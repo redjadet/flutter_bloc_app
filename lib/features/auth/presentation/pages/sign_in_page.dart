@@ -107,14 +107,25 @@ class SignInPage extends StatelessWidget {
       final AuthRepository? authRepository =
           getIt.isRegistered<AuthRepository>() ? getIt<AuthRepository>() : null;
       if (auth == null) {
-        if (authRepository != null) {
-          await authRepository.signInAnonymously();
+        try {
+          if (authRepository != null) {
+            await authRepository.signInAnonymously();
+          }
+          if (!context.mounted) {
+            ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
+            return;
+          }
+          context.go(postAuthPath());
+        } on FirebaseAuthException catch (error) {
+          showAuthError(error);
+        } on Exception {
+          if (!context.mounted) {
+            ContextUtils.logNotMounted('SignInPage.signInAnonymously.error');
+            return;
+          }
+          ErrorHandling.clearSnackBars(context);
+          ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
         }
-        if (!context.mounted) {
-          ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
-          return;
-        }
-        context.go(postAuthPath());
         return;
       }
 

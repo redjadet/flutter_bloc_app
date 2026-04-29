@@ -1,0 +1,11 @@
+config:
+  default: true
+  MD013: false
+
+# `markdownlint-cli2` ignores are applied even when a file is passed explicitly
+# (unlike `.markdownlintignore` / `.markdownlint-cli2ignore`, which mainly affect
+# glob resolution). Keep todo trackers out of lint entirely.
+ignores:
+  - "**/todo.md"
+  - "**/TODO.md"
+
