@@ -24,7 +24,7 @@ import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 part 'online_therapy_demo_shell_client_part.dart';
-part 'online_therapy_demo_shell_messaging_call_part.dart';
+part 'online_therapy_demo_shell_messaging_call.part.dart';
 part 'online_therapy_demo_shell_therapist_admin_part.dart';
 
 class OnlineTherapyDemoShellPage extends StatelessWidget {
