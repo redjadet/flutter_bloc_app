@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/shared/storage/hive_initializer.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -11,8 +13,13 @@ class HiveService {
 
   final HiveKeyManager _keyManager;
   bool _initialized = false;
+  Future<void>? _initializeInFlight;
+  final Map<String, _BoxMutex> _boxMutexes = {};
 
   bool get isInitialized => _initialized;
+
+  _BoxMutex _mutexFor(final String boxName) =>
+      _boxMutexes.putIfAbsent(boxName, _BoxMutex.new);
 
   /// Initializes Hive with encryption.
   ///
@@ -20,41 +27,22 @@ class HiveService {
   Future<void> initialize() async => StorageGuard.run<void>(
     logContext: 'HiveService.initialize',
     action: () async {
+      final Future<void>? existing = _initializeInFlight;
+      if (existing != null) {
+        await existing;
+        return;
+      }
       if (_initialized) {
         return;
       }
 
-      // Try to initialize Hive
-      // In tests, Hive.init() may have been called already, so initFlutter() will fail
+      final Future<void> initFuture = _initializeInternal();
+      _initializeInFlight = initFuture;
       try {
-        await initHive();
-      } on Exception catch (error, stackTrace) {
-        // If initFlutter fails, verify if Hive is actually initialized
-        // by attempting to use it (tests call Hive.init() directly)
-        try {
-          // Try to open and immediately close a temporary box to verify initialization
-          final String testBoxName =
-              '_init_check_${DateTime.now().millisecondsSinceEpoch}';
-          final Box<dynamic> testBox = await Hive.openBox(
-            testBoxName,
-            crashRecovery: false,
-          );
-          await testBox.close();
-          await Hive.deleteBoxFromDisk(testBoxName);
-          // Hive was already initialized (e.g., in test setup via Hive.init())
-          AppLogger.debug('Hive already initialized, skipping initFlutter');
-        } on Exception {
-          // Hive is truly not initialized - this is a real failure
-          AppLogger.error(
-            'Hive initialization failed and Hive is not initialized',
-            error,
-            stackTrace,
-          );
-          rethrow;
-        }
+        await initFuture;
+      } finally {
+        _initializeInFlight = null;
       }
-      _initialized = true;
-      AppLogger.info('Hive database initialized');
     },
     fallback: () {
       throw StateError(
@@ -63,6 +51,40 @@ class HiveService {
       );
     },
   );
+
+  Future<void> _initializeInternal() async {
+    // Try to initialize Hive
+    // In tests, Hive.init() may have been called already, so initFlutter() will fail
+    try {
+      await initHive();
+    } on Exception catch (error, stackTrace) {
+      // If initFlutter fails, verify if Hive is actually initialized
+      // by attempting to use it (tests call Hive.init() directly)
+      try {
+        // Try to open and immediately close a temporary box to verify initialization
+        final String testBoxName =
+            '_init_check_${DateTime.now().millisecondsSinceEpoch}';
+        final Box<dynamic> testBox = await Hive.openBox(
+          testBoxName,
+          crashRecovery: false,
+        );
+        await testBox.close();
+        await Hive.deleteBoxFromDisk(testBoxName);
+        // Hive was already initialized (e.g., in test setup via Hive.init())
+        AppLogger.debug('Hive already initialized, skipping initFlutter');
+      } on Exception {
+        // Hive is truly not initialized - this is a real failure
+        AppLogger.error(
+          'Hive initialization failed and Hive is not initialized',
+          error,
+          stackTrace,
+        );
+        rethrow;
+      }
+    }
+    _initialized = true;
+    AppLogger.info('Hive database initialized');
+  }
 
   /// Gets encryption cipher for a box.
   Future<HiveAesCipher> getEncryptionCipher() async {
@@ -83,11 +105,22 @@ class HiveService {
     if (name.isEmpty) {
       throw ArgumentError('Box name cannot be empty');
     }
-    if (!_initialized) {
-      await initialize();
-    }
+    await initialize();
 
+    return _mutexFor(
+      name,
+    ).run(() => _openBoxInternal(name, encrypted: encrypted));
+  }
+
+  Future<Box<dynamic>> _openBoxInternal(
+    final String name, {
+    required final bool encrypted,
+  }) async {
     try {
+      if (Hive.isBoxOpen(name)) {
+        return Hive.box<dynamic>(name);
+      }
+
       if (encrypted) {
         final HiveAesCipher cipher = await getEncryptionCipher();
         return Hive.openBox(name, encryptionCipher: cipher);
@@ -108,18 +141,20 @@ class HiveService {
     if (name.isEmpty) {
       return;
     }
-    try {
-      if (Hive.isBoxOpen(name)) {
-        await Hive.box<dynamic>(name).close();
+    await _mutexFor(name).run(() async {
+      try {
+        if (Hive.isBoxOpen(name)) {
+          await Hive.box<dynamic>(name).close();
+        }
+      } on Exception catch (error, stackTrace) {
+        AppLogger.error(
+          'Failed to close Hive box: $name',
+          error,
+          stackTrace,
+        );
+        // Don't rethrow - closing is best-effort
       }
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'Failed to close Hive box: $name',
-        error,
-        stackTrace,
-      );
-      // Don't rethrow - closing is best-effort
-    }
+    });
   }
 
   /// Deletes a box.
@@ -127,19 +162,42 @@ class HiveService {
     if (name.isEmpty) {
       return;
     }
-    try {
-      // Close box first if it's open
-      if (Hive.isBoxOpen(name)) {
-        await closeBox(name);
+    await _mutexFor(name).run(() async {
+      try {
+        if (Hive.isBoxOpen(name)) {
+          await Hive.box<dynamic>(name).close();
+        }
+        await Hive.deleteBoxFromDisk(name);
+      } on Exception catch (error, stackTrace) {
+        AppLogger.error(
+          'Failed to delete Hive box: $name',
+          error,
+          stackTrace,
+        );
+        rethrow;
       }
-      await Hive.deleteBoxFromDisk(name);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'Failed to delete Hive box: $name',
-        error,
-        stackTrace,
-      );
-      rethrow;
-    }
+    });
+  }
+}
+
+class _BoxMutex {
+  Future<void> _tail = Future<void>.value();
+
+  Future<T> run<T>(final Future<T> Function() action) {
+    final Completer<T> completer = Completer<T>();
+
+    _tail = _tail.then((_) async {
+      try {
+        final T result = await action();
+        completer.complete(result);
+      } catch (error, stackTrace) {
+        completer.completeError(error, stackTrace);
+      }
+    });
+
+    // Ensure tail stays alive even if action errors.
+    unawaited(_tail.catchError((_) {}));
+
+    return completer.future;
   }
 }

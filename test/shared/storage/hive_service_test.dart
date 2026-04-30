@@ -1,8 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import '../../test_helpers.dart' as test_helpers;
 
 void main() {
@@ -41,6 +42,12 @@ void main() {
       await hiveService.initialize();
       await hiveService.initialize();
       // Should not throw
+    });
+
+    test('initialize coalesces concurrent calls', () async {
+      final HiveService newService = HiveService(keyManager: keyManager);
+      await Future.wait(List.generate(20, (_) => newService.initialize()));
+      expect(newService.isInitialized, isTrue);
     });
 
     test('openBox creates encrypted box by default', () async {
@@ -82,6 +89,80 @@ void main() {
 
       await newService.closeBox('test_box_auto_init');
       await newService.deleteBox('test_box_auto_init');
+    });
+
+    test('openBox coalesces concurrent migration opens', () async {
+      await hiveService.initialize();
+      await hiveService.deleteBox('migration');
+
+      final List<Box<dynamic>> boxes = await Future.wait(
+        List.generate(
+          20,
+          (_) => hiveService.openBox('migration', encrypted: false),
+        ),
+      );
+
+      expect(boxes, isNotEmpty);
+      for (final box in boxes) {
+        expect(box.name, 'migration');
+        expect(box.isOpen, isTrue);
+      }
+
+      await hiveService.closeBox('migration');
+      await hiveService.deleteBox('migration');
+    });
+
+    test('openBox does not race closeBox for same box', () async {
+      await hiveService.initialize();
+      await hiveService.deleteBox('migration');
+
+      final Box<dynamic> initial = await hiveService.openBox(
+        'migration',
+        encrypted: false,
+      );
+      await initial.put('k', 'v');
+
+      await Future.wait(
+        List.generate(50, (i) async {
+          if (i.isEven) {
+            await hiveService.openBox('migration', encrypted: false);
+          } else {
+            await hiveService.closeBox('migration');
+          }
+        }),
+      );
+
+      final Box<dynamic> reopened = await hiveService.openBox(
+        'migration',
+        encrypted: false,
+      );
+      await reopened.put('k2', 'v2');
+      expect(reopened.get('k2'), 'v2');
+
+      await hiveService.closeBox('migration');
+      await hiveService.deleteBox('migration');
+    });
+
+    test('openBox does not race deleteBox for same box', () async {
+      await hiveService.initialize();
+      await hiveService.deleteBox('migration');
+
+      for (int i = 0; i < 25; i++) {
+        await Future.wait([
+          hiveService.openBox('migration', encrypted: false),
+          hiveService.deleteBox('migration'),
+        ]);
+      }
+
+      final Box<dynamic> finalBox = await hiveService.openBox(
+        'migration',
+        encrypted: false,
+      );
+      await finalBox.put('final', true);
+      expect(finalBox.get('final'), isTrue);
+
+      await hiveService.closeBox('migration');
+      await hiveService.deleteBox('migration');
     });
 
     test('closeBox closes open box', () async {
