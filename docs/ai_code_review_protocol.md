@@ -21,8 +21,11 @@ Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for source layout. If [
 | Simplify | Is this the smallest change that solves the task without speculative abstractions? |
 | Security | Did I review auth, replay, retries, logging, secrets, file access, sync, and `--dart-define` handling? |
 | Performance | Did I check rebuild scope, repeated I/O, parsing on the UI isolate, polling/listeners, allocations, and scale bottlenecks? |
-| Edge cases | Did I reason about empty, malformed, repeated, concurrent, offline, resumed, interrupted paths? |
-| Dependencies | Does the repo already have a suitable utility, and is the new dependency worth its cost? |
+| Edge cases | Does this handle empty, malformed, repeated, concurrent, offline, resumed, interrupted paths? |
+| Failure modes | What inputs or conditions might cause this implementation to fail, and what are its weaknesses? |
+| Error handling | Does this match the existing error handling pattern and keep stable error contracts? |
+| Dependencies | Does this introduce any new dependencies, and if so, has the repo's existing utility/package set been checked first? |
+| Naming | Are variables, methods, types, and test names consistent with the rest of the codebase? |
 | Legibility | Can a future Codex/Cursor run inspect the relevant docs, tests, fixtures, logs, or UI proof without chat context? |
 | Confidence | Does my confidence come from proof, and did I state uncertainty when risk remains? |
 | Focused tests | Is proof scope-matched, with regression coverage where practical, async-state reasoning/coverage, and no deprecated Flutter test APIs? |
@@ -51,7 +54,7 @@ Use when reviewing AI-written diffs or adding helper scanners. Goal: high-impact
 
 Do in order:
 
-1. **Checks:** Apply **Ten Checks** above.
+1. **Checks:** Apply the review checks above.
 2. **Goal:** If request is vague, define success criteria and smallest verifiable slice.
 3. **Diff:** Review changed files/generated artifacts.
 4. **Verify:** Run smallest honest validation command (route via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
