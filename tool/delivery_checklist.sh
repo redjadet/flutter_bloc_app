@@ -15,15 +15,48 @@ cd "$PROJECT_ROOT"
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
 
+usage() {
+  cat <<'EOF'
+Usage: ./bin/checklist [options]
+       ./bin/checklist-fast [options]
+       tool/delivery_checklist.sh [options]
+
+Delivery checklist gate. Default mode: full.
+
+Options:
+  -h, --help           Show help.
+  --mode <full|fast>   Override CHECKLIST_MODE.
+  --explain            Print detected mode inputs + changed-file summary.
+  --print-changed      Print changed files (git) and exit 0.
+  --no-reuse           Force rerun (sets CHECKLIST_ALLOW_REUSE=0).
+
+Env overrides:
+  CHECKLIST_MODE=full|fast
+  CHECKLIST_ALLOW_REUSE=auto|0|1
+  CHECKLIST_RUN_COVERAGE=0|1
+  CHECKLIST_RUN_FOCUSED_TESTS=auto|0|1
+  CHECKLIST_RUN_MIX_LINT=auto|0|1
+  CHECKLIST_RUN_TODO_LAYOUT_TESTS=auto|0|1
+  CHECKLIST_RUN_ANALYZE=auto|0|1
+  CHECKLIST_JOBS=<int>
+EOF
+}
+
 CHECKLIST_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-CHECKLIST_START_EPOCH_MS="$(python3 - <<'PY'
+CHECKLIST_START_EPOCH_MS="$(
+  if command -v python3 >/dev/null 2>&1; then
+    python3 - <<'PY'
 import time
 print(int(time.time() * 1000))
 PY
+  else
+    echo "$(( $(date -u +%s) * 1000 ))"
+  fi
 )"
 CHECKLIST_TMP_DIR=""
 CHECKLIST_CACHE_DIR="$PROJECT_ROOT/.dart_tool/checklist"
 CHECKLIST_CONFIG_CACHE_FILE="$CHECKLIST_CACHE_DIR/config_validation.sha256"
+CHECKLIST_EMIT_SCORECARD=1
 
 emit_checklist_scorecard_event() {
   local exit_code="$1"
@@ -34,14 +67,25 @@ emit_checklist_scorecard_event() {
   local workspace_fingerprint
 
   ended_at="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-  duration_ms="$(python3 - "$CHECKLIST_START_EPOCH_MS" <<'PY'
+  duration_ms="$(
+    if command -v python3 >/dev/null 2>&1; then
+      python3 - "$CHECKLIST_START_EPOCH_MS" <<'PY'
 import sys
 import time
 start_ms = int(sys.argv[1])
 print(max(0, int(time.time() * 1000) - start_ms))
 PY
-)"
-  workspace_fingerprint="$(python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true)"
+    else
+      echo "$(( $(date -u +%s) * 1000 - CHECKLIST_START_EPOCH_MS ))"
+    fi
+  )"
+  workspace_fingerprint="$(
+    if command -v python3 >/dev/null 2>&1; then
+      python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true
+    else
+      echo ""
+    fi
+  )"
 
   if [ "$exit_code" -eq 0 ]; then
     checklist_status="ok"
@@ -71,7 +115,9 @@ cleanup_checklist_tmp() {
 checklist_on_exit() {
   local checklist_exit_code=$?
   cleanup_checklist_tmp
-  emit_checklist_scorecard_event "$checklist_exit_code"
+  if [ "${CHECKLIST_EMIT_SCORECARD:-1}" = "1" ]; then
+    emit_checklist_scorecard_event "$checklist_exit_code"
+  fi
   exit "$checklist_exit_code"
 }
 
@@ -81,9 +127,6 @@ trap checklist_on_exit EXIT
 declare -a changed_files=()
 declare -a changed_dart_files=()
 CHECKLIST_ALLOW_REUSE="${CHECKLIST_ALLOW_REUSE:-auto}"
-
-print_flutter_resolution_report || true
-echo ""
 
 detect_cpu_count() {
   local cpu_count
@@ -215,6 +258,10 @@ run_parallel_static_checks() {
 
 should_attempt_checklist_reuse() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 1
+  fi
+
+  if ! command -v python3 >/dev/null 2>&1; then
     return 1
   fi
 
@@ -525,33 +572,41 @@ is_checklist_fast_compatible_change_set() {
 
   local file
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
-    case "$file" in
-      tool/*.sh|\
-      tool/*.dart|\
-      tool/direnv/bin/*|\
-      bin/*|\
-      tool/agent_host_templates/*|\
-      tool/fixtures/harness/*|\
-      pyrightconfig.json|\
-      demos/render_chat_api/pyrightconfig.json|\
-      AGENTS.md|\
-      .markdownlintignore|\
-      .markdownlint-cli2ignore|\
-      docs/*|\
-      tasks/*.md|\
-      README|README.*|\
-      CHANGELOG|CHANGELOG.*|\
-      LICENSE|LICENSE.*|\
-      .gitignore|\
-      .cursor/*)
-        ;;
-      *)
-        return 1
-        ;;
-    esac
+    if ! is_checklist_fast_compatible_path "$file"; then
+      return 1
+    fi
   done
 
   return 0
+}
+
+is_checklist_fast_compatible_path() {
+  local file="$1"
+  case "$file" in
+    tool/*.sh|\
+    tool/*.dart|\
+    tool/direnv/bin/*|\
+    bin/*|\
+    tool/agent_host_templates/*|\
+    tool/fixtures/harness/*|\
+    pyrightconfig.json|\
+    demos/render_chat_api/pyrightconfig.json|\
+    AGENTS.md|\
+    .markdownlintignore|\
+    .markdownlint-cli2ignore|\
+    docs/*|\
+    tasks/*.md|\
+    README|README.*|\
+    CHANGELOG|CHANGELOG.*|\
+    LICENSE|LICENSE.*|\
+    .gitignore|\
+    .cursor/*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
 }
 
 should_run_todo_layout_tests_auto() {
@@ -635,9 +690,6 @@ should_run_flutter_analyze_auto() {
   return 1
 }
 
-echo "🚀 Running Delivery Checklist..."
-echo ""
-
 CHECKLIST_MODE="${CHECKLIST_MODE:-full}"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
@@ -645,6 +697,45 @@ RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
+CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
+CHECKLIST_PRINT_CHANGED="${CHECKLIST_PRINT_CHANGED:-0}"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help|help)
+      CHECKLIST_EMIT_SCORECARD=0
+      usage
+      exit 0
+      ;;
+    --mode)
+      CHECKLIST_MODE="${2:-}"
+      if [[ -z "$CHECKLIST_MODE" || "$CHECKLIST_MODE" == -* ]]; then
+        CHECKLIST_EMIT_SCORECARD=0
+        echo "usage-error|--mode requires a value" >&2
+        exit 2
+      fi
+      shift 2
+      ;;
+    --no-reuse)
+      CHECKLIST_ALLOW_REUSE=0
+      shift
+      ;;
+    --explain)
+      CHECKLIST_EXPLAIN=1
+      shift
+      ;;
+    --print-changed)
+      CHECKLIST_PRINT_CHANGED=1
+      shift
+      ;;
+    *)
+      CHECKLIST_EMIT_SCORECARD=0
+      echo "usage-error|unknown arg: $1" >&2
+      echo "hint|use --help" >&2
+      exit 2
+      ;;
+  esac
+done
 
 if ! [[ "$CHECKLIST_MODE" =~ ^(full|fast)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_MODE='$CHECKLIST_MODE'; using full"
@@ -686,6 +777,40 @@ if ! [[ "$CHECKLIST_ALLOW_REUSE" =~ ^(auto|0|1)$ ]]; then
 fi
 
 collect_changed_files
+
+print_changed_files_summary() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    echo "changed_files|git|unavailable"
+    return 0
+  fi
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    echo "changed_files|count|0"
+    return 0
+  fi
+  echo "changed_files|count|${#changed_files[@]}"
+  local f
+  for f in "${changed_files[@]+"${changed_files[@]}"}"; do
+    echo "changed_files|path|$f"
+  done
+}
+
+if [ "$CHECKLIST_PRINT_CHANGED" = "1" ]; then
+  CHECKLIST_EMIT_SCORECARD=0
+  print_changed_files_summary
+  exit 0
+fi
+
+if [ "$CHECKLIST_EXPLAIN" = "1" ]; then
+  echo "explain|mode|$CHECKLIST_MODE"
+  echo "explain|allow_reuse|$CHECKLIST_ALLOW_REUSE"
+  print_changed_files_summary
+  echo ""
+fi
+
+print_flutter_resolution_report || true
+echo ""
+echo "🚀 Running Delivery Checklist..."
+echo ""
 
 if reuse_checklist_if_available; then
   exit 0
@@ -778,6 +903,33 @@ run_harness_docs_checks() {
   fi
 }
 
+print_checklist_fast_incompatibilities() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  local mismatches=0
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    if is_checklist_fast_compatible_path "$file"; then
+      continue
+    fi
+    if [ "$mismatches" -eq 0 ]; then
+      echo ""
+      echo "checklist-fast|incompatible_files|begin"
+    fi
+    echo "  - $file"
+    mismatches=1
+  done
+
+  if [ "$mismatches" -ne 0 ]; then
+    echo "checklist-fast|incompatible_files|end"
+  fi
+}
+
 if [ "$CHECKLIST_MODE" = "fast" ]; then
   if [ -n "${CI:-}" ]; then
     echo "❌ checklist-fast is local-only. Use ./bin/checklist on CI."
@@ -787,6 +939,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   if ! is_checklist_fast_compatible_change_set; then
     echo "❌ checklist-fast only supports clean trees or narrow local docs/tooling change sets."
     echo "   Use ./bin/checklist or targeted validation for app/runtime changes."
+    print_checklist_fast_incompatibilities
     exit 1
   fi
 

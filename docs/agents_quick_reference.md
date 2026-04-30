@@ -14,7 +14,7 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 
 | Situation | Command |
 | --- | --- |
-| Clean-tree local sanity or narrow local docs/tooling sweep | `./bin/checklist-fast` |
+| Clean-tree local sanity or narrow local docs/tooling sweep | `./bin/checklist-fast` (add `--explain` when debugging mode selection) |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
