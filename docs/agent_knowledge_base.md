@@ -46,7 +46,9 @@ Scale process to task value; avoid max-depth, broad validation, or delegation by
 8. Non-trivial: compare 2-3 approaches; pick lowest-regret by correctness, maintainability, reversibility, blast radius, and failure tolerance.
 9. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
    say so + narrow search space.
-10. Before report, predict failures: assumptions, edge cases, scale, side effects, maintenance cost. Harden material risks.
+10. Before report, critique own work: identify inputs/conditions that may
+    fail, weaknesses, assumptions, edge cases, scale, side effects, and
+    maintenance cost. Harden material risks.
 11. Stop when value is met, major risks are handled, proof matches scope, and more work mostly adds cost.
 
 ## Agent Legibility
