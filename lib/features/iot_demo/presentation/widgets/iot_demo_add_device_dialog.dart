@@ -8,18 +8,8 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
-/// Result of the add device dialog: name, type, and optional initial value.
-class IotDemoAddDeviceResult {
-  const IotDemoAddDeviceResult({
-    required this.name,
-    required this.type,
-    this.initialValue = 0,
-  });
-
-  final String name;
-  final IotDeviceType type;
-  final double initialValue;
-}
+part 'iot_demo_add_device_dialog_helpers.part.dart';
+part 'iot_demo_add_device_dialog_models.part.dart';
 
 /// Stateful dialog content so [TextEditingController] is disposed in
 /// [State.dispose] after the route is torn down.
@@ -42,14 +32,6 @@ class _IotDemoAddDeviceDialogBodyState
   IotDeviceType _selectedType = IotDeviceType.light;
   String? _nameError;
   double _initialValue = 0;
-
-  static const List<IotDeviceType> _types = <IotDeviceType>[
-    IotDeviceType.light,
-    IotDeviceType.thermostat,
-    IotDeviceType.plug,
-    IotDeviceType.sensor,
-    IotDeviceType.switch_,
-  ];
 
   @override
   void initState() {
@@ -150,7 +132,7 @@ class _IotDemoAddDeviceDialogBodyState
             decoration: InputDecoration(
               labelText: l10n.iotDemoAddDeviceTypeHint,
             ),
-            items: _types
+            items: _iotDemoAddDeviceDialogTypes
                 .map(
                   (final t) => DropdownMenuItem<IotDeviceType>(
                     value: t,
@@ -250,7 +232,7 @@ class _IotDemoAddDeviceDialogBodyState
                 decoration: InputDecoration(
                   labelText: l10n.iotDemoAddDeviceTypeHint,
                 ),
-                items: _types
+                items: _iotDemoAddDeviceDialogTypes
                     .map(
                       (final t) => DropdownMenuItem<IotDeviceType>(
                         value: t,
