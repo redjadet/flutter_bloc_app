@@ -5,9 +5,16 @@
 
 show_help() {
   cat <<'EOF'
-Usage: ./bin/checklist-fast
+Usage: ./bin/checklist-fast [options]
 
 Local-only checklist sanity path.
+
+Options (forwarded to underlying runner):
+  --mode full|fast  Override CHECKLIST_MODE.
+  --explain        Print mode inputs + changed-file summary.
+  --print-changed  Print detected changed files (git) and exit 0.
+  --no-reuse       Force rerun (sets CHECKLIST_ALLOW_REUSE=0).
+  --help           Show this help.
 
 What it is for:
 - clean-tree local sanity runs
