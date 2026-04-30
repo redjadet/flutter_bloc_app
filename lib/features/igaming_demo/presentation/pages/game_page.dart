@@ -16,27 +16,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:go_router/go_router.dart';
 
-/// Stake options (in minor units) for the demo game.
-const List<int> _stakeOptions = <int>[10, 50, 100, 500];
-
-String _symbolLegendLabel(final AppLocalizations l10n, final String symbol) {
-  switch (symbol) {
-    case '7':
-      return l10n.igamingDemoSymbol7;
-    case '★':
-      return l10n.igamingDemoSymbolStar;
-    case '◆':
-      return l10n.igamingDemoSymbolDiamond;
-    case '●':
-      return l10n.igamingDemoSymbolCircle;
-    case '▲':
-      return l10n.igamingDemoSymbolTriangle;
-    case '♦':
-      return l10n.igamingDemoSymbolGem;
-    default:
-      return symbol;
-  }
-}
+part 'game_page_legend.part.dart';
 
 /// Game page for one play-for-fun round: stake, spin, result.
 class GamePage extends StatelessWidget {
