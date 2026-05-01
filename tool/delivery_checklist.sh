@@ -321,6 +321,7 @@ validate_checklist_configuration() {
     "tool/check_agent_knowledge_base.sh"
     "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
+    "tool/check_checklist_cli_contract.sh"
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
     "tool/agent_session_bootstrap.sh"
@@ -390,6 +391,7 @@ validate_docs_only_dependencies() {
     "tool/check_agent_knowledge_base.sh"
     "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
+    "tool/check_checklist_cli_contract.sh"
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
     "tool/agent_session_bootstrap.sh"
@@ -699,6 +701,7 @@ RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
 CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
 CHECKLIST_PRINT_CHANGED="${CHECKLIST_PRINT_CHANGED:-0}"
+CHECKLIST_MODE_FROM_ARG=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -709,6 +712,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --mode)
       CHECKLIST_MODE="${2:-}"
+      CHECKLIST_MODE_FROM_ARG=1
       if [[ -z "$CHECKLIST_MODE" || "$CHECKLIST_MODE" == -* ]]; then
         CHECKLIST_EMIT_SCORECARD=0
         echo "usage-error|--mode requires a value" >&2
@@ -738,6 +742,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 if ! [[ "$CHECKLIST_MODE" =~ ^(full|fast)$ ]]; then
+  if [ "$CHECKLIST_MODE_FROM_ARG" = "1" ]; then
+    CHECKLIST_EMIT_SCORECARD=0
+    echo "usage-error|invalid --mode: $CHECKLIST_MODE" >&2
+    echo "hint|use --mode full or --mode fast" >&2
+    exit 2
+  fi
   echo "⚠️  Invalid CHECKLIST_MODE='$CHECKLIST_MODE'; using full"
   CHECKLIST_MODE=full
 fi
@@ -794,17 +804,19 @@ print_changed_files_summary() {
   done
 }
 
-if [ "$CHECKLIST_PRINT_CHANGED" = "1" ]; then
-  CHECKLIST_EMIT_SCORECARD=0
-  print_changed_files_summary
-  exit 0
-fi
-
 if [ "$CHECKLIST_EXPLAIN" = "1" ]; then
   echo "explain|mode|$CHECKLIST_MODE"
   echo "explain|allow_reuse|$CHECKLIST_ALLOW_REUSE"
   print_changed_files_summary
   echo ""
+fi
+
+if [ "$CHECKLIST_PRINT_CHANGED" = "1" ]; then
+  CHECKLIST_EMIT_SCORECARD=0
+  if [ "$CHECKLIST_EXPLAIN" != "1" ]; then
+    print_changed_files_summary
+  fi
+  exit 0
 fi
 
 print_flutter_resolution_report || true
