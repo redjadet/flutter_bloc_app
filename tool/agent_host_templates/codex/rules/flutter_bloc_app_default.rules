@@ -1,0 +1,15 @@
+# BEGIN flutter_bloc_app managed rules
+# Permission only. This allowlist approves repo-owned entrypoints and host-sync
+# helpers; it must not be treated as a recommendation to run every command.
+prefix_rule(pattern=["/bin/zsh", "-lc", "./bin/router_feature_validate"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./bin/checklist"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./bin/integration_tests"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./bin/upgrade_validate_all"], decision="allow")
+# The cross-host review helper stays allowlisted for explicit user-requested
+# second opinions only.
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/request_codex_feedback.sh"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/check_agent_asset_drift.sh"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/check_agent_knowledge_base.sh"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/sync_agent_assets.sh --dry-run"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/sync_agent_assets.sh --apply"], decision="allow")
+# END flutter_bloc_app managed rules

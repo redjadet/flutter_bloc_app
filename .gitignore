@@ -83,8 +83,6 @@ INTERVIEW_QA.md
 .config/
 # Local agent overlays (skills, symlinks, host-only policy); not part of the app build
 .agents/
-# Local-only host adapter templates; not required for fresh clones
-tool/agent_host_templates/
 coverage/lcov.base.info
 
 # Agent scorecard one-off exports (keep the rolling log tracked)

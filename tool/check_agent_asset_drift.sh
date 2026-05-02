@@ -5,9 +5,9 @@ usage() {
   cat <<'EOF'
 Usage: check_agent_asset_drift.sh
 
-Check whether managed Cursor/Codex host assets match local templates under
-tool/agent_host_templates/ (or AGENT_TEMPLATES_ROOT). Those paths are
-gitignored; fresh clones often have no templates yet.
+Check whether managed Cursor/Codex host assets match repo templates under
+tool/agent_host_templates/ (or AGENT_TEMPLATES_ROOT). Templates are
+versioned in this repo.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 Otherwise it also verifies README toolchain markers in matching policy docs.
