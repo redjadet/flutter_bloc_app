@@ -1,0 +1,43 @@
+---
+description:
+alwaysApply: false
+---
+
+# Global Flutter agent reminder
+
+- Per-project `AGENTS.md` is map; structured docs under `docs/` are system of record.
+- Cold start order: `AGENTS.md`, `docs/agent_knowledge_base.md`,
+  `docs/ai_code_review_protocol.md`; use `docs/agents_quick_reference.md` for
+  command lookup only.
+
+## Execution
+
+- Default workflow is Plan -> Execute -> Verify -> Report.
+- Closed-loop: keep going end-to-end; ask only on hard blockers (missing credentials/tooling, unsafe ambiguity below 95% confidence, user-owned product decision).
+- Plan once (<=10 lines), then execute. Avoid re-planning chatter.
+- Proof-first: confidence comes from running the smallest honest repo entrypoint.
+
+## Context budget
+
+- Read smallest blocks needed; prefer targeted search + narrow reads; avoid loading whole files/directories.
+- Avoid redundant restatement of repo policy; link to canon docs instead.
+
+## Quality bar
+
+- Default to smallest reversible change satisfying business goal + reliability bar.
+- Don't change files until at least 95% confident in goal/scope/approach.
+- Surgical diff: each changed line traces to request or required validation/doc update.
+- Treat AI code as draft until problem-fit, simplification, security, performance, edge-case, error-pattern, dependency, naming, and testing review pass.
+- Self-verify before report vs request, changed files, proof, blockers, risk.
+
+## Repo-first
+
+- Prefer repo-local docs and shell entrypoints over host-specific shortcuts.
+- Repeated failure => add missing repo capability: doc, fixture, test, script,
+  route proof, log helper, validation check.
+- File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
+- Agent/docs changes: semantic-lint stale plans, duplicate rules, source/host-template contradictions.
+- For agent/docs changes, keep the map short and run `./tool/check_agent_knowledge_base.sh`.
+- Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork unless capabilities differ.
+- Flutter widget tests: use `WidgetTester.view`; don't use deprecated `tester.binding.window` test-value APIs.
+- Favor concise, copy/paste-ready repo commands over long policy restatements.

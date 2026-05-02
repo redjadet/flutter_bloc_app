@@ -127,7 +127,18 @@ require_all_contains \
   "95% confident" \
   "Surgical diffs" \
   "Before report" \
-  "Report after checking"
+  "Report after checking" \
+  "## Multi-Agent Hub" \
+  "Benefit: team" \
+  "Benefit: single" \
+  "tasks/cursor/team/<run-id>/" \
+  "Coordinator" \
+  "Specialists" \
+  "Researcher" \
+  "Analyst" \
+  "Implementer" \
+  "Reviewer" \
+  "untrusted"
 
 require_all_contains \
   "docs/ai_code_review_protocol.md" \
@@ -140,7 +151,12 @@ require_all_contains \
   "docs/agents_quick_reference.md" \
   "below 95%" \
   "execute end-to-end, verify, report proof" \
-  "Behavior changes start in source docs"
+  "Behavior changes start in source docs" \
+  "Multi-Agent Hub" \
+  "Benefit: team" \
+  "Benefit: single" \
+  "tasks/cursor/team/<run-id>/" \
+  "agent_knowledge_base.md#multi-agent-hub"
 
 if ! bash "tool/check_agent_memory_compounding.sh"; then
   fail "Agent memory-compounding guard failed"
@@ -225,11 +241,32 @@ if [ -d "tool/agent_host_templates" ]; then
     "Report only after Verify"
 
   require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
+    "Multi-agent" \
+    "Benefit: team" \
+    "Benefit: single" \
+    "tasks/cursor/team/<run-id>/" \
+    "agent_knowledge_base.md#multi-agent-hub"
+
+  require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \
     "AGENTS.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "tasks/lessons.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \
+    "Task roles (multi-agent hub)" \
+    "Researcher" \
+    "Analyst" \
+    "Implementer" \
+    "Reviewer" \
+    "subagent_type: explore" \
+    "subagent_type: generalPurpose" \
+    "subagent_type: code-reviewer" \
+    "Redact" \
+    "untrusted"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md" \
@@ -238,6 +275,17 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/agents_quick_reference.md" \
     "docs/ai_code_review_protocol.md" \
     "tool/sync_agent_assets.sh"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md" \
+    "tasks/cursor/team/<run-id>/" \
+    "agent_knowledge_base.md#multi-agent-hub"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
+    "multi-agent hub" \
+    "tasks/cursor/team/<run-id>/" \
+    "agent_knowledge_base.md#multi-agent-hub"
 else
   echo "Host-template source checks skipped (tool/agent_host_templates not present)."
 fi

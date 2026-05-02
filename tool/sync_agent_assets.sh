@@ -5,10 +5,9 @@ usage() {
   cat <<'EOF'
 Usage: sync_agent_assets.sh --dry-run | --apply
 
-Sync local-only Cursor and Codex adapter templates into ~/.cursor and ~/.codex.
-Templates live under tool/agent_host_templates/ by default, or set
-AGENT_TEMPLATES_ROOT to another directory. They are gitignored; fresh clones
-often have no templates yet.
+Sync repo-managed Cursor and Codex adapter templates into ~/.cursor and ~/.codex.
+Templates live under tool/agent_host_templates/ by default (versioned in this
+repo), or set AGENT_TEMPLATES_ROOT to another directory.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 

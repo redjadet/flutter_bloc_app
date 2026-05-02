@@ -52,6 +52,14 @@ from snapshot, guard stale indexes. Header-row lists (`items.length + 1` with
 Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
 [`tasks/codex/todo.md`](../tasks/codex/todo.md).
 
+## Multi-Agent Hub
+
+Cursor non-trivial work records `Benefit: team - <reason>` or
+`Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use
+`trivial - gate skipped`. Default single; team when >=2 indicators. Team runs
+under `tasks/cursor/team/<run-id>/`. Doctrine:
+[`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+
 ## Harness Reminders
 
 - Closed-loop default: plan once, execute end-to-end, verify, report proof.
