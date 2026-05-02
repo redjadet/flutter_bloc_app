@@ -24,7 +24,7 @@ class ErrorHandling {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
-    if (messenger == null) {
+    if (messenger == null || Scaffold.maybeOf(context) == null) {
       return null;
     }
     return messenger.showSnackBar(snackBar);

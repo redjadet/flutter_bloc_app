@@ -205,6 +205,34 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets(
+    'SignInPage ignores anonymous sign-in error snackbar without Scaffold',
+    (WidgetTester tester) async {
+      final _ThrowingFirebaseAuth mockAuth = _ThrowingFirebaseAuth(
+        Exception('network down'),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: SignInPage(auth: mockAuth),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byKey(signInGuestButtonKey));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(
+        find.text(AppLocalizationsEn().anonymousSignInFailed),
+        findsNothing,
+      );
+    },
+  );
 }
 
 class _ThrowingFirebaseAuth extends MockFirebaseAuth {
