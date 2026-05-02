@@ -91,6 +91,31 @@ void main() {
       expect(find.text(errorMessage), findsOneWidget);
     });
 
+    testWidgets('showSnackBar skips when no Scaffold is registered', (
+      tester,
+    ) async {
+      const errorMessage = 'Test error';
+      late BuildContext context;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (builderContext) {
+              context = builderContext;
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      final controller = ErrorHandling.showErrorSnackBar(context, errorMessage);
+      await tester.pump();
+
+      expect(controller, isNull);
+      expect(tester.takeException(), isNull);
+      expect(find.text(errorMessage), findsNothing);
+    });
+
     testWidgets('showSnackBar works with multiple calls', (tester) async {
       const errorMessage = 'Test error';
 
