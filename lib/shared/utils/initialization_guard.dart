@@ -1,3 +1,8 @@
+// Startup storage/plugin failures can arrive as FlutterError, but this guard is
+// only used for optional bootstrap work that should not block app launch.
+// ignore_for_file: avoid_catching_errors
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Helper utilities for handling initialization errors gracefully.
@@ -33,6 +38,14 @@ class InitializationGuard {
   }) async {
     try {
       await operation();
+    } on FlutterError catch (error, stackTrace) {
+      // Flutter wraps some platform/storage startup failures in FlutterError.
+      AppLogger.error(
+        '$context: $failureMessage',
+        error,
+        stackTrace,
+      );
+      // Don't rethrow - allow app to continue
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         '$context: $failureMessage',

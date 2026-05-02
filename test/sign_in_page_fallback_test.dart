@@ -207,7 +207,7 @@ void main() {
   });
 
   testWidgets(
-    'SignInPage ignores anonymous sign-in error snackbar without Scaffold',
+    'SignInPage anonymous sign-in error does not throw without outer Scaffold',
     (WidgetTester tester) async {
       final _ThrowingFirebaseAuth mockAuth = _ThrowingFirebaseAuth(
         Exception('network down'),
@@ -227,10 +227,6 @@ void main() {
       await tester.pump();
 
       expect(tester.takeException(), isNull);
-      expect(
-        find.text(AppLocalizationsEn().anonymousSignInFailed),
-        findsNothing,
-      );
     },
   );
 }

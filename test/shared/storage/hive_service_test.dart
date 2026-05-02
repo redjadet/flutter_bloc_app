@@ -20,7 +20,10 @@ void main() {
     setUp(() {
       storage = InMemorySecretStorage();
       keyManager = HiveKeyManager(storage: storage);
-      hiveService = HiveService(keyManager: keyManager);
+      hiveService = HiveService(
+        keyManager: keyManager,
+        initializeHiveStorage: () async => true,
+      );
     });
 
     tearDown(() async {
@@ -45,10 +48,38 @@ void main() {
     });
 
     test('initialize coalesces concurrent calls', () async {
-      final HiveService newService = HiveService(keyManager: keyManager);
+      final HiveService newService = HiveService(
+        keyManager: keyManager,
+        initializeHiveStorage: () async => true,
+      );
       await Future.wait(List.generate(20, (_) => newService.initialize()));
       expect(newService.isInitialized, isTrue);
     });
+
+    test(
+      'initialize marks storage unavailable when process lock is held',
+      () async {
+        final HiveService lockedService = HiveService(
+          keyManager: keyManager,
+          initializeHiveStorage: () async => false,
+        );
+
+        await lockedService.initialize();
+
+        expect(lockedService.isInitialized, isTrue);
+        expect(lockedService.isStorageAvailable, isFalse);
+        await expectLater(
+          lockedService.openBox('migration', encrypted: false),
+          throwsA(
+            isA<StateError>().having(
+              (final error) => error.message,
+              'message',
+              contains('another app process owns it'),
+            ),
+          ),
+        );
+      },
+    );
 
     test('openBox creates encrypted box by default', () async {
       await hiveService.initialize();
@@ -81,7 +112,10 @@ void main() {
     });
 
     test('openBox initializes service if not initialized', () async {
-      final newService = HiveService(keyManager: keyManager);
+      final newService = HiveService(
+        keyManager: keyManager,
+        initializeHiveStorage: () async => true,
+      );
       final box = await newService.openBox('test_box_auto_init');
 
       expect(box, isNotNull);
