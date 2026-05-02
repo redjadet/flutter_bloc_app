@@ -24,10 +24,26 @@ class ErrorHandling {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
-    if (messenger == null || Scaffold.maybeOf(context) == null) {
+    if (messenger == null) {
       return null;
     }
-    return messenger.showSnackBar(snackBar);
+    try {
+      return messenger.showSnackBar(snackBar);
+    } catch (error) {
+      if (_isNoDescendantScaffoldSnackBarError(error)) {
+        return null;
+      }
+      rethrow;
+    }
+  }
+
+  static bool _isNoDescendantScaffoldSnackBarError(final Object error) {
+    final String message = error.toString();
+    return message.contains(
+          'ScaffoldMessenger.showSnackBar was called, but there are currently '
+          'no descendant Scaffolds',
+        ) ||
+        message.contains("'_scaffolds.isNotEmpty'");
   }
 
   /// Show a snackbar with error message

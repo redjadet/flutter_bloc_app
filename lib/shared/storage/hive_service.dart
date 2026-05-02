@@ -8,15 +8,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 /// Service for managing Hive database with encryption.
 class HiveService {
-  HiveService({required final HiveKeyManager keyManager})
-    : _keyManager = keyManager;
+  HiveService({
+    required final HiveKeyManager keyManager,
+    final Future<bool> Function()? initializeHiveStorage,
+  }) : _keyManager = keyManager,
+       _initializeHiveStorage = initializeHiveStorage ?? initHive;
 
   final HiveKeyManager _keyManager;
+  final Future<bool> Function() _initializeHiveStorage;
   bool _initialized = false;
+  bool _storageAvailable = true;
   Future<void>? _initializeInFlight;
   final Map<String, _BoxMutex> _boxMutexes = {};
 
   bool get isInitialized => _initialized;
+  bool get isStorageAvailable => _storageAvailable;
 
   _BoxMutex _mutexFor(final String boxName) =>
       _boxMutexes.putIfAbsent(boxName, _BoxMutex.new);
@@ -56,7 +62,12 @@ class HiveService {
     // Try to initialize Hive
     // In tests, Hive.init() may have been called already, so initFlutter() will fail
     try {
-      await initHive();
+      final bool storageAvailable = await _initializeHiveStorage();
+      if (!storageAvailable) {
+        _storageAvailable = false;
+        _initialized = true;
+        return;
+      }
     } on Exception catch (error, stackTrace) {
       // If initFlutter fails, verify if Hive is actually initialized
       // by attempting to use it (tests call Hive.init() directly)
@@ -106,6 +117,11 @@ class HiveService {
       throw ArgumentError('Box name cannot be empty');
     }
     await initialize();
+    if (!_storageAvailable) {
+      throw StateError(
+        'Hive storage is unavailable because another app process owns it.',
+      );
+    }
 
     return _mutexFor(
       name,
@@ -141,6 +157,9 @@ class HiveService {
     if (name.isEmpty) {
       return;
     }
+    if (!_storageAvailable) {
+      return;
+    }
     await _mutexFor(name).run(() async {
       try {
         if (Hive.isBoxOpen(name)) {
@@ -160,6 +179,9 @@ class HiveService {
   /// Deletes a box.
   Future<void> deleteBox(final String name) async {
     if (name.isEmpty) {
+      return;
+    }
+    if (!_storageAvailable) {
       return;
     }
     await _mutexFor(name).run(() async {
