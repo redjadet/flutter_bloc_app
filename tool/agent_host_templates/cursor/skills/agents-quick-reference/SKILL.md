@@ -17,7 +17,7 @@ Delegation discipline: **`agents-meta-behavior`**.
 
 Repo profile:
 
-- Flutter 3.41.8 / Dart 3.11.5
+- Flutter 3.41.9 / Dart 3.11.5
 - `Presentation -> Domain <- Data`
 
 Closed-loop default:
