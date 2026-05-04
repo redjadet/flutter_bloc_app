@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/utils/initialization_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +36,31 @@ void main() {
 
       expect(operationExecuted, isTrue);
       // Should not throw - operation completes gracefully
+    });
+
+    test('executeSafely handles FlutterError without rethrowing', () async {
+      final List<AppLogEntry> entries = <AppLogEntry>[];
+      AppLogger.observer = entries.add;
+
+      addTearDown(() {
+        AppLogger.observer = null;
+      });
+
+      await InitializationGuard.executeSafely(
+        () async {
+          throw FlutterError(
+            "FileSystemException: lock failed, path = 'migration.lock'",
+          );
+        },
+        context: 'bootstrapApp',
+        failureMessage:
+            'Migration failed during app startup. App will continue.',
+      );
+
+      expect(entries, hasLength(1));
+      expect(entries.single.level, AppLogLevel.error);
+      expect(entries.single.message, contains('Migration failed'));
+      expect(entries.single.error, isA<FlutterError>());
     });
 
     test('executeSafely logs errors when operation fails', () async {

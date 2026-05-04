@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
@@ -165,6 +166,40 @@ void main() {
       expect(find.text('Demo title'), findsOneWidget);
       expect(find.text('Demo body'), findsOneWidget);
       expect(find.text('type: demo'), findsOneWidget);
+    });
+
+    testWidgets('copy token action copies FCM token and shows feedback', (
+      final tester,
+    ) async {
+      String? copiedText;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (final call) {
+            if (call.method == 'Clipboard.setData') {
+              final data = call.arguments as Map<dynamic, dynamic>;
+              copiedText = data['text'] as String?;
+            }
+            return Future<void>.value();
+          });
+      addTearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, null);
+      });
+
+      await _pumpPage(
+        tester,
+        state: const FcmDemoState(
+          status: FcmDemoStatus.ready,
+          permissionState: FcmPermissionState.authorized,
+          fcmToken: 'fcm-token-1',
+        ),
+      );
+
+      await tester.tap(find.text(l10n.fcmDemoCopyToken));
+      await tester.pumpAndSettle();
+
+      expect(copiedText, 'fcm-token-1');
+      expect(tester.takeException(), isNull);
+      expect(find.text(l10n.fcmDemoCopySuccess), findsOneWidget);
     });
   });
 }

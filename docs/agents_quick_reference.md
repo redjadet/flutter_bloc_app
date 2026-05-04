@@ -6,7 +6,7 @@ Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review:
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
-Pinned repo toolchain: Flutter 3.41.8 / Dart 3.11.5.
+Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5.
 
 ## Validation Chooser
 
@@ -51,6 +51,14 @@ from snapshot, guard stale indexes. Header-row lists (`items.length + 1` with
 
 Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
 [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+
+## Multi-Agent Hub
+
+Cursor non-trivial work records `Benefit: team - <reason>` or
+`Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use
+`trivial - gate skipped`. Default single; team when >=2 indicators. Team runs
+under `tasks/cursor/team/<run-id>/`. Doctrine:
+[`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
 ## Harness Reminders
 

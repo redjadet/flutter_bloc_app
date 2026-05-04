@@ -7,6 +7,8 @@ Repo docs under `docs/` are system of record; host assets stay thin.
 
 Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host
 adapters. Done = Plan, Execute, Verify, Report proof.
+This root file is the repo-local source map; `tool/agent_host_templates/codex/AGENTS.md`
+is the Codex host bootstrap template synced to `~/.codex/AGENTS.md`.
 
 ## Start
 
@@ -22,7 +24,7 @@ Bootstrap: `bash tool/agent_session_bootstrap.sh`
 
 ## Snapshot
 
-Flutter 3.41.8 / Dart 3.11.5. Clean Architecture:
+Flutter 3.41.9 / Dart 3.11.5. Clean Architecture:
 `Presentation -> Domain <- Data`; Cubit/BLoC, `get_it`, GoRouter.
 Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
 `lib/main_staging.dart`, `lib/main_prod.dart`.
@@ -84,3 +86,10 @@ Use repo entrypoints. Pick smallest honest check.
 - Agent/docs: markdown/link checks + `./tool/check_agent_knowledge_base.sh`
 - Host templates: `./tool/check_agent_asset_drift.sh` +
   `./tool/sync_agent_assets.sh --dry-run`
+
+## Learned User Preferences
+
+- For non-trivial work, first judge whether parallel or multi-agent execution materially reduces calendar time or risk; when the answer is clearly yes, use multi-agent workflows without waiting for a separate prompt.
+- When editing agent-facing artifacts (skills, hooks, templates, thin repo maps), prefer deduping and tightening prose to cut context cost while keeping non-negotiable contracts and safety rules.
+- When a plan can be satisfied by routing through or extending an existing skill, update that skill’s instructions instead of adding parallel copies.
+- Do not fix newline or EOF lints with `ignore_for_file: eol_at_end_of_file`; correct the file structure instead.
