@@ -5,10 +5,14 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_w
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
+
+part 'hive_counter_repository_migration.dart';
 
 /// Hive-backed implementation of [CounterRepository].
 class HiveCounterRepository extends HiveRepositoryBase
@@ -30,6 +34,8 @@ class HiveCounterRepository extends HiveRepositoryBase
   static const String _keyLastSynced = 'last_synced_at';
   static const String _keySynchronized = 'synchronized';
 
+  static const String _schemaNamespace = 'counter:v1';
+
   static const CounterSnapshot _emptySnapshot = CounterSnapshot(
     userId: _localUserId,
     count: 0,
@@ -38,6 +44,19 @@ class HiveCounterRepository extends HiveRepositoryBase
 
   @override
   String get boxName => _boxName;
+
+  @override
+  HiveBoxSchema get schema => HiveBoxSchema(
+    boxName: _boxName,
+    namespace: _schemaNamespace,
+    fingerprint:
+        hiveSchemaFingerprints[_schemaNamespace] ??
+        (throw StateError(
+          'Missing hive schema fingerprint for $_schemaNamespace. '
+          'Run: dart run tool/generate_hive_schema_fingerprints.dart',
+        )),
+    migrate: _migrateCounter,
+  );
 
   late final HiveCounterRepositoryWatchHelper _watchHelper;
 

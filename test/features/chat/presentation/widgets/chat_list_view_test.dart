@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_list_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -355,6 +356,9 @@ void main() {
 }
 
 class _FakePendingSyncRepository implements PendingSyncRepository {
+  @override
+  HiveBoxSchema? get schema => null;
+
   @override
   String get boxName => 'fake-pending-sync';
 

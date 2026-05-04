@@ -4,10 +4,14 @@ import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+part 'hive_todo_repository_migration.dart';
 
 class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   HiveTodoRepository({required super.hiveService});
@@ -15,8 +19,24 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   static const String _boxName = 'todo_list';
   static const String _keyTodos = 'todos';
 
+  static const String _schemaNamespace = 'todo_list:todos';
+  static const String _tmpKeyMigrated = '__tmp__todos_migrated';
+
   @override
   String get boxName => _boxName;
+
+  @override
+  HiveBoxSchema get schema => HiveBoxSchema(
+    boxName: _boxName,
+    namespace: _schemaNamespace,
+    fingerprint:
+        hiveSchemaFingerprints[_schemaNamespace] ??
+        (throw StateError(
+          'Missing hive schema fingerprint for $_schemaNamespace. '
+          'Run: dart run tool/generate_hive_schema_fingerprints.dart',
+        )),
+    migrate: _migrateTodos,
+  );
 
   @override
   Future<List<TodoItem>> fetchAll() async => StorageGuard.run<List<TodoItem>>(

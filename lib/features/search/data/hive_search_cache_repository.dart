@@ -1,6 +1,8 @@
 import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
@@ -20,6 +22,16 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
 
   @override
   String get boxName => _boxName;
+
+  static const String _schemaNamespace = 'search_cache:query_*';
+
+  @override
+  HiveBoxSchema? get schema => HiveBoxSchema(
+    boxName: boxName,
+    namespace: _schemaNamespace,
+    fingerprint: hiveSchemaFingerprints[_schemaNamespace] ?? 'dev-untracked',
+    cleanup: _cleanupLegacyAndMalformed,
+  );
 
   @override
   Future<List<SearchResult>?> loadCachedResults(final String query) async =>
@@ -143,4 +155,39 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
   }
 
   String _normalizeQuery(final String query) => query.trim().toLowerCase();
+
+  Future<void> _cleanupLegacyAndMalformed(
+    final Box<dynamic> box, {
+    required final String? fromFingerprint,
+  }) async {
+    // Cleanup only. Never clear the whole box.
+    final List<String> queryKeys = box.keys
+        .whereType<String>()
+        .where((final k) => k.startsWith(_keyPrefix))
+        .toList(growable: false);
+
+    for (final String key in queryKeys) {
+      final dynamic raw = box.get(key);
+      if (raw == null) {
+        continue;
+      }
+      final bool readable = await _canParseStored(raw);
+      if (!readable) {
+        await safeDeleteKey(box, key);
+      }
+    }
+
+    final dynamic recentRaw = box.get(_keyRecentQueries);
+    if (recentRaw != null && recentRaw is! List<dynamic>) {
+      await safeDeleteKey(box, _keyRecentQueries);
+    }
+  }
+
+  Future<bool> _canParseStored(final dynamic raw) async {
+    try {
+      return await _parseStored(raw) != null;
+    } on Exception {
+      return false;
+    }
+  }
 }

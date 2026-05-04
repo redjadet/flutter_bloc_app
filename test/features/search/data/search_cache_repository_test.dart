@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -172,6 +173,23 @@ void main() {
       expect(await repository.loadCachedResults('dogs'), isNull);
       expect(await repository.loadCachedResults('cats'), isNull);
       expect(await repository.loadRecentQueries(), isEmpty);
+    });
+
+    test('schema cleanup deletes malformed cached result entries', () async {
+      final Box<dynamic> box = await hiveService.openBox('search_cache');
+      await box.put('query_dogs', 123); // malformed (not string/list/map)
+      await box.put('recent_queries', 'nope'); // malformed
+
+      // Triggers getBox() + schema ensure/cleanup.
+      expect(await repository.loadCachedResults('dogs'), isNull);
+
+      expect(box.get('query_dogs'), isNull);
+      expect(box.get('recent_queries'), isNull);
+      final dynamic meta = box.get(
+        HiveSchemaMigratorService.metaKeyFingerprints,
+      );
+      expect(meta, isA<Map>());
+      expect((meta as Map)['search_cache:query_*'], isNotNull);
     });
   });
 }
