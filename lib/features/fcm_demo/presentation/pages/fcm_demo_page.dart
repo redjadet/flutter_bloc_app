@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_s
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -168,16 +169,16 @@ class _TokenSection extends StatelessWidget {
     try {
       await Clipboard.setData(ClipboardData(text: text));
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.fcmDemoCopySuccess)),
+        ErrorHandling.showSuccessSnackBar(
+          context,
+          l10n.fcmDemoCopySuccess,
         );
       }
     } on Exception {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.fcmDemoCopyFailure),
-          ),
+        ErrorHandling.showErrorSnackBar(
+          context,
+          l10n.fcmDemoCopyFailure,
         );
       }
     }
