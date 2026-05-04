@@ -264,6 +264,10 @@ For Codex and Cursor, finished loop:
 Codex and Cursor should not grow separate operating doctrines.
 
 - Source docs own behavior. Host templates only summarize and route.
+- Root [`AGENTS.md`](../AGENTS.md) is the repo-local map.
+  `tool/agent_host_templates/codex/AGENTS.md` is the repo-managed Codex host
+  bootstrap template copied to `~/.codex/AGENTS.md` and optional Codex
+  worktrees.
 - When changing agent behavior, update owning source doc first.
 - If behavior affects command choice, update [`agents_quick_reference.md`](agents_quick_reference.md).
 - If behavior affects accepting AI-written work, update [`ai_code_review_protocol.md`](ai_code_review_protocol.md).

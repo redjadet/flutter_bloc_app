@@ -7,6 +7,8 @@ Repo docs under `docs/` are system of record; host assets stay thin.
 
 Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host
 adapters. Done = Plan, Execute, Verify, Report proof.
+This root file is the repo-local source map; `tool/agent_host_templates/codex/AGENTS.md`
+is the Codex host bootstrap template synced to `~/.codex/AGENTS.md`.
 
 ## Start
 

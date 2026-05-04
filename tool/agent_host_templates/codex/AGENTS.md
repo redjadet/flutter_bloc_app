@@ -2,6 +2,8 @@
 
 Use repo-local canon + shell entrypoints first. This bootstrap is map only;
 structured docs under `docs/` are system of record.
+Repo source map is root `AGENTS.md`; this file is the synced Codex host
+bootstrap template, copied to `~/.codex/AGENTS.md` and Codex worktrees.
 
 ## Read first
 
