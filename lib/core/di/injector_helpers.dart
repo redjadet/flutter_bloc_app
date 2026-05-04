@@ -5,6 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 
+/// When true, [createRemoteRepositoryOrNull] returns null so Realtime DB
+/// remotes are not wired. The integration harness sets this: plugin-backed
+/// `FirebaseAuth.instanceFor(app)` does not use GetIt-registered mock auth, so
+/// RTDB watch streams time out and fail the integration log gate.
+bool integrationTestOmitFirebaseRemoteRepositories = false;
+
 /// Helper function to register a lazy singleton if it's not already registered.
 ///
 /// This prevents duplicate registrations and allows safe re-registration
@@ -62,4 +68,5 @@ T? createRemoteRepositoryOrNull<T>({
 
 @visibleForTesting
 bool get shouldSkipFirebaseRemoteRepositories =>
-    !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
+    (!kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS) ||
+    integrationTestOmitFirebaseRemoteRepositories;

@@ -95,6 +95,16 @@ Async list builders:
 - Snapshot list at build start, derive `itemCount` from snapshot, guard stale indexes before indexing. Header-row patterns like `items.length + 1` with `items[index - 1]` are highest risk.
 - Add widget regression coverage when fixing runtime list-builder `RangeError`.
 
+Hive schema migrations:
+
+- When Hive DTO/map/json storage shape changes, update
+  [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md)
+  contract, manifest, generated fingerprints, and focused migration tests.
+- Review for idempotency, failed-migrator fingerprint behavior, watch/meta-key
+  noise, temp-key cleanup, and per-item salvage versus whole-key deletion.
+- Never call the generator "automatic schema inference"; it is manifest-driven
+  and only detects stale generated output or input drift.
+
 ## Relationship To Validation
 
 This protocol complements, but doesn't replace:

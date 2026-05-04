@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -169,6 +170,10 @@ Future<void> configureIntegrationTestDependencies({
     buildSignature: '',
   );
 
+  // RTDB repos use FirebaseAuth.instanceFor(app), not GetIt mock auth — skip
+  // remotes so Hive-only offline-first paths match integration expectations.
+  integrationTestOmitFirebaseRemoteRepositories = true;
+
   await test_helpers.setupTestDependencies(
     test_helpers.TestSetupOptions(
       overrideCounterRepository: overrideCounterRepository,
@@ -191,8 +196,10 @@ Future<void> configureIntegrationTestDependencies({
   }
 }
 
-Future<void> tearDownIntegrationTestDependencies() =>
-    test_helpers.tearDownTestDependencies();
+Future<void> tearDownIntegrationTestDependencies() async {
+  await test_helpers.tearDownTestDependencies();
+  integrationTestOmitFirebaseRemoteRepositories = false;
+}
 
 Future<void> launchTestApp(
   final WidgetTester tester, {

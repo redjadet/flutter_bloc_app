@@ -7,6 +7,9 @@ that.
 
 ## Index
 
+- [`2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md`](2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md): manifest-driven
+  Hive schema migrations; full migrate for todo + counter; pending-sync full
+  migrate deferred.
 - [`2026-04-02_case_study_supabase_private_storage_plan.md`](2026-04-02_case_study_supabase_private_storage_plan.md): optional Supabase private
   storage, RLS, and submit flow for the dentist **Case Study Demo** feature.
 - [`2026-04-01_dentist_case_study_demo_plan.md`](2026-04-01_dentist_case_study_demo_plan.md): **Case Study Demo** feature scope, routes, auth,

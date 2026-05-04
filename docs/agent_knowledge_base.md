@@ -108,6 +108,7 @@ Goal: next session smarter, no bloated wiki.
 | Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), [`adr/`](adr/) | Current design | Touching structure, routing, DI, layers, or feature seams. |
 | Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Current gates | Reviewing risk, test depth, and guardrails. |
 | Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Current patterns | Touching async, subscriptions, timers, retry, sync, or background work. |
+| Hive schema migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Current storage migration runbook | Changing Hive DTO/map/json stored shape, manifest/spec, fingerprints, migrators, or migration tests. Read [When migrations run automatically](offline_first/hive_schema_migrations.md#when-migrations-run-automatically): `getBox()` runs `ensureSchema` when `HiveRepositoryBase.schema` is set; fingerprint bumps and payload rewrites are still manifest- and code-driven. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | Current map | Adding or changing end-to-end flows. |
 | Plans | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md) | Active or historical as labeled | Complex work, execution contracts, and completed rationale. |
 | Audits | [`audits/README.md`](audits/README.md) | Historical snapshots | Understanding why a guard exists or finding debt trends. |
@@ -230,6 +231,15 @@ Analyst lists, Implementer respects, Reviewer checks when touched:
 - **Dio / HTTP / auth:** interceptors, replay policy, error mapping, token/header flow, storage boundary.
 - **Routes / l10n / codegen:** exact commands + generated paths; validate or document skip.
 - **Offline-first / sync:** dedupe, debounced resume, no overlapping flushes, idempotency keys, user scope; cite [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md).
+- **Hive schema migrations:** manifest-driven (not semantic diff detection).
+  **Automatic at runtime:** when a `HiveRepositoryBase` subclass declares
+  `schema`, every `getBox()` runs `HiveSchemaMigratorService.ensureSchema`
+  (unless `HIVE_SCHEMA_MIGRATIONS=false`): first adoption writes metadata or runs
+  migrators; fingerprint mismatch runs `migrate ?? cleanup` and updates
+  metadata only on success. **Manual when shape changes:** bump manifest `spec`,
+  regenerate fingerprints, extend migrator/tests, run fingerprint scripts; cite
+  [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md)
+  (section *When migrations run automatically*).
 - **Render / FastAPI / deploy** (only if touched): env contract, timeouts, auth assumptions; never leak secrets into artifacts.
 
 ### Cursor host adapter

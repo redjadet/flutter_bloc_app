@@ -27,6 +27,20 @@ class HiveService {
   _BoxMutex _mutexFor(final String boxName) =>
       _boxMutexes.putIfAbsent(boxName, _BoxMutex.new);
 
+  /// Runs [action] under the same per-box mutex used by open/close/delete.
+  ///
+  /// Exposed for higher-level box workflows (e.g. schema ensures) to prevent
+  /// interleaving writes for the same box.
+  Future<T> withBoxLock<T>(
+    final String boxName,
+    final Future<T> Function() action,
+  ) {
+    if (boxName.isEmpty) {
+      throw ArgumentError('Box name cannot be empty');
+    }
+    return _mutexFor(boxName).run(action);
+  }
+
   /// Initializes Hive with encryption.
   ///
   /// This method is safe to call multiple times - it will only initialize once.
@@ -113,6 +127,22 @@ class HiveService {
     final String name, {
     final bool encrypted = true,
   }) async {
+    return openBoxAndRun<Box<dynamic>>(
+      name,
+      encrypted: encrypted,
+      action: (final box) async => box,
+    );
+  }
+
+  /// Opens a box and runs [action] while holding the per-box mutex.
+  ///
+  /// Use this when callers must avoid interleaving with close/delete for the
+  /// same box (e.g. schema ensure + reads).
+  Future<T> openBoxAndRun<T>(
+    final String name, {
+    required final Future<T> Function(Box<dynamic> box) action,
+    final bool encrypted = true,
+  }) async {
     if (name.isEmpty) {
       throw ArgumentError('Box name cannot be empty');
     }
@@ -123,9 +153,13 @@ class HiveService {
       );
     }
 
-    return _mutexFor(
-      name,
-    ).run(() => _openBoxInternal(name, encrypted: encrypted));
+    return _mutexFor(name).run(() async {
+      final Box<dynamic> box = await _openBoxInternal(
+        name,
+        encrypted: encrypted,
+      );
+      return action(box);
+    });
   }
 
   Future<Box<dynamic>> _openBoxInternal(
