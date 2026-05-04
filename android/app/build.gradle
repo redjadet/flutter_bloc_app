@@ -69,7 +69,7 @@ flutter {
 
 dependencies {
     implementation "androidx.sqlite:sqlite:2.6.2"
-    implementation "net.zetetic:sqlcipher-android:4.14.1"
+    implementation "net.zetetic:sqlcipher-android:4.15.0"
 }
 
 afterEvaluate {
