@@ -12,10 +12,8 @@ alwaysApply: false
 
 ## Execution
 
-- Default workflow is Plan -> Execute -> Verify -> Report.
-- Closed-loop: keep going end-to-end; ask only on hard blockers (missing credentials/tooling, unsafe ambiguity below 95% confidence, user-owned product decision).
-- Plan once (<=10 lines), then execute. Avoid re-planning chatter.
-- Proof-first: confidence comes from running the smallest honest repo entrypoint.
+- Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
+- Proof-first: confidence from smallest honest repo entrypoint.
 
 ## Context budget
 
@@ -28,7 +26,7 @@ alwaysApply: false
 - Don't change files until at least 95% confident in goal/scope/approach.
 - Surgical diff: each changed line traces to request or required validation/doc update.
 - Treat AI code as draft until problem-fit, simplification, security, performance, edge-case, error-pattern, dependency, naming, and testing review pass.
-- Self-verify before report vs request, changed files, proof, blockers, risk.
+- Self-verify before report: request, changed files, proof, blockers, risk.
 
 ## Repo-first
 

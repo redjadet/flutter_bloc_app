@@ -1,13 +1,13 @@
 # AI Code Review Protocol
 
-AI code is draft until review gate passes. Before report: self-verify output vs request, diff, proof, blockers, residual risks.
+AI code = draft until review gate passes. Before report: self-verify vs request, diff, proof, blockers, residual risks.
 
 Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-Review gate before normal validation. Complements automated checks; does not replace them.
+Review gate before normal validation. Complements checks; not replacement.
 
 Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for source layout. If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). [`agents_quick_reference.md`](agents_quick_reference.md) is command lookup.
 
@@ -54,7 +54,7 @@ Use when reviewing AI-written diffs or adding helper scanners. Goal: high-impact
 
 Do in order:
 
-1. **Checks:** Apply the review checks above.
+1. **Checks:** Apply review checks above.
 2. **Goal:** If request is vague, define success criteria and smallest verifiable slice.
 3. **Diff:** Review changed files/generated artifacts.
 4. **Verify:** Run smallest honest validation command (route via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
@@ -71,8 +71,8 @@ Dependency changes: justify package/upgrade, check existing deps first, and don�
 
 Widget identity (keys) invariants:
 
-- In `ListView.builder`, `ListView.separated`, sliver builders, and similar, **rows must have a stable `Key` from durable id** (not index) when the list can reorder/filter/insert/delete.
-- In `AnimatedSwitcher` and similar mode-switching widgets, **the child must have explicit identity** (for example, `KeyedSubtree(key: ValueKey('mode'), child: …)`) so Flutter doesn't reuse the wrong `Element`.
+- In `ListView.builder`, `ListView.separated`, sliver builders, and similar, **rows must have stable `Key` from durable id** (not index) when list can reorder/filter/insert/delete.
+- In `AnimatedSwitcher` and similar mode-switching widgets, **child must have explicit identity** (like, `KeyedSubtree(key: ValueKey('mode'), child: …)`) so Flutter doesn't reuse wrong `Element`.
 - Guardrail: `./tool/check_widget_identity.sh` (wired into `./bin/checklist`; `./bin/checklist-fast` runs it for local tooling/docs changes that include Dart tooling files).
 - Suppress only with reason: `// widget_identity:ignore <reason>` on same line or line above flagged construct.
 
