@@ -1,4 +1,6 @@
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -30,6 +32,16 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
 
   @override
   String get boxName => 'settings';
+
+  String get _schemaNamespace => 'settings:$key';
+
+  @override
+  HiveBoxSchema? get schema => HiveBoxSchema(
+    boxName: boxName,
+    namespace: _schemaNamespace,
+    fingerprint: hiveSchemaFingerprints[_schemaNamespace] ?? 'dev-untracked',
+    cleanup: _cleanupInvalidOwnedValue,
+  );
 
   /// Loads the value from Hive with validation and error handling.
   Future<T?> load() async => StorageGuard.run<T?>(
@@ -101,4 +113,36 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
     },
     fallback: () {},
   );
+
+  Future<void> _cleanupInvalidOwnedValue(
+    final Box<dynamic> box, {
+    required final String? fromFingerprint,
+  }) async {
+    final dynamic storedValue = box.get(key);
+    if (storedValue == null) {
+      return;
+    }
+    if (storedValue is! String || storedValue.isEmpty) {
+      await safeDeleteKey(box, key);
+      return;
+    }
+    final T? parsed;
+    try {
+      parsed = fromString(storedValue);
+    } on Exception {
+      await safeDeleteKey(box, key);
+      return;
+    }
+    if (parsed == null) {
+      await safeDeleteKey(box, key);
+      return;
+    }
+    final validator = validateValue;
+    if (validator case final validate?) {
+      final String? validationError = validate(parsed);
+      if (validationError != null) {
+        await safeDeleteKey(box, key);
+      }
+    }
+  }
 }

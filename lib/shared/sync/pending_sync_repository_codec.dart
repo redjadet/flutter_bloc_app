@@ -21,6 +21,9 @@ class _StoredPendingOperation {
 }
 
 extension on PendingSyncRepository {
+  static const String _deadLetterPrefix = 'dead_letter:';
+  static const String _metaKeyFingerprints = '__meta__schema_fingerprints';
+
   _PendingOperationsReadResult _readOperations(
     final Map<dynamic, dynamic> entries,
   ) {
@@ -29,6 +32,13 @@ extension on PendingSyncRepository {
         <_StoredPendingOperation>[];
 
     for (final MapEntry<dynamic, dynamic> entry in entries.entries) {
+      if (entry.key == _metaKeyFingerprints) {
+        continue;
+      }
+      if (entry.key is String &&
+          (entry.key as String).startsWith(_deadLetterPrefix)) {
+        continue;
+      }
       final dynamic value = entry.value;
       if (value is! Map<dynamic, dynamic>) {
         malformedKeys.add(entry.key);

@@ -32,6 +32,9 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 | Scan for AI-generated-code smells (high-signal helper) | `./tool/check_ai_generated_code_smells.sh` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
+| Hive schema fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
+| Strict Hive schema input drift check | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
+| Hive migrations at runtime | Non-null `HiveRepositoryBase.schema` → `getBox()` calls `ensureSchema` (per-box lock); kill: `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Manifest/spec/fingerprint regen still manual when stored shape changes. | [`offline_first/hive_schema_migrations.md#when-migrations-run-automatically`](offline_first/hive_schema_migrations.md#when-migrations-run-automatically) |
 
 Fastlane: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
@@ -120,6 +123,7 @@ Cold-start fit:
   [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 - Offline-first:
   [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md),
+  [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md),
   [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
 - Supabase Edge / chat proxy:
   [`../supabase/README.md`](../supabase/README.md)

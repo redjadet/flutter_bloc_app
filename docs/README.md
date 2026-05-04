@@ -53,6 +53,12 @@ Source-of-truth docs for Flutter BLoC app.
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 
+### Offline-first and local storage
+
+- [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md)
+- [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md)
+- [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
+
 ### Setup, secrets, and integrations
 
 - [`firebase_setup.md`](firebase_setup.md)

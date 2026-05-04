@@ -67,8 +67,8 @@ class HiveCounterRepositoryWatchHelper {
     if (cached != null) {
       emitSnapshot(cached);
     }
-    unawaited(_watchState.loadAndEmitInitial());
-    unawaited(_startBoxWatch());
+    unawaited(_watchState.loadAndEmitInitial().catchError((_) {}));
+    unawaited(_startBoxWatch().catchError((_) {}));
   }
 
   /// Handles when a listener unsubscribes from the watch stream.
@@ -123,7 +123,7 @@ class HiveCounterRepositoryWatchHelper {
         cancelOnError: false, // We handle errors manually
       );
       _subscriptionManager.register(_boxSubscription);
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'Failed to start Hive box watch',
         error,
