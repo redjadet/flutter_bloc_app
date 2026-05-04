@@ -9,11 +9,7 @@ Use at non-trivial task start and before marking complete.
 
 Default path: **Plan -> Execute -> Verify -> Report**.
 
-Closed-loop default:
-
-- Plan once (<=10 lines), then execute end-to-end.
-- Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
-- Keep context tight: targeted search + narrow reads.
+Closed-loop: plan once (<=10 lines). Ask only hard blockers. Keep context tight.
 
 1. **Plan:** Start from repo docs, not host assumptions.
 2. **Plan:** Use `AGENTS.md` as map and `docs/agent_knowledge_base.md` as source-of-truth layout.
@@ -30,12 +26,14 @@ Closed-loop default:
 11. **Execute:** Update DI, routes, l10n, and codegen when touched.
 12. **Execute:** Widget-test viewport sizing uses `WidgetTester.view`, not
     deprecated `tester.binding.window`.
-13. **Execute:** Repeated struggle => add missing repo capability: doc, fixture, test, script, UI proof, log helper, validation check.
+13. **Execute:** Repeated struggle => add repo capability (doc/fixture/test/script/UI proof/log helper/validation check).
 14. **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
-15. **Verify:** Apply AI review gate from `docs/ai_code_review_protocol.md`.
-16. **Verify:** Run smallest matching repo validation command.
-17. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
-18. **Report:** don't mark work complete without proof that matches scope.
+15. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`.
+16. **Verify:** Run smallest matching repo validation.
+17. **Verify:** Self-verify vs request + changed files + proof + blockers + residual risk.
+18. **Report:** don't mark complete without proof matching scope.
+
+Required phrase (guard): Self-verify final response vs request, changed files, proof, blockers, residual risk.
 
 Validation picks:
 
@@ -64,16 +62,13 @@ Codex host rules:
 
 Use this section before delegating or spawning parallel work.
 
-- Delegate only when bounded parallelism materially improves quality, speed, or context hygiene.
-- Default to fewest subagents that materially improve result.
-- Keep one concrete goal per subagent.
-- Define owned scope, expected output, validation target before delegation.
-- Keep file ownership disjoint for write-capable subagents.
-- don't delegate immediate blocking task if main agent needs that answer to move critical path.
-- don't let subagents invent parallel workflow, expand scope, or own shared architecture decisions.
-- Keep centralized lifecycle/memory-management on main agent by default. Delegate narrow read-only audits, focused tests, or disjoint docs only.
-- Use `tasks/codex/todo.md` for main task plan; subagent work supports that plan, not parallel plan.
-- Wait on subagents only when their output is current blocker.
-- Treat subagent output as draft. Main agent reviews, integrates, validates.
+- Delegate only when it materially improves quality/speed/risk.
+- Fewest subagents that help. One goal per subagent.
+- Define scope + expected output + validation target up front.
+- Avoid multi-writer file edits. Default read-only.
+- don't delegate current blocker if main agent needs answer to move critical path.
+- don't let subagents expand scope or own shared architecture decisions.
+- Lifecycle/memory-management stays main-agent by default.
+- Subagent output = draft. Main agent integrates + validates.
 
 Repo canon wins over host-local delegation habits.

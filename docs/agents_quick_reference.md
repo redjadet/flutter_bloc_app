@@ -1,6 +1,6 @@
 # Agent Quick Reference
 
-Commands + routing lookup. Convenience only. Map: [`AGENTS.md`](../AGENTS.md).
+Commands + routing lookup. Convenience. Map: [`AGENTS.md`](../AGENTS.md).
 Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review:
 [`ai_code_review_protocol.md`](ai_code_review_protocol.md).
 If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
@@ -69,11 +69,17 @@ under `tasks/cursor/team/<run-id>/`. Doctrine:
 - Bug fix -> reproduce/reason to root cause before code change.
 - Repeated failure => add repo capability: doc/test/fixture/script/route proof/log helper/validation check.
 - Verified reusable conclusion => file into durable repo memory; don't leave it chat-only.
-- Agent/docs change => semantic lint for stale plans, duplicate rules, and source/template contradictions.
+- Agent/docs change => semantic lint: stale plans, duplicate rules, source/template contradictions.
 - Non-trivial: compare approaches, pick lowest-regret, stop when extra work stops reducing real risk.
+- Use parallel or multi-agent work only when it clearly reduces calendar time or
+  risk; update existing skills instead of adding parallel copies when a skill can
+  own the workflow.
+- Keep routine communication concise; avoid chatty explanations unless requested.
 - UI/app work: prefer app-visible proof over logs-only claims.
 - Enforce invariants mechanically; keep host assets thin and synced from `tool/agent_host_templates/`.
 - Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
+- Fix newline/EOF lints by correcting file structure; don't use
+  `ignore_for_file: eol_at_end_of_file`.
 
 ## Host Adapters
 

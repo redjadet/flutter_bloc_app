@@ -113,7 +113,9 @@ This separation lets the cubit and UI remain testable without Firebase while the
 - Start with the **domain contract/model** under `lib/features/<feature>/domain/`.
 - Implement the contract in **data** (local/remote/offline-first) and register it in DI (`injector_registrations.dart` or `injector_factories.dart`).
 - Build a **Cubit/Bloc** that depends only on the domain contract, uses `CubitExceptionHandler` for async work, and respects lifecycle guards.
-- Create **responsive, platform-adaptive widgets** that invoke cubit methods and render `Equatable`/`freezed` states. Avoid putting business logic in widgets.
+- Create **responsive, platform-adaptive widgets** that invoke cubit methods and
+  render `Equatable`/`freezed` states. Avoid putting business logic in widgets;
+  keep `build()` pure.
 - For persistence or timers, rely on shared abstractions (`HiveService`, `SharedPreferencesMigrationService`, `TimerService`, `NetworkStatusService`) to keep layers consistent and testable.
 - Keep offline-first logic in the **data layer**; presentation can show pending
   state, but queueing, replay, and conflict resolution stay in repositories and
@@ -132,6 +134,8 @@ This separation lets the cubit and UI remain testable without Firebase while the
 - New Hive repositories extend `HiveRepositoryBase` or `HiveSettingsRepository<T>`.
 - Do not call `Hive.openBox` outside `lib/shared/storage/`.
 - `setState` is reserved for UI-only toggles; business state lives in cubits.
+- New user-visible features need an app entrypoint unless the owning doc says
+  route-only.
 - Async cubit operations use `CubitExceptionHandler`; clean up timers/streams in
   `close()`.
 

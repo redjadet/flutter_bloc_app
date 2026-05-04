@@ -16,6 +16,9 @@ This guide describes how to onboard a feature into the shared offline-first stac
 2. **Wrap with OfflineFirst repository**
    - Implement `<Feature>OfflineRepository` that composes the local + remote repos and implements `SyncableRepository`.
    - On `save`, write to Hive first, mark `synchronized: false`, generate `idempotencyKey`/`changeId`, and enqueue a `SyncOperation`.
+   - `PendingSyncRepository.enqueue` dedupes by entity type, idempotency key,
+     and best-effort user scope. Preserve those fields when adding new queued
+     mutations.
    - When remote calls fail, enqueue the operation and throw/return a feature-specific “queued” signal (e.g., `ChatOfflineEnqueuedException`) so cubits can treat it as a pending success instead of an error.
    - On `processOperation`:
      - **Critical**: Persist user-generated data locally BEFORE attempting remote call to prevent data loss if sync fails.
@@ -23,6 +26,8 @@ This guide describes how to onboard a feature into the shared offline-first stac
      - If user data doesn't exist locally yet, create and persist it first, then attempt remote call.
    - On `pullRemote`, merge remote snapshots when newer.
    - **Don’t overwrite:** When merging a remote watch stream into local, use a `_shouldApplyRemote`-style check so older remote never overwrites newer unsynced local. See [Don’t overwrite guide](dont_overwrite_guide.md).
+   - App resume sync stays debounced and flushes must not overlap; use
+     `BackgroundSyncCoordinator.flush()` instead of starting parallel sync work.
 3. **Register in DI + registry**
    - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `lib/core/di/injector_registrations.dart`.
 4. **Expose status (logs + Settings)**

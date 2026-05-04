@@ -2,7 +2,7 @@
 
 Use repo-local canon + shell entrypoints first. This bootstrap is map only;
 structured docs under `docs/` are system of record.
-Repo source map is root `AGENTS.md`; this file is the synced Codex host
+Repo source map is root `AGENTS.md`; this file is synced Codex host
 bootstrap template, copied to `~/.codex/AGENTS.md` and Codex worktrees.
 
 ## Read first
@@ -54,7 +54,7 @@ Details live in `docs/agents_quick_reference.md` and
 - Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork host doctrine unless capabilities differ.
 - Host-template changes validate `./tool/check_agent_asset_drift.sh` and
   `./tool/sync_agent_assets.sh --dry-run`.
-- don't invoke `./tool/request_codex_feedback.sh` from Codex unless user explicitly asks for second opinion or cross-host review.
+- Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user explicitly asks for second opinion or cross-host review.
 - Scale reasoning depth to task complexity; don't default max for local/low-risk work.
 
 Communication style:

@@ -1,6 +1,6 @@
 # Agent Knowledge Base
 
-Source of truth for how agents find/use repo knowledge. Goal: progressive disclosure; start from map, open only task-needed files.
+Source of truth: agent workflow + where truth lives. Goal: progressive disclosure; open only task-needed files.
 
 ## Core Beliefs
 
@@ -21,8 +21,6 @@ Source of truth for how agents find/use repo knowledge. Goal: progressive disclo
 
 ## Progressive Disclosure
 
-Don’t load the whole handbook up front.
-
 1. Read [`AGENTS.md`](../AGENTS.md) for map.
 2. Read this document for knowledge-base layout and harness rules.
 3. Read [`ai_code_review_protocol.md`](ai_code_review_protocol.md) for review gate
@@ -34,21 +32,18 @@ Don’t load the whole handbook up front.
 
 ## Adaptive Execution
 
-Scale process to task value; avoid max-depth, broad validation, or delegation by default.
+Scale process to task value. Avoid max-depth, broad validation, or delegation by default.
 
 1. Classify task by complexity, risk, scope, and uncertainty.
 2. Calibrate effort: local mechanical = light; cross-system/ambiguous/high-risk = deeper plan + review.
 3. Plan once (<=10 lines for normal tasks), then execute end-to-end.
 4. Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
-5. Do not edit until 95% confident in goal/scope/approach; ask until clear.
-6. For vague asks, name assumptions, success criteria, and the smallest verifiable slice before coding.
+5. don't edit until 95% confident in goal/scope/approach; ask until clear.
+6. For vague asks, name assumptions, success criteria, and smallest verifiable slice before coding.
 7. If interpretations change behavior/blast radius, surface them. Ask when needed; otherwise make lowest-regret call and record tradeoff.
 8. Non-trivial: compare 2-3 approaches; pick lowest-regret by correctness, maintainability, reversibility, blast radius, and failure tolerance.
-9. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure,
-   say so + narrow search space.
-10. Before report, critique own work: identify inputs/conditions that may
-    fail, weaknesses, assumptions, edge cases, scale, side effects, and
-    maintenance cost. Harden material risks.
+9. Debug root cause: reproduce/reason, isolate, fix cause, verify. If unsure: say so + narrow search.
+10. Before report, self-critique: failure inputs, weaknesses, assumptions, edge cases, scale, side effects. Harden material risks.
 11. Stop when value is met, major risks are handled, proof matches scope, and more work mostly adds cost.
 
 ## Agent Legibility
@@ -57,8 +52,8 @@ Agents reason over inspectable state. Make product/runtime/quality signals visib
 
 - Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
 - Prefer repo-local observability/log helpers over chat-only claims.
-- Keep fixtures, schemas, API examples, generated clients, and test harnesses versioned so Codex and Cursor see the same truth.
-- For UI/runtime work, expose the narrowest runnable surface first: route tile, demo control, smoke test, or fixture.
+- Keep fixtures, schemas, API examples, generated clients, and test harnesses versioned so Codex and Cursor see same truth.
+- For UI/runtime work, expose narrowest runnable surface first: route tile, demo control, smoke test, or fixture.
 - Prefer inspectable dependencies/abstractions. In-repo helpers earn their keep by centralizing instrumentation or invariants with tests.
 
 ## Missing Capability Loop
@@ -80,12 +75,11 @@ Examples:
 
 ## Memory Compounding
 
-Useful agent work should leave the next session smarter without growing a broad
-wiki.
+Goal: next session smarter, no bloated wiki.
 
 - Treat source docs, ADRs, plans, changes, tests, scripts, fixtures, and host
-  trackers as the compiled memory layer.
-- File reusable conclusions into the owning source doc, `docs/changes/`,
+  trackers as compiled memory layer.
+- File reusable conclusions into owning source doc, `docs/changes/`,
   `docs/plans/`, or [`../tasks/lessons.md`](../tasks/lessons.md). Keep
   transient execution state in host trackers.
 - Preserve source-of-truth boundaries: code/tests beat generated summaries;
@@ -93,10 +87,10 @@ wiki.
 - Do not dump chat transcripts or generic summaries into docs. Add only compact,
   cited, task-relevant facts that future agents can act on.
 - Prefer fat skills only for repeated, validated workflows with clear triggers,
-  write scope, tools, and quality bar. Do not add cron/autonomous behavior
+  write scope, tools, and quality bar. don't add cron/autonomous behavior
   without explicit user approval.
 - For large or fast-changing external corpora, use retrieval/search. For this
-  repo, prefer maps, `rg`, code-review-graph, and targeted validation over a
+  repo, prefer maps, `rg`, code-review-graph, and targeted validation over
   separate RAG layer.
 - Semantic lint during doc/agent changes: check for stale plans, duplicate
   rules, contradictions between [`AGENTS.md`](../AGENTS.md), source docs, and host templates,
@@ -175,7 +169,7 @@ chat = **Coordinator**; bounded `Task`s = **Specialists**.
 
 ### Benefit gate
 
-Run before broad edits/fan-out. Use team when >=2 indicators apply: blast
+Run before broad edits/fan-out. Use team when >=2 indicators: blast
 radius, cross-layer reading (presentation/domain/data/sync), high-risk logic
 (auth, sync, migrations, routing gates), separate implementation/review bars,
 or user asked plan + implement + verify. Use single for small/local/mechanical
@@ -191,7 +185,7 @@ Benefit: single - short reason
 
 Trivial edits may skip this or use `trivial - gate skipped`. Non-trivial =
 multi-step delivery, runtime behavior, DI/sync/routes/codegen, unknown blast
-radius, plan + implement + verify, or anything the gate could reasonably send
+radius, plan + implement + verify, or anything gate could reasonably send
 to team.
 
 ### Coordinator
@@ -202,12 +196,12 @@ Single owner of phase, artifacts, validation, tracker. Specialists return text.
 - If `team`, create `tasks/cursor/team/<run-id>/` (stable `run-id` = date + slug or UUID).
 - Spawn specialists with explicit **inline** context; never path-only prompts when upstream content is required.
 - Serialize dependent phases. Coordinator runs validation per
-  [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) and appends proof to the run’s review file.
+  [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) and appends proof to run’s review file.
 - Loop fixes through Implementer at most twice unless user extends; STOP and summarize otherwise.
 
 Artifacts under `tasks/cursor/team/<run-id>/`: goal, findings, plan,
 diff-summary or diff, and review files. Overwrite phase files
-on replan; append validation blocks only to the review file. If plan changes after
+on replan; append validation blocks only to review file. If plan changes after
 analysis, invalidate downstream outputs and rerun dependent phases. Never pass
 superseded path-only context.
 
@@ -242,8 +236,8 @@ Analyst lists, Implementer respects, Reviewer checks when touched:
 
 Runtime checklist: `agents-delivery-workflow`. Task spawn rules:
 `agents-meta-behavior`. Pointers: `agents-quick-reference`,
-`agents-cursor-integration`. Do not create `agents-team-*` skill files unless
-size forces a future split.
+`agents-cursor-integration`. don't create `agents-team-*` skill files unless
+size forces future split.
 
 ## Final Agent Contract
 
@@ -264,9 +258,9 @@ For Codex and Cursor, finished loop:
 Codex and Cursor should not grow separate operating doctrines.
 
 - Source docs own behavior. Host templates only summarize and route.
-- Root [`AGENTS.md`](../AGENTS.md) is the repo-local map.
-  `tool/agent_host_templates/codex/AGENTS.md` is the repo-managed Codex host
-  bootstrap template copied to `~/.codex/AGENTS.md` and optional Codex
+- Root [`AGENTS.md`](../AGENTS.md) is repo-local map.
+  [`tool/agent_host_templates/codex/AGENTS.md`](../tool/agent_host_templates/codex/AGENTS.md) is repo-managed Codex host
+  bootstrap template copied to ~/.codex/AGENTS.md and optional Codex
   worktrees.
 - When changing agent behavior, update owning source doc first.
 - If behavior affects command choice, update [`agents_quick_reference.md`](agents_quick_reference.md).
@@ -287,9 +281,9 @@ Knowledge base is validated by repo tooling:
 - `./tool/check_agent_asset_drift.sh` checks managed Cursor/Codex assets against
   repo templates.
 - `./bin/checklist` runs full gate; `./bin/checklist-fast` is local-only for clean trees or narrow docs/tooling changes.
-- `.original.md` compression backups are temporary. Delete after verifying active docs.
+- `.original.md` compression backups temporary. Delete after verifying active docs.
 
-New durable agent rule: update owning source doc first, then thin host templates, then validation if the rule needs mechanical check.
+New durable agent rule: update owning source doc first, then thin host templates, then validation if rule needs mechanical check.
 
 ## Doc Gardening
 
@@ -299,10 +293,10 @@ Agents garden docs as part of touched work, not separate memory dump.
 - If plan becomes obsolete, mark it historical or move durable decisions into
   ADR/source doc.
 - If doc contradicts code, trust code plus tests first, then repair doc.
-- If tracker notes contain reusable conclusions, move them to the owning source
-  doc, `docs/changes/`, or [`tasks/lessons.md`](../tasks/lessons.md) before closing the task.
+- If tracker notes contain reusable conclusions, move them to owning source
+  doc, `docs/changes/`, or [`tasks/lessons.md`](../tasks/lessons.md) before closing task.
 - If rule no longer earns its keep, remove it from host templates and keep
   source doc smaller.
 - Keep cleanup continuous/small. Prefer targeted guardrails/tiny refactors over periodic large "AI cleanup" sweeps.
-- Track golden principles in source docs or checks so agents do not re-litigate the same review comments.
+- Track golden principles in source docs or checks so agents don't re-litigate same review comments.
 - For broad doc-gardening sweeps, run targeted markdown/link checks; escalate to `./bin/checklist` when validation or agent policy changes materially.

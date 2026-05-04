@@ -1,6 +1,6 @@
 # Documentation index
 
-This folder contains the source-of-truth documentation for the Flutter BLoC app.
+Source-of-truth docs for Flutter BLoC app.
 
 ## Start here
 
@@ -11,8 +11,7 @@ This folder contains the source-of-truth documentation for the Flutter BLoC app.
 - **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **AI decision workbench**:
   [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed
-  decision demo with visible risk score, rationale, proof trail, and action
-  history.
+  decision demo: risk score, rationale, proof trail, action history.
 - **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
