@@ -8,6 +8,8 @@ Usage: sync_agent_assets.sh --dry-run | --apply
 Sync repo-managed Cursor and Codex adapter templates into ~/.cursor and ~/.codex.
 Templates live under tool/agent_host_templates/ by default (versioned in this
 repo), or set AGENT_TEMPLATES_ROOT to another directory.
+Root AGENTS.md is the repo source map; tool/agent_host_templates/codex/AGENTS.md
+is the Codex host bootstrap template copied to ~/.codex/AGENTS.md and worktrees.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 
