@@ -195,7 +195,7 @@ void main() {
       );
 
       await tester.tap(find.text(l10n.fcmDemoCopyToken));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(copiedText, 'fcm-token-1');
       expect(tester.takeException(), isNull);

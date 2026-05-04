@@ -18,7 +18,7 @@ Non-trivial work/delegation: **`flutter-bloc-app-delivery-workflow`**.
 
 Repo profile:
 
-- Flutter 3.41.8 / Dart 3.11.5
+- Flutter 3.41.9 / Dart 3.11.5
 - `Presentation -> Domain <- Data`
 - `GoRouter` routing
 - offline-first sync under `lib/shared/sync/`
