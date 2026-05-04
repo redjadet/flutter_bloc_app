@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
@@ -306,6 +307,34 @@ void main() {
     expect(pending.first.id, valid.id);
     expect(box.get('bad-op'), isNull);
   });
+
+  test(
+    'getPendingOperations ignores schema meta and dead-letter keys',
+    () async {
+      final SyncOperation valid = SyncOperation.create(
+        entityType: 'todo',
+        payload: <String, dynamic>{'title': 'valid'},
+        idempotencyKey: 'valid-key',
+      );
+      await repository.enqueue(valid);
+
+      final box = await repository.getBox();
+      await box.put(
+        HiveSchemaMigratorService.metaKeyFingerprints,
+        <String, String>{'pending_sync_operations:v1': 'fingerprint'},
+      );
+      await box.put('dead_letter:bad-op', <String, dynamic>{'error': 'bad'});
+
+      final List<SyncOperation> pending = await repository.getPendingOperations(
+        now: DateTime.now().toUtc(),
+      );
+
+      expect(pending, hasLength(1));
+      expect(pending.single.id, valid.id);
+      expect(box.get(HiveSchemaMigratorService.metaKeyFingerprints), isNotNull);
+      expect(box.get('dead_letter:bad-op'), isNotNull);
+    },
+  );
 
   test('prune removes malformed stored operations', () async {
     final box = await repository.getBox();

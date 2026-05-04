@@ -13,6 +13,12 @@ This guide describes how to onboard a feature into the shared offline-first stac
 1. **Define local store**
    - Create a Hive-backed repository/data source under `lib/features/<feature>/data/` extending `HiveRepositoryBase`.
    - Add sync metadata fields (e.g., `changeId`, `lastSyncedAt`, `synchronized`) to the domain model and regen code with `dart run build_runner build --delete-conflicting-outputs`.
+   - If the Hive stored DTO/map/json shape changes, update the manifest-driven
+     schema migration contract; see [`hive_schema_migrations.md`](hive_schema_migrations.md).
+     After you declare `schema` and ship migrators, **`getBox()` applies
+     `ensureSchema` automatically** on each open (fingerprint compare + optional
+     `migrate`/`cleanup`); bumping `spec`, regenerating fingerprints, and tests
+     stays a deliberate change when semantics or payloads change.
 2. **Wrap with OfflineFirst repository**
    - Implement `<Feature>OfflineRepository` that composes the local + remote repos and implements `SyncableRepository`.
    - On `save`, write to Hive first, mark `synchronized: false`, generate `idempotencyKey`/`changeId`, and enqueue a `SyncOperation`.
@@ -36,6 +42,9 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests when testing sync-related flows.
 5. **Tests**
    - Unit tests for local store serialization + migrations.
+   - Hive schema migration tests cover manifest fingerprints, idempotency,
+     failed-migrator fingerprint behavior, malformed legacy payloads, and
+     metadata/temp/dead-letter key filtering where relevant.
    - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
    - Bloc/widget tests for sync flows; Sync Diagnostics (Settings, dev/qa) for manual inspection.
    - **Reference patterns**:

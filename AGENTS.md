@@ -45,6 +45,8 @@ or user-owned decision. Non-trivial work tracks plan/proof in
 - Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md),
   [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
 - Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md),
+  [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
+  (runtime `getBox()` → `ensureSchema`; manifest when shape changes),
   [`docs/engineering/delayed_work_guide.md`](docs/engineering/delayed_work_guide.md)
 - Plans/history: [`docs/plans/README.md`](docs/plans/README.md),
   [`docs/changes/README.md`](docs/changes/README.md),

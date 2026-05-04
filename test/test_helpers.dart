@@ -28,6 +28,7 @@ import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/storage/shared_preferences_migration_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
@@ -674,6 +675,9 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   String get boxName => 'fake-pending-sync-box';
 
   @override
+  HiveBoxSchema? get schema => null;
+
+  @override
   Stream<void> get onOperationEnqueued => Stream<void>.empty();
 
   @override
@@ -745,7 +749,12 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 Future<HiveService> createHiveService() async {
   final InMemorySecretStorage storage = InMemorySecretStorage();
   final HiveKeyManager keyManager = HiveKeyManager(storage: storage);
-  final HiveService hiveService = HiveService(keyManager: keyManager);
+  final HiveService hiveService = HiveService(
+    keyManager: keyManager,
+    // Tests call Hive.init(...) directly (see setupHiveForTesting). Avoid
+    // platform-specific initHive() that re-points Hive to app support dirs.
+    initializeHiveStorage: () async => true,
+  );
   await hiveService.initialize();
   return hiveService;
 }
@@ -763,6 +772,9 @@ Future<HiveService> createHiveService() async {
 Future<void> cleanupHiveBoxes(List<String> boxNames) async {
   for (final boxName in boxNames) {
     try {
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<dynamic>(boxName).close();
+      }
       await Hive.deleteBoxFromDisk(boxName);
     } catch (_) {
       // Box might not exist, ignore

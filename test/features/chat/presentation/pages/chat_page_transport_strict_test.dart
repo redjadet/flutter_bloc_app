@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
@@ -118,6 +119,9 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
 }
 
 class _FakePendingSyncRepository implements PendingSyncRepository {
+  @override
+  HiveBoxSchema? get schema => null;
+
   @override
   String get boxName => 'fake-pending-sync';
 

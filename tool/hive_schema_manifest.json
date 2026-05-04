@@ -1,0 +1,47 @@
+{
+  "boxes": [
+    {
+      "name": "search_cache:query_*",
+      "spec": "search_cache:v1{query_*:list<search_result_json>|json_string_list,recent_queries:list<string>}",
+      "inputs": [
+        "lib/features/search/data/hive_search_cache_repository.dart",
+        "lib/features/search/domain/search_result.dart"
+      ]
+    },
+    {
+      "name": "settings:preferred_locale_code",
+      "spec": "settings:v1{preferred_locale_code:string(tag)}",
+      "inputs": [
+        "lib/features/settings/data/hive_locale_repository.dart",
+        "lib/shared/storage/hive_settings_repository.dart"
+      ]
+    },
+    {
+      "name": "settings:theme_mode",
+      "spec": "settings:v1{theme_mode:enum(light|dark|system)}",
+      "inputs": [
+        "lib/features/settings/data/hive_theme_repository.dart",
+        "lib/shared/storage/hive_settings_repository.dart"
+      ]
+    },
+    {
+      "name": "todo_list:todos",
+      "spec": "todo_list:v2{todos:list<todo_item_map>|json_string_list; tmp:__tmp__todos_migrated}",
+      "inputs": [
+        "lib/features/todo_list/data/hive_todo_repository.dart",
+        "lib/features/todo_list/data/hive_todo_repository_migration.dart",
+        "lib/features/todo_list/data/todo_item_dto.dart",
+        "lib/features/todo_list/domain/todo_item.dart"
+      ]
+    },
+    {
+      "name": "counter:v1",
+      "spec": "counter:v2{count:int>=0,last_changed:ms,last_synced_at:ms,synchronized:bool,user_id:string,change_id:string}",
+      "inputs": [
+        "lib/features/counter/data/hive_counter_repository.dart",
+        "lib/features/counter/data/hive_counter_repository_migration.dart",
+        "lib/features/counter/domain/counter_snapshot.dart"
+      ]
+    }
+  ]
+}
