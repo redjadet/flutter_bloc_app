@@ -127,7 +127,7 @@ dev_dependencies:
   google_sign_in_mocks: ^0.3.0
   integration_test:
     sdk: flutter
-  json_serializable: 6.11.2
+  json_serializable: ^6.13.2
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
