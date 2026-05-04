@@ -36,22 +36,22 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
             changed = self.module.replace_required(
                 target,
                 self.module.AGENTS_TOOLCHAIN_PATTERN,
-                r"\g<1>3.41.8\g<2>3.11.5\g<3>",
+                r"\g<1>3.41.9\g<2>3.11.5\g<3>",
             )
 
             self.assertTrue(changed)
             self.assertEqual(
                 target.read_text(encoding="utf-8"),
-                "Flutter 3.41.8 / Dart 3.11.5. Clean Architecture:\n",
+                "Flutter 3.41.9 / Dart 3.11.5. Clean Architecture:\n",
             )
 
     def test_extract_version_reads_readme_badge_marker(self):
         text = (
-            "[![Flutter](https://img.shields.io/badge/Flutter-3.41.8-blue.svg)]"
+            "[![Flutter](https://img.shields.io/badge/Flutter-3.41.9-blue.svg)]"
             "(https://flutter.dev)\n"
         )
 
-        self.assertEqual(self.module._extract_version(text, "Flutter"), "3.41.8")
+        self.assertEqual(self.module._extract_version(text, "Flutter"), "3.41.9")
 
 
 if __name__ == "__main__":
