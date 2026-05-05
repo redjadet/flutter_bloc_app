@@ -96,6 +96,37 @@ Goal: next session smarter, no bloated wiki.
   rules, contradictions between [`AGENTS.md`](../AGENTS.md), source docs, and host templates,
   and reusable conclusions still stranded in task notes.
 
+## Context Navigation Ladder
+
+Goal: full-codebase awareness with bounded token spend.
+
+Use this order for non-trivial existing-code work when the exact file is not
+already known:
+
+1. **Map layer:** read the repo map and task-specific source docs through
+   [`AGENTS.md`](../AGENTS.md), this knowledge base, and
+   [`README.md`](README.md).
+2. **Memory layer:** search durable repo memory first: owning docs,
+   `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md),
+   and current host tracker. Use chat memory only as a pointer; verify
+   drift-prone facts in the repo before relying on them.
+3. **Structural layer:** query `code-review-graph` or run
+   [`../tool/refresh_code_review_graph.sh`](../tool/refresh_code_review_graph.sh)
+   `--status-only` / `--if-needed` to narrow files, symbols, callers, callees,
+   and impact before broad reads.
+4. **Raw-file layer:** targeted raw-file reads only for files needed to edit or
+   verify the narrowed slice. Fall back to `rg` when the graph is missing,
+   stale, too coarse, or direct search is cheaper.
+
+Do not import whole chat transcripts or create a parallel vault for this repo.
+The repo already owns durable memory; external tools may assist retrieval, but
+code/tests/source docs remain the system of record.
+
+Related:
+
+- Rationale + scope note: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-05-05_codex_context_navigation_ladder.md)
+- Graph usage + install details: [`code_review_graph.md`](code_review_graph.md)
+
 ## System Of Record Layout
 
 | Area | Source | Status | Use when |
@@ -108,6 +139,7 @@ Goal: next session smarter, no bloated wiki.
 | Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), [`adr/`](adr/) | Current design | Touching structure, routing, DI, layers, or feature seams. |
 | Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Current gates | Reviewing risk, test depth, and guardrails. |
 | Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Current patterns | Touching async, subscriptions, timers, retry, sync, or background work. |
+| Code graph | [`code_review_graph.md`](code_review_graph.md) | Optional local structural cache | Non-trivial existing-code exploration where graph queries can reduce raw file reads. |
 | Hive schema migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Current storage migration runbook | Changing Hive DTO/map/json stored shape, manifest/spec, fingerprints, migrators, or migration tests. Read [When migrations run automatically](offline_first/hive_schema_migrations.md#when-migrations-run-automatically): `getBox()` runs `ensureSchema` when `HiveRepositoryBase.schema` is set; fingerprint bumps and payload rewrites are still manifest- and code-driven. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | Current map | Adding or changing end-to-end flows. |
 | Plans | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md) | Active or historical as labeled | Complex work, execution contracts, and completed rationale. |

@@ -24,14 +24,15 @@ Details live in `docs/agents_quick_reference.md` and
 ## Default loop
 
 1. **Plan:** Understand business goal; open only relevant docs.
-2. **Plan:** Plan once (<=10 lines for normal tasks), then execute end-to-end.
-3. **Plan:** Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
-4. **Plan:** For non-trivial work, keep plan and verification in `tasks/codex/todo.md`.
-5. **Execute:** Implement inside existing repo seams.
-6. **Verify:** Apply AI review gate before trusting draft output.
-7. **Verify:** Run smallest honest repo validation.
-8. **Verify:** Self-check final response vs request, diff, proof, blockers, risk.
-9. **Report:** Prove result before calling work done.
+2. **Plan:** For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+3. **Plan:** Plan once (<=10 lines for normal tasks), then execute end-to-end.
+4. **Plan:** Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
+5. **Plan:** For non-trivial work, keep plan and verification in `tasks/codex/todo.md`.
+6. **Execute:** Implement inside existing repo seams.
+7. **Verify:** Apply AI review gate before trusting draft output.
+8. **Verify:** Run smallest honest repo validation.
+9. **Verify:** Self-check final response vs request, diff, proof, blockers, risk.
+10. **Report:** Prove result before calling work done.
 
 ## Operating defaults
 

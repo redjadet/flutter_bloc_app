@@ -30,12 +30,15 @@ Plan once. Execute end-to-end. Verify. Report proof.
 Ask only on blockers: credentials/tooling, unsafe ambiguity below 95% confident,
 or user-owned decision. Non-trivial work tracks plan/proof in
 `tasks/codex/todo.md` or `tasks/cursor/todo.md`.
+For non-trivial existing-code work, use context ladder: map docs -> durable
+memory -> code-review-graph -> targeted raw files.
 
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
+- Code graph: [`docs/code_review_graph.md`](docs/code_review_graph.md)
 - Docs index: [`docs/README.md`](docs/README.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
 - Architecture: [`docs/architecture_details.md`](docs/architecture_details.md),

@@ -18,6 +18,7 @@ alwaysApply: false
 ## Context budget
 
 - Read smallest blocks needed; prefer targeted search + narrow reads; avoid loading whole files/directories.
+- For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 - Avoid redundant restatement of repo policy; link to canon docs instead.
 
 ## Quality bar

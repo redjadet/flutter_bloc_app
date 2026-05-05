@@ -9,6 +9,7 @@ Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference
 Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask only hard blockers.
 
 - **Plan**: non-trivial -> write plan + verification in `tasks/cursor/todo.md`.
+- **Plan**: non-trivial existing-code work -> context ladder: map docs, durable memory, code-review-graph, targeted raw files.
 - **Plan**: delegation/parallelism -> `agents-meta-behavior`.
 - **Plan**: Do not change files until at least 95% confident in goal, scope, approach.
 - **Execute**: reuse seams; keep `Presentation -> Domain <- Data`.

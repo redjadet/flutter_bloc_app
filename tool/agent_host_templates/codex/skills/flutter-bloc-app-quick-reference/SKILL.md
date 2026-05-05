@@ -28,6 +28,7 @@ Fast reminders:
 - default loop -> Plan, Execute, Verify, Report
 - classify complexity / risk / scope / uncertainty before scaling depth
 - non-trivial work -> `tasks/codex/todo.md`
+- context ladder -> map docs, durable memory, code-review-graph, targeted raw files
 - repeated user correction -> `tasks/lessons.md`
 - reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`
 - agent docs/map drift -> `./tool/check_agent_knowledge_base.sh`
