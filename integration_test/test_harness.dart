@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
@@ -162,6 +163,10 @@ Future<void> configureIntegrationTestDependencies({
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
   final IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
 }) async {
+  if (authMode == IntegrationAuthMode.realFirebaseAuth) {
+    // Real auth uses plugin-backed FirebaseAuth; Firebase must exist first.
+    await FirebaseBootstrapService.initializeFirebase();
+  }
   PackageInfo.setMockInitialValues(
     appName: 'Flutter Demo',
     packageName: 'com.example.flutter_bloc_app',
@@ -170,9 +175,10 @@ Future<void> configureIntegrationTestDependencies({
     buildSignature: '',
   );
 
-  // RTDB repos use FirebaseAuth.instanceFor(app), not GetIt mock auth — skip
-  // remotes so Hive-only offline-first paths match integration expectations.
-  integrationTestOmitFirebaseRemoteRepositories = true;
+  // RTDB repos rely on plugin-backed auth to produce valid RTDB credentials.
+  // Under mock auth they can hang/time out; omit only in that mode.
+  integrationTestOmitFirebaseRemoteRepositories =
+      authMode == IntegrationAuthMode.mockFirebaseAuth;
 
   await test_helpers.setupTestDependencies(
     test_helpers.TestSetupOptions(

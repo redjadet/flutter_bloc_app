@@ -6,6 +6,7 @@ void main() {
   group('createRemoteRepositoryOrNull', () {
     tearDown(() {
       debugDefaultTargetPlatformOverride = null;
+      integrationTestOmitFirebaseRemoteRepositories = false;
     });
 
     test('skips Firebase remote repositories on macOS desktop debug', () {
@@ -18,6 +19,20 @@ void main() {
 
       expect(shouldSkipFirebaseRemoteRepositories, isTrue);
       expect(repository, isNull);
+    });
+
+    test('does not skip non-macOS debug remotes by default', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      expect(shouldSkipFirebaseRemoteRepositories, isFalse);
+    });
+
+    test('honors integration harness RTDB omit flag only when set', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      integrationTestOmitFirebaseRemoteRepositories = true;
+
+      expect(shouldSkipFirebaseRemoteRepositories, isTrue);
     });
   });
 }

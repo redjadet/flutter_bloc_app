@@ -37,6 +37,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   bool _remoteRestartScheduled = false;
   TimerDisposable? _remoteRestartHandle;
 
+  @visibleForTesting
+  bool get hasRemoteRepository => _remoteRepository != null;
+
   @override
   String get entityType => todoEntity;
 
@@ -133,7 +136,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       _generateChangeId,
     );
     await _localRepository.save(normalized);
-    if (!_hasRemoteRepository) {
+    if (!hasRemoteRepository) {
       return;
     }
     await _syncSaveToRemote(normalized);
@@ -146,7 +149,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
     await _localRepository.delete(normalizedId);
-    if (!_hasRemoteRepository) {
+    if (!hasRemoteRepository) {
       return;
     }
     await _syncDeleteToRemote(normalizedId);
@@ -197,8 +200,6 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       );
     }
   }
-
-  bool get _hasRemoteRepository => _remoteRepository != null;
 
   bool _isDeleteOperation(final SyncOperation operation) =>
       operation.payload.containsKey('deleted') &&
