@@ -5,6 +5,8 @@ import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import '../../test_helpers.dart' as test_helpers;
 
 void main() {
@@ -363,6 +365,151 @@ void main() {
 
     expect(pruned, 1);
     expect(box.get('custom-storage-key'), isNull);
+  });
+
+  group('schema migrate: pending_sync_operations:v1', () {
+    test(
+      'quarantines malformed legacy ops to dead_letter:<originalKey> then deletes originals',
+      () async {
+        await hiveService.openBoxAndRun<void>(
+          'pending_sync_operations',
+          action: (final box) async {
+            await box.put('not-a-map', 123);
+            await box.put('missing-fields', <String, dynamic>{
+              'entityType': 'x',
+            });
+            final SyncOperation legacyIot = SyncOperation.create(
+              entityType: 'iot_demo',
+              payload: <String, dynamic>{'deviceId': 'd1', 'action': 'connect'},
+              idempotencyKey: 'k1',
+            );
+            await box.put('legacy-iot', legacyIot.toJson());
+          },
+        );
+
+        // Triggers ensureSchema + migration.
+        final List<SyncOperation> pending = await repository
+            .getPendingOperations(now: DateTime.now().toUtc());
+        expect(pending, isEmpty);
+
+        final box = await repository.getBox();
+        expect(box.get('not-a-map'), isNull);
+        expect(box.get('missing-fields'), isNull);
+        expect(box.get('legacy-iot'), isNull);
+
+        final dynamic dl1 = box.get('dead_letter:not-a-map');
+        expect(dl1, isA<Map>());
+        expect((dl1 as Map)['schema'], equals('dead_letter:v1'));
+        expect(dl1['originalKey'], equals('not-a-map'));
+        expect(dl1['error'], equals('value_not_map'));
+        expect(dl1['originalValue'], equals(123));
+        expect(dl1['quarantinedAt'], isA<String>());
+
+        final dynamic dl2 = box.get('dead_letter:missing-fields');
+        expect(dl2, isA<Map>());
+        expect((dl2 as Map)['schema'], equals('dead_letter:v1'));
+        expect(dl2['originalKey'], equals('missing-fields'));
+        expect(dl2['error'], equals('sync_operation_parse_failed'));
+
+        final dynamic dl3 = box.get('dead_letter:legacy-iot');
+        expect(dl3, isA<Map>());
+        expect((dl3 as Map)['schema'], equals('dead_letter:v1'));
+        expect(dl3['originalKey'], equals('legacy-iot'));
+        expect(dl3['error'], equals('iot_demo_missing_user_id'));
+        expect(dl3['originalValue'], isA<Map>());
+
+        final Map<dynamic, dynamic>? meta =
+            box.get(HiveSchemaMigratorService.metaKeyFingerprints)
+                as Map<dynamic, dynamic>?;
+        expect(meta?['pending_sync_operations:v1'], isNotNull);
+      },
+    );
+
+    test(
+      'migration rerun is idempotent and does not overwrite dead-letter',
+      () async {
+        await hiveService.openBoxAndRun<void>(
+          'pending_sync_operations',
+          action: (final box) async {
+            await box.put('not-a-map', 123);
+          },
+        );
+
+        await repository.getPendingOperations(now: DateTime.now().toUtc());
+        final box = await repository.getBox();
+        final Map<dynamic, dynamic> first =
+            box.get('dead_letter:not-a-map') as Map<dynamic, dynamic>;
+        final String quarantinedAt1 = first['quarantinedAt'] as String;
+
+        // Re-run ensureSchema. Dead-letter should be preserved.
+        await repository.getPendingOperations(now: DateTime.now().toUtc());
+        final Map<dynamic, dynamic> second =
+            box.get('dead_letter:not-a-map') as Map<dynamic, dynamic>;
+        expect(second['quarantinedAt'], equals(quarantinedAt1));
+      },
+    );
+
+    test('migration does not emit onOperationEnqueued', () async {
+      await hiveService.openBoxAndRun<void>(
+        'pending_sync_operations',
+        action: (final box) async {
+          await box.put('not-a-map', 123);
+        },
+      );
+
+      final List<void> emissions = <void>[];
+      final subscription = repository.onOperationEnqueued.listen(emissions.add);
+
+      await repository.getPendingOperations(now: DateTime.now().toUtc());
+      await Future<void>.delayed(Duration.zero);
+      expect(emissions, isEmpty);
+
+      await subscription.cancel();
+    });
+
+    test(
+      'migration does not create read noise for box.watch consumers',
+      () async {
+        await hiveService.openBoxAndRun<void>(
+          'pending_sync_operations',
+          action: (final box) async {
+            await box.put('not-a-map', 123);
+          },
+        );
+
+        final Box<dynamic> box = await repository.getBox();
+        final List<BoxEvent> events = <BoxEvent>[];
+        final StreamSubscription<BoxEvent> sub = box.watch().listen(events.add);
+
+        // Trigger a second open (ensureSchema rerun) and a read.
+        await repository.getPendingOperations(now: DateTime.now().toUtc());
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+
+        // We expect at most dead-letter + meta writes; no original key remains.
+        expect(box.get('not-a-map'), isNull);
+        expect(box.get('dead_letter:not-a-map'), isNotNull);
+        expect(
+          box.get(HiveSchemaMigratorService.metaKeyFingerprints),
+          isNotNull,
+        );
+
+        // Assert no event for the original key (it should be deleted, not updated).
+        expect(events.any((final e) => e.key == 'not-a-map'), isFalse);
+
+        // Assert any watch events are only for meta/dead-letter.
+        expect(
+          events.every(
+            (final e) =>
+                e.key == HiveSchemaMigratorService.metaKeyFingerprints ||
+                (e.key is String &&
+                    (e.key as String).startsWith('dead_letter:')),
+          ),
+          isTrue,
+        );
+
+        await sub.cancel();
+      },
+    );
   });
 
   test(

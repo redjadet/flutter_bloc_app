@@ -42,6 +42,16 @@
         "lib/features/counter/data/hive_counter_repository_migration.dart",
         "lib/features/counter/domain/counter_snapshot.dart"
       ]
+    },
+    {
+      "name": "pending_sync_operations:v1",
+      "spec": "pending_sync_operations:v2{<op_id>:sync_operation_json; quarantine:dead_letter:<originalKey>(dead_letter:v1)}",
+      "inputs": [
+        "lib/shared/sync/pending_sync_repository.dart",
+        "lib/shared/sync/pending_sync_repository_codec.dart",
+        "lib/shared/sync/pending_sync_repository_migration.dart",
+        "lib/shared/sync/sync_operation.dart"
+      ]
     }
   ]
 }

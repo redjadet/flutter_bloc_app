@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_bloc_app/shared/utils/stream_controller_lifecycle.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'pending_sync_repository_codec.dart';
+part 'pending_sync_repository_migration.dart';
 
 /// A repository for managing a queue of [SyncOperation]s that need to be
 /// processed and synchronized with a remote backend.
@@ -17,12 +20,26 @@ class PendingSyncRepository extends HiveRepositoryBase {
   PendingSyncRepository({required super.hiveService});
 
   static const String _boxName = 'pending_sync_operations';
+  static const String _schemaNamespace = 'pending_sync_operations:v1';
 
   final StreamController<void> _enqueuedController =
       StreamController<void>.broadcast();
 
   @override
   String get boxName => _boxName;
+
+  @override
+  HiveBoxSchema? get schema => HiveBoxSchema(
+    boxName: _boxName,
+    namespace: _schemaNamespace,
+    fingerprint:
+        hiveSchemaFingerprints[_schemaNamespace] ??
+        (throw StateError(
+          'Missing hive schema fingerprint for $_schemaNamespace. '
+          'Run: dart run tool/generate_hive_schema_fingerprints.dart',
+        )),
+    migrate: _migratePendingSyncOperations,
+  );
 
   /// Fires once after each successful [enqueue]. Used to trigger immediate
   /// sync so IoT demo (and other) changes reach Supabase as soon as possible.

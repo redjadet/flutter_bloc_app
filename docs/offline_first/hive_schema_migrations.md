@@ -10,7 +10,7 @@ Runtime does **not** infer schema changes from Dart diffs. It only compares
 stored metadata to the **generated fingerprint** for the repository’s declared
 namespace. Migrations run **on box open**, not on a timer or background job.
 
-**Trigger path**
+### Trigger path
 
 1. Repository extends `HiveRepositoryBase` and overrides `schema` with a
    non-null [`HiveBoxSchema`](../../lib/shared/storage/hive_schema_migration.dart)
@@ -18,7 +18,7 @@ namespace. Migrations run **on box open**, not on a timer or background job.
 2. Any normal read/write path calls `getBox()` → `HiveService.openBoxAndRun`
    (per-box lock) → `HiveSchemaMigratorService.ensureSchema` on that open.
 
-**What `ensureSchema` does**
+### What `ensureSchema` does
 
 - If migrations are disabled (`HiveSchemaMigratorService.isEnabled` is false,
   e.g. `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`), it returns immediately.
@@ -34,7 +34,7 @@ namespace. Migrations run **on box open**, not on a timer or background job.
   and **keeps the old fingerprint** so the next `getBox()` can retry after you
   ship a fix.
 
-**What stays manual (agent/human work)**
+### What stays manual (agent/human work)
 
 When stored shape or migration semantics change, you still must: bump
 `tool/hive_schema_manifest.json` `spec`, refresh `inputs`, regenerate
@@ -159,6 +159,22 @@ For queue data, prefer quarantine:
 - Delete the original only after the quarantine write succeeds.
 - Make reruns idempotent.
 
+`pending_sync_operations:v1` uses `dead_letter:<originalKey>` with payload:
+
+```text
+{
+  schema: "dead_letter:v1",
+  quarantinedAt: ISO-8601 UTC string,
+  originalKey: string,
+  fromFingerprint: previous fingerprint or null,
+  error: validation code,
+  originalValue: original primitive/map/list payload
+}
+```
+
+Existing dead-letter entries are preserved on rerun; migration deletes the
+original key only after the dead-letter write succeeds or already exists.
+
 ## Watch and metadata safety
 
 Schema metadata and temp/dead-letter keys can trigger `box.watch()` events.
@@ -182,12 +198,10 @@ Current pending-sync reads ignore `__meta__schema_fingerprints` and
   salvage, DTO validation, and idempotent temp cleanup.
 - `counter:v1`: full migrate with count/timestamp/bool/string coercions and
   invalid-value cleanup.
-
-Pending:
-
-- `pending_sync_operations:v1`: full migrate deferred. Needs dead-letter
-  payload contract, known `entityType` validation through runtime sync
-  contracts, idempotency-key rules, and watch/read-noise verification.
+- `pending_sync_operations:v1`: full migrate that quarantines malformed legacy
+  queue entries to `dead_letter:<originalKey>`, preserves valid operations,
+  deletes originals only after quarantine, and preserves schema meta/dead-letter
+  keys during read/prune scans.
 
 Historical state and validation proof:
 [`../changes/2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md`](../changes/2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md).
