@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
@@ -30,6 +31,9 @@ class OfflineFirstCounterRepository
   final CounterRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
+
+  @visibleForTesting
+  bool get hasRemoteRepository => _remoteRepository != null;
 
   @override
   String get entityType => counterEntity;
