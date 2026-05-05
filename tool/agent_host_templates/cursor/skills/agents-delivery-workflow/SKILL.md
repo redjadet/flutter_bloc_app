@@ -66,5 +66,38 @@ Required checks:
 - Update docs when architecture, workflow, behavior, or validation guidance
   changes materially.
 
+## Commit rules (when user asks to commit)
+
+- Inspect before staging:
+  - `git status`
+  - `git diff`
+- Stage only intended scope. If scope unclear or mixed, stop and require
+  pre-staging by user.
+- Sanity check staged diff:
+  - `git diff --staged`
+- Message rules:
+  - imperative, <= 72 chars, no trailing period
+  - include “why” when not obvious
+  - include tests run (or “not run” with reason)
+  - no assistant mention
+  - prefer heredoc for newlines
+- Commit example:
+
+  - ```bash
+    git commit -m "$(cat <<'EOF'
+    <type>(<scope>): <short summary>
+
+    Summary:
+    - <what changed>
+
+    Rationale:
+    - <why>
+
+    Tests:
+    - <command or "not run (reason)">
+    EOF
+    )" -- <paths...>
+    ```
+
 Full testing and validation bar: `docs/testing_overview.md`,
 `docs/validation_scripts.md`.

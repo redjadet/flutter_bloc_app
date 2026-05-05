@@ -57,7 +57,8 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_material_buttons.sh`**: Prevents raw Material buttons (`ElevatedButton`, `OutlinedButton`, `TextButton`) - should use `PlatformAdaptive.*` helpers
 - **`check_raw_dialogs.sh`**: Prevents raw dialog APIs - should use `showAdaptiveDialog()`
 - **`check_raw_network_images.sh`**: Prevents raw `Image.network` usage - should use `CachedNetworkImageWidget`
-- **`check_raw_print.sh`**: Prevents raw `print()`/`debugPrint()` usage - should use `AppLogger`
+- **`check_raw_print.sh`**: Prevents raw `print()`/`debugPrint()` usage - use
+  `AppLogger` and [`logging.md`](logging.md) conventions instead.
 - **`check_raw_google_fonts.sh`**: Prevents per-widget `GoogleFonts.*` usage - should define fonts in `app_config.dart`
 
 ### Performance

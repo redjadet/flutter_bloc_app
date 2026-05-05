@@ -2,7 +2,7 @@
 
 ## Structured error codes
 
-Use [AppErrorCode](lib/shared/utils/error_codes.dart) when emitting error state or logging so analytics and crash tools can aggregate by type:
+Use [AppErrorCode](../lib/shared/utils/error_codes.dart) when emitting error state or logging so analytics and crash tools can aggregate by type:
 
 - **network** – connectivity or DNS failure
 - **timeout** – request/operation timed out
@@ -13,12 +13,19 @@ Use [AppErrorCode](lib/shared/utils/error_codes.dart) when emitting error state 
 - **rateLimit** – 429 or rate limited
 - **unknown** – unclassified
 
-Attach the code to freezed error state or pass to `AppLogger` / crash reporting. Map from exceptions or HTTP status using [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart): `getErrorCode(error)` for any error (including [HttpRequestFailure](lib/shared/utils/http_request_failure.dart)), `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing `isNetworkError` / `isTimeoutError` helpers.
+Attach the code to freezed error state or pass to `AppLogger` / crash reporting.
+Map from exceptions or HTTP status using
+[NetworkErrorMapper](../lib/shared/utils/network_error_mapper.dart):
+`getErrorCode(error)` for any error, including
+[HttpRequestFailure](../lib/shared/utils/http_request_failure.dart),
+`getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing
+`isNetworkError` / `isTimeoutError` helpers.
 
 ## Logging
 
 - Use `AppLogger.error(message, error, stackTrace)` for structured error logging.
 - For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
+- Full conventions live in [logging.md](logging.md).
 
 ## Crash reporting (optional)
 

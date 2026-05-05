@@ -57,6 +57,7 @@ or user-owned decision. Non-trivial work tracks plan/proof in
 
 - Smallest reversible change meeting goal + reliability bar.
 - Surgical diff: every changed line traces to request or required validation/doc update.
+- Docs Update Policy: if agent behavior/config changes, update docs in same task before finish.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.

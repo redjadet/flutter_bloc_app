@@ -153,11 +153,34 @@ Success criteria:
 ### 7. Land generated changes via PR
 
 - If there are no changes, stop here.
-- Stage only cohesive generated artifacts: `pubspec.lock`, coverage summary,
-  docs badge/toolchain updates, managed host-template outputs.
-- Never stage `.env*`, keys, credentials, local IDE state, simulator logs, or
-  unrelated user edits.
-- Commit with a concise message, no assistant mention.
+- Commit workflow (must be explicit, safe):
+  - Inspect scope first:
+    - `git status`
+    - `git diff`
+  - Stage only cohesive generated artifacts (examples): `pubspec.lock`, coverage
+    summary, docs badge/toolchain updates, managed host-template outputs.
+  - Never stage: `.env*`, keys, credentials, local IDE state, simulator logs, or
+    unrelated user edits.
+  - Verify staged scope matches intent:
+    - `git diff --staged`
+  - Commit message rules:
+    - concise, imperative, no trailing period
+    - prefer conventional prefix: `chore(upgrade): ...` for this lane
+    - no assistant mention
+    - pass message via heredoc to preserve newlines
+  - Commit example:
+    - `git commit -m "$(cat <<'EOF'
+chore(upgrade): refresh generated artifacts
+
+Summary:
+
+- Update lockfile + managed artifacts after upgrade lane
+
+Tests:
+
+- SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all
+EOF
+)" -- <paths...>`
 - Push and open PR.
 - Watch checks until complete: `gh pr checks <PR> --watch`.
 - If checks fail: fix in bounded loops, max 3 pushes, then re-watch.

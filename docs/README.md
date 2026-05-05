@@ -6,6 +6,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 - **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
 - **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
+- **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md)
 - **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
@@ -48,6 +49,7 @@ Source-of-truth docs for Flutter BLoC app.
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
+- [`logging.md`](logging.md)
 - [`code_review_graph.md`](code_review_graph.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
