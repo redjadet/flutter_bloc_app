@@ -10,7 +10,7 @@ Runtime does **not** infer schema changes from Dart diffs. It only compares
 stored metadata to the **generated fingerprint** for the repository’s declared
 namespace. Migrations run **on box open**, not on a timer or background job.
 
-**Trigger path**
+### Trigger path
 
 1. Repository extends `HiveRepositoryBase` and overrides `schema` with a
    non-null [`HiveBoxSchema`](../../lib/shared/storage/hive_schema_migration.dart)
@@ -18,7 +18,7 @@ namespace. Migrations run **on box open**, not on a timer or background job.
 2. Any normal read/write path calls `getBox()` → `HiveService.openBoxAndRun`
    (per-box lock) → `HiveSchemaMigratorService.ensureSchema` on that open.
 
-**What `ensureSchema` does**
+### What `ensureSchema` does
 
 - If migrations are disabled (`HiveSchemaMigratorService.isEnabled` is false,
   e.g. `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`), it returns immediately.
@@ -34,7 +34,7 @@ namespace. Migrations run **on box open**, not on a timer or background job.
   and **keeps the old fingerprint** so the next `getBox()` can retry after you
   ship a fix.
 
-**What stays manual (agent/human work)**
+### What stays manual (agent/human work)
 
 When stored shape or migration semantics change, you still must: bump
 `tool/hive_schema_manifest.json` `spec`, refresh `inputs`, regenerate
