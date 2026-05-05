@@ -1074,10 +1074,10 @@ packages:
     dependency: "direct main"
     description:
       name: genui_google_generative_ai
-      sha256: "1cd34bb1269d84231859db546f5fe07ac4af0e8f1fe68f5545ecc3413fff475c"
+      sha256: "2c4f552810b05b16861aee763fabecb22b351714d2224cf93b4af064004238e9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   geoclue:
     dependency: transitive
     description:
@@ -1370,10 +1370,10 @@ packages:
     dependency: transitive
     description:
       name: gtk
-      sha256: e8ce9ca4b1df106e4d72dad201d345ea1a036cc12c360f1a7d5a758f78ffa42c
+      sha256: "4ff85b2a16724029dd9e5bbb5a94b6918f9973f74ba571c949d2002801879cf5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   hive:
     dependency: "direct main"
     description:
