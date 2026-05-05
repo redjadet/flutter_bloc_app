@@ -166,7 +166,8 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `initialization_guard.dart` - Safe initialization wrapper for critical operations
 - `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB)
 - `isolate_samples.dart` - Examples of isolate usage for heavy computations
-- `logger.dart` - App-wide logging utility
+- [`logger.dart`](../lib/shared/utils/logger.dart) - App-wide logging utility;
+  use with [`logging.md`](logging.md) conventions.
 - `navigation.dart` - Navigation helper functions
 - `network_guard.dart` - Network connectivity checking utilities
 - `platform_adaptive.dart` - Platform-adaptive widget utilities
@@ -184,10 +185,10 @@ const kAnimationDuration = Duration(milliseconds: 300);
   telemetry, and retries. 401 refreshes are coordinated via `AuthTokenManager` and
   `AuthTokenInterceptor` (single-flight) so concurrent 401s await one refresh and retry with
   a refreshed bearer token. Repositories use `getIt<Dio>()` or typed Retrofit clients built from it.
-  Use [NetworkGuard.executeDio](lib/shared/utils/network_guard.dart) where you need centralized
-  timeout, status checks, and error mapping; [NetworkErrorMapper](lib/shared/utils/network_error_mapper.dart)
+  Use [NetworkGuard.executeDio](../lib/shared/utils/network_guard.dart) where you need centralized
+  timeout, status checks, and error mapping; [NetworkErrorMapper](../lib/shared/utils/network_error_mapper.dart)
   maps status codes and `DioException` to user-facing messages and
-  [AppErrorCode](lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
+  [AppErrorCode](../lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
 - **Retrofit** (optional): For stable REST APIs, define interfaces under `lib/features/<feature>/data/api/`
   and use generated clients; see [`plans/dio_retrofit_integration_plan.md`](plans/dio_retrofit_integration_plan.md). Chart uses `CoingeckoApi`.
 - **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
@@ -204,7 +205,7 @@ When to use which:
 
 **Timeouts:** Use explicit timeouts for all HTTP calls. Dio is created with 30s connect/receive timeouts in `createAppDio()`; use `NetworkGuard.executeDio` with a `timeout` parameter where you wrap requests. Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints.
 
-**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
+**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](../lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
 
 Example: cubit that retries a one-off load and cancels on close:
 
