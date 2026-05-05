@@ -581,11 +581,20 @@ void main() {
       currentUserId = 'other-user-id';
       final Future<void> secondPull = repo.pullRemote();
 
-      // Remote fetch start can be delayed by local storage work (e.g. schema ensure).
-      for (int i = 0; i < 20 && controllableRemote.fetchCallCount < 2; i++) {
-        await Future<void>.delayed(Duration.zero);
+      // Remote fetch start can be delayed by local storage work (e.g. Hive).
+      // In CI this can take longer than a few microtasks; wait with a real cap.
+      final Stopwatch stopwatch = Stopwatch()..start();
+      while (controllableRemote.fetchCallCount < 2) {
+        if (stopwatch.elapsed > const Duration(seconds: 2)) {
+          break;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 10));
       }
-      expect(controllableRemote.fetchCallCount, 2);
+      expect(
+        controllableRemote.fetchCallCount,
+        2,
+        reason: 'Expected two remote fetches (one per user).',
+      );
 
       firstFetchCompleter.complete(<IotDevice>[
         const IotDevice(
