@@ -92,6 +92,23 @@ echo "validation_pointer|router|./bin/router_feature_validate"
 echo "validation_pointer|integration|./bin/integration_tests"
 echo ""
 
+echo "context_ladder|1|map docs: AGENTS.md + docs/agent_knowledge_base.md + docs/README.md"
+echo "context_ladder|2|durable memory: docs/changes/ + docs/plans/ + tasks/lessons.md + current tracker"
+echo "context_ladder|3|structural graph: ./tool/refresh_code_review_graph.sh --status-only or --if-needed"
+echo "context_ladder|4|targeted raw files only for edits/proof"
+if [[ -f "$repo_root/.code-review-graph/graph.db" ]]; then
+  echo "context_graph|cache|present"
+  if [[ -f "$repo_root/.code-review-graph/last_head" ]]; then
+    graph_head="$(cat "$repo_root/.code-review-graph/last_head" 2>/dev/null || true)"
+    if [[ -n "$graph_head" ]]; then
+      echo "context_graph|last_head|$graph_head"
+    fi
+  fi
+else
+  echo "context_graph|cache|missing"
+fi
+echo ""
+
 print_flutter_resolution_report || true
 echo ""
 

@@ -25,6 +25,7 @@ Closed-loop default:
 - Plan once (<=10 lines) -> execute -> verify -> report.
 - Keep going end-to-end; ask only on hard blockers.
 - Context budget: targeted search + narrow reads.
+- Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 
 Fast reminders:
 
@@ -50,6 +51,7 @@ Approved shell entrypoints:
 ./bin/checklist
 ./bin/integration_tests
 ./bin/upgrade_validate_all
+./tool/refresh_code_review_graph.sh --status-only
 ./tool/check_agent_knowledge_base.sh
 ./tool/check_agent_memory_compounding.sh
 ./tool/check_agent_asset_drift.sh

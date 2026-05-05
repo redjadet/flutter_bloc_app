@@ -13,25 +13,26 @@ Closed-loop: plan once (<=10 lines). Ask only hard blockers. Keep context tight.
 
 1. **Plan:** Start from repo docs, not host assumptions.
 2. **Plan:** Use `AGENTS.md` as map and `docs/agent_knowledge_base.md` as source-of-truth layout.
-3. **Plan:** Keep active plan and verification in `tasks/codex/todo.md`.
-4. **Plan:** Preserve user-supplied execution plans unless user asks for revisions.
-5. **Plan:** Classify complexity, risk, scope, uncertainty before validation/delegation depth.
-6. **Plan:** Do not change files until at least 95% confident in goal, scope, and approach. Ask until clear.
-7. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns before new abstractions.
-8. **Execute:** Route lifecycle/memory-pressure work through `docs/REPOSITORY_LIFECYCLE.md` and `docs/reliability_error_handling_performance.md`.
-9. **Execute:** Prefer shared lifecycle helpers (`DisposableBag`,
+3. **Plan:** For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+4. **Plan:** Keep active plan and verification in `tasks/codex/todo.md`.
+5. **Plan:** Preserve user-supplied execution plans unless user asks for revisions.
+6. **Plan:** Classify complexity, risk, scope, uncertainty before validation/delegation depth.
+7. **Plan:** Do not change files until at least 95% confident in goal, scope, and approach. Ask until clear.
+8. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns before new abstractions.
+9. **Execute:** Route lifecycle/memory-pressure work through `docs/REPOSITORY_LIFECYCLE.md` and `docs/reliability_error_handling_performance.md`.
+10. **Execute:** Prefer shared lifecycle helpers (`DisposableBag`,
    `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`) over
    custom resource tracking.
-10. **Execute:** Keep `Presentation -> Domain <- Data`.
-11. **Execute:** Update DI, routes, l10n, and codegen when touched.
-12. **Execute:** Widget-test viewport sizing uses `WidgetTester.view`, not
+11. **Execute:** Keep `Presentation -> Domain <- Data`.
+12. **Execute:** Update DI, routes, l10n, and codegen when touched.
+13. **Execute:** Widget-test viewport sizing uses `WidgetTester.view`, not
     deprecated `tester.binding.window`.
-13. **Execute:** Repeated struggle => add repo capability (doc/fixture/test/script/UI proof/log helper/validation check).
-14. **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
-15. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`.
-16. **Verify:** Run smallest matching repo validation.
-17. **Verify:** Self-verify vs request + changed files + proof + blockers + residual risk.
-18. **Report:** don't mark complete without proof matching scope.
+14. **Execute:** Repeated struggle => add repo capability (doc/fixture/test/script/UI proof/log helper/validation check).
+15. **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
+16. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`.
+17. **Verify:** Run smallest matching repo validation.
+18. **Verify:** Self-verify vs request + changed files + proof + blockers + residual risk.
+19. **Report:** don't mark complete without proof matching scope.
 
 Required phrase (guard): Self-verify final response vs request, changed files, proof, blockers, residual risk.
 

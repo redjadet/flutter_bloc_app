@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-05-05_codex_context_navigation_ladder.md`](2026-05-05_codex_context_navigation_ladder.md): Codex context-navigation ladder for
+  durable memory, structural graph use, and targeted raw-file reads.
 - [`2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md`](2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md): manifest-driven
   Hive schema migrations; full migrate for todo + counter; pending-sync full
   migrate deferred.

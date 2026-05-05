@@ -7,6 +7,21 @@ rescanning the whole tree.
 
 This is local developer tooling. It does not affect the Flutter app runtime.
 
+## Context ladder fit
+
+This repo's Codex memory model is:
+
+1. map docs ([`AGENTS.md`](../AGENTS.md),
+   [`agent_knowledge_base.md`](agent_knowledge_base.md), [`README.md`](README.md))
+2. durable memory (`docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md),
+   current host tracker)
+3. structural graph (`code-review-graph`)
+4. targeted raw-file reads for edits and proof
+
+Use the graph as the structural layer, not as a replacement for source docs or
+code. If the graph cannot answer a question cheaply, fall back to `rg` and
+focused file reads.
+
 ## When agents should use it
 
 Treat `code-review-graph` as the default low-token repo-exploration path for

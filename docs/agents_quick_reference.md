@@ -19,6 +19,7 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Integration journey / flow verification | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
+| Non-trivial existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `./tool/refresh_code_review_graph.sh --if-needed` |
 | Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
 | Cold start (print map + validation pointers) | `bash tool/agent_session_bootstrap.sh` |
 | New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
@@ -67,6 +68,7 @@ under `tasks/cursor/team/<run-id>/`. Doctrine:
 
 - Closed-loop default: plan once, execute end-to-end, verify, report proof.
 - Ask only on hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
+- Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 - Classify complexity/risk/scope/uncertainty before scaling plan/validation/delegation.
 - Vague ask -> assumptions + success criteria + smallest verifiable slice before edits.
 - Bug fix -> reproduce/reason to root cause before code change.
