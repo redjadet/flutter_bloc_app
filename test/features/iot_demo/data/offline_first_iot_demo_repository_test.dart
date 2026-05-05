@@ -581,7 +581,10 @@ void main() {
       currentUserId = 'other-user-id';
       final Future<void> secondPull = repo.pullRemote();
 
-      await Future<void>.delayed(Duration.zero);
+      // Remote fetch start can be delayed by local storage work (e.g. schema ensure).
+      for (int i = 0; i < 20 && controllableRemote.fetchCallCount < 2; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
       expect(controllableRemote.fetchCallCount, 2);
 
       firstFetchCompleter.complete(<IotDevice>[
