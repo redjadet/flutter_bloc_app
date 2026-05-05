@@ -35,7 +35,7 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 | Hive schema fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
 | Strict Hive schema input drift check | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
-| Hive migrations at runtime | Non-null `HiveRepositoryBase.schema` → `getBox()` calls `ensureSchema` (per-box lock); kill: `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Manifest/spec/fingerprint regen still manual when stored shape changes. | [`offline_first/hive_schema_migrations.md#when-migrations-run-automatically`](offline_first/hive_schema_migrations.md#when-migrations-run-automatically) |
+| Hive migrations at runtime | Non-null `HiveRepositoryBase.schema` → `getBox()` calls `ensureSchema` (per-box lock); kill: `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Manifest/spec/fingerprint regen still manual when stored shape changes. See [`offline_first/hive_schema_migrations.md#when-migrations-run-automatically`](offline_first/hive_schema_migrations.md#when-migrations-run-automatically). |
 
 Fastlane: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
