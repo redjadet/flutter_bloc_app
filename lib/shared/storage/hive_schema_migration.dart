@@ -38,7 +38,7 @@ class HiveBoxSchema {
   /// Deterministic fingerprint for the namespace schema.
   final String fingerprint;
 
-  /// Optional forward migrator. MVP-0: unused (no payload mutations required).
+  /// Optional forward migrator for payload rewrites, salvage, or quarantine.
   final HiveSchemaMigrator? migrate;
 
   /// Optional cleanup migrator (drop only incompatible entries).
@@ -50,7 +50,7 @@ class HiveBoxSchema {
 /// Contract:
 /// - Writes/repairs metadata.
 /// - If [HiveBoxSchema.migrate] or [HiveBoxSchema.cleanup] provided, can run
-///   best-effort migration/cleanup under a per-box lock.
+///   migration/cleanup under a per-box lock.
 /// - If no migrator, mismatch is only logged and fingerprint is left unchanged.
 class HiveSchemaMigratorService {
   HiveSchemaMigratorService({final bool enableMigrations = true})
