@@ -14,6 +14,106 @@ RUN_STARTED_AT_EPOCH="$(date +%s)"
 cd "$PROJECT_ROOT"
 
 SYNC_AGENT_ASSETS_MODE="${SYNC_AGENT_ASSETS:-auto}"
+SKIP_PUB_UPGRADE_MODE="${SKIP_PUB_UPGRADE:-0}"
+
+# shellcheck source=./resolve_flutter_dart.sh disable=SC1091
+source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+
+usage() {
+  cat <<'EOF'
+Usage: upgrade_validate_all [--help]
+
+End-to-end upgrade and validation workflow:
+  1. Upgrade Flutter SDK
+  2. Upgrade package graph (unless SKIP_PUB_UPGRADE is true)
+  3. Run delivery checklist
+  4. Run integration tests
+  5. Refresh docs/toolchain artifacts
+  6. Sync and verify managed agent assets
+
+Environment:
+  SKIP_PUB_UPGRADE=1|true|yes|on    Skip major-version pub upgrade and run pub get.
+  SKIP_PUB_UPGRADE=0|false|no|off   Run major-version pub upgrade (default).
+  SYNC_AGENT_ASSETS=auto|apply|skip|1|0|true|false|yes|no
+EOF
+}
+
+die_usage() {
+  echo "❌ $1" >&2
+  echo >&2
+  usage >&2
+  exit 2
+}
+
+parse_bool_env() {
+  local name="$1"
+  local value="$2"
+
+  case "$value" in
+    1|true|TRUE|yes|YES|on|ON)
+      return 0
+      ;;
+    0|false|FALSE|no|NO|off|OFF|"")
+      return 1
+      ;;
+    *)
+      echo "❌ Unsupported $name value: $value" >&2
+      echo "   Use one of: 1, 0, true, false, yes, no, on, off." >&2
+      exit 2
+      ;;
+  esac
+}
+
+validate_bool_env() {
+  local name="$1"
+  local value="$2"
+
+  case "$value" in
+    1|true|TRUE|yes|YES|on|ON|0|false|FALSE|no|NO|off|OFF|"")
+      return 0
+      ;;
+    *)
+      echo "❌ Unsupported $name value: $value" >&2
+      echo "   Use one of: 1, 0, true, false, yes, no, on, off." >&2
+      exit 2
+      ;;
+  esac
+}
+
+validate_sync_agent_assets_mode() {
+  case "$SYNC_AGENT_ASSETS_MODE" in
+    1|true|TRUE|yes|YES|apply|0|false|FALSE|no|NO|skip|auto|"")
+      return 0
+      ;;
+    *)
+      echo "❌ Unsupported SYNC_AGENT_ASSETS value: $SYNC_AGENT_ASSETS_MODE" >&2
+      echo "   Use one of: auto, apply, skip, 1, 0, true, false, yes, no." >&2
+      exit 2
+      ;;
+  esac
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      die_usage "Unknown argument: $1"
+      ;;
+  esac
+done
+
+validate_bool_env "SKIP_PUB_UPGRADE" "$SKIP_PUB_UPGRADE_MODE"
+validate_sync_agent_assets_mode
+
+FLUTTER_BIN="$(resolve_flutter_sdk_flutter || true)"
+if [ -z "$FLUTTER_BIN" ]; then
+  print_flutter_resolution_report >&2 || true
+  echo "❌ Flutter SDK binary not found." >&2
+  exit 1
+fi
 
 get_mtime_epoch() {
   local path="$1"
@@ -75,17 +175,22 @@ run_agent_asset_sync_step() {
       ;;
     *)
       echo "❌ Unsupported SYNC_AGENT_ASSETS value: $SYNC_AGENT_ASSETS_MODE" >&2
-      echo "   Use one of: auto, apply, skip, 1, 0, true, false." >&2
+      echo "   Use one of: auto, apply, skip, 1, 0, true, false, yes, no." >&2
       exit 2
       ;;
   esac
 }
 
 echo "==> Step 1/6: Upgrade Flutter SDK"
-flutter upgrade
+"$FLUTTER_BIN" upgrade
 
-echo "==> Step 2/6: Upgrade packages (major versions when possible)"
-flutter pub upgrade --major-versions
+if parse_bool_env "SKIP_PUB_UPGRADE" "$SKIP_PUB_UPGRADE_MODE"; then
+  echo "==> Step 2/6: Upgrade packages (major versions when possible) [SKIPPED]"
+  "$FLUTTER_BIN" pub get
+else
+  echo "==> Step 2/6: Upgrade packages (major versions when possible)"
+  "$FLUTTER_BIN" pub upgrade --major-versions
+fi
 
 echo "==> Step 3/6: Run delivery checklist"
 "$PROJECT_ROOT/bin/checklist"
