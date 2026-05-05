@@ -36,6 +36,16 @@ tier expectations.
 - **Tier:** `standard`, `exhaustive`
 - **Owner:** feature QA owner
 
+## J5 RTDB remote wiring
+
+- **Goal:** Counter and Todo offline-first repositories keep Realtime Database
+  remotes wired when integration tests run with real plugin-backed Firebase Auth.
+- **Primary target:** `integration_test/rtdb_remote_wiring_flow_test.dart`
+- **Negative path:** mock-auth integration harness still omits RTDB remotes to
+  avoid unauthenticated plugin stream timeouts.
+- **Tier:** targeted real-Firebase proof, not aggregate tier by default
+- **Owner:** feature QA owner
+
 ## Aggregate mapping
 
 - `smoke` -> `integration_test/smoke_flows_test.dart`
