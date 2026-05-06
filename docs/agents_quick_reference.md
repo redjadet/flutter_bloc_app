@@ -8,6 +8,8 @@ If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
 
 Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5.
 
+CI/automation: [`ci_automation.md`](ci_automation.md).
+
 ## Validation Chooser
 
 Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
