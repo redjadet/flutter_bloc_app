@@ -114,7 +114,7 @@ void registerSettingsIntegrationFlow() {
     groupName: 'Settings flow',
     testName: 'opens settings and applies theme and locale changes',
     body: (final tester) async {
-      await launchTestApp(tester);
+      await launchTestApp(tester, ensureSignedIn: true);
 
       await pumpUntilFound(tester, find.byTooltip('Open settings'));
       await tapAndPump(tester, find.byTooltip('Open settings'));

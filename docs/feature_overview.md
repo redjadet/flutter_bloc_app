@@ -20,8 +20,8 @@ and the next document to read.
 | --- | --- | --- | --- |
 | Counter | `/` | `lib/features/counter/` | Primary home flow with persisted state and timer-driven behavior. |
 | Example hub | `/example` | `lib/features/example/` | Entry point to many demo surfaces. |
-| Settings | `/settings` | `lib/features/settings/` | Theme, locale, app info, diagnostics, and integration entry points. |
-| Authentication | `/auth`, `/manage-account`, `/register`, `/logged-out` | `lib/features/auth/` | Firebase Auth + FirebaseUI for primary sign-in and profile management. See [Authentication](authentication.md). |
+| Settings | `/settings` | `lib/features/settings/` | Theme, locale, app info, diagnostics, and integration entry points. **Auth-gated** (see [Authentication](authentication.md)). |
+| Authentication | `/auth`, `/manage-account`, `/register`, `/logged-out` | `lib/features/auth/` | Firebase Auth + FirebaseUI for primary sign-in and profile management. `/manage-account` is **auth-gated** (see [Authentication](authentication.md)). |
 | Profile | `/profile` | `lib/features/profile/` | Offline-first profile cache and profile screen. |
 | Search | `/search` | `lib/features/search/` | Cache-first search with background refresh. |
 | Todo List | `/todo-list` | `lib/features/todo_list/` | Realtime Database plus offline-first queueing. |
@@ -47,7 +47,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](staff_app_demo_walkthrough.md). |
 | Online Therapy Demo | `/online-therapy-demo` and nested client, therapist, and admin paths | `lib/features/online_therapy_demo/` | Simulation-first product demo for booking, messaging, call state, verification, and admin audit flows. Walkthrough: [Online Therapy Demo](online_therapy_demo/README.md). |
 | Supabase Auth | `/supabase-auth` | `lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |
-| WalletConnect Auth | `/walletconnect-auth` | `lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. |
+| WalletConnect Auth | `/walletconnect-auth` | `lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. **Auth-gated** (see [Authentication](authentication.md)). |
 | FCM Demo | `/fcm-demo` | `lib/features/fcm_demo/` | Permission, token, message, and sync-trigger demo. |
 
 ## Platform, media, and UI demos
