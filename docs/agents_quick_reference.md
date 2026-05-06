@@ -32,6 +32,7 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 | Tracker contract check | `bash tool/validate_task_trackers.sh` |
 | Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
+| Host-template local sync apply | `./tool/sync_agent_assets.sh --apply` |
 | Scan for AI-generated-code smells (high-signal helper) | `./tool/check_ai_generated_code_smells.sh` |
 | Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
 | Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
@@ -52,9 +53,19 @@ External catalogs (e.g. [Claude-OS](https://github.com/rohanmistry231/Claude-OS)
 | API / version-sensitive change | Use enabled docs, MCP, browser, or repo-pinned examples before model memory | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + scope-matched validation ([`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)) | Same |
 | Same failure repeats | Add repo capability ([`agent_knowledge_base.md#missing-capability-loop`](agent_knowledge_base.md#missing-capability-loop)); do not inflate prompts | Same |
-| Host template / agent behavior doc changed | Edit source docs → [`tool/agent_host_templates/`](../tool/agent_host_templates/) → `./tool/check_agent_asset_drift.sh` → `./tool/sync_agent_assets.sh --dry-run` | Same |
+| Host template / agent behavior doc changed | Edit source docs → [`tool/agent_host_templates/`](../tool/agent_host_templates/) → `./tool/sync_agent_assets.sh --dry-run` → `./tool/sync_agent_assets.sh --apply` → dry-run clean → `./tool/check_agent_asset_drift.sh` | Same |
 
 **Docs-before-memory (APIs):** For Flutter, Dart, Firebase, Supabase, GoRouter, or similar version-sensitive APIs, consult an enabled official or repo-grounded source (docs site, MCP doc tool, browser, or in-repo usage) before editing from recall alone. If no source is available, say so and narrow scope.
+
+**Host-copy caveat:** `tool/agent_host_templates/` is source of truth. Synced
+copies under `~/.codex` and local Cursor assets are per-machine and can lag until
+that developer runs `./tool/sync_agent_assets.sh --apply`; git cannot update
+other machines.
+
+**Cross-host caveat:** `./tool/request_codex_feedback.sh` and
+`./tool/run_codex_plan_review.sh` need local Codex, `gh`, auth, and network.
+Cold-machine failures are normal environment blockers and outside
+`./bin/checklist-fast` unless the task changes those scripts.
 
 ## Flutter Test Reminder
 
