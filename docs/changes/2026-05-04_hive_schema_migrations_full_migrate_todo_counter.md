@@ -2,6 +2,13 @@
 
 Date: 2026-05-04
 
+> **Historical note (superseded)**: this document reflects the state on 2026-05-04.
+> The “pending sync full migrate” section below is **no longer current**. As of
+> 2026-05-05, `pending_sync_operations:v1` shipped a **full migrate** with
+> dead-letter quarantine (`dead_letter:<originalKey>`). Current source-of-truth:
+> [`docs/offline_first/hive_schema_migrations.md`](../offline_first/hive_schema_migrations.md)
+> (see `pending_sync_operations:v1`).
+
 ## Purpose
 
 Hive storage in this app uses primitives, maps, and JSON-like payloads rather
@@ -139,9 +146,9 @@ Covered tests:
 
 ### Pending sync: read-safety only
 
-Full migrate is intentionally deferred. The shipped safety fix prevents normal
-pending-sync reads from treating migration metadata or future quarantine entries
-as malformed sync operations.
+**Historical-only**: on 2026-05-04, full migrate was intentionally deferred and
+only a read-safety fix shipped to prevent pending-sync reads from treating schema
+metadata or future quarantine entries as malformed sync operations.
 
 Ignored keys:
 
@@ -162,8 +169,9 @@ Covered tests:
 
 ### Pending sync full migrate
 
-Still deferred because it has the highest data-loss risk and needs runtime sync
-contract knowledge.
+**Historical-only**: this was deferred on 2026-05-04 because it has the highest
+data-loss risk and needs runtime sync contract knowledge. It shipped on 2026-05-05;
+see [`docs/offline_first/hive_schema_migrations.md`](../offline_first/hive_schema_migrations.md).
 
 Open requirements:
 

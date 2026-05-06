@@ -10,8 +10,8 @@ that.
 - [`2026-05-05_codex_context_navigation_ladder.md`](2026-05-05_codex_context_navigation_ladder.md): Codex context-navigation ladder for
   durable memory, structural graph use, and targeted raw-file reads.
 - [`2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md`](2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md): manifest-driven
-  Hive schema migrations; full migrate for todo + counter; pending-sync full
-  migrate deferred.
+  Hive schema migrations; full migrate for todo + counter; pending-sync section
+  is historical-only (superseded by shipped May 5 pending-sync migration docs).
 - [`2026-04-02_case_study_supabase_private_storage_plan.md`](2026-04-02_case_study_supabase_private_storage_plan.md): optional Supabase private
   storage, RLS, and submit flow for the dentist **Case Study Demo** feature.
 - [`2026-04-01_dentist_case_study_demo_plan.md`](2026-04-01_dentist_case_study_demo_plan.md): **Case Study Demo** feature scope, routes, auth,
