@@ -34,6 +34,10 @@ Route map:
 | Admin verification | `/online-therapy-demo/admin/verification` | Approve pending therapists |
 | Admin audit | `/online-therapy-demo/admin/audit` | Audit/event proof |
 
+Auth note:
+
+- Admin routes are **auth-gated** at the router layer (deep-link safe). If user is signed out, navigation redirects to `/auth` first.
+
 ## Demo script (fast)
 
 1. Open `/online-therapy-demo`.

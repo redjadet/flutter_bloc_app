@@ -31,6 +31,15 @@ On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/c
 
 For broader local or pre-ship validation, `./bin/integration_tests` still runs aggregated suite in `integration_test/all_flows_test.dart`.
 
+## Current state (May 2026)
+
+- Router now relies on route-level gates (`AppRouteAuthGate` + `AppRoutePolicies`) for deep-link-safe auth on selected routes.
+- When adding or modifying auth gates, expect **integration flows** to need explicit sign-in before visiting newly protected routes.
+- Preferred validation after auth/routing changes:
+  - `./bin/router_feature_validate`
+  - `./bin/checklist`
+  - `./bin/integration_tests`
+
 ## Existing Validation Scripts
 
 ### Architecture & Dependency Injection

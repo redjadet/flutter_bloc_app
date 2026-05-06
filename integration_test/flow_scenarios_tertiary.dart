@@ -121,7 +121,7 @@ void registerSettingsThemePersistenceIntegrationFlow() {
     groupName: 'Settings flow',
     testName: 'persists theme and locale after navigating away and back',
     body: (final tester) async {
-      await launchTestApp(tester);
+      await launchTestApp(tester, ensureSignedIn: true);
 
       await pumpUntilFound(tester, find.byTooltip('Open settings'));
       await tapAndPump(tester, find.byTooltip('Open settings'));

@@ -3,6 +3,8 @@ import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
+    as feature_auth;
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -210,7 +212,17 @@ Future<void> tearDownIntegrationTestDependencies() async {
 Future<void> launchTestApp(
   final WidgetTester tester, {
   final bool requireAuth = false,
+  final bool ensureSignedIn = false,
 }) async {
+  if (ensureSignedIn) {
+    if (getIt.isRegistered<feature_auth.AuthRepository>()) {
+      final feature_auth.AuthRepository auth =
+          getIt<feature_auth.AuthRepository>();
+      if (auth.currentUser == null) {
+        await auth.signInAnonymously().timeout(const Duration(seconds: 15));
+      }
+    }
+  }
   await tester.pumpWidget(MyApp(requireAuth: requireAuth));
   await tester.pump();
   await waitForCounterCubitsToLoad(tester);

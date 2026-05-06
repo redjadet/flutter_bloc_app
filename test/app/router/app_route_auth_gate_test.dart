@@ -137,9 +137,71 @@ void main() {
   });
 
   group('AppRoutePolicies', () {
+    test('settings route is explicitly marked authenticated', () {
+      expect(AppRoutePolicies.settings.path, AppRoutes.settingsPath);
+      expect(AppRoutePolicies.settings.requiresAuthentication, isTrue);
+    });
+
     test('profile route is explicitly marked authenticated', () {
       expect(AppRoutePolicies.profile.path, AppRoutes.profilePath);
       expect(AppRoutePolicies.profile.requiresAuthentication, isTrue);
+    });
+
+    test('manage account route is explicitly marked authenticated', () {
+      expect(AppRoutePolicies.manageAccount.path, AppRoutes.manageAccountPath);
+      expect(AppRoutePolicies.manageAccount.requiresAuthentication, isTrue);
+    });
+
+    test(
+      'online therapy demo admin route is explicitly marked authenticated',
+      () {
+        expect(
+          AppRoutePolicies.onlineTherapyDemoAdmin.path,
+          AppRoutes.onlineTherapyDemoAdminPath,
+        );
+        expect(
+          AppRoutePolicies.onlineTherapyDemoAdmin.requiresAuthentication,
+          isTrue,
+        );
+      },
+    );
+
+    test(
+      'online therapy demo admin verification route is explicitly marked authenticated',
+      () {
+        expect(
+          AppRoutePolicies.onlineTherapyDemoAdminVerification.path,
+          AppRoutes.onlineTherapyDemoAdminVerificationPath,
+        );
+        expect(
+          AppRoutePolicies
+              .onlineTherapyDemoAdminVerification
+              .requiresAuthentication,
+          isTrue,
+        );
+      },
+    );
+
+    test(
+      'online therapy demo admin audit route is explicitly marked authenticated',
+      () {
+        expect(
+          AppRoutePolicies.onlineTherapyDemoAdminAudit.path,
+          AppRoutes.onlineTherapyDemoAdminAuditPath,
+        );
+        expect(
+          AppRoutePolicies.onlineTherapyDemoAdminAudit.requiresAuthentication,
+          isTrue,
+        );
+      },
+    );
+
+    test('walletconnect auth route is explicitly marked authenticated', () {
+      expect(
+        AppRoutePolicies.walletconnectAuth.path,
+        AppRoutes.walletconnectAuthPath,
+      );
+      expect(AppRoutePolicies.walletconnectAuth.requiresAuthentication, isTrue);
     });
 
     test('case study demo subtree is marked authenticated', () {
