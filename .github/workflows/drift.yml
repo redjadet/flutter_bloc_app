@@ -1,0 +1,76 @@
+name: Drift checks
+
+on:
+  schedule:
+    # Nightly checklist on default branch.
+    - cron: "17 2 * * *"
+    # Weekly upgrade + validate (Sundays).
+    - cron: "33 3 * * 0"
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Which lane to run"
+        required: false
+        type: choice
+        default: "nightly_checklist"
+        options:
+          - nightly_checklist
+          - weekly_upgrade_validate_all
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drift-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FLUTTER_VERSION: "3.41.9"
+
+jobs:
+  nightly_checklist:
+    if: >-
+      (github.event_name == 'schedule' && github.event.schedule == '17 2 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.lane == 'nightly_checklist')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Run delivery checklist
+        run: ./bin/checklist
+
+  weekly_upgrade_validate_all:
+    if: >-
+      (github.event_name == 'schedule' && github.event.schedule == '33 3 * * 0') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.lane == 'weekly_upgrade_validate_all')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Run upgrade + validate workflow
+        run: ./bin/upgrade_validate_all

@@ -2,6 +2,8 @@ name: Dependency Review
 
 on:
   pull_request:
+  merge_group:
+    branches: [main, master]
 
 permissions:
   contents: read
