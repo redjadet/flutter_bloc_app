@@ -11,6 +11,13 @@ Review gate before normal validation. Complements checks; not replacement.
 
 Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for source layout. If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). [`agents_quick_reference.md`](agents_quick_reference.md) is command lookup.
 
+## Builder and Validator roles
+
+- **Builder:** produces the smallest reversible diff toward the request. Builder output stays **draft** until the Validator gate passes.
+- **Validator:** applies this protocol’s checks, then runs scope-matched validation per [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md), then self-verifies the report against the request, diff, proof, and residual risk.
+- **Same host is normal:** Builder and Validator are often the same Cursor or Codex session; treat them as roles, not a requirement for a second agent.
+- **Cross-host review** ([`./tool/request_codex_feedback.sh`](../tool/request_codex_feedback.sh), [`./tool/run_codex_plan_review.sh`](../tool/run_codex_plan_review.sh)): optional and **explicit-request-only**; environment-dependent (Codex, `gh`, network).
+
 ## Checks
 
 | Check | What to ask |

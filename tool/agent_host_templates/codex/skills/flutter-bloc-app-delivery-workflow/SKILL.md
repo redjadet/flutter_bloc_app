@@ -10,6 +10,7 @@ Use at non-trivial task start and before marking complete.
 Default path: **Plan -> Execute -> Verify -> Report**.
 
 Closed-loop: plan once (<=10 lines). Ask only hard blockers. Keep context tight.
+Default trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
 1. **Plan:** Start from repo docs, not host assumptions.
 2. **Plan:** Use `AGENTS.md` as map and `docs/agent_knowledge_base.md` as source-of-truth layout.
