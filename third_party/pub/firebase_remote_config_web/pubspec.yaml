@@ -6,7 +6,7 @@ repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_
 version: 1.9.0
 
 environment:
-  sdk: '3.11.5'
+  sdk: '3.11.6'
   flutter: '>=3.22.0'
 
 dependencies:
