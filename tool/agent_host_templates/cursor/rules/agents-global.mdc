@@ -5,10 +5,9 @@ alwaysApply: false
 
 # Global Flutter agent reminder
 
-- Per-project `AGENTS.md` is map; structured docs under `docs/` are system of record.
-- Cold start order: `AGENTS.md`, `docs/agent_knowledge_base.md`,
-  `docs/ai_code_review_protocol.md`; use `docs/agents_quick_reference.md` for
-  command lookup only.
+- Repo map: `AGENTS.md`. System of record: `docs/`.
+- Cold start: `AGENTS.md` -> `docs/agent_knowledge_base.md` -> `docs/ai_code_review_protocol.md`.
+- Use `docs/agents_quick_reference.md` for command lookup only.
 
 ## Execution
 
@@ -17,9 +16,9 @@ alwaysApply: false
 
 ## Context budget
 
-- Read smallest blocks needed; prefer targeted search + narrow reads; avoid loading whole files/directories.
-- For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Avoid redundant restatement of repo policy; link to canon docs instead.
+- Read smallest blocks needed; prefer targeted search + narrow reads.
+- context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+- Don’t restate policy; point to canon docs.
 
 ## Quality bar
 
@@ -39,4 +38,4 @@ alwaysApply: false
 - For agent/docs changes, keep the map short and run `./tool/check_agent_knowledge_base.sh`.
 - Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork unless capabilities differ.
 - Flutter widget tests: use `WidgetTester.view`; don't use deprecated `tester.binding.window` test-value APIs.
-- Favor concise, copy/paste-ready repo commands over long policy restatements.
+- Favor copy/paste-ready repo commands over long prose.
