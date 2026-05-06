@@ -5,18 +5,19 @@ description: Cursor integration pointer for Flutter BLoC app. Use when editing r
 
 # Cursor integration
 
-Repo-scoped Cursor assets:
+Repo does **not** commit `.cursor/*` in this project. Cursor agent assets are
+managed via repo templates and synced into the user’s Cursor profile.
 
-- `.cursor/rules/dependency-review.mdc`
-- `.cursor/rules/flutter-isolate-presentation.mdc`
-- `.cursor/rules/router-feature-validation.mdc`
-- `.cursor/mcp.json`
-- `.cursor/settings.json`
+Sources of truth:
 
-Canonical templates: `tool/agent_host_templates/cursor/**`. Sync via
-`./tool/sync_agent_assets.sh`; mapping lives in `tool/agent_asset_lib.sh`.
-Targets: `~/.cursor/skills/...`, `~/.cursor/commands/...`,
-`~/.cursor/rules/agents-global.mdc`.
+- Templates: `tool/agent_host_templates/cursor/**`
+- Sync script: `./tool/sync_agent_assets.sh` (mapping: `tool/agent_asset_lib.sh`)
+
+Host targets (written by sync):
+
+- `~/.cursor/skills/*`
+- `~/.cursor/commands/*`
+- `~/.cursor/rules/agents-global.mdc`
 
 Repo canon wins. Adapters point back to `AGENTS.md`,
 `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`,
