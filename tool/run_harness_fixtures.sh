@@ -35,6 +35,80 @@ bash tool/check_agent_memory_compounding.sh --help >/dev/null
 echo "fixtures|checklist_cli_contract"
 bash tool/check_checklist_cli_contract.sh >/dev/null
 
+echo "fixtures|upgrade_validate_all|help"
+upgrade_help="$(./bin/upgrade_validate_all --help)"
+if ! grep -q -- "Usage: upgrade_validate_all" <<<"$upgrade_help"; then
+  echo "❌ fixtures failed: upgrade_validate_all --help missing Usage line" >&2
+  echo "$upgrade_help" >&2
+  exit 1
+fi
+if ! grep -q -- "SKIP_PUB_UPGRADE" <<<"$upgrade_help"; then
+  echo "❌ fixtures failed: upgrade_validate_all --help missing SKIP_PUB_UPGRADE" >&2
+  echo "$upgrade_help" >&2
+  exit 1
+fi
+if ! grep -q -- "SYNC_AGENT_ASSETS" <<<"$upgrade_help"; then
+  echo "❌ fixtures failed: upgrade_validate_all --help missing SYNC_AGENT_ASSETS" >&2
+  echo "$upgrade_help" >&2
+  exit 1
+fi
+
+echo "fixtures|upgrade_validate_all|bad_arg"
+set +e
+  bad_arg_output="$(./bin/upgrade_validate_all --definitely-not-a-real-arg 2>&1)"
+status=$?
+set -e
+if [[ "$status" -ne 2 ]]; then
+  echo "❌ fixtures failed: expected exit 2 for unknown arg, got $status" >&2
+  exit 1
+fi
+if ! grep -q -- "Unknown argument: --definitely-not-a-real-arg" <<<"$bad_arg_output"; then
+  echo "❌ fixtures failed: unknown arg did not print usage failure" >&2
+  echo "$bad_arg_output" >&2
+  exit 1
+fi
+
+echo "fixtures|upgrade_validate_all|bad_env_skip_pub_upgrade"
+set +e
+  bad_skip_output="$(SKIP_PUB_UPGRADE=maybe ./bin/upgrade_validate_all 2>&1)"
+status=$?
+set -e
+if [[ "$status" -ne 2 ]]; then
+  echo "❌ fixtures failed: expected exit 2 for invalid SKIP_PUB_UPGRADE, got $status" >&2
+  exit 1
+fi
+if ! grep -q -- "Unsupported SKIP_PUB_UPGRADE value: maybe" <<<"$bad_skip_output"; then
+  echo "❌ fixtures failed: invalid SKIP_PUB_UPGRADE did not print env failure" >&2
+  echo "$bad_skip_output" >&2
+  exit 1
+fi
+
+echo "fixtures|upgrade_validate_all|bad_env_sync_agent_assets"
+set +e
+  bad_sync_output="$(SYNC_AGENT_ASSETS=banana ./bin/upgrade_validate_all 2>&1)"
+status=$?
+set -e
+if [[ "$status" -ne 2 ]]; then
+  echo "❌ fixtures failed: expected exit 2 for invalid SYNC_AGENT_ASSETS, got $status" >&2
+  exit 1
+fi
+if ! grep -q -- "Unsupported SYNC_AGENT_ASSETS value: banana" <<<"$bad_sync_output"; then
+  echo "❌ fixtures failed: invalid SYNC_AGENT_ASSETS did not print env failure" >&2
+  echo "$bad_sync_output" >&2
+  exit 1
+fi
+
+echo "fixtures|upgrade_pr_triage_skill|upgrade_lane_contract"
+upgrade_skill="tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md"
+if ! grep -q -- "SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all" "$upgrade_skill"; then
+  echo "❌ fixtures failed: upgrade triage skill missing SKIP_PUB_UPGRADE lane command" >&2
+  exit 1
+fi
+if ! grep -q -- "SKIP_PUB_UPGRADE=1 SYNC_AGENT_ASSETS=skip ./bin/upgrade_validate_all" "$upgrade_skill"; then
+  echo "❌ fixtures failed: upgrade triage skill missing SYNC_AGENT_ASSETS=skip lane command" >&2
+  exit 1
+fi
+
 fixture_bad="tool/fixtures/harness/bad_missing_md_token.md"
 fixture_space="tool/fixtures/harness/fixture with space.md"
 

@@ -145,6 +145,13 @@ Run exactly:
 SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all
 ```
 
+If you need to avoid mutating managed agent assets during the lane, set
+`SYNC_AGENT_ASSETS=skip`:
+
+```bash
+SKIP_PUB_UPGRADE=1 SYNC_AGENT_ASSETS=skip ./bin/upgrade_validate_all
+```
+
 Success criteria:
 
 - Script exits `0`.
