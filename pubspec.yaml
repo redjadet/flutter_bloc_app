@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+20
 environment:
-  sdk: 3.11.5
+  sdk: 3.11.6
 
 # Major bumps still blocked by the live graph (see dependency_overrides):
 # - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
@@ -73,7 +73,7 @@ dependencies:
   flutter_svg: ^2.2.4
   flutter_tts: ^4.2.5
   freezed_annotation: ^3.1.0
-  genui: ^0.7.0
+  genui: ^0.9.0
   genui_google_generative_ai: ^0.7.1
   geolocator: ^14.0.2
   get_it: ^9.2.1
@@ -94,7 +94,7 @@ dependencies:
   package_info_plus: ^9.0.1
   path: ^1.9.1
   path_provider: ^2.1.5
-  pdfrx: ^2.3.0
+  pdfrx: ^2.3.1
   provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.9.2
@@ -124,7 +124,7 @@ dev_dependencies:
   geolocator_platform_interface: ^4.2.6
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
-  google_sign_in_mocks: ^0.3.0
+  google_sign_in_mocks: ^0.4.1
   integration_test:
     sdk: flutter
   json_serializable: ^6.13.2
