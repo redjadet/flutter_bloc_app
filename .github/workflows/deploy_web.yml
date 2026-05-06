@@ -95,7 +95,7 @@ jobs:
           bash tool/build_web_github_pages.sh
 
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: build/web
 
