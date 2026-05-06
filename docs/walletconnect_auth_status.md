@@ -12,6 +12,12 @@ The WalletConnect Auth feature provides a demo implementation for wallet-based a
 - Tap **“WalletConnect Auth (Demo)”**.
 - Route: `/walletconnect-auth` (code: `lib/features/walletconnect_auth/`).
 
+## Auth gate (deep-link safe)
+
+This route is now **auth-gated** via `AppRouteAuthGate` so deep links cannot reach
+wallet-link UI while signed out. If user is signed out, navigation redirects to
+`/auth` first, then returns.
+
 ## What's Currently Implemented
 
 ### ✅ Complete Features
