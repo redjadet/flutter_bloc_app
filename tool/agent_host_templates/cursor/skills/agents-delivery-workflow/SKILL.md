@@ -7,6 +7,7 @@ description: Non-trivial delivery start→finish, validation routing, meta/subag
 
 Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
 Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask only hard blockers.
+Default trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
 - **Plan**: non-trivial -> write plan + verification in `tasks/cursor/todo.md`.
 - **Plan**: non-trivial existing-code work -> context ladder: map docs, durable memory, code-review-graph, targeted raw files.

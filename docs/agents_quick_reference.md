@@ -41,6 +41,21 @@ Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_ro
 
 Fastlane: prefer `./tool/fastlane.sh` over raw `fastlane`.
 
+## Automatic workflow triggers
+
+External catalogs (e.g. [Claude-OS](https://github.com/rohanmistry231/Claude-OS)) use similar names; this repo’s behavior is defined only by checked-in docs and scripts.
+
+| Trigger | Cursor path | Codex path |
+| --- | --- | --- |
+| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same ladder; plan + verification in [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Broad / high-risk work | Run multi-agent benefit gate in [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); use `Task` hub only if gate passes | Stay single-agent unless delegation clearly helps and is allowed |
+| API / version-sensitive change | Use enabled docs, MCP, browser, or repo-pinned examples before model memory | Same |
+| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + scope-matched validation ([`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)) | Same |
+| Same failure repeats | Add repo capability ([`agent_knowledge_base.md#missing-capability-loop`](agent_knowledge_base.md#missing-capability-loop)); do not inflate prompts | Same |
+| Host template / agent behavior doc changed | Edit source docs → [`tool/agent_host_templates/`](../tool/agent_host_templates/) → `./tool/sync_agent_assets.sh` + `./tool/check_agent_asset_drift.sh` | Same |
+
+**Docs-before-memory (APIs):** For Flutter, Dart, Firebase, Supabase, GoRouter, or similar version-sensitive APIs, consult an enabled official or repo-grounded source (docs site, MCP doc tool, browser, or in-repo usage) before editing from recall alone. If no source is available, say so and narrow scope.
+
 ## Flutter Test Reminder
 
 Widget tests: set screen size/pixel ratio with `WidgetTester.view`
