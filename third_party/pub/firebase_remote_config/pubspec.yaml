@@ -15,7 +15,7 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '3.11.5'
+  sdk: '3.11.6'
   flutter: '>=3.3.0'
 
 dependencies:
