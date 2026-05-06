@@ -4,7 +4,7 @@ version: 1.7.0
 repository: https://github.com/btwld/mix/tree/main/packages/mix_lint
 
 environment:
-  sdk: "3.11.6"
+  sdk: "3.11.5"
 
 dependencies:
   analyzer: ^8.4.1

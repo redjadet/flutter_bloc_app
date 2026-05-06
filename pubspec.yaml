@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+20
 environment:
-  sdk: 3.11.6
+  sdk: 3.11.5
 
 # Major bumps still blocked by the live graph (see dependency_overrides):
 # - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
