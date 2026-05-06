@@ -15,6 +15,23 @@
   - Redirect authenticated users away from `/auth` to `/counter`, unless they are anonymous and upgrading (`lib/app/router/auth_redirect.dart`).
 - Routes needing auth today rely on this router-level guard; there is no per-page auth check beyond GoRouter redirects.
 
+## Route-level protection (deep-link safe)
+
+Router redirect intentionally allows deep links while unauthenticated (universal links). Any route that must be authenticated must enforce it at the route level via:
+
+- `AppRouteAuthGate` (`lib/app/router/app_route_auth_gate.dart`)
+- `AppRoutePolicies` (`lib/app/router/route_auth_policy.dart`)
+
+This ensures both deep-link entry and in-app navigation go through the same auth checks.
+
+Protected examples:
+
+- `/profile` (gated by `AppRouteAuthGate` + `AppRoutePolicies.profile`)
+- `/manage-account` (gated by `AppRouteAuthGate` + `AppRoutePolicies.manageAccount`)
+- `/settings` (gated by `AppRouteAuthGate` + `AppRoutePolicies.settings`)
+- `/walletconnect-auth` (gated by `AppRouteAuthGate` + `AppRoutePolicies.walletconnectAuth`)
+- Online therapy demo admin routes (gated by `AppRouteAuthGate` + `AppRoutePolicies.onlineTherapyDemoAdmin*`)
+
 ## Sign-In & Account Flows
 
 - **Sign-in screen** (`lib/features/auth/presentation/pages/sign_in_page.dart`):
@@ -69,11 +86,26 @@
 
 ## Notable Gaps / Risks
 
-- Deep links to non-root routes bypass the auth redirect and can surface pages without an authenticated user; features should defensively handle missing user context if required.
+- Deep links to non-root routes bypass the auth redirect by design; any route that requires auth must be wrapped with `AppRouteAuthGate`. Remaining un-gated routes should defensively handle missing user context if required.
 - The registration flow is non-functional for account creation; users must use the FirebaseUI sign-in/registration path for real accounts.
 - Biometric authenticator returns `true` when biometrics are unsupported or not enrolled, which may be acceptable for settings access but is not a hard security gate.
 - Firebase-dependent flows auto-fallback to anonymous-only UI when Firebase is uninitialized, which may hide configuration issues in some environments.
 - Token injection only applies to HTTP requests made via the shared app **Dio** instance (and its interceptors); other clients (e.g. third-party SDKs) will not include auth headers automatically.
+
+## What remains (next work)
+
+- Expand `AppRoutePolicies` coverage for other sensitive routes that currently assume auth implicitly.
+- Decide and document a **roles/claims source of truth** (Firebase custom claims vs profile field vs hybrid) before implementing role-restricted gates.
+
+## Roles/claims (design note)
+
+Role-based access is not implemented yet. Before adding role-restricted routes, decide a source of truth that can be resolved without introducing async router redirects or startup race conditions:
+
+- **Firebase custom claims** (authoritative, but requires claim refresh and a safe access path)
+- **Profile field** (app-controlled, but needs persistence + sync semantics)
+- **Hybrid** (claims for coarse roles, profile for app-scoped flags)
+
+Until that decision exists, keep route policy to `public | authenticated`, and gate sensitive routes with `AppRouteAuthGate`.
 
 ## Request Checklist (Current State)
 

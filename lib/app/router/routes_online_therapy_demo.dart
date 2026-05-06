@@ -1,3 +1,6 @@
+import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
+import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/online_therapy_demo.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart';
@@ -91,20 +94,35 @@ RouteBase createOnlineTherapyDemoRoute() => ShellRoute(
     GoRoute(
       path: AppRoutes.onlineTherapyDemoAdminPath,
       name: AppRoutes.onlineTherapyDemoAdmin,
-      builder: (final context, final state) =>
-          const OnlineTherapyDemoAdminHubPage(),
+      builder: (final context, final state) => AppRouteAuthGate(
+        policy: AppRoutePolicies.onlineTherapyDemoAdmin,
+        getCurrentUser: () => getIt<AuthRepository>().currentUser,
+        authStateChanges: getIt<AuthRepository>().authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: const OnlineTherapyDemoAdminHubPage(),
+      ),
     ),
     GoRoute(
       path: AppRoutes.onlineTherapyDemoAdminVerificationPath,
       name: AppRoutes.onlineTherapyDemoAdminVerification,
-      builder: (final context, final state) =>
-          const OnlineTherapyDemoAdminVerificationPage(),
+      builder: (final context, final state) => AppRouteAuthGate(
+        policy: AppRoutePolicies.onlineTherapyDemoAdminVerification,
+        getCurrentUser: () => getIt<AuthRepository>().currentUser,
+        authStateChanges: getIt<AuthRepository>().authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: const OnlineTherapyDemoAdminVerificationPage(),
+      ),
     ),
     GoRoute(
       path: AppRoutes.onlineTherapyDemoAdminAuditPath,
       name: AppRoutes.onlineTherapyDemoAdminAudit,
-      builder: (final context, final state) =>
-          const OnlineTherapyDemoAdminAuditPage(),
+      builder: (final context, final state) => AppRouteAuthGate(
+        policy: AppRoutePolicies.onlineTherapyDemoAdminAudit,
+        getCurrentUser: () => getIt<AuthRepository>().currentUser,
+        authStateChanges: getIt<AuthRepository>().authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: const OnlineTherapyDemoAdminAuditPage(),
+      ),
     ),
   ],
 );

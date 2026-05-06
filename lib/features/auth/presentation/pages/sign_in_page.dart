@@ -112,7 +112,9 @@ class SignInPage extends StatelessWidget {
             await authRepository.signInAnonymously();
           }
           if (!context.mounted) {
-            ContextUtils.logNotMounted('SignInPage.signInAnonymously.noFirebase');
+            ContextUtils.logNotMounted(
+              'SignInPage.signInAnonymously.noFirebase',
+            );
             return;
           }
           context.go(postAuthPath());
