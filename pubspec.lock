@@ -1926,10 +1926,10 @@ packages:
     dependency: "direct main"
     description:
       name: pdfrx
-      sha256: "6d0d450202f3a934be58f0cb34446fcd70b4a8fbd610a52220c6aab3222edbd0"
+      sha256: "6b14886d8823f9a105230d1dfa483afa1099ff67cd6ddde896b5f33c9afb4312"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   pdfrx_engine:
     dependency: transitive
     description:
@@ -2507,10 +2507,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_web
-      sha256: d0412fcf4c6b31ecfdb7762359b7206ffba3bbffd396c6d9f9c4616ece476c1f
+      sha256: "85c81589622fbc87c1c683aaea164d3604a7777495a79d91e39ffcdec39ddb34"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.3"
   url_launcher_windows:
     dependency: transitive
     description:
