@@ -317,6 +317,7 @@ validate_checklist_configuration() {
     "tool/check_regression_guards.sh"
     "tool/check_todo_keyboard_layout.sh"
     "tool/validate_validation_docs.sh"
+    "tool/patch_flutter_secure_storage_darwin_swiftpm.sh"
     "tool/check_agent_asset_drift.sh"
     "tool/check_agent_knowledge_base.sh"
     "tool/check_agent_memory_compounding.sh"
@@ -1085,6 +1086,9 @@ if [ "$SHOULD_RUN_PUB_GET" -eq 1 ]; then
 else
   echo "  Dependencies already up-to-date, skipping 'flutter pub get'"
 fi
+
+# Patch known broken SwiftPM platform mins in pub cache (Darwin only).
+bash "$PROJECT_ROOT/tool/patch_flutter_secure_storage_darwin_swiftpm.sh" || true
 echo "✅ Dependencies ready"
 echo ""
 
