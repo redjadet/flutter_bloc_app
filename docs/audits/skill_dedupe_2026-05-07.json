@@ -1,0 +1,176 @@
+{
+  "generatedAt": "2026-05-07T11:13:01.384075Z",
+  "inventoryPath": "docs/audits/skill_inventory_2026-05-07.json",
+  "exactClusters": [
+    {
+      "hash": "9813bc59d372baaf53f83f879393065ded6f1793",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/upgrade-pr-triage-validate/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md"
+      ]
+    },
+    {
+      "hash": "c2e4e49f2442c557f6551597662a3e6a5a101a7b",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md"
+      ]
+    },
+    {
+      "hash": "9a4f4163e0921b7f9779205bafdacca3abe5329d",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-delivery-workflow/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md"
+      ]
+    },
+    {
+      "hash": "cc819a807b85bd5de6f8927c3fdee7d1d198c8bd",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-meta-behavior/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md"
+      ]
+    },
+    {
+      "hash": "6b3db5c830de0fe590b37bfabd65767c7d090620",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-cursor-integration/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md"
+      ]
+    },
+    {
+      "hash": "9809af4c98fbe0583fe5c09b8f33ed60e7a01d6e",
+      "paths": [
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
+        "/Users/ilkersevim/.cursor/skills/agents-quick-reference/SKILL.md"
+      ]
+    },
+    {
+      "hash": "9901bdf37ddbe10f6a3be99ae22ee8a259aa3db4",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/caveman-compress/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md"
+      ]
+    }
+  ],
+  "nearClusters": [
+    {
+      "fingerprint": "e8296f71fe3680b16238eff71f1ce091989f0745",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/workflow/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/workflow/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "51bcd74f033377e0a1001cd4e30a7a59f66665f9",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/ai-sdk/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/ai-sdk/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "130387f73bd014b9506b92a89e9fc439b3145bac",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/nextjs/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/nextjs/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "c181b428bf1d2570f9385484a574a0ddf08174a5",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/chat-sdk/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/chat-sdk/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "24560b6fdee1d8ca17c1e211b4d7db6882f49294",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-sandbox/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-sandbox/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "a4e18a3a0132413e03fc518e1443434cd38033ac",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-cache-components/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-cache-components/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "aede310e19537eb614854009a2ef23cec6d12aa5",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-forge/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-forge/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "58a62fb793671dfb928ae60070a0c5fe519ea51e",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/react-best-practices/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/react-best-practices/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "f69a21f5f4c82350fd12ca2e213660ef02901d37",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/upgrade-pr-triage-validate/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "af84c334607e40f81754477c3df6899ce57cf222",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-cli/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-cli/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "37181410e740016030e2b1762a6ce2f02439b9ac",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "ce38f3d0b3d64e788b9c74915e31c3275ee0e1ac",
+      "paths": [
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-upgrade/SKILL.md",
+        "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/next-upgrade/upstream/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "1cde76c9fa650ff00b099734e40eaaf26c1da0ae",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-delivery-workflow/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "a9e9705be8c0b8cc35a2782501a23075a003478d",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-meta-behavior/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "8b976bc964f7f84f555bdb73b2cb13edcf13f46e",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/agents-cursor-integration/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "740f8d24554be5e8e7ef0f73f62f79f56148d088",
+      "paths": [
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
+        "/Users/ilkersevim/.cursor/skills/agents-quick-reference/SKILL.md"
+      ]
+    },
+    {
+      "fingerprint": "8e99fbe13faa54757db22a0be910a1bfe18f8dbb",
+      "paths": [
+        "/Users/ilkersevim/.cursor/skills/caveman-compress/SKILL.md",
+        "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md"
+      ]
+    }
+  ]
+}
