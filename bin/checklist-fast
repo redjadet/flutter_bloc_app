@@ -53,7 +53,13 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 skill_inventory_path="$PROJECT_ROOT/docs/audits/skill_inventory_latest.json"
-if [ -f "$skill_inventory_path" ]; then
+
+if [ ! -f "$skill_inventory_path" ]; then
+  # Fallback: most recent dated inventory file (if present).
+  skill_inventory_path="$(ls -t "$PROJECT_ROOT"/docs/audits/skill_inventory_*.json 2>/dev/null | head -n 1 || true)"
+fi
+
+if [ -n "${skill_inventory_path:-}" ] && [ -f "$skill_inventory_path" ]; then
   echo "info|skill budgets|report-only|$skill_inventory_path"
   bash "$PROJECT_ROOT/tool/check_skill_budgets.sh" "$skill_inventory_path" report || true
 fi
