@@ -52,4 +52,10 @@ esac
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
+skill_inventory_path="$PROJECT_ROOT/docs/audits/skill_inventory_latest.json"
+if [ -f "$skill_inventory_path" ]; then
+  echo "info|skill budgets|report-only|$skill_inventory_path"
+  bash "$PROJECT_ROOT/tool/check_skill_budgets.sh" "$skill_inventory_path" report || true
+fi
+
 exec env CHECKLIST_MODE=fast "$PROJECT_ROOT/tool/delivery_checklist.sh" "$@"
