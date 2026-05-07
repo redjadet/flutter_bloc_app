@@ -16,6 +16,7 @@ Output only needed, copy/paste-ready.
    - ask only on hard blockers
    - review gate + self-verification
    - host tracker paths
+   - UI/design path: DESIGN.md + docs/design_system.md before visual code
 
 2) For my current change (files touched + intent), list exact validation commands, targeted first and broader only when justified.
 
@@ -30,5 +31,7 @@ Prefer repo entrypoints only:
 - ./bin/integration_tests
 - ./bin/upgrade_validate_all
 - ./tool/check_agent_asset_drift.sh and ./tool/sync_agent_assets.sh --dry-run when host templates changed
+- ./tool/check_design_md.sh when DESIGN.md changed
+- ./tool/run_mix_lint.sh when Mix tokens/styles changed
 - ./tool/request_codex_feedback.sh only for cross-host second opinion; do not self-delegate
 ```

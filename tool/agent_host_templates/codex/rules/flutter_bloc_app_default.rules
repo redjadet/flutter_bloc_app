@@ -10,6 +10,8 @@ prefix_rule(pattern=["/bin/zsh", "-lc", "./bin/upgrade_validate_all"], decision=
 prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/request_codex_feedback.sh"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/check_agent_asset_drift.sh"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/check_agent_knowledge_base.sh"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/check_design_md.sh"], decision="allow")
+prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/run_mix_lint.sh"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/sync_agent_assets.sh --dry-run"], decision="allow")
 prefix_rule(pattern=["/bin/zsh", "-lc", "./tool/sync_agent_assets.sh --apply"], decision="allow")
 # END flutter_bloc_app managed rules

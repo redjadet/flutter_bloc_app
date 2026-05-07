@@ -9,6 +9,9 @@ Source-of-truth docs for Flutter BLoC app.
 - **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md)
+- **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
+  [`design_system.md`](design_system.md),
+  [`mix_design_system_plan.md`](mix_design_system_plan.md)
 - **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **AI decision workbench**:
   [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed
@@ -36,6 +39,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 ### Architecture and design
 
+- [`../DESIGN.md`](../DESIGN.md) — agent-readable visual brief and DesignMD tokens
 - [`clean_architecture.md`](clean_architecture.md)
 - [`architecture_details.md`](architecture_details.md)
 - [`feature_overview.md`](feature_overview.md)

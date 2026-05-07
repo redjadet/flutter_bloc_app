@@ -62,6 +62,7 @@ required_files=(
   "docs/agents_quick_reference.md"
   "docs/agent_host_notes.md"
   "docs/README.md"
+  "docs/design_system.md"
   "docs/architecture_details.md"
   "docs/CODE_QUALITY.md"
   "docs/engineering/validation_routing_fast_vs_full.md"
@@ -83,6 +84,8 @@ if [ -f "AGENTS.md" ]; then
   require_contains "AGENTS.md" "docs/ai_code_review_protocol.md"
   require_contains "AGENTS.md" "docs/agents_quick_reference.md"
   require_contains "AGENTS.md" "docs/README.md"
+  require_contains "AGENTS.md" "DESIGN.md"
+  require_contains "AGENTS.md" "docs/design_system.md"
   require_contains "AGENTS.md" "docs/agent_host_notes.md"
 
   # Guard map-only invariant: host-specific guidance lives in docs/agent_host_notes.md.
@@ -99,6 +102,8 @@ require_contains "docs/agent_knowledge_base.md" "Agent Legibility"
 require_contains "docs/agent_knowledge_base.md" "Missing Capability Loop"
 require_contains "docs/agent_knowledge_base.md" "Memory Compounding"
 require_contains "docs/agent_knowledge_base.md" "System Of Record Layout"
+require_contains "docs/agent_knowledge_base.md" "DESIGN.md"
+require_contains "docs/agent_knowledge_base.md" "design_system.md"
 require_contains "docs/agent_knowledge_base.md" "Plans As Artifacts"
 require_contains "docs/agent_knowledge_base.md" "Invariant Enforcement"
 require_contains "docs/agent_knowledge_base.md" "Codex And Cursor"
@@ -111,7 +116,10 @@ require_contains "docs/agent_knowledge_base.md" "tasks/lessons.md"
 require_contains "docs/agent_knowledge_base.md" "reusable conclusions"
 require_contains "docs/agent_knowledge_base.md" "Semantic lint"
 require_contains "docs/README.md" "agent_knowledge_base.md"
+require_contains "docs/README.md" "DESIGN.md"
+require_contains "docs/README.md" "design_system.md"
 require_contains "docs/validation_scripts.md" "check_agent_knowledge_base.sh"
+require_contains "docs/validation_scripts.md" "check_design_md.sh"
 require_contains "docs/validation_scripts.md" "memory-compounding"
 require_contains "docs/validation_scripts.md" "closed-loop invariants"
 
@@ -143,12 +151,16 @@ require_all_contains \
 require_all_contains \
   "docs/ai_code_review_protocol.md" \
   "Before report" \
+  "DESIGN.md" \
+  "design_system.md" \
   "Scope discipline" \
   "Self-verification" \
   "Self-verify"
 
 require_all_contains \
   "docs/agents_quick_reference.md" \
+  "DESIGN.md" \
+  "design_system.md" \
   "below 95%" \
   "execute end-to-end, verify, report proof" \
   "Behavior changes start in source docs" \
@@ -166,6 +178,8 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "tool/agent_host_templates/codex/AGENTS.md" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "docs/agents_quick_reference.md" \
@@ -181,16 +195,22 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/agents_quick_reference.md" \
     "docs/ai_code_review_protocol.md" \
     "tool/check_agent_knowledge_base.sh" \
+    "tool/check_design_md.sh" \
+    "tool/run_mix_lint.sh" \
     "tool/check_agent_asset_drift.sh" \
     "tool/sync_agent_assets.sh --dry-run"
 
   require_all_contains \
     "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "tasks/codex/todo.md" \
@@ -205,10 +225,19 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "docs/agents_quick_reference.md" \
     "tool/check_agent_knowledge_base.sh"
+  require_all_contains \
+    "tool/agent_host_templates/cursor/rules/design-system.mdc" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
+    "AppStyles" \
+    "tool/check_design_md.sh" \
+    "tool/run_mix_lint.sh"
   require_all_contains \
     "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
     "95% confident" \
@@ -218,16 +247,22 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/agents_quick_reference.md" \
     "docs/ai_code_review_protocol.md" \
     "tool/check_agent_knowledge_base.sh" \
+    "tool/check_design_md.sh" \
+    "tool/run_mix_lint.sh" \
     "tool/check_agent_asset_drift.sh" \
     "tool/sync_agent_assets.sh --dry-run"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
     "AGENTS.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/agents_quick_reference.md" \
     "docs/ai_code_review_protocol.md" \

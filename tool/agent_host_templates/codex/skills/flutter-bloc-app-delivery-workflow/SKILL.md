@@ -5,72 +5,44 @@ description: Non-trivial delivery for Codex — planning, execution, validation,
 
 # Flutter BLoC app delivery workflow
 
-Use at non-trivial task start and before marking complete.
+Use at non-trivial start and before done.
 
-Default path: **Plan -> Execute -> Verify -> Report**.
+Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask only hard blockers. Trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-Closed-loop: plan once (<=10 lines). Ask only hard blockers. Keep context tight.
-Default trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
-
-1. **Plan:** Start from repo docs, not host assumptions.
-2. **Plan:** Use `AGENTS.md` as map and `docs/agent_knowledge_base.md` as source-of-truth layout.
-3. **Plan:** For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-4. **Plan:** Keep active plan and verification in `tasks/codex/todo.md`.
-5. **Plan:** Preserve user-supplied execution plans unless user asks for revisions.
-6. **Plan:** Classify complexity, risk, scope, uncertainty before validation/delegation depth.
-7. **Plan:** Do not change files until at least 95% confident in goal, scope, and approach. Ask until clear.
-8. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns before new abstractions.
-9. **Execute:** Route lifecycle/memory-pressure work through `docs/REPOSITORY_LIFECYCLE.md` and `docs/reliability_error_handling_performance.md`.
-10. **Execute:** Prefer shared lifecycle helpers (`DisposableBag`,
-   `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`) over
-   custom resource tracking.
-11. **Execute:** Keep `Presentation -> Domain <- Data`.
-12. **Execute:** Update DI, routes, l10n, and codegen when touched.
-13. **Execute:** Widget-test viewport sizing uses `WidgetTester.view`, not
-    deprecated `tester.binding.window`.
-14. **Execute:** Repeated struggle => add repo capability (doc/fixture/test/script/UI proof/log helper/validation check).
-15. **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
-16. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`.
-17. **Verify:** Run smallest matching repo validation.
-18. **Verify:** Self-verify vs request + changed files + proof + blockers + residual risk.
-19. **Report:** don't mark complete without proof matching scope.
-
-Required phrase (guard): Self-verify final response vs request, changed files, proof, blockers, residual risk.
+1. **Plan:** Start from repo docs. `AGENTS.md` map; `docs/agent_knowledge_base.md` source layout.
+2. **Plan:** Existing-code work uses context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+3. **Plan:** Keep active plan/proof in `tasks/codex/todo.md`.
+4. **Plan:** Preserve user-supplied plan unless asked to revise.
+5. **Plan:** Classify complexity/risk/scope/uncertainty.
+6. **Plan:** Do not edit until 95% confident in goal/scope/approach; ask until clear.
+7. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns; keep `Presentation -> Domain <- Data`.
+8. **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI` before new styling.
+9. **Execute:** Lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`; prefer `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.
+10. **Execute:** Update DI/routes/l10n/codegen when touched. Widget-test viewport uses `WidgetTester.view`.
+11. **Execute:** Repeated struggle => add repo capability. File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+12. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`; run smallest matching validation.
+13. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
+14. **Report:** Report only after Verify; proof must match scope.
 
 Validation picks:
 
 - router / `AppRoutes` / gates / auth UI -> `./bin/router_feature_validate`
 - broad / pre-ship -> `./bin/checklist`
-- integration flows -> `./bin/integration_tests`
-- upgrades / tooling -> `./bin/upgrade_validate_all`
-- docs / agent guidance -> targeted doc checks first; escalate to `./bin/checklist` when validation guidance changed materially
-- agent knowledge-base/map changes -> `./tool/check_agent_knowledge_base.sh`
-- agent/docs changes -> semantic-lint stale plans, duplicate rules, and
-  source/host-template contradictions
+- integration -> `./bin/integration_tests`
+- upgrades/tooling -> `./bin/upgrade_validate_all`
+- design brief -> `./tool/check_design_md.sh`; Mix token/style -> `./tool/run_mix_lint.sh`
+- agent docs -> targeted doc checks + `./tool/check_agent_knowledge_base.sh`; semantic-lint stale plans, duplicate rules, source/host-template contradictions
 
-Codex host rules:
+Codex rules:
 
-- Call repo shell entrypoints directly instead of host-local wrappers.
-- don't invoke `./tool/request_codex_feedback.sh` from Codex unless user
-  explicitly asks for second opinion or cross-host review.
-- Self-verification is mandatory and is not cross-host self-review.
-- Confidence should come from proof; state uncertainty when material risk remains.
+- Call repo shell entrypoints directly.
+- Do not invoke `./tool/request_codex_feedback.sh` unless user explicitly asks second opinion/cross-host review.
+- Self-verification is mandatory and not cross-host self-review.
+- Confidence from proof; state material uncertainty.
 - Surgical diff: each changed line traces to request or required validation/doc update.
-- Report only after Verify step has checked own output and available proof.
-- For UI/app changes, prefer app-visible proof over logs-only claims.
-- Keep host-local notes thin; repo canon wins.
+- UI/app changes prefer app-visible proof over logs-only claims.
+- Host notes stay thin; repo canon wins.
 
 ## Subagents
 
-Use this section before delegating or spawning parallel work.
-
-- Delegate only when it materially improves quality/speed/risk.
-- Fewest subagents that help. One goal per subagent.
-- Define scope + expected output + validation target up front.
-- Avoid multi-writer file edits. Default read-only.
-- don't delegate current blocker if main agent needs answer to move critical path.
-- don't let subagents expand scope or own shared architecture decisions.
-- Lifecycle/memory-management stays main-agent by default.
-- Subagent output = draft. Main agent integrates + validates.
-
-Repo canon wins over host-local delegation habits.
+Delegate only when it improves quality/speed/risk. Fewest agents, one goal each. Define scope/output/validation. Avoid multi-writer edits; default read-only. Don’t delegate current blocker. Subagent output = draft; main agent integrates + validates. Repo canon wins.

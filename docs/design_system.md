@@ -2,12 +2,24 @@
 
 Quick reference for where theme, constants, and shared UI live in the Flutter BLoC app.
 
+Root [`../DESIGN.md`](../DESIGN.md) is the agent-readable visual brief:
+tokens plus prose for brand feel, color roles, typography, spacing, component
+rules, and do/don't guardrails. Flutter runtime values still live in
+`AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI`; when values diverge,
+patch runtime source and then update [`DESIGN.md`](../DESIGN.md) to match the verified
+decision.
+
+`DESIGN.md` follows Google’s @google/design.md **alpha** spec: YAML tokens +
+`##` prose sections in canonical order. Keep any extra guidance as `###`
+subsections (so the linter doesn’t treat it as a new section).
+
 ## Locations
 
 | Area | Path | Purpose |
 | ---- | ---- | ------- |
+| Visual brief | [`DESIGN.md`](../DESIGN.md) | Agent-readable design memory using Google's DesignMD alpha format. |
 | Theme | `lib/core/theme/` | `ThemeData`, light/dark themes, `TextTheme`. Use `AppTheme.lightTheme()` / `AppTheme.darkTheme()`. |
-| Mix theme | `lib/core/theme/mix_app_theme.dart` | `MixThemeData` and app tokens. Use `buildAppMixThemeData(context)`; app is wrapped with `MixTheme` in `AppConfig`. |
+| Mix theme | `lib/core/theme/mix_app_theme.dart` | Mix token names and runtime values. Use `buildAppMixScope(context, child: ...)`; app is wrapped with `MixScope` in `AppConfig`. |
 | Mix styles | `lib/shared/design_system/app_styles.dart` | Shared [Style] definitions (card, profileOutlinedButton, etc.) using Mix tokens. |
 | Constants | `lib/core/constants/` | App-wide `AppConstants`: colors, breakpoints, window sizes, durations. |
 | Core extensions | `lib/core/extensions/` | Core-level `BuildContext` (or similar) extensions. |
@@ -18,20 +30,34 @@ Quick reference for where theme, constants, and shared UI live in the Flutter BL
 
 ## Mix (design tokens and styles)
 
-- **Tokens:** `AppMixTokens`, `AppMaterialColorTokens`, and `AppTextStyleTokens` in `mix_app_theme.dart` define space, radius, color, and text-style token names. Values are filled by `buildAppMixThemeData(context)` from `UI`, `AppConstants`, and Material `Theme` (including `textTheme`).
-- **Surface/layout styles:** From `app_styles.dart`: `AppStyles.card`, `profileOutlinedButton`, `listTile`, `inputField`, `inputFieldShell`, `appBar`, `chip`, `dialogContent`, `banner`, `emptyState`. Card uses `$on.dark`; listTile, banner, and chip use `$on.medium` for responsive padding. Use with `Box(style: AppStyles.*, child: ...)` or **CommonCard** for card-like wrappers.
+- **Tokens:** `AppMixTokens`, `AppMaterialColorTokens`, and `AppTextStyleTokens` in `mix_app_theme.dart` define space, radius, color, and text-style token names. Values are filled by `buildAppMixScope(context, child: ...)` from `UI`, `AppConstants`, and Material `Theme` (including `textTheme`).
+- **Surface/layout styles:** From `app_styles.dart`: `AppStyles.card`, `profileOutlinedButton`, `listTile`, `inputField`, `inputFieldShell`, `inputOutline`, `appBar`, `chip`, `dialogContent`, `banner`, `emptyState`, `statusSuccess`, `statusError`. Card uses `$on.dark`; listTile, banner, and chip use `$on.medium` for responsive padding. Use with `Box(style: AppStyles.*, child: ...)` or **CommonCard** for card-like wrappers.
 - **Button styles:** `AppStyles.filledButton`, `outlinedButton` — use with Mix `Button`/`Pressable` or align custom `ButtonStyle` with these tokens.
+- **Status text styles:** `AppStyles.statusSuccessText` and `statusErrorText` pair with the status surfaces.
 - **Text styles:** `AppStyles.headingStyle`, `subheadingStyle`, `bodyStyle`, `bodyLargeStyle`, `captionStyle`, `captionSmallStyle` (use `$text.style.ref(AppTextStyleTokens.*)` in Mix). For new text in Mix-aware widgets, prefer these over `AppTypography` where applicable.
 - **Examples:** **GraphqlDataSourceBadge**, **SyncDiagnosticsSection** chips use `AppStyles.chip`; **CommonCard** in settings, **SettingsCard**, **CalculatorSummaryCard**, **WebsocketConnectionBanner**; **SearchAppBar** uses `AppStyles.appBar`; **TodoSearchField** uses `AppStyles.inputField`; **CommonStatusView** uses `AppStyles.emptyState` when padding is null; **PlatformAdaptiveSheets.showPickerModal** and **register_country_picker** sheet use `AppStyles.dialogContent`.
 - **Tests:** Widget tests that need Mix theme use `pumpWithMixTheme(tester, child: ...)` from `test/helpers/pump_with_mix_theme.dart`.
-- **Relation to Theme:** Flutter `Theme` / `ThemeData` remain the source for Material widgets and `Theme.of(context)`. Mix runs alongside: `MixTheme` provides tokens; styles reference them. Legacy `AppTypography` and `UI` remain valid during migration. When touching a screen, see [Mix Design System Plan](mix_design_system_plan.md) “Ongoing and next steps” for a checklist.
+- **Relation to Theme:** Flutter `Theme` / `ThemeData` remain the source for Material widgets and `Theme.of(context)`. Mix runs alongside: `MixScope` provides tokens; styles reference them. Legacy `AppTypography` and `UI` remain valid during migration. When touching a screen, see [Mix Design System Plan](mix_design_system_plan.md) “Ongoing and next steps” for a checklist.
 
 ## Rules
 
+- Read root [`DESIGN.md`](../DESIGN.md) before adding new shared visual roles or UI patterns.
 - Define fonts and theme in `lib/core/theme/`; wire in `AppConfig`.
 - Use `Theme.of(context).colorScheme` and theme-derived text styles; avoid hardcoded colors and per-widget `GoogleFonts.*`.
 - For new styling, prefer Mix `Style` and tokens from `app_styles.dart` / `mix_app_theme.dart` where practical.
 - Use `context.responsiveHeadlineSize` / `TitleSize` / `BodySize` and `PlatformAdaptive.*` for UI.
+- Validate the visual brief with `./tool/check_design_md.sh` after editing
+  root [`DESIGN.md`](../DESIGN.md). This wrapper is intentionally not part of default
+  checklist until the CLI is pinned locally.
+
+### DESIGN.md CLI workflow
+
+- Package: @google/design.md
+- Lint command: npx @google/design.md lint DESIGN.md
+- Diff command: npx @google/design.md diff DESIGN.md DESIGN.before.md
+
+- Lint (wrapped by `./tool/check_design_md.sh`): npx @google/design.md lint DESIGN.md
+- Diff (useful in reviews): npx @google/design.md diff DESIGN.md DESIGN.before.md
 - Prefer barrel imports for consistency:
   - `package:flutter_bloc_app/core/constants/constants.dart`
   - `package:flutter_bloc_app/core/theme/theme.dart`

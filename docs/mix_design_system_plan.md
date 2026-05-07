@@ -4,10 +4,10 @@ This document is the implementation plan for integrating the [mix](https://pub.d
 
 ## Implementation status
 
-- **Pilot:** Done. Mix dependency, `mix_app_theme.dart`, `MixTheme` in `AppConfig`, `app_styles.dart` (card, profileOutlinedButton, listTile), `CommonCard` and profile button styles using mix tokens, tests updated, and design docs updated.
+- **Pilot:** Done. Mix dependency, `mix_app_theme.dart`, `MixScope` in `AppConfig`, `app_styles.dart` (card, profileOutlinedButton, listTile), `CommonCard` and profile button styles using mix tokens, tests updated, and design docs updated.
 - **Test helper:** `test/helpers/pump_with_mix_theme.dart` — `pumpWithMixTheme(tester, child: ...)` for widget tests that need Mix theme; `common_card_test.dart` uses it.
-- **Next steps done:** `AppStyles.inputField`, `AppStyles.appBar`, `AppStyles.chip`, `AppStyles.dialogContent`; dark-mode variant on card (`$on.dark`); breakpoint variant on listTile (`$on.medium` for horizontal padding). **GraphqlDataSourceBadge** migrated to `AppStyles.chip`.
-- **Further migration:** Settings sections use mix/CommonCard: **SyncDiagnosticsSection** (CommonCard + `AppStyles.chip`), **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection** (CommonCard); **RemoteConfig** status badge (`_RemoteConfigStatusBadge`) uses CommonCard. **SettingsCard** uses CommonCard. **CalculatorSummaryCard**, **WordCard** (playlearn), **GraphqlCountryCard** use CommonCard; **GraphqlCountryCard** `_DetailChip` uses `AppStyles.chip`. **PlatformAdaptiveSheets.showPickerModal** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. **AccountSection**, **SkeletonCard** use CommonCard. **CountdownBarContent** uses CommonCard. **AppMessage** uses CommonCard with default (token) padding. **SkeletonListTile** uses `Box(style: AppStyles.listTile)` for padding. **TopicCard** (playlearn) uses CommonCard with primaryContainer. **WalletAddressDisplay** uses CommonCard with outline border. **WebsocketConnectionBanner** (error and status bars) uses CommonCard with token padding. **WalletConnectAuthPage**: error/success message blocks and **_WalletProfileSection** use CommonCard. **TodoPriorityBadge**, **FlavorBadge** use CommonCard with border (badge/chip). **ChartLoadingList** skeleton placeholders use CommonCard. **buildTodoSwipeBackground** (todo list swipe action) uses CommonCard. **MarkdownEditorField**, **MarkdownPreview** use CommonCard for surface panels. **CalculatorSummaryCard** error block uses CommonCard. **MessageBubble** uses CommonCard inside ConstrainedBox (margin, padding, shape preserved). **GoogleMapsLocationList** selected-location chip uses CommonCard. **register_country_picker** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. List row shells: **SkeletonListTile** is the only custom row using `Box(style: AppStyles.listTile)`; other lists use ListTile or config-driven layout. **Priority B:** Added `AppStyles.banner`, `AppStyles.emptyState`, `AppStyles.filledButton`, `AppStyles.outlinedButton`; extended `AppStyles.inputField` with color and border tokens. **SearchAppBar** uses `Box(style: AppStyles.appBar)`; **TodoSearchField** uses `Box(style: AppStyles.inputField)`; **CommonStatusView** uses `Box(style: AppStyles.emptyState)` when padding is null. **Priority C:** App text tokens (AppTextStyleTokens) and textStyles in theme; AppStyles headingStyle, subheadingStyle, bodyStyle, bodyLargeStyle, captionStyle, captionSmallStyle; banner and chip use `$on.medium` for horizontal padding; AppTypography doc notes preference for Mix text/AppStyles in new code. Sync diagnostics and GraphqlCountryCard tests wrap with `MixTheme`; skeleton list tile tests use `pumpWithMixTheme`.
+- **Next steps done:** `AppStyles.inputField`, `AppStyles.inputOutline`, `AppStyles.appBar`, `AppStyles.chip`, `AppStyles.dialogContent`; dark-mode variant on card (`$on.dark`); breakpoint variant on listTile (`$on.medium` for horizontal padding). **GraphqlDataSourceBadge** migrated to `AppStyles.chip`.
+- **Further migration:** Settings sections use mix/CommonCard: **SyncDiagnosticsSection** (CommonCard + `AppStyles.chip`), **GraphqlCacheControlsSection**, **ProfileCacheControlsSection**, **RemoteConfigDiagnosticsSection** (CommonCard); **RemoteConfig** status badge (`_RemoteConfigStatusBadge`) uses CommonCard. **SettingsCard** uses CommonCard. **CalculatorSummaryCard**, **WordCard** (playlearn), **GraphqlCountryCard** use CommonCard; **GraphqlCountryCard** `_DetailChip` uses `AppStyles.chip`. **PlatformAdaptiveSheets.showPickerModal** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. **AccountSection**, **SkeletonCard** use CommonCard. **CountdownBarContent** uses CommonCard. **AppMessage** uses CommonCard with default (token) padding. **SkeletonListTile** uses `Box(style: AppStyles.listTile)` for padding. **TopicCard** (playlearn) uses CommonCard with primaryContainer. **WalletAddressDisplay** uses CommonCard with outline border. **WebsocketConnectionBanner** (error and status bars) uses CommonCard with token padding. **WalletConnectAuthPage**: error/success message blocks and **_WalletProfileSection** use CommonCard. **TodoPriorityBadge**, **FlavorBadge** use CommonCard with border (badge/chip). **ChartLoadingList** skeleton placeholders use CommonCard. **buildTodoSwipeBackground** (todo list swipe action) uses CommonCard. **MarkdownEditorField**, **MarkdownPreview** use CommonCard for surface panels. **CalculatorSummaryCard** error block uses CommonCard. **MessageBubble** uses CommonCard inside ConstrainedBox (margin, padding, shape preserved). **GoogleMapsLocationList** selected-location chip uses CommonCard. **register_country_picker** Material sheet content wrapped with `Box(style: AppStyles.dialogContent)`. List row shells: **SkeletonListTile** is the only custom row using `Box(style: AppStyles.listTile)`; other lists use ListTile or config-driven layout. **Priority B:** Added `AppStyles.banner`, `AppStyles.emptyState`, `AppStyles.statusSuccess`, `AppStyles.statusError`, `AppStyles.filledButton`, `AppStyles.outlinedButton`; extended `AppStyles.inputField` with color and border tokens. **SearchAppBar** uses `Box(style: AppStyles.appBar)`; **TodoSearchField** uses `Box(style: AppStyles.inputField)`; **CommonStatusView** uses `Box(style: AppStyles.emptyState)` when padding is null. **Priority C:** App text tokens (AppTextStyleTokens) and textStyles in theme; AppStyles headingStyle, subheadingStyle, bodyStyle, bodyLargeStyle, captionStyle, captionSmallStyle; banner and chip use `$on.medium` for horizontal padding; AppTypography doc notes preference for Mix text/AppStyles in new code. Sync diagnostics and GraphqlCountryCard tests wrap with `buildAppMixScope`; skeleton list tile tests use `pumpWithMixTheme`.
 - **Skipped:** On-device manual checks (deferred; run when validating release).
 - **Remaining:** mix_lint now runs via local package `custom_lints/mix_lint` (analyzer 8 + custom_lint 0.8 compatible). Use `./tool/run_mix_lint.sh` (or `dart run custom_lint`) to lint Mix usage. Incremental migration continues when touching other screens.
 
@@ -22,12 +22,12 @@ Use this as a checklist for implementation, verification, and follow-up.
 ### Implementation (pilot)
 
 - [x] Add `mix: ^1.7.0` (and `mix_annotations` if required) to `pubspec.yaml`.
-- [x] Create mix theme module: `lib/core/theme/mix_app_theme.dart` with tokens and `buildAppMixThemeData(context)`.
-- [x] Wrap app with `MixTheme` in `AppConfig.createMaterialApp` builder.
+- [x] Create mix theme module: `lib/core/theme/mix_app_theme.dart` with tokens and `buildAppMixScope(context, child: ...)`.
+- [x] Wrap app with `MixScope` in `AppConfig.createMaterialApp` builder.
 - [x] Create `lib/shared/design_system/app_styles.dart` with card and profile-outlined-button styles (tokens only).
-- [x] Refactor `CommonCard` to use mix tokens (padding, radius, color fallbacks from `MixTheme` / `UI`); keep same API.
+- [x] Refactor `CommonCard` to use mix tokens (padding, radius, color fallbacks from `MixScope` / `UI`); keep same API.
 - [x] Refactor profile button styles to use mix tokens / `AppStyles.profileOutlinedButton`.
-- [x] Update tests that need `MixTheme` (e.g. profile button styles tests, CommonCard test).
+- [x] Update tests that need `MixScope` (e.g. profile button styles tests, CommonCard test).
 - [x] Update [design_system.md](design_system.md) with Mix usage.
 
 ### Verification
@@ -65,7 +65,7 @@ Use this as a checklist for implementation, verification, and follow-up.
 #### Completed priorities (A–C)
 
 - **Priority A (low-risk replacements):** Card shells → CommonCard / `AppStyles.card`; badge/chip → `AppStyles.chip` or CommonCard with border; list row shells → `Box(style: AppStyles.listTile)` where full `ListTile` isn’t needed; dialog/sheet bodies → `Box(style: AppStyles.dialogContent)`. Done for the widgets listed in Implementation status; continue the same pattern when touching other screens.
-- **Priority B (shared style coverage):** `AppStyles.inputField`, `appBar`, `banner`, `emptyState`, `filledButton`, `outlinedButton` added and adopted in SearchAppBar, TodoSearchField, CommonStatusView; extend to other form/app bar/banner/empty-state/button UIs when touching them.
+- **Priority B (shared style coverage):** `AppStyles.inputField`, `inputOutline`, `appBar`, `banner`, `emptyState`, `statusSuccess`, `statusError`, `filledButton`, `outlinedButton` added and adopted in SearchAppBar, TodoSearchField, CommonStatusView; extend to other form/app bar/banner/status/empty-state/button UIs when touching them.
 - **Priority C (tokens and variants):** App text tokens and `AppStyles` text styles (headingStyle, bodyStyle, captionStyle, etc.); `$on.medium` on banner and chip; AppTypography doc updated to prefer Mix text/AppStyles for new code.
 
 ---
@@ -78,7 +78,7 @@ Use this as a checklist for implementation, verification, and follow-up.
 - **Chips and badges:** Use `Box(style: AppStyles.chip)` for chip-like labels; if a distinct chip pattern appears in 3+ places, add a named `AppStyles` variant.
 - **Custom row shells:** For non-`ListTile` rows, use `Box(style: AppStyles.listTile)`; add `listTileDense` / `listTileCompact` only when there is a real second use case.
 - **Dialogs and sheets:** Wrap Material dialog/sheet body content with `Box(style: AppStyles.dialogContent)` where layout allows.
-- **Status and empty states:** Use `Box(style: AppStyles.banner)` for full-width status bars and `Box(style: AppStyles.emptyState)` for empty-state containers.
+- **Status and empty states:** Use `Box(style: AppStyles.banner)` for full-width status bars, `Box(style: AppStyles.statusSuccess/statusError)` for compact status badges, and `Box(style: AppStyles.emptyState)` for empty-state containers.
 - **Buttons:** Prefer `AppStyles.filledButton` / `outlinedButton` with Mix `Button`/`Pressable`; if using `ButtonStyle`, align values with these tokens.
 - **Do not churn stable code:** If a file is untouched by product work, do not migrate it only for stylistic consistency.
 - **After each migration slice:** Run `./tool/run_mix_lint.sh` and affected tests before finishing the PR.
@@ -112,21 +112,21 @@ Roughly **100+ files** reference `TextStyle`/`BoxDecoration`/`EdgeInsets`/`Borde
 - **Consistency:** Same spacing/radius/typography tokens everywhere reduces design drift (e.g. “padding slightly different per screen”).
 - **Variants:** Named variants (e.g. `outlined`, `primary`) and **context variants** (e.g. `$on.dark`, breakpoint-based) give responsive and theme-aware styling without deep nesting.
 - **Composability:** Styles can be merged and reused (`Style(...).applyVariant(...)`), supporting a DRY design system.
-- **Coexistence with Theme:** mix’s `MixTheme`/`MixThemeData` supply **design tokens**; Flutter’s `Theme`/`ThemeData` remain for Material widgets and `Theme.of(context)`. The two can run in parallel: Material uses `Theme`, new/refactored UI can use mix tokens and `Style`.
+- **Coexistence with Theme:** mix’s `MixScope` supplies **design tokens**; Flutter’s `Theme`/`ThemeData` remain for Material widgets and `Theme.of(context)`. The two can run in parallel: Material uses `Theme`, new/refactored UI can use mix tokens and `Style`.
 
 ---
 
 ## Architecture: where mix sits
 
 - **MaterialApp** keeps using `AppTheme.lightTheme()` / `AppTheme.darkTheme()` so all existing `Theme.of(context)` and Material components keep working.
-- **MixTheme** wraps the app (e.g. inside `AppConfig`’s `builder` or in [lib/app/app_scope.dart](../lib/app/app_scope.dart)) and provides `MixThemeData` built from the same sources: `ColorScheme`, `TextTheme`, `UI`, and `AppConstants` breakpoints.
+- **MixScope** wraps the app inside `AppConfig`’s `builder` and provides token values built from the same sources: `ColorScheme`, `TextTheme`, `UI`, and `AppConstants` breakpoints.
 - **Style definitions** use mix utilities (`$box`, `$text`, etc.) and tokens; they can use context variants so they react to brightness and breakpoints without each widget duplicating logic.
 
 ```mermaid
 flowchart LR
   subgraph app [App root]
     MaterialApp[MaterialApp theme/darkTheme]
-    MixTheme[MixTheme]
+    MixScope[MixScope]
   end
   subgraph tokens [Token sources]
     ThemeData[ThemeData ColorScheme TextTheme]
@@ -134,11 +134,11 @@ flowchart LR
     UI[UI gaps radii]
   end
   MaterialApp --> ThemeData
-  MixTheme --> MixThemeData
-  MixThemeData --> ThemeData
-  MixThemeData --> AppConstants
-  MixThemeData --> UI
-  StyleDefs[Style definitions] --> MixThemeData
+  MixScope --> Tokens[Mix token values]
+  Tokens --> ThemeData
+  Tokens --> AppConstants
+  Tokens --> UI
+  StyleDefs[Style definitions] --> Tokens
   Widgets[Widgets] --> StyleDefs
   Widgets --> ThemeData
 ```
@@ -147,20 +147,20 @@ flowchart LR
 
 ## Implementation plan
 
-### 1. Add dependency and minimal MixTheme wiring
+### 1. Add dependency and minimal MixScope wiring
 
 - Add `mix: ^1.7.0` (and `mix_annotations` if required by mix’s API) to [pubspec.yaml](../pubspec.yaml).
 - Create a **mix theme module** (e.g. under `lib/core/theme/` or `lib/shared/design_system/`) that:
-  - Builds `MixThemeData` from:
+  - Builds `MixScope` token values from:
     - **Colors:** Map from `ThemeData.colorScheme` (primary, surface, onSurface, error, etc.) into mix color tokens so light/dark are consistent with Material.
     - **Text styles:** Map `ThemeData.textTheme` (e.g. `labelLarge`, `bodyMedium`, `headlineMedium`) to mix `textStyle` tokens so mix styles stay aligned with `AppTypography` and existing theme.
     - **Spaces:** Map `UI` (e.g. `gapS`, `gapM`, `cardPadH`) and, if needed, responsive values from [lib/shared/extensions/responsive/responsive_layout.dart](../lib/shared/extensions/responsive/responsive_layout.dart) into mix `space` tokens.
     - **Radii:** Map `UI.radiusM`, `UI.radiusPill`, etc. to mix `radius` tokens.
     - **Breakpoints:** Map `AppConstants.mobileBreakpoint` / `tabletBreakpoint` to mix breakpoint tokens so context variants match existing `ResponsiveConfig` behavior (or document a single source of truth and possibly feed ResponsiveConfig from mix later).
-  - Exposes a function that takes `BuildContext` (or `ThemeData` + optional layout info) and returns `MixThemeData`, so it can be used where theme/layout are available (e.g. inside the app builder where `Theme.of(context)` is valid).
-- Wrap the app with `MixTheme`: in `AppConfig.createMaterialApp`’s `builder`, after `appChild` is built, wrap with `MixTheme(data: mixThemeDataFromContext(context), child: result)`. Ensure `MixTheme` is inside the `MaterialApp` subtree so `Theme.of(context)` and `MediaQuery` are available when building `MixThemeData` if you build it from context.
+  - Exposes a function that takes `BuildContext` and wraps a child with `MixScope`, so it can be used where theme/layout are available (e.g. inside the app builder where `Theme.of(context)` is valid).
+- Wrap the app with `MixScope`: in `AppConfig.createMaterialApp`’s `builder`, after `appChild` is built, wrap with `buildAppMixScope(context, child: result)`. Ensure `MixScope` is inside the `MaterialApp` subtree so `Theme.of(context)` and `MediaQuery` are available when building token values.
 
-**Important:** The `UI` class uses **runtime** ScreenUtil scaling. Mix tokens are usually fixed at theme build time. Two options: (a) build `MixThemeData` in a place where you have context and call `UI.scaleWidth`/etc. when building token values (so tokens are “already scaled” for that device), or (b) define tokens as base numbers and use mix only for semantic names, and keep using `UI` for actual values in Style where mix allows passing resolved values. Prefer (a) for consistency with current behavior so tokens stay responsive without touching every Style.
+**Important:** The `UI` class uses **runtime** ScreenUtil scaling. Build `MixScope` in a place where you have context and call `UI.scaleWidth`/etc. when building token values, so tokens stay responsive without touching every Style.
 
 ---
 
@@ -191,7 +191,7 @@ Validate: run the app, toggle dark mode, resize to tablet/desktop, and run `./bi
 ### 4. Document and enforce patterns
 
 - Update [docs/design_system.md](design_system.md):
-  - Add a “Mix” section: where `MixThemeData` and shared `Style` definitions live, how to use tokens and variants in new widgets, and how this relates to `Theme`, `AppTypography`, and `UI`.
+  - Add a “Mix” section: where `MixScope` token values and shared `Style` definitions live, how to use tokens and variants in new widgets, and how this relates to `Theme`, `AppTypography`, and `UI`.
   - State that **new** styling should prefer mix Style + tokens where possible; legacy `AppTypography`/`UI` remain valid during migration.
 - Optionally add a short “Styling with Mix” note in internal coding docs: use mix tokens and Style for new UI; no hardcoded colors/spacing in widgets; use context variants for dark and responsive.
 
@@ -213,9 +213,9 @@ No need to change existing “no hardcoded values” or “theme colors” rules
 
 | Risk | Mitigation |
 | ------ | ------------- |
-| Mix theme build needs context but is built at root | Build `MixThemeData` inside the `builder` of `MaterialApp` where `context` is valid; use `Theme.of(context)` and, if needed, `MediaQuery`/layout to build tokens. |
-| ScreenUtil not initialized when MixThemeData is built | Build MixTheme below `ScreenUtilInit` (or wherever `UI.markScreenUtilReady()` is called), or build tokens lazily on first use with a fallback when ScreenUtil isn’t ready (similar to [lib/shared/ui/ui_constants.dart](../lib/shared/ui/ui_constants.dart)). |
-| Tests assume Theme but not MixTheme | In test helpers or `pumpApp`-style setup, wrap the widget under test with `MixTheme(data: testMixThemeData, child: ...)` (and optionally minimal `Theme`/`MaterialApp` if needed). Provide a minimal `MixThemeData` for tests so mix-resolved styles don’t throw. |
+| Mix token build needs context but is built at root | Build `MixScope` inside the `builder` of `MaterialApp` where `context` is valid; use `Theme.of(context)` and, if needed, `MediaQuery`/layout to build tokens. |
+| ScreenUtil not initialized when MixScope is built | Build `MixScope` below `ScreenUtilInit` (or wherever `UI.markScreenUtilReady()` is called), or build tokens lazily on first use with a fallback when ScreenUtil isn’t ready (similar to [lib/shared/ui/ui_constants.dart](../lib/shared/ui/ui_constants.dart)). |
+| Tests assume Theme but not MixScope | In test helpers or `pumpApp`-style setup, wrap the widget under test with `buildAppMixScope(context, child: ...)` and a minimal `Theme`/`MaterialApp` if needed. |
 | mix API or docs change | Pin mix to a stable minor (e.g. `^1.7.0`); check changelog when upgrading. Prefer confining mix usage to a small layer (theme + style modules) so API changes touch few files. |
 
 ---
@@ -272,7 +272,7 @@ Run these checks on a physical device or simulator to validate Mix-driven UI and
 
 ## Success criteria
 
-- mix is a dependency and the app wraps with `MixTheme` fed by a single `MixThemeData` built from `ThemeData`, `UI`, and `AppConstants`.
+- mix is a dependency and the app wraps with `MixScope` fed by tokens built from `ThemeData`, `UI`, and `AppConstants`.
 - At least one shared component (CommonCard) and one feature style (profile button) use mix Style and tokens; behavior and visuals match or improve on current (including dark mode and responsive).
 - Design system doc describes where and how to use mix; migration is incremental with no mandatory full-codebase refactor.
 - `./bin/checklist`, existing tests, and manual smoke (light/dark, phone/tablet/desktop) pass.

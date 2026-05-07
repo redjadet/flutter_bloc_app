@@ -1,163 +1,103 @@
 # Agent Quick Reference
 
-Commands + routing lookup. Convenience. Map: [`AGENTS.md`](../AGENTS.md).
-Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review:
-[`ai_code_review_protocol.md`](ai_code_review_protocol.md).
-If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with
-[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Commands + routing lookup. Map: [`AGENTS.md`](../AGENTS.md). Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). Validation detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
-Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5.
-
-CI/automation: [`ci_automation.md`](ci_automation.md).
+Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci_automation.md).
 
 ## Validation Chooser
 
-Decision guide: [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
-
 | Situation | Command |
 | --- | --- |
-| Clean-tree local sanity or narrow local docs/tooling sweep | `./bin/checklist-fast` (add `--explain` when debugging mode selection) |
+| Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
-| Integration journey / flow verification | `./bin/integration_tests` |
+| Integration journey / flow | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
-| Non-trivial existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `./tool/refresh_code_review_graph.sh --if-needed` |
-| Large refactor with code-review-graph installed | `./tool/refresh_code_review_graph.sh` |
-| Cold start (print map + validation pointers) | `bash tool/agent_session_bootstrap.sh` |
-| New shared agent-facing markdown doc | `./tool/compress_agent_doc.sh PATH`; rerun with `--overwrite-backups` to replace backup |
-| Cursor shared-doc compression | `caveman-compress` skill or `./tool/compress_agent_doc.sh PATH` |
-| Agent knowledge-base/map drift | `./tool/check_agent_knowledge_base.sh` |
-| Agent memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
-| Reusable agent conclusion | File into owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../tasks/lessons.md) |
-| Tracker contract check | `bash tool/validate_task_trackers.sh` |
-| Repo-managed host-template drift check | `./tool/check_agent_asset_drift.sh` |
-| Host-template preview sync | `./tool/sync_agent_assets.sh --dry-run` |
-| Host-template local sync apply | `./tool/sync_agent_assets.sh --apply` |
-| Scan for AI-generated-code smells (high-signal helper) | `./tool/check_ai_generated_code_smells.sh` |
-| Cross-host diff review, explicit request only | `./tool/request_codex_feedback.sh` |
-| Cross-host **plan** review (markdown plan + Codex) | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
-| Hive schema fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
-| Strict Hive schema input drift check | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
-| Hive migrations at runtime | Non-null `HiveRepositoryBase.schema` → `getBox()` calls `ensureSchema` (per-box lock); kill: `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Manifest/spec/fingerprint regen still manual when stored shape changes. See [`offline_first/hive_schema_migrations.md#when-migrations-run-automatically`](offline_first/hive_schema_migrations.md#when-migrations-run-automatically). |
+| Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
+| Large refactor with graph installed | `./tool/refresh_code_review_graph.sh` |
+| Cold start map | `bash tool/agent_session_bootstrap.sh` |
+| Agent doc compression | `./tool/compress_agent_doc.sh PATH` (`--overwrite-backups` if needed) |
+| Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
+| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh` if brief changed |
+| Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
+| Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
+| Tracker contract | `bash tool/validate_task_trackers.sh` |
+| Host-template drift | `./tool/check_agent_asset_drift.sh` |
+| Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
+| AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
+| Cross-host review (explicit only) | `./tool/request_codex_feedback.sh` |
+| Cross-host plan review | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
+| Hive fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
+| Strict Hive input drift | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
 
-Fastlane: prefer `./tool/fastlane.sh` over raw `fastlane`.
+Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`.
 
-## Automatic workflow triggers
+## Automatic Workflow Triggers
 
-External catalogs (e.g. [Claude-OS](https://github.com/rohanmistry231/Claude-OS)) use similar names; this repo’s behavior is defined only by checked-in docs and scripts.
+Repo docs/scripts define behavior; external catalogs do not.
 
-| Trigger | Cursor path | Codex path |
+| Trigger | Cursor | Codex |
 | --- | --- | --- |
-| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same ladder; plan + verification in [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
-| Broad / high-risk work | Run multi-agent benefit gate in [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); use `Task` hub only if gate passes | Stay single-agent unless delegation clearly helps and is allowed |
-| API / version-sensitive change | Use enabled docs, MCP, browser, or repo-pinned examples before model memory | Same |
-| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + scope-matched validation ([`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)) | Same |
-| Same failure repeats | Add repo capability ([`agent_knowledge_base.md#missing-capability-loop`](agent_knowledge_base.md#missing-capability-loop)); do not inflate prompts | Same |
-| Host template / agent behavior doc changed | Edit source docs → [`tool/agent_host_templates/`](../tool/agent_host_templates/) → `./tool/sync_agent_assets.sh --dry-run` → `./tool/sync_agent_assets.sh --apply` → dry-run clean → `./tool/check_agent_asset_drift.sh` | Same |
+| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Broad/high-risk work | Run [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation clearly helps and is allowed |
+| API/version-sensitive change | Official/repo-pinned docs before model memory | Same |
+| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
+| UI/design/theme/Mix work | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; app-visible/widget proof where practical | Same |
+| Same failure repeats | Add repo capability; do not inflate prompts | Same |
+| Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 
-**Docs-before-memory (APIs):** For Flutter, Dart, Firebase, Supabase, GoRouter, or similar version-sensitive APIs, consult an enabled official or repo-grounded source (docs site, MCP doc tool, browser, or in-repo usage) before editing from recall alone. If no source is available, say so and narrow scope.
+Docs-before-memory APIs: Flutter, Dart, Firebase, Supabase, GoRouter, and similar version-sensitive APIs need official/repo-grounded source before edits. If unavailable, say so and narrow scope.
 
-**Host-copy caveat:** `tool/agent_host_templates/` is source of truth. Synced
-copies under `~/.codex` and local Cursor assets are per-machine and can lag until
-that developer runs `./tool/sync_agent_assets.sh --apply`; git cannot update
-other machines.
+Host-copy caveat: `tool/agent_host_templates/` is source. Synced `~/.codex` / `~/.cursor` copies can lag until `./tool/sync_agent_assets.sh --apply`; git cannot update other machines.
 
-**Cross-host caveat:** `./tool/request_codex_feedback.sh` and
-`./tool/run_codex_plan_review.sh` need local Codex, `gh`, auth, and network.
-Cold-machine failures are normal environment blockers and outside
-`./bin/checklist-fast` unless the task changes those scripts.
-
-## Flutter Test Reminder
-
-Widget tests: set screen size/pixel ratio with `WidgetTester.view`
-(`physicalSize`, `devicePixelRatio`, reset methods). Avoid deprecated
-`tester.binding.window` / `TestWidgetsFlutterBinding.window`.
-
-## Async List Builder Reminder
-
-Builder indexing Cubit/BLoC list: snapshot at build start, derive `itemCount`
-from snapshot, guard stale indexes. Header-row lists (`items.length + 1` with
-`items[index - 1]`) are `RangeError`-prone during async refresh.
-
-## Host Trackers
-
-Cursor: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md). Codex:
-[`tasks/codex/todo.md`](../tasks/codex/todo.md).
-
-## Multi-Agent Hub
-
-Cursor non-trivial work records `Benefit: team - <reason>` or
-`Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use
-`trivial - gate skipped`. Default single; team when >=2 indicators. Team runs
-under `tasks/cursor/team/<run-id>/`. Doctrine:
-[`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local Codex, `gh`, auth, network; cold-machine failures are environment blockers.
 
 ## Harness Reminders
 
-- Closed-loop default: plan once, execute end-to-end, verify, report proof.
-- Ask only on hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
+- Closed-loop: plan once, execute end-to-end, verify, report proof.
+- Ask only hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
+- Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+- Classify complexity/risk/scope/uncertainty before scaling validation/delegation.
+- Vague ask -> assumptions + success criteria + smallest verifiable slice.
+- Bug fix -> reproduce/reason root cause before code.
+- Repeated failure => add doc/test/fixture/script/route proof/log helper/validation check.
+- Reusable agent conclusion => durable repo memory; don't leave chat-only.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Classify complexity/risk/scope/uncertainty before scaling plan/validation/delegation.
-- Vague ask -> assumptions + success criteria + smallest verifiable slice before edits.
-- Bug fix -> reproduce/reason to root cause before code change.
-- Repeated failure => add repo capability: doc/test/fixture/script/route proof/log helper/validation check.
-- Verified reusable conclusion => file into durable repo memory; don't leave it chat-only.
-- Agent/docs change => semantic lint: stale plans, duplicate rules, source/template contradictions.
-- Non-trivial: compare approaches, pick lowest-regret, stop when extra work stops reducing real risk.
-- Use parallel or multi-agent work only when it clearly reduces calendar time or
-  risk; update existing skills instead of adding parallel copies when a skill can
-  own the workflow.
-- Keep routine communication concise; avoid chatty explanations unless requested.
+- Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
+- Non-trivial => compare approaches; pick lowest regret; stop when extra work no longer reduces real risk.
+- Parallel/multi-agent only when it clearly reduces calendar time or risk; update existing skills before adding copies.
+- Keep routine communication concise.
 - UI/app work: prefer app-visible proof over logs-only claims.
-- Enforce invariants mechanically; keep host assets thin and synced from `tool/agent_host_templates/`.
+- UI/design work: use [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); avoid ad-hoc color/spacing/type/state when `AppStyles`/Mix tokens cover it.
 - Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
-- Fix newline/EOF lints by correcting file structure; don't use
-  `ignore_for_file: eol_at_end_of_file`.
+- Widget tests: use `WidgetTester.view`; avoid deprecated `tester.binding.window`.
+- Async builders: snapshot Cubit/BLoC list at build start; derive `itemCount` from snapshot; guard stale indexes.
+- Fix newline/EOF lints by file structure, not `ignore_for_file: eol_at_end_of_file`.
+
+## Multi-Agent Hub
+
+Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
 ## Host Adapters
 
 | Need | Cursor | Codex |
 | --- | --- | --- |
-| Fast orientation + command entrypoints | `agents-quick-reference` | `flutter-bloc-app-quick-reference` |
-| Non-trivial delivery through completion | `agents-delivery-workflow` | `flutter-bloc-app-delivery-workflow` |
-| Plan depth / delegation reminders | `agents-meta-behavior` | — |
-| Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` with a different host | `./tool/request_codex_feedback.sh` with a different host |
+| Orientation + commands | `agents-quick-reference` | `flutter-bloc-app-quick-reference` |
+| Non-trivial delivery | `agents-delivery-workflow` | `flutter-bloc-app-delivery-workflow` |
+| Plan/delegation reminders | `agents-meta-behavior` | — |
+| Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
 
-Repo-managed Cursor slash prompts (synced by `./tool/sync_agent_assets.sh`):
-`/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`,
-`/codex-feedback`.
-
-Cold-start fit:
-
-- Codex: bootstrap -> [`AGENTS.md`](../AGENTS.md), knowledge base, review protocol, quick reference, README
-- Cursor: global rule + skills point back to same canon; don’t duplicate policy
-- Cursor compression: `caveman-compress` or `./tool/compress_agent_doc.sh`, not Anthropic auth.
+Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`.
 
 ## Read By Task
 
-- Product/setup context:
-  [`README.md`](../README.md),
-  [`new_developer_guide.md`](new_developer_guide.md)
-- Agent harness / knowledge base:
-  [`agent_knowledge_base.md`](agent_knowledge_base.md),
-  [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
-- Feature work:
-  [`clean_architecture.md`](clean_architecture.md),
-  [`architecture_details.md`](architecture_details.md),
-  [`feature_overview.md`](feature_overview.md)
-- Validation detail:
-  [`validation_scripts.md`](validation_scripts.md),
-  [`testing_overview.md`](testing_overview.md)
-- Lifecycle:
-  [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md),
-  [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
-- Offline-first:
-  [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md),
-  [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md),
-  [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
-- Supabase Edge / chat proxy:
-  [`../supabase/README.md`](../supabase/README.md)
-- gstack:
-  [`gstack_integration.md`](gstack_integration.md)
-- Staff app demo:
-  [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md)
+- Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
+- Feature work: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md), [`feature_overview.md`](feature_overview.md)
+- UI/design: [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md)
+- Validation: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
+- Lifecycle: [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
+- Offline-first: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md), [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
+- Supabase/chat proxy: [`../supabase/README.md`](../supabase/README.md)
+- gstack: [`gstack_integration.md`](gstack_integration.md)
+- Staff demo: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
