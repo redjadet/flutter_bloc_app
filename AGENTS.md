@@ -40,6 +40,8 @@ memory -> code-review-graph -> targeted raw files.
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Code graph: [`docs/code_review_graph.md`](docs/code_review_graph.md)
 - Docs index: [`docs/README.md`](docs/README.md)
+- Design/UI: [`DESIGN.md`](DESIGN.md),
+  [`docs/design_system.md`](docs/design_system.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
 - Architecture: [`docs/architecture_details.md`](docs/architecture_details.md),
   [`docs/clean_architecture.md`](docs/clean_architecture.md)
@@ -62,6 +64,8 @@ memory -> code-review-graph -> targeted raw files.
 - Surgical diff: every changed line traces to request or required validation/doc update.
 - Docs Update Policy: if agent behavior/config changes, update docs in same task before finish.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
+- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use
+  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
 - Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
@@ -74,4 +78,5 @@ memory -> code-review-graph -> targeted raw files.
 - Router/auth/gates: `./bin/router_feature_validate`
 - Integration flows: `./bin/integration_tests`
 - Agent/docs: `./tool/check_agent_knowledge_base.sh`
+- Design brief: `./tool/check_design_md.sh`
 - Host templates: `./tool/check_agent_asset_drift.sh` + `./tool/sync_agent_assets.sh --dry-run`

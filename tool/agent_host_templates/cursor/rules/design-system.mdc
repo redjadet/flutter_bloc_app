@@ -1,0 +1,23 @@
+---
+description: UI/theme/Mix/AppStyles work must use DESIGN.md and design_system.md first.
+globs:
+  - DESIGN.md
+  - docs/design_system.md
+  - docs/mix_design_system_plan.md
+  - lib/core/theme/**/*.dart
+  - lib/shared/design_system/**/*.dart
+  - lib/features/**/presentation/**/*.dart
+  - lib/shared/widgets/**/*.dart
+alwaysApply: false
+---
+
+# Design system
+
+- Before visual code, read `DESIGN.md` and `docs/design_system.md`.
+- Runtime source wins for Flutter values: `AppTheme`, `buildAppMixScope`,
+  `AppStyles`, and `UI`.
+- Avoid ad-hoc colors, spacing, typography, radii, or component states when
+  shared tokens/styles cover the need.
+- If `DESIGN.md` changed, run `./tool/check_design_md.sh`.
+- If Mix tokens/styles changed, run `./tool/run_mix_lint.sh` plus focused
+  widget/app-visible proof where practical.

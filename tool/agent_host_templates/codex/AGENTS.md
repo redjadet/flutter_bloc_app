@@ -42,6 +42,8 @@ Details live in `docs/agents_quick_reference.md` and
 - If business intent/safe scope materially ambiguous, ask or document tradeoff.
 - Design for scale when touching shared architecture, routing, sync, lifecycle, security, CI, validation, or operational load.
 - Shared state belongs in Cubit/BLoC. Keep business rules out of widgets.
+- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use
+  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
 - Use `WidgetTester.view` for widget-test viewport/pixel-ratio setup; avoid
   deprecated `tester.binding.window` test-value APIs.
 - Capture repeated user corrections in `tasks/lessons.md`.
@@ -55,6 +57,8 @@ Details live in `docs/agents_quick_reference.md` and
 - Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork host doctrine unless capabilities differ.
 - Host-template changes validate `./tool/check_agent_asset_drift.sh` and
   `./tool/sync_agent_assets.sh --dry-run`.
+- Design brief changes validate `./tool/check_design_md.sh`; Mix token/style
+  changes validate `./tool/run_mix_lint.sh`.
 - Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user explicitly asks for second opinion or cross-host review.
 - Scale reasoning depth to task complexity; don't default max for local/low-risk work.
 
