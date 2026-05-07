@@ -63,6 +63,7 @@ Typical path:
 - Markdown lint or link/doc checks on touched paths
 - `bash tool/check_docs_gardening.sh` for cheap deterministic doc-rot detection
 - `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows canonical tracker contract
+- `./tool/check_design_md.sh` when root `DESIGN.md` changed
 - `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
 - `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
 
@@ -75,6 +76,7 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 | Trigger (changed files) | Required lane(s) (minimum) |
 | --- | --- |
 | Docs/tooling only (e.g. `docs/**`, `tool/*.sh`, `bin/*`, `.cursor/**`) | `./bin/checklist-fast` + `bash tool/check_agent_knowledge_base.sh` |
+| UI/design brief or design-system code (`DESIGN.md`, `docs/design_system.md`, `lib/core/theme/**`, `lib/shared/design_system/**`) | `./tool/check_design_md.sh` when `DESIGN.md` changed; `./tool/run_mix_lint.sh` when Mix tokens/styles changed; focused widget/app-visible proof when runtime UI changed |
 | Routing/auth gates (e.g. `lib/**/router/**`, `AppRoutes`, route guard code, auth UI) | `./bin/router_feature_validate` (+ `./bin/checklist` if wide diff) |
 | Offline-first/sync/lifecycle (e.g. `lib/shared/sync/**`, debounce/flush, pending-sync queues, retry/replay behavior) | `./bin/checklist` |
 | DI / transport config (e.g. `get_it` wiring, Dio/interceptors, auth headers, retry policies, base URL parsing) | `./bin/checklist` |

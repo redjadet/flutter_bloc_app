@@ -128,6 +128,16 @@ class AppStyles {
       )
       .borderRadiusAll(AppMixTokens.radiusM());
 
+  /// Shared field outline for custom controls that need to match TextField
+  /// borders without adopting [inputField] padding/background.
+  static BoxStyler get inputOutline => BoxStyler()
+      .border(
+        BorderMix.all(
+          BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
+        ),
+      )
+      .borderRadiusAll(AppMixTokens.radiusS());
+
   /// App bar area style: token-based horizontal/vertical padding, no elevation.
   /// Use with [Box] for custom app bar content.
   static BoxStyler get appBar => BoxStyler()
@@ -178,6 +188,38 @@ class AppStyles {
       )
       .onTablet(BoxStyler().paddingX(AppMixTokens.gapM()))
       .onDesktop(BoxStyler().paddingX(AppMixTokens.gapM()));
+
+  /// Compact positive status badge from DESIGN.md.
+  static BoxStyler get statusSuccess => BoxStyler()
+      .color(AppMaterialColorTokens.success())
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapS(),
+          horizontal: AppMixTokens.gapM(),
+        ),
+      );
+
+  static TextStyler get statusSuccessText => TextStyler()
+      .style(AppTextStyleTokens.labelMedium.mix())
+      .color(AppMaterialColorTokens.onSurface())
+      .fontWeight(FontWeight.w600);
+
+  /// Compact error status badge from DESIGN.md.
+  static BoxStyler get statusError => BoxStyler()
+      .color(AppMaterialColorTokens.error())
+      .borderRadiusAll(AppMixTokens.radiusPill())
+      .padding(
+        EdgeInsetsGeometryMix.symmetric(
+          vertical: AppMixTokens.gapS(),
+          horizontal: AppMixTokens.gapM(),
+        ),
+      );
+
+  static TextStyler get statusErrorText => TextStyler()
+      .style(AppTextStyleTokens.labelMedium.mix())
+      .color(AppMaterialColorTokens.onPrimary())
+      .fontWeight(FontWeight.w600);
 
   /// Dialog/sheet content padding from tokens.
   /// Use with [Box] to wrap dialog or bottom sheet body content.
