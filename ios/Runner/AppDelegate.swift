@@ -1,3 +1,13 @@
+//
+//  AppDelegate.swift
+//
+//  This AppDelegate handles:
+//  - Firebase initialization and App Check setup with thread-safe configuration
+//  - Google Maps API key provisioning with validation and detailed logging
+//  - Flutter engine integration and plugin registration
+//  - Native platform method channel for exposing device and API key info to Flutter
+//
+
 import Flutter
 import GoogleMaps
 import UIKit
@@ -8,6 +18,7 @@ import FirebaseAppCheck
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private let channelName = "com.example.flutter_bloc_app/native"
   private var hasConfiguredFirebase = false
+  private let firebaseConfigQueue = DispatchQueue(label: "com.example.flutter_bloc_app.firebaseConfigQueue")
 
   override func application(
     _ application: UIApplication,
@@ -15,6 +26,7 @@ import FirebaseAppCheck
   ) -> Bool {
     // Configure Firebase as early as possible, before didFinishLaunching
     configureFirebaseIfNeeded()
+
     return super.application(application, willFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -26,19 +38,25 @@ import FirebaseAppCheck
     configureFirebaseIfNeeded()
 
     // App-level initialization (not engine-specific)
-    if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String,
-       !apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-      GMSServices.provideAPIKey(apiKey)
-      #if DEBUG
-        if apiKey == "YOUR_IOS_GOOGLE_MAPS_API_KEY" {
-          NSLog(
-            "⚠️ Google Maps API key placeholder detected. Replace the GMSApiKey value in Info.plist"
-          )
-        }
-      #endif
+    if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String {
+      let trimmedKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+      if trimmedKey.isEmpty {
+        NSLog(
+          "⚠️ No Google Maps API key configured in Info.plist under GMSApiKey. " +
+          "This will cause the Google Maps features to remain disabled."
+        )
+      } else if trimmedKey == "YOUR_IOS_GOOGLE_MAPS_API_KEY" {
+        NSLog(
+          "⚠️ Google Maps API key placeholder detected in Info.plist. " +
+          "Replace the GMSApiKey value with your actual API key to enable map features."
+        )
+      } else {
+        GMSServices.provideAPIKey(trimmedKey)
+      }
     } else {
       NSLog(
-        "⚠️ No Google Maps API key configured. The Google Maps sample page will remain disabled."
+        "⚠️ Missing GMSApiKey entry in Info.plist. " +
+        "Google Maps features will remain disabled."
       )
     }
 
@@ -79,33 +97,39 @@ import FirebaseAppCheck
           "batteryLevel": batteryPercent
         ]
         result(info)
+
       case "hasGoogleMapsApiKey":
         let key = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String
         let trimmed = key?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let hasKey = !trimmed.isEmpty && trimmed != "YOUR_IOS_GOOGLE_MAPS_API_KEY"
         result(hasKey)
+
       default:
+        NSLog("⚠️ FlutterMethodChannel: Unknown method '\(call.method)' called on '\(self?.channelName ?? "")'")
         result(FlutterMethodNotImplemented)
       }
     }
   }
 
   private func configureFirebaseIfNeeded() {
-    if hasConfiguredFirebase {
-      return
-    }
-    if FirebaseApp.app() == nil {
+    firebaseConfigQueue.sync {
+      if hasConfiguredFirebase {
+        return
+      }
+      if FirebaseApp.app() == nil {
 #if DEBUG
         // iOS Simulator doesn't support DeviceCheck/AppAttest. Use the App Check
         // Debug provider so Firebase requests (e.g. Cloud Functions) can succeed
         // when App Check is enforced.
         AppCheck.setAppCheckProviderFactory(AppCheckDebugProviderFactory())
-      #endif
-            FirebaseApp.configure()
+#endif
+        FirebaseApp.configure()
+      } else {
+        NSLog("⚠️ Firebase already configured before AppDelegate initialization")
+      }
+      hasConfiguredFirebase = true
     }
-    hasConfiguredFirebase = true
   }
 
   // AppLinksPlugin registers via addApplicationDelegate and SceneDelegate handles scene-based deep links.
 }
-
