@@ -7,116 +7,104 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5.
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-Review gate before normal validation. Complements checks; not replacement.
-
-Use [`agent_knowledge_base.md`](agent_knowledge_base.md) for source layout. If [`AGENTS.md`](../AGENTS.md) unavailable, combine this with [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). [`agents_quick_reference.md`](agents_quick_reference.md) is command lookup.
+Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_reference.md`](agents_quick_reference.md), and [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Cross-host review (`./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`) is optional, explicit-request-only, environment-dependent.
 
 ## Builder and Validator roles
 
-- **Builder:** produces the smallest reversible diff toward the request. Builder output stays **draft** until the Validator gate passes.
-- **Validator:** applies this protocol’s checks, then runs scope-matched validation per [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md), then self-verifies the report against the request, diff, proof, and residual risk.
-- **Same host is normal:** Builder and Validator are often the same Cursor or Codex session; treat them as roles, not a requirement for a second agent.
-- **Cross-host review** ([`./tool/request_codex_feedback.sh`](../tool/request_codex_feedback.sh), [`./tool/run_codex_plan_review.sh`](../tool/run_codex_plan_review.sh)): optional and **explicit-request-only**; environment-dependent (Codex, `gh`, network).
+- **Builder:** smallest reversible diff toward request. Output stays **draft**.
+- **Validator:** applies checks below, runs scope-matched validation, self-verifies final report.
+- Same host often does both roles; no second agent required.
 
 ## Checks
 
 | Check | What to ask |
 | --- | --- |
-| Draft first | Am I still treating the first output as draft, not truth? |
-| Assumptions | Did I surface ambiguous scope, data, format, privacy, volume, or UX assumptions before coding? |
-| Problem fit | Does the change fit the user outcome and production path, not just the local function body? |
-| Simplify | Is this the smallest change that solves the task without speculative abstractions? |
-| Security | Did I review auth, replay, retries, logging, secrets, file access, sync, and `--dart-define` handling? |
-| Performance | Did I check rebuild scope, repeated I/O, parsing on the UI isolate, polling/listeners, allocations, and scale bottlenecks? |
-| Edge cases | Does this handle empty, malformed, repeated, concurrent, offline, resumed, interrupted paths? |
-| Failure modes | What inputs or conditions might cause this implementation to fail, and what are its weaknesses? |
-| Error handling | Does this match the existing error handling pattern and keep stable error contracts? |
-| Dependencies | Does this introduce any new dependencies, and if so, has the repo's existing utility/package set been checked first? |
-| Naming | Are variables, methods, types, and test names consistent with the rest of the codebase? |
-| Legibility | Can a future Codex/Cursor run inspect the relevant docs, tests, fixtures, logs, or UI proof without chat context? |
-| Confidence | Does my confidence come from proof, and did I state uncertainty when risk remains? |
-| Focused tests | Is proof scope-matched, with regression coverage where practical, async-state reasoning/coverage, and no deprecated Flutter test APIs? |
-| Judgment and ownership | Did I document the tradeoff and keep ownership of failures in the changed surface? |
-| Scope discipline | Does every changed line trace to the request or to validation/doc updates required by that same change? |
-| Self-verification | Before reporting back, did I check my final answer against the request, changed files, validation results, blockers, and residual risk? |
+| Draft first | Am I treating first output as draft, not truth? |
+| Assumptions | Did I surface ambiguous scope/data/format/privacy/volume/UX? |
+| Problem fit | Does change fit user outcome + production path? |
+| Visual fit | UI/design: did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`, avoid ad-hoc visual values? |
+| Simplify | Smallest change without speculative abstraction? |
+| Security | Auth, replay, retries, logging, secrets, file access, sync, `--dart-define` reviewed? |
+| Performance | Rebuild scope, repeated I/O, UI-isolate parsing, polling/listeners, allocations, scale checked? |
+| Edge cases | Empty, malformed, repeated, concurrent, offline, resumed, interrupted paths handled? |
+| Failure modes | What inputs/conditions fail? Weaknesses? |
+| Error handling | Existing pattern + stable error contracts preserved? |
+| Dependencies | Existing utilities/packages checked before adding deps? |
+| Naming | Names match codebase? |
+| Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat? |
+| Confidence | Confidence from proof; uncertainty stated? |
+| Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
+| Judgment | Tradeoff documented; changed surface owned? |
+| Scope discipline | Every changed line traces to request or required validation/doc update? |
+| Self-verification | Final answer checked against request, files, validation, blockers, risk? |
 
-## AI-Generated-Code Risk Matrix (compact)
+## AI-Generated-Code Risk Matrix
 
-Use when reviewing AI-written diffs or adding helper scanners. Goal: high-impact failures, low noise.
-
-| Risk | Common smell | What to do | Proof to prefer |
+| Risk | Smell | Fix | Proof |
 | --- | --- | --- | --- |
-| Injection (SQL/GraphQL/command/HTML) | string concatenation into query/HTML/CLI args | parameterize, strict allowlists, encode/escape, validate inputs | focused unit tests + grepable guardrails |
-| XSS-style UI injection | unsafe HTML rendering, missing escaping | avoid raw HTML; sanitize/escape; constrain allowed markup | widget tests / snapshot proof where applicable |
-| Hardcoded secrets / tokens | API keys, JWTs, DSNs, “sk-”, “AKIA”, long hex/base64 | remove; use env/secret store; blocklist patterns; rotate if real | repo scan + CI guard; no secret in git diff |
-| Swallowed errors | `catch (e) {}` / broad `except Exception: pass` | catch narrow; log/return typed error; keep stable error contract | tests asserting error codes/messages |
-| Missing auth/ownership | public endpoints mutate data; no user scope | add auth gate or explicitly document “demo-open” | route docs + tests; explicit decision log |
-| Race / concurrency bugs | async overlap, shared mutable state, non-idempotent retries | idempotency keys, locks/semaphores, debouncing, request coalescing | adversarial tests; deterministic reproduction harness |
-| Excessive I/O / N+1 | loops doing network/disk/db work | batch, cache, index, move off UI isolate | perf note + small benchmark if needed |
-| Deprecated/unstable APIs | uses removed Flutter test APIs / old SDK calls | update to supported APIs; align with repo conventions | `./bin/checklist-fast` or targeted checks |
-| Hallucinated deps / wrong APIs | adds packages “because”; calls non-existent helpers | verify repo has it; prefer existing utilities | `pubspec`/lock unchanged unless required |
-| Weak tests (mirror impl) | tests assert internal calls, not behavior | assert user-visible behavior/contracts, include edge inputs | red/green for bug repro; contract tests |
+| Injection | string-built SQL/GraphQL/command/HTML | parameterize, allowlist, encode/escape | focused tests + guardrails |
+| XSS-style UI injection | unsafe HTML/rendering | avoid raw HTML; sanitize/escape | widget/snapshot proof |
+| Secrets | keys/JWTs/DSNs/`sk-`/`AKIA` | remove, secret store, rotate if real | repo scan + CI guard |
+| Swallowed errors | broad empty catch | narrow catch, typed error/log, stable contract | tests assert error codes/messages |
+| Missing auth/ownership | public mutation/no user scope | auth gate or explicit demo-open decision | route docs + tests |
+| Race/concurrency | async overlap, mutable shared state, non-idempotent retry | locks, idempotency, debounce, coalescing | adversarial tests |
+| Excess I/O/N+1 | looped network/disk/db | batch/cache/index/offload | perf note/benchmark if needed |
+| Deprecated APIs | removed Flutter/SDK calls | update to repo convention | targeted checks |
+| Hallucinated deps/APIs | package/helper not verified | prefer existing utility; verify API exists | `pubspec`/lock unchanged unless required |
+| Weak tests | mirror implementation | assert behavior/contracts + edge inputs | red/green bug proof |
 
 ## Before Accepting AI-Written Code
 
-Do in order:
-
-1. **Checks:** Apply review checks above.
-2. **Goal:** If request is vague, define success criteria and smallest verifiable slice.
-3. **Diff:** Review changed files/generated artifacts.
-4. **Verify:** Run smallest honest validation command (route via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
-5. **Self-verify:** Final response vs request, diff, proof, blockers, residual risk.
-6. **Extra review (risk-based):** Medium/high risk -> prefer 1 extra review pass.
-   Cross-host diff review (explicit request): `./tool/request_codex_feedback.sh`.
-   Cross-host plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md`.
+1. Apply checks above.
+2. If vague, define success criteria + smallest verifiable slice.
+3. Review diff/generated artifacts.
+4. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+5. Self-verify final response vs request, diff, proof, blockers, residual risk.
+6. Medium/high risk: prefer extra review pass. Cross-host review only when explicitly requested.
 
 Repeated critique => repo-visible capability: source-doc update, validation check, test helper, fixture, route proof, or task template.
 
 ## Special Cases
 
-Dependency changes: justify package/upgrade, check existing deps first, and don’t treat `flutter pub get` as validation.
+Dependency changes: justify add/upgrade, check existing deps first, don’t treat `flutter pub get` as validation.
 
-Widget identity (keys) invariants:
+Widget identity:
 
-- In `ListView.builder`, `ListView.separated`, sliver builders, and similar, **rows must have stable `Key` from durable id** (not index) when list can reorder/filter/insert/delete.
-- In `AnimatedSwitcher` and similar mode-switching widgets, **child must have explicit identity** (like, `KeyedSubtree(key: ValueKey('mode'), child: …)`) so Flutter doesn't reuse wrong `Element`.
-- Guardrail: `./tool/check_widget_identity.sh` (wired into `./bin/checklist`; `./bin/checklist-fast` runs it for local tooling/docs changes that include Dart tooling files).
-- Suppress only with reason: `// widget_identity:ignore <reason>` on same line or line above flagged construct.
+- Builder rows need stable `Key` from durable id, not index, when list can reorder/filter/insert/delete.
+- `AnimatedSwitcher`/mode switches need explicit child identity (`KeyedSubtree`, `ValueKey`, etc.).
+- Guardrail: `./tool/check_widget_identity.sh`; suppress only with reason: `// widget_identity:ignore <reason>`.
 
-Bug-fix path:
+Bug fix path:
 
-1. reproduce or reason clearly about failure
+1. reproduce or reason clearly
 2. add focused guard
 3. implement fix
 4. validate narrowed scope
 
-Widget-test viewport setup:
+Widget-test viewport:
 
-- Use `tester.view.physicalSize` and `tester.view.devicePixelRatio`.
-- Reset with `tester.view.resetPhysicalSize()` and `tester.view.resetDevicePixelRatio()`.
-- Don’t use deprecated `tester.binding.window` or `TestWidgetsFlutterBinding.window` test-value APIs.
+- Use `tester.view.physicalSize` / `tester.view.devicePixelRatio`.
+- Reset with `tester.view.resetPhysicalSize()` / `tester.view.resetDevicePixelRatio()`.
+- Do not use deprecated `tester.binding.window` or `TestWidgetsFlutterBinding.window` test-value APIs.
+
+UI/design changes:
+
+- Read root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before theme, typography, spacing, Mix tokens, `AppStyles`, or shared component visuals.
+- Runtime source wins: `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- If `DESIGN.md` changes, run `./tool/check_design_md.sh`; if Mix styles/tokens change, run `./tool/run_mix_lint.sh` plus focused widget proof where practical.
 
 Async list builders:
 
-- In `ListView.builder`, `ListView.separated`, and sliver builders, don’t index live Cubit/BLoC lists when async refresh can shrink list.
-- Snapshot list at build start, derive `itemCount` from snapshot, guard stale indexes before indexing. Header-row patterns like `items.length + 1` with `items[index - 1]` are highest risk.
-- Add widget regression coverage when fixing runtime list-builder `RangeError`.
+- Don’t index live Cubit/BLoC lists during async refresh.
+- Snapshot list at build start, derive `itemCount` from snapshot, guard stale indexes.
+- Header rows (`items.length + 1`, `items[index - 1]`) are highest risk.
 
 Hive schema migrations:
 
-- When Hive DTO/map/json storage shape changes, update
-  [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md)
-  contract, manifest, generated fingerprints, and focused migration tests.
-- Review for idempotency, failed-migrator fingerprint behavior, watch/meta-key
-  noise, temp-key cleanup, and per-item salvage versus whole-key deletion.
-- Never call the generator "automatic schema inference"; it is manifest-driven
-  and only detects stale generated output or input drift.
+- Stored Hive shape changes require [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md), manifest, fingerprints, migrator/tests.
+- Review idempotency, failed fingerprint behavior, watch/meta-key noise, temp-key cleanup, per-item salvage.
+- Generator is manifest-driven, not automatic schema inference.
 
 ## Relationship To Validation
 
-This protocol complements, but doesn't replace:
-
-- `./bin/router_feature_validate`
-- `./tool/delivery_checklist.sh` / `./bin/checklist`
-- `./bin/integration_tests`
-- targeted format, analyze, and test runs
+Complements, never replaces: `./bin/router_feature_validate`, `./tool/delivery_checklist.sh` / `./bin/checklist`, `./bin/integration_tests`, targeted format/analyze/test.

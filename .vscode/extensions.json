@@ -6,7 +6,12 @@
     "streetsidesoftware.code-spell-checker",
     "ryanluker.vscode-coverage-gutters",
     "usernamehw.errorlens",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "sswg.swift-lang",
+    "sweetpad.sweetpad",
+    "vadimcn.vscode-lldb",
+    "llvm-vs-code-extensions.vscode-clangd",
+    "mariomatheu.syntax-project-pbxproj"
   ],
   "unwantedRecommendations": []
 }

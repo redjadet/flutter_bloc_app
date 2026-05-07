@@ -25,13 +25,14 @@ class AppMixTokens {
   // Radius tokens
   // ─────────────────────────────────────────────────────────────────────────
 
+  static const RadiusToken radiusS = RadiusToken('app.radius.radiusS');
   static const RadiusToken radiusM = RadiusToken('app.radius.radiusM');
   static const RadiusToken radiusPill = RadiusToken('app.radius.radiusPill');
 }
 
 /// Text style token names for Mix theme.
 ///
-/// Registered in buildAppMixThemeData from the Material text theme so
+/// Registered in [buildAppMixScope] from the Material text theme so
 /// AppStyles heading/body/caption styles can reference theme text.
 class AppTextStyleTokens {
   AppTextStyleTokens._();
@@ -67,6 +68,11 @@ class AppMaterialColorTokens {
   static const ColorToken primary = ColorToken('md.color.primary');
   static const ColorToken onPrimary = ColorToken('md.color.on.primary');
   static const ColorToken onSurface = ColorToken('md.color.on.surface');
+  static const ColorToken error = ColorToken('md.color.error');
+
+  /// Positive status color from DESIGN.md. Material ColorScheme has no
+  /// success role, so register this app token explicitly.
+  static const ColorToken success = ColorToken('app.color.success');
 
   /// Chip/filled surface tint; matches Material 3 Chip background.
   static const ColorToken surfaceContainerLow = ColorToken(
@@ -98,6 +104,8 @@ Widget buildAppMixScope(final BuildContext context, {required Widget child}) {
       AppMaterialColorTokens.surfaceContainerHighest:
           colorScheme.surfaceContainerHighest,
       AppMaterialColorTokens.outlineVariant: colorScheme.outlineVariant,
+      AppMaterialColorTokens.error: colorScheme.error,
+      AppMaterialColorTokens.success: const Color(0xFF4CAF50),
     },
     textStyles: {
       AppTextStyleTokens.titleLarge: textTheme.titleLarge ?? const TextStyle(),
@@ -118,6 +126,7 @@ Widget buildAppMixScope(final BuildContext context, {required Widget child}) {
       AppMixTokens.cardPadV: UI.cardPadV,
     },
     radii: {
+      AppMixTokens.radiusS: Radius.circular(UI.radiusS),
       AppMixTokens.radiusM: Radius.circular(UI.radiusM),
       AppMixTokens.radiusPill: Radius.circular(UI.radiusPill),
     },

@@ -5,101 +5,46 @@ description: Non-trivial delivery start→finish, validation routing, meta/subag
 
 # Delivery workflow
 
-Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
-Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask only hard blockers.
-Default trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
+Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`. Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask only hard blockers. Triggers: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-- **Plan**: non-trivial -> write plan + verification in `tasks/cursor/todo.md`.
-- **Plan**: non-trivial existing-code work -> context ladder: map docs, durable memory, code-review-graph, targeted raw files.
-- **Plan**: delegation/parallelism -> `agents-meta-behavior`.
-- **Plan**: Do not change files until at least 95% confident in goal, scope, approach.
-- **Execute**: reuse seams; keep `Presentation -> Domain <- Data`.
-- **Execute**: lifecycle/memory -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`.
-- **Execute**: prefer helpers: `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.
-- **Execute**: update DI/routes/l10n/codegen when touched.
-- **Verify**: AI review gate: `docs/ai_code_review_protocol.md`.
-- **Verify**: run smallest matching repo validation command.
-- **Verify**: Self-verify final response vs request, changed files, proof, blockers, residual risk.
-- **Execute**: File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+- **Plan:** non-trivial -> plan + proof in `tasks/cursor/todo.md`.
+- **Plan:** existing-code -> context ladder: map docs, durable memory, code-review-graph, targeted raw files.
+- **Plan:** delegation/parallelism -> `agents-meta-behavior`.
+- **Plan:** Do not edit until 95% confident in goal/scope/approach.
+- **Execute:** reuse seams; keep `Presentation -> Domain <- Data`.
+- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- **Execute:** lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`; prefer `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.
+- **Execute:** update DI/routes/l10n/codegen when touched.
+- **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+- **Verify:** AI review gate `docs/ai_code_review_protocol.md`; run smallest matching validation.
+- **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
+- **Report:** Report only after Verify.
 
-Docs-only note:
-
-- Repo docs validation-bearing. Prefer targeted doc/link checks; use `./bin/checklist` when guidance changed materially.
-- Agent knowledge-base/map changes should also run
-  `./tool/check_agent_knowledge_base.sh`.
-- Agent/docs changes should semantic-lint stale plans, duplicate rules, and
-  source/host-template contradictions.
+Docs/agent changes: targeted docs/link checks, `./tool/check_agent_knowledge_base.sh`, host-template drift path; escalate to `./bin/checklist` when guidance changed materially.
 
 ## Multi-agent
 
-Coordinator-as-hub. Gate before broad work/fan-out.
+Coordinator-as-hub. Gate before fan-out.
 
 - **Team** when >=2: blast radius, cross-layer read, high-risk logic, separate implement/review bars, or user asked plan+implement+verify.
-- **Single** otherwise; tie-break single. Tracker line: `Benefit: team - <reason>` or `Benefit: single - <reason>`.
-- `single`: normal Plan -> Execute -> Verify -> Report; no `tasks/cursor/team/<run-id>/`.
+- **Single** otherwise; tie-break single. Tracker: `Benefit: team - <reason>` or `Benefit: single - <reason>`.
+- `single`: normal loop; no `tasks/cursor/team/<run-id>/`.
 - `team`: create `tasks/cursor/team/<run-id>/` (`goal.md`, `findings.md`, `plan.md`, `diff-summary.md`/`diff.md`, `review.md`). Coordinator owns artifacts + validation.
-- Spawn specialists with **inline** context, never path-only. Max two Implementer fix loops unless user extends.
+- Spawn specialists with inline context, never path-only. Max two Implementer fix loops unless user extends.
 
-`Task` roles + redaction: see `agents-meta-behavior`. Doctrine + repo-sensitive
-matrix: `docs/agent_knowledge_base.md#multi-agent-hub`.
+Doctrine + matrix: `docs/agent_knowledge_base.md#multi-agent-hub`; roles/redaction: `agents-meta-behavior`.
 
-## Completion gate (before “done” / commit)
+## Completion gate
 
-Repo canon for sign-off:
+- Apply AI review gate.
+- Non-trivial tracker includes plan + verification.
+- UI/design: `./tool/check_design_md.sh` if `DESIGN.md` edited; `./tool/run_mix_lint.sh` for Mix token/style edits.
+- Review subagent output yourself.
+- UI/app: prefer app-visible proof.
+- Surgical diff: each line traces to request or required validation/doc update.
+- Self-verify final report vs diff, validation, blockers, risk.
+- Resolve selected validation failures; add focused tests when behavior warrants.
 
-1. `AGENTS.md`
-1. `docs/testing_overview.md`
-1. `docs/ai_code_review_protocol.md` for AI-generated changes
+## Commit rules
 
-Required checks:
-
-- Apply AI review gate before accepting AI-written code.
-- Non-trivial tasks: `tasks/cursor/todo.md` includes plan + verification notes.
-- Docs/agent-guidance changes: validate touched docs, links, host-template drift path.
-- If subagents were used, review their output and validate integrated result
-  yourself.
-- For UI/app changes, prefer app-visible proof over logs-only claims.
-- Surgical diff: each changed line traces to request or required validation/doc update.
-- Self-verify final report vs actual diff, validation output, blockers, risk.
-  don't use cross-host helpers as self-review.
-- Report only after Verify step has checked own output and available proof.
-- Resolve failures in selected validation scope.
-- Add or update focused tests when behavior changes warrant it.
-- Update docs when architecture, workflow, behavior, or validation guidance
-  changes materially.
-
-## Commit rules (when user asks to commit)
-
-- Inspect before staging:
-  - `git status`
-  - `git diff`
-- Stage only intended scope. If scope unclear or mixed, stop and require
-  pre-staging by user.
-- Sanity check staged diff:
-  - `git diff --staged`
-- Message rules:
-  - imperative, <= 72 chars, no trailing period
-  - include “why” when not obvious
-  - include tests run (or “not run” with reason)
-  - no assistant mention
-  - prefer heredoc for newlines
-- Commit example:
-
-  - ```bash
-    git commit -m "$(cat <<'EOF'
-    <type>(<scope>): <short summary>
-
-    Summary:
-    - <what changed>
-
-    Rationale:
-    - <why>
-
-    Tests:
-    - <command or "not run (reason)">
-    EOF
-    )" -- <paths...>
-    ```
-
-Full testing and validation bar: `docs/testing_overview.md`,
-`docs/validation_scripts.md`.
+Inspect `git status` + `git diff`; stage intended scope only; check `git diff --staged`. Commit message: imperative, <=72 char subject, why when not obvious, tests run/not run, no assistant mention. Full bar: `docs/testing_overview.md`, `docs/validation_scripts.md`.

@@ -22,6 +22,7 @@ managed_cursor_files=(
   "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
+  "cursor/rules/design-system.mdc|$HOME/.cursor/rules/design-system.mdc"
 )
 
 # shellcheck disable=SC2034
