@@ -1,55 +1,7 @@
 {
-  "generatedAt": "2026-05-07T11:13:48.899579Z",
+  "generatedAt": "2026-05-07T11:26:25.242562Z",
   "inventoryPath": "docs/audits/skill_inventory_2026-05-07.json",
   "editableRanked": [
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-ai-rules/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 9176,
-      "lines": 219,
-      "chars": 9172,
-      "approxTokens": 2293,
-      "name": "flutter-ai-rules",
-      "description": "Consults official Flutter/Dart AI rules for best practices and conventions. Use when unsure about Flutter or Dart style, architecture, state management, theming, layout, testing, or tooling while working on Flutter codebases. Based on the canonical Flutter AI rules (flutter/flutter docs/rules).",
-      "proxy": 5,
-      "score": 3439.5
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/skillify/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7703,
-      "lines": 164,
-      "chars": 7703,
-      "approxTokens": 1926,
-      "name": "skillify",
-      "description": ">",
-      "proxy": 6,
-      "score": 3081.6000000000004
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/mcp-builder/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 9092,
-      "lines": 237,
-      "chars": 9066,
-      "approxTokens": 2267,
-      "name": "mcp-builder",
-      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
-      "proxy": 3,
-      "score": 2947.1
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/knowledge-synthesis/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 8526,
-      "lines": 259,
-      "chars": 8462,
-      "approxTokens": 2116,
-      "name": "knowledge-synthesis",
-      "description": "Combines search results from multiple sources into coherent, deduplicated answers with source attribution. Handles confidence scoring based on freshness and authority, and summarizes large result sets effectively.",
-      "proxy": 3,
-      "score": 2750.8
-    },
     {
       "path": "/Users/ilkersevim/.cursor/skills/upgrade-pr-triage-validate/SKILL.md",
       "origin": "cursorSkills",
@@ -63,30 +15,6 @@
       "score": 2703.0
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-bloc-clean-baseline/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7116,
-      "lines": 168,
-      "chars": 7110,
-      "approxTokens": 1778,
-      "name": "flutter-bloc-clean-baseline",
-      "description": "Mandatory baseline for Flutter apps using Clean",
-      "proxy": 5,
-      "score": 2667.0
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-setup-declarative-routing/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 8204,
-      "lines": 256,
-      "chars": 8204,
-      "approxTokens": 2051,
-      "name": "flutter-setup-declarative-routing",
-      "description": "Configure `MaterialApp.router` using a package like `go_router` for advanced URL-based navigation. Use when developing web applications or mobile apps that require specific deep linking and browser history support.",
-      "proxy": 3,
-      "score": 2666.3
-    },
-    {
       "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md",
       "origin": "repoTemplates",
       "bytes": 7207,
@@ -97,18 +25,6 @@
       "description": "Triage open non-draft PRs on main, merge/close/make-ready, run upgrade_validate_all, then PR and merge the resulting artifacts.",
       "proxy": 4,
       "score": 2522.7999999999997
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-add-integration-test/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7342,
-      "lines": 164,
-      "chars": 7342,
-      "approxTokens": 1836,
-      "name": "flutter-add-integration-test",
-      "description": "Configures Flutter Driver for app interaction and converts MCP actions into permanent integration tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package.",
-      "proxy": 3,
-      "score": 2386.8
     },
     {
       "path": "/Users/ilkersevim/.cursor/skills/flutter-apply-architecture-best-practices/SKILL.md",
@@ -145,18 +61,6 @@
       "description": "Add `flutter_localizations` and `intl` dependencies, enable \"generate true\" in `pubspec.yaml`, and create an `l10n.yaml` configuration file. Use when initializing localization support for a new Flutter project.",
       "proxy": 5,
       "score": 2220.0
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-build-responsive-layout/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 6805,
-      "lines": 140,
-      "chars": 6805,
-      "approxTokens": 1702,
-      "name": "flutter-build-responsive-layout",
-      "description": "Use `LayoutBuilder`, `MediaQuery`, or `Expanded/Flexible` to create a layout that adapts to different screen sizes. Use when you need the UI to look good on both mobile and tablet/desktop form factors.",
-      "proxy": 3,
-      "score": 2212.6
     },
     {
       "path": "/Users/ilkersevim/.cursor/skills/flutter-use-http-package/SKILL.md",
@@ -531,6 +435,18 @@
       "score": 893.2
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/skillify/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 2196,
+      "lines": 64,
+      "chars": 2190,
+      "approxTokens": 548,
+      "name": "skillify",
+      "description": ">",
+      "proxy": 6,
+      "score": 876.8000000000001
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/skills/agents-figma/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 2674,
@@ -627,6 +543,18 @@
       "score": 677.3000000000001
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/knowledge-synthesis/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 2117,
+      "lines": 63,
+      "chars": 2077,
+      "approxTokens": 520,
+      "name": "knowledge-synthesis",
+      "description": "Combines search results from multiple sources into coherent, deduplicated answers with source attribution. Handles confidence scoring based on freshness and authority, and summarizes large result sets effectively.",
+      "proxy": 3,
+      "score": 676.0
+    },
+    {
       "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md",
       "origin": "repoTemplates",
       "bytes": 2661,
@@ -637,6 +565,18 @@
       "description": "Plan discipline, risk scaling, verification, lessons, and bounded subagent/delegation rules for this repo.",
       "proxy": 0,
       "score": 664.0
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/mcp-builder/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1692,
+      "lines": 41,
+      "chars": 1686,
+      "approxTokens": 422,
+      "name": "mcp-builder",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "proxy": 5,
+      "score": 633.0
     },
     {
       "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md",
@@ -769,6 +709,66 @@
       "description": "Design test strategies and test plans. Trigger with \"how should we test\", \"test strategy for\", \"write tests for\", \"test plan\", \"what tests do we need\", or when the user needs help with testing approaches, coverage, or test architecture.",
       "proxy": 3,
       "score": 416.0
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-bloc-clean-baseline/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1102,
+      "lines": 28,
+      "chars": 1102,
+      "approxTokens": 276,
+      "name": "flutter-bloc-clean-baseline",
+      "description": "Mandatory baseline for Flutter apps using Clean",
+      "proxy": 5,
+      "score": 414.0
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-ai-rules/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1064,
+      "lines": 23,
+      "chars": 1064,
+      "approxTokens": 266,
+      "name": "flutter-ai-rules",
+      "description": "Consults official Flutter/Dart AI rules for best practices and conventions. Use when unsure about Flutter or Dart style, architecture, state management, theming, layout, testing, or tooling while working on Flutter codebases. Based on the canonical Flutter AI rules (flutter/flutter docs/rules).",
+      "proxy": 3,
+      "score": 345.8
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-add-integration-test/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 979,
+      "lines": 20,
+      "chars": 979,
+      "approxTokens": 245,
+      "name": "flutter-add-integration-test",
+      "description": "Configures Flutter Driver for app interaction and converts MCP actions into permanent integration tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package.",
+      "proxy": 3,
+      "score": 318.5
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-setup-declarative-routing/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 979,
+      "lines": 22,
+      "chars": 979,
+      "approxTokens": 245,
+      "name": "flutter-setup-declarative-routing",
+      "description": "Configure `MaterialApp.router` using a package like `go_router` for advanced URL-based navigation. Use when developing web applications or mobile apps that require specific deep linking and browser history support.",
+      "proxy": 3,
+      "score": 318.5
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-build-responsive-layout/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 795,
+      "lines": 18,
+      "chars": 793,
+      "approxTokens": 199,
+      "name": "flutter-build-responsive-layout",
+      "description": "Use `LayoutBuilder`, `MediaQuery`, or `Expanded/Flexible` to create a layout that adapts to different screen sizes. Use when you need the UI to look good on both mobile and tablet/desktop form factors.",
+      "proxy": 5,
+      "score": 298.5
     },
     {
       "path": "/Users/ilkersevim/.cursor/skills/figma-this-repo/SKILL.md",
@@ -3437,7 +3437,7 @@
       "score": 1882.8
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
       "origin": "pluginCache",
       "bytes": 5228,
       "lines": 132,
@@ -3449,7 +3449,7 @@
       "score": 1811.6
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md",
       "origin": "pluginCache",
       "bytes": 5228,
       "lines": 132,
@@ -4613,18 +4613,6 @@
       "score": 980.4
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/postman/e760a8ae6eca277b90f764495490542651f4e0d2/skills/agent-ready-apis/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 3236,
-      "lines": 70,
-      "chars": 3236,
-      "approxTokens": 809,
-      "name": "agent-ready-apis",
-      "description": "Knowledge about AI agent API compatibility. Use when user asks about API readiness, agent compatibility, or wants to improve their API for AI consumption.",
-      "proxy": 2,
-      "score": 970.8
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/setup-react-native-app/SKILL.md",
       "origin": "pluginCache",
       "bytes": 3244,
@@ -4633,6 +4621,18 @@
       "approxTokens": 809,
       "name": "setup-react-native-app",
       "description": "Scaffold a React Native (Expo) app with Phantom React Native SDK for mobile wallet integration, including polyfills and deep linking",
+      "proxy": 2,
+      "score": 970.8
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/postman/e760a8ae6eca277b90f764495490542651f4e0d2/skills/agent-ready-apis/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 3236,
+      "lines": 70,
+      "chars": 3236,
+      "approxTokens": 809,
+      "name": "agent-ready-apis",
+      "description": "Knowledge about AI agent API compatibility. Use when user asks about API readiness, agent compatibility, or wants to improve their API for AI consumption.",
       "proxy": 2,
       "score": 970.8
     },
@@ -5537,6 +5537,18 @@
       "score": 290.4
     },
     {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/fix-ci/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 901,
+      "lines": 30,
+      "chars": 901,
+      "approxTokens": 226,
+      "name": "fix-ci",
+      "description": "Find failing PR checks, inspect logs or external check links, and apply focused fixes",
+      "proxy": 2,
+      "score": 271.2
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/weekly-review/SKILL.md",
       "origin": "pluginCache",
       "bytes": 902,
@@ -5549,16 +5561,16 @@
       "score": 271.2
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/fix-ci/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/database-query/SKILL.md",
       "origin": "pluginCache",
-      "bytes": 901,
-      "lines": 30,
-      "chars": 901,
-      "approxTokens": 226,
-      "name": "fix-ci",
-      "description": "Find failing PR checks, inspect logs or external check links, and apply focused fixes",
-      "proxy": 2,
-      "score": 271.2
+      "bytes": 1032,
+      "lines": 27,
+      "chars": 1032,
+      "approxTokens": 258,
+      "name": "database-query",
+      "description": "Query a Notion database by name or ID and return structured, readable results with optional filters and sorting.",
+      "proxy": 0,
+      "score": 258.0
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/create-task/SKILL.md",
@@ -5581,18 +5593,6 @@
       "approxTokens": 258,
       "name": "create-page",
       "description": "Create a new Notion page, optionally under a specific parent. Automatically structures content based on page type (meeting notes, project pages, etc.).",
-      "proxy": 0,
-      "score": 258.0
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/database-query/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 1032,
-      "lines": 27,
-      "chars": 1032,
-      "approxTokens": 258,
-      "name": "database-query",
-      "description": "Query a Notion database by name or ID and return structured, readable results with optional filters and sorting.",
       "proxy": 0,
       "score": 258.0
     },
