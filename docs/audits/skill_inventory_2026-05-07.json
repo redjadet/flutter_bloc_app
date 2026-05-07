@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-07T11:12:57.191582Z",
+  "generatedAt": "2026-05-07T11:26:24.692029Z",
   "roots": {
     "repoTemplates": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates",
     "cursorSkills": "/Users/ilkersevim/.cursor/skills",
@@ -1367,16 +1367,6 @@
       "description": "Vercel Runtime Cache API guidance — ephemeral per-region key-value cache with tag-based invalidation. Shared across Functions, Routing Middleware, and Builds. Use when implementing caching strategies beyond framework-level caching."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-ai-rules/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 9176,
-      "lines": 219,
-      "chars": 9172,
-      "approxTokens": 2293,
-      "name": "flutter-ai-rules",
-      "description": "Consults official Flutter/Dart AI rules for best practices and conventions. Use when unsure about Flutter or Dart style, architecture, state management, theming, layout, testing, or tooling while working on Flutter codebases. Based on the canonical Flutter AI rules (flutter/flutter docs/rules)."
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/posthog/301cdec119d268d1969040c4c371a737acb47087/skills/exploring-llm-clusters/SKILL.md",
       "origin": "pluginCache",
       "bytes": 9168,
@@ -1405,16 +1395,6 @@
       "approxTokens": 2270,
       "name": "pr-review-canvas",
       "description": "Generate an interactive PR review walkthrough as an HTML page. Fetches PR data via gh API, categorizes files into core vs mechanical changes, adds reviewer annotations, and renders diffs with moved-code detection. Use when the user pastes a GitHub PR URL and asks for a review, walkthrough, or summary, or says \"review this PR\"."
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/mcp-builder/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 9092,
-      "lines": 237,
-      "chars": 9066,
-      "approxTokens": 2267,
-      "name": "mcp-builder",
-      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/aws-serverless/c4c054c956ca3db8d33f614bea8a68ed07704ec9/skills/aws-lambda-durable-functions/SKILL.md",
@@ -1507,16 +1487,6 @@
       "description": ">-"
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/posthog/301cdec119d268d1969040c4c371a737acb47087/skills/instrument-product-analytics/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 8658,
-      "lines": 127,
-      "chars": 8654,
-      "approxTokens": 2164,
-      "name": "instrument-product-analytics",
-      "description": ">-"
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/circle/3f6a83777f9fac0c84eb94b4b8ab9bf0e18152c4/skills/use-usdc/SKILL.md",
       "origin": "pluginCache",
       "bytes": 8672,
@@ -1525,6 +1495,16 @@
       "approxTokens": 2164,
       "name": "use-usdc",
       "description": "\"USDC is Circle's stablecoin deployed across multiple blockchain ecosystems including EVM chains (Ethereum, Base, Arbitrum, Polygon, Arc) and Solana. Use this skill to check balances, send transfers, approve spending, and verify transactions. Triggers on: USDC balance, send USDC, transfer USDC, approve USDC, USDC allowance, verify USDC transfer, USDC contract address, USDC on Solana, Solana USDC, check balance, SPL token, Associated Token Account, ATA, ERC-20 USDC, parseUnits, formatUnits, 6 decimals, viem, @solana/kit.\""
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/posthog/301cdec119d268d1969040c4c371a737acb47087/skills/instrument-product-analytics/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 8658,
+      "lines": 127,
+      "chars": 8654,
+      "approxTokens": 2164,
+      "name": "instrument-product-analytics",
+      "description": ">-"
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/azure/179f0eddce6ff9bb289959f241a145ac2d7db8e0/skills/azure-kusto/SKILL.md",
@@ -1555,16 +1535,6 @@
       "approxTokens": 2134,
       "name": "figma-generate-diagram",
       "description": "\"MANDATORY prerequisite — load this skill BEFORE every `generate_diagram` tool call. Routes to type-specific guidance (generic flowchart, architecture flowchart) and tells you when to proceed directly, when to use a different diagram type, or when the tool isn't the right fit at all.\""
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/knowledge-synthesis/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 8526,
-      "lines": 259,
-      "chars": 8462,
-      "approxTokens": 2116,
-      "name": "knowledge-synthesis",
-      "description": "Combines search results from multiple sources into coherent, deduplicated answers with source attribution. Handles confidence scoring based on freshness and authority, and summarizes large result sets effectively."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/circle/3f6a83777f9fac0c84eb94b4b8ab9bf0e18152c4/skills/use-gateway/SKILL.md",
@@ -1635,16 +1605,6 @@
       "approxTokens": 2054,
       "name": "azure-resource-visualizer",
       "description": "\"Analyze Azure resource groups and generate detailed Mermaid architecture diagrams showing the relationships between individual resources. WHEN: create architecture diagram, visualize Azure resources, show resource relationships, generate Mermaid diagram, analyze resource group, diagram my resources, architecture visualization, resource topology, map Azure infrastructure.\""
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-setup-declarative-routing/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 8204,
-      "lines": 256,
-      "chars": 8204,
-      "approxTokens": 2051,
-      "name": "flutter-setup-declarative-routing",
-      "description": "Configure `MaterialApp.router` using a package like `go_router` for advanced URL-based navigation. Use when developing web applications or mobile apps that require specific deep linking and browser history support."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/render/1d8fb10d0d901141211b79b0b1bdd0171a872d18/skills/render-monitor/SKILL.md",
@@ -1797,16 +1757,6 @@
       "description": "Use when the user is implementing, embedding, or debugging a WorkOS Widget — specifically the User Management, User Profile, Admin Portal SSO Connection, or Admin Portal Domain Verification widgets. Handles the full stack — detecting the frontend (Next.js, React, React Router, TanStack Start, Vite, SvelteKit), generating access tokens via the backend SDK in use (Node, Python, Go, Ruby, PHP, Java, .NET), and wiring up the widget component correctly per the bundled OpenAPI spec. Also use when code imports from @workos-inc/widgets or the user pastes <UserManagement /> or <UserProfile /> JSX."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/skillify/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7703,
-      "lines": 164,
-      "chars": 7703,
-      "approxTokens": 1926,
-      "name": "skillify",
-      "description": ">"
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/sentry/d414035d685190d4bcb814b0c756469a098e9634/skills/sentry-create-alert/SKILL.md",
       "origin": "pluginCache",
       "bytes": 7652,
@@ -1847,16 +1797,6 @@
       "description": "Orchestrates AWS Amplify Gen 2 workflows for building full-stack apps with React, Next.js, Vue, Angular, React Native, Flutter, Swift, or Android. Use when user wants to BUILD, CREATE, or DEPLOY Amplify projects, add authentication, data models, storage, GraphQL APIs, Lambda functions, or deploy to sandbox/production. Do NOT invoke for conceptual questions, comparisons, or troubleshooting unrelated to active development."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-add-integration-test/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7342,
-      "lines": 164,
-      "chars": 7342,
-      "approxTokens": 1836,
-      "name": "flutter-add-integration-test",
-      "description": "Configures Flutter Driver for app interaction and converts MCP actions into permanent integration tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package."
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/posthog/301cdec119d268d1969040c4c371a737acb47087/skills/analyzing-experiment-session-replays/SKILL.md",
       "origin": "pluginCache",
       "bytes": 7325,
@@ -1867,8 +1807,8 @@
       "description": "'Analyze session replay patterns across experiment variants to understand user behavior differences. Use when the user wants to see how users interact with different experiment variants, identify usability issues, compare behavior patterns between control and test groups, or get qualitative insights to complement quantitative experiment results.'"
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/upgrade-pr-triage-validate/SKILL.md",
-      "origin": "cursorSkills",
+      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md",
+      "origin": "repoTemplates",
       "bytes": 7207,
       "lines": 211,
       "chars": 7207,
@@ -1877,8 +1817,8 @@
       "description": "Triage open non-draft PRs on main, merge/close/make-ready, run upgrade_validate_all, then PR and merge the resulting artifacts."
     },
     {
-      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md",
-      "origin": "repoTemplates",
+      "path": "/Users/ilkersevim/.cursor/skills/upgrade-pr-triage-validate/SKILL.md",
+      "origin": "cursorSkills",
       "bytes": 7207,
       "lines": 211,
       "chars": 7207,
@@ -1905,16 +1845,6 @@
       "approxTokens": 1778,
       "name": "use-modular-wallets",
       "description": "\"Build crypto wallets using Circle Modular Wallets SDK with passkey authentication, gasless transactions, and extensible module architecture. Use when: creating crypto wallets with passkey-based (WebAuthn) registration and login, sending gasless transactions using Circle Gas Station paymaster, batching multiple transactions into a single user operation, implementing passkey recovery using BIP-39 mnemonic phrases, building advanced onchain wallets with custom modules (multisig, subscriptions, session keys). Triggers on: modular wallet, smart account, MSCA, passkey authentication, WebAuthn, gasless, paymaster, Gas Station, bundler client, user operation, userOp, ERC-4337, ERC-6900, account abstraction, toCircleSmartAccount, toPasskeyTransport, toModularTransport, sendUserOperation, batch transactions, 2D nonce, passkey recovery, EIP-1193 provider.\""
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-bloc-clean-baseline/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 7116,
-      "lines": 168,
-      "chars": 7110,
-      "approxTokens": 1778,
-      "name": "flutter-bloc-clean-baseline",
-      "description": "Mandatory baseline for Flutter apps using Clean"
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/compound-engineering/62170315ba986caa525d2b2e43a5da0598d1b184/skills/ce-commit/SKILL.md",
@@ -1945,16 +1875,6 @@
       "approxTokens": 1729,
       "name": "create-secret",
       "description": ">-"
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/skills/flutter-build-responsive-layout/SKILL.md",
-      "origin": "cursorSkills",
-      "bytes": 6805,
-      "lines": 140,
-      "chars": 6805,
-      "approxTokens": 1702,
-      "name": "flutter-build-responsive-layout",
-      "description": "Use `LayoutBuilder`, `MediaQuery`, or `Expanded/Flexible` to create a layout that adapts to different screen sizes. Use when you need the UI to look good on both mobile and tablet/desktop form factors."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/circle/3f6a83777f9fac0c84eb94b4b8ab9bf0e18152c4/skills/use-arc/SKILL.md",
@@ -2287,16 +2207,6 @@
       "description": "Analyze and resolve Sentry comments on GitHub Pull Requests. Use this when asked to review or fix issues identified by Sentry in PR comments. Can review specific PRs by number or automatically find recent PRs with Sentry feedback."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/mongodb/b6fcb1a2d83079becf1c9be23d66e1b71739d007/tools/review-skill/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 5952,
-      "lines": 165,
-      "chars": 5920,
-      "approxTokens": 1480,
-      "name": "review-skill",
-      "description": ">-"
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/skills/flutter-setup-localization/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 5920,
@@ -2305,6 +2215,16 @@
       "approxTokens": 1480,
       "name": "flutter-setup-localization",
       "description": "Add `flutter_localizations` and `intl` dependencies, enable \"generate true\" in `pubspec.yaml`, and create an `l10n.yaml` configuration file. Use when initializing localization support for a new Flutter project."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/mongodb/b6fcb1a2d83079becf1c9be23d66e1b71739d007/tools/review-skill/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 5952,
+      "lines": 165,
+      "chars": 5920,
+      "approxTokens": 1480,
+      "name": "review-skill",
+      "description": ">-"
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/sagemaker-ai/b467313c6001132b634579a10ed0325c806f3c98/skills/planning/SKILL.md",
@@ -2407,16 +2327,6 @@
       "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - creates isolated git worktrees with smart directory selection and safety verification"
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/chargebee-integration/4fc2a5651e24973a63300e29ab0ada482d3cba12/skills/chargebee-integration/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 5589,
-      "lines": 146,
-      "chars": 5589,
-      "approxTokens": 1398,
-      "name": "chargebee-integration",
-      "description": "Comprehensive integration guide for Chargebee billing platform. Provides API integration patterns, webhook handling, SDK usage, and schema references for billing operations. Use when working with Chargebee for (1) API integration and REST endpoint calls, (2) Processing webhook events, (3) Customer management operations, (4) Subscription lifecycle handling, (5) Payment and invoice processing, (6) Any other billing-related integration tasks with Chargebee platform."
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/stripe/887cfc3852a6de69e2d472408990c5f505412a15/skills/upgrade-stripe/SKILL.md",
       "origin": "pluginCache",
       "bytes": 5592,
@@ -2425,6 +2335,16 @@
       "approxTokens": 1398,
       "name": null,
       "description": "Guide for upgrading Stripe API versions and SDKs"
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/chargebee-integration/4fc2a5651e24973a63300e29ab0ada482d3cba12/skills/chargebee-integration/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 5589,
+      "lines": 146,
+      "chars": 5589,
+      "approxTokens": 1398,
+      "name": "chargebee-integration",
+      "description": "Comprehensive integration guide for Chargebee billing platform. Provides API integration patterns, webhook handling, SDK usage, and schema references for billing operations. Use when working with Chargebee for (1) API integration and REST endpoint calls, (2) Processing webhook events, (3) Customer management operations, (4) Subscription lifecycle handling, (5) Payment and invoice processing, (6) Any other billing-related integration tasks with Chargebee platform."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/compound-engineering/62170315ba986caa525d2b2e43a5da0598d1b184/skills/lfg/SKILL.md",
@@ -2557,7 +2477,7 @@
       "description": "\"The Customer Account API allows customers to access their own data including orders, payment methods, and addresses.\""
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md",
       "origin": "pluginCache",
       "bytes": 5228,
       "lines": 132,
@@ -2567,7 +2487,7 @@
       "description": ">"
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/.claude/skills/phantom-connect/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/phantom-connect/SKILL.md",
       "origin": "pluginCache",
       "bytes": 5228,
       "lines": 132,
@@ -3187,16 +3107,6 @@
       "description": "Build and deploy Firebase Data Connect backends with PostgreSQL. Use for schema design, GraphQL queries/mutations, authorization, and SDK generation for web, Android, iOS, and Flutter apps."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/sagemaker-ai/b467313c6001132b634579a10ed0325c806f3c98/skills/use-case-specification/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 3951,
-      "lines": 79,
-      "chars": 3931,
-      "approxTokens": 983,
-      "name": "use-case-specification",
-      "description": "Creates a reusable use case specification file that defines the business problem, stakeholders, and measurable success criteria for model customization, as recommended by the AWS Responsible AI Lens. Use as the default first step in any model customization plan. Skip only if the user explicitly declines or already has a use case specification to reuse. Captures problem statement, primary users, and LLM-as-a-Judge success tenets."
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/skills/ai-safe-supabase-workflow/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 3946,
@@ -3205,6 +3115,16 @@
       "approxTokens": 983,
       "name": "ai-safe-supabase-workflow",
       "description": "AI-safe Supabase workflow checklist (migrations, RLS, Edge Functions) with auditability gates and verification steps."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/sagemaker-ai/b467313c6001132b634579a10ed0325c806f3c98/skills/use-case-specification/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 3951,
+      "lines": 79,
+      "chars": 3931,
+      "approxTokens": 983,
+      "name": "use-case-specification",
+      "description": "Creates a reusable use case specification file that defines the business problem, stakeholders, and measurable success criteria for model customization, as recommended by the AWS Responsible AI Lens. Use as the default first step in any model customization plan. Skip only if the user explicitly declines or already has a use case specification to reuse. Captures problem statement, primary users, and LLM-as-a-Judge success tenets."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/compound-engineering/62170315ba986caa525d2b2e43a5da0598d1b184/skills/ce-worktree/SKILL.md",
@@ -3387,16 +3307,6 @@
       "description": "\"Guidance for instrumenting webapps with Azure Application Insights. Provides telemetry patterns, SDK setup, and configuration references. WHEN: how to instrument app, App Insights SDK, telemetry patterns, what is App Insights, Application Insights guidance, instrumentation examples, APM best practices.\""
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-cli/upstream/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 3666,
-      "lines": 67,
-      "chars": 3626,
-      "approxTokens": 907,
-      "name": "vercel-cli",
-      "description": "Deploy, manage, and develop projects on Vercel from the command line"
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/sagemaker-ai/b467313c6001132b634579a10ed0325c806f3c98/skills/hyperpod-issue-report/SKILL.md",
       "origin": "pluginCache",
       "bytes": 3626,
@@ -3405,6 +3315,16 @@
       "approxTokens": 907,
       "name": "hyperpod-issue-report",
       "description": "Generate comprehensive issue reports from HyperPod clusters (EKS and Slurm) by collecting diagnostic logs and configurations for troubleshooting and AWS Support cases. Use when users need to collect diagnostics from HyperPod cluster nodes, generate issue reports for AWS Support, investigate node failures or performance problems, document cluster state, or create diagnostic snapshots. Triggers on requests involving issue reports, diagnostic collection, support case preparation, or cluster troubleshooting that requires gathering logs and system information from multiple nodes."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/vercel/3d9d9cd0fe5d1bdaedb891135a5c45f19190b83f/skills/vercel-cli/upstream/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 3666,
+      "lines": 67,
+      "chars": 3626,
+      "approxTokens": 907,
+      "name": "vercel-cli",
+      "description": "Deploy, manage, and develop projects on Vercel from the command line"
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/browserstack/b3ef869a2c9faceebd58e6a319a409433ccc3244/skills/run-mobile-tests-on-browserstack/SKILL.md",
@@ -3587,16 +3507,6 @@
       "description": "\"Use for Azure AI: Search, Speech, OpenAI, Document Intelligence. Helps with search, vector/hybrid search, speech-to-text, text-to-speech, transcription, OCR. WHEN: AI Search, query search, vector search, hybrid search, semantic search, speech-to-text, text-to-speech, transcribe, OCR, convert text to speech.\""
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/tavily/b971db016d23a908fe7061fdeb213f9b6cb4d771/skills/tavily-cli/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 3266,
-      "lines": 77,
-      "chars": 3246,
-      "approxTokens": 812,
-      "name": "tavily-cli",
-      "description": "|"
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/skills/agents-canonical-rules-presentation/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 3249,
@@ -3607,14 +3517,14 @@
       "description": "Canonical rules — UI, theme, l10n, Mix, type-safe BLoC access, list/build performance. Part of agents-canonical-rules split."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/postman/e760a8ae6eca277b90f764495490542651f4e0d2/skills/agent-ready-apis/SKILL.md",
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/tavily/b971db016d23a908fe7061fdeb213f9b6cb4d771/skills/tavily-cli/SKILL.md",
       "origin": "pluginCache",
-      "bytes": 3236,
-      "lines": 70,
-      "chars": 3236,
-      "approxTokens": 809,
-      "name": "agent-ready-apis",
-      "description": "Knowledge about AI agent API compatibility. Use when user asks about API readiness, agent compatibility, or wants to improve their API for AI consumption."
+      "bytes": 3266,
+      "lines": 77,
+      "chars": 3246,
+      "approxTokens": 812,
+      "name": "tavily-cli",
+      "description": "|"
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/phantom-connect/4162aa88131f0a6b6f0c050b176736f0773d038c/skills/setup-react-native-app/SKILL.md",
@@ -3625,6 +3535,16 @@
       "approxTokens": 809,
       "name": "setup-react-native-app",
       "description": "Scaffold a React Native (Expo) app with Phantom React Native SDK for mobile wallet integration, including polyfills and deep linking"
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/postman/e760a8ae6eca277b90f764495490542651f4e0d2/skills/agent-ready-apis/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 3236,
+      "lines": 70,
+      "chars": 3236,
+      "approxTokens": 809,
+      "name": "agent-ready-apis",
+      "description": "Knowledge about AI agent API compatibility. Use when user asks about API readiness, agent compatibility, or wants to improve their API for AI consumption."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/antimetal/c0363e85bc89a689ce5604de6b36cf8850db6b46/skills/fix/SKILL.md",
@@ -3707,16 +3627,6 @@
       "description": "Review Flutter feature code before client delivery for performance issues, missing error handling, memory leaks, readability/naming conventions, and missed edge cases. Use when the user says they're about to deliver, ship, or release a Flutter feature, or asks for a pre-delivery review."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/azure/179f0eddce6ff9bb289959f241a145ac2d7db8e0/skills/azure-compute/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 3051,
-      "lines": 49,
-      "chars": 3019,
-      "approxTokens": 755,
-      "name": "azure-compute",
-      "description": "\"Azure VM and VMSS router for recommendations, pricing, autoscale, orchestration, and connectivity troubleshooting. WHEN: Azure VM, VMSS, scale set, recommend, compare, server, website, burstable, lightweight, VM family, workload, GPU, learning, simulation, dev/test, backend, autoscale, load balancer, Flexible orchestration, Uniform orchestration, cost estimate, connect, refused, Linux, black screen, reset password, reach VM, port 3389, NSG, troubleshoot.\""
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/skills/codex-cursor-agent-delegate/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 3017,
@@ -3725,6 +3635,16 @@
       "approxTokens": 755,
       "name": "codex-cursor-agent-delegate",
       "description": "Delegate bounded read-only tasks from Codex to the local Cursor Agent CLI. Use when the user wants Codex to call Cursor's `agent` command as a sidecar reviewer, researcher, or planner. The wrapper prepends `/model Auto` before the delegated prompt and defaults to safe `ask` or `plan` mode."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/azure/179f0eddce6ff9bb289959f241a145ac2d7db8e0/skills/azure-compute/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 3051,
+      "lines": 49,
+      "chars": 3019,
+      "approxTokens": 755,
+      "name": "azure-compute",
+      "description": "\"Azure VM and VMSS router for recommendations, pricing, autoscale, orchestration, and connectivity troubleshooting. WHEN: Azure VM, VMSS, scale set, recommend, compare, server, website, burstable, lightweight, VM family, workload, GPU, learning, simulation, dev/test, backend, autoscale, load balancer, Flexible orchestration, Uniform orchestration, cost estimate, connect, refused, Linux, black screen, reset password, reach VM, port 3389, NSG, troubleshoot.\""
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/browserstack/b3ef869a2c9faceebd58e6a319a409433ccc3244/skills/run-web-tests-on-browserstack/SKILL.md",
@@ -4127,6 +4047,16 @@
       "description": "\"Assess and migrate cross-cloud workloads to Azure with migration reports and code conversion. Supports AWS Lambda→Functions and GCP Cloud Run→Container Apps. WHEN: migrate Lambda to Azure Functions, migrate AWS to Azure, Lambda migration assessment, convert serverless to Azure, migration readiness report, migrate from AWS, migrate from GCP, Cloud Run to Container Apps, Cloud Run migration assessment.\""
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/skillify/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 2196,
+      "lines": 64,
+      "chars": 2190,
+      "approxTokens": 548,
+      "name": "skillify",
+      "description": ">"
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/skills/check-problems/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 2181,
@@ -4137,16 +4067,6 @@
       "description": "Run static/runtime analysis and layout checks for this Flutter app using Dart MCP and project scripts, then fix any issues. Use when the user says \"check problems\", \"check analysis\", \"check layout\", \"fix analysis\", \"run analysis\", or asks to check/fix static analysis, runtime analysis, or layout issues."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/firebase/bec78e7dace12670b3b3c5c63d7124cca5c2c8c9/skills/firebase-hosting-basics/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 2126,
-      "lines": 47,
-      "chars": 2126,
-      "approxTokens": 532,
-      "name": "firebase-hosting-basics",
-      "description": "Skill for working with Firebase Hosting (Classic). Use this when you want to deploy static web apps, Single Page Apps (SPAs), or simple microservices. Do NOT use for Firebase App Hosting."
-    },
-    {
       "path": "/Users/ilkersevim/.cursor/skills/type-safe-bloc-access/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 2132,
@@ -4155,6 +4075,16 @@
       "approxTokens": 532,
       "name": "type-safe-bloc-access",
       "description": "Enforces type-safe Cubit/BLoC access in Flutter. Use when writing or reviewing code that accesses BlocProvider/Cubit; use context.cubit<T>(), context.state<T,S>(), and typed selectors; never context.read or BlocProvider.of."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/firebase/bec78e7dace12670b3b3c5c63d7124cca5c2c8c9/skills/firebase-hosting-basics/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 2126,
+      "lines": 47,
+      "chars": 2126,
+      "approxTokens": 532,
+      "name": "firebase-hosting-basics",
+      "description": "Skill for working with Firebase Hosting (Classic). Use this when you want to deploy static web apps, Single Page Apps (SPAs), or simple microservices. Do NOT use for Firebase App Hosting."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/context7-plugin/58a36cea87ea887e7bb4850409f1f9ea58dae5e5/skills/context7-mcp/SKILL.md",
@@ -4205,6 +4135,16 @@
       "approxTokens": 521,
       "name": "agents-supabase",
       "description": "Supabase MCP usage and migration workflow for this repo. Use when working with Supabase schema, migrations, or MCP apply_migration/list_migrations."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/knowledge-synthesis/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 2117,
+      "lines": 63,
+      "chars": 2077,
+      "approxTokens": 520,
+      "name": "knowledge-synthesis",
+      "description": "Combines search results from multiple sources into coherent, deduplicated answers with source attribution. Handles confidence scoring based on freshness and authority, and summarizes large result sets effectively."
     },
     {
       "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md",
@@ -4317,6 +4257,16 @@
       "description": "\"Helps users find the right Azure RBAC role for an identity with least privilege access, then generate CLI commands and Bicep code to assign it. Also provides guidance on permissions required to grant roles. WHEN: bicep for role assignment, what role should I assign, least privilege role, RBAC role for, role to read blobs, role for managed identity, custom role definition, assign role to identity, what role do I need to grant access, permissions to assign roles.\""
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/mcp-builder/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1692,
+      "lines": 41,
+      "chars": 1686,
+      "approxTokens": 422,
+      "name": "mcp-builder",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/loop-on-ci/SKILL.md",
       "origin": "pluginCache",
       "bytes": 1611,
@@ -4357,6 +4307,16 @@
       "description": "Comprehensive guide for Firestore enterprise native including provisioning, data model, security rules, and SDK usage. Use this skill when the user needs help setting up Firestore Enterprise with the Native mode, writing security rules, or using the Firestore SDK in their application."
     },
     {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/granola/56583da6e4db7f311808543f18ac905b8de1ff85/skills/granola-context/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 1515,
+      "lines": 17,
+      "chars": 1503,
+      "approxTokens": 376,
+      "name": "granola-context",
+      "description": "Look up what was discussed or decided in meetings. Use when someone asks about a past discussion, needs to recall a decision, or references something that was talked about in a meeting."
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/skills/agents-cursor-integration/SKILL.md",
       "origin": "cursorSkills",
       "bytes": 1505,
@@ -4375,16 +4335,6 @@
       "approxTokens": 376,
       "name": "agents-cursor-integration",
       "description": "Cursor integration pointer for Flutter BLoC app. Use when editing repo rules, shared Cursor adapters, or Cursor/Codex review wiring."
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/granola/56583da6e4db7f311808543f18ac905b8de1ff85/skills/granola-context/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 1515,
-      "lines": 17,
-      "chars": 1503,
-      "approxTokens": 376,
-      "name": "granola-context",
-      "description": "Look up what was discussed or decided in meetings. Use when someone asks about a past discussion, needs to recall a decision, or references something that was talked about in a meeting."
     },
     {
       "path": "/Users/ilkersevim/.cursor/skills/documentation/SKILL.md",
@@ -4407,8 +4357,8 @@
       "description": "Manages project directory setup and artifact organization. Use when starting a new project, resuming an existing one, or when a PLAN.md needs to be associated with a project directory. Creates the project folder structure (specs/, scripts/, notebooks/) and resolves project naming."
     },
     {
-      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
-      "origin": "repoTemplates",
+      "path": "/Users/ilkersevim/.cursor/skills/agents-quick-reference/SKILL.md",
+      "origin": "cursorSkills",
       "bytes": 1484,
       "lines": 45,
       "chars": 1484,
@@ -4417,8 +4367,8 @@
       "description": "Canon pointers, lifecycle, trackers, approved shell entrypoints, and host wrapper rules. Repo canon wins."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/agents-quick-reference/SKILL.md",
-      "origin": "cursorSkills",
+      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
+      "origin": "repoTemplates",
       "bytes": 1484,
       "lines": 45,
       "chars": 1484,
@@ -4547,6 +4497,36 @@
       "description": "Check current work against meeting decisions before submitting. Use when someone wants to verify their implementation, draft, or plan matches what was agreed."
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-bloc-clean-baseline/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1102,
+      "lines": 28,
+      "chars": 1102,
+      "approxTokens": 276,
+      "name": "flutter-bloc-clean-baseline",
+      "description": "Mandatory baseline for Flutter apps using Clean"
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-ai-rules/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 1064,
+      "lines": 23,
+      "chars": 1064,
+      "approxTokens": 266,
+      "name": "flutter-ai-rules",
+      "description": "Consults official Flutter/Dart AI rules for best practices and conventions. Use when unsure about Flutter or Dart style, architecture, state management, theming, layout, testing, or tooling while working on Flutter codebases. Based on the canonical Flutter AI rules (flutter/flutter docs/rules)."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/create-task/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 1031,
+      "lines": 32,
+      "chars": 1031,
+      "approxTokens": 258,
+      "name": "create-task",
+      "description": "Create a new task in the user's Notion tasks database with sensible defaults for due date, status, owner, and project."
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/create-page/SKILL.md",
       "origin": "pluginCache",
       "bytes": 1029,
@@ -4565,16 +4545,6 @@
       "approxTokens": 258,
       "name": "database-query",
       "description": "Query a Notion database by name or ID and return structured, readable results with optional filters and sorting."
-    },
-    {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/create-task/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 1031,
-      "lines": 32,
-      "chars": 1031,
-      "approxTokens": 258,
-      "name": "create-task",
-      "description": "Create a new task in the user's Notion tasks database with sensible defaults for due date, status, owner, and project."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/create-database-row/SKILL.md",
@@ -4607,6 +4577,26 @@
       "description": "Resolve merge conflicts non-interactively, validate build and tests, and finalize conflict resolution"
     },
     {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-add-integration-test/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 979,
+      "lines": 20,
+      "chars": 979,
+      "approxTokens": 245,
+      "name": "flutter-add-integration-test",
+      "description": "Configures Flutter Driver for app interaction and converts MCP actions into permanent integration tests. Use when adding integration testing to a project, exploring UI components via MCP, or automating user flows with the integration_test package."
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-setup-declarative-routing/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 979,
+      "lines": 22,
+      "chars": 979,
+      "approxTokens": 245,
+      "name": "flutter-setup-declarative-routing",
+      "description": "Configure `MaterialApp.router` using a package like `go_router` for advanced URL-based navigation. Use when developing web applications or mobile apps that require specific deep linking and browser history support."
+    },
+    {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/run-smoke-tests/SKILL.md",
       "origin": "pluginCache",
       "bytes": 967,
@@ -4615,6 +4605,16 @@
       "approxTokens": 242,
       "name": "run-smoke-tests",
       "description": "Run Playwright smoke tests, debug failures, and verify fixes"
+    },
+    {
+      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/search/SKILL.md",
+      "origin": "pluginCache",
+      "bytes": 902,
+      "lines": 21,
+      "chars": 902,
+      "approxTokens": 226,
+      "name": "search",
+      "description": "Search the user's Notion workspace using the Notion MCP server. Use for finding pages, databases, and content by keywords or natural-language queries."
     },
     {
       "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/cursor-team-kit/d1cdb88a9eb33cf392395c87e3fd76419fc1010e/skills/weekly-review/SKILL.md",
@@ -4637,14 +4637,14 @@
       "description": "Find failing PR checks, inspect logs or external check links, and apply focused fixes"
     },
     {
-      "path": "/Users/ilkersevim/.cursor/plugins/cache/cursor-public/notion-workspace/cf1324609edba6d617164f1dec138aeb43f26735/skills/search/SKILL.md",
-      "origin": "pluginCache",
-      "bytes": 902,
-      "lines": 21,
-      "chars": 902,
-      "approxTokens": 226,
-      "name": "search",
-      "description": "Search the user's Notion workspace using the Notion MCP server. Use for finding pages, databases, and content by keywords or natural-language queries."
+      "path": "/Users/ilkersevim/.cursor/skills/flutter-build-responsive-layout/SKILL.md",
+      "origin": "cursorSkills",
+      "bytes": 795,
+      "lines": 18,
+      "chars": 793,
+      "approxTokens": 199,
+      "name": "flutter-build-responsive-layout",
+      "description": "Use `LayoutBuilder`, `MediaQuery`, or `Expanded/Flexible` to create a layout that adapts to different screen sizes. Use when you need the UI to look good on both mobile and tablet/desktop form factors."
     },
     {
       "path": "/Users/ilkersevim/.cursor/skills/agents-canonical-rules-architecture/SKILL.md",
@@ -4667,8 +4667,8 @@
       "description": "Alias for the repo’s canonical Figma workflow skill (`agents-figma`). Use when implementing a Frame_Node design from Figma in this repo."
     },
     {
-      "path": "/Users/ilkersevim/.cursor/skills/caveman-compress/SKILL.md",
-      "origin": "cursorSkills",
+      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md",
+      "origin": "repoTemplates",
       "bytes": 733,
       "lines": 25,
       "chars": 733,
@@ -4677,8 +4677,8 @@
       "description": "Compress shared agent-facing markdown via the repo-local wrapper. Use when reducing context in docs used by AI agents."
     },
     {
-      "path": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md",
-      "origin": "repoTemplates",
+      "path": "/Users/ilkersevim/.cursor/skills/caveman-compress/SKILL.md",
+      "origin": "cursorSkills",
       "bytes": 733,
       "lines": 25,
       "chars": 733,
