@@ -98,8 +98,8 @@ def main() -> int:
         ),
         (
             PROJECT_ROOT / "docs/agents_quick_reference.md",
-            r"^Pinned repo toolchain: Flutter \S+ / Dart \S+\.$",
-            f"Pinned repo toolchain: Flutter {flutter_version} / Dart {dart_version}.",
+            r"^(Pinned repo toolchain: Flutter )\S+( / Dart )\S+(\..*)$",
+            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
         (
             PROJECT_ROOT / "docs/ai_code_review_protocol.md",
@@ -118,13 +118,13 @@ def main() -> int:
         ),
         (
             PROJECT_ROOT / "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md",
-            r"^- Flutter \S+ / Dart \S+$",
-            f"- Flutter {flutter_version} / Dart {dart_version}",
+            r"^(Repo: Flutter )\S+( / Dart )\S+(;.*)$",
+            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
         (
             PROJECT_ROOT / "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
-            r"^- Flutter \S+ / Dart \S+$",
-            f"- Flutter {flutter_version} / Dart {dart_version}",
+            r"^(Repo: Flutter )\S+( / Dart )\S+(;.*)$",
+            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
     ]
 
