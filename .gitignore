@@ -108,6 +108,7 @@ CLAUDE.md
 docs/gstack_integration.md
 docs/app_for_small_business.txt
 *.original.md
+docs/audits/
 
 # Python demo local virtualenv (e.g. demos/render_chat_api)
 demos/**/.venv/

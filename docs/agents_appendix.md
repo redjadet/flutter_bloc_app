@@ -1,7 +1,7 @@
 # Agents Appendix (Workspace + Tooling Facts)
 
 This file holds detailed workspace specifics and tooling facts referenced by
-[`AGENTS.md`](../AGENTS.md). Keep `AGENTS.md` lean; put long lists here.
+[`AGENTS.md`](../AGENTS.md). Keep [`AGENTS.md`](../AGENTS.md) lean; put long lists here.
 
 ## Local Lessons
 
@@ -12,21 +12,23 @@ User prefs:
   `origin/main`.
 - Prefer reusable `.cursor/commands/*.md` over copy/paste prompt templates.
 - External emails/messages: generic examples; no repo paths or “in this repo”.
-- `docs/agents_quick_reference.md` = command cheat sheet, not policy source.
+- [`agents_quick_reference.md`](agents_quick_reference.md) = command cheat sheet, not policy source.
 - Improve local dev workflows by changing repo directly when allowed.
 - Long scroll pages: keep validation/status feedback pinned above scroll body.
 - Prefer `./tool/run_codex_plan_review.sh` for Codex review of markdown plans.
 - When shrinking canon, keep authority order + invariants + validation routing + review gate explicit.
 - Run repo scripts/validation in agent session when shell exists.
 - Globally available Cursor skill must exist under `~/.cursor/skills/<skill>/SKILL.md`.
+- Vendor mitigation: repo may shadow high-frequency vendor skills (same `name:`)
+  with tiny shims in `~/.cursor/skills/` via `./tool/sync_agent_assets.sh`.
 
 ## Workspace
 
-- Case studies: `docs/case_studies/`, start `docs/case_studies/README.md`.
+- Case studies: `docs/case_studies/`, start [`case_studies/README.md`](case_studies/README.md).
 - Dentists demo: `lib/features/case_study_demo/`, route `/case-study-demo`.
 - Staff app demo: `lib/features/staff_app_demo/`, routes `/staff-app-demo`;
   router `lib/core/router/app_routes.dart`; walkthrough
-  `docs/staff_app_demo_walkthrough.md`.
+  [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md).
 - Shell exposes `StaffDemoSitesCubit` from `staffDemoSites`; pages pick from
   list, no free-text IDs.
 - Parsing must match seed/admin docs:
@@ -59,7 +61,7 @@ User prefs:
 
 ## Supabase / Hugging Face
 
-- Plan: `docs/plans/supabase_proxy_huggingface_chat_plan.md`.
+- Plan: [`plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md).
 - Supabase `chat-complete`: keep `verify_jwt = true`.
 - Dashboard **Verify JWT with legacy secret** disabled unless intentionally
   using legacy JWT-secret path.
@@ -82,10 +84,10 @@ User prefs:
 - `tool/normalize_doc_links.py` preserves `#fragment`; test
   `tool/normalize_doc_links_test.py`.
 - Plan-only Codex review: `./tool/run_codex_plan_review.sh` +
-  `tool/codex_plan_review_template.md`; `request_codex_feedback.sh` reviews
+  [`tool/codex_plan_review_template.md`](../tool/codex_plan_review_template.md); `request_codex_feedback.sh` reviews
   git diffs only.
 - Render FastAPI chat: plan
-  `docs/plans/render_fastapi_chat_demo_plan.md`; contract fixtures
+  [`plans/render_fastapi_chat_demo_plan.md`](plans/render_fastapi_chat_demo_plan.md); contract fixtures
   `test/fixtures/render_chat_contract/` and `demos/render_chat_api`.
 - Render chat ops: add `CHAT_RENDER_*` defines in
   `tool/flutter_dart_defines_from_env.sh`; `_render_meta` body fields may

@@ -69,6 +69,9 @@ Next session smarter, no bloated wiki.
 - Do not dump chat transcripts or generic summaries. Add compact, cited,
   actionable facts only.
 - Prefer fat skills only for repeated, validated workflows with clear triggers/write scope/tools/quality bar. No cron/autonomous behavior without explicit user approval.
+- Vendor skills may exist via Cursor plugins. If a vendor skill is high-frequency
+  and bloats context, prefer **repo-owned shadow shims** synced into
+  `~/.cursor/skills/` (same `name:`) that route to repo canon and keep hard gates.
 - For this repo, prefer maps, `rg`, code-review-graph, and targeted
   validation over separate RAG layer.
 - Semantic lint during doc/agent changes: stale plans, duplicate rules,
@@ -109,7 +112,7 @@ Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-
 ## Plans As Artifacts
 
 - Small changes: tracker notes.
-- Non-trivial: `tasks/codex/todo.md` or `tasks/cursor/todo.md` with scope/risks/write set/validation.
+- Non-trivial: [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) with scope/risks/write set/validation.
 - Durable plans: `docs/plans/`; completed rationale: `docs/changes/`; debt: owning source doc/ADR/plan.
 
 ## Harness Controls
