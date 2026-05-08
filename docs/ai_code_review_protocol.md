@@ -21,6 +21,7 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 | --- | --- |
 | Draft first | Am I treating first output as draft, not truth? |
 | Assumptions | Did I surface ambiguous scope/data/format/privacy/volume/UX? |
+| System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
 | Problem fit | Does change fit user outcome + production path? |
 | Visual fit | UI/design: did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`, avoid ad-hoc visual values? |
 | Simplify | Smallest change without speculative abstraction? |
@@ -56,7 +57,7 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 ## Before Accepting AI-Written Code
 
 1. Apply checks above.
-2. If vague, define success criteria + smallest verifiable slice.
+2. If vague, define assumptions, system boundaries, data flow, failure handling, success criteria, and smallest verifiable slice.
 3. Review diff/generated artifacts.
 4. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 5. Self-verify final response vs request, diff, proof, blockers, residual risk.
@@ -91,7 +92,7 @@ UI/design changes:
 
 - Read root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before theme, typography, spacing, Mix tokens, `AppStyles`, or shared component visuals.
 - Runtime source wins: `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
-- If `DESIGN.md` changes, run `./tool/check_design_md.sh`; if Mix styles/tokens change, run `./tool/run_mix_lint.sh` plus focused widget proof where practical.
+- If [`DESIGN.md`](../DESIGN.md) changes, run `./tool/check_design_md.sh`; if Mix styles/tokens change, run `./tool/run_mix_lint.sh` plus focused widget proof where practical.
 
 Async list builders:
 

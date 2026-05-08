@@ -15,14 +15,15 @@ Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask on
 4. **Plan:** Preserve user-supplied plan unless asked to revise.
 5. **Plan:** Classify complexity/risk/scope/uncertainty.
 6. **Plan:** Do not edit until 95% confident in goal/scope/approach; ask until clear.
-7. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns; keep `Presentation -> Domain <- Data`.
-8. **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI` before new styling.
-9. **Execute:** Lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`; prefer `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.
-10. **Execute:** Update DI/routes/l10n/codegen when touched. Widget-test viewport uses `WidgetTester.view`.
-11. **Execute:** Repeated struggle => add repo capability. File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-12. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`; run smallest matching validation.
-13. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
-14. **Report:** Report only after Verify; proof must match scope.
+7. **Plan:** If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
+8. **Execute:** Reuse `lib/shared/`, `lib/core/`, adjacent patterns; keep `Presentation -> Domain <- Data`.
+9. **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI` before new styling.
+10. **Execute:** Lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`; prefer `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.
+11. **Execute:** Update DI/routes/l10n/codegen when touched. Widget-test viewport uses `WidgetTester.view`.
+12. **Execute:** Repeated struggle => add repo capability. File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+13. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`; run smallest matching validation.
+14. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
+15. **Report:** Report only after Verify; proof must match scope.
 
 Validation picks:
 
