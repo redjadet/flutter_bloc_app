@@ -32,6 +32,8 @@ or user-owned decision. Non-trivial work tracks plan/proof in
 [`tasks/codex/todo.md`](../../../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../../../tasks/cursor/todo.md).
 For non-trivial existing-code work, use context ladder: map docs -> durable
 memory -> code-review-graph -> targeted raw files.
+If vague/risky, define boundaries, data flow, failure handling, and smallest
+verifiable slice before generation.
 
 - Self-check final response vs request, diff, proof, blockers, risk.
 - Prove result before calling work done.

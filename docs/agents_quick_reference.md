@@ -58,7 +58,8 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 - Ask only hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 - Classify complexity/risk/scope/uncertainty before scaling validation/delegation.
-- Vague ask -> assumptions + success criteria + smallest verifiable slice.
+- Vague ask -> assumptions + boundaries + data flow + failure handling + success criteria + smallest verifiable slice.
+- Before codegen/broad edits, make modules, ownership, logs, dry-run/test seams, and rollback story explicit when risk warrants.
 - Bug fix -> reproduce/reason root cause before code.
 - Repeated failure => add doc/test/fixture/script/route proof/log helper/validation check.
 - Reusable agent conclusion => durable repo memory; don't leave chat-only.

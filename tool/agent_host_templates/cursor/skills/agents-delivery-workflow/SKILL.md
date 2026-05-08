@@ -11,6 +11,7 @@ Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference
 - **Plan:** existing-code -> context ladder: map docs, durable memory, code-review-graph, targeted raw files.
 - **Plan:** delegation/parallelism -> `agents-meta-behavior`.
 - **Plan:** Do not edit until 95% confident in goal/scope/approach.
+- **Plan:** If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
 - **Execute:** reuse seams; keep `Presentation -> Domain <- Data`.
 - **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
 - **Execute:** lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`; prefer `DisposableBag`, `CubitSubscriptionMixin`, `SubscriptionManager`, `TimerHandleManager`.

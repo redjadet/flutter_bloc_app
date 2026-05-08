@@ -12,6 +12,7 @@ alwaysApply: false
 ## Execution
 
 - Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
+- If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
 - Proof-first: confidence from smallest honest repo entrypoint.
 - UI/design work: read `DESIGN.md` + `docs/design_system.md`; use
   `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before ad-hoc styling.

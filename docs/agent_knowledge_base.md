@@ -12,6 +12,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Codebase = memory. | Durable facts live in docs/plans/tests/scripts/ADRs, not chat. |
 | Missing capability beats retry. | Repeated failure => add doc/tool/test/fixture/script. |
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
+| Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 
 ## Progressive Disclosure
 
@@ -32,17 +33,19 @@ Scale effort to task value; avoid broad validation/delegation by default.
 3. Plan once (<=10 lines), then execute end-to-end.
 4. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
 5. Do not edit until 95% confident in goal/scope/approach.
-6. Vague ask => assumptions, success criteria, smallest verifiable slice.
+6. Vague ask => assumptions, success criteria, system boundaries, data flow, failure handling, smallest verifiable slice.
 7. Non-trivial => compare 2-3 approaches; choose lowest regret by correctness, maintainability, reversibility, blast radius, failure tolerance.
-8. Debug root cause: reproduce/reason, isolate, fix cause, verify.
-9. Before report, self-critique failure inputs, weaknesses, assumptions, edge cases, scale, side effects.
-10. Stop when value met, material risks handled, proof matches scope.
+8. Before codegen or broad edits, make the system shape explicit: modules, ownership boundaries, inputs/outputs, persistence/sync points, logs, dry-run/test seams, and rollback story.
+9. Debug root cause: reproduce/reason, isolate, fix cause, verify.
+10. Before report, self-critique failure inputs, weaknesses, assumptions, edge cases, scale, side effects.
+11. Stop when value met, material risks handled, proof matches scope.
 
 ## Agent Legibility
 
 Agents reason over inspectable state.
 
 - Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
+- Turn unclear goals into inspectable artifacts: acceptance criteria, boundaries, data-flow sketch, fixture, dry-run mode, or focused proof route.
 - UI/design chain: [`../DESIGN.md`](../DESIGN.md) -> [`design_system.md`](design_system.md) -> `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`.
 - Prefer repo-local logs/fixtures/schemas/examples/generated clients/test harnesses over chat-only claims.
 - For UI/runtime work, expose narrow runnable surface first: route tile, demo control, smoke test, or fixture.
