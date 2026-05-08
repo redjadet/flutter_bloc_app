@@ -27,6 +27,7 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci
 | AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
 | Cross-host review (explicit only) | `./tool/request_codex_feedback.sh` |
 | Cross-host plan review | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
+| Transcript context budgets (report-only) | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` (or `./bin/checklist-fast`) |
 | Hive fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
 | Strict Hive input drift | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
 
