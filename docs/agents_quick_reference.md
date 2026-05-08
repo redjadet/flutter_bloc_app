@@ -38,7 +38,7 @@ Repo docs/scripts define behavior; external catalogs do not.
 
 | Trigger | Cursor | Codex |
 | --- | --- | --- |
-| Non-trivial existing-code work | Context ladder; plan + verification in tasks/cursor/todo.md | Same, but tasks/codex/todo.md |
+| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
 | Broad/high-risk work | Run [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation clearly helps and is allowed |
 | API/version-sensitive change | Official/repo-pinned docs before model memory | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
@@ -76,6 +76,7 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 ## Multi-Agent Hub
 
 Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in tasks/cursor/todo.md; trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
 ## Host Adapters
 
@@ -98,5 +99,5 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validat
 - Lifecycle: [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 - Offline-first: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md), [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
 - Supabase/chat proxy: [`../supabase/README.md`](../supabase/README.md)
-- gstack: gstack_integration.md
+- gstack: [`gstack_integration.md`](gstack_integration.md)
 - Staff demo: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)

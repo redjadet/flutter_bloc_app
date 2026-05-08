@@ -1,70 +1,82 @@
-# Codex bootstrap for Flutter BLoC app
+# AGENTS - Flutter BLoC App Map
 
-Use repo-local canon + shell entrypoints first. This bootstrap is map only;
-structured docs under `docs/` are system of record.
-Repo source map is root `AGENTS.md`; this file is synced Codex host
-bootstrap template, copied to `~/.codex/AGENTS.md` and Codex worktrees.
+Map only. Repo docs under `docs/` are system of record; host assets stay thin.
 
-## Read first
+## Authority
+
+Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host adapters.
+Done = Plan, Execute, Verify, Report proof.
+This root file is repo-local source map; `tool/agent_host_templates/codex/AGENTS.md`
+is Codex host bootstrap template synced to ~/.codex/AGENTS.md.
+
+## Start
 
 1. `AGENTS.md`
-1. `docs/agent_knowledge_base.md`
-1. `docs/ai_code_review_protocol.md`
-1. `docs/agents_quick_reference.md` for command lookup
-1. task-specific docs from `docs/README.md`
+2. [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+3. [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
+4. [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
+5. task docs from [`docs/README.md`](docs/README.md)
 
-## Codex route
+## Snapshot
 
-- **`flutter-bloc-app-quick-reference`**: orientation, commands, explicit-only cross-host review pointer.
-- **`flutter-bloc-app-delivery-workflow`**: non-trivial delivery through proof, including subagent rules.
+Flutter 3.41.9 / Dart 3.11.5. Clean Architecture:
+`Presentation -> Domain <- Data`; Cubit/BLoC, `get_it`, GoRouter.
+Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
+`lib/main_staging.dart`, `lib/main_prod.dart`.
 
-Details live in `docs/agents_quick_reference.md` and
-`docs/engineering/validation_routing_fast_vs_full.md`.
+## Loop
 
-## Default loop
+Plan once. Execute end-to-end. Verify. Report proof.
+Ask only on blockers: credentials/tooling, unsafe ambiguity below 95% confident,
+or user-owned decision. Non-trivial work tracks plan/proof in
+`tasks/codex/todo.md` or `tasks/cursor/todo.md`.
+For non-trivial existing-code work, use context ladder: map docs -> durable
+memory -> code-review-graph -> targeted raw files.
 
-1. **Plan:** Understand business goal; open only relevant docs.
-2. **Plan:** For non-trivial existing-code work, use context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-3. **Plan:** If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
-4. **Plan:** Plan once (<=10 lines for normal tasks), then execute end-to-end.
-5. **Plan:** Ask only on hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confidence, or user-owned product decision.
-6. **Plan:** For non-trivial work, keep plan and verification in `tasks/codex/todo.md`.
-7. **Execute:** Implement inside existing repo seams.
-8. **Verify:** Apply AI review gate before trusting draft output.
-9. **Verify:** Run smallest honest repo validation.
-10. **Verify:** Self-check final response vs request, diff, proof, blockers, risk.
-11. **Report:** Prove result before calling work done.
+## Map
 
-## Operating defaults
+- Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
+- Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
+- Code graph: [`docs/code_review_graph.md`](docs/code_review_graph.md)
+- Docs index: [`docs/README.md`](docs/README.md)
+- Design/UI: [`DESIGN.md`](DESIGN.md),
+ [`docs/design_system.md`](docs/design_system.md)
+- Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
+- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md),
+ [`docs/clean_architecture.md`](docs/clean_architecture.md)
+- Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md),
+ [`docs/testing_overview.md`](docs/testing_overview.md)
+- Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md),
+ [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
+- Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md),
+ [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
+ (runtime `getBox()` → `ensureSchema`; manifest when shape changes),
+ [`docs/engineering/delayed_work_guide.md`](docs/engineering/delayed_work_guide.md)
+- Plans/history: [`docs/plans/README.md`](docs/plans/README.md),
+ [`docs/changes/README.md`](docs/changes/README.md),
+ [`docs/audits/README.md`](docs/audits/README.md)
+- Host notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md)
 
-- Use repo shell entrypoints directly; don't invent Codex-only command layers.
-- Prefer smallest reversible change satisfying business goal + reliability bar.
-- Don't change files until at least 95% confident in goal/scope/approach.
-- If business intent/safe scope materially ambiguous, ask or document tradeoff.
-- Design for scale when touching shared architecture, routing, sync, lifecycle, security, CI, validation, or operational load.
-- Shared state belongs in Cubit/BLoC. Keep business rules out of widgets.
+## Must Keep
+
+- Smallest reversible change meeting goal + reliability bar.
+- Surgical diff: every changed line traces to request or required validation/doc update.
+- Docs Update Policy: if agent behavior/config changes, update docs in same task before finish.
+- Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - UI/design work reads `DESIGN.md` + `docs/design_system.md`; use
-  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
-- Use `WidgetTester.view` for widget-test viewport/pixel-ratio setup; avoid
-  deprecated `tester.binding.window` test-value APIs.
-- Capture repeated user corrections in `tasks/lessons.md`.
-- Repeated struggle => add missing repo capability, not longer prompt.
-- File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
-- For agent/docs changes, semantic-lint stale plans, duplicate rules, source/host-template contradictions.
-- Surgical diff: changed lines trace to request or required validation/doc update.
-- UI/app changes prefer app-visible proof over logs-only claims.
-- Docs-only changes still need validation; agent/docs changes should run
-  `./tool/check_agent_knowledge_base.sh`.
-- Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork host doctrine unless capabilities differ.
-- Host-template changes validate `./tool/check_agent_asset_drift.sh` and
-  `./tool/sync_agent_assets.sh --dry-run`.
-- Design brief changes validate `./tool/check_design_md.sh`; Mix token/style
-  changes validate `./tool/run_mix_lint.sh`.
-- Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user explicitly asks for second opinion or cross-host review.
-- Scale reasoning depth to task complexity; don't default max for local/low-risk work.
+ `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
+- Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
+- Repeated failure => add repo capability, not longer prompt.
+- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
 
-Communication style:
+## Commands
 
-- Keep commentary short and decision-oriented.
-- Prefer: current step, notable finding, next validation, blocker if any.
-- Put durable tradeoffs, assumptions, and residual risks in `tasks/codex/todo.md` for non-trivial work.
+- Bootstrap: `bash tool/agent_session_bootstrap.sh`
+- Full/pre-ship: `./bin/checklist`
+- Fast docs/tooling: `./bin/checklist-fast`
+- Router/auth/gates: `./bin/router_feature_validate`
+- Integration flows: `./bin/integration_tests`
+- Agent/docs: `./tool/check_agent_knowledge_base.sh`
+- Design brief: `./tool/check_design_md.sh`
+- Host templates: `./tool/check_agent_asset_drift.sh` + `./tool/sync_agent_assets.sh --dry-run`
