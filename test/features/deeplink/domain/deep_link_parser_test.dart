@@ -25,6 +25,25 @@ void main() {
       expect(target, DeepLinkTarget.chat);
     });
 
+    test('parses universal host case-insensitively', () {
+      final target = parser.parse(
+        Uri.parse(
+          '${DeepLinkConfig.universalScheme}://LINKS.FLUTTERBLOC.APP/chat',
+        ),
+      );
+      expect(target, DeepLinkTarget.chat);
+    });
+
+    test('supports localhost web links for local web development', () {
+      final target = parser.parse(Uri.parse('http://localhost:7357/settings'));
+      expect(target, DeepLinkTarget.settings);
+    });
+
+    test('supports loopback web links for local web development', () {
+      final target = parser.parse(Uri.parse('http://127.0.0.1:7357/chat'));
+      expect(target, DeepLinkTarget.chat);
+    });
+
     test('supports fallback scheme for development', () {
       final target = parser.parse(
         Uri.parse('${DeepLinkConfig.fallbackScheme}://settings'),
