@@ -35,7 +35,7 @@ memory -> code-review-graph -> targeted raw files.
 
 - Self-check final response vs request, diff, proof, blockers, risk.
 - Prove result before calling work done.
-- File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or `tasks/lessons.md`); don’t leave chat-only.
+- File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md)); don’t leave chat-only.
 
 ## Map
 
