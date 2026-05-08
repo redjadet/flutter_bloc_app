@@ -11,8 +11,7 @@ class DeepLinkParser {
     if (!_isSupportedScheme(uri.scheme)) {
       return null;
     }
-    if (uri.scheme == DeepLinkConfig.universalScheme &&
-        uri.host != DeepLinkConfig.universalHost) {
+    if (_isWebHttpScheme(uri.scheme) && !_isSupportedWebHost(uri)) {
       return null;
     }
 
@@ -37,7 +36,26 @@ class DeepLinkParser {
 
   bool _isSupportedScheme(final String scheme) =>
       scheme == DeepLinkConfig.universalScheme ||
-      scheme == DeepLinkConfig.fallbackScheme;
+      scheme == DeepLinkConfig.fallbackScheme ||
+      _isWebHttpScheme(scheme);
+
+  bool _isSupportedWebHost(final Uri uri) =>
+      _isLocalhostHost(uri.host) ||
+      (uri.scheme == DeepLinkConfig.universalScheme &&
+          _isUniversalLinkHost(uri.host));
+
+  bool _isUniversalLinkHost(final String host) =>
+      host.toLowerCase() == DeepLinkConfig.universalHost;
+
+  bool _isLocalhostHost(final String host) {
+    final String normalized = host.toLowerCase();
+    return normalized == 'localhost' ||
+        normalized == '127.0.0.1' ||
+        normalized == '::1';
+  }
+
+  static bool _isWebHttpScheme(final String scheme) =>
+      scheme == 'http' || scheme == 'https';
 
   static const Map<String, DeepLinkTarget> _segmentMap =
       <String, DeepLinkTarget>{

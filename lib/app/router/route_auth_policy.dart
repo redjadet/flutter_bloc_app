@@ -23,7 +23,7 @@ class AppRoutePolicies {
 
   static const AppRoutePolicy settings = AppRoutePolicy(
     path: AppRoutes.settingsPath,
-    requirement: RouteAuthRequirement.authenticated,
+    requirement: RouteAuthRequirement.publicRoute,
   );
 
   static const AppRoutePolicy profile = AppRoutePolicy(

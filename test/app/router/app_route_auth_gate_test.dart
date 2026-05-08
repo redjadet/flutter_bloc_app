@@ -81,6 +81,28 @@ void main() {
       expect(find.text('auth'), findsNothing);
     });
 
+    testWidgets('shows public child without an authenticated user', (
+      final tester,
+    ) async {
+      final StreamController<AuthUser?> authController =
+          StreamController<AuthUser?>.broadcast();
+      addTearDown(authController.close);
+
+      AuthUser? currentUser;
+      final GoRouter router = _createRouter(
+        initialLocation: AppRoutes.settingsPath,
+        authStateChanges: authController.stream,
+        getCurrentUser: () => currentUser,
+      );
+      addTearDown(router.dispose);
+
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+
+      expect(find.text('settings'), findsOneWidget);
+      expect(find.text('auth'), findsNothing);
+    });
+
     testWidgets('does not crash when authStateChanges emits an error', (
       final tester,
     ) async {
@@ -137,9 +159,9 @@ void main() {
   });
 
   group('AppRoutePolicies', () {
-    test('settings route is explicitly marked authenticated', () {
+    test('settings route is explicitly marked public', () {
       expect(AppRoutePolicies.settings.path, AppRoutes.settingsPath);
-      expect(AppRoutePolicies.settings.requiresAuthentication, isTrue);
+      expect(AppRoutePolicies.settings.requiresAuthentication, isFalse);
     });
 
     test('profile route is explicitly marked authenticated', () {
@@ -237,6 +259,16 @@ GoRouter _createRouter({
         authStateChanges: authStateChanges,
         authPath: AppRoutes.authPath,
         child: const Scaffold(body: Center(child: Text('profile'))),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.settingsPath,
+      builder: (final context, final state) => AppRouteAuthGate(
+        policy: AppRoutePolicies.settings,
+        getCurrentUser: getCurrentUser,
+        authStateChanges: authStateChanges,
+        authPath: AppRoutes.authPath,
+        child: const Scaffold(body: Center(child: Text('settings'))),
       ),
     ),
     GoRoute(

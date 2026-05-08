@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 import 'package:go_router/go_router.dart';
@@ -20,10 +19,15 @@ class IntegrationsSection extends StatelessWidget {
       child: CommonCard(
         child: ListTile(
           title: Text(l10n.settingsSupabaseAuth),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: context.responsiveIconSize * 0.8,
-            color: theme.colorScheme.onSurfaceVariant,
+          trailing: SizedBox.square(
+            dimension: 24,
+            child: Center(
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 18,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
           onTap: () => context.push(AppRoutes.supabaseAuthPath),
         ),
