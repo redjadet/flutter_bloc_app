@@ -29,7 +29,7 @@ Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
 Plan once. Execute end-to-end. Verify. Report proof.
 Ask only on blockers: credentials/tooling, unsafe ambiguity below 95% confident,
 or user-owned decision. Non-trivial work tracks plan/proof in
-`tasks/codex/todo.md` or `tasks/cursor/todo.md`.
+[`tasks/codex/todo.md`](tasks/codex/todo.md) or [`tasks/cursor/todo.md`](tasks/cursor/todo.md).
 For non-trivial existing-code work, use context ladder: map docs -> durable
 memory -> code-review-graph -> targeted raw files.
 
@@ -41,21 +41,21 @@ memory -> code-review-graph -> targeted raw files.
 - Code graph: [`docs/code_review_graph.md`](docs/code_review_graph.md)
 - Docs index: [`docs/README.md`](docs/README.md)
 - Design/UI: [`DESIGN.md`](DESIGN.md),
- [`docs/design_system.md`](docs/design_system.md)
+  [`docs/design_system.md`](docs/design_system.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
 - Architecture: [`docs/architecture_details.md`](docs/architecture_details.md),
- [`docs/clean_architecture.md`](docs/clean_architecture.md)
+  [`docs/clean_architecture.md`](docs/clean_architecture.md)
 - Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md),
- [`docs/testing_overview.md`](docs/testing_overview.md)
+  [`docs/testing_overview.md`](docs/testing_overview.md)
 - Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md),
- [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
+  [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
 - Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md),
- [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
- (runtime `getBox()` → `ensureSchema`; manifest when shape changes),
- [`docs/engineering/delayed_work_guide.md`](docs/engineering/delayed_work_guide.md)
+  [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
+  (runtime `getBox()` → `ensureSchema`; manifest when shape changes),
+  [`docs/engineering/delayed_work_guide.md`](docs/engineering/delayed_work_guide.md)
 - Plans/history: [`docs/plans/README.md`](docs/plans/README.md),
- [`docs/changes/README.md`](docs/changes/README.md),
- [`docs/audits/README.md`](docs/audits/README.md)
+  [`docs/changes/README.md`](docs/changes/README.md),
+  [`docs/audits/README.md`](docs/audits/README.md)
 - Host notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md)
 
 ## Must Keep
@@ -65,10 +65,10 @@ memory -> code-review-graph -> targeted raw files.
 - Docs Update Policy: if agent behavior/config changes, update docs in same task before finish.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - UI/design work reads `DESIGN.md` + `docs/design_system.md`; use
- `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
+  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
 - Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
-- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md).
 
 ## Commands
 
