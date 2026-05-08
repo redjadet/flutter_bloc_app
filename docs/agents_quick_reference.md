@@ -61,6 +61,7 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 - Vague ask -> assumptions + boundaries + data flow + failure handling + success criteria + smallest verifiable slice.
 - Before codegen/broad edits, make modules, ownership, logs, dry-run/test seams, and rollback story explicit when risk warrants.
 - Bug fix -> reproduce/reason root cause before code.
+- Finish gate before report: edge cases, failure paths, readability, operational clarity, breakage impact.
 - Repeated failure => add doc/test/fixture/script/route proof/log helper/validation check.
 - Reusable agent conclusion => durable repo memory; don't leave chat-only.
 - Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.

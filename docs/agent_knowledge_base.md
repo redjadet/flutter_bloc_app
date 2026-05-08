@@ -37,7 +37,7 @@ Scale effort to task value; avoid broad validation/delegation by default.
 7. Non-trivial => compare 2-3 approaches; choose lowest regret by correctness, maintainability, reversibility, blast radius, failure tolerance.
 8. Before codegen or broad edits, make the system shape explicit: modules, ownership boundaries, inputs/outputs, persistence/sync points, logs, dry-run/test seams, and rollback story.
 9. Debug root cause: reproduce/reason, isolate, fix cause, verify.
-10. Before report, self-critique failure inputs, weaknesses, assumptions, edge cases, scale, side effects.
+10. Before report, run the finish gate: edge cases, failure paths, readability, operational clarity, and what breaks next if this fails.
 11. Stop when value met, material risks handled, proof matches scope.
 
 ## Agent Legibility
@@ -61,6 +61,16 @@ Do not answer repeated failure with bigger prompt.
 5. Remove stale guidance once mechanical guard covers it.
 
 Examples: route mistake -> route validator/doc; repeated review comment -> invariant/linter/test helper; UI proof gap -> smoke path/screenshot/integration map.
+
+## Finish Gate
+
+Last 20% builds trust. Before report/commit, ask when suitable:
+
+- Edge cases: empty, malformed, duplicate, concurrent, offline/resume, permission-denied, slow/large input.
+- Failure paths: how errors surface, retry/rollback/idempotency, cleanup, user-visible state, logs/metrics.
+- Readability: names, seams, comments, tests, and docs make the next change obvious.
+- Operational clarity: run/verify/debug steps are discoverable from repo artifacts.
+- Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
 
 ## Memory Compounding
 
