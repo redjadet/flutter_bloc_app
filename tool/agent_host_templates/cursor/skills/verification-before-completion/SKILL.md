@@ -26,6 +26,7 @@ Hard gates:
 Checklist:
 
 - Re-read request; ensure diff matches ask.
+- Check edge cases, failure paths, readability, operational clarity, and breakage impact.
 - Run relevant repo script(s) (prefer `./bin/checklist-fast` when applicable).
 - Check lints for edited files; fix introduced errors.
 - Summarize proof: commands run + results + residual risk.

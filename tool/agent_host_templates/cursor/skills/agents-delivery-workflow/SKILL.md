@@ -42,6 +42,7 @@ Doctrine + matrix: `docs/agent_knowledge_base.md#multi-agent-hub`; roles/redacti
 - UI/design: `./tool/check_design_md.sh` if `DESIGN.md` edited; `./tool/run_mix_lint.sh` for Mix token/style edits.
 - Review subagent output yourself.
 - UI/app: prefer app-visible proof.
+- Finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
 - Surgical diff: each line traces to request or required validation/doc update.
 - Self-verify final report vs diff, validation, blockers, risk.
 - Resolve selected validation failures; add focused tests when behavior warrants.

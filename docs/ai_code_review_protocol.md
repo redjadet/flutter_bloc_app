@@ -32,6 +32,9 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 | Error handling | Existing pattern + stable error contracts preserved? |
 | Dependencies | Existing utilities/packages checked before adding deps? |
 | Naming | Names match codebase? |
+| Readability | Can next agent/developer understand seams, names, comments, tests, and docs? |
+| Operational clarity | Can someone run, verify, debug, and recover from repo artifacts? |
+| Breakage impact | What breaks first, how is it detected, and what is the recovery path? |
 | Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat? |
 | Confidence | Confidence from proof; uncertainty stated? |
 | Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
