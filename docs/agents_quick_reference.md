@@ -75,7 +75,6 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 
 ## Multi-Agent Hub
 
-Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in tasks/cursor/todo.md; trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
 ## Host Adapters
