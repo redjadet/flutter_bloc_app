@@ -57,7 +57,7 @@ Hard gates:
 - `git status --porcelain` (must be empty unless user opted in)
 - `git diff --name-only --diff-filter=U` (must be empty; unmerged paths)
 
-2) Triage open non-draft PRs targeting `$base_branch`
+1) Triage open non-draft PRs targeting `$base_branch`
 
 - List: `gh pr list --state open --draft=false --base "$base_branch" --limit 200`
 - For each PR: `gh pr view <PR> --json mergeable,reviewDecision,statusCheckRollup,url,title,headRefName,isDraft`
@@ -67,7 +67,7 @@ Hard gates:
 - Not beneficial → `gh pr close <PR> --comment "Closing because: <brief reason>."`
 - Beneficial but failing → bounded fix loop (≤ `$fix_rounds`), then merge or report blocker
 
-3) Run upgrade lane on a working branch
+1) Run upgrade lane on a working branch
 
 ```bash
 git switch "$base_branch" && git pull --ff-only
@@ -82,7 +82,7 @@ Optional (avoid mutating managed agent assets during lane):
 SKIP_PUB_UPGRADE=1 SYNC_AGENT_ASSETS=skip ./bin/upgrade_validate_all
 ```
 
-4) Land generated changes (if any)
+1) Land generated changes (if any)
 
 - Inspect: `git status`, `git diff`
 - Stage cohesive artifacts only; never secrets.
