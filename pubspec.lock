@@ -1926,18 +1926,18 @@ packages:
     dependency: "direct main"
     description:
       name: pdfrx
-      sha256: "6b14886d8823f9a105230d1dfa483afa1099ff67cd6ddde896b5f33c9afb4312"
+      sha256: ba1003bc45454de82ba4911791561533108cfb5ebecb54d8d06489ff6b7f8ebc
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   pdfrx_engine:
     dependency: transitive
     description:
       name: pdfrx_engine
-      sha256: "55855ea6affdbfd4572a38e5a93f8301541bded5506d9b204b0d0c01f7b0cb35"
+      sha256: bbb71414a7828128e87a017c97f3c392e379b9e171beaaa37aa225c597ca4f6e
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   petitparser:
     dependency: transitive
     description:
@@ -2078,10 +2078,10 @@ packages:
     dependency: "direct dev"
     description:
       name: retrofit_generator
-      sha256: b6beaca9c62acfa24e2185c238d627fd265b0d4a5b117d0fbc27223bb724cbea
+      sha256: "7b7a7bbd61da2f2cac0646fc852515886c958cafad3c7f01f25b5b2bc451405b"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.5"
+    version: "10.2.6"
   retry:
     dependency: transitive
     description:
@@ -2587,10 +2587,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_avfoundation
-      sha256: af0e5b8a7a4876fb37e7cc8cb2a011e82bb3ecfa45844ef672e32cb14a1f259e
+      sha256: e5371e9c09a5f5d55b88fd552bb1192dd5805a5747388553a439a30b85851a6a
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.4"
+    version: "2.9.5"
   video_player_platform_interface:
     dependency: "direct dev"
     description:

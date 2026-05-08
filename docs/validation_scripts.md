@@ -826,7 +826,6 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_macos_debug_web_guard.sh`
 - `check_agent_knowledge_base.sh`
 - `check_agent_memory_compounding.sh`
-- `check_skill_budgets.sh` (soft; report-only unless enforced)
 - `check_ai_generated_code_smells.sh`
 - `check_pyright_python.sh`
 
