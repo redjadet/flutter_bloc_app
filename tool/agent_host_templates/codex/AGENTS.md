@@ -33,6 +33,10 @@ or user-owned decision. Non-trivial work tracks plan/proof in
 For non-trivial existing-code work, use context ladder: map docs -> durable
 memory -> code-review-graph -> targeted raw files.
 
+- Self-check final response vs request, diff, proof, blockers, risk.
+- Prove result before calling work done.
+- File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or `tasks/lessons.md`); don’t leave chat-only.
+
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
