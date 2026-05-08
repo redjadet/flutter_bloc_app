@@ -22,8 +22,9 @@ Default: **Plan -> Execute -> Verify -> Report**. Plan once (<=10 lines). Ask on
 11. **Execute:** Update DI/routes/l10n/codegen when touched. Widget-test viewport uses `WidgetTester.view`.
 12. **Execute:** Repeated struggle => add repo capability. File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
 13. **Verify:** AI review gate: `docs/ai_code_review_protocol.md`; run smallest matching validation.
-14. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
-15. **Report:** Report only after Verify; proof must match scope.
+14. **Verify:** Finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
+15. **Verify:** Self-verify final response vs request, changed files, proof, blockers, residual risk.
+16. **Report:** Report only after Verify; proof must match scope.
 
 Validation picks:
 

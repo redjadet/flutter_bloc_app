@@ -32,6 +32,8 @@ or user-owned decision. Non-trivial work tracks plan/proof in
 [`tasks/codex/todo.md`](tasks/codex/todo.md) or [`tasks/cursor/todo.md`](tasks/cursor/todo.md).
 For non-trivial existing-code work, use context ladder: map docs -> durable
 memory -> code-review-graph -> targeted raw files.
+Finish gate before report: edge cases, failure paths, readability, operational
+clarity, breakage impact.
 
 ## Map
 

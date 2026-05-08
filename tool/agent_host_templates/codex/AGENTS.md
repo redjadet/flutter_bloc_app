@@ -36,6 +36,8 @@ If vague/risky, define boundaries, data flow, failure handling, and smallest
 verifiable slice before generation.
 
 - Self-check final response vs request, diff, proof, blockers, risk.
+- Finish gate: edge cases, failure paths, readability, operational clarity,
+  breakage impact.
 - Prove result before calling work done.
 - File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)); don’t leave chat-only.
 

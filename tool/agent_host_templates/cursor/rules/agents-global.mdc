@@ -29,6 +29,7 @@ alwaysApply: false
 - Don't change files until at least 95% confident in goal/scope/approach.
 - Surgical diff: each changed line traces to request or required validation/doc update.
 - Treat AI code as draft until problem-fit, simplification, security, performance, edge-case, error-pattern, dependency, naming, and testing review pass.
+- Finish gate before report: edge cases, failure paths, readability, operational clarity, breakage impact.
 - Self-verify before report: request, changed files, proof, blockers, risk.
 
 ## Repo-first
