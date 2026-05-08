@@ -64,4 +64,10 @@ if [ -n "${skill_inventory_path:-}" ] && [ -f "$skill_inventory_path" ]; then
   bash "$PROJECT_ROOT/tool/check_skill_budgets.sh" "$skill_inventory_path" report || true
 fi
 
+if [ -n "${CURSOR_AGENT_TRANSCRIPTS_ROOT:-}" ]; then
+  transcript_inventory_path="$PROJECT_ROOT/docs/audits/transcript_inventory_$(date +%F).json"
+  echo "info|transcripts|report-only|$transcript_inventory_path"
+  bash "$PROJECT_ROOT/tool/check_transcript_budgets.sh" "$transcript_inventory_path" || true
+fi
+
 exec env CHECKLIST_MODE=fast "$PROJECT_ROOT/tool/delivery_checklist.sh" "$@"
