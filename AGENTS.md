@@ -29,7 +29,7 @@ Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
 Plan once. Execute end-to-end. Verify. Report proof.
 Ask only on blockers: credentials/tooling, unsafe ambiguity below 95% confident,
 or user-owned decision. Non-trivial work tracks plan/proof in
-`tasks/codex/todo.md` or `tasks/cursor/todo.md`.
+[`tasks/codex/todo.md`](tasks/codex/todo.md) or [`tasks/cursor/todo.md`](tasks/cursor/todo.md).
 For non-trivial existing-code work, use context ladder: map docs -> durable
 memory -> code-review-graph -> targeted raw files.
 
@@ -68,7 +68,7 @@ memory -> code-review-graph -> targeted raw files.
   `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
 - Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
-- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md).
 
 ## Commands
 
