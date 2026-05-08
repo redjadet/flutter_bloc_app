@@ -74,6 +74,9 @@ User prefs:
 - `.cursor/*`, `tasks/*`, `.code-review-graph/` ignored.
 - Host templates: see Host sync + Validation Routing.
 - `./tool/refresh_code_review_graph.sh` refreshes local graph after large changes.
+- Transcript context budgets (local-only): set `CURSOR_AGENT_TRANSCRIPTS_ROOT`
+  then run `./tool/check_transcript_budgets.sh` (report-only) or
+  `./bin/checklist-fast` (auto-runs when env var set).
 - Integration tests fail on warning/error logs unless narrowly allowlisted in
   `integration_test/test_harness.dart`.
 - Markdownlint ignores task trackers via `.markdownlintignore` and
