@@ -827,6 +827,139 @@ class AppLocalizationsTr extends AppLocalizations {
   String get cancelButtonLabel => 'Vazgeç';
 
   @override
+  String get okButtonLabel => 'Tamam';
+
+  @override
+  String get doneButtonLabel => 'Bitti';
+
+  @override
+  String get logoutButtonLabel => 'Çıkış';
+
+  @override
+  String get sendButtonLabel => 'Gönder';
+
+  @override
+  String get retryButtonShortLabel => 'Yeniden dene';
+
+  @override
+  String get conversationHintLabel => 'Conversation';
+
+  @override
+  String get selectAppointmentHintLabel => 'Randevu seç';
+
+  @override
+  String get cameraLabel => 'Kamera';
+
+  @override
+  String get microphoneLabel => 'Mikrofon';
+
+  @override
+  String get cameraPermissionGrantedLabel => 'Kamera izni verildi';
+
+  @override
+  String get microphonePermissionGrantedLabel => 'Mikrofon izni verildi';
+
+  @override
+  String get createSessionButtonLabel => 'Oturum oluştur';
+
+  @override
+  String get joinButtonLabel => 'Katıl';
+
+  @override
+  String get approveButtonLabel => 'Onayla';
+
+  @override
+  String get bookButtonLabel => 'Randevu al';
+
+  @override
+  String get bookedLabel => 'Alındı';
+
+  @override
+  String get cancelledLabel => 'İptal edildi';
+
+  @override
+  String get typeMessageHint => 'Mesaj yaz…';
+
+  @override
+  String get onlineTherapyDemoControlsTitle => 'Demo controls';
+
+  @override
+  String get onlineTherapyDemoControlsIntro =>
+      'Failure injection (demo-friendly). Changes affect the fake API behavior.';
+
+  @override
+  String onlineTherapyDemoControlsModeLabel(String mode) {
+    return 'Mode: $mode';
+  }
+
+  @override
+  String get onlineTherapyDemoControlsExplainNormal => 'Baseline success.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainSlow =>
+      'Adds delay so loading states are visible.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainOffline =>
+      'Throws Offline errors for failure UX.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainMessageFailure =>
+      'First message send fails (failed), retry succeeds (sent).';
+
+  @override
+  String get onlineTherapyDemoControlsExplainCallFailure =>
+      'Video join fails and shows fallback state.';
+
+  @override
+  String get onlineTherapyDemoLoggedOutTitle => 'You are logged out.';
+
+  @override
+  String get onlineTherapyDemoLoggedOutMessage =>
+      'Go back to the landing screen to sign in.';
+
+  @override
+  String get onlineTherapyDemoGoToLandingButton => 'Go to landing';
+
+  @override
+  String get onlineTherapyDemoClientHubTitle => 'Client — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoTherapistHubTitle => 'Therapist — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoAdminHubTitle => 'Admin — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoNavTherapists => 'Therapists';
+
+  @override
+  String get onlineTherapyDemoNavMyAppointments => 'My appointments';
+
+  @override
+  String get onlineTherapyDemoNavAppointments => 'Appointments';
+
+  @override
+  String get onlineTherapyDemoNavMessaging => 'Messaging';
+
+  @override
+  String get onlineTherapyDemoNavCall => 'Call';
+
+  @override
+  String get onlineTherapyDemoNavControls => 'Controls';
+
+  @override
+  String get onlineTherapyDemoControlsNavTitle =>
+      'Controls (network/failure injection)';
+
+  @override
+  String get onlineTherapyDemoNavTherapistVerification =>
+      'Therapist verification';
+
+  @override
+  String get onlineTherapyDemoNavAuditFeed => 'Audit feed';
+
+  @override
   String get deleteButtonLabel => 'Sil';
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_network_mode.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/fake/online_therapy_fake_api.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/fake/online_therapy_network_mode.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_auth_repository.dart';
 
 class OnlineTherapyDemoSessionState {

@@ -43,6 +43,21 @@ class CalculatorPage extends StatelessWidget {
 
             Widget content;
             if (shouldScroll) {
+              final EdgeInsets resolvedPadding = padding.resolve(
+                Directionality.of(context),
+              );
+              final double availableWidth =
+                  constraints.maxWidth -
+                  resolvedPadding.left -
+                  resolvedPadding.right;
+              final double spacing = context.responsiveGapL;
+              const int columns = 4;
+              const int rows = 5;
+              final double itemWidth =
+                  (availableWidth - (spacing * (columns - 1))) / columns;
+              final double keypadHeight =
+                  (itemWidth * rows) + (spacing * (rows - 1)) + spacing;
+
               content = SingleChildScrollView(
                 padding: padding,
                 child: Column(
@@ -51,7 +66,10 @@ class CalculatorPage extends StatelessWidget {
                     SizedBox(height: verticalGap),
                     const _CalculatorDisplay(),
                     SizedBox(height: verticalGap),
-                    const CalculatorKeypad(shrinkWrap: true),
+                    SizedBox(
+                      height: keypadHeight,
+                      child: const CalculatorKeypad(),
+                    ),
                     SizedBox(height: verticalGap),
                   ],
                 ),

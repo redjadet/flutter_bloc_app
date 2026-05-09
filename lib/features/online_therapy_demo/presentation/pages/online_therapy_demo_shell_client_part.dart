@@ -110,6 +110,7 @@ class _TherapistDetails extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final t = therapist;
     if (t == null) {
       return const Center(child: Text('Select a therapist.'));
@@ -176,7 +177,9 @@ class _TherapistDetails extends StatelessWidget {
                         onPressed: isBusy || !canBook
                             ? null
                             : () => onBook(slot),
-                        child: Text(canBook ? 'Book' : 'Booked'),
+                        child: Text(
+                          canBook ? l10n.bookButtonLabel : l10n.bookedLabel,
+                        ),
                       ),
                     );
                   },
@@ -206,10 +209,10 @@ class _TherapistDetails extends StatelessWidget {
                         title: Text(formatDeviceDateTime(context, a.startAt)),
                         subtitle: Text('Status: ${a.status.name}'),
                         trailing: a.status == AppointmentStatus.cancelled
-                            ? const Text('Cancelled')
+                            ? Text(l10n.cancelledLabel)
                             : TextButton(
                                 onPressed: isBusy ? null : () => onCancel(a.id),
-                                child: const Text('Cancel'),
+                                child: Text(l10n.cancelButtonLabel),
                               ),
                       );
                     },
