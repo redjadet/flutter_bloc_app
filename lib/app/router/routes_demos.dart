@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart'
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/ai_decision_demo.dart';
+import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -53,6 +54,10 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
         create: () => ChatCubit(
           repository: getIt<ChatRepository>(),
           historyRepository: getIt<ChatHistoryRepository>(),
+          renderOrchestrationHfTokenProvider:
+              getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+              ? getIt<RenderOrchestrationHfTokenProvider>()
+              : null,
           initialModel: SecretConfig.huggingfaceModel,
         ),
         init: (final cubit) => cubit.loadHistory(),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo_list_date_picker.freezed.dart';
@@ -197,18 +198,21 @@ Future<DateTime?> showAdaptiveTodoDatePicker({
         );
 
         final List<Widget> actions = [
-          TextButton(
+          PlatformAdaptive.textButton(
+            context: context,
             onPressed: () => Navigator.of(context).pop(),
             child: Text(cancelLabel),
           ),
           if (initialDate != null)
-            TextButton(
+            PlatformAdaptive.textButton(
+              context: context,
               onPressed: () => Navigator.of(context).pop(
                 const _DatePickerResult.cleared(),
               ),
               child: Text(clearLabel),
             ),
-          TextButton(
+          PlatformAdaptive.textButton(
+            context: context,
             onPressed: () => Navigator.of(context).pop(
               _DatePickerResult.confirmed(selected),
             ),

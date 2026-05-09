@@ -10,6 +10,8 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
+    as feature_auth;
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
@@ -52,6 +54,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
     path: AppRoutes.authPath,
     name: AppRoutes.auth,
     builder: (final context, final state) => SignInPage(
+      authRepository: getIt<feature_auth.AuthRepository>(),
       redirectAfterLogin: state.uri.queryParameters['redirect'],
     ),
   ),
