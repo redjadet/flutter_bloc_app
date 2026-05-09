@@ -19,6 +19,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/therapist_home_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -205,7 +206,7 @@ class _TopControls extends StatelessWidget {
           if (state.user != null)
             ElevatedButton(
               onPressed: state.isBusy ? null : () => cubit.logout(),
-              child: const Text('Logout'),
+              child: Text(context.l10n.logoutButtonLabel),
             ),
         ],
       ),

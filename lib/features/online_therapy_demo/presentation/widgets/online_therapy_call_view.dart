@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 
 class OnlineTherapyCallView extends StatelessWidget {
@@ -8,6 +9,7 @@ class OnlineTherapyCallView extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<CallCubit>().state;
     final cubit = context.cubit<CallCubit>();
 
@@ -20,7 +22,7 @@ class OnlineTherapyCallView extends StatelessWidget {
         DropdownButton<String>(
           isExpanded: true,
           value: apptId,
-          hint: const Text('Select appointment'),
+          hint: Text(l10n.selectAppointmentHintLabel),
           onChanged: state.isBusy
               ? null
               : (final v) => v == null ? null : cubit.selectAppointment(v),
@@ -45,7 +47,7 @@ class OnlineTherapyCallView extends StatelessWidget {
               ? null
               : (final v) =>
                     v == null ? null : cubit.toggleCameraPermission(granted: v),
-          title: const Text('Camera permission granted'),
+          title: Text(l10n.cameraPermissionGrantedLabel),
           controlAffinity: ListTileControlAffinity.leading,
         ),
         CheckboxListTile(
@@ -57,7 +59,7 @@ class OnlineTherapyCallView extends StatelessWidget {
               : (final v) => v == null
                     ? null
                     : cubit.toggleMicrophonePermission(granted: v),
-          title: const Text('Microphone permission granted'),
+          title: Text(l10n.microphonePermissionGrantedLabel),
           controlAffinity: ListTileControlAffinity.leading,
         ),
         const SizedBox(height: 8),
@@ -69,13 +71,13 @@ class OnlineTherapyCallView extends StatelessWidget {
               onPressed: state.isBusy || apptId == null
                   ? null
                   : () => cubit.createSession(),
-              child: const Text('Create session'),
+              child: Text(l10n.createSessionButtonLabel),
             ),
             ElevatedButton(
               onPressed: state.isBusy || session == null
                   ? null
                   : () => cubit.join(),
-              child: const Text('Join'),
+              child: Text(l10n.joinButtonLabel),
             ),
           ],
         ),

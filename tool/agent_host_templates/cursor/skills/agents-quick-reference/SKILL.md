@@ -18,14 +18,13 @@ Non-trivial: `agents-delivery-workflow`; delegation discipline: `agents-meta-beh
 
 Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`.
 
-Defaults:
+Defaults: Plan -> Execute -> Verify -> Report; Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 
-- Plan -> Execute -> Verify -> Report. Ask only hard blockers.
-- Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`.
-- UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
-- reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-- multi-agent hub -> `agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
+Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
+
+UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+
+multi-agent hub -> `agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
 
 Approved entrypoints:
 

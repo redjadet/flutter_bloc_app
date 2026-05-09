@@ -65,7 +65,6 @@ Future<CountryOption?> showCountryPicker({
               ),
               Flexible(
                 child: ListView.builder(
-                  shrinkWrap: true,
                   itemCount: kSupportedCountries.length,
                   itemBuilder: (final context, final index) {
                     final country = kSupportedCountries[index];

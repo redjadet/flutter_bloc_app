@@ -34,7 +34,9 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 | Naming | Names match codebase? |
 | Readability | Can next agent/developer understand seams, names, comments, tests, and docs? |
 | Operational clarity | Can someone run, verify, debug, and recover from repo artifacts? |
+| Execution state | Is plan/checklist/retry/blocker state inspectable instead of hidden in chat? |
 | Breakage impact | What breaks first, how is it detected, and what is the recovery path? |
+| Tool output | Were empty/truncated/malformed tool results treated as failures to re-check, not proof? |
 | Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat? |
 | Confidence | Confidence from proof; uncertainty stated? |
 | Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
@@ -61,10 +63,12 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 
 1. Apply checks above.
 2. If vague, define assumptions, system boundaries, data flow, failure handling, success criteria, and smallest verifiable slice.
-3. Review diff/generated artifacts.
-4. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
-5. Self-verify final response vs request, diff, proof, blockers, residual risk.
-6. Medium/high risk: prefer extra review pass. Cross-host review only when explicitly requested.
+3. For non-trivial work, define acceptance contract before broad execution; prefer executable specs/tests/fixtures over prose.
+4. Review diff/generated artifacts.
+5. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+6. If verifier/critique fails, retry only against concrete evidence; after two loops, replan or report blocker.
+7. Self-verify final response vs request, diff, proof, blockers, residual risk.
+8. Medium/high risk: prefer extra review pass. Cross-host review only when explicitly requested.
 
 Repeated critique => repo-visible capability: source-doc update, validation check, test helper, fixture, route proof, or task template.
 

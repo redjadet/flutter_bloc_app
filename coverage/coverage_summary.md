@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **70.82%** (19154/27045 lines)
+*Total line coverage*: **70.67%** (19179/27137 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -37,7 +37,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/igaming_demo/data/hive_demo_balance_repository.dart` | 0.00% | 0/32 |
 | `lib/features/igaming_demo/presentation/pages/game_page_legend.part.dart` | 0.00% | 0/13 |
 | `lib/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart` | 0.00% | 0/114 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_therapist_detail_page.dart` | 0.00% | 0/57 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_therapist_detail_page.dart` | 0.00% | 0/60 |
 | `lib/features/playlearn/data/asset_vocabulary_repository.dart` | 0.00% | 0/8 |
 | `lib/features/playlearn/data/tts_audio_service.dart` | 0.00% | 0/7 |
 | `lib/features/playlearn/presentation/widgets/topic_card.dart` | 0.00% | 0/13 |
@@ -65,33 +65,33 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/ui/typography.dart` | 0.00% | 0/49 |
 | `lib/shared/utils/error_codes.dart` | 0.00% | 0/1 |
 | `lib/features/igaming_demo/presentation/pages/game_page.dart` | 0.68% | 1/148 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_client_part.dart` | 0.98% | 1/102 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_client_part.dart` | 0.94% | 1/106 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | 1.29% | 2/155 |
 | `lib/features/example/presentation/pages/firebase_functions_test_page.dart` | 1.37% | 1/73 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | 1.43% | 2/140 |
-| `lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart` | 1.47% | 1/68 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_page.dart` | 1.68% | 2/119 |
+| `lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart` | 1.43% | 1/70 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_page.dart` | 1.67% | 2/120 |
 | `lib/features/staff_app_demo/presentation/widgets/staff_demo_proof_signature_section.dart` | 1.79% | 1/56 |
-| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_call_view.dart` | 2.27% | 1/44 |
+| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_call_view.dart` | 2.00% | 1/50 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_timeclock_page.dart` | 2.27% | 1/44 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_proof_page.dart` | 2.36% | 3/127 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_booking_confirm_page.dart` | 2.56% | 1/39 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_therapist_admin_part.dart` | 2.56% | 2/78 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_booking_confirm_page.dart` | 2.44% | 1/41 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_shell_therapist_admin_part.dart` | 2.50% | 2/80 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_admin_verification_page.dart` | 2.86% | 1/35 |
 | `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_admin_audit_page.dart` | 3.13% | 1/32 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_admin_verification_page.dart` | 3.13% | 1/32 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_controls_page.dart` | 3.23% | 1/31 |
 | `lib/features/case_study_demo/presentation/pages/case_study_demo_home_page.dart` | 3.57% | 1/28 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_controls_page.dart` | 4.35% | 1/23 |
 | `lib/features/igaming_demo/presentation/pages/lobby_page.dart` | 4.55% | 2/44 |
 | `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_call_page.dart` | 5.56% | 1/18 |
 | `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit_video.part.dart` | 5.88% | 3/51 |
 | `lib/features/chat/presentation/widgets/chat_fastapi_cloud_badge.dart` | 7.14% | 1/14 |
 | `lib/features/case_study_demo/data/case_study_clip_file_store.dart` | 7.32% | 3/41 |
+| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart` | 7.69% | 1/13 |
 | `lib/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart` | 8.00% | 2/25 |
 | `lib/features/ai_decision_demo/data/ai_decision_models.dart` | 8.33% | 3/36 |
 | `lib/core/di/register_walletconnect_auth_services.dart` | 9.09% | 3/33 |
 | `lib/features/genui_demo/presentation/pages/genui_demo_page.dart` | 11.11% | 1/9 |
 | `lib/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart` | 11.11% | 1/9 |
 | `lib/core/bootstrap/app_version_service.dart` | 12.50% | 1/8 |
-| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart` | 12.50% | 1/8 |
 | `lib/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart` | 13.33% | 2/15 |
 | `lib/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart` | 15.00% | 3/20 |
 | `lib/app/router/routes_demos.dart` | 15.24% | 16/105 |
@@ -131,16 +131,16 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/staff_app_demo/presentation/staff_demo_presentation_l10n.dart` | 40.91% | 9/22 |
 | `lib/features/playlearn/presentation/pages/playlearn_page.dart` | 41.67% | 15/36 |
 | `lib/features/playlearn/presentation/widgets/word_card.dart` | 41.67% | 25/60 |
-| `lib/shared/utils/platform_adaptive_sheets.dart` | 42.86% | 42/98 |
+| `lib/shared/utils/platform_adaptive_sheets.dart` | 42.00% | 42/100 |
 | `lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart` | 43.14% | 44/102 |
 | `lib/features/auth/data/firebase_auth_repository.dart` | 43.75% | 7/16 |
 | `lib/features/todo_list/presentation/pages/todo_list_page_handlers.dart` | 44.68% | 21/47 |
 | `lib/features/online_therapy_demo/presentation/cubit/admin_cubit.dart` | 44.83% | 13/29 |
-| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_messaging_view.dart` | 46.39% | 45/97 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_hubs.dart` | 47.22% | 34/72 |
+| `lib/features/online_therapy_demo/presentation/widgets/online_therapy_messaging_view.dart` | 47.17% | 50/106 |
 | `lib/features/chat/presentation/widgets/chat_list_view.dart` | 47.66% | 51/107 |
 | `lib/shared/widgets/cached_network_image_widget.dart` | 47.92% | 23/48 |
 | `lib/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart` | 48.44% | 31/64 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_hubs.dart` | 49.47% | 47/95 |
 | `lib/core/di/register_genui_services.dart` | 50.00% | 2/4 |
 | `lib/features/example/presentation/pages/markdown_editor_page.dart` | 50.00% | 1/2 |
 | `lib/features/staff_app_demo/domain/staff_demo_role.dart` | 50.00% | 2/4 |
@@ -434,7 +434,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/pages/chat_page.dart` | 93.33% | 98/105 |
 | `lib/features/search/data/hive_search_cache_repository.dart` | 93.33% | 84/90 |
 | `lib/features/walletconnect_auth/data/wallet_user_profile_mapper.dart` | 93.33% | 42/45 |
-| `lib/shared/services/error_notification_service.dart` | 93.33% | 28/30 |
 | `lib/features/case_study_demo/presentation/pages/case_study_history_page.dart` | 93.40% | 99/106 |
 | `lib/features/deeplink/presentation/deep_link_cubit.dart` | 93.51% | 72/77 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` | 93.52% | 101/108 |
@@ -443,6 +442,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/data/huggingface_api_client.dart` | 93.59% | 73/78 |
 | `lib/shared/sync/pending_sync_repository.dart` | 93.62% | 88/94 |
 | `lib/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart` | 93.75% | 15/16 |
+| `lib/shared/services/error_notification_service.dart` | 93.75% | 30/32 |
 | `lib/features/ai_decision_demo/presentation/pages/ai_decision_demo_page.dart` | 93.81% | 106/113 |
 | `lib/shared/sync/background_sync_runner_helpers.dart` | 93.81% | 106/113 |
 | `lib/shared/widgets/diagnostics/profile_cache_controls_section.dart` | 93.90% | 77/82 |
@@ -459,11 +459,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/example/presentation/helpers/example_platform_dialogs.dart` | 94.92% | 56/59 |
 | `lib/core/theme/app_theme.dart` | 95.00% | 19/20 |
 | `lib/shared/widgets/common_app_bar.dart` | 95.00% | 38/40 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_landing_page.dart` | 95.12% | 39/41 |
 | `lib/features/settings/presentation/pages/settings_page.dart` | 95.12% | 39/41 |
 | `lib/features/calculator/presentation/pages/calculator_payment_page.dart` | 95.24% | 20/21 |
 | `lib/features/profile/data/profile_cache_repository.dart` | 95.40% | 83/87 |
 | `lib/features/iot_demo/data/offline_first_iot_demo_repository.dart` | 95.45% | 42/44 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_landing_page.dart` | 95.45% | 42/44 |
 | `lib/features/settings/data/shared_preferences_theme_repository.dart` | 95.45% | 21/22 |
 | `lib/shared/utils/cubit_subscription_mixin.dart` | 95.65% | 22/23 |
 | `lib/features/iot_demo/presentation/pages/iot_demo_page.dart` | 95.74% | 45/47 |
@@ -495,7 +495,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/utils/retry_policy.dart` | 97.22% | 70/72 |
 | `lib/shared/widgets/skeletons/skeleton_card.dart` | 97.22% | 35/36 |
 | `lib/features/chat/presentation/widgets/chat_bottom_navigation_bar.dart` | 97.37% | 37/38 |
-| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_appointments_page.dart` | 97.37% | 37/38 |
+| `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_appointments_page.dart` | 97.50% | 39/40 |
 | `lib/shared/utils/safe_parse_utils.dart` | 97.62% | 41/42 |
 | `lib/features/chart/data/chart_demo_cache_repository.dart` | 97.67% | 42/43 |
 | `lib/features/chart/presentation/cubit/chart_cubit.dart` | 97.73% | 43/44 |

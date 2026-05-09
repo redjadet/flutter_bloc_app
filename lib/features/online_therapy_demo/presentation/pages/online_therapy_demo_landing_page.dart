@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
     final List<Widget> items = <Widget>[
@@ -39,7 +41,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: state.isBusy ? null : () => session.logout(),
-          child: const Text('Logout'),
+          child: Text(l10n.logoutButtonLabel),
         ),
       ],
       const Divider(height: 24),
@@ -66,7 +68,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
       const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.tune),
-        title: const Text('Controls (network/failure injection)'),
+        title: Text(l10n.onlineTherapyDemoControlsNavTitle),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
       ),
     ];

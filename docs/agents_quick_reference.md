@@ -58,23 +58,17 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 - Closed-loop: plan once, execute end-to-end, verify, report proof.
 - Ask only hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Classify complexity/risk/scope/uncertainty before scaling validation/delegation.
-- Vague ask -> assumptions + boundaries + data flow + failure handling + success criteria + smallest verifiable slice.
-- Before codegen/broad edits, make modules, ownership, logs, dry-run/test seams, and rollback story explicit when risk warrants.
-- Bug fix -> reproduce/reason root cause before code.
-- Finish gate before report: edge cases, failure paths, readability, operational clarity, breakage impact.
+- Risk scale: branch/delegate only when uncertainty pays; one loop (`plan -> tool -> observe -> revise`) by default.
+- Vague/broad work: define boundaries, data flow, failure handling, acceptance proof, and rollback/test seams first.
+- Tool/verifier failures: empty/truncated output is not proof; cap critique retries at two, then replan/escalate.
+- Finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
 - Repeated failure => add doc/test/fixture/script/route proof/log helper/validation check.
+- Script changes: only false-positive fixes (narrow match/scope, fixtures, `check-ignore` w/ reason); no broad weakening.
 - Reusable agent conclusion => durable repo memory; don't leave chat-only.
 - Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
-- Non-trivial => compare approaches; pick lowest regret; stop when extra work no longer reduces real risk.
-- Parallel/multi-agent only when it clearly reduces calendar time or risk; update existing skills before adding copies.
-- Keep routine communication concise.
-- UI/app work: prefer app-visible proof over logs-only claims.
-- UI/design work: use [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); avoid ad-hoc color/spacing/type/state when `AppStyles`/Mix tokens cover it.
 - Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
-- Widget tests: use `WidgetTester.view`; avoid deprecated `tester.binding.window`.
-- Async builders: snapshot Cubit/BLoC list at build start; derive `itemCount` from snapshot; guard stale indexes.
-- Fix newline/EOF lints by file structure, not `ignore_for_file: eol_at_end_of_file`.
+- UI/design: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), `AppStyles`/Mix/runtime source first, app-visible proof where practical.
+- Widget tests use `WidgetTester.view`; async builders snapshot lists before indexing.
 
 ## Multi-Agent Hub
 
@@ -93,7 +87,7 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validat
 
 ## Read By Task
 
-- Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md)
+- Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md), [`tech_stack.md`](tech_stack.md)
 - Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
 - Feature work: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md), [`feature_overview.md`](feature_overview.md)
 - UI/design: [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md)
