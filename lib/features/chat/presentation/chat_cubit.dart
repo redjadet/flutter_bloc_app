@@ -6,7 +6,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
@@ -36,6 +35,7 @@ class ChatCubit extends _ChatCubitCore
   ChatCubit({
     required super.repository,
     required super.historyRepository,
+    super.renderOrchestrationHfTokenProvider,
     super.initialModel,
     super.supportedModels,
   });
@@ -45,10 +45,13 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   _ChatCubitCore({
     required final ChatRepository repository,
     required final ChatHistoryRepository historyRepository,
+    final RenderOrchestrationHfTokenProvider?
+    renderOrchestrationHfTokenProvider,
     final String? initialModel,
     final List<String>? supportedModels,
   }) : _repository = repository,
        _historyRepository = historyRepository,
+       _renderOrchestrationHfTokenProvider = renderOrchestrationHfTokenProvider,
        _models = _buildModelList(initialModel, supportedModels),
        super(
          ChatState.initial(
@@ -62,6 +65,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
 
   final ChatRepository _repository;
   final ChatHistoryRepository _historyRepository;
+  final RenderOrchestrationHfTokenProvider? _renderOrchestrationHfTokenProvider;
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
   StreamSubscription<AuthState>? _supabaseAuthSubscription;
@@ -117,12 +121,9 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
         .authStateChanges()
         .listen(
           (user) {
-            if (user == null &&
-                getIt.isRegistered<RenderOrchestrationHfTokenProvider>()) {
-              unawaited(
-                getIt<RenderOrchestrationHfTokenProvider>()
-                    .clearRenderOrchestrationTokenCache(),
-              );
+            final provider = _renderOrchestrationHfTokenProvider;
+            if (user == null && provider != null) {
+              unawaited(provider.clearRenderOrchestrationTokenCache());
             }
             _refreshRunnableTransportHintOnly();
           },

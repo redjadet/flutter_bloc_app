@@ -30,13 +30,15 @@ void main() {
     Future<void> pumpSignInPage(
       WidgetTester tester, {
       required FirebaseAuth? auth,
+      AuthRepository? authRepository,
     }) async {
       final router = GoRouter(
         initialLocation: AppRoutes.authPath,
         routes: [
           GoRoute(
             path: AppRoutes.authPath,
-            builder: (context, state) => SignInPage(auth: auth),
+            builder: (context, state) =>
+                SignInPage(auth: auth, authRepository: authRepository),
           ),
           GoRoute(
             path: AppRoutes.counterPath,
@@ -82,7 +84,11 @@ void main() {
             );
         getIt.registerSingleton<AuthRepository>(_FallbackGuestAuthRepository());
 
-        await pumpSignInPage(tester, auth: mockAuth);
+        await pumpSignInPage(
+          tester,
+          auth: mockAuth,
+          authRepository: getIt<AuthRepository>(),
+        );
 
         await tester.tap(find.byKey(signInGuestButtonKey));
         await tester.pumpAndSettle();
@@ -100,7 +106,11 @@ void main() {
       final mockAuth = MockFirebaseAuth();
       getIt.registerSingleton<AuthRepository>(_FallbackGuestAuthRepository());
 
-      await pumpSignInPage(tester, auth: mockAuth);
+      await pumpSignInPage(
+        tester,
+        auth: mockAuth,
+        authRepository: getIt<AuthRepository>(),
+      );
 
       expect(SignInPage.shouldUseMacOsDebugGuestOnlyAuth, isTrue);
       expect(find.text(AppLocalizationsEn().anonymousSignInButton), findsOne);

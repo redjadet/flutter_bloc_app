@@ -5,7 +5,6 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
@@ -26,6 +25,7 @@ class SignInPage extends StatelessWidget {
   const SignInPage({
     super.key,
     final FirebaseAuth? auth,
+    this.authRepository,
     this.redirectAfterLogin,
     this.providersOverride,
     final firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
@@ -34,6 +34,7 @@ class SignInPage extends StatelessWidget {
            googleProviderFactory ?? maybeCreateGoogleProvider;
 
   final FirebaseAuth? _auth;
+  final AuthRepository? authRepository;
   final String? redirectAfterLogin;
   @visibleForTesting
   final List<firebase_ui.AuthProvider>? providersOverride;
@@ -104,13 +105,19 @@ class SignInPage extends StatelessWidget {
     }
 
     Future<void> signInAnonymously() async {
-      final AuthRepository? authRepository =
-          getIt.isRegistered<AuthRepository>() ? getIt<AuthRepository>() : null;
+      final AuthRepository? repository = authRepository;
       if (auth == null) {
         try {
-          if (authRepository != null) {
-            await authRepository.signInAnonymously();
+          if (repository == null) {
+            if (!context.mounted) return;
+            ErrorHandling.clearSnackBars(context);
+            ErrorHandling.showErrorSnackBar(
+              context,
+              l10n.anonymousSignInFailed,
+            );
+            return;
           }
+          await repository.signInAnonymously();
           if (!context.mounted) {
             ContextUtils.logNotMounted(
               'SignInPage.signInAnonymously.noFirebase',
@@ -132,10 +139,10 @@ class SignInPage extends StatelessWidget {
       }
 
       try {
-        if (authRepository == null) {
+        if (repository == null) {
           await auth.signInAnonymously();
         } else {
-          await authRepository.signInAnonymously();
+          await repository.signInAnonymously();
         }
         if (!context.mounted) {
           ContextUtils.logNotMounted('SignInPage.signInAnonymously');

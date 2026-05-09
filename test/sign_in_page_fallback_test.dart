@@ -20,7 +20,7 @@ void main() {
       routes: <GoRoute>[
         GoRoute(
           path: '/sign-in',
-          builder: (context, state) => const SignInPage(),
+          builder: (context, state) => SignInPage(auth: MockFirebaseAuth()),
         ),
         GoRoute(
           path: AppRoutes.counterPath,

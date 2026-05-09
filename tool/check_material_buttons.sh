@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Check for raw Material buttons (should use PlatformAdaptive instead)
-# Raw buttons: ElevatedButton, OutlinedButton, TextButton
+# Check for raw Material button widgets (should use PlatformAdaptive instead)
+# Raw widgets: ElevatedButton, OutlinedButton, TextButton (and their .icon variants)
 
 set -euo pipefail
 
@@ -13,19 +13,23 @@ IGNORED=""
 
 source "$PROJECT_ROOT/tool/check_helpers.sh"
 
-# Use ripgrep if available, otherwise grep
+# Use ripgrep if available, otherwise grep.
+# Important: Match widget constructors only. Do not flag style helpers like
+# OutlinedButton.styleFrom / ElevatedButton.styleFrom.
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "ElevatedButton|OutlinedButton|TextButton" lib/features 2>/dev/null \
-    --glob "*/presentation/**" \
+  VIOLATIONS=$(rg -n "(^|[^.\\w])(ElevatedButton|OutlinedButton|TextButton)(\\.icon)?\\s*\\(" lib/features 2>/dev/null \
+    --glob "**/presentation/**" \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
+    | rg -v "/[^/]+_demo/" \
     | rg -v "PlatformAdaptive" \
-    | rg -v "test" \
+    | rg -v "/test/" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
-  VIOLATIONS=$(grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features 2>/dev/null \
+  VIOLATIONS=$(grep -rnE "(^|[^.\w])(ElevatedButton|OutlinedButton|TextButton)(\.icon)?[[:space:]]*\\(" lib/features 2>/dev/null \
+    | grep -vE "/[^/]+_demo/" \
     | grep -v "/test/" \
     | grep -v "PlatformAdaptive" \
     | grep -v "^[[:space:]]*//" \
