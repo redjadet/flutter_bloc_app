@@ -20,12 +20,10 @@ if command -v rg &> /dev/null; then
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    | rg -v "/[^/]+_demo/" \
     | rg -v "test" \
     || true)
 else
   FILES=$(grep -rl "await" lib/features lib/shared lib/app 2>/dev/null \
-    | grep -E -v "/[^/]+_demo/" \
     | grep -v "/test/" \
     || true)
 fi
