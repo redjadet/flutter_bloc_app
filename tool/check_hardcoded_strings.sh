@@ -22,14 +22,12 @@ source "$PROJECT_ROOT/tool/check_helpers.sh"
 # - Test files
 # - Comments
 if command -v rg &> /dev/null; then
-  # Use PCRE2 lookbehinds so matches start at the quote line (better line numbers)
-  VIOLATIONS=$(rg --pcre2 -nU "(?<=Text\\([\\s\\S]{0,180})['\"]|(?<=SelectableText\\([\\s\\S]{0,180})['\"]|(?<=TextSpan\\([\\s\\S]{0,180}text:\\s*)['\"]|(?<=AppMessage\\([\\s\\S]{0,180}(title|message):\\s*)['\"]|(?<=CommonErrorView\\([\\s\\S]{0,180}message:\\s*)['\"]" lib/features lib/shared lib/app 2>/dev/null \
+  VIOLATIONS=$(rg -nU "Text\\(\\s*['\"]|SelectableText\\(\\s*['\"]|TextSpan\\([^\\)]*text:\\s*['\"]|AppMessage\\([\\s\\S]{0,180}(title|message):\\s*['\"]|CommonErrorView\\([\\s\\S]{0,180}message:\\s*['\"]" lib/features lib/shared lib/app 2>/dev/null \
     --glob "*/presentation/**" \
     --glob "lib/shared/widgets/**" \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    | rg -v "/[^/]+_demo/" \
     | rg -v "context\.l10n\." \
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
@@ -38,7 +36,6 @@ if command -v rg &> /dev/null; then
     || true)
 else
   VIOLATIONS=$(grep -rn "Text(\|SelectableText(\|TextSpan(.*text:\|AppMessage(\|CommonErrorView(" lib/features lib/shared lib/app 2>/dev/null \
-    | grep -E -v "/[^/]+_demo/" \
     | grep -v "/test/" \
     | grep -v "context\.l10n\." \
     | grep -v "^[[:space:]]*//" \

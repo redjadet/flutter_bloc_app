@@ -18,12 +18,10 @@ if command -v rg &> /dev/null; then
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    | rg -v "/[^/]+_demo/" \
     || true)
 else
   VIOLATIONS=$(grep -rn "package:flutter_bloc_app/features/.*/data/" lib/features 2>/dev/null \
     | grep "/presentation/" \
-    | grep -E -v "/[^/]+_demo/" \
     || true)
 fi
 
