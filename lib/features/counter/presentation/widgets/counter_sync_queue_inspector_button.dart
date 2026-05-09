@@ -138,7 +138,6 @@ class _SyncQueueInspectorSheet extends StatelessWidget {
             SizedBox(height: context.responsiveGapM),
             Flexible(
               child: ListView.separated(
-                shrinkWrap: true,
                 itemBuilder: (final itemContext, final index) {
                   final SyncOperation operation = operations[index];
                   final String subtitle = l10n.syncQueueInspectorOperation(

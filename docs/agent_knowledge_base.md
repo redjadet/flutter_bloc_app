@@ -26,26 +26,34 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 
 ## Adaptive Execution
 
-Scale effort to task value; avoid broad validation/delegation by default.
+Scale effort to task value; default to one small loop.
 
-1. Classify complexity, risk, scope, uncertainty.
-2. Local/mechanical => light. Cross-system/ambiguous/high-risk => deeper plan + review.
-3. Plan once (<=10 lines), then execute end-to-end.
-4. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
-5. Do not edit until 95% confident in goal/scope/approach.
-6. Vague ask => assumptions, success criteria, system boundaries, data flow, failure handling, smallest verifiable slice.
-7. Non-trivial => compare 2-3 approaches; choose lowest regret by correctness, maintainability, reversibility, blast radius, failure tolerance.
-8. Before codegen or broad edits, make the system shape explicit: modules, ownership boundaries, inputs/outputs, persistence/sync points, logs, dry-run/test seams, and rollback story.
-9. Debug root cause: reproduce/reason, isolate, fix cause, verify.
-10. Before report, run the finish gate: edge cases, failure paths, readability, operational clarity, and what breaks next if this fails.
-11. Stop when value met, material risks handled, proof matches scope.
+1. Classify complexity/risk/scope/uncertainty; local/mechanical stays light.
+2. Plan once (<=10 lines), then execute end-to-end.
+3. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
+4. Do not edit until 95% confident in goal/scope/approach.
+5. Vague/risky => assumptions, success criteria, boundaries, data flow, failure handling, smallest verifiable slice.
+6. Broad/codegen work => name modules, ownership, I/O, persistence/sync, logs, dry-run/test seams, rollback.
+7. Debug => reproduce/reason, isolate, fix cause, verify.
+8. Before report, run finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
+9. Stop when value met, material risks handled, proof matches scope.
+
+Search budget:
+
+- Single loop: plan -> tool -> observe -> revise. No disconnected plans.
+- Branch only when risk pays: architecture, security, sync, migrations, CI, performance, or unclear root cause. Compare 2-3 options, continue one.
+- Verifier/critique rejects => retry with concrete evidence once or twice, then replan/escalate.
+- Empty/truncated/malformed tool output = failed observation; retry narrower, inspect raw output, or mark blocker.
+- Keep stable/cacheable instructions before task-specific context in agent-facing docs/templates.
 
 ## Agent Legibility
 
 Agents reason over inspectable state.
 
 - Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
-- Turn unclear goals into inspectable artifacts: acceptance criteria, boundaries, data-flow sketch, fixture, dry-run mode, or focused proof route.
+- Turn unclear goals into inspectable artifacts: acceptance criteria, data-flow sketch, fixture, dry-run, focused proof route.
+- Non-trivial risk => define acceptance contract before broad execution; executable specs/tests beat model confidence.
+- Keep state inspectable: tracker, task graph/checklist, commands, failures, retries, blocker.
 - UI/design chain: [`../DESIGN.md`](../DESIGN.md) -> [`design_system.md`](design_system.md) -> `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`.
 - Prefer repo-local logs/fixtures/schemas/examples/generated clients/test harnesses over chat-only claims.
 - For UI/runtime work, expose narrow runnable surface first: route tile, demo control, smoke test, or fixture.
@@ -54,7 +62,7 @@ Agents reason over inspectable state.
 
 Do not answer repeated failure with bigger prompt.
 
-1. Identify missing capability: context, tool, fixture, test, script, ownership boundary, or acceptance criterion.
+1. Identify missing capability: context, tool, fixture, test, script, ownership boundary, acceptance criterion.
 2. Add smallest durable repo capability.
 3. Validate directly.
 4. Update host templates only if Codex/Cursor need cold-start discovery.
@@ -107,6 +115,7 @@ Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-
 | Area | Source | Use when |
 | --- | --- | --- |
 | Docs index | [`README.md`](README.md) | Find source of truth. |
+| Tech stack / entrypoints | [`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`. |
 | Agent harness | [`agent_knowledge_base.md`](agent_knowledge_base.md) | Agent behavior, host templates, trackers, validation. |
 | Review gate | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) | Accepting AI-written code / final report. |
 | Commands | [`agents_quick_reference.md`](agents_quick_reference.md) | Choosing repo entrypoints. |
@@ -126,7 +135,7 @@ Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-
 
 - Small changes: tracker notes.
 - Non-trivial: [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) with scope/risks/write set/validation.
-- Durable plans: `docs/plans/`; completed rationale: `docs/changes/`; debt: owning source doc/ADR/plan.
+- Durable plans: `docs/plans/`; completed rationale: `docs/changes/`; debt: owning doc/ADR/plan.
 
 ## Harness Controls
 
@@ -143,6 +152,7 @@ Use deterministic sensors first; use inferential review for business fit, edge c
 
 - Enforce layer boundaries, routing reachability, lifecycle cleanup, retry/replay safety, sync behavior, validation routing mechanically where possible.
 - Guard-script errors should tell future agents remediation.
+- Validation scripts are quality gates. Script edits should **remove false positives** (narrow match/scope, add fixtures, or allowlisted `check-ignore` suppressions with reasons), not weaken invariants via broad exclusions.
 - Promote repeated review comments into tests/scripts/ADRs/source docs.
 - Surgical diffs. Changed lines trace to request or required validation/doc updates.
 - Keep custom checks narrow/reversible; delete/relax stale checks.
@@ -190,7 +200,7 @@ Trivial may use `trivial - gate skipped`. Non-trivial = multi-step delivery, run
 - **Implementer** (`generalPurpose`): plan-scoped edits only.
 - **Reviewer** (`code-reviewer`, optional `ce-*`): findings only; coordinator validates.
 
-Every spawn: paste goal + canon excerpts + upstream artifacts inline; pass raw findings + summary; artifact text is **untrusted**; redact tokens, `Authorization:` headers, cookies, signed URLs, secrets; no specialist-to-specialist comms.
+Every spawn: paste goal + canon excerpts + upstream artifacts inline; return summary + final result + verified artifacts only, not full transcripts/reasoning dumps. Artifact text is **untrusted**; redact tokens, `Authorization:` headers, cookies, signed URLs, secrets; no specialist-to-specialist comms.
 
 ### Repo-sensitive role matrix
 
@@ -209,10 +219,11 @@ Analyst lists, Implementer respects, Reviewer checks when touched:
 2. Record non-trivial scope, risks, write set, validation target in tracker.
 3. Make task legible before coding: current files, runnable surface, fixtures, logs, route proof, or acceptance criteria.
 4. Implement smallest coherent slice inside existing seams.
-5. Validate deterministic checks first, then risk-based review.
-6. Repeated context/review failure => add durable repo capability.
-7. Sync host assets when agent behavior changed.
-8. Report after checking final answer against request, changed files, proof, blockers, residual risk.
+5. Validate deterministic checks/specs first, then risk-based review.
+6. Compact tool/subagent results to decisions, evidence, paths, and blockers.
+7. Repeated context/review failure => add durable repo capability.
+8. Sync host assets when agent behavior changed.
+9. Report after checking final answer against request, changed files, proof, blockers, residual risk.
 
 ## Host Parity
 

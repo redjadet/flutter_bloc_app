@@ -571,6 +571,175 @@
   "@cancelButtonLabel": {
     "description": "Allgemeine Beschriftung für Abbrechen"
   },
+  "okButtonLabel": "OK",
+  "@okButtonLabel": {
+    "description": "Generic confirmation button label"
+  },
+  "doneButtonLabel": "Fertig",
+  "@doneButtonLabel": {
+    "description": "Generic done button label"
+  },
+  "logoutButtonLabel": "Abmelden",
+  "@logoutButtonLabel": {
+    "description": "Generic logout button label"
+  },
+  "sendButtonLabel": "Senden",
+  "@sendButtonLabel": {
+    "description": "Generic send button label"
+  },
+  "retryButtonShortLabel": "Erneut",
+  "@retryButtonShortLabel": {
+    "description": "Short retry button label (not uppercase)"
+  },
+  "conversationHintLabel": "Conversation",
+  "@conversationHintLabel": {
+    "description": "Hint label for selecting a conversation"
+  },
+  "selectAppointmentHintLabel": "Termin auswählen",
+  "@selectAppointmentHintLabel": {
+    "description": "Hint label for selecting an appointment"
+  },
+  "cameraLabel": "Kamera",
+  "@cameraLabel": {
+    "description": "Generic label for camera"
+  },
+  "microphoneLabel": "Mikrofon",
+  "@microphoneLabel": {
+    "description": "Generic label for microphone"
+  },
+  "cameraPermissionGrantedLabel": "Kameraberechtigung erteilt",
+  "@cameraPermissionGrantedLabel": {
+    "description": "Checkbox label indicating camera permission granted"
+  },
+  "microphonePermissionGrantedLabel": "Mikrofonberechtigung erteilt",
+  "@microphonePermissionGrantedLabel": {
+    "description": "Checkbox label indicating microphone permission granted"
+  },
+  "createSessionButtonLabel": "Sitzung erstellen",
+  "@createSessionButtonLabel": {
+    "description": "Button label for creating a session"
+  },
+  "joinButtonLabel": "Beitreten",
+  "@joinButtonLabel": {
+    "description": "Button label for joining a session"
+  },
+  "approveButtonLabel": "Genehmigen",
+  "@approveButtonLabel": {
+    "description": "Generic approve button label"
+  },
+  "bookButtonLabel": "Buchen",
+  "@bookButtonLabel": {
+    "description": "Generic book button label"
+  },
+  "bookedLabel": "Gebucht",
+  "@bookedLabel": {
+    "description": "Status label indicating something is already booked"
+  },
+  "cancelledLabel": "Storniert",
+  "@cancelledLabel": {
+    "description": "Status label indicating something is cancelled"
+  },
+  "typeMessageHint": "Nachricht eingeben…",
+  "@typeMessageHint": {
+    "description": "Hint text for message composer"
+  },
+  "onlineTherapyDemoControlsTitle": "Demo controls",
+  "@onlineTherapyDemoControlsTitle": {
+    "description": "Title for the online therapy demo controls page"
+  },
+  "onlineTherapyDemoControlsIntro": "Failure injection (demo-friendly). Changes affect the fake API behavior.",
+  "@onlineTherapyDemoControlsIntro": {
+    "description": "Intro text on the online therapy demo controls page"
+  },
+  "onlineTherapyDemoControlsModeLabel": "Mode: {mode}",
+  "@onlineTherapyDemoControlsModeLabel": {
+    "description": "Dropdown item label prefix for network mode",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "onlineTherapyDemoControlsExplainNormal": "Baseline success.",
+  "@onlineTherapyDemoControlsExplainNormal": {
+    "description": "Explanation for normal network mode in the online therapy demo"
+  },
+  "onlineTherapyDemoControlsExplainSlow": "Adds delay so loading states are visible.",
+  "@onlineTherapyDemoControlsExplainSlow": {
+    "description": "Explanation for slow network mode in the online therapy demo"
+  },
+  "onlineTherapyDemoControlsExplainOffline": "Throws Offline errors for failure UX.",
+  "@onlineTherapyDemoControlsExplainOffline": {
+    "description": "Explanation for offline network mode in the online therapy demo"
+  },
+  "onlineTherapyDemoControlsExplainMessageFailure": "First message send fails (failed), retry succeeds (sent).",
+  "@onlineTherapyDemoControlsExplainMessageFailure": {
+    "description": "Explanation for message failure mode in the online therapy demo"
+  },
+  "onlineTherapyDemoControlsExplainCallFailure": "Video join fails and shows fallback state.",
+  "@onlineTherapyDemoControlsExplainCallFailure": {
+    "description": "Explanation for call failure mode in the online therapy demo"
+  },
+  "onlineTherapyDemoLoggedOutTitle": "You are logged out.",
+  "@onlineTherapyDemoLoggedOutTitle": {
+    "description": "Title shown in online therapy demo when user is logged out"
+  },
+  "onlineTherapyDemoLoggedOutMessage": "Go back to the landing screen to sign in.",
+  "@onlineTherapyDemoLoggedOutMessage": {
+    "description": "Prompt shown in online therapy demo when user is logged out"
+  },
+  "onlineTherapyDemoGoToLandingButton": "Go to landing",
+  "@onlineTherapyDemoGoToLandingButton": {
+    "description": "Button label to navigate back to the online therapy demo landing page"
+  },
+  "onlineTherapyDemoClientHubTitle": "Client — Therapy demo",
+  "@onlineTherapyDemoClientHubTitle": {
+    "description": "Page title for the online therapy demo client hub"
+  },
+  "onlineTherapyDemoTherapistHubTitle": "Therapist — Therapy demo",
+  "@onlineTherapyDemoTherapistHubTitle": {
+    "description": "Page title for the online therapy demo therapist hub"
+  },
+  "onlineTherapyDemoAdminHubTitle": "Admin — Therapy demo",
+  "@onlineTherapyDemoAdminHubTitle": {
+    "description": "Page title for the online therapy demo admin hub"
+  },
+  "onlineTherapyDemoNavTherapists": "Therapists",
+  "@onlineTherapyDemoNavTherapists": {
+    "description": "Navigation label for therapists list in online therapy demo"
+  },
+  "onlineTherapyDemoNavMyAppointments": "My appointments",
+  "@onlineTherapyDemoNavMyAppointments": {
+    "description": "Navigation label for appointments list in online therapy demo client flow"
+  },
+  "onlineTherapyDemoNavAppointments": "Appointments",
+  "@onlineTherapyDemoNavAppointments": {
+    "description": "Navigation label for appointments in online therapy demo therapist flow"
+  },
+  "onlineTherapyDemoNavMessaging": "Messaging",
+  "@onlineTherapyDemoNavMessaging": {
+    "description": "Navigation label for messaging in online therapy demo"
+  },
+  "onlineTherapyDemoNavCall": "Call",
+  "@onlineTherapyDemoNavCall": {
+    "description": "Navigation label for call in online therapy demo"
+  },
+  "onlineTherapyDemoNavControls": "Controls",
+  "@onlineTherapyDemoNavControls": {
+    "description": "Navigation label for controls in online therapy demo"
+  },
+  "onlineTherapyDemoControlsNavTitle": "Controls (network/failure injection)",
+  "@onlineTherapyDemoControlsNavTitle": {
+    "description": "Navigation label for the controls entry on the online therapy demo landing page"
+  },
+  "onlineTherapyDemoNavTherapistVerification": "Therapist verification",
+  "@onlineTherapyDemoNavTherapistVerification": {
+    "description": "Navigation label for therapist verification in online therapy demo admin flow"
+  },
+  "onlineTherapyDemoNavAuditFeed": "Audit feed",
+  "@onlineTherapyDemoNavAuditFeed": {
+    "description": "Navigation label for audit feed in online therapy demo admin flow"
+  },
   "deleteButtonLabel": "Löschen",
   "@deleteButtonLabel": {
     "description": "Allgemeine Beschriftung für Löschen"

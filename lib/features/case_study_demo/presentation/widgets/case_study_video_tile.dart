@@ -69,7 +69,11 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
     try {
       await c.initialize();
       await c.setLooping(true);
-      if (!mounted || token != _initToken) {
+      if (!mounted) {
+        await c.dispose();
+        return;
+      }
+      if (token != _initToken) {
         await c.dispose();
         return;
       }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 
 class OnlineTherapyMessagingView extends StatefulWidget {
@@ -32,6 +33,7 @@ class _OnlineTherapyMessagingViewState
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<MessagingCubit>().state;
     final cubit = context.cubit<MessagingCubit>();
     final conversations = List<Conversation>.unmodifiable(
@@ -64,7 +66,7 @@ class _OnlineTherapyMessagingViewState
         children: <Widget>[
           Expanded(
             child: convId == null
-                ? const Center(child: Text('Select a conversation.'))
+                ? Center(child: Text(l10n.conversationHintLabel))
                 : ListView.builder(
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
@@ -74,7 +76,7 @@ class _OnlineTherapyMessagingViewState
                       final m = messages[index];
                       final retryHint =
                           m.deliveryStatus == MessageDeliveryStatus.failed
-                          ? ' • retry'
+                          ? ' • ${l10n.retryButtonShortLabel.toLowerCase()}'
                           : '';
                       return ListTile(
                         key: ValueKey<String>('msg-${m.id}'),
@@ -95,7 +97,7 @@ class _OnlineTherapyMessagingViewState
                                 onPressed: state.isBusy
                                     ? null
                                     : () => cubit.retry(m.id),
-                                child: const Text('Retry'),
+                                child: Text(l10n.retryButtonShortLabel),
                               )
                             : null,
                       );
@@ -110,9 +112,7 @@ class _OnlineTherapyMessagingViewState
                   child: TextField(
                     enabled: !state.isBusy && convId != null,
                     controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message…',
-                    ),
+                    decoration: InputDecoration(hintText: l10n.typeMessageHint),
                     onChanged: cubit.setDraft,
                   ),
                 ),
@@ -123,14 +123,14 @@ class _OnlineTherapyMessagingViewState
                         ? null
                         : () => cubit.send(),
                     icon: const Icon(Icons.send),
-                    tooltip: 'Send',
+                    tooltip: l10n.sendButtonLabel,
                   )
                 else
                   ElevatedButton(
                     onPressed: state.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
-                    child: const Text('Send'),
+                    child: Text(l10n.sendButtonLabel),
                   ),
               ],
             ),
@@ -150,7 +150,7 @@ class _OnlineTherapyMessagingViewState
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: convId,
-                  hint: const Text('Conversation'),
+                  hint: Text(l10n.conversationHintLabel),
                   items: conversations
                       .map(
                         (c) => DropdownMenuItem<String>(

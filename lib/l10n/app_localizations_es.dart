@@ -833,6 +833,140 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cancelButtonLabel => 'Cancelar';
 
   @override
+  String get okButtonLabel => 'OK';
+
+  @override
+  String get doneButtonLabel => 'Listo';
+
+  @override
+  String get logoutButtonLabel => 'Cerrar sesión';
+
+  @override
+  String get sendButtonLabel => 'Enviar';
+
+  @override
+  String get retryButtonShortLabel => 'Reintentar';
+
+  @override
+  String get conversationHintLabel => 'Conversation';
+
+  @override
+  String get selectAppointmentHintLabel => 'Seleccionar cita';
+
+  @override
+  String get cameraLabel => 'Cámara';
+
+  @override
+  String get microphoneLabel => 'Micrófono';
+
+  @override
+  String get cameraPermissionGrantedLabel => 'Permiso de cámara concedido';
+
+  @override
+  String get microphonePermissionGrantedLabel =>
+      'Permiso de micrófono concedido';
+
+  @override
+  String get createSessionButtonLabel => 'Crear sesión';
+
+  @override
+  String get joinButtonLabel => 'Unirse';
+
+  @override
+  String get approveButtonLabel => 'Aprobar';
+
+  @override
+  String get bookButtonLabel => 'Reservar';
+
+  @override
+  String get bookedLabel => 'Reservado';
+
+  @override
+  String get cancelledLabel => 'Cancelado';
+
+  @override
+  String get typeMessageHint => 'Escribe un mensaje…';
+
+  @override
+  String get onlineTherapyDemoControlsTitle => 'Demo controls';
+
+  @override
+  String get onlineTherapyDemoControlsIntro =>
+      'Failure injection (demo-friendly). Changes affect the fake API behavior.';
+
+  @override
+  String onlineTherapyDemoControlsModeLabel(String mode) {
+    return 'Mode: $mode';
+  }
+
+  @override
+  String get onlineTherapyDemoControlsExplainNormal => 'Baseline success.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainSlow =>
+      'Adds delay so loading states are visible.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainOffline =>
+      'Throws Offline errors for failure UX.';
+
+  @override
+  String get onlineTherapyDemoControlsExplainMessageFailure =>
+      'First message send fails (failed), retry succeeds (sent).';
+
+  @override
+  String get onlineTherapyDemoControlsExplainCallFailure =>
+      'Video join fails and shows fallback state.';
+
+  @override
+  String get onlineTherapyDemoLoggedOutTitle => 'You are logged out.';
+
+  @override
+  String get onlineTherapyDemoLoggedOutMessage =>
+      'Go back to the landing screen to sign in.';
+
+  @override
+  String get onlineTherapyDemoGoToLandingButton => 'Go to landing';
+
+  @override
+  String get onlineTherapyDemoClientHubTitle => 'Client — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoTherapistHubTitle => 'Therapist — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoAdminHubTitle => 'Admin — Therapy demo';
+
+  @override
+  String get onlineTherapyDemoNavTherapists => 'Therapists';
+
+  @override
+  String get onlineTherapyDemoNavMyAppointments => 'My appointments';
+
+  @override
+  String get onlineTherapyDemoNavAppointments => 'Appointments';
+
+  @override
+  String get onlineTherapyDemoNavMessaging => 'Messaging';
+
+  @override
+  String get onlineTherapyDemoNavCall => 'Call';
+
+  @override
+  String get onlineTherapyDemoNavControls => 'Controls';
+
+  @override
+  String get onlineTherapyDemoControlsNavTitle =>
+      'Controls (network/failure injection)';
+
+  @override
+  String get onlineTherapyDemoNavTherapistVerification =>
+      'Therapist verification';
+
+  @override
+  String get onlineTherapyDemoNavAuditFeed => 'Audit feed';
+
+  @override
   String get deleteButtonLabel => 'Eliminar';
 
   @override

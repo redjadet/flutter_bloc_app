@@ -63,7 +63,6 @@ class _ScapesGridContentBody extends StatelessWidget {
 
         return ScapesGridView(
           scapes: data.$4,
-          shrinkWrap: true,
           onFavoritePressed: (final id) =>
               context.cubit<ScapesCubit>().toggleFavorite(id),
           onMorePressed: (final id) {
