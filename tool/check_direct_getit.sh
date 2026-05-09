@@ -17,7 +17,7 @@ source "$PROJECT_ROOT/tool/check_helpers.sh"
 # Match "getIt<" but exclude test files and debug/tooling widgets
 if command -v rg &> /dev/null; then
   VIOLATIONS=$(rg -n "getIt<" lib/features 2>/dev/null \
-    --glob "**/presentation/**" \
+    --glob "*/presentation/**" \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
@@ -25,15 +25,18 @@ if command -v rg &> /dev/null; then
     | rg -v "test" \
     | rg -v "debug" \
     | rg -v "tooling" \
-    | rg -v "^[[:space:]]*//" \
+    | rg -v ":[0-9]+:[[:space:]]*//" \
+    | rg -v ":[0-9]+:[[:space:]]*///" \
     || true)
 else
   VIOLATIONS=$(grep -rn "getIt<" lib/features 2>/dev/null \
+    | grep "/presentation/" \
     | grep -E -v "/[^/]+_demo/" \
     | grep -v "/test/" \
     | grep -v "debug" \
     | grep -v "tooling" \
-    | grep -v "^[[:space:]]*//" \
+    | grep -vE ":[0-9]+:[[:space:]]*//" \
+    | grep -vE ":[0-9]+:[[:space:]]*///" \
     || true)
 fi
 
