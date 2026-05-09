@@ -245,6 +245,18 @@ Analyst lists, Implementer respects, Reviewer checks when touched:
 
 New durable agent rule: update owning source doc first, then thin host templates, then validation if rule needs mechanical check.
 
+## Operator Preferences (Durable)
+
+Keep `AGENTS.md` lean map; put behavioral detail here.
+
+- Fix failures in **product code/DI/config** first; do not “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
+- Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when a proper fix fits.
+- After meaningful workflow/policy shifts, update agent-facing docs referenced from the map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
+
+Repo fact:
+
+- `./bin/checklist-fast` runs a report-only skill-budget pass when a skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`.
+
 ## Doc Gardening
 
 - If behavior changes, update owning source doc in same change.
