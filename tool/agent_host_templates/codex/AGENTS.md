@@ -6,8 +6,7 @@ Map only. Repo docs under `docs/` are system of record; host assets stay thin.
 
 Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host adapters.
 Done = Plan, Execute, Verify, Report proof.
-This root file is repo-local source map; `tool/agent_host_templates/codex/AGENTS.md`
-is Codex host bootstrap template synced to ~/.codex/AGENTS.md.
+Template source: `tool/agent_host_templates/codex/AGENTS.md` -> ~/.codex/AGENTS.md.
 
 ## Start
 
@@ -21,23 +20,16 @@ is Codex host bootstrap template synced to ~/.codex/AGENTS.md.
 
 Flutter 3.41.9 / Dart 3.11.5. Clean Architecture:
 `Presentation -> Domain <- Data`; Cubit/BLoC, `get_it`, GoRouter.
-Offline-first sync: `lib/shared/sync/`. Entrypoints: `lib/main_dev.dart`,
-`lib/main_staging.dart`, `lib/main_prod.dart`.
+Offline-first sync: `lib/shared/sync/`.
 
 ## Loop
 
-Plan once. Execute end-to-end. Verify. Report proof.
-Ask only on blockers: credentials/tooling, unsafe ambiguity below 95% confident,
-or user-owned decision. Non-trivial work tracks plan/proof in
-[`tasks/codex/todo.md`](../../../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../../../tasks/cursor/todo.md).
-For non-trivial existing-code work, use context ladder: map docs -> durable
-memory -> code-review-graph -> targeted raw files.
-If vague/risky, define boundaries, data flow, failure handling, and smallest
-verifiable slice before generation.
+Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
+(credentials/tooling, unsafe ambiguity below 95% confident, user-owned choice).
+Non-trivial work: [`tasks/codex/todo.md`](../../../tasks/codex/todo.md) + context ladder + one observe/revise loop.
+Vague/risky details: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 
 - Self-check final response vs request, diff, proof, blockers, risk.
-- Finish gate: edge cases, failure paths, readability, operational clarity,
-  breakage impact.
 - Prove result before calling work done.
 - File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)); don’t leave chat-only.
 
@@ -46,45 +38,20 @@ verifiable slice before generation.
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
-- Code graph: [`docs/code_review_graph.md`](docs/code_review_graph.md)
 - Docs index: [`docs/README.md`](docs/README.md)
-- Design/UI: [`DESIGN.md`](DESIGN.md),
-  [`docs/design_system.md`](docs/design_system.md)
+- Design/UI: [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
-- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md),
-  [`docs/clean_architecture.md`](docs/clean_architecture.md)
-- Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md),
-  [`docs/testing_overview.md`](docs/testing_overview.md)
-- Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md),
-  [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
-- Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md),
-  [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
-  (runtime `getBox()` → `ensureSchema`; manifest when shape changes),
-  [`docs/engineering/delayed_work_guide.md`](docs/engineering/delayed_work_guide.md)
-- Plans/history: [`docs/plans/README.md`](docs/plans/README.md),
-  [`docs/changes/README.md`](docs/changes/README.md),
-  [`docs/audits/README.md`](docs/audits/README.md)
+- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md), [`docs/clean_architecture.md`](docs/clean_architecture.md)
+- Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md), [`docs/testing_overview.md`](docs/testing_overview.md)
+- Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
+- Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
+- Plans/history: [`docs/plans/README.md`](docs/plans/README.md), [`docs/changes/README.md`](docs/changes/README.md), [`docs/audits/README.md`](docs/audits/README.md)
 - Host notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md)
 
 ## Must Keep
 
-- Smallest reversible change meeting goal + reliability bar.
-- Surgical diff: every changed line traces to request or required validation/doc update.
-- Docs Update Policy: if agent behavior/config changes, update docs in same task before finish.
+- Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
-- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use
-  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before new styling.
-- Widget-test viewport/pixel-ratio setup uses `WidgetTester.view`.
+- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- Widget tests use `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
-- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md).
-
-## Commands
-
-- Bootstrap: `bash tool/agent_session_bootstrap.sh`
-- Full/pre-ship: `./bin/checklist`
-- Fast docs/tooling: `./bin/checklist-fast`
-- Router/auth/gates: `./bin/router_feature_validate`
-- Integration flows: `./bin/integration_tests`
-- Agent/docs: `./tool/check_agent_knowledge_base.sh`
-- Design brief: `./tool/check_design_md.sh`
-- Host templates: `./tool/check_agent_asset_drift.sh` + `./tool/sync_agent_assets.sh --dry-run`

@@ -106,6 +106,7 @@ class _AdminPanel extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<AdminCubit>().state;
     final cubit = context.cubit<AdminCubit>();
 
@@ -151,7 +152,7 @@ class _AdminPanel extends StatelessWidget {
                           onPressed: state.isBusy
                               ? null
                               : () => cubit.approve(t.id),
-                          child: const Text('Approve'),
+                          child: Text(l10n.approveButtonLabel),
                         ),
                       ),
                     ),

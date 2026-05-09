@@ -12,6 +12,15 @@ Scripts guard architecture, UI/UX, async, perf, and memory hygiene. Prefer
 targeted scripts for local changes; use `./bin/checklist` for broad/pre-ship
 validation.
 
+## Policy: changing validation scripts
+
+Validation scripts are **quality gates**. When a script produces a false positive,
+fix it without weakening the invariant:
+
+- Prefer **narrower matching/scope**, better parsing, or **fixtures** that prove the old false positive and a real violation.
+- Prefer local, explicit suppressions: `// check-ignore: <reason>` on the exact line (or previous line) when the exception is intentional.
+- Avoid broad exclusions (“ignore demos”, “ignore feature X”) unless the repo policy truly intends that behavior and it is documented here with rationale.
+
 Checklist includes guards:
 
 - **Architecture compliance** - Ensures clean architecture boundaries and dependency injection patterns

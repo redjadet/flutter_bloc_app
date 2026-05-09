@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -25,6 +26,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final state = context.watchBloc<AdminCubit>().state;
     final cubit = context.cubit<AdminCubit>();
@@ -57,7 +59,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
               ),
               trailing: ElevatedButton(
                 onPressed: state.isBusy ? null : () => cubit.approve(t.id),
-                child: const Text('Approve'),
+                child: Text(l10n.approveButtonLabel),
               ),
             ),
           ),
@@ -65,7 +67,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
     ];
 
     return CommonPageLayout(
-      title: 'Therapist verification',
+      title: l10n.onlineTherapyDemoNavTherapistVerification,
       actions: <Widget>[
         IconButton(
           onPressed: state.isBusy ? null : () => cubit.refresh(),

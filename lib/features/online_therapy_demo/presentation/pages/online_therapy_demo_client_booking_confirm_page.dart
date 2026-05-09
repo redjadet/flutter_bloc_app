@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -13,6 +14,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final state = context.watchBloc<ClientBookingCubit>().state;
     final cubit = context.cubit<ClientBookingCubit>();
@@ -61,7 +63,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
                       cubit.clearPendingBookingSlot();
                       context.pop();
                     },
-              child: const Text('Cancel'),
+              child: Text(l10n.cancelButtonLabel),
             ),
           ),
           const SizedBox(width: 12),

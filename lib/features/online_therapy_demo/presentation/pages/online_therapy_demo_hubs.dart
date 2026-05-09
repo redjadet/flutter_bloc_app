@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +11,7 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final List<Widget> items = <Widget>[
       if (session.user == null)
@@ -19,37 +21,37 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
       if (session.user == null) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.person_search_outlined),
-        title: const Text('Therapists'),
+        title: Text(l10n.onlineTherapyDemoNavTherapists),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoClientTherapists),
       ),
       ListTile(
         leading: const Icon(Icons.event_outlined),
-        title: const Text('My appointments'),
+        title: Text(l10n.onlineTherapyDemoNavMyAppointments),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoClientAppointments),
       ),
       ListTile(
         leading: const Icon(Icons.chat_bubble_outline),
-        title: const Text('Messaging'),
+        title: Text(l10n.onlineTherapyDemoNavMessaging),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoClientMessaging),
       ),
       ListTile(
         leading: const Icon(Icons.videocam_outlined),
-        title: const Text('Call'),
+        title: Text(l10n.onlineTherapyDemoNavCall),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoClientCall),
       ),
       const Divider(height: 24),
       ListTile(
         leading: const Icon(Icons.tune),
-        title: const Text('Controls'),
+        title: Text(l10n.onlineTherapyDemoNavControls),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
       ),
     ];
 
     return CommonPageLayout(
-      title: 'Client — Therapy demo',
+      title: l10n.onlineTherapyDemoClientHubTitle,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: items,
@@ -63,6 +65,7 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final List<Widget> items = <Widget>[
       if (session.user == null)
@@ -72,32 +75,32 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
       if (session.user == null) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.event_available_outlined),
-        title: const Text('Appointments'),
+        title: Text(l10n.onlineTherapyDemoNavAppointments),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoTherapistAppointments),
       ),
       ListTile(
         leading: const Icon(Icons.chat_bubble_outline),
-        title: const Text('Messaging'),
+        title: Text(l10n.onlineTherapyDemoNavMessaging),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoTherapistMessaging),
       ),
       ListTile(
         leading: const Icon(Icons.videocam_outlined),
-        title: const Text('Call'),
+        title: Text(l10n.onlineTherapyDemoNavCall),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoTherapistCall),
       ),
       const Divider(height: 24),
       ListTile(
         leading: const Icon(Icons.tune),
-        title: const Text('Controls'),
+        title: Text(l10n.onlineTherapyDemoNavControls),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
       ),
     ];
 
     return CommonPageLayout(
-      title: 'Therapist — Therapy demo',
+      title: l10n.onlineTherapyDemoTherapistHubTitle,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: items,
@@ -111,6 +114,7 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final List<Widget> items = <Widget>[
       if (session.user == null)
@@ -120,25 +124,25 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
       if (session.user == null) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.verified_user_outlined),
-        title: const Text('Therapist verification'),
+        title: Text(l10n.onlineTherapyDemoNavTherapistVerification),
         onTap: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemoAdminVerification),
       ),
       ListTile(
         leading: const Icon(Icons.security_outlined),
-        title: const Text('Audit feed'),
+        title: Text(l10n.onlineTherapyDemoNavAuditFeed),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoAdminAudit),
       ),
       const Divider(height: 24),
       ListTile(
         leading: const Icon(Icons.tune),
-        title: const Text('Controls'),
+        title: Text(l10n.onlineTherapyDemoNavControls),
         onTap: () => context.pushNamed(AppRoutes.onlineTherapyDemoControls),
       ),
     ];
 
     return CommonPageLayout(
-      title: 'Admin — Therapy demo',
+      title: l10n.onlineTherapyDemoAdminHubTitle,
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: items,
@@ -153,27 +157,30 @@ class _LoggedOutPrompt extends StatelessWidget {
   final VoidCallback onGoToLanding;
 
   @override
-  Widget build(final BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text(
-            'You are logged out.',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 6),
-          const Text('Go back to the landing screen to sign in.'),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            onPressed: onGoToLanding,
-            child: const Text('Go to landing'),
-          ),
-        ],
+  Widget build(final BuildContext context) {
+    final l10n = context.l10n;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              l10n.onlineTherapyDemoLoggedOutTitle,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 6),
+            Text(l10n.onlineTherapyDemoLoggedOutMessage),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: onGoToLanding,
+              child: Text(l10n.onlineTherapyDemoGoToLandingButton),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 // eof

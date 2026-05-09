@@ -13,6 +13,8 @@ alwaysApply: false
 
 - Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
 - If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
+- Single loop: plan -> tool -> observe -> revise; keep task state inspectable.
+- Empty/truncated/malformed tool output is not proof.
 - Proof-first: confidence from smallest honest repo entrypoint.
 - UI/design work: read `DESIGN.md` + `docs/design_system.md`; use
   `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before ad-hoc styling.
@@ -21,6 +23,7 @@ alwaysApply: false
 
 - Read smallest blocks needed; prefer targeted search + narrow reads.
 - context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+- Branch/compare approaches only when uncertainty/risk pays for it; default one path.
 - Don’t restate policy; point to canon docs.
 
 ## Quality bar
@@ -28,6 +31,7 @@ alwaysApply: false
 - Default to smallest reversible change satisfying business goal + reliability bar.
 - Don't change files until at least 95% confident in goal/scope/approach.
 - Surgical diff: each changed line traces to request or required validation/doc update.
+- Validation scripts are quality gates. Only change scripts to remove false positives (narrow match/scope, fixtures, or documented `check-ignore`). Don’t weaken checks via broad exclusions.
 - Treat AI code as draft until problem-fit, simplification, security, performance, edge-case, error-pattern, dependency, naming, and testing review pass.
 - Finish gate before report: edge cases, failure paths, readability, operational clarity, breakage impact.
 - Self-verify before report: request, changed files, proof, blockers, risk.

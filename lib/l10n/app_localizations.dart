@@ -1573,6 +1573,252 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancelButtonLabel;
 
+  /// Generic confirmation button label
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButtonLabel;
+
+  /// Generic done button label
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneButtonLabel;
+
+  /// Generic logout button label
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logoutButtonLabel;
+
+  /// Generic send button label
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get sendButtonLabel;
+
+  /// Short retry button label (not uppercase)
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryButtonShortLabel;
+
+  /// Hint label for selecting a conversation
+  ///
+  /// In en, this message translates to:
+  /// **'Conversation'**
+  String get conversationHintLabel;
+
+  /// Hint label for selecting an appointment
+  ///
+  /// In en, this message translates to:
+  /// **'Select appointment'**
+  String get selectAppointmentHintLabel;
+
+  /// Generic label for camera
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get cameraLabel;
+
+  /// Generic label for microphone
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone'**
+  String get microphoneLabel;
+
+  /// Checkbox label indicating camera permission granted
+  ///
+  /// In en, this message translates to:
+  /// **'Camera permission granted'**
+  String get cameraPermissionGrantedLabel;
+
+  /// Checkbox label indicating microphone permission granted
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission granted'**
+  String get microphonePermissionGrantedLabel;
+
+  /// Button label for creating a session
+  ///
+  /// In en, this message translates to:
+  /// **'Create session'**
+  String get createSessionButtonLabel;
+
+  /// Button label for joining a session
+  ///
+  /// In en, this message translates to:
+  /// **'Join'**
+  String get joinButtonLabel;
+
+  /// Generic approve button label
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approveButtonLabel;
+
+  /// Generic book button label
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get bookButtonLabel;
+
+  /// Status label indicating something is already booked
+  ///
+  /// In en, this message translates to:
+  /// **'Booked'**
+  String get bookedLabel;
+
+  /// Status label indicating something is cancelled
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get cancelledLabel;
+
+  /// Hint text for message composer
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message…'**
+  String get typeMessageHint;
+
+  /// Title for the online therapy demo controls page
+  ///
+  /// In en, this message translates to:
+  /// **'Demo controls'**
+  String get onlineTherapyDemoControlsTitle;
+
+  /// Intro text on the online therapy demo controls page
+  ///
+  /// In en, this message translates to:
+  /// **'Failure injection (demo-friendly). Changes affect the fake API behavior.'**
+  String get onlineTherapyDemoControlsIntro;
+
+  /// Dropdown item label prefix for network mode
+  ///
+  /// In en, this message translates to:
+  /// **'Mode: {mode}'**
+  String onlineTherapyDemoControlsModeLabel(String mode);
+
+  /// Explanation for normal network mode in the online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Baseline success.'**
+  String get onlineTherapyDemoControlsExplainNormal;
+
+  /// Explanation for slow network mode in the online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Adds delay so loading states are visible.'**
+  String get onlineTherapyDemoControlsExplainSlow;
+
+  /// Explanation for offline network mode in the online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Throws Offline errors for failure UX.'**
+  String get onlineTherapyDemoControlsExplainOffline;
+
+  /// Explanation for message failure mode in the online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'First message send fails (failed), retry succeeds (sent).'**
+  String get onlineTherapyDemoControlsExplainMessageFailure;
+
+  /// Explanation for call failure mode in the online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Video join fails and shows fallback state.'**
+  String get onlineTherapyDemoControlsExplainCallFailure;
+
+  /// Title shown in online therapy demo when user is logged out
+  ///
+  /// In en, this message translates to:
+  /// **'You are logged out.'**
+  String get onlineTherapyDemoLoggedOutTitle;
+
+  /// Prompt shown in online therapy demo when user is logged out
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to the landing screen to sign in.'**
+  String get onlineTherapyDemoLoggedOutMessage;
+
+  /// Button label to navigate back to the online therapy demo landing page
+  ///
+  /// In en, this message translates to:
+  /// **'Go to landing'**
+  String get onlineTherapyDemoGoToLandingButton;
+
+  /// Page title for the online therapy demo client hub
+  ///
+  /// In en, this message translates to:
+  /// **'Client — Therapy demo'**
+  String get onlineTherapyDemoClientHubTitle;
+
+  /// Page title for the online therapy demo therapist hub
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist — Therapy demo'**
+  String get onlineTherapyDemoTherapistHubTitle;
+
+  /// Page title for the online therapy demo admin hub
+  ///
+  /// In en, this message translates to:
+  /// **'Admin — Therapy demo'**
+  String get onlineTherapyDemoAdminHubTitle;
+
+  /// Navigation label for therapists list in online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Therapists'**
+  String get onlineTherapyDemoNavTherapists;
+
+  /// Navigation label for appointments list in online therapy demo client flow
+  ///
+  /// In en, this message translates to:
+  /// **'My appointments'**
+  String get onlineTherapyDemoNavMyAppointments;
+
+  /// Navigation label for appointments in online therapy demo therapist flow
+  ///
+  /// In en, this message translates to:
+  /// **'Appointments'**
+  String get onlineTherapyDemoNavAppointments;
+
+  /// Navigation label for messaging in online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Messaging'**
+  String get onlineTherapyDemoNavMessaging;
+
+  /// Navigation label for call in online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get onlineTherapyDemoNavCall;
+
+  /// Navigation label for controls in online therapy demo
+  ///
+  /// In en, this message translates to:
+  /// **'Controls'**
+  String get onlineTherapyDemoNavControls;
+
+  /// Navigation label for the controls entry on the online therapy demo landing page
+  ///
+  /// In en, this message translates to:
+  /// **'Controls (network/failure injection)'**
+  String get onlineTherapyDemoControlsNavTitle;
+
+  /// Navigation label for therapist verification in online therapy demo admin flow
+  ///
+  /// In en, this message translates to:
+  /// **'Therapist verification'**
+  String get onlineTherapyDemoNavTherapistVerification;
+
+  /// Navigation label for audit feed in online therapy demo admin flow
+  ///
+  /// In en, this message translates to:
+  /// **'Audit feed'**
+  String get onlineTherapyDemoNavAuditFeed;
+
   /// Generic delete button label
   ///
   /// In en, this message translates to:

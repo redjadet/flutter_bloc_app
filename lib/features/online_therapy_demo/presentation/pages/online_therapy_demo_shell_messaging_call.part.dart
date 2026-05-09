@@ -25,6 +25,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<MessagingCubit>().state;
     final cubit = context.cubit<MessagingCubit>();
     final conversations = List<Conversation>.unmodifiable(
@@ -58,7 +59,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
         children: <Widget>[
           Expanded(
             child: convId == null
-                ? const Center(child: Text('Select a conversation.'))
+                ? Center(child: Text(l10n.conversationHintLabel))
                 : ListView.builder(
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
@@ -68,7 +69,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                       final m = messages[index];
                       final retryHint =
                           m.deliveryStatus == MessageDeliveryStatus.failed
-                          ? ' • retry'
+                          ? ' • ${l10n.retryButtonShortLabel.toLowerCase()}'
                           : '';
                       return ListTile(
                         key: ValueKey<String>('msg-${m.id}'),
@@ -89,7 +90,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                                 onPressed: state.isBusy
                                     ? null
                                     : () => cubit.retry(m.id),
-                                child: const Text('Retry'),
+                                child: Text(l10n.retryButtonShortLabel),
                               )
                             : null,
                       );
@@ -104,9 +105,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                   child: TextField(
                     enabled: !state.isBusy && convId != null,
                     controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message…',
-                    ),
+                    decoration: InputDecoration(hintText: l10n.typeMessageHint),
                     onChanged: cubit.setDraft,
                   ),
                 ),
@@ -117,14 +116,14 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                         ? null
                         : () => cubit.send(),
                     icon: const Icon(Icons.send),
-                    tooltip: 'Send',
+                    tooltip: l10n.sendButtonLabel,
                   )
                 else
                   ElevatedButton(
                     onPressed: state.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
-                    child: const Text('Send'),
+                    child: Text(l10n.sendButtonLabel),
                   ),
               ],
             ),
@@ -144,7 +143,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   value: convId,
-                  hint: const Text('Conversation'),
+                  hint: Text(l10n.conversationHintLabel),
                   items: conversations
                       .map(
                         (c) => DropdownMenuItem<String>(
@@ -224,6 +223,7 @@ class _CallPanel extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     final state = context.watchBloc<CallCubit>().state;
     final cubit = context.cubit<CallCubit>();
 
@@ -240,7 +240,7 @@ class _CallPanel extends StatelessWidget {
           children: <Widget>[
             DropdownButton<String>(
               value: apptId,
-              hint: const Text('Select appointment'),
+              hint: Text(l10n.selectAppointmentHintLabel),
               onChanged: state.isBusy
                   ? null
                   : (final v) => v == null ? null : cubit.selectAppointment(v),
@@ -262,7 +262,7 @@ class _CallPanel extends StatelessWidget {
                   : (final v) => v == null
                         ? null
                         : cubit.toggleCameraPermission(granted: v),
-              title: const Text('Camera'),
+              title: Text(l10n.cameraLabel),
               controlAffinity: ListTileControlAffinity.leading,
             ),
             CheckboxListTile(
@@ -274,20 +274,20 @@ class _CallPanel extends StatelessWidget {
                   : (final v) => v == null
                         ? null
                         : cubit.toggleMicrophonePermission(granted: v),
-              title: const Text('Microphone'),
+              title: Text(l10n.microphoneLabel),
               controlAffinity: ListTileControlAffinity.leading,
             ),
             ElevatedButton(
               onPressed: state.isBusy || apptId == null
                   ? null
                   : () => cubit.createSession(),
-              child: const Text('Create session'),
+              child: Text(l10n.createSessionButtonLabel),
             ),
             ElevatedButton(
               onPressed: state.isBusy || session == null
                   ? null
                   : () => cubit.join(),
-              child: const Text('Join'),
+              child: Text(l10n.joinButtonLabel),
             ),
           ],
         ),
