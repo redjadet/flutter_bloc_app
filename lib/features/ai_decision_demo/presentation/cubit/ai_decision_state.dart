@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_models.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 
 class AiDecisionState {
   const AiDecisionState({
