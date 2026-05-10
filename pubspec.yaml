@@ -84,6 +84,10 @@ dependencies:
   hive_flutter: ^1.1.0
   image_picker: ^1.2.2
   in_app_purchase: ^3.2.3
+  # Workaround: Flutter 3.41 generates Android registrant for this plugin even
+  # when listed under dev_dependencies; keep it in dependencies so release builds compile.
+  integration_test:
+    sdk: flutter
   intl: ^0.20.2
   json_annotation: ^4.11.0
   local_auth: ^3.0.1
@@ -125,8 +129,6 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
   google_sign_in_mocks: ^0.3.0
-  integration_test:
-    sdk: flutter
   json_serializable: ^6.13.2
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
@@ -165,18 +167,35 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/config/realtime_database_seed.json
-    - assets/config/secrets.sample.json
-    - assets/icons/
+    # Tooling-only inputs (not used at runtime). Keep on disk, exclude from bundle.
+    # - assets/config/realtime_database_seed.json
+    # - assets/config/secrets.sample.json
     - assets/images/
     - assets/playlearn/files/
-    - assets/figma/
+    # Keep figma assets whitelisted to avoid bundling unused exports.
+    - assets/figma/waveform_last.svg
     - assets/figma/Logged_out_0-2/Rectangle_0-42.png
     - assets/figma/Logged_out_0-2/Shape_0-115.svg
-    - assets/figma/Logged_out_0-2/loggedout_person.svg
     - assets/figma/Logged_out_0-2/loggedout_person.png
-    - assets/figma/Chats_mockup_0-702/
-    - assets/figma/Epoch___Mobile___Library_A_2805-20462/
+    - assets/figma/Chats_mockup_0-702/Ellipse_0-713.svg
+    - assets/figma/Chats_mockup_0-702/Ellipse_0-722.svg
+    - assets/figma/Chats_mockup_0-702/Ellipse_0-723.svg
+    - assets/figma/Chats_mockup_0-702/Ellipse_0-724.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_three_dot_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_menu_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_wordmark.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_favorite_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_filter_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon_selected.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon_inactive.svg
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_1.svg
+    - path: assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_2.svg
+      platforms: [web, windows, macos, linux]
+    - assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_3.svg
+    - path: assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_4.svg
+      platforms: [web, windows, macos, linux]
 
   # To add assets to your application, add an assets section, like this:
   # assets:
