@@ -31,11 +31,12 @@ Vague/risky details: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.
 
 - Self-check final response vs request, diff, proof, blockers, risk.
 - Prove result before calling work done.
-- File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)); don’t leave chat-only.
+- File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)).
 
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Docs index: [`docs/README.md`](docs/README.md)

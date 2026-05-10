@@ -33,6 +33,7 @@ Finish gate: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Docs index: [`docs/README.md`](docs/README.md)
