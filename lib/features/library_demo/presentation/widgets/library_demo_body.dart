@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_asset_tile.dart';
@@ -202,10 +203,18 @@ class LibraryDemoBody extends StatelessWidget {
     ),
   ];
 
-  static const List<String> _libraryThumbnailAssets = [
+  // Keep Android/iOS bundles small: avoid the two huge SVG exports on mobile.
+  // Those variants stay available on web/desktop via pubspec platforms.
+  static List<String> get _libraryThumbnailAssets => [
     'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_1.svg',
-    'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_2.svg',
+    if (kIsWeb)
+      'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_2.svg'
+    else
+      'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_1.svg',
     'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_3.svg',
-    'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_4.svg',
+    if (kIsWeb)
+      'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_4.svg'
+    else
+      'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_asset_3.svg',
   ];
 }
