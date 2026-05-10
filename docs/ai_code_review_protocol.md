@@ -17,6 +17,8 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 
 ## Checks
 
+Enforce TDD where practical, linting, build verification, minimal edits, and architecture preservation. Avoid giant prompts, giant rewrites, context flooding, single-agent overload, and unverified outputs.
+
 | Check | What to ask |
 | --- | --- |
 | Draft first | Am I treating first output as draft, not truth? |
@@ -37,6 +39,7 @@ Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_re
 | Execution state | Is plan/checklist/retry/blocker state inspectable instead of hidden in chat? |
 | Breakage impact | What breaks first, how is it detected, and what is the recovery path? |
 | Tool output | Were empty/truncated/malformed tool results treated as failures to re-check, not proof? |
+| Tool choice | Did I use repo tools/MCP/browser/connector evidence when it owns the state, instead of guessing from prompt memory? |
 | Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat? |
 | Confidence | Confidence from proof; uncertainty stated? |
 | Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |

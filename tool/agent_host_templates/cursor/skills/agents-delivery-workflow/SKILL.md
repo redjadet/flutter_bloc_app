@@ -9,7 +9,9 @@ Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference
 
 - **Plan:** non-trivial -> `tasks/cursor/todo.md`; existing code uses context ladder; delegation -> `agents-meta-behavior`.
 - **Plan:** do not edit until 95% confident; if vague/risky, define boundaries, data flow, failure handling, smallest proof.
-- **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays.
+- **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays. High-risk architecture/debug => compare 2-3 candidate approaches with evidence, then choose one.
+- **Plan:** use repo tools, code graph, browser/app proof, and MCP/connectors when they own current state; prompts alone are not proof.
+- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
 - **Execute:** reuse seams; keep `Presentation -> Domain <- Data`; update DI/routes/l10n/codegen when touched.
 - **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
 - **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.

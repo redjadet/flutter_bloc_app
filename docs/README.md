@@ -24,6 +24,8 @@ Source-of-truth docs for Flutter BLoC app.
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
   [`agents_quick_reference.md`](agents_quick_reference.md),
+  [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md),
+  [`agent_environment_setup.md`](agent_environment_setup.md),
   [`agent_host_notes.md`](agent_host_notes.md),
   [`code_review_graph.md`](code_review_graph.md)
   - Cold-start map printer: `bash ../tool/agent_session_bootstrap.sh`
@@ -52,6 +54,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 - [`new_developer_guide.md`](new_developer_guide.md)
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)
+- [`agent_environment_setup.md`](agent_environment_setup.md)
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)
 - [`logging.md`](logging.md)

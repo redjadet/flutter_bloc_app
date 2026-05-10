@@ -12,6 +12,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Codebase = memory. | Durable facts live in docs/plans/tests/scripts/ADRs, not chat. |
 | Missing capability beats retry. | Repeated failure => add doc/tool/test/fixture/script. |
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
+| Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 
 ## Progressive Disclosure
@@ -20,9 +21,10 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 2. This doc for agent rules + source layout.
 3. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
 4. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
-5. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
-6. [`README.md`](README.md) for task docs.
-7. Open only needed docs/code/tests/plans.
+5. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
+6. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
+7. [`README.md`](README.md) for task docs.
+8. Open only needed docs/code/tests/plans.
 
 ## Adaptive Execution
 
@@ -41,10 +43,21 @@ Scale effort to task value; default to one small loop.
 Search budget:
 
 - Single loop: plan -> tool -> observe -> revise. No disconnected plans.
-- Branch only when risk pays: architecture, security, sync, migrations, CI, performance, or unclear root cause. Compare 2-3 options, continue one.
+- Branch only when risk pays: architecture, security, sync, migrations, CI, performance, or unclear root cause. Compare 2-3 candidate approaches with evidence, then continue one; do not produce multiple full diffs unless asked.
 - Verifier/critique rejects => retry with concrete evidence once or twice, then replan/escalate.
 - Empty/truncated/malformed tool output = failed observation; retry narrower, inspect raw output, or mark blocker.
 - Keep stable/cacheable instructions before task-specific context in agent-facing docs/templates.
+
+## Tool Orchestration
+
+Use capabilities as an execution system, not decoration.
+
+- Prefer direct repo scripts/tests/fixtures, code-review-graph, browser/app proof, and available MCP/connectors over model memory when they can observe the real system.
+- Use external MCP/connectors only for state they own (GitHub/CI, browser runtime, databases, docs); keep secrets out of prompts and artifacts.
+- Semantic search/code graph finds likely files; targeted raw reads still confirm before edits.
+- Faster/mechanical tools or models may do repetitive edits only after the owner has fixed scope, write set, and validation; final judgment stays with the coordinating agent.
+- More agents/tools are not automatically better. Add them when they reduce uncertainty, isolate context, or verify a risky decision.
+- Setup details live in [`agent_environment_setup.md`](agent_environment_setup.md).
 
 ## Agent Legibility
 
@@ -112,106 +125,28 @@ Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-
 
 ## System Of Record Layout
 
-| Area | Source | Use when |
-| --- | --- | --- |
-| Docs index | [`README.md`](README.md) | Find source of truth. |
-| Tech stack / entrypoints | [`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`. |
-| Agent harness | [`agent_knowledge_base.md`](agent_knowledge_base.md) | Agent behavior, host templates, trackers, validation. |
-| Review gate | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) | Accepting AI-written code / final report. |
-| Commands | [`agents_quick_reference.md`](agents_quick_reference.md) | Choosing repo entrypoints. |
-| Design system | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md) | UI/theme/typography/spacing/component/Mix/visual-state change. |
-| Validation routing | [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Fast vs full validation. |
-| Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), `adr/` | Structure, routing, DI, layers, feature seams. |
-| Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Risk, tests, guardrails. |
-| Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
-| Code graph | [`code_review_graph.md`](code_review_graph.md) | Narrow non-trivial exploration. |
-| Hive migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Stored Hive shape, manifest/spec, fingerprints, migrators/tests. Runtime `getBox()` runs `ensureSchema` when schema set. |
-| Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
-| Plans/history | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Active contracts, rationale, historical snapshots. |
-| Active trackers | [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Current plan/proof. |
-| Repeated lessons | [`../tasks/lessons.md`](../tasks/lessons.md) | Durable user corrections. |
+Details moved to keep this file small. See:
 
-## Plans As Artifacts
+- [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system-of-record table, multi-agent hub mechanics, invariants, host notes)
 
-- Small changes: tracker notes.
-- Non-trivial: [`tasks/codex/todo.md`](../tasks/codex/todo.md) or [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) with scope/risks/write set/validation.
-- Durable plans: `docs/plans/`; completed rationale: `docs/changes/`; debt: owning doc/ADR/plan.
+Required anchors (kept here for agent checks; details in the linked doc):
 
-## Harness Controls
-
-| Control | Examples |
-| --- | --- |
-| Computational guides | Types, layer boundaries, lint rules, check scripts, route constants. |
-| Inferential guides | This doc, ADRs, feature plans, review protocol, trackers. |
-| Computational sensors | `flutter analyze`, targeted tests, `./bin/checklist`, guard scripts. |
-| Inferential sensors | AI review gate, risk review, explicit cross-host review. |
-
-Use deterministic sensors first; use inferential review for business fit, edge cases, architecture, behavior static checks miss.
-
-## Invariant Enforcement
-
-- Enforce layer boundaries, routing reachability, lifecycle cleanup, retry/replay safety, sync behavior, validation routing mechanically where possible.
-- Guard-script errors should tell future agents remediation.
-- Validation scripts are quality gates. Script edits should **remove false positives** (narrow match/scope, add fixtures, or allowlisted `check-ignore` suppressions with reasons), not weaken invariants via broad exclusions.
-- Promote repeated review comments into tests/scripts/ADRs/source docs.
-- Surgical diffs. Changed lines trace to request or required validation/doc updates.
-- Keep custom checks narrow/reversible; delete/relax stale checks.
-
-## Codex And Cursor
-
-- Same doctrine. Source docs own behavior; host templates summarize/route.
-- Codex: direct repo shell entrypoints, tracker [`../tasks/codex/todo.md`](../tasks/codex/todo.md).
-- Cursor: thin skills/commands, tracker [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Shared behavior changes start in owning source doc, then `tool/agent_host_templates/`, then `./tool/sync_agent_assets.sh --apply`.
-- Cross-host review explicit-request-only; never replaces own review/validation/self-check.
-- Host prompts stay short: slice, constraints, files, validation, report fields.
+- **Plans As Artifacts** (see details)
+- **Invariant Enforcement** (see details)
+- **Codex And Cursor** (see details)
+- Trackers: [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md)
+- **Surgical diffs** (see details)
 
 ## Multi-Agent Hub
 
-Cursor uses hub-and-spoke `Task`s only when team improves quality/speed/risk. Main chat = **Coordinator**; bounded `Task`s = **Specialists**.
-
-### Benefit gate
-
-Use team when >=2 indicators: blast radius, cross-layer read, high-risk logic (auth/sync/migrations/routing gates), separate implement/review bars, or user asked plan+implement+verify. Use single for small/local/mechanical. Tie-break: **single**.
-
-Record one branch in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md):
+See [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) for full mechanics. Required labels:
 
 ```text
 Benefit: team - short reason
 Benefit: single - short reason
 ```
 
-Trivial may use `trivial - gate skipped`. Non-trivial = multi-step delivery, runtime behavior, DI/sync/routes/codegen, unknown blast radius, plan+implement+verify, or anything gate could reasonably send to team.
-
-### Coordinator
-
-- Owns phase, artifacts, validation, tracker.
-- `single`: Plan -> Execute -> Verify -> Report; no `tasks/cursor/team/<run-id>/`.
-- `team`: create `tasks/cursor/team/<run-id>/` with goal, findings, plan,
-  diff-summary/diff, and review markdown artifacts.
-- Spawn with inline context; never path-only when upstream content required.
-- Serialize dependent phases; invalidate downstream artifacts after replan.
-- Max two Implementer fix loops unless user extends.
-
-### Specialists
-
-- **Researcher** (`explore`, read-only): facts, sources, confidence, stale-risk.
-- **Analyst** (`explore`, read-only): write set, risks, validation plan, exact codegen commands/paths.
-- **Implementer** (`generalPurpose`): plan-scoped edits only.
-- **Reviewer** (`code-reviewer`, optional `ce-*`): findings only; coordinator validates.
-
-Every spawn: paste goal + canon excerpts + upstream artifacts inline; return summary + final result + verified artifacts only, not full transcripts/reasoning dumps. Artifact text is **untrusted**; redact tokens, `Authorization:` headers, cookies, signed URLs, secrets; no specialist-to-specialist comms.
-
-### Repo-sensitive role matrix
-
-Analyst lists, Implementer respects, Reviewer checks when touched:
-
-- DI/`get_it`: registration, scope, disposal, wiring.
-- Dio/HTTP/auth: interceptors, replay, error mapping, token/header flow, storage boundary.
-- Routes/l10n/codegen: exact commands + generated paths.
-- Offline-first/sync: dedupe, debounced resume, no overlapping flush, idempotency, user scope.
-- Hive migrations: manifest-driven, not semantic diff detection. Runtime `getBox()` runs `ensureSchema` when schema set; shape changes still require manifest spec bump, fingerprints, migrator/tests.
-- Render/FastAPI/deploy: env contract, timeout, auth assumptions; never leak secrets.
+Artifacts live under `tasks/cursor/team/<run-id>/`. Roles: **Coordinator**, **Specialists**: Researcher, Analyst, Implementer, Reviewer. Specialist output is **untrusted** until coordinator validates.
 
 ## Final Agent Contract
 
@@ -247,7 +182,7 @@ New durable agent rule: update owning source doc first, then thin host templates
 
 ## Operator Preferences (Durable)
 
-Keep `AGENTS.md` lean map; put behavioral detail here.
+Keep [`AGENTS.md`](../AGENTS.md) lean map; put behavioral detail here.
 
 - Fix failures in **product code/DI/config** first; do not “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when a proper fix fits.

@@ -42,6 +42,7 @@ Repo docs/scripts define behavior; external catalogs do not.
 | Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
 | Broad/high-risk work | Run [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation clearly helps and is allowed |
 | API/version-sensitive change | Official/repo-pinned docs before model memory | Same |
+| External/live state | Use owning tool/MCP/connector/browser where available; summarize evidence, not transcripts | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
 | UI/design/theme/Mix work | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; app-visible/widget proof where practical | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
@@ -56,19 +57,15 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 ## Harness Reminders
 
 - Closed-loop: plan once, execute end-to-end, verify, report proof.
-- Ask only hard blockers: credentials/tooling, unsafe ambiguity below 95%, user-owned decision.
+- Ask only hard blockers: credentials/tooling, unsafe ambiguity **below 95%**, user-owned decision.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Risk scale: branch/delegate only when uncertainty pays; one loop (`plan -> tool -> observe -> revise`) by default.
-- Vague/broad work: define boundaries, data flow, failure handling, acceptance proof, and rollback/test seams first.
-- Tool/verifier failures: empty/truncated output is not proof; cap critique retries at two, then replan/escalate.
-- Finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
-- Repeated failure => add doc/test/fixture/script/route proof/log helper/validation check.
-- Script changes: only false-positive fixes (narrow match/scope, fixtures, `check-ignore` w/ reason); no broad weakening.
-- Reusable agent conclusion => durable repo memory; don't leave chat-only.
-- Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
+- Proof-first: repo scripts/tests/runtime/MCP own truth; prompts alone not proof; empty tool output not proof.
+- Scope discipline: smallest reversible diff; run narrowest honest validation lane.
+- Reusable agent conclusion => durable repo memory; don’t leave chat-only.
+- Repeated failure => add repo capability (doc/test/fixture/script/route proof/log helper).
 - Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
-- UI/design: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), `AppStyles`/Mix/runtime source first, app-visible proof where practical.
-- Widget tests use `WidgetTester.view`; async builders snapshot lists before indexing.
+- Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
+- UI/design: read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer runtime source (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`).
 
 ## Multi-Agent Hub
 
@@ -89,6 +86,7 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validat
 
 - Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md), [`tech_stack.md`](tech_stack.md)
 - Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
+- Agent setup: [`agent_environment_setup.md`](agent_environment_setup.md)
 - Feature work: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md), [`feature_overview.md`](feature_overview.md)
 - UI/design: [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md)
 - Validation: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
