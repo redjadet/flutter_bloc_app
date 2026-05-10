@@ -23,8 +23,8 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.d
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/fake_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/flutter_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
