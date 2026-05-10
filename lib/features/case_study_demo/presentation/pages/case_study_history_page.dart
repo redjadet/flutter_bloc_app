@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
@@ -70,11 +70,17 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
         content: Text(l10n.caseStudyDeleteDialogBody),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
+            onPressed: () {
+              if (!dialogContext.mounted) return;
+              Navigator.of(dialogContext).pop(false);
+            },
             child: Text(l10n.cancelButtonLabel),
           ),
           TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
+            onPressed: () {
+              if (!dialogContext.mounted) return;
+              Navigator.of(dialogContext).pop(true);
+            },
             child: Text(l10n.deleteButtonLabel),
           ),
         ],

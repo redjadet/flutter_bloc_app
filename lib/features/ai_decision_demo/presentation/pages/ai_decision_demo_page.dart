@@ -1,9 +1,11 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/pages/ai_decision_demo_proof_widgets.dart';
@@ -68,6 +70,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
 
             if (state.queue.isEmpty) {
               return const Center(
+                // check-ignore: demo copy (not localized yet)
                 child: Text('No cases (seed the backend DB).'),
               );
             }
@@ -96,9 +99,9 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                           ),
                         )
                         .toList(growable: false),
-                    onChanged: (final v) async {
+                    onChanged: (final v) {
                       if (v == null) return;
-                      await context.cubit<AiDecisionCubit>().loadCase(v);
+                      unawaited(context.cubit<AiDecisionCubit>().loadCase(v));
                     },
                     decoration: const InputDecoration(
                       labelText: 'Case',
@@ -107,17 +110,22 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   ),
                   const SizedBox(height: 12),
                   if (detail != null) ...[
+                    // check-ignore: demo copy (not localized yet)
                     Text('Applicant: ${detail.applicant['name']}'),
+                    // check-ignore: demo copy (not localized yet)
                     Text('Business: ${detail.business['name']}'),
                     Text(
+                      // check-ignore: demo copy (not localized yet)
                       'Loan: ${detail.loan['amount']} • ${detail.loan['purpose']}',
                     ),
                     const SizedBox(height: 8),
+                    // check-ignore: demo copy (not localized yet)
                     Text('Risk signals (${detail.riskSignals.length})'),
                     ...detail.riskSignals
                         .take(6)
                         .map(
                           (final s) => Text(
+                            // check-ignore: demo copy (not localized yet)
                             '- ${s['label']}: ${s['value']} (${s['severity']})',
                           ),
                         ),
@@ -136,11 +144,11 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   FilledButton(
                     onPressed: state.isRunningDecision || !hasCaseDetail
                         ? null
-                        : () async => context
-                              .cubit<AiDecisionCubit>()
-                              .runDecisionSupport(
+                        : () => unawaited(
+                            context.cubit<AiDecisionCubit>().runDecisionSupport(
                                 operatorNote: _operatorNote.text,
                               ),
+                          ),
                     child: state.isRunningDecision
                         ? const SizedBox(
                             height: 16,
@@ -152,6 +160,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   const SizedBox(height: 16),
                   if (decision != null) ...[
                     Text(
+                      // check-ignore: demo copy (not localized yet)
                       'Risk score',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
@@ -175,6 +184,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                         ),
                         _pill(
                           context: context,
+                          // check-ignore: demo copy (not localized yet)
                           label: 'Action: ${decision.recommendedAction}',
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -182,6 +192,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
+                      // check-ignore: demo copy (not localized yet)
                       'Rationale',
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
@@ -189,6 +200,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                     Text(decision.rationale),
                     const SizedBox(height: 16),
                     Text(
+                      // check-ignore: demo copy (not localized yet)
                       'Proof',
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
@@ -222,11 +234,13 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   ),
                   const SizedBox(height: 16),
                   if (detail != null) ...[
+                    // check-ignore: demo copy (not localized yet)
                     Text('Action history (${detail.actions.length})'),
                     ...detail.actions
                         .take(8)
                         .map(
                           (final a) =>
+                              // check-ignore: demo copy (not localized yet)
                               Text('- ${a['action_type']}: ${a['note']}'),
                         ),
                   ],
@@ -246,9 +260,11 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
   ) => FilledButton.tonal(
     onPressed: state.isSavingAction || state.caseDetail == null
         ? null
-        : () async => context.cubit<AiDecisionCubit>().saveAction(
-            actionType: actionType,
-            note: _actionNote.text,
+        : () => unawaited(
+            context.cubit<AiDecisionCubit>().saveAction(
+              actionType: actionType,
+              note: _actionNote.text,
+            ),
           ),
     child: Text(actionType),
   );
