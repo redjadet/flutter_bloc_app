@@ -64,11 +64,12 @@ Use capabilities as an execution system, not decoration.
 Agents reason over inspectable state.
 
 - Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
+- Runtime evidence needs agent-runnable trigger + stable log/metric/trace/fixture signal; human-only dashboards are not proof.
 - Turn unclear goals into inspectable artifacts: acceptance criteria, data-flow sketch, fixture, dry-run, focused proof route.
 - Non-trivial risk => define acceptance contract before broad execution; executable specs/tests beat model confidence.
 - Keep state inspectable: tracker, task graph/checklist, commands, failures, retries, blocker.
 - UI/design chain: [`../DESIGN.md`](../DESIGN.md) -> [`design_system.md`](design_system.md) -> `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`.
-- Prefer repo-local logs/fixtures/schemas/examples/generated clients/test harnesses over chat-only claims.
+- Prefer repo-local schemas/examples/generated clients/test harnesses over chat-only claims.
 - For UI/runtime work, expose narrow runnable surface first: route tile, demo control, smoke test, or fixture.
 
 ## Missing Capability Loop

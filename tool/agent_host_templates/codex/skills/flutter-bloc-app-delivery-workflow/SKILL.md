@@ -19,6 +19,7 @@ Default: **Plan -> Execute -> Verify -> Report**. Plan once. Ask only hard block
 - **Execute:** lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`.
 - **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
 - **Verify:** `docs/ai_code_review_protocol.md`, smallest matching validation; empty/truncated tool output is not proof.
+- **Verify:** runtime proof -> `docs/agent_knowledge_base.md#agent-legibility`.
 - **Verify:** finish gate + Self-verify final response vs request, changed files, proof, blockers, residual risk.
 - **Report:** Report only after Verify. Surgical diff: each changed line traces to request or required validation/doc update.
 
