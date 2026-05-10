@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 
