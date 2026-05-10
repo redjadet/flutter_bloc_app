@@ -15,6 +15,7 @@ Rarely opened. Holds long tables and deeper mechanics referenced by the main [`a
 | Validation routing | [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Fast vs full validation. |
 | Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), `adr/` | Structure, routing, DI, layers, feature seams. |
 | Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Risk, tests, guardrails. |
+| Runtime evidence | [`logging.md`](logging.md), [`observability.md`](observability.md), [`STARTUP_TIME_PROFILING.md`](STARTUP_TIME_PROFILING.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
 | Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
 | Code graph | [`code_review_graph.md`](code_review_graph.md) | Narrow non-trivial exploration. |
 | Hive migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Stored Hive shape, manifest/spec, fingerprints, migrators/tests. Runtime `getBox()` runs `ensureSchema` when schema set. |

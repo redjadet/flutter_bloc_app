@@ -40,7 +40,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Breakage impact | What breaks first, how is it detected, and what is the recovery path? |
 | Tool output | Were empty/truncated/malformed tool results treated as failures to re-check, not proof? |
 | Tool choice | Did I use repo tools/MCP/browser/connector evidence when it owns the state, instead of guessing from prompt memory? |
-| Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat? |
+| Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat, with a runnable trigger and stable signal for runtime claims? |
 | Confidence | Confidence from proof; uncertainty stated? |
 | Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
 | Judgment | Tradeoff documented; changed surface owned? |
