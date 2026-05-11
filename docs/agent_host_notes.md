@@ -8,6 +8,10 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 - Use [`../tasks/codex/todo.md`](../tasks/codex/todo.md) for non-trivial active work.
 - Do not invoke `./tool/request_codex_feedback.sh` from Codex unless the user
   explicitly asks for second opinion or cross-host review.
+- After material edits to agent-facing docs or
+  [`.cursor/rules/agent-execution.mdc`](../.cursor/rules/agent-execution.mdc),
+  Cursor may run `./tool/request_codex_feedback.sh` as an optional second
+  opinion before merge.
 
 ## Cursor
 
