@@ -1,6 +1,7 @@
 # Agent Knowledge Base (Details)
 
 Rarely opened. Holds long tables and deeper mechanics referenced by the main [`agent_knowledge_base.md`](agent_knowledge_base.md).
+Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 
 ## System Of Record Layout
 
