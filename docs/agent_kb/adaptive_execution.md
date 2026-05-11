@@ -20,6 +20,7 @@ Scale effort to task value; default to one small loop.
 
 - Single loop: plan -> tool -> observe -> revise. No disconnected plans.
 - Branch only when risk pays: architecture, security, sync, migrations, CI, performance, or unclear root cause. Compare 2-3 candidate approaches with evidence, then continue one; do not produce multiple full diffs unless asked.
-- Verifier/critique rejects => retry with concrete evidence once or twice, then replan/escalate.
+- Verifier/critique rejects => retry with concrete evidence once or twice, then replan/escalate. Do not turn prompting into a job.
+- “Almost correct” output => switch tactics fast: stop regenerating whole files; patch minimal diff against real repo seams.
 - Empty/truncated/malformed tool output = failed observation; retry narrower, inspect raw output, or mark blocker.
 - Keep stable/cacheable instructions before task-specific context in agent-facing docs/templates.
