@@ -1,0 +1,24 @@
+# Host Parity and Mechanical Enforcement
+
+Back: [Agent Knowledge Base](../agent_knowledge_base.md)
+
+See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agents_quick_reference.md`](../agents_quick_reference.md)
+
+## Host Parity
+
+- Root [`AGENTS.md`](../../AGENTS.md) = repo-local map.
+- Codex host bootstrap target: ~/.codex/AGENTS.md.
+- [`tool/agent_host_templates/codex/AGENTS.md`](../../tool/agent_host_templates/codex/AGENTS.md) = Codex host bootstrap synced to ~/.codex/AGENTS.md and worktrees.
+- Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
+- After host-template changes: sync apply, dry-run, drift check.
+- No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.
+
+## Mechanical Enforcement
+
+- `./tool/check_agent_knowledge_base.sh`: keeps [`AGENTS.md`](../../AGENTS.md) short; checks required links, host-template pointers, closed-loop invariants.
+- `./tool/check_agent_memory_compounding.sh`: source-aligned memory-compounding; autonomous action explicit-approval-gated.
+- `./tool/validate_validation_docs.sh`: validation docs vs checklist scripts.
+- `./tool/normalize_doc_links.py`: clickable local links.
+- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates.
+- `./bin/checklist`: full gate. `./bin/checklist-fast`: local-only clean/narrow docs/tooling.
+- `.original.md` compression backups temporary; delete after verifying active docs.
