@@ -41,6 +41,10 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
       isAlive: () => !isClosed,
       onSuccess: (final profile) {
         if (isClosed) return;
+        if (_authRepository.currentUser?.id != userId) {
+          unawaited(hydrate());
+          return;
+        }
         if (profile == null) {
           emit(state.copyWith(status: StaffDemoSessionStatus.missingProfile));
           return;
@@ -65,6 +69,10 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
       },
       onError: (final message) {
         if (isClosed) return;
+        if (_authRepository.currentUser?.id != userId) {
+          unawaited(hydrate());
+          return;
+        }
         emit(
           state.copyWith(
             status: StaffDemoSessionStatus.error,

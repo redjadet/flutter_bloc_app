@@ -69,6 +69,8 @@ class OnlineTherapyDemoSessionCubit
       return;
     }
 
+    final TherapyUser? previousUser = state.user;
+    final TherapyRole previousRole = state.role;
     emit(state.copyWith(role: role, isBusy: true, user: null));
     try {
       final email = (state.emailDraft ?? '').trim();
@@ -77,7 +79,14 @@ class OnlineTherapyDemoSessionCubit
       emit(state.copyWith(isBusy: false, user: user));
     } on Object catch (e) {
       if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      emit(
+        state.copyWith(
+          role: previousRole,
+          isBusy: false,
+          user: previousUser,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 

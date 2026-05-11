@@ -126,12 +126,32 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
       return;
     }
     await _local.ensureReady();
+    if (isClosed) return;
+    if (_requireUserId() != userId) {
+      if (!isClosed) {
+        unawaited(hydrate());
+      }
+      return;
+    }
     CaseStudyDraft? draft = await _local.loadDraft(userId);
+    if (isClosed) return;
+    if (_requireUserId() != userId) {
+      if (!isClosed) {
+        unawaited(hydrate());
+      }
+      return;
+    }
     if (draft == null) {
       draft = CaseStudyDraft.fresh(caseId: _newCaseId());
       await _local.saveDraft(userId, draft);
     }
     if (isClosed) return;
+    if (_requireUserId() != userId) {
+      if (!isClosed) {
+        unawaited(hydrate());
+      }
+      return;
+    }
     emit(
       state.copyWith(
         hydration: CaseStudyHydrationStatus.ready,
