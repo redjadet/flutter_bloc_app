@@ -6,7 +6,7 @@ alwaysApply: false
 # Global Flutter agent reminder
 
 - Repo map: `AGENTS.md`. System of record: `docs/`.
-- Cold start: `AGENTS.md` -> `docs/agent_knowledge_base.md` -> `docs/ai_code_review_protocol.md`.
+- Cold start: `AGENTS.md` -> `docs/agent_knowledge_base.md` -> `docs/agent_project_context.md` -> `docs/ai_code_review_protocol.md`.
 - Use `docs/agents_quick_reference.md` for command lookup only.
 
 ## Execution

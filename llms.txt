@@ -1,0 +1,9 @@
+# Flutter BLoC App AI Context
+
+Start:
+
+- `AGENTS.md`
+- `docs/agent_knowledge_base.md`
+- `docs/agent_project_context.md`
+- `docs/agents_quick_reference.md`
+- `docs/ai_code_review_protocol.md`

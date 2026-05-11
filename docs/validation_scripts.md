@@ -867,7 +867,8 @@ This runs all validation scripts in sequence and fails if any critical violation
 ### Fast Local Sanity Path
 
 Use `./bin/checklist-fast` for local-only sanity pass when tree is clean
-or when local change set is limited to docs/tooling surfaces:
+or when local change set is limited to docs/tooling surfaces (including
+agent-readable docs such as `llms.txt`):
 
 ```bash
 ./bin/checklist-fast

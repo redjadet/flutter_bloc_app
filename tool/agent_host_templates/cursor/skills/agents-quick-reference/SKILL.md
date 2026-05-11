@@ -11,8 +11,9 @@ Open only needed:
 
 1. `AGENTS.md`
 2. `docs/agent_knowledge_base.md`
-3. `docs/agents_quick_reference.md`
-4. `docs/ai_code_review_protocol.md` for AI-written code
+3. `docs/agent_project_context.md` for project/version caveats
+4. `docs/agents_quick_reference.md`
+5. `docs/ai_code_review_protocol.md` for AI-written code
 
 Non-trivial: `agents-delivery-workflow`; delegation discipline: `agents-meta-behavior`.
 

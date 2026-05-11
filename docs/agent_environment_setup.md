@@ -33,6 +33,29 @@ Prefer tools that observe or verify real state over prompt packs.
 
 High-signal categories: GitHub/CI, browser automation, docs retrieval, observability, deploy, design, security, and project-specific delivery skills.
 
+Official Flutter/Dart Agent Skills are optional task blueprints, not repo
+policy. Use them for generic workflows (widget tests, routing, layout,
+localization, JSON, package conflicts, static analysis) after reading repo
+canon. Repo docs and scripts win on conflicts.
+
+Install/update only when the host supports `.agents/skills`, Node/npm is
+available, and the user wants vendor skills in the workspace:
+
+```bash
+npx skills add flutter/skills --skill '*' --agent universal
+npx skills add dart-lang/skills --skill '*' --agent universal
+npx skills update
+```
+
+Notes:
+
+- Compatible agents discover `.agents/skills`; current repo-managed skills stay
+  thin and project-specific.
+- Upstream skill repos drift; check their README/docs before bulk install.
+- If a vendor skill becomes high-frequency and bloats context or conflicts with
+  repo rules, add a repo-owned shadow shim through `tool/agent_host_templates/`
+  instead of editing host copies by hand.
+
 ## Per Session
 
 Print the canon + validation pointers:
