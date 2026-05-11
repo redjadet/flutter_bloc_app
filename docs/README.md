@@ -22,6 +22,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
+  [`agent_project_context.md`](agent_project_context.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
   [`agents_quick_reference.md`](agents_quick_reference.md),
   [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md),
@@ -54,6 +55,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 - [`new_developer_guide.md`](new_developer_guide.md)
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)
+- [`agent_project_context.md`](agent_project_context.md)
 - [`agent_environment_setup.md`](agent_environment_setup.md)
 - [`validation_scripts.md`](validation_scripts.md)
 - [`testing_overview.md`](testing_overview.md)

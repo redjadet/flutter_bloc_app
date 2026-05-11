@@ -1,6 +1,6 @@
 # Agent Quick Reference
 
-Commands + routing lookup. Map: [`AGENTS.md`](../AGENTS.md). Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Review: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). Validation detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Commands + routing lookup. Map: [`AGENTS.md`](../AGENTS.md). Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Project context: [`agent_project_context.md`](agent_project_context.md). Review: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). Validation detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
 Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci_automation.md).
 
@@ -85,7 +85,7 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validat
 ## Read By Task
 
 - Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md), [`tech_stack.md`](tech_stack.md)
-- Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
+- Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agent_project_context.md`](agent_project_context.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
 - Agent setup: [`agent_environment_setup.md`](agent_environment_setup.md)
 - Feature work: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md), [`feature_overview.md`](feature_overview.md)
 - UI/design: [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md)

@@ -5,9 +5,9 @@ description: Non-trivial delivery start→finish, validation routing, meta/subag
 
 # Delivery workflow
 
-Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`. Default: **Plan -> Execute -> Verify -> Report**. Triggers: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
+Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agent_project_context.md`, `docs/agents_quick_reference.md`. Default: **Plan -> Execute -> Verify -> Report**. Triggers: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-- **Plan:** non-trivial -> `tasks/cursor/todo.md`; existing code uses context ladder; delegation -> `agents-meta-behavior`.
+- **Plan:** non-trivial -> `tasks/cursor/todo.md`; context ladder uses `docs/agent_project_context.md` for packages/migrations/platform/perf caveats; delegation -> `agents-meta-behavior`.
 - **Plan:** do not edit until 95% confident; if vague/risky, define boundaries, data flow, failure handling, smallest proof.
 - **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays. High-risk architecture/debug => compare 2-3 candidate approaches with evidence, then choose one.
 - **Plan:** use repo tools, code graph, browser/app proof, and MCP/connectors when they own current state; prompts alone are not proof.
