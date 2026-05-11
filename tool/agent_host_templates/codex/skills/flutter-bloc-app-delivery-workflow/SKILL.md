@@ -9,7 +9,7 @@ Use at non-trivial start and before done.
 
 Default: **Plan -> Execute -> Verify -> Report**. Plan once. Ask only hard blockers. Trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-- **Plan:** `AGENTS.md` -> `docs/agent_knowledge_base.md`; existing code uses context ladder; tracker = `tasks/codex/todo.md`.
+- **Plan:** `AGENTS.md` -> `docs/agent_knowledge_base.md`; context ladder uses `docs/agent_project_context.md` for packages/migrations/platform/perf caveats; tracker = `tasks/codex/todo.md`.
 - **Plan:** do not edit until 95% confident; if vague/risky, define boundaries, data flow, failure handling, smallest proof.
 - **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays. High-risk architecture/debug => compare 2-3 candidate approaches with evidence, then choose one.
 - **Plan:** use repo tools, code graph, browser/app proof, and MCP/connectors when they own current state; prompts alone are not proof.

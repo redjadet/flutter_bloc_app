@@ -7,6 +7,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Belief | Repo rule |
 | --- | --- |
 | Context beats instructions. | Ground in real files, current docs, current diff, repo scripts. |
+| Project facts beat generic Flutter tips. | Open project/version caveats before relying on model memory. |
 | Closed loop. | Plan once, execute end-to-end, verify, report proof. |
 | AI output = draft. | Review gate + scope-matched validation before trust. |
 | Codebase = memory. | Durable facts live in docs/plans/tests/scripts/ADRs, not chat. |
@@ -19,58 +20,32 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 
 1. [`AGENTS.md`](../AGENTS.md) map.
 2. This doc for agent rules + source layout.
-3. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
-4. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
-5. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
-6. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
-7. [`README.md`](README.md) for task docs.
-8. Open only needed docs/code/tests/plans.
+3. [`agent_project_context.md`](agent_project_context.md) for project-specific/version-specific caveats.
+4. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
+5. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
+6. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
+7. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
+8. [`README.md`](README.md) for task docs.
+9. Open only needed docs/code/tests/plans.
 
 ## Adaptive Execution
 
-Scale effort to task value; default to one small loop.
+Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md)
 
-1. Classify complexity/risk/scope/uncertainty; local/mechanical stays light.
-2. Plan once (<=10 lines), then execute end-to-end.
-3. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
-4. Do not edit until 95% confident in goal/scope/approach.
-5. Vague/risky => assumptions, success criteria, boundaries, data flow, failure handling, smallest verifiable slice.
-6. Broad/codegen work => name modules, ownership, I/O, persistence/sync, logs, dry-run/test seams, rollback.
-7. Debug => reproduce/reason, isolate, fix cause, verify.
-8. Before report, run finish gate: edge cases, failure paths, readability, operational clarity, breakage impact.
-9. Stop when value met, material risks handled, proof matches scope.
+Required anchors (kept here for mechanical checks):
 
-Search budget:
-
-- Single loop: plan -> tool -> observe -> revise. No disconnected plans.
-- Branch only when risk pays: architecture, security, sync, migrations, CI, performance, or unclear root cause. Compare 2-3 candidate approaches with evidence, then continue one; do not produce multiple full diffs unless asked.
-- Verifier/critique rejects => retry with concrete evidence once or twice, then replan/escalate.
-- Empty/truncated/malformed tool output = failed observation; retry narrower, inspect raw output, or mark blocker.
-- Keep stable/cacheable instructions before task-specific context in agent-facing docs/templates.
+- unsafe ambiguity below 95% confident
+- 95% confident
+- Before report
+- Stop when value met
 
 ## Tool Orchestration
 
-Use capabilities as an execution system, not decoration.
-
-- Prefer direct repo scripts/tests/fixtures, code-review-graph, browser/app proof, and available MCP/connectors over model memory when they can observe the real system.
-- Use external MCP/connectors only for state they own (GitHub/CI, browser runtime, databases, docs); keep secrets out of prompts and artifacts.
-- Semantic search/code graph finds likely files; targeted raw reads still confirm before edits.
-- Faster/mechanical tools or models may do repetitive edits only after the owner has fixed scope, write set, and validation; final judgment stays with the coordinating agent.
-- More agents/tools are not automatically better. Add them when they reduce uncertainty, isolate context, or verify a risky decision.
-- Setup details live in [`agent_environment_setup.md`](agent_environment_setup.md).
+Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md)
 
 ## Agent Legibility
 
-Agents reason over inspectable state.
-
-- Prefer app-visible proof: screenshots, widget tests, integration flows, route validators, emulator/browser evidence.
-- Runtime evidence needs agent-runnable trigger + stable log/metric/trace/fixture signal; human-only dashboards are not proof.
-- Turn unclear goals into inspectable artifacts: acceptance criteria, data-flow sketch, fixture, dry-run, focused proof route.
-- Non-trivial risk => define acceptance contract before broad execution; executable specs/tests beat model confidence.
-- Keep state inspectable: tracker, task graph/checklist, commands, failures, retries, blocker.
-- UI/design chain: [`../DESIGN.md`](../DESIGN.md) -> [`design_system.md`](design_system.md) -> `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`.
-- Prefer repo-local schemas/examples/generated clients/test harnesses over chat-only claims.
-- For UI/runtime work, expose narrow runnable surface first: route tile, demo control, smoke test, or fixture.
+Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md)
 
 ## Missing Capability Loop
 
@@ -86,43 +61,34 @@ Examples: route mistake -> route validator/doc; repeated review comment -> invar
 
 ## Finish Gate
 
-Last 20% builds trust. Before report/commit, ask when suitable:
+Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md)
 
-- Edge cases: empty, malformed, duplicate, concurrent, offline/resume, permission-denied, slow/large input.
-- Failure paths: how errors surface, retry/rollback/idempotency, cleanup, user-visible state, logs/metrics.
-- Readability: names, seams, comments, tests, and docs make the next change obvious.
-- Operational clarity: run/verify/debug steps are discoverable from repo artifacts.
-- Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
+Required anchors (kept here for mechanical checks):
+
+- Self-verify
+- Edge cases
+- Failure paths
+- Operational clarity
+- Breakage impact
 
 ## Memory Compounding
 
-Next session smarter, no bloated wiki.
+Owner: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
 
-- Treat source docs, ADRs, plans, changes, tests, scripts, fixtures, and host trackers as compiled memory.
-- File reusable conclusions into owning source doc, `docs/changes/`, `docs/plans/`, or [`../tasks/lessons.md`](../tasks/lessons.md). Keep transient state in host trackers.
-- Preserve source-of-truth boundaries: code/tests beat summaries; source docs beat host templates; user corrections beat inferred rules.
-- Do not dump chat transcripts or generic summaries. Add compact, cited,
-  actionable facts only.
-- Prefer fat skills only for repeated, validated workflows with clear triggers/write scope/tools/quality bar. No cron/autonomous behavior without explicit user approval.
-- Vendor skills may exist via Cursor plugins. If a vendor skill is high-frequency
-  and bloats context, prefer **repo-owned shadow shims** synced into
-  `~/.cursor/skills/` (same `name:`) that route to repo canon and keep hard gates.
-- For this repo, prefer maps, `rg`, code-review-graph, and targeted
-  validation over separate RAG layer.
-- Semantic lint during doc/agent changes: stale plans, duplicate rules,
-  source/host-template contradictions, reusable conclusions stranded in task
-  notes.
+Required anchors (kept here for mechanical checks):
+
+- reusable conclusions
+- Semantic lint
+- File reusable conclusions
+- Do not dump chat transcripts
+- explicit user approval
+- separate RAG layer
+- code-review-graph
+- targeted raw-file reads
 
 ## Context Navigation Ladder
 
-Use when exact file is not known:
-
-1. **Map layer:** [`AGENTS.md`](../AGENTS.md), this doc, [`README.md`](README.md), task docs.
-2. **Memory layer:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md), current tracker. Chat memory is pointer only; verify drift-prone facts.
-3. **Structural layer:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
-4. **Raw-file layer:** targeted raw-file reads only for edit/proof. Use `rg` when graph is stale/missing/too broad.
-
-Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-05-05_codex_context_navigation_ladder.md), [`code_review_graph.md`](code_review_graph.md).
+Owner: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
 
 ## System Of Record Layout
 
@@ -140,14 +106,22 @@ Required anchors (kept here for agent checks; details in the linked doc):
 
 ## Multi-Agent Hub
 
-See [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) for full mechanics. Required labels:
+Owner: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md)
+
+Required anchors (kept here for mechanical checks):
 
 ```text
-Benefit: team - short reason
-Benefit: single - short reason
+Benefit: team
+Benefit: single
+tasks/cursor/team/<run-id>/
+Coordinator
+Specialists
+Researcher
+Analyst
+Implementer
+Reviewer
+untrusted
 ```
-
-Artifacts live under `tasks/cursor/team/<run-id>/`. Roles: **Coordinator**, **Specialists**: Researcher, Analyst, Implementer, Reviewer. Specialist output is **untrusted** until coordinator validates.
 
 ## Final Agent Contract
 
@@ -163,21 +137,11 @@ Artifacts live under `tasks/cursor/team/<run-id>/`. Roles: **Coordinator**, **Sp
 
 ## Host Parity
 
-- Root [`AGENTS.md`](../AGENTS.md) = repo-local map.
-- [`../tool/agent_host_templates/codex/AGENTS.md`](../tool/agent_host_templates/codex/AGENTS.md) = Codex host bootstrap synced to ~/.codex/AGENTS.md and worktrees.
-- Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
-- After host-template changes: sync apply, dry-run, drift check.
-- No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.
+Owner: [`agent_kb/host_parity_and_enforcement.md`](agent_kb/host_parity_and_enforcement.md)
 
 ## Mechanical Enforcement
 
-- `./tool/check_agent_knowledge_base.sh`: keeps [`AGENTS.md`](../AGENTS.md) short; checks required links, host-template pointers, closed-loop invariants.
-- `./tool/check_agent_memory_compounding.sh`: source-aligned memory-compounding; autonomous action explicit-approval-gated.
-- `./tool/validate_validation_docs.sh`: validation docs vs checklist scripts.
-- `./tool/normalize_doc_links.py`: clickable local links.
-- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates.
-- `./bin/checklist`: full gate. `./bin/checklist-fast`: local-only clean/narrow docs/tooling.
-- `.original.md` compression backups temporary; delete after verifying active docs.
+Owner: [`agent_kb/host_parity_and_enforcement.md`](agent_kb/host_parity_and_enforcement.md)
 
 New durable agent rule: update owning source doc first, then thin host templates, then validation if rule needs mechanical check.
 

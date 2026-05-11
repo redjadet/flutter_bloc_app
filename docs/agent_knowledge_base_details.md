@@ -1,6 +1,7 @@
 # Agent Knowledge Base (Details)
 
 Rarely opened. Holds long tables and deeper mechanics referenced by the main [`agent_knowledge_base.md`](agent_knowledge_base.md).
+Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 
 ## System Of Record Layout
 
@@ -9,6 +10,7 @@ Rarely opened. Holds long tables and deeper mechanics referenced by the main [`a
 | Docs index | [`README.md`](README.md) | Find source of truth. |
 | Tech stack / entrypoints | [`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints: `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart`. |
 | Agent harness | [`agent_knowledge_base.md`](agent_knowledge_base.md) | Agent behavior, host templates, trackers, validation. |
+| Project-specific AI context | [`agent_project_context.md`](agent_project_context.md) | Pinned versions, package caveats, migration contracts, performance seams, forbidden patterns. |
 | Review gate | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) | Accepting AI-written code / final report. |
 | Commands | [`agents_quick_reference.md`](agents_quick_reference.md) | Choosing repo entrypoints. |
 | Design system | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md) | UI/theme/typography/spacing/component/Mix/visual-state change. |
