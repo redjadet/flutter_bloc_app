@@ -22,6 +22,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Check | What to ask |
 | --- | --- |
 | Draft first | Am I treating first output as draft, not truth? |
+| Reprompt loop | Did I stop after 1-2 critique cycles and switch to evidence + minimal patch instead of regenerating? |
 | Assumptions | Did I surface ambiguous scope/data/format/privacy/volume/UX? |
 | System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
 | Problem fit | Does change fit user outcome + production path? |

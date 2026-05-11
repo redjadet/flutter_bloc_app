@@ -16,6 +16,18 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 
+## AI Productivity Traps (And How This Repo Avoids Them)
+
+AI can be slower when it produces “almost correct” code: polished surface, subtle mismatches. Flutter amplifies mismatch cost (widget trees, rebuild/state, architectural seams).
+
+Repo guardrails:
+
+- **AI output not default implementation**: treat as draft; prefer smallest coherent change inside existing seams (Clean Architecture, Cubit/BLoC, DI, GoRouter).
+- **Stop re-prompt loops**: if 2 cycles of “almost right” appear, stop generating. Switch to evidence: read owning code/docs, implement manually, add missing fixture/test/script.
+- **Prefer micro-edits over rewrites**: patch the exact failing line(s) instead of regenerating whole files/widgets.
+- **Early proof beats late polish**: run narrowest honest validation lane early (see `agents_quick_reference.md`). Catch subtle issues before they spread.
+- **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is a net loss; align first, then iterate.
+
 ## Progressive Disclosure
 
 1. [`AGENTS.md`](../AGENTS.md) map.
