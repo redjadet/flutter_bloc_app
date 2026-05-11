@@ -51,6 +51,8 @@ Notes:
 
 - Compatible agents discover `.agents/skills`; current repo-managed skills stay
   thin and project-specific.
+- On this machine, global installs with `npx skills add flutter/skills` /
+  `dart-lang/skills` plus `-g` materialize under `~/.agents/skills/`.
 - Upstream skill repos drift; check their README/docs before bulk install.
 - If a vendor skill becomes high-frequency and bloats context or conflicts with
   repo rules, add a repo-owned shadow shim through `tool/agent_host_templates/`

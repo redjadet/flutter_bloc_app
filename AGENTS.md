@@ -45,7 +45,8 @@ Finish gate: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 - Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
 - Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
 - Plans/history: [`docs/plans/README.md`](docs/plans/README.md), [`docs/changes/README.md`](docs/changes/README.md), [`docs/audits/README.md`](docs/audits/README.md)
-- Host notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md)
+- Host/env notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md), [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
+- Operator preferences: [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)
 
 ## Must Keep
 
