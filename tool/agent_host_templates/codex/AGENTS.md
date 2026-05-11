@@ -44,6 +44,7 @@ prose. "stop caveman" or "normal mode" disables this.
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)
 - Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)

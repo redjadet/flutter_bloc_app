@@ -7,6 +7,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Belief | Repo rule |
 | --- | --- |
 | Context beats instructions. | Ground in real files, current docs, current diff, repo scripts. |
+| Project facts beat generic Flutter tips. | Open project/version caveats before relying on model memory. |
 | Closed loop. | Plan once, execute end-to-end, verify, report proof. |
 | AI output = draft. | Review gate + scope-matched validation before trust. |
 | Codebase = memory. | Durable facts live in docs/plans/tests/scripts/ADRs, not chat. |
@@ -19,12 +20,13 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 
 1. [`AGENTS.md`](../AGENTS.md) map.
 2. This doc for agent rules + source layout.
-3. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
-4. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
-5. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
-6. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
-7. [`README.md`](README.md) for task docs.
-8. Open only needed docs/code/tests/plans.
+3. [`agent_project_context.md`](agent_project_context.md) for project-specific/version-specific caveats.
+4. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
+5. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
+6. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
+7. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
+8. [`README.md`](README.md) for task docs.
+9. Open only needed docs/code/tests/plans.
 
 ## Adaptive Execution
 
@@ -118,9 +120,10 @@ Next session smarter, no bloated wiki.
 Use when exact file is not known:
 
 1. **Map layer:** [`AGENTS.md`](../AGENTS.md), this doc, [`README.md`](README.md), task docs.
-2. **Memory layer:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md), current tracker. Chat memory is pointer only; verify drift-prone facts.
-3. **Structural layer:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
-4. **Raw-file layer:** targeted raw-file reads only for edit/proof. Use `rg` when graph is stale/missing/too broad.
+2. **Project context layer:** [`agent_project_context.md`](agent_project_context.md) for pinned versions, package caveats, migrations, performance seams, and forbidden patterns.
+3. **Memory layer:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md), current tracker. Chat memory is pointer only; verify drift-prone facts.
+4. **Structural layer:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
+5. **Raw-file layer:** targeted raw-file reads only for edit/proof. Use `rg` when graph is stale/missing/too broad.
 
 Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](changes/2026-05-05_codex_context_navigation_ladder.md), [`code_review_graph.md`](code_review_graph.md).
 
