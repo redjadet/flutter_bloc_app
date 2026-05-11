@@ -15,6 +15,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_upload_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -75,6 +76,40 @@ class _MemoryLocalRepository implements CaseStudyLocalRepository {
     final List<CaseStudyRecord> next,
   ) async {
     records[userId] = next;
+  }
+}
+
+/// Mutable [currentUser] without emitting [authStateChanges] (simulates drift mid-await).
+class _MutableSilentAuthRepository implements AuthRepository {
+  _MutableSilentAuthRepository(this.user);
+
+  AuthUser? user;
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+
+  @override
+  AuthUser? get currentUser => user;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+
+  Future<void> dispose() => _controller.close();
+}
+
+/// Delays only the first [loadDraft] so [hydrate] can interleave auth changes.
+class _StallBeforeFirstLoadDraftRepository extends _MemoryLocalRepository {
+  _StallBeforeFirstLoadDraftRepository(this._until);
+
+  final Future<void> _until;
+  bool _didStall = false;
+
+  @override
+  Future<CaseStudyDraft?> loadDraft(final String userId) async {
+    if (!_didStall) {
+      _didStall = true;
+      await _until;
+    }
+    return super.loadDraft(userId);
   }
 }
 
@@ -802,6 +837,61 @@ void main() {
         final List<CaseStudyRecord> records = await local.loadRecords('user-1');
         expect(records, hasLength(1));
         expect(records.first.submittedAt, serverAt);
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+  });
+
+  group('CaseStudySessionCubit.hydrate', () {
+    test(
+      'does not leave prior user draft when auth user changes during loadDraft',
+      () async {
+        final Completer<void> stall = Completer<void>();
+        final _MutableSilentAuthRepository auth = _MutableSilentAuthRepository(
+          const AuthUser(id: 'user-a', isAnonymous: false),
+        );
+        final _StallBeforeFirstLoadDraftRepository local =
+            _StallBeforeFirstLoadDraftRepository(stall.future);
+
+        await local.saveDraft(
+          'user-a',
+          CaseStudyDraft.fresh(caseId: 'draft-a-only'),
+        );
+        await local.saveDraft(
+          'user-b',
+          CaseStudyDraft.fresh(caseId: 'draft-b-only'),
+        );
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          supabaseAuthRepository: _StubSupabaseAuthRepository(),
+          remoteRepository: _StubRemoteRepository(),
+          timerService: DefaultTimerService(),
+        );
+
+        final Future<void> done = cubit.hydrate();
+        await Future<void>.delayed(Duration.zero);
+        auth.user = const AuthUser(id: 'user-b', isAnonymous: false);
+        stall.complete();
+        await done;
+        bool readyB(final CaseStudySessionState s) =>
+            s.hydration == CaseStudyHydrationStatus.ready &&
+            s.draft.caseId == 'draft-b-only';
+        if (!readyB(cubit.state)) {
+          await cubit.stream
+              .firstWhere(readyB)
+              .timeout(const Duration(seconds: 2));
+        }
+
+        expect(cubit.state.hydration, CaseStudyHydrationStatus.ready);
+        expect(cubit.state.draft.caseId, 'draft-b-only');
 
         await cubit.close();
         await auth.dispose();
