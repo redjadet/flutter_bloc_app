@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **70.67%** (19179/27137 lines)
+*Total line coverage*: **70.67%** (19184/27147 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -363,6 +363,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/data/todo_merge_policy.dart` | 87.50% | 7/8 |
 | `lib/shared/extensions/responsive/responsive_typography.dart` | 87.50% | 7/8 |
 | `lib/shared/utils/cubit_async_operations.dart` | 87.50% | 28/32 |
+| `lib/features/library_demo/presentation/widgets/library_demo_body.dart` | 87.85% | 94/107 |
 | `lib/shared/extensions/responsive/responsive_metrics.dart` | 87.88% | 29/33 |
 | `lib/shared/extensions/responsive/responsive_layout.dart` | 87.93% | 51/58 |
 | `lib/shared/sync/pending_sync_repository_migration.dart` | 87.93% | 51/58 |
@@ -378,7 +379,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/widgets/common_form_field.dart` | 88.89% | 32/36 |
 | `lib/features/iot_demo/data/persistent_iot_demo_repository.dart` | 89.06% | 114/128 |
 | `lib/features/todo_list/presentation/widgets/todo_search_field.dart` | 89.09% | 49/55 |
-| `lib/features/library_demo/presentation/widgets/library_demo_body.dart` | 89.11% | 90/101 |
 | `lib/features/library_demo/presentation/pages/library_demo_page.dart` | 89.29% | 25/28 |
 | `lib/features/auth/presentation/widgets/register_password_field.dart` | 89.47% | 34/38 |
 | `lib/features/chat/data/offline_first_chat_repository.dart` | 89.47% | 34/38 |
@@ -411,6 +411,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/widgets/chat_sync_banner.dart` | 91.67% | 55/60 |
 | `lib/features/staff_app_demo/data/staff_demo_content_firestore_map.dart` | 91.67% | 11/12 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_helpers.dart` | 91.67% | 11/12 |
+| `lib/features/case_study_demo/presentation/pages/case_study_history_page.dart` | 91.82% | 101/110 |
 | `lib/features/todo_list/data/hive_todo_repository.dart` | 91.95% | 80/87 |
 | `lib/shared/utils/completer_helper.dart` | 92.00% | 23/25 |
 | `lib/features/counter/data/shared_preferences_counter_repository.dart` | 92.06% | 58/63 |
@@ -428,13 +429,13 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart` | 92.86% | 52/56 |
 | `lib/features/settings/presentation/widgets/integrations_section.dart` | 92.86% | 13/14 |
 | `lib/features/todo_list/presentation/widgets/todo_filter_bar.dart` | 92.86% | 39/42 |
+| `lib/features/ai_decision_demo/presentation/pages/ai_decision_demo_page.dart` | 92.92% | 105/113 |
 | `lib/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page.dart` | 93.04% | 107/115 |
 | `lib/features/profile/presentation/widgets/profile_action_buttons.dart` | 93.10% | 27/29 |
 | `lib/features/auth/presentation/helpers/auth_error_message.dart` | 93.33% | 28/30 |
 | `lib/features/chat/presentation/pages/chat_page.dart` | 93.33% | 98/105 |
 | `lib/features/search/data/hive_search_cache_repository.dart` | 93.33% | 84/90 |
 | `lib/features/walletconnect_auth/data/wallet_user_profile_mapper.dart` | 93.33% | 42/45 |
-| `lib/features/case_study_demo/presentation/pages/case_study_history_page.dart` | 93.40% | 99/106 |
 | `lib/features/deeplink/presentation/deep_link_cubit.dart` | 93.51% | 72/77 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` | 93.52% | 101/108 |
 | `lib/features/counter/data/rest_counter_repository.dart` | 93.55% | 29/31 |
@@ -443,7 +444,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/sync/pending_sync_repository.dart` | 93.62% | 88/94 |
 | `lib/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart` | 93.75% | 15/16 |
 | `lib/shared/services/error_notification_service.dart` | 93.75% | 30/32 |
-| `lib/features/ai_decision_demo/presentation/pages/ai_decision_demo_page.dart` | 93.81% | 106/113 |
 | `lib/shared/sync/background_sync_runner_helpers.dart` | 93.81% | 106/113 |
 | `lib/shared/widgets/diagnostics/profile_cache_controls_section.dart` | 93.90% | 77/82 |
 | `lib/features/chat/presentation/widgets/chat_history_sheet_helpers.dart` | 94.12% | 64/68 |

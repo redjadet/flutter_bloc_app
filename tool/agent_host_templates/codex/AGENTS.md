@@ -33,6 +33,14 @@ Vague/risky details: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.
 - Prove result before calling work done.
 - File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)).
 
+## Communication
+
+Inside `flutter_bloc_app`, default every Codex session to full caveman mode:
+drop articles, filler, pleasantries, and hedging; fragments OK; keep technical
+terms exact. Write code, commits, PR text, security warnings,
+destructive-action confirmations, and external messages in normal precise
+prose. "stop caveman" or "normal mode" disables this.
+
 ## Map
 
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)

@@ -49,6 +49,11 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
+      - name: Install ripgrep (rg)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
+
       - name: Run delivery checklist
         run: ./bin/checklist
 
@@ -71,6 +76,11 @@ jobs:
 
       - name: Flutter pub get
         run: flutter pub get
+
+      - name: Install ripgrep (rg)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep
 
       - name: Run upgrade + validate workflow
         run: ./bin/upgrade_validate_all
