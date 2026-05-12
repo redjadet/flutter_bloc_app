@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/painting.dart';
-import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 /// Centralizes app-wide memory trimming using existing cache owners.
+///
+/// Optional `onChartMemoryTrim` is wired from the composition root (DI) so
+/// this library does not depend on feature implementations.
 class AppMemoryService {
   AppMemoryService({
     AppImageCacheManager? imageCacheManager,
     Future<void> Function(AppMemoryTrimLevel level)? onImageCacheTrim,
+    Future<void> Function(AppMemoryTrimLevel level)? onChartMemoryTrim,
   }) : assert(
          imageCacheManager != null || onImageCacheTrim != null,
          'Provide either imageCacheManager or onImageCacheTrim.',
@@ -19,9 +22,13 @@ class AppMemoryService {
        _onImageCacheTrim =
            onImageCacheTrim ??
            imageCacheManager?.onTrim ??
-           _missingImageCacheTrim;
+           _missingImageCacheTrim,
+       _onChartMemoryTrim = onChartMemoryTrim ?? _noopChartTrim;
 
   final Future<void> Function(AppMemoryTrimLevel level) _onImageCacheTrim;
+  final Future<void> Function(AppMemoryTrimLevel level) _onChartMemoryTrim;
+
+  static Future<void> _noopChartTrim(final AppMemoryTrimLevel _) async {}
 
   Future<void>? _trimInFlight;
   AppMemoryTrimLevel? _queuedLevel;
@@ -82,8 +89,8 @@ class AppMemoryService {
       () => ResilientSvgAssetImage.trimCache(level: level),
     );
     await _runSafely(
-      'HttpChartRepository.trimMemory',
-      () async => HttpChartRepository.trimMemory(level),
+      'chartMemoryTrim',
+      () => _onChartMemoryTrim(level),
     );
     await _runSafely(
       'AppImageCacheManager.onTrim',

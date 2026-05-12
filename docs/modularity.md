@@ -81,10 +81,50 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
 
 ## Validation
 
-- **No shared → feature imports:** `grep -r "import.*features/" lib/shared` should find no matches.
-- **Known feature-boundary leaks:** `./bin/checklist` runs `tool/check_feature_modularity_leaks.sh` (see [validation_scripts.md](validation_scripts.md)). Extend that script when you add new cross-feature rules.
+- **Read-only metrics:** `bash tool/modular_metrics.sh` (stdout). Use
+  `bash tool/modular_metrics.sh --cross-feature-only` for a classified list of
+  `lib/features/<A>/` files importing `package:flutter_bloc_app/features/<B>/`
+  (Phase 1B inventory before any default-deny CI gate).
+- **No shared → feature imports:** enforced by `tool/check_feature_modularity_leaks.sh`
+  (fails on `package:flutter_bloc_app/features/` under `lib/shared/`). Composition
+  must inject feature behavior via DI callbacks from `lib/core/di/` (see
+  `AppMemoryService.onChartMemoryTrim`).
+- **Domain purity (imports):** same script fails on `^import` lines in
+  `lib/features/*/domain/**` that pull in Flutter, `get_it`, Hive, Supabase client
+  libs, Dio, Retrofit, `package:flutter_bloc_app/app/`, `package:flutter_bloc_app/core/di/`,
+  or another feature’s `presentation/` / `data/` paths. Domain remains pure Dart;
+  Flutter-only domain checks also run via `tool/check_flutter_domain_imports.sh`.
+- **Known pairwise feature boundaries:** declarative rules in
+  `tool/check_feature_modularity_leaks.sh` (e.g. `library_demo` ↔ `scapes`,
+  `settings` ↔ `graphql_demo` / `profile` / `remote_config`, `remote_config` ↔
+  `settings`). Extend the script when new rules land here.
+- **Full sweep:** `./bin/checklist` runs `tool/check_feature_modularity_leaks.sh`
+  (see [validation_scripts.md](validation_scripts.md)).
 - **Router/feature tests:** Run `./bin/router_feature_validate` after changing routes or DI.
 - When adding a new cross-cutting concept (e.g. “current user”), consider a **core** or **shared** contract so that app and features depend on the contract, not on a single feature’s implementation.
+
+### Phase 1B — feature-to-feature imports
+
+Cross-feature `package:` imports are **reported** via `modular_metrics.sh`, not
+failed by default, until each hit is classified (move to `lib/app/`, `lib/shared/`,
+`lib/core/` port, or an explicit time-boxed exception documented in this file).
+
+**Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change):
+
+| From → To | Representative files | Classification | Owner | Expiry / removal |
+| --- | --- | --- | --- | --- |
+| `case_study_demo` → `camera_gallery` | `case_study_image_picker_video_repository.dart`, `case_study_video_repository.dart`, `case_study_l10n_helpers.dart`, `case_study_session_cubit.dart` | Temporary — shared camera result/error types should move to `lib/shared/` or a thin `core/` contract so the demo does not depend on another feature’s domain | Maintainers | Remove when camera gallery exports are replaced by a shared or core type, or case study owns equivalent DTOs |
+| `case_study_demo` → `supabase_auth` | `case_study_session_cubit.dart`, `case_study_demo_home_page.dart`, `case_study_history_*.dart`, `case_study_data_mode_badge.dart` | Temporary — presentation pulls `SupabaseAuthRepository`; prefer app/DI passing an interface or core auth read model | Maintainers | Remove when cubit/pages receive auth via constructor/DI without importing `supabase_auth` |
+| `chat` → `remote_config` | `render_orchestration_hf_token_provider.dart` | Port candidate — HF token gating via remote config; see [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md) | Maintainers | Remove when a `core/` (or shared) port abstracts remote-config reads used by chat |
+
+## Phase 3 follow-ups (stronger seams)
+
+- **App-layer deep imports:** `bash tool/check_feature_barrel_exports.sh` (report-only,
+  exit 0) lists `lib/app/**` imports into feature `presentation/` / `data/` /
+  `domain/`. Use when shrinking imports toward per-feature barrels.
+- **Ports sweep:** [`engineering/ports_adapters_modular_sweep_2026-05-12.md`](engineering/ports_adapters_modular_sweep_2026-05-12.md).
+- **Scoped DI spike:** [`plans/feature_scoped_di_feasibility.md`](plans/feature_scoped_di_feasibility.md).
+- **Package split:** [`plans/melos_package_split_feasibility.md`](plans/melos_package_split_feasibility.md).
 
 ## Out of scope (by design)
 

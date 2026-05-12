@@ -35,6 +35,7 @@ import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.da
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/data/image_picker_camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
@@ -66,196 +67,14 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 
+part 'groups/register_core_services.dart';
+part 'groups/register_feature_services.dart';
+part 'groups/register_demo_services.dart';
+
 const bool _isFlutterTestProcess = bool.fromEnvironment('FLUTTER_TEST');
 
 Future<void> registerAllDependencies() async {
-  _registerAppRuntimeConfig();
-  await _registerStorageServices();
-  _registerCounterRepository();
-  registerAuthServices();
-  registerRemoteConfigServices();
-  _registerSupabaseConfigServices();
-  registerSupabaseServices();
-  _registerTimerAndNetworkStatus();
-  registerHttpServices();
-  registerChartServices();
-  registerCalculatorServices();
-  registerGraphqlServices();
-  registerChatServices();
-  registerCaseStudyDemoServices();
-  _registerSettingsServices();
-  _registerDeepLinkServices();
-  _registerWebSocketServices();
-  _registerMapServices();
-  registerProfileServices();
-  registerSearchServices();
-  registerTodoServices();
-  registerGenUiServices();
-  registerWalletConnectAuthServices();
-  registerPlaylearnServices();
-  registerIgamingDemoServices();
-  registerFcmDemoServices();
-  registerIotDemoServices();
-  registerInAppPurchaseDemoServices();
-  registerStaffAppDemoServices();
-  registerAiDecisionDemoServices();
-  registerOnlineTherapyDemoServices();
-  _registerMemoryServices();
-  _registerCameraGalleryServices();
-  _registerScapesServices();
-  _registerUtilityServices();
-  _registerSyncServices();
-}
-
-void _registerAppRuntimeConfig() {
-  registerLazySingletonIfAbsent<AppRuntimeConfig>(
-    AppRuntimeConfig.fromBootstrap,
-  );
-}
-
-Future<void> _registerStorageServices() async {
-  registerLazySingletonIfAbsent<HiveKeyManager>(HiveKeyManager.new);
-  registerLazySingletonIfAbsent<HiveService>(
-    () => HiveService(keyManager: getIt<HiveKeyManager>()),
-  );
-  registerLazySingletonIfAbsent<SharedPreferencesMigrationService>(
-    () => SharedPreferencesMigrationService(
-      hiveService: getIt<HiveService>(),
-    ),
-  );
-}
-
-void _registerCounterRepository() {
-  registerLazySingletonIfAbsent<CounterRepository>(createCounterRepository);
-}
-
-void _registerSupabaseConfigServices() {
-  registerLazySingletonIfAbsent<SupabaseConfigProvider>(
-    () => SupabaseConfigProvider(remoteConfig: getIt<RemoteConfigService>()),
-  );
-  if (!FirebaseBootstrapService.isFirebaseInitialized) {
-    return;
-  }
-
-  late final FirebaseAuth firebaseAuth;
-  try {
-    firebaseAuth = getIt<FirebaseAuth>();
-  } on Object {
-    return;
-  }
-
-  registerLazySingletonIfAbsent<SupabaseConfigCoordinator>(
-    () => SupabaseConfigCoordinator(
-      auth: firebaseAuth,
-      provider: getIt<SupabaseConfigProvider>(),
-    ),
-    dispose: (final coordinator) => coordinator.dispose(),
-  );
-}
-
-/// `registerHttpServices` builds `Dio` with `NetworkStatusService`; chart setup
-/// can eagerly resolve HTTP clients, so network status must exist first.
-void _registerTimerAndNetworkStatus() {
-  registerLazySingletonIfAbsent<TimerService>(DefaultTimerService.new);
-  registerLazySingletonIfAbsent<NetworkStatusService>(
-    () => ConnectivityNetworkStatusService(
-      timerService: getIt<TimerService>(),
-    ),
-    dispose: (final service) => service.dispose(),
-  );
-}
-
-void _registerSettingsServices() {
-  registerLazySingletonIfAbsent<LocaleRepository>(
-    () => HiveLocaleRepository(hiveService: getIt<HiveService>()),
-  );
-  registerLazySingletonIfAbsent<ThemeRepository>(
-    () => HiveThemeRepository(hiveService: getIt<HiveService>()),
-  );
-  registerLazySingletonIfAbsent<AppInfoRepository>(
-    () => const PackageInfoAppInfoRepository(),
-  );
-}
-
-void _registerDeepLinkServices() {
-  registerLazySingletonIfAbsent<DeepLinkParser>(() => const DeepLinkParser());
-  registerLazySingletonIfAbsent<DeepLinkService>(AppLinksDeepLinkService.new);
-}
-
-void _registerWebSocketServices() {
-  registerLazySingletonIfAbsent<WebsocketRepository>(
-    EchoWebsocketRepository.new,
-    dispose: (final repository) => repository.dispose(),
-  );
-}
-
-void _registerMapServices() {
-  registerLazySingletonIfAbsent<MapLocationRepository>(
-    () => const SampleMapLocationRepository(),
-  );
-}
-
-void _registerMemoryServices() {
-  if (!_isFlutterTestProcess) {
-    registerLazySingletonIfAbsent<AppImageCacheManager>(
-      AppImageCacheManager.new,
-      dispose: (final manager) => manager.dispose(),
-    );
-  }
-  registerLazySingletonIfAbsent<AppMemoryService>(
-    () => _isFlutterTestProcess
-        ? AppMemoryService(
-            onImageCacheTrim: (final level) async {},
-          )
-        : AppMemoryService(
-            imageCacheManager: getIt<AppImageCacheManager>(),
-          ),
-  );
-}
-
-void _registerCameraGalleryServices() {
-  registerLazySingletonIfAbsent<CameraGalleryRepository>(
-    ImagePickerCameraGalleryRepository.new,
-  );
-}
-
-void _registerScapesServices() {
-  registerLazySingletonIfAbsent<ScapesRepository>(MockScapesRepository.new);
-}
-
-void _registerUtilityServices() {
-  registerLazySingletonIfAbsent<BiometricAuthenticator>(
-    LocalBiometricAuthenticator.new,
-  );
-  registerLazySingletonIfAbsent<ErrorNotificationService>(
-    SnackbarErrorNotificationService.new,
-  );
-}
-
-void _registerSyncServices() {
-  registerLazySingletonIfAbsent<SyncableRepositoryRegistry>(
-    SyncableRepositoryRegistry.new,
-  );
-  registerLazySingletonIfAbsent<PendingSyncRepository>(
-    () => PendingSyncRepository(hiveService: getIt<HiveService>()),
-    dispose: (final repository) => repository.dispose(),
-  );
-  registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
-    () {
-      final IotDemoRealtimeSubscription realtime =
-          getIt<IotDemoRealtimeSubscription>();
-      return BackgroundSyncCoordinator(
-        repository: getIt<PendingSyncRepository>(),
-        networkStatusService: getIt<NetworkStatusService>(),
-        timerService: getIt<TimerService>(),
-        registry: getIt<SyncableRepositoryRegistry>(),
-        getSyncSupabaseUserId: () =>
-            getIt<SupabaseAuthRepository>().currentUser?.id,
-        startIotDemoRealtimeSubscription: (final onSyncRequested) =>
-            realtime.start(onSyncRequested),
-        stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),
-      );
-    },
-    dispose: (final coordinator) => coordinator.dispose(),
-  );
+  await registerCoreServices();
+  await registerFeatureServices();
+  await registerDemoServices();
 }
