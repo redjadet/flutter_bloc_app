@@ -171,7 +171,11 @@ New durable agent rule: update owning source doc first, then thin host templates
 
 ## Operator Preferences (Durable)
 
-Keep [`AGENTS.md`](../AGENTS.md) lean map; put behavioral detail here.
+Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put behavior here or owning `docs/`. Never add long prose or `## Learned User Preferences` / `## Learned Workspace Facts` to [`AGENTS.md`](../AGENTS.md).
+
+- Continual learning: repo index `.cursor/hooks/state/continual-learning-index.json`; land high-signal takeaways here or owning doc.
+- Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
+- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; see [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
 
 - Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
