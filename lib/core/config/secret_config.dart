@@ -1,3 +1,7 @@
+/// Loads and merges app secret configuration from bundled assets, optional
+/// overrides, and platform secure storage (implementation in `part` files).
+library;
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -7,6 +11,6 @@ import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
-part 'secret_config_impl.part.dart';
 part 'secret_config_chat_orchestration.dart';
+part 'secret_config_impl.part.dart';
 part 'secret_config_sources.part.dart';

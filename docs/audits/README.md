@@ -23,3 +23,4 @@ trend tracking, but they are **not** the day-to-day source of truth.
 - [`code_quality_analysis_2026-02-23.md`](code_quality_analysis_2026-02-23.md): deep code-quality review snapshot.
 - [`phase2_lifecycle_async_audit_2026-02-23.md`](phase2_lifecycle_async_audit_2026-02-23.md): lifecycle/async audit snapshot.
 - [`shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md): UI performance audit (shrinkwrap/slivers).
+- [`senior_quality_hotspots_2026-05-12.md`](senior_quality_hotspots_2026-05-12.md): hotspot churn + seed checks + classified findings (2026-05-12).
