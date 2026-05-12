@@ -10,6 +10,7 @@ Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
 - Non-trivial: plan + verification in `tasks/cursor/todo.md`.
 - Context budget: targeted search + narrow reads; avoid broad dumps.
 - Scale effort: classify complexity/risk/scope/uncertainty.
+- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
 - Proof-first: confidence from proof; state uncertainty when risk remains.
 - Re-plan only when evidence invalidates approach.
 - Repeated failure => add repo capability (doc/fixture/test/script/UI proof/log helper/validation check).

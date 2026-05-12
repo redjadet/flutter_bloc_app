@@ -25,6 +25,6 @@ Hard gates:
 
 Output shape (keep short):
 
-- State goal + constraints + success criteria.
+- State Goal / Context / Boundaries / Verification.
 - List 2–3 approaches with tradeoffs; pick lowest-regret.
 - Identify smallest verifiable slice + proof step.

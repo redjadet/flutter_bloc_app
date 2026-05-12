@@ -83,7 +83,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_raw_print.sh`**: Prevents raw `print()`/`debugPrint()` usage - use
   `AppLogger` and [`logging.md`](logging.md) conventions instead.
 - **`check_raw_google_fonts.sh`**: Prevents per-widget `GoogleFonts.*` usage - should define fonts in `app_config.dart`
-- **`check_ui_regressions.sh`**: Runs focused widget regression tests to catch UI sizing/layout issues early (e.g. web scaling causing oversized icons)
+- **`check_ui_regressions.sh`**: Runs focused widget regression tests to catch UI sizing/layout issues early (e.g. web scaling causing oversized icons, unstable controls, clipped text, or overlap)
 
 ### Performance
 

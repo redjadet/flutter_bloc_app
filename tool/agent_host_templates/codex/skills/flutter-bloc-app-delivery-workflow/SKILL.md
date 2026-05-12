@@ -9,13 +9,12 @@ Use at non-trivial start and before done.
 
 Default: **Plan -> Execute -> Verify -> Report**. Plan once. Ask only hard blockers. Trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-- **Plan:** `AGENTS.md` -> `docs/agent_knowledge_base.md`; context ladder uses `docs/agent_project_context.md` for packages/migrations/platform/perf caveats; tracker = `tasks/codex/todo.md`.
-- **Plan:** do not edit until 95% confident; if vague/risky, define boundaries, data flow, failure handling, smallest proof.
-- **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays. High-risk architecture/debug => compare 2-3 candidate approaches with evidence, then choose one.
-- **Plan:** use repo tools, code graph, browser/app proof, and MCP/connectors when they own current state; prompts alone are not proof.
-- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
+- **Plan:** `AGENTS.md` -> `docs/agent_knowledge_base.md`; context ladder uses `docs/agent_project_context.md`; tracker = `tasks/codex/todo.md`.
+- **Plan:** Goal / Context / Boundaries / Verification; exact steps only when path matters; no edits before 95% confident.
+- **Plan:** one observe/revise loop; branch only when risk pays; use repo tools/code graph/browser/MCP proof over memory.
+- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts/rewrites, context flooding, single-agent overload, unverified outputs.
 - **Execute:** reuse seams; keep `Presentation -> Domain <- Data`; update DI/routes/l10n/codegen when touched.
-- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use runtime source; prove real workflow, states, responsive no-overlap.
 - **Execute:** lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`.
 - **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
 - **Verify:** `docs/ai_code_review_protocol.md`, smallest matching validation; empty/truncated tool output is not proof.

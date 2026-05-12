@@ -25,8 +25,10 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Reprompt loop | Did I stop after 1-2 critique cycles and switch to evidence + minimal patch instead of regenerating? |
 | Assumptions | Did I surface ambiguous scope/data/format/privacy/volume/UX? |
 | System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
+| Prompt shape | Did guidance use Goal / Context / Boundaries / Verification, omit nonessential rules, and avoid micromanaging implementation order? |
 | Problem fit | Does change fit user outcome + production path? |
-| Visual fit | UI/design: did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`, avoid ad-hoc visual values? |
+| Visual fit | Did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use runtime source (`AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`), and fit audience/workflow? |
+| UI states/layout | Are expected states present, and did mobile/tablet/desktop checks cover clipped text, overlap, unstable controls, hidden primary content? |
 | Simplify | Smallest change without speculative abstraction? |
 | Security | Auth, replay, retries, logging, secrets, file access, sync, `--dart-define` reviewed? |
 | Performance | Rebuild scope, repeated I/O, UI-isolate parsing, polling/listeners, allocations, scale checked? |
@@ -41,6 +43,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Breakage impact | What breaks first, how is it detected, and what is the recovery path? |
 | Tool output | Were empty/truncated/malformed tool results treated as failures to re-check, not proof? |
 | Tool choice | Did I use repo tools/MCP/browser/connector evidence when it owns the state, instead of guessing from prompt memory? |
+| Tool contract | Are tool inputs, side effects, retry safety, and failure modes explicit enough for future agents? |
 | Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat, with a runnable trigger and stable signal for runtime claims? |
 | Confidence | Confidence from proof; uncertainty stated? |
 | Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
@@ -103,6 +106,9 @@ UI/design changes:
 
 - Read root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before theme, typography, spacing, Mix tokens, `AppStyles`, or shared component visuals.
 - Runtime source wins: `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- Build real workflow/demo first; avoid marketing/landing pages unless required.
+- Prefer complete controls/states over explanatory in-app text.
+- Dynamic labels/counters/badges/icons must not resize or overlap layout.
 - If [`DESIGN.md`](../DESIGN.md) changes, run `./tool/check_design_md.sh`; if Mix styles/tokens change, run `./tool/run_mix_lint.sh` plus focused widget proof where practical.
 
 Async list builders:

@@ -19,13 +19,13 @@ Non-trivial: `agents-delivery-workflow`; delegation discipline: `agents-meta-beh
 
 Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`.
 
-Defaults: Plan -> Execute -> Verify -> Report; Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+Defaults: Plan -> Execute -> Verify -> Report; Goal / Context / Boundaries / Verification; Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 
 Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, and code graph are evidence sources; prompts alone are not proof.
+Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, and code graph are evidence sources; prompts alone are not proof; tool contracts name inputs, side effects, retry safety, and failure modes.
 Enforce: TDD when practical, linting, build verification, minimal edits, architecture preservation. Avoid: giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
 
-UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify real workflow, states, responsive no-overlap.
 
 multi-agent hub -> `agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
 

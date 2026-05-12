@@ -25,7 +25,7 @@ Hard gates:
 
 Plan checklist:
 
-- Goal + non-goals + success criteria.
+- Goal / Context / Boundaries / Verification.
+- Non-goals only when they prevent likely scope creep.
 - Write set (exact files).
-- Verification plan (which scripts/tests).
 - Rollback notes if risky.

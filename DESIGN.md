@@ -236,3 +236,9 @@ When generating or refactoring UI, keep these constraints in working memory:
 - **Spacing scale**: 6/8/12/16 for gaps; cards use 20px horizontal + 16px vertical.
 - **Shapes**: cards/inputs 16px; compact controls 8px; pills only for buttons/chips/badges.
 - **Color roles**: primary for “most important action”, error only for failure, success only for positive status.
+- **Workflow first**: open on the real workflow/demo surface; prioritize
+  scanning, comparison, repeated action, not marketing/hero composition.
+- **Complete states**: loading, empty, error, disabled, offline/sync, success.
+- **Responsive proof**: stable constraints for boards/rows/counters/icon
+  buttons; check mobile/desktop for clipped text, overlap, unusable taps, or
+  hidden primary content.

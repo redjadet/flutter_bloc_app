@@ -29,6 +29,7 @@ Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
 Non-trivial work: [`tasks/codex/todo.md`](../../../tasks/codex/todo.md) + context ladder + one observe/revise loop.
 Vague/risky details: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 
+- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
 - Self-check final response vs request, diff, proof, blockers, risk.
 - Prove result before calling work done.
 - File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)).
@@ -62,6 +63,6 @@ prose. "stop caveman" or "normal mode" disables this.
 
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
-- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
 - Widget tests use `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.

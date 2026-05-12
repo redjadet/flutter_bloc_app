@@ -12,6 +12,12 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 - Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
 - After host-template changes: sync apply, dry-run, drift check.
 - No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.
+- Some overlap between [`AGENTS.md`](../../AGENTS.md), quick-reference reminders,
+  and final contract is intentional. Do not merge them into one mega-doc just
+  to remove repetition.
+- User/global host hooks that force broad skill loading are outside this repo's
+  source of truth. Change them only on explicit ask; otherwise keep repo docs
+  aligned with open-only-needed context.
 
 ## Mechanical Enforcement
 

@@ -7,13 +7,12 @@ description: Non-trivial delivery start→finish, validation routing, meta/subag
 
 Canon: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agent_project_context.md`, `docs/agents_quick_reference.md`. Default: **Plan -> Execute -> Verify -> Report**. Triggers: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
 
-- **Plan:** non-trivial -> `tasks/cursor/todo.md`; context ladder uses `docs/agent_project_context.md` for packages/migrations/platform/perf caveats; delegation -> `agents-meta-behavior`.
-- **Plan:** do not edit until 95% confident; if vague/risky, define boundaries, data flow, failure handling, smallest proof.
-- **Plan:** one loop (`plan -> tool -> observe -> revise`); branch only when risk pays. High-risk architecture/debug => compare 2-3 candidate approaches with evidence, then choose one.
-- **Plan:** use repo tools, code graph, browser/app proof, and MCP/connectors when they own current state; prompts alone are not proof.
-- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
+- **Plan:** non-trivial -> `tasks/cursor/todo.md`; context ladder uses `docs/agent_project_context.md`; delegation -> `agents-meta-behavior`.
+- **Plan:** Goal / Context / Boundaries / Verification; exact steps only when path matters; no edits before 95% confident.
+- **Plan:** one observe/revise loop; branch only when risk pays; use repo tools/code graph/browser/MCP proof over memory.
+- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts/rewrites, context flooding, single-agent overload, unverified outputs.
 - **Execute:** reuse seams; keep `Presentation -> Domain <- Data`; update DI/routes/l10n/codegen when touched.
-- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use runtime source; prove real workflow, states, responsive no-overlap.
 - **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
 - **Verify:** `docs/ai_code_review_protocol.md`, smallest matching validation; empty/truncated tool output is not proof.
 - **Verify:** runtime proof -> `docs/agent_knowledge_base.md#agent-legibility`.
