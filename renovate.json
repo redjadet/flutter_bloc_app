@@ -123,6 +123,29 @@
       ],
       "automerge": true,
       "automergeType": "pr"
+    },
+    {
+      "description": "Hold Dart/analyzer toolchain until coordinated upgrade",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPackageNames": [
+        "dart",
+        "analysis_server_plugin",
+        "analyzer",
+        "analyzer_plugin"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Hold eslint v10 until eslint-plugin-import supports it",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchPackageNames": [
+        "eslint"
+      ],
+      "allowedVersions": "<10"
     }
   ],
   "vulnerabilityAlerts": {
