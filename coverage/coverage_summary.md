@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.63%** (19716/27147 lines)
+*Total line coverage*: **72.70%** (19751/27166 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -78,7 +78,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/widgets/chat_fastapi_cloud_badge.dart` | 7.14% | 1/14 |
 | `lib/features/case_study_demo/data/case_study_clip_file_store.dart` | 7.32% | 3/41 |
 | `lib/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart` | 7.69% | 1/13 |
-| `lib/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart` | 8.00% | 2/25 |
 | `lib/features/ai_decision_demo/data/ai_decision_models.dart` | 8.33% | 3/36 |
 | `lib/core/di/register_walletconnect_auth_services.dart` | 9.09% | 3/33 |
 | `lib/features/genui_demo/presentation/pages/genui_demo_page.dart` | 11.11% | 1/9 |
@@ -174,13 +173,12 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/walletconnect_auth/presentation/widgets/connect_wallet_button.dart` | 63.64% | 7/11 |
 | `lib/features/todo_list/presentation/pages/todo_list_page_handlers.dart` | 63.83% | 30/47 |
 | `lib/features/online_therapy_demo/presentation/pages/online_therapy_demo_therapist_appointments_page.dart` | 64.10% | 25/39 |
-| `lib/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart` | 64.58% | 31/48 |
 | `lib/features/chat/data/chat_render_orchestration_diagnostics.dart` | 64.71% | 11/17 |
 | `lib/features/deeplink/presentation/deep_link_listener.dart` | 64.71% | 11/17 |
 | `lib/features/todo_list/presentation/widgets/todo_list_view.dart` | 64.71% | 22/34 |
 | `lib/features/example/presentation/pages/example_page.dart` | 65.05% | 67/103 |
+| `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart` | 65.22% | 30/46 |
 | `lib/features/scapes/presentation/widgets/scapes_grid_view.dart` | 65.28% | 47/72 |
-| `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart` | 65.71% | 23/35 |
 | `lib/features/camera_gallery/data/image_picker_camera_gallery_repository.dart` | 65.85% | 54/82 |
 | `lib/app/router/app_route_auth_gate.dart` | 65.91% | 29/44 |
 | `lib/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart` | 65.91% | 58/88 |
@@ -204,6 +202,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/data/hive_counter_repository_helpers.dart` | 70.59% | 12/17 |
 | `lib/shared/utils/network_error_mapper_messages.dart` | 70.59% | 48/68 |
 | `lib/features/todo_list/presentation/widgets/todo_list_item_actions.dart` | 70.73% | 29/41 |
+| `lib/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart` | 71.15% | 37/52 |
 | `lib/features/case_study_demo/domain/case_study_question.dart` | 71.43% | 5/7 |
 | `lib/features/chart/data/delayed_chart_repository.dart` | 71.43% | 5/7 |
 | `lib/features/counter/presentation/counter_cubit_base.dart` | 71.43% | 65/91 |
@@ -286,6 +285,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/presentation/counter_cubit.dart` | 82.65% | 81/98 |
 | `lib/features/genui_demo/presentation/widgets/genui_demo_content.dart` | 82.72% | 67/81 |
 | `lib/features/counter/presentation/pages/counter_page.dart` | 82.76% | 96/116 |
+| `lib/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart` | 82.76% | 24/29 |
 | `lib/features/counter/presentation/widgets/counter_page_app_bar.dart` | 82.91% | 97/117 |
 | `lib/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart` | 82.93% | 34/41 |
 | `lib/features/remote_config/data/offline_first_remote_config_repository.dart` | 83.13% | 69/83 |
