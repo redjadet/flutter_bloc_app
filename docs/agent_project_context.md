@@ -12,11 +12,11 @@ contracts, known regressions, performance seams, and forbidden patterns.
 
 Also: avoid AI “almost-correct” trap loops; see [`agent_knowledge_base.md#ai-productivity-traps-and-how-this-repo-avoids-them`](agent_knowledge_base.md#ai-productivity-traps-and-how-this-repo-avoids-them).
 
-Ask: "What repo fact would not be in model training data?" Then open the
+Ask: "What repo fact would not be in model training data?" Then open
 owning source below.
 
 Official Flutter/Dart skills can help with generic mechanics, but this file
-adds repo-specific constraints on top. Use the narrowest skill for the task,
+adds repo-specific constraints on top. Use narrowest skill for task,
 then apply this repo's architecture, package, migration, and validation rules.
 
 ## High-Value Sources
@@ -50,23 +50,23 @@ then apply this repo's architecture, package, migration, and validation rules.
 - Mix/style changes use runtime source first (`AppTheme`, `buildAppMixScope`,
   `AppStyles`, `UI`) and `./tool/run_mix_lint.sh`; local `mix_lint` is pinned
   under `custom_lints/mix_lint` for analyzer 8 / custom_lint 0.8 compatibility.
-- UI work should start from the real workflow/demo surface, not a marketing
+- UI work should start from real workflow/demo surface, not marketing
   landing page. Check responsive stability, complete states, and no
   text/control overlap at mobile/tablet/desktop widths.
 - Hive stored-shape changes are manifest-driven; runtime `getBox()` can run
   `ensureSchema`, but schema changes still require spec, fingerprint,
   migrator, and tests.
 - Supabase schema changes: check `list_migrations`, then apply/document repo
-  migrations; do not assume remote state from local files alone.
-- `firebase_ui_auth` has a documented long-display-name overflow caveat; see
+  migrations; don't assume remote state from local files alone.
+- `firebase_ui_auth` has documented long-display-name overflow caveat; see
   [`firebase_ui_auth_overflow_fix.md`](firebase_ui_auth_overflow_fix.md).
 - Feature-scoped DI via `get_it_modular` is not in use; current `get_it` setup
   is global unless compatibility and lifecycle need justify change.
 
 ## Avoid
 
-- Restating broad Flutter best practices when a repo doc already owns the rule.
+- Restating broad Flutter best practices when repo doc already owns rule.
 - Adding package/dependency advice without checking `pubspec.lock`, owning docs,
   and current package APIs.
 - Hiding project caveats in chat, tracker-only notes, or host-only prompts.
-- Expanding root [`AGENTS.md`](../AGENTS.md) into a handbook; link this index instead.
+- Expanding root [`AGENTS.md`](../AGENTS.md) into handbook; link this index instead.
