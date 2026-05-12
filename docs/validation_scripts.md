@@ -60,7 +60,21 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
-- **`check_feature_modularity_leaks.sh`**: Fails on known cross-feature `package:` imports: `library_demo` must not import `scapes`; `settings` must not import `graphql_demo`, `profile`, or `remote_config`; **`remote_config` must not import `settings`** (use `shared` widgets like `SettingsSection` instead). Extend script when new boundary rules land in [modularity.md](modularity.md). Included in `./bin/checklist`.
+- **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
+  (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
+  `remote_config` / `settings`). **Universal failures:** `lib/shared/**` must not
+  import `package:flutter_bloc_app/features/`; `lib/features/*/domain/**` must not
+  `import` Flutter, `get_it`, Hive, Supabase, Dio, Retrofit, `app/`, `core/di/`, or
+  other features’ `presentation/` / `data/` paths (generated `*.g.dart` /
+  `*.freezed.dart` / `*.gr.dart` excluded). Without `rg`, domain pattern checks are
+  skipped (install ripgrep for full coverage). See [modularity.md](modularity.md).
+  Included in `./bin/checklist`.
+- **`modular_metrics.sh`**: Read-only modular baseline (per-feature LOC, barrels,
+  shared→feature probe, domain→app/di probe, fan-in heuristics, cross-feature import
+  report). Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
+- **`check_feature_barrel_exports.sh`**: **Report-only** (always exit 0). Summarizes
+  `lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
+  (barrel migration backlog). Not in `./bin/checklist` by default.
 - **`check_macos_debug_web_guard.sh`**: Ensures macOS debug-only fallbacks that check `defaultTargetPlatform == TargetPlatform.macOS` also include `!kIsWeb`, so Safari/Chrome on macOS do not inherit desktop-only debug behavior. Uses `rg` when available, falls back to `grep`.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
 - **`check_design_md.sh`**: Runs Google DesignMD lint for root
