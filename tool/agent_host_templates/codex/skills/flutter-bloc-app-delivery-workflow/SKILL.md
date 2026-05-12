@@ -1,43 +1,44 @@
 ---
 name: flutter-bloc-app-delivery-workflow
-description: Non-trivial delivery for Codex — planning, execution, validation, subagent rules, and completion evidence.
+description: Codex delivery loop; tracker path and validation picks are Codex-specific.
 ---
 
-# Flutter BLoC app delivery workflow
+# Flutter BLoC app delivery (Codex)
 
-Use at non-trivial start and before done.
+Shared loop: **Plan -> Execute -> Verify -> Report**. Canon links: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agent_project_context.md`, `docs/ai_code_review_protocol.md`, `docs/agents_quick_reference.md`.
 
-Default: **Plan -> Execute -> Verify -> Report**. Plan once. Ask only hard blockers. Trigger routing: `docs/agents_quick_reference.md#automatic-workflow-triggers`.
+## Context ladder and durable memory
 
-- **Plan:** `AGENTS.md` -> `docs/agent_knowledge_base.md`; context ladder uses `docs/agent_project_context.md`; tracker = `tasks/codex/todo.md`.
-- **Plan:** Goal / Context / Boundaries / Verification; exact steps only when path matters; no edits before 95% confident.
-- **Plan:** one observe/revise loop; branch only when risk pays; use repo tools/code graph/browser/MCP proof over memory.
-- **Plan:** enforce TDD when practical, linting, build verification, minimal edits, architecture preservation; avoid giant prompts/rewrites, context flooding, single-agent overload, unverified outputs.
-- **Execute:** reuse seams; keep `Presentation -> Domain <- Data`; update DI/routes/l10n/codegen when touched.
-- **Execute:** UI/design/Mix -> `DESIGN.md` + `docs/design_system.md`; use runtime source; prove real workflow, states, responsive no-overlap.
-- **Execute:** lifecycle -> `docs/REPOSITORY_LIFECYCLE.md` + `docs/reliability_error_handling_performance.md`.
-- **Execute:** File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-- **Verify:** `docs/ai_code_review_protocol.md`, smallest matching validation; empty/truncated tool output is not proof.
-- **Verify:** runtime proof -> `docs/agent_knowledge_base.md#agent-legibility`.
-- **Verify:** finish gate + Self-verify final response vs request, changed files, proof, blockers, residual risk.
-- **Report:** Report only after Verify. Surgical diff: each changed line traces to request or required validation/doc update.
+**context ladder:** map docs -> durable memory -> structural graph -> targeted raw-file reads. **File verified reusable conclusions** -> owning doc / `docs/changes/` / `docs/plans/` / `tasks/lessons.md`.
 
-Validation picks:
+## Design/UI
 
-- router / `AppRoutes` / gates / auth UI -> `./bin/router_feature_validate`
-- broad / pre-ship -> `./bin/checklist`
-- integration -> `./bin/integration_tests`
-- upgrades/tooling -> `./bin/upgrade_validate_all`
-- design brief -> `./tool/check_design_md.sh`; Mix token/style -> `./tool/run_mix_lint.sh`
-- agent docs -> targeted doc checks + `./tool/check_agent_knowledge_base.sh`; semantic-lint stale plans, duplicate rules, source/host-template contradictions
+Use `DESIGN.md` and `docs/design_system.md` before visual code.
 
-Codex rules:
+## Codex-only
+
+- Tracker: `tasks/codex/todo.md`.
+- Lifecycle/reliability: `docs/REPOSITORY_LIFECYCLE.md`, `docs/reliability_error_handling_performance.md`.
+
+- **Plan:** no edits before **95% confident**; one observe/revise loop; proof via tools/graph/browser/MCP.
+- **Verify:** **Self-verify final response** vs request, diff, proof, blockers, risk.
+- **Report:** **Report only after Verify.** **Surgical diff**: each changed line traces to request or required validation/doc update.
+
+## Validation picks
+
+- Router / gates / auth UI -> `./bin/router_feature_validate`
+- Broad / pre-ship -> `./bin/checklist`
+- Integration -> `./bin/integration_tests`
+- Upgrade lane -> `./bin/upgrade_validate_all`
+- Design brief -> `./tool/check_design_md.sh`; Mix -> `./tool/run_mix_lint.sh`
+- Agent docs -> `./tool/check_agent_knowledge_base.sh`
+
+## Codex rules
 
 - Call repo shell entrypoints directly.
-- Do not invoke `./tool/request_codex_feedback.sh` unless user explicitly asks second opinion/cross-host review.
-- Confidence from proof; state material uncertainty.
-- Host notes stay thin; repo canon wins.
+- Do not invoke `./tool/request_codex_feedback.sh` unless user asks cross-host second opinion.
+- Proof-first; state material uncertainty. Repo canon wins.
 
 ## Subagents
 
-Delegate only when it improves quality/speed/risk. Fewest agents, one goal each. Define scope/output/validation. Avoid multi-writer edits; default read-only. Don’t delegate current blocker. Subagent output = summary + verified artifacts, still draft; main agent integrates + validates. Repo canon wins.
+Fewest agents; one objective each; read-only default; avoid multi-writer; never delegate current blocker; output = summary + verified artifacts (draft until coordinator validates). Details: `agents-meta-behavior`, `docs/agent_knowledge_base.md#multi-agent-hub`.

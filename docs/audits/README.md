@@ -24,3 +24,4 @@ trend tracking, but they are **not** the day-to-day source of truth.
 - [`phase2_lifecycle_async_audit_2026-02-23.md`](phase2_lifecycle_async_audit_2026-02-23.md): lifecycle/async audit snapshot.
 - [`shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md): UI performance audit (shrinkwrap/slivers).
 - [`senior_quality_hotspots_2026-05-12.md`](senior_quality_hotspots_2026-05-12.md): hotspot churn + seed checks + classified findings (2026-05-12).
+- Cursor context / skill-size snapshots: generate dated `cursor_context_baseline_<date>.md` and `skill_inventory_<date>_ctxopt.json` / `skill_rank_<date>_ctxopt.json` here via `dart run tool/skill_inventory.dart` and `dart run tool/skill_rank.dart`. New files under `docs/audits/` are usually **local-only** (gitignored); publish metrics in [`docs/changes/`](../changes/) when committing (e.g. [`2026-05-12_cursor_context_baseline_and_trim.md`](../changes/2026-05-12_cursor_context_baseline_and_trim.md)).
