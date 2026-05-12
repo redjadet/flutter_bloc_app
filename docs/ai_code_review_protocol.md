@@ -100,7 +100,7 @@ Widget-test viewport:
 
 - Use `tester.view.physicalSize` / `tester.view.devicePixelRatio`.
 - Reset with `tester.view.resetPhysicalSize()` / `tester.view.resetDevicePixelRatio()`.
-- Do not use deprecated `tester.binding.window` or `TestWidgetsFlutterBinding.window` test-value APIs.
+- Don't use deprecated `tester.binding.window` or `TestWidgetsFlutterBinding.window` test-value APIs.
 
 UI/design changes:
 

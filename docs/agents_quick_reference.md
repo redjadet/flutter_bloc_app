@@ -35,7 +35,7 @@ Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSc
 
 ## Automatic Workflow Triggers
 
-Repo docs/scripts define behavior; external catalogs do not.
+Repo docs/scripts define behavior; external catalogs don't.
 
 | Trigger | Cursor | Codex |
 | --- | --- | --- |

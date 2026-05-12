@@ -25,9 +25,9 @@ Repo guardrails:
 
 - **AI output not default implementation**: treat as draft; prefer smallest coherent change inside existing seams (Clean Architecture, Cubit/BLoC, DI, GoRouter).
 - **Stop re-prompt loops**: if 2 cycles of “almost right” appear, stop generating. Switch to evidence: read owning code/docs, implement manually, add missing fixture/test/script.
-- **Prefer micro-edits over rewrites**: patch the exact failing line(s) instead of regenerating whole files/widgets.
+- **Prefer micro-edits over rewrites**: patch exact failing line(s) instead of regenerating whole files/widgets.
 - **Early proof beats late polish**: run narrowest honest validation lane early (see [`agents_quick_reference.md`](agents_quick_reference.md)). Catch subtle issues before they spread.
-- **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is a net loss; align first, then iterate.
+- **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is net loss; align first, then iterate.
 
 ## Progressive Disclosure
 
@@ -64,7 +64,7 @@ Agent-facing guidance stays short, stable, outcome-first.
 - Stable doctrine first, task context last.
 - Prefer success criteria, evidence, side effects, stop/report contract over long process scripts.
 - Exact order only for safety, validation, migrations, codegen, destructive work, or repo-required workflows.
-- Delete stale, duplicate, or nonessential instructions once a script/test/doc owns the invariant.
+- Delete stale, duplicate, or nonessential instructions once script/test/doc owns invariant.
 - Add date/timezone only for task policy, user locale, or time-sensitive evidence.
 
 ## Agent Legibility
@@ -73,7 +73,7 @@ Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish
 
 ## Missing Capability Loop
 
-Do not answer repeated failure with bigger prompt.
+don't answer repeated failure with bigger prompt.
 
 1. Identify missing capability: context, tool, fixture, test, script, ownership boundary, acceptance criterion.
 2. Add smallest durable repo capability.
@@ -120,7 +120,7 @@ Details moved to keep this file small. See:
 
 - [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system-of-record table, multi-agent hub mechanics, invariants, host notes)
 
-Required anchors (kept here for agent checks; details in the linked doc):
+Required anchors (kept here for agent checks; details in linked doc):
 
 - **Plans As Artifacts** (see details)
 - **Invariant Enforcement** (see details)
@@ -173,13 +173,13 @@ New durable agent rule: update owning source doc first, then thin host templates
 
 Keep [`AGENTS.md`](../AGENTS.md) lean map; put behavioral detail here.
 
-- Fix failures in **product code/DI/config** first; do not “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
-- Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when a proper fix fits.
-- After meaningful workflow/policy shifts, update agent-facing docs referenced from the map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
+- Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
+- Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
+- After meaningful workflow/policy shifts, update agent-facing docs referenced from map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
 
 Repo fact:
 
-- `./bin/checklist-fast` runs a report-only skill-budget pass when a skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`.
+- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`.
 
 ## Doc Gardening
 
