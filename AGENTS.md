@@ -28,7 +28,8 @@ Offline-first sync: `lib/shared/sync/`.
 Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
 (credentials/tooling, unsafe ambiguity below 95% confident, user-owned choice).
 Non-trivial work: tracker + context ladder + one observe/revise loop.
-Finish gate: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
+Outcome: Goal / Context / Boundaries / Verification. Finish gate:
+[`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 
 ## Map
 
@@ -52,7 +53,7 @@ Finish gate: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
-- UI/design work reads `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
 - Widget tests use `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md).

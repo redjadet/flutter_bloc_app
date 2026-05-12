@@ -46,6 +46,9 @@ subsections (so the linter doesn’t treat it as a new section).
 - Use `Theme.of(context).colorScheme` and theme-derived text styles; avoid hardcoded colors and per-widget `GoogleFonts.*`.
 - For new styling, prefer Mix `Style` and tokens from `app_styles.dart` / `mix_app_theme.dart` where practical.
 - Use `context.responsiveHeadlineSize` / `TitleSize` / `BodySize` and `PlatformAdaptive.*` for UI.
+- Build actual workflow/demo first; avoid landing/marketing screens unless asked.
+- Match app density: quiet controls, scannable state, predictable nav, complete states.
+- Keep cards un-nested and controls stable; dynamic text/icons/badges/counters must not resize, overlap, or hide primary content.
 - Validate the visual brief with `./tool/check_design_md.sh` after editing
   root [`DESIGN.md`](../DESIGN.md). This wrapper is intentionally not part of default
   checklist until the CLI is pinned locally.

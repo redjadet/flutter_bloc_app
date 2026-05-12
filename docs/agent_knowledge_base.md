@@ -15,6 +15,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
+| Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
 
 ## AI Productivity Traps (And How This Repo Avoids Them)
 
@@ -25,7 +26,7 @@ Repo guardrails:
 - **AI output not default implementation**: treat as draft; prefer smallest coherent change inside existing seams (Clean Architecture, Cubit/BLoC, DI, GoRouter).
 - **Stop re-prompt loops**: if 2 cycles of “almost right” appear, stop generating. Switch to evidence: read owning code/docs, implement manually, add missing fixture/test/script.
 - **Prefer micro-edits over rewrites**: patch the exact failing line(s) instead of regenerating whole files/widgets.
-- **Early proof beats late polish**: run narrowest honest validation lane early (see `agents_quick_reference.md`). Catch subtle issues before they spread.
+- **Early proof beats late polish**: run narrowest honest validation lane early (see [`agents_quick_reference.md`](agents_quick_reference.md)). Catch subtle issues before they spread.
 - **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is a net loss; align first, then iterate.
 
 ## Progressive Disclosure
@@ -54,6 +55,17 @@ Required anchors (kept here for mechanical checks):
 ## Tool Orchestration
 
 Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md)
+
+## Prompt Hygiene
+
+Agent-facing guidance stays short, stable, outcome-first.
+
+- Use `Goal / Context / Boundaries / Verification`; context = task-relevant repo facts only.
+- Stable doctrine first, task context last.
+- Prefer success criteria, evidence, side effects, stop/report contract over long process scripts.
+- Exact order only for safety, validation, migrations, codegen, destructive work, or repo-required workflows.
+- Delete stale, duplicate, or nonessential instructions once a script/test/doc owns the invariant.
+- Add date/timezone only for task policy, user locale, or time-sensitive evidence.
 
 ## Agent Legibility
 

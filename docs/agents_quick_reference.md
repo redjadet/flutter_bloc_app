@@ -16,9 +16,9 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
 | Large refactor with graph installed | `./tool/refresh_code_review_graph.sh` |
 | Cold start map | `bash tool/agent_session_bootstrap.sh` |
-| Agent doc compression | `./tool/compress_agent_doc.sh PATH` (`--overwrite-backups` if needed) |
+| Agent doc compression | `./tool/compress_agent_doc.sh PATH` only on explicit redundant targets; avoid anchor blocks until checks are updated |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
-| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh` if brief changed |
+| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); run `./tool/check_design_md.sh` if brief changed |
 | Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
 | Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
@@ -58,6 +58,7 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 
 - Closed-loop: plan once, execute end-to-end, verify, report proof.
 - Ask only hard blockers: credentials/tooling, unsafe ambiguity **below 95%**, user-owned decision.
+- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
 - Proof-first: repo scripts/tests/runtime/MCP own truth; prompts alone not proof; empty tool output not proof.
 - Scope discipline: smallest reversible diff; run narrowest honest validation lane.
@@ -65,7 +66,7 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 - Repeated failure => add repo capability (doc/test/fixture/script/route proof/log helper).
 - Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
 - Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
-- UI/design: read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer runtime source (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`).
+- UI/design: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first; build real workflow first; verify states, responsive stability, no overlap.
 
 ## Multi-Agent Hub
 

@@ -50,6 +50,9 @@ then apply this repo's architecture, package, migration, and validation rules.
 - Mix/style changes use runtime source first (`AppTheme`, `buildAppMixScope`,
   `AppStyles`, `UI`) and `./tool/run_mix_lint.sh`; local `mix_lint` is pinned
   under `custom_lints/mix_lint` for analyzer 8 / custom_lint 0.8 compatibility.
+- UI work should start from the real workflow/demo surface, not a marketing
+  landing page. Check responsive stability, complete states, and no
+  text/control overlap at mobile/tablet/desktop widths.
 - Hive stored-shape changes are manifest-driven; runtime `getBox()` can run
   `ensureSchema`, but schema changes still require spec, fingerprint,
   migrator, and tests.

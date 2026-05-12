@@ -14,10 +14,11 @@ alwaysApply: false
 # Design system
 
 - Before visual code, read `DESIGN.md` and `docs/design_system.md`.
-- Runtime source wins for Flutter values: `AppTheme`, `buildAppMixScope`,
-  `AppStyles`, and `UI`.
-- Avoid ad-hoc colors, spacing, typography, radii, or component states when
-  shared tokens/styles cover the need.
+- Runtime source wins: `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
+- Avoid ad-hoc colors, spacing, typography, radii, component states when shared tokens/styles fit.
+- Build real workflow/demo first; avoid landing/marketing pages unless required.
+- Verify states: loading, empty, error, disabled, offline/sync, success.
+- Check mobile/tablet/desktop for clipped text, overlap, unstable controls, hidden primary content.
 - If `DESIGN.md` changed, run `./tool/check_design_md.sh`.
 - If Mix tokens/styles changed, run `./tool/run_mix_lint.sh` plus focused
   widget/app-visible proof where practical.

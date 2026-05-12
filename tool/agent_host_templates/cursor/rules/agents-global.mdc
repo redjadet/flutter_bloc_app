@@ -12,16 +12,17 @@ alwaysApply: false
 ## Execution
 
 - Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
+- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
 - If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
 - Single loop: plan -> tool -> observe -> revise; keep task state inspectable.
 - Empty/truncated/malformed tool output is not proof.
 - Proof-first: confidence from smallest honest repo entrypoint.
-- Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors,
-  and code graph are evidence sources; prompts alone are not proof.
+- Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, code graph; prompts alone are not proof.
+- Tool contracts name inputs, side effects, retry safety, and failure modes.
 - Enforce: minimal reversible diff; narrowest honest validation; preserve seams.
 - Avoid: giant prompts/rewrites, context flooding, unverified outputs.
-- UI/design work: read `DESIGN.md` + `docs/design_system.md`; use
-  `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` before ad-hoc styling.
+- If deleting an instruction would not reduce quality or safety, delete it.
+- UI/design: read `DESIGN.md` + `docs/design_system.md`; use runtime source before ad-hoc styling; verify real workflow, states, responsive no-overlap.
 
 ## Context budget
 

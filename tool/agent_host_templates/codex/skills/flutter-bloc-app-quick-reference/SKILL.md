@@ -19,12 +19,12 @@ Non-trivial delivery: **`flutter-bloc-app-delivery-workflow`**.
 
 Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`; GoRouter; offline-first sync in `lib/shared/sync/`.
 
-Fast rules: Plan -> Execute -> Verify -> Report; non-trivial -> `tasks/codex/todo.md`; context ladder -> map docs, durable memory, code-review-graph, targeted raw files.
+Fast rules: Plan -> Execute -> Verify -> Report; Goal / Context / Boundaries / Verification; non-trivial -> `tasks/codex/todo.md`; context ladder -> map docs, durable memory, code-review-graph, targeted raw files.
 reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, and code graph are evidence sources; prompts alone are not proof.
+Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, and code graph are evidence sources; prompts alone are not proof; tool contracts name inputs, side effects, retry safety, and failure modes.
 Enforce: TDD when practical, linting, build verification, minimal edits, architecture preservation. Avoid: giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
 
-UI/design/theme/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`). Widget tests use `WidgetTester.view`.
+UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify real workflow, states, responsive no-overlap. Widget tests use `WidgetTester.view`.
 
 Validation picks:
 
