@@ -58,6 +58,10 @@ Notes:
   repo rules, add a repo-owned shadow shim through `tool/agent_host_templates/`
   instead of editing host copies by hand.
 
+## Cursor indexing (context load)
+
+Local `.cursorignore` excludes Flutter tooling noise (`.dart_tool/`, `build/`, `coverage/`, etc.) from Cursor indexing; it is machine-local and gitignored. Prefer a **small MCP set** for daily work (see "Enable useful MCP/connectors"); widen only for infra/deploy tasks. Skill/token budgets: `./bin/checklist-fast` resolves the newest `docs/audits/skill_inventory_*.json` and runs `tool/check_skill_budgets.sh` (report-only).
+
 ## Per Session
 
 Print the canon + validation pointers:

@@ -915,6 +915,14 @@ Enforce budgets (exit non-zero on breach):
 SKILL_BUDGET_REPO_TOKENS=12000 bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json enforce
 ```
 
+Rank skills after inventory (proxy score for “what to shrink next”):
+
+```bash
+dart run tool/skill_rank.dart docs/audits/skill_inventory_<yyyy-mm-dd>_ctxopt.json docs/audits/skill_rank_<yyyy-mm-dd>_ctxopt.json
+```
+
+`./bin/checklist-fast` resolves the newest dated `docs/audits/skill_inventory_*.json` when `skill_inventory_latest.json` is missing.
+
 - auto-skips `flutter analyze` on local change sets with no Dart/analyzer-relevant files; CI and Dart/config/l10n changes still run it
 - auto-skips Pyright Python lane on local non-Python change sets; CI and standalone `tool/check_pyright_python.sh` runs still execute it
 - auto-skips offline-first remote-merge regression lane on local non-offline-first change sets; CI and standalone `tool/check_offline_first_remote_merge.sh` runs still execute it

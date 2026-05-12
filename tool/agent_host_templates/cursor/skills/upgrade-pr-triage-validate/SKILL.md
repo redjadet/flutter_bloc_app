@@ -11,10 +11,8 @@ allowed-tools:
   - ApplyPatch
   - AskQuestion
 when_to_use: >
-  Use when you want to run the repo's full upgrade lane but first keep main clean by
-  processing open, non-draft PRs targeting main. Triggers: "/upgrade-validate-all",
-  "upgrade validate all", "run upgrade lane", "triage PRs then upgrade",
-  "merge open renovate PRs then run validation".
+  Main cleanup + upgrade lane. Triggers: "/upgrade-validate-all", "upgrade validate all",
+  "run upgrade lane", "triage PRs then upgrade", "merge open renovate PRs then run validation".
 argument-hint: "[$base_branch=main] [$fix_rounds=3]"
 arguments:
   - base_branch
@@ -24,68 +22,24 @@ context: inline
 
 # Upgrade PR triage + validate
 
-Keep `$base_branch` clean, then run `./bin/upgrade_validate_all` on a new branch.
-Land generated artifacts via PR when CI green.
+Keep `$base_branch` clean, run `./bin/upgrade_validate_all` on a fresh branch, land artifacts via PR when CI green.
 
-Canon first:
+**Canon:** `AGENTS.md`, `docs/agents_quick_reference.md`, `docs/engineering/validation_routing_fast_vs_full.md`
 
-- `AGENTS.md`
-- `docs/agents_quick_reference.md`
-- `docs/engineering/validation_routing_fast_vs_full.md`
+**Inputs:** `$base_branch` (default `main`), `$fix_rounds` (default `3`, integer >=0).
 
-Inputs:
+**Gates:** no stash/clean/reset; no force-push to `$base_branch`; worktree clean unless user opted in; no unmerged paths; if PR value ambiguous leave open; validate inputs; on failure print blocker + next action.
 
-- `$base_branch` (default `main`)
-- `$fix_rounds` (default `3`)
+## Steps
 
-Hard gates:
+1. **Preflight:** `test -x ./bin/upgrade_validate_all`; `gh auth status`; `git fetch origin "$base_branch"`; `git status --porcelain` empty; `git diff --name-only --diff-filter=U` empty.
 
-- No destructive git actions (no stash/clean/reset).
-- No branch-protection bypass, no force-push to `$base_branch`.
-- If PR value ambiguous: leave open and report blocker.
-- Stop if unmerged paths or dirty worktree (unless user explicitly says to include local changes).
-- Validate inputs: `$base_branch` non-empty; `$fix_rounds` integer \(>= 0\).
-- On any gate failure: stop and print blocker + next action.
+2. **Triage PRs:** `gh pr list --state open --draft=false --base "$base_branch" --limit 200`. Per PR: `gh pr view` (mergeable, checks, draft); `gh pr checks`; if mergeable unknown wait/re-query; ready -> `gh pr merge --squash --delete-branch`; not beneficial -> `gh pr close` with reason; failing -> max `$fix_rounds` fix loops then merge or stop.
 
-## Workflow (compressed)
-
-1) Preflight
-
-- `test -x ./bin/upgrade_validate_all`
-- `gh auth status`
-- `git fetch origin "$base_branch"`
-- `git status --porcelain` (must be empty unless user opted in)
-- `git diff --name-only --diff-filter=U` (must be empty; unmerged paths)
-
-1) Triage open non-draft PRs targeting `$base_branch`
-
-- List: `gh pr list --state open --draft=false --base "$base_branch" --limit 200`
-- For each PR: `gh pr view <PR> --json mergeable,reviewDecision,statusCheckRollup,url,title,headRefName,isDraft`
-- For each PR: `gh pr checks <PR>` (if pending/failed, wait or fix; do not merge)
-- If `mergeable` is `UNKNOWN`, wait/re-query; do not merge on unknown.
-- Ready → `gh pr merge <PR> --squash --delete-branch`
-- Not beneficial → `gh pr close <PR> --comment "Closing because: <brief reason>."`
-- Beneficial but failing → bounded fix loop (≤ `$fix_rounds`), then merge or report blocker
-
-1) Run upgrade lane on a working branch
-
-```bash
-git switch "$base_branch" && git pull --ff-only
-git switch -c "chore/upgrade-validate-all-$(date +%Y%m%d-%H%M%S)"
-flutter pub upgrade --major-versions
-SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all
-```
-
-Optional (avoid mutating managed agent assets during lane):
+3. **Upgrade lane:** `git switch "$base_branch" && git pull --ff-only` -> `git switch -c "chore/upgrade-validate-all-$(date +%Y%m%d-%H%M%S)"` -> `flutter pub upgrade --major-versions` -> `SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all`. Optional (avoid mutating managed agent assets mid-lane):
 
 ```bash
 SKIP_PUB_UPGRADE=1 SYNC_AGENT_ASSETS=skip ./bin/upgrade_validate_all
 ```
 
-1) Land generated changes (if any)
-
-- Inspect: `git status`, `git diff`
-- Stage cohesive artifacts only; never secrets.
-- Commit: `chore(upgrade): refresh generated artifacts`
-- `git push -u origin HEAD`
-- `gh pr create` then `gh pr checks --watch` then `gh pr merge --squash --delete-branch`
+1. **Land changes:** if diff exists: inspect `git status`/`git diff`; stage artifacts only; commit `chore(upgrade): refresh generated artifacts`; push; `gh pr create`; `gh pr checks --watch`; merge when green.
