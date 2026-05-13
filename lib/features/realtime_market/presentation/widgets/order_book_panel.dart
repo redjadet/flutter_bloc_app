@@ -24,7 +24,9 @@ class OrderBookPanel extends StatelessWidget {
     if (rows.isEmpty) {
       return 1;
     }
-    return rows.map((final e) => e.quantity).reduce((final a, final b) => a > b ? a : b);
+    return rows
+        .map((final e) => e.quantity)
+        .reduce((final a, final b) => a > b ? a : b);
   }
 
   @override
@@ -84,8 +86,11 @@ class OrderBookPanel extends StatelessWidget {
               itemCount: rows.length,
               itemBuilder: (final _, final i) {
                 final OrderBookLevel r = rows[i];
-                final double depth = maxQty > 0 ? (r.quantity / maxQty).clamp(0.0, 1.0) : 0.0;
+                final double depth = maxQty > 0
+                    ? (r.quantity / maxQty).clamp(0.0, 1.0)
+                    : 0.0;
                 return Padding(
+                  key: ValueKey<String>('order_book_${r.side.name}_${r.price}'),
                   padding: EdgeInsets.symmetric(
                     vertical: context.responsiveGapXS / 2,
                   ),
