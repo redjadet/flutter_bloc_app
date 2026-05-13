@@ -87,13 +87,9 @@ Deno.serve(async (req: Request) => {
     }));
     return jsonResponse({ points, synced: rows.length });
   } catch (e) {
-    // Supabase PostgrestError is a plain object - extract .message for readable response
-    const message =
-      e instanceof Error
-        ? e.message
-        : typeof (e as { message?: string })?.message === "string"
-          ? (e as { message: string }).message
-          : String(e);
-    return jsonResponse({ error: message }, 502);
+    // Log full error server-side; return generic message to avoid exposing
+    // stack traces or internal details to clients (CodeQL js/stack-trace-exposure).
+    console.error("sync-chart-trending failed", e);
+    return jsonResponse({ error: "Sync failed" }, 502);
   }
 });
