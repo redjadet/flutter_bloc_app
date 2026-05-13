@@ -45,10 +45,12 @@ class FirebaseBootstrapService {
         return false;
       }
 
-      if (_usesPlaceholderValues(options)) {
+      final missingConfigFields = _missingFirebaseRequiredConfigFields(options);
+      if (missingConfigFields.isNotEmpty) {
         AppLogger.info(
-          'Firebase init skipped: lib/firebase_options.dart has placeholder '
-          'values. Run `flutterfire configure` to generate real config, or see '
+          'Firebase init skipped: missing Firebase config fields '
+          '(${missingConfigFields.join(', ')}). Run `flutterfire configure`, '
+          'or provide FIREBASE_* values through local direnv; see '
           'docs/firebase_setup.md.',
         );
         return false;
@@ -84,6 +86,13 @@ class FirebaseBootstrapService {
 
   /// Configure Firebase UI Auth providers
   static void configureFirebaseUI() {
+    if (!isFirebaseInitialized) {
+      AppLogger.info(
+        'Firebase UI Auth configuration skipped: Firebase is not initialized.',
+      );
+      return;
+    }
+
     final providers = <AuthProvider>[EmailAuthProvider()];
 
     final googleProvider = _createGoogleProvider();

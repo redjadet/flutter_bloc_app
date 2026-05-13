@@ -1226,6 +1226,7 @@ CHECK_SCRIPTS=(
   "tool/check_macos_debug_web_guard.sh"
   "tool/check_agent_knowledge_base.sh"
   "tool/check_agent_memory_compounding.sh"
+  "tool/check_tracked_secret_literals.sh"
   "tool/check_ai_generated_code_smells.sh"
   "tool/check_pyright_python.sh"
 )

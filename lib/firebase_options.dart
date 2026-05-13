@@ -40,38 +40,84 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'REDACTED_GOOGLE_API_KEY',
-    appId: '1:473097776453:android:80db6a1c2b04bfc0bd222c',
-    messagingSenderId: '473097776453',
-    projectId: 'flutter-bloc-app-697e8',
-    databaseURL:
-        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
+    apiKey: String.fromEnvironment(
+      'FIREBASE_ANDROID_API_KEY',
+      defaultValue: 'YOUR_ANDROID_API_KEY',
+    ),
+    appId: String.fromEnvironment(
+      'FIREBASE_ANDROID_APP_ID',
+      defaultValue: '1:000000000000:android:placeholder',
+    ),
+    messagingSenderId: String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+      defaultValue: '000000000000',
+    ),
+    projectId: String.fromEnvironment(
+      'FIREBASE_PROJECT_ID',
+      defaultValue: 'your-project-id',
+    ),
+    databaseURL: String.fromEnvironment('FIREBASE_DATABASE_URL'),
+    storageBucket: String.fromEnvironment(
+      'FIREBASE_STORAGE_BUCKET',
+      defaultValue: 'your-project-id.appspot.com',
+    ),
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'REDACTED_GOOGLE_API_KEY',
-    appId: '1:473097776453:ios:6962f6ddc4d7ea12bd222c',
-    messagingSenderId: '473097776453',
-    projectId: 'flutter-bloc-app-697e8',
-    databaseURL:
-        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
-    iosClientId:
-        '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
-    iosBundleId: 'com.example.flutterBlocApp',
+    apiKey: String.fromEnvironment(
+      'FIREBASE_IOS_API_KEY',
+      defaultValue: 'YOUR_IOS_API_KEY',
+    ),
+    appId: String.fromEnvironment(
+      'FIREBASE_IOS_APP_ID',
+      defaultValue: '1:000000000000:ios:placeholder',
+    ),
+    messagingSenderId: String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+      defaultValue: '000000000000',
+    ),
+    projectId: String.fromEnvironment(
+      'FIREBASE_PROJECT_ID',
+      defaultValue: 'your-project-id',
+    ),
+    databaseURL: String.fromEnvironment('FIREBASE_DATABASE_URL'),
+    storageBucket: String.fromEnvironment(
+      'FIREBASE_STORAGE_BUCKET',
+      defaultValue: 'your-project-id.appspot.com',
+    ),
+    iosClientId: String.fromEnvironment('FIREBASE_IOS_CLIENT_ID'),
+    iosBundleId: String.fromEnvironment(
+      'FIREBASE_IOS_BUNDLE_ID',
+      defaultValue: 'com.example.flutterBlocApp',
+    ),
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'REDACTED_GOOGLE_API_KEY',
-    appId: '1:473097776453:ios:6962f6ddc4d7ea12bd222c',
-    messagingSenderId: '473097776453',
-    projectId: 'flutter-bloc-app-697e8',
-    databaseURL:
-        'https://flutter-bloc-app-697e8-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutter-bloc-app-697e8.firebasestorage.app',
-    iosClientId:
-        '473097776453-eml27tsnmpj6tj5g1ipl8ec7g0ttd5iu.apps.googleusercontent.com',
-    iosBundleId: 'com.example.flutterBlocApp',
+    apiKey: String.fromEnvironment(
+      'FIREBASE_MACOS_API_KEY',
+      defaultValue: 'YOUR_MACOS_API_KEY',
+    ),
+    appId: String.fromEnvironment(
+      'FIREBASE_MACOS_APP_ID',
+      defaultValue: '1:000000000000:ios:placeholder',
+    ),
+    messagingSenderId: String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+      defaultValue: '000000000000',
+    ),
+    projectId: String.fromEnvironment(
+      'FIREBASE_PROJECT_ID',
+      defaultValue: 'your-project-id',
+    ),
+    databaseURL: String.fromEnvironment('FIREBASE_DATABASE_URL'),
+    storageBucket: String.fromEnvironment(
+      'FIREBASE_STORAGE_BUCKET',
+      defaultValue: 'your-project-id.appspot.com',
+    ),
+    iosClientId: String.fromEnvironment('FIREBASE_MACOS_CLIENT_ID'),
+    iosBundleId: String.fromEnvironment(
+      'FIREBASE_MACOS_BUNDLE_ID',
+      defaultValue: 'com.example.flutterBlocApp',
+    ),
   );
 }

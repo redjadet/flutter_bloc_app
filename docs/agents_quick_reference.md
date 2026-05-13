@@ -24,6 +24,8 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
+| IDE-open local env preflight | `.vscode/tasks.json` runs `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
+| Tracked secret literals | `./tool/check_tracked_secret_literals.sh` |
 | AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
 | Cross-host review (explicit only) | `./tool/request_codex_feedback.sh` |
 | Cross-host plan review | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |

@@ -25,22 +25,18 @@ void main() {
       await expectLater(_tryInitializeFirebase(), completes);
     });
 
-    test('configureFirebaseUI requires Firebase initialization first', () async {
-      // Firebase UI configuration requires Firebase to be initialized first
-      // In test environment, Firebase may not initialize, so we handle gracefully
+    test('configureFirebaseUI is a no-op when Firebase is missing', () async {
       final bool firebaseInitialized = await _tryInitializeFirebase();
 
       if (firebaseInitialized) {
-        // Only test if Firebase was successfully initialized
         expect(
           () => FirebaseBootstrapService.configureFirebaseUI(),
           returnsNormally,
         );
       } else {
-        // In test environment without Firebase config, expect exception
         expect(
           () => FirebaseBootstrapService.configureFirebaseUI(),
-          throwsException,
+          returnsNormally,
         );
       }
     });
@@ -72,10 +68,9 @@ void main() {
         // Should not throw
         expect(true, isTrue);
       } else {
-        // In test environment without Firebase, expect exception on first call
         expect(
           () => FirebaseBootstrapService.configureFirebaseUI(),
-          throwsException,
+          returnsNormally,
         );
       }
     });
@@ -100,14 +95,12 @@ void main() {
         // Only configure UI if Firebase was initialized
         FirebaseBootstrapService.configureFirebaseUI();
       } else {
-        // In test environment without Firebase, expect exception
         expect(
           () => FirebaseBootstrapService.configureFirebaseUI(),
-          throwsException,
+          returnsNormally,
         );
       }
 
-      // Should complete without throwing (except for expected configureFirebaseUI exception)
       expect(true, isTrue);
     });
   });

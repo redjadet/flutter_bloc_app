@@ -34,6 +34,25 @@ Then you can run `flutter run` without typing `--dart-define` flags manually.
 # export SUPABASE_URL="https://YOUR_PROJECT.supabase.co"
 # export SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 
+# Optional: Firebase local development config.
+# Committed Firebase files stay placeholders so secret scanning stays clean.
+# `tool/flutter_dart_defines_from_env.sh` forwards these into
+# `lib/firebase_options.dart` via --dart-define.
+# export FIREBASE_PROJECT_ID="your-project-id"
+# export FIREBASE_MESSAGING_SENDER_ID="000000000000"
+# export FIREBASE_DATABASE_URL="https://your-project-id-default-rtdb.region.firebasedatabase.app"
+# export FIREBASE_STORAGE_BUCKET="your-project-id.appspot.com"
+# export FIREBASE_ANDROID_API_KEY="YOUR_ANDROID_API_KEY"
+# export FIREBASE_ANDROID_APP_ID="1:000000000000:android:placeholder"
+# export FIREBASE_IOS_API_KEY="YOUR_IOS_API_KEY"
+# export FIREBASE_IOS_APP_ID="1:000000000000:ios:placeholder"
+# export FIREBASE_IOS_CLIENT_ID="000000000000-example.apps.googleusercontent.com"
+# export FIREBASE_IOS_BUNDLE_ID="com.example.flutterBlocApp"
+# export FIREBASE_MACOS_API_KEY="YOUR_MACOS_API_KEY"
+# export FIREBASE_MACOS_APP_ID="1:000000000000:ios:placeholder"
+# export FIREBASE_MACOS_CLIENT_ID="000000000000-example.apps.googleusercontent.com"
+# export FIREBASE_MACOS_BUNDLE_ID="com.example.flutterBlocApp"
+
 # Optional
 # export GEMINI_API_KEY="..."
 # export GOOGLE_MAPS_API_KEY="..."
