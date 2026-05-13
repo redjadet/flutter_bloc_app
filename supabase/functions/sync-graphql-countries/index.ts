@@ -226,7 +226,9 @@ Deno.serve(async (req: Request) => {
       synced_countries: countriesRows.length,
     });
   } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    return jsonResponse({ error: message }, 502);
+    // Log full error server-side; return generic message to avoid exposing
+    // stack traces or internal details to clients (CodeQL js/stack-trace-exposure).
+    console.error("sync-graphql-countries failed", e);
+    return jsonResponse({ error: "Sync failed" }, 502);
   }
 });
