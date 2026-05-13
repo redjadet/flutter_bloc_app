@@ -6,7 +6,7 @@ Point-in-time inventory of **cross-feature** dependencies that are good candidat
 
 | From | To | Observation |
 | ---- | -- | ----------- |
-| `chat` | `remote_config` | `render_orchestration_hf_token_provider.dart` reads remote config repositories/services. Candidate: narrow `RemoteConfigStringPort` or reuse `RemoteConfigService` from domain if already abstracted in core. |
+| ~~`chat`~~ | ~~`remote_config`~~ | **Resolved.** `lib/core/chat/render_orchestration_remote_token_port.dart` (`RenderOrchestrationRemoteTokenPort`) is implemented by `lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and wired in `register_remote_config_services.dart`. `lib/features/chat/data/render_orchestration_hf_token_provider.dart` no longer imports `package:flutter_bloc_app/features/remote_config/...`. |
 | `case_study_demo` | `camera_gallery` | Domain/data import shared camera result types. Candidate: move DTOs/error keys to `shared/` or `core` if reused by multiple features. |
 | `case_study_demo` | `supabase_auth` | Auth repository type in presentation. Candidate: depend on `SupabaseAuthRepository` interface re-exported from `core` (if not already). |
 | `injector_registrations` | `chart`, `iot_demo`, many features | Expected at composition root; not a leak. |
@@ -18,5 +18,5 @@ Cross-feature UI imports are listed by `bash tool/modular_metrics.sh --cross-fea
 ## Next actions (prioritized)
 
 1. Classify each `--cross-feature-only` row: move to app, shared DTO, or core port (document owner in `docs/modularity.md` Phase 1B table when promoting default-deny).
-2. Start with **chat → remote_config** if orchestration token path grows further.
-3. No code changes in this sweep doc-only pass.
+2. ~~Start with **chat → remote_config** if orchestration token path grows further.~~ **Done** — see `RenderOrchestrationRemoteTokenPort` (`lib/core/chat/`).
+3. Next candidate: `case_study_demo → camera_gallery` shared DTO move.
