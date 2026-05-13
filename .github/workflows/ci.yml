@@ -229,32 +229,7 @@ jobs:
             echo "simulator_ready=false" >> "$GITHUB_OUTPUT"
             exit 0
           }
-          SIMULATOR_SELECTION="$(xcrun simctl list devices available -j | /usr/bin/python3 -c "
-          import json, os, sys
-          data = json.load(sys.stdin)
-          preferred_names = [
-              name.strip()
-              for name in os.environ.get('IOS_SIMULATOR_PREFERRED_NAMES', '').split(',')
-              if name.strip()
-          ]
-          available_iphones = []
-          for runtime, devs in data.get('devices', {}).items():
-              if 'iOS' not in runtime:
-                  continue
-              for d in devs:
-                  if d.get('isAvailable', True) and 'iPhone' in d.get('name', ''):
-                      available_iphones.append(d)
-          for preferred_name in preferred_names:
-              for device in available_iphones:
-                  if device.get('name') == preferred_name:
-                      print(f\"{device['udid']}\\t{device['name']}\")
-                      raise SystemExit(0)
-          if available_iphones:
-              print(f\"{available_iphones[0]['udid']}\\t{available_iphones[0]['name']}\")
-              raise SystemExit(0)
-          print('No available iPhone simulator found', file=sys.stderr)
-          raise SystemExit(1)
-          ")" || true
+          SIMULATOR_SELECTION="$(xcrun simctl list devices available -j | /usr/bin/python3 "$GITHUB_WORKSPACE/tool/ios_simulator_pick.py")" || true
           if [ -z "$SIMULATOR_SELECTION" ]; then
             skip_integration "Skipping integration tests because no reachable iPhone simulator is available on this runner."
           fi

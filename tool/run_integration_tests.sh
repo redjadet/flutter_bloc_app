@@ -20,6 +20,7 @@
 #   PROGRESS_HEARTBEAT_SECONDS (default 60)
 #   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS (default 180)
 #   IOS_SIMULATOR_PREFERRED_NAMES (comma-separated preferred iPhone simulators)
+#   IOS_SIMULATOR_PREFERRED_RUNTIME_VERSION (optional pin, e.g. 26.5 or 18; unset = newest iOS runtime)
 #   ALLOW_DESKTOP_INTEGRATION_DEVICE (0|1, default 0)
 #   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY (0|1, default 1)
 #
@@ -405,64 +406,14 @@ preferred_ios_simulator_selection() {
   [ "$(uname -s)" = "Darwin" ] || return 1
   command -v xcrun >/dev/null 2>&1 || return 1
 
-  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 -c '
-import json
-import sys
-
-preferred_names = [
-    name.strip()
-    for name in sys.argv[1].split(",")
-    if name.strip()
-]
-data = json.load(sys.stdin)
-available_iphones = []
-
-for runtime_name, devices in data.get("devices", {}).items():
-    if "iOS" not in runtime_name:
-        continue
-    for device in devices:
-        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
-            available_iphones.append(device)
-
-for preferred_name in preferred_names:
-    for device in available_iphones:
-        if device.get("name") == preferred_name:
-            print(f"{device['udid']}\t{device['name']}")
-            raise SystemExit(0)
-
-if available_iphones:
-    print(f"{available_iphones[0]['udid']}\t{available_iphones[0]['name']}")
-    raise SystemExit(0)
-
-raise SystemExit(1)
-' "$IOS_SIMULATOR_PREFERRED_NAMES"
+  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" || return 1
 }
 
 booted_ios_simulator_selection() {
   [ "$(uname -s)" = "Darwin" ] || return 1
   command -v xcrun >/dev/null 2>&1 || return 1
 
-  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 -c '
-import json
-import sys
-
-data = json.load(sys.stdin)
-booted_iphones = []
-
-for runtime_name, devices in data.get("devices", {}).items():
-    if "iOS" not in runtime_name:
-        continue
-    for device in devices:
-        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
-            booted_iphones.append(device)
-
-if booted_iphones:
-    device = booted_iphones[0]
-    print(f"{device.get('udid','')}\t{device.get('name','')}")
-    raise SystemExit(0)
-
-raise SystemExit(1)
-'
+  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" --booted || return 1
 }
 
 is_ios_simulator_device() {
@@ -1270,46 +1221,7 @@ if [ "$#" -eq 0 ]; then
       cleanup_project_xcodebuilds
       sleep 2
       simulator_selection="$(
-        /usr/bin/python3 - <<'PY'
-import json
-import os
-import subprocess
-import sys
-
-preferred = os.environ.get("IOS_SIMULATOR_PREFERRED_NAMES", "")
-preferred_names = [n.strip() for n in preferred.split(",") if n.strip()]
-
-try:
-    raw = subprocess.check_output(
-        ["xcrun", "simctl", "list", "devices", "available", "-j"],
-        stderr=subprocess.DEVNULL,
-    )
-    data = json.loads(raw.decode("utf-8", errors="replace"))
-except Exception:
-    print("")
-    raise SystemExit(0)
-
-available_iphones = []
-for runtime_name, devices in data.get("devices", {}).items():
-    if "iOS" not in runtime_name:
-        continue
-    for device in devices:
-        if device.get("isAvailable", True) and "iPhone" in device.get("name", ""):
-            available_iphones.append(device)
-
-for preferred_name in preferred_names:
-    for device in available_iphones:
-        if device.get("name") == preferred_name:
-            print(f"{device['udid']}\t{device['name']}")
-            raise SystemExit(0)
-
-if available_iphones:
-    device = available_iphones[0]
-    print(f"{device['udid']}\t{device['name']}")
-    raise SystemExit(0)
-
-print("")
-PY
+        xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" || true
       )"
       if [ -z "${simulator_selection:-}" ]; then
         log "❌ No available iPhone simulator found for retry. (xcrun simctl returned none)"

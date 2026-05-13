@@ -54,7 +54,7 @@ User prefs:
 - Checklist flags unguarded `!`; prefer nullable trim + branch.
 - Cursor Plan mode edits only plan/markdown-style files.
 - Run integration tests one at time; concurrent runs conflict over Xcode/sims.
-- Integration runner defaults to iOS simulator unless explicitly overridden.
+- Integration runner defaults to iOS simulator (newest installed iOS runtime + preferred device names) unless explicitly overridden.
 - Dart2JS: avoid `1 << 32` as `Random.nextInt` max; use smaller chunking.
 - Flutter web isolate demos can hang if `Isolate.spawn` never delivers; guard
   with `kIsWeb` fallback.
