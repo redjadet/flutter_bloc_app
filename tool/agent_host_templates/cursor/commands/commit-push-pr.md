@@ -15,7 +15,29 @@ Preferred entrypoint:
 - Use repo helper when present: `tool/commit_push_pr_deploy.py`
 - Otherwise follow `AGENTS.md` and `docs/agents_quick_reference.md`.
 
-## After the PR is merged (required)
+## One-shot: merge PR then clean locals
+
+When CI is green and you want **`gh pr merge` + post-merge** in one command (defaults: **`--squash --delete-branch`**, same as triage skill):
+
+```bash
+bash tool/commit_push_pr_merge_and_cleanup.sh
+```
+
+Override merge style / PR number (anything you would pass to `gh pr merge`):
+
+```bash
+bash tool/commit_push_pr_merge_and_cleanup.sh 203 --squash
+bash tool/commit_push_pr_merge_and_cleanup.sh -- --merge --delete-branch
+```
+
+Python equivalent:
+
+```bash
+python3 tool/commit_push_pr_deploy.py merge-cleanup
+python3 tool/commit_push_pr_deploy.py merge-cleanup --remote upstream -- 42 --squash
+```
+
+## After the PR is merged (required if you did not use merge-cleanup)
 
 Run once GitHub shows the PR merged (for example `gh pr merge` completed):
 

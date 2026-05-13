@@ -909,6 +909,7 @@ checklist is also change-aware:
 
 ## Git · local branch cleanup
 
+- **`commit_push_pr_merge_and_cleanup.sh`**: **`gh pr merge`** then **`commit_push_pr_post_merge.sh`**. With no extra args, merge uses **`--squash --delete-branch`**. Pass **`--`** then any `gh pr merge` flags/PR number. Optional **`--remote`** for the cleanup step. See `bash tool/commit_push_pr_merge_and_cleanup.sh --help`.
 - **`commit_push_pr_post_merge.sh`**: End of **`/commit-push-pr`**: after a PR is merged on GitHub, run locally (or `python3 tool/commit_push_pr_deploy.py post-merge`). Fetches/prunes `origin`, checks out the remote default branch when the worktree is clean, `git pull --ff-only`, then runs **`clean_merged_local_branches.sh`** with **`--apply`**. If the worktree is dirty, skips checkout/pull and still prunes locals.
 - **`clean_merged_local_branches.sh`**: Deletes **local** branches that are safe to drop: `--gone` (upstream deleted after `git fetch --prune`) and/or `--merged-base origin/main` (true merges into that ref only; squash merges need the remote topic branch removed first, then `--gone`). Defaults to **dry-run**; pass **`--apply`** to execute. Removes linked **worktrees** (not the main checkout) before deleting a branch. See `bash tool/clean_merged_local_branches.sh --help`.
 
