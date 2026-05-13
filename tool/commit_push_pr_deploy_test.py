@@ -193,6 +193,23 @@ class CommitPushPrDeployTest(unittest.TestCase):
         self.assertEqual(len(plan), 1)
         self.assertEqual(captured, [["functions/src/index.ts"]])
 
+    def test_post_merge_runs_helper_script(self) -> None:
+        with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:
+            rc = commit_push_pr_deploy._post_merge_command(mock.Mock())
+
+        self.assertEqual(rc, 0)
+        run.assert_called_once_with(
+            ["bash", str(commit_push_pr_deploy.POST_MERGE_SCRIPT)],
+            check=False,
+            cwd=commit_push_pr_deploy.PROJECT_ROOT,
+        )
+
+    def test_post_merge_missing_script_returns_2(self) -> None:
+        missing = Path("/nonexistent/commit_push_pr_post_merge.sh")
+        with mock.patch.object(commit_push_pr_deploy, "POST_MERGE_SCRIPT", missing):
+            rc = commit_push_pr_deploy._post_merge_command(mock.Mock())
+        self.assertEqual(rc, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

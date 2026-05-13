@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan or execute pre-commit remote deploys for `/commit-push-pr`."""
+"""Plan or execute pre-commit remote deploys and post-merge cleanup for `/commit-push-pr`."""
 
 from __future__ import annotations
 
@@ -32,6 +32,7 @@ DEPLOY_COMMANDS = {
 }
 FASTAPI_CLOUD_DEPLOY_SCRIPT = PROJECT_ROOT / "tool" / "deploy_fastapi_cloud_chat_api.sh"
 RENDER_DEPLOY_TRIGGER_SCRIPT = PROJECT_ROOT / "tool" / "trigger_render_chat_api_deploy.sh"
+POST_MERGE_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_post_merge.sh"
 
 
 @dataclass(frozen=True)
@@ -432,6 +433,19 @@ def _execute_command(_: argparse.Namespace) -> int:
     return 0
 
 
+def _post_merge_command(_: argparse.Namespace) -> int:
+    """After PR merge on GitHub: fetch, checkout default branch if clean, prune locals."""
+    if not POST_MERGE_SCRIPT.is_file():
+        print(f"missing {POST_MERGE_SCRIPT}", file=sys.stderr)
+        return 2
+    result = subprocess.run(
+        ["bash", str(POST_MERGE_SCRIPT)],
+        check=False,
+        cwd=PROJECT_ROOT,
+    )
+    return int(result.returncode)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
@@ -442,6 +456,12 @@ def main() -> int:
 
     execute_parser = subparsers.add_parser("execute")
     execute_parser.set_defaults(func=_execute_command)
+
+    post_merge_parser = subparsers.add_parser(
+        "post-merge",
+        help="After PR merge: fetch/prune, checkout default branch if clean, delete merged local branches.",
+    )
+    post_merge_parser.set_defaults(func=_post_merge_command)
 
     args = parser.parse_args()
     return args.func(args)

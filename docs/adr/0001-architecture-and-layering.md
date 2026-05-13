@@ -1,57 +1,114 @@
 # ADR 0001: Architecture and Layering
 
-**Status:** Accepted
+| Field | Value |
+| --- | --- |
+| Status | Accepted |
+| Scope | App-wide architecture |
+| Source docs | [Clean Architecture](../clean_architecture.md), [Architecture Details](../architecture_details.md) |
 
 ## Context
 
-The app includes multiple feature areas (auth, chat, maps, settings, offline
-data) and is expected to remain testable, maintainable, and extensible as
-features grow. The team needed a scalable architecture pattern that enforces
-separation of concerns and supports both unit testing of business logic and
-widget-level testing of UI.
+The app contains several independent feature areas, including authentication,
+chat, maps, settings, offline data, and demo workflows. These areas need to
+stay testable and maintainable as the codebase grows.
 
-## Alternatives Considered
+The architecture must support:
 
-1. **Single-layer feature folders** (all code in one folder per feature).
-   Simpler file structure but no enforced separation between business logic,
-   data access, and UI — harder to test in isolation.
-2. **Riverpod-based architecture** (providers replace DI + state management).
-   Combines DI and state in one system but can blur layer boundaries and has a
-   steeper learning curve. See
-   [State Management Choice](../state_management_choice.md) for detailed
-   comparison.
-3. **MVC / MVVM without BLoC.** Familiar patterns but lack the explicit
-   event-driven data flow and replay/debug tooling that BLoC provides.
+- pure business contracts that can be tested without Flutter;
+- replaceable data implementations for local, remote, and offline-first flows;
+- route-scoped state management for user workflows;
+- centralized dependency wiring so feature composition remains visible;
+- clear review rules for code that belongs in app shell, feature layers, shared
+  infrastructure, or core infrastructure.
+
+## Decision Drivers
+
+- Preserve clear dependency direction: `Presentation -> Domain <- Data`.
+- Keep domain code free of Flutter, SDK, storage, HTTP, and navigation details.
+- Make business logic easy to test with unit and bloc tests.
+- Keep shared infrastructure reusable without making it an extra feature layer.
+- Make new feature delivery repeatable.
+- Keep app shell composition separate from feature business logic.
 
 ## Decision
 
-- Use a **feature-based layout** with **Domain → Data → Presentation** layers
-  inside each feature (`lib/features/<feature>/domain|data|presentation/`).
-- Keep the **domain layer Flutter-free** (pure Dart) for fast unit tests.
-- Use **BLoC/Cubit** (via `flutter_bloc`) for state management.
-- Centralize dependency wiring under `lib/core/di/` with **get_it** and
-  feature-specific registration files.
-- Cross-cutting concerns (storage, sync, HTTP, responsive helpers) live in
-  `lib/shared/` and `lib/core/`.
+Use feature-based Clean Architecture with three feature layers:
+
+- **Domain**: pure Dart contracts, models, and value objects.
+- **Data**: implementations of domain contracts, including storage, HTTP/SDK
+  adapters, offline-first composition, and merge policies.
+- **Presentation**: pages, widgets, Cubits/BLoCs, and route-specific workflow
+  orchestration.
+
+Use these supporting areas around the feature layers:
+
+- `lib/app/` for the app shell, router, and app-scope composition.
+- `lib/core/` for bootstrap, DI, constants, theme, app-wide contracts, and
+  platform-level helpers.
+- `lib/shared/` for reusable storage, sync, widgets, design tokens, and
+  utilities used by multiple features.
+
+Use `flutter_bloc` Cubits/BLoCs for state management and `get_it` for
+dependency injection. Register feature dependencies through `lib/core/di/`
+using feature-specific factories or registration helpers.
+
+The governing rule is dependency direction, not folder count. Small features
+may stay compact, but code still follows the same ownership boundaries.
+
+## Alternatives Considered
+
+| Alternative | Why not |
+| --- | --- |
+| Flat feature folders | Simpler at first, but business logic, UI, and data access become harder to test and reason about independently. |
+| Riverpod-only architecture | Combines DI and state management, but this repo already optimizes around explicit Cubit/BLoC flows and separate DI. See [State Management Choice](../state_management_choice.md). |
+| MVC/MVVM without BLoC | Familiar patterns, but they do not give this repo the same explicit state transitions, selectors, and bloc-test surface. |
+| Widget-level service locator lookups | Convenient, but hides dependencies and makes UI tests more fragile. Widgets should use Cubits/BLoCs or explicit constructor inputs. |
 
 ## Consequences
 
 ### Benefits
 
-- Clear ownership of responsibilities per layer — easy to find where logic
-  lives.
-- Domain contracts are testable with pure Dart; data-layer implementations are
-  substitutable via DI.
-- Cubits depend on abstractions, making bloc tests fast and deterministic.
-- Adding a new feature follows a repeatable pattern (domain contract → data
-  impl → cubit → widgets → DI → route).
+- Responsibilities are easy to locate by layer and feature.
+- Domain contracts remain fast to test and stable across data implementation
+  changes.
+- Cubits depend on abstractions, which keeps bloc tests deterministic.
+- Feature delivery follows a repeatable path: domain contract, data
+  implementation, Cubit/BLoC, widgets, DI, route, tests.
+- Offline-first repositories fit in the data layer without leaking queue or
+  merge policy into widgets.
 
 ### Costs
 
-- Increased boilerplate: every feature requires at minimum a domain interface,
-  a data implementation, a cubit, a page widget, a DI registration, and a
-  route entry.
-- Developers must understand the layering rules and DI conventions before
-  contributing; onboarding cost is higher than a flat architecture.
-- Runtime DI (`get_it`) means missing registrations are caught at test time, not
-  compile time.
+- More files and boilerplate than a flat feature structure.
+- Contributors must understand layer rules and DI conventions before making
+  larger changes.
+- Missing `get_it` registrations fail at runtime or test time, not compile
+  time.
+- Shared/core boundaries need review discipline so reusable helpers do not
+  become feature-specific dumping grounds.
+
+## Implementation Notes
+
+- Domain files must not import Flutter or presentation packages.
+- Presentation should depend on domain contracts, not concrete repositories.
+- Data implementations should satisfy domain contracts and hide local/remote
+  details.
+- App shell code composes features; it should not own feature business logic.
+- New persistent stores should use shared storage abstractions such as
+  `HiveRepositoryBase` or `HiveSettingsRepository<T>`.
+
+## Review Triggers
+
+Revisit this ADR when:
+
+- a new state-management or DI strategy is proposed;
+- feature modules move into separate packages;
+- app shell code starts owning feature-specific business rules;
+- domain code needs Flutter, platform, HTTP, storage, or router imports.
+
+## Verification
+
+- Architecture overview: [Architecture Details](../architecture_details.md)
+- Layer rules and examples: [Clean Architecture](../clean_architecture.md)
+- Quality gates: [Code Quality](../CODE_QUALITY.md)
+- Targeted command for Hive boundary drift: `./tool/check_no_hive_openbox.sh`
