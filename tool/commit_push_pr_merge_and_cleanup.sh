@@ -11,6 +11,7 @@
 #   bash tool/commit_push_pr_merge_and_cleanup.sh --remote upstream -- 42 --squash
 #
 # Also: python3 tool/commit_push_pr_deploy.py merge-cleanup [--remote NAME] [gh pr merge args...]
+# Or watch CI then merge+cleanup: python3 tool/commit_push_pr_deploy.py watch-merge-cleanup [options] [PR] [merge args...]
 
 set -euo pipefail
 
