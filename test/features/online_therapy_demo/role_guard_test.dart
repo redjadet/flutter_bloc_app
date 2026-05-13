@@ -8,9 +8,21 @@ void main() {
     final api = OnlineTherapyFakeApi();
     final auth = FakeTherapyAuthRepository(api: api);
     final admin = FakeTherapyAdminRepository(api: api);
+    final audit = FakeAuditRepository(api: api);
 
     await auth.login(email: 'demo@example.com', role: TherapyRole.client);
 
-    expect(() => admin.listPendingTherapists(), throwsA(isA<StateError>()));
+    await expectLater(admin.listPendingTherapists(), throwsA(isA<StateError>()));
+    await expectLater(audit.listEvents(), throwsA(isA<StateError>()));
+  });
+
+  test('admin audit read succeeds for admin role', () async {
+    final api = OnlineTherapyFakeApi();
+    final auth = FakeTherapyAuthRepository(api: api);
+    final audit = FakeAuditRepository(api: api);
+
+    await auth.login(email: 'admin@example.com', role: TherapyRole.admin);
+
+    await expectLater(audit.listEvents(), completion(isA<List<AuditEvent>>()));
   });
 }

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockWebsocketRepository extends Mock implements WebsocketRepository {}
@@ -147,5 +147,61 @@ void main() {
     await Future<void>.delayed(Duration.zero);
 
     expect(cubit.isClosed, true);
+  });
+
+  test('overlapping sendMessage keeps isSending until all sends complete', () async {
+    final Completer<void> firstSend = Completer<void>();
+    final Completer<void> secondSend = Completer<void>();
+    var sendInvocation = 0;
+    when(() => repository.send(any())).thenAnswer((_) async {
+      sendInvocation++;
+      if (sendInvocation == 1) {
+        await firstSend.future;
+      } else {
+        await secondSend.future;
+      }
+    });
+
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+    connectionController.add(const WebsocketConnectionState.connected());
+    await Future<void>.delayed(Duration.zero);
+
+    final Future<void> a = cubit.sendMessage('a');
+    await Future<void>.delayed(Duration.zero);
+    expect(cubit.state.isSending, isTrue);
+
+    final Future<void> b = cubit.sendMessage('b');
+    await Future<void>.delayed(Duration.zero);
+    expect(cubit.state.isSending, isTrue);
+
+    secondSend.complete();
+    await Future<void>.delayed(Duration.zero);
+    expect(cubit.state.isSending, isTrue);
+
+    firstSend.complete();
+    await a;
+    await b;
+    await Future<void>.delayed(Duration.zero);
+    expect(cubit.state.isSending, isFalse);
+    verify(() => repository.send('a')).called(1);
+    verify(() => repository.send('b')).called(1);
+
+    await cubit.close();
+  });
+
+  test('sendMessage error clears in-flight and exposes errorMessage', () async {
+    when(() => repository.send(any())).thenThrow(Exception('network'));
+
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+    connectionController.add(const WebsocketConnectionState.connected());
+    await Future<void>.delayed(Duration.zero);
+
+    await cubit.sendMessage('x');
+    await Future<void>.delayed(Duration.zero);
+
+    expect(cubit.state.isSending, isFalse);
+    expect(cubit.state.errorMessage, isNotNull);
+
+    await cubit.close();
   });
 }

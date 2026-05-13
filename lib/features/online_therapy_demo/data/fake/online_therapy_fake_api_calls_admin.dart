@@ -99,7 +99,8 @@ extension OnlineTherapyFakeApiCallsAdmin on OnlineTherapyFakeApi {
 
   Future<List<AuditEvent>> listAuditEvents() async {
     await _simulateNetwork();
-    _requireCurrentUser();
+    final user = _requireCurrentUser();
+    _requireRole(user, allowed: <TherapyRole>[TherapyRole.admin]);
     return _audit.toList(growable: false);
   }
 }
