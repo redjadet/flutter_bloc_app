@@ -49,7 +49,7 @@ Source-of-truth docs for Flutter BLoC app.
 - [`modularity.md`](modularity.md)
 - [`design_system.md`](design_system.md)
 - [`universal_links/README.md`](universal_links/README.md)
-- `adr/` (architecture decision records)
+- [`adr/README.md`](adr/README.md) - accepted architecture decision records and ADR lifecycle guidance
 
 ### Workflow and quality
 
