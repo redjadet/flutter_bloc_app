@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan or execute pre-commit remote deploys; post-merge and merge+cleanup for `/commit-push-pr`."""
+"""Plan or execute pre-commit remote deploys; rebase-on-main; post-merge; merge+cleanup; watch+merge+cleanup."""
 
 from __future__ import annotations
 
@@ -34,6 +34,8 @@ FASTAPI_CLOUD_DEPLOY_SCRIPT = PROJECT_ROOT / "tool" / "deploy_fastapi_cloud_chat
 RENDER_DEPLOY_TRIGGER_SCRIPT = PROJECT_ROOT / "tool" / "trigger_render_chat_api_deploy.sh"
 POST_MERGE_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_post_merge.sh"
 MERGE_AND_CLEANUP_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_merge_and_cleanup.sh"
+WATCH_MERGE_CLEANUP_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_watch_merge_cleanup.sh"
+REBASE_ON_MAIN_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_rebase_on_main.sh"
 
 
 @dataclass(frozen=True)
@@ -460,6 +462,37 @@ def _merge_cleanup_command(args: argparse.Namespace) -> int:
     return int(result.returncode)
 
 
+def _watch_merge_cleanup_command(args: argparse.Namespace) -> int:
+    """gh pr checks --watch, then merge + post-merge (shell script)."""
+    if not WATCH_MERGE_CLEANUP_SCRIPT.is_file():
+        print(f"missing {WATCH_MERGE_CLEANUP_SCRIPT}", file=sys.stderr)
+        return 2
+    cmd = ["bash", str(WATCH_MERGE_CLEANUP_SCRIPT)]
+    if args.watch_merge_remote != "origin":
+        cmd.extend(["--remote", args.watch_merge_remote])
+    if args.watch_merge_interval is not None:
+        cmd.extend(["-i", str(args.watch_merge_interval)])
+    if args.watch_merge_fail_fast:
+        cmd.append("--fail-fast")
+    cmd.extend(args.watch_merge_extra)
+    result = subprocess.run(cmd, check=False, cwd=PROJECT_ROOT)
+    return int(result.returncode)
+
+
+def _rebase_on_main_command(args: argparse.Namespace) -> int:
+    """Fetch remote default branch and rebase current branch (shell script)."""
+    if not REBASE_ON_MAIN_SCRIPT.is_file():
+        print(f"missing {REBASE_ON_MAIN_SCRIPT}", file=sys.stderr)
+        return 2
+    cmd = ["bash", str(REBASE_ON_MAIN_SCRIPT)]
+    if args.rebase_remote != "origin":
+        cmd.extend(["--remote", args.rebase_remote])
+    if args.rebase_branch != "main":
+        cmd.extend(["--branch", args.rebase_branch])
+    result = subprocess.run(cmd, check=False, cwd=PROJECT_ROOT)
+    return int(result.returncode)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
@@ -471,9 +504,29 @@ def main() -> int:
     execute_parser = subparsers.add_parser("execute")
     execute_parser.set_defaults(func=_execute_command)
 
+    rebase_parser = subparsers.add_parser(
+        "rebase-on-main",
+        help="Fetch origin/main (or --remote/--branch) and rebase current branch (commit-push-pr start).",
+    )
+    rebase_parser.add_argument(
+        "--remote",
+        default="origin",
+        dest="rebase_remote",
+        metavar="NAME",
+        help="Remote to fetch (default: origin).",
+    )
+    rebase_parser.add_argument(
+        "--branch",
+        default="main",
+        dest="rebase_branch",
+        metavar="NAME",
+        help="Upstream branch name to rebase onto (default: main).",
+    )
+    rebase_parser.set_defaults(func=_rebase_on_main_command)
+
     post_merge_parser = subparsers.add_parser(
         "post-merge",
-        help="After PR merge: fetch/prune, checkout default branch if clean, delete merged local branches.",
+        help="After PR merge: fetch, checkout default branch (clean tree), pull, prune locals.",
     )
     post_merge_parser.set_defaults(func=_post_merge_command)
 
@@ -495,6 +548,40 @@ def main() -> int:
         help="Forwarded to gh pr merge; if empty, the shell script uses --squash --delete-branch.",
     )
     merge_cleanup_parser.set_defaults(func=_merge_cleanup_command)
+
+    watch_merge_parser = subparsers.add_parser(
+        "watch-merge-cleanup",
+        help="Wait for gh pr checks, merge when green, then post-merge local cleanup.",
+    )
+    watch_merge_parser.add_argument(
+        "--remote",
+        default="origin",
+        dest="watch_merge_remote",
+        metavar="NAME",
+        help="Git remote for post-merge (default: origin).",
+    )
+    watch_merge_parser.add_argument(
+        "-i",
+        "--interval",
+        type=int,
+        default=None,
+        dest="watch_merge_interval",
+        metavar="N",
+        help="Seconds between gh pr checks polls (gh default if omitted).",
+    )
+    watch_merge_parser.add_argument(
+        "--fail-fast",
+        action="store_true",
+        dest="watch_merge_fail_fast",
+        help="Exit watch on first failing check.",
+    )
+    watch_merge_parser.add_argument(
+        "watch_merge_extra",
+        nargs="*",
+        default=[],
+        help="Optional PR number and/or gh pr merge args (defaults: --squash --delete-branch).",
+    )
+    watch_merge_parser.set_defaults(func=_watch_merge_cleanup_command)
 
     args = parser.parse_args()
     return args.func(args)

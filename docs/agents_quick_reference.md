@@ -81,7 +81,7 @@ Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`t
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
 
-Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. After a merged PR from `/commit-push-pr`, run `bash tool/commit_push_pr_merge_and_cleanup.sh` (merge + local cleanup) or only `python3 tool/commit_push_pr_deploy.py post-merge` if you merged elsewhere (see `validation_scripts.md` § Git).
+Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr` start:** `bash tool/commit_push_pr_rebase_on_main.sh` (then plan/execute/commit/push/PR). To land: `bash tool/commit_push_pr_watch_merge_cleanup.sh`; merge-only `bash tool/commit_push_pr_merge_and_cleanup.sh`; merged elsewhere `python3 tool/commit_push_pr_deploy.py post-merge` (`validation_scripts.md` § Git).
 
 ## Read By Task
 
