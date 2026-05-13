@@ -39,8 +39,14 @@ Future<void> main(List<String> args) async {
     for (final p in onDisk) {
       final stat = await File(p).stat();
       final mtimeMs = stat.modified.millisecondsSinceEpoch;
-      final prev = index[p]?.mtimeMs;
-      if (prev == null || mtimeMs > prev) changed.add(p);
+      final entry = index[p];
+      // Include never-seen paths, content newer than indexed mtime, or first
+      // scan after index_refresh (mtime recorded but lastProcessedAt still null).
+      if (entry == null ||
+          mtimeMs > entry.mtimeMs ||
+          entry.lastProcessedAt == null) {
+        changed.add(p);
+      }
     }
 
     if (changed.isEmpty) {
@@ -62,9 +68,11 @@ Future<void> main(List<String> args) async {
     await File(outPath).parent.create(recursive: true);
     await File(outPath).writeAsString(md);
 
+    _markTranscriptsProcessed(index, changed);
+    await _writeIndexAtomic(indexFile, index);
+
     if (findings.isEmpty) {
       stdout.writeln('No high-signal memory updates.');
-      await _writeIndexAtomic(indexFile, index);
       return;
     }
 
@@ -72,17 +80,6 @@ Future<void> main(List<String> args) async {
       // Conservative: only update tasks/lessons.md with dedup keys.
       await _applyToLessons(findings);
     }
-
-    // Mark processed: set index mtime to current on-disk mtime, and lastProcessedAt now.
-    final nowIso = DateTime.now().toUtc().toIso8601String();
-    for (final p in changed) {
-      final stat = await File(p).stat();
-      index[p] = TranscriptIndexEntry(
-        lastProcessedAt: nowIso,
-        mtimeMs: stat.modified.millisecondsSinceEpoch,
-      );
-    }
-    await _writeIndexAtomic(indexFile, index);
 
     stdout.writeln(
       'ok|suggestions|out=$outPath|changed=${changed.length}|findings=${findings.length}|apply=$apply',
@@ -160,6 +157,17 @@ Future<void> _writeIndexAtomic(File indexFile, Map<String, TranscriptIndexEntry>
   final tmp = File('${indexFile.path}.tmp');
   await tmp.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
   await tmp.rename(indexFile.path);
+}
+
+void _markTranscriptsProcessed(Map<String, TranscriptIndexEntry> index, Iterable<String> paths) {
+  final nowIso = DateTime.now().toUtc().toIso8601String();
+  for (final p in paths) {
+    final stat = File(p).statSync();
+    index[p] = TranscriptIndexEntry(
+      lastProcessedAt: nowIso,
+      mtimeMs: stat.modified.millisecondsSinceEpoch,
+    );
+  }
 }
 
 Future<String> _readTranscriptTailRedacted(String path, int maxBytes) async {
