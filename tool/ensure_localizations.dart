@@ -17,7 +17,8 @@ import 'dart:io';
 ///   dart run tool/ensure_localizations.dart
 void main(final List<String> args) async {
   final Directory l10nDir = Directory('lib/l10n');
-  if (!l10nDir.existsSync()) {
+  // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
+  if (!await l10nDir.exists()) {
     stderr.writeln('Error: lib/l10n directory does not exist');
     exit(1);
   }
@@ -51,7 +52,8 @@ void main(final List<String> args) async {
   bool allFilesExist = true;
   for (final String filePath in expectedFiles) {
     final File file = File(filePath);
-    if (!file.existsSync()) {
+    // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
+    if (!await file.exists()) {
       stderr.writeln('Error: $filePath was not generated');
       allFilesExist = false;
     }

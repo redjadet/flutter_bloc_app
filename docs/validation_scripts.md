@@ -120,6 +120,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 
 - **`check_raw_timer.sh`**: Prevents raw `Timer` usage - should use `TimerService` for testability
 - **`check_raw_future_delayed.sh`**: Flags `Future.delayed` in production `lib/` - prefer `TimerService.runOnce` where cancellation or test control matters (see [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md))
+- **`check_tool_dart_async_main_blocking_io.sh`**: In `tool/**/*.dart` files whose entrypoint is **`main(...) async`**, fails on common blocking dart:io / `FileSystemEntity` `*Sync` calls (`statSync`, `existsSync`, `readAsStringSync`, `readAsLinesSync`, `writeAsStringSync`, `listSync`, `typeSync`, `createSync`, `deleteSync`, `renameSync`, `copySync`, `lastModifiedSync`, etc.). Sync-only codegen CLIs are out of scope. Prefer `await file.readAsString()`, `await file.exists()`, `Directory.list()`, `FileSystemEntity.type()`, etc. Use `--paths PATH...` for fixture/focused checks. Suppress only with `check-ignore` on the same or previous line when intentional.
 
 ### Widget Lifecycle
 
@@ -813,6 +814,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_raw_google_fonts.sh`
 - `check_ui_regressions.sh`
 - `check_side_effects_build.sh`
+- `check_tool_dart_async_main_blocking_io.sh`
 - `check_context_mounted.sh`
 - `check_inherited_widget_in_create.sh`
 - `check_inherited_widget_in_initstate.sh`

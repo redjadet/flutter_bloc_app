@@ -307,6 +307,7 @@ validate_checklist_configuration() {
   local failed=0
   local script
   local syntax_exit=0
+  local -a dart_analyze_files=()
   local total_messages="${#CHECK_MESSAGES[@]}"
   local total_scripts="${#CHECK_SCRIPTS[@]}"
   local cache_key=""
@@ -364,12 +365,16 @@ validate_checklist_configuration() {
         fi
         ;;
       *.dart)
-        if ! dart analyze "$PROJECT_ROOT/$script"; then
-          syntax_exit=1
-        fi
+        dart_analyze_files+=("$PROJECT_ROOT/$script")
         ;;
     esac
   done
+
+  if [ "${#dart_analyze_files[@]}" -gt 0 ]; then
+    if ! dart analyze "${dart_analyze_files[@]}"; then
+      syntax_exit=1
+    fi
+  fi
 
   if [ "$syntax_exit" -ne 0 ]; then
     echo "❌ Checklist script syntax validation failed"
@@ -419,6 +424,7 @@ validate_docs_only_dependencies() {
 validate_tooling_only_dependencies() {
   local failed=0
   local file
+  local -a dart_analyze_files=()
 
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
@@ -438,12 +444,16 @@ validate_tooling_only_dependencies() {
           failed=1
           continue
         fi
-        if ! dart analyze "$PROJECT_ROOT/$file"; then
-          failed=1
-        fi
+        dart_analyze_files+=("$PROJECT_ROOT/$file")
         ;;
     esac
   done
+
+  if [ "${#dart_analyze_files[@]}" -gt 0 ]; then
+    if ! dart analyze "${dart_analyze_files[@]}"; then
+      failed=1
+    fi
+  fi
 
   if [ "$failed" -ne 0 ]; then
     echo "❌ Tooling-only syntax validation failed"
@@ -1119,6 +1129,7 @@ CHECK_MESSAGES=(
   "Checking for per-widget GoogleFonts usage..."
   "Running focused UI regression tests (widget layout/sizing)..."
   "Checking for side effects in build() method..."
+  "Checking tool/ Dart (async main) for blocking dart:io *Sync calls..."
   "Checking for missing context.mounted checks after async operations..."
   "Checking for InheritedWidget reads in Provider create callbacks..."
   "Checking for inherited/provider reads in initState()..."
@@ -1175,6 +1186,7 @@ CHECK_SCRIPTS=(
   "tool/check_raw_google_fonts.sh"
   "tool/check_ui_regressions.sh"
   "tool/check_side_effects_build.sh"
+  "tool/check_tool_dart_async_main_blocking_io.sh"
   "tool/check_context_mounted.sh"
   "tool/check_inherited_widget_in_create.sh"
   "tool/check_inherited_widget_in_initstate.sh"

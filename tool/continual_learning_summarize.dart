@@ -16,7 +16,9 @@ Future<void> main(List<String> args) async {
       '${Directory.current.path}/.cursor/hooks/state/continual-learning-index.json';
 
   final maxReadBytes =
-      int.tryParse(Platform.environment['CONTINUAL_LEARNING_MAX_READ_BYTES'] ?? '') ??
+      int.tryParse(
+        Platform.environment['CONTINUAL_LEARNING_MAX_READ_BYTES'] ?? '',
+      ) ??
       _defaultMaxReadBytes;
 
   final apply = args.contains('--apply');
@@ -37,6 +39,7 @@ Future<void> main(List<String> args) async {
 
     final changed = <String>[];
     for (final p in onDisk) {
+      // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
       final stat = await File(p).stat();
       final mtimeMs = stat.modified.millisecondsSinceEpoch;
       final entry = index[p];
@@ -58,7 +61,10 @@ Future<void> main(List<String> args) async {
 
     final findings = <Finding>[];
     for (final path in changed) {
-      final redactedText = await _readTranscriptTailRedacted(path, maxReadBytes);
+      final redactedText = await _readTranscriptTailRedacted(
+        path,
+        maxReadBytes,
+      );
       final extracted = _extractHighSignalFromRedactedText(redactedText);
       if (extracted.isEmpty) continue;
       findings.add(Finding(path: path, items: extracted));
@@ -68,7 +74,7 @@ Future<void> main(List<String> args) async {
     await File(outPath).parent.create(recursive: true);
     await File(outPath).writeAsString(md);
 
-    _markTranscriptsProcessed(index, changed);
+    await _markTranscriptsProcessed(index, changed);
     await _writeIndexAtomic(indexFile, index);
 
     if (findings.isEmpty) {
@@ -99,7 +105,7 @@ Future<void> _withFileLock(String lockPath, Future<void> Function() fn) async {
   await lockFile.parent.create(recursive: true);
   final raf = await lockFile.open(mode: FileMode.writeOnlyAppend);
   try {
-    await raf.lock(FileLock.exclusive);
+    await raf.lock();
     await fn();
   } finally {
     await raf.unlock();
@@ -109,9 +115,13 @@ Future<void> _withFileLock(String lockPath, Future<void> Function() fn) async {
 
 Future<List<String>> _listTranscriptFiles(String root) async {
   final rootDir = Directory(root);
+  // ignore: avoid_slow_async_io -- async tool path; blocking *Sync calls are guarded separately.
   if (!await rootDir.exists()) return [];
   final out = <String>[];
-  await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+  await for (final entity in rootDir.list(
+    recursive: true,
+    followLinks: false,
+  )) {
     if (entity is File && entity.path.endsWith('.jsonl')) out.add(entity.path);
   }
   return out;
@@ -124,9 +134,12 @@ class TranscriptIndexEntry {
 }
 
 Future<Map<String, TranscriptIndexEntry>> _readIndex(File indexFile) async {
+  // ignore: avoid_slow_async_io -- async tool path; blocking *Sync calls are guarded separately.
   if (!await indexFile.exists()) return {};
-  final decoded = jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
-  final transcripts = (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
+  final decoded =
+      jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
+  final transcripts =
+      (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
   final out = <String, TranscriptIndexEntry>{};
   for (final entry in transcripts.entries) {
     final v = entry.value;
@@ -144,7 +157,10 @@ Future<Map<String, TranscriptIndexEntry>> _readIndex(File indexFile) async {
   return out;
 }
 
-Future<void> _writeIndexAtomic(File indexFile, Map<String, TranscriptIndexEntry> index) async {
+Future<void> _writeIndexAtomic(
+  File indexFile,
+  Map<String, TranscriptIndexEntry> index,
+) async {
   final payload = <String, Object?>{
     'transcripts': {
       for (final e in index.entries)
@@ -159,10 +175,14 @@ Future<void> _writeIndexAtomic(File indexFile, Map<String, TranscriptIndexEntry>
   await tmp.rename(indexFile.path);
 }
 
-void _markTranscriptsProcessed(Map<String, TranscriptIndexEntry> index, Iterable<String> paths) {
+Future<void> _markTranscriptsProcessed(
+  Map<String, TranscriptIndexEntry> index,
+  Iterable<String> paths,
+) async {
   final nowIso = DateTime.now().toUtc().toIso8601String();
   for (final p in paths) {
-    final stat = File(p).statSync();
+    // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
+    final stat = await File(p).stat();
     index[p] = TranscriptIndexEntry(
       lastProcessedAt: nowIso,
       mtimeMs: stat.modified.millisecondsSinceEpoch,
@@ -191,11 +211,20 @@ String _redact(String text) {
     RegExp(r'Authorization:\s*[^\n]+', caseSensitive: false),
     'Authorization: [REDACTED]',
   );
-  out = out.replaceAll(RegExp(r'Bearer\s+[A-Za-z0-9\-_.=]+'), 'Bearer [REDACTED]');
-  out = out.replaceAll(RegExp(r'cookie:\s*[^\n]+', caseSensitive: false), 'Cookie: [REDACTED]');
+  out = out.replaceAll(
+    RegExp(r'Bearer\s+[A-Za-z0-9\-_.=]+'),
+    'Bearer [REDACTED]',
+  );
+  out = out.replaceAll(
+    RegExp(r'cookie:\s*[^\n]+', caseSensitive: false),
+    'Cookie: [REDACTED]',
+  );
   // Very loose API key-ish tokens.
   out = out.replaceAll(
-    RegExp(r'(api[_-]?key|token|secret)\s*[:=]\s*[^\s\n]+', caseSensitive: false),
+    RegExp(
+      r'(api[_-]?key|token|secret)\s*[:=]\s*[^\s\n]+',
+      caseSensitive: false,
+    ),
     r'$1: [REDACTED]',
   );
   return out;
@@ -214,7 +243,11 @@ List<String> _extractHighSignalFromRedactedText(String text) {
     if (l.isEmpty) continue;
     // Transcript tails are JSONL; avoid extracting from raw JSON noise.
     if (l.startsWith('{') || l.startsWith('[')) continue;
-    if (l.contains('"type"') || l.contains('"role"') || l.contains('"content"')) continue;
+    if (l.contains('"type"') ||
+        l.contains('"role"') ||
+        l.contains('"content"')) {
+      continue;
+    }
     if (l.contains(r'\u') || l.contains(r'\"')) continue;
 
     // Only extract user-level “correction-like” statements.
@@ -241,22 +274,21 @@ List<String> _extractHighSignalFromRedactedText(String text) {
 }
 
 String _renderMarkdown(List<Finding> findings) {
-  final b = StringBuffer();
-  b.writeln('# Continual learning suggestions');
-  b.writeln();
-  b.writeln('Generated at: `${DateTime.now().toUtc().toIso8601String()}`');
-  b.writeln();
+  final b = StringBuffer()
+    ..writeln('# Continual learning suggestions')
+    ..writeln()
+    ..writeln('Generated at: `${DateTime.now().toUtc().toIso8601String()}`')
+    ..writeln();
   if (findings.isEmpty) {
     b.writeln('No high-signal memory updates.');
     return b.toString();
   }
 
   for (final f in findings) {
-    b.writeln('## ${_sanitizeId(f.path)}');
-    b.writeln();
-    for (final item in f.items) {
-      b.writeln('- $item');
-    }
+    b
+      ..writeln('## ${_sanitizeId(f.path)}')
+      ..writeln();
+    f.items.map((final item) => '- $item').forEach(b.writeln);
     b.writeln();
   }
   return b.toString();
@@ -271,6 +303,7 @@ String _sanitizeId(String path) {
 Future<void> _applyToLessons(List<Finding> findings) async {
   final lessonsPath = '${Directory.current.path}/tasks/lessons.md';
   final file = File(lessonsPath);
+  // ignore: avoid_slow_async_io -- async tool path; blocking *Sync calls are guarded separately.
   final existing = await file.exists() ? await file.readAsString() : '';
 
   final additions = <String>[];
@@ -292,9 +325,7 @@ Future<void> _applyToLessons(List<Finding> findings) async {
 
   if (trimmed.isEmpty) {
     next.writeln(header);
-    for (final a in additions) {
-      next.writeln(a);
-    }
+    additions.forEach(next.writeln);
     next.writeln();
     await file.parent.create(recursive: true);
     await file.writeAsString(next.toString());
@@ -303,19 +334,17 @@ Future<void> _applyToLessons(List<Finding> findings) async {
 
   if (trimmed.contains(header)) {
     // Simple append without repeating the header.
-    next.writeln(trimmed);
-    next.writeln();
-    for (final a in additions) {
-      next.writeln(a);
-    }
+    next
+      ..writeln(trimmed)
+      ..writeln();
+    additions.forEach(next.writeln);
     next.writeln();
   } else {
-    next.writeln(trimmed);
-    next.writeln();
-    next.writeln(header);
-    for (final a in additions) {
-      next.writeln(a);
-    }
+    next
+      ..writeln(trimmed)
+      ..writeln()
+      ..writeln(header);
+    additions.forEach(next.writeln);
     next.writeln();
   }
   await file.parent.create(recursive: true);
