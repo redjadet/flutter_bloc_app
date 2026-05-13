@@ -12,7 +12,7 @@
     "setup:staff-demo:content": "node tool/setup_staff_demo_content.js",
     "setup:staff-demo": "npm run seed:staff-demo && npm run setup:staff-demo:content",
     "audit:safe": "node ./tool/audit_safe.mjs",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "bash ../tool/firebase_preflight.sh --require-cli && firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {

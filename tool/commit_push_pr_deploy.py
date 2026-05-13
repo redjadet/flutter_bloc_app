@@ -229,6 +229,7 @@ def _supabase_commands(staged_files: list[str]) -> tuple[str, ...]:
 
 def _firebase_commands(staged_files: list[str]) -> tuple[str, ...]:
     commands: list[str] = []
+    commands.append("bash tool/firebase_preflight.sh --require-cli")
     if any(path.startswith("functions/") for path in staged_files):
         commands.append("npm --prefix functions run deploy")
     if "firestore.rules" in staged_files:

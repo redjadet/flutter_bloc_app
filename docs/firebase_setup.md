@@ -100,6 +100,23 @@ Once config is in place:
 
 ---
 
+## Firebase workflow preflight (project mismatch guard)
+
+Firebase deploy and distribution scripts in this repo run a preflight check:
+
+- Expected Firebase project ID for this checkout comes from `.firebaserc` (`projects.default`).
+- The preflight compares that against your active Firebase CLI project (`firebase use --json`).
+- For App Distribution scripts, the preflight also validates the provided App ID matches the expected project.
+
+If it fails, run:
+
+```bash
+firebase login
+firebase use flutter-bloc-app-697e8
+```
+
+---
+
 ## Cloud Functions (TypeScript) – Charts fallback
 
 This repo includes Firebase Cloud Functions under `functions/` (TypeScript, Node 22).
