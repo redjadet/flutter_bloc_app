@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
 class ConnectionStatusPill extends StatelessWidget {
   const ConnectionStatusPill({
@@ -41,21 +42,17 @@ class ConnectionStatusPill extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (status == MarketConnectionStatus.reconnecting) ...[
-                Icon(Icons.sync_rounded, size: 16, color: fg),
-                const SizedBox(width: 6),
-              ],
-              Text(
-                label,
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: fg,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          child: IconLabelRow(
+            label: label,
+            icon: status == MarketConnectionStatus.reconnecting
+                ? Icons.sync_rounded
+                : null,
+            iconSize: 16,
+            iconColor: fg,
+            textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: fg,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
