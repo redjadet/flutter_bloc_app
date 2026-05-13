@@ -8,6 +8,7 @@
 #   bash tool/commit_push_pr_post_merge.sh --remote upstream
 #
 # Also: python3 tool/commit_push_pr_deploy.py post-merge
+# Or merge + cleanup in one step: bash tool/commit_push_pr_merge_and_cleanup.sh
 
 set -euo pipefail
 

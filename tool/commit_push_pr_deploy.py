@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan or execute pre-commit remote deploys and post-merge cleanup for `/commit-push-pr`."""
+"""Plan or execute pre-commit remote deploys; post-merge and merge+cleanup for `/commit-push-pr`."""
 
 from __future__ import annotations
 
@@ -33,6 +33,7 @@ DEPLOY_COMMANDS = {
 FASTAPI_CLOUD_DEPLOY_SCRIPT = PROJECT_ROOT / "tool" / "deploy_fastapi_cloud_chat_api.sh"
 RENDER_DEPLOY_TRIGGER_SCRIPT = PROJECT_ROOT / "tool" / "trigger_render_chat_api_deploy.sh"
 POST_MERGE_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_post_merge.sh"
+MERGE_AND_CLEANUP_SCRIPT = PROJECT_ROOT / "tool" / "commit_push_pr_merge_and_cleanup.sh"
 
 
 @dataclass(frozen=True)
@@ -446,6 +447,19 @@ def _post_merge_command(_: argparse.Namespace) -> int:
     return int(result.returncode)
 
 
+def _merge_cleanup_command(args: argparse.Namespace) -> int:
+    """Run gh pr merge (defaults in shell) then post-merge cleanup."""
+    if not MERGE_AND_CLEANUP_SCRIPT.is_file():
+        print(f"missing {MERGE_AND_CLEANUP_SCRIPT}", file=sys.stderr)
+        return 2
+    cmd = ["bash", str(MERGE_AND_CLEANUP_SCRIPT)]
+    if args.merge_cleanup_remote != "origin":
+        cmd.extend(["--remote", args.merge_cleanup_remote])
+    cmd.extend(args.gh_merge_args)
+    result = subprocess.run(cmd, check=False, cwd=PROJECT_ROOT)
+    return int(result.returncode)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subcommand", required=True)
@@ -462,6 +476,25 @@ def main() -> int:
         help="After PR merge: fetch/prune, checkout default branch if clean, delete merged local branches.",
     )
     post_merge_parser.set_defaults(func=_post_merge_command)
+
+    merge_cleanup_parser = subparsers.add_parser(
+        "merge-cleanup",
+        help="gh pr merge (default --squash --delete-branch) then post-merge local cleanup.",
+    )
+    merge_cleanup_parser.add_argument(
+        "--remote",
+        default="origin",
+        dest="merge_cleanup_remote",
+        metavar="NAME",
+        help="Git remote for post-merge fetch/cleanup (default: origin).",
+    )
+    merge_cleanup_parser.add_argument(
+        "gh_merge_args",
+        nargs="*",
+        default=[],
+        help="Forwarded to gh pr merge; if empty, the shell script uses --squash --delete-branch.",
+    )
+    merge_cleanup_parser.set_defaults(func=_merge_cleanup_command)
 
     args = parser.parse_args()
     return args.func(args)
