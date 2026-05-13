@@ -1,84 +1,77 @@
 # Flutter BLoC App
 
-A Flutter reference application for offline-first product demos, AI-assisted
-workflows, backend integrations, and production-minded delivery practices.
+Flutter reference application for production-style feature delivery: clean
+architecture, offline-first data, BLoC/Cubit state, typed routing, backend
+integrations, AI demos, and release-ready validation.
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.9-blue.svg)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-[![Coverage](https://img.shields.io/badge/Coverage-72%2E70%25-brightgreen.svg)](coverage/coverage_summary.md)
-[![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
-
 [![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
 [![Deploy web](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml)
 [![Dependency Review](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-review.yml)
+[![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
+[![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E70%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
-[![Architecture Pattern](https://img.shields.io/badge/Architecture-Offline--First-4CAF50.svg)](docs/offline_first/adoption_guide.md)
-[![State Management](https://img.shields.io/badge/State%20Management-BLOC%2FCubit-2196F3.svg)](https://pub.dev/packages/flutter_bloc)
+[![ADRs](https://img.shields.io/badge/ADRs-Accepted%20Decisions-475569.svg)](docs/adr/README.md)
+[![Offline First](https://img.shields.io/badge/Data-Offline--First-16A34A.svg)](docs/offline_first/adoption_guide.md)
+[![State Management](https://img.shields.io/badge/State-BLoC%2FCubit-2563EB.svg)](https://pub.dev/packages/flutter_bloc)
 [![Routing](https://img.shields.io/badge/Routing-GoRouter-00ADD8.svg)](https://pub.dev/packages/go_router)
 [![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
+[![Persistence](https://img.shields.io/badge/Persistence-Hive-FFB300.svg)](docs/offline_first/hive_schema_migrations.md)
+[![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/plans/dio_retrofit_integration_plan.md)
+[![Models](https://img.shields.io/badge/Models-Freezed-7C3AED.svg)](docs/freezed_usage_analysis.md)
+[![Design System](https://img.shields.io/badge/Design-Material%203%20%7C%20Mix-6200EE.svg)](docs/design_system.md)
+[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](docs/firebase_setup.md)
+[![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E.svg)](supabase/README.md)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
 [![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
-[![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-02569B.svg)](docs/deployment.md)
 [![Localization](https://img.shields.io/badge/Localization-6%20locales-009688.svg)](docs/localization.md)
-
-[![Backend](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](https://firebase.google.com/)
-[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E.svg)](https://supabase.com/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Chat%20API-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Decision%20API-0B5FFF.svg)](docs/ai_decision_workbench.md)
-[![Render](https://img.shields.io/badge/Render-Hosting-46E3B7.svg)](https://render.com/)
-[![FastAPI Cloud](https://img.shields.io/badge/FastAPI%20Cloud-Hosting-0B5FFF.svg)](https://fastapicloud.com/)
-[![AI Chat](https://img.shields.io/badge/AI-Chat%20Flows-0EA5E9.svg)](docs/ai_integration.md)
-
-[![Staff Demo](https://img.shields.io/badge/Demo-Staff%20App-2563EB.svg)](docs/staff_app_demo_walkthrough.md)
-[![Online Therapy](https://img.shields.io/badge/Demo-Online%20Therapy-14B8A6.svg)](docs/online_therapy_demo/README.md)
-[![Case Studies](https://img.shields.io/badge/Product-Case%20Studies-8B5CF6.svg)](docs/case_studies/README.md)
-[![Design System](https://img.shields.io/badge/Design%20System-Material%203-6200EE.svg)](https://m3.material.io/)
-[![iOS Design](https://img.shields.io/badge/iOS%20Design-Cupertino-007AFF.svg)](https://api.flutter.dev/flutter/cupertino/cupertino-library.html)
-[![Type Safety](https://img.shields.io/badge/Type%20Safety-Compile--Time-0F9D58.svg)](docs/compile_time_safety.md)
 [![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
-[![Universal Links](https://img.shields.io/badge/Links-Universal%20Links-0F766E.svg)](docs/universal_links/README.md)
-[![DRY Principles](https://img.shields.io/badge/DRY-Principles-2B7A78.svg)](docs/dry_principles.md)
-[![Separation of Concerns](https://img.shields.io/badge/Separation%20of%20Concerns-Applied-00796B.svg)](docs/separation_of_concerns.md)
-[![SOLID](https://img.shields.io/badge/SOLID-Principles-6C5CE7.svg)](docs/solid_principles.md)
-
-## Overview
-
-This repository is a polished Flutter reference app for production-style
-feature delivery. It brings together offline-first data flows, authentication,
-AI-assisted demos, backend integrations, and product walkthroughs so new app
-ideas can be tested without starting from an empty project.
 
 ## Start Here
 
-- Full docs index: [docs/README.md](docs/README.md)
-- Local setup and first run: [docs/new_developer_guide.md](docs/new_developer_guide.md)
-- Feature and route catalog: [docs/feature_overview.md](docs/feature_overview.md)
-- Quality and test lanes: [docs/testing_overview.md](docs/testing_overview.md),
-  [docs/validation_scripts.md](docs/validation_scripts.md)
-- Architecture and repo shape: [docs/clean_architecture.md](docs/clean_architecture.md),
-  [docs/architecture_details.md](docs/architecture_details.md)
-- Security and secret injection: [docs/security_and_secrets.md](docs/security_and_secrets.md),
-  [docs/SECURITY.md](docs/SECURITY.md)
-- Deployment and release: [docs/deployment.md](docs/deployment.md)
+| Need | Source |
+| --- | --- |
+| Documentation index | [docs/README.md](docs/README.md) |
+| First run and local setup | [docs/new_developer_guide.md](docs/new_developer_guide.md) |
+| Feature catalog | [docs/feature_overview.md](docs/feature_overview.md) |
+| Validation and testing | [docs/validation_scripts.md](docs/validation_scripts.md), [docs/testing_overview.md](docs/testing_overview.md) |
+| Architecture overview | [docs/architecture_details.md](docs/architecture_details.md), [docs/clean_architecture.md](docs/clean_architecture.md) |
+| Design system | [DESIGN.md](DESIGN.md), [docs/design_system.md](docs/design_system.md) |
+| Security and secrets | [docs/SECURITY.md](docs/SECURITY.md), [docs/security_and_secrets.md](docs/security_and_secrets.md) |
+| Deployment and release | [docs/deployment.md](docs/deployment.md), [docs/REPOSITORY_LIFECYCLE.md](docs/REPOSITORY_LIFECYCLE.md) |
 
-## Current Surfaces
+## Architecture Decisions
 
-- AI chat overview and transports: [docs/ai_integration.md](docs/ai_integration.md),
-  [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md),
-  [supabase/README.md](supabase/README.md)
-- AI Decision Workbench (FastAPI-backed risk score, rationale, proof trail,
-  and action history): [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md)
-- Staff app demo walkthrough: [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md)
-- Online therapy demo: [docs/online_therapy_demo/README.md](docs/online_therapy_demo/README.md)
-- Case-study briefs and demo context: [docs/case_studies/README.md](docs/case_studies/README.md)
-- Release, Firebase, Supabase, and universal-link setup:
-  [docs/deployment.md](docs/deployment.md),
-  [docs/firebase_setup.md](docs/firebase_setup.md),
-  [docs/universal_links/README.md](docs/universal_links/README.md)
+Architecture Decision Records (ADRs) are indexed in
+[docs/adr/README.md](docs/adr/README.md).
 
-Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for everything else.
+| ADR | Decision |
+| --- | --- |
+| [ADR 0001](docs/adr/0001-architecture-and-layering.md) | Feature-based Clean Architecture with `Presentation -> Domain <- Data`, BLoC/Cubit state, and `get_it` DI. |
+| [ADR 0002](docs/adr/0002-offline-first-data.md) | Offline-first repositories with Hive local stores, queued sync, and background reconciliation. |
+| [ADR 0003](docs/adr/0003-deferred-feature-loading.md) | Deferred imports and `DeferredPage` for heavy or infrequently used routed features. |
+| [ADR 0004](docs/adr/0004-type-safe-cubit-access.md) | Shared type-safe BLoC/Cubit access helpers and selectors for routine presentation code. |
+
+## Key References
+
+| Area | Source |
+| --- | --- |
+| Offline-first adoption | [docs/offline_first/adoption_guide.md](docs/offline_first/adoption_guide.md) |
+| Hive schema migrations | [docs/offline_first/hive_schema_migrations.md](docs/offline_first/hive_schema_migrations.md) |
+| AI chat integration | [docs/ai_integration.md](docs/ai_integration.md), [docs/integrations/render_fastapi_chat_demo.md](docs/integrations/render_fastapi_chat_demo.md) |
+| AI Decision Workbench | [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md) |
+| Staff app demo | [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md) |
+| Online therapy demo | [docs/online_therapy_demo/README.md](docs/online_therapy_demo/README.md) |
+| Case studies | [docs/case_studies/README.md](docs/case_studies/README.md) |
+| Firebase and Supabase | [docs/firebase_setup.md](docs/firebase_setup.md), [supabase/README.md](supabase/README.md) |
+| Universal links | [docs/universal_links/README.md](docs/universal_links/README.md) |
+| Agent harness | [AGENTS.md](AGENTS.md), [docs/agent_knowledge_base.md](docs/agent_knowledge_base.md), [docs/agents_quick_reference.md](docs/agents_quick_reference.md) |
 
 ## Screenshots
 
@@ -118,7 +111,7 @@ Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for 
 | --- | --- | --- |
 | <img src="assets/screenshots/register.png" alt="Register screen" width="240" /> | <img src="assets/screenshots/in_app_purchase.png" alt="In-app purchase screen" width="240" /> | <img src="assets/screenshots/whiteboard_color_pick.png" alt="Whiteboard color picker" width="240" /> |
 
-| Whiteboard | Markdown | Camera & gallery |
+| Whiteboard | Markdown | Camera and gallery |
 | --- | --- | --- |
 | <img src="assets/screenshots/whiteboard.png" alt="Whiteboard" width="240" /> | <img src="assets/screenshots/markdown_editor.png" alt="Markdown Editor" width="240" /> | <img src="assets/screenshots/camera_gallery.png" alt="Camera and gallery picker" width="240" /> |
 
@@ -135,3 +128,9 @@ Use [docs/README.md](docs/README.md) as the source-of-truth navigation page for 
 | <img src="assets/screenshots/scapes.png" alt="Scapes screen" width="240" /> |
 
 <!-- markdownlint-enable MD033 -->
+
+## Working Rule
+
+This README is the repo entrypoint only. Detailed guidance belongs in the linked
+docs above, with [docs/README.md](docs/README.md) as the primary documentation
+index.

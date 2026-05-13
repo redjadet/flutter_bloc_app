@@ -907,6 +907,11 @@ checklist is also change-aware:
 - exits early for local tooling-only change sets (`tool/*.sh`, `bin/*`, host-template files, and validation-guidance docs) after syntax/doc-sync/drift checks instead of running app-wide Flutter validation
 - caches checklist self-validation until checklist script/dependency scripts or validation docs change
 
+## Git · local branch cleanup
+
+- **`commit_push_pr_post_merge.sh`**: End of **`/commit-push-pr`**: after a PR is merged on GitHub, run locally (or `python3 tool/commit_push_pr_deploy.py post-merge`). Fetches/prunes `origin`, checks out the remote default branch when the worktree is clean, `git pull --ff-only`, then runs **`clean_merged_local_branches.sh`** with **`--apply`**. If the worktree is dirty, skips checkout/pull and still prunes locals.
+- **`clean_merged_local_branches.sh`**: Deletes **local** branches that are safe to drop: `--gone` (upstream deleted after `git fetch --prune`) and/or `--merged-base origin/main` (true merges into that ref only; squash merges need the remote topic branch removed first, then `--gone`). Defaults to **dry-run**; pass **`--apply`** to execute. Removes linked **worktrees** (not the main checkout) before deleting a branch. See `bash tool/clean_merged_local_branches.sh --help`.
+
 ## Skill budget check (agent context)
 
 Purpose: detect accidental growth in **repo-managed** agent skills and provide a signal for local `~/.cursor/skills` bloat.
