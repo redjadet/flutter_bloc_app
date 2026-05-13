@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -27,7 +28,6 @@ import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dar
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -143,7 +143,7 @@ void registerChatServices() {
   registerLazySingletonIfAbsent<RenderOrchestrationHfTokenProvider>(
     () => LayeredRenderOrchestrationHfTokenProvider(
       runtime: getIt<AppRuntimeConfig>(),
-      remoteConfig: getIt<RemoteConfigService>(),
+      remoteTokenPort: getIt<RenderOrchestrationRemoteTokenPort>(),
       storage: SecretConfig.storage ?? createDefaultSecretStorage(),
       firebaseAuth:
           getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty

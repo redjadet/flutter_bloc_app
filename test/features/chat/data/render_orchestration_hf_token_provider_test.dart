@@ -1,9 +1,8 @@
+import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,12 +31,7 @@ void main() {
                 flavor: Flavor.dev,
                 skeletonDelay: Duration.zero,
               ),
-              remoteConfig: _FakeRemoteConfig(
-                strings: <String, String>{
-                  RemoteConfigRepository.renderChatDemoHfReadTokenKey:
-                      '  rc-hf  ',
-                },
-              ),
+            remoteTokenPort: _FakeRemoteTokenPort(token: '  rc-hf  '),
               storage: storage,
             );
 
@@ -64,11 +58,7 @@ void main() {
               flavor: Flavor.dev,
               skeletonDelay: Duration.zero,
             ),
-            remoteConfig: _FakeRemoteConfig(
-              strings: <String, String>{
-                RemoteConfigRepository.renderChatDemoHfReadTokenKey: 'from-rc',
-              },
-            ),
+            remoteTokenPort: _FakeRemoteTokenPort(token: 'from-rc'),
             storage: storage,
           );
 
@@ -92,12 +82,7 @@ void main() {
                 flavor: Flavor.staging,
                 skeletonDelay: Duration.zero,
               ),
-              remoteConfig: _FakeRemoteConfig(
-                strings: <String, String>{
-                  RemoteConfigRepository.renderChatDemoHfReadTokenKey:
-                      'from-rc',
-                },
-              ),
+            remoteTokenPort: _FakeRemoteTokenPort(token: 'from-rc'),
               storage: storage,
             );
 
@@ -120,7 +105,7 @@ void main() {
               flavor: Flavor.staging,
               skeletonDelay: Duration.zero,
             ),
-            remoteConfig: _FakeRemoteConfig(),
+            remoteTokenPort: _FakeRemoteTokenPort(),
             storage: storage,
             callableTokenOverride: () async => 'from-callable',
           );
@@ -145,7 +130,7 @@ void main() {
               flavor: Flavor.dev,
               skeletonDelay: Duration.zero,
             ),
-            remoteConfig: _FakeRemoteConfig(),
+            remoteTokenPort: _FakeRemoteTokenPort(),
             storage: storage,
           );
 
@@ -181,7 +166,7 @@ void main() {
                 flavor: Flavor.dev,
                 skeletonDelay: Duration.zero,
               ),
-              remoteConfig: _FakeRemoteConfig(),
+            remoteTokenPort: _FakeRemoteTokenPort(),
               storage: storage,
             );
 
@@ -203,16 +188,14 @@ void main() {
 
     test('single-flight: concurrent reads share one resolution', () async {
       FlavorManager.current = Flavor.dev;
-      int getStringCalls = 0;
+      int readCalls = 0;
       final LayeredRenderOrchestrationHfTokenProvider provider =
           LayeredRenderOrchestrationHfTokenProvider(
             runtime: AppRuntimeConfig(
               flavor: Flavor.dev,
               skeletonDelay: Duration.zero,
             ),
-            remoteConfig: _CountingRemoteConfig(
-              onGetString: () => getStringCalls++,
-              value: 'once',
+            remoteTokenPort: _CountingRemoteTokenPort(onRead: () => readCalls++, token: 'once',
             ),
             storage: storage,
           );
@@ -224,65 +207,41 @@ void main() {
       ]);
 
       expect(results, everyElement('once'));
-      expect(getStringCalls, 1);
+      expect(readCalls, 1);
     });
   });
 }
 
-class _FakeRemoteConfig implements RemoteConfigService {
-  _FakeRemoteConfig({this.strings = const <String, String>{}});
+class _FakeRemoteTokenPort implements RenderOrchestrationRemoteTokenPort {
+  _FakeRemoteTokenPort({this.token});
 
-  final Map<String, String> strings;
-
-  @override
-  Future<void> clearCache() async {}
+  final String? token;
 
   @override
-  Future<void> forceFetch() async {}
+  Future<void> forceRefresh() async {}
 
   @override
-  bool getBool(final String key) => false;
-
-  @override
-  double getDouble(final String key) => 0;
-
-  @override
-  int getInt(final String key) => 0;
-
-  @override
-  String getString(final String key) => strings[key] ?? '';
-
-  @override
-  Future<void> initialize() async {}
+  String? readDevToken() {
+    final String? raw = token?.trim();
+    if (raw == null || raw.isEmpty) {
+      return null;
+    }
+    return raw;
+  }
 }
 
-class _CountingRemoteConfig implements RemoteConfigService {
-  _CountingRemoteConfig({required this.onGetString, required this.value});
+class _CountingRemoteTokenPort implements RenderOrchestrationRemoteTokenPort {
+  _CountingRemoteTokenPort({required this.onRead, required this.token});
 
-  final void Function() onGetString;
-  final String value;
-
-  @override
-  Future<void> clearCache() async {}
+  final void Function() onRead;
+  final String token;
 
   @override
-  Future<void> forceFetch() async {}
+  Future<void> forceRefresh() async {}
 
   @override
-  bool getBool(final String key) => false;
-
-  @override
-  double getDouble(final String key) => 0;
-
-  @override
-  int getInt(final String key) => 0;
-
-  @override
-  String getString(final String key) {
-    onGetString();
-    return value;
+  String? readDevToken() {
+    onRead();
+    return token;
   }
-
-  @override
-  Future<void> initialize() async {}
 }

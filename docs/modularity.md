@@ -53,6 +53,10 @@ The auth **feature** (`lib/features/auth/`) extends the core contract (e.g. adds
 - **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `lib/shared/widgets/diagnostics/` and depend only on **`lib/core/diagnostics/`** ports (`GraphqlCacheClearPort`, `ProfileCacheControlsPort`). The **router** wires `getIt` implementations so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports.
 - **Remote config diagnostics DTO** – `RemoteConfigDiagnosticsViewData` + `RemoteConfigDiagnosticsStatus` live in `lib/core/diagnostics/remote_config_diagnostics_view_data.dart`. The **remote_config** feature maps `RemoteConfigState` via `mapRemoteConfigStateToDiagnosticsViewData` (`lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`) so the cubit state type does not leak into core.
 
+### Render orchestration HF token (`lib/core/chat/`)
+
+- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `lib/core/chat/render_orchestration_remote_token_port.dart` exposing `readDevToken()` + `forceRefresh()`. The chat `LayeredRenderOrchestrationHfTokenProvider` depends only on this port, so **`chat` no longer imports `remote_config`**. The adapter lives in `lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in `lib/core/di/register_remote_config_services.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
+
 ### Settings diagnostics decoupling (plan todos — **all complete**)
 
 Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](plans/settings_diagnostics_decouple_plan.md).
@@ -115,7 +119,6 @@ failed by default, until each hit is classified (move to `lib/app/`, `lib/shared
 | --- | --- | --- | --- | --- |
 | `case_study_demo` → `camera_gallery` | `case_study_image_picker_video_repository.dart`, `case_study_video_repository.dart`, `case_study_l10n_helpers.dart`, `case_study_session_cubit.dart` | Temporary — shared camera result/error types should move to `lib/shared/` or a thin `core/` contract so the demo does not depend on another feature’s domain | Maintainers | Remove when camera gallery exports are replaced by a shared or core type, or case study owns equivalent DTOs |
 | `case_study_demo` → `supabase_auth` | `case_study_session_cubit.dart`, `case_study_demo_home_page.dart`, `case_study_history_*.dart`, `case_study_data_mode_badge.dart` | Temporary — presentation pulls `SupabaseAuthRepository`; prefer app/DI passing an interface or core auth read model | Maintainers | Remove when cubit/pages receive auth via constructor/DI without importing `supabase_auth` |
-| `chat` → `remote_config` | `render_orchestration_hf_token_provider.dart` | Port candidate — HF token gating via remote config; see [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md) | Maintainers | Remove when a `core/` (or shared) port abstracts remote-config reads used by chat |
 
 ## Phase 3 follow-ups (stronger seams)
 
