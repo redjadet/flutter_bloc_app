@@ -32,6 +32,19 @@ def _parse_runtime_version(runtime_name: str) -> Optional[Tuple[int, int]]:
     return (major, minor)
 
 
+def _parse_two_part_version(major: str, minor: str) -> Optional[Tuple[int, int]]:
+    """Parse major.minor strings; major required digits, minor empty => 0."""
+    major = major.strip()
+    minor = minor.strip()
+    if not major or not major.isdigit():
+        return None
+    if not minor:
+        return (int(major), 0)
+    if not minor.isdigit():
+        return None
+    return (int(major), int(minor))
+
+
 def _parse_version_pin(raw: str) -> Optional[Tuple[int, int]]:
     s = (raw or "").strip()
     if not s:
@@ -39,12 +52,14 @@ def _parse_version_pin(raw: str) -> Optional[Tuple[int, int]]:
     low = s.lower()
     if low.startswith("ios"):
         s = s[3:].lstrip(" -_.")
+    if not s:
+        return None
     if "." in s:
         a, _, b = s.partition(".")
-        return (int(a), int(b))
+        return _parse_two_part_version(a, b)
     if "-" in s:
         a, _, b = s.partition("-")
-        return (int(a), int(b))
+        return _parse_two_part_version(a, b)
     if s.isdigit():
         return (int(s), 0)
     return None
