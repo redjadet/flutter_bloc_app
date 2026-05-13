@@ -52,6 +52,12 @@ void main() {
                   const Scaffold(body: Text('Case Study Demo Page')),
             ),
             GoRoute(
+              path: AppRoutes.realtimeMarketPath,
+              name: AppRoutes.realtimeMarket,
+              builder: (context, state) =>
+                  const Scaffold(body: Text('Realtime Market Page')),
+            ),
+            GoRoute(
               path: AppRoutes.chartsPath,
               name: AppRoutes.charts,
               builder: (context, state) =>
@@ -144,6 +150,16 @@ void main() {
         ),
       );
       expect(exampleButton.onPressed, isNotNull);
+    });
+
+    testWidgets('realtime market button navigates when tapped', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.show_chart));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Realtime Market Page'), findsOneWidget);
     });
 
     testWidgets('case study demo button navigates when tapped', (tester) async {
@@ -249,6 +265,7 @@ void main() {
 
       expect(find.byIcon(Icons.payments_outlined), findsOneWidget);
       expect(find.byIcon(Icons.explore), findsOneWidget);
+      expect(find.byIcon(Icons.show_chart), findsOneWidget);
       expect(find.byIcon(Icons.ondemand_video_outlined), findsOneWidget);
       expect(find.byIcon(Icons.settings), findsOneWidget);
 

@@ -56,6 +56,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | --- | --- | --- | --- |
 | Google / Apple Maps | `/google-maps` | `lib/features/google_maps/` | Deferred-loaded map experience with platform-specific map providers. |
 | WebSocket Demo | `/websocket` | `lib/features/websocket/` | Deferred-loaded reconnecting WebSocket flow. |
+| Realtime market demo (simulated) | `/realtime-market` (Example hub entry) | `lib/features/realtime_market/` | Simulated order book + trades; Hive cache; no production exchange. Doc: [`features/realtime_market.md`](features/realtime_market.md). |
 | Camera Gallery | `/camera-gallery` | `lib/features/camera_gallery/` | Camera and gallery picker demo. |
 | Calculator | `/calculator`, `/calculator/payment` | `lib/features/calculator/` | Calculator and payment summary flow. |
 | Whiteboard | `/whiteboard` | `lib/features/example/presentation/pages/whiteboard_page.dart` | `CustomPainter`-based drawing experience. |
@@ -77,6 +78,7 @@ bundle smaller:
 - `/google-maps`
 - `/markdown-editor`
 - `/websocket`
+- `/realtime-market`
 
 See [Architecture Details](architecture_details.md) and
 [Lazy Loading Review](lazy_loading_review.md) for the rationale.

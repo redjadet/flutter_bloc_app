@@ -3,6 +3,7 @@ part of '../injector_registrations.dart';
 Future<void> registerDemoServices() async {
   registerIgamingDemoServices();
   registerFcmDemoServices();
+  registerRealtimeMarketServices();
   registerIotDemoServices();
   registerInAppPurchaseDemoServices();
   registerStaffAppDemoServices();
@@ -65,13 +66,15 @@ void _registerSyncServices() {
   );
   registerLazySingletonIfAbsent<BackgroundSyncCoordinator>(
     () {
-      final IotDemoRealtimeSubscription realtime = getIt<IotDemoRealtimeSubscription>();
+      final IotDemoRealtimeSubscription realtime =
+          getIt<IotDemoRealtimeSubscription>();
       return BackgroundSyncCoordinator(
         repository: getIt<PendingSyncRepository>(),
         networkStatusService: getIt<NetworkStatusService>(),
         timerService: getIt<TimerService>(),
         registry: getIt<SyncableRepositoryRegistry>(),
-        getSyncSupabaseUserId: () => getIt<SupabaseAuthRepository>().currentUser?.id,
+        getSyncSupabaseUserId: () =>
+            getIt<SupabaseAuthRepository>().currentUser?.id,
         startIotDemoRealtimeSubscription: (final onSyncRequested) =>
             realtime.start(onSyncRequested),
         stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),

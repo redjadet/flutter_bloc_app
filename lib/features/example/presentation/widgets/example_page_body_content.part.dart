@@ -8,6 +8,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onBackPressed,
     required this.onLoadPlatformInfo,
     required this.onOpenWebsocket,
+    required this.onOpenRealtimeMarket,
     required this.onOpenChatList,
     required this.onOpenSearch,
     required this.onOpenTodoList,
@@ -41,6 +42,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback onBackPressed;
   final VoidCallback? onLoadPlatformInfo;
   final VoidCallback onOpenWebsocket;
+  final VoidCallback onOpenRealtimeMarket;
   final VoidCallback onOpenChatList;
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenTodoList;
@@ -143,6 +145,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             onPressed: onOpenWebsocket,
             icon: Icons.wifi,
             label: l10n.exampleWebsocketButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenRealtimeMarket,
+            icon: Icons.show_chart,
+            label: l10n.exampleRealtimeMarketButton,
+            key: const ValueKey('example-realtime-market-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

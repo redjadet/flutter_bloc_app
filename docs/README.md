@@ -20,7 +20,8 @@ Source-of-truth docs for Flutter BLoC app.
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
-  [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
+  [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
+  [`features/realtime_market.md`](features/realtime_market.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`agent_project_context.md`](agent_project_context.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),

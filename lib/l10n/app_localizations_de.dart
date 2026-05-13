@@ -2022,6 +2022,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get openIotDemoTooltip => 'IoT-Demo öffnen';
 
   @override
+  String get openRealtimeMarketTooltip => 'Realtime-Market-Demo öffnen';
+
+  @override
   String get searchAllResultsSectionTitle => 'ALLE ERGEBNISSE';
 
   @override
@@ -2610,4 +2613,75 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get staffDemoShiftConfirmed => 'Confirmed';
+
+  @override
+  String get exampleRealtimeMarketButton => 'Echtzeitmarkt-Demo';
+
+  @override
+  String get realtimeMarketTitle => 'Echtzeitmarkt-Demo';
+
+  @override
+  String get realtimeMarketRetryButton => 'Retry';
+
+  @override
+  String get realtimeMarketStaleDataLabel => 'Showing cached data';
+
+  @override
+  String get realtimeMarketConnectionLive => 'Live';
+
+  @override
+  String get realtimeMarketConnectionReconnecting => 'Reconnecting';
+
+  @override
+  String get realtimeMarketConnectionOffline => 'Offline';
+
+  @override
+  String get realtimeMarketSideBuy => 'Buy';
+
+  @override
+  String get realtimeMarketSideSell => 'Sell';
+
+  @override
+  String get realtimeMarketOrderBookTitle => 'Order book';
+
+  @override
+  String get realtimeMarketTradesTitle => 'Recent trades';
+
+  @override
+  String get realtimeMarketLastPrice => 'Last price';
+
+  @override
+  String get realtimeMarketChartTitle => 'Price';
+
+  @override
+  String get realtimeMarketStatsTitle => '24h stats';
+
+  @override
+  String get realtimeMarketStatsHigh24h => '24h high';
+
+  @override
+  String get realtimeMarketStatsLow24h => '24h low';
+
+  @override
+  String get realtimeMarketStatsVolume => 'Volume';
+
+  @override
+  String get realtimeMarketLoadError => 'Could not load market data.';
+
+  @override
+  String get realtimeMarketOrderBookColumnPrice => 'Preis';
+
+  @override
+  String get realtimeMarketOrderBookColumnAmount => 'Menge';
+
+  @override
+  String get realtimeMarketTradesEmpty => 'Noch keine Trades';
+
+  @override
+  String get realtimeMarketPullToRefreshHint =>
+      'Zum Aktualisieren nach unten ziehen';
+
+  @override
+  String get realtimeMarketDisclaimer =>
+      'Simulierte Daten nur für die UI-Demo — kein echtes Exchange.';
 }

@@ -141,6 +141,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onBackPressed: () => NavigationUtils.popOrGoHome(context),
         onLoadPlatformInfo: _isFetchingInfo ? null : _loadPlatformInfo,
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
+        onOpenRealtimeMarket: () => context.pushNamed(AppRoutes.realtimeMarket),
         onOpenChatList: () => context.pushNamed(AppRoutes.chatList),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
         onOpenTodoList: () => context.pushNamed(AppRoutes.todoList),

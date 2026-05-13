@@ -14,6 +14,7 @@ export 'iot_demo/iot_demo.dart';
 export 'library_demo/presentation/pages/library_demo_page.dart';
 export 'playlearn/playlearn.dart';
 export 'profile/profile.dart';
+export 'realtime_market/realtime_market.dart';
 export 'remote_config/remote_config.dart';
 export 'scapes/scapes.dart';
 export 'search/search.dart';

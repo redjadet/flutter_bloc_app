@@ -30,6 +30,9 @@ class AppRoutes {
   static const websocket = 'websocket';
   static const websocketPath = '/websocket';
 
+  static const realtimeMarket = 'realtime-market';
+  static const realtimeMarketPath = '/realtime-market';
+
   static const googleMaps = 'google-maps';
   static const googleMapsPath = '/google-maps';
 
