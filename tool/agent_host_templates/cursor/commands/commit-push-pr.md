@@ -51,7 +51,7 @@ Equivalent:
 bash tool/commit_push_pr_post_merge.sh
 ```
 
-This `git fetch --prune` on `origin`, checks out the remote default branch when the worktree is **clean**, `git pull --ff-only`, then runs `tool/clean_merged_local_branches.sh` with **`--apply`** (`--gone` and `--merged-base` for that default branch). If the worktree is dirty, checkout is skipped and only pruning runs.
+Runs `git fetch --prune` on `origin`, **requires a clean worktree**, checks out the **remote default branch** (usually `main`: from `refs/remotes/origin/HEAD`, else `main`), then `git pull --ff-only`, then `tool/clean_merged_local_branches.sh` with **`--apply`**. If the worktree is dirty, the script **exits** so you never prune while still checked out on the merged topic branch—commit or stash, then re-run.
 
 Safety:
 
