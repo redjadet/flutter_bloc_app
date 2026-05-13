@@ -285,5 +285,97 @@ class CommitPushPrDeployTest(unittest.TestCase):
         self.assertEqual(rc, 2)
 
 
+    def test_rebase_on_main_missing_script_returns_2(self) -> None:
+        missing = Path("/nonexistent/commit_push_pr_rebase_on_main.sh")
+        ns = argparse.Namespace(rebase_remote="origin", rebase_branch="main")
+        with mock.patch.object(commit_push_pr_deploy, "REBASE_ON_MAIN_SCRIPT", missing):
+            rc = commit_push_pr_deploy._rebase_on_main_command(ns)
+        self.assertEqual(rc, 2)
+
+    def test_rebase_on_main_runs_helper_defaults(self) -> None:
+        ns = argparse.Namespace(rebase_remote="origin", rebase_branch="main")
+        with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:
+            rc = commit_push_pr_deploy._rebase_on_main_command(ns)
+        self.assertEqual(rc, 0)
+        run.assert_called_once_with(
+            ["bash", str(commit_push_pr_deploy.REBASE_ON_MAIN_SCRIPT)],
+            check=False,
+            cwd=commit_push_pr_deploy.PROJECT_ROOT,
+        )
+
+    def test_rebase_on_main_forwards_remote_and_branch(self) -> None:
+        ns = argparse.Namespace(rebase_remote="upstream", rebase_branch="develop")
+        with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:
+            rc = commit_push_pr_deploy._rebase_on_main_command(ns)
+        self.assertEqual(rc, 0)
+        run.assert_called_once_with(
+            [
+                "bash",
+                str(commit_push_pr_deploy.REBASE_ON_MAIN_SCRIPT),
+                "--remote",
+                "upstream",
+                "--branch",
+                "develop",
+            ],
+            check=False,
+            cwd=commit_push_pr_deploy.PROJECT_ROOT,
+        )
+
+
+    def test_watch_merge_cleanup_missing_script_returns_2(self) -> None:
+        missing = Path("/nonexistent/commit_push_pr_watch_merge_cleanup.sh")
+        ns = argparse.Namespace(
+            watch_merge_remote="origin",
+            watch_merge_interval=None,
+            watch_merge_fail_fast=False,
+            watch_merge_extra=[],
+        )
+        with mock.patch.object(commit_push_pr_deploy, "WATCH_MERGE_CLEANUP_SCRIPT", missing):
+            rc = commit_push_pr_deploy._watch_merge_cleanup_command(ns)
+        self.assertEqual(rc, 2)
+
+    def test_watch_merge_cleanup_runs_helper_script(self) -> None:
+        ns = argparse.Namespace(
+            watch_merge_remote="origin",
+            watch_merge_interval=None,
+            watch_merge_fail_fast=False,
+            watch_merge_extra=[],
+        )
+        with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:
+            rc = commit_push_pr_deploy._watch_merge_cleanup_command(ns)
+        self.assertEqual(rc, 0)
+        run.assert_called_once_with(
+            ["bash", str(commit_push_pr_deploy.WATCH_MERGE_CLEANUP_SCRIPT)],
+            check=False,
+            cwd=commit_push_pr_deploy.PROJECT_ROOT,
+        )
+
+    def test_watch_merge_cleanup_forwards_flags_and_extra(self) -> None:
+        ns = argparse.Namespace(
+            watch_merge_remote="upstream",
+            watch_merge_interval=45,
+            watch_merge_fail_fast=True,
+            watch_merge_extra=["205", "--merge"],
+        )
+        with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:
+            rc = commit_push_pr_deploy._watch_merge_cleanup_command(ns)
+        self.assertEqual(rc, 0)
+        run.assert_called_once_with(
+            [
+                "bash",
+                str(commit_push_pr_deploy.WATCH_MERGE_CLEANUP_SCRIPT),
+                "--remote",
+                "upstream",
+                "-i",
+                "45",
+                "--fail-fast",
+                "205",
+                "--merge",
+            ],
+            check=False,
+            cwd=commit_push_pr_deploy.PROJECT_ROOT,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
