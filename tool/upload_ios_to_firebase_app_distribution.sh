@@ -11,6 +11,8 @@ IPA_PATH="$1"
 RELEASE_NOTES="${2:-Release uploaded $(date +%Y-%m-%d)}"
 GROUPS="${3:-}"
 
+bash "$PROJECT_ROOT/tool/firebase_preflight.sh" --require-cli --app-id "$IOS_APP_ID"
+
 if [[ -z "$IPA_PATH" ]]; then
   IPA_PATH=$(find "$PROJECT_ROOT/build/ios" -name "*.ipa" 2>/dev/null | head -1)
 fi
