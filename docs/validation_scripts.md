@@ -36,7 +36,7 @@ Full documentation and suppression guidance is provided in sections below.
 
 On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs **`./bin/checklist`** on `ubuntu-latest` (same delivery pipeline as local pre-merge validation). Golden widget tests are skipped in GitHub Actions CI.
 
-**Integration tests not run on push/PR.** Run only via manual workflow (**Actions → CI → Run workflow**) with **`run_integration`** on (default off). macOS job tries preferred iPhone simulator; if none/boot fail/boot timeout, integration step skips (no job fail).
+**Integration tests not run on push/PR.** Run only via manual workflow (**Actions → CI → Run workflow**) with **`run_integration`** on (default off). macOS job picks an available **iPhone** on the **newest installed iOS simulator runtime** (see `tool/ios_simulator_pick.py`), then `IOS_SIMULATOR_PREFERRED_NAMES`; optional `IOS_SIMULATOR_PREFERRED_RUNTIME_VERSION` pins an exact runtime. If none/boot fail/boot timeout, integration step skips (no job fail).
 
 For broader local or pre-ship validation, `./bin/integration_tests` still runs aggregated suite in `integration_test/all_flows_test.dart`.
 
