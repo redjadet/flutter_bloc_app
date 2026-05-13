@@ -1169,6 +1169,7 @@ CHECK_MESSAGES=(
   "Checking macOS debug fallback web guards..."
   "Checking agent knowledge base map..."
   "Checking agent memory compounding..."
+  "Checking tracked files for secret-like literals..."
   "Checking AI-generated-code smells (high-signal)..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
