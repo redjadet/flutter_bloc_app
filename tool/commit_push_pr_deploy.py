@@ -435,7 +435,7 @@ def _execute_command(_: argparse.Namespace) -> int:
 
 
 def _post_merge_command(_: argparse.Namespace) -> int:
-    """After PR merge on GitHub: fetch, checkout default branch if clean, prune locals."""
+    """Fetch, checkout remote default branch (clean tree), pull, prune merged locals."""
     if not POST_MERGE_SCRIPT.is_file():
         print(f"missing {POST_MERGE_SCRIPT}", file=sys.stderr)
         return 2
