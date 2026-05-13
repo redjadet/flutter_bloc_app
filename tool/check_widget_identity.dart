@@ -19,7 +19,7 @@ import 'dart:io';
 /// - This is intentionally heuristic; tune over time if false positives show up.
 Future<void> main(final List<String> args) async {
   final root = Directory.current;
-  final scanFiles = _resolveScanFiles(root, args);
+  final scanFiles = await _resolveScanFiles(root, args);
   if (scanFiles.isEmpty) {
     stderr.writeln('check_widget_identity: no Dart files found.');
     exit(0);
@@ -169,31 +169,34 @@ void _scanFile(
   }
 }
 
-List<File> _resolveScanFiles(final Directory root, final List<String> args) {
+Future<List<File>> _resolveScanFiles(
+  final Directory root,
+  final List<String> args,
+) async {
   final scanRoots = args.isEmpty
       ? <FileSystemEntity>[
           Directory('${root.path}${Platform.pathSeparator}lib'),
         ]
-      : args
-            .map(
-              (arg) =>
-                  FileSystemEntity.typeSync(arg) ==
-                      FileSystemEntityType.directory
-                  ? Directory(arg)
-                  : File(arg),
-            )
-            .toList();
+      : await Future.wait(
+          args.map((final arg) async {
+            // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
+            final t = await FileSystemEntity.type(arg);
+            return t == FileSystemEntityType.directory
+                ? Directory(arg)
+                : File(arg);
+          }),
+        );
 
   final files = <File>[];
   for (final entity in scanRoots) {
-    if (!entity.existsSync()) continue;
+    if (!await entity.exists()) continue;
     if (entity is File) {
       if (entity.path.endsWith('.dart')) files.add(entity);
       continue;
     }
     if (entity is Directory) {
-      for (final file in entity.listSync(recursive: true).whereType<File>()) {
-        if (file.path.endsWith('.dart')) files.add(file);
+      await for (final file in entity.list(recursive: true)) {
+        if (file is File && file.path.endsWith('.dart')) files.add(file);
       }
     }
   }

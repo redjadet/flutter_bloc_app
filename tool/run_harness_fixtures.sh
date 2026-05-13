@@ -180,4 +180,57 @@ fi
 echo "fixtures|check_ai_generated_code_smells|verify_jwt_false_public_ok"
 bash tool/check_ai_generated_code_smells.sh --paths "$fixture_smells_ok_public_verify_jwt" >/dev/null
 
+echo "fixtures|check_tool_dart_async_main_blocking_io|fixtures"
+tmp_tool_io_dir="$(mktemp -d)"
+cleanup_tool_io_dir() {
+  rm -rf "$tmp_tool_io_dir"
+}
+trap cleanup_tool_io_dir EXIT
+cat >"$tmp_tool_io_dir/bad_async_main.dart" <<'EOF'
+import 'dart:io';
+
+Future<void> main(List<String> args) async {
+  File('x').readAsStringSync();
+}
+EOF
+cat >"$tmp_tool_io_dir/ok_sync_main.dart" <<'EOF'
+import 'dart:io';
+
+void main(List<String> args) {
+  File('x').readAsStringSync();
+}
+EOF
+cat >"$tmp_tool_io_dir/ok_comment_only.dart" <<'EOF'
+Future<void> main(List<String> args) async {
+  // readAsStringSync() in a comment must not fail the checker.
+}
+EOF
+cat >"$tmp_tool_io_dir/ok_ignored.dart" <<'EOF'
+import 'dart:io';
+
+Future<void> main(List<String> args) async {
+  // check-ignore: fixture intentionally uses sync IO
+  File('x').readAsStringSync();
+}
+EOF
+
+set +e
+  bad_tool_io_output="$(bash tool/check_tool_dart_async_main_blocking_io.sh --paths "$tmp_tool_io_dir/bad_async_main.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected async-main sync-IO checker to fail on bad_async_main.dart" >&2
+  exit 1
+fi
+if ! grep -q -- "bad_async_main.dart" <<<"$bad_tool_io_output"; then
+  echo "❌ fixtures failed: async-main sync-IO checker did not include filename" >&2
+  echo "$bad_tool_io_output" >&2
+  exit 1
+fi
+
+bash tool/check_tool_dart_async_main_blocking_io.sh --paths \
+  "$tmp_tool_io_dir/ok_sync_main.dart" \
+  "$tmp_tool_io_dir/ok_comment_only.dart" \
+  "$tmp_tool_io_dir/ok_ignored.dart" >/dev/null
+
 echo "fixtures|done"

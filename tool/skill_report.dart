@@ -4,12 +4,14 @@ import 'dart:io';
 /// Compare two skill inventories and print deltas.
 ///
 /// Usage:
-///   dart run tool/skill_report.dart <before.json> <after.json>
+///   `dart run tool/skill_report.dart <before.json> <after.json>`
 ///
 /// Output: markdown-ish text on stdout.
 Future<void> main(List<String> args) async {
   if (args.length < 2) {
-    stderr.writeln('Usage: dart run tool/skill_report.dart <before.json> <after.json>');
+    stderr.writeln(
+      'Usage: dart run tool/skill_report.dart <before.json> <after.json>',
+    );
     exitCode = 2;
     return;
   }
@@ -17,30 +19,35 @@ Future<void> main(List<String> args) async {
   final beforePath = args[0];
   final afterPath = args[1];
 
-  final before = _load(beforePath);
-  final after = _load(afterPath);
+  final before = await _load(beforePath);
+  final after = await _load(afterPath);
 
   final beforeByOrigin = _sumByOrigin(before);
   final afterByOrigin = _sumByOrigin(after);
 
-  stdout.writeln('## Skill inventory delta');
-  stdout.writeln();
-  stdout.writeln('- before: `$beforePath`');
-  stdout.writeln('- after: `$afterPath`');
-  stdout.writeln();
+  stdout
+    ..writeln('## Skill inventory delta')
+    ..writeln()
+    ..writeln('- before: `$beforePath`')
+    ..writeln('- after: `$afterPath`')
+    ..writeln();
 
-  for (final origin in <String>{...beforeByOrigin.keys, ...afterByOrigin.keys}..toList().sort()) {
+  for (final origin in <String>{
+    ...beforeByOrigin.keys,
+    ...afterByOrigin.keys,
+  }..toList().sort()) {
     final b = beforeByOrigin[origin] ?? 0;
     final a = afterByOrigin[origin] ?? 0;
     final delta = a - b;
     final pct = b == 0 ? null : (delta * 100.0 / b);
     final pctText = pct == null ? '' : ' (${pct.toStringAsFixed(1)}%)';
-    stdout.writeln('- $origin approxTokens: $b → $a (Δ $delta$pctText)');
+    stdout.writeln('- $origin approxTokens: $b -> $a (delta $delta$pctText)');
   }
 
-  stdout.writeln();
-  stdout.writeln('## Top cursorSkills (after)');
-  stdout.writeln();
+  stdout
+    ..writeln()
+    ..writeln('## Top cursorSkills (after)')
+    ..writeln();
 
   final afterCursor = after.where((s) => s.origin == 'cursorSkills').toList()
     ..sort((a, b) => b.approxTokens.compareTo(a.approxTokens));
@@ -50,13 +57,14 @@ Future<void> main(List<String> args) async {
   }
 }
 
-List<_Skill> _load(String path) {
-  final inv = jsonDecode(File(path).readAsStringSync()) as Map<String, Object?>;
-  final skills = (inv['skills'] as List).cast<Map<String, Object?>>();
+Future<List<_Skill>> _load(String path) async {
+  final inv =
+      jsonDecode(await File(path).readAsString()) as Map<String, Object?>;
+  final skills = (inv['skills']! as List).cast<Map<String, Object?>>();
   return skills
       .map(
         (s) => _Skill(
-          path: s['path'] as String,
+          path: s['path']! as String,
           origin: (s['origin'] as String?) ?? 'unknown',
           approxTokens: (s['approxTokens'] as int?) ?? 0,
         ),
@@ -73,8 +81,13 @@ Map<String, int> _sumByOrigin(List<_Skill> skills) {
 }
 
 class _Skill {
+  const _Skill({
+    required this.path,
+    required this.origin,
+    required this.approxTokens,
+  });
+
   final String path;
   final String origin;
   final int approxTokens;
-  const _Skill({required this.path, required this.origin, required this.approxTokens});
 }
