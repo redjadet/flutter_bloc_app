@@ -44,6 +44,10 @@ class WebsocketCubit extends Cubit<WebsocketState>
   // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin
   StreamSubscription<WebsocketMessage>? _messageSubscription;
 
+  /// Count of in-flight `repository.send` calls so overlapping sends do not
+  /// clear [WebsocketState.isSending] while another send is still pending.
+  int _inFlightSends = 0;
+
   Future<void> connect() async {
     if (state.isConnected || state.isConnecting) {
       return;
@@ -56,6 +60,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
       isAlive: () => !isClosed,
       onError: (final errorMessage) {
         if (isClosed) return;
+        _inFlightSends = 0;
         emit(
           state.copyWith(
             status: WebsocketStatus.error,
@@ -82,6 +87,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     if (message.isEmpty || !state.isConnected) {
       return;
     }
+    _inFlightSends++;
     emit(
       state
           .appendMessage(
@@ -90,21 +96,37 @@ class WebsocketCubit extends Cubit<WebsocketState>
               text: message,
             ),
           )
-          .copyWith(isSending: true, errorMessage: null),
+          .copyWith(
+            isSending: _inFlightSends > 0,
+            errorMessage: null,
+          ),
     );
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.send(message),
       isAlive: () => !isClosed,
       onSuccess: () {
         if (isClosed) return;
-        emit(state.copyWith(isSending: false));
+        _decrementInFlightSends();
+        emit(state.copyWith(isSending: _inFlightSends > 0));
       },
       onError: (final errorMessage) {
         if (isClosed) return;
-        emit(state.copyWith(isSending: false, errorMessage: errorMessage));
+        _decrementInFlightSends();
+        emit(
+          state.copyWith(
+            isSending: _inFlightSends > 0,
+            errorMessage: errorMessage,
+          ),
+        );
       },
       logContext: 'WebsocketCubit.sendMessage',
     );
+  }
+
+  void _decrementInFlightSends() {
+    if (_inFlightSends > 0) {
+      _inFlightSends--;
+    }
   }
 
   void _onIncomingMessage(final WebsocketMessage message) {
@@ -114,16 +136,21 @@ class WebsocketCubit extends Cubit<WebsocketState>
 
   void _onConnectionState(final WebsocketConnectionState connectionState) {
     if (isClosed) return;
+    if (connectionState.status != WebsocketStatus.connected) {
+      _inFlightSends = 0;
+    }
     emit(
       state.copyWith(
         status: connectionState.status,
         errorMessage: connectionState.errorMessage,
+        isSending: connectionState.status == WebsocketStatus.connected && _inFlightSends > 0,
       ),
     );
   }
 
   @override
   Future<void> close() async {
+    _inFlightSends = 0;
     _statusSubscription = null;
     _messageSubscription = null;
     await _repository.disconnect();
