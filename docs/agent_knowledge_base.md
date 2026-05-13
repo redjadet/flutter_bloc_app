@@ -181,6 +181,16 @@ Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put beh
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
 - After meaningful workflow/policy shifts, update agent-facing docs referenced from map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
 
+Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGENTS.md)):
+
+- **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists.
+- **Commit / PR helpers:** Rebase the current branch onto the latest default branch before opening or updating a PR when using the repo’s `commit-push-pr` style flow.
+
+Transcript-derived workspace guardrails:
+
+- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry (same length) or delivery-checklist configuration validation fails in CI.
+- **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
+
 Repo fact:
 
 - `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`.

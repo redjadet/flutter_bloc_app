@@ -13,7 +13,7 @@ integrations, AI demos, and release-ready validation.
 [![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-72%2E68%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-71%2E08%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
@@ -68,6 +68,7 @@ Architecture Decision Records (ADRs) are indexed in
 | AI Decision Workbench | [docs/ai_decision_workbench.md](docs/ai_decision_workbench.md) |
 | Staff app demo | [docs/staff_app_demo_walkthrough.md](docs/staff_app_demo_walkthrough.md) |
 | Online therapy demo | [docs/online_therapy_demo/README.md](docs/online_therapy_demo/README.md) |
+| Realtime market demo (simulated) | [docs/features/realtime_market.md](docs/features/realtime_market.md) |
 | Case studies | [docs/case_studies/README.md](docs/case_studies/README.md) |
 | Firebase and Supabase | [docs/firebase_setup.md](docs/firebase_setup.md), [supabase/README.md](supabase/README.md) |
 | Universal links | [docs/universal_links/README.md](docs/universal_links/README.md) |

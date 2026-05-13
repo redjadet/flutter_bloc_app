@@ -22,6 +22,7 @@ void main() {
               onBackPressed: () {},
               onLoadPlatformInfo: null,
               onOpenWebsocket: () {},
+              onOpenRealtimeMarket: () {},
               onOpenChatList: () {},
               onOpenSearch: () {},
               onOpenTodoList: () {},

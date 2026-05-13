@@ -6,6 +6,7 @@ enum DeepLinkTarget {
   settings,
   chat,
   websocket,
+  realtimeMarket,
   googleMaps,
   graphqlDemo,
   profile,

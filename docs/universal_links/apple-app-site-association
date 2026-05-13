@@ -11,6 +11,7 @@
           "/example",
           "/settings",
           "/websocket",
+          "/realtime-market",
           "/google-maps",
           "/charts",
           "/graphql-demo",

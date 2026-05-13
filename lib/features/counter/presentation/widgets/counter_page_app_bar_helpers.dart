@@ -17,6 +17,7 @@ enum OverflowAction {
   playlearn,
   igamingDemo,
   iotDemo,
+  realtimeMarket,
 }
 
 /// Represents an item in the overflow menu.

@@ -85,6 +85,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
       routeName: AppRoutes.iotDemo,
       labelBuilder: (final l10n) => l10n.openIotDemoTooltip,
     ),
+    OverflowItem(
+      action: OverflowAction.realtimeMarket,
+      routeName: AppRoutes.realtimeMarket,
+      labelBuilder: (final l10n) => l10n.openRealtimeMarketTooltip,
+    ),
   ];
 
   @override
@@ -122,6 +127,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
         tooltip: l10n.openExampleTooltip,
         onPressed: () => context.pushNamed(AppRoutes.example),
         icon: const Icon(Icons.explore),
+      ),
+      IconButton(
+        tooltip: l10n.openRealtimeMarketTooltip,
+        onPressed: () => context.pushNamed(AppRoutes.realtimeMarket),
+        icon: const Icon(Icons.show_chart),
       ),
       IconButton(
         tooltip: l10n.openCaseStudyDemoTooltip,
@@ -184,6 +194,11 @@ class CounterPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: CupertinoIcons.compass,
             onPressed: () => context.pushNamed(AppRoutes.example),
             tooltip: l10n.openExampleTooltip,
+          ),
+          CupertinoIconButton(
+            icon: CupertinoIcons.chart_bar,
+            onPressed: () => context.pushNamed(AppRoutes.realtimeMarket),
+            tooltip: l10n.openRealtimeMarketTooltip,
           ),
           CupertinoIconButton(
             icon: CupertinoIcons.videocam,

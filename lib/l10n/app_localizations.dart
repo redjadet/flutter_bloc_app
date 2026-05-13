@@ -3673,6 +3673,12 @@ abstract class AppLocalizations {
   /// **'Open IoT Demo'**
   String get openIotDemoTooltip;
 
+  /// Tooltip for navigating to the simulated realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Open realtime market demo'**
+  String get openRealtimeMarketTooltip;
+
   /// Section title for all search results
   ///
   /// In en, this message translates to:
@@ -4758,6 +4764,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirmed'**
   String get staffDemoShiftConfirmed;
+
+  /// Example hub entry that opens the simulated realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime market demo'**
+  String get exampleRealtimeMarketButton;
+
+  /// App bar title for the simulated realtime market demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Realtime market demo'**
+  String get realtimeMarketTitle;
+
+  /// Button to reconnect the simulated market feed after an error
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get realtimeMarketRetryButton;
+
+  /// Banner when the UI displays a snapshot loaded from Hive before live updates
+  ///
+  /// In en, this message translates to:
+  /// **'Showing cached data'**
+  String get realtimeMarketStaleDataLabel;
+
+  /// Connection pill when the simulated feed is streaming
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get realtimeMarketConnectionLive;
+
+  /// Connection pill while reconnecting the simulated feed
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get realtimeMarketConnectionReconnecting;
+
+  /// Connection pill when the feed is offline or errored
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get realtimeMarketConnectionOffline;
+
+  /// Demo-only buy side tab label (no trading)
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get realtimeMarketSideBuy;
+
+  /// Demo-only sell side tab label (no trading)
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get realtimeMarketSideSell;
+
+  /// Section title for bid/ask depth in the realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Order book'**
+  String get realtimeMarketOrderBookTitle;
+
+  /// Section title for recent trades list in the realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Recent trades'**
+  String get realtimeMarketTradesTitle;
+
+  /// Label before last traded price in the realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Last price'**
+  String get realtimeMarketLastPrice;
+
+  /// Section title for the mini price chart in the realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get realtimeMarketChartTitle;
+
+  /// Section title for high/low/volume strip in the realtime market demo
+  ///
+  /// In en, this message translates to:
+  /// **'24h stats'**
+  String get realtimeMarketStatsTitle;
+
+  /// Label for the 24 hour high price in the realtime market stats strip
+  ///
+  /// In en, this message translates to:
+  /// **'24h high'**
+  String get realtimeMarketStatsHigh24h;
+
+  /// Label for the 24 hour low price in the realtime market stats strip
+  ///
+  /// In en, this message translates to:
+  /// **'24h low'**
+  String get realtimeMarketStatsLow24h;
+
+  /// Label for the 24 hour volume in the realtime market stats strip
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get realtimeMarketStatsVolume;
+
+  /// Error message when the realtime market demo fails to initialize
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load market data.'**
+  String get realtimeMarketLoadError;
+
+  /// Column header for order book price column
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get realtimeMarketOrderBookColumnPrice;
+
+  /// Column header for order book size/quantity column
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get realtimeMarketOrderBookColumnAmount;
+
+  /// Placeholder when the simulated feed has not produced trades
+  ///
+  /// In en, this message translates to:
+  /// **'No trades yet'**
+  String get realtimeMarketTradesEmpty;
+
+  /// Hint under error or empty state for RefreshIndicator affordance
+  ///
+  /// In en, this message translates to:
+  /// **'Pull down to refresh the feed'**
+  String get realtimeMarketPullToRefreshHint;
+
+  /// Short disclaimer under the market header
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated data for UI demo only — not a real exchange.'**
+  String get realtimeMarketDisclaimer;
 }
 
 class _AppLocalizationsDelegate

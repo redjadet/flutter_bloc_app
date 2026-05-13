@@ -16,6 +16,8 @@ extension DeepLinkTargetLocationX on DeepLinkTarget {
         return AppRoutes.chatPath;
       case DeepLinkTarget.websocket:
         return AppRoutes.websocketPath;
+      case DeepLinkTarget.realtimeMarket:
+        return AppRoutes.realtimeMarketPath;
       case DeepLinkTarget.googleMaps:
         return AppRoutes.googleMapsPath;
       case DeepLinkTarget.graphqlDemo:
