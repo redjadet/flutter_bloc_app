@@ -5,9 +5,9 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 echo "Checking widget identity fixtures..."
-dart run tool/check_widget_identity.dart \
+dart tool/check_widget_identity.dart \
   tool/fixtures/widget_identity/good_dynamic_children_local_state.dart
-if dart run tool/check_widget_identity.dart \
+if dart tool/check_widget_identity.dart \
   tool/fixtures/widget_identity/bad_dynamic_children_local_state.dart \
   >/tmp/check_widget_identity_bad_fixture.out \
   2>/tmp/check_widget_identity_bad_fixture.err; then
@@ -22,4 +22,4 @@ if ! grep -q "FixtureSearchRow.*without a stable key" \
 fi
 
 echo "Checking for widget identity drift (keys, builders, switchers)..."
-dart run tool/check_widget_identity.dart
+dart tool/check_widget_identity.dart

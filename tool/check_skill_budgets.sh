@@ -25,5 +25,4 @@ if [ "$mode" = "enforce" ]; then
   enforce_flag="--enforce"
 fi
 
-dart run tool/skill_budget_check.dart "$inventory_path" $enforce_flag
-
+dart tool/skill_budget_check.dart "$inventory_path" $enforce_flag
