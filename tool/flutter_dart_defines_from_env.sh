@@ -30,6 +30,23 @@ emit_define "HUGGINGFACE_USE_CHAT_COMPLETIONS"
 emit_define "SUPABASE_URL"
 emit_define "SUPABASE_ANON_KEY"
 
+# Optional Firebase local config. The committed Firebase options stay as
+# placeholders; local direnv can inject real config for development.
+emit_define "FIREBASE_ANDROID_API_KEY"
+emit_define "FIREBASE_ANDROID_APP_ID"
+emit_define "FIREBASE_IOS_API_KEY"
+emit_define "FIREBASE_IOS_APP_ID"
+emit_define "FIREBASE_IOS_CLIENT_ID"
+emit_define "FIREBASE_IOS_BUNDLE_ID"
+emit_define "FIREBASE_MACOS_API_KEY"
+emit_define "FIREBASE_MACOS_APP_ID"
+emit_define "FIREBASE_MACOS_CLIENT_ID"
+emit_define "FIREBASE_MACOS_BUNDLE_ID"
+emit_define "FIREBASE_MESSAGING_SENDER_ID"
+emit_define "FIREBASE_PROJECT_ID"
+emit_define "FIREBASE_DATABASE_URL"
+emit_define "FIREBASE_STORAGE_BUCKET"
+
 # Optional (feature-gated) keys.
 emit_define "GEMINI_API_KEY"
 
@@ -60,4 +77,3 @@ emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE"
 emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION"
 
 printf "\n"
-

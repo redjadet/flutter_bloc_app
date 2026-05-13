@@ -2,7 +2,7 @@
 
 The repo includes a **placeholder** `lib/firebase_options.dart` so the project **compiles and runs** even when Firebase is not configured. In that case the app skips Firebase initialization and runs with Firebase-dependent features disabled (no crash, no login required).
 
-To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below. Platform config files (`google-services.json`, `GoogleService-Info.plist`) remain gitignored; `flutterfire configure` overwrites `lib/firebase_options.dart` with your project's options (do not commit that file if it contains real project IDs/keys).
+To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below. Platform config files (`google-services.json`, `GoogleService-Info.plist`) remain gitignored; `flutterfire configure` overwrites `lib/firebase_options.dart` with your project's options (do not commit that file if it contains real project IDs/keys). For local-only use, `.envrc` may provide `FIREBASE_*` values that the Flutter wrapper forwards as `--dart-define`. Before committing, run `./tool/check_tracked_secret_literals.sh`.
 
 ---
 
@@ -100,6 +100,29 @@ Once config is in place:
 
 ---
 
+## Before debugging Firebase features locally
+
+1. Decide whether this debug session needs Firebase. Non-Firebase screens should
+   run with placeholders; Firebase init skips safely when required values are
+   missing.
+2. If Firebase is needed, populate `.envrc` with `FIREBASE_*` values from your
+   local Firebase project and run `direnv allow`.
+3. Verify the wrapper sees the keys without printing values:
+   `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
+4. Confirm platform files are present only in gitignored paths when native
+   build tooling needs them: `android/app/google-services.json`,
+   `ios/Runner/GoogleService-Info.plist`, and
+   `macos/Runner/GoogleService-Info.plist`.
+5. Run `./tool/check_tracked_secret_literals.sh` before committing any Firebase
+   config change.
+6. If iOS/macOS native config changed, run `flutter clean`, `flutter pub get`,
+   and `cd ios && pod install && cd ..` before debug.
+7. Start with `flutter run -t lib/main_dev.dart`. If Firebase still does not
+   initialize, read the log line listing missing field names and add only those
+   `FIREBASE_*` values to `.envrc`.
+
+---
+
 ## Firebase workflow preflight (project mismatch guard)
 
 Firebase deploy and distribution scripts in this repo run a preflight check:
@@ -114,6 +137,23 @@ If it fails, run:
 firebase login
 firebase use flutter-bloc-app-697e8
 ```
+
+## Secret scanning alerts
+
+If GitHub secret scanning flags a Firebase/Google API key:
+
+1. Rotate or restrict the key in Google Cloud/Firebase if it was real.
+2. Replace committed values with placeholders (`YOUR_*_API_KEY`,
+   `your-project-id`, `1:000000000000:*:placeholder`).
+3. Keep real platform files in gitignored locations:
+   `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`,
+   and `macos/Runner/GoogleService-Info.plist`.
+4. Run `./tool/check_tracked_secret_literals.sh` before pushing.
+
+If one or more required `FIREBASE_*` values are missing from local direnv, the
+app skips Firebase initialization and logs the missing field names only. Firebase
+UI/Auth setup becomes a no-op in that state so local development can still use
+non-Firebase features.
 
 ---
 

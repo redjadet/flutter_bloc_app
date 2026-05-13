@@ -86,6 +86,7 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_transcript_budgets.sh`**: Report-only transcript inventory + budget signal to prevent conversation/transcript bloat from silently dominating agent context. Requires `CURSOR_AGENT_TRANSCRIPTS_ROOT` (local-only). Writes inventory JSON under `docs/audits/` (gitignored). Also runs from `./bin/checklist-fast` when the env var is set (never fails the checklist).
 - **`validate_task_trackers.sh`**: Validates `tasks/*/todo.md` tracker contract: required headings, non-empty write set, validation command.
 - **`run_harness_fixtures.sh`**: Smoke tests harness scripts and negative-case fixtures; runs in `./bin/checklist-fast` and docs/tooling lanes.
+- **`check_tracked_secret_literals.sh`**: Scans tracked files for secret-looking literals that GitHub secret scanning commonly flags, including Google API keys, OpenAI-style keys, AWS access keys, and private key blocks. Output names file/line/rule only and never prints the secret value.
 - **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
   - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
 
@@ -854,6 +855,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_macos_debug_web_guard.sh`
 - `check_agent_knowledge_base.sh`
 - `check_agent_memory_compounding.sh`
+- `check_tracked_secret_literals.sh`
 - `check_ai_generated_code_smells.sh`
 - `check_pyright_python.sh`
 

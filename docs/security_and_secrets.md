@@ -13,6 +13,11 @@ secret injection**, not vulnerability triage.
 
 - **Do not commit secrets**: `.envrc`, API keys, and local secret files must be
   gitignored.
+- **Do not commit real Firebase config**: keep committed Firebase options and
+  CI plist/json files as placeholders. If GitHub secret scanning flags a
+  Google API key, rotate or restrict that key in Google Cloud/Firebase, replace
+  the committed value with a placeholder, then run
+  [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh).
 - **Prefer runtime injection**: use `--dart-define` (or a wrapper that produces
   those flags) rather than hardcoding secrets in the repo.
 - **Fail safe**: when a key is missing, the owning feature should be disabled
@@ -80,6 +85,28 @@ direnv allow
 ./tool/build_ios_with_direnv.sh
 ```
 
+### Before local debug
+
+When VS Code/Cursor automatic tasks are allowed, `.vscode/tasks.json` runs
+`tool/local_ide_open_preflight.sh` on folder open. It loads approved `direnv`
+values into that task process, refreshes packages only when needed, lists
+forwarded key names without values, and runs the tracked-secret guard. It cannot
+approve `.envrc`; run `direnv allow` once after editing local secrets.
+
+Use this pre-debug checklist when a feature depends on local secrets:
+
+1. Run `direnv allow` from the repo root after editing `.envrc`; use
+   `direnv reload` or open a new terminal if the current shell did not refresh.
+2. List forwarded `--dart-define` key names without values:
+   `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
+3. If a needed key is missing from that list, add it to
+   [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
+   and [`envrc.example`](envrc.example) before relying on `.envrc`.
+4. Run [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh)
+   before committing or pushing.
+5. Never paste real values into issue comments, logs, screenshots, or docs;
+   refer to env var names only.
+
 ## CI / release builds
 
 CI should inject secrets via the CI system (GitHub Actions secrets, etc.) and
@@ -110,6 +137,16 @@ To enable Firebase-dependent features (Auth, Remote Config, Realtime Database,
 etc.), follow [Firebase Setup](firebase_setup.md). The app should still run when
 Firebase is not configured; the relevant surfaces disable themselves or degrade
 gracefully.
+
+Tracked placeholder files such as [`lib/firebase_options.dart`](../lib/firebase_options.dart)
+and `ios/ci` / `macos/ci` plist files must not contain real API keys. CI uses
+them only as build placeholders; maintainer machines and deployment pipelines
+should supply real Firebase config through gitignored platform files or secret
+injection. For local development, add `FIREBASE_*` values to `.envrc`; the
+direnv Flutter wrapper forwards them through
+[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
+When those values are missing or still placeholders, Firebase initialization
+skips safely and logs only field names, not secret values.
 
 ## Key inventory (feature-scoped)
 

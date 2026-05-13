@@ -43,6 +43,33 @@ Other entrypoints:
 - `lib/main_staging.dart`
 - `lib/main_prod.dart`
 
+### Before local debug
+
+VS Code/Cursor runs `.vscode/tasks.json` task **Local IDE open preflight** on
+folder open when automatic tasks are allowed. That task loads allowed direnv
+values into its own process, runs `flutter pub get` only when dependency
+metadata is stale, lists forwarded `--dart-define` key names without values,
+and runs the tracked-secret guard. It cannot approve `.envrc` for you; run
+`direnv allow` once after editing `.envrc` or when the IDE reports direnv is not
+allowed.
+
+Run these checks before starting a local debug session:
+
+1. Refresh packages: `flutter pub get`.
+2. Load local environment: `direnv allow` from repo root, then open a new
+   terminal or run `direnv reload`.
+3. Confirm injected keys are present without printing values:
+   `./tool/flutter_dart_defines_from_env.sh | tr ' ' '\n' | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p'`.
+4. Keep Firebase optional: if `FIREBASE_*` values are missing, the app should
+   skip Firebase and still run non-Firebase features. Add the values to
+   `.envrc` only when debugging Firebase Auth, Remote Config, RTDB, FCM, or
+   Firebase-backed chart flows.
+5. Check no tracked secret literals are present: `./tool/check_tracked_secret_literals.sh`.
+6. For iOS after Firebase/dependency changes, run:
+   `flutter clean && flutter pub get && (cd ios && pod install)`.
+7. Start debug with the intended entrypoint, usually
+   `flutter run -t lib/main_dev.dart`.
+
 ### Run the local quality gate
 
 ```bash

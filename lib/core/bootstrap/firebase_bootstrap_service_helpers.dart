@@ -112,12 +112,23 @@ void _logAppCheckDebugToken(
   }
 }
 
-bool _usesPlaceholderValues(final FirebaseOptions options) {
-  return _isPlaceholderFirebaseValue(options.projectId) ||
-      _isPlaceholderFirebaseValue(options.appId) ||
-      _isPlaceholderFirebaseValue(options.apiKey) ||
-      _isPlaceholderFirebaseValue(options.messagingSenderId) ||
-      _isPlaceholderFirebaseValue(options.storageBucket);
+List<String> _missingFirebaseRequiredConfigFields(
+  final FirebaseOptions options,
+) {
+  final missing = <String>[];
+  void addIfMissing(final String label, final String? value) {
+    if (_isPlaceholderFirebaseValue(value)) {
+      missing.add(label);
+    }
+  }
+
+  addIfMissing('projectId', options.projectId);
+  addIfMissing('appId', options.appId);
+  addIfMissing('apiKey', options.apiKey);
+  addIfMissing('messagingSenderId', options.messagingSenderId);
+  addIfMissing('storageBucket', options.storageBucket);
+  addIfMissing('databaseURL', options.databaseURL);
+  return missing;
 }
 
 bool _isPlaceholderFirebaseValue(final String? value) {
