@@ -3,10 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -52,12 +51,12 @@ class LayeredRenderOrchestrationHfTokenProvider
     implements RenderOrchestrationHfTokenProvider {
   LayeredRenderOrchestrationHfTokenProvider({
     required final AppRuntimeConfig runtime,
-    required final RemoteConfigService remoteConfig,
+    required final RenderOrchestrationRemoteTokenPort remoteTokenPort,
     required final SecretStorage storage,
     final FirebaseAuth? firebaseAuth,
     final Future<String?> Function()? callableTokenOverride,
   }) : _runtime = runtime,
-       _remoteConfig = remoteConfig,
+       _remoteTokenPort = remoteTokenPort,
        _storage = storage,
        _firebaseAuth = firebaseAuth,
        _callableTokenOverride = callableTokenOverride;
@@ -69,7 +68,7 @@ class LayeredRenderOrchestrationHfTokenProvider
   static const String legacyRcCacheKey = 'render_chat_demo_rc_hf_read_token_v1';
 
   final AppRuntimeConfig _runtime;
-  final RemoteConfigService _remoteConfig;
+  final RenderOrchestrationRemoteTokenPort _remoteTokenPort;
   final SecretStorage _storage;
   final FirebaseAuth? _firebaseAuth;
   final Future<String?> Function()? _callableTokenOverride;
@@ -110,19 +109,19 @@ class LayeredRenderOrchestrationHfTokenProvider
     }
 
     if (_runtime.isDev) {
-      String? fromRc = _readRemoteConfigToken();
+      String? fromRc = _remoteTokenPort.readDevToken();
       if ((fromRc == null || fromRc.isEmpty) &&
           !_devRemoteFetchAttempted &&
           FirebaseBootstrapService.isFirebaseInitialized) {
         _devRemoteFetchAttempted = true;
         try {
-          await _remoteConfig.forceFetch();
+          await _remoteTokenPort.forceRefresh();
         } on Exception catch (e, _) {
           AppLogger.info(
             'LayeredRenderOrchestrationHfTokenProvider: Remote Config forceFetch failed ($e)',
           );
         }
-        fromRc = _readRemoteConfigToken();
+        fromRc = _remoteTokenPort.readDevToken();
       }
       if (fromRc != null && fromRc.isNotEmpty) {
         await _writeCache(fromRc);
@@ -236,24 +235,6 @@ class LayeredRenderOrchestrationHfTokenProvider
     try {
       return FirebaseAuth.instance;
     } on Object {
-      return null;
-    }
-  }
-
-  String? _readRemoteConfigToken() {
-    try {
-      final String raw = _remoteConfig.getString(
-        RemoteConfigRepository.renderChatDemoHfReadTokenKey,
-      );
-      final String trimmed = raw.trim();
-      if (trimmed.isEmpty) {
-        return null;
-      }
-      return trimmed;
-    } on Exception catch (e, _) {
-      AppLogger.debug(
-        'LayeredRenderOrchestrationHfTokenProvider._readRemoteConfigToken: $e',
-      );
       return null;
     }
   }
