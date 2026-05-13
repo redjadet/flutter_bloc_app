@@ -25,6 +25,15 @@ void main() {
       expect(target, DeepLinkTarget.chat);
     });
 
+    test('parses realtime-market segment', () {
+      final target = parser.parse(
+        Uri.parse(
+          '${DeepLinkConfig.universalScheme}://${DeepLinkConfig.universalHost}/realtime-market',
+        ),
+      );
+      expect(target, DeepLinkTarget.realtimeMarket);
+    });
+
     test('parses universal host case-insensitively', () {
       final target = parser.parse(
         Uri.parse(
@@ -49,6 +58,13 @@ void main() {
         Uri.parse('${DeepLinkConfig.fallbackScheme}://settings'),
       );
       expect(target, DeepLinkTarget.settings);
+    });
+
+    test('supports fallback scheme for realtime-market host', () {
+      final target = parser.parse(
+        Uri.parse('${DeepLinkConfig.fallbackScheme}://realtime-market'),
+      );
+      expect(target, DeepLinkTarget.realtimeMarket);
     });
 
     test('returns null for unsupported host', () {

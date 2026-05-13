@@ -1,0 +1,161 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_stats.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/entities/order_book_level.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/entities/recent_trade.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../../../test_helpers.dart' as test_helpers;
+
+void main() {
+  group('RealtimeMarketRepositoryImpl', () {
+    late HiveService hiveService;
+
+    setUpAll(() async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      await test_helpers.setupHiveForTesting();
+    });
+
+    setUp(() async {
+      hiveService = await test_helpers.createHiveService();
+    });
+
+    tearDown(() async {
+      await test_helpers.cleanupHiveBoxes(<String>['realtime_market_v1']);
+    });
+
+    test('capSnapshot enforces book, trades, and chart caps', () {
+      final List<OrderBookLevel> bids = <OrderBookLevel>[
+        for (var i = 0; i < 20; i++)
+          OrderBookLevel(
+            price: 100 - i.toDouble(),
+            quantity: 1,
+            side: OrderBookSide.bid,
+          ),
+      ];
+      final List<RecentTrade> trades = <RecentTrade>[
+        for (var i = 0; i < 60; i++)
+          RecentTrade(
+            id: '$i',
+            price: 1,
+            quantity: 1,
+            isBuy: true,
+            at: DateTime.utc(2024),
+          ),
+      ];
+      final List<double> chart = List<double>.generate(
+        80,
+        (final i) => i.toDouble(),
+      );
+      final MarketFeedSnapshot raw = MarketFeedSnapshot(
+        pairId: 'btc_usdt',
+        lastPrice: 1,
+        changePct24h: 0,
+        connection: MarketConnectionStatus.live,
+        bids: bids,
+        asks: bids,
+        recentTrades: trades,
+        stats: const MarketStats(high24h: 1, low24h: 1, volume24h: 1),
+        chartCloses: chart,
+        updatedAt: DateTime.utc(2024),
+      );
+      final MarketFeedSnapshot capped =
+          RealtimeMarketRepositoryImpl.capSnapshot(raw);
+      expect(capped.bids.length, 12);
+      expect(capped.asks.length, 12);
+      expect(capped.recentTrades.length, 50);
+      expect(capped.chartCloses.length, 64);
+    });
+
+    test('loadCached returns null for malformed Hive payload', () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final box = await local.getBox();
+      await box.put(
+        RealtimeMarketLocalDataSource.snapshotKey('btc_usdt'),
+        <String, Object?>{'invalid': true},
+      );
+      expect(await local.loadCached('btc_usdt'), isNull);
+    });
+
+    test('watch persists capped snapshot to Hive', () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final SimulatedMarketFeed feed = SimulatedMarketFeed(
+        random: Random(42),
+        timerService: DefaultTimerService(),
+        clock: () => DateTime.utc(2024, 6, 1, 12),
+      );
+      final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+        localDataSource: local,
+        feed: feed,
+      );
+      final MarketFeedSnapshot s = await repo
+          .watch('btc_usdt')
+          .first
+          .timeout(const Duration(seconds: 2));
+      expect(s.bids.length, 12);
+      expect(s.asks.length, 12);
+      final MarketFeedSnapshot? cached = await repo.loadCached('btc_usdt');
+      expect(cached, isNotNull);
+      expect(cached!.bids.length, 12);
+      await repo.dispose();
+    });
+
+    test('reconnect restarts feed without throwing', () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final SimulatedMarketFeed feed = SimulatedMarketFeed(
+        random: Random(1),
+        timerService: DefaultTimerService(),
+        clock: () => DateTime.utc(2024),
+      );
+      final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+        localDataSource: local,
+        feed: feed,
+      );
+      final List<MarketFeedSnapshot> out = <MarketFeedSnapshot>[];
+      final StreamSubscription<MarketFeedSnapshot> sub = repo
+          .watch('btc_usdt')
+          .listen(out.add);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      await repo.reconnect('btc_usdt');
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+      expect(out, isNotEmpty);
+      await sub.cancel();
+      await repo.dispose();
+    });
+
+    test('dispose stops outbound stream', () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final SimulatedMarketFeed feed = SimulatedMarketFeed(
+        random: Random(2),
+        timerService: DefaultTimerService(),
+      );
+      final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+        localDataSource: local,
+        feed: feed,
+      );
+      final StreamSubscription<MarketFeedSnapshot> sub = repo
+          .watch('btc_usdt')
+          .listen((_) {});
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await repo.dispose();
+      await sub.cancel();
+      await expectLater(repo.watch('btc_usdt'), emitsDone);
+    });
+  });
+}

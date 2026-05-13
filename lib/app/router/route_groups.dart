@@ -1,6 +1,8 @@
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
     deferred as google_maps_page;
+import 'package:flutter_bloc_app/app/router/deferred_pages/realtime_market_page.dart'
+    deferred as realtime_market_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
@@ -27,6 +29,15 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
     builder: (final context, final state) => DeferredPage(
       loadLibrary: websocket_page.loadLibrary,
       builder: (final context) => websocket_page.buildWebsocketPage(),
+    ),
+  ),
+  GoRoute(
+    path: AppRoutes.realtimeMarketPath,
+    name: AppRoutes.realtimeMarket,
+    builder: (final context, final state) => DeferredPage(
+      loadLibrary: realtime_market_page.loadLibrary,
+      builder: (final context) =>
+          realtime_market_page.buildRealtimeMarketPage(),
     ),
   ),
   GoRoute(

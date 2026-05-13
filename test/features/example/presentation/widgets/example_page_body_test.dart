@@ -19,6 +19,7 @@ void main() {
             onBackPressed: () {},
             onLoadPlatformInfo: () {},
             onOpenWebsocket: () {},
+            onOpenRealtimeMarket: () {},
             onOpenSearch: () {},
             onOpenTodoList: () {},
             onOpenProfile: () {},
@@ -74,6 +75,7 @@ void main() {
             onBackPressed: () {},
             onLoadPlatformInfo: () {},
             onOpenWebsocket: () {},
+            onOpenRealtimeMarket: () {},
             onOpenSearch: () {},
             onOpenTodoList: () {},
             onOpenProfile: () {},
@@ -127,6 +129,7 @@ void main() {
             onBackPressed: () {},
             onLoadPlatformInfo: () {},
             onOpenWebsocket: () {},
+            onOpenRealtimeMarket: () {},
             onOpenSearch: () {},
             onOpenTodoList: () {},
             onOpenProfile: () {},
@@ -162,6 +165,64 @@ void main() {
       await tester.pump();
 
       expect(caseStudyTapped, isTrue);
+    });
+
+    testWidgets('invokes onOpenRealtimeMarket when tapping realtime button', (
+      final tester,
+    ) async {
+      var tapped = false;
+      final theme = ThemeData.light();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ExamplePageBody(
+            l10n: AppLocalizationsEn(),
+            theme: theme,
+            colors: theme.colorScheme,
+            onBackPressed: () {},
+            onLoadPlatformInfo: () {},
+            onOpenWebsocket: () {},
+            onOpenRealtimeMarket: () {
+              tapped = true;
+            },
+            onOpenSearch: () {},
+            onOpenTodoList: () {},
+            onOpenProfile: () {},
+            onOpenRegister: () {},
+            onOpenLoggedOut: () {},
+            onRunIsolates: () {},
+            isRunningIsolates: false,
+            isolateError: null,
+            fibonacciInput: null,
+            fibonacciResult: null,
+            parallelValues: const <int>[],
+            parallelDuration: Duration.zero,
+            onOpenChatList: () {},
+            onOpenLibraryDemo: () {},
+            onOpenIgamingDemo: () {},
+            onOpenStaffAppDemo: () {},
+            onOpenScapes: () {},
+            onOpenWalletconnectAuth: () {},
+            onOpenCameraGallery: () {},
+            onOpenCaseStudyDemo: () {},
+            onOpenIapDemo: () {},
+            onOpenAiDecisionDemo: () {},
+            onOpenOnlineTherapyDemo: () {},
+          ),
+        ),
+      );
+
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('example-realtime-market-button')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('example-realtime-market-button')),
+        warnIfMissed: false,
+      );
+      await tester.pump();
+      expect(tapped, isTrue);
     });
   });
 }

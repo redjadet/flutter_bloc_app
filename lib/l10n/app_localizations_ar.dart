@@ -2017,6 +2017,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get openIotDemoTooltip => 'افتح العرض التجريبي لإنترنت الأشياء';
 
   @override
+  String get openRealtimeMarketTooltip => 'افتح عرض السوق اللحظي التجريبي';
+
+  @override
   String get searchAllResultsSectionTitle => 'جميع النتائج';
 
   @override
@@ -2600,4 +2603,74 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get staffDemoShiftConfirmed => 'مؤكد';
+
+  @override
+  String get exampleRealtimeMarketButton => 'عرض السوق اللحظي التجريبي';
+
+  @override
+  String get realtimeMarketTitle => 'عرض السوق اللحظي التجريبي';
+
+  @override
+  String get realtimeMarketRetryButton => 'إعادة المحاولة';
+
+  @override
+  String get realtimeMarketStaleDataLabel => 'عرض بيانات مخزّنة';
+
+  @override
+  String get realtimeMarketConnectionLive => 'مباشر';
+
+  @override
+  String get realtimeMarketConnectionReconnecting => 'جاري إعادة الاتصال';
+
+  @override
+  String get realtimeMarketConnectionOffline => 'غير متصل';
+
+  @override
+  String get realtimeMarketSideBuy => 'شراء';
+
+  @override
+  String get realtimeMarketSideSell => 'بيع';
+
+  @override
+  String get realtimeMarketOrderBookTitle => 'سجل الطلبات';
+
+  @override
+  String get realtimeMarketTradesTitle => 'آخر الصفقات';
+
+  @override
+  String get realtimeMarketLastPrice => 'آخر سعر';
+
+  @override
+  String get realtimeMarketChartTitle => 'السعر';
+
+  @override
+  String get realtimeMarketStatsTitle => 'إحصاءات 24 ساعة';
+
+  @override
+  String get realtimeMarketStatsHigh24h => 'أعلى 24 ساعة';
+
+  @override
+  String get realtimeMarketStatsLow24h => 'أدنى 24 ساعة';
+
+  @override
+  String get realtimeMarketStatsVolume => 'الحجم';
+
+  @override
+  String get realtimeMarketLoadError => 'تعذّر تحميل بيانات السوق.';
+
+  @override
+  String get realtimeMarketOrderBookColumnPrice => 'السعر';
+
+  @override
+  String get realtimeMarketOrderBookColumnAmount => 'الكمية';
+
+  @override
+  String get realtimeMarketTradesEmpty => 'لا صفقات بعد';
+
+  @override
+  String get realtimeMarketPullToRefreshHint => 'اسحب للأسفل للتحديث';
+
+  @override
+  String get realtimeMarketDisclaimer =>
+      'بيانات محاكاة للعرض فقط — ليست بورصة حقيقية.';
 }

@@ -9,6 +9,8 @@ void main() {
     expect(AppRoutes.examplePath, '/example');
     expect(AppRoutes.settings, 'settings');
     expect(AppRoutes.settingsPath, '/settings');
+    expect(AppRoutes.realtimeMarket, 'realtime-market');
+    expect(AppRoutes.realtimeMarketPath, '/realtime-market');
     expect(AppRoutes.chat, 'chat');
     expect(AppRoutes.chatPath, '/chat');
     expect(AppRoutes.profile, 'profile');

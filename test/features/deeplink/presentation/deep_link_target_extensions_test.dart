@@ -29,6 +29,13 @@ void main() {
       expect(DeepLinkTarget.websocket.location, AppRoutes.websocketPath);
     });
 
+    test('location returns correct path for realtimeMarket', () {
+      expect(
+        DeepLinkTarget.realtimeMarket.location,
+        AppRoutes.realtimeMarketPath,
+      );
+    });
+
     test('location returns correct path for googleMaps', () {
       expect(DeepLinkTarget.googleMaps.location, AppRoutes.googleMapsPath);
     });

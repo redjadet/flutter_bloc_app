@@ -66,6 +66,7 @@ class DeepLinkParser {
         'settings': DeepLinkTarget.settings,
         'chat': DeepLinkTarget.chat,
         'websocket': DeepLinkTarget.websocket,
+        'realtime-market': DeepLinkTarget.realtimeMarket,
         'google-maps': DeepLinkTarget.googleMaps,
         'graphql-demo': DeepLinkTarget.graphqlDemo,
         'profile': DeepLinkTarget.profile,

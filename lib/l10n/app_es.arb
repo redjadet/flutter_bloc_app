@@ -1571,6 +1571,7 @@
   "iotDemoFilterOnOnly": "Solo encendidos",
   "iotDemoFilterOffOnly": "Solo apagados",
   "openIotDemoTooltip": "Abrir demo IoT",
+  "openRealtimeMarketTooltip": "Abrir demo de mercado en tiempo real",
   "searchAllResultsSectionTitle": "TODOS LOS RESULTADOS",
   "@searchAllResultsSectionTitle": {
     "description": "Section title for all search results"
@@ -2075,5 +2076,82 @@
   "staffDemoShiftConfirmed": "Confirmed",
   "@staffDemoShiftConfirmed": {
     "description": "Label when shift assignment is already confirmed in staff demo inbox"
-  }
+  },
+  "exampleRealtimeMarketButton": "Demo mercado en tiempo real",
+  "@exampleRealtimeMarketButton": {
+    "description": "Example hub entry that opens the simulated realtime market demo"
+  },
+  "realtimeMarketTitle": "Demo mercado en tiempo real",
+  "@realtimeMarketTitle": {
+    "description": "App bar title for the simulated realtime market demo page"
+  },
+  "realtimeMarketRetryButton": "Retry",
+  "@realtimeMarketRetryButton": {
+    "description": "Button to reconnect the simulated market feed after an error"
+  },
+  "realtimeMarketStaleDataLabel": "Showing cached data",
+  "@realtimeMarketStaleDataLabel": {
+    "description": "Banner when the UI displays a snapshot loaded from Hive before live updates"
+  },
+  "realtimeMarketConnectionLive": "Live",
+  "@realtimeMarketConnectionLive": {
+    "description": "Connection pill when the simulated feed is streaming"
+  },
+  "realtimeMarketConnectionReconnecting": "Reconnecting",
+  "@realtimeMarketConnectionReconnecting": {
+    "description": "Connection pill while reconnecting the simulated feed"
+  },
+  "realtimeMarketConnectionOffline": "Offline",
+  "@realtimeMarketConnectionOffline": {
+    "description": "Connection pill when the feed is offline or errored"
+  },
+  "realtimeMarketSideBuy": "Buy",
+  "@realtimeMarketSideBuy": {
+    "description": "Demo-only buy side tab label (no trading)"
+  },
+  "realtimeMarketSideSell": "Sell",
+  "@realtimeMarketSideSell": {
+    "description": "Demo-only sell side tab label (no trading)"
+  },
+  "realtimeMarketOrderBookTitle": "Order book",
+  "@realtimeMarketOrderBookTitle": {
+    "description": "Section title for bid/ask depth in the realtime market demo"
+  },
+  "realtimeMarketTradesTitle": "Recent trades",
+  "@realtimeMarketTradesTitle": {
+    "description": "Section title for recent trades list in the realtime market demo"
+  },
+  "realtimeMarketLastPrice": "Last price",
+  "@realtimeMarketLastPrice": {
+    "description": "Label before last traded price in the realtime market demo"
+  },
+  "realtimeMarketChartTitle": "Price",
+  "@realtimeMarketChartTitle": {
+    "description": "Section title for the mini price chart in the realtime market demo"
+  },
+  "realtimeMarketStatsTitle": "24h stats",
+  "@realtimeMarketStatsTitle": {
+    "description": "Section title for high/low/volume strip in the realtime market demo"
+  },
+  "realtimeMarketStatsHigh24h": "Máximo 24h",
+  "@realtimeMarketStatsHigh24h": {
+    "description": "Label for the 24 hour high price in the realtime market stats strip"
+  },
+  "realtimeMarketStatsLow24h": "Mínimo 24h",
+  "@realtimeMarketStatsLow24h": {
+    "description": "Label for the 24 hour low price in the realtime market stats strip"
+  },
+  "realtimeMarketStatsVolume": "Volumen",
+  "@realtimeMarketStatsVolume": {
+    "description": "Label for the 24 hour volume in the realtime market stats strip"
+  },
+  "realtimeMarketLoadError": "Could not load market data.",
+  "@realtimeMarketLoadError": {
+    "description": "Error message when the realtime market demo fails to initialize"
+  },
+  "realtimeMarketOrderBookColumnPrice": "Precio",
+  "realtimeMarketOrderBookColumnAmount": "Cantidad",
+  "realtimeMarketTradesEmpty": "Sin operaciones aún",
+  "realtimeMarketPullToRefreshHint": "Desliza hacia abajo para actualizar",
+  "realtimeMarketDisclaimer": "Datos simulados solo para la demo de interfaz — no es un exchange real."
 }

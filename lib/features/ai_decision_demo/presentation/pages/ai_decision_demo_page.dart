@@ -46,6 +46,21 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
     super.dispose();
   }
 
+  void _onCaseChanged(final BuildContext blocContext, final String? value) {
+    if (value == null) {
+      return;
+    }
+    unawaited(blocContext.cubit<AiDecisionCubit>().loadCase(value));
+  }
+
+  void _onRunDecisionSupport(final BuildContext blocContext) {
+    unawaited(
+      blocContext.cubit<AiDecisionCubit>().runDecisionSupport(
+        operatorNote: _operatorNote.text,
+      ),
+    );
+  }
+
   @override
   Widget build(final BuildContext context) {
     const title = 'AI Decision Workbench';
@@ -99,10 +114,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                           ),
                         )
                         .toList(growable: false),
-                    onChanged: (final v) {
-                      if (v == null) return;
-                      unawaited(context.cubit<AiDecisionCubit>().loadCase(v));
-                    },
+                    onChanged: (final value) => _onCaseChanged(context, value),
                     decoration: const InputDecoration(
                       labelText: 'Case',
                       border: OutlineInputBorder(),
@@ -144,11 +156,7 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
                   FilledButton(
                     onPressed: state.isRunningDecision || !hasCaseDetail
                         ? null
-                        : () => unawaited(
-                            context.cubit<AiDecisionCubit>().runDecisionSupport(
-                                operatorNote: _operatorNote.text,
-                              ),
-                          ),
+                        : () => _onRunDecisionSupport(context),
                     child: state.isRunningDecision
                         ? const SizedBox(
                             height: 16,
