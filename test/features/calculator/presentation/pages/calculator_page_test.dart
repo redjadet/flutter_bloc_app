@@ -47,9 +47,14 @@ void main() {
       final calculatorCubit = CalculatorCubit(
         calculator: const PaymentCalculator(),
       );
+      addTearDown(calculatorCubit.close);
 
-      // Use a small viewport to trigger compact layout
-      await tester.binding.setSurfaceSize(const Size(400, 400));
+      tester.view.physicalSize = const Size(400, 400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<CalculatorCubit>.value(
@@ -61,6 +66,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(SingleChildScrollView), findsOneWidget);
+    });
+
+    testWidgets('does not overflow on degenerate narrow viewport', (
+      tester,
+    ) async {
+      final calculatorCubit = CalculatorCubit(
+        calculator: const PaymentCalculator(),
+      );
+      addTearDown(calculatorCubit.close);
+      final originalOnError = FlutterError.onError;
+      final errors = <FlutterErrorDetails>[];
+      FlutterError.onError = (final details) {
+        errors.add(details);
+        originalOnError?.call(details);
+      };
+      addTearDown(() {
+        FlutterError.onError = originalOnError;
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      tester.view.physicalSize = const Size(96, 360);
+      tester.view.devicePixelRatio = 1.0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: BlocProvider<CalculatorCubit>.value(
+            value: calculatorCubit,
+            child: const CalculatorPage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final overflows = errors.where(
+        (final error) => error.exceptionAsString().contains('overflow'),
+      );
+      expect(overflows, isEmpty);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('constrains content width to max width', (tester) async {

@@ -34,19 +34,43 @@ class _CalculatorButton extends StatelessWidget {
           constraints.maxWidth,
           constraints.maxHeight,
         );
-        final double fontSize = (cellSize * 0.38).clamp(22, 42);
-        return Center(
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              config.label,
-              style: TextStyle(
+        if (cellSize <= 0) {
+          return const SizedBox.shrink();
+        }
+        // Keep labels inside the circular clip: avoid a fixed minimum font
+        // (e.g. 22px) that exceeds small cells on narrow web layouts.
+        final double rawInset = (cellSize * 0.12).clamp(2.0, 14.0);
+        // Cap inset so padding never consumes the whole cell (tiny layouts / tests).
+        final double inset = math.min(rawInset, cellSize * 0.42);
+        final Widget content = config.icon == null
+            ? Text(
+                config.label,
+                style: TextStyle(
+                  color: style.foreground,
+                  fontSize: cellSize * 0.85,
+                  fontWeight: config.type == _ButtonType.operation
+                      ? FontWeight.w600
+                      : FontWeight.w500,
+                  height: 1,
+                ),
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                textHeightBehavior: const TextHeightBehavior(
+                  applyHeightToFirstAscent: false,
+                  applyHeightToLastDescent: false,
+                ),
+              )
+            : Icon(
+                config.icon,
                 color: style.foreground,
-                fontSize: fontSize,
-                fontWeight: config.type == _ButtonType.operation
-                    ? FontWeight.w600
-                    : FontWeight.w500,
-              ),
+                size: cellSize * 0.54,
+              );
+        return SizedBox.expand(
+          child: Padding(
+            padding: EdgeInsets.all(inset),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: content,
             ),
           ),
         );
