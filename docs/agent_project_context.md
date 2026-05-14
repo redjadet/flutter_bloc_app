@@ -36,6 +36,15 @@ then apply this repo's architecture, package, migration, and validation rules.
 | Security / secrets | [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md) |
 | Known caveats / audits | [`audits/README.md`](audits/README.md), [`changes/README.md`](changes/README.md), [`plans/README.md`](plans/README.md) |
 
+## Feature Constraint Packet
+
+Before feature or cross-platform work, identify only the constraints that can
+change the implementation: toolchain, allowed existing packages, architecture
+boundary, state owner, platform targets, security/env config, offline/sync
+behavior, testing lane, CI/deploy impact, and performance limit. Use the source
+table above; do not invent a generic checklist when a repo doc or script owns
+the answer.
+
 ## Current Caveat Shortlist
 
 - Flutter 3.41.9 / Dart 3.11.5 pinned; version-sensitive APIs need official or

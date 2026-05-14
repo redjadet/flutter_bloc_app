@@ -27,10 +27,12 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
 | Prompt shape | Did guidance separate intent, eval/spec, and implementation; use Goal / Context / Boundaries / Verification; omit nonessential rules; and avoid micromanaging implementation order? |
 | Problem fit | Does change fit user outcome + production path? |
+| Deploy/config fit | Platform targets, flavor/env config, Firebase/Supabase wiring, secrets, CI/CD, store/background limits, and rollback path checked? |
 | Visual fit | Did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use runtime source (`AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`), and fit audience/workflow? |
 | UI states/layout | Are expected states present, and did mobile/tablet/desktop checks cover clipped text, overlap, unstable controls, hidden primary content? |
 | Simplify | Smallest change without speculative abstraction? |
 | Security | Auth, replay, retries, logging, secrets, file access, sync, `--dart-define` reviewed? |
+| Observability | Stable logs/telemetry/error metadata added only where useful, using repo utilities and no sensitive data? |
 | Performance | Rebuild scope, repeated I/O, UI-isolate parsing, polling/listeners, allocations, scale checked? |
 | Edge cases | Empty, malformed, repeated, concurrent, offline, resumed, interrupted paths handled? |
 | Failure modes | What inputs/conditions fail? Weaknesses? |
