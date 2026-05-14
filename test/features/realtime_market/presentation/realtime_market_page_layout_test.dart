@@ -20,7 +20,11 @@ MarketFeedSnapshot _denseSimStyleSnapshot() {
   const double open = 43000;
   final List<OrderBookLevel> bids = <OrderBookLevel>[
     for (var i = 0; i < 16; i++)
-      OrderBookLevel(price: price - 1 - i * 2.5, quantity: 0.5 + i * 0.12, side: OrderBookSide.bid),
+      OrderBookLevel(
+        price: price - 1 - i * 2.5,
+        quantity: 0.5 + i * 0.12,
+        side: OrderBookSide.bid,
+      ),
   ];
   final List<OrderBookLevel> asks = <OrderBookLevel>[
     for (var i = 0; i < 16; i++)
@@ -41,16 +45,88 @@ MarketFeedSnapshot _denseSimStyleSnapshot() {
     bids: bids,
     asks: asks,
     recentTrades: <RecentTrade>[
-      RecentTrade(id: '1', price: price, quantity: 0.01, isBuy: true, at: DateTime.utc(2024)),
+      RecentTrade(
+        id: '1',
+        price: price,
+        quantity: 0.01,
+        isBuy: true,
+        at: DateTime.utc(2024),
+      ),
     ],
-    stats: const MarketStats(high24h: 44000, low24h: 42000, volume24h: 1_000_000),
+    stats: const MarketStats(
+      high24h: 44000,
+      low24h: 42000,
+      volume24h: 1_000_000,
+    ),
     chartCloses: chart,
     updatedAt: DateTime.utc(2024),
   );
 }
 
 void main() {
-  testWidgets('RealtimeMarketPage has no flex overflow on phone with full sim book', (
+  Future<void> pumpMarketPage(
+    final WidgetTester tester, {
+    required final Size size,
+    final double textScale = 1,
+  }) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1.0;
+
+    final _FakeRepo repo = _FakeRepo(cached: _denseSimStyleSnapshot());
+
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: MediaQuery(
+          data: MediaQueryData(
+            size: size,
+            textScaler: TextScaler.linear(textScale),
+          ),
+          child: BlocProvider(
+            create: (_) =>
+                RealtimeMarketCubit(repository: repo, pairId: 'btc_usdt'),
+            child: const RealtimeMarketPage(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+
+  testWidgets(
+    'RealtimeMarketPage has no flex overflow on phone with full sim book',
+    (final tester) async {
+      final originalOnError = FlutterError.onError;
+      final errors = <FlutterErrorDetails>[];
+      FlutterError.onError = (final FlutterErrorDetails details) {
+        errors.add(details);
+        originalOnError?.call(details);
+      };
+      addTearDown(() {
+        FlutterError.onError = originalOnError;
+      });
+
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+      await pumpMarketPage(tester, size: const Size(390, 844));
+
+      final Iterable<FlutterErrorDetails> overflows = errors.where(
+        (final FlutterErrorDetails e) =>
+            e.exceptionAsString().contains('overflow'),
+      );
+      expect(
+        overflows,
+        isEmpty,
+        reason: overflows.map((e) => e.exceptionAsString()).join('\n---\n'),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('RealtimeMarketPage adapts on compact and desktop viewports', (
     final tester,
   ) async {
     final originalOnError = FlutterError.onError;
@@ -61,34 +137,29 @@ void main() {
     };
     addTearDown(() {
       FlutterError.onError = originalOnError;
-    });
-
-    addTearDown(() {
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
     });
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
 
-    final _FakeRepo repo = _FakeRepo(cached: _denseSimStyleSnapshot());
-
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: BlocProvider(
-          create: (_) => RealtimeMarketCubit(repository: repo, pairId: 'btc_usdt'),
-          child: const RealtimeMarketPage(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    final Iterable<FlutterErrorDetails> overflows = errors.where(
-      (final FlutterErrorDetails e) => e.exceptionAsString().contains('overflow'),
-    );
-    expect(overflows, isEmpty, reason: overflows.map((e) => e.exceptionAsString()).join('\n---\n'));
-    expect(tester.takeException(), isNull);
+    for (final (:size, :textScale) in <({Size size, double textScale})>[
+      (size: Size(360, 740), textScale: 1.4),
+      (size: Size(1280, 900), textScale: 1),
+    ]) {
+      errors.clear();
+      await pumpMarketPage(tester, size: size, textScale: textScale);
+      final Iterable<FlutterErrorDetails> overflows = errors.where(
+        (final FlutterErrorDetails e) =>
+            e.exceptionAsString().contains('overflow'),
+      );
+      expect(
+        overflows,
+        isEmpty,
+        reason:
+            'viewport=$size textScale=$textScale\n'
+            '${overflows.map((e) => e.exceptionAsString()).join('\n---\n')}',
+      );
+      expect(tester.takeException(), isNull);
+    }
   });
 }
 

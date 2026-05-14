@@ -17,7 +17,8 @@ class MarketStatsStrip extends StatelessWidget {
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
-    Widget cell(final String title, final String value) => Expanded(
+    Widget cell(final String title, final String value) => ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -34,6 +35,8 @@ class MarketStatsStrip extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -55,11 +58,15 @@ class MarketStatsStrip extends StatelessWidget {
           color: scheme.surfaceContainerHighest.withValues(alpha: 0.65),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.5)),
+            side: BorderSide(
+              color: scheme.outlineVariant.withValues(alpha: 0.5),
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.all(context.responsiveGapM),
-            child: Row(
+            child: Wrap(
+              spacing: context.responsiveGapM,
+              runSpacing: context.responsiveGapM,
               children: [
                 cell(
                   l10n.realtimeMarketStatsHigh24h,

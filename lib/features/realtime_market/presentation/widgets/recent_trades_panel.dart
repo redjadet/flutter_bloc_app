@@ -79,16 +79,21 @@ class RecentTradesPanel extends StatelessWidget {
                           t.isBuy ? Icons.trending_up : Icons.trending_down,
                           size: 18,
                           color: accent,
-                          semanticLabel:
-                              t.isBuy ? l10n.realtimeMarketSideBuy : l10n.realtimeMarketSideSell,
+                          semanticLabel: t.isBuy
+                              ? l10n.realtimeMarketSideBuy
+                              : l10n.realtimeMarketSideSell,
                         ),
                         SizedBox(width: context.responsiveGapS),
                         Expanded(
                           child: Text(
                             '${t.price.toStringAsFixed(2)} × ${t.quantity.toStringAsFixed(4)}',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
