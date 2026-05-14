@@ -90,9 +90,12 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           IconButton(
             onPressed: state.isBusy
                 ? null
-                : () => unawaited(
-                    cubit.loadAvailability(therapistId: widget.therapistId),
-                  ),
+                : () {
+                    // check-ignore: side_effects_build - user gesture (refresh).
+                    unawaited(
+                      cubit.loadAvailability(therapistId: widget.therapistId),
+                    );
+                  },
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -118,6 +121,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
                           ? null
                           : () {
                               cubit.setPendingBookingSlot(slot);
+                              // check-ignore: side_effects_build - user gesture (book).
                               unawaited(
                                 context.pushNamed(
                                   AppRoutes
