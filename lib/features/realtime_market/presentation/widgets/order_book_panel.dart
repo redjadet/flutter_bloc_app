@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/entities/order_book_level.dart';
+import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -12,6 +13,7 @@ class OrderBookPanel extends StatelessWidget {
     required this.bidFlex,
     required this.askFlex,
     super.key,
+    this.compactSide,
   });
 
   final List<OrderBookLevel> bids;
@@ -19,6 +21,7 @@ class OrderBookPanel extends StatelessWidget {
   final AppLocalizations l10n;
   final int bidFlex;
   final int askFlex;
+  final RealtimeMarketSideTab? compactSide;
 
   static double _maxQty(final List<OrderBookLevel> rows) {
     if (rows.isEmpty) {
@@ -35,6 +38,8 @@ class OrderBookPanel extends StatelessWidget {
     final ColorScheme scheme = theme.colorScheme;
     final double maxBid = _maxQty(bids);
     final double maxAsk = _maxQty(asks);
+    final bool showCompactBid = compactSide == RealtimeMarketSideTab.bids;
+    final bool compact = compactSide != null;
 
     Widget column(
       final String title,
@@ -42,9 +47,8 @@ class OrderBookPanel extends StatelessWidget {
       final Color accent,
       final int flex,
       final double maxQty,
-    ) => Expanded(
-      flex: flex,
-      child: Column(
+    ) {
+      final Widget content = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -149,8 +153,12 @@ class OrderBookPanel extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
+      if (compact) {
+        return content;
+      }
+      return Expanded(flex: flex, child: content);
+    }
 
     return RepaintBoundary(
       child: Column(
@@ -164,27 +172,39 @@ class OrderBookPanel extends StatelessWidget {
           ),
           SizedBox(height: context.responsiveGapS),
           SizedBox(
-            height: 220,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                column(
-                  l10n.realtimeMarketSideBuy,
-                  bids,
-                  RealtimeMarketUiTokens.bidAccent,
-                  bidFlex,
-                  maxBid,
-                ),
-                SizedBox(width: context.responsiveGapM),
-                column(
-                  l10n.realtimeMarketSideSell,
-                  asks,
-                  RealtimeMarketUiTokens.askAccent(scheme),
-                  askFlex,
-                  maxAsk,
-                ),
-              ],
-            ),
+            height: compact ? 280 : 220,
+            child: compact
+                ? column(
+                    showCompactBid
+                        ? l10n.realtimeMarketSideBuy
+                        : l10n.realtimeMarketSideSell,
+                    showCompactBid ? bids : asks,
+                    showCompactBid
+                        ? RealtimeMarketUiTokens.bidAccent
+                        : RealtimeMarketUiTokens.askAccent(scheme),
+                    1,
+                    showCompactBid ? maxBid : maxAsk,
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      column(
+                        l10n.realtimeMarketSideBuy,
+                        bids,
+                        RealtimeMarketUiTokens.bidAccent,
+                        bidFlex,
+                        maxBid,
+                      ),
+                      SizedBox(width: context.responsiveGapM),
+                      column(
+                        l10n.realtimeMarketSideSell,
+                        asks,
+                        RealtimeMarketUiTokens.askAccent(scheme),
+                        askFlex,
+                        maxAsk,
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

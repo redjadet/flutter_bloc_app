@@ -54,4 +54,10 @@ flutter test test/features/realtime_market/
 flutter test test/features/realtime_market/presentation/realtime_market_page_layout_test.dart
 ```
 
-The layout test pumps **RealtimeMarketPage** at iPhone size with a **16×16** order book (same depth as `SimulatedMarketFeed`) and fails if any `FlutterError` mentions **overflow** — catches fixed-height flex regressions before manual QA. It uses `pumpAndSettle` with a bounded duration; reconnecting UI must not use an infinite animation (for example, avoid an indeterminate progress indicator on the connection pill) so the test can settle.
+The layout test pumps **RealtimeMarketPage** with a **16×16** order book (same
+depth as `SimulatedMarketFeed`) at phone, compact high-text-scale, and desktop
+viewports. It fails if any `FlutterError` mentions **overflow** — catches
+fixed-height flex regressions before manual QA. It uses `pumpAndSettle` with a
+bounded duration; reconnecting UI must not use an infinite animation (for
+example, avoid an indeterminate progress indicator on the connection pill) so
+the test can settle.
