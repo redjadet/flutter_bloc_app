@@ -143,6 +143,63 @@ void main() {
     });
   });
 
+  group('decodeJsonMapFromBytes', () {
+    test('decodes small JSON map synchronously', () async {
+      const jsonString = '{"key": "value", "number": 42}';
+      final bytes = utf8.encode(jsonString);
+      final result = await decodeJsonMapFromBytes(bytes);
+
+      expect(result, isA<Map<String, dynamic>>());
+      expect(result['key'], 'value');
+      expect(result['number'], 42);
+    });
+
+    test('decodes large JSON map in isolate', () async {
+      final largeMap = <String, String>{};
+      for (int i = 0; i < 1000; i++) {
+        largeMap['key_$i'] = _repeat('value_$i', 10);
+      }
+      final jsonString = jsonEncode(largeMap);
+      final bytes = utf8.encode(jsonString);
+      expect(bytes.length, greaterThan(8 * 1024));
+
+      final result = await decodeJsonMapFromBytes(bytes);
+
+      expect(result, isA<Map<String, dynamic>>());
+      expect(result.length, 1000);
+      expect(result['key_0'], _repeat('value_0', 10));
+    });
+
+    test('throws FormatException for non-map JSON', () async {
+      final bytes = utf8.encode('[1, 2, 3]');
+      expect(() => decodeJsonMapFromBytes(bytes), throwsA(isA<FormatException>()));
+    });
+  });
+
+  group('decodeJsonListFromBytes', () {
+    test('decodes small JSON list synchronously', () async {
+      final bytes = utf8.encode('[1, 2, 3, "four"]');
+      final result = await decodeJsonListFromBytes(bytes);
+
+      expect(result, isA<List<dynamic>>());
+      expect(result.length, 4);
+      expect(result[0], 1);
+      expect(result[3], 'four');
+    });
+
+    test('decodes large JSON list in isolate', () async {
+      final largeList = List.generate(1000, (i) => {'id': i, 'data': _repeat('item_$i', 20)});
+      final jsonString = jsonEncode(largeList);
+      final bytes = utf8.encode(jsonString);
+      expect(bytes.length, greaterThan(8 * 1024));
+
+      final result = await decodeJsonListFromBytes(bytes);
+
+      expect(result, isA<List<dynamic>>());
+      expect(result.length, 1000);
+    });
+  });
+
   group('encodeJsonIsolate', () {
     test('encodes small string synchronously', () async {
       const input = 'small string';

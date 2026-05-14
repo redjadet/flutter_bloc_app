@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
@@ -17,9 +17,9 @@ Dio createMockDio(
     InterceptorsWrapper(
       onRequest: (options, handler) {
         handler.resolve(
-          Response<String>(
+          Response<List<int>>(
             requestOptions: options,
-            data: body,
+            data: utf8.encode(body),
             statusCode: statusCode,
             headers: Headers.fromMap({
               'content-type': [contentType],
@@ -81,9 +81,9 @@ void main() {
             onRequest: (options, handler) {
               capturedOptions = options;
               handler.resolve(
-                Response<String>(
+              Response<List<int>>(
                   requestOptions: options,
-                  data: jsonEncode(<String, dynamic>{'ok': true}),
+                data: utf8.encode(jsonEncode(<String, dynamic>{'ok': true})),
                   statusCode: 200,
                   headers: Headers.fromMap({
                     'content-type': ['application/json; charset=utf-8'],
@@ -236,9 +236,15 @@ void main() {
   });
 
   group('HuggingFaceApiClient.formatError', () {
-    Response<String> response(int statusCode, String data) => Response<String>(
+    Response<dynamic> response(int statusCode, String data) => Response<dynamic>(
       requestOptions: RequestOptions(path: '/'),
       data: data,
+      statusCode: statusCode,
+    );
+
+    Response<dynamic> responseBytes(int statusCode, String data) => Response<dynamic>(
+      requestOptions: RequestOptions(path: '/'),
+      data: utf8.encode(data),
       statusCode: statusCode,
     );
 
@@ -279,6 +285,15 @@ void main() {
       expect(
         HuggingFaceApiClient.formatError(response(500, 'unparsable')),
         'Chat service error (HTTP 500): unparsable',
+      );
+    });
+
+    test('parses JSON error detail from UTF-8 bytes body', () {
+      expect(
+        HuggingFaceApiClient.formatError(
+          responseBytes(400, jsonEncode(<String, String>{'error': 'bad'})),
+        ),
+        'Chat service error (HTTP 400): bad',
       );
     });
 
