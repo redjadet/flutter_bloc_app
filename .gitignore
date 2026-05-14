@@ -17,6 +17,7 @@ figma-sync/
 GEMINI.md
 .cursor/*
 .cursorignore
+.playwright-mcp/
 
 # Node lockfile at repo root (functions/ has its own)
 /package-lock.json

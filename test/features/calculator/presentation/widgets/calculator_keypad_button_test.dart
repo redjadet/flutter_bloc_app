@@ -162,5 +162,128 @@ void main() {
 
       expect(find.byType(GridView), findsOneWidget);
     });
+
+    testWidgets('centers button contents on large web-sized layout', (
+      tester,
+    ) async {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      tester.view.physicalSize = const Size(1440, 1000);
+      tester.view.devicePixelRatio = 1.0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: BlocProvider<CalculatorCubit>.value(
+                value: cubit,
+                child: const SizedBox(
+                  width: 720,
+                  height: 860,
+                  child: CalculatorKeypad(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      for (final label in ['AC', '+/−', '0', '+', '=']) {
+        final buttonRect = tester.getRect(
+          find.byKey(ValueKey<String>('calculator-button-$label')),
+        );
+        final labelRect = tester.getRect(find.text(label));
+        expect(labelRect.center.dx, closeTo(buttonRect.center.dx, 1));
+        expect(labelRect.center.dy, closeTo(buttonRect.center.dy, 1));
+      }
+
+      final backspaceButton = find.byKey(
+        const ValueKey<String>('calculator-button-⌫'),
+      );
+      final backspaceRect = tester.getRect(backspaceButton);
+      final iconRect = tester.getRect(
+        find.descendant(
+          of: backspaceButton,
+          matching: find.byIcon(Icons.backspace_outlined),
+        ),
+      );
+      expect(iconRect.center.dx, closeTo(backspaceRect.center.dx, 1));
+      expect(iconRect.center.dy, closeTo(backspaceRect.center.dy, 1));
+    });
+
+    testWidgets('keeps keypad labels inside cells at high text scale', (
+      tester,
+    ) async {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      final originalOnError = FlutterError.onError;
+      final errors = <FlutterErrorDetails>[];
+      FlutterError.onError = (final details) {
+        errors.add(details);
+        originalOnError?.call(details);
+      };
+      addTearDown(() {
+        FlutterError.onError = originalOnError;
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      tester.view.physicalSize = const Size(220, 360);
+      tester.view.devicePixelRatio = 1.0;
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(3)),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider<CalculatorCubit>.value(
+                value: cubit,
+                child: const SizedBox(
+                  width: 160,
+                  height: 220,
+                  child: CalculatorKeypad(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final overflows = errors.where(
+        (final error) => error.exceptionAsString().contains('overflow'),
+      );
+      expect(overflows, isEmpty);
+      expect(tester.takeException(), isNull);
+      expect(find.text('+/−'), findsOneWidget);
+      expect(find.text('AC'), findsOneWidget);
+      expect(find.byIcon(Icons.backspace_outlined), findsOneWidget);
+
+      for (final label in ['+/−', 'AC']) {
+        final buttonRect = tester.getRect(
+          find.byKey(ValueKey<String>('calculator-button-$label')),
+        );
+        final labelRect = tester.getRect(find.text(label));
+        expect(buttonRect.contains(labelRect.topLeft), isTrue);
+        expect(buttonRect.contains(labelRect.bottomRight), isTrue);
+      }
+
+      final backspaceButton = find.byKey(
+        const ValueKey<String>('calculator-button-⌫'),
+      );
+      final backspaceRect = tester.getRect(backspaceButton);
+      final iconRect = tester.getRect(
+        find.descendant(
+          of: backspaceButton,
+          matching: find.byIcon(Icons.backspace_outlined),
+        ),
+      );
+      expect(backspaceRect.contains(iconRect.topLeft), isTrue);
+      expect(backspaceRect.contains(iconRect.bottomRight), isTrue);
+    });
   });
 }
