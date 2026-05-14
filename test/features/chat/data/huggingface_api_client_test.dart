@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -13,9 +15,9 @@ Dio createMockDio(
     InterceptorsWrapper(
       onRequest: (options, handler) {
         handler.resolve(
-          Response<String>(
+          Response<List<int>>(
             requestOptions: options,
-            data: body,
+            data: utf8.encode(body),
             statusCode: statusCode,
             headers: Headers.fromMap({
               'content-type': [contentType],

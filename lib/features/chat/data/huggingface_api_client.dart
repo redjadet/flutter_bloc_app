@@ -38,15 +38,14 @@ class HuggingFaceApiClient {
     required final JsonMap payload,
     required final String context,
   }) async {
-    final Response<String>
-    response = await NetworkGuard.executeDio<String, ChatException>(
-      request: () => _dio.post<String>(
+    final Response<List<int>> response = await NetworkGuard.executeDio<List<int>, ChatException>(
+      request: () => _dio.post<List<int>>(
         uri.toString(),
         // check-ignore: small payload (<8KB) - request body is small
         data: jsonEncode(payload),
         options: Options(
           headers: _headers(),
-          responseType: ResponseType.plain,
+          responseType: ResponseType.bytes,
         ),
       ),
       timeout: _requestTimeout,
@@ -89,8 +88,8 @@ class HuggingFaceApiClient {
       throw const ChatException('Chat service returned unsupported content.');
     }
 
-    final String? body = response.data;
-    if (body == null || body.isEmpty) {
+    final List<int>? bodyBytes = response.data;
+    if (bodyBytes == null || bodyBytes.isEmpty) {
       AppLogger.error(
         'HuggingFaceApiClient.$context failed',
         'Empty response body',
@@ -100,7 +99,7 @@ class HuggingFaceApiClient {
     }
 
     try {
-      return await decodeJsonMap(body);
+      return await decodeJsonMapFromBytes(bodyBytes);
     } on FormatException catch (e, stackTrace) {
       if (e.message == 'Expected a JSON object') {
         AppLogger.error(
@@ -134,10 +133,27 @@ class HuggingFaceApiClient {
   }
 
   /// Formats an error message from a Dio [Response].
-  static String formatError(final Response<String> response) {
+  static String formatError(final Response<dynamic> response) {
     final int code = response.statusCode ?? 0;
-    final String body = response.data ?? '';
+    final String body = _responseDataAsString(response.data);
     return _formatErrorFromStatusAndBody(code, body);
+  }
+
+  static String _responseDataAsString(final Object? data) {
+    if (data == null) {
+      return '';
+    }
+    if (data is String) {
+      return data;
+    }
+    if (data is List<int>) {
+      try {
+        return utf8.decode(data);
+      } on FormatException {
+        return '';
+      }
+    }
+    return '';
   }
 
   static String _formatErrorFromStatusAndBody(

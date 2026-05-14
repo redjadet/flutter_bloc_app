@@ -164,7 +164,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `error_handling.dart` - Error handling utilities and domain failures
 - `http_request_failure.dart` - HTTP failure exception with statusCode (and optional retryAfter) so callers can differentiate 401 vs 503, etc.
 - `initialization_guard.dart` - Safe initialization wrapper for critical operations
-- `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB)
+- `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB); **bytes path** (`decodeJsonMapFromBytes` / `decodeJsonListFromBytes`) uses `utf8.decoder` fused with `json.decoder` so Dio can supply raw UTF-8 without building a full response `String` before parse (see `HuggingFaceApiClient`)
 - `isolate_samples.dart` - Examples of isolate usage for heavy computations
 - [`logger.dart`](../lib/shared/utils/logger.dart) - App-wide logging utility;
   use with [`logging.md`](logging.md) conventions.
@@ -282,8 +282,15 @@ await InitializationGuard.executeSafely(
 // JSON decoding/encoding with isolate offloading (for payloads >8KB)
 import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 
+// When you already have a String (e.g. Retrofit plain text body):
 final Map<String, dynamic> decoded = await decodeJsonMap(response.body);
 final List<dynamic> list = await decodeJsonList(storedJson);
+
+// When you have UTF-8 bytes (e.g. Dio ResponseType.bytes — avoids a large
+// intermediate String for the JSON text):
+final Map<String, dynamic> fromBytes =
+    await decodeJsonMapFromBytes(responseBodyBytes);
+
 final String encoded = await encodeJsonIsolate(object); // For size estimation
 ```
 
