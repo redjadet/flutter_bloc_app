@@ -12,6 +12,7 @@ Agents reason over inspectable state.
 - Runtime evidence needs agent-runnable trigger + stable log/metric/trace/fixture signal; human-only dashboards are not proof.
 - Turn unclear goals into inspectable artifacts: acceptance criteria, data-flow sketch, fixture, dry-run, focused proof route.
 - Non-trivial risk => define acceptance contract before broad execution; executable specs/tests beat model confidence.
+- Spec items must map to deterministic proof: test, fixture, script, lint, screenshot, log/metric, or explicit manual blocker. If not evaluable, treat it as intent/context, not spec.
 - For long/tool-heavy work, make stop rules explicit: retry/fallback/ask/abstain/report conditions.
 - Keep state inspectable: tracker, task graph/checklist, commands, failures, retries, blocker.
 - UI/design chain: [`../DESIGN.md`](../../DESIGN.md) -> [`design_system.md`](../design_system.md) -> `AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`.
@@ -29,3 +30,4 @@ Last 20% builds trust. Before report/commit, ask when suitable:
 - Readability: names, seams, comments, tests, and docs make the next change obvious.
 - Operational clarity: run/verify/debug steps are discoverable from repo artifacts.
 - Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
+- Drift: intent/spec/docs still match implementation after the patch.

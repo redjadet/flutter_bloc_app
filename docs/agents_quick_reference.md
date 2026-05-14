@@ -61,7 +61,9 @@ Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local
 - Closed-loop: plan once, execute end-to-end, verify, report proof.
 - Ask only hard blockers: credentials/tooling, unsafe ambiguity **below 95%**, user-owned decision.
 - Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
+- Intent/spec/implementation stay separate: intent = why/constraints; spec = eval contract; implementation = repo-derived tactics.
 - Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+- Context audit before feature/refactor: related code/tests/docs, known bugs, workarounds, deprecated patterns, unusual helpers; record only real landmines.
 - Proof-first: repo scripts/tests/runtime/MCP own truth; prompts alone not proof; empty tool output not proof.
 - Scope discipline: smallest reversible diff; run narrowest honest validation lane.
 - Reusable agent conclusion => durable repo memory; don’t leave chat-only.
@@ -83,7 +85,7 @@ Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`t
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
 
-Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr` start:** `bash tool/commit_push_pr_rebase_on_main.sh` (then plan/execute/commit/push/PR). To land: `bash tool/commit_push_pr_watch_merge_cleanup.sh`; merge-only `bash tool/commit_push_pr_merge_and_cleanup.sh`; merged elsewhere `python3 tool/commit_push_pr_deploy.py post-merge` (`validation_scripts.md` § Git).
+Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr` start:** `bash tool/commit_push_pr_rebase_on_main.sh` (then plan/execute/commit/push/PR). To land: `bash tool/commit_push_pr_watch_merge_cleanup.sh`; merge-only `bash tool/commit_push_pr_merge_and_cleanup.sh`; merged elsewhere `python3 tool/commit_push_pr_deploy.py post-merge` ([`validation_scripts.md`](validation_scripts.md) § Git).
 
 ## Read By Task
 
