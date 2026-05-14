@@ -57,7 +57,7 @@ Use this when you want testers on real devices **before** store submission:
 
 - [Firebase App Distribution](firebase_app_distribution.md)
 
-The doc includes both CLI usage and the repo’s Fastlane lanes.
+The doc includes CLI usage, Fastlane lanes, and the iOS upload script (`tool/upload_ios_to_firebase_app_distribution.sh`), which runs `firebase_preflight.sh` and maps tester emails to `--testers` (and group aliases to `--groups`).
 
 ## Web (GitHub Pages)
 

@@ -11,11 +11,18 @@ This document describes how to distribute **pre-release** versions of this Flutt
 ## Prerequisites
 
 1. **Firebase project** – Already set up for this app (see [firebase.json](../firebase.json), [WalletConnect Auth Status](walletconnect_auth_status.md)).
-2. **Firebase CLI** – Install or update the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) (standalone binary recommended). Sign in and confirm access to your project:
+2. **Firebase CLI** – Install or update the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) (standalone binary recommended). Sign in, select this repo’s default project (from [`.firebaserc`](../.firebaserc)), then confirm access:
 
    ```bash
    firebase login
+   firebase use flutter-bloc-app-697e8
    firebase projects:list
+   ```
+
+   Before distributing, you can verify the CLI project and iOS App ID match this checkout:
+
+   ```bash
+   ./tool/firebase_preflight.sh --require-cli --app-id "1:473097776453:ios:6962f6ddc4d7ea12bd222c"
    ```
 
 3. **Flutter** – Release builds require a configured Flutter environment and, for iOS, Xcode and signing.
@@ -224,6 +231,23 @@ firebase appdistribution:distribute path/to/YourApp.ipa \
 
 Testers receive an email with a link. On iOS they may need to **trust the developer** (Settings → General → VPN & Device Management) and have their device **registered** in your Apple Developer account for Ad Hoc builds.
 
+### iOS upload script
+
+[`tool/upload_ios_to_firebase_app_distribution.sh`](../tool/upload_ios_to_firebase_app_distribution.sh) is what the Fastlane lane `ios firebase_distribute` runs after building the IPA. It:
+
+- Runs [`tool/firebase_preflight.sh`](../tool/firebase_preflight.sh) with `--require-cli` and the iOS App ID (default: `1:473097776453:ios:6962f6ddc4d7ea12bd222c`, overridable via `FIREBASE_IOS_APP_ID`).
+- Passes **`--groups`** or **`--testers`** to `firebase appdistribution:distribute` as follows:
+  - If **`FIREBASE_GROUPS`** or **`FIREBASE_TESTERS`** is set in the environment, those flags are used (both can be set if you call the script manually and need both).
+  - Otherwise, the **third script argument** (recipient string from Fastlane) is interpreted as **group aliases** when it does **not** contain `@`, and as **comma-separated tester emails** when it **does** contain `@` (so `FIREBASE_TESTERS` flows to `--testers`, not `--groups`).
+
+You can also run the script directly (after `flutter build ipa`):
+
+```bash
+./tool/upload_ios_to_firebase_app_distribution.sh path/to/App.ipa "Release notes" qa-team
+# or with tester emails:
+./tool/upload_ios_to_firebase_app_distribution.sh path/to/App.ipa "Release notes" "a@example.com,b@example.com"
+```
+
 ---
 
 ## Flutter project notes (what’s specific to this repo)
@@ -234,8 +258,9 @@ This doc stays focused on **Firebase App Distribution**. Shared build concepts
 
 | Item | Notes |
 | ------ | ------ |
-| **Firebase config** | `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) are gitignored and generated via `flutterfire configure`. See [Firebase setup](firebase_setup.md). |
+| **Firebase config** | `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) are gitignored and generated via `flutterfire configure`. See [Firebase setup](firebase_setup.md). A committed template with matching App ID lives at `ios/ci/GoogleService-Info.plist` (still replace secrets / keys for real builds). |
 | **Build output paths** | Android: `build/app/outputs/flutter-apk/app-release.apk` or `build/app/outputs/bundle/release/app-release.aab`. iOS: use the path printed by `flutter build ipa` or your Xcode export. |
+| **iOS upload + project guard** | `tool/upload_ios_to_firebase_app_distribution.sh` runs `firebase_preflight.sh` so the active Firebase CLI project matches `.firebaserc` and the `--app` id belongs to that project. |
 
 ---
 
@@ -267,10 +292,9 @@ IOS_APP_ID="1:473097776453:ios:6962f6ddc4d7ea12bd222c"
 ./tool/ios_entitlements.sh distribution   # Restore Associated Domains for Ad Hoc
 flutter build ipa
 IPA_PATH=$(find build/ios -name "*.ipa" | head -1)
-firebase appdistribution:distribute "$IPA_PATH" \
-  --app "$IOS_APP_ID" \
-  --release-notes "${1:-Pre-release iOS build}" \
-  --groups "${2:-qa-team}"
+# Prefer the repo helper (preflight + correct --groups vs --testers):
+./tool/upload_ios_to_firebase_app_distribution.sh "$IPA_PATH" "${1:-Pre-release iOS build}" "${2:-qa-team}"
+# Or call firebase directly, e.g. --groups "qa-team" or --testers "a@x.com,b@y.com"
 # Optional: ./tool/ios_entitlements.sh development   # Revert for local runs
 ```
 
@@ -324,8 +348,8 @@ bundle install
 **Options (env or lane params):**
 
 - `FIREBASE_RELEASE_NOTES` or `release_notes:` – Release notes (default: timestamp).
-- `FIREBASE_GROUPS` or `groups:` – Comma-separated group aliases.
-- `FIREBASE_TESTERS` or `testers:` – Comma-separated tester emails.
+- `FIREBASE_GROUPS` or `groups:` – Comma-separated group aliases (passed to Firebase CLI as `--groups`).
+- `FIREBASE_TESTERS` or `testers:` – Comma-separated tester emails (passed as `--testers`). The lane forwards a single recipient string to `upload_ios_to_firebase_app_distribution.sh`; if you use **groups** in the lane, set `FIREBASE_GROUPS` (or `groups:`). If you use **testers**, set `FIREBASE_TESTERS` (or `testers:`). When only one is set, that value is used; the upload script maps emails to `--testers` and group aliases to `--groups` (see [iOS upload script](#ios-upload-script) above).
 - `FIREBASE_SKIP_BUILD=true` or `skip_build: true` – Upload an existing IPA only (IPA must already exist under `build/ios/`).
 - `FIREBASE_DISTRIBUTION_ENTITLEMENTS=false` or `distribution_entitlements: false` – Skip switching to distribution entitlements (use if building with a personal Apple ID and you only have a pre-built IPA).
 - `FIREBASE_IOS_APP_ID` – Override Firebase iOS App ID.
@@ -336,7 +360,11 @@ bundle install
 FIREBASE_GROUPS=qa-team ./tool/fastlane.sh ios firebase_distribute
 ```
 
-**Note:** iOS lane runs `tool/ios_entitlements.sh distribution` before building (requires paid Apple Developer account for IPA export). To upload an IPA you built elsewhere, use `FIREBASE_SKIP_BUILD=true` and ensure the IPA is at `build/ios/ipa/Runner.ipa` or anywhere under `build/ios/**/*.ipa`.
+```bash
+FIREBASE_TESTERS="qa1@example.com,qa2@example.com" ./tool/fastlane.sh ios firebase_distribute
+```
+
+**Note:** iOS lane runs `tool/ios_entitlements.sh distribution` before building (requires paid Apple Developer account for IPA export). Set `FASTLANE_APP_IDENTIFIER` to your bundle ID before running (see `ios/fastlane/Appfile`). To upload an IPA you built elsewhere, use `FIREBASE_SKIP_BUILD=true` and ensure the IPA is at `build/ios/ipa/Runner.ipa` or anywhere under `build/ios/**/*.ipa`.
 
 For other iOS distribution (Ad Hoc IPA only, TestFlight upload, App Store upload), see [Deployment – Fastlane iOS lanes](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store): `fastlane ios adhoc`, `ios upload_testflight`, `ios upload_appstore`.
 
@@ -353,7 +381,9 @@ For other iOS distribution (Ad Hoc IPA only, TestFlight upload, App Store upload
 | ------ | ---------- |
 | **Firebase CLI not found** | Install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) and ensure it’s on your `PATH`. |
 | **Permission denied / not authorized** | Run `firebase login` and ensure your account has access to the project. In CI, check token or service account permissions. |
+| **Active Firebase project mismatch** | Run `firebase use flutter-bloc-app-697e8` (see `.firebaserc`). `./tool/firebase_preflight.sh --require-cli --app-id "<your-ios-app-id>"` explains the failure. |
 | **Wrong App ID** | Use the **App ID** from Firebase Console → Project Settings → General (e.g. `1:...:android:...` or `1:...:ios:...`), not the project ID. |
+| **iOS: distributing to emails but install never offered** | Confirm you used **`--testers`** (emails) or **`--groups`** (aliases), not emails passed as `--groups`. The repo upload script maps this automatically; raw `firebase` CLI calls must pass the correct flag. |
 | **iOS: “Unable to install”** | For Ad Hoc builds, the device UDID must be in the provisioning profile. Register devices in Apple Developer and regenerate the profile. |
 | **Android: App not installing** | Ensure the APK/AAB is signed. Use `flutter build apk --release` or `flutter build appbundle --release` (with your signing config). |
 | **Build path not found** | After `flutter build apk`, use `build/app/outputs/flutter-apk/app-release.apk`. After `flutter build ipa`, use the path shown in the output or under `build/ios/ipa/`. |
@@ -388,9 +418,9 @@ Then run `flutter build apk --release` again. If the plugin’s `AndroidManifest
 
 ## Summary
 
-1. **Prerequisites**: Firebase project (done), Firebase CLI installed and logged in, Flutter build environment (and iOS signing for IPA).
+1. **Prerequisites**: Firebase project (done), Firebase CLI installed and logged in (`firebase use` must match [`.firebaserc`](../.firebaserc)), Flutter build environment (and iOS signing for IPA).
 2. **Android**: `flutter build apk --release` (or `appbundle`) → `firebase appdistribution:distribute <apk-or-aab> --app <ANDROID_APP_ID> --release-notes "..." --testers "..."` or `--groups "..."`.
-3. **iOS**: `flutter build ipa` (or Xcode archive) → `firebase appdistribution:distribute <path-to-ipa> --app <IOS_APP_ID> --release-notes "..." --testers "..."` or `--groups "..."`.
+3. **iOS**: `flutter build ipa` (or Xcode archive) → `firebase appdistribution:distribute <path-to-ipa> --app <IOS_APP_ID> --release-notes "..." --testers "..."` or `--groups "..."`, or use [`tool/upload_ios_to_firebase_app_distribution.sh`](../tool/upload_ios_to_firebase_app_distribution.sh) / `./tool/fastlane.sh ios firebase_distribute` for preflight and correct `--testers` / `--groups` handling.
 4. Use **tester groups** and **release-notes files** for repeatable pre-release distribution. Tie into Fastlane or CI using tokens or service accounts.
 
 ## Related documentation
