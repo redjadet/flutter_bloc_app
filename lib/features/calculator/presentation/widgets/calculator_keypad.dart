@@ -25,40 +25,48 @@ class CalculatorKeypad extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final CalculatorCubit cubit = context.cubit<CalculatorCubit>();
-    final double spacing = context.responsiveGapL;
+    final double rawSpacing = context.responsiveGapL;
     final CalculatorActions actions = CalculatorCubitActions(cubit);
     final _CalculatorPalette palette = _CalculatorPalette.fromTheme(
       Theme.of(context),
     );
     final List<_ButtonConfig> buttons = _buildButtons(context);
 
-    return GridView.builder(
-      shrinkWrap: shrinkWrap,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.only(bottom: spacing),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: spacing,
-        crossAxisSpacing: spacing,
-      ),
-      itemCount: buttons.length,
-      itemBuilder: (final context, final index) {
-        final button = buttons[index];
-        return _CalculatorButton(
-          key: ValueKey<String>('calculator-button-${button.label}'),
-          config: button,
-          actions: actions,
-          palette: palette,
-          onEvaluate: () {
-            if (cubit.state.error != null) {
-              return;
-            }
-            // check-ignore: navigation is triggered by user action
-            unawaited(
-              context.pushNamed(
-                AppRoutes.calculatorPayment,
-                extra: cubit,
-              ),
+    return LayoutBuilder(
+      builder: (final context, final constraints) {
+        final double spacing = math.min(
+          rawSpacing,
+          constraints.maxWidth / 3,
+        );
+        return GridView.builder(
+          shrinkWrap: shrinkWrap,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.only(bottom: spacing),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: spacing,
+          ),
+          itemCount: buttons.length,
+          itemBuilder: (final context, final index) {
+            final button = buttons[index];
+            return _CalculatorButton(
+              key: ValueKey<String>('calculator-button-${button.label}'),
+              config: button,
+              actions: actions,
+              palette: palette,
+              onEvaluate: () {
+                if (cubit.state.error != null) {
+                  return;
+                }
+                // check-ignore: navigation is triggered by user action
+                unawaited(
+                  context.pushNamed(
+                    AppRoutes.calculatorPayment,
+                    extra: cubit,
+                  ),
+                );
+              },
             );
           },
         );
@@ -71,6 +79,7 @@ class CalculatorKeypad extends StatelessWidget {
     return <_ButtonConfig>[
       _ButtonConfig.function(
         label: '⌫',
+        icon: Icons.backspace_outlined,
         semanticsLabel: l10n.calculatorBackspace,
         tooltip: l10n.calculatorBackspace,
         command: const BackspaceCommand(),

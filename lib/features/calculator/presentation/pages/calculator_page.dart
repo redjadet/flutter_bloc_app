@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants/constants.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
@@ -50,11 +52,16 @@ class CalculatorPage extends StatelessWidget {
                   constraints.maxWidth -
                   resolvedPadding.left -
                   resolvedPadding.right;
-              final double spacing = context.responsiveGapL;
+              final double rawSpacing = context.responsiveGapL;
               const int columns = 4;
               const int rows = 5;
+              final double contentWidth = math.max(0, availableWidth);
+              final double spacing = math.min(
+                rawSpacing,
+                contentWidth / (columns - 1),
+              );
               final double itemWidth =
-                  (availableWidth - (spacing * (columns - 1))) / columns;
+                  (contentWidth - (spacing * (columns - 1))) / columns;
               final double keypadHeight =
                   (itemWidth * rows) + (spacing * (rows - 1)) + spacing;
 

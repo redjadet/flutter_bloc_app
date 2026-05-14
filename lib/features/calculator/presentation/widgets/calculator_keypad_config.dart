@@ -12,6 +12,7 @@ class _ButtonConfig {
     required this.label,
     required this.type,
     required this.command,
+    this.icon,
     this.semanticsLabel,
     this.tooltip,
   });
@@ -45,12 +46,14 @@ class _ButtonConfig {
   const _ButtonConfig.function({
     required final String label,
     required final CalculatorCommand command,
+    final IconData? icon,
     final String? semanticsLabel,
     final String? tooltip,
   }) : this._(
          label: label,
          type: _ButtonType.function,
          command: command,
+         icon: icon,
          semanticsLabel: semanticsLabel,
          tooltip: tooltip,
        );
@@ -58,6 +61,7 @@ class _ButtonConfig {
   final String label;
   final _ButtonType type;
   final CalculatorCommand command;
+  final IconData? icon;
   final String? semanticsLabel;
   final String? tooltip;
 }
