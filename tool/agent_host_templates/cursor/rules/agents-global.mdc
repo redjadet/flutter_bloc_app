@@ -13,6 +13,7 @@ alwaysApply: false
 
 - Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
 - Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
+- Keep intent/spec/implementation separate: intent = why/constraints; spec = eval contract; implementation = repo-derived tactics.
 - If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
 - Single loop: plan -> tool -> observe -> revise; keep task state inspectable.
 - Empty/truncated/malformed tool output is not proof.
@@ -28,6 +29,7 @@ alwaysApply: false
 
 - Read smallest blocks needed; prefer targeted search + narrow reads.
 - context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+- Feature/refactor context audit: related code/tests/docs, known bugs, workarounds, deprecated patterns, unusual helpers; record only real landmines.
 - Branch/compare approaches only when uncertainty/risk pays for it; default one path. High-risk architecture/debug may compare 2-3 candidates with evidence, then choose one.
 - Don’t restate policy; point to canon docs.
 

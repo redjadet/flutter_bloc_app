@@ -23,9 +23,9 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | --- | --- |
 | Draft first | Am I treating first output as draft, not truth? |
 | Reprompt loop | Did I stop after 1-2 critique cycles and switch to evidence + minimal patch instead of regenerating? |
-| Assumptions | Did I surface ambiguous scope/data/format/privacy/volume/UX? |
+| Assumptions | What assumptions did the AI make about this codebase that might be false? Did I surface ambiguous scope/data/format/privacy/volume/UX? |
 | System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
-| Prompt shape | Did guidance use Goal / Context / Boundaries / Verification, omit nonessential rules, and avoid micromanaging implementation order? |
+| Prompt shape | Did guidance separate intent, eval/spec, and implementation; use Goal / Context / Boundaries / Verification; omit nonessential rules; and avoid micromanaging implementation order? |
 | Problem fit | Does change fit user outcome + production path? |
 | Visual fit | Did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use runtime source (`AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`), and fit audience/workflow? |
 | UI states/layout | Are expected states present, and did mobile/tablet/desktop checks cover clipped text, overlap, unstable controls, hidden primary content? |
@@ -46,7 +46,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Tool contract | Are tool inputs, side effects, retry safety, and failure modes explicit enough for future agents? |
 | Legibility | Future Codex/Cursor can inspect docs/tests/fixtures/logs/UI proof without chat, with a runnable trigger and stable signal for runtime claims? |
 | Confidence | Confidence from proof; uncertainty stated? |
-| Focused tests | Scope-matched tests, async reasoning, no deprecated Flutter test APIs? |
+| Focused tests | Scope-matched tests, known client/domain edge cases before integration when practical, async reasoning, no deprecated Flutter test APIs? |
 | Judgment | Tradeoff documented; changed surface owned? |
 | Scope discipline | Every changed line traces to request or required validation/doc update? |
 | Self-verification | Final answer checked against request, files, validation, blockers, risk? |
@@ -71,11 +71,13 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 1. Apply checks above.
 2. If vague, define assumptions, system boundaries, data flow, failure handling, success criteria, and smallest verifiable slice.
 3. For non-trivial work, define acceptance contract before broad execution; prefer executable specs/tests/fixtures over prose.
-4. Review diff/generated artifacts.
-5. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
-6. If verifier/critique fails, retry only against concrete evidence; after two loops, replan or report blocker.
-7. Self-verify final response vs request, diff, proof, blockers, residual risk.
-8. Medium/high risk: prefer extra review pass. Cross-host review only when explicitly requested.
+4. Re-read related existing features for landmines before trusting generated code.
+5. Add or identify edge-case proof first when domain boundaries matter (time, fiscal periods, offline/sync, permissions, retries, locale, scale).
+6. Review diff/generated artifacts.
+7. Run smallest honest validation via [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+8. If verifier/critique fails, retry only against concrete evidence; after two loops, replan or report blocker.
+9. Self-verify final response vs request, diff, proof, blockers, residual risk.
+10. Medium/high risk: prefer extra review pass. Cross-host review only when explicitly requested.
 
 Repeated critique => repo-visible capability: source-doc update, validation check, test helper, fixture, route proof, or task template.
 

@@ -8,10 +8,12 @@ Scale effort to task value; default to one small loop.
 
 1. Classify complexity/risk/scope/uncertainty; local/mechanical stays light.
 2. Define `Goal / Context / Boundaries / Verification`; add side effects or stop/report shape only when useful.
+   Keep intent, spec, and implementation separate: intent says why/constraints/success; spec says measurable contract/eval; implementation follows repo architecture.
 3. Plan once (<=10 lines), then execute end-to-end.
 4. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
 5. Do not edit until 95% confident in goal/scope/approach.
 6. Vague/risky => assumptions, data flow, failure handling, smallest verifiable slice.
+   Ask: what assumptions about this codebase may be false?
 7. Broad/codegen => modules, ownership, I/O, persistence/sync, logs, dry-run/test seams, rollback.
 8. Debug => reproduce/reason, isolate, fix cause, verify.
 9. Before report: edge cases, failure paths, readability, operational clarity, breakage impact.
@@ -27,3 +29,4 @@ Scale effort to task value; default to one small loop.
 - Keep stable/cacheable instructions before task-specific context.
 - Re-evaluate effort before escalating; low/medium often beats high when scope + stop rules are clear.
 - Trust senior-agent judgment inside boundaries; constrain outcomes/safety, not folder counts/order unless repo canon requires them.
+- Do not lock architecture in the prompt/spec unless repo canon or user constraint requires it; derive tactics from current code, history, and validation.
