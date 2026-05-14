@@ -25,9 +25,11 @@ void main() {
           InterceptorsWrapper(
             onRequest: (options, handler) {
               handler.resolve(
-                Response<String>(
+                Response<List<int>>(
                   requestOptions: options,
-                  data: jsonEncode(<String, dynamic>{'status': 'baseline'}),
+                  data: utf8.encode(
+                    jsonEncode(<String, dynamic>{'status': 'baseline'}),
+                  ),
                   statusCode: 200,
                   headers: Headers.fromMap({
                     'content-type': ['application/json'],
@@ -60,15 +62,17 @@ void main() {
           InterceptorsWrapper(
             onRequest: (options, handler) {
               handler.resolve(
-                Response<String>(
+                Response<List<int>>(
                   requestOptions: options,
-                  data: jsonEncode(<String, dynamic>{
-                    'conversation': <String, dynamic>{
-                      'past_user_inputs': const <String>[],
-                      'generated_responses': const <String>[],
-                    },
-                    'generated_text': 'override',
-                  }),
+                  data: utf8.encode(
+                    jsonEncode(<String, dynamic>{
+                      'conversation': <String, dynamic>{
+                        'past_user_inputs': const <String>[],
+                        'generated_responses': const <String>[],
+                      },
+                      'generated_text': 'override',
+                    }),
+                  ),
                   statusCode: 200,
                   headers: Headers.fromMap({
                     'content-type': ['application/json'],
