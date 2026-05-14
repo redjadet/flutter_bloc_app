@@ -98,9 +98,14 @@ void main() {
           timerService: FakeTimerService(),
         );
       },
-      seed: () => GameState.idle(const DemoBalance(amountUnits: 50), 100),
-      act: (cubit) => cubit.playRound(),
-      expect: () => <GameState>[const GameState.error('Insufficient balance')],
+      act: (cubit) async {
+        await cubit.loadBalance();
+        cubit.playRound();
+      },
+      expect: () => <GameState>[
+        GameState.idle(const DemoBalance(amountUnits: 50), 100),
+        const GameState.error('Insufficient balance'),
+      ],
     );
   });
 }

@@ -159,6 +159,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                       ? null
                       : (final id) {
                           if (id == null) return;
+                          // check-ignore: side_effects_build - user gesture (dropdown).
                           unawaited(cubit.selectConversation(id));
                         },
                 ),
