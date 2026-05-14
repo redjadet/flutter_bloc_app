@@ -8,13 +8,13 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 
 ## Overview
 
-**Current Status:** `compute()` is now used in production via `lib/shared/utils/isolate_json.dart` for JSON decoding in network repositories.
+**Current Status:** `compute()` is used in production via `lib/shared/utils/isolate_json.dart` for JSON decoding/encoding above size thresholds. **UTF-8 byte inputs** are supported via `decodeJsonMapFromBytes()` / `decodeJsonListFromBytes()` (fused `utf8` + `json` converter) so large HTTP bodies need not become a Dart `String` before parsing when Dio returns bytes.
 
 **Purpose:** Identify CPU-intensive operations that block the UI thread and recommend isolate-based solutions to improve responsiveness.
 
 **When to Use Isolates:**
 
-- ✅ JSON decoding of large payloads (>8KB threshold, automatic via `decodeJsonMap()`/`decodeJsonList()`)
+- ✅ JSON decoding of large payloads (>8KB threshold, automatic via `decodeJsonMap()` / `decodeJsonList()` / **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`**)
 - ✅ Parsing/transforming large lists (>1000 items)
 - ✅ CPU-intensive computations (crypto, image processing)
 - ✅ Heavy data transformations that cause UI jank
@@ -29,14 +29,28 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 
 ## Current Usage
 
-- **Production code**: `lib/shared/utils/isolate_json.dart` provides `decodeJsonMap()`/`decodeJsonList()` for JSON decoding and `encodeJsonIsolate()` for JSON encoding, using `compute()` for payloads >8KB (configurable threshold: `_kIsolateDecodeThreshold`)
-- **Network repositories**: Chart, GraphQL, and Hugging Face responses decode JSON via `decodeJsonMap()`
-- **Local storage**: Chat history and search cache parsing decode JSON via `decodeJsonList()`
+- **Production code**: `lib/shared/utils/isolate_json.dart` provides `decodeJsonMap()` / `decodeJsonList()` for **string** payloads, **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** for **UTF-8 `List<int>`** payloads (same 8KB isolate threshold), and `encodeJsonIsolate()` for JSON encoding, using `compute()` above those thresholds (`_kIsolateDecodeThreshold`, `_kIsolateEncodeSmallCollectionMax`).
+- **Network repositories**: Chart and GraphQL-style paths decode JSON via `decodeJsonMap()` on **string** bodies. **Hugging Face** chat client uses **`ResponseType.bytes`** and **`decodeJsonMapFromBytes()`** on the success path.
+- **Local storage**: Chat history and search cache parsing decode JSON via `decodeJsonList()` on stored strings.
 - **Size estimation**: Profile cache size estimation encodes JSON via `encodeJsonIsolate()`
 - **Demo/Testing**: Isolate samples in `lib/shared/utils/isolate_samples.dart` demonstrating Fibonacci calculations and parallel processing
 - **Tests**:
   - `test/isolate_samples_test.dart` validates isolate behavior
-  - `test/shared/utils/isolate_json_test.dart` validates JSON decode/encode functions with isolate offloading
+  - `test/shared/utils/isolate_json_test.dart` validates string and bytes JSON decode/encode with isolate offloading
+
+---
+
+## Future work: JSON parsing
+
+Do **not** start here without profiling; the list is for planning and trade-off discussion.
+
+| Direction | Notes |
+| --------- | ----- |
+| **More `ResponseType.bytes` + `decodeJsonMapFromBytes`** | Retrofit/`String`-based clients (for example chart CoinGecko) still decode from `String`. Migrating generated or hand-written APIs to return **`List<int>`** removes one large allocation when responses are big. |
+| **Configurable isolate threshold** | Lower `_kIsolateDecodeThreshold` for low-end or enterprise builds so more parses run in `compute()` (already mentioned below). |
+| **Upstream VM / experimental parsers** | Track **`dart-lang/sdk#55522`** for VM JSON improvements. FFI/SIMD community parsers are optional only with dependency justification, per-platform binaries, and CI coverage. |
+
+Point-in-time change log: [`changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md).
 
 ---
 
@@ -48,20 +62,18 @@ These operations synchronously decode JSON on the UI thread. Large payloads can 
 
 #### 1. Chart API Parsing
 
-**Location:** `lib/features/chart/data/http_chart_repository.dart:89-112`
+**Location:** `lib/features/chart/data/http_chart_repository.dart` (e.g. `fetchTrendingCounts`)
 
-**Current Implementation (Updated):**
+**Current implementation (updated):**
 
 ```dart
-Future<List<ChartPoint>> _parseBody(final String body) async {
-  final Map<String, dynamic> decoded = await decodeJsonMap(body);
-  // ... filtering, mapping, sorting
-}
+final String body = await _api.getBitcoinMarketChart(...);
+final Map<String, dynamic> decoded = await decodeJsonMap(body);
 ```
 
 **Impact:** Chart API responses can be 50-200KB with hundreds of data points
 
-**Status:** ✅ Completed (decode offloaded via `decodeJsonMap()`)
+**Status:** ✅ Completed (decode offloaded via `decodeJsonMap()` on **string** body). **Future:** byte response + `decodeJsonMapFromBytes` if the HTTP client returns raw UTF-8 (see **Future work: JSON parsing**).
 
 **Implementation:**
 
@@ -124,19 +136,24 @@ Future<List<ChatConversation>> _parseStored(final dynamic raw) async {
 
 #### 4. Hugging Face Response Parsing
 
-**Location:** `lib/features/chat/data/huggingface_api_client.dart:80`
+**Location:** `lib/features/chat/data/huggingface_api_client.dart`
 
-**Current Implementation (Updated):**
+**Current implementation:**
+
+- Request uses Dio with **`ResponseType.bytes`**.
+- Success path: **`await decodeJsonMapFromBytes(response.data!)`** (after content-type checks).
+- **`formatError`** accepts **`Response<dynamic>`** and stringifies **`String` or `List<int>`** bodies for small error JSON.
 
 ```dart
-final Map<String, dynamic> decoded = await decodeJsonMap(response.body);
+// Success: bytes → map (fused UTF-8 + JSON; isolate when >8KB)
+return await decodeJsonMapFromBytes(bodyBytes);
 ```
 
-**Impact:** AI responses can be large with detailed metadata
+**Impact:** AI responses can be large with detailed metadata; avoiding a full intermediate body string reduces allocation pressure on chat completions.
 
-**Status:** ✅ Completed (decode offloaded via `decodeJsonMap()`)
+**Status:** ✅ Completed (bytes response + `decodeJsonMapFromBytes()`)
 
-**Estimated Impact:** Prevents 20-100ms UI stalls per AI response
+**Estimated impact:** Same order of isolate win as before for large payloads, plus less string materialization for the raw JSON text when the body is large.
 
 ---
 
@@ -298,8 +315,9 @@ class MarkdownRenderObject {
 
 **For JSON decoding (recommended approach):**
 
-- [ ] Use `decodeJsonMap()` or `decodeJsonList()` from `lib/shared/utils/isolate_json.dart`
-- [ ] Automatically uses `compute()` for payloads >8KB
+- [ ] Prefer **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** when the HTTP layer gives UTF-8 **`List<int>`** (e.g. Dio **`ResponseType.bytes`**).
+- [ ] Otherwise use **`decodeJsonMap()`** or **`decodeJsonList()`** from `lib/shared/utils/isolate_json.dart` for **string** bodies.
+- [ ] Automatically uses `compute()` for payloads >8KB (byte length or string length per API).
 - [ ] Map to domain models on UI isolate (domain models aren't sendable)
 - [ ] Wrap in try-catch for error handling
 - [ ] Add tests for parsing with large payloads
@@ -327,12 +345,13 @@ class MarkdownRenderObject {
 - **Error tests:** Verify fallback behavior when isolates fail
 - **Examples:**
   - `test/isolate_samples_test.dart` - Isolate testing patterns
-  - `test/shared/utils/isolate_json_test.dart` - JSON decode/encode with isolate offloading
+  - `test/shared/utils/isolate_json_test.dart` - string and **bytes** JSON decode/encode with isolate offloading
 
 ---
 
 ## Related Documentation
 
+- [Point-in-time: JSON bytes + HF (2026-05-14)](changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md) - `decodeJsonMapFromBytes`, Hugging Face `ResponseType.bytes`, future Retrofit-bytes / FFI notes
 - [Flutter `compute()` Documentation](https://api.flutter.dev/flutter/foundation/compute.html)
 - [Dart Isolates Documentation](https://dart.dev/language/concurrency)
 - [Performance Best Practices](https://docs.flutter.dev/perf/best-practices)
@@ -348,16 +367,17 @@ class MarkdownRenderObject {
 
 **Key Opportunities (All Completed):**
 
-- JSON decoding for large payloads (chart, GraphQL, Hugging Face) offloaded
+- JSON decoding for large payloads: chart/GraphQL use **`decodeJsonMap()`** on strings; **Hugging Face** uses **`decodeJsonMapFromBytes()`** with **`ResponseType.bytes`**
 - Chat history and search cache JSON decoding offloaded
 - Profile cache size estimation JSON encoding offloaded
 - Markdown parsing caching in place
 
 **Next Steps:**
 
-1. Measure performance improvements from implemented optimizations
-2. Consider markdown isolate parsing for very large documents (>50KB)
-3. Use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for any new large JSON operations
+1. Measure performance improvements from implemented optimizations (including HF byte path where payloads are large).
+2. Consider markdown isolate parsing for very large documents (>50KB).
+3. Use `decodeJsonMap()` / `decodeJsonList()` / **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** / `encodeJsonIsolate()` for any new large JSON operations—**prefer bytes APIs** when Dio (or another client) already exposes UTF-8 bytes.
+4. **Optional backlog:** Migrate other large JSON call sites from string bodies to bytes + `decodeJsonMapFromBytes` when Retrofit/Dio surfaces allow; evaluate FFI/SIMD JSON only with profiling and dependency review (see **Future work: JSON parsing** above).
 
 **Enterprise / high-traffic:** For low-end devices or high-traffic scenarios, consider making the isolate threshold configurable (e.g. lower than 8KB) so more decoding is offloaded; the default remains 8KB in `lib/shared/utils/isolate_json.dart`.
 
