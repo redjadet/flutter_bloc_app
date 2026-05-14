@@ -129,7 +129,13 @@ Firebase deploy and distribution scripts in this repo run a preflight check:
 
 - Expected Firebase project ID for this checkout comes from `.firebaserc` (`projects.default`).
 - The preflight compares that against your active Firebase CLI project (`firebase use --json`).
-- For App Distribution scripts, the preflight also validates the provided App ID matches the expected project.
+- For App Distribution uploads, [`tool/upload_ios_to_firebase_app_distribution.sh`](../tool/upload_ios_to_firebase_app_distribution.sh) calls [`tool/firebase_preflight.sh`](../tool/firebase_preflight.sh) with `--app-id` so the iOS **App ID** prefix matches the expected project number (see [Firebase App Distribution](firebase_app_distribution.md#ios-upload-script)).
+
+You can run the same check manually:
+
+```bash
+./tool/firebase_preflight.sh --require-cli --app-id "1:473097776453:ios:6962f6ddc4d7ea12bd222c"
+```
 
 If it fails, run:
 
