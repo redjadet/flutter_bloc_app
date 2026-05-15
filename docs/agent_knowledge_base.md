@@ -175,7 +175,7 @@ Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put beh
 
 - Continual learning: index `.cursor/hooks/state/continual-learning-index.json` (set `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`). Run `dart run tool/continual_learning_index_refresh.dart` then `dart run tool/continual_learning_summarize.dart`; summarizer marks processed even when the tail has no correction-pattern lines. After refresh, rows with `lastProcessedAt` null are first-scan backlog. Land high-signal takeaways here or owning doc.
 - Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
-- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; see [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
+- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../pubspec.yaml) (e.g. `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`). See [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
 
 - Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
@@ -184,6 +184,7 @@ Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put beh
 Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGENTS.md)):
 
 - **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists.
+- **Upgrade lane proof:** After `./bin/upgrade_validate_all` or `/upgrade-pr-triage-validate`, cite explicit pass evidence for delivery checklist (step 3) and integration tests (step 4)—test counts and simulator id—not only overall exit 0.
 - **Commit / PR helpers:** Rebase the current branch onto the latest default branch before opening or updating a PR when using the repo’s `commit-push-pr` style flow.
 
 Transcript-derived workspace guardrails:
