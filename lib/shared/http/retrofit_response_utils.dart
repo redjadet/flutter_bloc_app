@@ -18,3 +18,20 @@ Response<String> stringResponseFromHttpResponse(
     headers: response.headers,
   );
 }
+
+/// Adapts Retrofit [HttpResponse] with a UTF-8 byte body to a Dio [Response].
+Response<List<int>> bytesResponseFromHttpResponse(
+  final HttpResponse<List<int>> httpResponse,
+) {
+  final Response<dynamic> response = httpResponse.response;
+  return Response<List<int>>(
+    data: response.data is List<int> ? response.data as List<int> : null,
+    requestOptions: response.requestOptions,
+    statusCode: response.statusCode,
+    statusMessage: response.statusMessage,
+    isRedirect: response.isRedirect,
+    redirects: response.redirects,
+    extra: response.extra,
+    headers: response.headers,
+  );
+}

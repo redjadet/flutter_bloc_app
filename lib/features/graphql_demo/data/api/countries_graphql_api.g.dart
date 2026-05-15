@@ -8,7 +8,7 @@ part of 'countries_graphql_api.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
 class _CountriesGraphqlApi implements CountriesGraphqlApi {
   _CountriesGraphqlApi(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -22,7 +22,7 @@ class _CountriesGraphqlApi implements CountriesGraphqlApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<String>> postQuery(
+  Future<HttpResponse<List<int>>> postQuery(
     Map<String, dynamic> body,
     Options? options,
   ) async {
@@ -39,13 +39,14 @@ class _CountriesGraphqlApi implements CountriesGraphqlApi {
     final _options = newOptions.copyWith(
       method: 'POST',
       baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+      responseType: ResponseType.bytes,
       queryParameters: queryParameters,
       path: '/',
     )..data = _data;
-    final _result = await _dio.fetch<String>(_options);
-    late String _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
     try {
-      _value = _result.data!;
+      _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

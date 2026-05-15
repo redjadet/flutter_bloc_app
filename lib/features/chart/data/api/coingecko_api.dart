@@ -11,7 +11,8 @@ abstract class CoingeckoApi {
   factory CoingeckoApi(final Dio dio, {final String? baseUrl}) = _CoingeckoApi;
 
   @GET('coins/bitcoin/market_chart')
-  Future<String> getBitcoinMarketChart(
+  @DioResponseType(ResponseType.bytes)
+  Future<List<int>> getBitcoinMarketChart(
     @Queries() final Map<String, String> query,
     @Header('Accept') final String accept,
   );

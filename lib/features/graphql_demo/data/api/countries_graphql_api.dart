@@ -13,7 +13,8 @@ abstract class CountriesGraphqlApi {
       _CountriesGraphqlApi;
 
   @POST('/')
-  Future<HttpResponse<String>> postQuery(
+  @DioResponseType(ResponseType.bytes)
+  Future<HttpResponse<List<int>>> postQuery(
     @Body() final Map<String, dynamic> body,
     @DioOptions() final Options? options,
   );

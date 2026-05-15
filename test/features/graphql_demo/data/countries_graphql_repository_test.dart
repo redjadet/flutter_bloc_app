@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
@@ -11,9 +13,9 @@ void main() {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           handler.resolve(
-            Response<String>(
+            Response<List<int>>(
               requestOptions: options,
-              data: body,
+              data: utf8.encode(body),
               statusCode: statusCode,
             ),
           );
