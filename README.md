@@ -13,7 +13,7 @@ integrations, AI demos, and release-ready validation.
 [![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-71%2E08%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E98%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
 
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-orange.svg)](docs/clean_architecture.md)
