@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
@@ -17,12 +19,12 @@ class _FakeCoingeckoApi implements CoingeckoApi {
   var requestCount = 0;
 
   @override
-  Future<String> getBitcoinMarketChart(
+  Future<List<int>> getBitcoinMarketChart(
     final Map<String, String> query,
     final String accept,
   ) async {
     requestCount += 1;
-    return '{"prices":[[1741478400000,41000.5],[1741564800000,42000.0]]}';
+    return utf8.encode('{"prices":[[1741478400000,41000.5],[1741564800000,42000.0]]}');
   }
 }
 

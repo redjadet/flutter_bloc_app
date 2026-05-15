@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/direct_chart_remote_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
@@ -9,7 +11,7 @@ class _FakeCoingeckoApi implements CoingeckoApi {
   final String Function() _body;
 
   @override
-  Future<String> getBitcoinMarketChart(
+  Future<List<int>> getBitcoinMarketChart(
     final Map<String, String> query,
     final String accept,
   ) async {
@@ -19,7 +21,7 @@ class _FakeCoingeckoApi implements CoingeckoApi {
       'interval': 'daily',
     });
     expect(accept, 'application/json');
-    return _body();
+    return utf8.encode(_body());
   }
 }
 

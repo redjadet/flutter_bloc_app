@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/api/countries_graphql_api.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
@@ -119,11 +121,11 @@ class CountriesGraphqlRepository
     }
 
     const Duration timeout = Duration(seconds: 10);
-    final Response<String>
-    response = await NetworkGuard.executeDio<String, GraphqlDemoException>(
+    final Response<List<int>> response =
+        await NetworkGuard.executeDio<List<int>, GraphqlDemoException>(
       request: () => _api
           .postQuery(payload, _options())
-          .then(stringResponseFromHttpResponse),
+          .then(bytesResponseFromHttpResponse),
       timeout: timeout,
       isSuccess: (final statusCode) => statusCode == 200,
       logContext:
@@ -132,7 +134,7 @@ class CountriesGraphqlRepository
       onHttpFailure: (final res) {
         final int? statusCode = res.statusCode;
         final bool isServerError = (statusCode ?? 0) >= 500;
-        final String? bodyData = res.data;
+            final String? bodyData = _responseBodyAsDiagnosticString(res.data);
         return GraphqlDemoException(
           'Unexpected status code: $statusCode',
           cause: bodyData != null && bodyData.isNotEmpty ? bodyData : null,
@@ -155,7 +157,7 @@ class CountriesGraphqlRepository
       },
     );
 
-    final String? responseBody = response.data;
+    final List<int>? responseBody = response.data;
     if (responseBody == null || responseBody.isEmpty) {
       throw GraphqlDemoException(
         'Empty GraphQL response',
@@ -165,7 +167,7 @@ class CountriesGraphqlRepository
 
     final Map<String, dynamic> decoded;
     try {
-      decoded = await decodeJsonMap(responseBody);
+      decoded = await decodeJsonMapFromBytes(responseBody);
     } on FormatException {
       throw GraphqlDemoException(
         'Malformed GraphQL response',
@@ -196,6 +198,26 @@ class CountriesGraphqlRepository
       );
     }
     return data;
+  }
+
+  static String? _responseBodyAsDiagnosticString(final Object? data) {
+    if (data == null) {
+      return null;
+    }
+    if (data is String) {
+      return data;
+    }
+    if (data is List<int>) {
+      if (data.isEmpty) {
+        return null;
+      }
+      try {
+        return utf8.decode(data);
+      } on FormatException {
+        return null;
+      }
+    }
+    return null;
   }
 
   static const String _continentsQuery = '''

@@ -24,14 +24,16 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
 
   @override
   Future<List<ChartPoint>> fetchTrendingCounts() async {
-    final String body = await _api.getBitcoinMarketChart(
+    final List<int> bodyBytes = await _api.getBitcoinMarketChart(
       _marketChartQuery,
       _acceptHeader,
     );
-    if (body.isEmpty) {
+    if (bodyBytes.isEmpty) {
       throw const FormatException('Empty response body');
     }
-    final Map<String, dynamic> decoded = await decodeJsonMap(body);
+    final Map<String, dynamic> decoded = await decodeJsonMapFromBytes(
+      bodyBytes,
+    );
     return _parseFromMap(decoded);
   }
 
