@@ -21,9 +21,9 @@ void main() {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           handler.resolve(
-            Response<String>(
+            Response<List<int>>(
               requestOptions: options,
-              data: body(),
+              data: utf8.encode(body()),
               statusCode: statusCode,
             ),
           );
@@ -45,9 +45,9 @@ void main() {
         onRequest: (options, handler) {
           requestCount++;
           handler.resolve(
-            Response<String>(
+            Response<List<int>>(
               requestOptions: options,
-              data: jsonEncode(pricesPayload),
+              data: utf8.encode(jsonEncode(pricesPayload)),
               statusCode: 200,
             ),
           );
@@ -84,17 +84,17 @@ void main() {
           requestCount++;
           if (requestCount == 1) {
             handler.resolve(
-              Response<String>(
+              Response<List<int>>(
                 requestOptions: options,
-                data: jsonEncode(pricesPayload),
+                data: utf8.encode(jsonEncode(pricesPayload)),
                 statusCode: 200,
               ),
             );
           } else {
             handler.resolve(
-              Response<String>(
+              Response<List<int>>(
                 requestOptions: options,
-                data: 'server error',
+                data: utf8.encode('server error'),
                 statusCode: 500,
               ),
             );

@@ -8,7 +8,7 @@ part of 'coingecko_api.dart';
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
 class _CoingeckoApi implements CoingeckoApi {
   _CoingeckoApi(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -22,7 +22,7 @@ class _CoingeckoApi implements CoingeckoApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<String> getBitcoinMarketChart(
+  Future<List<int>> getBitcoinMarketChart(
     Map<String, String> query,
     String accept,
   ) async {
@@ -32,8 +32,13 @@ class _CoingeckoApi implements CoingeckoApi {
     final _headers = <String, dynamic>{r'Accept': accept};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<String>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
+    final _options = _setStreamType<List<int>>(
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+            responseType: ResponseType.bytes,
+          )
           .compose(
             _dio.options,
             'coins/bitcoin/market_chart',
@@ -42,10 +47,10 @@ class _CoingeckoApi implements CoingeckoApi {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<String>(_options);
-    late String _value;
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
     try {
-      _value = _result.data!;
+      _value = _result.data!.cast<int>();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

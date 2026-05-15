@@ -24,7 +24,7 @@ environment:
 # - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
 # - device_info_plus 13 + package_info_plus 10: geolocator_linux caps package_info_plus ^9; win32 major split vs device_info_plus 13.
 # - genui 0.9: genui_google_generative_ai 0.7.x requires genui ^0.7.
-# - json_serializable 6.12+: needs analyzer newer than 8.4.x (pin below for retrofit + file_length_lint + custom_lint).
+# - json_serializable 6.12+ needs analyzer >=9; 6.13+ needs >=10; 6.11.x fits analyzer 8.4 pin.
 # - google_sign_in_mocks 0.4+: needs google_sign_in 7; firebase_ui_oauth_google stays on google_sign_in 6.
 # - meta 1.18: flutter_test from the SDK pins meta 1.17.0.
 
@@ -89,7 +89,7 @@ dependencies:
   integration_test:
     sdk: flutter
   intl: ^0.20.2
-  json_annotation: ^4.11.0
+  json_annotation: ^4.9.0
   local_auth: ^3.0.1
   logger: ^2.7.0
   markdown: ^7.3.1
@@ -129,7 +129,7 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
   google_sign_in_mocks: ^0.3.0
-  json_serializable: ^6.13.2
+  json_serializable: 6.11.3
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
@@ -141,8 +141,8 @@ dev_dependencies:
   video_player_platform_interface: ^6.7.0
 
 dependency_overrides:
-  # retrofit_generator >=10.2.5 needs analyzer >=8.4.1; analysis_server_plugin 0.3.3 pins 8.4.0.
-  # dart_style 3.1.9+ needs newer analyzer than 8.4.x — pin both so plugins + codegen resolve.
+  # retrofit_generator >=10.2.5 needs analyzer >=8.4.1; json_serializable 6.11.x fits 8.4.x.
+  # dart_style 3.1.9+ needs newer analyzer — pin 3.1.3 with analyzer 8.4.1 for plugins + codegen.
   analyzer: 8.4.1
   dart_style: 3.1.3
   # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17

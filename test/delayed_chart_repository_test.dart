@@ -32,9 +32,9 @@ void main() {
               ],
             };
             handler.resolve(
-              Response<String>(
+            Response<List<int>>(
                 requestOptions: options,
-                data: json.encode(payload),
+              data: utf8.encode(json.encode(payload)),
                 statusCode: 200,
               ),
             );

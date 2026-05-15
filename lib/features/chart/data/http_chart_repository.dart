@@ -52,14 +52,16 @@ class HttpChartRepository extends ChartRepository {
       return cached;
     }
     try {
-      final String body = await _api.getBitcoinMarketChart(
+      final List<int> bodyBytes = await _api.getBitcoinMarketChart(
         _marketChartQuery,
         _acceptHeader,
       );
-      if (body.isEmpty) {
+      if (bodyBytes.isEmpty) {
         throw const FormatException('Empty response body');
       }
-      final Map<String, dynamic> decoded = await decodeJsonMap(body);
+      final Map<String, dynamic> decoded = await decodeJsonMapFromBytes(
+        bodyBytes,
+      );
       final List<ChartPoint> data = _parseFromMap(decoded);
       return _cache(data, now);
     } on FormatException catch (error) {
