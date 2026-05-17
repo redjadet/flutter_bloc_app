@@ -367,12 +367,17 @@ PY
   return "$failed"
 }
 
-# When running in GitHub Actions, we only want integration tests to execute on
-# manual runs (`workflow_dispatch`). For push/pull_request we exit successfully
-# so the workflow job doesn't fail and doesn't waste time.
+# When running in GitHub Actions, integration tests need a booted iOS simulator.
+# - push/pull_request/schedule: skip (main CI macOS job covers integration when enabled).
+# - workflow_dispatch on Linux without CHECKLIST_INTEGRATION_DEVICE: skip (e.g. drift weekly lane on ubuntu-latest).
 if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   if [ "${GITHUB_EVENT_NAME:-}" != "workflow_dispatch" ]; then
     log "Skipping integration tests: requires workflow_dispatch (got GITHUB_EVENT_NAME='${GITHUB_EVENT_NAME:-unset}')."
+    INTEGRATION_SCORECARD_SKIPPED=1
+    exit 0
+  fi
+  if [ "$(uname -s)" = "Linux" ] && [ -z "${CHECKLIST_INTEGRATION_DEVICE:-}" ]; then
+    log "Skipping integration tests: Linux GitHub Actions runner has no iOS simulator (set CHECKLIST_INTEGRATION_DEVICE to override)."
     INTEGRATION_SCORECARD_SKIPPED=1
     exit 0
   fi
