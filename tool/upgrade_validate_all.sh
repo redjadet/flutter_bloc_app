@@ -166,8 +166,8 @@ run_agent_asset_sync_step() {
       ;;
     auto|"")
       if [ -n "${CI:-}" ]; then
-        echo "CI detected; running managed AI agent host asset sync in dry-run mode."
-        bash "$PROJECT_ROOT/tool/sync_agent_assets.sh" --dry-run
+        echo "CI detected; applying managed AI agent host assets before drift check."
+        bash "$PROJECT_ROOT/tool/sync_agent_assets.sh" --apply
       else
         echo "Applying managed AI agent host assets."
         bash "$PROJECT_ROOT/tool/sync_agent_assets.sh" --apply
