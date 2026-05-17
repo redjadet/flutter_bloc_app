@@ -917,6 +917,48 @@ checklist is also change-aware:
 - **`commit_push_pr_post_merge.sh`**: After a PR is merged on GitHub, run locally (or `python3 tool/commit_push_pr_deploy.py post-merge`). Fetches/prunes `origin`, **requires a clean worktree**, checks out the **remote default branch** (from `refs/remotes/origin/HEAD`, else `main`), **`git pull --ff-only`**, then runs **`clean_merged_local_branches.sh`** with **`--apply`**. Aborts with exit **1** if the worktree is dirty (cleanup must not run while still on a topic branch you intend to delete).
 - **`clean_merged_local_branches.sh`**: Deletes **local** branches that are safe to drop: `--gone` (upstream deleted after `git fetch --prune`) and/or `--merged-base origin/main` (true merges into that ref only; squash merges need the remote topic branch removed first, then `--gone`). Defaults to **dry-run**; pass **`--apply`** to execute. Removes linked **worktrees** (not the main checkout) before deleting a branch. See `bash tool/clean_merged_local_branches.sh --help`.
 
+## Global agent skills (host machine)
+
+Purpose: install or update **global** vendor skills for Cursor (Flutter, Dart, iOS, AI workflow) via the [skills CLI](https://skills.sh/). Does not replace `./tool/sync_agent_assets.sh` (repo-managed Cursor/Codex adapters). Requires Node.js (`npx`).
+
+Install default bundles (Dart, Flutter + legacy local copies when present, iOS, AI workflow):
+
+```bash
+bash tool/install_global_agent_skills.sh
+```
+
+Subset or preview:
+
+```bash
+bash tool/install_global_agent_skills.sh --dart-only
+bash tool/install_global_agent_skills.sh --flutter-only --skip-legacy
+bash tool/install_global_agent_skills.sh --ios-only
+bash tool/install_global_agent_skills.sh --ai-only
+bash tool/install_global_agent_skills.sh --dry-run
+```
+
+Update or check for updates:
+
+```bash
+bash tool/update_global_agent_skills.sh
+bash tool/update_global_agent_skills.sh --check
+```
+
+Search catalog:
+
+```bash
+bash tool/find_global_agent_skills.sh flutter
+```
+
+Trim duplicate globals (dry-run by default; archives under `~/.agents/skills/.archived/`):
+
+```bash
+bash tool/trim_duplicate_agent_skills.sh
+bash tool/trim_duplicate_agent_skills.sh --mode full --apply
+```
+
+Policy and MCP/plugin notes: [`agent_environment_setup.md`](agent_environment_setup.md).
+
 ## Skill budget check (agent context)
 
 Purpose: detect accidental growth in **repo-managed** agent skills and provide a signal for local `~/.cursor/skills` bloat.

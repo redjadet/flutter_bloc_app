@@ -7,7 +7,7 @@ import 'dart:io';
 /// - +3 if description contains many triggers ("Use when", "Triggers", etc)
 /// - +2 if body contains "Use when" or "Triggers on" (broad trigger lists)
 /// - +2 if body contains "MUST" or "MANDATORY" (often causes eager attachment)
-/// - +1 if origin == cursorSkills (user-facing; likely invoked)
+/// - +1 if origin == cursorSkills or agentsSkills (user-facing; likely invoked)
 /// - +0 if origin == pluginCache (vendor; still can dominate, but we won't edit)
 ///
 /// Score = approxTokens * (1 + proxy/10).
@@ -50,7 +50,7 @@ Future<void> main(List<String> args) async {
     if (RegExp(r'(use when|triggers?)', caseSensitive: false).hasMatch(text)) proxy += 2;
     if (RegExp(r'(triggers on|trigger:|trigger phrases)', caseSensitive: false).hasMatch(text)) proxy += 1;
     if (RegExp(r'(must|mandatory)', caseSensitive: false).hasMatch(text)) proxy += 2;
-    if (origin == 'cursorSkills') proxy += 1;
+    if (origin == 'cursorSkills' || origin == 'agentsSkills') proxy += 1;
 
     final score = approxTokens * (1.0 + (proxy / 10.0));
 

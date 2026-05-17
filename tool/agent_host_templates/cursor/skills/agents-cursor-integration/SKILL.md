@@ -12,6 +12,7 @@ Sources of truth:
 
 - Templates: `tool/agent_host_templates/cursor/**`
 - Sync script: `./tool/sync_agent_assets.sh` (mapping: `tool/agent_asset_lib.sh`)
+- Global vendor skills (Flutter/Dart/iOS/AI): `bash tool/install_global_agent_skills.sh` · `docs/agent_environment_setup.md`
 
 Host targets (written by sync): repo-managed skills include
 `agents-quick-reference`, `agents-delivery-workflow`, `agents-meta-behavior`,
