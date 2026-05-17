@@ -2,6 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Cursor agent environment setup (preview)",
+      "type": "shell",
+      "command": "${workspaceFolder}/tool/setup_cursor_agent_environment.sh",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
       "label": "Local IDE open preflight",
       "type": "shell",
       "command": "${workspaceFolder}/tool/local_ide_open_preflight.sh",

@@ -39,6 +39,19 @@ High-signal categories: GitHub/CI, browser automation, docs retrieval, observabi
 
 Requires Node.js (`npx`). Installs under `~/.agents/skills/` and links them to **Cursor** (`-g -a cursor`).
 
+**Automated host setup** (sync repo adapters + optional install/trim/inventory; agent command `/setup-cursor-agent-environment`):
+
+```bash
+bash tool/setup_cursor_agent_environment.sh              # preview
+bash tool/setup_cursor_agent_environment.sh --apply      # sync + drift check
+bash tool/setup_cursor_agent_environment.sh --apply --install
+bash tool/setup_cursor_agent_environment.sh --apply --install --trim-mode full
+```
+
+Flags: `--sync-only`, `--install`, `--trim`, `--trim-mode` (`balanced`|`full`), `--skip-trim`, `--skip-inventory`. VS Code task: **Cursor agent environment setup (preview)**.
+
+Manual steps (same result, more control):
+
 ```bash
 # Default: Dart + Flutter (+ legacy local copies) + iOS + AI workflow bundles
 bash tool/install_global_agent_skills.sh

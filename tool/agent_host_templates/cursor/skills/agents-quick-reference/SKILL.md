@@ -35,6 +35,7 @@ Approved entrypoints:
 ./tool/run_mix_lint.sh
 ./tool/check_agent_asset_drift.sh
 ./tool/sync_agent_assets.sh --dry-run
+bash tool/setup_cursor_agent_environment.sh
 ```
 
 Host wrappers are convenience only; cross-host review is explicit-request-only; self-verification is mandatory.

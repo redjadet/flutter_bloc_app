@@ -194,7 +194,7 @@ Transcript-derived workspace guardrails:
 
 Repo fact:
 
-- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`.
+- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`. Inventory includes `~/.agents/skills` when present. Host setup orchestrator: `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`); Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` (see [`agent_environment_setup.md`](agent_environment_setup.md)).
 
 ## Doc Gardening
 
