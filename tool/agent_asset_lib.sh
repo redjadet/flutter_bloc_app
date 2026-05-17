@@ -15,6 +15,7 @@ managed_cursor_files=(
   "cursor/skills/agents-delivery-workflow/SKILL.md|$HOME/.cursor/skills/agents-delivery-workflow/SKILL.md"
   "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
+  "cursor/skills/agents-global-skills-setup/SKILL.md|$HOME/.cursor/skills/agents-global-skills-setup/SKILL.md"
   "cursor/skills/brainstorming/SKILL.md|$HOME/.cursor/skills/brainstorming/SKILL.md"
   "cursor/skills/systematic-debugging/SKILL.md|$HOME/.cursor/skills/systematic-debugging/SKILL.md"
   "cursor/skills/writing-plans/SKILL.md|$HOME/.cursor/skills/writing-plans/SKILL.md"
@@ -41,6 +42,7 @@ managed_cursor_files=(
   "cursor/commands/local-agents-quick-reference.md|$HOME/.cursor/commands/local-agents-quick-reference.md"
   "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
+  "cursor/commands/setup-cursor-agent-environment.md|$HOME/.cursor/commands/setup-cursor-agent-environment.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
   "cursor/rules/design-system.mdc|$HOME/.cursor/rules/design-system.mdc"
 )

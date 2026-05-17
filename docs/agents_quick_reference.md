@@ -24,7 +24,8 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
-| Global vendor skills (Flutter/Dart/iOS/AI) | `bash tool/install_global_agent_skills.sh` · update: `bash tool/update_global_agent_skills.sh` · search: `bash tool/find_global_agent_skills.sh QUERY` |
+| Cursor host setup (sync + install/trim/inventory) | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) · Cursor command: `/setup-cursor-agent-environment` |
+| Global vendor skills (Flutter/Dart/iOS/AI) | install: `bash tool/install_global_agent_skills.sh` · update: `bash tool/update_global_agent_skills.sh` · search: `bash tool/find_global_agent_skills.sh QUERY` · trim dupes: `bash tool/trim_duplicate_agent_skills.sh` (`--apply`, `--mode full`) |
 | IDE-open local env preflight | `.vscode/tasks.json` runs `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
 | Tracked secret literals | `./tool/check_tracked_secret_literals.sh` |
 | AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
@@ -50,6 +51,7 @@ Repo docs/scripts define behavior; external catalogs don't.
 | UI/design/theme/Mix work | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; app-visible/widget proof where practical | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
+| Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | `bash tool/sync_agent_assets.sh --apply` + install/trim scripts when using globals |
 
 Docs-before-memory APIs: Flutter, Dart, Firebase, Supabase, GoRouter, and similar version-sensitive APIs need official/repo-grounded source before edits. If unavailable, say so and narrow scope.
 

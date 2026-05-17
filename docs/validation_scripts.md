@@ -921,6 +921,16 @@ checklist is also change-aware:
 
 Purpose: install or update **global** vendor skills for Cursor (Flutter, Dart, iOS, AI workflow) via the [skills CLI](https://skills.sh/). Does not replace `./tool/sync_agent_assets.sh` (repo-managed Cursor/Codex adapters). Requires Node.js (`npx`).
 
+Orchestrated host setup (`tool/setup_cursor_agent_environment.sh`; Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup`):
+
+```bash
+bash tool/setup_cursor_agent_environment.sh
+bash tool/setup_cursor_agent_environment.sh --apply
+bash tool/setup_cursor_agent_environment.sh --apply --install
+bash tool/setup_cursor_agent_environment.sh --apply --sync-only
+bash tool/setup_cursor_agent_environment.sh --apply --install --trim-mode full
+```
+
 Install default bundles (Dart, Flutter + legacy local copies when present, iOS, AI workflow):
 
 ```bash
@@ -954,14 +964,17 @@ Trim duplicate globals (dry-run by default; archives under `~/.agents/skills/.ar
 
 ```bash
 bash tool/trim_duplicate_agent_skills.sh
+bash tool/trim_duplicate_agent_skills.sh --apply
 bash tool/trim_duplicate_agent_skills.sh --mode full --apply
 ```
+
+Modes: `balanced` (default; archive `~/.agents/skills` when `~/.cursor/skills` has the same name), `flutter-legacy`, `ios-minimal`, or `full` (all three). Plan JSON: `docs/audits/skill_trim_plan_latest.json`.
 
 Policy and MCP/plugin notes: [`agent_environment_setup.md`](agent_environment_setup.md).
 
 ## Skill budget check (agent context)
 
-Purpose: detect accidental growth in **repo-managed** agent skills and provide a signal for local `~/.cursor/skills` bloat.
+Purpose: detect accidental growth in **repo-managed** agent skills and provide a signal for local `~/.cursor/skills` and `~/.agents/skills` bloat. After bulk global installs, run `bash tool/trim_duplicate_agent_skills.sh` before regenerating inventory.
 
 Note: this check is **manual-only** and is **not** part of the `./bin/checklist` `CHECK_SCRIPTS` index (it is report-only unless you opt into enforcement).
 
@@ -981,6 +994,7 @@ Enforce budgets (exit non-zero on breach):
 
 ```bash
 SKILL_BUDGET_REPO_TOKENS=12000 bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json enforce
+SKILL_BUDGET_AGENTS_TOKENS=80000 bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json enforce
 ```
 
 Rank skills after inventory (proxy score for “what to shrink next”):

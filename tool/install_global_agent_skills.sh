@@ -124,4 +124,5 @@ if (( install_ai )); then
 fi
 
 echo "global-agent-skills|done|install"
-echo "global-agent-skills|hint|trim duplicates: bash tool/trim_duplicate_agent_skills.sh (dry-run) then --apply"
+echo "global-agent-skills|hint|trim: bash tool/trim_duplicate_agent_skills.sh --apply"
+echo "global-agent-skills|hint|full host setup: bash tool/setup_cursor_agent_environment.sh --apply --install"

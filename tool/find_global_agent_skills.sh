@@ -15,7 +15,8 @@ Examples:
 Install a hit globally for Cursor:
   npx skills add <owner/repo@skill> -g -a cursor -y
 
-Or install default Flutter/Dart/iOS/AI bundles:
+Or install default Flutter/Dart/iOS/AI bundles (then trim + inventory):
+  bash tool/setup_cursor_agent_environment.sh --apply --install
   bash tool/install_global_agent_skills.sh
 
 Browse: https://skills.sh/
