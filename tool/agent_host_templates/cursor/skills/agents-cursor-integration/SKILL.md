@@ -13,9 +13,12 @@ Sources of truth:
 - Templates: `tool/agent_host_templates/cursor/**`
 - Sync script: `./tool/sync_agent_assets.sh` (mapping: `tool/agent_asset_lib.sh`)
 
-Host targets (written by sync):
+Host targets (written by sync): repo-managed skills include
+`agents-quick-reference`, `agents-delivery-workflow`, `agents-meta-behavior`,
+`agents-repo-context`, `agents-principles-baseline`, `agents-references`,
+`agents-canonical-rules` (+ architecture/presentation/async/platform children),
+`agents-validation-testing`, plus workflow helpers under `~/.cursor/skills/*`.
 
-- `~/.cursor/skills/*`
 - `~/.cursor/commands/*`
 - `tool/agent_host_templates/cursor/rules/agent-execution.mdc` → project `.cursor/rules/` (always-on)
 - `~/.cursor/rules/agents-global.mdc` (optional depth; synced from templates)

@@ -6,3 +6,8 @@ tasks/cursor/todo.md
 tasks/cursor/TODO.md
 tasks/codex/todo.md
 tasks/codex/TODO.md
+third_party/**
+**/.venv/**
+**/node_modules/**
+**/.dart_tool/**
+build/
