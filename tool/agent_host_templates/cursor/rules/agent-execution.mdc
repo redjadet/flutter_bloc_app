@@ -1,0 +1,16 @@
+---
+description: Always-on agent loop (repo-aligned). Full canon in AGENTS.md and docs/.
+alwaysApply: true
+---
+
+# Agent execution (always-on)
+
+Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`.
+
+- **Think:** unsafe ambiguity below 95% confidence → stop; evidence from repo docs, code, tests, or scripts (not guesses).
+- **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
+- **Prove:** plan → implement end-to-end → verify → report proof; narrowest honest validation lane.
+- **Stuck:** same failure twice → add durable repo capability (doc, test, fixture, script), not a longer prompt.
+- **Seams:** Clean Architecture, Cubit/BLoC, DI, GoRouter.
+
+Copy into project `.cursor/rules/agent-execution.mdc` (gitignored locally). Do not sync to `~/.cursor/rules`.

@@ -9,7 +9,8 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 - Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user
   explicitly asks for second opinion or cross-host review.
 - After material edits to agent-facing docs or
-  [`.cursor/rules/agent-execution.mdc`](../.cursor/rules/agent-execution.mdc),
+  [`tool/agent_host_templates/cursor/rules/agent-execution.mdc`](../tool/agent_host_templates/cursor/rules/agent-execution.mdc)
+  (copy to gitignored `.cursor/rules/` with `alwaysApply: true`),
   Cursor may run `./tool/request_codex_feedback.sh` as optional second
   opinion before merge.
 

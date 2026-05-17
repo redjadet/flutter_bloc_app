@@ -17,7 +17,8 @@ Host targets (written by sync):
 
 - `~/.cursor/skills/*`
 - `~/.cursor/commands/*`
-- `~/.cursor/rules/agents-global.mdc`
+- `tool/agent_host_templates/cursor/rules/agent-execution.mdc` → project `.cursor/rules/` (always-on)
+- `~/.cursor/rules/agents-global.mdc` (optional depth; synced from templates)
 
 Repo canon wins. Adapters point back to `AGENTS.md`,
 `docs/agent_knowledge_base.md`, `docs/agents_quick_reference.md`,

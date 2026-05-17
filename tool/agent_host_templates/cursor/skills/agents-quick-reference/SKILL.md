@@ -15,19 +15,13 @@ Open only needed:
 4. `docs/agents_quick_reference.md`
 5. `docs/ai_code_review_protocol.md` for AI-written code
 
-Non-trivial: `agents-delivery-workflow`; delegation discipline: `agents-meta-behavior`.
+Non-trivial: `agents-delivery-workflow`; delegation: `agents-meta-behavior`.
 
 Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`.
 
-Defaults: Plan -> Execute -> Verify -> Report; Goal / Context / Boundaries / Verification; Context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
+Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **Context ladder:** `docs/agent_knowledge_base.md` (memory compounding + semantic lint).
 
-Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; reusable agent conclusion -> source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`.
-Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, and code graph are evidence sources; prompts alone are not proof; tool contracts name inputs, side effects, retry safety, and failure modes.
-Enforce: TDD when practical, linting, build verification, minimal edits, architecture preservation. Avoid: giant prompts, giant rewrites, context flooding, single-agent overload, unverified outputs.
-
-UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify real workflow, states, responsive no-overlap.
-
-multi-agent hub -> `agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
+UI/design: `DESIGN.md` + `docs/design_system.md`. multi-agent hub → `docs/agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
 
 Approved entrypoints:
 
@@ -43,4 +37,4 @@ Approved entrypoints:
 ./tool/sync_agent_assets.sh --dry-run
 ```
 
-Host wrapper rules: Cursor commands are convenience only; cross-host review explicit; self-verification local and mandatory.
+Host wrappers are convenience only; cross-host review is explicit-request-only; self-verification is mandatory.

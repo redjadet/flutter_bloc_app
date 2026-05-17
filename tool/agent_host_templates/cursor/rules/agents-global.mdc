@@ -1,58 +1,42 @@
 ---
-description:
+description: Extra Flutter-repo depth when engaged (not always-on; pair with AGENTS.md and agent-execution.mdc).
 alwaysApply: false
 ---
 
 # Global Flutter agent reminder
 
-- Repo map: `AGENTS.md`. System of record: `docs/`.
-- Cold start: `AGENTS.md` -> `docs/agent_knowledge_base.md` -> `docs/agent_project_context.md` -> `docs/ai_code_review_protocol.md`.
-- Use `docs/agents_quick_reference.md` for command lookup only.
+Canon: `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_context.md` → `docs/ai_code_review_protocol.md`. Commands: `docs/agents_quick_reference.md` only.
 
-## Execution
+## Execution (beyond always-on map)
 
-- Default: Plan -> Execute -> Verify -> Report. Plan once. Ask only hard blockers.
-- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
-- Keep intent/spec/implementation separate: intent = why/constraints; spec = eval contract; implementation = repo-derived tactics.
-- If vague/risky, define boundaries, data flow, failure handling, and smallest verifiable slice before generation.
-- Single loop: plan -> tool -> observe -> revise; keep task state inspectable.
-- Empty/truncated/malformed tool output is not proof.
-- Proof-first: confidence from smallest honest repo entrypoint.
-- Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, code graph; prompts alone are not proof.
-- Tool contracts name inputs, side effects, retry safety, and failure modes.
-- Enforce: minimal reversible diff; narrowest honest validation; preserve seams.
-- Avoid: giant prompts/rewrites, context flooding, unverified outputs.
-- If deleting an instruction would not reduce quality or safety, delete it.
-- UI/design: read `DESIGN.md` + `docs/design_system.md`; use runtime source before ad-hoc styling; verify real workflow, states, responsive no-overlap.
+- Intent / spec / implementation stay separate (why+constraints vs eval contract vs repo tactics).
+- Vague or risky: boundaries, data flow, failure handling, smallest verifiable slice before codegen.
+- Loop: plan → tool → observe → revise; inspectable task state; empty or malformed tool output is not proof.
+- Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, code graph; prompts alone are not proof; name inputs, side effects, retry safety, failure modes.
+- UI: `DESIGN.md` + `docs/design_system.md`; runtime tokens first; verify workflow, states, responsive no-overlap.
 
 ## Context budget
 
-- Read smallest blocks needed; prefer targeted search + narrow reads.
-- context ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Feature/refactor context audit: related code/tests/docs, known bugs, workarounds, deprecated patterns, unusual helpers; record only real landmines.
-- Branch/compare approaches only when uncertainty/risk pays for it; default one path. High-risk architecture/debug may compare 2-3 candidates with evidence, then choose one.
-- Don’t restate policy; point to canon docs.
+- Smallest reads; targeted search beats dumps.
+- **context ladder:** map docs → durable memory → code-review-graph → targeted raw files.
+- Refactor/feature audit: record only real landmines (bugs, workarounds, deprecated patterns).
+- Compare approaches only when uncertainty/risk pays; default one path.
 
 ## Quality bar
 
-- Default to smallest reversible change satisfying business goal + reliability bar.
-- Don't change files until at least 95% confident in goal/scope/approach.
-- Surgical diff: each changed line traces to request or required validation/doc update.
-- Validation scripts are quality gates. Only change scripts to remove false positives (narrow match/scope, fixtures, or documented `check-ignore`). Don’t weaken checks via broad exclusions.
-- Treat AI code as draft until problem-fit, simplification, security, performance, edge-case, error-pattern, dependency, naming, and testing review pass.
-- Finish gate before report: edge cases, failure paths, readability, operational clarity, breakage impact.
-- Self-verify before report: request, changed files, proof, blockers, risk.
+- Reversible change for business goal + reliability bar.
+- Don't edit until **95% confident** in goal/scope/approach.
+- **Surgical diff:** each changed line traces to request or required validation/doc update.
+- Validation scripts are gates; change scripts only for demonstrated false positives.
+- AI output is draft until review passes; finish gate: edge cases, failures, ops, breakage impact.
+- **Self-verify before report:** request, changed files, proof, blockers, residual risk.
 
 ## Repo-first
 
-- Prefer repo-local docs and shell entrypoints over host-specific shortcuts.
-- Repeated failure => add missing repo capability: doc, fixture, test, script,
-  route proof, log helper, validation check.
-- File verified reusable conclusions into source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`; don't leave chat-only.
-- Agent/docs changes: semantic-lint stale plans, duplicate rules, source/host-template contradictions.
-- For agent/docs changes, keep the map short and run `./tool/check_agent_knowledge_base.sh`.
-- Agent behavior changes start in source docs, then sync both Codex and Cursor host templates; don't fork unless capabilities differ.
-- Design brief changes run `./tool/check_design_md.sh`; Mix token/style
-  changes run `./tool/run_mix_lint.sh`.
-- Flutter widget tests: use `WidgetTester.view`; don't use deprecated `tester.binding.window` test-value APIs.
-- Favor copy/paste-ready repo commands over long prose.
+- Repo docs and shell entrypoints over host shortcuts.
+- Repeated failure → doc, fixture, test, script, route proof, or validation check.
+- **File verified reusable conclusions** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md` (not chat-only).
+- Agent/docs edits: semantic-lint duplicates/stale plans; keep `AGENTS.md` short; run `./tool/check_agent_knowledge_base.sh`.
+- Behavior changes: source docs first, then sync Codex/Cursor templates.
+- `DESIGN.md` edits → `./tool/check_design_md.sh`; Mix → `./tool/run_mix_lint.sh`.
+- Widget tests: `WidgetTester.view` (not deprecated `tester.binding.window` APIs).
