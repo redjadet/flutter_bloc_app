@@ -33,30 +33,63 @@ Prefer tools that observe or verify real state over prompt packs.
 
 High-signal categories: GitHub/CI, browser automation, docs retrieval, observability, deploy, design, security, and project-specific delivery skills.
 
-Official Flutter/Dart Agent Skills are optional task blueprints, not repo
-policy. Use them for generic workflows (widget tests, routing, layout,
-localization, JSON, package conflicts, static analysis) after reading repo
-canon. Repo docs and scripts win on conflicts.
+**Cursor Marketplace plugins** (Figma, Firebase, BrowserStack, Context7, Superpowers, Compound Engineering, etc.): install or update from **Settings → Plugins** or [cursor.com/marketplace](https://cursor.com/marketplace). There is no repo script for marketplace plugins.
 
-Install/update only when the host supports `.agents/skills`, Node/npm is
-available, and the user wants vendor skills in the workspace:
+**Global agent skills** (Flutter, Dart, iOS, AI workflow) use the [skills CLI](https://skills.sh/) via repo scripts. Official Flutter/Dart skills are optional task blueprints, not repo policy — read repo canon first; repo docs and scripts win on conflicts.
+
+Requires Node.js (`npx`). Installs under `~/.agents/skills/` and links them to **Cursor** (`-g -a cursor`).
 
 ```bash
-npx skills add flutter/skills --skill '*' --agent universal
-npx skills add dart-lang/skills --skill '*' --agent universal
-npx skills update
+# Default: Dart + Flutter (+ legacy local copies) + iOS + AI workflow bundles
+bash tool/install_global_agent_skills.sh
+
+# Subsets
+bash tool/install_global_agent_skills.sh --dart-only
+bash tool/install_global_agent_skills.sh --flutter-only
+bash tool/install_global_agent_skills.sh --ios-only
+bash tool/install_global_agent_skills.sh --ai-only
+
+# Preview commands only
+bash tool/install_global_agent_skills.sh --dry-run
+
+# Refresh installed globals
+bash tool/update_global_agent_skills.sh
+bash tool/update_global_agent_skills.sh --check   # report-only
+
+# Search catalog before ad-hoc installs
+bash tool/find_global_agent_skills.sh flutter
+bash tool/find_global_agent_skills.sh ios swift
+```
+
+After install or update, reload Cursor (**Developer: Reload Window**). List globals: `npx skills list -g`.
+
+Ad-hoc single skill:
+
+```bash
+npx skills add <owner/repo@skill> -g -a cursor -y
 ```
 
 Notes:
 
-- Compatible agents discover `.agents/skills`; current repo-managed skills stay
-  thin and project-specific.
-- On this machine, global installs with `npx skills add flutter/skills` /
-  `dart-lang/skills` plus `-g` materialize under `~/.agents/skills/`.
-- Upstream skill repos drift; check their README/docs before bulk install.
-- If a vendor skill becomes high-frequency and bloats context or conflicts with
-  repo rules, add a repo-owned shadow shim through `tool/agent_host_templates/`
-  instead of editing host copies by hand.
+- Repo-managed skills from `./tool/sync_agent_assets.sh` stay thin and project-specific; they are separate from vendor globals.
+- Upstream skill repos drift; use `--dry-run` or `bash tool/find_global_agent_skills.sh` before bulk installs.
+- Legacy `flutter/*` skills removed from `flutter/skills` upstream may still exist locally; the install script re-links them to Cursor when `~/.agents/skills/<name>/SKILL.md` is present.
+- If a vendor skill becomes high-frequency and bloats context or conflicts with repo rules, add a repo-owned shim through `tool/agent_host_templates/` instead of editing host copies by hand.
+
+**Trim duplicates** (after bulk install; lowers skill-list token cost):
+
+```bash
+# Preview (~27 agent copies when Cursor already has the same name)
+bash tool/trim_duplicate_agent_skills.sh
+
+# Apply balanced dedupe (keeps ~/.cursor/skills, archives agents copy)
+bash tool/trim_duplicate_agent_skills.sh --apply
+
+# Flutter-first: also drop legacy flutter/* + flat swift-ios kit noise
+bash tool/trim_duplicate_agent_skills.sh --mode full --apply
+```
+
+Restore from `~/.agents/skills/.archived/<timestamp>/`. Regenerate inventory: `dart run tool/skill_inventory.dart docs/audits/skill_inventory_latest.json`.
 
 ## Cursor indexing (context load)
 

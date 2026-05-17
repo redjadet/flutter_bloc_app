@@ -9,13 +9,17 @@ import 'dart:io';
 Future<void> main(List<String> args) async {
   final outPath = args.isNotEmpty ? args.first : 'docs/audits/skill_inventory_latest.json';
 
+  final home = Platform.environment['HOME'] ?? '';
+  final cursorSkillsRoot = home.isEmpty ? '' : '$home/.cursor/skills';
+  final agentsSkillsRoot = home.isEmpty ? '' : '$home/.agents/skills';
+  final pluginCacheRoot = home.isEmpty ? '' : '$home/.cursor/plugins/cache';
+
   final roots = <String, String>{
     // repo-managed (templates are source of truth)
     'repoTemplates': '${Directory.current.path}/tool/agent_host_templates',
-    // user/global Cursor skills
-    'cursorSkills': '/Users/ilkersevim/.cursor/skills',
-    // plugin cache (read-only signals)
-    'pluginCache': '/Users/ilkersevim/.cursor/plugins/cache',
+    if (cursorSkillsRoot.isNotEmpty) 'cursorSkills': cursorSkillsRoot,
+    if (agentsSkillsRoot.isNotEmpty) 'agentsSkills': agentsSkillsRoot,
+    if (pluginCacheRoot.isNotEmpty) 'pluginCache': pluginCacheRoot,
   };
 
   final skills = <Map<String, Object?>>[];

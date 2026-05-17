@@ -12,6 +12,7 @@ import 'dart:io';
 /// Thresholds (env vars, optional):
 ///   SKILL_BUDGET_REPO_TOKENS=12000
 ///   SKILL_BUDGET_CURSOR_TOKENS=120000
+///   SKILL_BUDGET_AGENTS_TOKENS=80000
 ///   SKILL_BUDGET_MAX_SINGLE_REPO_TOKENS=3000
 ///
 /// Notes:
@@ -35,6 +36,9 @@ Future<void> main(List<String> args) async {
   final cursorBudget =
       int.tryParse(Platform.environment['SKILL_BUDGET_CURSOR_TOKENS'] ?? '') ??
       120000;
+  final agentsBudget =
+      int.tryParse(Platform.environment['SKILL_BUDGET_AGENTS_TOKENS'] ?? '') ??
+      80000;
   final maxSingleRepo =
       int.tryParse(
         Platform.environment['SKILL_BUDGET_MAX_SINGLE_REPO_TOKENS'] ?? '',
@@ -48,6 +52,7 @@ Future<void> main(List<String> args) async {
 
   int sumRepo = 0;
   int sumCursor = 0;
+  int sumAgents = 0;
   int sumVendor = 0;
 
   final repoTop = <Map<String, Object?>>[];
@@ -60,6 +65,8 @@ Future<void> main(List<String> args) async {
       repoTop.add(s);
     } else if (origin == 'cursorSkills') {
       sumCursor += tokens;
+    } else if (origin == 'agentsSkills') {
+      sumAgents += tokens;
     } else if (origin == 'pluginCache') {
       sumVendor += tokens;
     }
@@ -77,6 +84,7 @@ Future<void> main(List<String> args) async {
     ..writeln('- inventory: $inventoryPath')
     ..writeln('- repoTemplates approxTokens: $sumRepo (budget $repoBudget)')
     ..writeln('- cursorSkills approxTokens: $sumCursor (budget $cursorBudget)')
+    ..writeln('- agentsSkills approxTokens: $sumAgents (budget $agentsBudget)')
     ..writeln('- pluginCache approxTokens: $sumVendor (read-only)')
     ..writeln(
       '- largest repoTemplates skill: $repoMax ($repoMaxPath) (max $maxSingleRepo)',
@@ -90,6 +98,9 @@ Future<void> main(List<String> args) async {
   }
   if (sumCursor > cursorBudget) {
     breaches.add('cursorSkills sum $sumCursor > $cursorBudget');
+  }
+  if (sumAgents > agentsBudget) {
+    breaches.add('agentsSkills sum $sumAgents > $agentsBudget');
   }
   if (repoMax > maxSingleRepo) {
     breaches.add(
