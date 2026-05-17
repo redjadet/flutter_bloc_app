@@ -26,7 +26,7 @@ Safety:
 
 - Don’t replace `./bin/upgrade_validate_all` with a hand-written sequence when script exists.
 - Don’t clean, reset, stash, discard user changes, change git config, or publish anything.
-- In CI/non-local environments, prefer host-asset dry-run unless explicitly opted into asset sync.
+- In CI, `SYNC_AGENT_ASSETS=auto` applies host assets before drift check (runner `$HOME` is ephemeral).
 - For PR triage before this lane, use `upgrade-pr-triage-validate`; keep merge/close/fix
   actions bounded and never merge on unknown checks/mergeability.
 
