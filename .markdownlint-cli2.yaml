@@ -8,4 +8,9 @@ config:
 ignores:
   - "**/todo.md"
   - "**/TODO.md"
+  - "third_party/**"
+  - "**/.venv/**"
+  - "**/node_modules/**"
+  - "**/.dart_tool/**"
+  - "build/**"
 

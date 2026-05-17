@@ -1,3 +1,5 @@
+# Skill optimization (2026-05-07)
+
 ## Skill inventory delta
 
 - before: `/tmp/skill_inventory_head.json`
