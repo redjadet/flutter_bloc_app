@@ -30,7 +30,7 @@ Update docs in the same change when you modify:
 - Feature behavior or visible routes
 - Setup or secrets requirements
 - Validation or testing workflow
-- Release or deployment steps
+- Release or deployment steps (including Fastlane lanes under `fastlane/Fastfile` and wrappers in `tool/`)
 - Architecture or layering rules
 
 Prefer updating one source-of-truth doc instead of copying the same explanation

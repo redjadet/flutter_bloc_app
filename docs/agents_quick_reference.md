@@ -34,8 +34,10 @@ Pinned repo toolchain: Flutter 3.41.9 / Dart 3.11.5. CI: [`ci_automation.md`](ci
 | Transcript context budgets (report-only) | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` (or `./bin/checklist-fast`) |
 | Hive fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
 | Strict Hive input drift | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
+| Store release (both platforms) | `./tool/release_both_stores.sh preflight` then `deploy` after checklist/integration gates ([`deployment.md`](deployment.md)) |
+| Store release (Android only) | `./tool/release_android_play.sh preflight` / `upload_internal` ([`android_play_store_release_sop.md`](android_play_store_release_sop.md)) |
 
-Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`.
+Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`; both stores `./tool/release_both_stores.sh deploy` (see `docs/deployment.md`).
 
 ## Automatic Workflow Triggers
 

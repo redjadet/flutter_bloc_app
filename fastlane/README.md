@@ -13,6 +13,28 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+## General
+
+### deploy_all_preflight
+
+```sh
+[bundle exec] fastlane deploy_all_preflight
+```
+
+Preflight both store deploy lanes (iOS + Android)
+
+### deploy_all
+
+```sh
+[bundle exec] fastlane deploy_all
+```
+
+Deploy iOS (TestFlight) then Android (Play internal track) with one command
+
+Preferred wrapper: `./tool/release_both_stores.sh deploy`
+
+----
+
 ## Android
 
 ### android play_preflight
@@ -112,7 +134,6 @@ Promote release from one Play track to another
 Alias for play_promote_track (backward compatibility)
 
 ----
-
 
 ## iOS
 

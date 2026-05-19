@@ -1,5 +1,8 @@
+# LEGACY STUB — canonical iOS lanes live in ../../fastlane/Fastfile.
+# Run from repo root: ./tool/fastlane.sh ios upload_testflight
+# Or both stores: ./tool/release_both_stores.sh deploy
+#
 # iOS Fastlane: Ad Hoc, TestFlight, and App Store distribution.
-# Run from project root: bundle exec fastlane ios [adhoc|testflight|appstore|deploy]
 # Prerequisites: Xcode, Apple Developer account, ./tool/ios_entitlements.sh distribution for App Store/TestFlight/Ad Hoc.
 
 default_platform(:ios)

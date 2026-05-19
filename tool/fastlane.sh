@@ -20,5 +20,6 @@ fi
 # local shim drift (e.g. missing bundler 4.x errors).
 BUNDLER_VERSION="2.7.1"
 
+# Both stores: ./tool/release_both_stores.sh deploy  (wraps fastlane deploy_all)
 exec bundle "_${BUNDLER_VERSION}_" exec fastlane "$@"
 

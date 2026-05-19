@@ -1,3 +1,7 @@
+# LEGACY STUB — canonical Android lanes live in ../../fastlane/Fastfile.
+# Run from repo root: ./tool/release_android_play.sh upload_internal
+# Or both stores: ./tool/release_both_stores.sh deploy
+
 fastlane_version '2.221.0'
 
 default_platform(:android)

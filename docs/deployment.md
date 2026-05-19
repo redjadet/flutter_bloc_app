@@ -11,9 +11,82 @@ For the complete docs index, see [docs index](README.md).
 
 | Goal | Primary doc | Primary commands |
 | --- | --- | --- |
+| **Both stores (one command)** | This doc | `./tool/release_both_stores.sh deploy` |
 | iOS App Store / TestFlight | This doc | `./tool/fastlane.sh ios upload_testflight` / `./tool/fastlane.sh ios upload_appstore` |
 | Android Google Play | [Android Play Store Release SOP](android_play_store_release_sop.md) | `./tool/release_android_play.sh ...` |
 | Pre-release tester distribution | [Firebase App Distribution](firebase_app_distribution.md) | `./tool/fastlane.sh android firebase_distribute` / `./tool/fastlane.sh ios firebase_distribute` |
+
+Fastlane configuration lives in [`fastlane/Fastfile`](../fastlane/Fastfile) at the repo root.
+Run lanes through [`tool/fastlane.sh`](../tool/fastlane.sh) (Bundler-pinned) — not the legacy
+`ios/fastlane` or `android/fastlane` copies.
+
+### Release scripts
+
+| Script | Use when |
+| --- | --- |
+| [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) | One command for TestFlight + Play internal (`preflight`, `deploy`, or single-platform `ios` / `android`) |
+| [`tool/release_android_play.sh`](../tool/release_android_play.sh) | Android-only Play lanes (sources `.env.android.release`) |
+| [`tool/fastlane.sh`](../tool/fastlane.sh) | Direct Fastlane access (`ios …`, `android …`, `deploy_all`, lane index in [`fastlane/README.md`](../fastlane/README.md)) |
+
+Env templates (copy to gitignored files):
+
+| Template | Loaded by |
+| --- | --- |
+| [`.env.ios.release.example`](../.env.ios.release.example) | `release_both_stores.sh`, manual iOS lanes |
+| [`.env.android.release.example`](../.env.android.release.example) | `release_both_stores.sh`, `release_android_play.sh` |
+
+Ruby deps: `bundle install` (see root [`Gemfile`](../Gemfile), Fastlane 2.234.0).
+
+## Both stores (iOS + Android)
+
+Use this when you want **one scripted flow** for TestFlight and Play internal testing
+(inspired by [this Fastlane + Flutter walkthrough](https://medium.com/easy-flutter/how-i-set-up-fastlane-for-flutter-to-deploy-to-both-stores-without-touching-a-button-a2dece187483)).
+
+### Setup (one time)
+
+1. Copy env templates (gitignored real files):
+   - [`.env.ios.release.example`](../.env.ios.release.example) → `.env.ios.release`
+   - [`.env.android.release.example`](../.env.android.release.example) → `.env.android.release`
+2. Optional iOS signing with **match**: set `MATCH_GIT_URL` in `.env.ios.release` and copy
+   [`fastlane/Matchfile.example`](../fastlane/Matchfile.example) → `fastlane/Matchfile`.
+   Use `MATCH_READONLY=true` on CI so machines only sync existing certificates.
+3. Play Console: service account JSON at `ANDROID_JSON_KEY` with **Release manager** access.
+
+### Deploy
+
+```bash
+bundle install
+./tool/release_both_stores.sh preflight
+./tool/release_both_stores.sh deploy
+```
+
+What `deploy` does:
+
+1. Bumps `pubspec.yaml` build number **once** (shared by both platforms).
+2. Runs `ios upload_testflight` (Flutter IPA build + TestFlight upload; optional match sync).
+3. Runs `android play_upload_internal` (Flutter AAB + Play **internal** track as **draft**).
+
+Override lanes or tracks via env (`IOS_DEPLOY_LANE`, `ANDROID_DEPLOY_LANE`, `ANDROID_PLAY_TRACK`)
+or Fastlane options, for example:
+
+```bash
+./tool/fastlane.sh deploy_all ios_lane:upload_appstore android_lane:play_upload_track track:alpha
+```
+
+Version numbers always come from `pubspec.yaml` (`x.y.z+N`); Android uploads pass
+`version_name` / `version_code` to Play automatically.
+
+### Dual-store validation (recommended)
+
+Before `deploy`, run the same quality gates as the Android SOP, then both-store preflight:
+
+```bash
+CHECKLIST_INTEGRATION_DEVICE=emulator-5554 ./bin/checklist
+CHECKLIST_INTEGRATION_DEVICE=emulator-5554 ./bin/integration_tests
+./tool/release_both_stores.sh preflight
+```
+
+Android-only uploads can stop after `./tool/release_android_play.sh preflight` instead.
 
 ## iOS (TestFlight and App Store)
 
@@ -27,20 +100,40 @@ For the complete docs index, see [docs index](README.md).
 
 ### Recommended: Fastlane (repo wrapper)
 
+Load [`.env.ios.release`](../.env.ios.release.example) (copy from example) or export the same
+variables in your shell. For dual-store runs, `release_both_stores.sh` loads both iOS and Android env files.
+
 Run from the repo root:
 
 ```bash
 bundle install
+./tool/fastlane.sh ios preflight
 ./tool/fastlane.sh ios upload_testflight
 ./tool/fastlane.sh ios upload_appstore
 ```
+
+Common iOS lanes (full list: [`fastlane/README.md`](../fastlane/README.md)):
+
+| Lane | Purpose |
+| --- | --- |
+| `ios preflight` | Validates `FASTLANE_APP_IDENTIFIER` (and Apple ID when required) |
+| `ios adhoc` | Build Ad Hoc IPA only (no upload) |
+| `ios upload_testflight` | Build IPA + upload to TestFlight |
+| `ios upload_appstore` | Build IPA + upload to App Store Connect (no auto-submit for review) |
+| `ios firebase_distribute` | Build/upload via Firebase App Distribution |
 
 Notes:
 
 - `./tool/fastlane.sh` is the canonical entrypoint in this repo. It avoids
   Bundler/Ruby drift and keeps CI and local usage aligned.
-- [`fastlane/README.md`](../fastlane/README.md) is auto-generated by Fastlane. Treat it as a lane index,
+- [`fastlane/README.md`](../fastlane/README.md) is auto-generated when Fastlane runs. Treat it as a lane index,
   not the primary “how to ship” documentation.
+- iOS release notes: set `IOS_RELEASE_NOTES`, or let Fastlane derive them from recent git commits.
+- `upload_appstore` uploads to App Store Connect with `submit_for_review: false` by default
+  (review in App Store Connect before submitting).
+- Optional **match** signing: set `MATCH_GIT_URL` in `.env.ios.release`; copy
+  [`fastlane/Matchfile.example`](../fastlane/Matchfile.example) → `fastlane/Matchfile`.
+  Use `MATCH_READONLY=true` on CI.
 
 ## Android (Google Play)
 
@@ -50,6 +143,19 @@ Follow the runbook:
 
 That SOP encodes the validation gates and uses `./tool/release_android_play.sh`
 to prevent version-code drift and to keep the Play flow repeatable.
+
+Common Android lanes (via `./tool/fastlane.sh android …` or `release_android_play.sh`):
+
+| Lane / script action | Purpose |
+| --- | --- |
+| `play_preflight` / `preflight` | Service account + required dart-define env |
+| `play_build_release` / `build_release` | Flutter AAB only |
+| `play_upload_internal` / `upload_internal` | Build + upload to internal track (draft by default) |
+| `play_upload_track` / `upload_track` | Build + upload to `ANDROID_PLAY_TRACK` |
+| `play_metadata_sync` / `metadata_sync` | Listing metadata from `fastlane/metadata/android/` |
+| `play_promote_track` / `promote_track` | Promote between Play tracks |
+
+Listing copy and changelogs: `fastlane/metadata/android/en-US/` (per-build changelog files optional as `changelogs/<build_number>.txt`).
 
 ## Firebase App Distribution (pre-release testers)
 
@@ -170,7 +276,8 @@ dart run tool/prepare_release.dart
 
 ## Related docs
 
-- [Security and secrets](security_and_secrets.md)
+- [Security and secrets](security_and_secrets.md) — release env files and dart-defines
 - [Firebase setup](firebase_setup.md)
 - [Android Play Store Release SOP](android_play_store_release_sop.md)
 - [Firebase App Distribution](firebase_app_distribution.md)
+- [Fastlane lane index](../fastlane/README.md) — `deploy_all`, `deploy_all_preflight`, per-platform lanes

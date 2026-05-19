@@ -41,7 +41,7 @@ A new or materially changed feature should usually include:
 | Supabase-backed flows | Implemented where configured | [Authentication](authentication.md), [Security and Secrets](security_and_secrets.md) | `lib/features/supabase_auth/`, `lib/features/iot_demo/`, `lib/core/di/register_supabase_services.dart` |
 | Offline-first patterns | Implemented | [Offline-First Adoption Guide](offline_first/adoption_guide.md) | `lib/shared/sync/`, feature repositories with `OfflineFirst*` implementations |
 | Testing and validation | Implemented | [Testing Overview](testing_overview.md), [Validation Scripts](validation_scripts.md) | `test/`, `integration_test/`, `tool/`, `bin/` |
-| Deployment and release | Implemented | [Deployment](deployment.md), [Firebase App Distribution](firebase_app_distribution.md), [Android Play Store Release SOP](android_play_store_release_sop.md) | `fastlane/`, `tool/`, platform folders |
+| Deployment and release | Implemented | [Deployment](deployment.md), [Firebase App Distribution](firebase_app_distribution.md), [Android Play Store Release SOP](android_play_store_release_sop.md) | `fastlane/Fastfile`, `tool/fastlane.sh`, `tool/release_both_stores.sh`, `tool/release_android_play.sh` |
 | FCM demo and notification-triggered sync | Implemented | [FCM Demo Integration](fcm_demo_integration.md) | `lib/features/fcm_demo/`, `lib/shared/sync/` |
 | Maps | Implemented | [Google Maps Integration](google_maps_integration.md) | `lib/features/google_maps/`, deferred route files |
 | AI and GenUI demos | Implemented | [AI Integration](ai_integration.md), [GenUI Demo User Guide](genui_demo_user_guide.md) | `lib/features/chat/`, `lib/features/genui_demo/` |

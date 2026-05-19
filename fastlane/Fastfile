@@ -1,5 +1,7 @@
 fastlane_version '2.234.0'
 
+# Canonical Fastfile for this repo (invoked via ./tool/fastlane.sh from project root).
+# Platform-specific copies under ios/fastlane and android/fastlane are legacy stubs.
 default_platform(:android)
 
 def project_root
@@ -120,6 +122,98 @@ def resolve_aab_path(flavor)
   nil
 end
 
+def release_notes_from_git(commits_count: 5)
+  return nil unless system('git', 'rev-parse', '--git-dir', out: File::NULL, err: File::NULL)
+
+  changelog_from_git_commits(
+    commits_count: commits_count,
+    pretty: '- %s',
+    merge_commit_filtering: 'exclude_merges',
+  )
+rescue StandardError => e
+  UI.important("Could not build git release notes: #{e.message}")
+  nil
+end
+
+def release_notes_for_ios(locale: 'en-US')
+  explicit = ENV['IOS_RELEASE_NOTES'].to_s.strip
+  return explicit unless explicit.empty?
+
+  git_notes = release_notes_from_git
+  return git_notes if git_notes && !git_notes.strip.empty?
+
+  build_number = current_pubspec_version[:build_number]
+  release_notes_for(locale, build_number)
+end
+
+def sync_ios_signing_with_match!(options = {})
+  match_git = ENV['MATCH_GIT_URL'].to_s.strip
+  return if match_git.empty?
+
+  match_type = (options[:type] || ENV['MATCH_TYPE'] || 'appstore').to_s
+  readonly = options.key?(:readonly) ? options[:readonly] : ENV['MATCH_READONLY'] != 'false'
+
+  match_params = {
+    type: match_type,
+    readonly: readonly,
+    git_url: match_git,
+    app_identifier: ENV['FASTLANE_APP_IDENTIFIER'],
+    username: ENV['FASTLANE_APPLE_ID'],
+    team_id: ENV['FASTLANE_TEAM_ID'],
+  }.compact
+
+  match(match_params)
+end
+
+def build_flutter(platform, options = {})
+  clean = options.key?(:clean) ? options[:clean] : ENV['FLUTTER_CLEAN_BEFORE_BUILD'] == 'true'
+  bump_build = options.key?(:bump_build) ? options[:bump_build] : false
+  flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR'] || ENV['IOS_BUILD_FLAVOR']).to_s.strip
+  flavor = nil if flavor.empty?
+
+  build_info = bump_build ? bump_pubspec_build_number! : current_pubspec_version
+  UI.message("Flutter build #{build_info[:version]}+#{build_info[:build_number]} (#{platform})")
+
+  Dir.chdir(project_root) do
+    sh('flutter', 'clean') if clean
+    sh('flutter', 'pub', 'get')
+    sh('dart', 'run', 'tool/prepare_release.dart') unless options[:skip_prepare_release]
+
+    case platform
+    when :ios
+      entrypoint = options[:entrypoint] || ENV['IOS_ENTRYPOINT'] || 'lib/main_prod.dart'
+      build_mode = options[:build_mode] || ENV['IOS_BUILD_MODE'] || 'release'
+      args = ['flutter', 'build', 'ipa', "--#{build_mode}", "--target=#{entrypoint}"]
+      args.concat(['--flavor', flavor]) if flavor
+      defines = flutter_dart_defines
+      args.concat(defines)
+      sh(*args, log: false)
+    when :android
+      args = %w[flutter build appbundle --release]
+      args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
+      args.concat(['--flavor', flavor]) if flavor
+      defines = flutter_dart_defines
+      args.concat(defines)
+      sh(*args, log: false)
+      sh('ls', '-R', 'build/app/outputs/bundle') if ENV['FL_FASTLANE_DEBUG'] == 'true'
+    else
+      UI.user_error!("Unsupported platform for build_flutter: #{platform}")
+    end
+  end
+
+  build_info
+end
+
+def invoke_platform_lane(platform_name, lane_name, options = {})
+  args = [lane_name]
+  options.each do |key, value|
+    next if value.nil?
+
+    args << "#{key}:#{value}"
+  end
+  sh('bundle', 'exec', 'fastlane', platform_name.to_s, *args)
+end
+
 platform :android do
   desc 'Run preflight checks for Android Play deploy lanes'
   lane :play_preflight do
@@ -135,31 +229,16 @@ platform :android do
 
   desc 'Build a release appbundle via Flutter'
   lane :play_build_release do |options|
+    bump_build = options.key?(:bump_build) ? options[:bump_build] : true
     flavor = (options[:flavor] || ENV['ANDROID_BUILD_FLAVOR']).to_s.strip
     flavor = nil if flavor.empty?
-    bundle_dir = 'build/app/outputs/bundle'
-    bump_build = options.key?(:bump_build) ? options[:bump_build] : true
 
-    build_info = bump_build ? bump_pubspec_build_number! : current_pubspec_version
-    UI.message("Preparing release build for #{build_info[:version]}+#{build_info[:build_number]}")
-
-    Dir.chdir(project_root) do
-      sh('flutter', 'pub', 'get')
-      sh('dart', 'run', 'tool/prepare_release.dart')
-
-      args = %w[flutter build appbundle --release]
-      args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
-      args << '--flavor' << flavor if flavor
-      defines = flutter_dart_defines
-      args.concat(defines)
-      define_keys = defines.map { |d| d.split('=', 2).first.to_s.sub('--dart-define=', '') }.uniq
-      UI.message("Building appbundle with dart-defines: #{define_keys.join(', ')}")
-      sh(*args, log: false)
-
-      sh('ls', '-R', bundle_dir) if ENV['FL_FASTLANE_DEBUG'] == 'true'
-    end
-
-    build_info
+    build_flutter(
+      :android,
+      bump_build: bump_build,
+      flavor: flavor,
+      clean: ENV['FLUTTER_CLEAN_BEFORE_BUILD'] == 'true',
+    )
   end
 
   desc 'Alias for play_build_release (backward compatibility)'
@@ -223,10 +302,10 @@ platform :android do
       "Could not find AAB. Expected #{aab_path_for(flavor)} (from project root)",
     ) unless aab
 
-    upload_to_play_store(
+    upload_params = {
       track: track,
       aab: aab,
-      release_status: options[:release_status] || 'draft',
+      release_status: options[:release_status] || ENV['ANDROID_RELEASE_STATUS'] || 'draft',
       skip_upload_changelogs: false,
       skip_upload_apk: true,
       skip_upload_images: ENV['ANDROID_UPLOAD_IMAGES'] != 'true',
@@ -235,7 +314,10 @@ platform :android do
       metadata_path: metadata_path,
       json_key: ENV['ANDROID_JSON_KEY'],
       package_name: ENV['ANDROID_PACKAGE_NAME'],
-    )
+      version_name: build_info[:version],
+      version_code: build_info[:build_number],
+    }
+    upload_to_play_store(upload_params)
   end
 
   desc 'Alias for play_upload_track (backward compatibility)'
@@ -318,19 +400,45 @@ platform :ios do
   lane :upload_testflight do |options|
     ENV['FL_IOS_REQUIRE_APPLE_ID'] = 'true'
     preflight
+    sync_ios_signing_with_match!(options)
 
     ipa = adhoc(options)
-    upload_to_testflight(
+    changelog = release_notes_for_ios
+    upload_params = {
       ipa: ipa,
       username: ENV['FASTLANE_APPLE_ID'],
       team_id: ENV['FASTLANE_TEAM_ID'],
       skip_waiting_for_build_processing: options.fetch(:skip_waiting_for_build_processing, true),
-    )
+      distribute_external: options.fetch(:distribute_external, false),
+      submit_beta_review: options.fetch(:submit_beta_review, false),
+    }
+    upload_params[:changelog] = changelog if changelog && !changelog.strip.empty?
+    upload_to_testflight(upload_params)
   end
 
-  desc 'Build + upload to App Store Connect (same binary as TestFlight)'
+  desc 'Build + upload to App Store Connect (metadata optional; does not auto-submit for review)'
   lane :upload_appstore do |options|
-    upload_testflight(options)
+    ENV['FL_IOS_REQUIRE_APPLE_ID'] = 'true'
+    preflight
+    sync_ios_signing_with_match!(options)
+
+    ipa = adhoc(options)
+    locale = options[:locale] || ENV['IOS_METADATA_LOCALE'] || 'en-US'
+    changelog = release_notes_for_ios(locale: locale)
+    release_notes = {}
+    release_notes[locale] = changelog if changelog && !changelog.strip.empty?
+
+    upload_to_app_store(
+      ipa: ipa,
+      username: ENV['FASTLANE_APPLE_ID'],
+      team_id: ENV['FASTLANE_TEAM_ID'],
+      skip_screenshots: options.fetch(:skip_screenshots, true),
+      skip_metadata: options.fetch(:skip_metadata, ENV['IOS_SKIP_METADATA'] == 'true'),
+      skip_binary_upload: false,
+      submit_for_review: options.fetch(:submit_for_review, false),
+      automatic_release: options.fetch(:automatic_release, false),
+      release_notes: release_notes.empty? ? nil : release_notes,
+    )
   end
 
   desc 'Alias for upload_testflight (backward compatibility)'
@@ -357,4 +465,32 @@ platform :ios do
       sh(tool_path('upload_ios_to_firebase_app_distribution.sh'), ipa, release_notes, recipient)
     end
   end
+end
+
+desc 'Preflight both store deploy lanes (iOS + Android)'
+lane :deploy_all_preflight do
+  invoke_platform_lane(:ios, 'preflight')
+  invoke_platform_lane(:android, 'play_preflight')
+  UI.success('Both store preflight checks passed.')
+end
+
+desc 'Deploy iOS (TestFlight) then Android (Play internal track) with one command'
+lane :deploy_all do |options|
+  ios_lane = options[:ios_lane] || ENV['IOS_DEPLOY_LANE'] || 'upload_testflight'
+  android_lane = options[:android_lane] || ENV['ANDROID_DEPLOY_LANE'] || 'play_upload_internal'
+  lane_options = options.dup
+  bump_once = lane_options.key?(:bump_build) ? lane_options[:bump_build] : true
+
+  if bump_once
+    bump_pubspec_build_number!
+    lane_options[:bump_build] = false
+  end
+
+  UI.header("iOS lane: #{ios_lane}")
+  invoke_platform_lane(:ios, ios_lane, lane_options)
+
+  UI.header("Android lane: #{android_lane}")
+  invoke_platform_lane(:android, android_lane, lane_options)
+
+  UI.success('deploy_all finished (iOS + Android). Review drafts in App Store Connect and Play Console.')
 end
