@@ -90,6 +90,15 @@ Repeated critique => repo-visible capability: source-doc update, validation chec
 
 Dependency changes: justify add/upgrade, check existing deps first, don’t treat `flutter pub get` as validation.
 
+Generic abstractions:
+
+- Add type parameters only for repeated shapes with the same error, parsing,
+  lifecycle, or widget contract; keep the first abstraction feature-local unless
+  cross-feature reuse already exists.
+- Preserve endpoint/widget-specific names, failure messages, tests, and typed
+  mappers at the call site so the generic layer removes duplication without
+  hiding behavior.
+
 Widget identity:
 
 - Builder rows need stable `Key` from durable id, not index, when list can reorder/filter/insert/delete.
