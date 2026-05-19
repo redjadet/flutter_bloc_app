@@ -114,15 +114,23 @@ then pass them as `--dart-define` values (or use the same helper script used for
 local development). Avoid “production flutter run” guidance: for release builds,
 focus on how the build environment supplies keys.
 
-For **Android Play** uploads from a maintainer machine, copy
-[`.env.android.release.example`](../.env.android.release.example) to gitignored
-`.env.android.release`, fill required values, and run
-[`tool/release_android_play.sh`](../tool/release_android_play.sh). That script
-sources `.env.android.release` before Fastlane; the Android build uses the same
+For **store release** uploads from a maintainer machine:
+
+| Env file (gitignored) | Template | Used by |
+| --- | --- | --- |
+| `.env.android.release` | [`.env.android.release.example`](../.env.android.release.example) | [`tool/release_android_play.sh`](../tool/release_android_play.sh), [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) |
+| `.env.ios.release` | [`.env.ios.release.example`](../.env.ios.release.example) | [`tool/release_both_stores.sh`](../tool/release_both_stores.sh), manual `./tool/fastlane.sh ios …` |
+
+Both wrappers source the env files before Fastlane. Android (and dual-store) builds use the same
 [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
 as Option B, so optional `CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*` compile-time
-keys work the same way as in `.envrc`. See
-[Android Play Store release SOP](android_play_store_release_sop.md).
+keys work the same way as in `.envrc`.
+
+- Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh) — see [Android Play Store release SOP](android_play_store_release_sop.md).
+- iOS + Android: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) — see [Deployment](deployment.md#both-stores-ios--android).
+
+Keep Play service account JSON (`ANDROID_JSON_KEY`) and match certificate repos
+out of git. Optional match config: [`fastlane/Matchfile.example`](../fastlane/Matchfile.example).
 
 ## Firebase configuration is separate
 

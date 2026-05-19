@@ -90,6 +90,9 @@ coverage/lcov.base.info
 analysis/agent_scorecard/scorecard-events-*.jsonl
 tmp_test_write.md
 .env.android.release
+.env.ios.release
+fastlane/Matchfile
+fastlane/play-store-key.json
 fastlane/keys/*.json
 fastlane/report.xml
 

@@ -205,7 +205,7 @@ flutter build ipa -t lib/main_staging.dart
 
 **Option C – Fastlane (Ad Hoc IPA):**
 
-From the project root, run `./tool/fastlane.sh ios adhoc`. The IPA is exported to `build/ios/ipa/`. See [Deployment – Fastlane iOS lanes](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store) for all iOS lanes (adhoc, upload_testflight, upload_appstore).
+From the project root, run `./tool/fastlane.sh ios adhoc`. The IPA is exported under `build/ios/`. See [Deployment – iOS (TestFlight and App Store)](deployment.md#ios-testflight-and-app-store) for all iOS lanes (`adhoc`, `upload_testflight`, `upload_appstore`). For TestFlight + Play in one step, see [Deployment – Both stores](deployment.md#both-stores-ios--android).
 
 Use the path to the exported `.ipa` file in the next step.
 
@@ -364,9 +364,9 @@ FIREBASE_GROUPS=qa-team ./tool/fastlane.sh ios firebase_distribute
 FIREBASE_TESTERS="qa1@example.com,qa2@example.com" ./tool/fastlane.sh ios firebase_distribute
 ```
 
-**Note:** iOS lane runs `tool/ios_entitlements.sh distribution` before building (requires paid Apple Developer account for IPA export). Set `FASTLANE_APP_IDENTIFIER` to your bundle ID before running (see `ios/fastlane/Appfile`). To upload an IPA you built elsewhere, use `FIREBASE_SKIP_BUILD=true` and ensure the IPA is at `build/ios/ipa/Runner.ipa` or anywhere under `build/ios/**/*.ipa`.
+**Note:** iOS lane runs `tool/ios_entitlements.sh distribution` before building (requires paid Apple Developer account for IPA export). Set `FASTLANE_APP_IDENTIFIER` to your bundle ID before running (see `fastlane/Appfile` and `.env.ios.release.example`). To upload an IPA you built elsewhere, use `FIREBASE_SKIP_BUILD=true` and ensure the IPA is at `build/ios/ipa/Runner.ipa` or anywhere under `build/ios/**/*.ipa`.
 
-For other iOS distribution (Ad Hoc IPA only, TestFlight upload, App Store upload), see [Deployment – Fastlane iOS lanes](deployment.md#fastlane-ios-lanes-ad-hoc-testflight-app-store): `fastlane ios adhoc`, `ios upload_testflight`, `ios upload_appstore`.
+For other iOS distribution (Ad Hoc IPA only, TestFlight upload, App Store upload), see [Deployment – iOS (TestFlight and App Store)](deployment.md#ios-testflight-and-app-store): `./tool/fastlane.sh ios adhoc`, `ios upload_testflight`, `ios upload_appstore`.
 
 ### CI
 

@@ -1,0 +1,8 @@
+# Copy to fastlane/Matchfile when using match for iOS signing.
+# Prefer env vars (see .env.ios.release.example) so CI can inject secrets without committing paths.
+
+git_url(ENV['MATCH_GIT_URL'])
+storage_mode('git')
+type(ENV.fetch('MATCH_TYPE', 'appstore'))
+app_identifier(ENV['FASTLANE_APP_IDENTIFIER'])
+username(ENV['FASTLANE_APPLE_ID'])

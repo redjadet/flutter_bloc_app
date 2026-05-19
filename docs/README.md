@@ -95,9 +95,11 @@ Source-of-truth docs for Flutter BLoC app.
 
 ### Release and distribution
 
-- [`deployment.md`](deployment.md)
-- [`firebase_app_distribution.md`](firebase_app_distribution.md)
-- [`android_play_store_release_sop.md`](android_play_store_release_sop.md)
+- [`deployment.md`](deployment.md) — iOS, Android, dual-store Fastlane (`release_both_stores.sh`), web Pages
+- [`firebase_app_distribution.md`](firebase_app_distribution.md) — pre-release testers
+- [`android_play_store_release_sop.md`](android_play_store_release_sop.md) — Play validation gates and promotion
+- [`../fastlane/README.md`](../fastlane/README.md) — Fastlane lane index (`deploy_all`, platform lanes)
+- Env templates: [`.env.ios.release.example`](../.env.ios.release.example), [`.env.android.release.example`](../.env.android.release.example)
 
 ## Historical context (not source of truth)
 
