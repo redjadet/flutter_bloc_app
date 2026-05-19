@@ -28,6 +28,9 @@ Repo guardrails:
 - **Prefer micro-edits over rewrites**: patch exact failing line(s) instead of regenerating whole files/widgets.
 - **Early proof beats late polish**: run narrowest honest validation lane early (see [`agents_quick_reference.md`](agents_quick_reference.md)). Catch subtle issues before they spread.
 - **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is net loss; align first, then iterate.
+- **System shape beats screen shape**: start from feature/domain boundary, dependency graph, and contracts. Avoid screen-centric rewrites, giant cubits/view models, hidden dependencies, and cross-feature leakage.
+- **Capabilities beat concrete classes**: reusable widgets/services receive narrow callbacks or domain/core ports, not feature implementations, when that keeps ownership explicit and tests cheap.
+- **Boring seams beat clever abstractions**: add interfaces, mixins, or shared services only when they remove repeated behavior or hide an external dependency; do not add indirection for style.
 
 ## Progressive Disclosure
 

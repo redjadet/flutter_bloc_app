@@ -27,6 +27,8 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | System shape | Are boundaries, data flow, ownership, failure handling, logs, test seams, and rollback clear enough before generation/refactor? |
 | Prompt shape | Did guidance separate intent, eval/spec, and implementation; use Goal / Context / Boundaries / Verification; omit nonessential rules; and avoid micromanaging implementation order? |
 | Problem fit | Does change fit user outcome + production path? |
+| Modularity fit | Did code model the feature/system boundary instead of one screen, preserve `Presentation -> Domain <- Data`, and avoid feature leakage? |
+| Capability shape | Are reusable widgets/services passed narrow capabilities or contracts instead of concrete cubits/repositories/view models? |
 | Deploy/config fit | Platform targets, flavor/env config, Firebase/Supabase wiring, secrets, CI/CD, store/background limits, and rollback path checked? |
 | Visual fit | Did I read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md), use runtime source (`AppTheme` / `buildAppMixScope` / `AppStyles` / `UI`), and fit audience/workflow? |
 | UI states/layout | Are expected states present, and did mobile/tablet/desktop checks cover clipped text, overlap, unstable controls, hidden primary content? |
@@ -39,6 +41,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 | Error handling | Existing pattern + stable error contracts preserved? |
 | Dependencies | Existing utilities/packages checked before adding deps? |
 | Naming | Names match codebase? |
+| Shared behavior | Is duplicated behavior extracted only when lifecycle/error/test contracts match, and kept feature-local unless cross-feature reuse is proven? |
 | Readability | Can next agent/developer understand seams, names, comments, tests, and docs? |
 | Operational clarity | Can someone run, verify, debug, and recover from repo artifacts? |
 | Execution state | Is plan/checklist/retry/blocker state inspectable instead of hidden in chat? |

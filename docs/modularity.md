@@ -21,6 +21,24 @@ Use this as the shorthand:
 - `lib/features/*/domain/` should remain pure Dart and feature-scoped
 - `lib/shared/` must not depend on `lib/features/`
 
+## Capability boundaries
+
+When extracting reusable widgets, shared services, or cross-feature flows, pass
+the smallest capability the caller needs:
+
+- Prefer `VoidCallback`, typed callbacks, domain/core ports, or tiny interfaces
+  over concrete cubits, repositories, pages, or feature view models.
+- Keep capability interfaces named for behavior (`AuthTokenReader`,
+  `ProfileCacheClearPort`, `NavigationTargetHandler`), not vague containers
+  (`Helper`, `Manager`, `Utils`, `BaseThing`).
+- Put a new port in `lib/core/` only when app/router or multiple features need
+  it; keep it feature-local when reuse is speculative.
+- If repeated behavior appears across cubits/services, extract a focused mixin
+  or service only after the shared lifecycle, error contract, and tests are the
+  same.
+- Reusable widgets accept state + capabilities; feature-specific policy stays
+  in the owning cubit, route builder, or app composition layer.
+
 ## Dependency direction
 
 - **`lib/shared/` must never import `lib/features/`.** Shared code is used by many features; it cannot depend on any single feature. If a helper (e.g. markdown parsing, design tokens) is needed by both shared and a feature, it lives in `lib/shared/` and the feature imports from there.

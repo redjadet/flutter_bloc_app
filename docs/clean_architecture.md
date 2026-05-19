@@ -122,6 +122,30 @@ This separation lets the cubit and UI remain testable without Firebase while the
   shared sync infrastructure.
 - Add tests per layer: pure unit tests for domain/data, `bloc_test` for cubits, widget/golden tests for UI; run `./bin/checklist` before shipping.
 
+## AI-Friendly Architecture Rules
+
+Use these as review questions before accepting generated feature/refactor code:
+
+- Model a **system**, not a screen: feature entrypoint, domain contract, data
+  adapter, cubit/bloc, route wiring, and tests should be discoverable without
+  reading unrelated modules.
+- Pass **capabilities**, not concrete feature classes, across reusable UI or
+  shared boundaries. Prefer narrow domain/core contracts, callbacks, or typed
+  ports over passing a full cubit/repository/view model when only one behavior
+  is needed.
+- Put shared behavior in the lowest honest owner: feature-local helper first,
+  then domain/core/shared service or mixin only after repeated behavior is
+  proven. Avoid global `Utils`, `Helper`, `Manager`, and `Base*` buckets.
+- Keep widgets dumb: render state, expose callbacks, delegate actions. Do not
+  add networking, sync decisions, navigation policy, or unrelated state
+  mutation inside `build()`.
+- Centralize navigation ownership: map domain targets to GoRouter locations in
+  presentation/app routing code; do not scatter raw route strings or
+  `context.go` calls through reusable widgets.
+- Optimize for future refactors: explicit constructor injection, minimal
+  public APIs, stable names that explain intent, immutable state, and tests that
+  assert behavior contracts rather than implementation shape.
+
 ## Review Checklist
 
 - Domain files use pure Dart only (no `package:flutter` imports).
