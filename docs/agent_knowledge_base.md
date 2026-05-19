@@ -16,6 +16,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
+| Harness beats model choice. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
 
 ## AI Productivity Traps (And How This Repo Avoids Them)
 
@@ -69,6 +70,16 @@ Agent-facing guidance stays short, stable, outcome-first.
 - Exact order only for safety, validation, migrations, codegen, destructive work, or repo-required workflows.
 - Delete stale, duplicate, or nonessential instructions once script/test/doc owns invariant.
 - Add date/timezone only for task policy, user locale, or time-sensitive evidence.
+
+## Long Session Health
+
+Agent quality depends on harness architecture: context management, memory tiering, orchestration, cache/tool-output discipline, and failure recovery.
+
+- Treat memory as layers: in-context facts for active work, persistent files for durable evidence, and instruction files for rules that must survive summarization.
+- Compact tool output to decisions, evidence, paths, and blockers; do not carry long logs when a precise pointer is enough.
+- Watch circuit-breaker symptoms: repeated contradictions, stale file claims, lost goal, invented tool output, or circular repair attempts.
+- After two failed repair loops or clear context drift, stop generation, reread source files, restate Goal / Context / Boundaries / Verification, then continue from verified state.
+- If reset was needed because repo guidance was missing, add the smallest durable capability: doc pointer, script, test, fixture, skill, or automation rule.
 
 ## Agent Legibility
 
