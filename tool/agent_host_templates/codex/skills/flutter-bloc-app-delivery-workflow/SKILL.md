@@ -22,6 +22,7 @@ Use `DESIGN.md` and `docs/design_system.md` before visual code.
 
 - **Plan:** no edits before **95% confident**; one observe/revise loop; proof via tools/graph/browser/MCP.
   Separate intent/spec/implementation; specs need evals, implementation follows repo seams. Audit related landmines before feature/refactor.
+- **Execute:** model feature/system boundaries, pass narrow capabilities/contracts instead of concrete feature classes, keep widgets dumb, and avoid vague shared buckets.
 - **Verify:** **Self-verify final response** vs request, diff, proof, blockers, risk.
 - **Report:** **Report only after Verify.** **Surgical diff**: each changed line traces to request or required validation/doc update.
 

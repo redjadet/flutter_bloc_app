@@ -9,7 +9,7 @@ Canon: `docs/clean_architecture.md`, `docs/solid_principles.md`, `docs/dry_princ
 
 ## Principles (summary)
 
-TDD; DRY (search `lib/shared/` and features before new utils); SRP; SoC (domain contracts, data I/O, presentation UI/state); SOLID detail in `docs/solid_principles.md`; small interfaces; low coupling / high cohesion; `AppLogger` observability; KISS; YAGNI.
+TDD; DRY (search `lib/shared/` and features before new utils); SRP; SoC (domain contracts, data I/O, presentation UI/state); SOLID detail in `docs/solid_principles.md`; small interfaces; pass capabilities not concrete feature classes; low coupling / high cohesion; `AppLogger` observability; KISS; YAGNI.
 
 ## Non-negotiable baseline
 

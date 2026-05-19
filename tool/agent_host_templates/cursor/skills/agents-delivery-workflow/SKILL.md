@@ -8,7 +8,7 @@ description: Non-trivial delivery start-to-finish, validation routing, meta/suba
 Canon + loop (**Plan → Execute → Verify → Report**): `AGENTS.md`, `agents-quick-reference`, `docs/agents_quick_reference.md` (routing: `#automatic-workflow-triggers`). **context ladder** + **File verified reusable conclusions** → `docs/agent_knowledge_base.md`.
 
 - **Plan:** Goal / Context / Boundaries / Verification; non-trivial → `tasks/cursor/todo.md`; context audit before feature/refactor; delegation → `agents-meta-behavior` + `#multi-agent-hub`. No edits until **95% confident**. One observe/revise loop.
-- **Execute:** preserve `Presentation -> Domain <- Data` seams; DI/routes/l10n/codegen when touched; UI/Mix → `DESIGN.md` + `docs/design_system.md`.
+- **Execute:** preserve `Presentation -> Domain <- Data` seams; pass narrow capabilities/contracts instead of concrete feature classes; keep widgets dumb; avoid vague shared buckets; DI/routes/l10n/codegen when touched; UI/Mix → `DESIGN.md` + `docs/design_system.md`.
 - **Verify:** `docs/ai_code_review_protocol.md`; narrowest validation lane; empty tool output ≠ proof. **Self-verify final response** vs request, diff, proof, blockers, risk.
 - **Report only after Verify**; **Surgical diff** traces each line to request or validation/doc need.
 
