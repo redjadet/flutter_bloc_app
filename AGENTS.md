@@ -30,6 +30,7 @@ Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
 Non-trivial work: tracker + context ladder + one observe/revise loop.
 Outcome: Goal / Context / Boundaries / Verification. Finish gate:
 [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
+Long session health: compact evidence, watch context drift, reset plan when state corrupts.
 
 ## Map
 

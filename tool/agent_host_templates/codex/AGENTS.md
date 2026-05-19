@@ -32,6 +32,7 @@ Vague/risky details: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.
 - Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
 - Self-check final response vs request, diff, proof, blockers, risk.
 - Prove result before calling work done.
+- Long session health: compact evidence, watch context drift, reset plan when state corrupts.
 - File verified reusable conclusions into owning source doc (`docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](../../../tasks/lessons.md)).
 
 ## Communication
