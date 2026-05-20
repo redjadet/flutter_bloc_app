@@ -4,6 +4,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 ## Start here
 
+- **Interview showcase** (30-minute portfolio walk): [`interview_showcase.md`](interview_showcase.md)
 - **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
 - **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
 - **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
@@ -21,7 +22,8 @@ Source-of-truth docs for Flutter BLoC app.
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
-  [`features/realtime_market.md`](features/realtime_market.md)
+  [`features/realtime_market.md`](features/realtime_market.md),
+  [`features/counter_outcome_brief.md`](features/counter_outcome_brief.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`agent_project_context.md`](agent_project_context.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),

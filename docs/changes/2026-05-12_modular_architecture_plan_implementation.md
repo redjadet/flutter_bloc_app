@@ -1,9 +1,16 @@
 # Modular architecture plan — implementation notes (2026-05-12)
 
+## Agent session summary
+
+- **Goal:** Enforce modular monolith boundaries without Melos split.
+- **Delivered:** Leak script, DI group parts, memory-service decoupling, domain surface tests, feasibility docs.
+- **Verify:** `bash tool/check_feature_modularity_leaks.sh`, targeted `flutter test`, checklist-fast lane.
+- **Interview use:** Cite this change log in [interview_showcase.md](../interview_showcase.md) §9 as an AI plan→implement→verify example.
+
 ## What shipped
 
 - **`tool/modular_metrics.sh`** — read-only baseline; `--cross-feature-only` for import inventory.
-- **`docs/audits/modular_baseline_2026-05-12.md`** — captured output (use `git add -f` if `docs/audits/` is gitignored).
+- **[`audits/modular_baseline_2026-05-12.md`](../audits/modular_baseline_2026-05-12.md)** — captured output (use `git add -f` if `docs/audits/` is gitignored).
 - **`tool/check_feature_modularity_leaks.sh`** — declarative pairwise rules + universal **shared→features** + **domain import purity** (with `rg`; grep fallback for pairwise only).
 - **`AppMemoryService`** — removed `shared` → `chart` import; chart trim wired via `onChartMemoryTrim` from [`lib/core/di/injector_registrations.dart`](../../lib/core/di/injector_registrations.dart).
 - **DI orchestration** — [`injector_registrations.dart`](../../lib/core/di/injector_registrations.dart) split into `part` files under [`lib/core/di/groups/`](../../lib/core/di/groups/): `register_core_services.dart`, `register_feature_services.dart`, `register_demo_services.dart` (`registerCoreServices`, `registerFeatureServices`, `registerDemoServices`).

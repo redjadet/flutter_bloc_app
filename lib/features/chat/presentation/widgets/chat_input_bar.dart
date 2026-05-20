@@ -56,18 +56,23 @@ class ChatInputBar extends StatelessWidget {
             canSend: state.canSend,
             isLoading: state.isLoading,
           ),
-          builder: (final context, final data) => IconButton(
-            tooltip: l10n.chatSendButton,
-            onPressed: data.canSend ? onSend : null,
-            icon: data.isLoading
-                ? SizedBox.square(
-                    dimension: context.responsiveIconSize,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: theme.colorScheme.primary,
-                    ),
-                  )
-                : const Icon(Icons.send),
+          builder: (final context, final data) => Semantics(
+            button: true,
+            label: l10n.chatSendButton,
+            enabled: data.canSend,
+            child: IconButton(
+              tooltip: l10n.chatSendButton,
+              onPressed: data.canSend ? onSend : null,
+              icon: data.isLoading
+                  ? SizedBox.square(
+                      dimension: context.responsiveIconSize,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: theme.colorScheme.primary,
+                      ),
+                    )
+                  : const Icon(Icons.send),
+            ),
           ),
         ),
       ],

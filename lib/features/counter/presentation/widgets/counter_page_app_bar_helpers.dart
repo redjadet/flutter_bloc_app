@@ -47,12 +47,16 @@ class CupertinoIconButton extends StatelessWidget {
   final String tooltip;
 
   @override
-  Widget build(final BuildContext context) => Tooltip(
-    message: tooltip,
-    child: CupertinoButton(
-      padding: EdgeInsets.zero,
-      onPressed: onPressed,
-      child: Icon(icon, size: 22),
+  Widget build(final BuildContext context) => Semantics(
+    button: true,
+    label: tooltip,
+    child: Tooltip(
+      message: tooltip,
+      child: CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: Icon(icon, size: 22),
+      ),
     ),
   );
 }
