@@ -39,6 +39,9 @@ This project uses automated dependency update monitoring to keep dependencies up
 - Weekly security scans (Mondays at 9am UTC)
 - Creates PRs only for security vulnerabilities
 - Limited to 5 open PRs at a time
+- Also scans root `Gemfile.lock` (Fastlane / Ruby) for security advisories
+
+**Ruby / Fastlane (`Gemfile`)**: When Rubygems `fastlane` lags a security fix (for example `jwt` CVE-2026-45363), the repo may temporarily pin `fastlane` to a GitHub ref that widens the `jwt` constraint, plus `gem 'jwt', '~> 3.2'`. Revert to a Rubygems `fastlane` version once it ships with the same constraint (for example `2.235.0`).
 
 ## Automated Testing
 
