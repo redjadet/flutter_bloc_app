@@ -4,8 +4,8 @@ Flutter reference application for production-style feature delivery: clean
 architecture, offline-first data, BLoC/Cubit state, typed routing, backend
 integrations, AI demos, and release-ready validation.
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.41.9-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.11.5-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44.0-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.12.0-blue.svg)](https://dart.dev)
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![CI](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/ci.yml)
 [![Deploy web](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/deploy_web.yml)
