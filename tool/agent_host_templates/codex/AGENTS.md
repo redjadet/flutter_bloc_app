@@ -18,7 +18,7 @@ Template source: `tool/agent_host_templates/codex/AGENTS.md` -> ~/.codex/AGENTS.
 
 ## Snapshot
 
-Flutter 3.41.9 / Dart 3.11.5. Clean Architecture:
+Flutter 3.44.0 / Dart 3.12.0. Clean Architecture:
 `Presentation -> Domain <- Data`; Cubit/BLoC, `get_it`, GoRouter.
 Offline-first sync: `lib/shared/sync/`.
 

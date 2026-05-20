@@ -17,7 +17,7 @@ Open only needed:
 
 Non-trivial: `agents-delivery-workflow`; delegation: `agents-meta-behavior`.
 
-Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`.
+Repo: Flutter 3.44.0 / Dart 3.12.0; `Presentation -> Domain <- Data`.
 
 Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **Context ladder:** `docs/agent_knowledge_base.md` (memory compounding + semantic lint).
 
