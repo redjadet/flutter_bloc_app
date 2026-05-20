@@ -10,10 +10,9 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 /// abstraction and tests can substitute a fake runner.
 class SyncJobRunner {
   SyncJobRunner({
-    required final SyncableRepositoryRegistry registry,
-    required final PendingSyncRepository pendingRepository,
-  }) : _registry = registry,
-       _pendingRepository = pendingRepository;
+    required this._registry,
+    required this._pendingRepository,
+  });
 
   final SyncableRepositoryRegistry _registry;
   final PendingSyncRepository _pendingRepository;

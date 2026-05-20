@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 /// Supabase implementation of [SupabaseAuthRepository].
 class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   SupabaseAuthRepositoryImpl({
-    final bool Function()? isConfiguredOverride,
+    this._isConfiguredOverride,
     final User? Function()? readCurrentUser,
     final Stream<AuthState> Function()? authStateChangesStream,
     final Future<void> Function({
@@ -24,8 +24,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     })?
     signUpImpl,
     final Future<void> Function()? signOutImpl,
-  }) : _isConfiguredOverride = isConfiguredOverride,
-       _readCurrentUser = readCurrentUser ?? _defaultReadCurrentUser,
+  }) : _readCurrentUser = readCurrentUser ?? _defaultReadCurrentUser,
        _authStateChangesStream =
            authStateChangesStream ?? _defaultAuthStateChangesStream,
        _signInWithPasswordImpl =

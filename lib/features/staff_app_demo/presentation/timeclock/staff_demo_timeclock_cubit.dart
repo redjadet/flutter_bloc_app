@@ -7,13 +7,10 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {
   StaffDemoTimeclockCubit({
-    required final AuthRepository authRepository,
-    required final StaffDemoTimeclockRepository repository,
-    required final StaffDemoTimeclockLocalRepository localRepository,
-  }) : _authRepository = authRepository,
-       _repository = repository,
-       _localRepository = localRepository,
-       super(const StaffDemoTimeclockState());
+    required this._authRepository,
+    required this._repository,
+    required this._localRepository,
+  }) : super(const StaffDemoTimeclockState());
 
   final AuthRepository _authRepository;
   final StaffDemoTimeclockRepository _repository;

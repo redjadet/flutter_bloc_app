@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
@@ -88,9 +89,9 @@ class ChatMessageList extends StatelessWidget {
               }
               return RepaintBoundary(
                 child: ListView.builder(
+                  scrollCacheExtent: const ScrollCacheExtent.pixels(500),
                   controller: controller,
                   padding: context.allGapM,
-                  cacheExtent: 500,
                   itemCount: data.messages.length,
                   itemBuilder: (final context, final index) {
                     final ChatMessage message = data.messages[index];

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreStaffDemoInboxRepository {
   FirestoreStaffDemoInboxRepository({
-    required final FirebaseFirestore firestore,
-  }) : _firestore = firestore;
+    required this._firestore,
+  });
 
   final FirebaseFirestore _firestore;
 

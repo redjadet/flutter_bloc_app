@@ -13,11 +13,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class DeepLinkCubit extends Cubit<DeepLinkState>
     with CubitSubscriptionMixin<DeepLinkState> {
   DeepLinkCubit({
-    required final DeepLinkService service,
-    required final DeepLinkParser parser,
-  }) : _service = service,
-       _parser = parser,
-       super(const DeepLinkState.idle());
+    required this._service,
+    required this._parser,
+  }) : super(const DeepLinkState.idle());
 
   final DeepLinkService _service;
   final DeepLinkParser _parser;

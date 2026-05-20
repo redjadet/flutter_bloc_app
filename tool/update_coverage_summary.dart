@@ -67,7 +67,9 @@ void main(final List<String> args) {
   final File output = File('coverage/coverage_summary.md');
   output.parent.createSync(recursive: true);
   final String nextMarkdown = coverage.toMarkdown();
-  final String? existingMarkdown = output.existsSync() ? output.readAsStringSync() : null;
+  final String? existingMarkdown = output.existsSync()
+      ? output.readAsStringSync()
+      : null;
   if (existingMarkdown != nextMarkdown) {
     output.writeAsStringSync(nextMarkdown);
   }

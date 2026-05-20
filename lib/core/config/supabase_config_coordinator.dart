@@ -12,13 +12,10 @@ import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 /// Firebase Auth lifecycle to avoid duplicate calls and duplicate init attempts.
 final class SupabaseConfigCoordinator {
   SupabaseConfigCoordinator({
-    required FirebaseAuth auth,
-    required SupabaseConfigProvider provider,
-    @visibleForTesting
-    final Future<SupabaseConfigFetchResult> Function()? fetchAndApplyIfNeeded,
-  }) : _auth = auth,
-       _provider = provider,
-       _fetchAndApplyIfNeeded = fetchAndApplyIfNeeded;
+    required this._auth,
+    required this._provider,
+    @visibleForTesting this._fetchAndApplyIfNeeded,
+  });
 
   final FirebaseAuth _auth;
   final SupabaseConfigProvider _provider;

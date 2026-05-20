@@ -5,8 +5,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift
 
 class FirestoreStaffDemoShiftRepository implements StaffDemoShiftRepository {
   FirestoreStaffDemoShiftRepository({
-    required final FirebaseFirestore firestore,
-  }) : _firestore = firestore;
+    required this._firestore,
+  });
 
   final FirebaseFirestore _firestore;
 

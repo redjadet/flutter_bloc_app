@@ -17,14 +17,11 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstProfileRepository
     implements ProfileRepository, SyncableRepository {
   OfflineFirstProfileRepository({
-    required final ProfileRepository remoteRepository,
-    required final ProfileCacheRepository cacheRepository,
-    required final NetworkStatusService networkStatusService,
-    required final SyncableRepositoryRegistry registry,
-  }) : _remoteRepository = remoteRepository,
-       _cacheRepository = cacheRepository,
-       _networkStatusService = networkStatusService,
-       _registry = registry {
+    required this._remoteRepository,
+    required this._cacheRepository,
+    required this._networkStatusService,
+    required this._registry,
+  }) {
     _registry.register(this);
   }
 

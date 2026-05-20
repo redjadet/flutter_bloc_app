@@ -6,10 +6,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class FirestoreStaffDemoPushTokenRepository
     implements StaffDemoPushTokenRepository {
   FirestoreStaffDemoPushTokenRepository({
-    required final FirebaseFirestore firestore,
+    required this._firestore,
     final FirebaseMessaging? messaging,
-  }) : _firestore = firestore,
-       _messaging = messaging ?? FirebaseMessaging.instance;
+  }) : _messaging = messaging ?? FirebaseMessaging.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseMessaging _messaging;

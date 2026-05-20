@@ -25,18 +25,13 @@ String _newRenderClientCorrelationId() {
 /// Remote chat via Render FastAPI orchestration (`POST /v1/chat/completions`).
 class RenderFastApiChatRepository implements ChatRepository {
   RenderFastApiChatRepository({
-    required final Dio dio,
-    required final HuggingFacePayloadBuilder payloadBuilder,
-    required final HuggingFaceResponseParser responseParser,
-    required final RenderCallerAuthHeaderProvider callerAuth,
-    required final RenderOrchestrationHfTokenProvider hfTokenProvider,
-    required final bool Function() isRunnable,
-  }) : _dio = dio,
-       _payloadBuilder = payloadBuilder,
-       _responseParser = responseParser,
-       _callerAuth = callerAuth,
-       _hfTokenProvider = hfTokenProvider,
-       _isRunnable = isRunnable;
+    required this._dio,
+    required this._payloadBuilder,
+    required this._responseParser,
+    required this._callerAuth,
+    required this._hfTokenProvider,
+    required this._isRunnable,
+  });
 
   final Dio _dio;
   final HuggingFacePayloadBuilder _payloadBuilder;

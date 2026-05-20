@@ -11,9 +11,7 @@ part 'app_info_cubit.freezed.dart';
 
 /// Cubit that loads and holds app info (version, build, etc.) from [AppInfoRepository].
 class AppInfoCubit extends Cubit<AppInfoState> {
-  AppInfoCubit({required final AppInfoRepository repository})
-    : _repository = repository,
-      super(const AppInfoState());
+  AppInfoCubit({required this._repository}) : super(const AppInfoState());
 
   final AppInfoRepository _repository;
   CancelToken? _loadToken;

@@ -7,10 +7,9 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_conte
 class FirestoreStaffDemoContentRepository
     implements StaffDemoContentRepository {
   FirestoreStaffDemoContentRepository({
-    required final FirebaseFirestore firestore,
-    required final FirebaseStorage? storage,
-  }) : _firestore = firestore,
-       _storage = storage;
+    required this._firestore,
+    required this._storage,
+  });
 
   final FirebaseFirestore _firestore;
   final FirebaseStorage? _storage;

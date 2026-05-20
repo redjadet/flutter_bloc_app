@@ -6,8 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 /// Hive-backed drafts and records for the case-study demo (dedicated box).
 class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
-  CaseStudyHiveLocalRepository({required final HiveService hiveService})
-    : _hiveService = hiveService;
+  CaseStudyHiveLocalRepository({required this._hiveService});
 
   static const String boxName = 'case_study_demo';
   static const String schemaKey = 'schemaVersion';

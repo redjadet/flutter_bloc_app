@@ -10,9 +10,8 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class GenUiDemoCubit extends Cubit<GenUiDemoState>
     with CubitSubscriptionMixin<GenUiDemoState> {
-  GenUiDemoCubit({required final GenUiDemoAgent agent})
-    : _agent = agent,
-      super(const GenUiDemoState.initial());
+  GenUiDemoCubit({required this._agent})
+    : super(const GenUiDemoState.initial());
 
   final GenUiDemoAgent _agent;
   // ignore: cancel_subscriptions - Subscriptions are managed by CubitSubscriptionMixin

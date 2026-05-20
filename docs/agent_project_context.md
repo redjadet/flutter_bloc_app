@@ -47,7 +47,7 @@ the answer.
 
 ## Current Caveat Shortlist
 
-- Flutter 3.41.9 / Dart 3.11.5 pinned; version-sensitive APIs need official or
+- Flutter 3.44.0 / Dart 3.12.0 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
 - Domain layer stays pure Dart; no `package:flutter` imports.
 - Shared state lives in Cubit/BLoC; use existing type-safe access/selectors

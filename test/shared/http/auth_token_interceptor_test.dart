@@ -19,9 +19,8 @@ class _MockIdTokenResult extends Mock implements IdTokenResult {}
 class _TestNetworkStatusService implements NetworkStatusService {
   _TestNetworkStatusService({
     final Iterable<NetworkStatus> statuses = const <NetworkStatus>[],
-    final NetworkStatus fallbackStatus = NetworkStatus.online,
-  }) : _statuses = Queue<NetworkStatus>.from(statuses),
-       _fallbackStatus = fallbackStatus;
+  }) : _fallbackStatus = NetworkStatus.online,
+       _statuses = Queue<NetworkStatus>.from(statuses);
 
   final Queue<NetworkStatus> _statuses;
   final NetworkStatus _fallbackStatus;

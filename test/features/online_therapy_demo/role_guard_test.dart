@@ -12,7 +12,10 @@ void main() {
 
     await auth.login(email: 'demo@example.com', role: TherapyRole.client);
 
-    await expectLater(admin.listPendingTherapists(), throwsA(isA<StateError>()));
+    await expectLater(
+      admin.listPendingTherapists(),
+      throwsA(isA<StateError>()),
+    );
     await expectLater(audit.listEvents(), throwsA(isA<StateError>()));
   });
 

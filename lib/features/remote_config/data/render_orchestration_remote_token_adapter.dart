@@ -6,10 +6,11 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Adapts [RemoteConfigService] to the chat-scoped
 /// [RenderOrchestrationRemoteTokenPort] so `lib/features/chat/` does not import
 /// `lib/features/remote_config/`.
-class RemoteConfigRenderOrchestrationTokenAdapter implements RenderOrchestrationRemoteTokenPort {
+class RemoteConfigRenderOrchestrationTokenAdapter
+    implements RenderOrchestrationRemoteTokenPort {
   const RemoteConfigRenderOrchestrationTokenAdapter({
-    required final RemoteConfigService remoteConfig,
-  }) : _remoteConfig = remoteConfig;
+    required this._remoteConfig,
+  });
 
   final RemoteConfigService _remoteConfig;
 

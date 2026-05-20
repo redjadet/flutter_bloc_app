@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Fetches chart trending data directly from CoinGecko (used when Supabase
 /// is not configured or user is not signed in).
 class DirectChartRemoteRepository implements ChartRemoteRepository {
-  DirectChartRemoteRepository({required final CoingeckoApi api}) : _api = api;
+  DirectChartRemoteRepository({required this._api});
 
   static const Map<String, String> _marketChartQuery = <String, String>{
     'vs_currency': 'usd',

@@ -4,8 +4,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 
 class FirestoreStaffDemoSiteRepository implements StaffDemoSiteRepository {
-  FirestoreStaffDemoSiteRepository({required final FirebaseFirestore firestore})
-    : _firestore = firestore;
+  FirestoreStaffDemoSiteRepository({required this._firestore});
 
   final FirebaseFirestore _firestore;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
@@ -61,11 +62,11 @@ class TodoListContent extends StatelessWidget {
         onRefresh: () => cubit.refresh(),
         child: ClipRect(
           child: ReorderableListView.builder(
+            scrollCacheExtent: const ScrollCacheExtent.pixels(500),
             scrollController: scrollController,
             padding: context.responsiveListPadding,
-            cacheExtent: 500,
             itemCount: filteredItems.length,
-            onReorder: (final oldIndex, final newIndex) {
+            onReorderItem: (final oldIndex, final newIndex) {
               cubit.reorderItems(
                 oldIndex: oldIndex,
                 newIndex: newIndex,

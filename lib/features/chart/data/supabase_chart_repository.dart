@@ -19,11 +19,10 @@ class SupabaseChartRepository implements ChartRemoteRepository {
     })?
     invokeEdgeFunction,
     final Future<Object?> Function()? fetchTableRows,
-    final ChartRemoteRepository? liveDirectFallback,
+    this._liveDirectFallback,
   }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
-       _fetchTableRows = fetchTableRows ?? _defaultFetchTableRows,
-       _liveDirectFallback = liveDirectFallback;
+       _fetchTableRows = fetchTableRows ?? _defaultFetchTableRows;
 
   static const String _tableName = 'chart_trending_points';
   static const String _syncFunction = 'sync-chart-trending';

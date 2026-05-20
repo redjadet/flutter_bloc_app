@@ -54,11 +54,9 @@ class ClientBookingState {
 
 class ClientBookingCubit extends Cubit<ClientBookingState> {
   ClientBookingCubit({
-    required final TherapistRepository therapists,
-    required final AppointmentRepository appointments,
-  }) : _therapists = therapists,
-       _appointments = appointments,
-       super(
+    required this._therapists,
+    required this._appointments,
+  }) : super(
          const ClientBookingState(
            isBusy: false,
            therapists: <TherapistProfile>[],

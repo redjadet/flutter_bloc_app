@@ -1,8 +1,7 @@
 enum StaffDemoRole {
   employee,
   manager,
-  accountant
-  ;
+  accountant;
 
   static StaffDemoRole? tryParse(final String? raw) {
     return switch (raw) {

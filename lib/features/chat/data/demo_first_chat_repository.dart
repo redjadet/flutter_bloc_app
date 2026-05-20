@@ -14,12 +14,10 @@ class DemoFirstChatRepository implements ChatRepository {
   DemoFirstChatRepository({
     required final ChatRepository renderRepository,
     required final ChatRepository compositeRepository,
-    required final bool Function() isRenderAttemptedFirst,
-    required final bool Function() isRenderStrict,
+    required this._isRenderAttemptedFirst,
+    required this._isRenderStrict,
   }) : _render = renderRepository,
-       _composite = compositeRepository,
-       _isRenderAttemptedFirst = isRenderAttemptedFirst,
-       _isRenderStrict = isRenderStrict;
+       _composite = compositeRepository;
 
   final ChatRepository _render;
   final ChatRepository _composite;

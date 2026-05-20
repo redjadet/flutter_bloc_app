@@ -32,12 +32,10 @@ final class SupabaseConfigFetchResult {
 /// user is signed in with Firebase Auth, then persists + applies it at runtime.
 final class SupabaseConfigProvider {
   SupabaseConfigProvider({
-    final FirebaseAuth? auth,
-    final RemoteConfigService? remoteConfig,
-    final SecretStorage? storage,
-  }) : _auth = auth,
-       _remoteConfig = remoteConfig,
-       _storage = storage;
+    this._auth,
+    this._remoteConfig,
+    this._storage,
+  });
 
   final FirebaseAuth? _auth;
   final RemoteConfigService? _remoteConfig;

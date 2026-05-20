@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms
 
 class FirestoreStaffDemoFormsRepository implements StaffDemoFormsRepository {
   FirestoreStaffDemoFormsRepository({
-    required final FirebaseFirestore firestore,
-  }) : _firestore = firestore;
+    required this._firestore,
+  });
 
   final FirebaseFirestore _firestore;
 

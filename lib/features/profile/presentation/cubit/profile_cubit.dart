@@ -8,9 +8,7 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit({required final ProfileRepository repository})
-    : _repository = repository,
-      super(const ProfileState());
+  ProfileCubit({required this._repository}) : super(const ProfileState());
 
   final ProfileRepository _repository;
   final RequestIdGuard _loadGuard = RequestIdGuard();

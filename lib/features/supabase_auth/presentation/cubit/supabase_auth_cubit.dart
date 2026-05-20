@@ -13,11 +13,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
     with CubitSubscriptionMixin<SupabaseAuthState> {
   SupabaseAuthCubit({
-    required final SupabaseAuthRepository repository,
-    final AppLocalizations? l10n,
-  }) : _repository = repository,
-       _l10n = l10n,
-       super(const SupabaseAuthState.initial());
+    required this._repository,
+    this._l10n,
+  }) : super(const SupabaseAuthState.initial());
 
   final SupabaseAuthRepository _repository;
   final AppLocalizations? _l10n;

@@ -139,12 +139,10 @@ class _FakeChartRepository extends ChartRepository {
 
 class _FakeCacheThenRefreshChartRepository extends ChartRepository {
   _FakeCacheThenRefreshChartRepository({
-    required List<ChartPoint> cached,
-    required Future<List<ChartPoint>> refreshResult,
-    required ChartDataSource refreshSource,
-  }) : _cached = cached,
-       _refreshResult = refreshResult,
-       _refreshSource = refreshSource;
+    required this._cached,
+    required this._refreshResult,
+    required this._refreshSource,
+  });
 
   final List<ChartPoint> _cached;
   final Future<List<ChartPoint>> _refreshResult;

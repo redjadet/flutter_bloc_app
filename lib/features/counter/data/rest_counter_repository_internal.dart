@@ -86,7 +86,7 @@ Map<String, String> _headers(
   final Map<String, String>? overrides,
 }) => {
   ...repository._defaultHeaders,
-  if (overrides != null) ...overrides,
+  ...?overrides,
 };
 
 bool _isSuccess(final int statusCode) => statusCode >= 200 && statusCode < 300;

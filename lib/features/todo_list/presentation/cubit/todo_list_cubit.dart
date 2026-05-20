@@ -24,11 +24,9 @@ class TodoListCubit extends Cubit<TodoListState>
         _TodoListCubitCrud {
   TodoListCubit({
     required this.repository,
-    required final TimerService timerService,
-    final Duration searchDebounceDuration = const Duration(milliseconds: 300),
-  }) : _timerService = timerService,
-       _searchDebounceDuration = searchDebounceDuration,
-       super(const TodoListState());
+    required this._timerService,
+    this._searchDebounceDuration = const Duration(milliseconds: 300),
+  }) : super(const TodoListState());
   @override
   final TodoRepository repository;
   @override

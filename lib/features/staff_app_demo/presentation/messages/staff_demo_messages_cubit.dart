@@ -14,13 +14,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
     with CubitSubscriptionMixin<StaffDemoMessagesState> {
   StaffDemoMessagesCubit({
-    required final AuthRepository authRepository,
-    required final FirestoreStaffDemoInboxRepository inboxRepository,
-    required final FirestoreStaffDemoMessagingRepository messagingRepository,
-  }) : _authRepository = authRepository,
-       _inboxRepository = inboxRepository,
-       _messagingRepository = messagingRepository,
-       super(const StaffDemoMessagesState());
+    required this._authRepository,
+    required this._inboxRepository,
+    required this._messagingRepository,
+  }) : super(const StaffDemoMessagesState());
 
   final AuthRepository _authRepository;
   final FirestoreStaffDemoInboxRepository _inboxRepository;

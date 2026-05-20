@@ -3,12 +3,10 @@ part of 'walletconnect_auth_repository_impl.dart';
 /// Implementation of [WalletConnectAuthRepository].
 class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   WalletConnectAuthRepositoryImpl({
-    required final WalletConnectService walletConnectService,
-    required final FirebaseAuth firebaseAuth,
-    required final FirebaseFirestore firestore,
-  }) : _walletConnectService = walletConnectService,
-       _firebaseAuth = firebaseAuth,
-       _firestore = firestore;
+    required this._walletConnectService,
+    required this._firebaseAuth,
+    required this._firestore,
+  });
 
   final WalletConnectService _walletConnectService;
   final FirebaseAuth _firebaseAuth;

@@ -9,7 +9,7 @@ class HuggingfaceChatRepository implements ChatRepository {
     final Dio? client,
     final String? apiKey,
     final String? model,
-    final bool useChatCompletions = true,
+    this._useChatCompletions = true,
     final HuggingFaceApiClient? apiClient,
     final HuggingFacePayloadBuilder? payloadBuilder,
     final HuggingFaceResponseParser? responseParser,
@@ -20,8 +20,7 @@ class HuggingfaceChatRepository implements ChatRepository {
        _responseParser =
            responseParser ??
            const HuggingFaceResponseParser(fallbackMessage: fallbackMessage),
-       _model = _normalize(model) ?? _defaultModel,
-       _useChatCompletions = useChatCompletions;
+       _model = _normalize(model) ?? _defaultModel;
 
   static const String _defaultModel = 'HuggingFaceH4/zephyr-7b-beta';
   static const String _inferenceBaseUrl =

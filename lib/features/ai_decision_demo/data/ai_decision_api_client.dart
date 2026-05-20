@@ -7,7 +7,7 @@ typedef _JsonMap = Map<String, dynamic>;
 typedef _JsonMapper<T> = T Function(_JsonMap json);
 
 class AiDecisionApiClient {
-  AiDecisionApiClient({required final Dio dio}) : _dio = dio;
+  AiDecisionApiClient({required this._dio});
 
   final Dio _dio;
 

@@ -5,8 +5,7 @@ import 'dart:async';
 /// whether an initial value has been resolved, and allows resetting when
 /// all listeners detach.
 class RepositoryInitialLoadHelper<T> {
-  RepositoryInitialLoadHelper({final void Function()? onReset})
-    : _onReset = onReset;
+  RepositoryInitialLoadHelper({this._onReset});
 
   Completer<void>? _initialLoadCompleter;
   bool _hasResolvedInitialValue = false;

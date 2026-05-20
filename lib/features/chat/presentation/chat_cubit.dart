@@ -43,16 +43,12 @@ class ChatCubit extends _ChatCubitCore
 
 abstract class _ChatCubitCore extends Cubit<ChatState> {
   _ChatCubitCore({
-    required final ChatRepository repository,
-    required final ChatHistoryRepository historyRepository,
-    final RenderOrchestrationHfTokenProvider?
-    renderOrchestrationHfTokenProvider,
+    required this._repository,
+    required this._historyRepository,
+    this._renderOrchestrationHfTokenProvider,
     final String? initialModel,
     final List<String>? supportedModels,
-  }) : _repository = repository,
-       _historyRepository = historyRepository,
-       _renderOrchestrationHfTokenProvider = renderOrchestrationHfTokenProvider,
-       _models = _buildModelList(initialModel, supportedModels),
+  }) : _models = _buildModelList(initialModel, supportedModels),
        super(
          ChatState.initial(
            currentModel: _resolveInitialModel(initialModel, supportedModels),

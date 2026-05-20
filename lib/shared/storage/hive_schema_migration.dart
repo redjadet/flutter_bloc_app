@@ -53,8 +53,7 @@ class HiveBoxSchema {
 ///   migration/cleanup under a per-box lock.
 /// - If no migrator, mismatch is only logged and fingerprint is left unchanged.
 class HiveSchemaMigratorService {
-  HiveSchemaMigratorService({final bool enableMigrations = true})
-    : _enableMigrations = enableMigrations;
+  HiveSchemaMigratorService({this._enableMigrations = true});
 
   static const String metaKeyFingerprints = '__meta__schema_fingerprints';
 

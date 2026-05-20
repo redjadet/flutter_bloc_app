@@ -25,11 +25,10 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   PersistentIotDemoRepository({
     required super.hiveService,
     required final String supabaseUserId,
-    required final TimerService timerService,
+    required this._timerService,
   }) : _boxNameSuffix = _sanitizeBoxSuffix(
          PersistentIotDemoRepository._validateUserId(supabaseUserId),
-       ),
-       _timerService = timerService;
+       );
 
   static String _validateUserId(final String supabaseUserId) {
     final String trimmed = supabaseUserId.trim();

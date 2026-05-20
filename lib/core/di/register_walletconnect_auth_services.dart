@@ -49,8 +49,8 @@ WalletConnectAuthRepository _createMockWalletConnectAuthRepository({
 /// Mock implementation for testing.
 class _MockWalletConnectAuthRepository implements WalletConnectAuthRepository {
   _MockWalletConnectAuthRepository({
-    required final WalletConnectService walletConnectService,
-  }) : _walletConnectService = walletConnectService;
+    required this._walletConnectService,
+  });
 
   final WalletConnectService _walletConnectService;
   WalletAddress? _linkedAddress;

@@ -5,12 +5,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
   AuthAwareGraphqlRemoteRepository({
-    required final GraphqlRemoteRepository supabaseRemote,
-    required final GraphqlRemoteRepository directRemote,
-    required final bool Function() isSupabaseSignedIn,
-  }) : _supabaseRemote = supabaseRemote,
-       _directRemote = directRemote,
-       _isSupabaseSignedIn = isSupabaseSignedIn;
+    required this._supabaseRemote,
+    required this._directRemote,
+    required this._isSupabaseSignedIn,
+  });
 
   final GraphqlRemoteRepository _supabaseRemote;
   final GraphqlRemoteRepository _directRemote;

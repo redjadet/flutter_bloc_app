@@ -13,14 +13,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// `alter publication supabase_realtime add table iot_devices;`
 class IotDemoRealtimeSubscription {
   IotDemoRealtimeSubscription({
-    final bool Function()? isConfiguredOverride,
+    this._isConfiguredOverride,
     final RealtimeChannel Function(
       void Function(PostgresChangePayload payload) onPayload,
     )?
     createChannel,
     final Future<void> Function(RealtimeChannel channel)? removeChannel,
-  }) : _isConfiguredOverride = isConfiguredOverride,
-       _createChannel = createChannel ?? _defaultCreateChannel,
+  }) : _createChannel = createChannel ?? _defaultCreateChannel,
        _removeChannel = removeChannel ?? _defaultRemoveChannel;
 
   final bool Function()? _isConfiguredOverride;

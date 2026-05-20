@@ -12,16 +12,12 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Chat repository that prefers local/cache and syncs with remote when online.
 class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   OfflineFirstChatRepository({
-    required final ChatRepository remoteRepository,
-    required final PendingSyncRepository pendingSyncRepository,
-    required final SyncableRepositoryRegistry registry,
-    required final ChatSyncOperationFactory syncOperationFactory,
-    required final ChatLocalConversationUpdater localConversationUpdater,
-  }) : _remoteRepository = remoteRepository,
-       _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry,
-       _syncOperationFactory = syncOperationFactory,
-       _localConversationUpdater = localConversationUpdater {
+    required this._remoteRepository,
+    required this._pendingSyncRepository,
+    required this._registry,
+    required this._syncOperationFactory,
+    required this._localConversationUpdater,
+  }) {
     _registry.register(this);
   }
 

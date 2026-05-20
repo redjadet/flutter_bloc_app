@@ -32,11 +32,9 @@ class AdminState {
 
 class AdminCubit extends Cubit<AdminState> {
   AdminCubit({
-    required final TherapyAdminRepository admin,
-    required final AuditRepository audit,
-  }) : _admin = admin,
-       _audit = audit,
-       super(
+    required this._admin,
+    required this._audit,
+  }) : super(
          const AdminState(
            isBusy: false,
            pendingTherapists: <TherapistProfile>[],

@@ -10,8 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// tokens).
 class AuthTokenManager {
   AuthTokenManager({
-    final FirebaseAuth? firebaseAuth,
-  }) : _firebaseAuth = firebaseAuth;
+    this._firebaseAuth,
+  });
 
   final FirebaseAuth? _firebaseAuth;
 

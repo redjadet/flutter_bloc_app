@@ -30,19 +30,13 @@ part 'offline_first_iot_demo_repository_sync.dart';
 class OfflineFirstIotDemoRepository
     implements IotDemoRepository, SyncableRepository {
   OfflineFirstIotDemoRepository({
-    required final String? Function() getCurrentSupabaseUserId,
-    required final PersistentIotDemoRepository Function(String)
-    getPersistentRepository,
-    required final PendingSyncRepository pendingSyncRepository,
-    required final SyncableRepositoryRegistry registry,
-    required final TimerService timerService,
-    final SupabaseIotDemoRepository? remoteRepository,
-  }) : _getCurrentSupabaseUserId = getCurrentSupabaseUserId,
-       _getPersistentRepository = getPersistentRepository,
-       _remoteRepository = remoteRepository,
-       _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry,
-       _timerService = timerService {
+    required this._getCurrentSupabaseUserId,
+    required this._getPersistentRepository,
+    required this._pendingSyncRepository,
+    required this._registry,
+    required this._timerService,
+    this._remoteRepository,
+  }) {
     _registry.register(this);
   }
 

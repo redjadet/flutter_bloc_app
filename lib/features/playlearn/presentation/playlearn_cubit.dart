@@ -7,13 +7,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class PlaylearnCubit extends Cubit<PlaylearnState> {
   PlaylearnCubit({
-    required final VocabularyRepository repository,
-    required final AudioPlaybackService audioService,
-    final AppLocalizations? l10n,
-  }) : _repository = repository,
-       _audioService = audioService,
-       _l10n = l10n,
-       super(const PlaylearnState()) {
+    required this._repository,
+    required this._audioService,
+    this._l10n,
+  }) : super(const PlaylearnState()) {
     loadTopics();
   }
 

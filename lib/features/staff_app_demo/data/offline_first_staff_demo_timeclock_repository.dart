@@ -21,22 +21,15 @@ import 'package:geolocator/geolocator.dart';
 class OfflineFirstStaffDemoTimeclockRepository
     implements StaffDemoTimeclockRepository, SyncableRepository {
   OfflineFirstStaffDemoTimeclockRepository({
-    required final AuthRepository authRepository,
-    required final FirebaseFirestore firestore,
-    required final StaffDemoShiftRepository shiftRepository,
-    required final StaffDemoSiteRepository siteRepository,
-    required final StaffDemoLocationService locationService,
-    required final StaffDemoTimeclockLocalRepository localRepository,
-    required final PendingSyncRepository pendingSyncRepository,
-    required final SyncableRepositoryRegistry registry,
-  }) : _authRepository = authRepository,
-       _firestore = firestore,
-       _shiftRepository = shiftRepository,
-       _siteRepository = siteRepository,
-       _locationService = locationService,
-       _localRepository = localRepository,
-       _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry {
+    required this._authRepository,
+    required this._firestore,
+    required this._shiftRepository,
+    required this._siteRepository,
+    required this._locationService,
+    required this._localRepository,
+    required this._pendingSyncRepository,
+    required this._registry,
+  }) {
     _registry.register(this);
   }
 

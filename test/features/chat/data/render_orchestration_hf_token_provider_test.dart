@@ -31,7 +31,7 @@ void main() {
                 flavor: Flavor.dev,
                 skeletonDelay: Duration.zero,
               ),
-            remoteTokenPort: _FakeRemoteTokenPort(token: '  rc-hf  '),
+              remoteTokenPort: _FakeRemoteTokenPort(token: '  rc-hf  '),
               storage: storage,
             );
 
@@ -82,7 +82,7 @@ void main() {
                 flavor: Flavor.staging,
                 skeletonDelay: Duration.zero,
               ),
-            remoteTokenPort: _FakeRemoteTokenPort(token: 'from-rc'),
+              remoteTokenPort: _FakeRemoteTokenPort(token: 'from-rc'),
               storage: storage,
             );
 
@@ -166,7 +166,7 @@ void main() {
                 flavor: Flavor.dev,
                 skeletonDelay: Duration.zero,
               ),
-            remoteTokenPort: _FakeRemoteTokenPort(),
+              remoteTokenPort: _FakeRemoteTokenPort(),
               storage: storage,
             );
 
@@ -195,7 +195,9 @@ void main() {
               flavor: Flavor.dev,
               skeletonDelay: Duration.zero,
             ),
-            remoteTokenPort: _CountingRemoteTokenPort(onRead: () => readCalls++, token: 'once',
+            remoteTokenPort: _CountingRemoteTokenPort(
+              onRead: () => readCalls++,
+              token: 'once',
             ),
             storage: storage,
           );

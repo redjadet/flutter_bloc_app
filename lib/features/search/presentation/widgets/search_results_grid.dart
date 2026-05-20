@@ -1,5 +1,6 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
@@ -20,7 +21,7 @@ class SearchResultsGrid extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: gridLayout.horizontalPadding),
       child: GridView.builder(
-        cacheExtent: 500,
+        scrollCacheExtent: const ScrollCacheExtent.pixels(500),
         gridDelegate: context.createResponsiveGridDelegate(
           mobileColumns: 2,
           tabletColumns: 3,

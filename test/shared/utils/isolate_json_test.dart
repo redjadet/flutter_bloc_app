@@ -172,7 +172,10 @@ void main() {
 
     test('throws FormatException for non-map JSON', () async {
       final bytes = utf8.encode('[1, 2, 3]');
-      expect(() => decodeJsonMapFromBytes(bytes), throwsA(isA<FormatException>()));
+      expect(
+        () => decodeJsonMapFromBytes(bytes),
+        throwsA(isA<FormatException>()),
+      );
     });
   });
 
@@ -188,7 +191,10 @@ void main() {
     });
 
     test('decodes large JSON list in isolate', () async {
-      final largeList = List.generate(1000, (i) => {'id': i, 'data': _repeat('item_$i', 20)});
+      final largeList = List.generate(
+        1000,
+        (i) => {'id': i, 'data': _repeat('item_$i', 20)},
+      );
       final jsonString = jsonEncode(largeList);
       final bytes = utf8.encode(jsonString);
       expect(bytes.length, greaterThan(8 * 1024));

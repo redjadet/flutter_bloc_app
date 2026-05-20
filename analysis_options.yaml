@@ -16,13 +16,6 @@
 
 include: package:very_good_analysis/analysis_options.yaml
 
-# Native Dart 3.10.7 analyzer plugins configuration
-plugins:
-  file_length_lint:
-    path: custom_lints/file_length_lint
-    diagnostics:
-      file_too_long: true
-
 analyzer:
   plugins:
     - custom_lint
@@ -90,15 +83,6 @@ linter:
     one_member_abstracts: false
     use_decorated_box: true
     unnecessary_breaks: false
-
-# Custom lint configuration
-file_length_lint:
-  # Maximum number of lines allowed per code file (warn when exceeded).
-  max_lines: 300
-  # Additional glob patterns to exclude beyond the built-in defaults.
-  # Paths are matched against the absolute file path.
-  excludes:
-    - lib/generated/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

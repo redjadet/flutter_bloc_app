@@ -5,9 +5,7 @@ import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class LocaleCubit extends Cubit<Locale?> {
-  LocaleCubit({required final LocaleRepository repository})
-    : _repository = repository,
-      super(null);
+  LocaleCubit({required this._repository}) : super(null);
 
   final LocaleRepository _repository;
 
