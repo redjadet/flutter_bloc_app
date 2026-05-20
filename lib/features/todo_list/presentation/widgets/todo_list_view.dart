@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
@@ -59,9 +60,9 @@ class TodoListView extends StatelessWidget {
     if (items.length >= 100) {
       // Use ListView.builder for large lists (better performance)
       return ListView.builder(
+        scrollCacheExtent: const ScrollCacheExtent.pixels(500),
         controller: scrollController,
         padding: context.responsiveListPadding,
-        cacheExtent: 500,
         itemCount: items.length * 2 - 1,
         itemBuilder: (final context, final index) {
           if (index.isOdd) {
@@ -74,9 +75,9 @@ class TodoListView extends StatelessWidget {
     }
 
     return ListView.separated(
+      scrollCacheExtent: const ScrollCacheExtent.pixels(500),
       controller: scrollController,
       padding: context.responsiveListPadding,
-      cacheExtent: 500,
       itemCount: items.length,
       separatorBuilder: (final separatorContext, final separatorIndex) =>
           SizedBox(height: context.responsiveGapS),

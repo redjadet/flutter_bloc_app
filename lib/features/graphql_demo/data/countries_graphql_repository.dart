@@ -121,8 +121,8 @@ class CountriesGraphqlRepository
     }
 
     const Duration timeout = Duration(seconds: 10);
-    final Response<List<int>> response =
-        await NetworkGuard.executeDio<List<int>, GraphqlDemoException>(
+    final Response<List<int>>
+    response = await NetworkGuard.executeDio<List<int>, GraphqlDemoException>(
       request: () => _api
           .postQuery(payload, _options())
           .then(bytesResponseFromHttpResponse),
@@ -134,7 +134,7 @@ class CountriesGraphqlRepository
       onHttpFailure: (final res) {
         final int? statusCode = res.statusCode;
         final bool isServerError = (statusCode ?? 0) >= 500;
-            final String? bodyData = _responseBodyAsDiagnosticString(res.data);
+        final String? bodyData = _responseBodyAsDiagnosticString(res.data);
         return GraphqlDemoException(
           'Unexpected status code: $statusCode',
           cause: bodyData != null && bodyData.isNotEmpty ? bodyData : null,

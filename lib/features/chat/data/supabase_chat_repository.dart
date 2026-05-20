@@ -10,7 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// `supabase/README.md`.
 class SupabaseChatRepository implements ChatRepository {
   SupabaseChatRepository({
-    required final HuggingFacePayloadBuilder payloadBuilder,
+    required this._payloadBuilder,
     final String? Function()? readAccessToken,
     final String? Function()? readAnonKey,
     final Future<void> Function()? refreshSessionAfter401,
@@ -20,8 +20,7 @@ class SupabaseChatRepository implements ChatRepository {
       required Map<String, dynamic> body,
     })?
     invoke,
-  }) : _payloadBuilder = payloadBuilder,
-       _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
+  }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _readAnonKey = readAnonKey ?? _defaultReadAnonKey,
        _refreshSessionAfter401 =
            refreshSessionAfter401 ?? _defaultRefreshSessionAfter401,

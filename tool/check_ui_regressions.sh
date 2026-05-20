@@ -69,7 +69,20 @@ fi
 
 echo "🧩 UI regression lane (focused widget tests)..."
 
-flutter test \
-  test/features/settings/presentation/widgets/integrations_section_test.dart
+run_ui_regressions() {
+  flutter test test/features/settings/presentation/widgets/integrations_section_test.dart
+}
+
+rm -rf build/unit_test_assets
+
+if ! run_ui_regressions 2> >(tee /tmp/check_ui_regressions.stderr >&2); then
+  if grep -Eq "build/unit_test_assets|NativeAssetsManifest\\.json|build/native_assets/macos/native_assets\\.json" /tmp/check_ui_regressions.stderr; then
+    echo "check_ui_regressions: flutter unit_test_assets/native-assets failed; cleaning build assets and retrying once"
+    rm -rf build/unit_test_assets build/native_assets
+    run_ui_regressions
+  else
+    exit 1
+  fi
+fi
 
 echo "✅ UI regression lane passed"

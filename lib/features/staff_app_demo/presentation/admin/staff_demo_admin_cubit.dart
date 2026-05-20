@@ -5,10 +5,8 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
   StaffDemoAdminCubit({
-    required final FirestoreStaffDemoTimeEntriesRepository
-    timeEntriesRepository,
-  }) : _timeEntriesRepository = timeEntriesRepository,
-       super(const StaffDemoAdminState());
+    required this._timeEntriesRepository,
+  }) : super(const StaffDemoAdminState());
 
   final FirestoreStaffDemoTimeEntriesRepository _timeEntriesRepository;
 

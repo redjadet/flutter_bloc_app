@@ -25,9 +25,8 @@ class TherapistHomeState {
 }
 
 class TherapistHomeCubit extends Cubit<TherapistHomeState> {
-  TherapistHomeCubit({required final AppointmentRepository appointments})
-    : _appointments = appointments,
-      super(
+  TherapistHomeCubit({required this._appointments})
+    : super(
         const TherapistHomeState(isBusy: false, appointments: <Appointment>[]),
       );
 

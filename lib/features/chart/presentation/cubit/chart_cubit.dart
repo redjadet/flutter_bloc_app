@@ -13,9 +13,7 @@ part 'chart_cubit.freezed.dart';
 part 'chart_state.dart';
 
 class ChartCubit extends Cubit<ChartState> {
-  ChartCubit({required final ChartRepository repository})
-    : _repository = repository,
-      super(const ChartState());
+  ChartCubit({required this._repository}) : super(const ChartState());
 
   final ChartRepository _repository;
   final RequestIdGuard _fetchGuard = RequestIdGuard();

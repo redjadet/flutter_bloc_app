@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
@@ -192,8 +193,8 @@ class _ChatLoadedList extends StatelessWidget {
       bottom: false,
       child: CommonMaxWidth(
         child: ListView.separated(
+          scrollCacheExtent: const ScrollCacheExtent.pixels(500),
           padding: safeListPadding,
-          cacheExtent: 500,
           itemCount: contacts.length,
           separatorBuilder: (final context, final index) =>
               const _ChatDivider(),

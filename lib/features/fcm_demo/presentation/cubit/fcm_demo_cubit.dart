@@ -15,11 +15,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class FcmDemoCubit extends Cubit<FcmDemoState>
     with CubitSubscriptionMixin<FcmDemoState> {
   FcmDemoCubit({
-    required final FcmMessagingService messaging,
-    required final BackgroundSyncCoordinator coordinator,
-  }) : _messaging = messaging,
-       _coordinator = coordinator,
-       super(const FcmDemoState());
+    required this._messaging,
+    required this._coordinator,
+  }) : super(const FcmDemoState());
 
   final FcmMessagingService _messaging;
   final BackgroundSyncCoordinator _coordinator;

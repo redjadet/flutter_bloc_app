@@ -17,7 +17,8 @@ final Converter<List<int>, Object?> _kUtf8JsonConverter = utf8.decoder.fuse(
 Uint8List _bytesToUint8List(final List<int> bytes) =>
     bytes is Uint8List ? bytes : Uint8List.fromList(bytes);
 
-Object? _decodeJsonUtf8BytesForIsolate(final Uint8List bytes) => _kUtf8JsonConverter.convert(bytes);
+Object? _decodeJsonUtf8BytesForIsolate(final Uint8List bytes) =>
+    _kUtf8JsonConverter.convert(bytes);
 
 Future<Map<String, dynamic>> decodeJsonMap(final String payload) async {
   if (payload.length < _kIsolateDecodeThreshold) {

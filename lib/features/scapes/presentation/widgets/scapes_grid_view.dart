@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid_item.dart';
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
@@ -108,11 +109,11 @@ class ScapesGridView extends StatelessWidget {
             horizontal: metrics.gridLayout.horizontalPadding,
           ),
           child: GridView.builder(
+            scrollCacheExtent: ScrollCacheExtent.pixels(shrinkWrap ? 0 : 500),
             shrinkWrap: shrinkWrap,
             physics: shrinkWrap
                 ? const NeverScrollableScrollPhysics()
                 : const AlwaysScrollableScrollPhysics(),
-            cacheExtent: shrinkWrap ? 0 : 500,
             gridDelegate: metrics.delegate,
             itemCount: scapes.length,
             itemBuilder: (final context, final index) {

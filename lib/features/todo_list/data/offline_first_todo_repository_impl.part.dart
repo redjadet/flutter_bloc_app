@@ -2,19 +2,14 @@ part of 'offline_first_todo_repository.dart';
 
 class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   OfflineFirstTodoRepository({
-    required final HiveTodoRepository localRepository,
-    required final PendingSyncRepository pendingSyncRepository,
-    required final SyncableRepositoryRegistry registry,
-    required final TimerService timerService,
-    final TodoRepository? remoteRepository,
+    required this._localRepository,
+    required this._pendingSyncRepository,
+    required this._registry,
+    required this._timerService,
+    this._remoteRepository,
     final TodoMergePolicy? mergePolicy,
     final TodoPayloadBuilder? payloadBuilder,
-  }) : _localRepository = localRepository,
-       _remoteRepository = remoteRepository,
-       _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry,
-       _timerService = timerService,
-       _mergePolicy = mergePolicy ?? const TodoMergePolicy(),
+  }) : _mergePolicy = mergePolicy ?? const TodoMergePolicy(),
        _payloadBuilder = payloadBuilder ?? const TodoPayloadBuilder() {
     _registry.register(this);
     if (_remoteRepository != null) {

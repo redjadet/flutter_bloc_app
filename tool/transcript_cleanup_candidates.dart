@@ -18,7 +18,10 @@ Future<void> main(List<String> args) async {
       _argValue(args, '--out') ??
       '${Directory.current.path}/docs/audits/transcript_cleanup_candidates_${DateTime.now().toUtc().toIso8601String().substring(0, 10)}.json';
 
-  final cutoff = DateTime.now().toUtc().subtract(Duration(days: days)).millisecondsSinceEpoch;
+  final cutoff = DateTime.now()
+      .toUtc()
+      .subtract(Duration(days: days))
+      .millisecondsSinceEpoch;
 
   final index = await _readIndex(File(indexPath));
   final candidates = <Map<String, Object?>>[];
@@ -42,7 +45,9 @@ Future<void> main(List<String> args) async {
     });
   }
 
-  candidates.sort((a, b) => ((b['bytes'] as int?) ?? 0).compareTo((a['bytes'] as int?) ?? 0));
+  candidates.sort(
+    (a, b) => ((b['bytes'] as int?) ?? 0).compareTo((a['bytes'] as int?) ?? 0),
+  );
 
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
@@ -53,7 +58,9 @@ Future<void> main(List<String> args) async {
 
   final outFile = File(outPath);
   await outFile.parent.create(recursive: true);
-  await outFile.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
+  await outFile.writeAsString(
+    const JsonEncoder.withIndent('  ').convert(payload),
+  );
 
   stdout.writeln('cleanup_candidates|count=${candidates.length}|out=$outPath');
 }
@@ -73,9 +80,11 @@ class TranscriptIndexEntry {
 
 Future<Map<String, TranscriptIndexEntry>> _readIndex(File indexFile) async {
   if (!await indexFile.exists()) return {};
-  final decoded = jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
+  final decoded =
+      jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
   final transcripts =
-      (decoded['transcripts'] as Map<String, Object?>?) ?? const <String, Object?>{};
+      (decoded['transcripts'] as Map<String, Object?>?) ??
+      const <String, Object?>{};
   final out = <String, TranscriptIndexEntry>{};
   for (final entry in transcripts.entries) {
     final v = entry.value;

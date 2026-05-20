@@ -20,8 +20,8 @@ abstract class ChatLocalConversationState with _$ChatLocalConversationState {
 
 class ChatLocalConversationUpdater {
   ChatLocalConversationUpdater({
-    required final ChatHistoryRepository localDataSource,
-  }) : _localDataSource = localDataSource;
+    required this._localDataSource,
+  });
 
   final ChatHistoryRepository _localDataSource;
 

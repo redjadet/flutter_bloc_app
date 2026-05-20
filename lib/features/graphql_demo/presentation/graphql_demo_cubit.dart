@@ -9,9 +9,8 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
-  GraphqlDemoCubit({required final GraphqlDemoRepository repository})
-    : _repository = repository,
-      super(const GraphqlDemoState());
+  GraphqlDemoCubit({required this._repository})
+    : super(const GraphqlDemoState());
 
   final GraphqlDemoRepository _repository;
   final RequestIdGuard _loadGuard = RequestIdGuard();

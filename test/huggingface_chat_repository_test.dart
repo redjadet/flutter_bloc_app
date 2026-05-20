@@ -177,13 +177,8 @@ ChatResult _chatResult(String reply) {
 }
 
 class _StubApiClient extends HuggingFaceApiClient {
-  _StubApiClient({
-    required bool hasApiKey,
-    required Future<Map<String, dynamic>> Function(RequestSnapshot request)
-    responder,
-  }) : _hasApiKey = hasApiKey,
-       _responder = responder,
-       super(dio: Dio(), apiKey: 'token');
+  _StubApiClient({required this._hasApiKey, required this._responder})
+    : super(dio: Dio(), apiKey: 'token');
 
   final bool _hasApiKey;
   final Future<Map<String, dynamic>> Function(RequestSnapshot request)

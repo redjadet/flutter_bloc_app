@@ -41,9 +41,8 @@ class MessagingState {
 }
 
 class MessagingCubit extends Cubit<MessagingState> {
-  MessagingCubit({required final TherapyMessagingRepository messaging})
-    : _messaging = messaging,
-      super(
+  MessagingCubit({required this._messaging})
+    : super(
         const MessagingState(
           isBusy: false,
           conversations: <Conversation>[],

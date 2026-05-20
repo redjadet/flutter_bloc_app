@@ -38,7 +38,9 @@ void main() {
       onChartMemoryTrim: (_) async {},
     );
 
-    final Future<void> backgroundTrim = service.trim(AppMemoryTrimLevel.background);
+    final Future<void> backgroundTrim = service.trim(
+      AppMemoryTrimLevel.background,
+    );
     final Future<void> pressureTrim = service.trim(AppMemoryTrimLevel.pressure);
 
     await Future<void>.delayed(Duration.zero);
@@ -50,7 +52,6 @@ void main() {
     expect(imageLevels, <AppMemoryTrimLevel>[
       AppMemoryTrimLevel.background,
       AppMemoryTrimLevel.pressure,
-    ],
-    );
+    ]);
   });
 }

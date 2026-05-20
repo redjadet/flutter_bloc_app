@@ -16,7 +16,8 @@ class TranscriptEntry {
   final int approxTokens;
   final int? indexedMtimeMs;
 
-  bool get changedSinceIndex => indexedMtimeMs == null || mtimeMs > indexedMtimeMs!;
+  bool get changedSinceIndex =>
+      indexedMtimeMs == null || mtimeMs > indexedMtimeMs!;
 
   Map<String, Object?> toJson() => {
     'path': path,
@@ -53,7 +54,8 @@ Future<void> main(List<String> args) async {
 
   final totals = _totals(entries);
   final topByBytes = entries.take(20).toList();
-  final topByTokens = [...entries]..sort((a, b) => b.approxTokens.compareTo(a.approxTokens));
+  final topByTokens = [...entries]
+    ..sort((a, b) => b.approxTokens.compareTo(a.approxTokens));
   final changed = entries.where((e) => e.changedSinceIndex).toList()
     ..sort((a, b) => b.mtimeMs.compareTo(a.mtimeMs));
 
@@ -70,10 +72,16 @@ Future<void> main(List<String> args) async {
   if (outPath != null) {
     final outFile = File(outPath);
     await outFile.parent.create(recursive: true);
-    await outFile.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
+    await outFile.writeAsString(
+      const JsonEncoder.withIndent('  ').convert(payload),
+    );
   }
 
-  _printSummary(totals: totals, changedCount: changed.length, top: topByBytes.take(5).toList());
+  _printSummary(
+    totals: totals,
+    changedCount: changed.length,
+    top: topByBytes.take(5).toList(),
+  );
 }
 
 Future<Map<String, int>> _readIndex(String indexPath) async {
@@ -81,7 +89,8 @@ Future<Map<String, int>> _readIndex(String indexPath) async {
   if (!await file.exists()) return {};
 
   final decoded = jsonDecode(await file.readAsString()) as Map<String, Object?>;
-  final transcripts = (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
+  final transcripts =
+      (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
 
   final out = <String, int>{};
   for (final entry in transcripts.entries) {
@@ -106,7 +115,10 @@ Future<List<TranscriptEntry>> _scanTranscripts(
   }
 
   final entries = <TranscriptEntry>[];
-  await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+  await for (final entity in rootDir.list(
+    recursive: true,
+    followLinks: false,
+  )) {
     if (entity is! File) continue;
     if (!entity.path.endsWith('.jsonl')) continue;
 
@@ -154,7 +166,9 @@ void _printSummary({
   stdout.writeln('transcripts|files=$files|bytes=$bytes|approxTokens=$tokens');
   stdout.writeln('transcripts|changedSinceIndex=$changedCount');
   for (final e in top) {
-    stdout.writeln('top|${_sanitizeId(e.path)}|bytes=${e.bytes}|approxTokens=${e.approxTokens}');
+    stdout.writeln(
+      'top|${_sanitizeId(e.path)}|bytes=${e.bytes}|approxTokens=${e.approxTokens}',
+    );
   }
 }
 

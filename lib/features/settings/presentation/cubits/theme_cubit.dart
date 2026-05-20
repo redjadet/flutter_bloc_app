@@ -5,9 +5,7 @@ import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart'
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit({required final ThemeRepository repository})
-    : _repository = repository,
-      super(ThemeMode.system);
+  ThemeCubit({required this._repository}) : super(ThemeMode.system);
 
   final ThemeRepository _repository;
 

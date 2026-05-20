@@ -81,9 +81,9 @@ void main() {
             onRequest: (options, handler) {
               capturedOptions = options;
               handler.resolve(
-              Response<List<int>>(
+                Response<List<int>>(
                   requestOptions: options,
-                data: utf8.encode(jsonEncode(<String, dynamic>{'ok': true})),
+                  data: utf8.encode(jsonEncode(<String, dynamic>{'ok': true})),
                   statusCode: 200,
                   headers: Headers.fromMap({
                     'content-type': ['application/json; charset=utf-8'],
@@ -236,17 +236,19 @@ void main() {
   });
 
   group('HuggingFaceApiClient.formatError', () {
-    Response<dynamic> response(int statusCode, String data) => Response<dynamic>(
-      requestOptions: RequestOptions(path: '/'),
-      data: data,
-      statusCode: statusCode,
-    );
+    Response<dynamic> response(int statusCode, String data) =>
+        Response<dynamic>(
+          requestOptions: RequestOptions(path: '/'),
+          data: data,
+          statusCode: statusCode,
+        );
 
-    Response<dynamic> responseBytes(int statusCode, String data) => Response<dynamic>(
-      requestOptions: RequestOptions(path: '/'),
-      data: utf8.encode(data),
-      statusCode: statusCode,
-    );
+    Response<dynamic> responseBytes(int statusCode, String data) =>
+        Response<dynamic>(
+          requestOptions: RequestOptions(path: '/'),
+          data: utf8.encode(data),
+          statusCode: statusCode,
+        );
 
     test('returns authentication hint for 401 without detail', () {
       expect(

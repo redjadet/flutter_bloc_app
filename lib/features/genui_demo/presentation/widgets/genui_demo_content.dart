@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -121,7 +122,7 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
     required final List<String> surfaceIds,
     required final genui.A2uiMessageProcessor hostHandle,
   }) => ListView.builder(
-    cacheExtent: 500,
+    scrollCacheExtent: const ScrollCacheExtent.pixels(500),
     itemCount: surfaceIds.length,
     itemBuilder: (final context, final index) {
       final surfaceId = surfaceIds[index];

@@ -395,8 +395,7 @@ void main() {
 
 /// Minimal fake for Firestore document snapshot.
 class _FakeDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
-  _FakeDocumentSnapshot({required this.exists, Map<String, dynamic>? data})
-    : _data = data;
+  _FakeDocumentSnapshot({required this.exists, this._data});
 
   @override
   final bool exists;

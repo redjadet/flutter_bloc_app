@@ -16,18 +16,13 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstStaffDemoEventProofRepository
     implements StaffDemoEventProofRepository, SyncableRepository {
   OfflineFirstStaffDemoEventProofRepository({
-    required final FirebaseFirestore firestore,
-    required final FirebaseStorage storage,
-    required final PendingSyncRepository pendingSyncRepository,
-    required final SyncableRepositoryRegistry registry,
-    required final StaffDemoEventProofSyncOperationFactory operationFactory,
-    String Function()? proofIdFactory,
-  }) : _firestore = firestore,
-       _storage = storage,
-       _pendingSyncRepository = pendingSyncRepository,
-       _registry = registry,
-       _operationFactory = operationFactory,
-       _proofIdFactory = proofIdFactory {
+    required this._firestore,
+    required this._storage,
+    required this._pendingSyncRepository,
+    required this._registry,
+    required this._operationFactory,
+    this._proofIdFactory,
+  }) {
     _registry.register(this);
   }
 

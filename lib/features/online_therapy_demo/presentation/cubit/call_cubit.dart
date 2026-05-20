@@ -51,11 +51,9 @@ class CallState {
 
 class CallCubit extends Cubit<CallState> {
   CallCubit({
-    required final AppointmentRepository appointments,
-    required final TherapyCallRepository calls,
-  }) : _appointments = appointments,
-       _calls = calls,
-       super(
+    required this._appointments,
+    required this._calls,
+  }) : super(
          const CallState(
            isBusy: false,
            cameraPermissionGranted: false,

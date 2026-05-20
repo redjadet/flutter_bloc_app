@@ -68,5 +68,7 @@ T? createRemoteRepositoryOrNull<T>({
 
 @visibleForTesting
 bool get shouldSkipFirebaseRemoteRepositories =>
-    (!kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS) ||
+    (!kIsWeb &&
+        !kReleaseMode &&
+        defaultTargetPlatform == TargetPlatform.macOS) ||
     integrationTestOmitFirebaseRemoteRepositories;

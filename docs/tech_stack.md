@@ -13,8 +13,8 @@ not a replacement for `pubspec.yaml`.
 
 | Area | Current state |
 | --- | --- |
-| Flutter | `3.41.9` |
-| Dart | `3.11.5` |
+| Flutter | `3.44.0` |
+| Dart | `3.12.0` |
 | App entrypoints | `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` |
 | Shared bootstrap | `lib/main_bootstrap.dart` |
 | App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |

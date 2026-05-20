@@ -11,11 +11,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class ScapesCubit extends Cubit<ScapesState>
     with CubitSubscriptionMixin<ScapesState> {
   ScapesCubit({
-    required final ScapesRepository repository,
-    required final TimerService timerService,
-  }) : _repository = repository,
-       _timerService = timerService,
-       super(const ScapesState()) {
+    required this._repository,
+    required this._timerService,
+  }) : super(const ScapesState()) {
     _loadScapes();
   }
 

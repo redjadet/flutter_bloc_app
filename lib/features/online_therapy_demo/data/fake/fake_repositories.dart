@@ -3,8 +3,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/repositories.dart';
 
 class FakeTherapyAuthRepository implements TherapyAuthRepository {
-  FakeTherapyAuthRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeTherapyAuthRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -22,8 +21,7 @@ class FakeTherapyAuthRepository implements TherapyAuthRepository {
 }
 
 class FakeTherapistRepository implements TherapistRepository {
-  FakeTherapistRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeTherapistRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -50,8 +48,7 @@ class FakeTherapistRepository implements TherapistRepository {
 }
 
 class FakeAppointmentRepository implements AppointmentRepository {
-  FakeAppointmentRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeAppointmentRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -78,8 +75,7 @@ class FakeAppointmentRepository implements AppointmentRepository {
 }
 
 class FakeTherapyMessagingRepository implements TherapyMessagingRepository {
-  FakeTherapyMessagingRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeTherapyMessagingRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -102,8 +98,7 @@ class FakeTherapyMessagingRepository implements TherapyMessagingRepository {
 }
 
 class FakeTherapyCallRepository implements TherapyCallRepository {
-  FakeTherapyCallRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeTherapyCallRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -117,8 +112,7 @@ class FakeTherapyCallRepository implements TherapyCallRepository {
 }
 
 class FakeTherapyAdminRepository implements TherapyAdminRepository {
-  FakeTherapyAdminRepository({required final OnlineTherapyFakeApi api})
-    : _api = api;
+  FakeTherapyAdminRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 
@@ -133,7 +127,7 @@ class FakeTherapyAdminRepository implements TherapyAdminRepository {
 }
 
 class FakeAuditRepository implements AuditRepository {
-  FakeAuditRepository({required final OnlineTherapyFakeApi api}) : _api = api;
+  FakeAuditRepository({required this._api});
 
   final OnlineTherapyFakeApi _api;
 

@@ -7,8 +7,8 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class FirestoreStaffDemoProfileRepository
     implements StaffDemoProfileRepository {
   FirestoreStaffDemoProfileRepository({
-    required final FirebaseFirestore firestore,
-  }) : _firestore = firestore;
+    required this._firestore,
+  });
 
   final FirebaseFirestore _firestore;
 

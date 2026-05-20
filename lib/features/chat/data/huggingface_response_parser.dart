@@ -5,8 +5,7 @@ import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 typedef JsonMap = Map<String, dynamic>;
 
 class HuggingFaceResponseParser {
-  const HuggingFaceResponseParser({required final String fallbackMessage})
-    : _fallbackMessage = fallbackMessage;
+  const HuggingFaceResponseParser({required this._fallbackMessage});
 
   final String _fallbackMessage;
 

@@ -16,11 +16,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class IotDemoCubit extends Cubit<IotDemoState>
     with CubitSubscriptionMixin<IotDemoState> {
   IotDemoCubit({
-    required final IotDemoRepository repository,
-    final AppLocalizations? l10n,
-  }) : _repository = repository,
-       _l10n = l10n,
-       super(const IotDemoState.initial());
+    required this._repository,
+    this._l10n,
+  }) : super(const IotDemoState.initial());
 
   final IotDemoRepository _repository;
   final AppLocalizations? _l10n;

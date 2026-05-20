@@ -1,7 +1,7 @@
 part of 'test_harness.dart';
 
 class _FakeBiometricAuthenticator implements BiometricAuthenticator {
-  _FakeBiometricAuthenticator({required final bool result}) : _result = result;
+  _FakeBiometricAuthenticator({required this._result});
 
   final bool _result;
 

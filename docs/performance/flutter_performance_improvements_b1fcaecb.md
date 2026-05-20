@@ -7,8 +7,8 @@ This file was moved from repo root to keep docs organized.
 ## Environment
 
 - **Date**: 2026-03-25
-- **Flutter**: 3.41.9 (stable)
-- **Dart**: 3.11.5
+- **Flutter**: 3.44.0 (stable)
+- **Dart**: 3.12.0
 - **DevTools**: 2.54.2
 - **Target**: iOS (iPhone simulator)
 - **Chosen simulator (UDID)**: `82B916E8-9CEC-48F1-8219-22C73B6F7037` (iPhone 17e)

@@ -15,10 +15,9 @@ class HuggingFaceApiClient {
   HuggingFaceApiClient({
     final Dio? dio,
     final String? apiKey,
-    final Duration requestTimeout = const Duration(seconds: 30),
+    this._requestTimeout = const Duration(seconds: 30),
   }) : _dio = dio ?? Dio(),
        _apiKey = _clean(apiKey),
-       _requestTimeout = requestTimeout,
        _ownsClient = dio == null;
 
   final Dio _dio;
@@ -38,7 +37,8 @@ class HuggingFaceApiClient {
     required final JsonMap payload,
     required final String context,
   }) async {
-    final Response<List<int>> response = await NetworkGuard.executeDio<List<int>, ChatException>(
+    final Response<List<int>>
+    response = await NetworkGuard.executeDio<List<int>, ChatException>(
       request: () => _dio.post<List<int>>(
         uri.toString(),
         // check-ignore: small payload (<8KB) - request body is small

@@ -16,9 +16,8 @@ abstract final class RealtimeMarketSnapshotCaps {
 class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
   RealtimeMarketRepositoryImpl({
     required final RealtimeMarketLocalDataSource localDataSource,
-    required final SimulatedMarketFeed feed,
-  }) : _local = localDataSource,
-       _feed = feed;
+    required this._feed,
+  }) : _local = localDataSource;
 
   final RealtimeMarketLocalDataSource _local;
   final SimulatedMarketFeed _feed;

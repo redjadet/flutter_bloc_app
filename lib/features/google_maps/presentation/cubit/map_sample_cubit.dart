@@ -7,9 +7,7 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
-  MapSampleCubit({required final MapLocationRepository repository})
-    : _repository = repository,
-      super(MapSampleState.initial());
+  MapSampleCubit({required this._repository}) : super(MapSampleState.initial());
 
   final MapLocationRepository _repository;
 

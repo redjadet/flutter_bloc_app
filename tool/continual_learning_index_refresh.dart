@@ -69,8 +69,10 @@ Future<void> _withFileLock(String lockPath, Future<void> Function() fn) async {
 
 Future<TranscriptIndexState> _readIndexState(File indexFile) async {
   if (!await indexFile.exists()) return TranscriptIndexState({});
-  final decoded = jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
-  final transcripts = (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
+  final decoded =
+      jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
+  final transcripts =
+      (decoded['transcripts'] as Map<String, Object?>?) ?? const {};
   final out = <String, TranscriptIndexEntry>{};
   for (final entry in transcripts.entries) {
     final v = entry.value;
@@ -88,7 +90,10 @@ Future<TranscriptIndexState> _readIndexState(File indexFile) async {
   return TranscriptIndexState(out);
 }
 
-Future<void> _writeIndexAtomic(File indexFile, TranscriptIndexState state) async {
+Future<void> _writeIndexAtomic(
+  File indexFile,
+  TranscriptIndexState state,
+) async {
   final payload = <String, Object?>{
     'transcripts': {
       for (final e in state.transcripts.entries)
@@ -121,7 +126,10 @@ Future<List<String>> _listTranscriptFiles(String root) async {
   if (!await rootDir.exists()) return [];
 
   final out = <String>[];
-  await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+  await for (final entity in rootDir.list(
+    recursive: true,
+    followLinks: false,
+  )) {
     if (entity is File && entity.path.endsWith('.jsonl')) out.add(entity.path);
   }
   return out;

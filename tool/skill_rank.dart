@@ -17,7 +17,9 @@ import 'dart:io';
 /// - vendorRanked: pluginCache (read-only signals)
 Future<void> main(List<String> args) async {
   if (args.length < 2) {
-    stderr.writeln('Usage: dart run tool/skill_rank.dart <inventory.json> <out.json>');
+    stderr.writeln(
+      'Usage: dart run tool/skill_rank.dart <inventory.json> <out.json>',
+    );
     exitCode = 2;
     return;
   }
@@ -25,7 +27,8 @@ Future<void> main(List<String> args) async {
   final invPath = args[0];
   final outPath = args[1];
 
-  final inv = jsonDecode(await File(invPath).readAsString()) as Map<String, Object?>;
+  final inv =
+      jsonDecode(await File(invPath).readAsString()) as Map<String, Object?>;
   final skills = (inv['skills'] as List).cast<Map<String, Object?>>();
 
   final editableRanked = <Map<String, Object?>>[];
@@ -47,9 +50,15 @@ Future<void> main(List<String> args) async {
     var proxy = 0;
     final text = '$description\n$body';
     // Avoid word-boundary surprises; keep it simple.
-    if (RegExp(r'(use when|triggers?)', caseSensitive: false).hasMatch(text)) proxy += 2;
-    if (RegExp(r'(triggers on|trigger:|trigger phrases)', caseSensitive: false).hasMatch(text)) proxy += 1;
-    if (RegExp(r'(must|mandatory)', caseSensitive: false).hasMatch(text)) proxy += 2;
+    if (RegExp(r'(use when|triggers?)', caseSensitive: false).hasMatch(text))
+      proxy += 2;
+    if (RegExp(
+      r'(triggers on|trigger:|trigger phrases)',
+      caseSensitive: false,
+    ).hasMatch(text))
+      proxy += 1;
+    if (RegExp(r'(must|mandatory)', caseSensitive: false).hasMatch(text))
+      proxy += 2;
     if (origin == 'cursorSkills' || origin == 'agentsSkills') proxy += 1;
 
     final score = approxTokens * (1.0 + (proxy / 10.0));
@@ -67,8 +76,12 @@ Future<void> main(List<String> args) async {
     }
   }
 
-  editableRanked.sort((a, b) => (b['score'] as double).compareTo(a['score'] as double));
-  vendorRanked.sort((a, b) => (b['score'] as double).compareTo(a['score'] as double));
+  editableRanked.sort(
+    (a, b) => (b['score'] as double).compareTo(a['score'] as double),
+  );
+  vendorRanked.sort(
+    (a, b) => (b['score'] as double).compareTo(a['score'] as double),
+  );
 
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
@@ -79,7 +92,10 @@ Future<void> main(List<String> args) async {
 
   final outFile = File(outPath);
   await outFile.parent.create(recursive: true);
-  await outFile.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
-  stdout.writeln('Wrote ranked ${editableRanked.length}+${vendorRanked.length} -> $outPath');
+  await outFile.writeAsString(
+    const JsonEncoder.withIndent('  ').convert(payload),
+  );
+  stdout.writeln(
+    'Wrote ranked ${editableRanked.length}+${vendorRanked.length} -> $outPath',
+  );
 }
-

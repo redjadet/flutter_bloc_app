@@ -8,9 +8,8 @@ export 'chat_list_state.dart';
 
 class ChatListCubit extends Cubit<ChatListState> {
   ChatListCubit({
-    required final ChatListRepository repository,
-  }) : _repository = repository,
-       super(const ChatListState.initial());
+    required this._repository,
+  }) : super(const ChatListState.initial());
 
   final ChatListRepository _repository;
 

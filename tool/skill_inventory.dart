@@ -7,7 +7,9 @@ import 'dart:io';
 ///
 /// approxTokens: rough estimate (chars / 4). Good enough for ranking.
 Future<void> main(List<String> args) async {
-  final outPath = args.isNotEmpty ? args.first : 'docs/audits/skill_inventory_latest.json';
+  final outPath = args.isNotEmpty
+      ? args.first
+      : 'docs/audits/skill_inventory_latest.json';
 
   final home = Platform.environment['HOME'] ?? '';
   final cursorSkillsRoot = home.isEmpty ? '' : '$home/.cursor/skills';
@@ -28,7 +30,10 @@ Future<void> main(List<String> args) async {
     final rootDir = Directory(entry.value);
     if (!await rootDir.exists()) continue;
 
-    await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+    await for (final entity in rootDir.list(
+      recursive: true,
+      followLinks: false,
+    )) {
       if (entity is! File) continue;
       if (!entity.path.endsWith('${Platform.pathSeparator}SKILL.md')) continue;
       if (_isIgnoredPath(entity.path)) continue;
@@ -54,7 +59,9 @@ Future<void> main(List<String> args) async {
     }
   }
 
-  skills.sort((a, b) => (b['approxTokens'] as int).compareTo(a['approxTokens'] as int));
+  skills.sort(
+    (a, b) => (b['approxTokens'] as int).compareTo(a['approxTokens'] as int),
+  );
 
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
@@ -64,7 +71,9 @@ Future<void> main(List<String> args) async {
 
   final outFile = File(outPath);
   await outFile.parent.create(recursive: true);
-  await outFile.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
+  await outFile.writeAsString(
+    const JsonEncoder.withIndent('  ').convert(payload),
+  );
 
   stdout.writeln('Wrote ${skills.length} skills -> $outPath');
 }

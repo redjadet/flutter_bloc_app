@@ -24,7 +24,9 @@ class _FakeCoingeckoApi implements CoingeckoApi {
     final String accept,
   ) async {
     requestCount += 1;
-    return utf8.encode('{"prices":[[1741478400000,41000.5],[1741564800000,42000.0]]}');
+    return utf8.encode(
+      '{"prices":[[1741478400000,41000.5],[1741564800000,42000.0]]}',
+    );
   }
 }
 

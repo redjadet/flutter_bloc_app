@@ -13,11 +13,9 @@ import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     with CubitSubscriptionMixin<InAppPurchaseDemoState> {
   InAppPurchaseDemoCubit({
-    required final InAppPurchaseRepository fakeRepository,
-    required final InAppPurchaseRepository realRepository,
-  }) : _fakeRepository = fakeRepository,
-       _realRepository = realRepository,
-       super(const InAppPurchaseDemoState()) {
+    required this._fakeRepository,
+    required this._realRepository,
+  }) : super(const InAppPurchaseDemoState()) {
     _sub = registerSubscription(
       _activeRepository.watchPurchaseResults().listen(
         _onPurchaseResult,

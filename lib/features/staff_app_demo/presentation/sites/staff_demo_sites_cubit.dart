@@ -30,9 +30,8 @@ class StaffDemoSitesState {
 }
 
 class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
-  StaffDemoSitesCubit({required final StaffDemoSiteRepository repository})
-    : _repository = repository,
-      super(const StaffDemoSitesState());
+  StaffDemoSitesCubit({required this._repository})
+    : super(const StaffDemoSitesState());
 
   final StaffDemoSiteRepository _repository;
 

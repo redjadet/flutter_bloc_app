@@ -3,10 +3,9 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 
 class FirestoreStaffDemoMessagingRepository {
   FirestoreStaffDemoMessagingRepository({
-    required final FirebaseFirestore firestore,
-    required final AuthRepository authRepository,
-  }) : _firestore = firestore,
-       _authRepository = authRepository;
+    required this._firestore,
+    required this._authRepository,
+  });
 
   final FirebaseFirestore _firestore;
   final AuthRepository _authRepository;
