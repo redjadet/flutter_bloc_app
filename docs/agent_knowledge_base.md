@@ -187,7 +187,7 @@ New durable agent rule: update owning source doc first, then thin host templates
 
 Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put behavior here or owning `docs/`. Never add long prose or `## Learned User Preferences` / `## Learned Workspace Facts` to [`AGENTS.md`](../AGENTS.md).
 
-Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch, badges, quick start, one doc table, minimal screenshots; route detail to [`docs/README.md`](README.md) and topic docs—no ADR tables, command essays, or duplicate deep-dive sections on README.
+Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch, **grouped badge rows** (repo-backed stack/CI/docs links only—no vanity shields), quick start, one doc table; **Scope** before **Screenshots** (screenshots last, full grid OK); route detail to [`docs/README.md`](README.md) and topic docs—no ADR tables, command essays, or duplicate deep-dive sections in the README body.
 
 - Continual learning: index `.cursor/hooks/state/continual-learning-index.json` (set `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`). Run `dart run tool/continual_learning_index_refresh.dart` then `dart run tool/continual_learning_summarize.dart`; summarizer marks processed even when the tail has no correction-pattern lines. After refresh, rows with `lastProcessedAt` null are first-scan backlog. Land high-signal takeaways here or owning doc.
 - Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
@@ -205,6 +205,8 @@ Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGE
 - **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists.
 - **Upgrade lane proof:** After `./bin/upgrade_validate_all` or `/upgrade-pr-triage-validate`, cite explicit pass evidence for delivery checklist (step 3) and integration tests (step 4)—test counts and simulator id—not only overall exit 0.
 - **Commit / PR helpers:** Rebase the current branch onto the latest default branch before opening or updating a PR when using the repo’s `commit-push-pr` style flow.
+- **Pre-commit review:** On client-facing Dart delivery, run a final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR—not only green `./bin/checklist`.
+- **README / docs lint:** After substantive README or `docs/**` edits, run `markdownlint-cli2` on those paths until clean (see [`docs/agents_appendix.md`](agents_appendix.md) ignores).
 
 Transcript-derived workspace guardrails:
 

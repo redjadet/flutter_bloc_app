@@ -23,3 +23,20 @@ updates:
       prefix: "security"
       include: "scope"
 
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "security"
+    ignore:
+      - dependency-type: "all"
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+    commit-message:
+      prefix: "security"
+      include: "scope"
+
