@@ -73,7 +73,7 @@ dependencies:
   flutter_svg: ^2.3.0
   flutter_tts: ^4.2.5
   freezed_annotation: ^3.1.0
-  genui: ^0.9.0
+  genui: ^0.7.0
   genui_google_generative_ai: ^0.7.1
   geolocator: ^14.0.2
   get_it: ^9.2.1
@@ -119,7 +119,7 @@ dev_dependencies:
   file_length_lint:
     path: custom_lints/file_length_lint
   firebase_auth_mocks: ^0.15.2
-  firebase_core_platform_interface: ^6.0.3
+  firebase_core_platform_interface: ^7.0.1
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
@@ -128,7 +128,7 @@ dev_dependencies:
   geolocator_platform_interface: ^4.2.6
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
-  google_sign_in_mocks: ^0.4.1
+  google_sign_in_mocks: ^0.3.0
   json_serializable: 6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
