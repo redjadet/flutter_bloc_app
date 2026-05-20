@@ -139,5 +139,144 @@ void main() {
         ).called(1);
       },
     );
+
+    test(
+      'ignores second submit while first is validating local files',
+      () async {
+        final authRepository = _MockAuthRepository();
+        final repository = _MockStaffDemoEventProofRepository();
+        final fileStore = _MockStaffDemoProofFileStore();
+        final completer = Completer<String>();
+        final tempDir = await Directory.systemTemp.createTemp(
+          'staff-proof-validate-overlap-test',
+        );
+        final signatureFile = File('${tempDir.path}/signature.png');
+        await signatureFile.writeAsBytes(const <int>[1, 2, 3], flush: true);
+
+        when(() => authRepository.currentUser).thenReturn(
+          const AuthUser(
+            id: 'u1',
+            email: 'user@example.com',
+            isAnonymous: false,
+          ),
+        );
+        when(
+          () => repository.submitProof(
+            userId: any(named: 'userId'),
+            siteId: any(named: 'siteId'),
+            shiftId: any(named: 'shiftId'),
+            photoFilePaths: any(named: 'photoFilePaths'),
+            signaturePngFilePath: any(named: 'signaturePngFilePath'),
+          ),
+        ).thenAnswer((_) => completer.future);
+
+        final cubit = StaffDemoProofCubit(
+          authRepository: authRepository,
+          repository: repository,
+          fileStore: fileStore,
+        );
+        addTearDown(() async {
+          await cubit.close();
+          await tempDir.delete(recursive: true);
+        });
+
+        cubit.setSignaturePath(signatureFile.path);
+
+        final first = cubit.submit(siteId: 'site1', shiftId: null);
+        final second = cubit.submit(siteId: 'site1', shiftId: null);
+        await Future<void>.delayed(Duration.zero);
+
+        completer.complete('proof-1');
+        await first;
+        await second;
+
+        verify(
+          () => repository.submitProof(
+            userId: 'u1',
+            siteId: 'site1',
+            shiftId: null,
+            photoFilePaths: const <String>[],
+            signaturePngFilePath: signatureFile.path,
+          ),
+        ).called(1);
+      },
+    );
+
+    test('surfaces error when signature file is missing on disk', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+
+      when(() => authRepository.currentUser).thenReturn(
+        const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
+      );
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+      );
+      addTearDown(cubit.close);
+
+      cubit.setSignaturePath('/tmp/staff-proof-missing-signature.png');
+      await cubit.submit(siteId: 'site1', shiftId: null);
+
+      expect(cubit.state.status, StaffDemoProofStatus.error);
+      expect(cubit.state.errorMessage, 'Signature file missing.');
+      verifyNever(
+        () => repository.submitProof(
+          userId: any(named: 'userId'),
+          siteId: any(named: 'siteId'),
+          shiftId: any(named: 'shiftId'),
+          photoFilePaths: any(named: 'photoFilePaths'),
+          signaturePngFilePath: any(named: 'signaturePngFilePath'),
+        ),
+      );
+    });
+
+    test('surfaces error when a photo file is missing on disk', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+      final tempDir = await Directory.systemTemp.createTemp(
+        'staff-proof-missing-photo-test',
+      );
+      final signatureFile = File('${tempDir.path}/signature.png');
+      await signatureFile.writeAsBytes(const <int>[1, 2, 3], flush: true);
+
+      when(() => authRepository.currentUser).thenReturn(
+        const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
+      );
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await tempDir.delete(recursive: true);
+      });
+
+      cubit
+        ..setSignaturePath(signatureFile.path)
+        ..setPhotos(<String>['${tempDir.path}/missing-photo.jpg']);
+      await cubit.submit(siteId: 'site1', shiftId: null);
+
+      expect(cubit.state.status, StaffDemoProofStatus.error);
+      expect(
+        cubit.state.errorMessage,
+        'A photo file is missing locally. Please re-add it.',
+      );
+      verifyNever(
+        () => repository.submitProof(
+          userId: any(named: 'userId'),
+          siteId: any(named: 'siteId'),
+          shiftId: any(named: 'shiftId'),
+          photoFilePaths: any(named: 'photoFilePaths'),
+          signaturePngFilePath: any(named: 'signaturePngFilePath'),
+        ),
+      );
+    });
   });
 }

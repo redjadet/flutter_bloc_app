@@ -337,6 +337,14 @@ validate_checklist_configuration() {
     return 1
   fi
 
+  if declare -p CHECK_SCRIPT_THEMES &>/dev/null; then
+    local total_themes="${#CHECK_SCRIPT_THEMES[@]}"
+    if [ "$total_themes" -ne "$total_scripts" ]; then
+      echo "❌ CHECK_SCRIPT_THEMES/CHECK_SCRIPTS length mismatch: $total_themes themes vs $total_scripts scripts"
+      failed=1
+    fi
+  fi
+
   for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
     if [ ! -f "$PROJECT_ROOT/$script" ]; then
       echo "❌ Missing checklist dependency: $script"
@@ -625,6 +633,63 @@ is_checklist_fast_compatible_path() {
   esac
 }
 
+
+should_run_router_feature_validate_auto() {
+  if [ "${CHECKLIST_SKIP_ROUTER_VALIDATE:-0}" = "1" ]; then
+    return 1
+  fi
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+  local rule_file="$PROJECT_ROOT/.cursor/rules/router-feature-validation.mdc"
+  if [ ! -f "$rule_file" ] || ! command -v python3 >/dev/null 2>&1; then
+    return 1
+  fi
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    if python3 - "$rule_file" "$file" <<'PY'
+import fnmatch
+import sys
+from pathlib import Path
+rule_text = Path(sys.argv[1]).read_text(encoding="utf-8")
+path = sys.argv[2]
+globs = []
+in_globs = False
+for line in rule_text.splitlines():
+    stripped = line.strip()
+    if stripped.startswith("globs:"):
+        rest = stripped[len("globs:"):].strip()
+        if rest:
+            globs = [g.strip() for g in rest.split(",") if g.strip()]
+            break
+        in_globs = True
+        continue
+    if in_globs:
+        if stripped.startswith("- "):
+            globs.append(stripped[2:].strip())
+            continue
+        if stripped and not stripped.startswith("#"):
+            break
+if not globs:
+    raise SystemExit(1)
+expanded = list(globs)
+for pattern in globs:
+    if pattern.endswith("/router/**/*.dart"):
+        expanded.append(pattern.replace("/router/**/*.dart", "/router/*.dart"))
+if any(fnmatch.fnmatch(path, pattern) for pattern in expanded):
+    raise SystemExit(0)
+raise SystemExit(1)
+PY
+    then
+      return 0
+    fi
+  done
+  return 1
+}
+
 should_run_todo_layout_tests_auto() {
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
@@ -714,6 +779,7 @@ RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
 CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
+CHECKLIST_EXPLAIN_THEMES="${CHECKLIST_EXPLAIN_THEMES:-0}"
 CHECKLIST_PRINT_CHANGED="${CHECKLIST_PRINT_CHANGED:-0}"
 CHECKLIST_MODE_FROM_ARG=0
 
@@ -1171,6 +1237,10 @@ CHECK_MESSAGES=(
   "Checking agent memory compounding..."
   "Checking tracked files for secret-like literals..."
   "Checking AI-generated-code smells (high-signal)..."
+  "Checking navigation APIs outside presentation layer..."
+  "Checking presentation layer for blocking dart:io *Sync calls..."
+  "Checking remote image cache hints (warn-only)..."
+  "Checking cubit stream subscription hygiene (warn-only)..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
 
@@ -1229,7 +1299,72 @@ CHECK_SCRIPTS=(
   "tool/check_agent_memory_compounding.sh"
   "tool/check_tracked_secret_literals.sh"
   "tool/check_ai_generated_code_smells.sh"
+  "tool/check_navigation_outside_presentation.sh"
+  "tool/check_sync_io_in_presentation.sh"
+  "tool/check_remote_image_cache_hints.sh"
+  "tool/check_cubit_subscription_cancel.sh"
   "tool/check_pyright_python.sh"
+)
+CHECK_SCRIPT_THEMES=(
+  "architecture"
+  "ui"
+  "architecture"
+  "background"
+  "background"
+  "state-mgmt"
+  "ui"
+  "images"
+  "ui"
+  "ui"
+  "ui"
+  "rebuild"
+  "blocking-io-tool"
+  "async"
+  "async"
+  "async"
+  "async"
+  "async"
+  "ui"
+  "ui"
+  "ui"
+  "state-mgmt"
+  "perf"
+  "architecture"
+  "architecture"
+  "widget-trees"
+  "widget-trees"
+  "rebuild"
+  "perf"
+  "rebuild"
+  "state-mgmt"
+  "memory"
+  "memory"
+  "memory"
+  "memory"
+  "async"
+  "blocking-io"
+  "architecture"
+  "async"
+  "async-boundaries"
+  "async-boundaries"
+  "async-boundaries"
+  "architecture"
+  "async"
+  "ui"
+  "async"
+  "background"
+  "architecture"
+  "memory"
+  "ui"
+  "meta"
+  "meta"
+  "security"
+  "meta"
+  "navigation"
+  "blocking-io"
+  "images"
+  "state-mgmt"
+  "tooling"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"
@@ -1248,6 +1383,13 @@ fi
 
 if ! validate_checklist_configuration; then
   exit 1
+fi
+
+if [ "$CHECKLIST_EXPLAIN" = "1" ] && [ "$CHECKLIST_EXPLAIN_THEMES" = "1" ]; then
+  for ((i = 0; i < ${#CHECK_SCRIPTS[@]}; i++)); do
+    echo "explain|theme|${CHECK_SCRIPT_THEMES[$i]}|${CHECK_SCRIPTS[$i]}"
+  done
+  echo ""
 fi
 
 echo "🔍 Step 3/5: Analyzing code with 'flutter analyze'"
@@ -1307,6 +1449,14 @@ if [ "$ANALYZE_FAILED" -ne 0 ]; then
 fi
 echo "✅ Code analysis complete"
 echo ""
+if should_run_router_feature_validate_auto; then
+  echo "  Running router feature validation (path-triggered)..."
+  if ! bash "$PROJECT_ROOT/bin/router_feature_validate"; then
+    VALIDATION_FAILED=1
+  fi
+  echo ""
+fi
+
 
 should_run_mix_lint=1
 if [ "$RUN_MIX_LINT" = "0" ]; then

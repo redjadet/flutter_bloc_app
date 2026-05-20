@@ -61,10 +61,13 @@ Source-of-truth docs for Flutter BLoC app.
 - [`agent_project_context.md`](agent_project_context.md)
 - [`agent_environment_setup.md`](agent_environment_setup.md)
 - [`validation_scripts.md`](validation_scripts.md)
+- [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 - [`testing_overview.md`](testing_overview.md)
 - [`logging.md`](logging.md)
 - [`code_review_graph.md`](code_review_graph.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
+- [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 

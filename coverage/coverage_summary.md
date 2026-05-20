@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **71.18%** (20040/28152 lines)
+*Total line coverage*: **71.22%** (20056/28161 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -127,7 +127,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/services/app_image_cache_manager.dart` | 37.50% | 3/8 |
 | `lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart` | 38.78% | 19/49 |
 | `lib/features/todo_list/presentation/widgets/todo_list_content.dart` | 38.89% | 21/54 |
-| `lib/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart` | 39.68% | 25/63 |
 | `lib/core/di/register_fcm_demo_services.dart` | 40.00% | 2/5 |
 | `lib/core/di/register_todo_services.dart` | 40.00% | 2/5 |
 | `lib/features/staff_app_demo/presentation/staff_demo_presentation_l10n.dart` | 40.91% | 9/22 |
@@ -164,6 +163,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/di/register_online_therapy_demo_services.dart` | 56.25% | 9/16 |
 | `lib/features/chat/presentation/widgets/chat_list_view_parts.part.dart` | 56.25% | 9/16 |
 | `lib/shared/utils/app_error.dart` | 56.25% | 18/32 |
+| `lib/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart` | 56.94% | 41/72 |
 | `lib/shared/widgets/resilient_svg_asset_image.dart` | 57.63% | 34/59 |
 | `lib/app/router/routes_online_therapy_demo.dart` | 58.14% | 25/43 |
 | `lib/features/playlearn/presentation/pages/vocabulary_list_page.dart` | 58.33% | 14/24 |
