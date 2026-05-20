@@ -34,13 +34,13 @@ The repo contains many demo routes. Interviewers need a **short, repeatable walk
 
 ## Consequences
 
-**Benefits**
+### Benefits
 
 - Clear interviewer script and proof commands
 - Smaller, reviewable diffs for hero a11y
 - Truth-aligned observability docs
 
-**Costs**
+### Costs
 
 - Manual demo for sync diagnostics
 - Longer PR smoke runtime on macOS
