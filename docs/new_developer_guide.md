@@ -76,7 +76,10 @@ Run these checks before starting a local debug session:
 ./tool/delivery_checklist.sh
 # same pipeline when present: ./bin/checklist
 # local-only sanity shortcut for clean trees or narrow docs/tooling work: ./bin/checklist-fast
+# optional: CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist  (script → theme map)
 ```
+
+Theme gates (navigation/sync-io fail; image/cubit warn): [`validation_scripts.md`](validation_scripts.md#quality-theme-gates-checklist-mvp-may-2026).
 
 ### Run code generation when needed
 
