@@ -23,31 +23,35 @@ class ChatContactTile extends StatelessWidget {
     final config = ChatContactTileConfig.fromContext(context);
     final timeText = _formatTime(contact.lastMessageTime);
 
-    return InkWell(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: config.horizontalPadding,
-          vertical: config.verticalPadding,
-        ),
-        child: Row(
-          children: [
-            ChatContactAvatar(
-              contact: contact,
-              size: config.profileImageSize,
-            ),
-            SizedBox(
-              width: config.horizontalGap,
-            ),
-            Expanded(
-              child: ChatContactTileDetails(
+    return Semantics(
+      button: true,
+      label: contact.name,
+      child: InkWell(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: config.horizontalPadding,
+            vertical: config.verticalPadding,
+          ),
+          child: Row(
+            children: [
+              ChatContactAvatar(
                 contact: contact,
-                config: config,
-                timeText: timeText,
+                size: config.profileImageSize,
               ),
-            ),
-          ],
+              SizedBox(
+                width: config.horizontalGap,
+              ),
+              Expanded(
+                child: ChatContactTileDetails(
+                  contact: contact,
+                  config: config,
+                  timeText: timeText,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

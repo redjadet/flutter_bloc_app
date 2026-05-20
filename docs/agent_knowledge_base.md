@@ -187,13 +187,18 @@ New durable agent rule: update owning source doc first, then thin host templates
 
 Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put behavior here or owning `docs/`. Never add long prose or `## Learned User Preferences` / `## Learned Workspace Facts` to [`AGENTS.md`](../AGENTS.md).
 
+Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch, badges, quick start, one doc table, minimal screenshots; route detail to [`docs/README.md`](README.md) and topic docs—no ADR tables, command essays, or duplicate deep-dive sections on README.
+
 - Continual learning: index `.cursor/hooks/state/continual-learning-index.json` (set `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`). Run `dart run tool/continual_learning_index_refresh.dart` then `dart run tool/continual_learning_summarize.dart`; summarizer marks processed even when the tail has no correction-pattern lines. After refresh, rows with `lastProcessedAt` null are first-scan backlog. Land high-signal takeaways here or owning doc.
 - Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
 - Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../pubspec.yaml) (e.g. `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`). See [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
 
 - Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
+- After `lib/` or mixed `lib/` + `docs/` delivery, run [`./bin/checklist`](../bin/checklist) until green; [`./bin/checklist-fast`](../bin/checklist-fast) is docs/tooling-only (see [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
+- When optimizing agent memory, skills, or docs, apply only safe dedup/thinning that preserves checks and behavior; prefer trimming duplicate global/repo skills/plugins to cut token cost.
 - After meaningful workflow/policy shifts, update agent-facing docs referenced from map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
+- Caveman terse mode: always-on via [`.cursor/rules/caveman.mdc`](../.cursor/rules/caveman.mdc); user may disable with “stop caveman” / “normal mode”.
 
 Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGENTS.md)):
 

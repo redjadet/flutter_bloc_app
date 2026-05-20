@@ -27,12 +27,27 @@ Map from exceptions or HTTP status using
 - For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
 - Full conventions live in [logging.md](logging.md).
 
-## Crash reporting (optional)
+## Crash reporting (Firebase Crashlytics)
 
-If the project adopts Firebase Crashlytics or similar:
+When Firebase initializes successfully, the app registers Flutter and zone error handlers that forward fatals to **Firebase Crashlytics**:
 
-1. **Uncaught errors:** Register `FlutterError.onError` and `runZonedGuarded` so uncaught errors and zone errors are reported.
-2. **Sensitive data:** Do not attach PII, tokens, or full request/response bodies to crash reports. Use `AppErrorCode` and short context strings only.
-3. **Document:** Update [security_and_secrets.md](security_and_secrets.md) with the chosen tool and any auth/configuration required.
+- Implementation: [`lib/core/bootstrap/firebase_bootstrap_service.dart`](../lib/core/bootstrap/firebase_bootstrap_service.dart) (`registerCrashlyticsHandlers`)
+- **Sensitive data:** Do not attach PII, tokens, or full request/response bodies to crash reports. Use `AppErrorCode` and short context strings only.
+- Configuration and secrets: [security_and_secrets.md](security_and_secrets.md), [firebase_setup.md](firebase_setup.md)
 
-No crash reporting is configured by default; this section describes the pattern when you add it.
+Crashlytics is **not** active when Firebase is disabled or fails to initialize (e.g. some test harnesses).
+
+## Product analytics (not configured)
+
+There is **no** Mixpanel, Sentry product SDK, or custom `AnalyticsPort` implementation in `pubspec.yaml` today. Operational diagnostics UI data lives under [`lib/core/diagnostics/`](../lib/core/diagnostics/) (Remote Config view models, cache controls) — not product funnel analytics.
+
+- Interview/portfolio scope: [ADR 0005](adr/0005-interview-showcase-scope.md)
+- Planned seams and event taxonomy: [plans/future_observability.md](plans/future_observability.md)
+- Portfolio walk: [interview_showcase.md](interview_showcase.md) §11–12
+
+Sync and settings surfaces expose **operational** telemetry (queue depth, flush status) via [`lib/shared/sync/`](../lib/shared/sync/) and Settings sync diagnostics — not product funnel analytics.
+
+## Related docs
+
+- [reliability_error_handling_performance.md](reliability_error_handling_performance.md)
+- [interview_showcase.md](interview_showcase.md)

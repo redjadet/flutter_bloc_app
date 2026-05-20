@@ -66,10 +66,14 @@ class _CounterSyncQueueInspectorButtonState
         ? const SizedBox.shrink()
         : Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: PlatformAdaptive.textButton(
-              context: context,
-              onPressed: () => _showInspector(context, context.l10n),
-              child: Text(context.l10n.syncQueueInspectorButton),
+            child: Semantics(
+              button: true,
+              label: context.l10n.syncQueueInspectorButton,
+              child: PlatformAdaptive.textButton(
+                context: context,
+                onPressed: () => _showInspector(context, context.l10n),
+                child: Text(context.l10n.syncQueueInspectorButton),
+              ),
             ),
           );
 
