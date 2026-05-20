@@ -35,6 +35,8 @@ void registerPrSmokeIntegrationFlows() {
   registerSearchIntegrationFlow();
   registerSettingsIntegrationFlow();
   registerTodoListIntegrationFlow();
+  registerCounterPersistenceIntegrationFlow();
+  registerChatListIntegrationFlow();
 }
 
 void registerExtendedIntegrationFlows() {

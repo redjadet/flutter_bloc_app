@@ -71,6 +71,12 @@ the answer.
   [`firebase_ui_auth_overflow_fix.md`](firebase_ui_auth_overflow_fix.md).
 - Feature-scoped DI via `get_it_modular` is not in use; current `get_it` setup
   is global unless compatibility and lifecycle need justify change.
+- Interview portfolio spine and proof commands: [`interview_showcase.md`](interview_showcase.md),
+  scope in [`adr/0005-interview-showcase-scope.md`](adr/0005-interview-showcase-scope.md).
+- Mixpanel, Sentry, and Patrol are **not** in `pubspec.yaml`; doc-only seams in
+  [`observability.md`](observability.md) and [`plans/future_observability.md`](plans/future_observability.md).
+- `tasks/*` trackers are gitignored (local-only); durable conclusions belong in
+  `docs/`, not committed tracker paths.
 
 ## Avoid
 

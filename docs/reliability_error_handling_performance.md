@@ -29,6 +29,8 @@ high level:
 
 Validation (checklist, lifecycle scripts, and regression guards) keeps these behaviors enforced. The sections below index where each concern is implemented and documented.
 
+For crash reporting, structured error codes, and the **doc-only** product analytics posture, see [observability.md](observability.md) and the interview walk in [interview_showcase.md](interview_showcase.md).
+
 ---
 
 ## 1. Reliability
@@ -58,7 +60,7 @@ Validation (checklist, lifecycle scripts, and regression guards) keeps these beh
 | **Cubit async errors** | [CubitExceptionHandler](../lib/shared/utils/cubit_async_operations.dart) and [CubitErrorHandler](../lib/shared/utils/cubit_error_handler.dart) with `isAlive: () => !isClosed` so callbacks don’t run after close. For [HttpRequestFailure](../lib/shared/utils/http_request_failure.dart), the handler uses NetworkErrorMapper so emitted messages are status-aware. | State, Lifecycle, and Async Safety; [phase2_lifecycle_async_audit_2026-02-23.md](audits/phase2_lifecycle_async_audit_2026-02-23.md) |
 | **Structured error codes** | [AppErrorCode](../lib/shared/utils/error_codes.dart) (network, timeout, auth, server, **serviceUnavailable**, client, rateLimit, unknown). Map from exceptions or status via [NetworkErrorMapper.getErrorCode](../lib/shared/utils/network_error_mapper.dart) / `getErrorCodeForStatusCode`. | [observability.md](observability.md) |
 | **Logging** | Use [AppLogger](../lib/shared/utils/logger.dart) instead of raw `print()` / `debugPrint()`. Keep messages stable and searchable with compact context fields, and keep secrets/PII out of logs. | [logging.md](logging.md); [observability.md](observability.md) |
-| **Crash reporting (optional)** | Pattern for uncaught errors (`FlutterError.onError`, `runZonedGuarded`) and no PII in reports; document in [security_and_secrets.md](security_and_secrets.md) when a tool is adopted. | [observability.md](observability.md) |
+| **Crash reporting** | Firebase Crashlytics when Firebase initializes (`registerCrashlyticsHandlers`); no PII in reports. Inactive when Firebase is off (tests/mock harness). | [observability.md](observability.md); [firebase_bootstrap_service.dart](../lib/core/bootstrap/firebase_bootstrap_service.dart) |
 
 ---
 

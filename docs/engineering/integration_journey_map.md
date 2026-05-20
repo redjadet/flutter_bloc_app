@@ -48,6 +48,9 @@ tier expectations.
 
 ## Aggregate mapping
 
+- `pr_smoke` -> `integration_test/pr_smoke_flows_test.dart`
+  (`registerPrSmokeIntegrationFlows`: launch, charts, search, settings, todo,
+  counter persistence, chat list)
 - `smoke` -> `integration_test/smoke_flows_test.dart`
 - `standard` -> `integration_test/standard_flows_test.dart`
   (`registerStandardIntegrationFlows`: smoke + extended; see `flow_scenarios.dart`)

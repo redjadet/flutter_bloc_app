@@ -106,10 +106,14 @@ class TodoListPage extends StatelessWidget {
           title: l10n.todoListTitle,
           actions: _buildTodoListAppBarActions(context, barData),
           body: const _TodoListBody(),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => _handleAddTodo(context),
-            tooltip: l10n.todoListAddAction,
-            child: const Icon(Icons.add),
+          floatingActionButton: Semantics(
+            button: true,
+            label: l10n.todoListAddAction,
+            child: FloatingActionButton(
+              onPressed: () => _handleAddTodo(context),
+              tooltip: l10n.todoListAddAction,
+              child: const Icon(Icons.add),
+            ),
           ),
         );
       },

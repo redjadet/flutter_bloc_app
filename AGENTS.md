@@ -1,6 +1,8 @@
 # AGENTS - Flutter BLoC App Map
 
 Map only. Repo docs under `docs/` are system of record; host assets stay thin.
+No learned bullets or long prose here—link to owning `docs/` (see
+[`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)).
 
 ## Authority
 
@@ -49,6 +51,8 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Plans/history: [`docs/plans/README.md`](docs/plans/README.md), [`docs/changes/README.md`](docs/changes/README.md), [`docs/audits/README.md`](docs/audits/README.md)
 - Host/env notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md), [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Operator prefs/learning: [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)
+- Interview/portfolio walk: [`docs/interview_showcase.md`](docs/interview_showcase.md), [`docs/adr/0005-interview-showcase-scope.md`](docs/adr/0005-interview-showcase-scope.md)
+- Observability (Crashlytics when Firebase on; analytics doc-only): [`docs/observability.md`](docs/observability.md), [`docs/plans/future_observability.md`](docs/plans/future_observability.md)
 
 ## Must Keep
 
@@ -57,4 +61,4 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
 - Widget tests use `WidgetTester.view`.
 - Repeated failure => add repo capability, not longer prompt.
-- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md).
+- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never expand this map with learned sections.
