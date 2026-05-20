@@ -17,7 +17,7 @@ Read only needed:
 
 Non-trivial delivery: **`flutter-bloc-app-delivery-workflow`**.
 
-Repo: Flutter 3.41.9 / Dart 3.11.5; `Presentation -> Domain <- Data`; GoRouter; offline-first sync in `lib/shared/sync/`.
+Repo: Flutter 3.44.0 / Dart 3.12.0; `Presentation -> Domain <- Data`; GoRouter; offline-first sync in `lib/shared/sync/`.
 
 Tracker: `tasks/codex/todo.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **context ladder** → `docs/agent_knowledge_base.md`.
 
