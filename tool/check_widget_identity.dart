@@ -189,11 +189,14 @@ Future<List<File>> _resolveScanFiles(
 
   final files = <File>[];
   for (final entity in scanRoots) {
+    // ignore: avoid_slow_async_io -- tool; keep async I/O (see tool/check_tool_dart_async_main_blocking_io.sh)
     if (!await entity.exists()) continue;
+
     if (entity is File) {
       if (entity.path.endsWith('.dart')) files.add(entity);
       continue;
     }
+
     if (entity is Directory) {
       await for (final file in entity.list(recursive: true)) {
         if (file is File && file.path.endsWith('.dart')) files.add(file);

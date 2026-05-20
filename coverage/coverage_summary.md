@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.98%** (20527/28128 lines)
+*Total line coverage*: **73.07%** (20567/28147 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -80,7 +80,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/widgets/chat_fastapi_cloud_badge.dart` | 7.14% | 1/14 |
 | `lib/features/case_study_demo/data/case_study_clip_file_store.dart` | 7.32% | 3/41 |
 | `lib/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart` | 7.69% | 1/13 |
-| `lib/features/ai_decision_demo/data/ai_decision_models.dart` | 8.33% | 3/36 |
 | `lib/core/di/register_walletconnect_auth_services.dart` | 9.09% | 3/33 |
 | `lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` | 10.00% | 1/10 |
 | `lib/features/genui_demo/presentation/pages/genui_demo_page.dart` | 11.11% | 1/9 |
@@ -102,6 +101,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/playlearn/data/tts_audio_service.dart` | 28.57% | 2/7 |
 | `lib/core/bootstrap/firebase_bootstrap_service.dart` | 28.81% | 17/59 |
 | `lib/features/scapes/presentation/widgets/scapes_grid_content.dart` | 29.55% | 13/44 |
+| `lib/features/ai_decision_demo/data/ai_decision_models.dart` | 30.56% | 11/36 |
 | `lib/core/di/register_in_app_purchase_demo_services.dart` | 33.33% | 4/12 |
 | `lib/features/chart/domain/chart_data_exception.dart` | 33.33% | 1/3 |
 | `lib/features/realtime_market/data/security/realtime_market_backend_config.dart` | 33.33% | 1/3 |
@@ -110,7 +110,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/iot_demo/data/iot_demo_sync_payloads.dart` | 36.36% | 4/11 |
 | `lib/features/walletconnect_auth/data/walletconnect_auth_repository_impl_body.part.dart` | 36.36% | 44/121 |
 | `lib/shared/services/app_image_cache_manager.dart` | 37.50% | 3/8 |
-| `lib/features/ai_decision_demo/data/ai_decision_api_client.dart` | 38.30% | 18/47 |
 | `lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart` | 38.78% | 19/49 |
 | `lib/features/todo_list/presentation/widgets/todo_list_content.dart` | 38.89% | 21/54 |
 | `lib/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart` | 39.68% | 25/63 |
@@ -234,6 +233,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/app/router/route_auth_policy.dart` | 75.00% | 3/4 |
 | `lib/features/auth/presentation/widgets/logged_out_background_layer.dart` | 75.00% | 9/12 |
 | `lib/features/todo_list/data/hive_todo_repository_migration.dart` | 75.38% | 49/65 |
+| `lib/features/ai_decision_demo/data/ai_decision_api_client.dart` | 75.51% | 37/49 |
 | `lib/shared/sync/presentation/sync_status_cubit.dart` | 75.56% | 34/45 |
 | `lib/shared/widgets/common_dropdown_field.dart` | 75.56% | 68/90 |
 | `lib/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart` | 75.82% | 69/91 |
@@ -294,6 +294,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/utils/error_handling.dart` | 82.26% | 51/62 |
 | `lib/shared/utils/navigation.dart` | 82.35% | 14/17 |
 | `lib/features/case_study_demo/presentation/pages/case_study_metadata_page.dart` | 82.46% | 47/57 |
+| `lib/features/graphql_demo/data/countries_graphql_repository.dart` | 82.50% | 66/80 |
 | `lib/features/counter/presentation/counter_cubit.dart` | 82.65% | 81/98 |
 | `lib/features/genui_demo/presentation/widgets/genui_demo_content.dart` | 82.72% | 67/81 |
 | `lib/features/counter/presentation/pages/counter_page.dart` | 82.76% | 96/116 |
@@ -320,7 +321,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/data/supabase_chat_repository.dart` | 84.85% | 56/66 |
 | `lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart` | 84.85% | 28/33 |
 | `lib/shared/storage/shared_preferences_migration_service.dart` | 84.91% | 45/53 |
-| `lib/features/graphql_demo/data/countries_graphql_repository.dart` | 85.14% | 63/74 |
 | `lib/shared/responsive/responsive_config.dart` | 85.19% | 23/27 |
 | `lib/shared/ui/ui_constants.dart` | 85.37% | 35/41 |
 | `lib/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart` | 85.45% | 47/55 |
@@ -347,6 +347,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chart/data/auth_aware_chart_remote_repository.dart` | 87.50% | 21/24 |
 | `lib/features/chart/data/chart_points_parser.dart` | 87.50% | 14/16 |
 | `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 87.50% | 28/32 |
+| `lib/features/profile/presentation/widgets/profile_sync_banner.dart` | 87.50% | 35/40 |
 | `lib/features/todo_list/data/todo_merge_policy.dart` | 87.50% | 7/8 |
 | `lib/shared/extensions/responsive/responsive_typography.dart` | 87.50% | 7/8 |
 | `lib/shared/utils/cubit_async_operations.dart` | 87.50% | 28/32 |
@@ -380,7 +381,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/deeplink/data/app_links_deep_link_service.dart` | 90.00% | 36/40 |
 | `lib/features/in_app_purchase_demo/data/iap_demo_credits_store.dart` | 90.00% | 18/20 |
 | `lib/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart` | 90.00% | 36/40 |
-| `lib/features/profile/presentation/widgets/profile_sync_banner.dart` | 90.00% | 36/40 |
 | `lib/shared/utils/logger.dart` | 90.00% | 45/50 |
 | `lib/shared/sync/background_sync_coordinator_lifecycle.dart` | 90.24% | 37/41 |
 | `lib/features/online_therapy_demo/data/fake/online_therapy_fake_api_internals.dart` | 90.32% | 84/93 |
@@ -684,7 +684,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/firebase/realtime_database_guard.dart` | 100.00% | 7/7 |
 | `lib/shared/firebase/stream_with_auth_user.dart` | 100.00% | 5/5 |
 | `lib/shared/http/interceptors/telemetry_interceptor.dart` | 100.00% | 22/22 |
-| `lib/shared/http/retrofit_response_utils.dart` | 100.00% | 11/11 |
+| `lib/shared/http/retrofit_response_utils.dart` | 100.00% | 22/22 |
 | `lib/shared/responsive/responsive_scope.dart` | 100.00% | 13/13 |
 | `lib/shared/storage/hive_key_manager.dart` | 100.00% | 36/36 |
 | `lib/shared/storage/hive_repository_base.dart` | 100.00% | 14/14 |
