@@ -18,13 +18,11 @@ const Duration kSpinAnimationDuration = Duration(milliseconds: 2500);
 class GameCubit extends Cubit<GameState>
     with CubitSubscriptionMixin<GameState> {
   GameCubit({
-    required final DemoBalanceRepository balanceRepository,
-    required final TimerService timerService,
+    required this._balanceRepository,
+    required this._timerService,
     final Random? random,
     final AppLocalizations? l10n,
-  }) : _balanceRepository = balanceRepository,
-       _timerService = timerService,
-       _testRandom = random,
+  }) : _testRandom = random,
        _l10n = l10n,
        super(
          GameState.error(

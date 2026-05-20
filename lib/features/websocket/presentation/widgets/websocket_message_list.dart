@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
@@ -21,11 +22,11 @@ class WebsocketMessageList extends StatelessWidget {
     }
     return RepaintBoundary(
       child: ListView.builder(
+        scrollCacheExtent: const ScrollCacheExtent.pixels(500),
         padding: EdgeInsets.symmetric(
           horizontal: context.responsiveHorizontalGapL,
           vertical: context.responsiveGapS,
         ),
-        cacheExtent: 500,
         reverse: true,
         itemCount: messages.length,
         itemBuilder: (final context, final index) {

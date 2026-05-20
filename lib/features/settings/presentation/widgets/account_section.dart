@@ -11,7 +11,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key, final FirebaseAuth? auth}) : _auth = auth;
+  const AccountSection({super.key, this._auth});
 
   final FirebaseAuth? _auth;
 

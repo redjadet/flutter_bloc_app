@@ -17,10 +17,8 @@
 include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
-  # Analyzer plugins currently disabled for Dart 3.12 toolchain upgrades.
-  # The plugin manager requires `analysis_server_plugin` >=0.3.8, while our
-  # vendored plugins still target older analyzer_plugin/analysis_server_plugin
-  # constraints. Re-enable once dependencies align.
+  plugins:
+    - custom_lint
   language:
     strict-casts: true
     strict-inference: true
@@ -52,9 +50,6 @@ analyzer:
     collection_methods_unrelated_type: error
     unrelated_type_equality_checks: error
     void_checks: error
-    deprecated_member_use: ignore
-    prefer_initializing_formals: ignore
-    use_null_aware_elements: ignore
   exclude:
     - build/**
     - .dart_tool/**
@@ -62,7 +57,6 @@ analyzer:
     - ios/Pods/**
     - android/.gradle/**
     - android/app/generated/**
-    - test/**
     - '**/*.g.dart'
     - '**/*.freezed.dart'
     - '**/*.gen.dart'
@@ -79,8 +73,6 @@ analyzer:
 linter:
   rules:
     prefer_expression_function_bodies: false
-    prefer_initializing_formals: false
-    use_null_aware_elements: false
     type_annotate_public_apis: true
     avoid_final_parameters: false
     public_member_api_docs: false
@@ -91,15 +83,6 @@ linter:
     one_member_abstracts: false
     use_decorated_box: true
     unnecessary_breaks: false
-
-# Custom lint configuration
-file_length_lint:
-  # Maximum number of lines allowed per code file (warn when exceeded).
-  max_lines: 300
-  # Additional glob patterns to exclude beyond the built-in defaults.
-  # Paths are matched against the absolute file path.
-  excludes:
-    - lib/generated/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

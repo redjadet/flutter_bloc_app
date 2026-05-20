@@ -12,8 +12,7 @@ typedef TelemetryEventSink =
 
 /// Logs request/response duration and status.
 class TelemetryInterceptor extends Interceptor {
-  TelemetryInterceptor({final TelemetryEventSink? eventSink})
-    : _eventSink = eventSink;
+  TelemetryInterceptor({this._eventSink});
 
   final TelemetryEventSink? _eventSink;
 

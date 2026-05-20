@@ -10,13 +10,10 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
   StaffDemoSessionCubit({
-    required final AuthRepository authRepository,
-    required final StaffDemoProfileRepository profileRepository,
-    required final StaffDemoPushTokenRepository pushTokenRepository,
-  }) : _authRepository = authRepository,
-       _profileRepository = profileRepository,
-       _pushTokenRepository = pushTokenRepository,
-       super(const StaffDemoSessionState());
+    required this._authRepository,
+    required this._profileRepository,
+    required this._pushTokenRepository,
+  }) : super(const StaffDemoSessionState());
 
   final AuthRepository _authRepository;
   final StaffDemoProfileRepository _profileRepository;

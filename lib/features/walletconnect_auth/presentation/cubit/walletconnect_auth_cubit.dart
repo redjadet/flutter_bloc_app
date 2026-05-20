@@ -12,11 +12,9 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 /// Cubit managing WalletConnect authentication state.
 class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
   WalletConnectAuthCubit({
-    required final WalletConnectAuthRepository repository,
-    final AppLocalizations? l10n,
-  }) : _repository = repository,
-       _l10n = l10n,
-       super(const WalletConnectAuthState());
+    required this._repository,
+    this._l10n,
+  }) : super(const WalletConnectAuthState());
 
   final WalletConnectAuthRepository _repository;
   final AppLocalizations? _l10n;

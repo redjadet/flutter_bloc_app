@@ -13,12 +13,10 @@ import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 class SearchCubit extends Cubit<SearchState>
     with CubitSubscriptionMixin<SearchState> {
   SearchCubit({
-    required final SearchRepository repository,
-    required final TimerService timerService,
+    required this._repository,
+    required this._timerService,
     this.debounceDuration = const Duration(milliseconds: 500),
-  }) : _repository = repository,
-       _timerService = timerService,
-       super(const SearchState());
+  }) : super(const SearchState());
 
   final SearchRepository _repository;
   final TimerService _timerService;

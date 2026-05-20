@@ -935,8 +935,7 @@ class _TrackingChatHistoryRepository extends FakeChatHistoryRepository {
 }
 
 class _ThrowingChatHistoryRepository extends FakeChatHistoryRepository {
-  _ThrowingChatHistoryRepository({bool shouldThrow = true})
-    : _shouldThrow = shouldThrow;
+  _ThrowingChatHistoryRepository() : _shouldThrow = true;
 
   bool _shouldThrow;
 

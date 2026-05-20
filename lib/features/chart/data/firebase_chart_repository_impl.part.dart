@@ -2,21 +2,15 @@ part of 'firebase_chart_repository.dart';
 
 class FirebaseChartRepository implements ChartRemoteRepository {
   FirebaseChartRepository({
-    final FirebaseAuth? auth,
-    final FirebaseFunctions? functions,
-    final FirebaseFirestore? firestore,
-    final ChartRemoteRepository? liveDirectFallback,
+    this._auth,
+    this._functions,
+    this._firestore,
+    this._liveDirectFallback,
 
     /// When non-null, skips real [FirebaseFirestore] reads (for tests only).
     /// Do not inject this from production DI.
-    @visibleForTesting
-    final Future<Map<String, dynamic>?> Function(String docPath)?
-    firestoreDocDataLoader,
-  }) : _auth = auth,
-       _functions = functions,
-       _firestore = firestore,
-       _liveDirectFallback = liveDirectFallback,
-       _firestoreDocDataLoader = firestoreDocDataLoader;
+    @visibleForTesting this._firestoreDocDataLoader,
+  });
 
   static const String _region = 'us-central1';
   static const String _callableName = 'syncChartTrending';

@@ -11,16 +11,12 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// work (see tests).
 class AuthAwareChartRemoteRepository implements ChartRemoteRepository {
   AuthAwareChartRemoteRepository({
-    required final ChartRemoteRepository supabaseRemote,
-    required final ChartRemoteRepository firebaseRemote,
-    required final ChartRemoteRepository directRemote,
-    required final bool Function() isSupabaseSignedIn,
-    required final bool Function() isFirebaseSignedIn,
-  }) : _supabaseRemote = supabaseRemote,
-       _firebaseRemote = firebaseRemote,
-       _directRemote = directRemote,
-       _isSupabaseSignedIn = isSupabaseSignedIn,
-       _isFirebaseSignedIn = isFirebaseSignedIn;
+    required this._supabaseRemote,
+    required this._firebaseRemote,
+    required this._directRemote,
+    required this._isSupabaseSignedIn,
+    required this._isFirebaseSignedIn,
+  });
 
   final ChartRemoteRepository _supabaseRemote;
   final ChartRemoteRepository _firebaseRemote;

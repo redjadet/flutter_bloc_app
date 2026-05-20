@@ -5,8 +5,7 @@ import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 class ChatSyncOperationFactory {
-  ChatSyncOperationFactory({required final String entityType})
-    : _entityType = entityType;
+  ChatSyncOperationFactory({required this._entityType});
 
   final String _entityType;
 

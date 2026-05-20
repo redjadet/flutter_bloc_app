@@ -16,7 +16,9 @@ import 'dart:typed_data';
 ///   }
 Future<void> main(List<String> args) async {
   if (args.length < 2) {
-    stderr.writeln('Usage: dart run tool/skill_dedupe.dart <inventory.json> <out.json>');
+    stderr.writeln(
+      'Usage: dart run tool/skill_dedupe.dart <inventory.json> <out.json>',
+    );
     exitCode = 2;
     return;
   }
@@ -24,7 +26,8 @@ Future<void> main(List<String> args) async {
   final invPath = args[0];
   final outPath = args[1];
 
-  final inv = jsonDecode(await File(invPath).readAsString()) as Map<String, Object?>;
+  final inv =
+      jsonDecode(await File(invPath).readAsString()) as Map<String, Object?>;
   final skills = (inv['skills'] as List).cast<Map<String, Object?>>();
 
   final exact = <String, List<String>>{};
@@ -46,14 +49,22 @@ Future<void> main(List<String> args) async {
           .where((e) => e.value.length > 1)
           .map((e) => {'hash': e.key, 'paths': e.value})
           .toList()
-        ..sort((a, b) => (b['paths'] as List).length.compareTo((a['paths'] as List).length));
+        ..sort(
+          (a, b) => (b['paths'] as List).length.compareTo(
+            (a['paths'] as List).length,
+          ),
+        );
 
   final nearClusters =
       near.entries
           .where((e) => e.value.length > 1)
           .map((e) => {'fingerprint': e.key, 'paths': e.value})
           .toList()
-        ..sort((a, b) => (b['paths'] as List).length.compareTo((a['paths'] as List).length));
+        ..sort(
+          (a, b) => (b['paths'] as List).length.compareTo(
+            (a['paths'] as List).length,
+          ),
+        );
 
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
@@ -64,8 +75,12 @@ Future<void> main(List<String> args) async {
 
   final outFile = File(outPath);
   await outFile.parent.create(recursive: true);
-  await outFile.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
-  stdout.writeln('Wrote ${exactClusters.length} exact, ${nearClusters.length} near -> $outPath');
+  await outFile.writeAsString(
+    const JsonEncoder.withIndent('  ').convert(payload),
+  );
+  stdout.writeln(
+    'Wrote ${exactClusters.length} exact, ${nearClusters.length} near -> $outPath',
+  );
 }
 
 String _fingerprint(String content) {

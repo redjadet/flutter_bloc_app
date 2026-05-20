@@ -4,8 +4,7 @@ import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 enum TodoItemDensity {
   regular,
   compact,
-  phoneLandscape
-  ;
+  phoneLandscape;
 
   bool get isCompact => this != TodoItemDensity.regular;
   bool get showsDescription => this != TodoItemDensity.phoneLandscape;

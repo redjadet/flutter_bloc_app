@@ -18,9 +18,9 @@ part 'chart_page.freezed.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({
-    required final ChartRepository repository,
+    required this._repository,
     super.key,
-  }) : _repository = repository;
+  });
 
   final ChartRepository _repository;
 

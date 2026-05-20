@@ -8,10 +8,9 @@ import 'package:meta/meta.dart';
 
 class HttpChartRepository extends ChartRepository {
   HttpChartRepository({
-    required final CoingeckoApi api,
+    required this._api,
     final DateTime Function()? now,
-  }) : _api = api,
-       _now = now ?? DateTime.now;
+  }) : _now = now ?? DateTime.now;
 
   static const Map<String, String> _marketChartQuery = <String, String>{
     'vs_currency': 'usd',

@@ -50,16 +50,12 @@ class SecretConfigRenderOrchestrationHfTokenProvider
 class LayeredRenderOrchestrationHfTokenProvider
     implements RenderOrchestrationHfTokenProvider {
   LayeredRenderOrchestrationHfTokenProvider({
-    required final AppRuntimeConfig runtime,
-    required final RenderOrchestrationRemoteTokenPort remoteTokenPort,
-    required final SecretStorage storage,
-    final FirebaseAuth? firebaseAuth,
-    final Future<String?> Function()? callableTokenOverride,
-  }) : _runtime = runtime,
-       _remoteTokenPort = remoteTokenPort,
-       _storage = storage,
-       _firebaseAuth = firebaseAuth,
-       _callableTokenOverride = callableTokenOverride;
+    required this._runtime,
+    required this._remoteTokenPort,
+    required this._storage,
+    this._firebaseAuth,
+    this._callableTokenOverride,
+  });
 
   /// Current cache key for any orchestration HF material (RC or Callable).
   static const String cacheKey = 'render_chat_orchestration_hf_token_v1';

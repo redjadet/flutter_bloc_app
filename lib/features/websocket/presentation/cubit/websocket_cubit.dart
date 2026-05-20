@@ -143,7 +143,9 @@ class WebsocketCubit extends Cubit<WebsocketState>
       state.copyWith(
         status: connectionState.status,
         errorMessage: connectionState.errorMessage,
-        isSending: connectionState.status == WebsocketStatus.connected && _inFlightSends > 0,
+        isSending:
+            connectionState.status == WebsocketStatus.connected &&
+            _inFlightSends > 0,
       ),
     );
   }

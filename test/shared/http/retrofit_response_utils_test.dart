@@ -20,8 +20,9 @@ void main() {
         inner,
       );
 
-      final Response<List<int>> adapted =
-          bytesResponseFromHttpResponse(httpResponse);
+      final Response<List<int>> adapted = bytesResponseFromHttpResponse(
+        httpResponse,
+      );
 
       expect(adapted.statusCode, 200);
       expect(utf8.decode(adapted.data!), body);

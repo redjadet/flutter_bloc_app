@@ -6,14 +6,11 @@ import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 /// Retries on transient status codes and connection/timeout errors.
 class RetryInterceptor extends Interceptor {
   RetryInterceptor({
-    required final Dio dio,
-    required final int maxRetries,
-    final RetryNotificationService? retryNotificationService,
+    required this._dio,
+    required this._maxRetries,
+    this._retryNotificationService,
     final Future<void> Function(Duration delay)? waitForDelay,
-  }) : _dio = dio,
-       _maxRetries = maxRetries,
-       _retryNotificationService = retryNotificationService,
-       _waitForDelay = waitForDelay ?? Future<void>.delayed;
+  }) : _waitForDelay = waitForDelay ?? Future<void>.delayed;
 
   final Dio _dio;
   final int _maxRetries;

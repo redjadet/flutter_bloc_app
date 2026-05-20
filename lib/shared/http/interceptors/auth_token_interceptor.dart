@@ -9,12 +9,10 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 /// Injects Firebase auth token and retries once on 401 after refresh.
 class AuthTokenInterceptor extends QueuedInterceptor {
   AuthTokenInterceptor({
-    required final AuthTokenManager authTokenManager,
-    required final Dio Function() createRetryDio,
-    final FirebaseAuth? firebaseAuth,
-  }) : _authTokenManager = authTokenManager,
-       _createRetryDio = createRetryDio,
-       _firebaseAuth = firebaseAuth;
+    required this._authTokenManager,
+    required this._createRetryDio,
+    this._firebaseAuth,
+  });
 
   final AuthTokenManager _authTokenManager;
   final Dio Function() _createRetryDio;

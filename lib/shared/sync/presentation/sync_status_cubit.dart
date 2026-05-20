@@ -13,10 +13,9 @@ export 'sync_status_state.dart';
 class SyncStatusCubit extends Cubit<SyncStatusState>
     with CubitSubscriptionMixin<SyncStatusState> {
   SyncStatusCubit({
-    required final NetworkStatusService networkStatusService,
+    required this._networkStatusService,
     required final BackgroundSyncCoordinator coordinator,
-  }) : _networkStatusService = networkStatusService,
-       _coordinator = coordinator,
+  }) : _coordinator = coordinator,
        super(
          SyncStatusState(
            networkStatus: NetworkStatus.unknown,

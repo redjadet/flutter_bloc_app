@@ -11,14 +11,12 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/entities/recent
 /// High-frequency simulated crypto book (demo only; no exchange).
 class SimulatedMarketFeed {
   SimulatedMarketFeed({
-    required final Random random,
-    required final TimerService timerService,
+    required this._random,
+    required this._timerService,
     this.fastTick = const Duration(milliseconds: 20),
     this.emitInterval = const Duration(milliseconds: 80),
     final DateTime Function()? clock,
-  }) : _random = random,
-       _timerService = timerService,
-       _clock = clock ?? DateTime.now;
+  }) : _clock = clock ?? DateTime.now;
 
   final Random _random;
   final TimerService _timerService;

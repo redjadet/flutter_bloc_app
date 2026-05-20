@@ -22,8 +22,7 @@ class InMemoryIapDemoCreditsStore implements IapDemoCreditsStore {
 }
 
 class HiveIapDemoCreditsStore implements IapDemoCreditsStore {
-  HiveIapDemoCreditsStore({required final HiveService hiveService})
-    : _hiveService = hiveService;
+  HiveIapDemoCreditsStore({required this._hiveService});
 
   static const String _boxName = 'iap_demo';
   static const String _keyCredits = 'credits';

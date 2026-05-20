@@ -47,10 +47,9 @@ class _StubProfileRepository implements ProfileRepository {
 
 class _CompletingProfileCacheRepository implements ProfileCacheRepository {
   _CompletingProfileCacheRepository({
-    required ProfileCacheRepository delegate,
-    required Completer<void> saveCompleter,
-  }) : _delegate = delegate,
-       _saveCompleter = saveCompleter;
+    required this._delegate,
+    required this._saveCompleter,
+  });
 
   final ProfileCacheRepository _delegate;
   final Completer<void> _saveCompleter;

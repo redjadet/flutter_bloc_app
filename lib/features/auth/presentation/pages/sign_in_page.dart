@@ -24,13 +24,12 @@ const Key signInGuestButtonKey = Key('sign_in_guest_button');
 class SignInPage extends StatelessWidget {
   const SignInPage({
     super.key,
-    final FirebaseAuth? auth,
+    this._auth,
     this.authRepository,
     this.redirectAfterLogin,
     this.providersOverride,
     final firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
-  }) : _auth = auth,
-       _googleProviderFactory =
+  }) : _googleProviderFactory =
            googleProviderFactory ?? maybeCreateGoogleProvider;
 
   final FirebaseAuth? _auth;

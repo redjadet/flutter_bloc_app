@@ -10,12 +10,11 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_pur
 
 class FakeInAppPurchaseRepository implements InAppPurchaseRepository {
   FakeInAppPurchaseRepository({
-    required final TimerService timerService,
+    required this._timerService,
     final IapDemoCreditsStore? creditsStore,
     this.delay = const Duration(milliseconds: 450),
     this.clockNow,
-  }) : _timerService = timerService,
-       _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
+  }) : _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
 
   final Duration delay;
   final DateTime Function()? clockNow;

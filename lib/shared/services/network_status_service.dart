@@ -17,10 +17,9 @@ abstract class NetworkStatusService {
 class ConnectivityNetworkStatusService implements NetworkStatusService {
   ConnectivityNetworkStatusService({
     final Connectivity? connectivity,
-    final Duration debounce = const Duration(milliseconds: 250),
+    this._debounce = const Duration(milliseconds: 250),
     final TimerService? timerService,
   }) : _connectivity = connectivity ?? Connectivity(),
-       _debounce = debounce,
        _timerService = timerService ?? DefaultTimerService() {
     _controller = StreamController<NetworkStatus>.broadcast(
       onListen: _onListen,

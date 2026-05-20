@@ -7,9 +7,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 /// Provides common functionality for opening boxes and safely deleting keys.
 /// Subclasses must implement [boxName] to specify which Hive box to use.
 abstract class HiveRepositoryBase {
-  /// Creates a new [HiveRepositoryBase] with the given [hiveService].
-  HiveRepositoryBase({required final HiveService hiveService})
-    : _hiveService = hiveService;
+  /// Creates a new [HiveRepositoryBase] with the given [_hiveService].
+  HiveRepositoryBase({required this._hiveService});
 
   final HiveService _hiveService;
 

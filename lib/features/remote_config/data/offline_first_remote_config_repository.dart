@@ -20,16 +20,12 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 class OfflineFirstRemoteConfigRepository
     implements RemoteConfigService, SyncableRepository {
   OfflineFirstRemoteConfigRepository({
-    required final RemoteConfigRepository remoteRepository,
-    required final RemoteConfigCacheRepository cacheRepository,
-    required final NetworkStatusService networkStatusService,
-    required final SyncableRepositoryRegistry registry,
+    required this._remoteRepository,
+    required this._cacheRepository,
+    required this._networkStatusService,
+    required this._registry,
     final void Function(String event, Map<String, Object?> payload)? telemetry,
-  }) : _remoteRepository = remoteRepository,
-       _cacheRepository = cacheRepository,
-       _networkStatusService = networkStatusService,
-       _registry = registry,
-       _telemetry = telemetry ?? _defaultTelemetry {
+  }) : _telemetry = telemetry ?? _defaultTelemetry {
     if (!shouldSkipBackgroundSyncOnMacOsDebug) {
       _registry.register(this);
     }

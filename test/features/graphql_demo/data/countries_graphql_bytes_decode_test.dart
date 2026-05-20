@@ -20,32 +20,35 @@ void main() {
     );
   });
 
-  test('fetchCountries parses large byte response without string body', () async {
-    final String body = _allCountriesPayload(countryCount: 300);
-    final Dio client = Dio();
-    client.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          handler.resolve(
-            Response<List<int>>(
-              requestOptions: options,
-              data: utf8.encode(body),
-              statusCode: 200,
-            ),
-          );
-        },
-      ),
-    );
-    final CountriesGraphqlRepository repository = CountriesGraphqlRepository(
-      client: client,
-    );
+  test(
+    'fetchCountries parses large byte response without string body',
+    () async {
+      final String body = _allCountriesPayload(countryCount: 300);
+      final Dio client = Dio();
+      client.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            handler.resolve(
+              Response<List<int>>(
+                requestOptions: options,
+                data: utf8.encode(body),
+                statusCode: 200,
+              ),
+            );
+          },
+        ),
+      );
+      final CountriesGraphqlRepository repository = CountriesGraphqlRepository(
+        client: client,
+      );
 
-    final List<GraphqlCountry> countries = await repository.fetchCountries();
+      final List<GraphqlCountry> countries = await repository.fetchCountries();
 
-    expect(countries, hasLength(300));
-    expect(countries.first.code, 'C000');
-    expect(countries.last.code, 'C299');
-  });
+      expect(countries, hasLength(300));
+      expect(countries.first.code, 'C000');
+      expect(countries.last.code, 'C299');
+    },
+  );
 }
 
 String _allCountriesPayload({required final int countryCount}) {

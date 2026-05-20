@@ -10,13 +10,11 @@ class CompositeChatRepository implements ChatRepository {
     required final ChatRepository supabaseRepository,
     required final HuggingfaceChatRepository directRepository,
     required final NetworkStatusService networkStatusService,
-    required final bool Function() isSupabaseProxyRunnable,
-    required final bool Function() isDirectPolicyAllowed,
+    required this._isSupabaseProxyRunnable,
+    required this._isDirectPolicyAllowed,
   }) : _supabase = supabaseRepository,
        _direct = directRepository,
-       _networkStatus = networkStatusService,
-       _isSupabaseProxyRunnable = isSupabaseProxyRunnable,
-       _isDirectPolicyAllowed = isDirectPolicyAllowed;
+       _networkStatus = networkStatusService;
 
   final ChatRepository _supabase;
   final HuggingfaceChatRepository _direct;

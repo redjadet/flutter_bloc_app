@@ -8,10 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../test_helpers.dart' as test_helpers;
 
 class _FailingHiveService extends HiveService {
-  _FailingHiveService({
-    required super.keyManager,
-    required final Set<String> failingBoxes,
-  }) : _failingBoxes = failingBoxes;
+  _FailingHiveService({required super.keyManager, required this._failingBoxes});
 
   final Set<String> _failingBoxes;
 

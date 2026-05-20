@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.07%** (20567/28147 lines)
+*Total line coverage*: **73.07%** (20564/28144 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -254,10 +254,10 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/playlearn/presentation/pages/playlearn_page.dart` | 77.78% | 28/36 |
 | `lib/features/realtime_market/presentation/pages/realtime_market_page.dart` | 77.78% | 28/36 |
 | `lib/shared/storage/hive_initializer_io.dart` | 77.78% | 14/18 |
+| `lib/features/google_maps/presentation/cubit/map_sample_cubit.dart` | 77.94% | 53/68 |
 | `lib/features/google_maps/presentation/widgets/map_state_manager.dart` | 78.05% | 32/41 |
 | `lib/features/chat/data/chat_direct_failure_mapper.dart` | 78.13% | 25/32 |
 | `lib/features/case_study_demo/domain/case_study_draft.dart` | 78.26% | 54/69 |
-| `lib/features/google_maps/presentation/cubit/map_sample_cubit.dart` | 78.26% | 54/69 |
 | `lib/features/realtime_market/presentation/widgets/market_chart_panel.dart` | 78.26% | 36/46 |
 | `lib/features/staff_app_demo/presentation/forms/staff_demo_forms_cubit.dart` | 78.26% | 36/46 |
 | `lib/features/counter/presentation/widgets/counter_sync_banner.dart` | 78.48% | 62/79 |
@@ -308,8 +308,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/realtime_market/presentation/widgets/connection_status_pill.dart` | 83.33% | 20/24 |
 | `lib/features/remote_config/presentation/widgets/remote_config_diagnostics_section_components.dart` | 83.33% | 45/54 |
 | `lib/shared/http/interceptors/network_check_interceptor.dart` | 83.33% | 10/12 |
-| `lib/features/websocket/presentation/cubit/websocket_cubit.dart` | 83.56% | 61/73 |
 | `lib/features/fcm_demo/data/firebase_messaging_repository.dart` | 83.64% | 46/55 |
+| `lib/features/websocket/presentation/cubit/websocket_cubit.dart` | 83.78% | 62/74 |
 | `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` | 83.87% | 26/31 |
 | `lib/features/chart/presentation/widgets/chart_line_graph.dart` | 84.21% | 96/114 |
 | `lib/shared/utils/isolate_samples.dart` | 84.38% | 27/32 |
@@ -474,11 +474,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/data/rest_counter_repository_watch.dart` | 96.15% | 25/26 |
 | `lib/features/todo_list/data/realtime_database_todo_repository.dart` | 96.20% | 76/79 |
 | `lib/features/iot_demo/data/offline_first_iot_demo_repository_sync.dart` | 96.23% | 102/106 |
+| `lib/features/settings/presentation/cubits/theme_cubit.dart` | 96.30% | 26/27 |
 | `lib/shared/utils/bloc_provider_helpers.dart` | 96.30% | 26/27 |
 | `lib/shared/widgets/sync_status_banner.dart` | 96.30% | 26/27 |
 | `lib/core/di/groups/register_feature_services.dart` | 96.43% | 54/56 |
 | `lib/features/counter/presentation/widgets/countdown_bar/countdown_bar.dart` | 96.43% | 27/28 |
-| `lib/features/settings/presentation/cubits/theme_cubit.dart` | 96.43% | 27/28 |
 | `lib/features/settings/presentation/widgets/language_section.dart` | 96.43% | 27/28 |
 | `lib/features/chat/domain/chat_message.dart` | 96.55% | 28/29 |
 | `lib/shared/widgets/skeletons/skeleton_grid_item.dart` | 96.55% | 28/29 |
@@ -500,8 +500,8 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/presentation/widgets/todo_filter_bar.dart` | 97.62% | 41/42 |
 | `lib/shared/utils/safe_parse_utils.dart` | 97.62% | 41/42 |
 | `lib/features/chart/data/chart_demo_cache_repository.dart` | 97.67% | 42/43 |
+| `lib/features/chart/presentation/cubit/chart_cubit.dart` | 97.67% | 42/43 |
 | `lib/features/realtime_market/presentation/widgets/order_book_panel.dart` | 97.70% | 85/87 |
-| `lib/features/chart/presentation/cubit/chart_cubit.dart` | 97.73% | 43/44 |
 | `lib/features/library_demo/presentation/widgets/library_demo_category_list.dart` | 97.73% | 43/44 |
 | `lib/features/search/presentation/search_cubit.dart` | 97.73% | 43/44 |
 | `lib/features/example/presentation/widgets/example_page_body_content.part.dart` | 97.76% | 131/134 |
@@ -624,7 +624,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/playlearn/presentation/playlearn_cubit.dart` | 100.00% | 31/31 |
 | `lib/features/playlearn/presentation/widgets/listen_button.dart` | 100.00% | 18/18 |
 | `lib/features/playlearn/presentation/widgets/topic_card.dart` | 100.00% | 13/13 |
-| `lib/features/profile/presentation/cubit/profile_cubit.dart` | 100.00% | 19/19 |
+| `lib/features/profile/presentation/cubit/profile_cubit.dart` | 100.00% | 18/18 |
 | `lib/features/profile/presentation/widgets/profile_button_styles.dart` | 100.00% | 18/18 |
 | `lib/features/profile/presentation/widgets/profile_gallery.dart` | 100.00% | 37/37 |
 | `lib/features/realtime_market/data/mappers/market_snapshot_mapper.dart` | 100.00% | 8/8 |
@@ -645,7 +645,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/settings/data/hive_locale_repository.dart` | 100.00% | 3/3 |
 | `lib/features/settings/data/hive_theme_repository.dart` | 100.00% | 10/10 |
 | `lib/features/settings/data/package_info_app_info_repository.dart` | 100.00% | 8/8 |
-| `lib/features/settings/presentation/cubits/locale_cubit.dart` | 100.00% | 24/24 |
+| `lib/features/settings/presentation/cubits/locale_cubit.dart` | 100.00% | 23/23 |
 | `lib/features/settings/presentation/widgets/settings_card.dart` | 100.00% | 22/22 |
 | `lib/features/settings/presentation/widgets/sync_diagnostics_section.dart` | 100.00% | 79/79 |
 | `lib/features/settings/presentation/widgets/theme_section.dart` | 100.00% | 14/14 |
@@ -699,7 +699,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/ui/view_status.dart` | 100.00% | 4/4 |
 | `lib/shared/utils/cubit_error_handler.dart` | 100.00% | 9/9 |
 | `lib/shared/utils/in_flight_coalescer.dart` | 100.00% | 22/22 |
-| `lib/shared/utils/isolate_json.dart` | 100.00% | 49/49 |
+| `lib/shared/utils/isolate_json.dart` | 100.00% | 50/50 |
 | `lib/shared/utils/markdown_table_renderer.dart` | 100.00% | 53/53 |
 | `lib/shared/utils/platform_environment.dart` | 100.00% | 1/1 |
 | `lib/shared/utils/platform_environment_io.dart` | 100.00% | 1/1 |

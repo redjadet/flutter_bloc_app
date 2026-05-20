@@ -7,10 +7,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class OfflineFirstChartRepository extends ChartRepository {
   OfflineFirstChartRepository({
-    required final ChartRemoteRepository remoteRepository,
-    required final ChartCacheRepository cacheRepository,
-  }) : _remoteRepository = remoteRepository,
-       _cacheRepository = cacheRepository;
+    required this._remoteRepository,
+    required this._cacheRepository,
+  });
 
   static const Duration _maxCacheAge = Duration(hours: 24);
   static const String _logContext =

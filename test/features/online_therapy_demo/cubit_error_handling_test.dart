@@ -8,21 +8,27 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('ClientBookingCubit.loadTherapists clears busy and surfaces error', () async {
-    final cubit = ClientBookingCubit(
-      therapists: _ThrowingTherapistRepository(),
-      appointments: _NoopAppointmentRepository(),
-    );
-    addTearDown(cubit.close);
+  test(
+    'ClientBookingCubit.loadTherapists clears busy and surfaces error',
+    () async {
+      final cubit = ClientBookingCubit(
+        therapists: _ThrowingTherapistRepository(),
+        appointments: _NoopAppointmentRepository(),
+      );
+      addTearDown(cubit.close);
 
-    await cubit.loadTherapists();
+      await cubit.loadTherapists();
 
-    expect(cubit.state.isBusy, isFalse);
-    expect(cubit.state.errorMessage, isNotNull);
-  });
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.errorMessage, isNotNull);
+    },
+  );
 
   test('AdminCubit.refresh clears busy and surfaces error', () async {
-    final cubit = AdminCubit(admin: _ThrowingAdminRepository(), audit: _ThrowingAuditRepository());
+    final cubit = AdminCubit(
+      admin: _ThrowingAdminRepository(),
+      audit: _ThrowingAuditRepository(),
+    );
     addTearDown(cubit.close);
 
     await cubit.refresh();
@@ -58,7 +64,10 @@ class _ThrowingTherapistRepository implements TherapistRepository {
 
 class _NoopAppointmentRepository implements AppointmentRepository {
   @override
-  Future<Appointment> cancelAppointment({required String appointmentId, required String reason}) {
+  Future<Appointment> cancelAppointment({
+    required String appointmentId,
+    required String reason,
+  }) {
     throw UnimplementedError();
   }
 
@@ -72,7 +81,8 @@ class _NoopAppointmentRepository implements AppointmentRepository {
   }
 
   @override
-  Future<List<Appointment>> listAppointmentsForCurrentRole() async => <Appointment>[];
+  Future<List<Appointment>> listAppointmentsForCurrentRole() async =>
+      <Appointment>[];
 }
 
 class _ThrowingAdminRepository implements TherapyAdminRepository {

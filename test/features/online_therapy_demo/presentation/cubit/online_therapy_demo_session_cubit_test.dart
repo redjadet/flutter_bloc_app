@@ -36,28 +36,29 @@ TherapyUser _sampleUser(final TherapyRole role) => TherapyUser(
 
 void main() {
   group('OnlineTherapyDemoSessionCubit.setRole', () {
-    test('restores previous user and role when role switch login fails', () async {
-      final TherapyUser clientUser = _sampleUser(TherapyRole.client);
-      final _ThrowingLoginTherapyAuthRepository auth =
-          _ThrowingLoginTherapyAuthRepository(clientUser);
-      final OnlineTherapyFakeApi api = OnlineTherapyFakeApi();
+    test(
+      'restores previous user and role when role switch login fails',
+      () async {
+        final TherapyUser clientUser = _sampleUser(TherapyRole.client);
+        final _ThrowingLoginTherapyAuthRepository auth =
+            _ThrowingLoginTherapyAuthRepository(clientUser);
+        final OnlineTherapyFakeApi api = OnlineTherapyFakeApi();
 
-      final OnlineTherapyDemoSessionCubit cubit = OnlineTherapyDemoSessionCubit(
-        auth: auth,
-        api: api,
-      );
+        final OnlineTherapyDemoSessionCubit cubit =
+            OnlineTherapyDemoSessionCubit(auth: auth, api: api);
 
-      expect(cubit.state.user, clientUser);
-      expect(cubit.state.role, TherapyRole.client);
+        expect(cubit.state.user, clientUser);
+        expect(cubit.state.role, TherapyRole.client);
 
-      await cubit.setRole(TherapyRole.therapist);
+        await cubit.setRole(TherapyRole.therapist);
 
-      expect(cubit.state.isBusy, isFalse);
-      expect(cubit.state.user, clientUser);
-      expect(cubit.state.role, TherapyRole.client);
-      expect(cubit.state.errorMessage, contains('network'));
+        expect(cubit.state.isBusy, isFalse);
+        expect(cubit.state.user, clientUser);
+        expect(cubit.state.role, TherapyRole.client);
+        expect(cubit.state.errorMessage, contains('network'));
 
-      await cubit.close();
-    });
+        await cubit.close();
+      },
+    );
   });
 }

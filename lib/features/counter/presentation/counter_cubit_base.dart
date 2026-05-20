@@ -5,15 +5,11 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         CubitSubscriptionMixin<CounterState>,
         StateRestorationMixin<CounterState> {
   _CounterCubitBase({
-    required final CounterRepository repository,
-    required final TimerService timerService,
-    required final DateTime Function() now,
-    required final Duration initialLoadDelay,
-  }) : _repository = repository,
-       _timerService = timerService,
-       _now = now,
-       _initialLoadDelay = initialLoadDelay,
-       super(const CounterState(count: 0));
+    required this._repository,
+    required this._timerService,
+    required this._now,
+    required this._initialLoadDelay,
+  }) : super(const CounterState(count: 0));
 
   // Default auto-decrement interval used on load and manual interactions.
   static const int _defaultIntervalSeconds =

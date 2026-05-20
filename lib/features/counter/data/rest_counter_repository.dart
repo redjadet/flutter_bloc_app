@@ -33,11 +33,10 @@ class RestCounterRepository implements CounterRepository {
     required final String baseUrl,
     final Dio? client,
     final Map<String, String>? defaultHeaders,
-    final Duration requestTimeout = const Duration(seconds: 10),
+    this._requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = _parseBaseUri(baseUrl),
        _client = client ?? Dio(),
-       _defaultHeaders = {if (defaultHeaders != null) ...defaultHeaders},
-       _requestTimeout = requestTimeout,
+       _defaultHeaders = {...?defaultHeaders},
        _ownsClient = client == null {
     _api = CounterApi(_client, baseUrl: _baseUri.toString());
     _watchController = StreamController<CounterSnapshot>.broadcast(

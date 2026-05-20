@@ -9,10 +9,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 /// Service for managing Hive database with encryption.
 class HiveService {
   HiveService({
-    required final HiveKeyManager keyManager,
+    required this._keyManager,
     final Future<bool> Function()? initializeHiveStorage,
-  }) : _keyManager = keyManager,
-       _initializeHiveStorage = initializeHiveStorage ?? initHive;
+  }) : _initializeHiveStorage = initializeHiveStorage ?? initHive;
 
   final HiveKeyManager _keyManager;
   final Future<bool> Function() _initializeHiveStorage;

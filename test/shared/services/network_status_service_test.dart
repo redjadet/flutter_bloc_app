@@ -11,11 +11,10 @@ import '../../test_helpers.dart' show FakeTimerService;
 /// multi-listener fan-out on stubbed getters).
 final class _FakeConnectivity implements Connectivity {
   _FakeConnectivity({
-    required Stream<List<ConnectivityResult>> onConnectivityChanged,
+    required this._onConnectivityChanged,
     this.beforeCheck,
     Future<List<ConnectivityResult>> Function()? checkConnectivity,
-  }) : _onConnectivityChanged = onConnectivityChanged,
-       _checkConnectivity =
+  }) : _checkConnectivity =
            checkConnectivity ??
            (() async => <ConnectivityResult>[ConnectivityResult.wifi]);
 

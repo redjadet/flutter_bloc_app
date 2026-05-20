@@ -8,10 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Service to migrate data from SharedPreferences to Hive database.
 class SharedPreferencesMigrationService {
   SharedPreferencesMigrationService({
-    required final HiveService hiveService,
-    final SharedPreferences? sharedPreferences,
-  }) : _hiveService = hiveService,
-       _sharedPreferences = sharedPreferences;
+    required this._hiveService,
+    this._sharedPreferences,
+  });
 
   static const String _migrationBoxName = 'migration';
   static const String _migrationKey = 'migration_completed';
