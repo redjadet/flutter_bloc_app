@@ -19,6 +19,20 @@ class _MockStaffDemoEventProofRepository extends Mock
 class _MockStaffDemoProofFileStore extends Mock
     implements StaffDemoProofFileStore {}
 
+Future<void> _pumpUntil(
+  bool Function() predicate, {
+  Duration step = const Duration(milliseconds: 10),
+  int maxAttempts = 100,
+}) async {
+  for (var attempt = 0; attempt < maxAttempts; attempt++) {
+    if (predicate()) {
+      return;
+    }
+    await Future<void>.delayed(step);
+  }
+  fail('Condition not met within ${step * maxAttempts}');
+}
+
 void main() {
   group('StaffDemoProofCubit', () {
     test(
@@ -63,11 +77,12 @@ void main() {
 
         cubit.setSignaturePath(signatureFile.path);
 
-        unawaited(cubit.submit(siteId: 'site1', shiftId: null));
-        await Future<void>.delayed(Duration.zero);
+        final first = cubit.submit(siteId: 'site1', shiftId: null);
+        await _pumpUntil(
+          () => cubit.state.status == StaffDemoProofStatus.submitting,
+        );
 
         unawaited(cubit.submit(siteId: 'site1', shiftId: null));
-        await Future<void>.delayed(Duration.zero);
 
         verify(
           () => repository.submitProof(
@@ -80,7 +95,7 @@ void main() {
         ).called(1);
 
         completer.complete('proof-1');
-        await Future<void>.delayed(Duration.zero);
+        await first;
       },
     );
 
