@@ -18,6 +18,7 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
   final AuthRepository _authRepository;
   final StaffDemoEventProofRepository _repository;
   final StaffDemoProofFileStore _fileStore;
+  bool _submitInFlight = false;
 
   void setPhotos(final List<String> paths) {
     emit(state.copyWith(photoPaths: List<String>.from(paths)));
@@ -58,7 +59,7 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
     required final String siteId,
     required final String? shiftId,
   }) async {
-    if (state.status == StaffDemoProofStatus.submitting) {
+    if (_submitInFlight || state.status == StaffDemoProofStatus.submitting) {
       return;
     }
     final userId = _authRepository.currentUser?.id;
@@ -90,18 +91,35 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
       );
       return;
     }
-    if (!File(signaturePath).existsSync()) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Signature file missing.',
-        ),
-      );
+
+    if (_submitInFlight) {
       return;
     }
+    final photoPaths = List<String>.unmodifiable(state.photoPaths);
+    _submitInFlight = true;
+    try {
+      // ignore: avoid_slow_async_io — sync-io gate blocks existsSync on UI isolate
+      if (!await File(signaturePath).exists()) {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: StaffDemoProofStatus.error,
+            errorMessage: 'Signature file missing.',
+          ),
+        );
+        return;
+      }
 
-    for (final path in state.photoPaths) {
-      if (!File(path).existsSync()) {
+      final photoExistence = await Future.wait<bool>(
+        photoPaths.map(
+          (final path) async {
+            // ignore: avoid_slow_async_io — sync-io gate blocks existsSync on UI isolate
+            return File(path).exists();
+          },
+        ),
+      );
+      if (photoExistence.contains(false)) {
+        if (isClosed) return;
         emit(
           state.copyWith(
             status: StaffDemoProofStatus.error,
@@ -110,50 +128,53 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
         );
         return;
       }
-    }
 
-    emit(state.copyWith(status: StaffDemoProofStatus.submitting));
-    try {
-      final proofId = await _repository.submitProof(
-        userId: userId,
-        siteId: siteId.trim(),
-        shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
-        photoFilePaths: state.photoPaths,
-        signaturePngFilePath: signaturePath,
-      );
       if (isClosed) return;
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.success,
-          errorMessage: null,
-          lastProofId: proofId,
-        ),
-      );
-    } on StaffDemoEventProofOfflineEnqueuedException {
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.offlineQueued,
-          errorMessage: null,
-        ),
-      );
-    } on Exception catch (error, stackTrace) {
-      if (isClosed) return;
-      await CubitExceptionHandler.executeAsync<void>(
-        operation: () => Future<void>.error(error, stackTrace),
-        isAlive: () => !isClosed,
-        onSuccess: (_) {},
-        onError: (final message) {
-          if (isClosed) return;
-          emit(
-            state.copyWith(
-              status: StaffDemoProofStatus.error,
-              errorMessage: message,
-            ),
-          );
-        },
-        logContext: 'StaffDemoProofCubit.submit',
-      );
+      emit(state.copyWith(status: StaffDemoProofStatus.submitting));
+      try {
+        final proofId = await _repository.submitProof(
+          userId: userId,
+          siteId: siteId.trim(),
+          shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
+          photoFilePaths: photoPaths,
+          signaturePngFilePath: signaturePath,
+        );
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: StaffDemoProofStatus.success,
+            errorMessage: null,
+            lastProofId: proofId,
+          ),
+        );
+      } on StaffDemoEventProofOfflineEnqueuedException {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            status: StaffDemoProofStatus.offlineQueued,
+            errorMessage: null,
+          ),
+        );
+      } on Exception catch (error, stackTrace) {
+        if (isClosed) return;
+        await CubitExceptionHandler.executeAsync<void>(
+          operation: () => Future<void>.error(error, stackTrace),
+          isAlive: () => !isClosed,
+          onSuccess: (_) {},
+          onError: (final message) {
+            if (isClosed) return;
+            emit(
+              state.copyWith(
+                status: StaffDemoProofStatus.error,
+                errorMessage: message,
+              ),
+            );
+          },
+          logContext: 'StaffDemoProofCubit.submit',
+        );
+      }
+    } finally {
+      _submitInFlight = false;
     }
   }
 }

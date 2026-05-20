@@ -27,6 +27,7 @@ ALL_TESTS=(
   "test/core/supabase/edge_then_tables_test.dart"
   "test/shared/inherited_widget_lifecycle_regression_test.dart"
   "test/shared/widgets/sync_status_banner_test.dart"
+  "test/shared/sync/background_sync_coordinator_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
@@ -97,6 +98,8 @@ select_regression_guard_tests() {
       pubspec.lock|\
       lib/shared/*|\
       test/shared/*|\
+      lib/shared/sync/*|\
+      test/shared/sync/*|\
       lib/core/*|\
       test/core/*)
         out_ref=("${ALL_TESTS[@]}")

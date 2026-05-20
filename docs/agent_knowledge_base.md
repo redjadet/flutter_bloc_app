@@ -208,7 +208,7 @@ Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGE
 
 Transcript-derived workspace guardrails:
 
-- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry (same length) or delivery-checklist configuration validation fails in CI.
+- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 59) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md).
 - **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
 
 Repo fact:

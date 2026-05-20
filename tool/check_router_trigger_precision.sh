@@ -45,13 +45,17 @@ def extract_globs_from_frontmatter(text: str) -> list[str]:
 
 
 globs = extract_globs_from_frontmatter(rule_text)
+expanded_globs = list(globs)
+for pattern in globs:
+    if pattern.endswith("/router/**/*.dart"):
+        expanded_globs.append(pattern.replace("/router/**/*.dart", "/router/*.dart"))
 
 tp = fp = tn = fn = 0
 
 for item in benchmark:
     path = item["path"]
     expected = bool(item["should_trigger"])
-    actual = any(fnmatch.fnmatch(path, pattern) for pattern in globs)
+    actual = any(fnmatch.fnmatch(path, pattern) for pattern in expanded_globs)
     if expected and actual:
         tp += 1
     elif not expected and actual:
