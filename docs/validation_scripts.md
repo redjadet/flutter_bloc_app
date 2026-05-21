@@ -487,6 +487,41 @@ stream.listen((data) {
 
 ---
 
+#### `check_row_action_overflow.sh`
+
+**Purpose**: Detects `Row` blocks with two or more action buttons and no `OverflowBar`, `Wrap`, or `Expanded`/`Flexible` mitigation (RenderFlex overflow risk on narrow widths).
+
+**What it checks**:
+
+- Runs **primary** scope, then **all** of `lib/` when `CHECK_ROW_ACTION_OVERFLOW_ALSO_ALL=1` (default; set `0` to skip second pass)
+- Primary scope: profile/settings presentation, `presentation/widgets`, dialogs, forms, `*actions_bar*`, `common_form_field.dart`, `staff_app_demo_forms_page.dart`
+- `CHECK_ROW_ACTION_OVERFLOW_SCOPE=primary|all` overrides the first pass only (legacy single-pass mode)
+- Within 80 lines after each standalone `Row(` (not `ResponsiveDualCtaRow`, `IconLabelRow`, etc.), counts action buttons
+- Passes when `OverflowBar`, `ResponsiveActionOverflowBar`, `ResponsiveDualCtaRow`, `Wrap`, or `Expanded`/`Flexible` appears in the same window
+- `lib/shared/widgets/responsive_action_bar.dart` is always in primary scope (canonical `Row`+`Expanded` for dual CTAs lives there when call sites use `ResponsiveDualCtaRow`)
+- Self-test: `tool/check_row_action_overflow_fixtures.sh` via `tool/fixtures/action_row/`
+
+**Why it matters**:
+
+- Intrinsic-width button groups overflow before they wrap; `OverflowBar` stacks actions vertically when horizontal space is tight
+- Complements `check_row_text_overflow.sh` (icon + label rows → `IconLabelRow`)
+
+**Regression tests**: `test/shared/widgets/action_bar_layout_regression_test.dart`, `test/features/staff_app_demo/presentation/widgets/staff_demo_proof_signature_section_layout_test.dart` (via `tool/check_action_bar_layout.sh` and `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=auto|0|1`).
+
+**Env**: `CHECK_ROW_ACTION_OVERFLOW_MODE=fail|warn` (default `fail`). `CHECK_ROW_ACTION_OVERFLOW_ALSO_ALL=1|0` (default `1`). Checklist uses `fail` + dual pass.
+
+**Suppression**: `// check-ignore: reason` on the `Row(` line or the line above.
+
+---
+
+#### `check_action_bar_layout.sh`
+
+**Purpose**: Runs focused widget tests for `OverflowBar` and staff proof signature action layout at 320–360dp widths.
+
+**Env**: Invoked from `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=auto|0|1` matches PRIMARY_SCOPE UI changes (see `tool/delivery_checklist.sh`).
+
+---
+
 #### `check_lifecycle_error_handling.sh`
 
 **Purpose**: Catches lifecycle and error-handling patterns that can cause crashes or unhandled errors.
@@ -897,6 +932,8 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_freezed_preferred.sh`
 - `check_unguarded_null_assertion.sh`
 - `check_row_text_overflow.sh`
+- `check_row_action_overflow.sh`
+- `check_action_bar_layout.sh`
 - `check_lifecycle_error_handling.sh`
 - `check_offline_first_remote_merge.sh`
 - `check_feature_modularity_leaks.sh`

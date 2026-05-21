@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/shared/widgets/responsive_action_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
@@ -53,35 +54,28 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
           ),
         ),
       const SizedBox(height: 12),
-      Row(
-        children: <Widget>[
-          Expanded(
-            child: OutlinedButton(
-              onPressed: state.isBusy
-                  ? null
-                  : () {
-                      cubit.clearPendingBookingSlot();
-                      context.pop();
-                    },
-              child: Text(l10n.cancelButtonLabel),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: state.isBusy || slot == null
-                  ? null
-                  : () async {
-                      await cubit.createAppointmentFromSlot(slot);
-                      if (!context.mounted) return;
-                      context.goNamed(
-                        AppRoutes.onlineTherapyDemoClientAppointments,
-                      );
-                    },
-              child: Text(state.isBusy ? 'Booking…' : 'Confirm'),
-            ),
-          ),
-        ],
+      ResponsiveDualCtaRow(
+        start: OutlinedButton(
+          onPressed: state.isBusy
+              ? null
+              : () {
+                  cubit.clearPendingBookingSlot();
+                  context.pop();
+                },
+          child: Text(l10n.cancelButtonLabel),
+        ),
+        end: ElevatedButton(
+          onPressed: state.isBusy || slot == null
+              ? null
+              : () async {
+                  await cubit.createAppointmentFromSlot(slot);
+                  if (!context.mounted) return;
+                  context.goNamed(
+                    AppRoutes.onlineTherapyDemoClientAppointments,
+                  );
+                },
+          child: Text(state.isBusy ? 'Booking…' : 'Confirm'),
+        ),
       ),
       const SizedBox(height: 12),
       const Text(

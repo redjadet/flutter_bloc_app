@@ -9,7 +9,7 @@ rules, and do/don't guardrails. Flutter runtime values still live in
 patch runtime source and then update [`DESIGN.md`](../DESIGN.md) to match the verified
 decision.
 
-`DESIGN.md` follows Google’s @google/design.md **alpha** spec: YAML tokens +
+[`DESIGN.md`](../DESIGN.md) follows Google’s @google/design.md **alpha** spec: YAML tokens +
 `##` prose sections in canonical order. Keep any extra guidance as `###`
 subsections (so the linter doesn’t treat it as a new section).
 
@@ -52,6 +52,18 @@ subsections (so the linter doesn’t treat it as a new section).
 - Validate the visual brief with `./tool/check_design_md.sh` after editing
   root [`DESIGN.md`](../DESIGN.md). This wrapper is intentionally not part of default
   checklist until the CLI is pinned locally.
+
+### Horizontal action layout (overflow)
+
+| Pattern | Widget | When |
+| ------- | ------ | ---- |
+| Icon + label in a row | [`IconLabelRow`](../lib/shared/widgets/icon_label_row.dart) | Any `Row` with `Icon` + `Text` (enforced by `tool/check_row_text_overflow.sh`) |
+| 2+ intrinsic-width actions | `ResponsiveActionOverflowBar` (wraps `OverflowBar`, spacing 12) | Clear/Save, Cancel/Confirm; Cupertino picker sheets |
+| Many chips / batch tools | `Wrap` with spacing | Todo batch bar, filter chips |
+| Equal dual CTA (Sign in / Register, Cancel/Confirm) | `ResponsiveDualCtaRow` (`Row`+`Expanded` wide; column below 360dp available width) | Auth landing, booking confirm |
+| Dialog actions | `AlertDialog.actions` + `PlatformAdaptive.dialogAction` | Framework handles overflow |
+
+Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Widget regressions: `tool/check_action_bar_layout.sh`.
 
 ### DESIGN.md CLI workflow
 

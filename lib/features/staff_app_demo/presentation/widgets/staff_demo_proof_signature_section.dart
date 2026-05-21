@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staf
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
+import 'package:flutter_bloc_app/shared/widgets/responsive_action_bar.dart';
 import 'package:signature/signature.dart';
 
 /// Signature capture for staff demo proof flow (theme-aware pad + export).
@@ -106,7 +107,7 @@ class _StaffDemoProofSignatureSectionState
               ),
             ),
             const SizedBox(height: 12),
-            Row(
+            ResponsiveActionOverflowBar(
               children: <Widget>[
                 OutlinedButton(
                   onPressed: () {
@@ -115,7 +116,6 @@ class _StaffDemoProofSignatureSectionState
                   },
                   child: Text(l10n.staffDemoProofSignatureClear),
                 ),
-                const SizedBox(width: 12),
                 FilledButton(
                   onPressed: () => _saveSignature(context),
                   child: Text(l10n.staffDemoProofSignatureSave),
