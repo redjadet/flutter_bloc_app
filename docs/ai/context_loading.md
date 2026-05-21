@@ -1,15 +1,15 @@
 # Context loading ladder
 
-Minimum context order for agents.
+**Canonical** minimum load order (other agent docs link here; do not duplicate this list).
 
 ## Ladder
 
 1. [`AGENTS.md`](../../AGENTS.md)
-2. [`CODEMAP.md`](../../CODEMAP.md) or [`PLAN.md`](../../PLAN.md)
+2. [`CODEMAP.md`](../../CODEMAP.md) or [`PLAN.md`](../../PLAN.md) (AI engineering)
 3. [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md)
-4. Feature rows in [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md)
-5. Canon docs linked from [`docs/README.md`](../README.md)
-6. Evidence only when claiming debt: `ai/reports/`, `docs/audits/`
+4. [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) for the feature/task
+5. Canon from [`docs/README.md`](../README.md)
+6. Debt claims only: `ai/reports/`, `docs/audits/` (`git add -f`)
 
 ## Avoid loading early
 

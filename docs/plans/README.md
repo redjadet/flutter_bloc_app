@@ -13,7 +13,8 @@ This directory contains design notes and execution plans.
 
 ## Index
 
-- [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md): AI-first engineering execution plan (operability layer, waves 1–2, phases 1–5).
+- [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md): **Agent runtime** — status, backlog, gates (~45 lines).
+- [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md): Historical build spec (waves 1A–2); load only when auditing.
 - [`ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md): Classification of prior AI/operability ideas vs this repo.
 - [`ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md): Metrics and outcomes snapshot (2026-05-21).
 - [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md): Feature Brief + AI alignment checklist (honor system until Phase 5).

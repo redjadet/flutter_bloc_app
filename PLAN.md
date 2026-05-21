@@ -1,82 +1,27 @@
 # PLAN — AI-first engineering (index)
 
-Operator entry point. Keep this file as index, not plan body.
+Index only. **Status, backlog, gates:** [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md). **Metrics/phases:** [`docs/plans/ai_first_engineering_executive_summary.md`](docs/plans/ai_first_engineering_executive_summary.md).
 
 | Need | Path |
 | --- | --- |
-| Full plan | [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) |
-| Executive summary | [`docs/plans/ai_first_engineering_executive_summary.md`](docs/plans/ai_first_engineering_executive_summary.md) |
+| Runtime status | [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) |
+| Build spec (archive) | [`docs/plans/2026-05-21_ai_first_engineering_plan_build_spec.md`](docs/plans/2026-05-21_ai_first_engineering_plan_build_spec.md) |
 | Changelog | [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md) |
 | Task router | [`CODEMAP.md`](CODEMAP.md) |
 | Minimal context | [`ai/CONTEXT_MAP.md`](ai/CONTEXT_MAP.md) |
-| Governance | [`docs/ai/governance.md`](docs/ai/governance.md) |
+| Governance / roles | [`docs/ai/governance.md`](docs/ai/governance.md) |
+| Ship/land PR | [`docs/changes/2026-05-21_agent_automated_delivery_loop.md`](docs/changes/2026-05-21_agent_automated_delivery_loop.md) |
 
-## Status (2026-05-21)
+## Principles
 
-| Item | State |
-| --- | --- |
-| Waves 1A-2 | Done: AI operability docs, reports, audits, template, glossary, contracts |
-| Phase 4 / ARCH-003 | Done: four feature barrels + import tests |
-| Phase 5 | Done: `tool/check_feature_brief_linked.sh` + governance |
-| Merge | Done: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) squash-merged to `main` |
-| Post-merge refactors | Done on branch `refactor/arch-001-case-study-decouple` (validated 2026-05-21) |
-| Plan todos | All **done** except **land PR** (operator) |
-| Backlog | Full 31-feature contract bodies; ARCH-004+ (see audit) |
-
-## Philosophy
-
-1. `docs/` is behavior canon; agents follow links, not copies.
-2. `ai/reports/` is dated evidence; refresh after structural changes.
-3. AI multiplies architecture quality: weak boundaries amplify debt.
-4. Smallest reversible change; Feature Brief before non-trivial feature work.
-
-## Doc authority
-
-| Surface | Authority |
-| --- | --- |
-| `docs/` | Architecture, testing, features, validation |
-| `docs/plans/` | Long plans, template, changelog |
-| `docs/audits/` | Ranked audits; gitignored, use `git add -f` |
-| `docs/ai/` | Governance, prompts, context loading |
-| `ai/reports/` | Discovery snapshots |
-| `CODEMAP.md` | Task to path router |
-| `CONTRACTS.md` | API and feature contract rules |
-
-## Phases
-
-| Phase | Goal | Exit |
-| --- | --- | --- |
-| 1 | Stabilisation | Reports, audits, feature map 16+15 |
-| 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
-| 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
-| 4 | Scalability | ARCH-003 barrels + tests (**merged**) |
-| 5 | Continuous | Refresh policy + Feature Brief script (warn default) |
-
-Details live in the full plan and changelog. Do not restate them here.
-
-## Merge gate
-
-PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) **merged** to `main` (squash). Local `main` updated via post-merge cleanup.
-
-**Land next:** PR from `refactor/arch-001-case-study-decouple` (ARCH-001/002, final report, Phase 5 script).
+[`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) (canon + operator prefs). `docs/` = behavior; `ai/reports/` = dated evidence.
 
 ## Not enforced yet
 
-- Mechanical Feature Brief in `./bin/checklist` (run `check_feature_brief_linked.sh` manually; strict mode optional).
-- Full 31-feature contract bodies (pilots only in Wave 2).
-- Automatic report regeneration in CI.
+- Feature Brief in full `./bin/checklist` (use `check_feature_brief_linked.sh`; strict optional).
+- Full 31-feature contract bodies (5 pilots today).
+- Automatic `ai/reports/` regeneration in CI.
 
 ## Validation
 
-```bash
-npx markdownlint-cli2 "PLAN.md" "CODEMAP.md" "CONTRACTS.md" "docs/plans/**/*.md" "docs/audits/ai_*.md" "docs/ai/**/*.md" "ai/**/*.md"
-git diff --check
-./tool/check_agent_knowledge_base.sh
-```
-
-Refresh evidence:
-
-```bash
-bash tool/modular_metrics.sh
-bash tool/modular_metrics.sh --cross-feature-only
-```
+Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md). Doc edits: [runtime plan § Doc validation](docs/plans/2026-05-21_ai_first_engineering_plan.md#doc-validation).

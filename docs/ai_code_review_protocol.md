@@ -7,13 +7,11 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0.
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-Use with [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agents_quick_reference.md`](agents_quick_reference.md), and [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Cross-host review (`./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`) is optional, explicit-request-only, environment-dependent.
+Workflow: [`agent_knowledge_base.md`](agent_knowledge_base.md) (draft-first, traps, finish gate). Commands: [`agents_quick_reference.md`](agents_quick_reference.md). Validation lane: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Optional cross-host: `./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`.
 
-## Builder and Validator roles
+## Builder and Validator
 
-- **Builder:** smallest reversible diff toward request. Output stays **draft**.
-- **Validator:** applies checks below, runs scope-matched validation, self-verifies final report.
-- Same host often does both roles; no second agent required.
+Builder = smallest reversible diff (draft). Validator = table below + scope-matched validation + self-verify report ([`AGENTS.md`](../AGENTS.md) § Loop).
 
 ## Checks
 

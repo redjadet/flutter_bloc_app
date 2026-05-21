@@ -1,7 +1,7 @@
 # AI-first engineering — executive summary
 
 **Date:** 2026-05-21
-**Status:** Waves 1–2 + Phase 4/5 **merged** via [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239); ARCH-001/002 + final report on branch `refactor/arch-001-case-study-decouple` (2026-05-21).
+**Status:** Waves 1–2 + Phase 4/5 via [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239); ARCH-001/002 via [PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) — **plan execution complete** (2026-05-21).
 
 ## Outcome
 
@@ -27,15 +27,9 @@ Established an **AI operability layer** (`/ai`, [`CODEMAP.md`](../../CODEMAP.md)
 - **Audits:** [`audits/ai_architecture_audit.md`](../audits/ai_architecture_audit.md), [`audits/ai_domain_language_report_v1.md`](../audits/ai_domain_language_report_v1.md) (force-tracked)
 - **Workflow (Wave 2):** Feature template, glossary, testing strategy router, contracts pilots, [`docs/ai/governance.md`](../ai/governance.md)
 
-## Phases
+## Phase outcomes
 
-| Phase | Focus | Status |
-| --- | --- | --- |
-| 1 | Stabilisation — legible architecture for agents | **Done** (Waves 1–2 merged) |
-| 2 | Workflow — alignment, contracts, TDD router | **Done** |
-| 3 | Velocity — CONTEXT_MAP ≤8 files per pilot | **Done** (pilots) |
-| 4 | Scalability — ARCH-driven code refactors | ARCH-003 on `main`; ARCH-001/002 on refactor branch (land PR pending) |
-| 5 | Continuous — refresh + mechanical gates | **Done** (`check_feature_brief_linked.sh`) |
+All phases **done** (PR #239 operability + PR #240 ARCH-001/002). Phase table detail: historical [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md) §9.
 
 ## Top risks
 
@@ -45,8 +39,6 @@ Established an **AI operability layer** (`/ai`, [`CODEMAP.md`](../../CODEMAP.md)
 
 ## Next actions
 
-1. Open PR from `refactor/arch-001-case-study-decouple`; `git add -f docs/audits/ai_*.md` as needed.
-2. Refresh `ai/reports/` after merge to `main`.
-3. Track ARCH-004+ in [`ai_architecture_audit.md`](../audits/ai_architecture_audit.md).
+See [`PLAN.md`](../../PLAN.md) backlog + [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md).
 
-**Full plan:** [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md)
+**Archive (build spec only):** [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md)

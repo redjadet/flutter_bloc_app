@@ -35,15 +35,7 @@ Repo guardrails:
 
 ## Progressive Disclosure
 
-1. [`AGENTS.md`](../AGENTS.md) map.
-2. This doc for agent rules + source layout.
-3. [`agent_project_context.md`](agent_project_context.md) for project-specific/version-specific caveats.
-4. [`ai_code_review_protocol.md`](ai_code_review_protocol.md) before accepting AI-written code.
-5. [`agents_quick_reference.md`](agents_quick_reference.md) for commands.
-6. [`agent_environment_setup.md`](agent_environment_setup.md) for host/tool setup.
-7. UI/design: root [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) before widgets/theme/Mix/typography/spacing/component work.
-8. [`README.md`](README.md) for task docs.
-9. Open only needed docs/code/tests/plans.
+**Ladder (canonical):** [`docs/ai/context_loading.md`](ai/context_loading.md). Then: this doc (rules) → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) (commands only) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) when touching widgets/theme.
 
 ## Adaptive Execution
 
@@ -126,7 +118,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Context Navigation Ladder
 
-Owner: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
+Steps: [`docs/ai/context_loading.md`](ai/context_loading.md). Detail: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
 
 ## System Of Record Layout
 
@@ -163,15 +155,7 @@ untrusted
 
 ## Final Agent Contract
 
-1. Start from map; open only task-relevant sources.
-2. Record non-trivial scope, risks, write set, validation target in tracker.
-3. Make task legible before coding: current files, runnable surface, fixtures, logs, route proof, or acceptance criteria.
-4. Implement smallest coherent slice inside existing seams.
-5. Validate deterministic checks/specs first, then risk-based review.
-6. Compact tool/subagent results to decisions, evidence, paths, and blockers.
-7. Repeated context/review failure => add durable repo capability.
-8. Sync host assets when agent behavior changed.
-9. Report after checking final answer against request, changed files, proof, blockers, residual risk.
+Loop: [`AGENTS.md`](../AGENTS.md) § Loop. Execution: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md). Finish/report: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md). Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). **Report after checking** request, diff, proof, blockers (details in legibility doc).
 
 ## Host Parity
 
@@ -204,7 +188,8 @@ Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGE
 
 - **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists.
 - **Upgrade lane proof:** After `./bin/upgrade_validate_all` or `/upgrade-pr-triage-validate`, cite explicit pass evidence for delivery checklist (step 3) and integration tests (step 4)—test counts and simulator id—not only overall exit 0.
-- **Commit / PR helpers:** Rebase the current branch onto the latest default branch before opening or updating a PR when using the repo’s `commit-push-pr` style flow.
+- **`/commit-push-pr`:** [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md) (omit checklist coverage/README churn unless shipping coverage).
+- **Feature-brief:** `lib/features/**` diff → `bash tool/check_feature_brief_linked.sh` or `SKIP_FEATURE_BRIEF=1`.
 - **Pre-commit review:** On client-facing Dart delivery, run a final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR—not only green `./bin/checklist`.
 - **README / docs lint:** After substantive README or `docs/**` edits, run `markdownlint-cli2` on those paths until clean (see [`docs/agents_appendix.md`](agents_appendix.md) ignores).
 - **Firebase local config:** Keep committed [`lib/firebase_options.dart`](../lib/firebase_options.dart) placeholder-only; put real `FIREBASE_*` in gitignored `.envrc` after `flutterfire configure` (restore placeholder per [`firebase_setup.md`](firebase_setup.md) step 3b). Secret scanning / history scrub: [`security_and_secrets.md`](security_and_secrets.md), [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt).

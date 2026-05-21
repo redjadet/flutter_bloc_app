@@ -11,7 +11,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [feature_map.md](feature_map.md) | Per-feature context (16 full + 15 stub) |
 | [context_hotspots.md](context_hotspots.md) | Largest files; Phase 4 candidates |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
-| [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | ARCH-001/002 closure + metrics |
+| [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | ARCH-001/002 closure + metrics (shipped PR #240) |
 
 ## Audits (ranked findings)
 
@@ -21,3 +21,5 @@ Tracked under `docs/audits/` (directory is `.gitignore`d—use `git add -f` when
 - [`docs/audits/ai_domain_language_report_v1.md`](../../docs/audits/ai_domain_language_report_v1.md) — naming v1
 
 **Generated:** 2026-05-21 via `tool/modular_metrics.sh` and repository scans.
+
+**Ship/land:** [`docs/changes/2026-05-21_agent_automated_delivery_loop.md`](../../docs/changes/2026-05-21_agent_automated_delivery_loop.md).

@@ -11,4 +11,4 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 | [decision_log.md](decision_log.md) | Durable AI-engineering decisions |
 | [contracts.md](contracts.md) | Link to root [`CONTRACTS.md`](../../CONTRACTS.md) |
 
-Evidence snapshots: [`ai/reports/`](../../ai/reports/README.md).
+Evidence: [`ai/reports/`](../../ai/reports/README.md). Ship/land: [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md).

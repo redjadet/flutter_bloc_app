@@ -6,8 +6,9 @@ evidence: flutter test, tool/modular_metrics.sh
 
 # Final optimization report (ARCH-001 / ARCH-002)
 
-Closure report for the **post-merge** architecture refactors on branch
-`refactor/arch-001-case-study-decouple`, after [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (AI-first Waves 1–2 + ARCH-003 barrels).
+Closure report for **post-merge** architecture refactors shipped on `main` via
+[PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) (`c703b9b5`), after
+[PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (AI-first Waves 1–2 + ARCH-003 barrels).
 
 ## Summary
 
@@ -69,7 +70,7 @@ Not wired into `./bin/checklist` by default (avoid false positives on small fixe
 
 ## Refresh
 
-After merge to `main`, run:
+Optional on `main` after further feature work:
 
 ```bash
 bash tool/modular_metrics.sh

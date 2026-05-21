@@ -38,9 +38,11 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 | ARCH-003 feature barrels | Done — merged via PR #239 |
 | Barrel regression tests | Done — `test/features/*/*_barrel_test.dart` |
 | PR #239 merge | Done — squash to `main` |
-| ARCH-001 / ARCH-002 | Done — branch `refactor/arch-001-case-study-decouple` (land PR pending) |
+| ARCH-001 / ARCH-002 | **Done** — merged [PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) (`c703b9b5`) |
 | `FINAL_OPTIMIZATION_REPORT.md` | Done — `ai/reports/` |
 | `check_feature_brief_linked.sh` | Done — warn default; `FEATURE_BRIEF_CHECK_STRICT=1` optional |
+| Agent delivery loop doc | Done — [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md) |
+| Plan split (runtime / build spec) | Done — slim [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md); archive [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md) |
 
 ## Evidence captured (preflight 2026-05-21)
 

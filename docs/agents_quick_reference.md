@@ -51,36 +51,16 @@ Repo docs/scripts define behavior; external catalogs don't.
 | API/version-sensitive change | Official/repo-pinned docs before model memory | Same |
 | External/live state | Use owning tool/MCP/connector/browser where available; summarize evidence, not transcripts | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
-| UI/design/theme/Mix work | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); prefer `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; app-visible/widget proof where practical | Same |
+| UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | `bash tool/sync_agent_assets.sh --apply` + install/trim scripts when using globals |
 
-Docs-before-memory APIs: Flutter, Dart, Firebase, Supabase, GoRouter, and similar version-sensitive APIs need official/repo-grounded source before edits. If unavailable, say so and narrow scope.
+Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/official docs before model memory. Host-template sync, cross-host review caveats: [`agent_knowledge_base.md`](agent_knowledge_base.md) (Host Parity, [`agent_environment_setup.md`](agent_environment_setup.md)).
 
-Host-copy caveat: `tool/agent_host_templates/` is source. Synced `~/.codex` / `~/.cursor` copies can lag until `./tool/sync_agent_assets.sh --apply`; git cannot update other machines.
+## Harness (pointers; doctrine in linked docs)
 
-Cross-host caveat: `request_codex_feedback` / `run_codex_plan_review` need local Codex, `gh`, auth, network; cold-machine failures are environment blockers.
-
-## Harness Reminders
-
-- Closed-loop: plan once, execute end-to-end, verify, report proof.
-- Ask only hard blockers: credentials/tooling, unsafe ambiguity **below 95%**, user-owned decision.
-- Outcome: Goal / Context / Boundaries / Verification; exact steps only when path matters.
-- Intent/spec/implementation stay separate: intent = why/constraints; spec = eval contract; implementation = repo-derived tactics.
-- Context navigation ladder: map docs -> durable memory -> code-review-graph -> targeted raw files.
-- Context audit before feature/refactor: related code/tests/docs, known bugs, workarounds, deprecated patterns, unusual helpers; record only real landmines.
-- Proof-first: repo scripts/tests/runtime/MCP own truth; prompts alone not proof; empty tool output not proof.
-- Scope discipline: smallest reversible diff; run narrowest honest validation lane.
-- Reusable agent conclusion => durable repo memory; don’t leave chat-only.
-- Repeated failure => add repo capability (doc/test/fixture/script/route proof/log helper).
-- Behavior changes start in source docs, then host templates; don’t fork unless host capability differs.
-- Agent/docs change => semantic lint stale plans, duplicate rules, source/template contradictions.
-- UI/design: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first; build real workflow first; verify states, responsive stability, no overlap.
-
-## Multi-Agent Hub
-
-Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md); trivial may use `trivial - gate skipped`. Default single; team when >=2 indicators. Team artifacts under `tasks/cursor/team/<run-id>/`. Doctrine: [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+[`AGENTS.md`](../AGENTS.md) § Loop (plan once → **execute end-to-end, verify, report proof**; below 95% confident only). [`agent_knowledge_base.md`](agent_knowledge_base.md) (beliefs, finish gate). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** `Benefit: team` / `Benefit: single` → [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub), `tasks/cursor/team/<run-id>/`. **Reusable agent conclusion** + **semantic lint**; **Behavior changes start in source docs** then host templates.
 
 ## Host Adapters
 
@@ -91,18 +71,8 @@ Cursor records `Benefit: team - <reason>` or `Benefit: single - <reason>` in [`t
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
 
-Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr` start:** `bash tool/commit_push_pr_rebase_on_main.sh` (then plan/execute/commit/push/PR). To land: `bash tool/commit_push_pr_watch_merge_cleanup.sh`; merge-only `bash tool/commit_push_pr_merge_and_cleanup.sh`; merged elsewhere `python3 tool/commit_push_pr_deploy.py post-merge` ([`validation_scripts.md`](validation_scripts.md) § Git).
+Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts.md`](validation_scripts.md) § Git.
 
-## Read By Task
+## Task doc routing
 
-- Product/setup: [`../README.md`](../README.md), [`new_developer_guide.md`](new_developer_guide.md), [`tech_stack.md`](tech_stack.md)
-- Agent harness: [`agent_knowledge_base.md`](agent_knowledge_base.md), [`agent_project_context.md`](agent_project_context.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md)
-- Agent setup: [`agent_environment_setup.md`](agent_environment_setup.md)
-- Feature work: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md), [`feature_overview.md`](feature_overview.md)
-- UI/design: [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md)
-- Validation: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
-- Lifecycle: [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
-- Offline-first: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md), [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md)
-- Supabase/chat proxy: [`../supabase/README.md`](../supabase/README.md)
-- gstack: [`gstack_integration.md`](gstack_integration.md)
-- Staff demo: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI engineering index: [`PLAN.md`](../PLAN.md).

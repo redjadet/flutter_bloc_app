@@ -1,7 +1,7 @@
 # ARCH-001 / ARCH-002 — case study decouple and cubit split
 
 **Date:** 2026-05-21  
-**Branch:** `refactor/arch-001-case-study-decouple`  
+**Shipped:** [PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) squash-merged to `main` (`c703b9b5`)  
 **Plan:** [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](../plans/2026-05-21_ai_first_engineering_plan.md) post-merge follow-up
 
 ## Goal
@@ -28,3 +28,5 @@ dart analyze lib/features/case_study_demo/presentation/cubit/
 ```
 
 Report: [`ai/reports/FINAL_OPTIMIZATION_REPORT.md`](../../ai/reports/FINAL_OPTIMIZATION_REPORT.md).
+
+Delivery automation notes: [`2026-05-21_agent_automated_delivery_loop.md`](2026-05-21_agent_automated_delivery_loop.md).

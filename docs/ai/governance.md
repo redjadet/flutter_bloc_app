@@ -32,9 +32,7 @@ One session may hold multiple roles; declare role in PR description.
 
 ## Context budget
 
-1. Load `CONTEXT_MAP.md` paths.
-2. Expand to feature barrel + DI only when needed.
-3. Avoid whole-feature scans unless refactoring.
+[`context_loading.md`](context_loading.md) ladder; expand only `CONTEXT_MAP` paths → barrel/DI as needed. No whole-feature tree scans unless refactoring.
 
 ## Evidence hygiene
 
