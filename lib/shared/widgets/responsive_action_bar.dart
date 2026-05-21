@@ -64,10 +64,11 @@ class ResponsiveDualCtaRow extends StatelessWidget {
   Widget build(final BuildContext context) {
     return LayoutBuilder(
       builder: (final context, final constraints) {
-        final double availableWidth = constraints.hasBoundedWidth
-            ? constraints.maxWidth
-            : MediaQuery.sizeOf(context).width;
-        if (availableWidth < stackBreakpoint) {
+        // Screen width, not parent max width: fixed-width columns (e.g. auth
+        // logged-out body) can be <360dp while the device is still wide enough
+        // for a single Row + Expanded row.
+        final double layoutWidth = MediaQuery.sizeOf(context).width;
+        if (layoutWidth < stackBreakpoint) {
           final List<Widget> children = <Widget>[
             _maybeSized(height, start),
             SizedBox(height: gap),

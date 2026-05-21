@@ -63,7 +63,7 @@ void main() {
       expectNoRenderOverflows(capture.errors);
     });
 
-    testWidgets('stacks when parent constraint is narrow on wide screen', (
+    testWidgets('keeps Row when parent is narrow on wide screen', (
       tester,
     ) async {
       final capture = startLayoutOverflowCapture();
@@ -88,8 +88,8 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.byType(Column), findsOneWidget);
-      expect(find.byType(Row), findsNothing);
+      expect(find.byType(Row), findsOneWidget);
+      expect(find.byType(Expanded), findsNWidgets(2));
       expectNoRenderOverflows(capture.errors);
     });
   });
