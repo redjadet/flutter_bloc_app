@@ -1,10 +1,10 @@
 
 # AI-First Software Engineering Execution Plan (build-ready)
 
-**Cursor draft:** this file.  
-**Repo canon (on build):** [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) — full narrative.  
-**Operator index:** [`PLAN.md`](PLAN.md) — **short** entry only (~120 lines max).  
-**Change log:** [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md).
+**Cursor draft:** this file.
+**Repo canon (on build):** [`plans/2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md) — full narrative.
+**Operator index:** [`PLAN.md`](../../PLAN.md) — **short** entry only (~120 lines max).
+**Change log:** [`plans/ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md).
 
 ## Execution status (2026-05-21)
 
@@ -13,9 +13,25 @@
 | Waves 1A–1C + Wave 2 | **Shipped** | PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239), branch `docs/ai-first-engineering` |
 | Phase 1–3 doc exits | **Met** | 16+15 feature map, CONTEXT_MAP pilots, audits, governance |
 | Phase 4 code | **Complete** | ARCH-003 barrels + tests on branch |
-| Phase 5 automation | **Doc baseline** | Honor system + `ai/README.md` refresh policy (no CI script) |
+| Phase 5 automation | **Doc baseline** | Honor system + [`ai/README.md`](../../ai/README.md) refresh policy (no CI script) |
 | PR #239 merge | **Deferred** | Operator: `tool/commit_push_pr_watch_merge_cleanup.sh 239` |
 | ARCH-001 / ARCH-002 | **Backlog** | Separate refactor PRs after merge |
+
+### Todo tracker (sync with Cursor plan)
+
+| ID | Task | Status |
+| --- | --- | --- |
+| w1a | Wave 1A | **done** |
+| w1b | Wave 1B | **done** |
+| w1c | Wave 1C | **done** |
+| w1-validate-pr | Validate + PR #239 | **done** |
+| w2 | Wave 2 | **done** |
+| phase4-arch-003 | ARCH-003 barrels + tests | **done** (`5270abd3`) |
+| phase5-doc-baseline | Governance + refresh policy | **done** |
+| pr239-merge | Merge PR #239 | **pending** |
+| post-merge-arch-001 | ARCH-001 refactor | **pending** (backlog) |
+| post-merge-arch-002 | ARCH-002 refactor | **pending** (backlog) |
+| post-merge-phase5-ci | Mechanical gates / refresh CI | **pending** (backlog) |
 
 ---
 
@@ -24,17 +40,17 @@
 | Issue | Severity | Fix in this revision |
 | --- | --- | --- |
 | Wave 1 still ~18 files / one PR | **High** | Split **1A → 1B → 1C** (3 reviewable PRs) |
-| Seven root-level `.md` files | **High** | Only `CODEMAP.md` + `PLAN.md` at root; audits/reports under `docs/plans/` or `ai/reports/` |
-| `PLAN.md` “shorten from Cursor plan” undefined | **High** | `PLAN.md` = **index only**; long body lives in `docs/plans/` |
+| Seven root-level `.md` files | **High** | Only [`CODEMAP.md`](../../CODEMAP.md) + [`PLAN.md`](../../PLAN.md) at root; audits/reports under `docs/plans/` or `ai/reports/` |
+| [`PLAN.md`](../../PLAN.md) “shorten from Cursor plan” undefined | **High** | [`PLAN.md`](../../PLAN.md) = **index only**; long body lives in `docs/plans/` |
 | `feature_map.md` × 32 features manual | **High** | **15 full + 17 stub** required; list of 15 named below |
 | `DOMAIN_LANGUAGE_REPORT` via one `rg` | **Medium** | v1 = top-50 terms + overload list; full glossary **Wave 2** |
-| `CONTRACTS.md` × 32 stubs “optional” | **Medium** | Wave 2 = **global rules + 5 pilot** features only |
-| `docs/ai/contracts.md` + root `CONTRACTS.md` | **Medium** | **Single rules file:** `CONTRACTS.md`; `docs/ai/contracts.md` = link stub only |
+| [`CONTRACTS.md`](../../CONTRACTS.md) × 32 stubs “optional” | **Medium** | Wave 2 = **global rules + 5 pilot** features only |
+| [`docs/ai/contracts.md`](../ai/contracts.md) + root [`CONTRACTS.md`](../../CONTRACTS.md) | **Medium** | **Single rules file:** [`CONTRACTS.md`](../../CONTRACTS.md); [`docs/ai/contracts.md`](../ai/contracts.md) = link stub only |
 | `ARCHITECTURE_AUDIT` vs `ai/reports/architecture_audit` | **Medium** | **One file:** `ARCHITECTURE_AUDIT.md`; `ai/reports/README` links it |
-| `AGENTS.md` new `## AI Engineering` section | **Low** | **Map bullets only** (no new H2); 64→~75 lines, under 120 cap |
+| [`AGENTS.md`](../../AGENTS.md) new `## AI Engineering` section | **Low** | **Map bullets only** (no new H2); 64→~75 lines, under 120 cap |
 | FEATURE_TEMPLATE gate | **Low** | **Doc-only honor system** until Phase 5; labeled **not enforced yet** |
 | Five agent roles | **Low** | Doc convention only; not CI-enforceable — OK |
-| No staleness / ownership on reports | **Medium** | Frontmatter + “refresh when” in `ai/README.md` |
+| No staleness / ownership on reports | **Medium** | Frontmatter + “refresh when” in [`ai/README.md`](../../ai/README.md) |
 | KPIs without numeric baselines | **Low** | Baselines captured in Wave 1A preflight |
 
 **Philosophy kept:** AI multiplies good architecture; `docs/` stays source of truth; no `lib/` until Phase 4.
@@ -48,20 +64,20 @@
 | Item | Owner path | Done when |
 | --- | --- | --- |
 | Preflight + `/tmp` evidence | commands in plan | 4 artifact files exist locally |
-| `docs/plans/ai_first_engineering_plan_changelog.md` | docs | Table from §1 complete |
-| `ai/README.md` + `ai/reports/README.md` | ai | Authority + index + refresh policy |
+| [`plans/ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md) | docs | Table from §1 complete |
+| [`ai/README.md`](../../ai/README.md) + [`ai/reports/README.md`](../../ai/reports/README.md) | ai | Authority + index + refresh policy |
 | `architecture_overview.md` | ai/reports | Mermaid + layer table; links canon |
 | `dependency_map.md` | ai/reports | modular_metrics output cited |
 | `anti_patterns.md` | ai/reports | ≥8 repo-specific rows |
 | `data_flow_map.md` | ai/reports | ≥3 paths + offline-first link |
-| `CODEMAP.md` | root | ≤80 lines; task → paths |
+| [`CODEMAP.md`](../../CODEMAP.md) | root | ≤80 lines; task → paths |
 
 ### Ready after 1A merges (Wave 1B) — needs evidence + time
 
 | Item | Blocker | Done when |
 | --- | --- | --- |
 | `feature_map.md` | Manual effort ~4–6h | 15 full + 17 stub sections |
-| `ai/CONTEXT_MAP.md` | Depends on feature_map | Table matches minimal_context |
+| [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) | Depends on feature_map | Table matches minimal_context |
 | `context_hotspots.md` | Needs hotspot file | Top 20 table with phase4 column |
 | `ai_recommendations.md` | Needs audit + map | ≥5 `REC-###` with evidence paths |
 | `ARCHITECTURE_AUDIT.md` | Needs cross-feature + hotspots | ≥10 `ARCH-###` ranked |
@@ -71,12 +87,12 @@
 
 | Item | Why |
 | --- | --- |
-| `docs/domain/domain_glossary.md` | Requires curated terms from v1 report + human pass |
-| `docs/testing/testing_strategy.md` | Must be **router** (~80 lines); canon stays `testing_overview.md` |
-| `FEATURE_TEMPLATE.md` | Ready to **author** in W2; **not enforced** by CI yet |
-| `CONTRACTS.md` full stubs (32) | Only **5 pilots** in W2: `counter`, `chat`, `auth`, `settings`, `todo_list` |
+| [`domain/domain_glossary.md`](../domain/domain_glossary.md) | Requires curated terms from v1 report + human pass |
+| [`testing/testing_strategy.md`](../testing/testing_strategy.md) | Must be **router** (~80 lines); canon stays [`testing_overview.md`](../testing_overview.md) |
+| [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md) | Ready to **author** in W2; **not enforced** by CI yet |
+| [`CONTRACTS.md`](../../CONTRACTS.md) full stubs (32) | Only **5 pilots** in W2: `counter`, `chat`, `auth`, `settings`, `todo_list` |
 | `docs/ai/*` + `governance.md` | Depends on stable `CODEMAP` + `PLAN` index |
-| `AGENTS.md` pointer edits | After `docs/ai/governance.md` exists; verify ≤120 lines |
+| [`AGENTS.md`](../../AGENTS.md) pointer edits | After [`docs/ai/governance.md`](../ai/governance.md) exists; verify ≤120 lines |
 
 ### Not ready until Phase 4+
 
@@ -109,25 +125,25 @@ DOMAIN_LANGUAGE_REPORT.md      # docs/audits/ai_domain_language_report.md (prefe
 CONTRACTS.md                   # root (W2) — single rules source
 ```
 
-**Decision:** Prefer new audits under [`docs/audits/`](docs/audits/) and link from `ai/reports/README.md`. Keeps repo root clean. If user requires root filenames from original spec, copy or symlink in Wave 1C only.
+**Decision:** Prefer new audits under [`docs/audits/`](../audits/) and link from [`ai/reports/README.md`](../../ai/reports/README.md). Keeps repo root clean. If user requires root filenames from original spec, copy or symlink in Wave 1C only.
 
 ---
 
 ## 1. `PLAN_CHANGELOG` (build first)
 
-Path: [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md)
+Path: [`plans/ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md)
 
 Use classification table from prior plan §1 (Keep/Merge/Rewrite/Remove/Missing) — already drafted there; copy verbatim on build.
 
 ---
 
-## 2. Alignment — `FEATURE_TEMPLATE.md` (Wave 2)
+## 2. Alignment — [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md) (Wave 2)
 
-Path: [`docs/plans/FEATURE_TEMPLATE.md`](docs/plans/FEATURE_TEMPLATE.md) (not root — matches [`docs/plans/README.md`](docs/plans/README.md) convention).
+Path: [`plans/FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md) (not root — matches [`plans/README.md`](README.md) convention).
 
 Sections: Feature Brief + AI Alignment Checklist + trivial-fix quick path.
 
-Link from [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md) (one paragraph, Wave 2).
+Link from [`feature_implementation_guide.md`](../feature_implementation_guide.md) (one paragraph, Wave 2).
 
 **Enforcement:** **Not ready** — honor system only until Phase 5 (e.g. PR template or `tool/check_feature_brief_linked.sh` TBD).
 
@@ -137,8 +153,8 @@ Link from [`docs/feature_implementation_guide.md`](docs/feature_implementation_g
 
 | Deliverable | Wave | Content |
 | --- | --- | --- |
-| `docs/audits/ai_domain_language_report_v1.md` | 1B | Top-50 terms, overloads, duplicates, “do not rename” |
-| `docs/domain/domain_glossary.md` | 2 | Curated SoT table; migrate terms from v1 |
+| [`audits/ai_domain_language_report_v1.md`](../audits/ai_domain_language_report_v1.md) | 1B | Top-50 terms, overloads, duplicates, “do not rename” |
+| [`domain/domain_glossary.md`](../domain/domain_glossary.md) | 2 | Curated SoT table; migrate terms from v1 |
 
 **v1 extraction command** (bounded):
 
@@ -152,23 +168,23 @@ Human curates top 50 into report — **not** auto-written glossary.
 
 ---
 
-## 4. Test-first — `docs/testing/testing_strategy.md` (Wave 2)
+## 4. Test-first — [`testing/testing_strategy.md`](../testing/testing_strategy.md) (Wave 2)
 
 **Max ~80 lines.** Structure:
 
 - RED / GREEN / REFACTOR (5 lines each)
-- Layer table (link `testing_overview.md` for detail)
+- Layer table (link [`testing_overview.md`](../testing_overview.md) for detail)
 - AI test rules (5 bullets)
 - Flaky prevention (3 bullets)
 - Validation links
 
-**Rule:** No copy-paste from [`docs/testing_overview.md`](docs/testing_overview.md).
+**Rule:** No copy-paste from [`testing_overview.md`](../testing_overview.md).
 
 ---
 
 ## 5. `ARCHITECTURE_AUDIT.md` (Wave 1B)
 
-Path: [`docs/audits/ai_architecture_audit.md`](docs/audits/ai_architecture_audit.md) (preferred).
+Path: [`audits/ai_architecture_audit.md`](../audits/ai_architecture_audit.md) (preferred).
 
 Minimum bar for merge:
 
@@ -177,11 +193,11 @@ Minimum bar for merge:
 - ≥5 hotspot rows referenced
 - Each issue: problem, impact, recommendation, migration difficulty, tests needed
 
-Target module shape (reference only — link `docs/clean_architecture.md`).
+Target module shape (reference only — link [`clean_architecture.md`](../clean_architecture.md)).
 
 ---
 
-## 6. `CONTRACTS.md` (Wave 2)
+## 6. [`CONTRACTS.md`](../../CONTRACTS.md) (Wave 2)
 
 **Wave 2 minimum:**
 
@@ -189,21 +205,21 @@ Target module shape (reference only — link `docs/clean_architecture.md`).
 2. Empty template section
 3. **Pilot stubs only:** `counter`, `chat`, `auth`, `settings`, `todo_list`
 
-[`docs/ai/contracts.md`](docs/ai/contracts.md): ≤15 lines linking to root `CONTRACTS.md` — **not** duplicate rules.
+[`docs/ai/contracts.md`](../ai/contracts.md): ≤15 lines linking to root [`CONTRACTS.md`](../../CONTRACTS.md) — **not** duplicate rules.
 
 ---
 
 ## 7. Governance (Wave 2)
 
-[`docs/ai/governance.md`](docs/ai/governance.md): full roles, handoff, stop conditions.
+[`docs/ai/governance.md`](../ai/governance.md): full roles, handoff, stop conditions.
 
-[`AGENTS.md`](AGENTS.md) — **Map bullets only** (current 64 lines):
+[`AGENTS.md`](../../AGENTS.md) — **Map bullets only** (current 64 lines):
 
 ```markdown
 - AI engineering: [`PLAN.md`](PLAN.md), [`CODEMAP.md`](CODEMAP.md), [`docs/ai/governance.md`](docs/ai/governance.md)
 ```
 
-Optional **Start** line 2: `PLAN.md` (index). Re-run `wc -l AGENTS.md` — must stay ≤120.
+Optional **Start** line 2: [`PLAN.md`](../../PLAN.md) (index). Re-run `wc -l AGENTS.md` — must stay ≤120.
 
 **Not ready:** `## AI Engineering` table in AGENTS — risks map-only drift; use governance doc anchors instead.
 
@@ -232,9 +248,9 @@ Optional **Start** line 2: `PLAN.md` (index). Re-run `wc -l AGENTS.md` — must 
 
 ---
 
-## 10. `PLAN.md` + executive summary (Wave 1C)
+## 10. [`PLAN.md`](../../PLAN.md) + executive summary (Wave 1C)
 
-### `PLAN.md` (root, **index only**)
+### [`PLAN.md`](../../PLAN.md) (root, **index only**)
 
 Sections only:
 
@@ -249,7 +265,7 @@ Sections only:
 
 ### `EXECUTIVE_SUMMARY.md`
 
-Path: [`docs/plans/ai_first_engineering_executive_summary.md`](docs/plans/ai_first_engineering_executive_summary.md) (preferred over root).
+Path: [`plans/ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md) (preferred over root).
 
 Fill after 1B with real metrics from preflight (feature count, cross-import count, top hotspot).
 
@@ -261,14 +277,14 @@ Fill after 1B with real metrics from preflight (feature count, cross-import coun
 
 | # | File |
 | --- | --- |
-| 1 | `docs/plans/ai_first_engineering_plan_changelog.md` |
-| 2 | `ai/README.md` |
-| 3 | `ai/reports/README.md` |
-| 4 | `ai/reports/architecture_overview.md` |
-| 5 | `ai/reports/dependency_map.md` |
-| 6 | `ai/reports/anti_patterns.md` |
-| 7 | `ai/reports/data_flow_map.md` |
-| 8 | `CODEMAP.md` |
+| 1 | [`plans/ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md) |
+| 2 | [`ai/README.md`](../../ai/README.md) |
+| 3 | [`ai/reports/README.md`](../../ai/reports/README.md) |
+| 4 | [`ai/reports/architecture_overview.md`](../../ai/reports/architecture_overview.md) |
+| 5 | [`ai/reports/dependency_map.md`](../../ai/reports/dependency_map.md) |
+| 6 | [`ai/reports/anti_patterns.md`](../../ai/reports/anti_patterns.md) |
+| 7 | [`ai/reports/data_flow_map.md`](../../ai/reports/data_flow_map.md) |
+| 8 | [`CODEMAP.md`](../../CODEMAP.md) |
 
 **Preflight** (required before writing #4–7):
 
@@ -292,7 +308,7 @@ git diff --check
 
 **Branch:** `docs/ai-first-w1b`
 
-**15 features — full entries** (from [`docs/feature_overview.md`](docs/feature_overview.md)):
+**15 features — full entries** (from [`feature_overview.md`](../feature_overview.md)):
 
 `counter`, `auth`, `settings`, `example`, `chat`, `todo_list`, `profile`, `search`, `case_study_demo`, `chart`, `graphql_demo`, `iot_demo`, `staff_app_demo`, `online_therapy_demo`, `google_maps`, `walletconnect_auth`
 
@@ -302,12 +318,12 @@ All other `lib/features/*` dirs.
 
 | File |
 | --- |
-| `ai/reports/feature_map.md` |
-| `ai/reports/context_hotspots.md` |
-| `ai/reports/ai_recommendations.md` |
-| `docs/audits/ai_architecture_audit.md` |
-| `docs/audits/ai_domain_language_report_v1.md` |
-| `ai/CONTEXT_MAP.md` |
+| [`ai/reports/feature_map.md`](../../ai/reports/feature_map.md) |
+| [`ai/reports/context_hotspots.md`](../../ai/reports/context_hotspots.md) |
+| [`ai/reports/ai_recommendations.md`](../../ai/reports/ai_recommendations.md) |
+| [`audits/ai_architecture_audit.md`](../audits/ai_architecture_audit.md) |
+| [`audits/ai_domain_language_report_v1.md`](../audits/ai_domain_language_report_v1.md) |
+| [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) |
 
 ---
 
@@ -315,10 +331,10 @@ All other `lib/features/*` dirs.
 
 | File |
 | --- |
-| `docs/plans/2026-05-21_ai_first_engineering_plan.md` (this plan body) |
-| `PLAN.md` (index) |
-| `docs/plans/ai_first_engineering_executive_summary.md` |
-| `docs/plans/README.md` (index line) |
+| [`plans/2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md) (this plan body) |
+| [`PLAN.md`](../../PLAN.md) (index) |
+| [`plans/ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md) |
+| [`plans/README.md`](README.md) (index line) |
 
 ---
 
@@ -326,7 +342,7 @@ All other `lib/features/*` dirs.
 
 `FEATURE_TEMPLATE`, `CONTRACTS`+pilots, `domain_glossary`, `testing_strategy`, `docs/ai/*`, `governance`, `AGENTS` Map line.
 
-Update [`docs/validation_scripts.md`](docs/validation_scripts.md) if new checks added (Phase 3).
+Update [`validation_scripts.md`](../validation_scripts.md) if new checks added (Phase 3).
 
 ---
 

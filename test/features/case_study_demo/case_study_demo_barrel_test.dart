@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/case_study_demo.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('case_study_demo barrel exposes public API types', () {

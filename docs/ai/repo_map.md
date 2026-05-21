@@ -1,6 +1,6 @@
-# Repo map (AI)
+# Repo map
 
-Thin duplicate of [`CODEMAP.md`](../../CODEMAP.md) for agents starting under `docs/ai/`.
+Thin pointer for agents starting under `docs/ai/`. Prefer [`CODEMAP.md`](../../CODEMAP.md).
 
 | Area | Path |
 | --- | --- |
@@ -13,5 +13,3 @@ Thin duplicate of [`CODEMAP.md`](../../CODEMAP.md) for agents starting under `do
 | Canon docs | `docs/` |
 | Evidence | `ai/reports/` |
 | Plans | `docs/plans/` |
-
-**Task routing:** prefer [`CODEMAP.md`](../../CODEMAP.md).

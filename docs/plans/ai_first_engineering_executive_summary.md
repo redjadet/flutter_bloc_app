@@ -1,11 +1,11 @@
 # AI-first engineering — executive summary
 
-**Date:** 2026-05-21  
+**Date:** 2026-05-21
 **Status:** Waves 1–2 + Phase 4 (ARCH-003) + Phase 5 doc baseline on [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (open). **Merge deferred** to operator.
 
 ## Outcome
 
-Established an **AI operability layer** (`/ai`, `CODEMAP.md`, `PLAN.md`) that routes agents to existing `docs/` canon without duplicating behavior rules or changing application code.
+Established an **AI operability layer** (`/ai`, [`CODEMAP.md`](../../CODEMAP.md), [`PLAN.md`](../../PLAN.md)) that routes agents to existing `docs/` canon without duplicating behavior rules or changing application code.
 
 ## Baseline metrics (preflight)
 
@@ -22,10 +22,10 @@ Established an **AI operability layer** (`/ai`, `CODEMAP.md`, `PLAN.md`) that ro
 
 ## Delivered artifacts
 
-- **Routing:** `CODEMAP.md`, `PLAN.md`, `ai/README.md`, `ai/CONTEXT_MAP.md`
+- **Routing:** [`CODEMAP.md`](../../CODEMAP.md), [`PLAN.md`](../../PLAN.md), [`ai/README.md`](../../ai/README.md), [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md)
 - **Evidence:** `ai/reports/*` (architecture, dependencies, anti-patterns, data flows, feature map, hotspots, recommendations)
-- **Audits:** `docs/audits/ai_architecture_audit.md`, `docs/audits/ai_domain_language_report_v1.md` (force-tracked)
-- **Workflow (Wave 2):** Feature template, glossary, testing strategy router, contracts pilots, `docs/ai/governance.md`
+- **Audits:** [`audits/ai_architecture_audit.md`](../audits/ai_architecture_audit.md), [`audits/ai_domain_language_report_v1.md`](../audits/ai_domain_language_report_v1.md) (force-tracked)
+- **Workflow (Wave 2):** Feature template, glossary, testing strategy router, contracts pilots, [`docs/ai/governance.md`](../ai/governance.md)
 
 ## Phases
 

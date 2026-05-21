@@ -1,60 +1,56 @@
 # PLAN — AI-first engineering (index)
 
-Operator entry point. **Full plan:** [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md).  
-**Summary:** [`docs/plans/ai_first_engineering_executive_summary.md`](docs/plans/ai_first_engineering_executive_summary.md).  
-**Changelog:** [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md).
+Operator entry point. Keep this file as index, not plan body.
+
+| Need | Path |
+| --- | --- |
+| Full plan | [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) |
+| Executive summary | [`docs/plans/ai_first_engineering_executive_summary.md`](docs/plans/ai_first_engineering_executive_summary.md) |
+| Changelog | [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md) |
+| Task router | [`CODEMAP.md`](CODEMAP.md) |
+| Minimal context | [`ai/CONTEXT_MAP.md`](ai/CONTEXT_MAP.md) |
+| Governance | [`docs/ai/governance.md`](docs/ai/governance.md) |
+
+## Status (2026-05-21)
+
+| Item | State |
+| --- | --- |
+| Waves 1A-2 | Done: AI operability docs, reports, audits, template, glossary, contracts |
+| Phase 4 / ARCH-003 | Done: four feature barrels + import tests |
+| Phase 5 baseline | Done: governance and refresh policy documented |
+| Merge | Pending operator: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) |
+| Backlog | ARCH-001, ARCH-002, mechanical Feature Brief CI, full contract expansion |
 
 ## Philosophy
 
-1. **`docs/`** is behavior and engineering canon; agents follow links, not copies.
-2. **`ai/reports/`** holds dated evidence; refresh after structural changes.
-3. **AI multiplies** clear architecture—weak boundaries get worse with agents.
-4. **Smallest reversible change**; no `lib/` edits in documentation waves.
-5. **Feature Brief** before non-trivial feature work ([`docs/plans/FEATURE_TEMPLATE.md`](docs/plans/FEATURE_TEMPLATE.md)).
+1. `docs/` is behavior canon; agents follow links, not copies.
+2. `ai/reports/` is dated evidence; refresh after structural changes.
+3. AI multiplies architecture quality: weak boundaries amplify debt.
+4. Smallest reversible change; Feature Brief before non-trivial feature work.
 
 ## Doc authority
 
-```text
-docs/           canon (architecture, testing, features, validation)
-docs/plans/     long plans, template, changelog
-docs/audits/    ranked audits (gitignored — git add -f when committing)
-docs/ai/        governance, prompts, context loading
-ai/reports/     discovery snapshots
-CODEMAP.md      task → path router (root)
-PLAN.md         this index (root)
-CONTRACTS.md    API/feature contract rules (root)
-```
+| Surface | Authority |
+| --- | --- |
+| `docs/` | Architecture, testing, features, validation |
+| `docs/plans/` | Long plans, template, changelog |
+| `docs/audits/` | Ranked audits; gitignored, use `git add -f` |
+| `docs/ai/` | Governance, prompts, context loading |
+| `ai/reports/` | Discovery snapshots |
+| `CODEMAP.md` | Task to path router |
+| `CONTRACTS.md` | API and feature contract rules |
 
 ## Phases
 
 | Phase | Goal | Exit |
 | --- | --- | --- |
-| 1 | Stabilisation | Reports + audits + feature map 16+15 |
+| 1 | Stabilisation | Reports, audits, feature map 16+15 |
 | 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
 | 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
 | 4 | Scalability | ARCH-003 barrels + tests (**complete** on branch) |
-| 5 | Continuous | Refresh policy documented; mechanical CI **not** in scope |
+| 5 | Continuous | Refresh policy documented; mechanical CI out of scope |
 
-## Shipped waves (documentation)
-
-| Wave | Contents | Status |
-| --- | --- | --- |
-| 1A–1C + 2 | Full operability layer | Shipped — [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) open |
-| 4 | ARCH-003 feature barrels + tests | Shipped on same branch |
-
-Details: changelog, `ai/reports/*`, `CODEMAP.md`, audits, `CONTEXT_MAP.md`, template, glossary, `docs/ai/*`, `CONTRACTS.md`, `AGENTS.md` pointers.
-
-## Key links
-
-| Need | Path |
-| --- | --- |
-| Task router | [`CODEMAP.md`](CODEMAP.md) |
-| Agent map | [`AGENTS.md`](AGENTS.md) |
-| Feature map | [`ai/reports/feature_map.md`](ai/reports/feature_map.md) |
-| Minimal context | [`ai/CONTEXT_MAP.md`](ai/CONTEXT_MAP.md) |
-| Architecture audit | [`docs/audits/ai_architecture_audit.md`](docs/audits/ai_architecture_audit.md) |
-| Governance | [`docs/ai/governance.md`](docs/ai/governance.md) |
-| Contracts | [`CONTRACTS.md`](CONTRACTS.md) |
+Details live in the full plan and changelog. Do not restate them here.
 
 ## Merge gate
 
