@@ -37,12 +37,11 @@ CONTRACTS.md    API/feature contract rules (root)
 
 ## Shipped waves (documentation)
 
-| Wave | Contents |
-| --- | --- |
-| 1A | Changelog, `ai/` scaffold, core reports, `CODEMAP.md` |
-| 1B | Feature map, hotspots, recommendations, audits, `CONTEXT_MAP.md` |
-| 1C | This index, executive summary, plan mirror |
-| 2 | Template, glossary, contracts, `docs/ai/*`, AGENTS pointers |
+| Wave | Contents | Status |
+| --- | --- | --- |
+| 1A–1C + 2 | Full operability layer (see PR #239) | Shipped — [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) open |
+
+Details: changelog, `ai/reports/*`, `CODEMAP.md`, audits, `CONTEXT_MAP.md`, template, glossary, `docs/ai/*`, `CONTRACTS.md`, `AGENTS.md` pointers.
 
 ## Key links
 

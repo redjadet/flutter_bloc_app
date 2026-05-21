@@ -1,7 +1,7 @@
 # AI-first engineering — executive summary
 
 **Date:** 2026-05-21  
-**Status:** Phase 1 documentation shipped in-repo; Phase 4 code pending.
+**Status:** Waves 1–2 shipped in PR #239 (open). Phase 4 code pending after merge.
 
 ## Outcome
 
