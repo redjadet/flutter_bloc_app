@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:mix/mix.dart';
@@ -11,8 +11,8 @@ class CaseStudyDataModeBadge extends StatelessWidget {
 
   final CaseStudyDataMode mode;
 
-  static CaseStudyDataMode fromSupabaseAuth(
-    final SupabaseAuthRepository auth,
+  static CaseStudyDataMode fromRemoteBackendAuth(
+    final RemoteBackendAuthPort auth,
   ) {
     if (!auth.isConfigured) return CaseStudyDataMode.localOnly;
     if (auth.currentUser != null) return CaseStudyDataMode.supabase;

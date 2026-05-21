@@ -19,7 +19,8 @@ Operator entry point. Keep this file as index, not plan body.
 | Phase 4 / ARCH-003 | Done: four feature barrels + import tests |
 | Phase 5 baseline | Done: governance and refresh policy documented |
 | Merge | Done: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) squash-merged to `main` |
-| Backlog | ARCH-001, ARCH-002, mechanical Feature Brief CI, full contract expansion |
+| Backlog | ARCH-002, mechanical Feature Brief CI, full contract expansion |
+| In progress | ARCH-001 PR (`refactor/arch-001-case-study-decouple`) |
 
 ## Philosophy
 

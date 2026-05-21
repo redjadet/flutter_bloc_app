@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
@@ -23,13 +23,13 @@ String cameraGalleryErrorMessage(
   final String key,
 ) {
   switch (key) {
-    case CameraGalleryErrorKeys.permissionDenied:
+    case MediaPickErrorKeys.permissionDenied:
       return l10n.cameraGalleryPermissionDenied;
-    case CameraGalleryErrorKeys.cameraUnavailable:
+    case MediaPickErrorKeys.cameraUnavailable:
       return l10n.cameraGalleryCameraUnavailable;
-    case CameraGalleryErrorKeys.cancelled:
+    case MediaPickErrorKeys.cancelled:
       return l10n.cameraGalleryCancelled;
-    case CameraGalleryErrorKeys.generic:
+    case MediaPickErrorKeys.generic:
     default:
       return l10n.cameraGalleryGenericError;
   }

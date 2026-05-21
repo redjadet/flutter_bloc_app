@@ -9,7 +9,7 @@ Ranked issues for Phase 4 work. Target shape: [`docs/clean_architecture.md`](../
 
 | ID | Severity | Problem | Impact | Recommendation | Migration | Tests |
 | --- | --- | --- | --- | --- | --- | --- |
-| ARCH-001 | High | `case_study_demo` imports `camera_gallery` and `supabase_auth` domain types | Cross-feature coupling; blocks extraction | Introduce shared port in `lib/shared/` or local DTO + adapter | M | Cubit + repository contract tests |
+| ARCH-001 | High | ~~`case_study_demo` imports `camera_gallery` and `supabase_auth` domain types~~ **Resolved** (2026-05-21) | Was cross-feature coupling | `MediaPickResult` / `MediaPickErrorKeys` in `lib/shared/media/`; `RemoteBackendAuthPort` in `lib/core/auth/` | M | `flutter test test/features/case_study_demo`; `modular_metrics.sh --cross-feature-only` (no `case_study_demo` edges) |
 | ARCH-002 | High | `case_study_session_cubit_actions.part.dart` (~385 LOC) | Hard reviews; agent context overflow | Split actions into mixins/files by flow step | M | Existing cubit tests + new action unit tests |
 | ARCH-003 | Medium | ~~Four features lack barrel~~ **Resolved** (2026-05-21 branch) | Was inconsistent import surfaces | `igaming_demo`, `case_study_demo`, `staff_app_demo`, `library_demo` barrels + tests | S | `test/features/*/*_barrel_test.dart` |
 | ARCH-004 | Medium | Top features (`chat`, `todo_list`, `online_therapy_demo`) >4k LOC each | High change risk | Enforce Feature Brief + CONTEXT_MAP before edits | L | Integration tests per feature |

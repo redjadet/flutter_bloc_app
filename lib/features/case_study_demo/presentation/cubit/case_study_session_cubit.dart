@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_upload_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
@@ -42,7 +42,7 @@ class CaseStudySessionCubit extends _CaseStudySessionCubitBase
     required super.uploadRepository,
     required super.clipStore,
     required super.remoteDeleteRepository,
-    required super.supabaseAuthRepository,
+    required super.remoteBackendAuth,
     required super.remoteRepository,
     required super.timerService,
   });
@@ -56,7 +56,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
     required final CaseStudyUploadRepository uploadRepository,
     required this._clipStore,
     required final CaseStudyRemoteDeleteRepository remoteDeleteRepository,
-    required final SupabaseAuthRepository supabaseAuthRepository,
+    required final RemoteBackendAuthPort remoteBackendAuth,
     required final CaseStudyRemoteRepository remoteRepository,
     required this._timerService,
   }) : _authRepository = authRepository,
@@ -64,7 +64,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
        _video = videoRepository,
        _upload = uploadRepository,
        _remoteDelete = remoteDeleteRepository,
-       _supaAuth = supabaseAuthRepository,
+       _remoteAuth = remoteBackendAuth,
        _remote = remoteRepository,
        super(
          CaseStudySessionState(
@@ -96,7 +96,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   final CaseStudyUploadRepository _upload;
   final CaseStudyClipFileStore _clipStore;
   final CaseStudyRemoteDeleteRepository _remoteDelete;
-  final SupabaseAuthRepository _supaAuth;
+  final RemoteBackendAuthPort _remoteAuth;
   final CaseStudyRemoteRepository _remote;
   final TimerService _timerService;
   final RequestIdGuard _pickGuard = RequestIdGuard();

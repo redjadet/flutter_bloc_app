@@ -1,8 +1,8 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,43 +21,43 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
   static bool _defaultIsAndroid() => Platform.isAndroid;
 
   @override
-  Future<CameraGalleryResult> pickVideoFromCamera() async =>
+  Future<MediaPickResult> pickVideoFromCamera() async =>
       _pickVideo(source: ImageSource.camera, isCamera: true);
 
   @override
-  Future<CameraGalleryResult> pickVideoFromGallery() async =>
+  Future<MediaPickResult> pickVideoFromGallery() async =>
       _pickVideo(source: ImageSource.gallery, isCamera: false);
 
-  Future<CameraGalleryResult> _pickVideo({
+  Future<MediaPickResult> _pickVideo({
     required final ImageSource source,
     required final bool isCamera,
   }) async {
     try {
       final XFile? file = await _picker.pickVideo(source: source);
-      if (file == null) return const CameraGalleryResult.cancelled();
+      if (file == null) return const MediaPickResult.cancelled();
 
       final String path = file.path;
       if (path.isEmpty) {
-        return const CameraGalleryResult.failure(
-          errorKey: CameraGalleryErrorKeys.generic,
+        return const MediaPickResult.failure(
+          errorKey: MediaPickErrorKeys.generic,
         );
       }
 
-      return CameraGalleryResult.success(path);
+      return MediaPickResult.success(path);
     } on PlatformException catch (error) {
       return _mapPlatformException(error);
     } on Object catch (error) {
       if (isCamera) {
         return _mapCameraException(error);
       }
-      return CameraGalleryResult.failure(
-        errorKey: CameraGalleryErrorKeys.generic,
+      return MediaPickResult.failure(
+        errorKey: MediaPickErrorKeys.generic,
         message: error.toString(),
       );
     }
   }
 
-  CameraGalleryResult _mapPlatformException(final PlatformException error) {
+  MediaPickResult _mapPlatformException(final PlatformException error) {
     final String code = error.code.toLowerCase();
     final String message = (error.message ?? '').toLowerCase();
 
@@ -72,19 +72,19 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
         message.contains('not allowed') ||
         message.contains('restricted');
     if (isPermissionDenied) {
-      return const CameraGalleryResult.failure(
-        errorKey: CameraGalleryErrorKeys.permissionDenied,
+      return const MediaPickResult.failure(
+        errorKey: MediaPickErrorKeys.permissionDenied,
       );
     }
 
     if (_isCameraUnavailableCodeOrMessage(code, error.message)) {
-      return const CameraGalleryResult.failure(
-        errorKey: CameraGalleryErrorKeys.cameraUnavailable,
+      return const MediaPickResult.failure(
+        errorKey: MediaPickErrorKeys.cameraUnavailable,
       );
     }
 
-    return CameraGalleryResult.failure(
-      errorKey: CameraGalleryErrorKeys.generic,
+    return MediaPickResult.failure(
+      errorKey: MediaPickErrorKeys.generic,
       message: error.message,
     );
   }
@@ -111,22 +111,22 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
         lower.contains('no camera found');
   }
 
-  CameraGalleryResult _mapCameraException(final Object error) {
+  MediaPickResult _mapCameraException(final Object error) {
     final String message = error.toString();
     if (_isCameraUnavailableCodeOrMessage('', message)) {
-      return const CameraGalleryResult.failure(
-        errorKey: CameraGalleryErrorKeys.cameraUnavailable,
+      return const MediaPickResult.failure(
+        errorKey: MediaPickErrorKeys.cameraUnavailable,
       );
     }
 
-    return CameraGalleryResult.failure(
-      errorKey: CameraGalleryErrorKeys.generic,
+    return MediaPickResult.failure(
+      errorKey: MediaPickErrorKeys.generic,
       message: message,
     );
   }
 
   @override
-  Future<CameraGalleryResult?> retrieveLostVideo() async {
+  Future<MediaPickResult?> retrieveLostVideo() async {
     if (!_isAndroid()) return null;
 
     try {
@@ -136,7 +136,7 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
       final String? path = _extractLostPath(response);
       if (path != null &&
           (response.type == RetrieveType.video || _isProbablyVideoPath(path))) {
-        return CameraGalleryResult.success(path);
+        return MediaPickResult.success(path);
       }
 
       if (response.exception case final PlatformException exception?) {

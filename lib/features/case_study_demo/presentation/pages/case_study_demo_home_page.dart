@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,9 +15,9 @@ class CaseStudyDemoHomePage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
-    final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromSupabaseAuth(
-      supaAuth,
+    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+    final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromRemoteBackendAuth(
+      remoteAuth,
     );
     return CommonPageLayout(
       title: l10n.caseStudyDemoTitle,

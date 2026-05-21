@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 
 /// Abstraction over Supabase authentication state and operations.
 ///
@@ -17,7 +18,7 @@ import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 /// ```
 /// Use [currentUser] for one-off checks; use [authStateChanges] for reactive
 /// flows (e.g. UI that updates when the user signs in or out).
-abstract class SupabaseAuthRepository {
+abstract class SupabaseAuthRepository implements RemoteBackendAuthPort {
   /// Whether Supabase was initialized (URL and anon key configured).
   bool get isConfigured;
 

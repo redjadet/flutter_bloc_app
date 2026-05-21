@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -16,7 +17,6 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_uplo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubAuthRepository implements AuthRepository {
@@ -145,15 +145,15 @@ class _AlwaysFailingSaveRecordsLocalRepository extends _MemoryLocalRepository {
 
 class _StubVideoRepository implements CaseStudyVideoRepository {
   @override
-  Future<CameraGalleryResult> pickVideoFromCamera() async =>
-      const CameraGalleryResult.cancelled();
+  Future<MediaPickResult> pickVideoFromCamera() async =>
+      const MediaPickResult.cancelled();
 
   @override
-  Future<CameraGalleryResult> pickVideoFromGallery() async =>
-      const CameraGalleryResult.cancelled();
+  Future<MediaPickResult> pickVideoFromGallery() async =>
+      const MediaPickResult.cancelled();
 
   @override
-  Future<CameraGalleryResult?> retrieveLostVideo() async => null;
+  Future<MediaPickResult?> retrieveLostVideo() async => null;
 }
 
 class _StubUploadRepository implements CaseStudyUploadRepository {
@@ -190,8 +190,8 @@ class _ThrowingRemoteDeleteRepository
   }
 }
 
-class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
-  _StubSupabaseAuthRepository({this.configured = false, this.user});
+class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
+  _StubRemoteBackendAuth({this.configured = false, this.user});
 
   final bool configured;
   final AuthUser? user;
@@ -206,20 +206,7 @@ class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
   Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
 
   @override
-  Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
-  }) async {}
-
-  @override
   Future<void> signOut() async {}
-
-  @override
-  Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
-  }) async {}
 }
 
 class _StubRemoteRepository implements CaseStudyRemoteRepository {
@@ -450,7 +437,7 @@ void main() {
         uploadRepository: _StubUploadRepository(),
         clipStore: _NoopClipFileStore(),
         remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-        supabaseAuthRepository: _StubSupabaseAuthRepository(),
+        remoteBackendAuth: _StubRemoteBackendAuth(),
         remoteRepository: _StubRemoteRepository(),
         timerService: DefaultTimerService(),
       );
@@ -482,7 +469,7 @@ void main() {
         uploadRepository: _StubUploadRepository(),
         clipStore: _NoopClipFileStore(),
         remoteDeleteRepository: _ThrowingRemoteDeleteRepository(),
-        supabaseAuthRepository: _StubSupabaseAuthRepository(),
+        remoteBackendAuth: _StubRemoteBackendAuth(),
         remoteRepository: _StubRemoteRepository(),
         timerService: DefaultTimerService(),
       );
@@ -519,7 +506,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-          supabaseAuthRepository: _StubSupabaseAuthRepository(
+          remoteBackendAuth: _StubRemoteBackendAuth(
             configured: true,
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
@@ -576,7 +563,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: remoteDelete,
-          supabaseAuthRepository: _StubSupabaseAuthRepository(
+          remoteBackendAuth: _StubRemoteBackendAuth(
             configured: true,
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
@@ -633,7 +620,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-          supabaseAuthRepository: _StubSupabaseAuthRepository(
+          remoteBackendAuth: _StubRemoteBackendAuth(
             configured: true,
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
@@ -689,7 +676,7 @@ void main() {
         uploadRepository: _StubUploadRepository(),
         clipStore: _NoopClipFileStore(),
         remoteDeleteRepository: remoteDelete,
-        supabaseAuthRepository: _StubSupabaseAuthRepository(
+        remoteBackendAuth: _StubRemoteBackendAuth(
           configured: true,
           user: const AuthUser(id: 'supa-1', isAnonymous: false),
         ),
@@ -742,7 +729,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-          supabaseAuthRepository: _StubSupabaseAuthRepository(
+          remoteBackendAuth: _StubRemoteBackendAuth(
             configured: true,
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
@@ -803,7 +790,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-          supabaseAuthRepository: _StubSupabaseAuthRepository(
+          remoteBackendAuth: _StubRemoteBackendAuth(
             configured: true,
             user: const AuthUser(id: 'supa-1', isAnonymous: false),
           ),
@@ -871,7 +858,7 @@ void main() {
           uploadRepository: _StubUploadRepository(),
           clipStore: _NoopClipFileStore(),
           remoteDeleteRepository: _NoopRemoteDeleteRepository(),
-          supabaseAuthRepository: _StubSupabaseAuthRepository(),
+          remoteBackendAuth: _StubRemoteBackendAuth(),
           remoteRepository: _StubRemoteRepository(),
           timerService: DefaultTimerService(),
         );

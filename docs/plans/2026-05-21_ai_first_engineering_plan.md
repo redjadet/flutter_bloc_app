@@ -15,7 +15,8 @@
 | Phase 4 code | **Complete** | ARCH-003 barrels + tests on branch |
 | Phase 5 automation | **Doc baseline** | Honor system + [`ai/README.md`](../../ai/README.md) refresh policy (no CI script) |
 | PR #239 merge | **Done** | Squash-merged to `main` (2026-05-21) |
-| ARCH-001 / ARCH-002 | **Backlog** | Separate refactor PRs after merge |
+| ARCH-001 | **Done** (branch `refactor/arch-001-case-study-decouple`) | Shared media types + `RemoteBackendAuthPort` |
+| ARCH-002 | **Backlog** | Separate refactor PR after ARCH-001 lands |
 
 ### Todo tracker (sync with Cursor plan)
 
@@ -29,7 +30,7 @@
 | phase4-arch-003 | ARCH-003 barrels + tests | **done** (`5270abd3`) |
 | phase5-doc-baseline | Governance + refresh policy | **done** |
 | pr239-merge | Merge PR #239 | **done** |
-| post-merge-arch-001 | ARCH-001 refactor | **pending** (backlog) |
+| post-merge-arch-001 | ARCH-001 refactor | **done** (awaiting PR) |
 | post-merge-arch-002 | ARCH-002 refactor | **pending** (backlog) |
 | post-merge-phase5-ci | Mechanical gates / refresh CI | **pending** (backlog) |
 

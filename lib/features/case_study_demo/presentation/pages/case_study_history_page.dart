@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/case_study_l10n_helpers.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:go_router/go_router.dart';
@@ -23,12 +23,12 @@ class CaseStudyHistoryPage extends StatefulWidget {
 
 class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
   Future<List<CaseStudyRecord>>? _future;
-  late final SupabaseAuthRepository _supaAuth;
+  late final RemoteBackendAuthPort _remoteAuth;
 
   @override
   void initState() {
     super.initState();
-    _supaAuth = getIt<SupabaseAuthRepository>();
+    _remoteAuth = getIt<RemoteBackendAuthPort>();
     _future = _load();
   }
 
@@ -36,8 +36,8 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
     final AuthRepository auth = getIt<AuthRepository>();
     final String? userId = auth.currentUser?.id;
     if (userId == null || userId.isEmpty) return <CaseStudyRecord>[];
-    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
-    if (supaAuth.isConfigured && supaAuth.currentUser != null) {
+    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+    if (remoteAuth.isConfigured && remoteAuth.currentUser != null) {
       final CaseStudyRemoteRepository remote =
           getIt<CaseStudyRemoteRepository>();
       final List<RemoteCaseStudySummary> summaries = await remote
@@ -96,8 +96,9 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
     final String? userId = auth.currentUser?.id;
     if (userId == null || userId.isEmpty) return;
 
-    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
-    final bool isRemote = supaAuth.isConfigured && supaAuth.currentUser != null;
+    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+    final bool isRemote =
+        remoteAuth.isConfigured && remoteAuth.currentUser != null;
 
     try {
       if (isRemote) {
@@ -125,7 +126,7 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
     } on Object catch (error) {
       if (error is HttpRequestFailure && error.statusCode == 401) {
         try {
-          await getIt<SupabaseAuthRepository>().signOut();
+          await getIt<RemoteBackendAuthPort>().signOut();
         } on Object {
           // Best-effort only; still show the error message.
         }
@@ -138,8 +139,8 @@ class _CaseStudyHistoryPageState extends State<CaseStudyHistoryPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromSupabaseAuth(
-      _supaAuth,
+    final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromRemoteBackendAuth(
+      _remoteAuth,
     );
     return CommonPageLayout(
       title: l10n.caseStudyHistoryTitle,

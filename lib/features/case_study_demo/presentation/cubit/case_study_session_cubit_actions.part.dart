@@ -151,7 +151,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
       return;
     }
     final bool remoteSubmit =
-        _supaAuth.isConfigured && _supaAuth.currentUser != null;
+        _remoteAuth.isConfigured && _remoteAuth.currentUser != null;
     var beganRemoteCaseStudyUpload = false;
     var remoteSubmitFinished = false;
     String? caseIdForSubmit;
@@ -187,7 +187,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
       final String caseId = caseIdForSubmit;
       _pendingSubmitSubmittedAtUtc = submittedAtUtc;
 
-      if (_supaAuth.isConfigured && _supaAuth.currentUser != null) {
+      if (_remoteAuth.isConfigured && _remoteAuth.currentUser != null) {
         beganRemoteCaseStudyUpload = true;
         final int clipTotal = state.draft.answers.values
             .where((p) => p.isNotEmpty)
@@ -327,7 +327,7 @@ mixin _CaseStudySessionCubitActions on _CaseStudySessionCubitBase {
     try {
       DateTime submittedAtUtc =
           _pendingSubmitSubmittedAtUtc ?? DateTime.now().toUtc();
-      if (_supaAuth.isConfigured && _supaAuth.currentUser != null) {
+      if (_remoteAuth.isConfigured && _remoteAuth.currentUser != null) {
         try {
           final RemoteCaseStudyDetail? detail = await _remote.getSubmittedCase(
             caseId: state.draft.caseId,

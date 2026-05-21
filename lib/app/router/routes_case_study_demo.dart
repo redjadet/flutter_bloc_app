@@ -20,7 +20,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_supabase_auth_gate.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
@@ -80,16 +80,16 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
         child,
       ) {
         final AuthRepository auth = getIt<AuthRepository>();
-        final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
+        final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
         return AppRouteAuthGate(
           policy: AppRoutePolicies.caseStudyDemo,
           getCurrentUser: () => auth.currentUser,
           authStateChanges: auth.authStateChanges,
           authPath: AppRoutes.authPath,
           child: CaseStudySupabaseAuthGate(
-            isSupabaseInitialized: supaAuth.isConfigured,
-            getCurrentUser: () => supaAuth.currentUser,
-            authStateChanges: supaAuth.authStateChanges,
+            isSupabaseInitialized: remoteAuth.isConfigured,
+            getCurrentUser: () => remoteAuth.currentUser,
+            authStateChanges: remoteAuth.authStateChanges,
             fallbackPath: AppRoutes.counterPath,
             supabaseAuthPath: AppRoutes.supabaseAuthPath,
             redirectReturnPath: state.uri.toString(),
@@ -102,7 +102,7 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
                 clipStore: getIt<CaseStudyClipFileStore>(),
                 remoteDeleteRepository:
                     getIt<CaseStudyRemoteDeleteRepository>(),
-                supabaseAuthRepository: supaAuth,
+                remoteBackendAuth: remoteAuth,
                 remoteRepository: getIt<CaseStudyRemoteRepository>(),
                 timerService: getIt<TimerService>(),
               ),
