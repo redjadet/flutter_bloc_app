@@ -206,7 +206,7 @@ Testing detail lives in:
 
 | Problem | What to check |
 | --- | --- |
-| Firebase features are disabled | Confirm `flutterfire configure` was run and platform config files are present. See [Firebase Setup](firebase_setup.md). |
+| Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` with `direnv allow`. See [Firebase Setup](firebase_setup.md) (step 3b). |
 | Supabase-backed flows show "not configured" | Confirm `SUPABASE_URL` and `SUPABASE_ANON_KEY` are available through the configured secrets path. See [Security and Secrets](security_and_secrets.md). |
 | Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
 | iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |

@@ -134,12 +134,16 @@ out of git. Optional match config: [`fastlane/Matchfile.example`](../fastlane/Ma
 
 ## Firebase configuration is separate
 
-Firebase platform config files are **gitignored** and are not managed through
-the secrets system:
+Firebase config is split between **gitignored platform files** and a
+**committed Dart placeholder**:
 
-- `android/app/google-services.json`
-- `ios/Runner/GoogleService-Info.plist`
-- `lib/firebase_options.dart`
+| Artifact | In git | Real values |
+| --- | --- | --- |
+| `android/app/google-services.json` | gitignored | Local / CI secret injection |
+| `ios/Runner/GoogleService-Info.plist` | gitignored | Local / CI secret injection |
+| `macos/Runner/GoogleService-Info.plist` | gitignored | Local / CI secret injection |
+| [`lib/firebase_options.dart`](../lib/firebase_options.dart) | committed placeholder | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
+| `.envrc` | gitignored | Maintainer machine only |
 
 To enable Firebase-dependent features (Auth, Remote Config, Realtime Database,
 etc.), follow [Firebase Setup](firebase_setup.md). The app should still run when
@@ -149,12 +153,29 @@ gracefully.
 Tracked placeholder files such as [`lib/firebase_options.dart`](../lib/firebase_options.dart)
 and `ios/ci` / `macos/ci` plist files must not contain real API keys. CI uses
 them only as build placeholders; maintainer machines and deployment pipelines
-should supply real Firebase config through gitignored platform files or secret
-injection. For local development, add `FIREBASE_*` values to `.envrc`; the
-direnv Flutter wrapper forwards them through
+should supply real Firebase config through gitignored platform files or
+`FIREBASE_*` injection. For local development, add `FIREBASE_*` values to
+`.envrc`; the direnv Flutter wrapper forwards them through
 [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
 When those values are missing or still placeholders, Firebase initialization
 skips safely and logs only field names, not secret values.
+
+After `flutterfire configure`, restore the committed Dart placeholder (`git
+checkout HEAD -- lib/firebase_options.dart`) and copy keys into `.envrc` — do
+not commit hardcoded API keys from the CLI output.
+
+### Git history and secret scanning
+
+[`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh)
+guards the **current** tree. GitHub [secret scanning](https://github.com/redjadet/flutter_bloc_app/security/secret-scanning)
+can still flag keys in **old commits**. If keys were ever pushed:
+
+1. Rotate restricted keys in Google Cloud/Firebase.
+2. Confirm `main` has no `AIzaSy…` literals (`./tool/check_tracked_secret_literals.sh`).
+3. Optionally rewrite history with
+   [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt)
+   and `git filter-repo` (see [Secret scanning alerts](firebase_setup.md#secret-scanning-alerts) in Firebase Setup).
+4. Force-push all branches and have collaborators re-clone.
 
 ## Key inventory (feature-scoped)
 

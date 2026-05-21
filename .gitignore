@@ -127,3 +127,4 @@ analysis/agent_scorecard/archive/scorecard-events-2026-03-24.jsonl.gz
 analysis/agent_scorecard/archive/scorecard-events-2026-03-25.jsonl.gz
 analysis/agent_scorecard/archive/*
 docs/Spot_Bad_AI_Generated_Code.pdf
+tool/firebase_secret_history_replacements.txt
