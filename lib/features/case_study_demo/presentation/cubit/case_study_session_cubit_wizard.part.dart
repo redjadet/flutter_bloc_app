@@ -5,8 +5,11 @@ mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
     final String? userId = _requireUserId();
     if (userId == null) return;
     await _local.ensureReady();
+    if (isClosed) return;
     await _clipStore.deleteCaseFolder(state.draft.caseId);
+    if (isClosed) return;
     await _local.clearDraft(userId);
+    if (isClosed) return;
     final CaseStudyDraft next = CaseStudyDraft.fresh(caseId: _newCaseId());
     await _local.saveDraft(userId, next);
     if (isClosed) return;
@@ -66,6 +69,7 @@ mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
       currentQuestionIndex: state.draft.currentQuestionIndex + 1,
     );
     unawaited(_local.saveDraft(userId, updated));
+    if (isClosed) return;
     emit(state.copyWith(draft: updated, clearPickError: true));
   }
 
@@ -77,10 +81,12 @@ mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
       currentQuestionIndex: state.draft.currentQuestionIndex - 1,
     );
     unawaited(_local.saveDraft(userId, updated));
+    if (isClosed) return;
     emit(state.copyWith(draft: updated, clearPickError: true));
   }
 
   void clearPickError() {
+    if (isClosed) return;
     emit(state.copyWith(clearPickError: true));
   }
 }

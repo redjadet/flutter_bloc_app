@@ -14,6 +14,7 @@ mixin _CaseStudySessionCubitSubmit
     String? caseIdForSubmit;
 
     _pendingSubmitSubmittedAtUtc = null;
+    if (isClosed) return;
     emit(
       state.copyWith(
         isSubmitting: true,

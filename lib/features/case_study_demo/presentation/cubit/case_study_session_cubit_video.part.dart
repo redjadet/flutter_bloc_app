@@ -22,9 +22,11 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
         unawaited(_commitVideoPath(path, userId));
       },
       cancelled: () {
+        if (isClosed) return;
         emit(state.copyWith(clearPickError: true));
       },
       failure: (errorKey, message) {
+        if (isClosed) return;
         emit(state.copyWith(pickErrorKey: errorKey));
       },
     );

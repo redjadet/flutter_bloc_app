@@ -59,6 +59,7 @@ mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
     }
     final CaseStudyCaseType? caseType = state.draft.caseType;
     if (caseType == null) return;
+    if (isClosed) return;
 
     emit(
       state.copyWith(
@@ -89,6 +90,7 @@ mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
           );
         }
       }
+      if (isClosed) return;
       final CaseStudyDraft fresh = await _persistSubmissionToLocalHistory(
         userId: userId,
         caseId: state.draft.caseId,

@@ -14,5 +14,8 @@ abstract class RemoteBackendAuthPort {
   Stream<AuthUser?> get authStateChanges;
 
   /// Signs out the current remote-backend user.
+  ///
+  /// Intended for presentation layers (e.g. history delete on 401), not cubit
+  /// session flows.
   Future<void> signOut();
 }

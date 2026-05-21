@@ -6,7 +6,9 @@ mixin _CaseStudySessionCubitLifecycle on _CaseStudySessionCubitBase {
     if (userId == null) return;
     final String caseId = state.draft.caseId;
     await _clipStore.deleteCaseFolder(state.draft.caseId);
+    if (isClosed) return;
     await _local.clearDraft(userId);
+    if (isClosed) return;
     try {
       await _remoteDelete.deleteCaseStudyRemote(caseId: caseId);
     } on Object catch (error, stackTrace) {
@@ -18,6 +20,7 @@ mixin _CaseStudySessionCubitLifecycle on _CaseStudySessionCubitBase {
         stackTrace,
       );
     }
+    if (isClosed) return;
     final CaseStudyDraft next = CaseStudyDraft.fresh(caseId: _newCaseId());
     await _local.saveDraft(userId, next);
     if (isClosed) return;
