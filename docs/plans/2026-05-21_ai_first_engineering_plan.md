@@ -12,8 +12,9 @@
 | --- | --- | --- |
 | Waves 1A–1C + Wave 2 | **Shipped** | PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239), branch `docs/ai-first-engineering` |
 | Phase 1–3 doc exits | **Met** | 16+15 feature map, CONTEXT_MAP pilots, audits, governance |
-| Phase 4 code | **Pending** | After PR merge |
+| Phase 4 code | **In progress** | ARCH-003 on branch; merge PR at end |
 | Phase 5 automation | **Backlog** | Feature Brief honor system only |
+| PR #239 merge | **Deferred** | Operator: merge when all plan work complete |
 
 ---
 
@@ -342,9 +343,9 @@ AGENTS/host template change → `sync_agent_assets.sh --dry-run` + `check_agent_
 
 ## Build order (execute)
 
-1. ~~Wave 1A–1C + Wave 2~~ — **done** in PR #239  
-2. **Now:** merge PR #239 (`bash tool/commit_push_pr_watch_merge_cleanup.sh 239`)  
-3. **Next:** Phase 4 — one `ARCH-###` with Feature Brief + RED test (see audit)  
+1. ~~Wave 1A–1C + Wave 2~~ — **done** on branch / PR #239  
+2. **Now:** Phase 4 — `ARCH-###` with Feature Brief + RED test (ARCH-003 pilot)  
+3. **End:** merge PR #239 (`bash tool/commit_push_pr_watch_merge_cleanup.sh 239`) + post-merge  
 4. **Later:** Phase 5 refresh automation  
 
 **commit-push-pr:** rebase on `origin/main`; no AI in commit messages.

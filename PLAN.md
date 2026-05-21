@@ -32,7 +32,7 @@ CONTRACTS.md    API/feature contract rules (root)
 | 1 | Stabilisation | Reports + audits + feature map 16+15 |
 | 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
 | 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
-| 4 | Scalability | One `ARCH-###` merge with tests |
+| 4 | Scalability | One `ARCH-###` with tests (in progress on branch) |
 | 5 | Continuous | Refresh policy + optional CI hooks |
 
 ## Shipped waves (documentation)
@@ -54,6 +54,10 @@ Details: changelog, `ai/reports/*`, `CODEMAP.md`, audits, `CONTEXT_MAP.md`, temp
 | Architecture audit | [`docs/audits/ai_architecture_audit.md`](docs/audits/ai_architecture_audit.md) |
 | Governance | [`docs/ai/governance.md`](docs/ai/governance.md) |
 | Contracts | [`CONTRACTS.md`](CONTRACTS.md) |
+
+## Merge gate
+
+**PR #239** stays open until Phase 4 (and any follow-up ARCH work) is done — merge once at the end (`tool/commit_push_pr_watch_merge_cleanup.sh 239`).
 
 ## Not enforced yet
 

@@ -1,7 +1,7 @@
 # AI-first engineering — executive summary
 
 **Date:** 2026-05-21  
-**Status:** Waves 1–2 shipped in PR #239 (open). Phase 4 code pending after merge.
+**Status:** Waves 1–2 in PR #239 (open). Phase 4 started (`igaming_demo` barrel). **Merge PR at end** of plan work.
 
 ## Outcome
 
@@ -34,7 +34,7 @@ Established an **AI operability layer** (`/ai`, `CODEMAP.md`, `PLAN.md`) that ro
 | 1 | Stabilisation — legible architecture for agents | In progress (docs) |
 | 2 | Workflow — alignment, contracts, TDD router | Wave 2 docs |
 | 3 | Velocity — CONTEXT_MAP ≤8 files per pilot | Pilot maps written |
-| 4 | Scalability — ARCH-driven code refactors | Not started |
+| 4 | Scalability — ARCH-driven code refactors | ARCH-003 partial (`igaming_demo` barrel) |
 | 5 | Continuous — refresh + mechanical gates | Not started |
 
 ## Top risks
