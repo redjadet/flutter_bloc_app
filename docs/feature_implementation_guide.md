@@ -5,6 +5,9 @@ repeating the implementation detail already covered elsewhere. Use it as a
 routing document: it tells you where to build, what to update, and which docs
 own each concern.
 
+Non-trivial features should start from the Feature Brief and AI alignment checklist in
+[`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) (honor system until automated gates exist).
+
 ## Definition of done
 
 A new or materially changed feature should usually include:
