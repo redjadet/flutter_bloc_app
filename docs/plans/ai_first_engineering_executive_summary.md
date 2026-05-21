@@ -1,7 +1,7 @@
 # AI-first engineering — executive summary
 
 **Date:** 2026-05-21
-**Status:** Waves 1–2 + Phase 4 (ARCH-003) + Phase 5 doc baseline on [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (open). **Merge deferred** to operator.
+**Status:** Waves 1–2 + Phase 4 (ARCH-003) + Phase 5 doc baseline **merged** via [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (2026-05-21).
 
 ## Outcome
 

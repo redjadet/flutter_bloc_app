@@ -14,7 +14,7 @@
 | Phase 1–3 doc exits | **Met** | 16+15 feature map, CONTEXT_MAP pilots, audits, governance |
 | Phase 4 code | **Complete** | ARCH-003 barrels + tests on branch |
 | Phase 5 automation | **Doc baseline** | Honor system + [`ai/README.md`](../../ai/README.md) refresh policy (no CI script) |
-| PR #239 merge | **Deferred** | Operator: `tool/commit_push_pr_watch_merge_cleanup.sh 239` |
+| PR #239 merge | **Done** | Squash-merged to `main` (2026-05-21) |
 | ARCH-001 / ARCH-002 | **Backlog** | Separate refactor PRs after merge |
 
 ### Todo tracker (sync with Cursor plan)
@@ -28,7 +28,7 @@
 | w2 | Wave 2 | **done** |
 | phase4-arch-003 | ARCH-003 barrels + tests | **done** (`5270abd3`) |
 | phase5-doc-baseline | Governance + refresh policy | **done** |
-| pr239-merge | Merge PR #239 | **pending** |
+| pr239-merge | Merge PR #239 | **done** |
 | post-merge-arch-001 | ARCH-001 refactor | **pending** (backlog) |
 | post-merge-arch-002 | ARCH-002 refactor | **pending** (backlog) |
 | post-merge-phase5-ci | Mechanical gates / refresh CI | **pending** (backlog) |

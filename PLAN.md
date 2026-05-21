@@ -18,7 +18,7 @@ Operator entry point. Keep this file as index, not plan body.
 | Waves 1A-2 | Done: AI operability docs, reports, audits, template, glossary, contracts |
 | Phase 4 / ARCH-003 | Done: four feature barrels + import tests |
 | Phase 5 baseline | Done: governance and refresh policy documented |
-| Merge | Pending operator: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) |
+| Merge | Done: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) squash-merged to `main` |
 | Backlog | ARCH-001, ARCH-002, mechanical Feature Brief CI, full contract expansion |
 
 ## Philosophy
@@ -47,20 +47,16 @@ Operator entry point. Keep this file as index, not plan body.
 | 1 | Stabilisation | Reports, audits, feature map 16+15 |
 | 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
 | 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
-| 4 | Scalability | ARCH-003 barrels + tests (**complete** on branch) |
+| 4 | Scalability | ARCH-003 barrels + tests (**merged**) |
 | 5 | Continuous | Refresh policy documented; mechanical CI out of scope |
 
 Details live in the full plan and changelog. Do not restate them here.
 
 ## Merge gate
 
-Plan work on branch is **complete** except merge. Run when ready:
+PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) **merged** to `main` (squash). Local `main` updated via post-merge cleanup.
 
-```bash
-bash tool/commit_push_pr_watch_merge_cleanup.sh 239
-```
-
-**Not in this plan pass:** ARCH-001/002 code refactors, `FINAL_OPTIMIZATION_REPORT.md`, mechanical Feature Brief CI.
+**Post-merge backlog:** ARCH-001/002 refactors, `FINAL_OPTIMIZATION_REPORT.md`, mechanical Feature Brief CI.
 
 ## Not enforced yet
 
