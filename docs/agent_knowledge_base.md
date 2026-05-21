@@ -211,7 +211,8 @@ Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGE
 
 Transcript-derived workspace guardrails:
 
-- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 59) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md).
+- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 60) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md).
+- **Horizontal CTA / action bars:** `./bin/checklist` runs `tool/check_row_action_overflow.sh` (static PRIMARY_SCOPE heuristics) and `tool/check_action_bar_layout.sh` (widget tests). Prefer `ResponsiveDualCtaRow` / `ResponsiveActionOverflowBar` over raw multi-button `Row` — [`docs/design_system.md`](design_system.md#horizontal-action-layout-overflow).
 - **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
 - **Ephemeral repo-root files:** Delete one-shot `tmp_*.json` at repo root (e.g. GitHub branch-protection API bodies); use `tmp/` for scratch (`tmp/*` gitignored).
 
