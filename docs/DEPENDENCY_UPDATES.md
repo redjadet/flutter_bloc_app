@@ -28,6 +28,11 @@ This project uses automated dependency update monitoring to keep dependencies up
 - **Dev dependencies**: Patch updates are auto-merged (if tests pass)
 - **Security updates**: Created immediately, regardless of schedule
 
+**Coordinated pub pins** (see comments at top of `pubspec.yaml`; enforced in `renovate.json` via `allowedVersions`):
+
+- `genui` — held below `0.8.0` while `genui_google_generative_ai` `0.7.x` requires `genui ^0.7`
+- `google_sign_in_mocks` (dev) — held below `0.4.0` while `firebase_ui_oauth_google` stays on `google_sign_in` 6
+
 ### Backup: Dependabot
 
 [Dependabot](https://docs.github.com/en/code-security/dependabot) is configured as a backup, primarily for security vulnerability monitoring.

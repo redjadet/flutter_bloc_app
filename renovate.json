@@ -41,6 +41,29 @@
       ]
     },
     {
+      "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPackageNames": [
+        "genui"
+      ],
+      "allowedVersions": "<0.8.0"
+    },
+    {
+      "description": "Hold google_sign_in_mocks ^0.3; 0.4+ needs google_sign_in 7 (firebase_ui on 6)",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchPackageNames": [
+        "google_sign_in_mocks"
+      ],
+      "allowedVersions": "<0.4.0"
+    },
+    {
       "description": "Separate major version updates for Flutter SDK",
       "matchPackageNames": [
         "flutter",
