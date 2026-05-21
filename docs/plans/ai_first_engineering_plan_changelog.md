@@ -31,6 +31,15 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 4. **No `lib/` or `test/`** changes in Waves 1–2.
 5. **Feature map:** 16 full + 15 stub entries (31 feature modules).
 
+## Phase 4 exit (2026-05-21, branch `docs/ai-first-engineering`)
+
+| Item | Status |
+| --- | --- |
+| ARCH-003 feature barrels | Done — `igaming_demo`, `case_study_demo`, `staff_app_demo`, `library_demo` |
+| Barrel regression tests | Done — `test/features/*/*_barrel_test.dart` |
+| ARCH-001 / ARCH-002 refactors | **Out of scope** for this plan pass (separate PRs after merge) |
+| PR #239 merge | **Deferred** until operator runs merge-cleanup |
+
 ## Evidence captured (preflight 2026-05-21)
 
 - `bash tool/modular_metrics.sh` → per-feature LOC, barrels, fan-in.

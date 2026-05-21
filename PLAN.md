@@ -32,14 +32,15 @@ CONTRACTS.md    API/feature contract rules (root)
 | 1 | Stabilisation | Reports + audits + feature map 16+15 |
 | 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
 | 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
-| 4 | Scalability | One `ARCH-###` with tests (in progress on branch) |
-| 5 | Continuous | Refresh policy + optional CI hooks |
+| 4 | Scalability | ARCH-003 barrels + tests (**complete** on branch) |
+| 5 | Continuous | Refresh policy documented; mechanical CI **not** in scope |
 
 ## Shipped waves (documentation)
 
 | Wave | Contents | Status |
 | --- | --- | --- |
-| 1A–1C + 2 | Full operability layer (see PR #239) | Shipped — [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) open |
+| 1A–1C + 2 | Full operability layer | Shipped — [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) open |
+| 4 | ARCH-003 feature barrels + tests | Shipped on same branch |
 
 Details: changelog, `ai/reports/*`, `CODEMAP.md`, audits, `CONTEXT_MAP.md`, template, glossary, `docs/ai/*`, `CONTRACTS.md`, `AGENTS.md` pointers.
 
@@ -57,7 +58,13 @@ Details: changelog, `ai/reports/*`, `CODEMAP.md`, audits, `CONTEXT_MAP.md`, temp
 
 ## Merge gate
 
-**PR #239** stays open until Phase 4 (and any follow-up ARCH work) is done — merge once at the end (`tool/commit_push_pr_watch_merge_cleanup.sh 239`).
+Plan work on branch is **complete** except merge. Run when ready:
+
+```bash
+bash tool/commit_push_pr_watch_merge_cleanup.sh 239
+```
+
+**Not in this plan pass:** ARCH-001/002 code refactors, `FINAL_OPTIMIZATION_REPORT.md`, mechanical Feature Brief CI.
 
 ## Not enforced yet
 
