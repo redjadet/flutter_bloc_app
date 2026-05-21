@@ -60,7 +60,7 @@ subsections (so the linter doesn’t treat it as a new section).
 | Icon + label in a row | [`IconLabelRow`](../lib/shared/widgets/icon_label_row.dart) | Any `Row` with `Icon` + `Text` (enforced by `tool/check_row_text_overflow.sh`) |
 | 2+ intrinsic-width actions | `ResponsiveActionOverflowBar` (wraps `OverflowBar`, spacing 12) | Clear/Save, Cancel/Confirm; Cupertino picker sheets |
 | Many chips / batch tools | `Wrap` with spacing | Todo batch bar, filter chips |
-| Equal dual CTA (Sign in / Register, Cancel/Confirm) | `ResponsiveDualCtaRow` (`Row`+`Expanded` wide; column below 360dp available width) | Auth landing, booking confirm |
+| Equal dual CTA (Sign in / Register, Cancel/Confirm) | `ResponsiveDualCtaRow` (`Row`+`Expanded` wide; column below 360dp screen width) | Auth landing, booking confirm |
 | Dialog actions | `AlertDialog.actions` + `PlatformAdaptive.dialogAction` | Framework handles overflow |
 
 Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Widget regressions: `tool/check_action_bar_layout.sh`.
