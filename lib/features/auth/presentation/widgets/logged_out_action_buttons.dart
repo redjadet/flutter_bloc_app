@@ -22,32 +22,28 @@ class LoggedOutActionButtons extends StatelessWidget {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final String signInLabel = context.l10n.accountSignInButton.toUpperCase();
     final String registerLabel = context.l10n.registerTitle.toUpperCase();
-    return SizedBox(
-      height: 52 * verticalScale,
-      child: Row(
-        children: [
-          Expanded(
-            child: _LoggedOutActionButton(
-              label: signInLabel,
-              scale: scale,
-              backgroundColor: colors.surface,
-              foregroundColor: colors.onSurface,
-              border: BorderSide(width: 2, color: colors.outline),
-              onPressed: () => context.go(AppRoutes.authPath),
-            ),
-          ),
-          SizedBox(width: 9 * scale),
-          Expanded(
-            child: _LoggedOutActionButton(
-              label: registerLabel,
-              scale: scale,
-              backgroundColor: colors.primary,
-              foregroundColor: colors.onPrimary,
-              onPressed: () => context.go(AppRoutes.registerPath),
-            ),
-          ),
-        ],
-      ),
+    final double buttonHeight = 52 * verticalScale;
+    final Widget signInButton = _LoggedOutActionButton(
+      label: signInLabel,
+      scale: scale,
+      backgroundColor: colors.surface,
+      foregroundColor: colors.onSurface,
+      border: BorderSide(width: 2, color: colors.outline),
+      onPressed: () => context.go(AppRoutes.authPath),
+    );
+    final Widget registerButton = _LoggedOutActionButton(
+      label: registerLabel,
+      scale: scale,
+      backgroundColor: colors.primary,
+      foregroundColor: colors.onPrimary,
+      onPressed: () => context.go(AppRoutes.registerPath),
+    );
+
+    return ResponsiveDualCtaRow(
+      height: buttonHeight,
+      gap: 9 * scale,
+      start: signInButton,
+      end: registerButton,
     );
   }
 }

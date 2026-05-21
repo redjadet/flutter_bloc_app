@@ -29,6 +29,7 @@ ALL_TESTS=(
   "test/shared/widgets/sync_status_banner_test.dart"
   "test/shared/sync/background_sync_coordinator_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
+  "test/shared/widgets/action_bar_layout_regression_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
@@ -131,8 +132,12 @@ select_regression_guard_tests() {
         add_test_once out_ref "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
         ;;
       lib/features/staff_app_demo/*|\
-      test/features/staff_app_demo/*)
+      test/features/staff_app_demo/*|\
+      tool/check_row_action_overflow.sh|\
+      tool/check_action_bar_layout.sh)
         add_test_once out_ref "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
+        add_test_once out_ref "test/shared/widgets/action_bar_layout_regression_test.dart"
+        add_test_once out_ref "test/features/staff_app_demo/presentation/widgets/staff_demo_proof_signature_section_layout_test.dart"
         ;;
     esac
   done

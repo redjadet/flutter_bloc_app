@@ -37,6 +37,7 @@ Env overrides:
   CHECKLIST_RUN_FOCUSED_TESTS=auto|0|1
   CHECKLIST_RUN_MIX_LINT=auto|0|1
   CHECKLIST_RUN_TODO_LAYOUT_TESTS=auto|0|1
+  CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=auto|0|1
   CHECKLIST_RUN_ANALYZE=auto|0|1
   CHECKLIST_JOBS=<int>
 EOF
@@ -720,6 +721,41 @@ should_run_todo_layout_tests_auto() {
   return 1
 }
 
+should_run_action_bar_layout_tests_auto() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      lib/features/profile/presentation/*|\
+      lib/features/settings/presentation/*|\
+      lib/features/*/presentation/widgets/*|\
+      lib/features/*/presentation/helpers/*dialog*|\
+      lib/features/*/*dialog*.dart|\
+      lib/features/*/presentation/forms/*|\
+      lib/features/*/*actions_bar*.dart|\
+      lib/features/*/*action_bar*.dart|\
+      lib/shared/widgets/common_form_field.dart|\
+      lib/shared/utils/platform_adaptive*|\
+      lib/shared/extensions/responsive.dart|\
+      test/features/staff_app_demo/presentation/widgets/*|\
+      test/shared/widgets/action_bar_layout_regression_test.dart|\
+      tool/check_row_action_overflow.sh|\
+      tool/check_action_bar_layout.sh)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 should_run_agent_asset_drift_check() {
   if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
     return 1
@@ -776,6 +812,7 @@ RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
+RUN_ACTION_BAR_LAYOUT_TESTS="${CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
 HAS_GIT_REPO=0
 CHECKLIST_EXPLAIN="${CHECKLIST_EXPLAIN:-0}"
@@ -850,6 +887,11 @@ fi
 if ! [[ "$RUN_TODO_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_TODO_LAYOUT_TESTS='$RUN_TODO_LAYOUT_TESTS'; using auto"
   RUN_TODO_LAYOUT_TESTS=auto
+fi
+
+if ! [[ "$RUN_ACTION_BAR_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS='$RUN_ACTION_BAR_LAYOUT_TESTS'; using auto"
+  RUN_ACTION_BAR_LAYOUT_TESTS=auto
 fi
 
 if ! [[ "$RUN_ANALYZE" =~ ^(auto|0|1)$ ]]; then
@@ -1228,6 +1270,7 @@ CHECK_MESSAGES=(
   "Checking for Equatable usage (Freezed preferred)..."
   "Checking for unguarded null assertion (!) usage..."
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
+  "Checking for Row+multi-button action overflow risk (OverflowBar, Wrap, or Expanded)..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
@@ -1290,6 +1333,7 @@ CHECK_SCRIPTS=(
   "tool/check_freezed_preferred.sh"
   "tool/check_unguarded_null_assertion.sh"
   "tool/check_row_text_overflow.sh"
+  "tool/check_row_action_overflow.sh"
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_offline_first_remote_merge.sh"
   "tool/check_feature_modularity_leaks.sh"
@@ -1350,6 +1394,7 @@ CHECK_SCRIPT_THEMES=(
   "async-boundaries"
   "architecture"
   "async"
+  "ui"
   "ui"
   "async"
   "background"
@@ -1504,6 +1549,24 @@ if [ "$should_run_focused_tests" -eq 1 ]; then
     echo ""
   else
     echo "  Skipping Todo keyboard/layout regression tests (no relevant Todo/layout changes; override with CHECKLIST_RUN_TODO_LAYOUT_TESTS=1)"
+    echo ""
+  fi
+
+  should_run_action_bar_layout_tests=1
+  if [ "$RUN_ACTION_BAR_LAYOUT_TESTS" = "0" ]; then
+    should_run_action_bar_layout_tests=0
+  elif [ "$RUN_ACTION_BAR_LAYOUT_TESTS" = "auto" ]; then
+    if ! should_run_action_bar_layout_tests_auto; then
+      should_run_action_bar_layout_tests=0
+    fi
+  fi
+
+  if [ "$should_run_action_bar_layout_tests" -eq 1 ]; then
+    echo "  Running action-bar layout regression tests..."
+    bash tool/check_action_bar_layout.sh || VALIDATION_FAILED=1
+    echo ""
+  else
+    echo "  Skipping action-bar layout regression tests (no relevant UI action-row changes; override with CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=1)"
     echo ""
   fi
 else

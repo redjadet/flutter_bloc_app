@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/responsive_action_bar.dart';
 import 'package:mix/mix.dart';
 
 /// Platform-adaptive bottom sheets and action dialogs (Cupertino vs Material).
@@ -275,9 +276,9 @@ class _CupertinoPickerSheetContentState<T>
                 ).toList(),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
+            ResponsiveActionOverflowBar(
+              spacing: 8,
+              children: <Widget>[
                 CupertinoButton(
                   onPressed: widget.onCancel,
                   child: Text(context.l10n.cancelButtonLabel),

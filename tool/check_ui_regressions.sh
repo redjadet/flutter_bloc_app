@@ -52,8 +52,20 @@ if [ "$MODE" = "auto" ]; then
         lib/shared/extensions/responsive/*|\
         lib/shared/extensions/responsive.dart|\
         lib/shared/widgets/*|\
-        lib/features/settings/presentation/widgets/*|\
-        test/features/settings/presentation/widgets/*)
+        lib/features/profile/presentation/*|\
+        lib/features/settings/presentation/*|\
+        lib/features/*/presentation/widgets/*|\
+        lib/features/*/presentation/helpers/*dialog*|\
+        lib/features/*/*dialog*.dart|\
+        lib/features/*/presentation/forms/*|\
+        lib/features/*/*actions_bar*.dart|\
+        lib/features/*/*action_bar*.dart|\
+        lib/shared/widgets/common_form_field.dart|\
+        test/features/settings/presentation/widgets/*|\
+        test/shared/widgets/action_bar_layout_regression_test.dart|\
+        test/features/staff_app_demo/presentation/widgets/*|\
+        tool/check_row_action_overflow.sh|\
+        tool/check_action_bar_layout.sh)
           should_run=1
           break
           ;;
@@ -71,6 +83,8 @@ echo "🧩 UI regression lane (focused widget tests)..."
 
 run_ui_regressions() {
   flutter test test/features/settings/presentation/widgets/integrations_section_test.dart
+  flutter test test/shared/widgets/action_bar_layout_regression_test.dart
+  flutter test test/features/staff_app_demo/presentation/widgets/staff_demo_proof_signature_section_layout_test.dart
 }
 
 rm -rf build/unit_test_assets
