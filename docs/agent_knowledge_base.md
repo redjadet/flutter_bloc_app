@@ -191,7 +191,7 @@ Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch
 
 - Continual learning: index `.cursor/hooks/state/continual-learning-index.json` (set `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`). Run `dart run tool/continual_learning_index_refresh.dart` then `dart run tool/continual_learning_summarize.dart`; summarizer marks processed even when the tail has no correction-pattern lines. After refresh, rows with `lastProcessedAt` null are first-scan backlog. Land high-signal takeaways here or owning doc.
 - Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
-- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../pubspec.yaml) (e.g. `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`). See [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
+- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../pubspec.yaml) (e.g. `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`). Ruby/Fastlane `Gemfile` advisories: [`DEPENDENCY_UPDATES.md`](DEPENDENCY_UPDATES.md). See [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
 
 - Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
@@ -207,11 +207,13 @@ Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGE
 - **Commit / PR helpers:** Rebase the current branch onto the latest default branch before opening or updating a PR when using the repo’s `commit-push-pr` style flow.
 - **Pre-commit review:** On client-facing Dart delivery, run a final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR—not only green `./bin/checklist`.
 - **README / docs lint:** After substantive README or `docs/**` edits, run `markdownlint-cli2` on those paths until clean (see [`docs/agents_appendix.md`](agents_appendix.md) ignores).
+- **Firebase local config:** Keep committed [`lib/firebase_options.dart`](../lib/firebase_options.dart) placeholder-only; put real `FIREBASE_*` in gitignored `.envrc` after `flutterfire configure` (restore placeholder per [`firebase_setup.md`](firebase_setup.md) step 3b). Secret scanning / history scrub: [`security_and_secrets.md`](security_and_secrets.md), [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt).
 
 Transcript-derived workspace guardrails:
 
 - **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 59) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md).
 - **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
+- **Ephemeral repo-root files:** Delete one-shot `tmp_*.json` at repo root (e.g. GitHub branch-protection API bodies); use `tmp/` for scratch (`tmp/*` gitignored).
 
 Repo fact:
 
