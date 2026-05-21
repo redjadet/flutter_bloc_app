@@ -4,7 +4,7 @@ Largest non-generated Dart files under `lib/features/` (2026-05-21). Use to scop
 
 | Rank | LOC | File | Feature | Phase 4 candidate |
 | ---: | ---: | --- | --- | --- |
-| 1 | 385 | `case_study_demo/.../case_study_session_cubit_actions.part.dart` | case_study_demo | yes — split cubit actions |
+| 1 | 159 | `case_study_demo/.../case_study_session_cubit_submit.part.dart` | case_study_demo | done (ARCH-002); monitor submit flow |
 | 2 | 336 | `walletconnect_auth/.../walletconnect_auth_page_impl.part.dart` | walletconnect_auth | yes |
 | 3 | 322 | `todo_list/.../offline_first_todo_repository_impl.part.dart` | todo_list | maybe — sync-critical |
 | 4 | 322 | `example/.../example_page_body_content.part.dart` | example | low — demo hub |

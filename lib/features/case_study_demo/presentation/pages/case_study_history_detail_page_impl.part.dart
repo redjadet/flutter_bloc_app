@@ -54,8 +54,8 @@ class _CaseStudyHistoryDetailPageState
       );
     }
 
-    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
-    if (supaAuth.isConfigured && supaAuth.currentUser != null) {
+    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+    if (remoteAuth.isConfigured && remoteAuth.currentUser != null) {
       final CaseStudyRemoteRepository remote =
           getIt<CaseStudyRemoteRepository>();
       try {
@@ -156,8 +156,8 @@ class _CaseStudyHistoryDetailPageState
     final String? userId = auth.currentUser?.id;
     if (userId == null || userId.isEmpty) return;
 
-    final SupabaseAuthRepository supaAuth = getIt<SupabaseAuthRepository>();
-    final bool isRemote = supaAuth.isConfigured && supaAuth.currentUser != null;
+    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+    final bool isRemote = remoteAuth.isConfigured && remoteAuth.currentUser != null;
 
     try {
       if (isRemote) {
@@ -181,7 +181,7 @@ class _CaseStudyHistoryDetailPageState
     } on Object catch (error) {
       if (error is HttpRequestFailure && error.statusCode == 401) {
         try {
-          await getIt<SupabaseAuthRepository>().signOut();
+          await getIt<RemoteBackendAuthPort>().signOut();
         } on Object {
           // Best-effort only; still show the error message.
         }

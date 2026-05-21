@@ -11,6 +11,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [feature_map.md](feature_map.md) | Per-feature context (16 full + 15 stub) |
 | [context_hotspots.md](context_hotspots.md) | Largest files; Phase 4 candidates |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
+| [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | ARCH-001/002 closure + metrics |
 
 ## Audits (ranked findings)
 

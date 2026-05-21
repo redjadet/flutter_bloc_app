@@ -10,21 +10,23 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
   }
 
   Future<void> _pickAndCommit(
-    final Future<CameraGalleryResult> Function() pick,
+    final Future<MediaPickResult> Function() pick,
   ) async {
     final String? userId = _requireUserId();
     if (userId == null) return;
     final int requestId = _pickGuard.next();
-    final CameraGalleryResult result = await pick();
+    final MediaPickResult result = await pick();
     if (isClosed || !_pickGuard.isCurrent(requestId)) return;
     result.when(
       success: (path) {
         unawaited(_commitVideoPath(path, userId));
       },
       cancelled: () {
+        if (isClosed) return;
         emit(state.copyWith(clearPickError: true));
       },
       failure: (errorKey, message) {
+        if (isClosed) return;
         emit(state.copyWith(pickErrorKey: errorKey));
       },
     );
@@ -79,7 +81,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
       }
       emit(
         state.copyWith(
-          pickErrorKey: CameraGalleryErrorKeys.generic,
+          pickErrorKey: MediaPickErrorKeys.generic,
         ),
       );
     }
@@ -88,7 +90,7 @@ mixin _CaseStudySessionCubitVideo on _CaseStudySessionCubitBase {
   Future<void> tryRecoverLostVideo() async {
     final String? userId = _requireUserId();
     if (userId == null) return;
-    final CameraGalleryResult? lost = await _video.retrieveLostVideo();
+    final MediaPickResult? lost = await _video.retrieveLostVideo();
     if (lost == null) return;
     lost.when(
       success: (path) {

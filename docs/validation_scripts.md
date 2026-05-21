@@ -60,6 +60,10 @@ For broader local or pre-ship validation, `./bin/integration_tests` still runs a
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
+- **`check_feature_brief_linked.sh`**: When `lib/features/**/*.dart` changes vs a git base,
+  requires a matching `docs/changes/*.md` note (Feature Brief / change log). **Warn**
+  by default (exit 0); `FEATURE_BRIEF_CHECK_STRICT=1` fails; `SKIP_FEATURE_BRIEF=1`
+  skips. Not in `./bin/checklist` by default. See [`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md).
 - **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
   (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
   `remote_config` / `settings`). **Universal failures:** `lib/shared/**` must not

@@ -6,7 +6,8 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -22,7 +23,6 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_metadata_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -79,15 +79,15 @@ class _StubLocalRepository implements CaseStudyLocalRepository {
 
 class _StubVideoRepository implements CaseStudyVideoRepository {
   @override
-  Future<CameraGalleryResult> pickVideoFromCamera() async =>
-      const CameraGalleryResult.cancelled();
+  Future<MediaPickResult> pickVideoFromCamera() async =>
+      const MediaPickResult.cancelled();
 
   @override
-  Future<CameraGalleryResult> pickVideoFromGallery() async =>
-      const CameraGalleryResult.cancelled();
+  Future<MediaPickResult> pickVideoFromGallery() async =>
+      const MediaPickResult.cancelled();
 
   @override
-  Future<CameraGalleryResult?> retrieveLostVideo() async => null;
+  Future<MediaPickResult?> retrieveLostVideo() async => null;
 }
 
 class _StubUploadRepository implements CaseStudyUploadRepository {
@@ -100,7 +100,7 @@ class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
   Future<void> deleteCaseStudyRemote({required final String caseId}) async {}
 }
 
-class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
+class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
   @override
   bool get isConfigured => false;
 
@@ -111,20 +111,7 @@ class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
   Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
 
   @override
-  Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
-  }) async {}
-
-  @override
   Future<void> signOut() async {}
-
-  @override
-  Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
-  }) async {}
 }
 
 class _StubRemoteRepository implements CaseStudyRemoteRepository {
@@ -178,7 +165,7 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
         uploadRepository: _StubUploadRepository(),
         clipStore: CaseStudyClipFileStore(),
         remoteDeleteRepository: _StubRemoteDeleteRepository(),
-        supabaseAuthRepository: _StubSupabaseAuthRepository(),
+        remoteBackendAuth: _StubRemoteBackendAuth(),
         remoteRepository: _StubRemoteRepository(),
         timerService: DefaultTimerService(),
       );

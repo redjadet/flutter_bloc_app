@@ -17,9 +17,11 @@ Operator entry point. Keep this file as index, not plan body.
 | --- | --- |
 | Waves 1A-2 | Done: AI operability docs, reports, audits, template, glossary, contracts |
 | Phase 4 / ARCH-003 | Done: four feature barrels + import tests |
-| Phase 5 baseline | Done: governance and refresh policy documented |
-| Merge | Pending operator: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) |
-| Backlog | ARCH-001, ARCH-002, mechanical Feature Brief CI, full contract expansion |
+| Phase 5 | Done: `tool/check_feature_brief_linked.sh` + governance |
+| Merge | Done: PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) squash-merged to `main` |
+| Post-merge refactors | Done on branch `refactor/arch-001-case-study-decouple` (validated 2026-05-21) |
+| Plan todos | All **done** except **land PR** (operator) |
+| Backlog | Full 31-feature contract bodies; ARCH-004+ (see audit) |
 
 ## Philosophy
 
@@ -47,24 +49,20 @@ Operator entry point. Keep this file as index, not plan body.
 | 1 | Stabilisation | Reports, audits, feature map 16+15 |
 | 2 | Workflow | Template, glossary, testing router, 5 contract pilots |
 | 3 | Velocity | CONTEXT_MAP ≤8 files for pilots |
-| 4 | Scalability | ARCH-003 barrels + tests (**complete** on branch) |
-| 5 | Continuous | Refresh policy documented; mechanical CI out of scope |
+| 4 | Scalability | ARCH-003 barrels + tests (**merged**) |
+| 5 | Continuous | Refresh policy + Feature Brief script (warn default) |
 
 Details live in the full plan and changelog. Do not restate them here.
 
 ## Merge gate
 
-Plan work on branch is **complete** except merge. Run when ready:
+PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239) **merged** to `main` (squash). Local `main` updated via post-merge cleanup.
 
-```bash
-bash tool/commit_push_pr_watch_merge_cleanup.sh 239
-```
-
-**Not in this plan pass:** ARCH-001/002 code refactors, `FINAL_OPTIMIZATION_REPORT.md`, mechanical Feature Brief CI.
+**Land next:** PR from `refactor/arch-001-case-study-decouple` (ARCH-001/002, final report, Phase 5 script).
 
 ## Not enforced yet
 
-- Mechanical Feature Brief on every PR (Phase 5).
+- Mechanical Feature Brief in `./bin/checklist` (run `check_feature_brief_linked.sh` manually; strict mode optional).
 - Full 31-feature contract bodies (pilots only in Wave 2).
 - Automatic report regeneration in CI.
 

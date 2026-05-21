@@ -13,9 +13,12 @@
 | Waves 1A–1C + Wave 2 | **Shipped** | PR [#239](https://github.com/redjadet/flutter_bloc_app/pull/239), branch `docs/ai-first-engineering` |
 | Phase 1–3 doc exits | **Met** | 16+15 feature map, CONTEXT_MAP pilots, audits, governance |
 | Phase 4 code | **Complete** | ARCH-003 barrels + tests on branch |
-| Phase 5 automation | **Doc baseline** | Honor system + [`ai/README.md`](../../ai/README.md) refresh policy (no CI script) |
-| PR #239 merge | **Deferred** | Operator: `tool/commit_push_pr_watch_merge_cleanup.sh 239` |
-| ARCH-001 / ARCH-002 | **Backlog** | Separate refactor PRs after merge |
+| Phase 5 automation | **Done** | `tool/check_feature_brief_linked.sh` (warn default; strict optional) |
+| PR #239 merge | **Done** | Squash-merged to `main` (2026-05-21) |
+| ARCH-001 | **Done** (branch `refactor/arch-001-case-study-decouple`) | Shared media types + `RemoteBackendAuthPort` |
+| ARCH-002 | **Done** (same branch) | Cubit actions → wizard/lifecycle/history/submit mixins |
+| Final report | **Done** | [`ai/reports/FINAL_OPTIMIZATION_REPORT.md`](../../ai/reports/FINAL_OPTIMIZATION_REPORT.md) |
+| Plan execution | **Complete** | Post-merge code on `refactor/arch-001-case-study-decouple`; **land PR** remains operator step |
 
 ### Todo tracker (sync with Cursor plan)
 
@@ -26,12 +29,15 @@
 | w1c | Wave 1C | **done** |
 | w1-validate-pr | Validate + PR #239 | **done** |
 | w2 | Wave 2 | **done** |
-| phase4-arch-003 | ARCH-003 barrels + tests | **done** (`5270abd3`) |
+| phase4-arch-003 | ARCH-003 barrels + tests | **done** (`5270abd3`, merged PR #239) |
 | phase5-doc-baseline | Governance + refresh policy | **done** |
-| pr239-merge | Merge PR #239 | **pending** |
-| post-merge-arch-001 | ARCH-001 refactor | **pending** (backlog) |
-| post-merge-arch-002 | ARCH-002 refactor | **pending** (backlog) |
-| post-merge-phase5-ci | Mechanical gates / refresh CI | **pending** (backlog) |
+| phase5-feature-brief-script | `check_feature_brief_linked.sh` | **done** |
+| pr239-merge | Merge PR #239 | **done** |
+| post-merge-arch-001 | ARCH-001 refactor | **done** (branch `refactor/arch-001-case-study-decouple`) |
+| post-merge-arch-002 | ARCH-002 refactor | **done** (same branch) |
+| post-merge-final-report | `FINAL_OPTIMIZATION_REPORT.md` | **done** |
+| post-merge-validate | Analyze + case study/camera tests + cross-feature metrics | **done** (2026-05-21) |
+| post-merge-land-pr | Open PR: `refactor/arch-001-case-study-decouple` → `main` | **pending** (operator) |
 
 ---
 
@@ -145,7 +151,7 @@ Sections: Feature Brief + AI Alignment Checklist + trivial-fix quick path.
 
 Link from [`feature_implementation_guide.md`](../feature_implementation_guide.md) (one paragraph, Wave 2).
 
-**Enforcement:** **Not ready** — honor system only until Phase 5 (e.g. PR template or `tool/check_feature_brief_linked.sh` TBD).
+**Enforcement:** `bash tool/check_feature_brief_linked.sh` (warn by default; `FEATURE_BRIEF_CHECK_STRICT=1` to fail; `SKIP_FEATURE_BRIEF=1` for trivial fixes). Not in `./bin/checklist` by default.
 
 ---
 
@@ -360,11 +366,12 @@ AGENTS/host template change → `sync_agent_assets.sh --dry-run` + `check_agent_
 
 ## Build order (execute)
 
-1. ~~Wave 1A–1C + Wave 2~~ — **done** on branch / PR #239
-2. ~~Phase 4 ARCH-003~~ — **done** (four feature barrels + tests)
-3. ~~Phase 5 doc baseline~~ — **done** (governance, refresh policy, honor-system gates documented)
-4. **Operator:** merge PR #239 when ready (`bash tool/commit_push_pr_watch_merge_cleanup.sh 239`) + post-merge
-5. **Follow-up (post-merge):** ARCH-001/002 refactors; `FINAL_OPTIMIZATION_REPORT.md` after first ARCH refactor PR
+1. ~~Wave 1A–1C + Wave 2~~ — **done** (PR #239, merged)
+2. ~~Phase 4 ARCH-003~~ — **done** (four feature barrels + tests, merged)
+3. ~~Phase 5~~ — **done** (governance, refresh policy, `check_feature_brief_linked.sh`)
+4. ~~Merge PR #239~~ — **done** (2026-05-21)
+5. ~~Post-merge ARCH-001/002 + final report + review fixes~~ — **done** on `refactor/arch-001-case-study-decouple`
+6. **Operator:** commit branch work if needed, then open PR to `main` (`git add -f docs/audits/ai_architecture_audit.md` when auditing)
 
 **commit-push-pr:** rebase on `origin/main`; no AI in commit messages.
 

@@ -11,7 +11,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_reco
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_page.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,7 +27,7 @@ class _StubAuthRepository implements AuthRepository {
   Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
 }
 
-class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
+class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
   @override
   bool get isConfigured => false;
 
@@ -38,20 +38,7 @@ class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
   Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
 
   @override
-  Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
-  }) async {}
-
-  @override
   Future<void> signOut() async {}
-
-  @override
-  Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
-  }) async {}
 }
 
 class _StubRemoteRepository implements CaseStudyRemoteRepository {
@@ -180,8 +167,8 @@ void main() {
       );
 
       getIt.registerSingleton<AuthRepository>(_StubAuthRepository(user));
-      getIt.registerSingleton<SupabaseAuthRepository>(
-        _StubSupabaseAuthRepository(),
+      getIt.registerSingleton<RemoteBackendAuthPort>(
+        _StubRemoteBackendAuth(),
       );
       getIt.registerSingleton<CaseStudyRemoteRepository>(
         _StubRemoteRepository(),

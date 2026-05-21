@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 
 /// Abstraction over Supabase authentication state and operations.
 ///
@@ -17,14 +18,17 @@ import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 /// ```
 /// Use [currentUser] for one-off checks; use [authStateChanges] for reactive
 /// flows (e.g. UI that updates when the user signs in or out).
-abstract class SupabaseAuthRepository {
+abstract class SupabaseAuthRepository implements RemoteBackendAuthPort {
   /// Whether Supabase was initialized (URL and anon key configured).
+  @override
   bool get isConfigured;
 
   /// Current user, or null if not signed in.
+  @override
   AuthUser? get currentUser;
 
   /// Stream of auth state changes (emits current user or null on sign out).
+  @override
   Stream<AuthUser?> get authStateChanges;
 
   /// Signs in with email and password. Throws [SupabaseAuthException] on failure.
@@ -42,6 +46,7 @@ abstract class SupabaseAuthRepository {
   });
 
   /// Signs out the current user.
+  @override
   Future<void> signOut();
 }
 
