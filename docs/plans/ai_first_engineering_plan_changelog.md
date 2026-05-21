@@ -17,7 +17,7 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 | `FEATURE_TEMPLATE` at root | Merge | `docs/plans/FEATURE_TEMPLATE.md` | Aligns with other plans | Feature guide gets one link | Low |
 | Copy `testing_overview` | Remove | `docs/testing/testing_strategy.md` router only | Avoid duplicate canon | Shorter agent context | Low |
 | 32 full feature contracts | Remove | 5 pilot stubs only | Cost vs value | Incremental adoption | Low |
-| Mechanical Feature Brief CI | Missing | Phase 5 | Honor system until script exists | No false gates | N/A |
+| Mechanical Feature Brief CI | Keep | `tool/check_feature_brief_linked.sh` (warn default) | Not in full checklist by default | Agents reminded on feature diffs | Low |
 | `lib/` refactors in doc PR | Remove | Phase 4 only | Smallest reversible change | No behavior change in Waves 1–2 | N/A |
 | Seven reports in one PR | Rewrite | Waves 1A / 1B / 1C (+ Wave 2) | Reviewable slices | Slower merge count, safer review | Low |
 | Agent role table in AGENTS | Remove | `docs/ai/governance.md` | Map-only policy | AGENTS line budget | Low |
@@ -31,14 +31,16 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 4. **No `lib/` or `test/`** changes in Waves 1–2.
 5. **Feature map:** 16 full + 15 stub entries (31 feature modules).
 
-## Phase 4 exit (2026-05-21, branch `docs/ai-first-engineering`)
+## Phase 4–5 exit (2026-05-21)
 
 | Item | Status |
 | --- | --- |
-| ARCH-003 feature barrels | Done — `igaming_demo`, `case_study_demo`, `staff_app_demo`, `library_demo` |
+| ARCH-003 feature barrels | Done — merged via PR #239 |
 | Barrel regression tests | Done — `test/features/*/*_barrel_test.dart` |
-| ARCH-001 / ARCH-002 refactors | **Out of scope** for this plan pass (separate PRs after merge) |
-| PR #239 merge | **Deferred** until operator runs merge-cleanup |
+| PR #239 merge | Done — squash to `main` |
+| ARCH-001 / ARCH-002 | Done — branch `refactor/arch-001-case-study-decouple` (land PR pending) |
+| `FINAL_OPTIMIZATION_REPORT.md` | Done — `ai/reports/` |
+| `check_feature_brief_linked.sh` | Done — warn default; `FEATURE_BRIEF_CHECK_STRICT=1` optional |
 
 ## Evidence captured (preflight 2026-05-21)
 

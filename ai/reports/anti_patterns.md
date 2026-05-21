@@ -6,7 +6,7 @@ Actionable smells observed in this codebase. Pair with [`docs/CODE_QUALITY.md`](
 | --- | --- | --- | --- | --- |
 | AP-01 | Cross-feature domain imports | `case_study_demo` imports `camera_gallery` / `supabase_auth` domain ([dependency_map.md](dependency_map.md)) | Hidden coupling; harder extraction | Extract shared contract to `lib/shared/` or invert dependency |
 | AP-02 | Missing feature barrels | `case_study_demo`, `staff_app_demo`, `igaming_demo`, `library_demo` | Inconsistent public API surface | Add `<feature>.dart` export when touching feature |
-| AP-03 | Large part files (>300 LOC) | `case_study_session_cubit_actions.part.dart` (385), walletconnect/todo/iot parts | Agent context blow-up; review fatigue | Split by use-case; link ARCH-### in audit |
+| AP-03 | Large part files (>300 LOC) | walletconnect/todo/iot parts (case_study actions split 2026-05-21) | Agent context blow-up; review fatigue | Split by use-case; link ARCH-### in audit |
 | AP-04 | Duplicate exception mappers | Multiple `ChatRemoteFailureException` mappers in `chat/data/` | Divergent error UX | Consolidate mapper behind single entry |
 | AP-05 | State type name collisions | `CounterState` in validator + feature | Confusing grep / agent search | Prefix feature-specific states or import hides |
 | AP-06 | God-route demo hubs | `example` hub routes many deferred demos | Navigation graph hard to scan | Keep catalog in `docs/feature_overview.md`; avoid new hub deps |

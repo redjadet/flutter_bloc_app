@@ -1,6 +1,6 @@
-import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 
 String caseStudyCaseTypeTitle(
   final AppLocalizations l10n,

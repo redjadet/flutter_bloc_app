@@ -1,7 +1,7 @@
 # AI-first engineering — executive summary
 
 **Date:** 2026-05-21
-**Status:** Waves 1–2 + Phase 4 (ARCH-003) + Phase 5 doc baseline **merged** via [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239) (2026-05-21).
+**Status:** Waves 1–2 + Phase 4/5 **merged** via [PR #239](https://github.com/redjadet/flutter_bloc_app/pull/239); ARCH-001/002 + final report on branch `refactor/arch-001-case-study-decouple` (2026-05-21).
 
 ## Outcome
 
@@ -31,22 +31,22 @@ Established an **AI operability layer** (`/ai`, [`CODEMAP.md`](../../CODEMAP.md)
 
 | Phase | Focus | Status |
 | --- | --- | --- |
-| 1 | Stabilisation — legible architecture for agents | In progress (docs) |
-| 2 | Workflow — alignment, contracts, TDD router | Wave 2 docs |
-| 3 | Velocity — CONTEXT_MAP ≤8 files per pilot | Pilot maps written |
-| 4 | Scalability — ARCH-driven code refactors | ARCH-003 complete (4 barrels); ARCH-001/002 backlog |
-| 5 | Continuous — refresh + mechanical gates | Doc baseline only (honor system; no CI script) |
+| 1 | Stabilisation — legible architecture for agents | **Done** (Waves 1–2 merged) |
+| 2 | Workflow — alignment, contracts, TDD router | **Done** |
+| 3 | Velocity — CONTEXT_MAP ≤8 files per pilot | **Done** (pilots) |
+| 4 | Scalability — ARCH-driven code refactors | ARCH-003 on `main`; ARCH-001/002 on refactor branch (land PR pending) |
+| 5 | Continuous — refresh + mechanical gates | **Done** (`check_feature_brief_linked.sh`) |
 
 ## Top risks
 
 1. **Stale reports** if metrics are not refreshed after large features.
-2. **Cross-feature coupling** (`case_study_demo` → `camera_gallery` / `supabase_auth`).
-3. **Large part files** driving agent context cost (385 LOC cubit actions).
+2. **Stale cross-feature metrics** if reports not refreshed after refactors land on `main`.
+3. **Remaining hotspots** (walletconnect, todo, iot parts >300 LOC).
 
 ## Next actions
 
-1. Merge doc PR; run `git add -f docs/audits/ai_*.md` on commit.
-2. Wave 2: enforce Feature Brief honor system + 5 contract pilots.
-3. Phase 4: ARCH-001 / ARCH-002 with RED tests only.
+1. Open PR from `refactor/arch-001-case-study-decouple`; `git add -f docs/audits/ai_*.md` as needed.
+2. Refresh `ai/reports/` after merge to `main`.
+3. Track ARCH-004+ in [`ai_architecture_audit.md`](../audits/ai_architecture_audit.md).
 
 **Full plan:** [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md)

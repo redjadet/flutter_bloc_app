@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -20,7 +21,6 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_supabase_auth_gate.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 

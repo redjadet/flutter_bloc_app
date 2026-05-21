@@ -10,7 +10,7 @@ Ranked issues for Phase 4 work. Target shape: [`docs/clean_architecture.md`](../
 | ID | Severity | Problem | Impact | Recommendation | Migration | Tests |
 | --- | --- | --- | --- | --- | --- | --- |
 | ARCH-001 | High | ~~`case_study_demo` imports `camera_gallery` and `supabase_auth` domain types~~ **Resolved** (2026-05-21) | Was cross-feature coupling | `MediaPickResult` / `MediaPickErrorKeys` in `lib/shared/media/`; `RemoteBackendAuthPort` in `lib/core/auth/` | M | `flutter test test/features/case_study_demo`; `modular_metrics.sh --cross-feature-only` (no `case_study_demo` edges) |
-| ARCH-002 | High | `case_study_session_cubit_actions.part.dart` (~385 LOC) | Hard reviews; agent context overflow | Split actions into mixins/files by flow step | M | Existing cubit tests + new action unit tests |
+| ARCH-002 | High | ~~`case_study_session_cubit_actions.part.dart` (~385 LOC)~~ **Resolved** (2026-05-21) | Was hard reviews; agent context overflow | Split into wizard/lifecycle/history/submit mixins (max part ~159 LOC) | M | `flutter test test/features/case_study_demo` (33 passed) |
 | ARCH-003 | Medium | ~~Four features lack barrel~~ **Resolved** (2026-05-21 branch) | Was inconsistent import surfaces | `igaming_demo`, `case_study_demo`, `staff_app_demo`, `library_demo` barrels + tests | S | `test/features/*/*_barrel_test.dart` |
 | ARCH-004 | Medium | Top features (`chat`, `todo_list`, `online_therapy_demo`) >4k LOC each | High change risk | Enforce Feature Brief + CONTEXT_MAP before edits | L | Integration tests per feature |
 | ARCH-005 | Medium | `example` hub aggregates many demo routes | Accidental deps on hub | Route new demos independently when possible | S | Router tests |
@@ -23,12 +23,11 @@ Ranked issues for Phase 4 work. Target shape: [`docs/clean_architecture.md`](../
 
 ## Cross-feature evidence (sample)
 
-```text
-case_study_demo → camera_gallery (domain)
-case_study_demo → supabase_auth (domain)
-```
+ARCH-001 removed prior `case_study_demo → camera_gallery` / `supabase_auth` edges. Re-verify after merge:
 
-Full: `bash tool/modular_metrics.sh --cross-feature-only`.
+```bash
+bash tool/modular_metrics.sh --cross-feature-only
+```
 
 ## Hotspot evidence
 

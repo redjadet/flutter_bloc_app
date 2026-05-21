@@ -1,9 +1,9 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:image_picker/image_picker.dart';
 

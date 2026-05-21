@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 
 /// Read-only Supabase (or similar remote backend) auth surface for cross-feature use.
 ///
-/// Feature modules depend on this core port instead of [SupabaseAuthRepository].
+/// Feature modules depend on this core port instead of a concrete Supabase auth repository type.
 abstract class RemoteBackendAuthPort {
   /// Whether the remote backend was initialized (URL and credentials configured).
   bool get isConfigured;
