@@ -169,6 +169,27 @@
         "eslint"
       ],
       "allowedVersions": "<10"
+    },
+    {
+      "description": "Flutter plugin loader is not on Maven Central; Gradle resolves it via the plugin portal (fixes Renovate no-result on issue #2)",
+      "matchManagers": [
+        "gradle"
+      ],
+      "matchPackageNames": [
+        "dev.flutter.flutter-plugin-loader"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Do not renovate vendored third_party Android Gradle trees (duplicate plugin IDs; not app-owned)",
+      "matchManagers": [
+        "gradle",
+        "gradle-wrapper"
+      ],
+      "matchFileNames": [
+        "third_party/**/android/**"
+      ],
+      "enabled": false
     }
   ],
   "vulnerabilityAlerts": {
