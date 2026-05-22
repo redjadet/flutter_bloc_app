@@ -27,6 +27,7 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
 
   StreamSubscription<MarketFeedSnapshot>? _feedSub;
   bool _disposed = false;
+  final List<Future<void>> _inflightPersists = <Future<void>>[];
 
   /// Ensures only one [_restartWatchBody] runs at a time so overlapping
   /// `watch`/`reconnect`/`dispose` cannot orphan feed subscriptions.
@@ -87,7 +88,27 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     }
     await _feedSub?.cancel();
     _feedSub = null;
+    if (_inflightPersists.isNotEmpty) {
+      await Future.wait(List<Future<void>>.from(_inflightPersists));
+    }
     await _out.close();
+  }
+
+  Future<MarketFeedSnapshot> _persistSnapshotIfActive(
+    final String pairId,
+    final MarketFeedSnapshot capped,
+  ) async {
+    if (_disposed) {
+      return capped;
+    }
+    final Future<void> persist = _local.saveSnapshot(pairId, capped);
+    _inflightPersists.add(persist);
+    try {
+      await persist;
+    } finally {
+      _inflightPersists.remove(persist);
+    }
+    return capped;
   }
 
   Future<void> _restartWatch(final String pairId) {
@@ -108,11 +129,9 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     }
     final StreamSubscription<MarketFeedSnapshot> next = _feed
         .watch(pairId)
-        .asyncMap((raw) async {
-          final MarketFeedSnapshot capped = capSnapshot(raw);
-          await _local.saveSnapshot(pairId, capped);
-          return capped;
-        })
+        .asyncMap(
+          (final raw) => _persistSnapshotIfActive(pairId, capSnapshot(raw)),
+        )
         .listen(
           (e) {
             if (!_out.isClosed) {
