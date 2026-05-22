@@ -64,5 +64,5 @@ When an item ships, remove its row here and note the change in
 
 - MVP baseline & fixtures: [`checklist_quality_gates_baseline.md`](checklist_quality_gates_baseline.md)
 - Change note: [`../changes/2026-05-20_checklist_quality_gates.md`](../changes/2026-05-20_checklist_quality_gates.md)
-- Script catalog: [`../validation_scripts.md`](../validation_scripts.md) (Quality theme gates)
+- Script catalog: [`../validation_scripts/catalog.md`](../validation_scripts/catalog.md) (Quality theme gates)
 - Fast vs full routing: [`../engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)

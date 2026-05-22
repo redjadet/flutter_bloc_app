@@ -66,7 +66,9 @@ require_contains "docs/agents_quick_reference.md" "Context navigation ladder"
 require_contains "docs/agents_quick_reference.md" "semantic lint"
 require_contains "AGENTS.md" "Verified reusable agent conclusion"
 require_contains "AGENTS.md" "context ladder"
-require_contains "docs/validation_scripts.md" "check_agent_memory_compounding.sh"
+if ! grep -qF "check_agent_memory_compounding.sh" docs/validation_scripts.md docs/validation_scripts/*.md 2>/dev/null; then
+  fail "validation_scripts router or shards must reference: check_agent_memory_compounding.sh"
+fi
 require_contains "tool/agent_session_bootstrap.sh" "context_ladder|3|structural graph"
 
 if [[ -d "tool/agent_host_templates" ]]; then

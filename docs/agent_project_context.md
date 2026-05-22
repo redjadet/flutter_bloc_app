@@ -54,7 +54,9 @@ the answer.
   before new state patterns.
 - GoRouter, DI, l10n, codegen, and route gates are coupled surfaces; update and
   validate together when touched.
-- Widget-test viewport uses `WidgetTester.view`, never deprecated
+- Widget tests: [`testing_overview.md`](testing_overview.md) § Feature-defined
+  testing; layout-sensitive sizing per [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md)
+  (not repo-wide `WidgetTester.view` until a harness exists). Never deprecated
   `tester.binding.window`.
 - Mix/style changes use runtime source first (`AppTheme`, `buildAppMixScope`,
   `AppStyles`, `UI`) and `./tool/run_mix_lint.sh`; local `mix_lint` is pinned

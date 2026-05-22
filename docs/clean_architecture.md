@@ -11,7 +11,8 @@ together without blurring layer responsibilities.
 
 > **Related Documentation:**
 >
-> - [Architecture Details](architecture_details.md) - High-level architecture diagrams, principles, and state management flow
+> - [Architecture Details](architecture_details.md) - Diagrams, principles, BLoC rationale
+> - [Lazy loading & state flow](architecture_lazy_loading_and_flow.md) - Deferred routes and offline-first sequence
 > - [SOLID Principles](solid_principles.md) - How SOLID principles are applied throughout this architecture
 > - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
 > - [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries across layers, DI, and shared services

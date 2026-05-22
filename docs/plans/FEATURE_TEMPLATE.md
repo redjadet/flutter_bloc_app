@@ -25,10 +25,30 @@ Use before non-trivial feature work or cross-layer refactors. Run `bash tool/che
 - Repository: ...
 - State: ...
 
-### Tests (RED first)
-- [ ] unit: ...
-- [ ] widget: ...
-- [ ] integration: ...
+### Tests (executable contract — RED first)
+
+Write these **before or with** the first implementation commit in this change series. A test-only follow-up needs a one-line reason in `docs/changes/`.
+
+#### Behaviour (widget and/or cubit)
+- [ ] Scenario: <user action> → <observable outcome>
+- [ ] Files: `test/...`
+
+#### State (widget — seed cubit/state)
+- [ ] Scenario: <loading | success | error | empty> → <UI assertion>
+- [ ] Files: `test/...`
+
+#### Unit (domain / data)
+- [ ] Scenario: <pure logic or repository rule>
+- [ ] Files: `test/...`
+
+#### Integration (only if cross-screen / journey)
+- [ ] Journey: <J1–J5 from integration_journey_map> — tier: <smoke | standard>
+- [ ] Omit if single-screen; justify in Risks if skipping after prior production bug
+
+#### Proof command
+- [ ] `flutter test <paths>` (and `./bin/integration_tests <target>` if integration row checked)
+
+**Examples in repo:** `test/features/auth/presentation/pages/register_page_test.dart` (validation + submit); `test/features/auth/presentation/pages/logged_out_page_test.dart` (stateful shell); `test/features/calculator/presentation/pages/calculator_payment_page_test.dart` (rendering).
 
 ### Docs
 - [ ] docs/feature_overview.md
@@ -54,12 +74,14 @@ Skip full brief when **all** true:
 
 - ≤2 files, one layer
 - No route/DI/schema change
-- Test update included or N/A with reason
+- Tests row filled: at least one named `test/...` path **or** `Tests: N/A — <reason>` (cannot silently skip all test rows)
 
 Still run narrowest validation script.
 
 ## Related
 
 - Delivery: [`docs/feature_implementation_guide.md`](../feature_implementation_guide.md)
+- Testing policy: [`docs/testing_overview.md`](../testing_overview.md) § Feature-defined testing
+- Widget how-to: [`docs/testing/widget_test_playbook.md`](../testing/widget_test_playbook.md)
 - Contracts: [`CONTRACTS.md`](../../CONTRACTS.md)
 - Plan: [`PLAN.md`](../../PLAN.md)

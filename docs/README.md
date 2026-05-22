@@ -63,6 +63,7 @@ Source-of-truth docs for Flutter BLoC app.
 - [`validation_scripts.md`](validation_scripts.md)
 - [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 - [`testing_overview.md`](testing_overview.md)
+- [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — BLoC widget test how-to
 - [`logging.md`](logging.md)
 - [`code_review_graph.md`](code_review_graph.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)

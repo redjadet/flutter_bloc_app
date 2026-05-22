@@ -17,7 +17,7 @@ This directory contains design notes and execution plans.
 - [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md): Historical build spec (waves 1A–2); load only when auditing.
 - [`ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md): Classification of prior AI/operability ideas vs this repo.
 - [`ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md): Metrics and outcomes snapshot (2026-05-21).
-- [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md): Feature Brief + AI alignment checklist (honor system until Phase 5).
+- [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md): Feature Brief + executable **Tests** contract (behaviour, state, unit, integration, proof); honor system until Phase 5.
 - [`checklist_quality_gates_baseline.md`](checklist_quality_gates_baseline.md): MVP wiring for fourteen quality-theme checklist gates (May 2026).
 - [`checklist_quality_gates_deferred.md`](checklist_quality_gates_deferred.md): post-MVP deferred/rejected checklist gates (IDs, unblock criteria).
 - [`dependency_validator_feasibility.md`](dependency_validator_feasibility.md): spike outcome — defer `dependency_validator` in CI (noisy on this repo layout).

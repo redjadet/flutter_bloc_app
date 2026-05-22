@@ -61,6 +61,6 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
-- Widget tests use `WidgetTester.view`.
+- Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
 - Repeated failure => add repo capability, not longer prompt.
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never expand this map with learned sections.

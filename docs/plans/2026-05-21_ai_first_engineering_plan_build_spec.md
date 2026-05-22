@@ -324,4 +324,3 @@ git diff --check
 ```
 
 AGENTS/host template change → `sync_agent_assets.sh --dry-run` + `check_agent_asset_drift.sh`.
-

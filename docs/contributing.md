@@ -52,3 +52,4 @@ into several files.
 - New abstractions should earn their keep; reuse existing shared code first.
 - User-facing or cross-cutting changes should include doc updates.
 - Validation should be run before requesting review.
+- Behavior-changing PRs include tests that would catch refactor regressions in adjacent flows, or document **Tests: N/A — reason** in the linked feature brief or `docs/changes/` note.

@@ -1,0 +1,38 @@
+# Operator Preferences (Durable)
+
+Keep [`AGENTS.md`](../AGENTS.md) a **lean map**: links only in `## Map`; put behavior here or owning `docs/`. Never add long prose or `## Learned User Preferences` / `## Learned Workspace Facts` to [`AGENTS.md`](../AGENTS.md).
+
+Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch, **grouped badge rows** (repo-backed stack/CI/docs links only—no vanity shields), quick start, one doc table; **Scope** before **Screenshots** (screenshots last, full grid OK); route detail to [`docs/README.md`](README.md) and topic docs—no ADR tables, command essays, or duplicate deep-dive sections in the README body.
+
+- Continual learning: index `.cursor/hooks/state/continual-learning-index.json` (set `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`). Run `dart run tool/continual_learning_index_refresh.dart`; process only new/changed transcript rows. Prefer **`agents-memory-updater`** subagent for full memory flow (refresh index, land durable prefs here or owning `docs/`—never [`AGENTS.md`](../AGENTS.md) learned sections). Optional `dart run tool/continual_learning_summarize.dart` for audit suggestions. Rows with `lastProcessedAt` null after refresh are first-scan backlog.
+- Agent docs/templates: reduce context/token load only when required signal + mechanical-check anchors survive. Optional compression: [`../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md`](../tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md).
+- Dependency automation: bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../pubspec.yaml) (e.g. `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`). Ruby/Fastlane `Gemfile` advisories: [`DEPENDENCY_UPDATES.md`](DEPENDENCY_UPDATES.md). See [`agent_environment_setup.md`](agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md).
+
+- Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
+- Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
+- After `lib/` or mixed `lib/` + `docs/` delivery, run [`./bin/checklist`](../bin/checklist) until green; [`./bin/checklist-fast`](../bin/checklist-fast) is docs/tooling-only (see [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
+- When optimizing agent memory, skills, or docs, apply only safe dedup/thinning that preserves checks and behavior; prefer trimming duplicate global/repo skills/plugins to cut token cost.
+- After meaningful workflow/policy shifts, update agent-facing docs referenced from map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
+- Caveman terse mode: always-on via [`.cursor/rules/caveman.mdc`](../.cursor/rules/caveman.mdc); user may disable with “stop caveman” / “normal mode”.
+
+Transcript-derived durable prefs (detail lives here, not in [`AGENTS.md`](../AGENTS.md)):
+
+- **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists.
+- **Upgrade lane proof:** After `./bin/upgrade_validate_all` or `/upgrade-pr-triage-validate`, cite explicit pass evidence for delivery checklist (step 3) and integration tests (step 4)—test counts and simulator id—not only overall exit 0.
+- **`/commit-push-pr`:** [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md) (omit checklist coverage/README churn unless shipping coverage).
+- **Feature-brief:** `lib/features/**` diff → `bash tool/check_feature_brief_linked.sh` or `SKIP_FEATURE_BRIEF=1`.
+- **Tests as feature definition:** For non-trivial `lib/features/**` work, tests are the executable done contract—not post-implementation cleanup. Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad implementation; add RED/unit/widget tests in the **same change series** as feature code. Widget patterns: [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md). Policy: [`changes/2026-05-22_tests-as-feature-definition.md`](changes/2026-05-22_tests-as-feature-definition.md).
+- **Pre-commit review:** On client-facing Dart delivery, run a final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR—not only green `./bin/checklist`.
+- **README / docs lint:** After substantive README or `docs/**` edits, run `markdownlint-cli2` on those paths until clean (see [`docs/agents_appendix.md`](agents_appendix.md) ignores).
+- **Firebase local config:** Keep committed [`lib/firebase_options.dart`](../lib/firebase_options.dart) placeholder-only; put real `FIREBASE_*` in gitignored `.envrc` after `flutterfire configure` (restore placeholder per [`firebase_setup.md`](firebase_setup.md) step 3b). Secret scanning / history scrub: [`security_and_secrets.md`](security_and_secrets.md), [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt).
+
+Transcript-derived workspace guardrails:
+
+- **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 60) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md).
+- **Horizontal CTA / action bars:** `./bin/checklist` runs `tool/check_row_action_overflow.sh` (static PRIMARY_SCOPE heuristics) and `tool/check_action_bar_layout.sh` (widget tests). Prefer `ResponsiveDualCtaRow` / `ResponsiveActionOverflowBar` over raw multi-button `Row` — [`docs/design_system.md`](design_system.md#horizontal-action-layout-overflow).
+- **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
+- **Ephemeral repo-root files:** Delete one-shot `tmp_*.json` at repo root (e.g. GitHub branch-protection API bodies); use `tmp/` for scratch (`tmp/*` gitignored).
+
+Repo fact:
+
+- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`. Inventory includes `~/.agents/skills` when present. Host setup orchestrator: `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`); Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` (see [`agent_environment_setup.md`](agent_environment_setup.md)).

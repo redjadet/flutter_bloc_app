@@ -357,11 +357,18 @@ validate_checklist_configuration() {
     return 1
   fi
 
+  validation_doc_cache_inputs=( "docs/validation_scripts.md" )
+  if [ -d "$PROJECT_ROOT/docs/validation_scripts" ]; then
+    while IFS= read -r shard; do
+      validation_doc_cache_inputs+=( "${shard#"$PROJECT_ROOT/"}" )
+    done < <(find "$PROJECT_ROOT/docs/validation_scripts" -maxdepth 1 -name '*.md' -print | LC_ALL=C sort)
+  fi
+
   cache_key="$(compute_validation_cache_key \
     "tool/delivery_checklist.sh" \
     "${CHECK_SCRIPTS[@]}" \
     "${extra_scripts[@]}" \
-    "docs/validation_scripts.md")"
+    "${validation_doc_cache_inputs[@]}")"
   if has_matching_validation_cache "$CHECKLIST_CONFIG_CACHE_FILE" "$cache_key"; then
     return 0
   fi
@@ -391,7 +398,7 @@ validate_checklist_configuration() {
   fi
 
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
     return 1
   fi
 
@@ -572,6 +579,7 @@ is_tooling_only_change_set() {
       .markdownlint-cli2ignore|\
       docs/agents_quick_reference.md|\
       docs/validation_scripts.md|\
+      docs/validation_scripts/*|\
       docs/testing_overview.md|\
       docs/new_developer_guide.md|\
       docs/engineering/validation_routing_fast_vs_full.md)
@@ -1085,7 +1093,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
@@ -1130,7 +1138,7 @@ if is_docs_only_change_set; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
@@ -1163,7 +1171,7 @@ if is_tooling_only_change_set; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ docs/validation_scripts.md out of sync with CHECK_SCRIPTS; update the doc or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then

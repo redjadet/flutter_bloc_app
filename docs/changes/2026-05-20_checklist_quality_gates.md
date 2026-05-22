@@ -31,7 +31,7 @@ CHECKLIST_SKIP_ROUTER_VALIDATE=1 ./bin/checklist
 **Proof (2026-05-20):**
 
 - Gates on `lib/`: pass (navigation, sync-io presentation, warn-only image cache + cubit subscription).
-- Fixture matrix: documented in [`validation_scripts.md`](../validation_scripts.md) (Quality theme gates).
+- Fixture matrix: documented in [`validation_scripts/catalog.md`](../validation_scripts/catalog.md) (Quality theme gates).
 - `./bin/checklist` with coverage: pass (~4.3 min); coverage summary **71.22%** (README badge).
 - Optional faster local run: `CHECKLIST_RUN_COVERAGE=0 CHECKLIST_SKIP_ROUTER_VALIDATE=1 ./bin/checklist` (~62s).
 - Router trigger precision: `TP=6 FP=0 FN=0 TN=4` (`tool/check_router_trigger_precision.sh`).
