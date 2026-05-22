@@ -6,6 +6,10 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+if [[ -z "${CI:-}" && "${AGENT_MEMORY_AUTO_MAINTAIN:-1}" != "0" ]]; then
+  bash "$PROJECT_ROOT/tool/agent_memory_auto_maintain.sh" --if-changed
+fi
+
 MAX_AGENTS_LINES="${MAX_AGENTS_LINES:-120}"
 
 failures=0

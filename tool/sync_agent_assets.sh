@@ -106,4 +106,9 @@ if (( failures != 0 )); then
   exit 1
 fi
 
+if [[ "$mode" == "apply" && "${AGENT_MEMORY_AUTO_MAINTAIN:-1}" != "0" ]]; then
+  echo "Agent asset sync: running agent-memory auto-maintain (verify)..."
+  bash "$(cd "$(dirname "$0")" && pwd)/agent_memory_auto_maintain.sh" --verify
+fi
+
 echo "Agent asset sync completed."

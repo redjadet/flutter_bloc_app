@@ -32,6 +32,24 @@ bash tool/check_docs_gardening.sh --help >/dev/null
 echo "fixtures|check_agent_memory_compounding|help"
 bash tool/check_agent_memory_compounding.sh --help >/dev/null
 
+echo "fixtures|agent_memory_auto_maintain|help"
+bash tool/agent_memory_auto_maintain.sh --help >/dev/null
+
+echo "fixtures|agent_memory_auto_maintain|verify"
+bash tool/agent_memory_auto_maintain.sh --verify >/dev/null
+
+echo "fixtures|agent_memory_auto_maintain|untracked_if_changed"
+fixture_path="docs/changes/agent_memory_auto_maintain_fixture.md"
+cleanup_auto_maintain_fixture() {
+  rm -f "$fixture_path"
+}
+trap cleanup_auto_maintain_fixture EXIT
+printf 'See `docs/agents_quick_reference.md`.\n' >"$fixture_path"
+bash tool/agent_memory_auto_maintain.sh --if-changed >/dev/null
+grep -qF '[`agents_quick_reference.md`](../agents_quick_reference.md)' "$fixture_path"
+cleanup_auto_maintain_fixture
+trap - EXIT
+
 echo "fixtures|checklist_cli_contract"
 bash tool/check_checklist_cli_contract.sh >/dev/null
 
