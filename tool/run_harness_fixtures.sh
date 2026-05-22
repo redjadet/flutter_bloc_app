@@ -38,6 +38,9 @@ bash tool/agent_memory_auto_maintain.sh --help >/dev/null
 echo "fixtures|agent_memory_auto_maintain|verify"
 bash tool/agent_memory_auto_maintain.sh --verify >/dev/null
 
+echo "fixtures|agent_memory_auto_maintain|codex_memory_health"
+bash tool/agent_memory_auto_maintain.sh --codex-memory-health >/dev/null
+
 echo "fixtures|agent_memory_auto_maintain|untracked_if_changed"
 fixture_path="docs/changes/agent_memory_auto_maintain_fixture.md"
 cleanup_auto_maintain_fixture() {

@@ -23,7 +23,7 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci
 | Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad impl; widget patterns [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md); policy [`testing_overview.md`](testing_overview.md) § Feature-defined testing |
 | Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
 | Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
-| Agent-memory auto upkeep (local) | `./tool/agent_memory_auto_maintain.sh` (`--if-changed`, `--verify`; wired into KB check + sync `--apply`) |
+| Agent-memory auto upkeep (local) | `./tool/agent_memory_auto_maintain.sh` (`--if-changed`, `--verify`, `--codex-memory-health`; wired into KB check + sync `--apply`; Codex memory health is report-only) |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
