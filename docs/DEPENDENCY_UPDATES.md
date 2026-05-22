@@ -129,6 +129,16 @@ To temporarily disable updates for a specific package, add a comment to `renovat
 2. Verify `renovate.json` syntax is valid
 3. Check the Renovate dashboard issue for errors
 
+### Dependency Dashboard (issue #2) warnings
+
+[Issue #2](https://github.com/redjadet/flutter_bloc_app/issues/2) is Renovate’s **Dependency Dashboard** (`:dependencyDashboard` in `renovate.json`). It is meant to stay **open**; Renovate updates the body each run. Do not close it unless you remove `:dependencyDashboard` from `renovate.json`.
+
+| Dashboard message | Cause | Action |
+| --- | --- | --- |
+| `Failed to look up maven package dev.flutter.flutter-plugin-loader` | Plugin ID is resolved via Gradle plugin portal, not Maven Central | Ignored in `renovate.json` (`matchManagers: gradle`, `dev.flutter.flutter-plugin-loader` disabled). Upgrade the version in `android/settings.gradle` with Flutter/SDK release notes. |
+| `Custom registries are not allowed for this datasource` | Harmless Renovate warning when `Gemfile` pins `fastlane` from GitHub (`git-refs` datasource); see [renovate#37432](https://github.com/renovatebot/renovate/issues/37432) | Safe to ignore until `fastlane` returns to a Rubygems release (see `Gemfile` comment). |
+| Rate-limited / blocked PRs | Renovate concurrency or manual edit/close | Use checkboxes on the dashboard or merge open dependency PRs; see **PR Edited (Blocked)** / **PR Closed (Blocked)** sections. |
+
 ### Dependency update workflow fails to comment on the PR (403)
 
 If the **Dependency Updates** workflow fails with:
