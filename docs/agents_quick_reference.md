@@ -59,9 +59,9 @@ Repo docs/scripts define behavior; external catalogs don't.
 
 Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/official docs before model memory. Host-template sync, cross-host review caveats: [`agent_knowledge_base.md`](agent_knowledge_base.md) (Host Parity, [`agent_environment_setup.md`](agent_environment_setup.md)).
 
-## Harness (pointers; doctrine in linked docs)
+## Harness (pointers only)
 
-[`AGENTS.md`](../AGENTS.md) § Loop (plan once → **execute end-to-end, verify, report proof**; below 95% confident only). [`agent_knowledge_base.md`](agent_knowledge_base.md) (beliefs, finish gate). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** `Benefit: team` / `Benefit: single` → [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub), `tasks/cursor/team/<run-id>/`. **Reusable agent conclusion** + **semantic lint**; **Behavior changes start in source docs** then host templates.
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md) (loop **execute end-to-end, verify, report proof**; below 95% confident only; finish gate). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub) (`Benefit: team` / `Benefit: single`, `tasks/cursor/team/<run-id>/`). **Reusable agent conclusion** + **semantic lint**; **Behavior changes start in source docs** then host templates (§ Automatic Workflow Triggers).
 
 ## Host Adapters
 

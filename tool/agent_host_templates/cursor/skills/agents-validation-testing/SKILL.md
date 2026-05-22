@@ -5,28 +5,22 @@ description: Validation scripts, regression guards, and testing requirements for
 
 # Validation and testing
 
-**Routing:** `agents-delivery-workflow`, `docs/agents_quick_reference.md`, `docs/engineering/validation_routing_fast_vs_full.md`.
+## When to use
 
-**Script catalog:** `docs/validation_scripts.md` (lifecycle scripts marked **C** = in `./bin/checklist`).
+Running checks, regression tests, Mix/lifecycle/offline-first touches.
 
-## Repo-specific (not fully indexed elsewhere)
+## Open (order)
 
-**Mix:** `app_styles.dart` / `mix_app_theme.dart` changes → `./tool/run_mix_lint.sh`. Tests → `pumpWithMixTheme` (`test/helpers/pump_with_mix_theme.dart`).
+1. `docs/agents_quick_reference.md` § Validation Chooser
+2. `docs/engineering/validation_routing_fast_vs_full.md`
+3. `docs/validation_scripts.md` (catalog; **C** = in `./bin/checklist`)
 
-**Lifecycle regressions:** register in `tool/check_regression_guards.sh`. Manual scripts when touching area: `check_side_effects_build.sh`, `check_todo_keyboard_layout.sh`, `check_perf_shrinkwrap_lists.sh`, `check_missing_const.sh`.
+## Do not duplicate
 
-**Regression test anchors** (add/extend when fixing same class of bug):
+- Command table → quick reference § Validation Chooser only
+- Regression anchors, lifecycle lists, goldens/coverage → [`docs/testing_overview.md`](../../../../../docs/testing_overview.md)
 
-| Area | Test path(s) |
-| ------ | ---------------- |
-| Background sync races | `test/shared/sync/background_sync_coordinator_test.dart` |
-| Repo in-flight coalesce | `test/features/search/data/offline_first_search_repository_test.dart`, `.../profile/...`, `.../remote_config/...` |
-| Don't-overwrite local | `test/features/counter/data/offline_first_counter_repository_test.dart` (+ `tool/check_offline_first_remote_merge.sh`) |
-| HTTP error mapping | 401/429/503, unmapped fallback, `Retry-After` parsing |
-| Auth refresh single-flight | one forced refresh on 401 retry with new bearer |
+## Repo-specific (short)
 
-**Test conventions:** mirror `lib/` under `test/`; descriptive `group`/`test`; AAA; fakes from `test/test_helpers.dart` / `test/helpers/`; `blocTest` for cubits; Hive temp dir + `HiveService` setup; Supabase → `test/helpers/supabase_test_setup.dart`.
-
-**Goldens:** `test/goldens/`; `flutter test --update-goldens` after SDK bump; phone + tablet; `pumpWithMixTheme` for Mix screens.
-
-**Coverage:** `./tool/test_coverage.sh`; `dart run tool/update_coverage_summary.dart`; align `coverage/coverage_summary.md`.
+- **Mix:** `app_styles.dart` / `mix_app_theme.dart` → `./tool/run_mix_lint.sh`; tests → `pumpWithMixTheme` (`test/helpers/pump_with_mix_theme.dart`).
+- **Guards:** register in `tool/check_regression_guards.sh`; area scripts in validation catalog.

@@ -35,7 +35,7 @@ Repo guardrails:
 
 ## Progressive Disclosure
 
-**Ladder (canonical):** [`docs/ai/context_loading.md`](ai/context_loading.md). Then: this doc (rules) → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) (commands only) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md) when touching widgets/theme.
+**Ladder (canonical numbered steps):** [`docs/ai/context_loading.md`](ai/context_loading.md) only. After ladder: this doc (rules) → project context → review protocol → [`agents_quick_reference.md`](agents_quick_reference.md) (commands) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
 
 ## Adaptive Execution
 

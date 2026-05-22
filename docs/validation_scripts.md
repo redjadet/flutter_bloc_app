@@ -34,6 +34,7 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 | [`validation_scripts/operations_running.md`](validation_scripts/operations_running.md) | Running scripts, CI, troubleshooting |
 | [`validation_scripts/operations_host_skills.md`](validation_scripts/operations_host_skills.md) | Host skills, agent assets |
 | [`validation_scripts/operations_manual.md`](validation_scripts/operations_manual.md) | Manual validation, related docs |
+| [`validation_scripts/upgrade_pr_triage_validate.md`](validation_scripts/upgrade_pr_triage_validate.md) | Upgrade PR triage + `upgrade_validate_all` lane |
 
 ## Related Documentation
 

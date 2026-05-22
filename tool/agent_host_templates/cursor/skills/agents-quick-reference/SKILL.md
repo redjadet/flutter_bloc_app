@@ -5,37 +5,8 @@ description: Canon pointers, lifecycle, trackers, approved shell entrypoints, an
 
 # Quick reference
 
-Thin adapter. Repo canon wins.
+Repo canon wins. Orientation / validation / host wrappers.
 
-Open only needed:
+**Open:** `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_context.md` → `docs/agents_quick_reference.md` → `docs/ai_code_review_protocol.md`. Non-trivial: `agents-delivery-workflow`; delegation: `agents-meta-behavior`.
 
-1. `AGENTS.md`
-2. `docs/agent_knowledge_base.md`
-3. `docs/agent_project_context.md` for project/version caveats
-4. `docs/agents_quick_reference.md`
-5. `docs/ai_code_review_protocol.md` for AI-written code
-
-Non-trivial: `agents-delivery-workflow`; delegation: `agents-meta-behavior`.
-
-Repo: Flutter 3.44.0 / Dart 3.12.0; `Presentation -> Domain <- Data`.
-
-Tracker: `tasks/cursor/todo.md`; lessons: `tasks/lessons.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **Context ladder:** `docs/agent_knowledge_base.md` (memory compounding + semantic lint).
-
-UI/design: `DESIGN.md` + `docs/design_system.md`. multi-agent hub → `docs/agent_knowledge_base.md#multi-agent-hub`; team dir `tasks/cursor/team/<run-id>/`.
-
-Approved entrypoints:
-
-```text
-./bin/checklist-fast
-./bin/router_feature_validate
-./bin/checklist
-./bin/integration_tests
-./tool/check_agent_knowledge_base.sh
-./tool/check_design_md.sh
-./tool/run_mix_lint.sh
-./tool/check_agent_asset_drift.sh
-./tool/sync_agent_assets.sh --dry-run
-bash tool/setup_cursor_agent_environment.sh
-```
-
-Host wrappers are convenience only; cross-host review is explicit-request-only; self-verification is mandatory.
+**Do not duplicate:** **Context ladder** → `docs/ai/context_loading.md`; commands → quick ref § Validation Chooser; **reusable agent conclusion** → owning doc / `docs/changes/` / `tasks/lessons.md`. Tracker `tasks/cursor/todo.md`. UI `DESIGN.md` + `docs/design_system.md`. **multi-agent hub** → `agent_knowledge_base.md#multi-agent-hub`; `tasks/cursor/team/<run-id>/`. Entrypoints: `./bin/checklist-fast`, `./bin/checklist`, `./tool/check_agent_knowledge_base.sh`, `./tool/check_design_md.sh`, `./tool/run_mix_lint.sh`, `./tool/check_agent_asset_drift.sh`, `./tool/sync_agent_assets.sh --dry-run`.

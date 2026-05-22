@@ -1,8 +1,8 @@
 ---
 name: figma-this-repo
-description: Alias for agents-figma. Use when implementing a Frame_Node design from Figma in this repo.
+description: Alias for agents-figma. Use when implementing Figma designs in this repo.
 ---
 
-# Figma (alias)
+# Figma (this repo)
 
-Thin alias — use **`agents-figma`** for figma-sync, assets, MCP, and Flutter adaptation.
+Alias → skill `agents-figma`. **Canon:** `DESIGN.md`, `docs/design_system.md`.
