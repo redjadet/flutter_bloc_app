@@ -34,6 +34,8 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | Cold-start numbered ladder | [`ai/context_loading.md`](../ai/context_loading.md) | Canonical | Only numbered load-order list |
 | File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) § File discovery layers | Canonical | Unnumbered layers; not a second ladder |
 | File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) (old § Context Navigation Ladder) | Resolved | Renamed/de-numbered 2026-05-22 pass 2 |
+| Cold-start bootstrap output | [`tool/agent_session_bootstrap.sh`](../../tool/agent_session_bootstrap.sh) | Canonical echo | `read_next` → [`context_loading.md`](../ai/context_loading.md); discovery pointer only (no 1–4 ladder) |
+| Auto memory upkeep | [`tool/agent_memory_auto_maintain.sh`](../../tool/agent_memory_auto_maintain.sh) | Canonical | `--verify` after sync `--apply`; `--if-changed` from KB check (local only) |
 
 ## WidgetTester.view note
 

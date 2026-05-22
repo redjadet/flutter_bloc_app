@@ -1,5 +1,7 @@
 # Codex Context Navigation Ladder
 
+> **Historical (2026-05-05).** Current canon: cold-start load order in [`context_loading.md`](../ai/context_loading.md); unknown-path layers in [`memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md). This note records the Codex memory/graph decision below—not a second numbered ladder.
+
 ## Why
 
 The linked reference setup,

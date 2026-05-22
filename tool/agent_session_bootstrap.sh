@@ -78,6 +78,7 @@ fi
 
 echo ""
 echo "read_next|AGENTS.md"
+echo "read_next|docs/ai/context_loading.md"
 echo "read_next|docs/agent_knowledge_base.md"
 echo "read_next|docs/ai_code_review_protocol.md"
 echo "read_next|docs/agents_quick_reference.md"
@@ -98,10 +99,9 @@ echo "host_setup_pointer|apply|bash tool/setup_cursor_agent_environment.sh --app
 echo "host_setup_pointer|cursor_command|/setup-cursor-agent-environment"
 echo ""
 
-echo "context_ladder|1|map docs: AGENTS.md + docs/agent_knowledge_base.md + docs/README.md"
-echo "context_ladder|2|durable memory: docs/changes/ + docs/plans/ + tasks/lessons.md + current tracker"
+echo "context_ladder|canonical|docs/ai/context_loading.md (numbered cold-start only)"
+echo "context_discovery|layers|docs/agent_kb/memory_and_context_ladder.md (file discovery; unnumbered)"
 echo "context_ladder|3|structural graph: ./tool/refresh_code_review_graph.sh --status-only or --if-needed"
-echo "context_ladder|4|targeted raw files only for edits/proof"
 if [[ -f "$repo_root/.code-review-graph/graph.db" ]]; then
   echo "context_graph|cache|present"
   if [[ -f "$repo_root/.code-review-graph/last_head" ]]; then

@@ -9,9 +9,11 @@ Goal: reproducible Codex/Cursor runs. Prefer repo scripts and repo-managed host 
 Cursor/Codex skills, commands, rules, and maps live under `tool/agent_host_templates/`.
 
 ```bash
-./tool/sync_agent_assets.sh --apply
+./tool/sync_agent_assets.sh --apply   # also runs agent_memory_auto_maintain.sh --verify
 ./tool/check_agent_asset_drift.sh
 ```
+
+Local agent-doc edits: `./tool/check_agent_knowledge_base.sh` runs safe link normalize via `agent_memory_auto_maintain.sh --if-changed` (skipped in CI). Opt-out: `AGENT_MEMORY_AUTO_MAINTAIN=0`.
 
 ### 2. Enable useful MCP/connectors
 

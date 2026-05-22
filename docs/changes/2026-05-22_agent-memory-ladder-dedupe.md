@@ -12,6 +12,11 @@ Removed a **second numbered “ladder”** that competed with the canonical cold
 
 Pass 1: repo + host template trim, skill budgets — [`2026-05-22_agent-context-optimization.md`](2026-05-22_agent-context-optimization.md), matrix [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md).
 
+## Follow-up (post-push)
+
+- [`agent_session_bootstrap.sh`](../../tool/agent_session_bootstrap.sh): stop printing a second 1–4 ladder; `read_next` + pointer to [`context_loading.md`](../ai/context_loading.md).
+- [`2026-05-05_codex_context_navigation_ladder.md`](2026-05-05_codex_context_navigation_ladder.md): historical banner so linked “See also” does not revive old steps.
+
 ## Agent rule
 
 - **One numbered context ladder** → [`ai/context_loading.md`](../ai/context_loading.md).
