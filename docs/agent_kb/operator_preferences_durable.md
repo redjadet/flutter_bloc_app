@@ -11,7 +11,8 @@ Keep root [`README.md`](../README.md) a **professional entrypoint**: short pitch
 - Fix failures in **product code/DI/config** first; don't “pass” checks by weakening scripts or validators (only change scripts for demonstrated false positives).
 - Treat analyzer warnings/info and lints as **code fixes** first (structure, l10n, mounted guards); avoid broad ignore comments when proper fix fits.
 - After `lib/` or mixed `lib/` + `docs/` delivery, run [`./bin/checklist`](../bin/checklist) until green; [`./bin/checklist-fast`](../bin/checklist-fast) is docs/tooling-only (see [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)).
-- When optimizing agent memory, skills, or docs, apply only safe dedup/thinning that preserves checks and behavior; prefer trimming duplicate global/repo skills/plugins to cut token cost.
+- When optimizing agent memory, skills, or docs, apply only safe dedup/thinning that preserves checks and behavior; prefer trimming duplicate global/repo skills/plugins to cut token cost. Classify edits via [`docs/audits/dedup_matrix_*.md`](audits/) (canonical / echo / stale); keep the numbered context ladder only in [`docs/ai/context_loading.md`](ai/context_loading.md) (see [`changes/2026-05-22_agent-context-baseline.md`](changes/2026-05-22_agent-context-baseline.md)).
+- Machine-wide Cursor rules/commands/skills: `bash tool/setup_cursor_agent_environment.sh --apply` (+ optional `--install`); `bash tool/sync_agent_assets.sh --apply` for drift check—not piecemeal `~/.cursor/` edits. Global skill trim defaults to `--trim-mode balanced`; `--trim-mode full` archives more vendor trees under `~/.agents/skills/.archived/<timestamp>/` (reversible)—use `full` only when operator explicitly wants aggressive cleanup.
 - After meaningful workflow/policy shifts, update agent-facing docs referenced from map (knowledge base, quick reference, review protocol, validation docs, and host templates when cold-start changes).
 - Caveman terse mode: always-on via [`.cursor/rules/caveman.mdc`](../.cursor/rules/caveman.mdc); user may disable with “stop caveman” / “normal mode”.
 
@@ -32,6 +33,7 @@ Transcript-derived workspace guardrails:
 - **Horizontal CTA / action bars:** `./bin/checklist` runs `tool/check_row_action_overflow.sh` (static PRIMARY_SCOPE heuristics) and `tool/check_action_bar_layout.sh` (widget tests). Prefer `ResponsiveDualCtaRow` / `ResponsiveActionOverflowBar` over raw multi-button `Row` — [`docs/design_system.md`](design_system.md#horizontal-action-layout-overflow).
 - **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
 - **Ephemeral repo-root files:** Delete one-shot `tmp_*.json` at repo root (e.g. GitHub branch-protection API bodies); use `tmp/` for scratch (`tmp/*` gitignored).
+- **`docs/audits/` git policy:** Keep tracked [`docs/audits/README.md`](audits/README.md) and `dedup_matrix_*.md` (`check_agent_knowledge_base.sh` requires README). Use `.gitignore` pattern `docs/audits/*` + `!docs/audits/README.md` + `!docs/audits/dedup_matrix_*.md`—not bare `docs/audits/` (blocks re-includes).
 
 Repo fact:
 
