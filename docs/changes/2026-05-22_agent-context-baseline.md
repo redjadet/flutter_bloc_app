@@ -42,4 +42,4 @@ Largest `repoTemplates` skills:
 
 ## Dedup matrix
 
-Committed: [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md) (`docs/audits/` keeps JSON ignored; matrix files are unignored).
+Committed: [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses `docs/audits/*` + `!docs/audits/dedup_matrix_*.md` (not `docs/audits/`, which blocks re-includes).
