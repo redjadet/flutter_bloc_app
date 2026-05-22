@@ -114,6 +114,7 @@ docs/app_for_small_business.txt
 *.original.md
 # `docs/audits/` (directory) blocks re-includes; use `*` + negation instead.
 docs/audits/*
+!docs/audits/README.md
 !docs/audits/dedup_matrix_*.md
 
 # Python demo local virtualenv (e.g. demos/render_chat_api)

@@ -42,4 +42,4 @@ Largest `repoTemplates` skills:
 
 ## Dedup matrix
 
-Committed: [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses `docs/audits/*` + `!docs/audits/dedup_matrix_*.md` (not `docs/audits/`, which blocks re-includes).
+Committed: [`README.md`](../audits/README.md), [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses `docs/audits/*` + `!docs/audits/README.md` + `!docs/audits/dedup_matrix_*.md` (not `docs/audits/`, which blocks re-includes).
