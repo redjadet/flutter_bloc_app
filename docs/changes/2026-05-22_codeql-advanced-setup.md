@@ -15,12 +15,26 @@ from default setup to **advanced setup** with an explicit language matrix:
 - `build-mode: none` for all matrix entries (no autobuild)
 - **Excluded:** `java-kotlin`, `swift`
 
-After merge, disable or remove the repo **Code scanning → CodeQL → Default setup**
-entry in GitHub Settings if the UI still offers both default and advanced setups.
+## GitHub settings (required once)
+
+Default setup and `codeql.yml` **cannot run together**. While default setup stays on,
+workflow SARIF upload fails with: *advanced configurations cannot be processed when
+the default setup is enabled*.
+
+Disable default setup (done on repo via API for PR #243 verification):
+
+```bash
+gh api repos/redjadet/flutter_bloc_app/code-scanning/default-setup \
+  --method PATCH --input - <<< '{"state":"not-configured"}'
+```
+
+Or **Settings → Code security → Code scanning → CodeQL → Default setup → Disable**.
+
+Removed stale failed analyses for `java-kotlin` / `swift` via
+`DELETE /repos/.../code-scanning/analyses/{id}` (`confirm_delete=true`).
 
 ## Verify
 
-1. Push/merge the workflow to `main`.
-2. Confirm **Actions → CodeQL** runs from `.github/workflows/codeql.yml`.
-3. Open **Security → Code scanning → CodeQL** — new analyses for the five
-   languages above; java/swift configurations should stop updating with failures.
+1. Merge PR #243; **Actions → CodeQL** uses `.github/workflows/codeql.yml` only.
+2. All five matrix jobs green; no dynamic `github-code-scanning/codeql` default run.
+3. **Security → Code scanning → CodeQL** — no new java/swift autobuild failures.
