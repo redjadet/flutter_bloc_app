@@ -1,27 +1,13 @@
-# Audits (historical snapshots)
+# Audits (local snapshots)
 
-This directory contains point-in-time reviews of the repository (architecture,
-quality, lifecycle, performance). These documents are useful for context and
-trend tracking, but they are **not** the day-to-day source of truth.
+Machine-generated inventories and one-off reviews live here. **Git tracks** this README and `dedup_matrix_*.md`; JSON and other snapshots are gitignored (see root `.gitignore`).
 
-## How to use these documents
+## Regenerate
 
-- Use audits to understand *why* a guideline exists or to compare “before vs
-  after” when the repo evolves.
-- If an audit discovers an invariant that should be enforced, prefer encoding
-  it as:
-  - a validation script under `tool/` (and document it in
-    [`validation_scripts.md`](../validation_scripts.md)), or
-  - an ADR under `docs/adr/`, or
-  - a focused update to an existing source-of-truth doc.
+```bash
+dart run tool/skill_inventory.dart docs/audits/skill_inventory_latest.json
+dart run tool/skill_rank.dart docs/audits/skill_inventory_latest.json docs/audits/skill_rank_latest.json
+bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json report
+```
 
-## Index
-
-- [`codebase_analysis_2026-03-17.md`](codebase_analysis_2026-03-17.md): repo-level architecture + maintainability
-  assessment.
-- [`baseline_inventory_2026-03-17.md`](baseline_inventory_2026-03-17.md): baseline inventory snapshot.
-- [`code_quality_analysis_2026-02-23.md`](code_quality_analysis_2026-02-23.md): deep code-quality review snapshot.
-- [`phase2_lifecycle_async_audit_2026-02-23.md`](phase2_lifecycle_async_audit_2026-02-23.md): lifecycle/async audit snapshot.
-- [`shrinkwrap_slivers_audit.md`](shrinkwrap_slivers_audit.md): UI performance audit (shrinkwrap/slivers).
-- [`senior_quality_hotspots_2026-05-12.md`](senior_quality_hotspots_2026-05-12.md): hotspot churn + seed checks + classified findings (2026-05-12).
-- Cursor context / skill-size snapshots: generate dated `cursor_context_baseline_<date>.md` and `skill_inventory_<date>_ctxopt.json` / `skill_rank_<date>_ctxopt.json` here via `dart run tool/skill_inventory.dart` and `dart run tool/skill_rank.dart`. New files under `docs/audits/` are usually **local-only** (gitignored); publish metrics in [`docs/changes/`](../changes/) when committing (e.g. [`2026-05-12_cursor_context_baseline_and_trim.md`](../changes/2026-05-12_cursor_context_baseline_and_trim.md)).
+Publish summaries in [`docs/changes/`](../changes/), not bulk JSON. Optional local-only audits (e.g. `ai_architecture_audit.md`, `ai_domain_language_report_v1.md`) may exist for cross-links — regenerate or `git add -f` only when promoting findings.

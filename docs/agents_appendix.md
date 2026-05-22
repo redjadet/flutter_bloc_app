@@ -79,8 +79,9 @@ User prefs:
   `./bin/checklist-fast` (auto-runs when env var set).
 - Integration tests fail on warning/error logs unless narrowly allowlisted in
   `integration_test/test_harness.dart`.
-- Markdownlint ignores task trackers via `.markdownlintignore` and
-  `.markdownlint-cli2ignore`.
+- Markdownlint ignores (`.markdownlintignore`, `.markdownlint-cli2.yaml`): task
+  trackers, `AGENTS.md`/`GEMINI.md`, `.agents/`, `vendor/`, platform trees,
+  `fastlane/` (generated README), `third_party/`, build artifacts.
 - `tool/check_dialog_text_controller_lifecycle.sh` / `.py` runs in checklist;
   flags local `TextEditingController(` inside async blocks in dialog files.
   Prefer Stateful dialog content with controllers in `initState` + `dispose()`.

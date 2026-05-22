@@ -23,3 +23,10 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 
 - Subagents are draft-producing helpers only: bounded scope, disjoint writes,
   main agent owns review and verification.
+
+## Agent doc edit loop
+
+Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_templates/`), run
+`./tool/check_agent_knowledge_base.sh` and `./tool/check_agent_memory_compounding.sh`,
+then `./tool/sync_agent_assets.sh --apply` and `./tool/check_agent_asset_drift.sh`.
+Re-measure with `dart run tool/skill_inventory.dart` → `docs/audits/skill_inventory_latest.json`.

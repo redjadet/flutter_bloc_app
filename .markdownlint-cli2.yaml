@@ -8,9 +8,17 @@ config:
 ignores:
   - "**/todo.md"
   - "**/TODO.md"
+  - ".agents/**"
   - "third_party/**"
+  - "vendor/**"
   - "**/.venv/**"
   - "**/node_modules/**"
   - "**/.dart_tool/**"
   - "build/**"
+  - "windows/**"
+  - "linux/**"
+  - "macos/**"
+  - "ios/**"
+  - "android/**"
+  - "fastlane/**"
 

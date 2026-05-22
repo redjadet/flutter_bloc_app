@@ -3,43 +3,8 @@ name: flutter-bloc-app-quick-reference
 description: Fast orientation, command entrypoints, and cross-host review pointer for Codex in this repo.
 ---
 
-# Flutter BLoC app quick reference
+# Quick reference (Codex)
 
-Thin adapter. Repo canon wins.
+**Open:** `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_context.md` → `docs/agents_quick_reference.md` → `docs/ai_code_review_protocol.md`. Non-trivial: `flutter-bloc-app-delivery-workflow`.
 
-Read only needed:
-
-1. `AGENTS.md`
-2. `docs/agent_knowledge_base.md`
-3. `docs/agent_project_context.md` for project/version caveats
-4. `docs/agents_quick_reference.md`
-5. `docs/ai_code_review_protocol.md` for AI-written code/review
-
-Non-trivial delivery: **`flutter-bloc-app-delivery-workflow`**.
-
-Repo: Flutter 3.44.0 / Dart 3.12.0; `Presentation -> Domain <- Data`; GoRouter; offline-first sync in `lib/shared/sync/`.
-
-Tracker: `tasks/codex/todo.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **context ladder** → `docs/agent_knowledge_base.md`.
-
-UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify workflow, states, responsive no-overlap. Feature tests: [`docs/plans/FEATURE_TEMPLATE.md`](docs/plans/FEATURE_TEMPLATE.md) **Tests** contract; widget how-to [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
-
-Validation picks:
-
-- router/auth/gates → `./bin/router_feature_validate`
-- broad/pre-ship → `./bin/checklist`
-- integration → `./bin/integration_tests`
-- upgrades/tooling → `./bin/upgrade_validate_all`
-- design brief → `./tool/check_design_md.sh`
-- Mix token/style → `./tool/run_mix_lint.sh`
-- agent docs → `./tool/check_agent_knowledge_base.sh`
-- host templates → `./tool/check_agent_asset_drift.sh` + `./tool/sync_agent_assets.sh --dry-run`
-
-Before final: self-verify vs request, files, proof, blockers, risk. Agent/docs edits: semantic-lint stale plans, duplicate rules, source/host-template contradictions.
-
-Cross-host review explicit-only:
-
-```bash
-./tool/request_codex_feedback.sh
-```
-
-Codex must not use that helper for self-review.
+**context ladder** → `docs/ai/context_loading.md`. Validation → quick ref § Validation Chooser. **reusable agent conclusion** → owning doc / `docs/changes/` / `tasks/lessons.md`. `tasks/codex/todo.md`. `DESIGN.md` + `docs/design_system.md`. **Self-verify** before final. `./tool/check_agent_knowledge_base.sh`, `./tool/check_design_md.sh`, `./tool/run_mix_lint.sh`, `./tool/check_agent_asset_drift.sh`, `./tool/sync_agent_assets.sh --dry-run`. Cross-host: `./tool/request_codex_feedback.sh` only if user asks (Codex must not self-invoke).

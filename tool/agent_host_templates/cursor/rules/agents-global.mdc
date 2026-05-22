@@ -18,9 +18,8 @@ Canon: `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_co
 ## Context budget
 
 - Smallest reads; targeted search beats dumps.
-- **context ladder:** map docs → durable memory → code-review-graph → targeted raw files.
-- Refactor/feature audit: record only real landmines (bugs, workarounds, deprecated patterns).
-- Compare approaches only when uncertainty/risk pays; default one path.
+- **context ladder:** [`docs/ai/context_loading.md`](../../../../docs/ai/context_loading.md) (canonical); memory/graph detail in `docs/agent_knowledge_base.md`.
+- Refactor/feature audit: landmines only (bugs, workarounds, deprecated patterns).
 
 ## Quality bar
 

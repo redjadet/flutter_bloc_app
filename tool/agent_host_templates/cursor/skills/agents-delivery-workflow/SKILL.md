@@ -5,23 +5,15 @@ description: Non-trivial delivery start-to-finish, validation routing, meta/suba
 
 # Delivery workflow
 
-Canon + loop (**Plan → Execute → Verify → Report**): `AGENTS.md`, `agents-quick-reference`, `docs/agents_quick_reference.md` (routing: `#automatic-workflow-triggers`). **context ladder** + **File verified reusable conclusions** → `docs/agent_knowledge_base.md`.
+## When to use
 
-- **Plan:** Goal / Context / Boundaries / Verification; non-trivial → `tasks/cursor/todo.md`; context audit before feature/refactor; delegation → `agents-meta-behavior` + `#multi-agent-hub`. No edits until **95% confident**. One observe/revise loop.
-- **Execute:** preserve `Presentation -> Domain <- Data` seams; pass narrow capabilities/contracts instead of concrete feature classes; keep widgets dumb; avoid vague shared buckets; DI/routes/l10n/codegen when touched; UI/Mix → `DESIGN.md` + `docs/design_system.md`.
-- **Verify:** `docs/ai_code_review_protocol.md`; narrowest validation lane; empty tool output ≠ proof. **Self-verify final response** vs request, diff, proof, blockers, risk.
-- **Report only after Verify**; **Surgical diff** traces each line to request or validation/doc need.
+Non-trivial feature/fix, validation routing, completion before done/commit.
 
-Doc/host changes: `./tool/check_agent_knowledge_base.sh`; escalate to `./bin/checklist` if agent guidance changed materially.
+## Open (order)
 
-## Multi-agent
+1. `AGENTS.md` + `docs/agents_quick_reference.md` (§ Automatic Workflow Triggers)
+2. `docs/ai/context_loading.md` — **context ladder**; `docs/agent_knowledge_base.md` — **File verified reusable conclusions**, `#multi-agent-hub`
+3. `docs/ai_code_review_protocol.md`
+4. `docs/engineering/validation_routing_fast_vs_full.md`
 
-Coordinator gates fan-out. **Team** when blast radius, cross-layer read, high-risk logic, separate implement/review bars, or user asked plan+implement+verify: `tasks/cursor/team/<run-id>/` (`goal.md`, `findings.md`, `plan.md`, diff artifacts, `review.md`). **Single** otherwise; log `Benefit: team - <reason>` or `Benefit: single - <reason>`. Inline context to specialists (not path-only); max 2 implementer fix loops unless user extends. Matrix: `agent_knowledge_base.md#multi-agent-hub`.
-
-## Completion gate
-
-Non-trivial: AI review + tracker proof. UI: `./tool/check_design_md.sh` if `DESIGN.md` edited; Mix: `./tool/run_mix_lint.sh`. Prefer app-visible proof.
-
-## Commit rules
-
-Inspect `git status` / `git diff` / `git diff --staged`. Imperative ≤72-char subject; note tests run/skipped. Full bar: `docs/testing_overview.md`, `docs/validation_scripts.md`.
+**Loop:** Plan → Execute → Verify → Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**. Ladder → `docs/ai/context_loading.md`. Commands → `docs/agents_quick_reference.md`. **Multi-agent:** `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`. `DESIGN.md` + `docs/design_system.md`; `tasks/cursor/todo.md`. `./tool/check_agent_knowledge_base.sh` on doc changes.

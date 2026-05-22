@@ -7,6 +7,9 @@ that.
 
 ## Index
 
+- [`2026-05-22_agent-context-optimization.md`](2026-05-22_agent-context-optimization.md): Agent context/token pass — repo + host template dedupe, sync, balanced global trim; before/after inventory.
+- [`2026-05-22_agent-context-baseline.md`](2026-05-22_agent-context-baseline.md): Pre-pass skill inventory snapshot (`repoTemplates` 10411 tokens).
+- [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md): Dedup theme matrix (canonical owners vs echoes).
 - [`2026-05-22_tests-as-feature-definition.md`](2026-05-22_tests-as-feature-definition.md): FEATURE_TEMPLATE executable **Tests** contract; feature-defined testing policy; widget test playbook; delivery/review routers.
 - [`2026-05-21_agent_automated_delivery_loop.md`](2026-05-21_agent_automated_delivery_loop.md): `/commit-push-pr` canon; checklist + integration proof; post-merge `main` sync.
 - **2026-05-21 (doc):** Agent doc dedup — ladder canon [`ai/context_loading.md`](../ai/context_loading.md); [`PLAN.md`](../../PLAN.md)/`quick_reference`/`KB`/`review_protocol` trimmed; harness/commands single-owner.

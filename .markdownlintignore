@@ -1,5 +1,13 @@
 # Exclude vendored dependencies from markdownlint checks.
+.agents/
 third_party/
+vendor/
+windows/
+linux/
+macos/
+ios/
+android/
+fastlane/
 **/.venv/**
 **/node_modules/**
 **/.dart_tool/**
