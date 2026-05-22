@@ -1,6 +1,8 @@
-# Memory and Context Navigation Ladder
+# Memory and file discovery
 
 Back: [Agent Knowledge Base](../agent_knowledge_base.md)
+
+**Cold-start load order (numbered, do not duplicate elsewhere):** [`docs/ai/context_loading.md`](../ai/context_loading.md).
 
 See also: [`agent_project_context.md`](../agent_project_context.md), [`code_review_graph.md`](../code_review_graph.md), [`changes/2026-05-05_codex_context_navigation_ladder.md`](../changes/2026-05-05_codex_context_navigation_ladder.md)
 
@@ -18,15 +20,15 @@ Next session smarter, no bloated wiki.
 - Semantic lint during doc/agent changes: stale plans, duplicate rules, source/host-template contradictions, reusable conclusions stranded in task notes.
 - Before feature/refactor work, do a context audit: related code, tests, docs, plans, known bugs, workarounds, deprecated patterns, unusual helpers. Record only high-signal landmines in tracker or owning doc.
 
-## Context Navigation Ladder
+## File discovery layers
 
-Use when exact file is not known:
+Use when the target file is unknown (not a second cold-start ladder):
 
-1. **Map layer:** [`AGENTS.md`](../../AGENTS.md), [`agent_knowledge_base.md`](../agent_knowledge_base.md), [`README.md`](../README.md), task docs.
-2. **Project context layer:** [`agent_project_context.md`](../agent_project_context.md) for pinned versions, package caveats, migrations, performance seams, and forbidden patterns.
-3. **Memory layer:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../../tasks/lessons.md), current tracker. Chat memory is pointer only; verify drift-prone facts.
-4. **Structural layer:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
-5. **Raw-file layer:** targeted raw-file reads only for edit/proof. Use `rg` when graph is stale/missing/too broad.
+- **Map:** [`AGENTS.md`](../../AGENTS.md), [`agent_knowledge_base.md`](../agent_knowledge_base.md), [`README.md`](../README.md), task docs.
+- **Project context:** [`agent_project_context.md`](../agent_project_context.md) — versions, caveats, migrations, performance seams, forbidden patterns.
+- **Compiled memory:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../../tasks/lessons.md), current tracker. Chat is pointer only; verify drift-prone facts.
+- **Structure:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
+- **Raw files:** targeted reads for edit/proof; `rg` when graph is stale, missing, or too broad.
 
 When archaeology finds a real landmine, carry it into `Context` or `Boundaries`; do not turn broad background into prompt bulk.
 

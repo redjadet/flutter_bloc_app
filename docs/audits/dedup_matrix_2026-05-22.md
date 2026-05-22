@@ -31,6 +31,9 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | Host sync flow | [`agents_quick_reference.md`](../agents_quick_reference.md) + [`agent_host_notes.md`](../agent_host_notes.md) + operator prefs | Echo | Keep same command order, no piecemeal host edits |
 | Cross-host review | [`agents_quick_reference.md`](../agents_quick_reference.md) | Canonical | Explicit request only |
 | Cross-host review | [`agent_host_notes.md`](../agent_host_notes.md) | Echo | Cursor/Codex caveat must preserve explicit-request gate |
+| Cold-start numbered ladder | [`ai/context_loading.md`](../ai/context_loading.md) | Canonical | Only numbered load-order list |
+| File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) § File discovery layers | Canonical | Unnumbered layers; not a second ladder |
+| File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) (old § Context Navigation Ladder) | Resolved | Renamed/de-numbered 2026-05-22 pass 2 |
 
 ## WidgetTester.view note
 

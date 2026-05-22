@@ -118,7 +118,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Context Navigation Ladder
 
-Steps: [`docs/ai/context_loading.md`](ai/context_loading.md). Detail: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
+Cold-start steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Unknown path: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md) § File discovery layers.
 
 ## System Of Record Layout
 
