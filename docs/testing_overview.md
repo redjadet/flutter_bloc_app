@@ -135,8 +135,53 @@ auto-cleared when the recorded owner PID is gone.
 - Extend an existing regression guard when fixing a bug instead of creating a
   parallel duplicate test.
 
+## Feature-defined testing
+
+For non-trivial features, tests are the **definition of done**—not a post-merge
+cleanup step. They guard **behaviour contracts** during refactors (compile checks
+stay with `dart analyze`). Fill the executable contract in
+[`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) before broad
+implementation.
+
+### Layer mix (guidance, not quotas)
+
+| Layer | ~Share | When | Location |
+| --- | --- | --- | --- |
+| Unit + cubit | ~60% | Domain rules, repository logic, cubit transitions | `test/**` |
+| Widget | ~30% | Screen contracts: taps, validation, loading/success/error UI | `test/**` |
+| Integration | ~10% | Named cross-screen journeys only | `integration_test/**` |
+
+This is priority guidance, not a coverage target. CI line-coverage thresholds are
+unchanged.
+
+### Priority matrix
+
+| Priority | Examples in this app | Minimum contract |
+| --- | --- | --- |
+| P0 | Auth, payments/calculator/IAP demos, core navigation/shell | ≥1 behaviour + ≥1 state widget test per changed screen; cubit tests for new transitions |
+| P1 | Todo, counter, search, chat, offline-first banners | Cubit + widget for changed UX; integration only when journey map requires it |
+| P2 | Demos, showcase, low-traffic samples | Unit/cubit for logic; widget smoke optional |
+
+### Non-goals
+
+- Widget-test every leaf component.
+- Live network in unit or widget tests (use fakes under `test/`).
+- New aggregate integration suites when an existing journey (J1 auth session,
+  payment/calculator paths in standard flows) can be extended instead. See
+  [Integration test policy](engineering/integration_test_policy.md) and
+  [Integration journey map](engineering/integration_journey_map.md).
+
+### How-to
+
+- Widget tests (BLoC): [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md)
+- RED→GREEN loop: [`testing/testing_strategy.md`](testing/testing_strategy.md)
+- Async pumps: follow **Repo testing conventions** above (bounded `pump()`, not
+  unbounded `pumpAndSettle` on heavy animation).
+
 ## Related docs
 
+- [Widget test playbook](testing/widget_test_playbook.md)
+- [Testing strategy (router)](testing/testing_strategy.md)
 - [Integration Flow Guide](testing_integration_flows.md)
 - [Validation Scripts](validation_scripts.md)
 - [New Developer Guide](new_developer_guide.md)

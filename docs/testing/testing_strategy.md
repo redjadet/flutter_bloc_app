@@ -16,7 +16,7 @@ TDD workflow index for agents. **Detail:** [`docs/testing_overview.md`](../testi
 | --- | --- |
 | Domain | Unit (pure logic, parsers) |
 | Data | Unit with fakes; contract tests |
-| Presentation | Widget tests (`WidgetTester.view`) |
+| Presentation | Widget tests; set viewport/size on layout-sensitive screens ([`widget_test_playbook.md`](widget_test_playbook.md)) |
 | E2E | Integration / Patrol (when enabled) |
 
 ## AI test rules
@@ -24,8 +24,9 @@ TDD workflow index for agents. **Detail:** [`docs/testing_overview.md`](../testi
 1. Test behavior, not private implementation details.
 2. One primary assertion per scenario when possible.
 3. Use existing fakes under `test/` before new mocks.
-4. Widget tests: set viewport via `WidgetTester.view`.
-5. Link Feature Brief test section before skipping coverage.
+4. Layout-sensitive widget tests: use `tester.view` sizing or overflow validators ([`widget_test_playbook.md`](widget_test_playbook.md)); do not add viewport setup to every widget test until a harness exists.
+5. Non-trivial feature: fill [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) **Tests** section before broad implementation; done = those rows satisfied or documented N/A.
+6. Feature-defined policy: [`testing_overview.md`](../testing_overview.md) § Feature-defined testing.
 
 ## Flaky prevention
 

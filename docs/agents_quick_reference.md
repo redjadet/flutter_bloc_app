@@ -11,7 +11,7 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
-| Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts.md`](validation_scripts.md#quality-theme-gates-checklist-mvp-may-2026) |
+| Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026) |
 | Integration journey / flow | `./bin/integration_tests` |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
@@ -20,6 +20,7 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci
 | Agent doc compression | `./tool/compress_agent_doc.sh PATH` only on explicit redundant targets; avoid anchor blocks until checks are updated |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); run `./tool/check_design_md.sh` if brief changed |
+| Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad impl; widget patterns [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md); policy [`testing_overview.md`](testing_overview.md) § Feature-defined testing |
 | Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
 | Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
@@ -38,7 +39,7 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci
 | Store release (both platforms) | `./tool/release_both_stores.sh preflight` then `deploy` after checklist/integration gates ([`deployment.md`](deployment.md)) |
 | Store release (Android only) | `./tool/release_android_play.sh preflight` / `upload_internal` ([`android_play_store_release_sop.md`](android_play_store_release_sop.md)) |
 
-Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`; both stores `./tool/release_both_stores.sh deploy` (see `docs/deployment.md`).
+Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`; both stores `./tool/release_both_stores.sh deploy` (see [`deployment.md`](deployment.md)).
 
 ## Automatic Workflow Triggers
 
@@ -71,7 +72,7 @@ Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/offic
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
 
-Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts.md`](validation_scripts.md) § Git.
+Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts/operations_running.md`](validation_scripts/operations_running.md#git--local-branch-cleanup).
 
 ## Task doc routing
 

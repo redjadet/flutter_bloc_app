@@ -118,10 +118,27 @@ require_contains "docs/agent_knowledge_base.md" "Semantic lint"
 require_contains "docs/README.md" "agent_knowledge_base.md"
 require_contains "docs/README.md" "DESIGN.md"
 require_contains "docs/README.md" "design_system.md"
-require_contains "docs/validation_scripts.md" "check_agent_knowledge_base.sh"
-require_contains "docs/validation_scripts.md" "check_design_md.sh"
-require_contains "docs/validation_scripts.md" "memory-compounding"
-require_contains "docs/validation_scripts.md" "closed-loop invariants"
+validation_docs=(
+  "docs/validation_scripts.md"
+)
+while IFS= read -r shard; do
+  validation_docs+=("$shard")
+done < <(find docs/validation_scripts -maxdepth 1 -name '*.md' -print 2>/dev/null | sort)
+
+require_validation_docs_contains() {
+  local needle="$1"
+  for path in "${validation_docs[@]}"; do
+    if [ -f "$path" ] && grep -qF "$needle" "$path"; then
+      return 0
+    fi
+  done
+  fail "validation_scripts router or shards must reference: $needle"
+}
+
+require_validation_docs_contains "check_agent_knowledge_base.sh"
+require_validation_docs_contains "check_design_md.sh"
+require_validation_docs_contains "memory-compounding"
+require_validation_docs_contains "closed-loop invariants"
 
 require_all_contains \
   "AGENTS.md" \

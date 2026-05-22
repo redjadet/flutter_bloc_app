@@ -102,6 +102,11 @@ else
   add_doc_target_if_exists "docs/agents_quick_reference.md"
   add_doc_target_if_exists "docs/ai_code_review_protocol.md"
   add_doc_target_if_exists "docs/validation_scripts.md"
+  if [ -d "$repo_root/docs/validation_scripts" ]; then
+    while IFS= read -r shard; do
+      add_doc_target_if_exists "${shard#"$repo_root/"}"
+    done < <(find "$repo_root/docs/validation_scripts" -maxdepth 1 -name '*.md' -print | LC_ALL=C sort)
+  fi
 fi
 
 if [[ "${#doc_targets[@]}" -eq 0 ]]; then
@@ -238,7 +243,7 @@ for doc in "${doc_targets[@]}"; do
 done
 
 if ! bash "$repo_root/tool/validate_validation_docs.sh"; then
-  fail "docs/validation_scripts.md out of sync with CHECK_SCRIPTS"
+  fail "validation_scripts docs out of sync with CHECK_SCRIPTS"
 fi
 
 if [[ "$failures" -ne 0 ]]; then

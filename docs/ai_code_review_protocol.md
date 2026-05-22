@@ -73,7 +73,7 @@ Enforce TDD where practical, linting, build verification, minimal edits, and arc
 
 1. Apply checks above.
 2. If vague, define assumptions, system boundaries, data flow, failure handling, success criteria, and smallest verifiable slice.
-3. For non-trivial work, define acceptance contract before broad execution; prefer executable specs/tests/fixtures over prose.
+3. For non-trivial work, define acceptance contract before broad execution; prefer executable specs/tests/fixtures over prose. Map each Feature Brief **Tests** row (or spec bullet) to an existing or new `test/` path in review output.
 4. Re-read related existing features for landmines before trusting generated code.
 5. Add or identify edge-case proof first when domain boundaries matter (time, fiscal periods, offline/sync, permissions, retries, locale, scale).
 6. Review diff/generated artifacts.

@@ -21,7 +21,7 @@ Repo: Flutter 3.44.0 / Dart 3.12.0; `Presentation -> Domain <- Data`; GoRouter; 
 
 Tracker: `tasks/codex/todo.md`; **reusable agent conclusion** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md`. **context ladder** → `docs/agent_knowledge_base.md`.
 
-UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify workflow, states, responsive no-overlap. Widget tests: `WidgetTester.view`.
+UI/design/Mix: `DESIGN.md` + `docs/design_system.md`; runtime source first; verify workflow, states, responsive no-overlap. Feature tests: [`docs/plans/FEATURE_TEMPLATE.md`](docs/plans/FEATURE_TEMPLATE.md) **Tests** contract; widget how-to [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
 
 Validation picks:
 

@@ -1,15 +1,16 @@
 #!/bin/bash
-# Ensures docs/validation_scripts.md stays in sync with CHECK_SCRIPTS in tool/delivery_checklist.sh.
+# Ensures validation_scripts router + shards stay in sync with CHECK_SCRIPTS in tool/delivery_checklist.sh.
 # Run from project root. Exit 0 if doc lists all checklist scripts; exit 1 and print missing entries.
 
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CHECKLIST="$PROJECT_ROOT/tool/delivery_checklist.sh"
-DOC="$PROJECT_ROOT/docs/validation_scripts.md"
+DOC_ROUTER="$PROJECT_ROOT/docs/validation_scripts.md"
+DOC_DIR="$PROJECT_ROOT/docs/validation_scripts"
 
-if [ ! -f "$CHECKLIST" ] || [ ! -f "$DOC" ]; then
-  echo "validate_validation_docs.sh: missing $CHECKLIST or $DOC"
+if [ ! -f "$CHECKLIST" ] || [ ! -f "$DOC_ROUTER" ] || [ ! -d "$DOC_DIR" ]; then
+  echo "validate_validation_docs.sh: missing $CHECKLIST, $DOC_ROUTER, or $DOC_DIR"
   exit 1
 fi
 
@@ -30,7 +31,7 @@ for script in "${scripts_in_checklist[@]-}"; do
   if [ -z "$script" ]; then
     continue
   fi
-  if ! grep -qF "$script" "$DOC"; then
+  if ! grep -qF -- "$script" "$DOC_ROUTER" "$DOC_DIR"/*.md 2>/dev/null; then
     missing+=("$script")
   fi
 done
@@ -39,7 +40,7 @@ if [ -z "${missing[*]-}" ]; then
   exit 0
 fi
 
-echo "docs/validation_scripts.md is out of sync with tool/delivery_checklist.sh CHECK_SCRIPTS."
+echo "validation_scripts docs are out of sync with tool/delivery_checklist.sh CHECK_SCRIPTS."
 echo "Missing script(s) in doc: ${missing[*]}"
-echo "Add entries for these in docs/validation_scripts.md or remove them from CHECK_SCRIPTS."
+echo "Add entries under docs/validation_scripts/ (or the router) or remove them from CHECK_SCRIPTS."
 exit 1

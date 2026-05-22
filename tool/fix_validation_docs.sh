@@ -1,12 +1,12 @@
 #!/bin/bash
-# Auto-syncs docs/validation_scripts.md with CHECK_SCRIPTS in tool/delivery_checklist.sh.
+# Auto-syncs docs/validation_scripts/checklist_index.md with CHECK_SCRIPTS in tool/delivery_checklist.sh.
 # Adds/updates an auto-generated index block so validation_docs check passes.
 
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CHECKLIST="$PROJECT_ROOT/tool/delivery_checklist.sh"
-DOC="$PROJECT_ROOT/docs/validation_scripts.md"
+DOC="$PROJECT_ROOT/docs/validation_scripts/checklist_index.md"
 
 if [ ! -f "$CHECKLIST" ] || [ ! -f "$DOC" ]; then
   echo "fix_validation_docs.sh: missing $CHECKLIST or $DOC"
@@ -58,19 +58,15 @@ if start_marker in doc_text and end_marker in doc_text:
     )
     new_text = pattern.sub(generated_block, doc_text)
 else:
-    anchor = "## Keeping This Doc in Sync"
-    if anchor in doc_text:
-        new_text = doc_text.replace(anchor, f"{generated_block}\n\n{anchor}", 1)
-    else:
-        if not doc_text.endswith("\n"):
-            doc_text += "\n"
-        new_text = f"{doc_text}\n{generated_block}\n"
+    if not doc_text.endswith("\n"):
+        doc_text += "\n"
+    new_text = f"{doc_text}\n{generated_block}\n"
 
 if new_text != doc_text:
     doc.write_text(new_text, encoding="utf-8")
-    print("Updated docs/validation_scripts.md auto-generated checklist index.")
+    print("Updated docs/validation_scripts/checklist_index.md auto-generated block.")
 else:
-    print("docs/validation_scripts.md already in sync (auto-generated block unchanged).")
+    print("checklist_index.md already in sync (auto-generated block unchanged).")
 PY
 
 echo "✅ validation docs auto-fix complete."

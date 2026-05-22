@@ -32,7 +32,7 @@ wiring (clean-tree counts).
 `./bin/router_feature_validate` runs from checklist when changed files match globs in
 `.cursor/rules/router-feature-validation.mdc` (not on every full checklist run).
 Set `CHECKLIST_SKIP_ROUTER_VALIDATE=1` to skip. See
-[`docs/validation_scripts.md`](../validation_scripts.md) (Quality theme gates).
+[`docs/validation_scripts/catalog.md`](../validation_scripts/catalog.md) (Quality theme gates).
 
 ## Deferred route manifest (M0 appendix)
 

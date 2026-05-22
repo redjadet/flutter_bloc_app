@@ -17,7 +17,7 @@ A new or materially changed feature should usually include:
 3. Cubit, pages, and widgets under `lib/features/<feature>/presentation/`.
 4. DI registration under `lib/core/di/`.
 5. Route wiring in `lib/core/router/app_routes.dart` and `lib/app/router/`.
-6. Tests updated at the right scope.
+6. Tests from the Feature Brief **Tests** contract (RED with implementation, not a follow-up-only PR).
 7. Relevant docs refreshed when behavior, setup, or workflows changed.
 8. Validation run through the repo commands, typically `./bin/checklist`.
 
@@ -25,12 +25,15 @@ A new or materially changed feature should usually include:
 
 | Step | What to do |
 | --- | --- |
+| Brief + contract | Copy [`FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md); fill **Tests** (behaviour, state, unit, integration as needed). |
 | Reuse first | Check `lib/shared/`, `lib/core/`, and adjacent features before adding new abstractions. |
 | Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |
+| Domain / data | RED unit or cubit tests for contracts; minimal implementation to green. |
 | Register dependencies | Use the feature-specific `register_*_services.dart` files or `injector_registrations.dart`. |
 | Wire routes intentionally | Add route constants first, then update the route group that owns the flow. |
+| Presentation | RED widget tests for behaviour + state where P0/P1 applies; then UI. |
 | Update generated code | Run `build_runner` when touching Freezed, JSON, Retrofit, or related annotations. |
-| Add tests | Prefer focused regression coverage close to the changed behavior. |
+| Prove | `flutter test <paths>` from the brief; pick validation lane in [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). |
 | Update docs | Refresh the doc that is already the source of truth instead of copying text into multiple places. |
 
 ## Source docs by concern
@@ -58,7 +61,7 @@ A new or materially changed feature should usually include:
 4. Register dependencies in `lib/core/di/`.
 5. Add or update route constants in `lib/core/router/app_routes.dart`.
 6. Wire the page in the correct route group under `lib/app/router/`.
-7. Add tests at the smallest correct scope.
+7. Add or extend tests per the brief **Tests** section (same change series as implementation).
 8. Update the feature catalog if the feature is user-visible.
 
 ## Documentation ownership
