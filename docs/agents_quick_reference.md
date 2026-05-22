@@ -55,13 +55,13 @@ Repo docs/scripts define behavior; external catalogs don't.
 | UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
-| Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | `bash tool/sync_agent_assets.sh --apply` + install/trim scripts when using globals |
+| Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim scripts when using globals |
 
 Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/official docs before model memory. Host-template sync, cross-host review caveats: [`agent_knowledge_base.md`](agent_knowledge_base.md) (Host Parity, [`agent_environment_setup.md`](agent_environment_setup.md)).
 
 ## Harness (pointers only)
 
-Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md) (loop **execute end-to-end, verify, report proof**; below 95% confident only; finish gate). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub) (`Benefit: team` / `Benefit: single`, `tasks/cursor/team/<run-id>/`). **Reusable agent conclusion** + **semantic lint**; **Behavior changes start in source docs** then host templates (§ Automatic Workflow Triggers).
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub). Required cold-start anchors: below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
 ## Host Adapters
 
@@ -70,7 +70,7 @@ Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md) (loop **execute e
 | Orientation + commands | `agents-quick-reference` | `flutter-bloc-app-quick-reference` |
 | Non-trivial delivery | `agents-delivery-workflow` | `flutter-bloc-app-delivery-workflow` |
 | Plan/delegation reminders | `agents-meta-behavior` | — |
-| Cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` |
+| Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |
 
 Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts/operations_running.md`](validation_scripts/operations_running.md#git--local-branch-cleanup).
 

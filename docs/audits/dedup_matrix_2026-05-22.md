@@ -27,6 +27,10 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | UI / Mix | [`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md) | Canonical | — |
 | Codex map | [`AGENTS.md`](../../AGENTS.md) | Canonical | Root source |
 | Codex map | codex AGENTS.md (host template) | Echo | Codex-only deltas only |
+| Host sync flow | [`agent_kb/host_parity_and_enforcement.md`](../agent_kb/host_parity_and_enforcement.md) | Canonical | dry-run → apply → dry-run clean → drift check |
+| Host sync flow | [`agents_quick_reference.md`](../agents_quick_reference.md) + [`agent_host_notes.md`](../agent_host_notes.md) + operator prefs | Echo | Keep same command order, no piecemeal host edits |
+| Cross-host review | [`agents_quick_reference.md`](../agents_quick_reference.md) | Canonical | Explicit request only |
+| Cross-host review | [`agent_host_notes.md`](../agent_host_notes.md) | Echo | Cursor/Codex caveat must preserve explicit-request gate |
 
 ## WidgetTester.view note
 

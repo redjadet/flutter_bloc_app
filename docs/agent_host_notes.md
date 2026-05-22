@@ -8,11 +8,10 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 - Use [`../tasks/codex/todo.md`](../tasks/codex/todo.md) for non-trivial active work.
 - Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user
   explicitly asks for second opinion or cross-host review.
-- After material edits to agent-facing docs or
+- If user explicitly asks for second opinion after material edits to agent-facing docs or
   [`tool/agent_host_templates/cursor/rules/agent-execution.mdc`](../tool/agent_host_templates/cursor/rules/agent-execution.mdc)
   (copy to gitignored `.cursor/rules/` with `alwaysApply: true`),
-  Cursor may run `./tool/request_codex_feedback.sh` as optional second
-  opinion before merge.
+  Cursor may run `./tool/request_codex_feedback.sh` before merge.
 
 ## Cursor
 
@@ -28,5 +27,6 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 
 Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_templates/`), run
 `./tool/check_agent_knowledge_base.sh` and `./tool/check_agent_memory_compounding.sh`,
-then `./tool/sync_agent_assets.sh --apply` and `./tool/check_agent_asset_drift.sh`.
+then `./tool/sync_agent_assets.sh --dry-run`, `./tool/sync_agent_assets.sh --apply`,
+dry-run clean, and `./tool/check_agent_asset_drift.sh`.
 Re-measure with `dart run tool/skill_inventory.dart` → `docs/audits/skill_inventory_latest.json`.
