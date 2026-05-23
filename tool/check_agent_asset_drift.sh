@@ -71,6 +71,12 @@ if ! check_toolchain_mentions; then
   failures=1
 fi
 
+dup_status="$(check_workspace_managed_skill_duplicates)" || true
+echo "$dup_status"
+if [[ "${dup_status%%|*}" != "ok" ]]; then
+  failures=1
+fi
+
 if (( failures != 0 )); then
   echo "Agent asset drift detected." >&2
   exit 1

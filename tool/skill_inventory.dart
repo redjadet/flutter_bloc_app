@@ -7,9 +7,7 @@ import 'dart:io';
 ///
 /// approxTokens: rough estimate (chars / 4). Good enough for ranking.
 Future<void> main(List<String> args) async {
-  final outPath = args.isNotEmpty
-      ? args.first
-      : 'docs/audits/skill_inventory_latest.json';
+  final outPath = args.isNotEmpty ? args.first : 'docs/audits/skill_inventory_latest.json';
 
   final home = Platform.environment['HOME'] ?? '';
   final cursorSkillsRoot = home.isEmpty ? '' : '$home/.cursor/skills';
@@ -86,6 +84,7 @@ bool _isIgnoredPath(String path) {
     '${sep}build$sep',
     '$sep.venv$sep',
     '${sep}node_modules$sep',
+    '${sep}.archived$sep',
   ];
   for (final seg in ignoreSegments) {
     if (path.contains(seg)) return true;
