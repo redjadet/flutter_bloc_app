@@ -221,20 +221,20 @@ void main() {
     );
 
     test(
-      'coalesces counter operations to latest count and prunes older ones',
+      'coalesces counter operations to latest createdAt and prunes older ones',
       () async {
         final SyncOperation olderCounterOp = SyncOperation(
           id: 'counter-1',
           entityType: 'counter',
           payload: const <String, dynamic>{'count': 2},
-          createdAt: DateTime.utc(2024, 1, 1),
+          createdAt: DateTime.utc(2024, 1, 1, 10),
           idempotencyKey: 'counter-key-1',
         );
         final SyncOperation newerCounterOp = SyncOperation(
           id: 'counter-2',
           entityType: 'counter',
           payload: const <String, dynamic>{'count': 5},
-          createdAt: DateTime.utc(2024, 1, 1),
+          createdAt: DateTime.utc(2024, 1, 1, 11),
           idempotencyKey: 'counter-key-2',
         );
         final _MockSyncableRepository repo = _MockSyncableRepository();
@@ -264,6 +264,53 @@ void main() {
         verifyNever(() => repo.processOperation(olderCounterOp));
         verify(() => pending.markCompleted(newerCounterOp.id)).called(1);
         verify(() => pending.markCompleted(olderCounterOp.id)).called(1);
+      },
+    );
+
+    test(
+      'coalesces counter operations to latest createdAt when count decreases',
+      () async {
+        final SyncOperation staleHighCountOp = SyncOperation(
+          id: 'counter-1',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 10},
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          idempotencyKey: 'counter-key-1',
+        );
+        final SyncOperation latestLowerCountOp = SyncOperation(
+          id: 'counter-2',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 7},
+          createdAt: DateTime.utc(2024, 1, 1, 11),
+          idempotencyKey: 'counter-key-2',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('counter');
+        when(() => repo.processOperation(any())).thenAnswer((_) async {});
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer(
+          (_) async => <SyncOperation>[staleHighCountOp, latestLowerCountOp],
+        );
+        when(() => pending.markCompleted(any())).thenAnswer((_) async {});
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        verify(() => repo.processOperation(latestLowerCountOp)).called(1);
+        verifyNever(() => repo.processOperation(staleHighCountOp));
+        verify(() => pending.markCompleted(latestLowerCountOp.id)).called(1);
+        verify(() => pending.markCompleted(staleHighCountOp.id)).called(1);
       },
     );
 
