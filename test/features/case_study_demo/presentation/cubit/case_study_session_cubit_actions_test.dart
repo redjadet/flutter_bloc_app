@@ -487,6 +487,46 @@ void main() {
       await cubit.close();
       await auth.dispose();
     });
+
+    test(
+      'does not delete remote when submitLocalHistoryFailed is set',
+      () async {
+        final _StubAuthRepository auth = _StubAuthRepository(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        );
+        final _MemoryLocalRepository local = _MemoryLocalRepository();
+        final _SpyRemoteDeleteRepository remoteDelete =
+            _SpyRemoteDeleteRepository();
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: remoteDelete,
+          remoteBackendAuth: _StubRemoteBackendAuth(),
+          remoteRepository: _StubRemoteRepository(),
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
+        await local.saveDraft('user-1', draft);
+        await cubit.hydrate();
+        cubit.emit(
+          cubit.state.copyWith(submitLocalHistoryFailed: true),
+        );
+
+        await cubit.abandonCase();
+
+        expect(remoteDelete.deleteCount, 0);
+        final CaseStudyDraft? unchanged = await local.loadDraft('user-1');
+        expect(unchanged?.caseId, 'case-1');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
   });
 
   group('CaseStudySessionCubit.submitMockUpload', () {

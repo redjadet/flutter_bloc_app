@@ -75,6 +75,12 @@ _CoalescedPendingOperations _coalescePendingOperations(
 
   if (counterOps.length > 1) {
     final SyncOperation latestCounterOp = counterOps.reduce((final a, final b) {
+      if (b.createdAt.isAfter(a.createdAt)) {
+        return b;
+      }
+      if (a.createdAt.isAfter(b.createdAt)) {
+        return a;
+      }
       final int countA = _counterCountFromPayload(a.payload);
       final int countB = _counterCountFromPayload(b.payload);
       return countB > countA ? b : a;

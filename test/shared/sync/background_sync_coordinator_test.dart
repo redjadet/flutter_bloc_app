@@ -293,11 +293,13 @@ void main() {
           entityType: 'counter',
           payload: const <String, dynamic>{'count': 3},
           idempotencyKey: 'success',
+          createdAt: DateTime.utc(2024, 1, 1),
         );
         final SyncOperation failOp = SyncOperation.create(
           entityType: 'counter',
           payload: const <String, dynamic>{'count': 4},
           idempotencyKey: 'fail',
+          createdAt: DateTime.utc(2024, 1, 2),
         );
         final List<List<SyncOperation>> batches = <List<SyncOperation>>[
           <SyncOperation>[successOp, failOp],
@@ -348,7 +350,7 @@ void main() {
         networkController.add(NetworkStatus.online);
         await Future<void>.delayed(const Duration(milliseconds: 20));
 
-        // Counter ops are coalesced: only the one with max count (failOp) is
+        // Counter ops are coalesced: only the latest createdAt (failOp) is
         // processed; successOp is marked completed without processing
         verify(() => syncableRepo.processOperation(failOp)).called(1);
         verify(() => pendingRepository.markCompleted(successOp.id)).called(1);
