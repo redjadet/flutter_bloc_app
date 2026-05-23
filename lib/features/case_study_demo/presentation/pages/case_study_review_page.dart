@@ -150,7 +150,7 @@ class CaseStudyReviewPage extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: state.isSubmitting
+                onPressed: state.isSubmitting || state.submitLocalHistoryFailed
                     ? null
                     : () async {
                         final bool? ok = await showDialog<bool>(
