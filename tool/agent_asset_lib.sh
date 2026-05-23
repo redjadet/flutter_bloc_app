@@ -197,6 +197,24 @@ check_codex_rules_block() {
   echo "ok|$target"
 }
 
+# Workspace .cursor/skills must not repeat names synced to ~/.cursor/skills (duplicate picker entries).
+check_workspace_managed_skill_duplicates() {
+  local workspace_skills="$repo_root/.cursor/skills"
+  local mapping dst skill_dir workspace_skill
+  [[ -d "$workspace_skills" ]] || return 0
+  for mapping in "${managed_cursor_files[@]}"; do
+    dst="${mapping##*|}"
+    skill_dir="$(basename "$(dirname "$dst")")"
+    workspace_skill="$workspace_skills/$skill_dir/SKILL.md"
+    if [[ -f "$workspace_skill" ]]; then
+      echo "workspace-skill-duplicate|$workspace_skill|remove; canon syncs to $dst"
+      return 1
+    fi
+  done
+  echo "ok|$workspace_skills"
+  return 0
+}
+
 apply_codex_rules_block() {
   local template="$agent_templates_root/$managed_codex_rules_template"
   local target="$managed_codex_rules_target"

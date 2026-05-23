@@ -19,7 +19,7 @@ Procedure for skill `upgrade-pr-triage-validate` and `/upgrade-validate-all`. Ro
 
 1. **Preflight:** `test -x ./bin/upgrade_validate_all`; `gh auth status`; `git fetch origin "$base_branch"`; `git status --porcelain` empty; `git diff --name-only --diff-filter=U` empty.
 
-2. **Triage PRs:** `gh pr list --state open --draft=false --base "$base_branch" --limit 200`. Per PR: `gh pr view` (mergeable, checks, draft); `gh pr checks`; if mergeable unknown wait/re-query; ready → `gh pr merge --squash --delete-branch`; not beneficial → `gh pr close` with reason; failing → max `$fix_rounds` fix loops then merge or stop.
+2. **Triage PRs:** `gh pr list --state open --draft=false --base "$base_branch" --limit 200`. Per PR: `gh pr view` (mergeable, checks, draft); `gh pr checks`; if mergeable unknown wait/re-query. **Do not merge** dependency-bot PRs when only CodeQL (or other non-build checks) is green — require dependency-updates / build workflow that runs `flutter pub get`. ready → `gh pr merge --squash --delete-branch`; not beneficial → `gh pr close` with reason; failing → max `$fix_rounds` fix loops then merge or stop.
 
 3. **Upgrade lane:** `git switch "$base_branch" && git pull --ff-only` → `git switch -c "chore/upgrade-validate-all-$(date +%Y%m%d-%H%M%S)"` → `flutter pub upgrade --major-versions` → `SKIP_PUB_UPGRADE=1 ./bin/upgrade_validate_all`. Optional (avoid mutating managed agent assets mid-lane):
 

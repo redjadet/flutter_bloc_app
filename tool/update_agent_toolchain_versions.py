@@ -88,6 +88,29 @@ def replace_required(
     return True
 
 
+def replace_optional(
+    path: Path,
+    pattern: str,
+    replacement: str,
+    *,
+    count: int = 1,
+) -> bool:
+    text = path.read_text(encoding="utf-8")
+    updated, replacements = re.subn(
+        pattern,
+        replacement,
+        text,
+        count=count,
+        flags=re.MULTILINE,
+    )
+    if replacements == 0:
+        return False
+    if updated == text:
+        return False
+    path.write_text(updated, encoding="utf-8")
+    return True
+
+
 def main() -> int:
     flutter_version, dart_version = extract_versions()
     replacements = [
@@ -116,6 +139,9 @@ def main() -> int:
             r"^- Dart `[^`]+`$",
             f"- Dart `{dart_version}`",
         ),
+    ]
+
+    optional_replacements = [
         (
             PROJECT_ROOT / "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md",
             r"^(Repo: Flutter )\S+( / Dart )\S+(;.*)$",
@@ -131,6 +157,9 @@ def main() -> int:
     changed_paths: list[Path] = []
     for path, pattern, replacement in replacements:
         if replace_required(path, pattern, replacement):
+            changed_paths.append(path.relative_to(PROJECT_ROOT))
+    for path, pattern, replacement in optional_replacements:
+        if replace_optional(path, pattern, replacement):
             changed_paths.append(path.relative_to(PROJECT_ROOT))
 
     print(f"Toolchain source: README.md -> Flutter {flutter_version}, Dart {dart_version}")
