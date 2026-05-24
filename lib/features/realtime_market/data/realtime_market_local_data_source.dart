@@ -26,6 +26,10 @@ class RealtimeMarketLocalDataSource extends HiveRepositoryBase {
     final MarketFeedSnapshot snapshot,
   ) async {
     final Box<dynamic> box = await getBox();
+    final MarketFeedSnapshot? existing = await loadCached(pairId);
+    if (existing != null && existing.updatedAt.isAfter(snapshot.updatedAt)) {
+      return;
+    }
     await box.put(
       snapshotKey(pairId),
       MarketSnapshotMapper.toHiveMap(snapshot),

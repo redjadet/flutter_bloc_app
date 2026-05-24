@@ -124,6 +124,9 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     }
     await _feedSub?.cancel();
     _feedSub = null;
+    if (_inflightPersists.isNotEmpty) {
+      await Future.wait(List<Future<void>>.from(_inflightPersists));
+    }
     if (_disposed) {
       return;
     }
