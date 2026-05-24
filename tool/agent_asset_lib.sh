@@ -66,8 +66,6 @@ required_toolchain_targets=(
 optional_local_policy_targets=(
   "AGENTS.md"
   "docs/agents_quick_reference.md"
-  "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
-  "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md"
 )
 
 list_optional_codex_worktree_agent_targets() {
@@ -128,12 +126,30 @@ extract_readme_toolchain() {
   python3 - "$repo_root/README.md" <<'PY'
 import re
 import sys
+
 text = open(sys.argv[1], encoding="utf-8").read()
-flutter = re.search(r"Flutter `([^`]+)`", text)
-dart = re.search(r"Dart `([^`]+)`", text)
+version = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
+
+
+def _version(label: str) -> str | None:
+    patterns = (
+        rf"{label} `([^`]+)`",
+        rf"^- {label} `([^`]+)`$",
+        rf"{label}\s+({version})",
+        rf"badge/{label}-({version})-",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.MULTILINE)
+        if match is not None:
+            return match.group(1)
+    return None
+
+
+flutter = _version("Flutter")
+dart = _version("Dart")
 if not flutter or not dart:
     raise SystemExit(1)
-print(f"{flutter.group(1)}|{dart.group(1)}")
+print(f"{flutter}|{dart}")
 PY
 }
 
@@ -201,7 +217,10 @@ check_codex_rules_block() {
 check_workspace_managed_skill_duplicates() {
   local workspace_skills="$repo_root/.cursor/skills"
   local mapping dst skill_dir workspace_skill
-  [[ -d "$workspace_skills" ]] || return 0
+  if [[ ! -d "$workspace_skills" ]]; then
+    echo "ok|$workspace_skills (absent)"
+    return 0
+  fi
   for mapping in "${managed_cursor_files[@]}"; do
     dst="${mapping##*|}"
     skill_dir="$(basename "$(dirname "$dst")")"
