@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.40%** (20702/28205 lines)
+*Total line coverage*: **73.38%** (20698/28208 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -352,6 +352,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/extensions/responsive/responsive_typography.dart` | 87.50% | 7/8 |
 | `lib/shared/utils/cubit_async_operations.dart` | 87.50% | 28/32 |
 | `lib/core/config/supabase_config_provider.dart` | 87.69% | 57/65 |
+| `lib/shared/sync/background_sync_runner_helpers.dart` | 87.83% | 101/115 |
 | `lib/shared/extensions/responsive/responsive_layout.dart` | 87.93% | 51/58 |
 | `lib/shared/sync/pending_sync_repository_migration.dart` | 87.93% | 51/58 |
 | `lib/features/chat/data/chat_local_data_source.dart` | 88.24% | 30/34 |
@@ -445,7 +446,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/sync/pending_sync_repository.dart` | 93.62% | 88/94 |
 | `lib/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart` | 93.75% | 15/16 |
 | `lib/shared/services/error_notification_service.dart` | 93.75% | 30/32 |
-| `lib/shared/sync/background_sync_runner_helpers.dart` | 93.81% | 106/113 |
 | `lib/shared/widgets/diagnostics/profile_cache_controls_section.dart` | 93.90% | 77/82 |
 | `lib/shared/widgets/common_loading_widget.dart` | 94.00% | 47/50 |
 | `lib/features/chat/presentation/widgets/chat_history_sheet_helpers.dart` | 94.12% | 64/68 |
@@ -551,7 +551,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/case_study_demo/domain/case_study_case_type.dart` | 100.00% | 5/5 |
 | `lib/features/case_study_demo/domain/case_study_remote_repository.dart` | 100.00% | 2/2 |
 | `lib/features/case_study_demo/presentation/case_study_question_prompt.dart` | 100.00% | 21/21 |
-| `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit_lifecycle.part.dart` | 100.00% | 14/14 |
+| `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit_lifecycle.part.dart` | 100.00% | 15/15 |
 | `lib/features/case_study_demo/presentation/cubit/case_study_session_state.dart` | 100.00% | 21/21 |
 | `lib/features/chart/data/chart_live_direct_fallback.dart` | 100.00% | 13/13 |
 | `lib/features/chart/data/direct_chart_remote_repository.dart` | 100.00% | 20/20 |
