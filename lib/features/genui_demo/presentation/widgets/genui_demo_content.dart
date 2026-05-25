@@ -11,9 +11,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:genui/genui.dart' as genui;
 
 class GenUiDemoContent extends StatefulWidget {
-  const GenUiDemoContent({required this.state, super.key});
-
-  final GenUiDemoState state;
+  const GenUiDemoContent({super.key});
 
   @override
   State<GenUiDemoContent> createState() => _GenUiDemoContentState();
@@ -39,89 +37,118 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
 
   @override
   Widget build(final BuildContext context) {
-    final state = widget.state;
-
-    return state.when(
-      initial: () => const CommonLoadingWidget(),
-      loading: (final surfaceIds, final isSending, final hostHandle) =>
-          _buildContent(
-            context: context,
-            surfaceIds: surfaceIds,
-            isSending: isSending,
-            hostHandle: hostHandle,
-          ),
-      ready: (final surfaceIds, final hostHandle, final isSending) =>
-          _buildContent(
-            context: context,
-            surfaceIds: surfaceIds,
-            isSending: isSending,
-            hostHandle: hostHandle,
-          ),
-      error:
-          (
-            final message,
-            final surfaceIds,
-            final hostHandle,
-            final isSending,
-          ) => Column(
-            children: [
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (final context, final constraints) =>
-                      SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: CommonErrorView(message: message),
-                        ),
-                      ),
-                ),
-              ),
-              if (hostHandle != null && surfaceIds.isNotEmpty)
-                Expanded(
-                  child: _buildSurfacesList(
-                    surfaceIds: surfaceIds,
-                    hostHandle: hostHandle,
-                  ),
-                ),
-              _buildInputRow(context: context, isSending: isSending),
-            ],
-          ),
+    final isInitial = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
+      selector: (final state) =>
+          state.maybeWhen(initial: () => true, orElse: () => false),
     );
-  }
 
-  Widget _buildContent({
-    required final BuildContext context,
-    required final List<String> surfaceIds,
-    required final bool isSending,
-    required final genui.A2uiMessageProcessor? hostHandle,
-  }) {
-    final l10n = context.l10n;
+    if (isInitial) {
+      return const CommonLoadingWidget();
+    }
+
     return Column(
       children: [
-        Expanded(
-          child: hostHandle != null && surfaceIds.isNotEmpty
-              ? _buildSurfacesList(
-                  surfaceIds: surfaceIds,
-                  hostHandle: hostHandle,
-                )
-              : Center(
-                  child: Text(
-                    l10n.genuiDemoHintText,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
+        const Expanded(child: _GenUiMainSection()),
+        _GenUiInputRow(
+          textController: _textController,
+          onSendMessage: _sendMessage,
         ),
-        _buildInputRow(context: context, isSending: isSending),
       ],
     );
   }
+}
 
-  Widget _buildSurfacesList({
-    required final List<String> surfaceIds,
-    required final genui.A2uiMessageProcessor hostHandle,
-  }) => ListView.builder(
+class _GenUiMainSection extends StatelessWidget {
+  const _GenUiMainSection();
+
+  @override
+  Widget build(final BuildContext context) {
+    final viewState = context
+        .selectState<
+          GenUiDemoCubit,
+          GenUiDemoState,
+          ({
+            String? errorMessage,
+            List<String> surfaceIds,
+            genui.A2uiMessageProcessor? hostHandle,
+          })
+        >(
+          selector: (final state) => (
+            errorMessage: state.maybeWhen(
+              error: (final message, _, _, _) => message,
+              orElse: () => null,
+            ),
+            surfaceIds: state.when(
+              initial: () => const <String>[],
+              loading: (final surfaceIds, _, _) => surfaceIds,
+              ready: (final surfaceIds, _, _) => surfaceIds,
+              error: (_, final surfaceIds, _, _) => surfaceIds,
+            ),
+            hostHandle: state.when(
+              initial: () => null,
+              loading: (_, _, final hostHandle) => hostHandle,
+              ready: (_, final hostHandle, _) => hostHandle,
+              error: (_, _, final hostHandle, _) => hostHandle,
+            ),
+          ),
+        );
+
+    final hostHandle = viewState.hostHandle;
+
+    if (viewState.errorMessage case final message?) {
+      return Column(
+        children: [
+          Expanded(
+            child: LayoutBuilder(
+              builder: (final context, final constraints) =>
+                  SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: CommonErrorView(message: message),
+                    ),
+                  ),
+            ),
+          ),
+          if (hostHandle != null && viewState.surfaceIds.isNotEmpty)
+            Expanded(
+              child: _GenUiSurfacesList(
+                surfaceIds: viewState.surfaceIds,
+                hostHandle: hostHandle,
+              ),
+            ),
+        ],
+      );
+    }
+
+    if (hostHandle != null && viewState.surfaceIds.isNotEmpty) {
+      return _GenUiSurfacesList(
+        surfaceIds: viewState.surfaceIds,
+        hostHandle: hostHandle,
+      );
+    }
+
+    return Center(
+      child: Text(
+        context.l10n.genuiDemoHintText,
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    );
+  }
+}
+
+class _GenUiSurfacesList extends StatelessWidget {
+  const _GenUiSurfacesList({
+    required this.surfaceIds,
+    required this.hostHandle,
+  });
+
+  final List<String> surfaceIds;
+  final genui.A2uiMessageProcessor hostHandle;
+
+  @override
+  Widget build(final BuildContext context) => ListView.builder(
     scrollCacheExtent: const ScrollCacheExtent.pixels(500),
     itemCount: surfaceIds.length,
     itemBuilder: (final context, final index) {
@@ -135,13 +162,30 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
       );
     },
   );
+}
 
-  Widget _buildInputRow({
-    required final BuildContext context,
-    required final bool isSending,
-  }) {
+class _GenUiInputRow extends StatelessWidget {
+  const _GenUiInputRow({
+    required this.textController,
+    required this.onSendMessage,
+  });
+
+  final TextEditingController textController;
+  final Future<void> Function() onSendMessage;
+
+  @override
+  Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final colors = Theme.of(context).colorScheme;
+    final isSending = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
+      selector: (final state) => state.when(
+        initial: () => false,
+        loading: (_, final isSending, _) => isSending,
+        ready: (_, _, final isSending) => isSending,
+        error: (_, _, _, final isSending) => isSending,
+      ),
+    );
+
     return SafeArea(
       child: Container(
         padding: EdgeInsets.all(context.responsiveGapM),
@@ -158,16 +202,16 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
             Expanded(
               child: PlatformAdaptive.textField(
                 context: context,
-                controller: _textController,
+                controller: textController,
                 hintText: l10n.genuiDemoHintText,
                 enabled: !isSending,
-                onSubmitted: (_) => _sendMessage(),
+                onSubmitted: (_) => onSendMessage(),
               ),
             ),
             SizedBox(width: context.responsiveGapS),
             PlatformAdaptive.filledButton(
               context: context,
-              onPressed: isSending ? null : _sendMessage,
+              onPressed: isSending ? null : onSendMessage,
               child: isSending
                   ? SizedBox(
                       width: 20,

@@ -27,16 +27,34 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
 
   @override
   Widget build(final BuildContext context) {
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<TherapistHomeCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context
+        .selectState<TherapistHomeCubit, TherapistHomeState, bool>(
+          selector: (final state) => state.isBusy,
+        );
+    final errorMessage = context
+        .selectState<TherapistHomeCubit, TherapistHomeState, String?>(
+          selector: (final state) => state.errorMessage,
+        );
+    final selectedAppointments = context
+        .selectState<TherapistHomeCubit, TherapistHomeState, List<Appointment>>(
+          selector: (final state) => state.appointments,
+        );
     final cubit = context.cubit<TherapistHomeCubit>();
-    final appointments = List<Appointment>.unmodifiable(state.appointments);
+    final appointments = List<Appointment>.unmodifiable(selectedAppointments);
 
     return CommonPageLayout(
       title: 'Appointments',
       actions: <Widget>[
         IconButton(
-          onPressed: state.isBusy ? null : () => cubit.refresh(),
+          onPressed: isBusy ? null : () => cubit.refresh(),
           icon: const Icon(Icons.refresh),
         ),
       ],
@@ -47,7 +65,7 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
             const Divider(height: 1),
         itemBuilder: (context, index) {
           if (index == 0) {
-            if (session.user == null) {
+            if (!isLoggedIn) {
               return const KeyedSubtree(
                 key: ValueKey(
                   'online-therapy-therapist-appointments-header-logged-out',
@@ -58,7 +76,7 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
                 ),
               );
             }
-            if (state.errorMessage case final String errorMessage?) {
+            if (errorMessage case final String message?) {
               return KeyedSubtree(
                 key: const ValueKey(
                   'online-therapy-therapist-appointments-header-error',
@@ -66,7 +84,7 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    errorMessage,
+                    message,
                     style: const TextStyle(color: Colors.red),
                   ),
                 ),
@@ -79,7 +97,7 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                  state.isBusy ? 'Loading…' : 'Your upcoming sessions.',
+                  isBusy ? 'Loading…' : 'Your upcoming sessions.',
                 ),
               ),
             );

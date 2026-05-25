@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
@@ -25,17 +26,33 @@ class _OnlineTherapyDemoAdminAuditPageState
 
   @override
   Widget build(final BuildContext context) {
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<AdminCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context.selectState<AdminCubit, AdminState, bool>(
+      selector: (final state) => state.isBusy,
+    );
+    final errorMessage = context.selectState<AdminCubit, AdminState, String?>(
+      selector: (final state) => state.errorMessage,
+    );
+    final selectedEvents = context
+        .selectState<AdminCubit, AdminState, List<AuditEvent>>(
+          selector: (final state) => state.auditEvents,
+        );
     final cubit = context.cubit<AdminCubit>();
 
-    final events = state.auditEvents.reversed.toList(growable: false);
+    final events = selectedEvents.reversed.toList(growable: false);
 
     return CommonPageLayout(
       title: 'Audit feed',
       actions: <Widget>[
         IconButton(
-          onPressed: state.isBusy ? null : () => cubit.refresh(),
+          onPressed: isBusy ? null : () => cubit.refresh(),
           icon: const Icon(Icons.refresh),
         ),
       ],
@@ -46,7 +63,7 @@ class _OnlineTherapyDemoAdminAuditPageState
             const Divider(height: 1),
         itemBuilder: (context, index) {
           if (index == 0) {
-            if (session.user == null) {
+            if (!isLoggedIn) {
               return const KeyedSubtree(
                 key: ValueKey('online-therapy-admin-audit-header-logged-out'),
                 child: Padding(
@@ -55,13 +72,13 @@ class _OnlineTherapyDemoAdminAuditPageState
                 ),
               );
             }
-            if (state.errorMessage case final String errorMessage?) {
+            if (errorMessage case final String message?) {
               return KeyedSubtree(
                 key: const ValueKey('online-therapy-admin-audit-header-error'),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
-                    errorMessage,
+                    message,
                     style: const TextStyle(color: Colors.red),
                   ),
                 ),

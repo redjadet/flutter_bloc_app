@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
+import 'package:flutter_bloc_app/features/playlearn/domain/topic_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_cubit.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_state.dart';
@@ -42,21 +43,37 @@ class PlaylearnPage extends StatelessWidget {
       ),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
-        body: TypeSafeBlocBuilder<PlaylearnCubit, PlaylearnState>(
-          builder: (final context, final state) {
-            if (state.isLoading) {
+        body: Builder(
+          builder: (final context) {
+            final viewState = context
+                .selectState<
+                  PlaylearnCubit,
+                  PlaylearnState,
+                  ({
+                    bool isLoading,
+                    String? errorMessage,
+                    List<TopicItem> topics,
+                  })
+                >(
+                  selector: (final state) => (
+                    isLoading: state.isLoading,
+                    errorMessage: state.errorMessage,
+                    topics: state.topics,
+                  ),
+                );
+            if (viewState.isLoading) {
               return const CommonLoadingWidget();
             }
-            if (state.hasError) {
+            if (viewState.errorMessage case final String message?) {
               return CommonErrorView(
-                message: state.errorMessage ?? '',
+                message: message,
                 onRetry: () => context.cubit<PlaylearnCubit>().loadTopics(),
               );
             }
-            if (state.topics.isEmpty) {
+            if (viewState.topics.isEmpty) {
               return CommonEmptyState(message: l10n.playlearnNoTopics);
             }
-            final topics = List.of(state.topics, growable: false);
+            final topics = List.of(viewState.topics, growable: false);
             return ListView.separated(
               padding: context.pagePadding,
               itemCount: topics.length,

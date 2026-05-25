@@ -12,6 +12,23 @@ echo "2/3 Analyzing..."
 dart analyze lib/app/router/ lib/core/router/ lib/features/
 
 echo "3/3 Running router + feature tests..."
-flutter test test/app/router/ test/features/iot_demo/ test/core/router/app_routes_test.dart
+router_feature_stderr="$(mktemp -t router_feature_validate.XXXXXX.stderr)"
+trap 'rm -f "$router_feature_stderr"' EXIT
+
+run_router_feature_tests() {
+  flutter test test/app/router/ test/features/iot_demo/ test/core/router/app_routes_test.dart
+}
+
+rm -rf build/unit_test_assets
+
+if ! run_router_feature_tests 2> >(tee "$router_feature_stderr" >&2); then
+  if grep -Eq "build/unit_test_assets|NativeAssetsManifest\\.json|build/native_assets/macos/native_assets\\.json" "$router_feature_stderr"; then
+    echo "router_feature_validate: flutter unit_test_assets/native-assets failed; cleaning build assets and retrying once"
+    rm -rf build/unit_test_assets build/native_assets
+    run_router_feature_tests
+  else
+    exit 1
+  fi
+fi
 
 echo "Router/feature validation passed."

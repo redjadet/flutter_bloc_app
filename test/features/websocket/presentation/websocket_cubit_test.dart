@@ -117,6 +117,17 @@ void main() {
     },
   );
 
+  test('sendMessage returns false when disconnected', () async {
+    final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+
+    final bool didSend = await cubit.sendMessage('hi');
+
+    expect(didSend, isFalse);
+    verifyNever(() => repository.send(any()));
+
+    await cubit.close();
+  });
+
   blocTest<WebsocketCubit, WebsocketState>(
     'incoming error updates error message',
     build: () {
@@ -168,11 +179,11 @@ void main() {
       connectionController.add(const WebsocketConnectionState.connected());
       await Future<void>.delayed(Duration.zero);
 
-      final Future<void> a = cubit.sendMessage('a');
+      final Future<bool> a = cubit.sendMessage('a');
       await Future<void>.delayed(Duration.zero);
       expect(cubit.state.isSending, isTrue);
 
-      final Future<void> b = cubit.sendMessage('b');
+      final Future<bool> b = cubit.sendMessage('b');
       await Future<void>.delayed(Duration.zero);
       expect(cubit.state.isSending, isTrue);
 
@@ -199,9 +210,10 @@ void main() {
     connectionController.add(const WebsocketConnectionState.connected());
     await Future<void>.delayed(Duration.zero);
 
-    await cubit.sendMessage('x');
+    final bool didSend = await cubit.sendMessage('x');
     await Future<void>.delayed(Duration.zero);
 
+    expect(didSend, isFalse);
     expect(cubit.state.isSending, isFalse);
     expect(cubit.state.errorMessage, isNotNull);
 

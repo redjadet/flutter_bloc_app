@@ -82,11 +82,12 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await _repository.disconnect();
   }
 
-  Future<void> sendMessage(final String rawMessage) async {
+  Future<bool> sendMessage(final String rawMessage) async {
     final String message = rawMessage.trim();
     if (message.isEmpty || !state.isConnected) {
-      return;
+      return false;
     }
+    var sendSucceeded = false;
     _inFlightSends++;
     emit(
       state
@@ -106,6 +107,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
       isAlive: () => !isClosed,
       onSuccess: () {
         if (isClosed) return;
+        sendSucceeded = true;
         _decrementInFlightSends();
         emit(state.copyWith(isSending: _inFlightSends > 0));
       },
@@ -121,6 +123,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
       },
       logContext: 'WebsocketCubit.sendMessage',
     );
+    return sendSucceeded;
   }
 
   void _decrementInFlightSends() {

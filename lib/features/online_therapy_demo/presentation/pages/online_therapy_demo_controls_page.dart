@@ -27,15 +27,25 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
+    final controls = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          ({OnlineTherapyNetworkMode networkMode, bool isBusy})
+        >(
+          selector: (final state) => (
+            networkMode: state.networkMode,
+            isBusy: state.isBusy,
+          ),
+        );
     final List<Widget> items = <Widget>[
       Text(l10n.onlineTherapyDemoControlsIntro),
       const SizedBox(height: 12),
       DropdownButton<OnlineTherapyNetworkMode>(
         isExpanded: true,
-        value: state.networkMode,
-        onChanged: state.isBusy
+        value: controls.networkMode,
+        onChanged: controls.isBusy
             ? null
             : (v) => v == null ? null : session.setNetworkMode(v),
         items: OnlineTherapyNetworkMode.values
@@ -51,7 +61,7 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
       ),
       const SizedBox(height: 8),
       Text(
-        _explain(mode: state.networkMode, l10n: l10n),
+        _explain(mode: controls.networkMode, l10n: l10n),
         style: const TextStyle(color: Colors.black54),
       ),
     ];

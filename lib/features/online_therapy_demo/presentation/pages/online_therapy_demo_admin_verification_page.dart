@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
@@ -27,24 +28,40 @@ class _OnlineTherapyDemoAdminVerificationPageState
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<AdminCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context.selectState<AdminCubit, AdminState, bool>(
+      selector: (final state) => state.isBusy,
+    );
+    final errorMessage = context.selectState<AdminCubit, AdminState, String?>(
+      selector: (final state) => state.errorMessage,
+    );
+    final pendingTherapists = context
+        .selectState<AdminCubit, AdminState, List<TherapistProfile>>(
+          selector: (final state) => state.pendingTherapists,
+        );
     final cubit = context.cubit<AdminCubit>();
     final List<Widget> items = <Widget>[
-      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-      if (session.user == null) const SizedBox(height: 12),
-      if (state.errorMessage case final String errorMessage?)
+      if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
+      if (!isLoggedIn) const SizedBox(height: 12),
+      if (errorMessage case final String message?)
         Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
-            errorMessage,
+            message,
             style: const TextStyle(color: Colors.red),
           ),
         ),
-      if (state.pendingTherapists.isEmpty)
+      if (pendingTherapists.isEmpty)
         const ListTile(title: Text('No pending therapists.'))
       else
-        ...state.pendingTherapists.map(
+        ...pendingTherapists.map(
           (t) => Card(
             child: ListTile(
               title: Text(
@@ -58,7 +75,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
                 overflow: TextOverflow.ellipsis,
               ),
               trailing: ElevatedButton(
-                onPressed: state.isBusy ? null : () => cubit.approve(t.id),
+                onPressed: isBusy ? null : () => cubit.approve(t.id),
                 child: Text(l10n.approveButtonLabel),
               ),
             ),
@@ -70,7 +87,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
       title: l10n.onlineTherapyDemoNavTherapistVerification,
       actions: <Widget>[
         IconButton(
-          onPressed: state.isBusy ? null : () => cubit.refresh(),
+          onPressed: isBusy ? null : () => cubit.refresh(),
           icon: const Icon(Icons.refresh),
         ),
       ],

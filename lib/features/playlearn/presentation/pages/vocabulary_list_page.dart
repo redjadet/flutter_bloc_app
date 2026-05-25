@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
+import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_cubit.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_state.dart';
@@ -31,12 +32,23 @@ class VocabularyListPage extends StatelessWidget {
       )..loadWordsForTopic(topicId),
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
-        body: TypeSafeBlocBuilder<PlaylearnCubit, PlaylearnState>(
-          builder: (final context, final state) {
-            if (state.words.isEmpty && !state.isLoading) {
+        body: Builder(
+          builder: (final context) {
+            final viewState = context
+                .selectState<
+                  PlaylearnCubit,
+                  PlaylearnState,
+                  ({bool isLoading, List<VocabularyItem> words})
+                >(
+                  selector: (final state) => (
+                    isLoading: state.isLoading,
+                    words: state.words,
+                  ),
+                );
+            if (viewState.words.isEmpty && !viewState.isLoading) {
               return CommonEmptyState(message: l10n.playlearnNoWords);
             }
-            final words = List.of(state.words, growable: false);
+            final words = List.of(viewState.words, growable: false);
             return ListView.builder(
               itemCount: words.length,
               itemBuilder: (final context, final index) {

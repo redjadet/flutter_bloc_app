@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -39,12 +38,28 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.caseStudyRecordTitle,
-      body: BlocBuilder<CaseStudySessionCubit, CaseStudySessionState>(
-        builder: (context, state) {
-          if (state.hydration != CaseStudyHydrationStatus.ready) {
+      body: Builder(
+        builder: (final context) {
+          final viewState = context
+              .selectState<
+                CaseStudySessionCubit,
+                CaseStudySessionState,
+                ({
+                  CaseStudyHydrationStatus hydration,
+                  CaseStudyDraft draft,
+                  String? pickErrorKey,
+                })
+              >(
+                selector: (final state) => (
+                  hydration: state.hydration,
+                  draft: state.draft,
+                  pickErrorKey: state.pickErrorKey,
+                ),
+              );
+          if (viewState.hydration != CaseStudyHydrationStatus.ready) {
             return const Center(child: CircularProgressIndicator());
           }
-          final draft = state.draft;
+          final draft = viewState.draft;
           if (!draft.hasMetadata) {
             return const _CaseStudyStepRedirect(
               targetRouteName: AppRoutes.caseStudyDemoNew,
@@ -60,7 +75,7 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
           final int current = draft.currentQuestionIndex + 1;
           final int total = CaseStudyQuestions.orderedIds.length;
           final String? videoPath = draft.answers[qid];
-          final String? errKey = state.pickErrorKey;
+          final String? errKey = viewState.pickErrorKey;
 
           return ListView(
             padding: const EdgeInsets.symmetric(vertical: 8),

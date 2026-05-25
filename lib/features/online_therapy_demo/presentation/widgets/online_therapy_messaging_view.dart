@@ -34,14 +34,35 @@ class _OnlineTherapyMessagingViewState
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<MessagingCubit>().state;
+    final viewState = context
+        .selectState<
+          MessagingCubit,
+          MessagingState,
+          ({
+            bool isBusy,
+            List<Conversation> conversations,
+            List<Message> messages,
+            String? selectedConversationId,
+            String? draft,
+            String? errorMessage,
+          })
+        >(
+          selector: (final state) => (
+            isBusy: state.isBusy,
+            conversations: state.conversations,
+            messages: state.messages,
+            selectedConversationId: state.selectedConversationId,
+            draft: state.draft,
+            errorMessage: state.errorMessage,
+          ),
+        );
     final cubit = context.cubit<MessagingCubit>();
     final conversations = List<Conversation>.unmodifiable(
-      state.conversations,
+      viewState.conversations,
     );
-    final messages = List<Message>.unmodifiable(state.messages);
+    final messages = List<Message>.unmodifiable(viewState.messages);
 
-    final nextText = state.draft ?? '';
+    final nextText = viewState.draft ?? '';
     if (_controller.text != nextText) {
       _controller.value = _controller.value.copyWith(
         text: nextText,
@@ -49,7 +70,7 @@ class _OnlineTherapyMessagingViewState
       );
     }
 
-    if (state.errorMessage case final String errorMessage?) {
+    if (viewState.errorMessage case final String errorMessage?) {
       return Center(
         child: Text(
           errorMessage,
@@ -59,7 +80,7 @@ class _OnlineTherapyMessagingViewState
       );
     }
 
-    final convId = state.selectedConversationId;
+    final convId = viewState.selectedConversationId;
 
     Widget buildMessagesPane({required final bool compact}) {
       return Column(
@@ -94,7 +115,7 @@ class _OnlineTherapyMessagingViewState
                         trailing:
                             m.deliveryStatus == MessageDeliveryStatus.failed
                             ? TextButton(
-                                onPressed: state.isBusy
+                                onPressed: viewState.isBusy
                                     ? null
                                     : () => cubit.retry(m.id),
                                 child: Text(l10n.retryButtonShortLabel),
@@ -110,7 +131,7 @@ class _OnlineTherapyMessagingViewState
               children: <Widget>[
                 Expanded(
                   child: TextField(
-                    enabled: !state.isBusy && convId != null,
+                    enabled: !viewState.isBusy && convId != null,
                     controller: _controller,
                     decoration: InputDecoration(hintText: l10n.typeMessageHint),
                     onChanged: cubit.setDraft,
@@ -119,7 +140,7 @@ class _OnlineTherapyMessagingViewState
                 const SizedBox(width: 8),
                 if (compact)
                   IconButton(
-                    onPressed: state.isBusy || convId == null
+                    onPressed: viewState.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
                     icon: const Icon(Icons.send),
@@ -127,7 +148,7 @@ class _OnlineTherapyMessagingViewState
                   )
                 else
                   ElevatedButton(
-                    onPressed: state.isBusy || convId == null
+                    onPressed: viewState.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
                     child: Text(l10n.sendButtonLabel),
@@ -162,7 +183,7 @@ class _OnlineTherapyMessagingViewState
                         ),
                       )
                       .toList(growable: false),
-                  onChanged: state.isBusy
+                  onChanged: viewState.isBusy
                       ? null
                       : (final id) {
                           if (id == null) return;

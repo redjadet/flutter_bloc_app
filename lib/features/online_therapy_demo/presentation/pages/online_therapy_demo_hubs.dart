@@ -12,13 +12,20 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
     final List<Widget> items = <Widget>[
-      if (session.user == null)
+      if (!isLoggedIn)
         _LoggedOutPrompt(
           onGoToLanding: () => context.goNamed(AppRoutes.onlineTherapyDemo),
         ),
-      if (session.user == null) const SizedBox(height: 12),
+      if (!isLoggedIn) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.person_search_outlined),
         title: Text(l10n.onlineTherapyDemoNavTherapists),
@@ -66,13 +73,20 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
     final List<Widget> items = <Widget>[
-      if (session.user == null)
+      if (!isLoggedIn)
         _LoggedOutPrompt(
           onGoToLanding: () => context.goNamed(AppRoutes.onlineTherapyDemo),
         ),
-      if (session.user == null) const SizedBox(height: 12),
+      if (!isLoggedIn) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.event_available_outlined),
         title: Text(l10n.onlineTherapyDemoNavAppointments),
@@ -115,13 +129,20 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
     final List<Widget> items = <Widget>[
-      if (session.user == null)
+      if (!isLoggedIn)
         _LoggedOutPrompt(
           onGoToLanding: () => context.goNamed(AppRoutes.onlineTherapyDemo),
         ),
-      if (session.user == null) const SizedBox(height: 12),
+      if (!isLoggedIn) const SizedBox(height: 12),
       ListTile(
         leading: const Icon(Icons.verified_user_outlined),
         title: Text(l10n.onlineTherapyDemoNavTherapistVerification),

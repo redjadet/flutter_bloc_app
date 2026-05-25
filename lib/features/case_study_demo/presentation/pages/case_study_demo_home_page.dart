@@ -1,6 +1,5 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
@@ -21,9 +20,23 @@ class CaseStudyDemoHomePage extends StatelessWidget {
     );
     return CommonPageLayout(
       title: l10n.caseStudyDemoTitle,
-      body: BlocBuilder<CaseStudySessionCubit, CaseStudySessionState>(
-        builder: (context, state) {
-          if (state.hydration != CaseStudyHydrationStatus.ready) {
+      body: Builder(
+        builder: (final context) {
+          final viewState = context
+              .selectState<
+                CaseStudySessionCubit,
+                CaseStudySessionState,
+                ({
+                  CaseStudyHydrationStatus hydration,
+                  bool submitLocalHistoryFailed,
+                })
+              >(
+                selector: (final state) => (
+                  hydration: state.hydration,
+                  submitLocalHistoryFailed: state.submitLocalHistoryFailed,
+                ),
+              );
+          if (viewState.hydration != CaseStudyHydrationStatus.ready) {
             return const Center(child: CircularProgressIndicator());
           }
           return ListView(
@@ -37,7 +50,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
                 ),
               ),
               FilledButton(
-                onPressed: state.submitLocalHistoryFailed
+                onPressed: viewState.submitLocalHistoryFailed
                     ? null
                     : () async {
                         await context

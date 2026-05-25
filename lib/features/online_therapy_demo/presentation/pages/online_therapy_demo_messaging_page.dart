@@ -26,21 +26,30 @@ class _OnlineTherapyDemoMessagingPageState
 
   @override
   Widget build(final BuildContext context) {
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<MessagingCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context.selectState<MessagingCubit, MessagingState, bool>(
+      selector: (final state) => state.isBusy,
+    );
     final cubit = context.cubit<MessagingCubit>();
 
     return CommonPageLayout(
       title: 'Messaging',
       actions: <Widget>[
         IconButton(
-          onPressed: state.isBusy ? null : () => cubit.refresh(),
+          onPressed: isBusy ? null : () => cubit.refresh(),
           icon: const Icon(Icons.refresh),
         ),
       ],
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: session.user == null
+        child: !isLoggedIn
             ? const OnlineTherapyLoggedOutPrompt()
             : const OnlineTherapyMessagingView(),
       ),

@@ -25,19 +25,28 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
 
   @override
   Widget build(final BuildContext context) {
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<CallCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context.selectState<CallCubit, CallState, bool>(
+      selector: (final state) => state.isBusy,
+    );
     final cubit = context.cubit<CallCubit>();
     final List<Widget> items = <Widget>[
-      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-      if (session.user != null) const OnlineTherapyCallView(),
+      if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
+      if (isLoggedIn) const OnlineTherapyCallView(),
     ];
 
     return CommonPageLayout(
       title: 'Call',
       actions: <Widget>[
         IconButton(
-          onPressed: state.isBusy ? null : () => cubit.refresh(),
+          onPressed: isBusy ? null : () => cubit.refresh(),
           icon: const Icon(Icons.refresh),
         ),
       ],
