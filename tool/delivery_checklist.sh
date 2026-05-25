@@ -5,7 +5,7 @@
 # 2. dart format (changed Dart files only)
 # 3. flutter analyze
 # 4. Best practices validation (parallel static checks + mix_lint + optional focused tests)
-# 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0)
+# 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0/auto)
 
 set -euo pipefail
 
@@ -33,7 +33,7 @@ Options:
 Env overrides:
   CHECKLIST_MODE=full|fast
   CHECKLIST_ALLOW_REUSE=auto|0|1
-  CHECKLIST_RUN_COVERAGE=0|1
+  CHECKLIST_RUN_COVERAGE=auto|0|1
   CHECKLIST_RUN_FOCUSED_TESTS=auto|0|1
   CHECKLIST_RUN_MIX_LINT=auto|0|1
   CHECKLIST_RUN_TODO_LAYOUT_TESTS=auto|0|1
@@ -478,6 +478,58 @@ validate_tooling_only_dependencies() {
 }
 
 # Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
+collect_changed_files_from_worktree() {
+  {
+    git diff --name-only --diff-filter=ACMRTUXB
+    git diff --cached --name-only --diff-filter=ACMRTUXB
+    git ls-files --others --exclude-standard
+  }
+}
+
+collect_changed_files_from_ci() {
+  local event_name="${GITHUB_EVENT_NAME:-}"
+
+  if [ "$HAS_GIT_REPO" -ne 1 ] || [ -z "${CI:-}" ]; then
+    return 1
+  fi
+
+  case "$event_name" in
+    pull_request|pull_request_target)
+      # GitHub Actions usually checks out a synthetic merge commit for PRs.
+      # Diff against the base parent when available so CI can recover branch scope
+      # even from a clean checkout with no local git diff.
+      if git rev-parse --verify HEAD^1 >/dev/null 2>&1; then
+        git diff --name-only --diff-filter=ACMRTUXB HEAD^1..HEAD
+        return 0
+      fi
+
+      if [ -n "${GITHUB_BASE_REF:-}" ]; then
+        local remote_base="origin/$GITHUB_BASE_REF"
+        local merge_base=""
+        git fetch --no-tags --depth=50 origin \
+          "+refs/heads/$GITHUB_BASE_REF:refs/remotes/origin/$GITHUB_BASE_REF" >/dev/null 2>&1 || true
+        if git rev-parse --verify "$remote_base" >/dev/null 2>&1; then
+          merge_base="$(git merge-base HEAD "$remote_base" 2>/dev/null || true)"
+          if [ -n "$merge_base" ]; then
+            git diff --name-only --diff-filter=ACMRTUXB "$merge_base"...HEAD
+            return 0
+          fi
+        fi
+      fi
+      ;;
+    push|merge_group)
+      if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+        git diff --name-only --diff-filter=ACMRTUXB HEAD^..HEAD
+      else
+        git show --pretty='' --name-only --diff-filter=ACMRTUXB HEAD
+      fi
+      return 0
+      ;;
+  esac
+
+  return 1
+}
+
 collect_changed_files() {
   changed_files=()
   changed_dart_files=()
@@ -490,9 +542,11 @@ collect_changed_files() {
     changed_files+=("$file")
   done < <(
     {
-      git diff --name-only --diff-filter=ACMRTUXB
-      git diff --cached --name-only --diff-filter=ACMRTUXB
-      git ls-files --others --exclude-standard
+      if [ -n "${CI:-}" ] && collect_changed_files_from_ci; then
+        :
+      else
+        collect_changed_files_from_worktree
+      fi
     } | sort -u | sed '/^$/d'
   )
 
@@ -785,10 +839,6 @@ should_run_agent_asset_drift_check() {
 }
 
 should_run_flutter_analyze_auto() {
-  if [ -n "${CI:-}" ]; then
-    return 0
-  fi
-
   if [ "$HAS_GIT_REPO" -ne 1 ]; then
     return 0
   fi
@@ -815,8 +865,44 @@ should_run_flutter_analyze_auto() {
   return 1
 }
 
+should_run_coverage_auto() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      *.dart|\
+      analysis_options.yaml|\
+      pubspec.yaml|\
+      pubspec.lock|\
+      l10n.yaml|\
+      lib/l10n/*.arb|\
+      lib/*|\
+      test/*|\
+      integration_test/*|\
+      android/*|\
+      ios/*|\
+      macos/*|\
+      linux/*|\
+      windows/*|\
+      web/*|\
+      custom_lints/*)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 CHECKLIST_MODE="${CHECKLIST_MODE:-full}"
-RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-1}"
+RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-auto}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
@@ -877,9 +963,9 @@ if ! [[ "$CHECKLIST_MODE" =~ ^(full|fast)$ ]]; then
   CHECKLIST_MODE=full
 fi
 
-if ! [[ "$RUN_COVERAGE" =~ ^(0|1)$ ]]; then
-  echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using 1"
-  RUN_COVERAGE=1
+if ! [[ "$RUN_COVERAGE" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_COVERAGE='$RUN_COVERAGE'; using auto"
+  RUN_COVERAGE=auto
 fi
 
 if ! [[ "$RUN_FOCUSED_TESTS" =~ ^(auto|0|1)$ ]]; then
@@ -1530,10 +1616,19 @@ else
 fi
 echo ""
 
+should_run_coverage=1
+if [ "$RUN_COVERAGE" = "0" ]; then
+  should_run_coverage=0
+elif [ "$RUN_COVERAGE" = "auto" ]; then
+  if ! should_run_coverage_auto; then
+    should_run_coverage=0
+  fi
+fi
+
 should_run_focused_tests=1
 if [ "$RUN_FOCUSED_TESTS" = "0" ]; then
   should_run_focused_tests=0
-elif [ "$RUN_FOCUSED_TESTS" = "auto" ] && [ "$RUN_COVERAGE" = "1" ]; then
+elif [ "$RUN_FOCUSED_TESTS" = "auto" ] && [ "$should_run_coverage" -eq 1 ]; then
   should_run_focused_tests=0
 fi
 
@@ -1590,14 +1685,14 @@ fi
 echo "✅ All best practices validation checks passed"
 echo ""
 
-if [ "$RUN_COVERAGE" = "1" ]; then
+if [ "$should_run_coverage" -eq 1 ]; then
   # Step 5: Run test coverage
   echo "🧪 Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
   bash tool/test_coverage.sh
   echo "✅ Test coverage complete"
   echo ""
 else
-  echo "🧪 Step 5/5: Skipped coverage (CHECKLIST_RUN_COVERAGE=0)"
+  echo "🧪 Step 5/5: Skipped coverage (override with CHECKLIST_RUN_COVERAGE=1)"
   echo ""
 fi
 
