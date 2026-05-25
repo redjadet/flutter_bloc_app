@@ -75,6 +75,25 @@ void main() {
       expect(capped.chartCloses.length, 64);
     });
 
+    test('saveSnapshot does not overwrite newer cached row with older updatedAt',
+        () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final MarketFeedSnapshot newer = _sampleSnapshot(
+        lastPrice: 200,
+        updatedAt: DateTime.utc(2024, 6, 2),
+      );
+      final MarketFeedSnapshot older = _sampleSnapshot(
+        lastPrice: 100,
+        updatedAt: DateTime.utc(2024, 6, 1),
+      );
+      await local.saveSnapshot('btc_usdt', newer);
+      await local.saveSnapshot('btc_usdt', older);
+      final MarketFeedSnapshot? cached = await local.loadCached('btc_usdt');
+      expect(cached?.lastPrice, 200);
+    });
+
     test('loadCached returns null for malformed Hive payload', () async {
       final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
         hiveService: hiveService,
@@ -158,4 +177,22 @@ void main() {
       await expectLater(repo.watch('btc_usdt'), emitsDone);
     });
   });
+}
+
+MarketFeedSnapshot _sampleSnapshot({
+  required final double lastPrice,
+  required final DateTime updatedAt,
+}) {
+  return MarketFeedSnapshot(
+    pairId: 'btc_usdt',
+    lastPrice: lastPrice,
+    changePct24h: 0,
+    connection: MarketConnectionStatus.live,
+    bids: const <OrderBookLevel>[],
+    asks: const <OrderBookLevel>[],
+    recentTrades: const <RecentTrade>[],
+    stats: const MarketStats(high24h: 1, low24h: 1, volume24h: 1),
+    chartCloses: const <double>[1],
+    updatedAt: updatedAt,
+  );
 }

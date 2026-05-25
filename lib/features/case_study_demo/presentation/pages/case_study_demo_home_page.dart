@@ -37,12 +37,16 @@ class CaseStudyDemoHomePage extends StatelessWidget {
                 ),
               ),
               FilledButton(
-                onPressed: () async {
-                  await context.cubit<CaseStudySessionCubit>().startNewCase();
-                  if (context.mounted) {
-                    await context.pushNamed(AppRoutes.caseStudyDemoNew);
-                  }
-                },
+                onPressed: state.submitLocalHistoryFailed
+                    ? null
+                    : () async {
+                        await context
+                            .cubit<CaseStudySessionCubit>()
+                            .startNewCase();
+                        if (context.mounted) {
+                          await context.pushNamed(AppRoutes.caseStudyDemoNew);
+                        }
+                      },
                 child: Text(l10n.caseStudyDemoNewCase),
               ),
               const SizedBox(height: 12),
