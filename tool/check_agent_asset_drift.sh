@@ -40,12 +40,30 @@ fi
 
 failures=0
 
+normalize_status_line() {
+  local raw="$1"
+  local line
+  local extracted=""
+
+  while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    if [[ "$line" =~ (ok|update|missing-source|missing-target|toolchain-drift|workspace-skill-duplicate)\|.*$ ]]; then
+      extracted="${BASH_REMATCH[0]}"
+    fi
+  done <<< "$raw"
+
+  printf '%s' "$extracted"
+}
+
 check_mapping() {
   local src_rel="$1"
   local dst="$2"
+  local raw_status
   local status
-  status="$(copy_file_if_needed "$src_rel" "$dst")" || true
-  echo "$status"
+
+  raw_status="$(copy_file_if_needed "$src_rel" "$dst")" || true
+  status="$(normalize_status_line "$raw_status")"
+  echo "${status:-$raw_status}"
   if [[ "${status%%|*}" != "ok" ]]; then
     failures=1
   fi
@@ -61,8 +79,9 @@ while IFS= read -r worktree_agent; do
   check_mapping "codex/AGENTS.md" "$worktree_agent"
 done < <(list_optional_codex_worktree_agent_targets)
 
-rules_status="$(check_codex_rules_block)" || true
-echo "$rules_status"
+rules_raw_status="$(check_codex_rules_block)" || true
+rules_status="$(normalize_status_line "$rules_raw_status")"
+echo "${rules_status:-$rules_raw_status}"
 if [[ "${rules_status%%|*}" != "ok" ]]; then
   failures=1
 fi
@@ -71,8 +90,9 @@ if ! check_toolchain_mentions; then
   failures=1
 fi
 
-dup_status="$(check_workspace_managed_skill_duplicates)" || true
-echo "$dup_status"
+dup_raw_status="$(check_workspace_managed_skill_duplicates)" || true
+dup_status="$(normalize_status_line "$dup_raw_status")"
+echo "${dup_status:-$dup_raw_status}"
 if [[ "${dup_status%%|*}" != "ok" ]]; then
   failures=1
 fi
