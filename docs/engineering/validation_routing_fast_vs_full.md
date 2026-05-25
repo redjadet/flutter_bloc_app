@@ -101,9 +101,14 @@ Behavior:
 
 Use for integration-covered workflows, release-candidate lanes, and upgrade lanes.
 
+Use `./bin/integration_preflight` first when you want the cheapest honest proof
+for browser/bootstrap seams (web-safe imports, fake Firebase bootstrap, log
+filter scoping, or generated SwiftPM patch drift) before the full device suite.
+
 Command:
 
 ```bash
+./bin/integration_preflight
 ./bin/integration_tests
 ```
 
