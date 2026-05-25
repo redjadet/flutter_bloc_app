@@ -1,6 +1,5 @@
 // check-ignore: nonbuilder_lists - small, fixed-size form
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/case_study_l10n_helpers.dart';
@@ -17,16 +16,36 @@ class CaseStudyMetadataPage extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.caseStudyDemoMetadataTitle,
-      body: BlocBuilder<CaseStudySessionCubit, CaseStudySessionState>(
-        builder: (context, state) {
-          if (state.hydration != CaseStudyHydrationStatus.ready) {
+      body: Builder(
+        builder: (final context) {
+          final viewState = context
+              .selectState<
+                CaseStudySessionCubit,
+                CaseStudySessionState,
+                ({
+                  CaseStudyHydrationStatus hydration,
+                  String caseId,
+                  String doctorName,
+                  String notes,
+                  CaseStudyCaseType? caseType,
+                })
+              >(
+                selector: (final state) => (
+                  hydration: state.hydration,
+                  caseId: state.draft.caseId,
+                  doctorName: state.draft.doctorName,
+                  notes: state.draft.notes,
+                  caseType: state.draft.caseType,
+                ),
+              );
+          if (viewState.hydration != CaseStudyHydrationStatus.ready) {
             return const Center(child: CircularProgressIndicator());
           }
           return _MetadataForm(
-            key: ValueKey<String>(state.draft.caseId),
-            initialDoctor: state.draft.doctorName,
-            initialNotes: state.draft.notes,
-            initialCaseType: state.draft.caseType,
+            key: ValueKey<String>(viewState.caseId),
+            initialDoctor: viewState.doctorName,
+            initialNotes: viewState.notes,
+            initialCaseType: viewState.caseType,
           );
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
@@ -16,13 +17,26 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<ClientBookingCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final slot = context
+        .selectState<ClientBookingCubit, ClientBookingState, AvailabilitySlot?>(
+          selector: (final state) => state.pendingBookingSlot,
+        );
+    final isBusy = context
+        .selectState<ClientBookingCubit, ClientBookingState, bool>(
+          selector: (final state) => state.isBusy,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
-    final slot = state.pendingBookingSlot;
     final List<Widget> items = <Widget>[
-      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-      if (session.user == null) const SizedBox(height: 12),
+      if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
+      if (!isLoggedIn) const SizedBox(height: 12),
       if (slot == null)
         const Card(
           child: Padding(
@@ -56,7 +70,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
       const SizedBox(height: 12),
       ResponsiveDualCtaRow(
         start: OutlinedButton(
-          onPressed: state.isBusy
+          onPressed: isBusy
               ? null
               : () {
                   cubit.clearPendingBookingSlot();
@@ -65,7 +79,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
           child: Text(l10n.cancelButtonLabel),
         ),
         end: ElevatedButton(
-          onPressed: state.isBusy || slot == null
+          onPressed: isBusy || slot == null
               ? null
               : () async {
                   await cubit.createAppointmentFromSlot(slot);
@@ -74,7 +88,7 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
                     AppRoutes.onlineTherapyDemoClientAppointments,
                   );
                 },
-          child: Text(state.isBusy ? 'Booking…' : 'Confirm'),
+          child: Text(isBusy ? 'Booking…' : 'Confirm'),
         ),
       ),
       const SizedBox(height: 12),

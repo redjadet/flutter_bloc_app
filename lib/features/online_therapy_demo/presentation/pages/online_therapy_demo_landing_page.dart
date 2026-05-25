@@ -13,16 +13,31 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
+    final user = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          TherapyUser?
+        >(
+          selector: (final state) => state.user,
+        );
+    final isBusy = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isBusy,
+        );
     final List<Widget> items = <Widget>[
       const Text(
         'Interview demo (simulated backend). Not production compliance.',
       ),
       const SizedBox(height: 12),
-      if (state.user == null) ...<Widget>[
+      if (user == null) ...<Widget>[
         TextField(
-          enabled: !state.isBusy,
+          enabled: !isBusy,
           decoration: const InputDecoration(
             labelText: 'Email',
             hintText: 'demo@example.com',
@@ -31,16 +46,16 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         ElevatedButton(
-          onPressed: state.isBusy ? null : () => session.login(),
-          child: Text(state.isBusy ? 'Signing in…' : 'Sign in'),
+          onPressed: isBusy ? null : () => session.login(),
+          child: Text(isBusy ? 'Signing in…' : 'Sign in'),
         ),
       ] else ...<Widget>[
         Text(
-          'User: ${state.user?.displayName} (${state.user?.maskedEmail})',
+          'User: ${user.displayName} (${user.maskedEmail})',
         ),
         const SizedBox(height: 8),
         ElevatedButton(
-          onPressed: state.isBusy ? null : () => session.logout(),
+          onPressed: isBusy ? null : () => session.logout(),
           child: Text(l10n.logoutButtonLabel),
         ),
       ],

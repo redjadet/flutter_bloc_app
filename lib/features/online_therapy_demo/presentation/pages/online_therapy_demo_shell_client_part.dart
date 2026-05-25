@@ -5,23 +5,46 @@ class _ClientBookingPanel extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final state = context.watchBloc<ClientBookingCubit>().state;
+    final viewState = context
+        .selectState<
+          ClientBookingCubit,
+          ClientBookingState,
+          ({
+            List<TherapistProfile> therapists,
+            String? selectedTherapistId,
+            TherapistProfile? selectedTherapist,
+            List<AvailabilitySlot> availability,
+            List<Appointment> appointments,
+            bool isBusy,
+            String? errorMessage,
+          })
+        >(
+          selector: (final state) => (
+            therapists: state.therapists,
+            selectedTherapistId: state.selectedTherapistId,
+            selectedTherapist: state.selectedTherapist,
+            availability: state.availability,
+            appointments: state.appointments,
+            isBusy: state.isBusy,
+            errorMessage: state.errorMessage,
+          ),
+        );
     final cubit = context.cubit<ClientBookingCubit>();
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final bool wide = constraints.maxWidth >= 900;
         final therapistList = _TherapistList(
-          therapists: state.therapists,
-          selectedId: state.selectedTherapistId,
+          therapists: viewState.therapists,
+          selectedId: viewState.selectedTherapistId,
           onSelect: cubit.selectTherapist,
         );
         final details = _TherapistDetails(
-          therapist: state.selectedTherapist,
-          availability: state.availability,
-          appointments: state.appointments,
-          isBusy: state.isBusy,
-          error: state.errorMessage,
+          therapist: viewState.selectedTherapist,
+          availability: viewState.availability,
+          appointments: viewState.appointments,
+          isBusy: viewState.isBusy,
+          error: viewState.errorMessage,
           onBook: cubit.createAppointmentFromSlot,
           onCancel: cubit.cancelAppointment,
           onRefresh: cubit.refresh,

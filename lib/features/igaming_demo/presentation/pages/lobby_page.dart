@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:go_router/go_router.dart';
 
 /// Lobby page for the iGaming demo: shows virtual balance and entry to game.
@@ -21,19 +20,57 @@ class LobbyPage extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.igamingDemoLobbyTitle,
-      body: TypeSafeBlocBuilder<LobbyCubit, LobbyState>(
-        builder: (final context, final state) {
-          return state.when(
-            initial: () => const _LoadingBody(),
-            loading: () => const _LoadingBody(),
-            ready: (final balance) => _ReadyBody(
-              balance: balance,
-              onPlayGame: () => context.go(AppRoutes.igamingDemoGamePath),
-            ),
-            error: (final message) => CommonErrorView(
+      body: Builder(
+        builder: (final context) {
+          final viewState = context
+              .selectState<
+                LobbyCubit,
+                LobbyState,
+                ({bool isLoading, DemoBalance? balance, String? errorMessage})
+              >(
+                selector: (final state) => state.when(
+                  initial: () => (
+                    isLoading: true,
+                    balance: null,
+                    errorMessage: null,
+                  ),
+                  loading: () => (
+                    isLoading: true,
+                    balance: null,
+                    errorMessage: null,
+                  ),
+                  ready: (final balance) => (
+                    isLoading: false,
+                    balance: balance,
+                    errorMessage: null,
+                  ),
+                  error: (final message) => (
+                    isLoading: false,
+                    balance: null,
+                    errorMessage: message,
+                  ),
+                ),
+              );
+
+          if (viewState.isLoading) {
+            return const _LoadingBody();
+          }
+
+          if (viewState.errorMessage case final String message?) {
+            return CommonErrorView(
               message: message,
               onRetry: () => context.cubit<LobbyCubit>().loadBalance(),
-            ),
+            );
+          }
+
+          final balance = viewState.balance;
+          if (balance == null) {
+            return const _LoadingBody();
+          }
+
+          return _ReadyBody(
+            balance: balance,
+            onPlayGame: () => context.go(AppRoutes.igamingDemoGamePath),
           );
         },
       ),

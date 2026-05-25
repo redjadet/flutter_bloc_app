@@ -106,27 +106,49 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>();
-    final state = session.state;
+    final role = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          TherapyRole
+        >(
+          selector: (final state) => state.role,
+        );
+    final user = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          TherapyUser?
+        >(
+          selector: (final state) => state.user,
+        );
+    final errorMessage = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          String?
+        >(
+          selector: (final state) => state.errorMessage,
+        );
 
     return CommonPageLayout(
       title: 'Online Therapy Demo',
       body: Column(
         children: <Widget>[
-          _TopControls(state: state),
-          if (state.errorMessage case final String errorMessage?)
+          const _TopControls(),
+          if (errorMessage case final String message?)
             Padding(
               padding: const EdgeInsets.all(12),
               child: Text(
-                errorMessage,
+                message,
                 style: const TextStyle(color: Colors.red),
               ),
             ),
           const Divider(height: 1),
           Expanded(
-            child: state.user == null
+            child: user == null
                 ? const _LoginPanel()
-                : switch (state.role) {
+                : switch (role) {
                     TherapyRole.client => const _ClientBookingPanel(),
                     TherapyRole.therapist => const _TherapistPanel(),
                     TherapyRole.admin => const _AdminPanel(),
@@ -139,13 +161,29 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
 }
 
 class _TopControls extends StatelessWidget {
-  const _TopControls({required this.state});
-
-  final OnlineTherapyDemoSessionState state;
+  const _TopControls();
 
   @override
   Widget build(final BuildContext context) {
     final cubit = context.cubit<OnlineTherapyDemoSessionCubit>();
+    final controls = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          ({
+            TherapyRole role,
+            OnlineTherapyNetworkMode networkMode,
+            bool isBusy,
+            TherapyUser? user,
+          })
+        >(
+          selector: (final state) => (
+            role: state.role,
+            networkMode: state.networkMode,
+            isBusy: state.isBusy,
+            user: state.user,
+          ),
+        );
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -158,8 +196,8 @@ class _TopControls extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 220),
             child: DropdownButton<TherapyRole>(
               isExpanded: true,
-              value: state.role,
-              onChanged: state.isBusy
+              value: controls.role,
+              onChanged: controls.isBusy
                   ? null
                   : (final v) {
                       if (v == null) return;
@@ -183,8 +221,8 @@ class _TopControls extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 220),
             child: DropdownButton<OnlineTherapyNetworkMode>(
               isExpanded: true,
-              value: state.networkMode,
-              onChanged: state.isBusy
+              value: controls.networkMode,
+              onChanged: controls.isBusy
                   ? null
                   : (final v) => v == null ? null : cubit.setNetworkMode(v),
               items: OnlineTherapyNetworkMode.values
@@ -200,13 +238,13 @@ class _TopControls extends StatelessWidget {
                   .toList(growable: false),
             ),
           ),
-          if (state.user != null)
+          if (controls.user != null)
             Text(
-              'User: ${state.user?.displayName} (${state.user?.maskedEmail})',
+              'User: ${controls.user?.displayName} (${controls.user?.maskedEmail})',
             ),
-          if (state.user != null)
+          if (controls.user != null)
             ElevatedButton(
-              onPressed: state.isBusy ? null : () => cubit.logout(),
+              onPressed: controls.isBusy ? null : () => cubit.logout(),
               child: Text(context.l10n.logoutButtonLabel),
             ),
         ],
@@ -228,7 +266,7 @@ class _LoginPanelState extends State<_LoginPanel> {
   @override
   void initState() {
     super.initState();
-    final state = context.read<OnlineTherapyDemoSessionCubit>().state;
+    final state = context.cubit<OnlineTherapyDemoSessionCubit>().state;
     _controller = TextEditingController(text: state.emailDraft ?? '');
   }
 
@@ -240,10 +278,20 @@ class _LoginPanelState extends State<_LoginPanel> {
 
   @override
   Widget build(final BuildContext context) {
-    final state = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
+    final viewState = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          ({String? emailDraft, bool isBusy})
+        >(
+          selector: (final state) => (
+            emailDraft: state.emailDraft,
+            isBusy: state.isBusy,
+          ),
+        );
     final cubit = context.cubit<OnlineTherapyDemoSessionCubit>();
 
-    final nextText = state.emailDraft ?? '';
+    final nextText = viewState.emailDraft ?? '';
     if (_controller.text != nextText) {
       _controller.value = _controller.value.copyWith(
         text: nextText,
@@ -265,7 +313,7 @@ class _LoginPanelState extends State<_LoginPanel> {
             const SizedBox(height: 12),
             TextField(
               controller: _controller,
-              enabled: !state.isBusy,
+              enabled: !viewState.isBusy,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 hintText: 'demo@example.com',
@@ -276,8 +324,8 @@ class _LoginPanelState extends State<_LoginPanel> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: state.isBusy ? null : () => cubit.login(),
-                child: Text(state.isBusy ? 'Signing in…' : 'Sign in'),
+                onPressed: viewState.isBusy ? null : () => cubit.login(),
+                child: Text(viewState.isBusy ? 'Signing in…' : 'Sign in'),
               ),
             ),
           ],

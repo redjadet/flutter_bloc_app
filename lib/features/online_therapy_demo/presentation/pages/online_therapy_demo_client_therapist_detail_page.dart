@@ -42,17 +42,37 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<ClientBookingCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final therapist = context
+        .selectState<ClientBookingCubit, ClientBookingState, TherapistProfile?>(
+          selector: (final state) => state.therapists
+              .where((final therapist) => therapist.id == widget.therapistId)
+              .cast<TherapistProfile?>()
+              .firstOrNull,
+        );
+    final availability = context
+        .selectState<
+          ClientBookingCubit,
+          ClientBookingState,
+          List<AvailabilitySlot>
+        >(
+          selector: (final state) => state.availability,
+        );
+    final isBusy = context
+        .selectState<ClientBookingCubit, ClientBookingState, bool>(
+          selector: (final state) => state.isBusy,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
-
-    final therapist = state.therapists
-        .where((t) => t.id == widget.therapistId)
-        .cast<TherapistProfile?>()
-        .firstOrNull;
     final List<Widget> items = <Widget>[
-      if (session.user == null) const OnlineTherapyLoggedOutPrompt(),
-      if (session.user == null) const SizedBox(height: 12),
+      if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
+      if (!isLoggedIn) const SizedBox(height: 12),
       if (therapist == null)
         const Text(
           'Therapist not found.',
@@ -88,7 +108,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
             ),
           ),
           IconButton(
-            onPressed: state.isBusy
+            onPressed: isBusy
                 ? null
                 : () {
                     // check-ignore: side_effects_build - user gesture (refresh).
@@ -100,13 +120,13 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           ),
         ],
       ),
-      if (state.availability.isEmpty)
+      if (availability.isEmpty)
         Padding(
           padding: const EdgeInsets.only(top: 8),
-          child: Text(state.isBusy ? 'Loading…' : 'No slots for today.'),
+          child: Text(isBusy ? 'Loading…' : 'No slots for today.'),
         )
       else
-        ...state.availability.map(
+        ...availability.map(
           (slot) => Card(
             child: ListTile(
               title: Text(
@@ -117,7 +137,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
               subtitle: Text('Status: ${slot.status.name}'),
               trailing: slot.status == AvailabilitySlotStatus.available
                   ? ElevatedButton(
-                      onPressed: state.isBusy
+                      onPressed: isBusy
                           ? null
                           : () {
                               cubit.setPendingBookingSlot(slot);

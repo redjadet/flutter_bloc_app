@@ -10,11 +10,34 @@ class OnlineTherapyCallView extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<CallCubit>().state;
+    final viewState = context
+        .selectState<
+          CallCubit,
+          CallState,
+          ({
+            bool isBusy,
+            bool cameraPermissionGranted,
+            bool microphonePermissionGranted,
+            List<Appointment> appointments,
+            String? selectedAppointmentId,
+            CallSession? session,
+            String? errorMessage,
+          })
+        >(
+          selector: (final state) => (
+            isBusy: state.isBusy,
+            cameraPermissionGranted: state.cameraPermissionGranted,
+            microphonePermissionGranted: state.microphonePermissionGranted,
+            appointments: state.appointments,
+            selectedAppointmentId: state.selectedAppointmentId,
+            session: state.session,
+            errorMessage: state.errorMessage,
+          ),
+        );
     final cubit = context.cubit<CallCubit>();
 
-    final apptId = state.selectedAppointmentId;
-    final session = state.session;
+    final apptId = viewState.selectedAppointmentId;
+    final session = viewState.session;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,10 +46,10 @@ class OnlineTherapyCallView extends StatelessWidget {
           isExpanded: true,
           value: apptId,
           hint: Text(l10n.selectAppointmentHintLabel),
-          onChanged: state.isBusy
+          onChanged: viewState.isBusy
               ? null
               : (final v) => v == null ? null : cubit.selectAppointment(v),
-          items: state.appointments
+          items: viewState.appointments
               .map(
                 (a) => DropdownMenuItem<String>(
                   value: a.id,
@@ -42,8 +65,8 @@ class OnlineTherapyCallView extends StatelessWidget {
         CheckboxListTile(
           contentPadding: EdgeInsets.zero,
           dense: true,
-          value: state.cameraPermissionGranted,
-          onChanged: state.isBusy
+          value: viewState.cameraPermissionGranted,
+          onChanged: viewState.isBusy
               ? null
               : (final v) =>
                     v == null ? null : cubit.toggleCameraPermission(granted: v),
@@ -53,8 +76,8 @@ class OnlineTherapyCallView extends StatelessWidget {
         CheckboxListTile(
           contentPadding: EdgeInsets.zero,
           dense: true,
-          value: state.microphonePermissionGranted,
-          onChanged: state.isBusy
+          value: viewState.microphonePermissionGranted,
+          onChanged: viewState.isBusy
               ? null
               : (final v) => v == null
                     ? null
@@ -68,20 +91,20 @@ class OnlineTherapyCallView extends StatelessWidget {
           runSpacing: 8,
           children: <Widget>[
             ElevatedButton(
-              onPressed: state.isBusy || apptId == null
+              onPressed: viewState.isBusy || apptId == null
                   ? null
                   : () => cubit.createSession(),
               child: Text(l10n.createSessionButtonLabel),
             ),
             ElevatedButton(
-              onPressed: state.isBusy || session == null
+              onPressed: viewState.isBusy || session == null
                   ? null
                   : () => cubit.join(),
               child: Text(l10n.joinButtonLabel),
             ),
           ],
         ),
-        if (state.errorMessage case final String errorMessage?)
+        if (viewState.errorMessage case final String errorMessage?)
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(

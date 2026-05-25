@@ -8,80 +8,227 @@ class WalletConnectAuthPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     return CommonPageLayout(
       title: context.l10n.walletconnectAuthTitle,
-      body: TypeSafeBlocBuilder<WalletConnectAuthCubit, WalletConnectAuthState>(
-        builder: (final context, final state) =>
-            _WalletConnectAuthContent(state: state),
-      ),
+      body: const _WalletConnectAuthContent(),
     );
   }
 }
 
 class _WalletConnectAuthContent extends StatelessWidget {
-  const _WalletConnectAuthContent({required this.state});
-
-  final WalletConnectAuthState state;
+  const _WalletConnectAuthContent();
 
   @override
   Widget build(final BuildContext context) {
-    final WalletConnectAuthCubit cubit = context
-        .cubit<WalletConnectAuthCubit>();
-
     return SingleChildScrollView(
       padding: context.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(height: context.responsiveGapL),
-          if (state.errorMessage case final msg?) ...<Widget>[
-            _StatusBannerCard.error(
-              message: msg,
-              onDismiss: cubit.clearError,
-            ),
-            SizedBox(height: context.responsiveGapM),
-          ],
-          if (state.isLinked) ...<Widget>[
-            _StatusBannerCard.success(
-              message: context.l10n.walletLinked,
-            ),
-            SizedBox(height: context.responsiveGapM),
-          ],
-          if (state.linkedWalletAddress case final addr?) ...<Widget>[
-            _LinkedWalletSection(
-              address: addr,
-              showRelinkButton: !state.isLoadingLinkedWallet,
-              onRelink: cubit.relinkWalletToUser,
-            ),
-            SizedBox(height: context.responsiveGapL),
-          ],
-          if (state.linkedProfile case final profile?) ...<Widget>[
-            _WalletProfileSection(profile: profile),
-            SizedBox(height: context.responsiveGapL),
-          ],
-          if (state.unlinkedWalletAddress case final addr?) ...<Widget>[
-            WalletAddressDisplay(address: addr),
-            SizedBox(height: context.responsiveGapM),
-          ],
-          if (state.showConnectButton)
-            ConnectWalletButton(onPressed: cubit.connectWallet),
-          if (state.showLinkButton) ...<Widget>[
-            PlatformAdaptive.outlinedButton(
-              context: context,
-              onPressed: cubit.linkWalletToUser,
-              child: Text(context.l10n.linkToFirebase),
-            ),
-            SizedBox(height: context.responsiveGapM),
-          ],
-          if (state.showLoadingIndicator) const _LoadingSection(),
-          if (state.isConnected) ...<Widget>[
-            SizedBox(height: context.responsiveGapM),
-            PlatformAdaptive.textButton(
-              context: context,
-              onPressed: state.isBusy ? null : cubit.disconnectWallet,
-              child: Text(context.l10n.disconnectWallet),
-            ),
-          ],
+          const _StatusSections(),
+          const _LinkedWalletSectionContainer(),
+          const _WalletProfileSectionContainer(),
+          const _UnlinkedWalletAddressSection(),
+          const _ActionSections(),
         ],
       ),
+    );
+  }
+}
+
+class _StatusSections extends StatelessWidget {
+  const _StatusSections();
+
+  @override
+  Widget build(final BuildContext context) {
+    final state = context
+        .selectState<
+          WalletConnectAuthCubit,
+          WalletConnectAuthState,
+          ({String? errorMessage, bool isLinked})
+        >(
+          selector: (final state) => (
+            errorMessage: state.errorMessage,
+            isLinked: state.isLinked,
+          ),
+        );
+
+    if (state.errorMessage == null && !state.isLinked) {
+      return const SizedBox.shrink();
+    }
+
+    final cubit = context.cubit<WalletConnectAuthCubit>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        if (state.errorMessage case final msg?) ...<Widget>[
+          _StatusBannerCard.error(
+            message: msg,
+            onDismiss: cubit.clearError,
+          ),
+          SizedBox(height: context.responsiveGapM),
+        ],
+        if (state.isLinked) ...<Widget>[
+          _StatusBannerCard.success(
+            message: context.l10n.walletLinked,
+          ),
+          SizedBox(height: context.responsiveGapM),
+        ],
+      ],
+    );
+  }
+}
+
+class _LinkedWalletSectionContainer extends StatelessWidget {
+  const _LinkedWalletSectionContainer();
+
+  @override
+  Widget build(final BuildContext context) {
+    final state = context
+        .selectState<
+          WalletConnectAuthCubit,
+          WalletConnectAuthState,
+          ({WalletAddress? address, bool showRelinkButton})
+        >(
+          selector: (final state) => (
+            address: state.linkedWalletAddress,
+            showRelinkButton: !state.isLoadingLinkedWallet,
+          ),
+        );
+
+    if (state.address case final address?) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _LinkedWalletSection(
+            address: address,
+            showRelinkButton: state.showRelinkButton,
+            onRelink: context
+                .cubit<WalletConnectAuthCubit>()
+                .relinkWalletToUser,
+          ),
+          SizedBox(height: context.responsiveGapL),
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}
+
+class _WalletProfileSectionContainer extends StatelessWidget {
+  const _WalletProfileSectionContainer();
+
+  @override
+  Widget build(final BuildContext context) {
+    final profile = context
+        .selectState<
+          WalletConnectAuthCubit,
+          WalletConnectAuthState,
+          WalletUserProfile?
+        >(
+          selector: (final state) => state.linkedProfile,
+        );
+
+    if (profile == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _WalletProfileSection(profile: profile),
+        SizedBox(height: context.responsiveGapL),
+      ],
+    );
+  }
+}
+
+class _UnlinkedWalletAddressSection extends StatelessWidget {
+  const _UnlinkedWalletAddressSection();
+
+  @override
+  Widget build(final BuildContext context) {
+    final address = context
+        .selectState<
+          WalletConnectAuthCubit,
+          WalletConnectAuthState,
+          WalletAddress?
+        >(
+          selector: (final state) => state.unlinkedWalletAddress,
+        );
+
+    if (address == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        WalletAddressDisplay(address: address),
+        SizedBox(height: context.responsiveGapM),
+      ],
+    );
+  }
+}
+
+class _ActionSections extends StatelessWidget {
+  const _ActionSections();
+
+  @override
+  Widget build(final BuildContext context) {
+    final l10n = context.l10n;
+    final cubit = context.cubit<WalletConnectAuthCubit>();
+    final state = context
+        .selectState<
+          WalletConnectAuthCubit,
+          WalletConnectAuthState,
+          ({
+            bool showConnectButton,
+            bool showLinkButton,
+            bool showLoadingIndicator,
+            bool isConnected,
+            bool isBusy,
+          })
+        >(
+          selector: (final state) => (
+            showConnectButton: state.showConnectButton,
+            showLinkButton: state.showLinkButton,
+            showLoadingIndicator: state.showLoadingIndicator,
+            isConnected: state.isConnected,
+            isBusy: state.isBusy,
+          ),
+        );
+
+    if (!state.showConnectButton &&
+        !state.showLinkButton &&
+        !state.showLoadingIndicator &&
+        !state.isConnected) {
+      return const SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        if (state.showConnectButton)
+          ConnectWalletButton(onPressed: cubit.connectWallet),
+        if (state.showLinkButton) ...<Widget>[
+          PlatformAdaptive.outlinedButton(
+            context: context,
+            onPressed: cubit.linkWalletToUser,
+            child: Text(l10n.linkToFirebase),
+          ),
+          SizedBox(height: context.responsiveGapM),
+        ],
+        if (state.showLoadingIndicator) const _LoadingSection(),
+        if (state.isConnected) ...<Widget>[
+          SizedBox(height: context.responsiveGapM),
+          PlatformAdaptive.textButton(
+            context: context,
+            onPressed: state.isBusy ? null : cubit.disconnectWallet,
+            child: Text(l10n.disconnectWallet),
+          ),
+        ],
+      ],
     );
   }
 }

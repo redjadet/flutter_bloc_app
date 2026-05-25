@@ -544,11 +544,8 @@ state file.
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
-import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/widgets/genui_demo_content.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class GenUiDemoPage extends StatelessWidget {
   const GenUiDemoPage({super.key});
@@ -558,12 +555,7 @@ class GenUiDemoPage extends StatelessWidget {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.genuiDemoPageTitle,
-      body: TypeSafeBlocSelector<GenUiDemoCubit, GenUiDemoState, GenUiDemoState>(
-        selector: (state) => state,
-        builder: (context, state) {
-          return GenUiDemoContent(state: state);
-        },
-      ),
+      body: const GenUiDemoContent(),
     );
   }
 }
@@ -584,9 +576,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 
 class GenUiDemoContent extends StatefulWidget {
-  const GenUiDemoContent({required this.state, super.key});
-
-  final GenUiDemoState state;
+  const GenUiDemoContent({super.key});
 
   @override
   State<GenUiDemoContent> createState() => _GenUiDemoContentState();
@@ -612,93 +602,49 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
 
   @override
   Widget build(BuildContext context) {
-    final state = widget.state;
-
-    return state.when(
-      initial: () => const CommonLoadingWidget(),
-      loading: (surfaceIds, isSending, hostHandle) => _buildContent(
-        context: context,
-        surfaceIds: surfaceIds,
-        isSending: isSending,
-        hostHandle: hostHandle,
-      ),
-      ready: (surfaceIds, isSending, hostHandle) => _buildContent(
-        context: context,
-        surfaceIds: surfaceIds,
-        isSending: isSending,
-        hostHandle: hostHandle,
-      ),
-      error: (message, surfaceIds, hostHandle) => Column(
-        children: [
-          Expanded(
-            child: CommonErrorView(message: message),
-          ),
-          if (hostHandle != null && surfaceIds.isNotEmpty)
-            Expanded(
-              child: _buildSurfacesList(
-                surfaceIds: surfaceIds,
-                hostHandle: hostHandle,
-              ),
-            ),
-          _buildInputRow(context: context, isSending: false),
-        ],
-      ),
+    final isInitial = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
+      selector: (state) =>
+          state.maybeWhen(initial: () => true, orElse: () => false),
     );
-  }
 
-  Widget _buildContent({
-    required BuildContext context,
-    required List<String> surfaceIds,
-    required bool isSending,
-    required A2uiMessageProcessor? hostHandle,
-  }) {
-    final l10n = context.l10n;
+    if (isInitial) {
+      return const CommonLoadingWidget();
+    }
+
     return Column(
       children: [
-        Expanded(
-          child: hostHandle != null && surfaceIds.isNotEmpty
-              ? _buildSurfacesList(
-                  surfaceIds: surfaceIds,
-                  hostHandle: hostHandle,
-                )
-              : Center(
-                  child: Text(
-                    l10n.genuiDemoHintText,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                ),
+        const Expanded(child: _GenUiMainSection()),
+        _GenUiInputRow(
+          textController: _textController,
+          onSendMessage: _sendMessage,
         ),
-        _buildInputRow(context: context, isSending: isSending),
       ],
     );
   }
+}
 
-  Widget _buildSurfacesList({
-    required List<String> surfaceIds,
-    required A2uiMessageProcessor hostHandle,
-  }) {
-    return ListView.builder(
-      cacheExtent: 500,
-      itemCount: surfaceIds.length,
-      itemBuilder: (context, index) {
-        final surfaceId = surfaceIds[index];
-        return RepaintBoundary(
-          key: ValueKey(surfaceId),
-          child: GenUiSurface(
-            host: hostHandle,
-            surfaceId: surfaceId,
-          ),
-        );
-      },
-    );
-  }
+class _GenUiInputRow extends StatelessWidget {
+  const _GenUiInputRow({
+    required this.textController,
+    required this.onSendMessage,
+  });
 
-  Widget _buildInputRow({
-    required BuildContext context,
-    required bool isSending,
-  }) {
+  final TextEditingController textController;
+  final Future<void> Function() onSendMessage;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = Theme.of(context).colorScheme;
+    final isSending = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
+      selector: (state) => state.when(
+        initial: () => false,
+        loading: (_, isSending, _) => isSending,
+        ready: (_, _, isSending) => isSending,
+        error: (_, _, _, isSending) => isSending,
+      ),
+    );
+
     return SafeArea(
       child: Container(
         padding: EdgeInsets.all(context.responsiveGapM),
@@ -713,16 +659,16 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
             Expanded(
               child: PlatformAdaptive.textField(
                 context: context,
-                controller: _textController,
+                controller: textController,
                 hintText: l10n.genuiDemoHintText,
                 enabled: !isSending,
-                onSubmitted: (_) => _sendMessage(),
+                onSubmitted: (_) => onSendMessage(),
               ),
             ),
             SizedBox(width: context.responsiveGapS),
             PlatformAdaptive.filledButton(
               context: context,
-              onPressed: isSending ? null : _sendMessage,
+              onPressed: isSending ? null : onSendMessage,
               child: isSending
                   ? SizedBox(
                       width: 20,

@@ -157,7 +157,8 @@ class _CaseStudyHistoryDetailPageState
     if (userId == null || userId.isEmpty) return;
 
     final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
-    final bool isRemote = remoteAuth.isConfigured && remoteAuth.currentUser != null;
+    final bool isRemote =
+        remoteAuth.isConfigured && remoteAuth.currentUser != null;
 
     try {
       if (isRemote) {

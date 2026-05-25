@@ -13,7 +13,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
   @override
   void initState() {
     super.initState();
-    final state = context.read<MessagingCubit>().state;
+    final state = context.cubit<MessagingCubit>().state;
     _controller = TextEditingController(text: state.draft ?? '');
   }
 
@@ -26,14 +26,35 @@ class _MessagingPanelState extends State<_MessagingPanel> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<MessagingCubit>().state;
+    final viewState = context
+        .selectState<
+          MessagingCubit,
+          MessagingState,
+          ({
+            bool isBusy,
+            List<Conversation> conversations,
+            List<Message> messages,
+            String? selectedConversationId,
+            String? draft,
+            String? errorMessage,
+          })
+        >(
+          selector: (final state) => (
+            isBusy: state.isBusy,
+            conversations: state.conversations,
+            messages: state.messages,
+            selectedConversationId: state.selectedConversationId,
+            draft: state.draft,
+            errorMessage: state.errorMessage,
+          ),
+        );
     final cubit = context.cubit<MessagingCubit>();
     final conversations = List<Conversation>.unmodifiable(
-      state.conversations,
+      viewState.conversations,
     );
-    final messages = List<Message>.unmodifiable(state.messages);
+    final messages = List<Message>.unmodifiable(viewState.messages);
 
-    final nextText = state.draft ?? '';
+    final nextText = viewState.draft ?? '';
     if (_controller.text != nextText) {
       _controller.value = _controller.value.copyWith(
         text: nextText,
@@ -41,7 +62,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
       );
     }
 
-    if (state.errorMessage case final String errorMessage?) {
+    if (viewState.errorMessage case final String errorMessage?) {
       return Center(
         child: Text(
           errorMessage,
@@ -51,7 +72,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
       );
     }
 
-    final convId = state.selectedConversationId;
+    final convId = viewState.selectedConversationId;
     Widget buildMessagesPane({
       required final bool compact,
     }) {
@@ -87,7 +108,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                         trailing:
                             m.deliveryStatus == MessageDeliveryStatus.failed
                             ? TextButton(
-                                onPressed: state.isBusy
+                                onPressed: viewState.isBusy
                                     ? null
                                     : () => cubit.retry(m.id),
                                 child: Text(l10n.retryButtonShortLabel),
@@ -103,7 +124,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
-                    enabled: !state.isBusy && convId != null,
+                    enabled: !viewState.isBusy && convId != null,
                     controller: _controller,
                     decoration: InputDecoration(hintText: l10n.typeMessageHint),
                     onChanged: cubit.setDraft,
@@ -112,7 +133,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                 const SizedBox(width: 8),
                 if (compact)
                   IconButton(
-                    onPressed: state.isBusy || convId == null
+                    onPressed: viewState.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
                     icon: const Icon(Icons.send),
@@ -120,7 +141,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                   )
                 else
                   ElevatedButton(
-                    onPressed: state.isBusy || convId == null
+                    onPressed: viewState.isBusy || convId == null
                         ? null
                         : () => cubit.send(),
                     child: Text(l10n.sendButtonLabel),
@@ -155,7 +176,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
                         ),
                       )
                       .toList(growable: false),
-                  onChanged: state.isBusy
+                  onChanged: viewState.isBusy
                       ? null
                       : (final id) {
                           if (id == null) return;
@@ -225,11 +246,34 @@ class _CallPanel extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final state = context.watchBloc<CallCubit>().state;
+    final viewState = context
+        .selectState<
+          CallCubit,
+          CallState,
+          ({
+            bool isBusy,
+            bool cameraPermissionGranted,
+            bool microphonePermissionGranted,
+            List<Appointment> appointments,
+            String? selectedAppointmentId,
+            CallSession? session,
+            String? errorMessage,
+          })
+        >(
+          selector: (final state) => (
+            isBusy: state.isBusy,
+            cameraPermissionGranted: state.cameraPermissionGranted,
+            microphonePermissionGranted: state.microphonePermissionGranted,
+            appointments: state.appointments,
+            selectedAppointmentId: state.selectedAppointmentId,
+            session: state.session,
+            errorMessage: state.errorMessage,
+          ),
+        );
     final cubit = context.cubit<CallCubit>();
 
-    final apptId = state.selectedAppointmentId;
-    final session = state.session;
+    final apptId = viewState.selectedAppointmentId;
+    final session = viewState.session;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,10 +286,10 @@ class _CallPanel extends StatelessWidget {
             DropdownButton<String>(
               value: apptId,
               hint: Text(l10n.selectAppointmentHintLabel),
-              onChanged: state.isBusy
+              onChanged: viewState.isBusy
                   ? null
                   : (final v) => v == null ? null : cubit.selectAppointment(v),
-              items: state.appointments
+              items: viewState.appointments
                   .map(
                     (a) => DropdownMenuItem<String>(
                       value: a.id,
@@ -257,8 +301,8 @@ class _CallPanel extends StatelessWidget {
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              value: state.cameraPermissionGranted,
-              onChanged: state.isBusy
+              value: viewState.cameraPermissionGranted,
+              onChanged: viewState.isBusy
                   ? null
                   : (final v) => v == null
                         ? null
@@ -269,8 +313,8 @@ class _CallPanel extends StatelessWidget {
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               dense: true,
-              value: state.microphonePermissionGranted,
-              onChanged: state.isBusy
+              value: viewState.microphonePermissionGranted,
+              onChanged: viewState.isBusy
                   ? null
                   : (final v) => v == null
                         ? null
@@ -279,20 +323,20 @@ class _CallPanel extends StatelessWidget {
               controlAffinity: ListTileControlAffinity.leading,
             ),
             ElevatedButton(
-              onPressed: state.isBusy || apptId == null
+              onPressed: viewState.isBusy || apptId == null
                   ? null
                   : () => cubit.createSession(),
               child: Text(l10n.createSessionButtonLabel),
             ),
             ElevatedButton(
-              onPressed: state.isBusy || session == null
+              onPressed: viewState.isBusy || session == null
                   ? null
                   : () => cubit.join(),
               child: Text(l10n.joinButtonLabel),
             ),
           ],
         ),
-        if (state.errorMessage case final String errorMessage?)
+        if (viewState.errorMessage case final String errorMessage?)
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Text(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
@@ -25,11 +26,22 @@ class _OnlineTherapyDemoClientTherapistsPageState
 
   @override
   Widget build(final BuildContext context) {
-    final state = context.watchBloc<ClientBookingCubit>().state;
+    final isBusy = context
+        .selectState<ClientBookingCubit, ClientBookingState, bool>(
+          selector: (final state) => state.isBusy,
+        );
+    final selectedTherapists = context
+        .selectState<
+          ClientBookingCubit,
+          ClientBookingState,
+          List<TherapistProfile>
+        >(
+          selector: (final state) => state.therapists,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
 
-    final therapists = state.therapists
-        .where((t) => t.isVerified)
+    final verifiedTherapists = selectedTherapists
+        .where((final therapist) => therapist.isVerified)
         .toList(growable: false);
 
     return CommonPageLayout(
@@ -38,7 +50,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
         onRefresh: cubit.loadTherapists,
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
-          itemCount: therapists.length + 1,
+          itemCount: verifiedTherapists.length + 1,
           separatorBuilder: (final context, final index) =>
               const Divider(height: 1),
           itemBuilder: (context, index) {
@@ -48,15 +60,13 @@ class _OnlineTherapyDemoClientTherapistsPageState
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    state.isBusy
-                        ? 'Loading…'
-                        : 'Select a therapist to view details.',
+                    isBusy ? 'Loading…' : 'Select a therapist to view details.',
                   ),
                 ),
               );
             }
 
-            final t = therapists[index - 1];
+            final t = verifiedTherapists[index - 1];
             return ListTile(
               key: ValueKey<String>('online-therapy-therapist-${t.id}'),
               title: Text(
@@ -70,7 +80,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
                 overflow: TextOverflow.ellipsis,
               ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: state.isBusy
+              onTap: isBusy
                   ? null
                   : () async {
                       await cubit.selectTherapist(t.id);

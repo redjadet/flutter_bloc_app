@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class WebsocketConnectionBanner extends StatelessWidget {
-  const WebsocketConnectionBanner({required this.state, super.key});
+  const WebsocketConnectionBanner({
+    required this.endpoint,
+    required this.isConnecting,
+    required this.isConnected,
+    required this.errorMessage,
+    super.key,
+  });
 
-  final WebsocketState state;
+  final Uri endpoint;
+  final bool isConnecting;
+  final bool isConnected;
+  final String? errorMessage;
 
   @override
   Widget build(final BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
-    if (state.errorMessage case final msg?) {
+    if (errorMessage case final msg?) {
       return SizedBox(
         width: double.infinity,
         child: CommonCard(
@@ -30,13 +38,13 @@ class WebsocketConnectionBanner extends StatelessWidget {
         ),
       );
     }
-    final String statusText = state.isConnected
-        ? l10n.websocketStatusConnected(state.endpoint.toString())
-        : l10n.websocketStatusConnecting(state.endpoint.toString());
-    final Color backgroundColor = state.isConnected
+    final String statusText = isConnected
+        ? l10n.websocketStatusConnected(endpoint.toString())
+        : l10n.websocketStatusConnecting(endpoint.toString());
+    final Color backgroundColor = isConnected
         ? theme.colorScheme.primaryContainer
         : theme.colorScheme.surfaceContainerHighest;
-    final Color foregroundColor = state.isConnected
+    final Color foregroundColor = isConnected
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.onSurfaceVariant;
     return SizedBox(
@@ -48,7 +56,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
         padding: context.allGapS,
         child: Row(
           children: [
-            if (state.isConnecting) ...[
+            if (isConnecting) ...[
               SizedBox(
                 width: context.responsiveIconSize * 0.67,
                 height: context.responsiveIconSize * 0.67,

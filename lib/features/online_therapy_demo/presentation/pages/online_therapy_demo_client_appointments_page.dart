@@ -29,10 +29,24 @@ class _OnlineTherapyDemoClientAppointmentsPageState
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final session = context.watchBloc<OnlineTherapyDemoSessionCubit>().state;
-    final state = context.watchBloc<ClientBookingCubit>().state;
+    final isLoggedIn = context
+        .selectState<
+          OnlineTherapyDemoSessionCubit,
+          OnlineTherapyDemoSessionState,
+          bool
+        >(
+          selector: (final state) => state.isLoggedIn,
+        );
+    final isBusy = context
+        .selectState<ClientBookingCubit, ClientBookingState, bool>(
+          selector: (final state) => state.isBusy,
+        );
+    final selectedAppointments = context
+        .selectState<ClientBookingCubit, ClientBookingState, List<Appointment>>(
+          selector: (final state) => state.appointments,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
-    final appointments = List<Appointment>.unmodifiable(state.appointments);
+    final appointments = List<Appointment>.unmodifiable(selectedAppointments);
 
     return CommonPageLayout(
       title: 'My appointments',
@@ -40,12 +54,12 @@ class _OnlineTherapyDemoClientAppointmentsPageState
         onRefresh: cubit.loadAppointments,
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
-          itemCount: session.user == null ? 1 : appointments.length + 1,
+          itemCount: !isLoggedIn ? 1 : appointments.length + 1,
           separatorBuilder: (final context, final index) =>
               const Divider(height: 1),
           itemBuilder: (context, index) {
             if (index == 0) {
-              if (session.user == null) {
+              if (!isLoggedIn) {
                 return const KeyedSubtree(
                   key: ValueKey(
                     'online-therapy-client-appointments-logged-out',
@@ -60,7 +74,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    state.isBusy ? 'Loading…' : 'Your booked sessions.',
+                    isBusy ? 'Loading…' : 'Your booked sessions.',
                   ),
                 ),
               );
@@ -87,7 +101,7 @@ class _OnlineTherapyDemoClientAppointmentsPageState
               trailing: a.status == AppointmentStatus.cancelled
                   ? null
                   : TextButton(
-                      onPressed: state.isBusy
+                      onPressed: isBusy
                           ? null
                           : () => cubit.cancelAppointment(a.id),
                       child: Text(l10n.cancelButtonLabel),
