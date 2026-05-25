@@ -69,7 +69,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.9.3
-  flutter_secure_storage: ^10.2.0
+  flutter_secure_storage: ^10.3.0
   flutter_svg: ^2.3.0
   flutter_tts: ^4.2.5
   freezed_annotation: ^3.1.0
@@ -98,7 +98,7 @@ dependencies:
   package_info_plus: ^9.0.1
   path: ^1.9.1
   path_provider: ^2.1.5
-  pdfrx: ^2.4.1
+  pdfrx: ^2.4.2
   provider: ^6.1.5
   responsive_framework: ^1.5.1
   retrofit: ^4.9.2
@@ -128,7 +128,7 @@ dev_dependencies:
   geolocator_platform_interface: ^4.2.6
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
-  google_sign_in_mocks: ^0.3.0
+  google_sign_in_mocks: ^0.4.1
   json_serializable: 6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
