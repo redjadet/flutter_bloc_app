@@ -57,10 +57,10 @@ env:
 
 jobs:
   changes:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
       run_integration: ${{ steps.scope.outputs.run_integration }}
+      run_integration_preflight: ${{ steps.scope.outputs.run_integration_preflight }}
       integration_target: ${{ steps.scope.outputs.integration_target }}
       integration_tier: ${{ steps.scope.outputs.integration_tier }}
       integration_phase: ${{ steps.scope.outputs.integration_phase }}
@@ -73,9 +73,23 @@ jobs:
         run: |
           set -euo pipefail
 
-          run_integration="${{ github.event.inputs.run_integration || 'false' }}"
-          integration_phase="${{ github.event.inputs.integration_phase || 'observe' }}"
-          integration_tier="${{ github.event.inputs.integration_tier || 'standard' }}"
+          event_name="${{ github.event_name }}"
+          run_integration="false"
+          run_integration_preflight="false"
+          integration_phase="enforced"
+          integration_tier="smoke"
+
+          case "$event_name" in
+            workflow_dispatch)
+              run_integration="${{ github.event.inputs.run_integration || 'false' }}"
+              run_integration_preflight="$run_integration"
+              integration_phase="${{ github.event.inputs.integration_phase || 'observe' }}"
+              integration_tier="${{ github.event.inputs.integration_tier || 'standard' }}"
+              ;;
+            pull_request|merge_group)
+              run_integration_preflight="true"
+              ;;
+          esac
 
           case "$integration_phase" in
             observe|non_blocking)
@@ -108,6 +122,7 @@ jobs:
 
           {
             echo "run_integration=$run_integration"
+            echo "run_integration_preflight=$run_integration_preflight"
             echo "integration_phase=$integration_phase"
             echo "integration_tier=$integration_tier"
             echo "integration_non_blocking=$integration_non_blocking"
@@ -188,14 +203,70 @@ jobs:
           name: coverage-lcov
           path: coverage/lcov.info
 
-  integration:
+  integration-preflight:
     needs: changes
+    runs-on: macos-latest
+    timeout-minutes: 20
+    continue-on-error: ${{ needs.changes.outputs.integration_non_blocking == 'true' }}
+    if: >-
+      needs.changes.outputs.run_integration_preflight == 'true'
+    outputs:
+      preflight_passed: ${{ steps.status.outputs.preflight_passed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Run integration preflight
+        id: run_preflight
+        run: ./bin/integration_preflight
+
+      - name: Capture preflight status
+        if: always()
+        id: status
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ steps.run_preflight.outcome }}" == "success" ]]; then
+            echo "preflight_passed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "preflight_passed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish integration preflight summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Integration preflight"
+            echo ""
+            echo "- event: \`${{ github.event_name }}\`"
+            echo "- tier: \`${{ needs.changes.outputs.integration_tier }}\`"
+            echo "- phase: \`${{ needs.changes.outputs.integration_phase }}\`"
+            echo "- preflight_passed: \`${{ steps.status.outputs.preflight_passed }}\`"
+            echo "- step_outcome: \`${{ steps.run_preflight.outcome }}\`"
+            echo ""
+            echo "The slower macOS simulator lane only starts when this preflight job passes during manual integration runs."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  integration:
+    needs: [changes, integration-preflight]
     runs-on: macos-latest
     timeout-minutes: 45
     continue-on-error: ${{ needs.changes.outputs.integration_non_blocking == 'true' }}
     if: >-
       github.event_name == 'workflow_dispatch' &&
-      needs.changes.outputs.run_integration == 'true'
+      needs.changes.outputs.run_integration == 'true' &&
+      needs.integration-preflight.outputs.preflight_passed == 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6

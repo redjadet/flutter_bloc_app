@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
@@ -21,9 +22,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../test/test_helpers.dart' as test_helpers;
-import '../test/test_helpers.dart' show waitForCounterCubitsToLoad;
 import 'graphql_fail_once_repository.dart';
+import 'test_harness_log_filtering.dart' as test_harness_log_filtering;
+import 'test_helpers_bridge.dart' as test_helpers;
+import 'test_helpers_bridge.dart' show waitForCounterCubitsToLoad;
 import 'widget_tester_pumps.dart';
 
 export 'widget_tester_pumps.dart';
@@ -139,18 +141,7 @@ void _assertNoUnexpectedIntegrationLogs() {
   }
 
   final String details = _unexpectedIntegrationLogs
-      .map((final entry) {
-        final StringBuffer buffer = StringBuffer()
-          ..write(entry.level.name)
-          ..write(': ')
-          ..write(entry.message);
-        if (entry.error != null) {
-          buffer
-            ..write(' | error=')
-            ..write(entry.error);
-        }
-        return buffer.toString();
-      })
+      .map(test_harness_log_filtering.formatIntegrationLogEntry)
       .join('\n');
   fail('Unexpected warning/error logs during integration test:\n$details');
 }

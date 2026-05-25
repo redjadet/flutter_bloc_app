@@ -7,6 +7,7 @@ This repo uses GitHub Actions as the merge gate + drift detector.
 Require these checks on `main`:
 
 - **`CI / build`**: runs `./bin/checklist` (analyze + repo static checks + mix_lint + coverage).
+- **`CI / integration-preflight`**: runs `./bin/integration_preflight` on PRs / merge queue to catch browser/bootstrap/import drift before slower simulator lanes.
 - **`Dependency Review / dependency-review`**: GitHub dependency review action.
 - **`OSV-Scanner PR Scan / scan-pr`**: vulnerability scan of `pubspec.lock`.
 
@@ -34,4 +35,25 @@ Workflow: [`.github/workflows/drift.yml`](../.github/workflows/drift.yml)
 - Full merge gate: `./bin/checklist`
 - Fast docs/tooling sanity: `./bin/checklist-fast`
 - Router/auth gates: `./bin/router_feature_validate`
+- Early integration/bootstrap guardrails: `./bin/integration_preflight`
 - Integration flows: `./bin/integration_tests`
+
+## Integration preflight on PRs
+
+`CI / integration-preflight` now runs automatically on:
+
+- `pull_request`
+- `merge_group`
+
+It executes `./bin/integration_preflight` as an early browser/bootstrap/import
+guard before any slower simulator-based integration lane is requested.
+
+## Manual integration rollout
+
+Workflow-dispatch integration now uses two macOS jobs in order:
+
+- **`CI / integration-preflight`**: runs `./bin/integration_preflight`
+- **`CI / integration`**: runs `./bin/integration_tests` only after preflight passes
+
+This keeps browser/bootstrap/import/patch drift failures visible before the
+slower simulator lane starts.

@@ -1,0 +1,9 @@
+#!/bin/bash
+# Shortcut command for running fast integration preflight checks.
+# Usage: integration_preflight
+# This runs tool/run_integration_preflight.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/run_integration_preflight.sh" "$@"

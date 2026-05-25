@@ -13,6 +13,8 @@
 # Optional env:
 #   INTEGRATION_TESTS_ENABLE_SELECTIVE (0|1) — narrow target via map + changed paths
 #   INTEGRATION_TESTS_CHANGED_FILES — comma/newline-separated paths for selective resolver
+#   INTEGRATION_TESTS_RUN_PREFLIGHT (0|1, default 1) — run fast browser/bootstrap guardrails first
+#   INTEGRATION_PREFLIGHT_WEB_DEVICE (default chrome; empty skips the web bootstrap smoke lane)
 #   INTEGRATION_TESTS_RETRY_ON_FAILURE (0|1, default 0) — skips retry when logs look like assertion failures
 #   INTEGRATION_TESTS_TIMEOUT_SECONDS (default 1800)
 #   INTEGRATION_TESTS_ALLOW_CONCURRENT (0|1, default 0) — bypass the single-run lock (unsafe)
@@ -39,6 +41,16 @@ cd "$PROJECT_ROOT"
 
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+
+RUN_PREFLIGHT_VALUE="$(printf '%s' "${INTEGRATION_TESTS_RUN_PREFLIGHT:-1}" | tr '[:upper:]' '[:lower:]')"
+case "$RUN_PREFLIGHT_VALUE" in
+  0|false|no)
+    bash "$PROJECT_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
+    ;;
+  *)
+    bash "$PROJECT_ROOT/tool/run_integration_preflight.sh"
+    ;;
+esac
 
 INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
