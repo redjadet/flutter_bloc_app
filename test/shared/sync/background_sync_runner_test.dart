@@ -2,6 +2,7 @@ import 'package:flutter_bloc_app/shared/sync/background_sync_runner.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_cycle_summary.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation_deferred_exception.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
@@ -311,6 +312,99 @@ void main() {
         verifyNever(() => repo.processOperation(staleHighCountOp));
         verify(() => pending.markCompleted(latestLowerCountOp.id)).called(1);
         verify(() => pending.markCompleted(staleHighCountOp.id)).called(1);
+      },
+    );
+
+    test(
+      'leaves deferred operations pending without markCompleted or markFailed',
+      () async {
+        final SyncOperation op = SyncOperation(
+          id: 'deferred-op',
+          entityType: 'test',
+          payload: const <String, dynamic>{'k': 'v'},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'deferred-key',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('test');
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        when(
+          () => repo.processOperation(any()),
+        ).thenThrow(const SyncOperationDeferredException());
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[op]);
+
+        final SyncCycleSummary summary = await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        expect(summary.operationsProcessed, 0);
+        expect(summary.operationsFailed, 0);
+        verifyNever(() => pending.markCompleted(any()));
+        verifyNever(
+          () => pending.markFailed(
+            operationId: any(named: 'operationId'),
+            nextRetryAt: any(named: 'nextRetryAt'),
+            retryCount: any(named: 'retryCount'),
+          ),
+        );
+      },
+    );
+
+    test(
+      'coalesces counter operations with equal createdAt to last pending op',
+      () async {
+        final DateTime sameInstant = DateTime.utc(2024, 1, 1, 12);
+        final SyncOperation firstCounterOp = SyncOperation(
+          id: 'counter-1',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 10},
+          createdAt: sameInstant,
+          idempotencyKey: 'counter-key-1',
+        );
+        final SyncOperation secondCounterOp = SyncOperation(
+          id: 'counter-2',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 7},
+          createdAt: sameInstant,
+          idempotencyKey: 'counter-key-2',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('counter');
+        when(() => repo.processOperation(any())).thenAnswer((_) async {});
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer(
+          (_) async => <SyncOperation>[firstCounterOp, secondCounterOp],
+        );
+        when(() => pending.markCompleted(any())).thenAnswer((_) async {});
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        verify(() => repo.processOperation(secondCounterOp)).called(1);
+        verifyNever(() => repo.processOperation(firstCounterOp));
+        verify(() => pending.markCompleted(secondCounterOp.id)).called(1);
+        verify(() => pending.markCompleted(firstCounterOp.id)).called(1);
       },
     );
 

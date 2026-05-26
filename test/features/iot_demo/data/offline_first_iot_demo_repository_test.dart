@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation_deferred_exception.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
@@ -340,7 +341,7 @@ void main() {
       expect(remoteRepository.addDeviceCalls, isEmpty);
     });
 
-    test('processOperation skips op for different user', () async {
+    test('processOperation defers op for different user', () async {
       final OfflineFirstIotDemoRepository repo = buildRepository(
         remote: remoteRepository,
       );
@@ -353,7 +354,10 @@ void main() {
         },
         idempotencyKey: 'test_other_user_1',
       );
-      await repo.processOperation(op);
+      expect(
+        () => repo.processOperation(op),
+        throwsA(isA<SyncOperationDeferredException>()),
+      );
       expect(remoteRepository.connectCalls, isEmpty);
     });
 

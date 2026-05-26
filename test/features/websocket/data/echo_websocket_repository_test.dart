@@ -61,6 +61,29 @@ void main() {
       await repository.dispose();
     });
 
+    test(
+      'concurrent connect waiters resume when the first attempt fails',
+      () async {
+        var connectAttempts = 0;
+        final EchoWebsocketRepository repository = EchoWebsocketRepository(
+          connector: (_) {
+            connectAttempts++;
+            throw Exception('connect failed');
+          },
+          connectionTimeout: Duration.zero,
+        );
+
+        final Future<void> first = repository.connect();
+        final Future<void> second = repository.connect();
+
+        await expectLater(first, throwsA(isA<Exception>()));
+        await expectLater(second, throwsA(isA<Exception>()));
+        expect(connectAttempts, 2);
+
+        await repository.dispose();
+      },
+    );
+
     test('emits error state when connector throws', () async {
       final EchoWebsocketRepository repository = EchoWebsocketRepository(
         connector: (_) => throw Exception('unable to connect'),
