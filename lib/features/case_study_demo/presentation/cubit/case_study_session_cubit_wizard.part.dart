@@ -2,9 +2,11 @@ part of 'case_study_session_cubit.dart';
 
 mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
   Future<void> startNewCase() async {
-    if (state.submitLocalHistoryFailed) {
+    if (state.submitLocalHistoryFailed || state.isSubmitting) {
       return;
     }
+    _pickGuard.invalidate();
+    _commitGuard.invalidate();
     final String? userId = _requireUserId();
     if (userId == null) return;
     await _local.ensureReady();

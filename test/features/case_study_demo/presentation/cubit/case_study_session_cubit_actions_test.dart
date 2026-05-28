@@ -143,6 +143,14 @@ class _AlwaysFailingSaveRecordsLocalRepository extends _MemoryLocalRepository {
   }
 }
 
+/// Fails [clearDraft] after [saveRecords] so history is written but persist aborts.
+class _ClearDraftAlwaysFailsLocalRepository extends _MemoryLocalRepository {
+  @override
+  Future<void> clearDraft(final String userId) async {
+    throw StateError('clearDraft always fails');
+  }
+}
+
 class _StubVideoRepository implements CaseStudyVideoRepository {
   @override
   Future<MediaPickResult> pickVideoFromCamera() async =>
@@ -497,6 +505,40 @@ void main() {
       await auth.dispose();
     });
 
+    test('startNewCase is blocked while submit is in flight', () async {
+      final _StubAuthRepository auth = _StubAuthRepository(
+        const AuthUser(id: 'user-1', isAnonymous: false),
+      );
+      final _MemoryLocalRepository local = _MemoryLocalRepository();
+      final _SpyClipFileStore clipStore = _SpyClipFileStore();
+
+      final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+        authRepository: auth,
+        localRepository: local,
+        videoRepository: _StubVideoRepository(),
+        uploadRepository: _StubUploadRepository(),
+        clipStore: clipStore,
+        remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+        remoteBackendAuth: _StubRemoteBackendAuth(),
+        remoteRepository: _StubRemoteRepository(),
+        timerService: DefaultTimerService(),
+      );
+
+      final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
+      await local.saveDraft('user-1', draft);
+      await cubit.hydrate();
+      cubit.emit(cubit.state.copyWith(isSubmitting: true));
+
+      await cubit.startNewCase();
+
+      expect(clipStore.deleteCount, 0);
+      final CaseStudyDraft? unchanged = await local.loadDraft('user-1');
+      expect(unchanged?.caseId, 'case-1');
+
+      await cubit.close();
+      await auth.dispose();
+    });
+
     test(
       'startNewCase is blocked when submitLocalHistoryFailed is set',
       () async {
@@ -799,6 +841,62 @@ void main() {
       await cubit.close();
       await auth.dispose();
     });
+
+    test(
+      'retryPersistLocalHistoryAfterRemote does not duplicate history rows',
+      () async {
+        final _StubAuthRepository auth = _StubAuthRepository(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        );
+        final _ClearDraftAlwaysFailsLocalRepository local =
+            _ClearDraftAlwaysFailsLocalRepository();
+        final _SpyRemoteRepository remote = _SpyRemoteRepository();
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          remoteBackendAuth: _StubRemoteBackendAuth(
+            configured: true,
+            user: const AuthUser(id: 'supa-1', isAnonymous: false),
+          ),
+          remoteRepository: remote,
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudyDraft draft = CaseStudyDraft(
+          caseId: 'case-dedupe',
+          doctorName: 'Dr. Ada',
+          caseType: CaseStudyCaseType.implant,
+          notes: 'notes',
+          answers: <String, String>{
+            for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
+              id: '/tmp/$id.mp4',
+          },
+          phase: CaseStudyDraftPhase.reviewing,
+          currentQuestionIndex: 0,
+          remoteObjectKeysByQuestion: const <String, String>{},
+        );
+        await local.saveDraft('user-1', draft);
+        await cubit.hydrate();
+
+        await cubit.submitMockUpload();
+
+        expect(cubit.state.submitLocalHistoryFailed, isTrue);
+        expect(await local.loadRecords('user-1'), hasLength(1));
+
+        await cubit.retryPersistLocalHistoryAfterRemote();
+
+        expect(await local.loadRecords('user-1'), hasLength(1));
+        expect((await local.loadRecords('user-1')).first.id, 'case-dedupe');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
 
     test(
       'retryPersistLocalHistoryAfterRemote completes local history',

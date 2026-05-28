@@ -29,11 +29,13 @@ class CaseStudyDemoHomePage extends StatelessWidget {
                 ({
                   CaseStudyHydrationStatus hydration,
                   bool submitLocalHistoryFailed,
+                  bool isSubmitting,
                 })
               >(
                 selector: (final state) => (
                   hydration: state.hydration,
                   submitLocalHistoryFailed: state.submitLocalHistoryFailed,
+                  isSubmitting: state.isSubmitting,
                 ),
               );
           if (viewState.hydration != CaseStudyHydrationStatus.ready) {
@@ -50,7 +52,8 @@ class CaseStudyDemoHomePage extends StatelessWidget {
                 ),
               ),
               FilledButton(
-                onPressed: viewState.submitLocalHistoryFailed
+                onPressed:
+                    viewState.submitLocalHistoryFailed || viewState.isSubmitting
                     ? null
                     : () async {
                         await context

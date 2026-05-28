@@ -22,9 +22,12 @@ mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
             notes: state.draft.notes,
             answers: Map<String, String>.from(state.draft.answers),
           );
+          final List<CaseStudyRecord> withoutDuplicate = records
+              .where((final CaseStudyRecord r) => r.id != caseId)
+              .toList();
           final List<CaseStudyRecord> nextRecords = <CaseStudyRecord>[
             record,
-            ...records,
+            ...withoutDuplicate,
           ];
           await _local.saveRecords(userId, nextRecords);
           await _local.clearDraft(userId);
