@@ -81,9 +81,9 @@ _CoalescedPendingOperations _coalescePendingOperations(
       if (a.createdAt.isAfter(b.createdAt)) {
         return a;
       }
-      final int countA = _counterCountFromPayload(a.payload);
-      final int countB = _counterCountFromPayload(b.payload);
-      return countB > countA ? b : a;
+      // Same timestamp: prefer the later enqueued op (pending list is sorted by
+      // createdAt, so the right-hand operand is newer when timestamps tie).
+      return b;
     });
     operations.add(latestCounterOp);
     for (final SyncOperation op in counterOps) {
@@ -201,13 +201,6 @@ Map<String, Object?> _telemetryPayload(final SyncCycleSummary summary) {
     'lastErrorByEntity': summary.lastErrorByEntity,
     'retrySuccessRate': summary.retrySuccessRate,
   };
-}
-
-int _counterCountFromPayload(final Map<String, dynamic> payload) {
-  final dynamic count = payload['count'];
-  if (count is int) return count;
-  if (count is num) return count.toInt();
-  return 0;
 }
 
 final class _PullRemoteResult {

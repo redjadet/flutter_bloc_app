@@ -268,6 +268,54 @@ void main() {
     );
 
     test(
+      'coalesces counter operations to later enqueue when createdAt ties',
+      () async {
+        final DateTime sameTime = DateTime.utc(2024, 1, 1, 10);
+        final SyncOperation firstCounterOp = SyncOperation(
+          id: 'counter-1',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 10},
+          createdAt: sameTime,
+          idempotencyKey: 'counter-key-1',
+        );
+        final SyncOperation secondCounterOp = SyncOperation(
+          id: 'counter-2',
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 9},
+          createdAt: sameTime,
+          idempotencyKey: 'counter-key-2',
+        );
+        final _MockSyncableRepository repo = _MockSyncableRepository();
+        when(() => repo.entityType).thenReturn('counter');
+        when(() => repo.processOperation(any())).thenAnswer((_) async {});
+        when(() => repo.pullRemote()).thenAnswer((_) async {});
+        registry.register(repo);
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer(
+          (_) async => <SyncOperation>[firstCounterOp, secondCounterOp],
+        );
+        when(() => pending.markCompleted(any())).thenAnswer((_) async {});
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final _, final _) {},
+        );
+
+        verify(() => repo.processOperation(secondCounterOp)).called(1);
+        verifyNever(() => repo.processOperation(firstCounterOp));
+        verify(() => pending.markCompleted(secondCounterOp.id)).called(1);
+        verify(() => pending.markCompleted(firstCounterOp.id)).called(1);
+      },
+    );
+
+    test(
       'coalesces counter operations to latest createdAt when count decreases',
       () async {
         final SyncOperation staleHighCountOp = SyncOperation(
