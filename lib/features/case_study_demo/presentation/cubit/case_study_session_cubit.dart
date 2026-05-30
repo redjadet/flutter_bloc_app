@@ -158,6 +158,15 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
       }
       return;
     }
+    if (state.isSubmitting) {
+      emit(
+        state.copyWith(
+          hydration: CaseStudyHydrationStatus.ready,
+          clearPickError: true,
+        ),
+      );
+      return;
+    }
     emit(
       state.copyWith(
         hydration: CaseStudyHydrationStatus.ready,

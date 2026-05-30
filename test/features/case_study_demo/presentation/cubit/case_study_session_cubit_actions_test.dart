@@ -497,6 +497,40 @@ void main() {
       await auth.dispose();
     });
 
+    test('startNewCase is blocked while submit is in flight', () async {
+      final _StubAuthRepository auth = _StubAuthRepository(
+        const AuthUser(id: 'user-1', isAnonymous: false),
+      );
+      final _MemoryLocalRepository local = _MemoryLocalRepository();
+      final _SpyClipFileStore clipStore = _SpyClipFileStore();
+
+      final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+        authRepository: auth,
+        localRepository: local,
+        videoRepository: _StubVideoRepository(),
+        uploadRepository: _StubUploadRepository(),
+        clipStore: clipStore,
+        remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+        remoteBackendAuth: _StubRemoteBackendAuth(),
+        remoteRepository: _StubRemoteRepository(),
+        timerService: DefaultTimerService(),
+      );
+
+      final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
+      await local.saveDraft('user-1', draft);
+      await cubit.hydrate();
+      cubit.emit(cubit.state.copyWith(isSubmitting: true));
+
+      await cubit.startNewCase();
+
+      expect(clipStore.deleteCount, 0);
+      final CaseStudyDraft? unchanged = await local.loadDraft('user-1');
+      expect(unchanged?.caseId, 'case-1');
+
+      await cubit.close();
+      await auth.dispose();
+    });
+
     test(
       'startNewCase is blocked when submitLocalHistoryFailed is set',
       () async {
