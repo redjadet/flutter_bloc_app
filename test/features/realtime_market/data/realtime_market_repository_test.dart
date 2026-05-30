@@ -131,6 +131,54 @@ void main() {
       await repo.dispose();
     });
 
+    test('reconnect does not replace richer cached snapshot with feed bootstrap',
+        () async {
+      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
+        hiveService: hiveService,
+      );
+      final MarketFeedSnapshot rich = _sampleSnapshot(
+        lastPrice: 44000,
+        updatedAt: DateTime.utc(2024, 6, 1, 10),
+      ).copyWith(
+        recentTrades: <RecentTrade>[
+          RecentTrade(
+            id: 't1',
+            price: 44000,
+            quantity: 1,
+            isBuy: true,
+            at: DateTime.utc(2024, 6, 1, 9),
+          ),
+        ],
+        chartCloses: <double>[43000, 43500, 44000],
+      );
+      await local.saveSnapshot('btc_usdt', rich);
+
+      final SimulatedMarketFeed feed = SimulatedMarketFeed(
+        random: Random(3),
+        timerService: DefaultTimerService(),
+        clock: () => DateTime.utc(2024, 6, 1, 12),
+      );
+      final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+        localDataSource: local,
+        feed: feed,
+      );
+      final List<MarketFeedSnapshot> out = <MarketFeedSnapshot>[];
+      final StreamSubscription<MarketFeedSnapshot> sub = repo
+          .watch('btc_usdt')
+          .listen(out.add);
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      await repo.reconnect('btc_usdt');
+      await Future<void>.delayed(const Duration(milliseconds: 80));
+      await sub.cancel();
+      await repo.dispose();
+
+      final MarketFeedSnapshot? cached = await local.loadCached('btc_usdt');
+      expect(cached, isNotNull);
+      expect(cached!.recentTrades.length, greaterThanOrEqualTo(1));
+      expect(cached.chartCloses.length, greaterThanOrEqualTo(3));
+      expect(cached.lastPrice, rich.lastPrice);
+    });
+
     test('reconnect restarts feed without throwing', () async {
       final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
         hiveService: hiveService,

@@ -130,8 +130,12 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     if (_disposed) {
       return;
     }
+    final MarketFeedSnapshot? resumeFrom = await _local.loadCached(pairId);
+    if (_disposed) {
+      return;
+    }
     final StreamSubscription<MarketFeedSnapshot> next = _feed
-        .watch(pairId)
+        .watch(pairId, resumeFrom: resumeFrom)
         .asyncMap(
           (final raw) => _persistSnapshotIfActive(pairId, capSnapshot(raw)),
         )
