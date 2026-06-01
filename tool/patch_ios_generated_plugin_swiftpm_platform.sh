@@ -25,3 +25,5 @@ elif grep -qE '\.iOS\("16\.0"\)' "$package_swift"; then
 else
   echo "warn|FlutterGeneratedPluginSwiftPackage|unexpected-platform-declaration" >&2
 fi
+
+bash "$(dirname "${BASH_SOURCE[0]}")/patch_ios_flutterfire_crashlytics_upload.sh"
