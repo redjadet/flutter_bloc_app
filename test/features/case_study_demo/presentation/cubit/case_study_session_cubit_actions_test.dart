@@ -599,6 +599,7 @@ void main() {
     );
 
     test(
+      'does not delete remote when submitLocalHistoryFailed is set',
       () async {
         final _StubAuthRepository auth = _StubAuthRepository(
           const AuthUser(id: 'user-1', isAnonymous: false),
