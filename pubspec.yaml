@@ -38,8 +38,8 @@ dependencies:
   app_links: ^6.4.1
   apple_maps_flutter: ^1.4.0
   cached_network_image: ^3.4.1
-  cloud_firestore: ^6.4.1
-  cloud_functions: ^6.3.1
+  cloud_firestore: ^6.5.0
+  cloud_functions: ^6.3.2
   collection: ^1.19.1
   confetti: ^0.8.0
   connectivity_plus: ^7.1.1
@@ -48,15 +48,15 @@ dependencies:
   dio: ^5.9.2
   equatable: ^2.0.8
   fancy_shimmer_image: ^2.0.3
-  firebase_analytics: ^12.4.1
+  firebase_analytics: ^12.4.2
   firebase_app_check: ^0.4.4+1
-  firebase_auth: ^6.5.1
-  firebase_core: ^4.9.0
-  firebase_crashlytics: ^5.2.2
-  firebase_database: ^12.4.1
-  firebase_messaging: ^16.2.2
-  firebase_remote_config: ^6.5.1
-  firebase_storage: ^13.4.1
+  firebase_auth: ^6.5.2
+  firebase_core: ^4.10.0
+  firebase_crashlytics: ^5.2.3
+  firebase_database: ^12.4.2
+  firebase_messaging: ^16.3.0
+  firebase_remote_config: ^6.5.2
+  firebase_storage: ^13.4.2
   firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.1
   firebase_ui_oauth_google: ^2.0.1
@@ -128,7 +128,7 @@ dev_dependencies:
   geolocator_platform_interface: ^4.2.6
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
-  google_sign_in_mocks: ^0.3.0
+  google_sign_in_mocks: ^0.4.1
   json_serializable: 6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
