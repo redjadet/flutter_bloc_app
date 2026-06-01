@@ -36,6 +36,10 @@
         "patch"
       ],
       "groupName": "dart-minor-patch",
+      "ignoreDeps": [
+        "google_sign_in_mocks",
+        "genui"
+      ],
       "schedule": [
         "after 9am and before 5pm on Monday to Friday"
       ]
