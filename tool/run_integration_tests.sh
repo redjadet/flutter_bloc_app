@@ -536,6 +536,30 @@ is_known_xcode_simulator_build_failure() {
     "$log_path"
 }
 
+ensure_ios_swift_package_checkouts() {
+  local device_id="$1"
+  local packages_dir="$PROJECT_ROOT/ios/Flutter/ephemeral/Packages/.packages"
+  local link
+
+  [ "$(uname -s)" = "Darwin" ] || return 0
+  is_ios_simulator_device "$device_id" || return 0
+  [ -d "$packages_dir" ] || return 0
+
+  for link in "$packages_dir"/*; do
+    [ -L "$link" ] || continue
+    if [ ! -e "$link" ]; then
+      log "Broken SwiftPM ephemeral symlink ($link). Resolving Xcode package dependencies..."
+      (
+        cd "$PROJECT_ROOT/ios"
+        xcodebuild -resolvePackageDependencies \
+          -workspace Runner.xcworkspace \
+          -scheme Runner
+      )
+      return 0
+    fi
+  done
+}
+
 recover_ios_simulator_after_build_failure() {
   local device_id="$1"
 
@@ -1098,6 +1122,7 @@ acquire_integration_lock "$@"
 
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
+ensure_ios_swift_package_checkouts "$DEVICE_ID"
 
 if command -v lcov >/dev/null 2>&1; then
   HAS_LCOV=1
