@@ -96,6 +96,27 @@ class _MutableSilentAuthRepository implements AuthRepository {
   Future<void> dispose() => _controller.close();
 }
 
+class _SwitchableAuthRepository implements AuthRepository {
+  _SwitchableAuthRepository(this.user);
+
+  AuthUser? user;
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+
+  void switchUser(final AuthUser? next) {
+    user = next;
+    _controller.add(next);
+  }
+
+  @override
+  AuthUser? get currentUser => user;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+
+  Future<void> dispose() => _controller.close();
+}
+
 /// Delays only the first [loadDraft] so [hydrate] can interleave auth changes.
 class _StallBeforeFirstLoadDraftRepository extends _MemoryLocalRepository {
   _StallBeforeFirstLoadDraftRepository(this._until);
@@ -537,7 +558,47 @@ void main() {
     );
 
     test(
-      'does not delete remote when submitLocalHistoryFailed is set',
+      'abandonCase and startNewCase are blocked while submit is in flight',
+      () async {
+        final _StubAuthRepository auth = _StubAuthRepository(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        );
+        final _MemoryLocalRepository local = _MemoryLocalRepository();
+        final _SpyClipFileStore clipStore = _SpyClipFileStore();
+        final _SpyRemoteDeleteRepository remoteDelete =
+            _SpyRemoteDeleteRepository();
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: clipStore,
+          remoteDeleteRepository: remoteDelete,
+          remoteBackendAuth: _StubRemoteBackendAuth(),
+          remoteRepository: _StubRemoteRepository(),
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
+        await local.saveDraft('user-1', draft);
+        await cubit.hydrate();
+        cubit.emit(cubit.state.copyWith(isSubmitting: true));
+
+        await cubit.startNewCase();
+        await cubit.abandonCase();
+
+        expect(clipStore.deleteCount, 0);
+        expect(remoteDelete.deleteCount, 0);
+        final CaseStudyDraft? unchanged = await local.loadDraft('user-1');
+        expect(unchanged?.caseId, 'case-1');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test(
       () async {
         final _StubAuthRepository auth = _StubAuthRepository(
           const AuthUser(id: 'user-1', isAnonymous: false),
@@ -967,6 +1028,60 @@ void main() {
 
         expect(cubit.state.hydration, CaseStudyHydrationStatus.ready);
         expect(cubit.state.draft.caseId, 'draft-b-only');
+
+        await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test(
+      'clears submit flags when auth user changes via authStateChanges',
+      () async {
+        final _SwitchableAuthRepository auth = _SwitchableAuthRepository(
+          const AuthUser(id: 'user-a', isAnonymous: false),
+        );
+        final _MemoryLocalRepository local = _MemoryLocalRepository();
+
+        await local.saveDraft(
+          'user-a',
+          CaseStudyDraft.fresh(caseId: 'draft-a-only'),
+        );
+        await local.saveDraft(
+          'user-b',
+          CaseStudyDraft.fresh(caseId: 'draft-b-only'),
+        );
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: local,
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          remoteBackendAuth: _StubRemoteBackendAuth(),
+          remoteRepository: _StubRemoteRepository(),
+          timerService: DefaultTimerService(),
+        );
+
+        await cubit.hydrate();
+        cubit.emit(
+          cubit.state.copyWith(
+            submitLocalHistoryFailed: true,
+            submitError: true,
+            isSubmitting: false,
+          ),
+        );
+
+        auth.switchUser(const AuthUser(id: 'user-b', isAnonymous: false));
+        await cubit.stream.firstWhere(
+          (final CaseStudySessionState s) =>
+              s.hydration == CaseStudyHydrationStatus.ready &&
+              s.draft.caseId == 'draft-b-only',
+        );
+
+        expect(cubit.state.submitLocalHistoryFailed, isFalse);
+        expect(cubit.state.submitError, isFalse);
+        expect(cubit.state.isSubmitting, isFalse);
 
         await cubit.close();
         await auth.dispose();

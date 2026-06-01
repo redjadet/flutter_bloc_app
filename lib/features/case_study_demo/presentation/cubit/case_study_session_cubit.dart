@@ -123,10 +123,15 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
     );
     final String? userId = _requireUserId();
     if (userId == null) {
+      _pendingSubmitSubmittedAtUtc = null;
       emit(
         state.copyWith(
           hydration: CaseStudyHydrationStatus.ready,
           draft: CaseStudyDraft.fresh(caseId: _newCaseId()),
+          isSubmitting: false,
+          submitError: false,
+          clearSubmitLocalHistoryFailed: true,
+          clearSubmitProgress: true,
         ),
       );
       return;
@@ -158,11 +163,16 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
       }
       return;
     }
+    _pendingSubmitSubmittedAtUtc = null;
     emit(
       state.copyWith(
         hydration: CaseStudyHydrationStatus.ready,
         draft: draft,
         clearPickError: true,
+        isSubmitting: false,
+        submitError: false,
+        clearSubmitLocalHistoryFailed: true,
+        clearSubmitProgress: true,
       ),
     );
   }

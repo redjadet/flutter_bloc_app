@@ -2,7 +2,7 @@ part of 'case_study_session_cubit.dart';
 
 mixin _CaseStudySessionCubitLifecycle on _CaseStudySessionCubitBase {
   Future<void> abandonCase() async {
-    if (state.submitLocalHistoryFailed) {
+    if (state.isSubmitting || state.submitLocalHistoryFailed) {
       return;
     }
     final String? userId = _requireUserId();
