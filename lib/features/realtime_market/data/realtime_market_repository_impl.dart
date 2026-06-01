@@ -130,10 +130,15 @@ class RealtimeMarketRepositoryImpl implements RealtimeMarketRepository {
     if (_disposed) {
       return;
     }
+    // asyncExpand (not asyncMap) so each persist completes before the next tick
+    // starts; overlapping asyncMap work could let an older snapshot overwrite a
+    // newer Hive row after a stale read in [RealtimeMarketLocalDataSource].
     final StreamSubscription<MarketFeedSnapshot> next = _feed
         .watch(pairId)
-        .asyncMap(
-          (final raw) => _persistSnapshotIfActive(pairId, capSnapshot(raw)),
+        .asyncExpand(
+          (final raw) => Stream<MarketFeedSnapshot>.fromFuture(
+            _persistSnapshotIfActive(pairId, capSnapshot(raw)),
+          ),
         )
         .listen(
           (e) {

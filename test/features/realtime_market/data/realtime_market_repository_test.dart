@@ -131,6 +131,41 @@ void main() {
       await repo.dispose();
     });
 
+    test(
+      'watch keeps newest cached snapshot when an older persist finishes last',
+      () async {
+        final MarketFeedSnapshot older = _sampleSnapshot(
+          lastPrice: 100,
+          updatedAt: DateTime.utc(2024, 6, 1),
+        );
+        final MarketFeedSnapshot newer = _sampleSnapshot(
+          lastPrice: 200,
+          updatedAt: DateTime.utc(2024, 6, 2),
+        );
+        final RealtimeMarketLocalDataSource local =
+            _SlowFirstPersistLocalDataSource(
+              hiveService: hiveService,
+              slowSnapshot: older,
+            );
+        final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+          localDataSource: local,
+          feed: _BurstMarketFeed(
+            snapshots: <MarketFeedSnapshot>[older, newer],
+          ),
+        );
+        final List<MarketFeedSnapshot> emitted = <MarketFeedSnapshot>[];
+        final StreamSubscription<MarketFeedSnapshot> sub = repo
+            .watch('btc_usdt')
+            .listen(emitted.add);
+        await Future<void>.delayed(const Duration(milliseconds: 120));
+        await sub.cancel();
+        expect(emitted.length, greaterThanOrEqualTo(2));
+        final MarketFeedSnapshot? cached = await repo.loadCached('btc_usdt');
+        expect(cached?.lastPrice, 200);
+        await repo.dispose();
+      },
+    );
+
     test('reconnect restarts feed without throwing', () async {
       final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
         hiveService: hiveService,
@@ -177,6 +212,47 @@ void main() {
       await expectLater(repo.watch('btc_usdt'), emitsDone);
     });
   });
+}
+
+/// Emits a fixed burst so repository persist ordering is exercised.
+class _BurstMarketFeed extends SimulatedMarketFeed {
+  _BurstMarketFeed({required this.snapshots})
+    : super(
+        random: Random(0),
+        timerService: DefaultTimerService(),
+        clock: () => DateTime.utc(2024),
+      );
+
+  final List<MarketFeedSnapshot> snapshots;
+
+  @override
+  Stream<MarketFeedSnapshot> watch(final String pairId) async* {
+    for (final MarketFeedSnapshot snapshot in snapshots) {
+      yield snapshot;
+    }
+  }
+}
+
+/// Delays the first matching persist so a newer tick can finish writing first.
+class _SlowFirstPersistLocalDataSource extends RealtimeMarketLocalDataSource {
+  _SlowFirstPersistLocalDataSource({
+    required super.hiveService,
+    required this.slowSnapshot,
+  });
+
+  final MarketFeedSnapshot slowSnapshot;
+
+  @override
+  Future<void> saveSnapshot(
+    final String pairId,
+    final MarketFeedSnapshot snapshot,
+  ) async {
+    if (snapshot.updatedAt == slowSnapshot.updatedAt &&
+        snapshot.lastPrice == slowSnapshot.lastPrice) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+    }
+    return super.saveSnapshot(pairId, snapshot);
+  }
 }
 
 MarketFeedSnapshot _sampleSnapshot({
