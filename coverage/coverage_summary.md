@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.43%** (20928/28501 lines)
+*Total line coverage*: **73.43%** (20927/28501 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -342,6 +342,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/case_study_demo/domain/case_study_record.dart` | 87.23% | 41/47 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit.dart` | 87.25% | 89/102 |
 | `lib/features/camera_gallery/presentation/pages/camera_gallery_page.dart` | 87.27% | 96/110 |
+| `lib/features/realtime_market/data/realtime_market_repository_impl.dart` | 87.30% | 55/63 |
 | `lib/core/di/register_case_study_demo_services.dart` | 87.50% | 7/8 |
 | `lib/features/auth/presentation/helpers/google_provider_helper.dart` | 87.50% | 14/16 |
 | `lib/features/chart/data/auth_aware_chart_remote_repository.dart` | 87.50% | 21/24 |
@@ -367,7 +368,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/todo_list/presentation/helpers/todo_list_dialogs.dart` | 88.76% | 79/89 |
 | `lib/features/chart/presentation/widgets/chart_data_source_badge.dart` | 88.89% | 16/18 |
 | `lib/features/counter/data/rest_counter_repository_internal.dart` | 88.89% | 64/72 |
-| `lib/features/realtime_market/data/realtime_market_repository_impl.dart` | 88.89% | 56/63 |
 | `lib/features/realtime_market/presentation/widgets/market_side_tabs.dart` | 88.89% | 16/18 |
 | `lib/shared/utils/initialization_guard.dart` | 88.89% | 8/9 |
 | `lib/shared/utils/platform_adaptive.dart` | 88.89% | 24/27 |
