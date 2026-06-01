@@ -75,24 +75,25 @@ void main() {
       expect(capped.chartCloses.length, 64);
     });
 
-    test('saveSnapshot does not overwrite newer cached row with older updatedAt',
-        () async {
-      final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
-        hiveService: hiveService,
-      );
-      final MarketFeedSnapshot newer = _sampleSnapshot(
-        lastPrice: 200,
-        updatedAt: DateTime.utc(2024, 6, 2),
-      );
-      final MarketFeedSnapshot older = _sampleSnapshot(
-        lastPrice: 100,
-        updatedAt: DateTime.utc(2024, 6, 1),
-      );
-      await local.saveSnapshot('btc_usdt', newer);
-      await local.saveSnapshot('btc_usdt', older);
-      final MarketFeedSnapshot? cached = await local.loadCached('btc_usdt');
-      expect(cached?.lastPrice, 200);
-    });
+    test(
+      'saveSnapshot does not overwrite newer cached row with older updatedAt',
+      () async {
+        final RealtimeMarketLocalDataSource local =
+            RealtimeMarketLocalDataSource(hiveService: hiveService);
+        final MarketFeedSnapshot newer = _sampleSnapshot(
+          lastPrice: 200,
+          updatedAt: DateTime.utc(2024, 6, 2),
+        );
+        final MarketFeedSnapshot older = _sampleSnapshot(
+          lastPrice: 100,
+          updatedAt: DateTime.utc(2024, 6, 1),
+        );
+        await local.saveSnapshot('btc_usdt', newer);
+        await local.saveSnapshot('btc_usdt', older);
+        final MarketFeedSnapshot? cached = await local.loadCached('btc_usdt');
+        expect(cached?.lastPrice, 200);
+      },
+    );
 
     test('loadCached returns null for malformed Hive payload', () async {
       final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
@@ -149,9 +150,7 @@ void main() {
             );
         final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
           localDataSource: local,
-          feed: _BurstMarketFeed(
-            snapshots: <MarketFeedSnapshot>[older, newer],
-          ),
+          feed: _BurstMarketFeed(snapshots: <MarketFeedSnapshot>[older, newer]),
         );
         final List<MarketFeedSnapshot> emitted = <MarketFeedSnapshot>[];
         final StreamSubscription<MarketFeedSnapshot> sub = repo

@@ -193,9 +193,7 @@ void main() {
       );
 
       getIt.registerSingleton<AuthRepository>(_StubAuthRepository(user));
-      getIt.registerSingleton<RemoteBackendAuthPort>(
-        _StubRemoteBackendAuth(),
-      );
+      getIt.registerSingleton<RemoteBackendAuthPort>(_StubRemoteBackendAuth());
       getIt.registerSingleton<CaseStudyRemoteRepository>(
         _StubRemoteRepository(),
       );

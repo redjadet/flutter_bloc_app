@@ -9,6 +9,7 @@ Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci
 | Situation | Command |
 | --- | --- |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
+| Format Dart source | `./bin/format` or `./bin/format --changed` (respects `.gitignore`; avoids generated `build/` and `.dart_tool/`) |
 | Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026) |

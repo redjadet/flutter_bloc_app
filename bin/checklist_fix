@@ -13,10 +13,6 @@ if ! [[ "$MAX_PASSES" =~ ^[1-9][0-9]*$ ]]; then
   exit 2
 fi
 
-changed_dart_files() {
-  git ls-files --modified --others --exclude-standard -- '*.dart'
-}
-
 echo "checklist_fix: run ./bin/checklist (max passes: $MAX_PASSES)"
 echo "checklist_fix: set CHECKLIST_FIX_APPLY=1 to format changed Dart files between passes"
 
@@ -48,20 +44,8 @@ while true; do
   echo
   echo "Applying bounded auto-fixes..."
 
-  if command -v dart >/dev/null 2>&1; then
-    dart_files=()
-    while IFS= read -r file; do
-      dart_files+=("$file")
-    done < <(changed_dart_files)
-    if [[ "${#dart_files[@]}" -gt 0 ]]; then
-      echo "  - dart format changed Dart files (${#dart_files[@]})"
-      dart format "${dart_files[@]}"
-    else
-      echo "  - no changed Dart files to format"
-    fi
-  else
-    echo "  - dart not found; skipping dart format"
-  fi
+  echo "  - ./bin/format --changed"
+  ./bin/format --changed
 
   if [[ "$CHECKLIST_FIX_GLOBAL_DART_FIX" == "1" ]] && command -v dart >/dev/null 2>&1; then
     echo "  - dart fix --apply"

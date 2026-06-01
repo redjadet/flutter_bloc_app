@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# Format repo Dart files while respecting .gitignore.
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: ./bin/format [--changed] [dart format options]
+
+Formats Git-known Dart files while skipping ignored/generated paths such as
+build/ and .dart_tool/.
+
+Options:
+  --changed  Format changed Dart files only.
+  -h, --help Show help.
+
+Other options are forwarded to dart format.
+EOF
+}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
+# shellcheck disable=SC1091
+source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+
+format_changed=0
+format_args=()
+for arg in "$@"; do
+  case "$arg" in
+    --changed)
+      format_changed=1
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      format_args+=("$arg")
+      ;;
+  esac
+done
+
+dart_files=()
+if [[ "$format_changed" -eq 1 ]]; then
+  while IFS= read -r file; do
+    [[ -z "$file" || "$file" != *.dart || ! -f "$file" ]] && continue
+    dart_files+=("$file")
+  done < <(
+    {
+      git diff --name-only --diff-filter=ACMRTUXB
+      git diff --cached --name-only --diff-filter=ACMRTUXB
+      git ls-files --others --exclude-standard
+    } | sort -u
+  )
+else
+  while IFS= read -r file; do
+    dart_files+=("$file")
+  done < <(git ls-files --cached --modified --others --exclude-standard -- '*.dart')
+fi
+
+if [[ "${#dart_files[@]}" -eq 0 ]]; then
+  echo "format: no Dart files found"
+  exit 0
+fi
+
+DART_BIN="$(resolve_flutter_dart)"
+exec "$DART_BIN" format "${format_args[@]}" "${dart_files[@]}"

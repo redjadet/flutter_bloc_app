@@ -2,7 +2,7 @@
 # Delivery Checklist Script
 # Runs all delivery checklist steps in order:
 # 1. flutter pub get (only when dependency metadata changed)
-# 2. dart format (changed Dart files only)
+# 2. ./bin/format --changed (changed Dart files only)
 # 3. flutter analyze
 # 4. Best practices validation (parallel static checks + mix_lint + optional focused tests)
 # 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0/auto)
@@ -1310,7 +1310,7 @@ echo ""
 echo "📝 Step 2/5: Formatting changed Dart files"
 if [ "${#changed_dart_files[@]}" -gt 0 ]; then
   echo "  Found ${#changed_dart_files[@]} changed Dart file(s)"
-  "$DART_BIN" format "${changed_dart_files[@]}"
+  "$PROJECT_ROOT/bin/format" --changed
 else
   echo "  No changed Dart files, skipping format"
 fi

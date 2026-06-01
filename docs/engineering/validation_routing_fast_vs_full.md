@@ -9,7 +9,7 @@ Pick lane in **Verify**. Report after proof ran or blocker confirmed.
 
 Use for narrow low-risk edits where routing/auth/gates unchanged.
 
-- Local formatting/lints/tests for touched files
+- Local formatting with `./bin/format --changed`, lints, and tests for touched files
 - Optional targeted regression tests
 - **Python only** (`demos/render_chat_api/**`, repo `tool/*.py`): `./tool/check_pyright_python.sh` (Pyright + config guard; bootstraps `demos/render_chat_api/.venv` when missing). For behavior proof, `cd demos/render_chat_api && python -m pytest`. Full gate still includes this script via `./tool/delivery_checklist.sh` / `./bin/checklist`.
 - **Checklist local sanity shortcut**: `./bin/checklist-fast` for clean-tree local sanity or narrow docs/tooling change sets only. It skips app-wide Flutter validation and refuses CI or app/runtime diffs.

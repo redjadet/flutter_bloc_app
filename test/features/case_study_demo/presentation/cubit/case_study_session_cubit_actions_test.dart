@@ -542,9 +542,7 @@ void main() {
         final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
         await local.saveDraft('user-1', draft);
         await cubit.hydrate();
-        cubit.emit(
-          cubit.state.copyWith(submitLocalHistoryFailed: true),
-        );
+        cubit.emit(cubit.state.copyWith(submitLocalHistoryFailed: true));
 
         await cubit.startNewCase();
 
@@ -623,9 +621,7 @@ void main() {
         final CaseStudyDraft draft = CaseStudyDraft.fresh(caseId: 'case-1');
         await local.saveDraft('user-1', draft);
         await cubit.hydrate();
-        cubit.emit(
-          cubit.state.copyWith(submitLocalHistoryFailed: true),
-        );
+        cubit.emit(cubit.state.copyWith(submitLocalHistoryFailed: true));
 
         await cubit.abandonCase();
 

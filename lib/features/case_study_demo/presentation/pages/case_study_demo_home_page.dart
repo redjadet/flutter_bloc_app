@@ -53,8 +53,7 @@ class CaseStudyDemoHomePage extends StatelessWidget {
               ),
               FilledButton(
                 onPressed:
-                    viewState.isSubmitting ||
-                        viewState.submitLocalHistoryFailed
+                    viewState.isSubmitting || viewState.submitLocalHistoryFailed
                     ? null
                     : () async {
                         await context
