@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation_deferred_exception.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -209,12 +210,14 @@ class OfflineFirstStaffDemoTimeclockRepository
   Future<void> processOperation(final SyncOperation operation) async {
     final payload = operation.payload;
     final String? opUserId = payload['userId'] as String?;
-    final String? currentUserId = _currentUserId();
-    if (opUserId == null ||
-        currentUserId == null ||
-        opUserId.isEmpty ||
-        opUserId != currentUserId) {
+    if (opUserId == null || opUserId.isEmpty) {
       return;
+    }
+    final String? currentUserId = _currentUserId();
+    if (currentUserId == null || opUserId != currentUserId) {
+      throw const SyncOperationDeferredException(
+        'staff_demo_timeclock user scope mismatch',
+      );
     }
 
     final action = payload['action'];

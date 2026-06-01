@@ -179,9 +179,12 @@ Future<void> processOperationImpl(
   final String? opUserId = stringFromDynamicTrimmed(
     payload[iotDemoSyncPayloadKeySupabaseUserId],
   );
-  final String? currentUserId = r._currentSupabaseUserId();
-  if (opUserId == null || currentUserId == null || opUserId != currentUserId) {
+  if (opUserId == null) {
     return;
+  }
+  final String? currentUserId = r._currentSupabaseUserId();
+  if (currentUserId == null || opUserId != currentUserId) {
+    throw const SyncOperationDeferredException('iot_demo user scope mismatch');
   }
   final SupabaseIotDemoRepository? remote = r._remoteRepository;
   if (remote == null) return;

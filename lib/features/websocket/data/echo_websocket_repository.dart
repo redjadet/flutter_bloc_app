@@ -31,6 +31,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   WebSocketChannel? _channel;
   StreamSubscription<dynamic>? _channelSubscription;
   final CompleterHelper<void> _connectionCompleter = CompleterHelper<void>();
+  int _connectionFollowerCount = 0;
 
   final StreamController<WebsocketMessage> _messagesController =
       StreamController<WebsocketMessage>.broadcast();
@@ -64,6 +65,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     // If it fails, the completer will be cleared and we can retry
     final Completer<void>? existingCompleter = _connectionCompleter.pending;
     if (existingCompleter case final completer?) {
+      _connectionFollowerCount++;
       try {
         return await completer.future;
       } on Object catch (_) {
@@ -74,6 +76,8 @@ class EchoWebsocketRepository implements WebsocketRepository {
           // Another connection succeeded or is in progress
           return;
         }
+      } finally {
+        _connectionFollowerCount--;
       }
     }
 
@@ -93,18 +97,22 @@ class EchoWebsocketRepository implements WebsocketRepository {
       _updateState(const WebsocketConnectionState.connected());
       _connectionCompleter.completeAndReset();
     } on TimeoutException catch (error) {
-      _connectionCompleter.reset();
+      _releaseConnectionAttempt(error);
       await _handleError(error);
-      // Don't complete completer with error - let concurrent calls retry
-      // The rethrow will propagate the error to the current caller
       rethrow;
     } on Object catch (error) {
-      _connectionCompleter.reset();
+      _releaseConnectionAttempt(error);
       await _handleError(error);
-      // Don't complete completer with error - let concurrent calls retry
-      // The rethrow will propagate the error to the current caller
       rethrow;
     }
+  }
+
+  void _releaseConnectionAttempt(final Object error) {
+    if (_connectionFollowerCount > 0) {
+      _connectionCompleter.completeErrorAndReset(error);
+      return;
+    }
+    _connectionCompleter.reset();
   }
 
   Future<WebSocketChannel> _connectWithTimeout() => WebSocketGuard.connect(

@@ -81,9 +81,8 @@ _CoalescedPendingOperations _coalescePendingOperations(
       if (a.createdAt.isAfter(b.createdAt)) {
         return a;
       }
-      final int countA = _counterCountFromPayload(a.payload);
-      final int countB = _counterCountFromPayload(b.payload);
-      return countB > countA ? b : a;
+      // Same timestamp: prefer the later op in the pending list (last write wins).
+      return b;
     });
     operations.add(latestCounterOp);
     for (final SyncOperation op in counterOps) {
@@ -137,6 +136,12 @@ Future<void> _processOperation({
     await repository.processOperation(operation);
     await pendingRepository.markCompleted(operation.id);
     result.recordSuccess(operation);
+  } on SyncOperationDeferredException {
+    result.processed--;
+    AppLogger.debug(
+      'BackgroundSyncCoordinator deferred ${operation.entityType} '
+      '(id=${operation.id}) until preconditions are met',
+    );
   } on Exception catch (error, stackTrace) {
     AppLogger.error(
       'BackgroundSyncCoordinator.processOperation failed for '
@@ -201,13 +206,6 @@ Map<String, Object?> _telemetryPayload(final SyncCycleSummary summary) {
     'lastErrorByEntity': summary.lastErrorByEntity,
     'retrySuccessRate': summary.retrySuccessRate,
   };
-}
-
-int _counterCountFromPayload(final Map<String, dynamic> payload) {
-  final dynamic count = payload['count'];
-  if (count is int) return count;
-  if (count is num) return count.toInt();
-  return 0;
 }
 
 final class _PullRemoteResult {
