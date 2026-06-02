@@ -78,6 +78,15 @@ analyzer:
     - custom_lints/**
     - tool/**
 
+# Native analyzer plugin configuration (file_length_lint).
+file_length_lint:
+  # Keep files small to reduce review and AI-agent context payloads.
+  max_lines: 225
+  # Use plugin defaults (generated files, tests, tools, l10n, etc).
+  include_defaults: true
+  excludes:
+    - integration_test/**
+
 # Keep our custom preferences on top of VGV
 linter:
   rules:

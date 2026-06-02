@@ -20,7 +20,8 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 
-part 'offline_first_iot_demo_repository_sync.dart';
+part 'offline_first_iot_demo_repository_sync_commands.part.dart';
+part 'offline_first_iot_demo_repository_sync_pull.part.dart';
 
 /// Offline-first implementation of [IotDemoRepository].
 ///

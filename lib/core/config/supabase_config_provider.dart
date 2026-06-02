@@ -13,20 +13,7 @@ import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
-@immutable
-final class SupabaseConfigFetchResult {
-  const SupabaseConfigFetchResult({
-    required this.updated,
-    required this.skipped,
-    this.version,
-    this.reason,
-  });
-
-  final bool updated;
-  final bool skipped;
-  final String? version;
-  final String? reason;
-}
+part 'supabase_config_provider.part.dart';
 
 /// Fetches Supabase client config from Firebase Remote Config after the
 /// user is signed in with Firebase Auth, then persists + applies it at runtime.
@@ -41,41 +28,9 @@ final class SupabaseConfigProvider {
   final RemoteConfigService? _remoteConfig;
   final SecretStorage? _storage;
 
-  static const String _reasonFirebaseNotInitialized =
-      'firebase_not_initialized';
-  static const String _reasonFirebaseAuthUnavailable =
-      'firebase_auth_unavailable';
-  static const String _reasonFirebaseAuthNotReady = 'firebase_auth_not_ready';
-  static const String _reasonRemoteConfigUnavailable =
-      'remote_config_unavailable';
-  static const String _reasonRemoteConfigDisabled = 'remote_config_disabled';
-  static const String _reasonInvalidPayload = 'invalid_payload';
-  static const String _reasonVersionUnchanged = 'version_unchanged';
-  static const String _reasonRemoteConfigFetchFailed =
-      'remote_config_fetch_failed';
+  // Reasons and value objects live in `supabase_config_provider.part.dart`.
 
   Future<SupabaseConfigFetchResult>? _inFlight;
-
-  FirebaseAuth? get _safeAuth {
-    if (_auth != null) return _auth;
-    try {
-      return FirebaseAuth.instance;
-    } on Object {
-      return null;
-    }
-  }
-
-  RemoteConfigService? get _safeRemoteConfig {
-    if (_remoteConfig != null) return _remoteConfig;
-    try {
-      return getIt<RemoteConfigService>();
-    } on Object {
-      return null;
-    }
-  }
-
-  SecretStorage get _safeStorage =>
-      _storage ?? (SecretConfig.storage ?? createDefaultSecretStorage());
 
   /// Fetches config from Remote Config and applies it if it is missing or the
   /// Remote Config `version` differs from the currently loaded one.
@@ -108,7 +63,7 @@ final class SupabaseConfigProvider {
       return const SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
-        reason: _reasonFirebaseNotInitialized,
+        reason: kSupabaseConfigReasonFirebaseNotInitialized,
       );
     }
 
@@ -117,7 +72,7 @@ final class SupabaseConfigProvider {
       return const SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
-        reason: _reasonFirebaseAuthUnavailable,
+        reason: kSupabaseConfigReasonFirebaseAuthUnavailable,
       );
     }
 
@@ -131,7 +86,7 @@ final class SupabaseConfigProvider {
       return const SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
-        reason: _reasonFirebaseAuthNotReady,
+        reason: kSupabaseConfigReasonFirebaseAuthNotReady,
       );
     }
 
@@ -140,7 +95,7 @@ final class SupabaseConfigProvider {
       return const SupabaseConfigFetchResult(
         updated: false,
         skipped: true,
-        reason: _reasonRemoteConfigUnavailable,
+        reason: kSupabaseConfigReasonRemoteConfigUnavailable,
       );
     }
 
@@ -166,7 +121,7 @@ final class SupabaseConfigProvider {
           return const SupabaseConfigFetchResult(
             updated: false,
             skipped: true,
-            reason: _reasonRemoteConfigFetchFailed,
+            reason: kSupabaseConfigReasonRemoteConfigFetchFailed,
           );
         }
         rethrow;
@@ -204,7 +159,7 @@ final class SupabaseConfigProvider {
         return SupabaseConfigFetchResult(
           updated: false,
           skipped: true,
-          reason: _reasonRemoteConfigDisabled,
+          reason: kSupabaseConfigReasonRemoteConfigDisabled,
           version: 'rcv:$versionNumber',
         );
       }
@@ -213,7 +168,7 @@ final class SupabaseConfigProvider {
         return const SupabaseConfigFetchResult(
           updated: false,
           skipped: true,
-          reason: _reasonInvalidPayload,
+          reason: kSupabaseConfigReasonInvalidPayload,
         );
       }
 
@@ -223,7 +178,7 @@ final class SupabaseConfigProvider {
           updated: false,
           skipped: false,
           version: version,
-          reason: _reasonVersionUnchanged,
+          reason: kSupabaseConfigReasonVersionUnchanged,
         );
       }
 
@@ -261,16 +216,6 @@ final class SupabaseConfigProvider {
             ? error.runtimeType.toString()
             : 'unexpected_error',
       );
-    }
-  }
-
-  String? _tryFirebaseProjectId() {
-    try {
-      final FirebaseApp app = Firebase.app();
-      final String projectId = app.options.projectId;
-      return projectId.trim().isEmpty ? null : projectId.trim();
-    } on Object {
-      return null;
     }
   }
 }

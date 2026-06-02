@@ -284,7 +284,6 @@ class _FakeNetworkStatusService implements NetworkStatusService {
 
   @override
   Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
-
   @override
   Future<void> dispose() async {}
 }
@@ -314,7 +313,6 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> stop() async {}
-
   @override
   Future<void> dispose() async {}
 
@@ -381,7 +379,6 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<void> clear() async => _operations.clear();
-
   @override
   Future<void> dispose() async {}
 

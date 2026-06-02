@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
@@ -16,6 +17,8 @@ import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 
 export 'package:flutter_bloc_app/features/auth/presentation/helpers/auth_error_message.dart';
+
+part 'sign_in_page.part.dart';
 
 @visibleForTesting
 const Key signInGuestButtonKey = Key('sign_in_guest_button');
@@ -82,83 +85,20 @@ class SignInPage extends StatelessWidget {
       providers = <firebase_ui.AuthProvider>[];
     }
 
-    void showAuthError(final Object error) {
-      if (!context.mounted) {
-        ContextUtils.logNotMounted('SignInPage.showAuthError');
-        return;
-      }
-      if (error is FirebaseAuthException) {
-        final String message = authErrorMessage(l10n, error);
-        ErrorHandling.clearSnackBars(context);
-        ErrorHandling.showErrorSnackBar(context, message);
-      }
-    }
+    void showAuthError(final Object error) =>
+        _showAuthError(context: context, l10n: l10n, error: error);
 
-    String postAuthPath() {
-      final String? redirectPath = redirectAfterLogin;
-      if (redirectPath case final String nonNullPath
-          when AppRoutes.isSafeRedirectPath(nonNullPath)) {
-        return nonNullPath;
-      }
-      return AppRoutes.counterPath;
-    }
+    String postAuthPath() =>
+        _postAuthPath(redirectAfterLogin: redirectAfterLogin);
 
-    Future<void> signInAnonymously() async {
-      final AuthRepository? repository = authRepository;
-      if (auth == null) {
-        try {
-          if (repository == null) {
-            if (!context.mounted) return;
-            ErrorHandling.clearSnackBars(context);
-            ErrorHandling.showErrorSnackBar(
-              context,
-              l10n.anonymousSignInFailed,
-            );
-            return;
-          }
-          await repository.signInAnonymously();
-          if (!context.mounted) {
-            ContextUtils.logNotMounted(
-              'SignInPage.signInAnonymously.noFirebase',
-            );
-            return;
-          }
-          context.go(postAuthPath());
-        } on FirebaseAuthException catch (error) {
-          showAuthError(error);
-        } on Exception {
-          if (!context.mounted) {
-            ContextUtils.logNotMounted('SignInPage.signInAnonymously.error');
-            return;
-          }
-          ErrorHandling.clearSnackBars(context);
-          ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
-        }
-        return;
-      }
-
-      try {
-        if (repository == null) {
-          await auth.signInAnonymously();
-        } else {
-          await repository.signInAnonymously();
-        }
-        if (!context.mounted) {
-          ContextUtils.logNotMounted('SignInPage.signInAnonymously');
-          return;
-        }
-        context.go(postAuthPath());
-      } on FirebaseAuthException catch (error) {
-        showAuthError(error);
-      } on Exception {
-        if (!context.mounted) {
-          ContextUtils.logNotMounted('SignInPage.signInAnonymously.error');
-          return;
-        }
-        ErrorHandling.clearSnackBars(context);
-        ErrorHandling.showErrorSnackBar(context, l10n.anonymousSignInFailed);
-      }
-    }
+    Future<void> signInAnonymously() => _signInAnonymously(
+      context: context,
+      l10n: l10n,
+      auth: auth,
+      repository: authRepository,
+      showAuthError: showAuthError,
+      postAuthPath: postAuthPath,
+    );
 
     if (!canUseFirebaseUISignIn) {
       return FallbackSignInContent(

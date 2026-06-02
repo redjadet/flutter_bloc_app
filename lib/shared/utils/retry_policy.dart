@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 
+part 'retry_policy_execute.part.dart';
+
 /// Retry strategy types for different backoff patterns.
 enum RetryStrategy {
   /// Exponential backoff: delay = baseDelay * 2^attempt
@@ -21,7 +23,7 @@ enum RetryStrategy {
 /// (search, chat, charts, etc.) with cancellation support.
 ///
 /// When a [TimerService] is passed to [executeWithRetry], backoff delays use it (testable time);
-/// when null, uses [Future.delayed] (allow-listed in validation script).
+/// when null, uses [DefaultTimerService] for production backoff.
 class RetryPolicy {
   /// Creates a retry policy with the specified configuration.
   const RetryPolicy({
@@ -59,61 +61,12 @@ class RetryPolicy {
     final CancelToken? cancelToken,
     final bool Function(Object error)? shouldRetry,
     final TimerService? timerService,
-  }) async {
-    Object? lastError;
-    StackTrace? lastStackTrace;
-    for (int attempt = 0; attempt < maxAttempts; attempt++) {
-      _throwIfCancelled(cancelToken);
-
-      try {
-        return await action();
-      } on Object catch (error, stackTrace) {
-        lastError = error;
-        lastStackTrace = stackTrace;
-
-        if (!_shouldRetryError(error, shouldRetry)) {
-          rethrow;
-        }
-
-        final bool hasRemainingAttempts = attempt < maxAttempts - 1;
-        if (hasRemainingAttempts) {
-          await _waitBeforeRetry(
-            _calculateDelay(attempt),
-            cancelToken,
-            timerService,
-          );
-        }
-      }
-    }
-
-    if (lastError == null) {
-      throw Exception('Retry failed: unknown error');
-    }
-
-    if (lastStackTrace != null) {
-      Error.throwWithStackTrace(lastError, lastStackTrace);
-    }
-
-    throw Exception(lastError.toString());
-  }
-
-  bool _shouldRetryError(
-    final Object error,
-    final bool Function(Object error)? shouldRetry,
-  ) {
-    if (error is CancellationException) {
-      return false;
-    }
-    return shouldRetry?.call(error) ?? true;
-  }
-
-  /// Calculate delay for the given attempt number (0-indexed).
-  Duration _calculateDelay(final int attempt) => calculateDelay(
-    attempt: attempt,
-    baseDelay: baseDelay,
-    maxDelay: maxDelay,
-    strategy: strategy,
-    jitter: jitter,
+  }) => _retryPolicyExecuteWithRetry(
+    this,
+    action: action,
+    cancelToken: cancelToken,
+    shouldRetry: shouldRetry,
+    timerService: timerService,
   );
 
   /// Shared delay calculation for use by other layers (e.g. HTTP client).
@@ -178,73 +131,6 @@ class RetryPolicy {
     final int jitteredMs = cappedMs + jitterOffset;
     final int clampedMs = jitteredMs.clamp(0, maxMs);
     return Duration(milliseconds: clampedMs);
-  }
-
-  void _throwIfCancelled(
-    final CancelToken? cancelToken, {
-    final bool duringDelay = false,
-  }) {
-    if (cancelToken?.isCancelled ?? false) {
-      throw CancellationException(
-        duringDelay ? 'Retry cancelled during delay' : 'Retry cancelled',
-      );
-    }
-  }
-
-  Future<void> _waitBeforeRetry(
-    final Duration delay,
-    final CancelToken? cancelToken,
-    final TimerService? timerService,
-  ) async {
-    if (cancelToken == null && timerService == null) {
-      await Future<void>.delayed(delay);
-      return;
-    }
-
-    const Duration checkInterval = Duration(milliseconds: 50);
-    Duration elapsed = Duration.zero;
-
-    while (elapsed < delay) {
-      _throwIfCancelled(cancelToken, duringDelay: true);
-      final Duration waitDuration = _nextDelayChunk(
-        remaining: delay - elapsed,
-        checkInterval: checkInterval,
-      );
-      await _delay(waitDuration, timerService);
-      elapsed += waitDuration;
-    }
-
-    _throwIfCancelled(cancelToken, duringDelay: true);
-  }
-
-  static Duration _nextDelayChunk({
-    required final Duration remaining,
-    required final Duration checkInterval,
-  }) {
-    return remaining < checkInterval ? remaining : checkInterval;
-  }
-
-  static Future<void> _delay(
-    final Duration duration,
-    final TimerService? timerService,
-  ) {
-    if (timerService != null) {
-      return _delayViaTimerService(timerService, duration);
-    }
-    return Future<void>.delayed(duration);
-  }
-
-  static Future<void> _delayViaTimerService(
-    final TimerService service,
-    final Duration duration,
-  ) {
-    final Completer<void> completer = Completer<void>();
-    final TimerDisposable handle = service.runOnce(duration, () {
-      if (!completer.isCompleted) {
-        completer.complete();
-      }
-    });
-    return completer.future.whenComplete(handle.dispose);
   }
 
   /// Create a default retry policy for transient errors (5xx, timeouts).

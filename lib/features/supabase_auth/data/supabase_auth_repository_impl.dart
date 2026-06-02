@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 
+part 'supabase_auth_repository_impl.part.dart';
+
 /// Supabase implementation of [SupabaseAuthRepository].
 class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   SupabaseAuthRepositoryImpl({
@@ -57,7 +59,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   app_auth.AuthUser? get currentUser {
     if (!_canAccessSupabase) return null;
     try {
-      return _mapUser(_readCurrentUser());
+      return _mapSupabaseUser(_readCurrentUser());
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'SupabaseAuthRepositoryImpl.currentUser',
@@ -82,7 +84,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
           );
         }
       }
-      return _mapUser(data.session?.user);
+      return _mapSupabaseUser(data.session?.user);
     });
   }
 
@@ -149,126 +151,4 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
       rethrow;
     }
   }
-
-  bool get _canAccessSupabase => isConfigured;
-
-  void _requireConfigured() {
-    if (_canAccessSupabase) {
-      return;
-    }
-    throw const SupabaseAuthException(
-      'Supabase is not configured (missing URL or anon key).',
-    );
-  }
-
-  static app_auth.AuthUser? _mapUser(final User? user) =>
-      user == null ? null : _toAuthUser(user);
-
-  static Map<String, dynamic>? _signUpUserData(final String? displayName) {
-    if (displayName == null) {
-      return null;
-    }
-    final String trimmedDisplayName = displayName.trim();
-    if (trimmedDisplayName.isEmpty) {
-      return null;
-    }
-    return <String, dynamic>{'full_name': trimmedDisplayName};
-  }
-
-  static SupabaseAuthException _authExceptionFromSupabase(
-    final AuthException error,
-  ) {
-    return SupabaseAuthException(
-      error.message,
-      code: _mapErrorCode(error),
-      cause: error,
-    );
-  }
-
-  static SupabaseAuthException _unexpectedAuthException(final Object error) =>
-      SupabaseAuthException(error.toString(), cause: error);
-
-  static app_auth.AuthUser _toAuthUser(final User user) {
-    final meta = user.userMetadata;
-    final String? displayName = switch (meta) {
-      final Map<dynamic, dynamic> values => stringFromDynamic(
-        values['full_name'],
-      )?.trim(),
-      _ => null,
-    };
-    return app_auth.AuthUser(
-      id: user.id,
-      email: user.email?.trim(),
-      displayName: displayName?.isEmpty ?? true ? null : displayName,
-      isAnonymous: false,
-    );
-  }
-
-  static SupabaseAuthErrorCode? _mapErrorCode(final AuthException error) {
-    if (error is AuthRetryableFetchException || error.statusCode == null) {
-      return SupabaseAuthErrorCode.network;
-    }
-
-    final String normalizedMessage = error.message.trim().toLowerCase();
-    if (normalizedMessage.contains('invalid login credentials') ||
-        normalizedMessage.contains('invalid email or password')) {
-      return SupabaseAuthErrorCode.invalidCredentials;
-    }
-
-    if (normalizedMessage.contains('failed host lookup') ||
-        normalizedMessage.contains('socketexception') ||
-        normalizedMessage.contains('network')) {
-      return SupabaseAuthErrorCode.network;
-    }
-
-    if (normalizedMessage.contains('password should be') ||
-        normalizedMessage.contains('at least 6 characters')) {
-      return SupabaseAuthErrorCode.weakPassword;
-    }
-
-    if (normalizedMessage.contains('validate email') ||
-        (normalizedMessage.contains('invalid format') &&
-            normalizedMessage.contains('email'))) {
-      return SupabaseAuthErrorCode.invalidEmail;
-    }
-
-    if (normalizedMessage.contains('already registered') ||
-        normalizedMessage.contains('user already exists') ||
-        normalizedMessage.contains('email already in use')) {
-      return SupabaseAuthErrorCode.userAlreadyExists;
-    }
-
-    return null;
-  }
-
-  static User? _defaultReadCurrentUser() =>
-      Supabase.instance.client.auth.currentUser;
-
-  static Stream<AuthState> _defaultAuthStateChangesStream() =>
-      Supabase.instance.client.auth.onAuthStateChange;
-
-  static Future<void> _defaultSignInWithPassword({
-    required final String email,
-    required final String password,
-  }) {
-    return Supabase.instance.client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-  }
-
-  static Future<void> _defaultSignUp({
-    required final String email,
-    required final String password,
-    final Map<String, dynamic>? data,
-  }) {
-    return Supabase.instance.client.auth.signUp(
-      email: email,
-      password: password,
-      data: data,
-    );
-  }
-
-  static Future<void> _defaultSignOut() =>
-      Supabase.instance.client.auth.signOut();
 }

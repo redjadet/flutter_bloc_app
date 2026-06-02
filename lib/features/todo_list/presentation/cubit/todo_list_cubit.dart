@@ -16,11 +16,13 @@ part 'todo_list_cubit_crud.dart';
 part 'todo_list_cubit_helpers.dart';
 part 'todo_list_cubit_logging.dart';
 part 'todo_list_cubit_methods.dart';
+part 'todo_list_cubit_methods_reorder.part.dart';
 
 class TodoListCubit extends Cubit<TodoListState>
     with
         CubitSubscriptionMixin<TodoListState>,
         _TodoListCubitMethods,
+        _TodoListCubitMethodsReorder,
         _TodoListCubitCrud {
   TodoListCubit({
     required this.repository,

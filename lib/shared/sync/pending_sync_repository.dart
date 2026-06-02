@@ -11,6 +11,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 part 'pending_sync_repository_codec.dart';
 part 'pending_sync_repository_migration.dart';
+part 'pending_sync_repository_mutations.part.dart';
 
 /// A repository for managing a queue of [SyncOperation]s that need to be
 /// processed and synchronized with a remote backend.
@@ -144,56 +145,22 @@ class PendingSyncRepository extends HiveRepositoryBase {
   );
 
   /// Removes a successfully synchronized operation from the queue.
-  Future<void> markCompleted(final String operationId) async {
-    await StorageGuard.run<void>(
-      logContext: 'PendingSyncRepository.markCompleted',
-      action: () async {
-        final Box<dynamic> box = await getBox();
-        await box.delete(operationId);
-      },
-    );
-  }
+  Future<void> markCompleted(final String operationId) =>
+      markCompletedBody(operationId);
 
   /// Updates an operation that failed to sync with a new retry timestamp.
   Future<void> markFailed({
     required final String operationId,
     required final DateTime nextRetryAt,
     final int? retryCount,
-  }) async {
-    await StorageGuard.run<void>(
-      logContext: 'PendingSyncRepository.markFailed',
-      action: () async {
-        final Box<dynamic> box = await getBox();
-        final dynamic stored = box.get(operationId);
-        if (stored is! Map<dynamic, dynamic>) {
-          await box.delete(operationId);
-          return;
-        }
-
-        final SyncOperation? existing = _operationFromJsonOrNull(stored);
-        if (existing == null) {
-          await box.delete(operationId);
-          return;
-        }
-        final SyncOperation updated = existing.copyWith(
-          nextRetryAt: nextRetryAt,
-          retryCount: retryCount ?? (existing.retryCount + 1),
-        );
-        await box.put(operationId, updated.toJson());
-      },
-    );
-  }
+  }) => markFailedBody(
+    operationId: operationId,
+    nextRetryAt: nextRetryAt,
+    retryCount: retryCount,
+  );
 
   /// Clears all pending operations from the queue.
-  Future<void> clear() async {
-    await StorageGuard.run<void>(
-      logContext: 'PendingSyncRepository.clear',
-      action: () async {
-        final Box<dynamic> box = await getBox();
-        await box.clear();
-      },
-    );
-  }
+  Future<void> clear() => clearBody();
 
   /// Prunes operations that have exceeded retry limits or are too old to retry.
   ///
@@ -201,27 +168,5 @@ class PendingSyncRepository extends HiveRepositoryBase {
   Future<int> prune({
     final int maxRetryCount = 10,
     final Duration maxAge = const Duration(days: 30),
-  }) async => StorageGuard.run<int>(
-    logContext: 'PendingSyncRepository.prune',
-    action: () async {
-      final Box<dynamic> box = await getBox();
-      final DateTime cutoff = DateTime.now().toUtc().subtract(maxAge);
-      final _PendingOperationsReadResult readResult = _readOperations(
-        box.toMap(),
-      );
-      final List<dynamic> keysToDelete = <dynamic>[
-        ...readResult.malformedKeys,
-        ...readResult.operations
-            .where(
-              (final entry) =>
-                  entry.operation.retryCount >= maxRetryCount ||
-                  _isOlderThanCutoff(entry.operation, cutoff),
-            )
-            .map((final entry) => entry.key),
-      ];
-      await _deleteKeys(box, keysToDelete);
-      return keysToDelete.length;
-    },
-    fallback: () => 0,
-  );
+  }) => pruneBody(maxRetryCount: maxRetryCount, maxAge: maxAge);
 }
