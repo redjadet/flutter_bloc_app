@@ -6,6 +6,7 @@ This file was moved from repo root to keep docs organized.
 
 ## Environment
 
+- **Pinned toolchain (current):** Flutter 3.44.1 / Dart 3.12.1 (see [README](../../README.md))
 - **Date**: 2026-03-25
 - **Flutter**: 3.44.0 (stable)
 - **Dart**: 3.12.0

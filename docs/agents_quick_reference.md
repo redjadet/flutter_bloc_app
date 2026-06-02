@@ -2,7 +2,7 @@
 
 Commands + routing lookup. Map: [`AGENTS.md`](../AGENTS.md). Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Project context: [`agent_project_context.md`](agent_project_context.md). Review: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). Validation detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 
-Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0. CI: [`ci_automation.md`](ci_automation.md).
+Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1. CI: [`ci_automation.md`](ci_automation.md).
 
 ## Validation Chooser
 

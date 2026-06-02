@@ -4,8 +4,8 @@ Production-style Flutter reference app: Clean Architecture, offline-first sync, 
 
 Platform & toolchain
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.44.0-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.12.0-blue.svg)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.44.1-blue.svg)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.12.1-blue.svg)](https://dart.dev)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20Android%20%7C%20Web%20%7C%20Desktop-02569B.svg)](docs/deployment.md)
 [![style: very good analysis](https://img.shields.io/badge/Lint-very__good__analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Custom lint](https://img.shields.io/badge/Lint-custom__lint%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
