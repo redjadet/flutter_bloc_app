@@ -11,14 +11,17 @@ See also: [`agent_project_context.md`](../agent_project_context.md), [`code_revi
 Next session smarter, no bloated wiki.
 
 - Treat source docs, ADRs, plans, changes, tests, scripts, fixtures, and host trackers as compiled memory.
+- Root memory/error log files are not repo memory stores here. Route durable decisions to owning docs/ADRs/plans/changes/tasks, and recurring failure patterns to [`../../tasks/lessons.md`](../../tasks/lessons.md), `docs/changes/`, or the failing tool/test doc.
 - File reusable conclusions into owning source doc, `docs/changes/`, `docs/plans/`, or [`../tasks/lessons.md`](../../tasks/lessons.md). Keep transient state in host trackers.
 - Preserve source-of-truth boundaries: code/tests beat summaries; source docs beat host templates; user corrections beat inferred rules.
 - Do not dump chat transcripts or generic summaries. Add compact, cited, actionable facts only.
+- At session end, persist only reusable conclusions, current blockers, and exact next step when they matter for future work; otherwise report proof without creating memory noise.
 - Prefer fat skills only for repeated, validated workflows with clear triggers/write scope/tools/quality bar. No cron/autonomous behavior without explicit user approval.
 - Vendor skills may exist via Cursor plugins. If a vendor skill is high-frequency and bloats context, prefer **repo-owned shadow shims** synced into `~/.cursor/skills/` (same `name:`) that route to repo canon and keep hard gates.
 - For this repo, prefer maps, `rg`, code-review-graph, and targeted validation over separate RAG layer.
 - Semantic lint during doc/agent changes: stale plans, duplicate rules, source/host-template contradictions, reusable conclusions stranded in task notes.
 - Before feature/refactor work, do a context audit: related code, tests, docs, plans, known bugs, workarounds, deprecated patterns, unusual helpers. Record only high-signal landmines in tracker or owning doc.
+- If an approach needs more than two attempts, record failed approaches, cause, and final fix in the owning doc, [`tasks/lessons.md`](../../tasks/lessons.md), or `docs/changes/` so future agents avoid the same path.
 
 ## File discovery layers
 

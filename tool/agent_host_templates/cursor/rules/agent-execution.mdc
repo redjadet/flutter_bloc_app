@@ -9,7 +9,9 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 
 - **Think:** unsafe ambiguity below 95% confidence → stop; evidence from repo docs, code, tests, or scripts (not guesses).
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
+- **Safety:** destructive/external side effects require current-turn confirmation after listing affected items.
 - **Prove:** plan → implement end-to-end → verify → report proof; narrowest honest validation lane.
+- **Report:** coding-task closeout includes Files Changed and Follow-up Actions.
 - **Stuck:** same failure twice → add durable repo capability (doc, test, fixture, script), not a longer prompt.
 - **Seams:** Clean Architecture, Cubit/BLoC, DI, GoRouter.
 

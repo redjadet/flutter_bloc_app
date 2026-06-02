@@ -32,3 +32,12 @@ Last 20% builds trust. Before report/commit, ask when suitable:
 - Operational clarity: run/verify/debug steps are discoverable from repo artifacts.
 - Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
 - Drift: intent/spec/docs still match implementation after the patch.
+
+## Report Shape
+
+For coding tasks, start with outcome/proof and include:
+
+- Files Changed: each changed file plus one-line modification summary.
+- Follow-up Actions: required next steps, manual actions, or `None`.
+
+Keep unrelated observations separate from the change summary.

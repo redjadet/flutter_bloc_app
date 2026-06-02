@@ -64,5 +64,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
 - Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
+- Destructive/external side effects need current-turn confirmation: list affected items first.
+- Reports after coding tasks include Files Changed and Follow-up Actions.
 - Repeated failure => add repo capability, not longer prompt.
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never expand this map with learned sections.

@@ -12,12 +12,19 @@ Scale effort to task value; default to one small loop.
 3. Plan once (<=10 lines), then execute end-to-end.
 4. Ask only hard blockers: missing credentials/tooling, unsafe ambiguity below 95% confident, or user-owned decision.
 5. Do not edit until 95% confident in goal/scope/approach.
-6. Vague/risky => assumptions, data flow, failure handling, smallest verifiable slice.
+6. Vague/risky => state uncertainty before code; call out assumptions, data flow, failure handling, smallest verifiable slice.
    Ask: what assumptions about this codebase may be false?
 7. Broad/codegen => modules, ownership, I/O, persistence/sync, logs, dry-run/test seams, rollback.
 8. Debug => reproduce/reason, isolate, fix cause, verify.
 9. Before report: edge cases, failure paths, readability, operational clarity, breakage impact.
 10. Stop when value met, material risks handled, proof matches scope.
+
+## Scope And Safety
+
+- Use the approved repo stack and tools from [`../agent_project_context.md`](../agent_project_context.md), [`../tech_stack.md`](../tech_stack.md), and [`../agents_quick_reference.md`](../agents_quick_reference.md). If a requested tool conflicts, flag conflict and continue with repo-approved stack unless user explicitly overrides.
+- Modify only task-owned files/functions. Do not rename, refactor, or redesign unrelated code; report unrelated issues separately.
+- Use the simplest solution that solves the verified problem. Avoid speculative abstractions, package swaps, and extra boilerplate.
+- Before destructive or external-side-effect actions, stop, list affected items, and request explicit confirmation in the current conversation. This includes deleting files, overwriting generated/user code, dropping data, running migrations, deploys, and remote writes.
 
 ## Search budget
 
