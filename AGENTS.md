@@ -68,3 +68,12 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Reports after coding tasks include Files Changed and Follow-up Actions.
 - Repeated failure => add repo capability, not longer prompt.
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never expand this map with learned sections.
+
+## Learned User Preferences
+
+- Continue until finished; stop only when stuck/blocker.
+
+## Learned Workspace Facts
+
+- Fix `file_too_long` by splitting into `*.part.dart`; don't raise `defaultMaxLines` to hide lint.
+- Add preflight checks to catch dependency/codegen incompatibilities before they break builds.

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:mix/mix.dart';
 
+part 'app_styles_layout.part.dart';
+
 /// Material text theme token for label large (button text).
 const TextStyleToken _labelLargeToken = TextStyleToken(
   'md3.text.theme.label.large',
@@ -140,113 +142,45 @@ class AppStyles {
 
   /// App bar area style: token-based horizontal/vertical padding, no elevation.
   /// Use with [Box] for custom app bar content.
-  static BoxStyler get appBar => BoxStyler()
-      .padding(
-        EdgeInsetsGeometryMix.symmetric(
-          vertical: AppMixTokens.gapM(),
-          horizontal: AppMixTokens.cardPadH(),
-        ),
-      )
-      .shadows(const []);
+  static BoxStyler get appBar => _appStylesAppBar;
 
   /// Banner/full-width bar style: horizontal and vertical padding, no
   /// elevation. On medium+ breakpoints horizontal padding increases.
   /// Use with [Box] or `CommonCard` for status/info bars.
-  static BoxStyler get banner => BoxStyler()
-      .padding(
-        EdgeInsetsGeometryMix.symmetric(
-          vertical: AppMixTokens.gapM(),
-          horizontal: AppMixTokens.cardPadH(),
-        ),
-      )
-      .shadows(const [])
-      .onTablet(BoxStyler().paddingX(AppMixTokens.gapL()))
-      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapL()));
+  static BoxStyler get banner => _appStylesBanner;
 
   /// Empty state container: generous padding for centered icon/message.
   /// Use with [Box] wrapping empty-state content.
-  static BoxStyler get emptyState => BoxStyler().padding(
-    EdgeInsetsGeometryMix.only(
-      top: AppMixTokens.gapL(),
-      bottom: AppMixTokens.gapL(),
-      left: AppMixTokens.cardPadH(),
-      right: AppMixTokens.cardPadH(),
-    ),
-  );
+  static BoxStyler get emptyState => _appStylesEmptyState;
 
   /// Chip-style container: surfaceContainerLow background (matches Material 3
   /// Chip), pill radius, compact padding. On medium+ breakpoints horizontal
   /// padding increases. Use with [Box] for chip-like labels.
-  static BoxStyler get chip => BoxStyler()
-      .color(AppMaterialColorTokens.surfaceContainerLow())
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .padding(
-        EdgeInsetsGeometryMix.symmetric(
-          vertical: AppMixTokens.gapS(),
-          horizontal: AppMixTokens.gapS(),
-        ),
-      )
-      .onTablet(BoxStyler().paddingX(AppMixTokens.gapM()))
-      .onDesktop(BoxStyler().paddingX(AppMixTokens.gapM()));
+  static BoxStyler get chip => _appStylesChip;
 
   /// Compact positive status badge from DESIGN.md.
-  static BoxStyler get statusSuccess => BoxStyler()
-      .color(AppMaterialColorTokens.success())
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .padding(
-        EdgeInsetsGeometryMix.symmetric(
-          vertical: AppMixTokens.gapS(),
-          horizontal: AppMixTokens.gapM(),
-        ),
-      );
+  static BoxStyler get statusSuccess => _appStylesStatusSuccess;
 
-  static TextStyler get statusSuccessText => TextStyler()
-      .style(AppTextStyleTokens.labelMedium.mix())
-      .color(AppMaterialColorTokens.onSurface())
-      .fontWeight(FontWeight.w600);
+  static TextStyler get statusSuccessText => _appStylesStatusSuccessText;
 
   /// Compact error status badge from DESIGN.md.
-  static BoxStyler get statusError => BoxStyler()
-      .color(AppMaterialColorTokens.error())
-      .borderRadiusAll(AppMixTokens.radiusPill())
-      .padding(
-        EdgeInsetsGeometryMix.symmetric(
-          vertical: AppMixTokens.gapS(),
-          horizontal: AppMixTokens.gapM(),
-        ),
-      );
+  static BoxStyler get statusError => _appStylesStatusError;
 
-  static TextStyler get statusErrorText => TextStyler()
-      .style(AppTextStyleTokens.labelMedium.mix())
-      .color(AppMaterialColorTokens.onPrimary())
-      .fontWeight(FontWeight.w600);
+  static TextStyler get statusErrorText => _appStylesStatusErrorText;
 
   /// Dialog/sheet content padding from tokens.
   /// Use with [Box] to wrap dialog or bottom sheet body content.
-  static BoxStyler get dialogContent => BoxStyler().padding(
-    EdgeInsetsGeometryMix.only(
-      top: AppMixTokens.gapL(),
-      bottom: AppMixTokens.gapL(),
-      left: AppMixTokens.cardPadH(),
-      right: AppMixTokens.cardPadH(),
-    ),
-  );
+  static BoxStyler get dialogContent => _appStylesDialogContent;
 
-  static TextStyler get headingStyle =>
-      TextStyler().style(AppTextStyleTokens.titleLarge.mix());
+  static TextStyler get headingStyle => _appStylesHeadingStyle;
 
-  static TextStyler get subheadingStyle =>
-      TextStyler().style(AppTextStyleTokens.titleMedium.mix());
+  static TextStyler get subheadingStyle => _appStylesSubheadingStyle;
 
-  static TextStyler get bodyStyle =>
-      TextStyler().style(AppTextStyleTokens.bodyMedium.mix());
+  static TextStyler get bodyStyle => _appStylesBodyStyle;
 
-  static TextStyler get bodyLargeStyle =>
-      TextStyler().style(AppTextStyleTokens.bodyLarge.mix());
+  static TextStyler get bodyLargeStyle => _appStylesBodyLargeStyle;
 
-  static TextStyler get captionStyle =>
-      TextStyler().style(AppTextStyleTokens.labelMedium.mix());
+  static TextStyler get captionStyle => _appStylesCaptionStyle;
 
-  static TextStyler get captionSmallStyle =>
-      TextStyler().style(AppTextStyleTokens.labelSmall.mix());
+  static TextStyler get captionSmallStyle => _appStylesCaptionSmallStyle;
 }

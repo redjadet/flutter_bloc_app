@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 part 'background_sync_runner_helpers.dart';
+part 'background_sync_runner_helpers_summary.part.dart';
 
 /// Runs a single sync cycle and returns a summary for diagnostics.
 ///

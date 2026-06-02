@@ -12,6 +12,8 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+part 'iot_demo_cubit_devices.part.dart';
+
 /// Cubit for the IoT demo: list devices, connect, disconnect, send commands.
 class IotDemoCubit extends Cubit<IotDemoState>
     with CubitSubscriptionMixin<IotDemoState> {
@@ -38,39 +40,13 @@ class IotDemoCubit extends Cubit<IotDemoState>
         filterOverride ??
         state.mapOrNull(loaded: (final s) => s.filter) ??
         IotDemoDeviceFilter.all;
-    await _prewarmRemoteDevicesIfNeeded();
+    await prewarmRemoteDevicesIfNeeded();
     if (isClosed) return;
-    await _restartDevicesSubscription(
+    await restartDevicesSubscriptionImpl(
       filter: filter,
       previousSelectedDeviceId: previousSelectedDeviceId,
       emitLoadingState: true,
     );
-  }
-
-  Future<void> _prewarmRemoteDevicesIfNeeded() async {
-    final SyncableRepository? syncable = switch (_repository) {
-      final SyncableRepository value => value,
-      _ => null,
-    };
-    if (syncable == null) {
-      return;
-    }
-
-    try {
-      final List<IotDevice> initialDevices = await _repository
-          .watchDevices()
-          .first;
-      if (isClosed || initialDevices.isNotEmpty) {
-        return;
-      }
-      await syncable.pullRemote();
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'IotDemoCubit._prewarmRemoteDevicesIfNeeded',
-        error,
-        stackTrace,
-      );
-    }
   }
 
   void setFilter(final IotDemoDeviceFilter filter) {
@@ -79,7 +55,7 @@ class IotDemoCubit extends Cubit<IotDemoState>
       loaded: (final s) {
         if (s.filter == filter) return;
         emit(
-          _buildLoadedState(
+          buildLoadedStateImpl(
             devices: _allDevices,
             filter: filter,
             selectedDeviceId: s.selectedDeviceId,
@@ -87,93 +63,6 @@ class IotDemoCubit extends Cubit<IotDemoState>
         );
       },
     );
-  }
-
-  Future<void> _restartDevicesSubscription({
-    required final IotDemoDeviceFilter filter,
-    final String? previousSelectedDeviceId,
-    final bool emitLoadingState = false,
-  }) async {
-    final int requestId = ++_devicesWatchRequestId;
-    if (emitLoadingState) {
-      emit(const IotDemoState.loading());
-    }
-    final StreamSubscription<List<IotDevice>>? previousSubscription =
-        _devicesSubscription;
-    _devicesSubscription = null;
-    await cancelRegisteredSubscription(previousSubscription);
-    if (isClosed || requestId != _devicesWatchRequestId) return;
-    _subscribeToDevices(filter, previousSelectedDeviceId, requestId);
-  }
-
-  void _subscribeToDevices(
-    final IotDemoDeviceFilter filter,
-    final String? previousSelectedDeviceId,
-    final int requestId,
-  ) {
-    _devicesSubscription = registerSubscription(
-      _repository.watchDevices().listen(
-        (final list) {
-          if (isClosed || requestId != _devicesWatchRequestId) return;
-          _allDevices = List<IotDevice>.unmodifiable(list);
-          final IotDemoDeviceFilter activeFilter =
-              state.mapOrNull(loaded: (final s) => s.filter) ?? filter;
-          emit(
-            _buildLoadedState(
-              devices: list,
-              filter: activeFilter,
-              selectedDeviceId:
-                  state.mapOrNull(loaded: (final s) => s.selectedDeviceId) ??
-                  previousSelectedDeviceId,
-            ),
-          );
-        },
-        onError: (final Object error, final StackTrace stackTrace) {
-          AppLogger.error(
-            'IotDemoCubit watchDevices error',
-            error,
-            stackTrace,
-          );
-          if (isClosed || requestId != _devicesWatchRequestId) return;
-          emit(
-            IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()),
-          );
-        },
-        cancelOnError: true,
-      ),
-    );
-  }
-
-  IotDemoState _buildLoadedState({
-    required final List<IotDevice> devices,
-    required final IotDemoDeviceFilter filter,
-    required final String? selectedDeviceId,
-  }) {
-    final List<IotDevice> filteredDevices = _applyFilter(devices, filter);
-    final String? resolvedSelection =
-        selectedDeviceId != null &&
-            filteredDevices.any((final d) => d.id == selectedDeviceId)
-        ? selectedDeviceId
-        : null;
-    return IotDemoState.loaded(
-      filteredDevices,
-      selectedDeviceId: resolvedSelection,
-      filter: filter,
-    );
-  }
-
-  List<IotDevice> _applyFilter(
-    final List<IotDevice> devices,
-    final IotDemoDeviceFilter filter,
-  ) {
-    switch (filter) {
-      case IotDemoDeviceFilter.all:
-        return devices;
-      case IotDemoDeviceFilter.toggledOnOnly:
-        return devices.where((final d) => d.toggledOn).toList();
-      case IotDemoDeviceFilter.toggledOffOnly:
-        return devices.where((final d) => !d.toggledOn).toList();
-    }
   }
 
   void selectDevice(final String? deviceId) {
@@ -263,6 +152,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
       },
     );
   }
+
+  void emitIotState(final IotDemoState value) => emit(value);
 
   @override
   Future<void> close() {

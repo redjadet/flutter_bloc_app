@@ -7,6 +7,8 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purcha
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
+part 'flutter_in_app_purchase_repository_purchases.part.dart';
+
 /// Real store-backed implementation using `in_app_purchase`.
 ///
 /// Notes:
@@ -89,13 +91,13 @@ class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
 
   @override
   Stream<IapPurchaseResult> watchPurchaseResults() {
-    _ensurePurchaseSubscription();
+    ensurePurchaseSubscriptionImpl();
     return _resultsController.stream;
   }
 
   @override
   Future<IapPurchaseResult> purchase(final IapProduct product) async {
-    _ensurePurchaseSubscription();
+    ensurePurchaseSubscriptionImpl();
     final bool available = await _store.isAvailable();
     if (!available) {
       return IapPurchaseResult.failure(
@@ -108,8 +110,14 @@ class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
     // UI can update deterministically after a "Buy" tap.
     final Stream<IapPurchaseResult> resultsForProduct = _resultsController
         .stream
-        .where((final r) => _matchesProductId(r, product.id))
-        .where(_isTerminal)
+        .where(
+          (final r) =>
+              _FlutterInAppPurchaseRepositoryPurchases.matchesProductIdImpl(
+                r,
+                product.id,
+              ),
+        )
+        .where(_FlutterInAppPurchaseRepositoryPurchases.isTerminalImpl)
         .take(1);
 
     final ProductDetailsResponse response = await _store.queryProductDetails(
@@ -160,7 +168,7 @@ class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
 
   @override
   Future<void> restorePurchases() async {
-    _ensurePurchaseSubscription();
+    ensurePurchaseSubscriptionImpl();
     await _store.restorePurchases();
   }
 
@@ -178,80 +186,4 @@ class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
     _purchaseSub = null;
     unawaited(_resultsController.close());
   }
-
-  void _ensurePurchaseSubscription() {
-    _purchaseSub ??= _store.purchaseStream.listen(
-      _onPurchaseUpdates,
-      onError: (final Object error, final StackTrace st) {},
-    );
-  }
-
-  Future<void> _onPurchaseUpdates(final List<PurchaseDetails> purchases) async {
-    for (final purchase in purchases) {
-      final String productId = purchase.productID;
-      switch (purchase.status) {
-        case PurchaseStatus.pending:
-          _resultsController.add(
-            IapPurchaseResult.pending(productId: productId),
-          );
-          break;
-        case PurchaseStatus.canceled:
-          _resultsController.add(
-            IapPurchaseResult.cancelled(productId: productId),
-          );
-          break;
-        case PurchaseStatus.error:
-          _resultsController.add(
-            IapPurchaseResult.failure(
-              productId: productId,
-              message: purchase.error?.message ?? 'Purchase error.',
-            ),
-          );
-          break;
-        case PurchaseStatus.purchased:
-        case PurchaseStatus.restored:
-          _entitlements = _applyEntitlement(productId);
-          if (productId == IapDemoProductIds.consumableCredits100) {
-            await _creditsStore.saveCredits(_entitlements.credits);
-          }
-          _resultsController.add(
-            IapPurchaseResult.success(productId: productId),
-          );
-          if (purchase.pendingCompletePurchase) {
-            await _store.completePurchase(purchase);
-          }
-          break;
-      }
-    }
-  }
-
-  IapEntitlements _applyEntitlement(final String productId) {
-    if (productId == IapDemoProductIds.consumableCredits100) {
-      return _entitlements.copyWith(credits: _entitlements.credits + 100);
-    }
-    if (productId == IapDemoProductIds.nonConsumablePremium) {
-      return _entitlements.copyWith(isPremiumOwned: true);
-    }
-    if (productId == IapDemoProductIds.subscriptionMonthly) {
-      // Best-effort demo expiry; real apps should validate via backend.
-      return _entitlements.copyWith(
-        isSubscriptionActive: true,
-        subscriptionExpiry: DateTime.now().add(const Duration(days: 30)),
-      );
-    }
-    return _entitlements;
-  }
-
-  static bool _matchesProductId(final IapPurchaseResult r, final String id) =>
-      r.when(
-        success: (final productId, final message) => productId == id,
-        cancelled: (final productId, final message) => productId == id,
-        pending: (final productId, final message) => productId == id,
-        failure: (final productId, final message) => productId == id,
-      );
-
-  static bool _isTerminal(final IapPurchaseResult r) => r.maybeWhen(
-    pending: (final productId, final message) => false,
-    orElse: () => true,
-  );
 }

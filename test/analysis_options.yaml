@@ -6,6 +6,12 @@ analyzer:
     strict-inference: false
     strict-raw-types: false
 
+file_length_lint:
+  include_defaults: true
+  excludes:
+    - '*.dart'
+    - '**/*.dart'
+
 linter:
   rules:
     # Relax rules in tests for ergonomics

@@ -131,7 +131,6 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   @override
   Future<SyncOperation> enqueue(final SyncOperation operation) async =>
       operation;
-
   @override
   Future<int> prune({
     final int maxRetryCount = 10,
@@ -144,20 +143,16 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
     final int? limit,
     final String? supabaseUserIdFilter,
   }) async => const <SyncOperation>[];
-
   @override
   Future<void> markCompleted(final String operationId) async {}
-
   @override
   Future<void> markFailed({
     required final String operationId,
     required final DateTime nextRetryAt,
     final int? retryCount,
   }) async {}
-
   @override
   Future<void> clear() async {}
-
   @override
   Future<void> dispose() async {}
 
@@ -175,7 +170,6 @@ class _FakeNetworkStatusService implements NetworkStatusService {
 
   @override
   Future<NetworkStatus> getCurrentStatus() async => NetworkStatus.online;
-
   @override
   Future<void> dispose() async {}
 }
@@ -205,7 +199,6 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> stop() async {}
-
   @override
   Future<void> dispose() async {}
 

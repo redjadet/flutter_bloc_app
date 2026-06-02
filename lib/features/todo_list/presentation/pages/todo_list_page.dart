@@ -26,6 +26,7 @@ import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 part 'todo_list_page_app_bar.dart';
 part 'todo_list_page_body.dart';
+part 'todo_list_page_body.part.dart';
 part 'todo_list_page_handlers.dart';
 
 enum _BatchMenuAction { complete, uncomplete, delete }

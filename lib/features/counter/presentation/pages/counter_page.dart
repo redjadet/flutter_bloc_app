@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:go_router/go_router.dart';
 
 part 'counter_page_content.dart';
+part 'counter_page_listeners.part.dart';
 
 class CounterPage extends StatefulWidget {
   const CounterPage({
@@ -41,6 +42,7 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   late final bool _showFlavorBadge;
   late final ConfettiController _confettiController;
+  late final _CounterPageListenerDelegate _listenerDelegate;
   DateTime? _lastFlushTime;
   bool _isCannotGoBelowZeroSnackBarVisible = false;
   bool _didEnsureSyncStarted = false;
@@ -58,7 +60,13 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     _confettiController = ConfettiController(
       duration: const Duration(milliseconds: 800),
     );
+    _listenerDelegate = _CounterPageListenerDelegate(this);
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  void _markCannotGoBelowZeroSnackBarHidden() {
+    if (!mounted) return;
+    setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
   }
 
   @override
@@ -73,7 +81,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _disposeCannotGoBelowZeroSnackBarDelayHandle();
+    _listenerDelegate.disposeCannotGoBelowZeroSnackBarDelayHandle();
     WidgetsBinding.instance.removeObserver(this);
     _confettiController.dispose();
     super.dispose();
@@ -92,7 +100,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
         cubit.pauseAutoDecrement();
-        unawaited(_flushSyncIfPossible(context));
+        unawaited(_listenerDelegate.flushSyncIfPossible(context));
         break;
       case AppLifecycleState.resumed:
         cubit.resumeAutoDecrement();
@@ -113,155 +121,8 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
     );
   }
 
-  List<TypeSafeBlocListener<CounterCubit, CounterState>> _buildListeners() {
-    return <TypeSafeBlocListener<CounterCubit, CounterState>>[
-      TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => prev.error != curr.error,
-        listener: _handleCounterErrorStateChanged,
-      ),
-      TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => curr.count > prev.count,
-        listener: _handleCounterIncremented,
-      ),
-      TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) =>
-            prev.count == 0 && curr.count > 0,
-        listener: _handleCounterRecoveredFromZero,
-      ),
-      TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => prev.count != curr.count,
-        listener: _handleCounterCountChanged,
-      ),
-    ];
-  }
-
-  Future<void> _flushSyncIfPossible(final BuildContext context) async {
-    try {
-      final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
-      if (!syncCubit.state.isOnline) {
-        return;
-      }
-
-      final DateTime now = DateTime.now();
-      final DateTime? lastFlush = _lastFlushTime;
-      if (lastFlush != null &&
-          now.difference(lastFlush) < _flushThrottleDuration) {
-        return;
-      }
-      _lastFlushTime = now;
-
-      unawaited(syncCubit.flush());
-    } on Object {
-      // SyncStatusCubit not available in this subtree (e.g., tests/minimal shells).
-    }
-  }
-
-  void _handleCounterErrorStateChanged(
-    final BuildContext context,
-    final CounterState state,
-  ) {
-    final CounterError? error = state.error;
-    if (error == null) {
-      return;
-    }
-
-    final String localizedMessage = counterErrorMessage(
-      context.l10n,
-      error,
-    );
-    if (error.type == CounterErrorType.cannotGoBelowZero) {
-      if (!_isCannotGoBelowZeroSnackBarVisible) {
-        _showCannotGoBelowZeroSnackBar(localizedMessage);
-      }
-      return;
-    }
-
-    ErrorHandling.handleCubitError(
-      context,
-      UnknownError(
-        message: localizedMessage,
-        cause: error,
-      ),
-      customMessage: localizedMessage,
-      onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
-        context,
-        (final cubit) => cubit.clearError(),
-      ),
-    );
-  }
-
-  void _handleCounterIncremented(
-    final BuildContext context,
-    final CounterState state,
-  ) {
-    _confettiController.play();
-  }
-
-  void _handleCounterRecoveredFromZero(
-    final BuildContext context,
-    final CounterState state,
-  ) {
-    _isCannotGoBelowZeroSnackBarVisible = false;
-    ErrorHandling.clearSnackBars(context);
-  }
-
-  void _handleCounterCountChanged(
-    final BuildContext context,
-    final CounterState state,
-  ) {
-    // check-ignore: listener callback is event-driven, not a build side effect
-    unawaited(_flushSyncIfPossible(context));
-  }
-
-  void _disposeCannotGoBelowZeroSnackBarDelayHandle() {
-    _snackBarHideTimerHandle?.dispose();
-    _snackBarHideTimerHandle = null;
-  }
-
-  void _hideCannotGoBelowZeroSnackBar() {
-    if (!mounted) {
-      return;
-    }
-    _disposeCannotGoBelowZeroSnackBarDelayHandle();
-    ErrorHandling.hideCurrentSnackBar(context);
-  }
-
-  void _handleCannotGoBelowZeroSnackBarClosed() {
-    _disposeCannotGoBelowZeroSnackBarDelayHandle();
-    if (mounted) {
-      setState(() => _isCannotGoBelowZeroSnackBarVisible = false);
-    }
-  }
-
-  void _scheduleCannotGoBelowZeroSnackBarHide(final TimerService timerService) {
-    _snackBarHideTimerHandle = timerService.runOnce(
-      _cannotGoBelowZeroSnackBarDuration,
-      _hideCannotGoBelowZeroSnackBar,
-    );
-  }
-
-  void _showCannotGoBelowZeroSnackBar(final String message) {
-    _disposeCannotGoBelowZeroSnackBarDelayHandle();
-
-    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
-    controller = ErrorHandling.showErrorSnackBar(
-      context,
-      message,
-      duration: _cannotGoBelowZeroSnackBarDuration,
-    );
-    if (controller == null) {
-      return;
-    }
-    _isCannotGoBelowZeroSnackBarVisible = true;
-
-    final TimerService timerService =
-        widget.timerService ?? DefaultTimerService();
-    _scheduleCannotGoBelowZeroSnackBarHide(timerService);
-
-    unawaited(
-      controller.closed.whenComplete(_handleCannotGoBelowZeroSnackBarClosed),
-    );
-  }
+  List<TypeSafeBlocListener<CounterCubit, CounterState>> _buildListeners() =>
+      _listenerDelegate.buildListeners();
 
   Future<void> _handleOpenSettings(final BuildContext context) async {
     final l10n = context.l10n;

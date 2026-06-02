@@ -13,6 +13,8 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/c
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
+part 'case_study_record_page_redirect.part.dart';
+
 class CaseStudyRecordPage extends StatefulWidget {
   const CaseStudyRecordPage({super.key});
 
@@ -199,31 +201,5 @@ class _CaseStudyRecordPageState extends State<CaseStudyRecordPage> {
         },
       ),
     );
-  }
-}
-
-class _CaseStudyStepRedirect extends StatefulWidget {
-  const _CaseStudyStepRedirect({required this.targetRouteName});
-
-  final String targetRouteName;
-
-  @override
-  State<_CaseStudyStepRedirect> createState() => _CaseStudyStepRedirectState();
-}
-
-class _CaseStudyStepRedirectState extends State<_CaseStudyStepRedirect> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        context.goNamed(widget.targetRouteName);
-      }
-    });
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
   }
 }

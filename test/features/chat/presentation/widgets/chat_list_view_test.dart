@@ -368,7 +368,6 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
   @override
   Future<SyncOperation> enqueue(final SyncOperation operation) async =>
       operation;
-
   @override
   Future<int> prune({
     int maxRetryCount = 10,
@@ -381,20 +380,16 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
     final int? limit,
     final String? supabaseUserIdFilter,
   }) async => const <SyncOperation>[];
-
   @override
   Future<void> markCompleted(final String operationId) async {}
-
   @override
   Future<void> markFailed({
     required final String operationId,
     required final DateTime nextRetryAt,
     final int? retryCount,
   }) async {}
-
   @override
   Future<void> clear() async {}
-
   @override
   Future<void> dispose() async {}
 
