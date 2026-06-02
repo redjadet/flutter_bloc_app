@@ -18,6 +18,7 @@ not a replacement for `pubspec.yaml`.
 | App entrypoints | `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` |
 | Shared bootstrap | `lib/main_bootstrap.dart` |
 | App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |
+| Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for existing Podfiles and plugin fallback |
 
 ## Core architecture
 

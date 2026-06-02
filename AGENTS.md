@@ -59,6 +59,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 ## Must Keep
 
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
+- Flutter app-code/UI edits: hot reload active controllable debug session; hot restart when needed; see [`docs/agent_kb/tool_orchestration.md`](docs/agent_kb/tool_orchestration.md).
 - Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
 - UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
 - Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).

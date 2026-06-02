@@ -1,0 +1,28 @@
+---
+description: After editing Dart/Flutter code, trigger hot reload when app running (reduces edit-test loop).
+globs:
+  - lib/**/*.dart
+  - test/**/*.dart
+  - integration_test/**/*.dart
+alwaysApply: true
+---
+
+# Auto hot reload after edits
+
+When you change Dart/Flutter code and there is a running Flutter app, **trigger hot reload before you claim the change is verified**.
+
+Preferred path (Dart MCP, fastest):
+
+- Connect to a Dart Tooling Daemon (DTD) that owns the running app:
+  - `dtd` → `listDtdUris`
+  - `dtd` → `connect` (pick the DTD that matches this repo)
+  - `dtd` → `listConnectedApps`
+- Run `hot_reload` (use `appUri` if multiple apps).
+
+Fallback (no DTD / no running app):
+
+- Report "no active controllable session" and use the narrowest repo validation command instead (see `docs/agents_quick_reference.md`).
+
+Escalation:
+
+- If hot reload cannot apply (init/DI/codegen/native), use `hot_restart`.

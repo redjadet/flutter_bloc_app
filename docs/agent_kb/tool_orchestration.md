@@ -11,5 +11,7 @@ Use capabilities as an execution system, not decoration.
 - Tool docs/templates should name what tool does, when to use it, required inputs, side effects, retry safety, and common failure modes.
 - Semantic search/code graph finds likely files; targeted raw reads still confirm before edits.
 - Faster/mechanical tools or models may do repetitive edits only after the owner has fixed scope, write set, and validation; final judgment stays with the coordinating agent.
+- Protocol: `dart mcp-server` uses **newline-delimited JSON-RPC** (NDJSON), not `Content-Length` framing.
+- After Flutter app-code, UI, route, asset, or localization edits, trigger hot reload for any already-running controllable debug session before manual inspection; use hot restart when reload cannot apply (init, DI, codegen, native, `dart-define`), and report when no session was available instead of silently starting one.
 - More agents/tools are not automatically better. Add them when they reduce uncertainty, isolate context, or verify a risky decision.
 - Setup details live in [`agent_environment_setup.md`](../agent_environment_setup.md).
