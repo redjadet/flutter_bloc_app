@@ -71,8 +71,8 @@ Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context naviga
 
 | Need | Cursor | Codex |
 | --- | --- | --- |
-| Orientation + commands | `agents-quick-reference` | `flutter-bloc-app-quick-reference` |
-| Non-trivial delivery | `agents-delivery-workflow` | `flutter-bloc-app-delivery-workflow` |
+| Orientation + commands | `agents-quick-reference` | `agents-quick-reference` |
+| Non-trivial delivery | `agents-delivery-workflow` | `agents-delivery-workflow` |
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |
 

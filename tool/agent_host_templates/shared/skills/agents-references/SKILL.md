@@ -7,13 +7,9 @@ description: External references and key file paths for this repo. Use when loca
 
 Thin pointer skill. **Do not duplicate** long path lists here.
 
-## Open (order)
+## Pointers
 
-1. [`docs/agent_project_context.md`](../../../../../docs/agent_project_context.md) — topic table
-2. [`CODEMAP.md`](../../../../../CODEMAP.md) — feature/layout map
-3. [`docs/README.md`](../../../../../docs/README.md) — doc index
-4. `agents-repo-context` — stack snapshot
-5. `agents-canonical-rules` (+ scoped children) — coding rules
+Topic table: [`docs/agent_project_context.md`](../../../../../docs/agent_project_context.md). Feature/layout map: [`CODEMAP.md`](../../../../../CODEMAP.md). Doc index: [`docs/README.md`](../../../../../docs/README.md). Stack snapshot: `agents-repo-context`. Coding rules: `agents-canonical-rules` (+ scoped children).
 
 ## Find code
 

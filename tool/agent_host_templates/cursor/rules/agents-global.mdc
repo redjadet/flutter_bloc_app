@@ -5,7 +5,7 @@ alwaysApply: false
 
 # Global Flutter agent reminder
 
-Canon: `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_context.md` → `docs/ai_code_review_protocol.md`. Commands: `docs/agents_quick_reference.md` only.
+Canon starts at `AGENTS.md` + `docs/ai/context_loading.md`. Pointers: `docs/agent_knowledge_base.md`, `docs/agent_project_context.md`, `docs/ai_code_review_protocol.md`. Commands: `docs/agents_quick_reference.md` only.
 
 ## Execution (beyond always-on map)
 
@@ -18,7 +18,7 @@ Canon: `AGENTS.md` → `docs/agent_knowledge_base.md` → `docs/agent_project_co
 ## Context budget
 
 - Smallest reads; targeted search beats dumps.
-- **context ladder:** [`docs/ai/context_loading.md`](../../../../docs/ai/context_loading.md) (canonical); memory/graph detail in `docs/agent_knowledge_base.md`.
+- **context ladder:** canonical; memory/graph detail in `docs/agent_knowledge_base.md`.
 - Refactor/feature audit: landmines only (bugs, workarounds, deprecated patterns).
 
 ## Quality bar

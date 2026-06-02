@@ -73,16 +73,12 @@ require_contains "tool/agent_session_bootstrap.sh" "docs/ai/context_loading.md"
 require_contains "tool/agent_session_bootstrap.sh" "context_ladder|3|structural graph"
 
 if [[ -d "tool/agent_host_templates" ]]; then
-  require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" "reusable agent conclusion"
-  require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" "context ladder"
-  require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" "File verified reusable conclusions"
-  require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" "context ladder"
+  require_contains "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" "reusable agent conclusion"
+  require_contains "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" "Context ladder"
+  require_contains "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" "File verified reusable conclusions"
+  require_contains "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" "context ladder"
   require_contains "tool/agent_host_templates/cursor/rules/agents-global.mdc" "File verified reusable conclusions"
   require_contains "tool/agent_host_templates/cursor/rules/agents-global.mdc" "context ladder"
-  require_contains "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" "reusable agent conclusion"
-  require_contains "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" "Context ladder"
-  require_contains "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" "File verified reusable conclusions"
-  require_contains "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" "context ladder"
 fi
 
 if [[ "$failures" -ne 0 ]]; then

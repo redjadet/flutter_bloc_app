@@ -143,12 +143,7 @@ def main() -> int:
 
     optional_replacements = [
         (
-            PROJECT_ROOT / "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md",
-            r"^(Repo: Flutter )\S+( / Dart )\S+(;.*)$",
-            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
-        ),
-        (
-            PROJECT_ROOT / "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md",
+            PROJECT_ROOT / "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md",
             r"^(Repo: Flutter )\S+( / Dart )\S+(;.*)$",
             rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),

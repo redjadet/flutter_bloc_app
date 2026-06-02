@@ -50,6 +50,13 @@ require_not_contains() {
   fi
 }
 
+require_absent() {
+  local path="$1"
+  if [ -e "$path" ]; then
+    fail "$path must not exist; use shared host-neutral source instead"
+  fi
+}
+
 require_all_contains() {
   local path="$1"
   shift
@@ -195,6 +202,10 @@ if ! bash "tool/check_agent_memory_compounding.sh"; then
   fail "Agent memory-compounding guard failed"
 fi
 
+if ! bash "tool/check_continual_learning_index.sh"; then
+  fail "Continual-learning index guard failed"
+fi
+
 if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "AGENTS.md" \
@@ -212,8 +223,25 @@ if [ -d "tool/agent_host_templates" ]; then
     "Surgical diff" \
     "Report proof"
 
+  require_absent "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
+  require_absent "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-repo-context/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-principles-baseline/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-references/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-architecture/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-presentation/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-async/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-platform/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-validation-testing/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-common-pitfalls/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-modularity/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-shared-patterns/SKILL.md"
+
   require_all_contains \
-    "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" \
+    "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" \
     "AGENTS.md" \
     "DESIGN.md" \
     "docs/design_system.md" \
@@ -224,23 +252,43 @@ if [ -d "tool/agent_host_templates" ]; then
     "tool/check_design_md.sh" \
     "tool/run_mix_lint.sh" \
     "tool/check_agent_asset_drift.sh" \
-    "tool/sync_agent_assets.sh --dry-run"
+    "tool/sync_agent_assets.sh --dry-run" \
+    "flutter-cross-platform-modern"
 
   require_all_contains \
-    "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" \
+    "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" \
     "AGENTS.md" \
     "DESIGN.md" \
     "docs/design_system.md" \
     "docs/agent_knowledge_base.md" \
     "docs/ai_code_review_protocol.md" \
     "tasks/codex/todo.md" \
+    "tasks/cursor/todo.md" \
     "tool/check_agent_knowledge_base.sh"
   require_all_contains \
-    "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" \
+    "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" \
     "95% confident" \
     "Surgical diff" \
     "Self-verify final response" \
     "Report only after Verify"
+
+  require_absent "tool/agent_host_templates/codex/skills/flutter-cross-platform-modern/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/flutter-cross-platform-modern/SKILL.md"
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/flutter-cross-platform-modern/SKILL.md" \
+    "AGENTS.md" \
+    "docs/ai/context_loading.md" \
+    "docs/agent_project_context.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/engineering/validation_routing_fast_vs_full.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
+    "docs/testing/widget_test_playbook.md" \
+    "PlatformAdaptive" \
+    "dart:io" \
+    "./bin/router_feature_validate" \
+    "./bin/integration_preflight" \
+    "./bin/checklist"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
@@ -265,43 +313,38 @@ if [ -d "tool/agent_host_templates" ]; then
     "Self-verify before report"
 
   require_all_contains \
-    "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
-    "AGENTS.md" \
-    "DESIGN.md" \
-    "docs/design_system.md" \
-    "docs/agent_knowledge_base.md" \
-    "docs/agents_quick_reference.md" \
-    "docs/ai_code_review_protocol.md" \
-    "tool/check_agent_knowledge_base.sh" \
-    "tool/check_design_md.sh" \
-    "tool/run_mix_lint.sh" \
-    "tool/check_agent_asset_drift.sh" \
-    "tool/sync_agent_assets.sh --dry-run"
-
-  require_all_contains \
-    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
-    "AGENTS.md" \
-    "DESIGN.md" \
-    "docs/design_system.md" \
-    "docs/agent_knowledge_base.md" \
-    "docs/agents_quick_reference.md" \
-    "docs/ai_code_review_protocol.md" \
-    "tasks/cursor/todo.md" \
-    "tool/check_agent_knowledge_base.sh"
-  require_all_contains \
-    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
-    "95% confident" \
-    "Surgical diff" \
-    "Self-verify final response" \
-    "Report only after Verify"
-
-  require_all_contains \
-    "tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md" \
+    "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" \
     "Multi-agent" \
     "Benefit: team" \
     "Benefit: single" \
     "tasks/cursor/team/<run-id>/" \
     "agent_knowledge_base.md#multi-agent-hub"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-repo-context/SKILL.md" \
+    "AGENTS.md" \
+    "CODEMAP.md" \
+    "docs/agents_quick_reference.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-validation-testing/SKILL.md" \
+    "docs/agents_quick_reference.md" \
+    "docs/engineering/validation_routing_fast_vs_full.md" \
+    "docs/validation_scripts.md" \
+    "docs/testing_overview.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-canonical-rules/SKILL.md" \
+    "agents-principles-baseline" \
+    "agents-common-pitfalls" \
+    "agents-canonical-rules-architecture"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-principles-baseline/SKILL.md" \
+    "docs/clean_architecture.md" \
+    "docs/solid_principles.md" \
+    "docs/dry_principles.md" \
+    "docs/CODE_QUALITY.md"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \
@@ -337,10 +380,12 @@ if [ -d "tool/agent_host_templates" ]; then
     "agent_knowledge_base.md#multi-agent-hub"
 
   require_all_contains \
-    "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md" \
+    "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" \
     "multi-agent hub" \
     "tasks/cursor/team/<run-id>/" \
-    "agent_knowledge_base.md#multi-agent-hub"
+    "agent_knowledge_base.md#multi-agent-hub" \
+    "flutter-cross-platform-modern"
+
 else
   echo "Host-template source checks skipped (tool/agent_host_templates not present)."
 fi

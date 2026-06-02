@@ -9,11 +9,9 @@ description: Validation scripts, regression guards, and testing requirements for
 
 Running checks, regression tests, Mix/lifecycle/offline-first touches.
 
-## Open (order)
+## Pointers
 
-1. `docs/agents_quick_reference.md` § Validation Chooser
-2. `docs/engineering/validation_routing_fast_vs_full.md`
-3. `docs/validation_scripts.md` (catalog; **C** = in `./bin/checklist`)
+Chooser: `docs/agents_quick_reference.md` § Validation Chooser. Routing: `docs/engineering/validation_routing_fast_vs_full.md`. Catalog: `docs/validation_scripts.md` (**C** = in `./bin/checklist`).
 
 ## Do not duplicate
 
