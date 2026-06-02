@@ -25,14 +25,23 @@ analyzer:
     strict-raw-types: true
   errors:
     avoid_dynamic_calls: error
+    avoid_catches_without_on_clauses: error
+    avoid_catching_errors: error
     avoid_unnecessary_containers: error
+    avoid_void_async: error
+    await_only_futures: error
     cancel_subscriptions: error
     close_sinks: warning
+    document_ignores: error
     discarded_futures: error
+    only_throw_errors: error
     prefer_const_constructors: error
     prefer_const_literals_to_create_immutables: error
     prefer_final_fields: warning
     prefer_final_locals: warning
+    unawaited_futures: error
+    unnecessary_ignore: error
+    unnecessary_statements: error
     use_build_context_synchronously: error
     use_key_in_widget_constructors: error
     # Stricter type inference and null-safety rules
