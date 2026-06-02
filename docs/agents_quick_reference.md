@@ -76,6 +76,8 @@ Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context naviga
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |
 
+Shared host-neutral skill source: [`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/).
+
 Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts/operations_running.md`](validation_scripts/operations_running.md#git--local-branch-cleanup).
 
 ## Task doc routing

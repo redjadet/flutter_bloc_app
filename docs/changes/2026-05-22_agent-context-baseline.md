@@ -13,13 +13,16 @@ Pre-optimization snapshot for the agent context/token pass. JSON inventories sta
 
 Largest `repoTemplates` skills:
 
+Paths below point at current source locations; several host-neutral skills moved
+to `tool/agent_host_templates/shared/` after this baseline.
+
 | Tokens | Path |
 | ---: | --- |
-| 849 | [`tool/agent_host_templates/cursor/skills/agents-references/SKILL.md`](../../tool/agent_host_templates/cursor/skills/agents-references/SKILL.md) |
-| 587 | [`tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md`](../../tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md) |
+| 849 | [`tool/agent_host_templates/shared/skills/agents-references/SKILL.md`](../../tool/agent_host_templates/shared/skills/agents-references/SKILL.md) |
+| 587 | [`tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md`](../../tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md) |
 | 582 | [`tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md`](../../tool/agent_host_templates/cursor/skills/upgrade-pr-triage-validate/SKILL.md) |
 | 565 | [`tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md`](../../tool/agent_host_templates/cursor/skills/agents-cursor-integration/SKILL.md) |
-| 565 | [`tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md`](../../tool/agent_host_templates/cursor/skills/agents-delivery-workflow/SKILL.md) |
+| 565 | [`tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md`](../../tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md) |
 
 ## Always-on bytes
 
@@ -42,4 +45,4 @@ Largest `repoTemplates` skills:
 
 ## Dedup matrix
 
-Committed: [`README.md`](../audits/README.md), [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses `docs/audits/*` + `!docs/audits/README.md` + `!docs/audits/dedup_matrix_*.md` (not `docs/audits/`, which blocks re-includes).
+Committed: [`README.md`](../audits/README.md), [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses docs/audits/* plus !docs/audits/README.md and !docs/audits/dedup_matrix_*.md (not docs/audits/, which blocks re-includes).

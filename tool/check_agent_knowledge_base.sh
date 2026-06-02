@@ -239,6 +239,15 @@ if [ -d "tool/agent_host_templates" ]; then
   require_absent "tool/agent_host_templates/cursor/skills/agents-common-pitfalls/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-modularity/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-shared-patterns/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-figma/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/figma-this-repo/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-supabase/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/brainstorming/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/caveman-compress/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/systematic-debugging/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/test-driven-development/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/verification-before-completion/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/writing-plans/SKILL.md"
 
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" \
@@ -345,6 +354,30 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/solid_principles.md" \
     "docs/dry_principles.md" \
     "docs/CODE_QUALITY.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-figma/SKILL.md" \
+    "DESIGN.md" \
+    "docs/design_system.md" \
+    "figma-sync" \
+    "get_design_context"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-supabase/SKILL.md" \
+    "supabase/migrations/*.sql" \
+    "docs/offline_first/supabase_migrations.md" \
+    "supabase/README.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/systematic-debugging/SKILL.md" \
+    "root cause" \
+    "changes doc"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/writing-plans/SKILL.md" \
+    "tasks/cursor/todo.md" \
+    "tasks/codex/todo.md" \
+    "docs/ai/context_loading.md"
 
   require_all_contains \
     "tool/agent_host_templates/cursor/skills/agents-meta-behavior/SKILL.md" \

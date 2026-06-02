@@ -16,7 +16,9 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
   `agents-delivery-workflow`, `agents-repo-context`, `agents-references`,
   `agents-validation-testing`, `agents-principles-baseline`,
   `agents-canonical-rules*`, `agents-common-pitfalls`, `agents-modularity`,
-  `agents-shared-patterns`, and `flutter-cross-platform-modern`.
+  `agents-shared-patterns`, `agents-figma`, `figma-this-repo`,
+  `agents-supabase`, small workflow routers, and
+  `flutter-cross-platform-modern`.
 - Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
 - After host-template changes: `./tool/sync_agent_assets.sh --dry-run` -> `./tool/sync_agent_assets.sh --apply` -> dry-run clean -> `./tool/check_agent_asset_drift.sh`.
 - No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.
