@@ -11,6 +11,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Closed loop. | Plan once, execute end-to-end, verify, report proof. |
 | AI output = draft. | Review gate + scope-matched validation before trust. |
 | Codebase = memory. | Durable facts live in docs/plans/tests/scripts/ADRs, not chat. |
+| Retrieval beats recall. | Search/retrieve owning repo artifacts before answering from model memory. |
 | Missing capability beats retry. | Repeated failure => add doc/tool/test/fixture/script. |
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |

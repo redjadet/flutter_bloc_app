@@ -18,7 +18,8 @@ Next session smarter, no bloated wiki.
 - At session end, persist only reusable conclusions, current blockers, and exact next step when they matter for future work; otherwise report proof without creating memory noise.
 - Prefer fat skills only for repeated, validated workflows with clear triggers/write scope/tools/quality bar. No cron/autonomous behavior without explicit user approval.
 - Vendor skills may exist via Cursor plugins. If a vendor skill is high-frequency and bloats context, prefer **repo-owned shadow shims** synced into `~/.cursor/skills/` (same `name:`) that route to repo canon and keep hard gates.
-- For this repo, prefer maps, `rg`, code-review-graph, and targeted validation over separate RAG layer.
+- Long-term memory is retrieval, not recall: search relevant repo artifacts first, retrieve owning docs/code/tests/plans, then answer or edit from retrieved facts.
+- For this repo, prefer maps, `rg`, code-review-graph, and targeted validation as the repo RAG path over a separate RAG layer.
 - Semantic lint during doc/agent changes: stale plans, duplicate rules, source/host-template contradictions, reusable conclusions stranded in task notes.
 - Before feature/refactor work, do a context audit: related code, tests, docs, plans, known bugs, workarounds, deprecated patterns, unusual helpers. Record only high-signal landmines in tracker or owning doc.
 - If an approach needs more than two attempts, record failed approaches, cause, and final fix in the owning doc, [`tasks/lessons.md`](../../tasks/lessons.md), or `docs/changes/` so future agents avoid the same path.

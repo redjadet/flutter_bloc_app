@@ -480,8 +480,8 @@ validate_tooling_only_dependencies() {
 # Bash 3.2 (macOS /bin/bash) + set -u: "${arr[@]}" in for-loops errors on empty arrays; use ${arr[@]+"${arr[@]}"} instead.
 collect_changed_files_from_worktree() {
   {
-    git diff --name-only --diff-filter=ACMRTUXB
-    git diff --cached --name-only --diff-filter=ACMRTUXB
+    git diff --name-only --diff-filter=ACDMRTUXB
+    git diff --cached --name-only --diff-filter=ACDMRTUXB
     git ls-files --others --exclude-standard
   }
 }
@@ -499,7 +499,7 @@ collect_changed_files_from_ci() {
       # Diff against the base parent when available so CI can recover branch scope
       # even from a clean checkout with no local git diff.
       if git rev-parse --verify HEAD^1 >/dev/null 2>&1; then
-        git diff --name-only --diff-filter=ACMRTUXB HEAD^1..HEAD
+        git diff --name-only --diff-filter=ACDMRTUXB HEAD^1..HEAD
         return 0
       fi
 
@@ -511,7 +511,7 @@ collect_changed_files_from_ci() {
         if git rev-parse --verify "$remote_base" >/dev/null 2>&1; then
           merge_base="$(git merge-base HEAD "$remote_base" 2>/dev/null || true)"
           if [ -n "$merge_base" ]; then
-            git diff --name-only --diff-filter=ACMRTUXB "$merge_base"...HEAD
+            git diff --name-only --diff-filter=ACDMRTUXB "$merge_base"...HEAD
             return 0
           fi
         fi
@@ -519,9 +519,9 @@ collect_changed_files_from_ci() {
       ;;
     push|merge_group)
       if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
-        git diff --name-only --diff-filter=ACMRTUXB HEAD^..HEAD
+        git diff --name-only --diff-filter=ACDMRTUXB HEAD^..HEAD
       else
-        git show --pretty='' --name-only --diff-filter=ACMRTUXB HEAD
+        git show --pretty='' --name-only --diff-filter=ACDMRTUXB HEAD
       fi
       return 0
       ;;
@@ -583,6 +583,40 @@ should_run_mix_lint_auto() {
   return 1
 }
 
+should_run_pubspec_codegen_compat_preflight() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      pubspec.yaml|pubspec.lock)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
+run_pubspec_codegen_compat_preflight_if_needed() {
+  if ! should_run_pubspec_codegen_compat_preflight; then
+    return 0
+  fi
+
+  echo "🧩 Checking pubspec codegen/analyzer compatibility before dependency resolution"
+  if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
+    echo "❌ Pubspec codegen/analyzer compatibility failed; fix pubspec before running flutter pub get."
+    return 1
+  fi
+  echo ""
+}
+
 is_docs_only_change_set() {
   if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
     return 1
@@ -592,12 +626,9 @@ is_docs_only_change_set() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       *.md|*.mdx|*.txt|*.rst|*.adoc|\
-      AGENTS.md|\
       .markdownlintignore|\
       .markdownlint-cli2ignore|\
       docs/*|\
-      llms.txt|\
-      tasks/*.md|\
       tool/agent_host_templates/*|\
       README|README.*|\
       CHANGELOG|CHANGELOG.*|\
@@ -1082,14 +1113,11 @@ collect_changed_doc_files() {
 
   if [ "${#changed_files[@]}" -gt 0 ]; then
     for file in "${changed_files[@]+"${changed_files[@]}"}"; do
-      case "$file" in
-        README.md|SECURITY.md|AGENTS.md|\
-        docs/*.md|docs/*/*.md|docs/*/*/*.md)
-          if [ -f "$file" ]; then
-            out+=("$file")
-          fi
-          ;;
-      esac
+      if [[ "$file" == "README.md" || "$file" == "SECURITY.md" || "$file" == "AGENTS.md" || ( "$file" == docs/* && "$file" == *.md ) ]]; then
+        if [ -f "$file" ]; then
+          out+=("$file")
+        fi
+      fi
     done
   fi
 
@@ -1281,7 +1309,11 @@ if is_tooling_only_change_set; then
   exit 0
 fi
 
-DART_BIN="$(resolve_flutter_dart)"
+resolve_flutter_dart >/dev/null
+
+if ! run_pubspec_codegen_compat_preflight_if_needed; then
+  exit 1
+fi
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
@@ -1342,6 +1374,7 @@ CHECK_MESSAGES=(
   "Checking for missing localization keys..."
   "Checking for missing isClosed checks before emit() in cubits..."
   "Checking for missing const constructors in StatelessWidget..."
+  "Checking pubspec codegen/analyzer compatibility..."
   "Checking for data-layer imports in presentation (SOLID DIP)..."
   "Checking for presentation imports in data layer (SOLID layering)..."
   "Checking for shrinkWrap: true in presentation lists (perf)..."
@@ -1405,6 +1438,7 @@ CHECK_SCRIPTS=(
   "tool/check_missing_localizations.sh"
   "tool/check_cubit_isclosed.sh"
   "tool/check_missing_const.sh"
+  "tool/check_pubspec_codegen_compat.sh"
   "tool/check_solid_presentation_data_imports.sh"
   "tool/check_solid_data_presentation_imports.sh"
   "tool/check_perf_shrinkwrap_lists.sh"
@@ -1467,6 +1501,7 @@ CHECK_SCRIPT_THEMES=(
   "ui"
   "state-mgmt"
   "perf"
+  "tooling"
   "architecture"
   "architecture"
   "widget-trees"
