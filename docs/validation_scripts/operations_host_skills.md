@@ -51,9 +51,10 @@ Trim duplicate globals (dry-run by default; archives under `~/.agents/skills/.ar
 bash tool/trim_duplicate_agent_skills.sh
 bash tool/trim_duplicate_agent_skills.sh --apply
 bash tool/trim_duplicate_agent_skills.sh --mode full --apply
+bash tool/trim_duplicate_agent_skills.sh --mode flutter-repo --apply
 ```
 
-Modes: `balanced` (default; archive `~/.agents/skills` when `~/.cursor/skills` has the same name), `flutter-legacy`, `ios-minimal`, or `full` (all three). Plan JSON: `docs/audits/skill_trim_plan_latest.json`.
+Modes: `balanced` (default; archive `~/.agents/skills` when `~/.cursor/skills` has the same name), `flutter-legacy`, `flutter-repo` (Flutter-only minimal set), `ios-minimal`, or `full` (balanced + flutter-legacy + ios-minimal). Plan JSON: `docs/audits/skill_trim_plan_latest.json`.
 
 Policy and MCP/plugin notes: [`agent_environment_setup.md`](../agent_environment_setup.md).
 

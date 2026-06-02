@@ -11,6 +11,7 @@ if [[ -z "${CI:-}" && "${AGENT_MEMORY_AUTO_MAINTAIN:-1}" != "0" ]]; then
 fi
 
 MAX_AGENTS_LINES="${MAX_AGENTS_LINES:-120}"
+MAX_AGENT_DOC_LINES="${MAX_AGENT_DOC_LINES:-200}"
 
 failures=0
 
@@ -23,6 +24,21 @@ require_file() {
   local path="$1"
   if [ ! -f "$path" ]; then
     fail "Missing required agent knowledge file: $path"
+  fi
+}
+
+require_line_budget() {
+  local path="$1"
+  local max_lines="${2:-$MAX_AGENT_DOC_LINES}"
+  if [ ! -f "$path" ]; then
+    fail "Cannot check missing line-budget file: $path"
+    return
+  fi
+
+  local lines
+  lines="$(wc -l <"$path" | tr -d '[:space:]')"
+  if [ "$lines" -gt "$max_lines" ]; then
+    fail "$path has $lines lines; keep frequently used agent docs at or below $max_lines lines"
   fi
 }
 
@@ -69,6 +85,7 @@ require_all_contains() {
 
 required_files=(
   "docs/agent_knowledge_base.md"
+  "docs/agent_kb/self_improvement.md"
   "docs/ai_code_review_protocol.md"
   "docs/agents_quick_reference.md"
   "docs/agent_host_notes.md"
@@ -84,6 +101,25 @@ required_files=(
 
 for path in "${required_files[@]}"; do
   require_file "$path"
+done
+
+line_budget_files=(
+  "AGENTS.md"
+  "docs/agent_knowledge_base.md"
+  "docs/agent_kb/self_improvement.md"
+  "docs/ai/context_loading.md"
+  "docs/ai_code_review_protocol.md"
+  "docs/agents_quick_reference.md"
+  "docs/agent_project_context.md"
+  "docs/agent_environment_setup.md"
+  "docs/validation_scripts.md"
+  "docs/validation_scripts/operations_host_skills.md"
+  "tasks/codex/todo.md"
+  "tasks/cursor/todo.md"
+)
+
+for path in "${line_budget_files[@]}"; do
+  require_line_budget "$path"
 done
 
 if [ -f "AGENTS.md" ]; then
@@ -108,6 +144,7 @@ else
 fi
 
 require_contains "docs/agent_knowledge_base.md" "Progressive Disclosure"
+require_contains "docs/agent_knowledge_base.md" "Self-Improvement"
 require_contains "docs/agent_knowledge_base.md" "Adaptive Execution"
 require_contains "docs/agent_knowledge_base.md" "Agent Legibility"
 require_contains "docs/agent_knowledge_base.md" "Missing Capability Loop"
@@ -126,6 +163,15 @@ require_contains "docs/agent_knowledge_base.md" "tasks/cursor/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/lessons.md"
 require_contains "docs/agent_knowledge_base.md" "reusable conclusions"
 require_contains "docs/agent_knowledge_base.md" "Semantic lint"
+require_all_contains \
+  "docs/agent_kb/self_improvement.md" \
+  "no verifier, no persistence" \
+  "Reflection" \
+  "Memory" \
+  "Scaffold evolution" \
+  "model fine-tuning" \
+  "Expected benefit" \
+  "version history"
 require_contains "docs/README.md" "agent_knowledge_base.md"
 require_contains "docs/README.md" "DESIGN.md"
 require_contains "docs/README.md" "design_system.md"

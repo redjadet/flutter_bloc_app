@@ -33,6 +33,20 @@ Repo guardrails:
 - **Capabilities beat concrete classes**: reusable widgets/services receive narrow callbacks or domain/core ports, not feature implementations, when that keeps ownership explicit and tests cheap.
 - **Boring seams beat clever abstractions**: add interfaces, mixins, or shared services only when they remove repeated behavior or hide an external dependency; do not add indirection for style.
 
+## Self-Improvement
+
+Owner: [`agent_kb/self_improvement.md`](agent_kb/self_improvement.md)
+
+Required anchors (kept here for mechanical checks):
+
+- no verifier, no persistence
+- Reflection
+- Memory
+- Scaffold evolution
+- model fine-tuning
+- Expected benefit
+- version history
+
 ## Progressive Disclosure
 
 **Ladder (canonical numbered steps):** [`docs/ai/context_loading.md`](ai/context_loading.md) only. After ladder: this doc (rules) → project context → review protocol → [`agents_quick_reference.md`](agents_quick_reference.md) (commands) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
@@ -59,7 +73,7 @@ Agent-facing guidance stays short, stable, outcome-first.
 - Use `Goal / Context / Boundaries / Verification`; context = task-relevant repo facts only.
 - Stable doctrine first, task context last.
 - Prefer success criteria, evidence, side effects, stop/report contract over long process scripts.
-- Exact order only for safety, validation, migrations, codegen, destructive work, or repo-required workflows.
+- Exact order only for safety, validation, migrations, codegen, destructive work, scaffold changes, or repo-required workflows.
 - Delete stale, duplicate, or nonessential instructions once script/test/doc owns invariant.
 - Add date/timezone only for task policy, user locale, or time-sensitive evidence.
 

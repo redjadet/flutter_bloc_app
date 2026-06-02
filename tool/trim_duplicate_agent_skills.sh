@@ -13,6 +13,9 @@ Modes (combine with multiple --mode flags or use --mode full):
   balanced       When ~/.cursor/skills has the same skill name, archive the
                  ~/.agents/skills copy (keeps repo-thin Cursor skills).
   flutter-legacy Archive legacy flutter/* skills only in agents (upstream removed).
+  flutter-repo   Flutter-repo minimal: archive iOS/macOS/Swift/App-Store kits
+                 and other non-Flutter skill families. Keeps Dart/Flutter +
+                 shared testing/security/process skills. Reversible.
   ios-minimal    Archive flat swift-ios kit skills; keep ios-development router,
                  swift-development, release-review, security, macos-development.
   superpowers    Archive obra/superpowers copies in agents when Cursor already
@@ -155,6 +158,18 @@ trim_ios_minimal() {
   done
 }
 
+trim_flutter_repo_minimal() {
+  local name path
+  for path in "$GLOBAL_AGENT_SKILLS_HOME"/*; do
+    [[ -d "$path" ]] || continue
+    name="$(basename "$path")"
+    should_skip_dir "$name" && continue
+    _flutter_repo_min_is_bloat_name "$name" || continue
+    add_plan "flutter-repo" "$path"
+    _archive_agent_skill_dir "$path" "$archive_root" "$apply"
+  done
+}
+
 trim_superpowers_agents() {
   local names=(
     using-superpowers
@@ -183,6 +198,26 @@ trim_superpowers_agents() {
   done
 }
 
+_flutter_repo_min_is_bloat_name() {
+  local name="$1"
+  # Keep Dart/Flutter + shared infra/testing/security.
+  case "$name" in
+    dart-*|flutter-*|testing|security|security-best-practices|reusable-prompts)
+      return 1
+      ;;
+  esac
+
+  # Archive common non-Flutter families that dominate context.
+  case "$name" in
+    ios-*|macos-*|swift*|app-store*|*kit|vision-*|pdf|pdfkit|core-*|apple-*|contacts-*|background-*)
+      return 0
+      ;;
+  esac
+
+  # Default: keep (conservative).
+  return 1
+}
+
 if [[ -d "$GLOBAL_CURSOR_SKILLS_HOME" ]]; then
   _cursor_skill_name_index_build
 fi
@@ -192,6 +227,9 @@ if mode_enabled balanced; then
 fi
 if mode_enabled flutter-legacy; then
   trim_flutter_legacy
+fi
+if mode_enabled flutter-repo; then
+  trim_flutter_repo_minimal
 fi
 if mode_enabled ios-minimal; then
   trim_ios_minimal

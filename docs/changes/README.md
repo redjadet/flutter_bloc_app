@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-06-02_agent_doc_line_budget.md`](2026-06-02_agent_doc_line_budget.md): Frequent AI-agent docs and active trackers capped at 200 lines; self-improvement details split to a shard and tracker history archived.
+- [`2026-06-02_agent_self_improvement_stack.md`](2026-06-02_agent_self_improvement_stack.md): Safe self-improvement stack for repo agents: reflection, verified memory, reversible scaffold evolution; model/population evolution non-default.
 - [`2026-05-22_agent-memory-auto-maintain.md`](2026-05-22_agent-memory-auto-maintain.md): [`agent_memory_auto_maintain.sh`](../../tool/agent_memory_auto_maintain.sh) wired into KB check (local) and sync `--apply` (verify); CI-safe.
 - [`2026-05-22_agent-memory-ladder-dedupe.md`](2026-05-22_agent-memory-ladder-dedupe.md): One cold-start ladder ([`context_loading.md`](../ai/context_loading.md)); file-discovery layers de-numbered in [`memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md).
 - [`2026-05-22_agent-context-optimization.md`](2026-05-22_agent-context-optimization.md): Agent context/token pass — repo + host template dedupe, sync, balanced global trim; before/after inventory.
