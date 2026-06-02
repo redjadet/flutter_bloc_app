@@ -197,7 +197,7 @@ fi
 
 if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
-    "tool/agent_host_templates/codex/AGENTS.md" \
+    "AGENTS.md" \
     "AGENTS.md" \
     "DESIGN.md" \
     "docs/design_system.md" \
@@ -207,11 +207,10 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/README.md" \
     "tasks/codex/todo.md"
   require_all_contains \
-    "tool/agent_host_templates/codex/AGENTS.md" \
+    "AGENTS.md" \
     "95% confident" \
     "Surgical diff" \
-    "Self-check final response" \
-    "Prove result"
+    "Report proof"
 
   require_all_contains \
     "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" \

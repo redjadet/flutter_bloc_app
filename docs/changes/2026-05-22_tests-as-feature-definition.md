@@ -25,7 +25,7 @@ Adopted the practice that **tests define done** for feature work—not optional 
 | [`changes/README.md`](README.md) | Index entry for this note |
 | [`plans/README.md`](../plans/README.md) | FEATURE_TEMPLATE index blurb |
 | [`agents_quick_reference.md`](../agents_quick_reference.md) | Validation chooser row for feature **Tests** contract |
-| Host templates | Codex [`AGENTS.md`](../../tool/agent_host_templates/codex/AGENTS.md), Cursor [`agents-global.mdc`](../../tool/agent_host_templates/cursor/rules/agents-global.mdc), quick-reference skill — aligned with repo [`AGENTS.md`](../../AGENTS.md) |
+| Host templates | Codex host sync now copies repo [`AGENTS.md`](../../AGENTS.md); Cursor [`agents-global.mdc`](../../tool/agent_host_templates/cursor/rules/agents-global.mdc), quick-reference skill — aligned with repo [`AGENTS.md`](../../AGENTS.md) |
 
 ## Guidance split (not quotas)
 

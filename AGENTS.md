@@ -8,17 +8,16 @@ No learned bullets or long prose here—link to owning `docs/` (see
 
 Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host adapters.
 Done = Plan, Execute, Verify, Report proof.
-Source map: this file. Codex host template:
-`tool/agent_host_templates/codex/AGENTS.md` -> ~/.codex/AGENTS.md.
+Source map: this file. Codex host sync copies this file to the Codex home
+AGENTS file and Codex worktrees.
 
 ## Start
 
 1. `AGENTS.md`
-2. [`PLAN.md`](PLAN.md) (AI engineering index)
-3. [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
-4. [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
-5. [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
-6. task docs from [`docs/README.md`](docs/README.md)
+2. Canonical ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md)
+3. Review/commands when needed:
+   [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md),
+   [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 
 ## Snapshot
 
@@ -30,7 +29,9 @@ Offline-first sync: `lib/shared/sync/`.
 
 Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
 (credentials/tooling, unsafe ambiguity below 95% confident, user-owned choice).
-Non-trivial work: tracker + context ladder + one observe/revise loop.
+Non-trivial work: [`tasks/codex/todo.md`](tasks/codex/todo.md) or
+[`tasks/cursor/todo.md`](tasks/cursor/todo.md) + context ladder + one
+observe/revise loop.
 Outcome: Goal / Context / Boundaries / Verification. Finish gate:
 [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 Long session health: compact evidence, watch context drift, reset plan when state corrupts.

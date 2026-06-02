@@ -51,7 +51,7 @@ managed_cursor_files=(
 
 # shellcheck disable=SC2034
 managed_codex_files=(
-  "codex/AGENTS.md|$HOME/.codex/AGENTS.md"
+  "__repo_root__/AGENTS.md|$HOME/.codex/AGENTS.md"
   "codex/skills/flutter-bloc-app-quick-reference/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   "codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
 )
@@ -68,9 +68,20 @@ required_toolchain_targets=(
 optional_local_policy_targets=(
   "AGENTS.md"
   "docs/agents_quick_reference.md"
-  "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
   "tool/agent_host_templates/cursor/skills/agents-quick-reference/SKILL.md"
 )
+
+agent_asset_source_path() {
+  local src_rel="$1"
+  case "$src_rel" in
+    __repo_root__/*)
+      printf '%s/%s\n' "$repo_root" "${src_rel#__repo_root__/}"
+      ;;
+    *)
+      printf '%s/%s\n' "$agent_templates_root" "$src_rel"
+      ;;
+  esac
+}
 
 list_optional_codex_worktree_agent_targets() {
   local repo_name
@@ -102,7 +113,8 @@ require_agent_asset_runtime() {
 copy_file_if_needed() {
   local src_rel="$1"
   local dst="$2"
-  local src="$agent_templates_root/$src_rel"
+  local src
+  src="$(agent_asset_source_path "$src_rel")"
 
   if [[ ! -f "$src" ]]; then
     echo "missing-source|$src"
@@ -121,7 +133,8 @@ copy_file_if_needed() {
 apply_copy_file() {
   local src_rel="$1"
   local dst="$2"
-  local src="$agent_templates_root/$src_rel"
+  local src
+  src="$(agent_asset_source_path "$src_rel")"
   mkdir -p "$(dirname "$dst")"
   cp "$src" "$dst"
 }

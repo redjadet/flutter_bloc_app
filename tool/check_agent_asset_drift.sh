@@ -5,9 +5,9 @@ usage() {
   cat <<'EOF'
 Usage: check_agent_asset_drift.sh
 
-Check whether managed Cursor/Codex host assets match repo templates under
-tool/agent_host_templates/ (or AGENT_TEMPLATES_ROOT). Templates are
-versioned in this repo.
+Check whether managed Cursor/Codex host assets match repo sources. Cursor
+assets and Codex skills/rules come from tool/agent_host_templates/ (or
+AGENT_TEMPLATES_ROOT); Codex AGENTS.md comes from root AGENTS.md.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 Otherwise it also verifies README toolchain markers in matching policy docs.
@@ -76,7 +76,7 @@ done
 
 while IFS= read -r worktree_agent; do
   [[ -n "$worktree_agent" ]] || continue
-  check_mapping "codex/AGENTS.md" "$worktree_agent"
+  check_mapping "__repo_root__/AGENTS.md" "$worktree_agent"
 done < <(list_optional_codex_worktree_agent_targets)
 
 rules_raw_status="$(check_codex_rules_block)" || true

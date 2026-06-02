@@ -7,8 +7,9 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 ## Host Parity
 
 - Root [`AGENTS.md`](../../AGENTS.md) = repo-local map.
-- Codex host bootstrap target: ~/.codex/AGENTS.md.
-- [`tool/agent_host_templates/codex/AGENTS.md`](../../tool/agent_host_templates/codex/AGENTS.md) = Codex host bootstrap synced to ~/.codex/AGENTS.md and worktrees.
+- Root [`AGENTS.md`](../../AGENTS.md) is the only project AGENTS source.
+  `./tool/sync_agent_assets.sh --apply` copies it to the Codex home AGENTS
+  file and Codex worktrees; Cursor reads the root map in-repo.
 - Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
 - After host-template changes: `./tool/sync_agent_assets.sh --dry-run` -> `./tool/sync_agent_assets.sh --apply` -> dry-run clean -> `./tool/check_agent_asset_drift.sh`.
 - No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.

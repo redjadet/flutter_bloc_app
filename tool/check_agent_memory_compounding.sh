@@ -73,8 +73,6 @@ require_contains "tool/agent_session_bootstrap.sh" "docs/ai/context_loading.md"
 require_contains "tool/agent_session_bootstrap.sh" "context_ladder|3|structural graph"
 
 if [[ -d "tool/agent_host_templates" ]]; then
-  require_contains "tool/agent_host_templates/codex/AGENTS.md" "File verified reusable conclusions"
-  require_contains "tool/agent_host_templates/codex/AGENTS.md" "context ladder"
   require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" "reusable agent conclusion"
   require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-quick-reference/SKILL.md" "context ladder"
   require_contains "tool/agent_host_templates/codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md" "File verified reusable conclusions"
