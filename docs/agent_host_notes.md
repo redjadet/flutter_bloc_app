@@ -6,6 +6,11 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 ## Codex
 
 - Use [`../tasks/codex/todo.md`](../tasks/codex/todo.md) for non-trivial active work.
+- Dart/Flutter MCP: `codex mcp add dart -- dart mcp-server --force-roots-fallback`
+  (repo host config may also set `cwd` and `FLUTTER_SDK`). Smoke:
+  `node script/mcp_smoke_dart.js`, then verify with `mcp__dart.roots` +
+  `mcp__dart.analyze_files`.
+  Note: `dart mcp-server` speaks **newline-delimited JSON-RPC** (NDJSON), not `Content-Length` framing.
 - Don't invoke `./tool/request_codex_feedback.sh` from Codex unless user
   explicitly asks for second opinion or cross-host review.
 - If user explicitly asks for second opinion after material edits to agent-facing docs or

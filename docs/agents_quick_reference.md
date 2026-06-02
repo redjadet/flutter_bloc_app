@@ -56,6 +56,7 @@ Repo docs/scripts define behavior; external catalogs don't.
 | External/live state | Use owning tool/MCP/connector/browser where available; summarize evidence, not transcripts | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
 | UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
+| Flutter app-code/UI change with active debug run | Trigger hot reload; hot restart if reload cannot apply; report unavailable session | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim scripts when using globals |

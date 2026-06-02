@@ -13,7 +13,9 @@ For the complete docs index, see [docs index](README.md).
 
 - Flutter `3.44.1`
 - Dart `3.12.1`
-- Xcode + CocoaPods for iOS work
+- Xcode for iOS/macOS work; Swift Package Manager is the preferred native
+  dependency path. CocoaPods remains installed/usable for existing Podfiles and
+  plugin fallback.
 - Android Studio + Android SDK for Android work
 
 The pinned Flutter version comes from [README](../README.md) and
@@ -65,8 +67,11 @@ Run these checks before starting a local debug session:
    `.envrc` only when debugging Firebase Auth, Remote Config, RTDB, FCM, or
    Firebase-backed chart flows.
 5. Check no tracked secret literals are present: `./tool/check_tracked_secret_literals.sh`.
-6. For iOS after Firebase/dependency changes, run:
-   `flutter clean && flutter pub get && (cd ios && pod install)`.
+6. For iOS/macOS after Firebase/dependency changes, keep SPM enabled:
+   `flutter config --enable-swift-package-manager`, then run
+   `flutter clean && flutter pub get`. If a plugin still falls back to
+   CocoaPods or `ios/Podfile.lock`/`macos/Podfile.lock` changes, also run
+   `pod install` in the affected platform directory.
 7. Start debug with the intended entrypoint, usually
    `flutter run -t lib/main_dev.dart`.
 
