@@ -2,7 +2,7 @@
 
 AI code = draft until review gate passes. Before report: self-verify vs request, diff, proof, blockers, residual risks.
 
-Pinned repo toolchain: Flutter 3.44.0 / Dart 3.12.0.
+Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1.
 
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
