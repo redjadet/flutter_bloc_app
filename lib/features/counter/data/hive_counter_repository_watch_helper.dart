@@ -67,8 +67,8 @@ class HiveCounterRepositoryWatchHelper {
     if (cached != null) {
       emitSnapshot(cached);
     }
-    unawaited(_watchState.loadAndEmitInitial().catchError((_) {}));
-    unawaited(_startBoxWatch().catchError((_) {}));
+    unawaited(_watchState.loadAndEmitInitial());
+    unawaited(_startBoxWatch());
   }
 
   /// Handles when a listener unsubscribes from the watch stream.

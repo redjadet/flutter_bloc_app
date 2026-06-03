@@ -7,7 +7,7 @@ blocking merge of the four new gates. Source plan:
 **MVP shipped (do not re-open as “missing work”):**
 
 - Fail: `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh`
-- Warn: `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`
+- Fail (promoted 2026-06-03): `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`
 - `CHECK_SCRIPT_THEMES`, `CHECKLIST_EXPLAIN_THEMES=1`, path-triggered
   `./bin/router_feature_validate`, `background_sync_coordinator_test.dart` regression
 
@@ -38,7 +38,6 @@ When an item ships, remove its row here and note the change in
 | **QG-D06** | Startup | `check_startup_work_in_build.sh` | defer | Overlaps `check_side_effects_build.sh`; risk of duplicate signals and unclear severity. | Diff report: violations only in `check_startup` not caught by side-effects script; product owner picks **warn** or **fail**. |
 | **QG-D07** | Lifecycle | `check_lifecycle_observer_dispose.sh` | defer | ~3 call sites; low count but needs `WidgetsBindingObserver` / route observer patterns spelled out. | Inventory file list frozen; fixtures for missing `dispose`; zero violations after fixes or documented `check-ignore`. |
 | **QG-D08** | Checklist UX | `CHECK_THEME` env filter | defer | Needs stable theme IDs in `CHECK_SCRIPT_THEMES` (done for MVP) plus subset runner tests so partial runs do not skip required fail gates. | Spec: `CHECK_THEME=navigation,blocking-io ./bin/checklist` runs only matching scripts; docs + test proves fail gate cannot be skipped accidentally. |
-| **QG-D09** | Policy | Warn → fail promotion (`check_remote_image_cache_hints`, `check_cubit_subscription_cancel`) | defer | Warn gates intentionally exit 0 until violation count → 0 on `main` for N days. | Track warn counts in baseline doc for 2+ weeks at 0 (or accepted ignores); then flip exit code and update [`validation_scripts.md`](../validation_scripts.md). |
 | **QG-D10** | Blocking IO | `check_sync_io_in_lib.sh` (entire `lib/`) | **reject** | Data layer **legitimately** uses `existsSync` / `*Sync` in Hive and file stores; presentation-only gate is the correct boundary. | Revisit only if data layer moves sync IO off hot paths **and** presentation gate is insufficient. |
 
 ---

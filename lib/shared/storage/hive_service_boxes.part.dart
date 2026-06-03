@@ -127,6 +127,8 @@ class _BoxMutex {
       }
     });
 
+    // Completer forwards action errors; swallow only the chained tail future so
+    // the mutex queue stays unbroken without an unhandled async error.
     unawaited(_tail.catchError((_) {}));
 
     return completer.future;

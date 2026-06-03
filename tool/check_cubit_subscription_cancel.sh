@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Warn: cubit .listen without obvious subscription lifecycle (exit 0).
+# Fail: cubit .listen without obvious subscription lifecycle.
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source "$PROJECT_ROOT/tool/check_helpers.sh"
-echo "🔍 Checking cubit stream subscription hygiene (warn-only)..."
+echo "🔍 Checking cubit stream subscription hygiene..."
 SCAN_PATHS=("lib")
 usage() {
   cat <<'EOF'
 Usage: tool/check_cubit_subscription_cancel.sh [--paths PATH...]
 
-Warn-only. Default scope: lib/**/*cubit*.dart. --paths supports fixture runs.
+Default scope: lib/**/*cubit*.dart. --paths supports fixture runs.
 EOF
 }
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -48,8 +48,11 @@ VIOLATIONS="$(filter_ignored "$(collect_violations)")"
 [ -n "${IGNORED:-}" ] && { echo "ℹ️  Ignored:"; echo "$IGNORED"; }
 if [ -n "$VIOLATIONS" ]; then
   count=$(printf '%s\n' "$VIOLATIONS" | sed '/^$/d' | wc -l | tr -d ' ')
-  echo "⚠️  Cubit subscription cancel: ${count} file(s)"
+  echo "❌ Cubit subscription cancel: ${count} violation(s)"
   printf '%s\n' "$VIOLATIONS" | sed '/^$/d' | head -5
   echo "Remediation: CubitSubscriptionMixin or cancel in close()."
-else echo "✅ No cubit subscription cancel warnings"; fi
+  exit 1
+fi
+
+echo "✅ No cubit subscription cancel violations"
 exit 0

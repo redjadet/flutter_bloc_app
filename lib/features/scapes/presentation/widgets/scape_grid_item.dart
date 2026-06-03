@@ -27,6 +27,7 @@ class ScapeGridItem extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final EpochThemeExtension epoch = context.epoch;
 
     final double imageOuterRadius = UI.scaleRadius(6);
     final double imageInnerRadius = UI.scaleRadius(2);
@@ -95,7 +96,7 @@ class ScapeGridItem extends StatelessWidget {
               Container(
                 height: imageHeight,
                 decoration: BoxDecoration(
-                  color: EpochColors.pink,
+                  color: epoch.pink,
                   borderRadius: BorderRadius.circular(imageOuterRadius),
                 ),
                 padding: EdgeInsets.all(imagePadding),
@@ -151,8 +152,8 @@ class ScapeGridItem extends StatelessWidget {
                           icon: ScapeFavoriteIcon(
                             isFavorite: scape.isFavorite,
                             color: scape.isFavorite
-                                ? EpochColors.warmGreyLightest
-                                : EpochColors.ash,
+                                ? epoch.warmGreyLightest
+                                : epoch.ash,
                             size: iconSize,
                           ),
                         ),

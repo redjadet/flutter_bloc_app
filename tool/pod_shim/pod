@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Stub CocoaPods CLI when the real `pod` cannot run (OOM/Ruby mismatch) but
+# ios/Pods/Manifest.lock already matches Podfile.lock. Enabled only when
+# tool/run_integration_tests.sh sets INTEGRATION_TESTS_ALLOW_POD_SHIM=1.
+set -euo pipefail
+
+_shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+_find_real_pod() {
+  local path_entry entry saved_ifs="$IFS"
+
+  IFS=:
+  for path_entry in $PATH; do
+    [ -n "$path_entry" ] || continue
+    [ "$path_entry" = "$_shim_dir" ] && continue
+    entry="$path_entry/pod"
+    if [ -x "$entry" ] && [ "$entry" != "$_shim_dir/pod" ]; then
+      IFS="$saved_ifs"
+      printf '%s\n' "$entry"
+      return 0
+    fi
+  done
+  IFS="$saved_ifs"
+
+  if command -v which >/dev/null 2>&1; then
+    while IFS= read -r entry; do
+      [ "$entry" = "$_shim_dir/pod" ] && continue
+      [ -x "$entry" ] || continue
+      printf '%s\n' "$entry"
+      return 0
+    done < <(which -a pod 2>/dev/null || true)
+  fi
+  return 1
+}
+
+_exec_real_pod() {
+  local real_pod
+  real_pod="$(_find_real_pod || true)"
+  if [ -z "$real_pod" ]; then
+    echo "pod_shim: real pod unavailable for: $*" >&2
+    return 1
+  fi
+  exec "$real_pod" "$@"
+}
+
+_locks_in_sync() {
+  local podfile_lock="${INTEGRATION_TESTS_PODFILE_LOCK:-}"
+  local manifest_lock="${INTEGRATION_TESTS_PODS_MANIFEST:-}"
+
+  [ -n "$podfile_lock" ] && [ -n "$manifest_lock" ] || return 1
+  [ -f "$podfile_lock" ] && [ -f "$manifest_lock" ] || return 1
+  diff -q "$podfile_lock" "$manifest_lock" >/dev/null 2>&1
+}
+
+_shim_install_allowed() {
+  [ "${INTEGRATION_TESTS_ALLOW_POD_SHIM:-}" = "1" ] || return 1
+  _locks_in_sync
+}
+
+_cocoapods_version_from_lock() {
+  local podfile_lock="${INTEGRATION_TESTS_PODFILE_LOCK:-}"
+  if [ -f "$podfile_lock" ]; then
+    sed -n 's/^COCOAPODS: //p' "$podfile_lock" | head -n 1
+  fi
+}
+
+case "${1:-}" in
+  --version|-v)
+    if _shim_install_allowed; then
+      version="$(_cocoapods_version_from_lock || true)"
+      echo "${version:-1.16.2}"
+      exit 0
+    fi
+    _exec_real_pod --version
+    ;;
+  install)
+    shift
+    if [ "$#" -gt 0 ]; then
+      _exec_real_pod install "$@"
+    fi
+    if _shim_install_allowed; then
+      echo "pod_shim: pod install no-op (Podfile.lock matches Pods/Manifest.lock)" >&2
+      exit 0
+    fi
+    _exec_real_pod install
+    ;;
+  *)
+    _exec_real_pod "$@"
+    ;;
+esac

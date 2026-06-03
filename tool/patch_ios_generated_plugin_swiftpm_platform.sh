@@ -20,7 +20,7 @@ fi
 if grep -qE '\.iOS\("13\.0"\)' "$package_swift"; then
   perl -0777 -i -pe 's/\.iOS\("13\.0"\)/.iOS("16.0")/g' "$package_swift"
   echo "patched|FlutterGeneratedPluginSwiftPackage|ios16"
-elif grep -qE '\.iOS\("16\.0"\)' "$package_swift"; then
+elif grep -qE '\.iOS\("(1[6-9]|[2-9][0-9]+)\.[0-9]+"\)' "$package_swift"; then
   :
 else
   echo "warn|FlutterGeneratedPluginSwiftPackage|unexpected-platform-declaration" >&2

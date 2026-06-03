@@ -180,7 +180,7 @@ class OrderBookPanel extends StatelessWidget {
                         : l10n.realtimeMarketSideSell,
                     showCompactBid ? bids : asks,
                     showCompactBid
-                        ? RealtimeMarketUiTokens.bidAccent
+                        ? RealtimeMarketUiTokens.bidAccent(scheme)
                         : RealtimeMarketUiTokens.askAccent(scheme),
                     1,
                     showCompactBid ? maxBid : maxAsk,
@@ -191,7 +191,7 @@ class OrderBookPanel extends StatelessWidget {
                       column(
                         l10n.realtimeMarketSideBuy,
                         bids,
-                        RealtimeMarketUiTokens.bidAccent,
+                        RealtimeMarketUiTokens.bidAccent(scheme),
                         bidFlex,
                         maxBid,
                       ),

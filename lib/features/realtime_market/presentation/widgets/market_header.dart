@@ -22,7 +22,7 @@ class MarketHeader extends StatelessWidget {
     final String pairLabel = snapshot.pairId.replaceAll('_', '/').toUpperCase();
     final bool up = snapshot.changePct24h >= 0;
     final Color deltaColor = up
-        ? RealtimeMarketUiTokens.bidAccent
+        ? RealtimeMarketUiTokens.bidAccent(scheme)
         : RealtimeMarketUiTokens.askAccent(scheme);
     return LayoutBuilder(
       builder: (final context, final constraints) {

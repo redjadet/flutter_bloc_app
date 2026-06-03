@@ -23,46 +23,49 @@ class _LibrarySearchRowState extends State<LibrarySearchRow> {
   }
 
   @override
-  Widget build(final BuildContext context) => Row(
-    children: [
-      Expanded(
-        child: Container(
-          height: EpochSpacing.buttonSize,
-          padding: EdgeInsets.symmetric(
-            horizontal: EpochSpacing.panelPadding,
-          ),
-          decoration: BoxDecoration(
-            color: EpochColors.ash.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(
-              EpochSpacing.borderRadiusLarge,
+  Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: EpochSpacing.buttonSize,
+            padding: EdgeInsets.symmetric(
+              horizontal: EpochSpacing.panelPadding,
             ),
-          ),
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: TextField(
-              key: const ValueKey('library-demo-search-field'),
-              controller: _controller,
-              style: EpochTextStyles.searchPlaceholder(context).copyWith(
-                color: EpochColors.warmGreyLightest,
+            decoration: BoxDecoration(
+              color: epoch.ash.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(
+                EpochSpacing.borderRadiusLarge,
               ),
-              decoration: InputDecoration(
-                hintText: widget.l10n.libraryDemoSearchHint.toUpperCase(),
-                hintStyle: EpochTextStyles.searchPlaceholder(context),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
+            ),
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextField(
+                key: const ValueKey('library-demo-search-field'),
+                controller: _controller,
+                style: EpochTextStyles.searchPlaceholder(context).copyWith(
+                  color: epoch.warmGreyLightest,
+                ),
+                decoration: InputDecoration(
+                  hintText: widget.l10n.libraryDemoSearchHint.toUpperCase(),
+                  hintStyle: EpochTextStyles.searchPlaceholder(context),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      SizedBox(width: EpochSpacing.gapTight),
-      LibraryDemoIconButton(
-        icon: const LibraryFilterIcon(),
-        onPressed: () {},
-        tooltip: widget.l10n.libraryDemoFilterButtonLabel,
-        backgroundColor: EpochColors.ash.withValues(alpha: 0.5),
-      ),
-    ],
-  );
+        SizedBox(width: EpochSpacing.gapTight),
+        LibraryDemoIconButton(
+          icon: const LibraryFilterIcon(),
+          onPressed: () {},
+          tooltip: widget.l10n.libraryDemoFilterButtonLabel,
+          backgroundColor: epoch.ash.withValues(alpha: 0.5),
+        ),
+      ],
+    );
+  }
 }

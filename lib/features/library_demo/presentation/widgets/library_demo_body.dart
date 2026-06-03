@@ -34,7 +34,8 @@ class LibraryDemoBody extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final AppLocalizations l10n = context.l10n;
-    final List<LibraryAsset> assets = _libraryAssets(l10n);
+    final EpochThemeExtension epoch = context.epoch;
+    final List<LibraryAsset> assets = _libraryAssets(l10n, epoch);
 
     return LayoutBuilder(
       builder: (final context, final constraints) {
@@ -67,7 +68,7 @@ class LibraryDemoBody extends StatelessWidget {
 
         if (isGridView) {
           return ColoredBox(
-            color: EpochColors.darkGrey,
+            color: epoch.darkGrey,
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
@@ -75,7 +76,7 @@ class LibraryDemoBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ColoredBox(
-                        color: EpochColors.warmGrey,
+                        color: epoch.warmGrey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -158,7 +159,10 @@ class LibraryDemoBody extends StatelessWidget {
     );
   }
 
-  List<LibraryAsset> _libraryAssets(final AppLocalizations l10n) => [
+  List<LibraryAsset> _libraryAssets(
+    final AppLocalizations l10n,
+    final EpochThemeExtension epoch,
+  ) => [
     LibraryAsset(
       name: l10n.libraryDemoAssetName,
       type: l10n.libraryDemoAssetTypeObject,
@@ -178,7 +182,7 @@ class LibraryDemoBody extends StatelessWidget {
       type: l10n.libraryDemoAssetTypeSound,
       durationLabel: l10n.libraryDemoAssetDuration,
       formatLabel: l10n.libraryDemoFormatMp4,
-      backgroundColor: EpochColors.pink,
+      backgroundColor: epoch.pink,
     ),
     LibraryAsset(
       name: l10n.libraryDemoAssetName,
@@ -199,7 +203,7 @@ class LibraryDemoBody extends StatelessWidget {
       type: l10n.libraryDemoAssetTypeSound,
       durationLabel: l10n.libraryDemoAssetDuration,
       formatLabel: l10n.libraryDemoFormatMp3,
-      backgroundColor: EpochColors.purple,
+      backgroundColor: epoch.purple,
     ),
   ];
 

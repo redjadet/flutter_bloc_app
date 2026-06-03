@@ -50,15 +50,15 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 ### Quality theme gates (checklist MVP, May 2026)
 
-Four scripts extend `./bin/checklist` with navigation/sync-io fail gates and warn-only hygiene scans. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
+Six scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-subscription fail gates. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
 
 | Theme (representative) | Existing coverage | New / wired in MVP |
 | --- | --- | --- |
 | Architecture / layering | domain imports, SOLID imports, modularity | **fail** `check_navigation_outside_presentation.sh` |
 | Rebuild / widget trees | context read/watch, widget identity, row overflow | (deferred: bloc rebuild scoping) |
 | Blocking main isolate | compute/isolate guards | **fail** `check_sync_io_in_presentation.sh` (presentation only) |
-| Images / cache | raw network images, image cache width | **warn** `check_remote_image_cache_hints.sh` |
-| State management | cubit isClosed, dynamic list safety | **warn** `check_cubit_subscription_cancel.sh` |
+| Images / cache | raw network images, image cache width | **fail** `check_remote_image_cache_hints.sh` |
+| State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
 | Async / boundaries | post-async mounted, stream dispose, concurrent modification | existing scripts |
 | Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate` |
 | Memory / lifecycle | memory scripts, lifecycle error handling | existing scripts |
@@ -66,14 +66,23 @@ Four scripts extend `./bin/checklist` with navigation/sync-io fail gates and war
 
 - **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `lib/features/**/{domain,data}/**` and `lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
 - **`check_sync_io_in_presentation.sh`**: Blocking `dart:io` `*Sync` in `lib/**/presentation/**` only (not data-layer `existsSync`). Fixtures under `tool/fixtures/sync_io_in_presentation/presentation/`.
-- **`check_remote_image_cache_hints.sh`**: Warn-only; flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Always exit 0.
-- **`check_cubit_subscription_cancel.sh`**: Warn-only; heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription`. Always exit 0.
+- **`check_remote_image_cache_hints.sh`**: Flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Exits 1 on violations (promoted from warn-only, 2026-06-03).
+- **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 
 Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).
 
 **Deferred / not in MVP:** [`docs/plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md)
 (`bloc_lint`, file length, rebuild scoping, context read/watch, deferred-route heuristic,
-startup-in-build, lifecycle observer, `CHECK_THEME` filter, warn→fail promotion; lib-wide sync-io **rejected**).
+startup-in-build, lifecycle observer, `CHECK_THEME` filter; lib-wide sync-io **rejected**).
+
+### Integration testing
+
+- **`run_integration_tests.sh`** (entry: `./bin/integration_tests`): iOS simulator
+  integration tiers, artifacts under `artifacts/integration/`, selective target
+  resolution. Optional CocoaPods fallback: commit **`tool/pod_shim/pod`** (executable);
+  enabled when `INTEGRATION_TESTS_ALLOW_POD_SHIM=1` (default) and
+  `ios/Podfile.lock` matches `ios/Pods/Manifest.lock`. Contract:
+  [`integration_runner_contract.md`](../engineering/integration_runner_contract.md).
 
 **Router companion inside checklist:** After static checks, `./bin/checklist` may run `./bin/router_feature_validate` when changed files match [`.cursor/rules/router-feature-validation.mdc`](../.cursor/rules/router-feature-validation.mdc) globs (same rules as `tool/check_router_trigger_precision.sh`). Expect extra time when router/auth UI changes. Skip locally: `CHECKLIST_SKIP_ROUTER_VALIDATE=1`.
 
@@ -88,9 +97,11 @@ bash tool/check_navigation_outside_presentation.sh --paths tool/fixtures/navigat
 bash tool/check_sync_io_in_presentation.sh --paths tool/fixtures/sync_io_in_presentation/presentation/bad.dart
 bash tool/check_sync_io_in_presentation.sh --paths tool/fixtures/sync_io_in_presentation/presentation/suppressed.dart
 
-# Warn gates — always exit 0; fixture bad emits count/sample, suppressed is ignored
+# Image cache hints (fail) — bad=1, suppressed=0
 bash tool/check_remote_image_cache_hints.sh --paths tool/fixtures/remote_image_cache_hints/presentation/bad.dart
 bash tool/check_remote_image_cache_hints.sh --paths tool/fixtures/remote_image_cache_hints/presentation/suppressed.dart
+
+# Cubit subscription (fail) — bad=1, suppressed=0
 bash tool/check_cubit_subscription_cancel.sh --paths tool/fixtures/cubit_subscription_cancel/presentation/bad_cubit.dart
 bash tool/check_cubit_subscription_cancel.sh --paths tool/fixtures/cubit_subscription_cancel/presentation/suppressed_cubit.dart
 ```

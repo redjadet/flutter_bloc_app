@@ -80,6 +80,13 @@ class EpochThemeExtension extends ThemeExtension<EpochThemeExtension> {
       Color.lerp(from, to, t) ?? (t < 0.5 ? from : to);
 }
 
+/// Resolves [EpochThemeExtension] from the current theme, or [EpochThemeExtension.defaults].
+extension EpochThemeContext on BuildContext {
+  EpochThemeExtension get epoch =>
+      Theme.of(this).extension<EpochThemeExtension>() ??
+      EpochThemeExtension.defaults;
+}
+
 /// EPOCH Library Design System Colors.
 ///
 /// Values are also available via [EpochThemeExtension] when the extension
@@ -126,7 +133,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -1.8,
     height: 1,
-    color: EpochColors.darkGrey,
+    color: context.epoch.darkGrey,
   );
 
   /// Heading style (24px, Libre Caslon Text, -0.72px letter spacing)
@@ -136,7 +143,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.72,
     height: 1.14,
-    color: EpochColors.warmGreyLightest,
+    color: context.epoch.warmGreyLightest,
   );
 
   /// Asset name style (18px, Libre Caslon Text, -0.36px letter spacing)
@@ -146,7 +153,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w400,
     letterSpacing: -0.36,
     height: 1.1,
-    color: EpochColors.warmGreyLightest,
+    color: context.epoch.warmGreyLightest,
   );
 
   /// Label style (18px, IBM Plex Mono SemiBold, -0.9px letter spacing, uppercase)
@@ -156,7 +163,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w600,
     letterSpacing: -0.9,
     height: 1,
-    color: EpochColors.warmGreyLightest,
+    color: context.epoch.warmGreyLightest,
   );
 
   /// Metadata style (14px, IBM Plex Mono SemiBold, -0.28px letter spacing, uppercase)
@@ -166,7 +173,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w600,
     letterSpacing: -0.28,
     height: 1.1,
-    color: EpochColors.ash,
+    color: context.epoch.ash,
   );
 
   /// Search placeholder style (18px, IBM Plex Mono Light, -0.9px letter spacing, uppercase)
@@ -176,7 +183,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w300,
     letterSpacing: -0.9,
     height: 1,
-    color: EpochColors.warmGrey,
+    color: context.epoch.warmGrey,
   );
 
   /// Asset type style (14px, IBM Plex Mono SemiBold, -0.28px letter spacing, uppercase)
@@ -186,7 +193,7 @@ class EpochTextStyles {
     fontWeight: FontWeight.w600,
     letterSpacing: -0.28,
     height: 1.1,
-    color: EpochColors.ash,
+    color: context.epoch.ash,
   );
 }
 

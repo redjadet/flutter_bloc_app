@@ -62,7 +62,9 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
       const SizedBox(height: 8),
       Text(
         _explain(mode: controls.networkMode, l10n: l10n),
-        style: const TextStyle(color: Colors.black54),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
     ];
 

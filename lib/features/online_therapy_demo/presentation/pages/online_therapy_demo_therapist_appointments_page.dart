@@ -85,7 +85,9 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     message,
-                    style: const TextStyle(color: Colors.red),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
                 ),
               );

@@ -66,7 +66,7 @@ class _MessagingPanelState extends State<_MessagingPanel> {
       return Center(
         child: Text(
           errorMessage,
-          style: const TextStyle(color: Colors.red),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
           textAlign: TextAlign.center,
         ),
       );
@@ -341,16 +341,16 @@ class _CallPanel extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               errorMessage,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
         const SizedBox(height: 8),
         Text('Session: ${session?.id ?? '-'}'),
         Text('Join status: ${session?.joinStatus.name ?? '-'}'),
         if (session?.joinStatus == CallJoinStatus.failed)
-          const Text(
+          Text(
             'Fallback: join failed — simulated provider.',
-            style: TextStyle(color: Colors.orange),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
           ),
       ],
     );

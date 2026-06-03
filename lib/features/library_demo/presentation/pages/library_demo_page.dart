@@ -39,18 +39,19 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
   Widget build(final BuildContext context) {
     final TimerService timerService = widget.timerService;
     final ThemeData theme = Theme.of(context);
+    final EpochThemeExtension epoch = context.epoch;
     final ThemeData pageTheme = theme.copyWith(
       extensions: () {
         final List<ThemeExtension<dynamic>> list = [
-          EpochThemeExtension.defaults,
+          epoch,
           ...theme.extensions.values,
         ];
         return list;
       }(),
-      scaffoldBackgroundColor: EpochColors.warmGrey,
+      scaffoldBackgroundColor: epoch.warmGrey,
       appBarTheme: theme.appBarTheme.copyWith(
-        backgroundColor: EpochColors.warmGrey,
-        foregroundColor: EpochColors.darkGrey,
+        backgroundColor: epoch.warmGrey,
+        foregroundColor: epoch.darkGrey,
         elevation: 0,
       ),
     );
@@ -59,8 +60,8 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
       data: pageTheme,
       child: CommonPageLayout(
         title: context.l10n.libraryDemoPageTitle,
-        appBarBackgroundColor: EpochColors.warmGrey,
-        appBarForegroundColor: EpochColors.darkGrey,
+        appBarBackgroundColor: epoch.warmGrey,
+        appBarForegroundColor: epoch.darkGrey,
         useResponsiveBody: false,
         body: SafeArea(
           child: LibraryDemoBody(
