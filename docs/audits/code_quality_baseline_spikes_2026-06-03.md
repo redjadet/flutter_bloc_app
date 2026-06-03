@@ -12,6 +12,7 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 - **FP risk:** low
 - **Label:** **ready**
 - **Severity (PR2):** warn-first (`CHECK_LIFECYCLE_OBSERVER_MODE=warn`)
+- **Severity (PR #292):** default **fail** — 0 violations on `main` @ `dd883f31`
 - **Rollback:** remove CHECK_SCRIPTS row; restore deferred doc row
 
 ## Spike: QG-D05 — deferred heavy routes
@@ -23,6 +24,7 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 - **FP risk:** low
 - **Label:** **ready**
 - **Severity (PR2):** warn-first (`CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn`)
+- **Severity (PR #292):** default **fail** — 0 violations on `lib/app/router`
 - **Rollback:** remove CHECK_SCRIPTS row; restore deferred doc row
 
 ## Spike: QG-D08 — CHECK_THEME filter
@@ -62,6 +64,12 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 
 ## Promotion queue (confirmed)
 
-1. QG-D07 — **ready** → PR2
-2. QG-D05 — **ready** → PR2 (warn-first)
-3. QG-D08+ — blocked on spikes above
+1. QG-D07 — **ready** → PR #290 (warn) → PR #292 (**fail**)
+2. QG-D05 — **ready** → PR #290 (warn) → PR #292 (**fail**)
+3. QG-D08 — **needs_fixtures** (subset runner safety); no script
+4. QG-D03 / QG-D04 / QG-D06 — **needs_fixtures**; scripts missing
+5. QG-D01 / QG-D02 — **reject** wave 1 (analyzer plugins)
+
+## Phase 2 wave closure (2026-06-03)
+
+No additional gate scripts promoted beyond D05/D07 fail flip. D03/D04/D08 remain spike-only until fixtures and scripts land (cadence 3+).

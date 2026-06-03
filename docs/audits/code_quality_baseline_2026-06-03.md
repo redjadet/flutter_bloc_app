@@ -1,10 +1,12 @@
 # Code quality baseline — 2026-06-03
 
-- **Commit:** `3228d800` (initial snapshot); **post-merge:** `acbcdc6b` ([PR #290](https://github.com/redjadet/flutter_bloc_app/pull/290)), plan status `cfe1f686`
+- **Commit:** `3228d800` (initial snapshot); **post-merge:** `acbcdc6b` ([PR #290](https://github.com/redjadet/flutter_bloc_app/pull/290)); **Phase 2:** `dd883f31` ([PR #292](https://github.com/redjadet/flutter_bloc_app/pull/292))
 - **Auditor:** Cursor agent (code quality baseline program)
 - **Program:** [code quality baseline and gate promotion](../plans/code_quality_baseline_and_gate_promotion_2026-06.md)
 
 ## Post-merge re-snapshot (2026-06-03, clean `main`)
+
+### After PR #290
 
 | Command | Exit | Notes |
 | --- | ---: | --- |
@@ -16,7 +18,15 @@
 | `./bin/integration_preflight` | 0 | Log-filter + web bootstrap smoke |
 | iOS integration (standard tier) | 0 | `standard_flows_test.dart` on iPhone 17e; 22/22 passed (~300s) |
 
-**Not rerun on this pass:** full `./bin/checklist` (proved pre-merge on delivery branch); `INTEGRATION_TESTS_TIER=exhaustive` / `all_flows_test.dart`.
+### After PR #292 (Phase 2 closeout)
+
+| Command | Exit | Notes |
+| --- | ---: | --- |
+| `./bin/checklist` | 0 | Full delivery gate on `main` @ `dd883f31` |
+| `bash tool/check_lifecycle_observer_dispose.sh` | 0 | **fail** mode (default); 0 violations |
+| `bash tool/check_deferred_heavy_routes.sh` | 0 | **fail** mode (default); allowlist OK |
+| iOS integration (standard) | 0 | 22/22 (prior branch proof; unchanged surface) |
+| iOS integration (exhaustive) | 0 | `all_flows_test.dart`; 23/23 on iPhone 17e (~240s) |
 
 ## Checklist snapshot (pre-merge)
 
@@ -70,6 +80,7 @@ Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (ge
 | Offline-first counter | Yes | `test/features/counter/data/offline_first_counter_repository_test.dart` |
 | Graphql exception mapping | Yes | `test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart` |
 | Graphql `AppError` presentation | Yes | `test/features/graphql_demo/presentation/graphql_demo_app_error_mapper_test.dart`, cubit tests |
+| MapSample `AppError` | Yes | `test/features/google_maps/presentation/cubit/map_sample_cubit_test.dart` |
 
 **P1:** Extend coordinator tests for `BackgroundSyncTrigger` telemetry if Phase 2 sync slice proceeds.
 
@@ -85,9 +96,13 @@ Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (ge
 
 **Integration preflight (2026-06-03):** exit 0 — log-filter regression + web bootstrap smoke passed.
 
-## Future-plan next target (PR3)
+## Future-plan next target
 
-**Chosen:** Option 3 — structured error adoption for **Graphql demo** (`GraphqlDemoCubit` / page), next named surface after Chart, Counter, and shared `ErrorHandling`.
+**Shipped (PR #290):** Graphql demo `AppError` (`GraphqlDemoCubit` / page).
+
+**Shipped (PR #292):** MapSample `AppError` + retry (Chart-aligned).
+
+**Recommended next (cadence 3+):** **Todo list** — offline-first feature with `errorMessage` only (`TodoListState`); aligns with future-arch Phase 4 “one additional high-value cubit” and baseline coverage gap on `lib/features/todo_list/`.
 
 Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/future_architecture_code_quality_improvement_plan.md) § Current Recommended Next Step):
 
@@ -98,19 +113,19 @@ Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/f
 | ID | Priority | Item | Proof | Owner doc |
 | --- | --- | --- | --- | --- |
 | B-01 | P0 | None undocumented after final checklist pass | `./bin/checklist` exit 0 | This audit |
-| B-02 | P1 | ~~Promote QG-D07~~ **done** (warn-first) | Post-merge dry-run 0 violations | Flip to **fail** when a new observer site lands without dispose |
-| B-03 | P1 | ~~Promote QG-D05~~ **done** (warn-first) | Post-merge dry-run 0 violations | Flip to **fail** when a second deferred route file is intentional |
-| B-04 | P1 | ~~Graphql `AppError`~~ **done** | PR #290 + presentation tests | Next error surface per future-arch plan |
+| B-02 | P1 | ~~QG-D07 promotion~~ **done** | PR #290 warn-first; PR #292 **fail** default; 0 violations on `main` | Monitor new `WidgetsBindingObserver` sites |
+| B-03 | P1 | ~~QG-D05 promotion~~ **done** | PR #290 warn-first; PR #292 **fail** default; allowlist OK | Monitor new `deferred as` import sites |
+| B-04 | P1 | ~~Graphql `AppError`~~ **done** | PR #290 + presentation tests | — |
+| B-04b | P1 | ~~MapSample `AppError`~~ **done** | PR #292 + `map_sample_cubit_test` | Next: Todo list (see above) |
 | B-05 | P2 | `lib/core/` coverage below 85% | coverage table | [`CODE_QUALITY.md`](../CODE_QUALITY.md) |
 | B-06 | P2 | D03/D04/D01/D02 gate spikes | Phase 0b spikes doc | deferred gates doc |
 
 ## Next action
 
-**Program slice (2026-06-03):** closed on `main` via PR #290; post-merge re-snapshot recorded above.
+**Program waves 1–2 (2026-06-03):** closed on `main` via PR #290 and PR #292; post-merge proof recorded above.
 
-**Phase 2 backlog (pick one per cadence):**
+**Cadence 3+ backlog (one slice per PR):**
 
-1. Flip **QG-D05** / **QG-D07** from warn → fail (only after intentional new violation or product sign-off).
-2. Spike **QG-D03** / **QG-D04** / **QG-D08** per [spikes doc](code_quality_baseline_spikes_2026-06-03.md).
-3. Next **future-architecture** error surface (after Graphql) per owner plan.
-4. Optional: exhaustive iOS integration (`INTEGRATION_TESTS_TIER=exhaustive`) before release when CI macOS job is skipped.
+1. Spike/promote **QG-D03** / **QG-D04** / **QG-D08** when scripts/fixtures exist — see [spikes doc](code_quality_baseline_spikes_2026-06-03.md) (no promotion in Phase 2 wave).
+2. **Todo list** `AppError` adoption (recommended next arch slice).
+3. `lib/core/` coverage uplift (B-05) only when a slice touches core/DI.
