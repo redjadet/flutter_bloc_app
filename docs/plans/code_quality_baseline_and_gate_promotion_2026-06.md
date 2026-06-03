@@ -1,6 +1,6 @@
 # Code quality baseline and gate promotion (2026)
 
-**Status:** Phase 0a/0b + PR2 gates + PR3 Graphql `AppError` slice landed in workspace (2026-06-03). Re-run `./bin/checklist` before merge claims.
+**Status:** Shipped on `main` via [PR #290](https://github.com/redjadet/flutter_bloc_app/pull/290) (2026-06-03). Phase 2: re-baseline on `main` after next checklist run; flip D05/D07 to fail when backlog allows.
 **Priority:** Balanced — baseline audit, then one vertical slice per cadence.
 
 ## Artifacts
