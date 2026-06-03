@@ -1,6 +1,6 @@
 # Code quality baseline and gate promotion (2026)
 
-**Status:** Shipped on `main` via [PR #290](https://github.com/redjadet/flutter_bloc_app/pull/290) (2026-06-03). Phase 2: re-baseline on `main` after next checklist run; flip D05/D07 to fail when backlog allows.
+**Status:** PR #290 shipped 2026-06-03. Phase 2 slice (D05/D07 fail default, MapSample `AppError`) on branch `feat/quality-phase2-gates-maps-apperror`.
 **Priority:** Balanced — baseline audit, then one vertical slice per cadence.
 
 ## Artifacts
@@ -18,7 +18,8 @@
 | iOS integration (standard) | Done | `CHECKLIST_INTEGRATION_DEVICE=<sim> INTEGRATION_TESTS_TIER=standard ./bin/integration_tests` |
 | Full `./bin/checklist` on `main` | Pre-merge proof | Rerun before next release if `lib/` changed since PR #290 |
 | Integration exhaustive | Open | `INTEGRATION_TESTS_TIER=exhaustive` when macOS CI skipped |
-| Flip D05/D07 warn → fail | Open | Only when deferred doc unblock criteria met |
+| Flip D05/D07 warn → fail | Done (branch) | Default `fail`; 0 violations on `lib/` |
+| MapSample `AppError` | Done (branch) | Chart-aligned `lastError` + retry |
 | Next arch slice / gate spike | Open | See baseline backlog B-05+ and [spikes](../audits/code_quality_baseline_spikes_2026-06-03.md) |
 
 ## Quick start (Day 1)

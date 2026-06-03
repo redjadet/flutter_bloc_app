@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Warn/fail: State classes using WidgetsBindingObserver must removeObserver in dispose.
-# Theme: lifecycle | Severity: warn by default (CHECK_LIFECYCLE_OBSERVER_MODE=warn)
+# Theme: lifecycle | Severity: fail by default (CHECK_LIFECYCLE_OBSERVER_MODE=fail)
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source "$PROJECT_ROOT/tool/check_helpers.sh"
-MODE="${CHECK_LIFECYCLE_OBSERVER_MODE:-warn}"
+MODE="${CHECK_LIFECYCLE_OBSERVER_MODE:-fail}"
 echo "🔍 Checking WidgetsBindingObserver dispose hygiene (mode=$MODE)..."
 usage() {
   cat <<'EOF'

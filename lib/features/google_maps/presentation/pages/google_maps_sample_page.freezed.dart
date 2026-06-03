@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapBodyData implements DiagnosticableTreeMixin {
 
- bool get showLoading; bool get hasError; String? get errorMessage;
+ bool get showLoading; bool get hasError; String? get errorMessage; AppError? get lastError;
 /// Create a copy of _MapBodyData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,21 +26,21 @@ _$MapBodyDataCopyWith<_MapBodyData> get copyWith => __$MapBodyDataCopyWithImpl<_
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', '_MapBodyData'))
-    ..add(DiagnosticsProperty('showLoading', showLoading))..add(DiagnosticsProperty('hasError', hasError))..add(DiagnosticsProperty('errorMessage', errorMessage));
+    ..add(DiagnosticsProperty('showLoading', showLoading))..add(DiagnosticsProperty('hasError', hasError))..add(DiagnosticsProperty('errorMessage', errorMessage))..add(DiagnosticsProperty('lastError', lastError));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBodyData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapBodyData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,showLoading,hasError,errorMessage);
+int get hashCode => Object.hash(runtimeType,showLoading,hasError,errorMessage,lastError);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return '_MapBodyData(showLoading: $showLoading, hasError: $hasError, errorMessage: $errorMessage)';
+  return '_MapBodyData(showLoading: $showLoading, hasError: $hasError, errorMessage: $errorMessage, lastError: $lastError)';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class _$MapBodyDataCopyWith<$Res>  {
   factory _$MapBodyDataCopyWith(_MapBodyData value, $Res Function(_MapBodyData) _then) = __$MapBodyDataCopyWithImpl;
 @useResult
 $Res call({
- bool showLoading, bool hasError, String? errorMessage
+ bool showLoading, bool hasError, String? errorMessage, AppError? lastError
 });
 
 
@@ -68,12 +68,13 @@ class __$MapBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of _MapBodyData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? showLoading = null,Object? hasError = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? showLoading = null,Object? hasError = null,Object? errorMessage = freezed,Object? lastError = freezed,}) {
   return _then(_self.copyWith(
 showLoading: null == showLoading ? _self.showLoading : showLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLoading,  bool hasError,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool showLoading,  bool hasError,  String? errorMessage,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case __MapBodyData() when $default != null:
-return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
+return $default(_that.showLoading,_that.hasError,_that.errorMessage,_that.lastError);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLoading,  bool hasError,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool showLoading,  bool hasError,  String? errorMessage,  AppError? lastError)  $default,) {final _that = this;
 switch (_that) {
 case __MapBodyData():
-return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
+return $default(_that.showLoading,_that.hasError,_that.errorMessage,_that.lastError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLoading,  bool hasError,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool showLoading,  bool hasError,  String? errorMessage,  AppError? lastError)?  $default,) {final _that = this;
 switch (_that) {
 case __MapBodyData() when $default != null:
-return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
+return $default(_that.showLoading,_that.hasError,_that.errorMessage,_that.lastError);case _:
   return null;
 
 }
@@ -214,12 +215,13 @@ return $default(_that.showLoading,_that.hasError,_that.errorMessage);case _:
 
 
 class __MapBodyData with DiagnosticableTreeMixin implements _MapBodyData {
-  const __MapBodyData({required this.showLoading, required this.hasError, required this.errorMessage});
+  const __MapBodyData({required this.showLoading, required this.hasError, required this.errorMessage, required this.lastError});
   
 
 @override final  bool showLoading;
 @override final  bool hasError;
 @override final  String? errorMessage;
+@override final  AppError? lastError;
 
 /// Create a copy of _MapBodyData
 /// with the given fields replaced by the non-null parameter values.
@@ -232,21 +234,21 @@ _$_MapBodyDataCopyWith<__MapBodyData> get copyWith => __$_MapBodyDataCopyWithImp
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', '_MapBodyData'))
-    ..add(DiagnosticsProperty('showLoading', showLoading))..add(DiagnosticsProperty('hasError', hasError))..add(DiagnosticsProperty('errorMessage', errorMessage));
+    ..add(DiagnosticsProperty('showLoading', showLoading))..add(DiagnosticsProperty('hasError', hasError))..add(DiagnosticsProperty('errorMessage', errorMessage))..add(DiagnosticsProperty('lastError', lastError));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is __MapBodyData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is __MapBodyData&&(identical(other.showLoading, showLoading) || other.showLoading == showLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,showLoading,hasError,errorMessage);
+int get hashCode => Object.hash(runtimeType,showLoading,hasError,errorMessage,lastError);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return '_MapBodyData(showLoading: $showLoading, hasError: $hasError, errorMessage: $errorMessage)';
+  return '_MapBodyData(showLoading: $showLoading, hasError: $hasError, errorMessage: $errorMessage, lastError: $lastError)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$_MapBodyDataCopyWith<$Res> implements _$MapBodyDataCopyWi
   factory _$_MapBodyDataCopyWith(__MapBodyData value, $Res Function(__MapBodyData) _then) = __$_MapBodyDataCopyWithImpl;
 @override @useResult
 $Res call({
- bool showLoading, bool hasError, String? errorMessage
+ bool showLoading, bool hasError, String? errorMessage, AppError? lastError
 });
 
 
@@ -274,12 +276,13 @@ class __$_MapBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of _MapBodyData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? showLoading = null,Object? hasError = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? showLoading = null,Object? hasError = null,Object? errorMessage = freezed,Object? lastError = freezed,}) {
   return _then(__MapBodyData(
 showLoading: null == showLoading ? _self.showLoading : showLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
