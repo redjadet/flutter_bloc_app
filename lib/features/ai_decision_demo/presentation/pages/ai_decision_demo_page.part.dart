@@ -352,6 +352,7 @@ class _AiDecisionActionButtons extends StatelessWidget {
           FilledButton.tonal(
             onPressed: actionState.isSavingAction || !actionState.hasCaseDetail
                 ? null
+                // check-ignore: side_effects_build - user gesture (button onPressed).
                 : () => unawaited(
                     context.cubit<AiDecisionCubit>().saveAction(
                       actionType: actionType,

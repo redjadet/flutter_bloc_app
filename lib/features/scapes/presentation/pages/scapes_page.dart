@@ -23,53 +23,66 @@ class ScapesPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final EpochThemeExtension epoch = context.epoch;
+    final ThemeData pageTheme = theme.copyWith(
+      extensions: () {
+        final List<ThemeExtension<dynamic>> list = [
+          epoch,
+          ...theme.extensions.values,
+        ];
+        return list;
+      }(),
+    );
 
     return BlocProvider(
       create: (_) => ScapesCubit(
         repository: repository,
         timerService: timerService,
       ),
-      child: Scaffold(
-        backgroundColor: EpochColors.darkGrey,
-        appBar: AppBar(
-          backgroundColor: EpochColors.darkGrey,
-          foregroundColor: EpochColors.warmGreyLightest,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => NavigationUtils.popOrGoHome(context),
-            tooltip: 'Back',
+      child: Theme(
+        data: pageTheme,
+        child: Scaffold(
+          backgroundColor: epoch.darkGrey,
+          appBar: AppBar(
+            backgroundColor: epoch.darkGrey,
+            foregroundColor: epoch.warmGreyLightest,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => NavigationUtils.popOrGoHome(context),
+              tooltip: 'Back',
+            ),
+            title: Text(
+              l10n.scapesPageTitle,
+              style: pageTheme.textTheme.titleLarge,
+            ),
           ),
-          title: Text(
-            l10n.scapesPageTitle,
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
-        body: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
-          selector: (final state) => state,
-          isLoading: (final state) => state.isLoading,
-          isError: (final state) => state.hasError,
-          loadingBuilder: (final _) => const CommonLoadingWidget(),
-          errorBuilder: (final context, final state) => CommonErrorView(
-            message: state.errorMessage ?? l10n.scapesErrorOccurred,
-            onRetry: () => context.cubit<ScapesCubit>().reload(),
-          ),
-          builder: (final context, final state) {
-            if (state.scapes.isEmpty) {
-              return CommonEmptyState(
-                message: l10n.noScapesAvailable,
-              );
-            }
+          body: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
+            selector: (final state) => state,
+            isLoading: (final state) => state.isLoading,
+            isError: (final state) => state.hasError,
+            loadingBuilder: (final _) => const CommonLoadingWidget(),
+            errorBuilder: (final context, final state) => CommonErrorView(
+              message: state.errorMessage ?? l10n.scapesErrorOccurred,
+              onRetry: () => context.cubit<ScapesCubit>().reload(),
+            ),
+            builder: (final context, final state) {
+              if (state.scapes.isEmpty) {
+                return CommonEmptyState(
+                  message: l10n.noScapesAvailable,
+                );
+              }
 
-            return ScapesGridView(
-              scapes: state.scapes,
-              onFavoritePressed: (final id) =>
-                  context.cubit<ScapesCubit>().toggleFavorite(id),
-              onMorePressed: (final id) {
-                AppLogger.debug('options menu clicked');
-              },
-            );
-          },
+              return ScapesGridView(
+                scapes: state.scapes,
+                onFavoritePressed: (final id) =>
+                    context.cubit<ScapesCubit>().toggleFavorite(id),
+                onMorePressed: (final id) {
+                  AppLogger.debug('options menu clicked');
+                },
+              );
+            },
+          ),
         ),
       ),
     );

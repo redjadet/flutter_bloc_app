@@ -1409,8 +1409,8 @@ CHECK_MESSAGES=(
   "Checking AI-generated-code smells (high-signal)..."
   "Checking navigation APIs outside presentation layer..."
   "Checking presentation layer for blocking dart:io *Sync calls..."
-  "Checking remote image cache hints (warn-only)..."
-  "Checking cubit stream subscription hygiene (warn-only)..."
+  "Checking remote image cache hints..."
+  "Checking cubit stream subscription hygiene..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
 

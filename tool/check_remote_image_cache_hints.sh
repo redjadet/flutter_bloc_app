@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# Warn: CachedNetworkImageWidget with size but no memCacheWidth/memCacheHeight (exit 0).
+# Fail: CachedNetworkImageWidget with size but no memCacheWidth/memCacheHeight.
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source "$PROJECT_ROOT/tool/check_helpers.sh"
-echo "🔍 Checking remote image cache hints (warn-only)..."
+echo "🔍 Checking remote image cache hints..."
 SCAN_PATHS=("lib")
 usage() {
   cat <<'EOF'
 Usage: tool/check_remote_image_cache_hints.sh [--paths PATH...]
 
-Warn-only. Default scope: lib/**/presentation/**. --paths supports fixture runs.
+Default scope: lib/**/presentation/**. --paths supports fixture runs.
 EOF
 }
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -85,8 +85,11 @@ VIOLATIONS="$(filter_ignored "$(collect_violations)")"
 [ -n "${IGNORED:-}" ] && { echo "ℹ️  Ignored:"; echo "$IGNORED"; }
 if [ -n "$VIOLATIONS" ]; then
   count=$(printf '%s\n' "$VIOLATIONS" | sed '/^$/d' | wc -l | tr -d ' ')
-  echo "⚠️  Remote image cache hints: ${count} file(s)"
+  echo "❌ Remote image cache hints: ${count} violation(s)"
   printf '%s\n' "$VIOLATIONS" | sed '/^$/d' | head -5
   echo "Remediation: add memCacheWidth/memCacheHeight to CachedNetworkImageWidget."
-else echo "✅ No remote image cache hint warnings"; fi
+  exit 1
+fi
+
+echo "✅ No remote image cache hint violations"
 exit 0

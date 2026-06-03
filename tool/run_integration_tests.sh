@@ -25,6 +25,7 @@
 #   IOS_SIMULATOR_PREFERRED_RUNTIME_VERSION (optional pin, e.g. 26.5 or 18; unset = newest iOS runtime)
 #   ALLOW_DESKTOP_INTEGRATION_DEVICE (0|1, default 0)
 #   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY (0|1, default 1)
+#   INTEGRATION_TESTS_ALLOW_POD_SHIM (0|1, default 1) — use tool/pod_shim when pod CLI is broken but Pods are in sync
 #
 # Behavior:
 #   - No arguments: aggregated suite (integration_test/all_flows_test.dart),
@@ -41,16 +42,6 @@ cd "$PROJECT_ROOT"
 
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
-
-RUN_PREFLIGHT_VALUE="$(printf '%s' "${INTEGRATION_TESTS_RUN_PREFLIGHT:-1}" | tr '[:upper:]' '[:lower:]')"
-case "$RUN_PREFLIGHT_VALUE" in
-  0|false|no)
-    bash "$PROJECT_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
-    ;;
-  *)
-    bash "$PROJECT_ROOT/tool/run_integration_preflight.sh"
-    ;;
-esac
 
 INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
@@ -531,9 +522,39 @@ is_known_xcode_simulator_build_failure() {
 
   [ -s "$log_path" ] || return 1
 
+  if grep -Eqi 'GoogleMaps-xcframeworks\.sh' "$log_path" &&
+    grep -Eqi 'Killed: 9' "$log_path"; then
+    return 0
+  fi
+
   grep -Eq \
-    'incompatible with DVTBuildVersion|Could not build the application for the simulator\.' \
+    'incompatible with DVTBuildVersion|Could not build the application for the simulator\.|AssetCatalogSimulatorAgent|CocoaPods not installed or not in valid state' \
     "$log_path"
+}
+
+maybe_enable_pod_shim_if_needed() {
+  local pod_shim_dir="$PROJECT_ROOT/tool/pod_shim"
+
+  [ "${INTEGRATION_TESTS_ALLOW_POD_SHIM:-1}" = "1" ] || return 0
+  [ -x "$pod_shim_dir/pod" ] || return 0
+  [ -f "$PROJECT_ROOT/ios/Podfile.lock" ] || return 0
+  [ -f "$PROJECT_ROOT/ios/Pods/Manifest.lock" ] || return 0
+  diff -q "$PROJECT_ROOT/ios/Podfile.lock" "$PROJECT_ROOT/ios/Pods/Manifest.lock" >/dev/null 2>&1 || return 0
+
+  if command -v pod >/dev/null 2>&1; then
+    local pod_check_rc=0
+    pod --version >/dev/null 2>&1 || pod_check_rc=$?
+    if [ "$pod_check_rc" -eq 0 ]; then
+      return 0
+    fi
+    log "CocoaPods CLI present but unusable (exit $pod_check_rc); checking pod_shim fallback."
+  fi
+
+  export PATH="$pod_shim_dir:$PATH"
+  export INTEGRATION_TESTS_ALLOW_POD_SHIM=1
+  export INTEGRATION_TESTS_PODFILE_LOCK="$PROJECT_ROOT/ios/Podfile.lock"
+  export INTEGRATION_TESTS_PODS_MANIFEST="$PROJECT_ROOT/ios/Pods/Manifest.lock"
+  log "CocoaPods CLI unavailable; Pods/Manifest.lock in sync — using tool/pod_shim for flutter iOS builds."
 }
 
 ensure_ios_swift_package_checkouts() {
@@ -615,10 +636,15 @@ elif "expected:" in low and "actual:" in low:
 elif "cannot start app on wirelessly tethered ios device" in low:
     # This is an infra/device limitation; our retry path can auto-add --publish-port.
     print("wireless_publish_port_required")
+elif (
+    "could not build the application" in low
+    or "assetcatalogsimulatoragent" in low
+    or "googlemaps-xcframeworks.sh" in low
+    or "cocoapods not installed" in low
+):
+    print("simulator_build_infra")
 elif "some tests failed" in low:
     print("test_assertion_or_app_failure")
-elif "could not build the application" in low:
-    print("simulator_build_infra")
 elif "xcodebuild" in low and " error " in low:
     print("simulator_build_infra")
 elif "failed to load asset" in low:
@@ -647,6 +673,17 @@ emit_actionable_hint_from_log() {
 
   # Keep this lightweight and tail-focused; we only want to surface hints for
   # the most common, non-code failures that waste time during upgrades.
+  if grep -Eqi 'GoogleMaps-xcframeworks\.sh' "$log_path" &&
+    grep -Eqi 'Killed: 9' "$log_path"; then
+    log "⚠️ GoogleMaps CocoaPods script was killed (often memory pressure during xcframework copy)."
+    log "   Close extra simulators/Xcode builds, then retry. If Pods are in sync, repair the real CocoaPods CLI (pod --version should not exit 137)."
+  fi
+  if grep -Eqi 'AssetCatalogSimulatorAgent' "$log_path"; then
+    log "⚠️ CoreSimulator AssetCatalog agent failed. Retry after: xcrun simctl shutdown <udid>; xcrun simctl boot <udid>."
+  fi
+  if grep -Eqi 'Could not build the application for the simulator|assetcatalogsimulatoragent|googlemaps-xcframeworks' "$log_path"; then
+    return 0
+  fi
   if grep -Eqi 'Dart VM Service was not discovered|Unable to start the app on the device' "$log_path"; then
     log "⚠️ Flutter couldn't discover the Dart VM Service / couldn't start the app."
     if [ "$(uname -s)" = "Darwin" ]; then
@@ -1016,6 +1053,16 @@ if [ "${INTEGRATION_TESTS_SOURCE_ONLY:-0}" = "1" ]; then
   return 0 2>/dev/null || exit 0
 fi
 
+RUN_PREFLIGHT_VALUE="$(printf '%s' "${INTEGRATION_TESTS_RUN_PREFLIGHT:-1}" | tr '[:upper:]' '[:lower:]')"
+case "$RUN_PREFLIGHT_VALUE" in
+  0|false|no)
+    bash "$PROJECT_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
+    ;;
+  *)
+    bash "$PROJECT_ROOT/tool/run_integration_preflight.sh"
+    ;;
+esac
+
 RUN_COVERAGE="${INTEGRATION_TESTS_RUN_COVERAGE:-1}"
 RETRY_ON_FAILURE="${INTEGRATION_TESTS_RETRY_ON_FAILURE:-0}"
 INTEGRATION_TESTS_TIMEOUT_SECONDS="${INTEGRATION_TESTS_TIMEOUT_SECONDS:-1800}"
@@ -1123,6 +1170,7 @@ acquire_integration_lock "$@"
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
 ensure_ios_swift_package_checkouts "$DEVICE_ID"
+maybe_enable_pod_shim_if_needed
 
 if command -v lcov >/dev/null 2>&1; then
   HAS_LCOV=1
@@ -1278,51 +1326,54 @@ if [ "$#" -eq 0 ]; then
           if ! xcrun simctl boot "$DEVICE_ID" 2>/dev/null; then
             log "Simulator $DEVICE_ID was already booted or boot request returned non-zero; continuing with boot wait."
           fi
-          wait_for_simulator_boot "$DEVICE_ID" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS" || true
-          set +e
-          if [ "$RUN_COVERAGE" -eq 0 ]; then
-            run_integration_command \
-              "$SELECTED_TARGET simulator retry" \
-              flutter test \
-              --no-pub \
-              -d "$DEVICE_ID" \
-              "$SELECTED_TARGET"
-          elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-            run_integration_command \
-              "$SELECTED_TARGET simulator retry" \
-              flutter test \
-              --no-pub \
-              -d "$DEVICE_ID" \
-              --coverage \
-              --merge-coverage \
-              --coverage-path="$FINAL_COVERAGE_PATH" \
-              "$SELECTED_TARGET"
-          elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-            run_integration_command \
-              "$SELECTED_TARGET simulator retry" \
-              flutter test \
-              --no-pub \
-              -d "$DEVICE_ID" \
-              "$SELECTED_TARGET"
-          elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
-            run_integration_command \
-              "$SELECTED_TARGET simulator retry" \
-              flutter test \
-              --no-pub \
-              -d "$DEVICE_ID" \
-              --coverage \
-              --coverage-path="$FINAL_COVERAGE_PATH" \
-              "$SELECTED_TARGET"
+          if wait_for_simulator_boot "$DEVICE_ID" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+            set +e
+            if [ "$RUN_COVERAGE" -eq 0 ]; then
+              run_integration_command \
+                "$SELECTED_TARGET simulator retry" \
+                flutter test \
+                --no-pub \
+                -d "$DEVICE_ID" \
+                "$SELECTED_TARGET"
+            elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$HAS_LCOV" -eq 1 ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+              run_integration_command \
+                "$SELECTED_TARGET simulator retry" \
+                flutter test \
+                --no-pub \
+                -d "$DEVICE_ID" \
+                --coverage \
+                --merge-coverage \
+                --coverage-path="$FINAL_COVERAGE_PATH" \
+                "$SELECTED_TARGET"
+            elif [ -s "$BASE_COVERAGE_PATH" ] && [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+              run_integration_command \
+                "$SELECTED_TARGET simulator retry" \
+                flutter test \
+                --no-pub \
+                -d "$DEVICE_ID" \
+                "$SELECTED_TARGET"
+            elif [ "$SELECTED_TARGET" = "$FULL_SUITE_TARGET" ]; then
+              run_integration_command \
+                "$SELECTED_TARGET simulator retry" \
+                flutter test \
+                --no-pub \
+                -d "$DEVICE_ID" \
+                --coverage \
+                --coverage-path="$FINAL_COVERAGE_PATH" \
+                "$SELECTED_TARGET"
+            else
+              run_integration_command \
+                "$SELECTED_TARGET simulator retry" \
+                flutter test \
+                --no-pub \
+                -d "$DEVICE_ID" \
+                "$SELECTED_TARGET"
+            fi
+            exit_code=$?
+            set -e
           else
-            run_integration_command \
-              "$SELECTED_TARGET simulator retry" \
-              flutter test \
-              --no-pub \
-              -d "$DEVICE_ID" \
-              "$SELECTED_TARGET"
+            log "❌ Simulator $DEVICE_ID did not finish booting; skipping wireless fallback retry."
           fi
-          exit_code=$?
-          set -e
         fi
       fi
     fi

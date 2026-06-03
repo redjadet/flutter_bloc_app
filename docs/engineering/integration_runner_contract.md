@@ -105,3 +105,24 @@ Default gates:
 - `success_rate >= 90%`
 - `flake_rerun_rate <= 20%`
 - `uncategorized_failure_count <= 0`
+
+## CocoaPods shim (local / CI recovery)
+
+When the real `pod` CLI is missing or killed during version checks (exit `137`),
+`tool/run_integration_tests.sh` may prepend `tool/pod_shim` to `PATH` if
+`Podfile.lock` matches `Pods/Manifest.lock`.
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `INTEGRATION_TESTS_ALLOW_POD_SHIM` | `1` | Allow shim when lock files match |
+| `INTEGRATION_TESTS_PODFILE_LOCK` | set by runner | Absolute path to `ios/Podfile.lock` |
+| `INTEGRATION_TESTS_PODS_MANIFEST` | set by runner | Absolute path to `ios/Pods/Manifest.lock` |
+
+Shim behavior (`tool/pod_shim/pod`):
+
+- `install` with no extra args: no-op **only** when allow flag is `1` and locks match.
+- `install` with extra args, or any other subcommand: delegates to real `pod` when found.
+- Unknown commands without a real `pod`: exit `1` (no silent success).
+
+Set `INTEGRATION_TESTS_ALLOW_POD_SHIM=0` to require a working CocoaPods install.
+Commit `tool/pod_shim/pod` (executable) so clones and CI can use the same path.

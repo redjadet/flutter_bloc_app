@@ -55,7 +55,7 @@ class _OnlineTherapyDemoAdminVerificationPageState
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(
             message,
-            style: const TextStyle(color: Colors.red),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
           ),
         ),
       if (pendingTherapists.isEmpty)

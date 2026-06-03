@@ -44,7 +44,7 @@ class _TherapistPanel extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           Expanded(
@@ -158,7 +158,7 @@ class _AdminPanel extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 12),
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           Expanded(

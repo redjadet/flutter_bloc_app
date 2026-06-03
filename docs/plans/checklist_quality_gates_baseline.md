@@ -10,8 +10,8 @@ wiring (clean-tree counts).
 | --- | --- | --- | --- | --- |
 | `tool/check_navigation_outside_presentation.sh` | fail | 0 | — | Repo clean after presentation fixes |
 | `tool/check_sync_io_in_presentation.sh` | fail | 0 | — | Presentation-only; data-layer `existsSync` allowed |
-| `tool/check_remote_image_cache_hints.sh` | warn | 0 | — | Always exit 0 until promotion |
-| `tool/check_cubit_subscription_cancel.sh` | warn | 0 | — | Always exit 0 until promotion |
+| `tool/check_remote_image_cache_hints.sh` | fail | 0 | — | Promoted 2026-06-03 (was warn-only) |
+| `tool/check_cubit_subscription_cancel.sh` | fail | 0 | — | Promoted 2026-06-03 (was warn-only) |
 
 **Pre-wire fixes (presentation):**
 
@@ -24,8 +24,8 @@ wiring (clean-tree counts).
 | --- | --- | --- | --- |
 | navigation | `presentation/good.dart` | `domain/bad.dart` | `domain/suppressed.dart` |
 | sync-io presentation | `presentation/good.dart` | `presentation/bad.dart` | `presentation/suppressed.dart` |
-| image cache hints | `remote_image_cache_hints/presentation/good.dart` | `presentation/bad.dart` | `presentation/suppressed.dart` |
-| cubit subscription | `presentation/good_cubit.dart` | `presentation/bad_cubit.dart` | `presentation/suppressed_cubit.dart` |
+| image cache hints | `remote_image_cache_hints/presentation/good.dart` | `presentation/bad.dart` (fail) | `presentation/suppressed.dart` |
+| cubit subscription | `presentation/good_cubit.dart` | `presentation/bad_cubit.dart` (fail) | `presentation/suppressed_cubit.dart` |
 
 ## Router path trigger
 

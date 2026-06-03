@@ -74,9 +74,9 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
       if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
       if (!isLoggedIn) const SizedBox(height: 12),
       if (therapist == null)
-        const Text(
+        Text(
           'Therapist not found.',
-          style: TextStyle(color: Colors.red),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
         )
       else ...<Widget>[
         Text(

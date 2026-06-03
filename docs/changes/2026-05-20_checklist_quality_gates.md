@@ -11,7 +11,7 @@ from checklist, and documented baseline + routing.
 ## Changes
 
 - **Fail:** `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh`
-- **Warn (exit 0):** `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`
+- **Warn (exit 0) at MVP ship:** `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh` — promoted to **fail** 2026-06-03 ([`2026-06-03_checklist_warn_gates_promoted.md`](2026-06-03_checklist_warn_gates_promoted.md))
 - **Fixtures** + presentation `existsSync` fixes (staff demo, case study compute)
 - **Regression:** `background_sync_coordinator_test.dart` in `check_regression_guards.sh`
 - **Docs:** [`plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md), theme section in [`validation_scripts.md`](../validation_scripts.md), routing matrix update

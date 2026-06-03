@@ -44,7 +44,7 @@ extension _OnlineTherapyMessagingViewStateBuild
       return Center(
         child: Text(
           errorMessage,
-          style: const TextStyle(color: Colors.red),
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
           textAlign: TextAlign.center,
         ),
       );

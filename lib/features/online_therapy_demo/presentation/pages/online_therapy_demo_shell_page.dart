@@ -143,7 +143,9 @@ class _OnlineTherapyDemoBody extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             ),
           const Divider(height: 1),

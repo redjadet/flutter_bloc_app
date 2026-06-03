@@ -17,19 +17,22 @@ class LibraryTopNav extends StatelessWidget {
   final EdgeInsets? padding;
 
   @override
-  Widget build(final BuildContext context) => Padding(
-    padding:
-        padding ??
-        EdgeInsets.only(
-          top: EpochSpacing.topPadding,
-          left: EpochSpacing.panelPadding,
-        ),
-    child: LibraryDemoIconButton(
-      icon: const LibraryMenuIcon(),
-      onPressed: onBack,
-      tooltip: l10n.libraryDemoBackButtonLabel,
-      backgroundColor: EpochColors.warmGreyLightest,
-      size: EpochSpacing.buttonSize,
-    ),
-  );
+  Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
+    return Padding(
+      padding:
+          padding ??
+          EdgeInsets.only(
+            top: EpochSpacing.topPadding,
+            left: EpochSpacing.panelPadding,
+          ),
+      child: LibraryDemoIconButton(
+        icon: const LibraryMenuIcon(),
+        onPressed: onBack,
+        tooltip: l10n.libraryDemoBackButtonLabel,
+        backgroundColor: epoch.warmGreyLightest,
+        size: EpochSpacing.buttonSize,
+      ),
+    );
+  }
 }

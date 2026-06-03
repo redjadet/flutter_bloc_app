@@ -57,7 +57,7 @@ class RecentTradesPanel extends StatelessWidget {
           ...shown.map(
             (final t) {
               final Color accent = t.isBuy
-                  ? RealtimeMarketUiTokens.bidAccent
+                  ? RealtimeMarketUiTokens.bidAccent(scheme)
                   : RealtimeMarketUiTokens.askAccent(scheme);
               return Padding(
                 padding: EdgeInsets.symmetric(

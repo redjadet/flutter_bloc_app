@@ -109,18 +109,18 @@ class OnlineTherapyCallView extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               errorMessage,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
         const SizedBox(height: 12),
         Text('Session: ${session?.id ?? '-'}'),
         Text('Join status: ${session?.joinStatus.name ?? '-'}'),
         if (session?.joinStatus == CallJoinStatus.failed)
-          const Padding(
-            padding: EdgeInsets.only(top: 4),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
             child: Text(
               'Fallback: join failed — simulated provider.',
-              style: TextStyle(color: Colors.orange),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),
           ),
       ],

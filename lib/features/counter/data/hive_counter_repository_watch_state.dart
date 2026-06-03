@@ -72,8 +72,8 @@ class HiveCounterRepositoryWatchState {
     if (pending case final existingPending?) {
       try {
         await existingPending;
-      } on Exception {
-        // Errors are handled in _performLoadAndEmit.
+      } on Object {
+        // Errors are logged in _performLoadAndEmit.
       }
       if (_pendingInitialNotification != null &&
           _pendingInitialNotification != existingPending) {
@@ -96,7 +96,7 @@ class HiveCounterRepositoryWatchState {
     try {
       final CounterSnapshot snapshot = await loadSnapshot();
       emitSnapshot(snapshot);
-    } on Exception catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       AppLogger.error(
         'Failed to load and emit initial snapshot',
         error,

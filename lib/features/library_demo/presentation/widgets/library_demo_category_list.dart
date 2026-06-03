@@ -10,6 +10,7 @@ class LibraryCategoryList extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
     final List<LibraryCategory> categories = [
       LibraryCategory(label: l10n.libraryDemoCategoryScapes),
       LibraryCategory(label: l10n.libraryDemoCategoryPacks),
@@ -25,11 +26,14 @@ class LibraryCategoryList extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: EpochColors.warmGrey.withValues(alpha: 0.35),
+                  color: epoch.warmGrey.withValues(alpha: 0.35),
                 ),
               ),
             ),
-            child: _LibraryCategoryRow(category: categories[index]),
+            child: _LibraryCategoryRow(
+              category: categories[index],
+              caretColor: epoch.ash,
+            ),
           ),
           if (index != categories.length - 1)
             SizedBox(height: EpochSpacing.gapSection),
@@ -40,9 +44,13 @@ class LibraryCategoryList extends StatelessWidget {
 }
 
 class _LibraryCategoryRow extends StatelessWidget {
-  const _LibraryCategoryRow({required this.category});
+  const _LibraryCategoryRow({
+    required this.category,
+    required this.caretColor,
+  });
 
   final LibraryCategory category;
+  final Color caretColor;
 
   @override
   Widget build(final BuildContext context) => InkWell(
@@ -58,7 +66,7 @@ class _LibraryCategoryRow extends StatelessWidget {
         RepaintBoundary(
           child: CustomPaint(
             size: const Size(16, 16),
-            painter: _CaretPainter(),
+            painter: _CaretPainter(color: caretColor),
           ),
         ),
       ],
@@ -67,10 +75,14 @@ class _LibraryCategoryRow extends StatelessWidget {
 }
 
 class _CaretPainter extends CustomPainter {
+  const _CaretPainter({required this.color});
+
+  final Color color;
+
   @override
   void paint(final Canvas canvas, final Size size) {
     final Paint paint = Paint()
-      ..color = EpochColors.ash
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round
@@ -85,5 +97,7 @@ class _CaretPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant final CustomPainter oldDelegate) => false;
+  @override
+  bool shouldRepaint(covariant final _CaretPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

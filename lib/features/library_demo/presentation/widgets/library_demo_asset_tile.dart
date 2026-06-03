@@ -15,98 +15,104 @@ class LibraryAssetTile extends StatelessWidget {
   final LibraryAsset asset;
 
   @override
-  Widget build(final BuildContext context) => Container(
-    padding: EdgeInsets.symmetric(
-      vertical: EpochSpacing.gapMedium / 2,
-    ),
-    decoration: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(
-          color: EpochColors.warmGrey.withValues(alpha: 0.35),
+  Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: EpochSpacing.gapMedium / 2,
+      ),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: epoch.warmGrey.withValues(alpha: 0.35),
+          ),
         ),
       ),
-    ),
-    child: SizedBox(
-      height: EpochSpacing.assetThumbnailSize,
-      child: Row(
-        children: [
-          // Asset art and info
-          Expanded(
-            child: Row(
-              children: [
-                // Thumbnail
-                _buildThumbnail(),
-                const SizedBox(width: 12),
-                // Asset info
-                Expanded(
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          asset.name,
-                          style: EpochTextStyles.assetName(context),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          asset.type.toUpperCase(),
-                          style: EpochTextStyles.assetType(context),
-                        ),
-                      ],
+      child: SizedBox(
+        height: EpochSpacing.assetThumbnailSize,
+        child: Row(
+          children: [
+            // Asset art and info
+            Expanded(
+              child: Row(
+                children: [
+                  // Thumbnail
+                  _buildThumbnail(context, epoch),
+                  const SizedBox(width: 12),
+                  // Asset info
+                  Expanded(
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            asset.name,
+                            style: EpochTextStyles.assetName(context),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            asset.type.toUpperCase(),
+                            style: EpochTextStyles.assetType(context),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(width: EpochSpacing.gapAssetGroup),
-          // Metadata and icons
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    asset.durationLabel,
-                    style: EpochTextStyles.metadata(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
+            SizedBox(width: EpochSpacing.gapAssetGroup),
+            // Metadata and icons
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      asset.durationLabel,
+                      style: EpochTextStyles.metadata(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
                   ),
-                ),
-                SizedBox(width: EpochSpacing.gapSection),
-                Flexible(
-                  child: Text(
-                    asset.formatLabel,
-                    style: EpochTextStyles.metadata(context),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
+                  SizedBox(width: EpochSpacing.gapSection),
+                  Flexible(
+                    child: Text(
+                      asset.formatLabel,
+                      style: EpochTextStyles.metadata(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
                   ),
-                ),
-                SizedBox(width: EpochSpacing.gapSection),
-                const LibraryFavoriteIcon(),
-                SizedBox(width: EpochSpacing.gapLarge),
-                const LibraryThreeDotIcon(),
-              ],
+                  SizedBox(width: EpochSpacing.gapSection),
+                  const LibraryFavoriteIcon(),
+                  SizedBox(width: EpochSpacing.gapLarge),
+                  const LibraryThreeDotIcon(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
-  Widget _buildThumbnail() {
+  Widget _buildThumbnail(
+    final BuildContext context,
+    final EpochThemeExtension epoch,
+  ) {
     if (asset.isAudio) {
       return Container(
         width: EpochSpacing.assetThumbnailSize,
         height: EpochSpacing.assetThumbnailSize,
         decoration: BoxDecoration(
-          color: asset.backgroundColor ?? EpochColors.pink,
+          color: asset.backgroundColor ?? epoch.pink,
           borderRadius: BorderRadius.circular(EpochSpacing.borderRadiusSmall),
         ),
         child: const LibraryWaveform(),
@@ -125,7 +131,7 @@ class LibraryAssetTile extends StatelessWidget {
                   assetPath: assetPath,
                   fit: BoxFit.contain,
                   fallbackBuilder: () => Container(
-                    color: EpochColors.warmGreyLightest.withValues(
+                    color: epoch.warmGreyLightest.withValues(
                       alpha: 0.2,
                     ),
                   ),
@@ -144,7 +150,7 @@ class LibraryAssetTile extends StatelessWidget {
       width: EpochSpacing.assetThumbnailSize,
       height: EpochSpacing.assetThumbnailSize,
       decoration: BoxDecoration(
-        color: EpochColors.warmGreyLightest.withValues(alpha: 0.2),
+        color: epoch.warmGreyLightest.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(EpochSpacing.borderRadiusSmall),
       ),
     );

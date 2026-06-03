@@ -14,18 +14,19 @@ class ScapeGridViewIcon extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
     final double iconSize = UI.scaleFontMax(16);
     final String assetPath = isSelected
         ? 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon_selected.svg'
         : 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_grid_view_icon.svg';
-    final Color? iconColor = isSelected ? null : EpochColors.ash;
+    final Color? iconColor = isSelected ? null : epoch.ash;
     final Widget icon = ResilientSvgAssetImage(
       assetPath: assetPath,
       fit: BoxFit.contain,
       fallbackBuilder: () => Icon(
         Icons.grid_view,
         size: iconSize,
-        color: iconColor ?? EpochColors.warmGreyLightest,
+        color: iconColor ?? epoch.warmGreyLightest,
       ),
     );
 
@@ -53,10 +54,9 @@ class ScapeListViewIcon extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
     final double iconSize = UI.scaleFontMax(16);
-    final Color iconColor = isSelected
-        ? EpochColors.warmGreyLightest
-        : EpochColors.ash;
+    final Color iconColor = isSelected ? epoch.warmGreyLightest : epoch.ash;
 
     return SizedBox(
       width: iconSize,

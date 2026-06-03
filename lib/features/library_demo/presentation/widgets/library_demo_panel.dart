@@ -33,9 +33,10 @@ class LibraryDemoPanel extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
+    final EpochThemeExtension epoch = context.epoch;
     return Container(
       decoration: BoxDecoration(
-        color: EpochColors.darkGrey,
+        color: epoch.darkGrey,
         borderRadius: BorderRadius.all(
           Radius.circular(EpochSpacing.borderRadiusLarge),
         ),
