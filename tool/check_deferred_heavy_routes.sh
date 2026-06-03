@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Warn/fail: deferred route imports must stay in allowlisted router files only.
-# Theme: navigation-architecture | Severity: warn by default (CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn)
+# Theme: navigation-architecture | Severity: fail by default (CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail)
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source "$PROJECT_ROOT/tool/check_helpers.sh"
-MODE="${CHECK_DEFERRED_HEAVY_ROUTES_MODE:-warn}"
+MODE="${CHECK_DEFERRED_HEAVY_ROUTES_MODE:-fail}"
 ALLOWLIST=(
   "lib/app/router/route_groups.dart"
   "lib/app/router/routes_core.dart"

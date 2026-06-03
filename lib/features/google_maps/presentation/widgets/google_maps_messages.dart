@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class GoogleMapsUnsupportedMessage extends StatelessWidget {
   const GoogleMapsUnsupportedMessage({required this.message, super.key});
@@ -11,13 +13,32 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
 }
 
 class GoogleMapsErrorMessage extends StatelessWidget {
-  const GoogleMapsErrorMessage({required this.message, super.key});
+  const GoogleMapsErrorMessage({
+    required this.message,
+    this.onRetry,
+    super.key,
+  });
 
   final String message;
+  final VoidCallback? onRetry;
 
   @override
-  Widget build(final BuildContext context) =>
-      AppMessage(message: message, isError: true);
+  Widget build(final BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    return AppMessage(
+      message: message,
+      isError: true,
+      actions: onRetry == null
+          ? null
+          : <Widget>[
+              PlatformAdaptive.textButton(
+                context: context,
+                onPressed: onRetry,
+                child: Text(l10n.retryButtonLabel),
+              ),
+            ],
+    );
+  }
 }
 
 class GoogleMapsMissingKeyMessage extends StatelessWidget {

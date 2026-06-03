@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
@@ -16,14 +18,21 @@ class MapSampleCubit extends Cubit<MapSampleState> {
       state.copyWith(
         isLoading: true,
         errorMessage: null,
+        lastError: null,
         markers: const <gmaps.Marker>{},
         locations: const <MapLocation>[],
         selectedMarkerId: null,
       ),
     );
+    AppError? latestError;
+
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
       isAlive: () => !isClosed,
+      onAppError: (final appError) {
+        if (isClosed) return;
+        latestError = appError;
+      },
       onSuccess: (final locations) {
         if (isClosed) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
@@ -50,6 +59,8 @@ class MapSampleCubit extends Cubit<MapSampleState> {
           state.copyWith(
             isLoading: false,
             errorMessage: errorMessage,
+            lastError:
+                latestError ?? NetworkErrorMapper.getAppError(errorMessage),
             markers: const <gmaps.Marker>{},
             locations: const <MapLocation>[],
             selectedMarkerId: null,

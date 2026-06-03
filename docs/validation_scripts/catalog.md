@@ -60,16 +60,16 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | Images / cache | raw network images, image cache width | **fail** `check_remote_image_cache_hints.sh` |
 | State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
 | Async / boundaries | post-async mounted, stream dispose, concurrent modification | existing scripts |
-| Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate`; **warn** `check_deferred_heavy_routes.sh` |
-| Memory / lifecycle | memory scripts, lifecycle error handling | **warn** `check_lifecycle_observer_dispose.sh` |
+| Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate`; **fail** `check_deferred_heavy_routes.sh` |
+| Memory / lifecycle | memory scripts, lifecycle error handling | **fail** `check_lifecycle_observer_dispose.sh` |
 | Background / startup | background sync coordinator test, perf scripts | regression test added; startup gate deferred |
 
 - **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `lib/features/**/{domain,data}/**` and `lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
 - **`check_sync_io_in_presentation.sh`**: Blocking `dart:io` `*Sync` in `lib/**/presentation/**` only (not data-layer `existsSync`). Fixtures under `tool/fixtures/sync_io_in_presentation/presentation/`.
 - **`check_remote_image_cache_hints.sh`**: Flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
-- **`check_lifecycle_observer_dispose.sh`**: Warn-first `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=fail` for fixture/fail-mode proof. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
-- **`check_deferred_heavy_routes.sh`**: Warn-first deferred route import allowlist. Deferred imports must stay in `lib/app/router/route_groups.dart` / `lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail` for fixture/fail-mode proof. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
+- **`check_lifecycle_observer_dispose.sh`**: Fail-by-default `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=warn` to soften locally. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
+- **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `lib/app/router/route_groups.dart` / `lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
 
 Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).
 
