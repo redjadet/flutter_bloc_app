@@ -1411,6 +1411,8 @@ CHECK_MESSAGES=(
   "Checking presentation layer for blocking dart:io *Sync calls..."
   "Checking remote image cache hints..."
   "Checking cubit stream subscription hygiene..."
+  "Checking WidgetsBindingObserver removeObserver in dispose..."
+  "Checking deferred route imports stay on router allowlist..."
   "Running Pyright on Python (Render chat demo + tool/)..."
 )
 
@@ -1475,6 +1477,8 @@ CHECK_SCRIPTS=(
   "tool/check_sync_io_in_presentation.sh"
   "tool/check_remote_image_cache_hints.sh"
   "tool/check_cubit_subscription_cancel.sh"
+  "tool/check_lifecycle_observer_dispose.sh"
+  "tool/check_deferred_heavy_routes.sh"
   "tool/check_pyright_python.sh"
 )
 CHECK_SCRIPT_THEMES=(
@@ -1538,6 +1542,8 @@ CHECK_SCRIPT_THEMES=(
   "blocking-io"
   "images"
   "state-mgmt"
+  "lifecycle"
+  "navigation"
   "tooling"
 )
 

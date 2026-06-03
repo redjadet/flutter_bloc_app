@@ -3,8 +3,10 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_app_error_mapper.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
@@ -19,6 +21,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
     if (isClosed) return;
     final int requestId = _loadGuard.next();
     _emitLoading();
+    AppError? latestError;
     await CubitExceptionHandler.executeAsync(
       operation: () async {
         final List<GraphqlContinent> continents = await _repository
@@ -36,16 +39,28 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
+      onAppError: (final appError) {
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
+        latestError = appError;
+      },
       onError: (final message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        _emitError(message: null, type: GraphqlDemoErrorType.unknown);
+        _emitError(
+          message: message,
+          type: GraphqlDemoErrorType.unknown,
+          lastError: latestError,
+        );
       },
       logContext: 'GraphqlDemoCubit.loadInitial',
       specificExceptionHandlers: {
         GraphqlDemoException: (final error, final stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(message: exception.message, type: exception.type);
+          _emitError(
+            message: exception.message,
+            type: exception.type,
+            lastError: graphqlDemoAppErrorFromException(exception),
+          );
         },
       },
     );
@@ -72,6 +87,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
       activeContinentCode: continentCode,
       shouldUpdateActiveContinent: true,
     );
+    AppError? latestError;
     await CubitExceptionHandler.executeAsync(
       operation: () => _repository.fetchCountries(
         continentCode: continentCode,
@@ -86,16 +102,28 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
           source: _repository.lastSource,
         );
       },
+      onAppError: (final appError) {
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
+        latestError = appError;
+      },
       onError: (final message) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
-        _emitError(message: null, type: GraphqlDemoErrorType.unknown);
+        _emitError(
+          message: message,
+          type: GraphqlDemoErrorType.unknown,
+          lastError: latestError,
+        );
       },
       logContext: 'GraphqlDemoCubit.selectContinent',
       specificExceptionHandlers: {
         GraphqlDemoException: (final error, final stackTrace) {
           if (isClosed || !_loadGuard.isCurrent(requestId)) return;
           final GraphqlDemoException exception = error as GraphqlDemoException;
-          _emitError(message: exception.message, type: exception.type);
+          _emitError(
+            message: exception.message,
+            type: exception.type,
+            lastError: graphqlDemoAppErrorFromException(exception),
+          );
         },
       },
     );
@@ -111,6 +139,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         status: ViewStatus.loading,
         errorMessage: null,
         errorType: null,
+        lastError: null,
         activeContinentCode: shouldUpdateActiveContinent
             ? activeContinentCode
             : state.activeContinentCode,
@@ -142,6 +171,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
             : state.activeContinentCode,
         errorMessage: null,
         errorType: null,
+        lastError: null,
         dataSource: source ?? state.dataSource,
       ),
     );
@@ -150,6 +180,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   void _emitError({
     required final String? message,
     required final GraphqlDemoErrorType? type,
+    final AppError? lastError,
   }) {
     if (isClosed) return;
     emit(
@@ -157,6 +188,7 @@ class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
         status: ViewStatus.error,
         errorMessage: message,
         errorType: type,
+        lastError: lastError ?? graphqlDemoAppErrorFromType(type, message),
       ),
     );
   }

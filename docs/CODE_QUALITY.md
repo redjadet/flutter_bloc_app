@@ -7,6 +7,17 @@ This document consolidates code-quality analysis and improvement notes.
 This file is a **human-readable quality overview**. It is not the enforcement
 layer.
 
+### Program status (2026-06-03)
+
+Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
+Top gaps tracked there:
+
+1. **Coverage** — total 71.49% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)).
+2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
+3. **CI proof** — exhaustive integration remains environment-sensitive; honesty matrix documents what `./bin/checklist` vs `integration_preflight` actually prove.
+
+Promoted checklist gates (warn-first): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md).
+
 Source of truth for gates and guardrails:
 
 - `./bin/checklist`

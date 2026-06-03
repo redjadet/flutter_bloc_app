@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'graphql_demo_view_models.freezed.dart';
@@ -21,5 +22,6 @@ abstract class GraphqlBodyData with _$GraphqlBodyData {
     required final List<GraphqlCountry> countries,
     required final GraphqlDemoErrorType? errorType,
     required final String? errorMessage,
+    final AppError? lastError,
   }) = _GraphqlBodyData;
 }

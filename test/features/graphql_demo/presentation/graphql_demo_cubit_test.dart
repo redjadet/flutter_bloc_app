@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repos
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {
@@ -59,13 +60,17 @@ void main() {
         ),
       ),
       act: (cubit) => cubit.loadInitial(),
-      expect: () => const <GraphqlDemoState>[
-        GraphqlDemoState(status: ViewStatus.loading),
-        GraphqlDemoState(
-          status: ViewStatus.error,
-          errorMessage: 'error',
-          errorType: GraphqlDemoErrorType.unknown,
-        ),
+      expect: () => <dynamic>[
+        const GraphqlDemoState(status: ViewStatus.loading),
+        isA<GraphqlDemoState>()
+            .having((s) => s.status, 'status', ViewStatus.error)
+            .having((s) => s.errorMessage, 'errorMessage', 'error')
+            .having(
+              (s) => s.errorType,
+              'errorType',
+              GraphqlDemoErrorType.unknown,
+            )
+            .having((s) => s.lastError, 'lastError', isA<UnknownError>()),
       ],
     );
 
@@ -91,15 +96,40 @@ void main() {
         ),
       ),
       act: (cubit) => cubit.selectContinent('AF'),
-      expect: () => const <GraphqlDemoState>[
-        GraphqlDemoState(status: ViewStatus.loading, activeContinentCode: 'AF'),
-        GraphqlDemoState(
-          status: ViewStatus.error,
-          errorMessage: 'error',
-          errorType: GraphqlDemoErrorType.unknown,
+      expect: () => <dynamic>[
+        const GraphqlDemoState(
+          status: ViewStatus.loading,
           activeContinentCode: 'AF',
         ),
+        isA<GraphqlDemoState>()
+            .having((s) => s.status, 'status', ViewStatus.error)
+            .having((s) => s.errorMessage, 'errorMessage', 'error')
+            .having(
+              (s) => s.errorType,
+              'errorType',
+              GraphqlDemoErrorType.unknown,
+            )
+            .having((s) => s.activeContinentCode, 'activeContinentCode', 'AF')
+            .having((s) => s.lastError, 'lastError', isA<UnknownError>()),
       ],
+    );
+
+    blocTest<GraphqlDemoCubit, GraphqlDemoState>(
+      'maps network GraphqlDemoException to retryable NetworkError',
+      build: () => GraphqlDemoCubit(
+        repository: _StubGraphqlDemoRepository(
+          exception: GraphqlDemoException(
+            'offline',
+            type: GraphqlDemoErrorType.network,
+          ),
+        ),
+      ),
+      act: (cubit) => cubit.loadInitial(),
+      verify: (cubit) {
+        final AppError? error = cubit.state.lastError;
+        expect(error, isA<NetworkError>());
+        expect(error!.isRetryable, isTrue);
+      },
     );
   });
 }
