@@ -1,7 +1,7 @@
 # Renovate Dependency Dashboard follow-up (issue #2)
 
-**Date:** 2026-06-03  
-**Issue:** https://github.com/redjadet/flutter_bloc_app/issues/2
+**Date:** 2026-06-03
+**Issue:** <https://github.com/redjadet/flutter_bloc_app/issues/2>
 
 ## Problem
 
