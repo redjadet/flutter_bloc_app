@@ -9,14 +9,18 @@ layer.
 
 ### Program status (2026-06-03)
 
+**Waves 1–2 closed** on `main` (PR [#290](https://github.com/redjadet/flutter_bloc_app/pull/290), PR [#292](https://github.com/redjadet/flutter_bloc_app/pull/292), closeout [2026-06-03_quality-program-waves-1-2-closeout.md](changes/2026-06-03_quality-program-waves-1-2-closeout.md)).
+
 Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
-Top gaps tracked there:
+Top gaps tracked there (cadence 3+):
 
-1. **Coverage** — total 71.49% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)).
+1. **Coverage** — total 73.35% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)); integration merge can raise rollup.
 2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
-3. **CI proof** — exhaustive integration remains environment-sensitive; honesty matrix documents what `./bin/checklist` vs `integration_preflight` actually prove. **Post-merge (2026-06-03):** iOS simulator standard tier (`standard_flows_test.dart`, 22 flows) passed locally; exhaustive tier not rerun.
+3. **Next arch slice** — Todo list `AppError` (recommended); see baseline audit § Future-plan next target.
 
-Promoted checklist gates (warn-first): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md). Post-merge dry-runs: 0 violations; flip to fail when backlog criteria in [deferred gates](plans/checklist_quality_gates_deferred.md) are met.
+Promoted checklist gates (**fail** default): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md) and [deferred gates](plans/checklist_quality_gates_deferred.md). Proof on `main`: 0 violations; env overrides `CHECK_*_MODE=warn` for staged fixes.
+
+**Integration proof:** standard 22/22 and exhaustive 23/23 on iPhone 17e (`665deee8`); honesty matrix in baseline audit.
 
 Source of truth for gates and guardrails:
 

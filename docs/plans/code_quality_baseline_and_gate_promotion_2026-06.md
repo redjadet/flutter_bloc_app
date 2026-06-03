@@ -1,6 +1,6 @@
 # Code quality baseline and gate promotion (2026)
 
-**Status:** Waves 1–2 **closed** on `main` (PR [#290](https://github.com/redjadet/flutter_bloc_app/pull/290), PR [#292](https://github.com/redjadet/flutter_bloc_app/pull/292) @ `dd883f31`). Cadence 3+ backlog in [baseline audit](../audits/code_quality_baseline_2026-06-03.md). **Cursor plan todos:** `.cursor/plans/flawless_quality_program_f3279390.plan.md`.
+**Status:** Waves 1–2 **closed** on `main` (PR [#290](https://github.com/redjadet/flutter_bloc_app/pull/290), PR [#292](https://github.com/redjadet/flutter_bloc_app/pull/292), closeout `665deee8`). Cadence 3+ backlog in [baseline audit](../audits/code_quality_baseline_2026-06-03.md). **Cursor plan:** `.cursor/plans/flawless_quality_program_f3279390.plan.md` (all todos completed).
 **Priority:** Balanced — baseline audit, then one vertical slice per cadence.
 
 ## Artifacts
@@ -49,15 +49,17 @@ bash tool/modular_metrics.sh && bash tool/modular_metrics.sh --cross-feature-onl
 
 Copy audit + spike templates from Cursor plan § **Build readiness** and § **Phase 0a**.
 
-## Execution order
+## Execution order (completed)
 
-1. **PR1** — Phase 0a audit + [`audits/README.md`](../audits/README.md) link + [`CODE_QUALITY.md`](../CODE_QUALITY.md) status (top 3 gaps)
-2. **0b** — Spikes for QG-D07, QG-D05 (minimum)
-3. **PR2** — One gate (D07 or D05 warn-first)
-4. **PR3** — One future-architecture slice (pick one option from owner doc)
-5. **Optional PR4** — Second gate or sustain cross-links (not same week as PR3)
+| Step | Action | Status |
+| --- | --- | --- |
+| 1 | PR1 — Phase 0a audit + audits README + CODE_QUALITY status | Done — #290 |
+| 2 | 0b — Spikes D07, D05 (+ full deferred set in spikes doc) | Done |
+| 3 | PR2 — D07 + D05 warn-first | Done — #290 |
+| 4 | PR3 — Graphql `AppError` | Done — #290 |
+| 5 | PR4 — D05/D07 fail + MapSample `AppError` + closeout | Done — #292, `665deee8` |
 
-Do not combine PR2 + PR3 in one PR.
+Do not combine PR2 + PR3 themes in one PR (honored).
 
 ## Canonical owners
 
