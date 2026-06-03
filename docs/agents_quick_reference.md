@@ -15,6 +15,7 @@ Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1. CI: [`ci_automation.md`](ci
 | Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026) |
 | Integration journey / flow | `./bin/integration_tests` |
 | Early integration/bootstrap guardrails | `./bin/integration_preflight` |
+| Browser integration (Chrome/web; not `integration_test/` on device) | `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` (default) |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
 | Large refactor with graph installed | `./tool/refresh_code_review_graph.sh` |

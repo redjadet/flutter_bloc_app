@@ -16,9 +16,16 @@ Durable operator choices. Keep simple; link to owner; avoid duplicate prose.
 
 Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch, grouped repo-backed badges, quick start, one doc table. Put **Scope** before **Screenshots**; screenshots last. Route detail to [`docs/README.md`](../README.md) and topic docs. No ADR tables, command essays, or duplicate deep dives in README body.
 
+## Workflow
+
+- Continue until finished; stop only when stuck/blocker.
+- Don't revert doc or agent-knowledge edits during review/cleanup unless the user asks.
+
 ## Validation
 
 - Fix failures in product code/DI/config first; do not "pass" checks by weakening scripts or validators. Change scripts only for demonstrated false positives.
+- Extend preflight checks when dependency/codegen drift appears before full builds break (see `./bin/integration_preflight` and delivery-checklist dependency preflight).
+- **Web/browser:** `integration_test` does not run on web; use `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` — [`agents_quick_reference.md`](../agents_quick_reference.md).
 - Treat analyzer warnings/info and lints as code fixes first: structure, l10n, mounted guards. Avoid broad ignore comments when proper fix fits.
 - After `lib/` or mixed `lib/` + `docs/` delivery, run [`./bin/checklist`](../../bin/checklist) until green. [`./bin/checklist-fast`](../../bin/checklist-fast) is docs/tooling-only; see [`engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
 - README or substantive `docs/**` edits: run `markdownlint-cli2` on touched paths until clean; see [`docs/agents_appendix.md`](../agents_appendix.md).
@@ -43,6 +50,9 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Repo Guardrails
 
+- **`file_too_long`:** split into `*.part.dart`; do not raise `defaultMaxLines` to hide the lint.
+- **Orphan codegen:** orphan `*.g.dart` / `*.freezed.dart` with no matching source are safe to delete; regenerate when source exists.
+- **Checklist gate promotion:** promote warn-only checklist gates to fail once violation count stays at zero; record in [`plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md) and related [`docs/changes/`](../changes/) notes.
 - **`tool/delivery_checklist.sh`:** Every `CHECK_SCRIPTS` entry needs a matching `CHECK_MESSAGES` entry and `CHECK_SCRIPT_THEMES` entry (same length, currently 60) or delivery-checklist configuration validation fails in CI. `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script. Quality-theme MVP + deferred backlog: [`plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md), [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md).
 - **Horizontal CTA / action bars:** `./bin/checklist` runs `tool/check_row_action_overflow.sh` (static PRIMARY_SCOPE heuristics) and `tool/check_action_bar_layout.sh` (widget tests). Prefer `ResponsiveDualCtaRow` / `ResponsiveActionOverflowBar` over raw multi-button `Row` — [`docs/design_system.md`](../design_system.md#horizontal-action-layout-overflow).
 - **`tool/**/*.dart`:** Avoid synchronous `File.statSync` (and similar) across large file sets; `check_tool_dart_no_stat_sync.sh` enforces non-blocking patterns.
