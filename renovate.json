@@ -36,13 +36,24 @@
         "patch"
       ],
       "groupName": "dart-minor-patch",
-      "ignoreDeps": [
-        "google_sign_in_mocks",
-        "genui"
-      ],
       "schedule": [
         "after 9am and before 5pm on Monday to Friday"
       ]
+    },
+    {
+      "description": "Keep coordinated pub pins out of dart-minor-patch (cannot combine ignoreDeps with matchUpdateTypes)",
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPackageNames": [
+        "google_sign_in_mocks",
+        "genui"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "pub-coordinated-pins"
     },
     {
       "description": "Hold genui ^0.7 until genui_google_generative_ai supports newer core (pubspec.yaml)",

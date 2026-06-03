@@ -20,7 +20,7 @@ This project uses automated dependency update monitoring to keep dependencies up
 
 **Update Strategy**:
 
-- **Minor/Patch updates**: Grouped together as "dart-minor-patch" (`genui` and `google_sign_in_mocks` excluded from the group; they use dedicated `allowedVersions` rules below)
+- **Minor/Patch updates**: Grouped together as "dart-minor-patch" (`genui` and `google_sign_in_mocks` use separate `pub-coordinated-pins` group plus `allowedVersions` rules below)
 - **Major updates**: Separated by category:
   - Flutter SDK major updates
   - Firebase major updates
