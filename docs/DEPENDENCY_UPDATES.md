@@ -135,7 +135,8 @@ To temporarily disable updates for a specific package, add a comment to `renovat
 
 | Dashboard message | Cause | Action |
 | --- | --- | --- |
-| `Failed to look up maven package dev.flutter.flutter-plugin-loader` | Plugin ID is resolved via Gradle plugin portal, not Maven Central | Ignored in `renovate.json` (`matchManagers: gradle`, `dev.flutter.flutter-plugin-loader` disabled). Upgrade the version in `android/settings.gradle` with Flutter/SDK release notes. |
+| `Failed to look up maven package dev.flutter.flutter-plugin-loader` | Plugin ID is resolved via Gradle plugin portal, not Maven Central | Listed in `renovate.json` `ignoreDeps` and Gradle rule (`enabled: false`). Upgrade the version in `android/settings.gradle` with Flutter/SDK release notes. |
+| `dart-minor-patch` PR fails `pubspec-compat` on `json_serializable` | `6.12+` needs analyzer ≥9; `6.13+` needs ≥10; repo pins analyzer 8.4.x for `custom_lints` | `renovate.json` holds `json_serializable` to `<6.12.0`. Close/rebase the broken Renovate PR after merge. |
 | `Custom registries are not allowed for this datasource` | Harmless Renovate warning when `Gemfile` pins `fastlane` from GitHub (`git-refs` datasource); see [renovate#37432](https://github.com/renovatebot/renovate/issues/37432) | Safe to ignore until `fastlane` returns to a Rubygems release (see `Gemfile` comment). |
 | Rate-limited / blocked PRs | Renovate concurrency or manual edit/close | Use checkboxes on the dashboard or merge open dependency PRs; see **PR Edited (Blocked)** / **PR Closed (Blocked)** sections. |
 
