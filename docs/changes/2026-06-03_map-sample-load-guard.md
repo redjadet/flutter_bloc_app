@@ -11,6 +11,6 @@
 ## Verification
 
 ```bash
-dart analyze lib/features/google_maps/presentation/cubit/map_sample_cubit.dart
+./tool/analyze.sh
 flutter test test/features/google_maps/presentation/cubit/map_sample_cubit_test.dart
 ```

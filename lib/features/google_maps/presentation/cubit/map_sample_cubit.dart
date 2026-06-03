@@ -34,7 +34,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
 
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
-      isAlive: () => !isClosed,
+      isAlive: () => !isClosed && _loadGuard.isCurrent(requestId),
       onAppError: (final appError) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         latestError = appError;

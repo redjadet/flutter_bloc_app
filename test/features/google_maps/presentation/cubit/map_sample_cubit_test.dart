@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_coordinate.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class _StubMapLocationRepository implements MapLocationRepository {
@@ -171,6 +171,8 @@ void main() {
         await Future<void>.delayed(Duration.zero);
       },
       expect: () => <dynamic>[
+        // Two loadLocations() calls each emit loading synchronously, but the
+        // second matches the first loading state so Cubit suppresses it.
         isA<MapSampleState>().having(
           (final state) => state.isLoading,
           'isLoading',
@@ -178,11 +180,7 @@ void main() {
         ),
         isA<MapSampleState>()
             .having((final state) => state.isLoading, 'isLoading', false)
-            .having(
-              (final state) => state.locations.length,
-              'locations',
-              2,
-            )
+            .having((final state) => state.locations.length, 'locations', 2)
             .having(
               (final state) => state.selectedMarkerId?.value,
               'selectedMarkerId',
@@ -193,14 +191,43 @@ void main() {
         expect(raceRepository.callCount, 2);
       },
     );
+
+    blocTest<MapSampleCubit, MapSampleState>(
+      'ignores stale error when a newer load succeeds first',
+      build: () {
+        raceRepository = _RaceMapLocationRepository();
+        return MapSampleCubit(repository: raceRepository);
+      },
+      act: (final cubit) async {
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+
+        raceRepository.completeSecond(_sampleLocations);
+        await Future<void>.delayed(Duration.zero);
+
+        raceRepository.completeFirstError(Exception('stale'));
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <dynamic>[
+        isA<MapSampleState>().having((final state) => state.isLoading, 'isLoading', true),
+        isA<MapSampleState>()
+            .having((final state) => state.isLoading, 'isLoading', false)
+            .having((final state) => state.locations.length, 'locations', 2)
+            .having((final state) => state.errorMessage, 'errorMessage', isNull),
+      ],
+      verify: (_) {
+        expect(raceRepository.callCount, 2);
+      },
+    );
   });
 }
 
 class _RaceMapLocationRepository implements MapLocationRepository {
-  final Completer<List<MapLocation>> _first =
-      Completer<List<MapLocation>>();
-  final Completer<List<MapLocation>> _second =
-      Completer<List<MapLocation>>();
+  final Completer<List<MapLocation>> _first = Completer<List<MapLocation>>();
+  final Completer<List<MapLocation>> _second = Completer<List<MapLocation>>();
   int _callCount = 0;
   int get callCount => _callCount;
 
@@ -216,6 +243,12 @@ class _RaceMapLocationRepository implements MapLocationRepository {
   void completeFirst(final List<MapLocation> locations) {
     if (!_first.isCompleted) {
       _first.complete(locations);
+    }
+  }
+
+  void completeFirstError(final Object error) {
+    if (!_first.isCompleted) {
+      _first.completeError(error);
     }
   }
 
