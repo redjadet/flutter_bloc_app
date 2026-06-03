@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_coordinate.dart';
@@ -45,6 +47,8 @@ final List<MapLocation> _sampleLocations = <MapLocation>[
 ];
 
 void main() {
+  late _RaceMapLocationRepository raceRepository;
+
   group('MapSampleCubit', () {
     blocTest<MapSampleCubit, MapSampleState>(
       'emits loading then populated state when loadLocations succeeds',
@@ -124,5 +128,100 @@ void main() {
 
       expect(cubit.state.selectedMarkerId, const gmaps.MarkerId('2'));
     });
+
+    test('selectLocation with empty id is a no-op', () async {
+      final repository = _StubMapLocationRepository(
+        locations: _sampleLocations,
+      );
+      final cubit = MapSampleCubit(repository: repository);
+
+      await cubit.loadLocations();
+      final gmaps.MarkerId? before = cubit.state.selectedMarkerId;
+
+      cubit.selectLocation('');
+      cubit.selectLocation('   ');
+
+      expect(cubit.state.selectedMarkerId, before);
+    });
+
+    blocTest<MapSampleCubit, MapSampleState>(
+      'ignores stale completion when a newer load finishes first',
+      build: () {
+        raceRepository = _RaceMapLocationRepository();
+        return MapSampleCubit(repository: raceRepository);
+      },
+      act: (final cubit) async {
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+
+        raceRepository.completeSecond(_sampleLocations);
+        await Future<void>.delayed(Duration.zero);
+
+        raceRepository.completeFirst(<MapLocation>[
+          const MapLocation(
+            id: 'stale',
+            title: 'Stale',
+            description: 'Stale',
+            coordinate: MapCoordinate(latitude: 0, longitude: 0),
+          ),
+        ]);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <dynamic>[
+        isA<MapSampleState>().having(
+          (final state) => state.isLoading,
+          'isLoading',
+          true,
+        ),
+        isA<MapSampleState>()
+            .having((final state) => state.isLoading, 'isLoading', false)
+            .having(
+              (final state) => state.locations.length,
+              'locations',
+              2,
+            )
+            .having(
+              (final state) => state.selectedMarkerId?.value,
+              'selectedMarkerId',
+              '1',
+            ),
+      ],
+      verify: (_) {
+        expect(raceRepository.callCount, 2);
+      },
+    );
   });
+}
+
+class _RaceMapLocationRepository implements MapLocationRepository {
+  final Completer<List<MapLocation>> _first =
+      Completer<List<MapLocation>>();
+  final Completer<List<MapLocation>> _second =
+      Completer<List<MapLocation>>();
+  int _callCount = 0;
+  int get callCount => _callCount;
+
+  @override
+  Future<List<MapLocation>> fetchSampleLocations() {
+    _callCount++;
+    if (_callCount == 1) {
+      return _first.future;
+    }
+    return _second.future;
+  }
+
+  void completeFirst(final List<MapLocation> locations) {
+    if (!_first.isCompleted) {
+      _first.complete(locations);
+    }
+  }
+
+  void completeSecond(final List<MapLocation> locations) {
+    if (!_second.isCompleted) {
+      _second.complete(locations);
+    }
+  }
 }

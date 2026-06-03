@@ -6,14 +6,20 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sam
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
   MapSampleCubit({required this._repository}) : super(MapSampleState.initial());
 
   final MapLocationRepository _repository;
+  final RequestIdGuard _loadGuard = RequestIdGuard();
 
   Future<void> loadLocations() async {
+    if (isClosed) {
+      return;
+    }
+    final int requestId = _loadGuard.next();
     emit(
       state.copyWith(
         isLoading: true,
@@ -30,11 +36,11 @@ class MapSampleCubit extends Cubit<MapSampleState> {
       operation: _repository.fetchSampleLocations,
       isAlive: () => !isClosed,
       onAppError: (final appError) {
-        if (isClosed) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         latestError = appError;
       },
       onSuccess: (final locations) {
-        if (isClosed) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
             ? null
             : gmaps.MarkerId(locations.first.id);
@@ -54,7 +60,7 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         );
       },
       onError: (final errorMessage) {
-        if (isClosed) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             isLoading: false,
@@ -87,6 +93,9 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   void selectLocation(final String locationId) {
+    if (locationId.trim().isEmpty) {
+      return;
+    }
     final MapLocation? location = state.locations.firstWhereOrNull(
       (final candidate) => candidate.id == locationId,
     );
