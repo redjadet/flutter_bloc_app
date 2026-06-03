@@ -1,7 +1,7 @@
 # Renovate config validation (issue #277)
 
-**Date:** 2026-06-03  
-**Issue:** https://github.com/redjadet/flutter_bloc_app/issues/277
+**Date:** 2026-06-03
+**Issue:** <https://github.com/redjadet/flutter_bloc_app/issues/277>
 
 ## Problem
 
