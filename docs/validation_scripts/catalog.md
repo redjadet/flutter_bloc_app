@@ -48,9 +48,9 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 - **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
   - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
 
-### Quality theme gates (checklist MVP, May 2026)
+### Quality theme gates (checklist MVP + promoted warn gates)
 
-Six scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-subscription fail gates. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
+Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-subscription fail gates plus warn-first route/lifecycle gates. Theme labels align with `CHECK_SCRIPT_THEMES` in `tool/delivery_checklist.sh` (use `CHECKLIST_EXPLAIN_THEMES=1` to print mapping).
 
 | Theme (representative) | Existing coverage | New / wired in MVP |
 | --- | --- | --- |
@@ -60,20 +60,22 @@ Six scripts extend `./bin/checklist` with navigation/sync-io/image-cache/cubit-s
 | Images / cache | raw network images, image cache width | **fail** `check_remote_image_cache_hints.sh` |
 | State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
 | Async / boundaries | post-async mounted, stream dispose, concurrent modification | existing scripts |
-| Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate` |
-| Memory / lifecycle | memory scripts, lifecycle error handling | existing scripts |
+| Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate`; **warn** `check_deferred_heavy_routes.sh` |
+| Memory / lifecycle | memory scripts, lifecycle error handling | **warn** `check_lifecycle_observer_dispose.sh` |
 | Background / startup | background sync coordinator test, perf scripts | regression test added; startup gate deferred |
 
 - **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `lib/features/**/{domain,data}/**` and `lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
 - **`check_sync_io_in_presentation.sh`**: Blocking `dart:io` `*Sync` in `lib/**/presentation/**` only (not data-layer `existsSync`). Fixtures under `tool/fixtures/sync_io_in_presentation/presentation/`.
 - **`check_remote_image_cache_hints.sh`**: Flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
+- **`check_lifecycle_observer_dispose.sh`**: Warn-first `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=fail` for fixture/fail-mode proof. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
+- **`check_deferred_heavy_routes.sh`**: Warn-first deferred route import allowlist. Deferred imports must stay in `lib/app/router/route_groups.dart` / `lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail` for fixture/fail-mode proof. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
 
 Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).
 
 **Deferred / not in MVP:** [`docs/plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md)
-(`bloc_lint`, file length, rebuild scoping, context read/watch, deferred-route heuristic,
-startup-in-build, lifecycle observer, `CHECK_THEME` filter; lib-wide sync-io **rejected**).
+(`bloc_lint`, file length, rebuild scoping, context read/watch, startup-in-build,
+`CHECK_THEME` filter; lib-wide sync-io **rejected**).
 
 ### Integration testing
 
@@ -104,6 +106,15 @@ bash tool/check_remote_image_cache_hints.sh --paths tool/fixtures/remote_image_c
 # Cubit subscription (fail) — bad=1, suppressed=0
 bash tool/check_cubit_subscription_cancel.sh --paths tool/fixtures/cubit_subscription_cancel/presentation/bad_cubit.dart
 bash tool/check_cubit_subscription_cancel.sh --paths tool/fixtures/cubit_subscription_cancel/presentation/suppressed_cubit.dart
+
+# Lifecycle observer (warn by default; fail-mode fixture proof)
+CHECK_LIFECYCLE_OBSERVER_MODE=fail bash tool/check_lifecycle_observer_dispose.sh --paths tool/fixtures/lifecycle_observer_dispose/presentation/good.dart
+CHECK_LIFECYCLE_OBSERVER_MODE=fail bash tool/check_lifecycle_observer_dispose.sh --paths tool/fixtures/lifecycle_observer_dispose/presentation/bad.dart
+CHECK_LIFECYCLE_OBSERVER_MODE=fail bash tool/check_lifecycle_observer_dispose.sh --paths tool/fixtures/lifecycle_observer_dispose/presentation/suppressed.dart
+
+# Deferred heavy routes (warn by default; fail-mode fixture proof)
+CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh --paths tool/fixtures/deferred_heavy_routes/router/good.dart
+CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh --paths tool/fixtures/deferred_heavy_routes/router/bad.dart
 ```
 
 `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` prints `explain|theme|…` per script when the theme array is configured.

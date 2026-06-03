@@ -2,6 +2,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'graphql_demo_state.freezed.dart';
@@ -15,6 +16,7 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
     final String? activeContinentCode,
     final String? errorMessage,
     final GraphqlDemoErrorType? errorType,
+    final AppError? lastError,
     @Default(GraphqlDataSource.unknown) final GraphqlDataSource dataSource,
   }) = _GraphqlDemoState;
 
@@ -22,5 +24,6 @@ abstract class GraphqlDemoState with _$GraphqlDemoState {
 
   bool get isLoading => status.isLoading;
   bool get hasError =>
-      status.isError && (errorMessage != null || errorType != null);
+      status.isError &&
+      (errorMessage != null || errorType != null || lastError != null);
 }
