@@ -14,9 +14,9 @@ Top gaps tracked there:
 
 1. **Coverage** — total 71.49% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)).
 2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
-3. **CI proof** — exhaustive integration remains environment-sensitive; honesty matrix documents what `./bin/checklist` vs `integration_preflight` actually prove.
+3. **CI proof** — exhaustive integration remains environment-sensitive; honesty matrix documents what `./bin/checklist` vs `integration_preflight` actually prove. **Post-merge (2026-06-03):** iOS simulator standard tier (`standard_flows_test.dart`, 22 flows) passed locally; exhaustive tier not rerun.
 
-Promoted checklist gates (warn-first): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md).
+Promoted checklist gates (warn-first): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md). Post-merge dry-runs: 0 violations; flip to fail when backlog criteria in [deferred gates](plans/checklist_quality_gates_deferred.md) are met.
 
 Source of truth for gates and guardrails:
 

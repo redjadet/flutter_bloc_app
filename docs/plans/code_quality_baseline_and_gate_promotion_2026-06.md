@@ -10,12 +10,16 @@
 | Baseline | [code_quality_baseline_2026-06-03.md](../audits/code_quality_baseline_2026-06-03.md) |
 | Gate spikes | [code_quality_baseline_spikes_2026-06-03.md](../audits/code_quality_baseline_spikes_2026-06-03.md) |
 
-## Remaining proof (before merge)
+## Phase 2 follow-ups (post-merge)
 
-| Item | Action |
-| --- | --- |
-| Full checklist | `./bin/checklist` after catalog sync |
-| Integration exhaustive | Honesty matrix only unless sim proof exists |
+| Item | Status (2026-06-03) | Action |
+| --- | --- | --- |
+| Re-baseline on clean `main` | Done | `./bin/checklist-fast`, gates, modular_metrics, integration_preflight — see [baseline audit](../audits/code_quality_baseline_2026-06-03.md) post-merge table |
+| iOS integration (standard) | Done | `CHECKLIST_INTEGRATION_DEVICE=<sim> INTEGRATION_TESTS_TIER=standard ./bin/integration_tests` |
+| Full `./bin/checklist` on `main` | Pre-merge proof | Rerun before next release if `lib/` changed since PR #290 |
+| Integration exhaustive | Open | `INTEGRATION_TESTS_TIER=exhaustive` when macOS CI skipped |
+| Flip D05/D07 warn → fail | Open | Only when deferred doc unblock criteria met |
+| Next arch slice / gate spike | Open | See baseline backlog B-05+ and [spikes](../audits/code_quality_baseline_spikes_2026-06-03.md) |
 
 ## Quick start (Day 1)
 
