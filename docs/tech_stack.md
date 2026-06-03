@@ -18,7 +18,7 @@ not a replacement for `pubspec.yaml`.
 | App entrypoints | `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` |
 | Shared bootstrap | `lib/main_bootstrap.dart` |
 | App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |
-| Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for existing Podfiles and plugin fallback |
+| Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
 ## Core architecture
 
@@ -63,7 +63,7 @@ not a replacement for `pubspec.yaml`.
 | Images and SVG | `cached_network_image` `^3.4.1`, `fancy_shimmer_image` `^2.0.3`, `flutter_svg` `^2.2.2`, `skeletonizer` `^2.1.0+1` |
 | Charts and visualization | `fl_chart` `^1.1.1` |
 | Media and device features | `image_picker` `^1.2.1`, `local_auth` `^3.0.0`, `device_info_plus` `^12.3.0`, `package_info_plus` `^9.0.0` |
-| Maps | `google_maps_flutter` `^2.14.0`, `apple_maps_flutter` `^1.4.0` |
+| Maps | `google_maps_flutter` `^2.17.1`, `google_maps_flutter_ios_sdk10` `^2.18.4`, `apple_maps_flutter` `^1.4.0` |
 | AI demos | `genui` `^0.7.0`, `genui_google_generative_ai` `^0.7.0` |
 | Other feature packages | `in_app_purchase` `^3.2.3`, `wallet_connect_v2` `^1.0.0`, `flutter_tts` `^4.2.0`, `markdown` `^7.3.0`, `flex_color_picker` `^3.3.0` |
 
@@ -83,7 +83,7 @@ not a replacement for `pubspec.yaml`.
 | Package or concern | Notes |
 | --- | --- |
 | `apple_maps_flutter` | iOS-only map provider used on Apple platforms. |
-| `google_maps_flutter` | Requires platform API key configuration where Google Maps is used. |
+| `google_maps_flutter` | Requires platform API key configuration where Google Maps is used. iOS native SDK is pinned through the SwiftPM-compatible `google_maps_flutter_ios_sdk10` package. |
 | `window_manager` | Desktop-only window management support. |
 | `local_auth` | Uses platform biometric APIs on iOS and Android. |
 | Firebase config files | `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `macos/Runner/GoogleService-Info.plist` when applicable. |
