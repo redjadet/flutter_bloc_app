@@ -59,13 +59,16 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
           ),
         );
       }
-      return;
     }
 
     if (isClosed) {
       return;
     }
 
+    _registerMarketWatch(pairId);
+  }
+
+  void _registerMarketWatch(final String pairId) {
     try {
       registerSubscription(
         _watch(pairId).listen(
@@ -103,7 +106,7 @@ class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
       );
     } on Object catch (error, stackTrace) {
       AppLogger.error(
-        'RealtimeMarketCubit._bootstrap watch',
+        'RealtimeMarketCubit._registerMarketWatch',
         error,
         stackTrace,
       );
