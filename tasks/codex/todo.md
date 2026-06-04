@@ -2,40 +2,40 @@
 
 ## Goal
 
-Keep frequently used AI-agent documents at or below 200 lines without losing
-important agent knowledge.
+Review commit `2ac10278` against live integration and validation tooling; patch
+only confirmed documentation-integrity issues.
 
 ## Write-set
 
-- `docs/agent_knowledge_base.md`
-- `docs/agent_kb/self_improvement.md`
-- `docs/changes/README.md`
-- `docs/changes/2026-06-02_agent_self_improvement_stack.md`
+- `docs/engineering/integration_runner_contract.md`
+- `docs/testing_integration_flows.md`
+- `docs/validation_scripts/catalog.md`
+- `docs/validation_scripts/overview.md`
+- `tool/validate_validation_docs.sh`
 - `tasks/codex/todo.md`
-- `tasks/codex/history/2026-06-02_pre_line_budget_todo.md`
-- `tasks/cursor/todo.md`
-- `tasks/cursor/history/2026-06-02_pre_line_budget_todo.md`
-- agent doc validation guard if needed
 
 ## Risks
 
-- Dropping durable agent rules while shortening docs.
-- Breaking existing anchor checks in `tool/check_agent_knowledge_base.sh`.
-- Hiding useful tracker history instead of preserving it.
+- Documenting a CI suite that current workflow does not run.
+- Letting manually documented script counts drift from disk/checklist inventory.
+- Making validation-doc sync reject intentionally undocumented helpers.
 
 ## Validation command
 
 ```bash
-./tool/check_agent_knowledge_base.sh
+bash tool/validate_validation_docs.sh
+bash tool/check_docs_gardening.sh --paths docs/engineering/integration_runner_contract.md docs/testing_integration_flows.md docs/validation_scripts/catalog.md docs/validation_scripts/overview.md
 bash tool/validate_task_trackers.sh
-python3 ./tool/normalize_doc_links.py --check docs/agent_knowledge_base.md docs/agent_kb/self_improvement.md docs/changes/README.md docs/changes/2026-06-02_agent_self_improvement_stack.md tasks/codex/todo.md tasks/cursor/todo.md
-git diff --check -- docs/agent_knowledge_base.md docs/agent_kb/self_improvement.md docs/changes/README.md docs/changes/2026-06-02_agent_self_improvement_stack.md tasks/codex/todo.md tasks/cursor/todo.md
 ./bin/checklist-fast --explain
+git diff --check
 ```
 
 ## Evidence/result
 
-- In progress: inventoried core agent docs, host skill docs, active trackers,
-  and line counts.
-- Completed: archived old active trackers under `tasks/*/history/` and replaced
-  them with short canonical trackers.
+- Completed: compared commit docs with `.github/workflows/ci.yml`,
+  `tool/run_integration_tests.sh`, and `tool/delivery_checklist.sh`.
+- Completed: found false PR integration-suite claim and unguarded inventory
+  count/full-disk sync claims.
+- Completed: new count guard exposed existing macOS `sed` parser as a no-op;
+  replaced it with Bash regex extraction.
+- Completed: focused validation and `./bin/checklist-fast --explain` passed.

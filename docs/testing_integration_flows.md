@@ -8,7 +8,7 @@ This document explains how integration flows are structured and how to add new o
   - `integration_test/all_flows_test.dart` — exhaustive tier; registers every flow.
   - `integration_test/standard_flows_test.dart` — standard tier (smoke + extended flows).
   - `integration_test/smoke_flows_test.dart` — smoke tier; broader local smoke suite.
-  - `integration_test/pr_smoke_flows_test.dart` — smallest high-signal suite for PR CI.
+  - `integration_test/pr_smoke_flows_test.dart` — smallest high-signal suite for explicit PR-level confidence.
   - `integration_test/extended_flows_test.dart` — heavier persistence, refresh, and filter scenarios (also included in standard tier).
 - Flow registration and helpers:
   - `integration_test/flow_scenarios.dart`

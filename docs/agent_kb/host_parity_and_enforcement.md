@@ -33,7 +33,7 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 
 - `./tool/check_agent_knowledge_base.sh`: keeps [`AGENTS.md`](../../AGENTS.md) short; checks required links, host-template pointers, closed-loop invariants.
 - `./tool/check_agent_memory_compounding.sh`: source-aligned memory-compounding; autonomous action explicit-approval-gated.
-- `./tool/validate_validation_docs.sh`: validation docs vs checklist scripts.
+- `./tool/validate_validation_docs.sh`: validation docs vs on-disk `check_*.sh` inventory and catalog counts.
 - `./tool/normalize_doc_links.py`: clickable local links.
 - `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates.
 - `./bin/checklist`: full gate. `./bin/checklist-fast`: local-only clean/narrow docs/tooling.

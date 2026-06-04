@@ -4,12 +4,13 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 ## Keeping This Doc in Sync
 
-`tool/validate_validation_docs.sh` checks that every script in `CHECK_SCRIPTS`
-(in `tool/delivery_checklist.sh`) is mentioned in [`validation_scripts.md`](../validation_scripts.md)
-or any shard under [`validation_scripts/`](.). The auto-generated index lives in
-[`checklist_index.md`](checklist_index.md). Run `bash tool/fix_validation_docs.sh`
-to refresh the index block after `CHECK_SCRIPTS` changes, then
-`bash tool/validate_validation_docs.sh` to verify.
+`tool/validate_validation_docs.sh` checks that every on-disk `tool/check_*.sh`
+script (except `check_helpers.sh`) is mentioned in [`validation_scripts.md`](../validation_scripts.md)
+or a shard under [`validation_scripts/`](.), and that [`catalog.md`](catalog.md)
+and [`overview.md`](overview.md) inventory counts match disk + `CHECK_SCRIPTS`.
+The auto-generated checklist index lives in [`checklist_index.md`](checklist_index.md).
+Run `bash tool/fix_validation_docs.sh` to refresh the index block after
+`CHECK_SCRIPTS` changes, then `bash tool/validate_validation_docs.sh` to verify.
 
 ## Running Validation Scripts
 

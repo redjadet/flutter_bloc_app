@@ -32,9 +32,11 @@ Invalid tier or target-set values fall back to `exhaustive` / full aggregate.
 | `standard` | `integration_test/standard_flows_test.dart` |
 | `exhaustive` / `full` | `integration_test/all_flows_test.dart` |
 
-PR CI uses `integration_test/pr_smoke_flows_test.dart` via workflow inputs, not
-via these tier env vars. See [`integration_journey_map.md`](integration_journey_map.md)
-and [`ci_automation.md`](../ci_automation.md).
+`integration_test/pr_smoke_flows_test.dart` remains an explicit smallest
+high-signal target for PR-level confidence; current PR CI runs
+`./bin/integration_preflight`, not a device integration suite. See
+[`integration_journey_map.md`](integration_journey_map.md) and
+[`ci_automation.md`](../ci_automation.md).
 
 ## Common environment variables
 
@@ -47,7 +49,7 @@ and [`ci_automation.md`](../ci_automation.md).
 | `INTEGRATION_TESTS_ALLOW_CONCURRENT` | `0` | Set `1` to bypass single-run lock (unsafe) |
 | `INTEGRATION_TESTS_ARTIFACTS_ROOT` | `artifacts/integration` | Artifact root directory |
 | `CHECKLIST_INTEGRATION_DEVICE` | auto-discovered | Device id for `flutter test -d` |
-| `INTEGRATION_TESTS_SOURCE_ONLY` | `0` | Set `1` to validate config and exit without running tests |
+| `INTEGRATION_TESTS_SOURCE_ONLY` | `0` | Set `1` to source helper functions and exit before preflight/device work (runner contract tests) |
 
 ## Artifact contract
 

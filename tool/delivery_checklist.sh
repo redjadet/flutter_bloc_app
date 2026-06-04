@@ -398,7 +398,7 @@ validate_checklist_configuration() {
   fi
 
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     return 1
   fi
 
@@ -1207,7 +1207,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
@@ -1252,7 +1252,7 @@ if is_docs_only_change_set; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
@@ -1285,7 +1285,7 @@ if is_tooling_only_change_set; then
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
-    echo "❌ validation_scripts docs out of sync with CHECK_SCRIPTS; update shards or run tool/validate_validation_docs.sh for details."
+    echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
   if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then

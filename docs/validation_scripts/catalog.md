@@ -6,14 +6,21 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **81** guard scripts (excludes `check_helpers.sh`; `check_row_action_overflow_fixtures.sh` is fixture-only) |
+| `tool/check_*.sh` on disk | **81** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **63** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
-Sync: `bash tool/validate_validation_docs.sh` requires every `CHECK_SCRIPTS` entry to appear in [`validation_scripts.md`](../validation_scripts.md) or any `docs/validation_scripts/*.md` shard (not necessarily in this file). After `CHECK_SCRIPTS` edits: `bash tool/fix_validation_docs.sh` then validate.
+Sync: `bash tool/validate_validation_docs.sh` requires every on-disk `tool/check_*.sh`
+script except `check_helpers.sh` to appear in [`validation_scripts.md`](../validation_scripts.md)
+or a `docs/validation_scripts/*.md` shard (not necessarily in this file), and
+verifies the documented disk/checklist counts. After `CHECK_SCRIPTS` edits:
+`bash tool/fix_validation_docs.sh` then validate.
 
-**Not in `CHECK_SCRIPTS` but used by checklist or CI:** `check_regression_guards.sh`, `check_action_bar_layout.sh`, `check_docs_gardening.sh` (docs/tooling lanes), `check_design_md.sh` (agent/design lane). See [Supplemental scripts](#supplemental-and-adjacent-scripts) below.
+**Not in `CHECK_SCRIPTS`:** checklist hooks include `check_regression_guards.sh`,
+`check_action_bar_layout.sh`, and `check_docs_gardening.sh`; agent/design lanes
+use `check_design_md.sh`. See [Supplemental scripts](#supplemental-and-adjacent-scripts)
+below.
 
 ## Existing Validation Scripts
 

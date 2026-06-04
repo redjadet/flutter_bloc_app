@@ -243,7 +243,7 @@ for doc in "${doc_targets[@]}"; do
 done
 
 if ! bash "$repo_root/tool/validate_validation_docs.sh"; then
-  fail "validation_scripts docs out of sync with CHECK_SCRIPTS"
+  fail "validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts"
 fi
 
 if [[ "$failures" -ne 0 ]]; then

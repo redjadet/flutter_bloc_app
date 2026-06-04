@@ -65,7 +65,7 @@ workflow dispatch and supports the
 
 | File | Purpose |
 | --- | --- |
-| `integration_test/pr_smoke_flows_test.dart` | Smallest high-signal smoke suite intended for PR-level confidence. |
+| `integration_test/pr_smoke_flows_test.dart` | Smallest high-signal suite for explicit PR-level confidence (manual/explicit target; PR CI runs preflight only). |
 | `integration_test/smoke_flows_test.dart` | Broader local smoke coverage. |
 | `integration_test/standard_flows_test.dart` | Standard integration tier aligned with CI workflow dispatch. |
 | `integration_test/extended_flows_test.dart` | Heavier persistence, refresh, and filter scenarios. |
