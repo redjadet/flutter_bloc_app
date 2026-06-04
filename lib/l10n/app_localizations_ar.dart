@@ -1068,6 +1068,54 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exampleWebsocketButton => 'افتح العرض التوضيحي لـ WebSocket';
 
   @override
+  String get exampleEventBusDemoButton => 'افتح العرض التوضيحي لـ Event Bus';
+
+  @override
+  String get eventBusDemoTitle => 'عرض Event Bus';
+
+  @override
+  String get eventBusDemoIntro =>
+      'يحاكي اتصالاً غير مرتبط: لوحة تسجيل الدخول تصدر الأحداث؛ لوحتا الرئيسية والإشعارات تستمعان دون الإشارة إلى بعضهما. استخدم Event Bus بحذر للإشارات على مستوى التطبيق — احتفظ بحالة الشاشة في Cubit/BLoC.';
+
+  @override
+  String get eventBusDemoLoginPanelTitle => 'شاشة تسجيل الدخول (ناشر)';
+
+  @override
+  String get eventBusDemoHomePanelTitle => 'الشاشة الرئيسية (مستمع)';
+
+  @override
+  String get eventBusDemoNotificationPanelTitle => 'خدمة الإشعارات (مستمع)';
+
+  @override
+  String get eventBusDemoUserIdLabel => 'معرف المستخدم';
+
+  @override
+  String get eventBusDemoLoginButton => 'إطلاق UserLoggedInEvent';
+
+  @override
+  String get eventBusDemoLogoutButton => 'إطلاق UserLoggedOutEvent';
+
+  @override
+  String get eventBusDemoHomeWaiting => 'في انتظار UserLoggedInEvent…';
+
+  @override
+  String eventBusDemoHomeActive(String userId, int count) {
+    return 'المستخدم $userId نشط. تم تحديث الرئيسية $count مرة.';
+  }
+
+  @override
+  String get eventBusDemoNotificationIdle => 'قناة الدفع خاملة.';
+
+  @override
+  String eventBusDemoNotificationConnected(String userId) {
+    return 'تم توصيل الدفع للمستخدم $userId.';
+  }
+
+  @override
+  String get eventBusDemoGuidance =>
+      'مناسب: التحليلات، التنبيهات، روابط الوحدات الخفيفة. تجنب: حالة الواجهة الأساسية ومسارات العمل — استخدم Cubit/BLoC. ألغِ الاشتراكات في dispose() دائماً.';
+
+  @override
   String get exampleGoogleMapsButton =>
       'افتح العرض التوضيحي لخرائط Google/Apple';
 

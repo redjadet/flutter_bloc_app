@@ -2017,6 +2017,90 @@ abstract class AppLocalizations {
   /// **'Open WebSocket demo'**
   String get exampleWebsocketButton;
 
+  /// Button label that navigates to the Event Bus pattern demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Open Event Bus demo'**
+  String get exampleEventBusDemoButton;
+
+  /// Title for the Event Bus pattern interactive demo
+  ///
+  /// In en, this message translates to:
+  /// **'Event Bus demo'**
+  String get eventBusDemoTitle;
+
+  /// Intro text on the Event Bus demo explaining the pattern
+  ///
+  /// In en, this message translates to:
+  /// **'Simulates decoupled communication: the login panel fires events; home and notification panels listen without referencing each other. Use Event Bus sparingly for app-wide signals — keep screen state in Cubit/BLoC.'**
+  String get eventBusDemoIntro;
+
+  /// Card title for the login publisher panel in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'Login screen (publisher)'**
+  String get eventBusDemoLoginPanelTitle;
+
+  /// Card title for the home listener panel in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'Home screen (listener)'**
+  String get eventBusDemoHomePanelTitle;
+
+  /// Card title for the notification listener panel in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'Notification service (listener)'**
+  String get eventBusDemoNotificationPanelTitle;
+
+  /// Label for user id text field in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'User ID'**
+  String get eventBusDemoUserIdLabel;
+
+  /// Button that publishes a login event on the demo bus
+  ///
+  /// In en, this message translates to:
+  /// **'Fire UserLoggedInEvent'**
+  String get eventBusDemoLoginButton;
+
+  /// Button that publishes a logout event on the demo bus
+  ///
+  /// In en, this message translates to:
+  /// **'Fire UserLoggedOutEvent'**
+  String get eventBusDemoLogoutButton;
+
+  /// Home listener idle state in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for UserLoggedInEvent…'**
+  String get eventBusDemoHomeWaiting;
+
+  /// Home listener state after login events
+  ///
+  /// In en, this message translates to:
+  /// **'User {userId} is active. Home refreshed {count} time(s).'**
+  String eventBusDemoHomeActive(String userId, int count);
+
+  /// Notification listener idle state in Event Bus demo
+  ///
+  /// In en, this message translates to:
+  /// **'Push channel idle.'**
+  String get eventBusDemoNotificationIdle;
+
+  /// Notification listener state after login event
+  ///
+  /// In en, this message translates to:
+  /// **'Push connected for user {userId}.'**
+  String eventBusDemoNotificationConnected(String userId);
+
+  /// Footer guidance on when to use Event Bus vs state management
+  ///
+  /// In en, this message translates to:
+  /// **'Good fits: analytics, toasts, loose module hooks. Avoid: primary UI state and business flows — use Cubit/BLoC instead. Always cancel stream subscriptions in dispose().'**
+  String get eventBusDemoGuidance;
+
   /// Button label that navigates to the Google/Apple Maps sample page
   ///
   /// In en, this message translates to:

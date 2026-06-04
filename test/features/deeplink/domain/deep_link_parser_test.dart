@@ -25,6 +25,15 @@ void main() {
       expect(target, DeepLinkTarget.chat);
     });
 
+    test('parses event-bus-demo segment', () {
+      final target = parser.parse(
+        Uri.parse(
+          '${DeepLinkConfig.universalScheme}://${DeepLinkConfig.universalHost}/event-bus-demo',
+        ),
+      );
+      expect(target, DeepLinkTarget.eventBusDemo);
+    });
+
     test('parses realtime-market segment', () {
       final target = parser.parse(
         Uri.parse(

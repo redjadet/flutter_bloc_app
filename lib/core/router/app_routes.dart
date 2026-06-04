@@ -131,6 +131,9 @@ class AppRoutes {
   static const aiDecisionDemo = 'ai-decision-demo';
   static const aiDecisionDemoPath = '/ai-decision-demo';
 
+  static const eventBusDemo = 'event-bus-demo';
+  static const eventBusDemoPath = '/event-bus-demo';
+
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';
   static const staffAppDemoDashboardPath = '/staff-app-demo/dashboard';
 

@@ -16,4 +16,17 @@ void main() {
       isTrue,
     );
   });
+
+  test('createDemoRoutes includes Event Bus demo route', () {
+    final List<RouteBase> routes = createDemoRoutes();
+    expect(
+      routes.any(
+        (final RouteBase r) =>
+            r is GoRoute &&
+            r.name == AppRoutes.eventBusDemo &&
+            r.path == AppRoutes.eventBusDemoPath,
+      ),
+      isTrue,
+    );
+  });
 }

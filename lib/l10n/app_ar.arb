@@ -318,6 +318,20 @@
   "graphqlSampleDataSourceSupabaseTables": "سوباباس (الجداول)",
   "graphqlSampleDataSourceRemote": "بعيد",
   "exampleWebsocketButton": "افتح العرض التوضيحي لـ WebSocket",
+  "exampleEventBusDemoButton": "افتح العرض التوضيحي لـ Event Bus",
+  "eventBusDemoTitle": "عرض Event Bus",
+  "eventBusDemoIntro": "يحاكي اتصالاً غير مرتبط: لوحة تسجيل الدخول تصدر الأحداث؛ لوحتا الرئيسية والإشعارات تستمعان دون الإشارة إلى بعضهما. استخدم Event Bus بحذر للإشارات على مستوى التطبيق — احتفظ بحالة الشاشة في Cubit/BLoC.",
+  "eventBusDemoLoginPanelTitle": "شاشة تسجيل الدخول (ناشر)",
+  "eventBusDemoHomePanelTitle": "الشاشة الرئيسية (مستمع)",
+  "eventBusDemoNotificationPanelTitle": "خدمة الإشعارات (مستمع)",
+  "eventBusDemoUserIdLabel": "معرف المستخدم",
+  "eventBusDemoLoginButton": "إطلاق UserLoggedInEvent",
+  "eventBusDemoLogoutButton": "إطلاق UserLoggedOutEvent",
+  "eventBusDemoHomeWaiting": "في انتظار UserLoggedInEvent…",
+  "eventBusDemoHomeActive": "المستخدم {userId} نشط. تم تحديث الرئيسية {count} مرة.",
+  "eventBusDemoNotificationIdle": "قناة الدفع خاملة.",
+  "eventBusDemoNotificationConnected": "تم توصيل الدفع للمستخدم {userId}.",
+  "eventBusDemoGuidance": "مناسب: التحليلات، التنبيهات، روابط الوحدات الخفيفة. تجنب: حالة الواجهة الأساسية ومسارات العمل — استخدم Cubit/BLoC. ألغِ الاشتراكات في dispose() دائماً.",
   "exampleGoogleMapsButton": "افتح العرض التوضيحي لخرائط Google/Apple",
   "exampleNativeBatteryLabel": "مستوى البطارية: {percent}%",
   "websocketDemoTitle": "عرض WebSocket",
@@ -1731,6 +1745,64 @@
   },
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
+  },
+  "@exampleEventBusDemoButton": {
+    "description": "Button label that navigates to the Event Bus pattern demo page"
+  },
+  "@eventBusDemoTitle": {
+    "description": "Title for the Event Bus pattern interactive demo"
+  },
+  "@eventBusDemoIntro": {
+    "description": "Intro text on the Event Bus demo explaining the pattern"
+  },
+  "@eventBusDemoLoginPanelTitle": {
+    "description": "Card title for the login publisher panel in Event Bus demo"
+  },
+  "@eventBusDemoHomePanelTitle": {
+    "description": "Card title for the home listener panel in Event Bus demo"
+  },
+  "@eventBusDemoNotificationPanelTitle": {
+    "description": "Card title for the notification listener panel in Event Bus demo"
+  },
+  "@eventBusDemoUserIdLabel": {
+    "description": "Label for user id text field in Event Bus demo"
+  },
+  "@eventBusDemoLoginButton": {
+    "description": "Button that publishes a login event on the demo bus"
+  },
+  "@eventBusDemoLogoutButton": {
+    "description": "Button that publishes a logout event on the demo bus"
+  },
+  "@eventBusDemoHomeWaiting": {
+    "description": "Home listener idle state in Event Bus demo"
+  },
+  "@eventBusDemoHomeActive": {
+    "description": "Home listener state after login events",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "@eventBusDemoNotificationIdle": {
+    "description": "Notification listener idle state in Event Bus demo"
+  },
+  "@eventBusDemoNotificationConnected": {
+    "description": "Notification listener state after login event",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      }
+    }
+  },
+  "@eventBusDemoGuidance": {
+    "description": "Footer guidance on when to use Event Bus vs state management"
   },
   "@exampleGoogleMapsButton": {
     "description": "Button label that navigates to the Google/Apple Maps sample page"

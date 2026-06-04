@@ -21,6 +21,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 - Continue until finished; stop only when stuck/blocker.
 - Don't revert doc or agent-knowledge edits during review/cleanup unless the user asks.
+- Review passes (review-changes-improve, cross-host review, ship-ready asks): fix every reported issue or explicitly defer with reason before claiming done.
 
 ## Validation
 

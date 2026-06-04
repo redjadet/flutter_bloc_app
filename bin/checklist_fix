@@ -45,7 +45,7 @@ while true; do
   echo "Applying bounded auto-fixes..."
 
   echo "  - ./bin/format --changed"
-  ./bin/format --changed
+  bash ./bin/format --changed
 
   if [[ "$CHECKLIST_FIX_GLOBAL_DART_FIX" == "1" ]] && command -v dart >/dev/null 2>&1; then
     echo "  - dart fix --apply"

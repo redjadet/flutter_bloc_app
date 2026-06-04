@@ -41,6 +41,7 @@ void main() {
               onOpenOnlineTherapyDemo: () {
                 tapped = true;
               },
+              onOpenEventBusDemo: () {},
               onRunIsolates: null,
               isRunningIsolates: false,
               isolateError: null,

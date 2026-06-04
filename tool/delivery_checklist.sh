@@ -1343,7 +1343,7 @@ echo ""
 echo "📝 Step 2/5: Formatting changed Dart files"
 if [ "${#changed_dart_files[@]}" -gt 0 ]; then
   echo "  Found ${#changed_dart_files[@]} changed Dart file(s)"
-  "$PROJECT_ROOT/bin/format" --changed
+  bash "$PROJECT_ROOT/bin/format" --changed
 else
   echo "  No changed Dart files, skipping format"
 fi

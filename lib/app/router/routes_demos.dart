@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
+import 'package:flutter_bloc_app/features/event_bus_demo/event_bus_demo.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
@@ -176,46 +177,5 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       ),
     ],
   ),
-  GoRoute(
-    path: AppRoutes.iotDemoPath,
-    name: AppRoutes.iotDemo,
-    builder: (final context, final state) {
-      final l10n = context.l10n;
-      return IotDemoAuthGate(
-        isSupabaseInitialized: SupabaseBootstrapService.isSupabaseInitialized,
-        getCurrentUser: () => getIt<SupabaseAuthRepository>().currentUser,
-        authStateChanges: getIt<SupabaseAuthRepository>().authStateChanges,
-        counterPath: AppRoutes.counterPath,
-        supabaseAuthPath: AppRoutes.supabaseAuthPath,
-        redirectReturnPath: AppRoutes.iotDemoPath,
-        child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
-          create: () => IotDemoCubit(
-            repository: getIt<IotDemoRepository>(),
-            l10n: l10n,
-          ),
-          init: (final cubit) => cubit.initialize(),
-          child: const IotDemoPage(),
-        ),
-      );
-    },
-  ),
-  GoRoute(
-    path: AppRoutes.iapDemoPath,
-    name: AppRoutes.iapDemo,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<InAppPurchaseDemoCubit>(
-          create: () => InAppPurchaseDemoCubit(
-            fakeRepository: getIt<FakeInAppPurchaseRepository>(),
-            realRepository: getIt<FlutterInAppPurchaseRepository>(),
-          ),
-          init: (final cubit) => cubit.initialize(),
-          child: const InAppPurchaseDemoPage(),
-        ),
-  ),
-  GoRoute(
-    path: AppRoutes.aiDecisionDemoPath,
-    name: AppRoutes.aiDecisionDemo,
-    builder: (final context, final state) => const AiDecisionDemoPage(),
-  ),
-  createOnlineTherapyDemoRoute(),
+  ...createDemoRoutesTail(),
 ];

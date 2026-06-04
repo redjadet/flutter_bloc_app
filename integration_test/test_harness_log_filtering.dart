@@ -132,6 +132,13 @@ bool isIgnoredIntegrationLog(
     return true;
   }
 
+  // iOS simulators may not expose Keychain-backed secure storage for Hive keys.
+  if (entry.message.startsWith(
+    'Secure storage unavailable; using non-persisted Hive encryption key',
+  )) {
+    return true;
+  }
+
   return false;
 }
 

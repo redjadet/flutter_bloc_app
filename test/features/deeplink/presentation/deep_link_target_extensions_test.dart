@@ -47,5 +47,9 @@ void main() {
     test('location returns correct path for profile', () {
       expect(DeepLinkTarget.profile.location, AppRoutes.profilePath);
     });
+
+    test('location returns correct path for eventBusDemo', () {
+      expect(DeepLinkTarget.eventBusDemo.location, AppRoutes.eventBusDemoPath);
+    });
   });
 }

@@ -1077,6 +1077,56 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exampleWebsocketButton => 'Abrir demostración de WebSocket';
 
   @override
+  String get exampleEventBusDemoButton => 'Abrir demo de Event Bus';
+
+  @override
+  String get eventBusDemoTitle => 'Demo de Event Bus';
+
+  @override
+  String get eventBusDemoIntro =>
+      'Simula comunicación desacoplada: el panel de inicio de sesión publica eventos; los paneles de inicio y notificaciones escuchan sin referenciarse. Usa Event Bus con moderación para señales globales — mantén el estado de pantalla en Cubit/BLoC.';
+
+  @override
+  String get eventBusDemoLoginPanelTitle =>
+      'Pantalla de inicio de sesión (publicador)';
+
+  @override
+  String get eventBusDemoHomePanelTitle => 'Pantalla de inicio (escucha)';
+
+  @override
+  String get eventBusDemoNotificationPanelTitle =>
+      'Servicio de notificaciones (escucha)';
+
+  @override
+  String get eventBusDemoUserIdLabel => 'ID de usuario';
+
+  @override
+  String get eventBusDemoLoginButton => 'Disparar UserLoggedInEvent';
+
+  @override
+  String get eventBusDemoLogoutButton => 'Disparar UserLoggedOutEvent';
+
+  @override
+  String get eventBusDemoHomeWaiting => 'Esperando UserLoggedInEvent…';
+
+  @override
+  String eventBusDemoHomeActive(String userId, int count) {
+    return 'El usuario $userId está activo. Inicio actualizado $count vez/veces.';
+  }
+
+  @override
+  String get eventBusDemoNotificationIdle => 'Canal push inactivo.';
+
+  @override
+  String eventBusDemoNotificationConnected(String userId) {
+    return 'Push conectado para el usuario $userId.';
+  }
+
+  @override
+  String get eventBusDemoGuidance =>
+      'Buen uso: analíticas, toasts, enlaces sueltos entre módulos. Evitar: estado UI principal y flujos de negocio — usa Cubit/BLoC. Cancela suscripciones en dispose().';
+
+  @override
   String get exampleGoogleMapsButton => 'Abrir demo de Google Maps';
 
   @override
