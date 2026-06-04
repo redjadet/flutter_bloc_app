@@ -19,6 +19,21 @@ class MapSampleCubit extends Cubit<MapSampleState> {
     if (isClosed) {
       return;
     }
+    if (state.isLoading) {
+      return;
+    }
+    await _fetchLocations();
+  }
+
+  /// Forces a new fetch even when [loadLocations] would coalesce an in-flight load.
+  Future<void> reloadLocations() async {
+    if (isClosed) {
+      return;
+    }
+    await _fetchLocations();
+  }
+
+  Future<void> _fetchLocations() async {
     final int requestId = _loadGuard.next();
     emit(
       state.copyWith(

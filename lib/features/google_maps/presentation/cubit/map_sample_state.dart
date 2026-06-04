@@ -26,6 +26,7 @@ abstract class MapSampleState with _$MapSampleState {
       target: gmaps.LatLng(37.7955, -122.3937),
       zoom: 13,
     ),
+    isLoading: false,
   );
 
   bool get hasError => errorMessage != null || lastError != null;

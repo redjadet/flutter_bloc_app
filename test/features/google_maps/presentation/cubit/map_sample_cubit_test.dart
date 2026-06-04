@@ -93,6 +93,20 @@ void main() {
       ],
     );
 
+    test('toggleTraffic toggles traffic flag after load', () async {
+      final repository = _StubMapLocationRepository(locations: _sampleLocations);
+      final cubit = MapSampleCubit(repository: repository);
+
+      await cubit.loadLocations();
+      expect(cubit.state.trafficEnabled, isFalse);
+
+      cubit.toggleTraffic();
+      expect(cubit.state.trafficEnabled, isTrue);
+
+      cubit.toggleTraffic();
+      expect(cubit.state.trafficEnabled, isFalse);
+    });
+
     test(
       'toggleMapType switches between normal and hybrid after load',
       () async {
@@ -145,6 +159,31 @@ void main() {
     });
 
     blocTest<MapSampleCubit, MapSampleState>(
+      'does not start a second fetch while already loading',
+      build: () {
+        raceRepository = _RaceMapLocationRepository();
+        return MapSampleCubit(repository: raceRepository);
+      },
+      act: (final cubit) async {
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+        unawaited(cubit.loadLocations());
+        await Future<void>.delayed(Duration.zero);
+        raceRepository.completeFirst(_sampleLocations);
+        await Future<void>.delayed(Duration.zero);
+      },
+      expect: () => <dynamic>[
+        isA<MapSampleState>().having((final state) => state.isLoading, 'isLoading', true),
+        isA<MapSampleState>()
+            .having((final state) => state.isLoading, 'isLoading', false)
+            .having((final state) => state.locations.length, 'locations', 2),
+      ],
+      verify: (_) {
+        expect(raceRepository.callCount, 1);
+      },
+    );
+
+    blocTest<MapSampleCubit, MapSampleState>(
       'ignores stale completion when a newer load finishes first',
       build: () {
         raceRepository = _RaceMapLocationRepository();
@@ -154,7 +193,7 @@ void main() {
         unawaited(cubit.loadLocations());
         await Future<void>.delayed(Duration.zero);
 
-        unawaited(cubit.loadLocations());
+        unawaited(cubit.reloadLocations());
         await Future<void>.delayed(Duration.zero);
 
         raceRepository.completeSecond(_sampleLocations);
@@ -171,8 +210,7 @@ void main() {
         await Future<void>.delayed(Duration.zero);
       },
       expect: () => <dynamic>[
-        // Two loadLocations() calls each emit loading synchronously, but the
-        // second matches the first loading state so Cubit suppresses it.
+        // load + reload: second loading emit matches first, Cubit suppresses it.
         isA<MapSampleState>().having(
           (final state) => state.isLoading,
           'isLoading',
@@ -202,7 +240,7 @@ void main() {
         unawaited(cubit.loadLocations());
         await Future<void>.delayed(Duration.zero);
 
-        unawaited(cubit.loadLocations());
+        unawaited(cubit.reloadLocations());
         await Future<void>.delayed(Duration.zero);
 
         raceRepository.completeSecond(_sampleLocations);
@@ -212,6 +250,7 @@ void main() {
         await Future<void>.delayed(Duration.zero);
       },
       expect: () => <dynamic>[
+        // Same as stale-success race: second loading emit deduped by Cubit.
         isA<MapSampleState>().having((final state) => state.isLoading, 'isLoading', true),
         isA<MapSampleState>()
             .having((final state) => state.isLoading, 'isLoading', false)
