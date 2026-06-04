@@ -60,8 +60,15 @@ tier expectations.
 
 ## CI workflow shape
 
-Integration jobs run only from **Actions → CI → Run workflow** (not on push/PR).
-See [`validation_scripts.md`](../validation_scripts.md) for current GitHub Actions contract.
+- **Pull requests / merge queue:** `CI / integration-preflight` runs
+  `./bin/integration_preflight` automatically (browser/bootstrap guardrails).
+- **Manual dispatch:** enable `run_integration` on **Actions → CI → Run workflow**
+  to run the macOS simulator lane after preflight passes. Choose
+  `integration_tier` (`smoke` | `standard` | `exhaustive`).
+
+See [`ci_automation.md`](../ci_automation.md) and
+[`validation_scripts/overview.md`](../validation_scripts/overview.md) for the
+current GitHub Actions contract.
 
 ## Notes
 

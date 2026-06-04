@@ -5,20 +5,49 @@ This document defines stable contract for `./bin/integration_tests` and
 
 ## Stable default behavior
 
-- `./bin/integration_tests` with no args runs aggregate integration suite.
+- `./bin/integration_tests` with no args runs the suite for `INTEGRATION_TESTS_TIER`
+  (default `exhaustive` → `integration_test/all_flows_test.dart`).
+- Passing explicit targets (for example `integration_test/smoke_flows_test.dart`)
+  runs those files and bypasses tier selection.
 - Exit semantics remain compatible: `0` on success, non-zero on failure.
-- Only one integration runner instance may hold repo lock at time.
-- second run exits with code `2` while another active run owns lock.
-- Stale lock directories are removed automatically when recorded owner PID is no longer alive.
+- Only one integration runner instance may hold the repo lock at a time.
+- A second run exits with code `2` while another active run owns the lock.
+- Stale lock directories are removed automatically when the recorded owner PID is
+  no longer alive.
+- By default the runner executes `./bin/integration_preflight` first (browser/bootstrap
+  guardrails). Set `INTEGRATION_TESTS_RUN_PREFLIGHT=0` to skip.
 
 ## Tier selectors
 
 Optional selectors:
 
-- `INTEGRATION_TESTS_TIER=smoke|standard|exhaustive`
-- `INTEGRATION_TESTS_TARGET_SET=smoke|standard|exhaustive|full`
+- `INTEGRATION_TESTS_TIER=smoke|standard|exhaustive` (default `exhaustive`)
+- `INTEGRATION_TESTS_TARGET_SET=smoke|standard|exhaustive|full` (overrides tier target when set)
 
-If selectors are invalid, runner falls back to `exhaustive`.
+Invalid tier or target-set values fall back to `exhaustive` / full aggregate.
+
+| Tier / target set | Entry file (no explicit args) |
+| --- | --- |
+| `smoke` | `integration_test/smoke_flows_test.dart` |
+| `standard` | `integration_test/standard_flows_test.dart` |
+| `exhaustive` / `full` | `integration_test/all_flows_test.dart` |
+
+PR CI uses `integration_test/pr_smoke_flows_test.dart` via workflow inputs, not
+via these tier env vars. See [`integration_journey_map.md`](integration_journey_map.md)
+and [`ci_automation.md`](../ci_automation.md).
+
+## Common environment variables
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `INTEGRATION_TESTS_RUN_PREFLIGHT` | `1` | Run `./bin/integration_preflight` before device tests |
+| `INTEGRATION_TESTS_RUN_COVERAGE` | `1` | Collect/merge coverage on full-suite runs when baseline exists |
+| `INTEGRATION_TESTS_RETRY_ON_FAILURE` | `0` | Opt-in retry; skipped for inferred assertion failures |
+| `INTEGRATION_TESTS_TIMEOUT_SECONDS` | `1800` | Per-invocation timeout passed to `flutter test` |
+| `INTEGRATION_TESTS_ALLOW_CONCURRENT` | `0` | Set `1` to bypass single-run lock (unsafe) |
+| `INTEGRATION_TESTS_ARTIFACTS_ROOT` | `artifacts/integration` | Artifact root directory |
+| `CHECKLIST_INTEGRATION_DEVICE` | auto-discovered | Device id for `flutter test -d` |
+| `INTEGRATION_TESTS_SOURCE_ONLY` | `0` | Set `1` to validate config and exit without running tests |
 
 ## Artifact contract
 
@@ -137,3 +166,11 @@ Shim behavior (`tool/pod_shim/pod`):
 
 Set `INTEGRATION_TESTS_ALLOW_POD_SHIM=0` to require a working CocoaPods install.
 Commit `tool/pod_shim/pod` (executable) so clones and CI can use the same path.
+
+## Related docs
+
+- Flow authoring: [`testing_integration_flows.md`](../testing_integration_flows.md)
+- Policy and ownership: [`integration_test_policy.md`](integration_test_policy.md)
+- Journey → target map: [`integration_journey_map.md`](integration_journey_map.md)
+- CI jobs and preflight: [`ci_automation.md`](../ci_automation.md)
+- Browser-only lane: `./bin/integration_preflight` ([`agents_quick_reference.md`](../agents_quick_reference.md))

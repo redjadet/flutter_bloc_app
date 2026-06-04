@@ -2,6 +2,19 @@
 
 Router: [`../validation_scripts.md`](../validation_scripts.md).
 
+## Inventory map (disk vs docs)
+
+| Source | What it is |
+| --- | --- |
+| `tool/check_*.sh` on disk | **81** guard scripts (excludes `check_helpers.sh`; `check_row_action_overflow_fixtures.sh` is fixture-only) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **63** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| This catalog | Human-oriented index; one-line purpose + when to run |
+| Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
+
+Sync: `bash tool/validate_validation_docs.sh` requires every `CHECK_SCRIPTS` entry to appear in [`validation_scripts.md`](../validation_scripts.md) or any `docs/validation_scripts/*.md` shard (not necessarily in this file). After `CHECK_SCRIPTS` edits: `bash tool/fix_validation_docs.sh` then validate.
+
+**Not in `CHECK_SCRIPTS` but used by checklist or CI:** `check_regression_guards.sh`, `check_action_bar_layout.sh`, `check_docs_gardening.sh` (docs/tooling lanes), `check_design_md.sh` (agent/design lane). See [Supplemental scripts](#supplemental-and-adjacent-scripts) below.
+
 ## Existing Validation Scripts
 
 ### Architecture & Dependency Injection
@@ -163,3 +176,46 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
 - **`check_offline_first_remote_merge.sh`**: Regression tests ensuring offline-first repos don't overwrite newer unsynced local state with older remote (see Offline-first remote merge below). Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
+
+### Context & async safety (checklist; detail in guide shard)
+
+Long-form examples: [`guides_context_async.md`](guides_context_async.md).
+
+- **`check_context_mounted.sh`**: `context.mounted` before `Navigator` / `context.read` / `ScaffoldMessenger` after `await`
+- **`check_setstate_mounted.sh`**: `mounted` before `setState` after `await`
+- **`check_setstate_async.sh`**: Blocks `setState(() async { ... })` (async setState callbacks)
+
+### Theme, l10n, const (checklist; detail in guide shards)
+
+- **`check_hardcoded_colors.sh`**, **`check_hardcoded_strings.sh`**, **`check_missing_localizations.sh`**: Theme/l10n hygiene — [`guides_theme_l10n.md`](guides_theme_l10n.md)
+- **`check_missing_const.sh`**: Heuristic missing `const` on stable widgets — [`guides_performance_lists.md`](guides_performance_lists.md)
+- **`check_pubspec_codegen_compat.sh`**: Fails on known-incompatible `pubspec.yaml` / lock combos for `build_runner` + analyzer (e.g. `json_serializable` vs `mix_lint`)
+
+### State, layout, memory (checklist; detail in guide shards)
+
+- **`check_freezed_preferred.sh`**, **`check_cubit_isclosed.sh`**, **`check_unguarded_null_assertion.sh`**, **`check_row_text_overflow.sh`**, **`check_row_action_overflow.sh`**: State/layout guards — [`guides_state_layout.md`](guides_state_layout.md)
+- **`check_memory_unclosed_streams.sh`**, **`check_memory_missing_dispose.sh`**: Stream/subscription and dispose heuristics — [`guides_memory_typography.md`](guides_memory_typography.md)
+
+### Supplemental and adjacent scripts
+
+Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-only.
+
+| Script | Typical invocation | Purpose |
+| --- | --- | --- |
+| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs) | Runs fixed widget/unit regression tests for past lifecycle/race bugs |
+| `check_action_bar_layout.sh` | `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS` is `auto` or `1` | Widget tests for action-bar / icon-label row layout regressions |
+| `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
+| `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |
+| `check_router_trigger_precision.sh` | Manual / scorecard | Benchmarks router-feature-validation globs vs `analysis/agent_scorecard/router_trigger_benchmark_v1.json` |
+| `check_agent_asset_drift.sh` | `./bin/checklist-fast` when templates exist | Repo vs managed Cursor/Codex host asset drift |
+| `check_checklist_cli_contract.sh` | Manual / harness | `./bin/checklist` / `checklist-fast` CLI contract smoke |
+| `check_bundle_size.sh` | Manual / release | APK/AAB/iOS size vs budgets; writes `.bundle_sizes.json` |
+| `check_hive_schema_fingerprints.sh` | Manual / CI opt-in | `generate_hive_schema_fingerprints.dart --check-*`; optional `HIVE_SCHEMA_ENFORCE_INPUTS=true` |
+| `check_integration_rollout_threshold.sh` | Integration scorecard | Gates flake/success vs `analysis/agent_scorecard/summaries/integration-baseline.json` |
+| `check_delegate_wrapper_contracts.sh` | Manual | Delegate wrapper contract tests |
+| `check_continual_learning_index.sh` | Agent memory lane | Continual-learning index invariants |
+| `check_skill_budgets.sh` | Manual | Token budgets for skill inventory JSON — [`operations_host_skills.md`](operations_host_skills.md) |
+| `check_todo_keyboard_layout.sh` | Manual | Todo keyboard layout regression lane |
+| `check_row_action_overflow_fixtures.sh` | Self-test for `check_row_action_overflow.sh` | Fixture proof only (not a product guard) |
+
+Report-only / optional (also in Architecture section above): `check_feature_brief_linked.sh`, `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`.

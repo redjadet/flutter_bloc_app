@@ -4,7 +4,10 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 ## About this catalog
 
-Catalog of validation scripts in `tool/`. Run scripts directly for targeted
+Catalog of validation scripts in `tool/`. **81** `check_*.sh` on disk; **63** in
+`./bin/checklist` (`CHECK_SCRIPTS`) — see inventory map in
+[`catalog.md`](catalog.md#inventory-map-disk-vs-docs) and auto list in
+[`checklist_index.md`](checklist_index.md). Run scripts directly for targeted
 proof, `./bin/checklist` for full sweep, and `./bin/checklist-fast` only for
 clean-tree or narrow docs/tooling sanity.
 
@@ -42,7 +45,10 @@ On pushes and pull requests, [`.github/workflows/ci.yml`](../.github/workflows/c
 
 **Integration tests not run on push/PR.** Run only via manual workflow (**Actions → CI → Run workflow**) with **`run_integration`** on (default off). macOS job picks an available **iPhone** on the **newest installed iOS simulator runtime** (see `tool/ios_simulator_pick.py`), then `IOS_SIMULATOR_PREFERRED_NAMES`; optional `IOS_SIMULATOR_PREFERRED_RUNTIME_VERSION` pins an exact runtime. If none/boot fail/boot timeout, integration step skips (no job fail).
 
-For broader local or pre-ship validation, `./bin/integration_tests` still runs aggregated suite in `integration_test/all_flows_test.dart`.
+For broader local or pre-ship validation, `./bin/integration_tests` runs on a
+non-web device. Default tier is `exhaustive` (`integration_test/all_flows_test.dart`);
+set `INTEGRATION_TESTS_TIER=smoke|standard` for smaller suites. Contract:
+[`engineering/integration_runner_contract.md`](../engineering/integration_runner_contract.md).
 
 ## Current state (May 2026)
 

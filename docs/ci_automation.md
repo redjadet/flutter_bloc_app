@@ -50,10 +50,17 @@ guard before any slower simulator-based integration lane is requested.
 
 ## Manual integration rollout
 
-Workflow-dispatch integration now uses two macOS jobs in order:
+Workflow-dispatch integration uses two macOS jobs in order when `run_integration`
+is enabled:
 
 - **`CI / integration-preflight`**: runs `./bin/integration_preflight`
 - **`CI / integration`**: runs `./bin/integration_tests` only after preflight passes
+
+Workflow inputs:
+
+- `integration_tier`: `smoke` | `standard` | `exhaustive` (maps to suite entry files;
+  see [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md))
+- `integration_phase`: `observe` | `non_blocking` | `enforced` (rollout strictness)
 
 This keeps browser/bootstrap/import/patch drift failures visible before the
 slower simulator lane starts.

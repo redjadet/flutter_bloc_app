@@ -6,7 +6,9 @@ Source-of-truth docs for Flutter BLoC app.
 
 - **Interview showcase** (30-minute portfolio walk): [`interview_showcase.md`](interview_showcase.md)
 - **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
-- **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md)
+- **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md),
+  integration policy [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md),
+  runner contract [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
 - **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md)
@@ -71,6 +73,19 @@ Source-of-truth docs for Flutter BLoC app.
 - [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
+- [`ci_automation.md`](ci_automation.md)
+
+#### Engineering (`docs/engineering/`)
+
+- [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) — fast vs full validation lanes
+- [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md) — where to add tests; failure ownership
+- [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) — journeys → integration targets and tiers
+- [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md) — `./bin/integration_tests` env, tiers, artifacts
+- [`engineering/integration_metrics_baseline.md`](engineering/integration_metrics_baseline.md) — rollout metrics and baseline commands
+- [`engineering/agent_output_scorecard_v1.md`](engineering/agent_output_scorecard_v1.md) — agent scorecard event contract
+- [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md) — Cursor/Codex task tracker shape
+- [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md) — deferred work and scheduling patterns
+- [`testing_integration_flows.md`](testing_integration_flows.md) — authoring integration flows (companion to policy/contract)
 
 ### Offline-first and local storage
 

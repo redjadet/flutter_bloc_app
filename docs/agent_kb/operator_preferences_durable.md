@@ -10,6 +10,7 @@ Durable operator choices. Keep simple; link to owner; avoid duplicate prose.
 - Keep numbered **context ladder** only in [`docs/ai/context_loading.md`](../ai/context_loading.md). Keep validation choices in [`docs/agents_quick_reference.md`](../agents_quick_reference.md) § Validation Chooser.
 - Optional compression: [`tool/agent_host_templates/shared/skills/caveman-compress/SKILL.md`](../../tool/agent_host_templates/shared/skills/caveman-compress/SKILL.md). Use only on proven redundant targets; preserve exact commands, paths, URLs, and guarded literals.
 - Meaningful workflow/policy shift: update source docs first, then host templates only when cold-start behavior changes.
+- **Doc/code audits:** When reconciling docs with the repo, sync [`validation_scripts/catalog.md`](../validation_scripts/catalog.md) and [`validation_scripts/overview.md`](../validation_scripts/overview.md) with on-disk `tool/check_*.sh` inventory and `./bin/checklist` wiring; sync integration docs with `bin/integration_*` entrypoints per [`engineering/integration_runner_contract.md`](../engineering/integration_runner_contract.md).
 - Caveman terse mode: always-on via [`.cursor/rules/caveman.mdc`](../../.cursor/rules/caveman.mdc); user may disable with "stop caveman" / "normal mode".
 
 ## README
@@ -39,7 +40,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Durable Prefs
 
-- **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists. On a clean iOS tree with Firebase SPM, run `cd ios && xcodebuild -resolvePackageDependencies -workspace Runner.xcworkspace -scheme Runner` before `./bin/integration_tests` when Crashlytics upload scripts fail for missing checkouts.
+- **Integration tests / simulators:** Prefer resolving the latest available iPhone Simulator runtime when repo scripts support it; avoid hard-coding a single OS version when a dynamic choice exists. Before the first iOS simulator integration run on a clean or dependency-changed tree, run `cd ios && pod install` (when `pod` is available) and `xcodebuild -resolvePackageDependencies -workspace Runner.xcworkspace -scheme Runner` — same preflight as [`engineering/integration_runner_contract.md`](../engineering/integration_runner_contract.md); do not wait for Crashlytics/SPM checkout failures.
 - **Upgrade lane proof:** After `./bin/upgrade_validate_all` or `/upgrade-pr-triage-validate`, cite explicit pass evidence for delivery checklist (step 3) and integration tests (step 4)—test counts and simulator id—not only overall exit 0.
 - **`/commit-push-pr`:** [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md) (omit checklist coverage/README churn unless shipping coverage).
 - **Feature-brief:** `lib/features/**` diff → `bash tool/check_feature_brief_linked.sh` or `SKIP_FEATURE_BRIEF=1`.

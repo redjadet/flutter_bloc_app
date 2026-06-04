@@ -23,7 +23,7 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 | Shard | Topic |
 | --- | --- |
 | [`validation_scripts/overview.md`](validation_scripts/overview.md) | Running checks, checklist, fix/validate tools |
-| [`validation_scripts/catalog.md`](validation_scripts/catalog.md) | Full script catalog by category |
+| [`validation_scripts/catalog.md`](validation_scripts/catalog.md) | Script catalog, disk/checklist inventory map, supplemental scripts |
 | [`validation_scripts/checklist_index.md`](validation_scripts/checklist_index.md) | Auto-generated checklist script list |
 | [`validation_scripts/guides_context_async.md`](validation_scripts/guides_context_async.md) | Context, async, navigation |
 | [`validation_scripts/guides_theme_l10n.md`](validation_scripts/guides_theme_l10n.md) | Theme, colors, localization |
