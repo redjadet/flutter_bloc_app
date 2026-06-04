@@ -214,8 +214,9 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
 | `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |
 | `check_router_trigger_precision.sh` | Manual / scorecard | Benchmarks router-feature-validation globs vs `analysis/agent_scorecard/router_trigger_benchmark_v1.json` |
-| `check_agent_asset_drift.sh` | `./bin/checklist-fast` when templates exist | Repo vs managed Cursor/Codex host asset drift |
-| `check_checklist_cli_contract.sh` | Manual / harness | `./bin/checklist` / `checklist-fast` CLI contract smoke |
+| `check_agent_asset_drift.sh` | `./bin/checklist-fast` when templates exist; via `agent-maintain` | Repo vs managed Cursor/Codex host asset drift |
+| `agent_maintain.sh` | `./bin/agent-maintain` | Host upkeep router (`preflight`, scope `closeout`/`docs-sync`, `after-host-edit`, globals); policy [`host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md) |
+| `check_checklist_cli_contract.sh` | Manual / harness | `./bin/checklist` / `checklist-fast` / `agent-maintain` CLI contract smoke |
 | `check_bundle_size.sh` | Manual / release | APK/AAB/iOS size vs budgets; writes `.bundle_sizes.json` |
 | `check_hive_schema_fingerprints.sh` | Manual / CI opt-in | `generate_hive_schema_fingerprints.dart --check-*`; optional `HIVE_SCHEMA_ENFORCE_INPUTS=true` |
 | `check_integration_rollout_threshold.sh` | Integration scorecard | Gates flake/success vs `analysis/agent_scorecard/summaries/integration-baseline.json` |

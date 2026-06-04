@@ -15,3 +15,4 @@ Use capabilities as an execution system, not decoration.
 - After Flutter app-code, UI, route, asset, or localization edits, trigger hot reload for any already-running controllable debug session before manual inspection; use hot restart when reload cannot apply (init, DI, codegen, native, `dart-define`), and report when no session was available instead of silently starting one.
 - More agents/tools are not automatically better. Add them when they reduce uncertainty, isolate context, or verify a risky decision.
 - Setup details live in [`agent_environment_setup.md`](../agent_environment_setup.md).
+- Host upkeep automation (when agents run `preflight` / `closeout` / `after-host-edit`): [`host_maintenance_automation.md`](host_maintenance_automation.md).

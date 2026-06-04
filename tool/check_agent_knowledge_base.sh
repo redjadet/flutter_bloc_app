@@ -84,6 +84,9 @@ require_all_contains() {
 }
 
 required_files=(
+  "bin/agent-maintain"
+  "tool/agent_maintain.sh"
+  "docs/agent_kb/host_maintenance_automation.md"
   "docs/agent_knowledge_base.md"
   "docs/agent_kb/self_improvement.md"
   "docs/ai_code_review_protocol.md"
@@ -134,6 +137,10 @@ if [ -f "AGENTS.md" ]; then
   require_contains "AGENTS.md" "DESIGN.md"
   require_contains "AGENTS.md" "docs/design_system.md"
   require_contains "AGENTS.md" "docs/agent_host_notes.md"
+  require_contains "AGENTS.md" "host_maintenance_automation.md"
+  require_contains "AGENTS.md" "agent-maintain preflight"
+  require_contains "AGENTS.md" "agent-maintain closeout"
+  require_contains "docs/agent_kb/tool_orchestration.md" "host_maintenance_automation.md"
 
   # Guard map-only invariant: host-specific guidance lives in docs/agent_host_notes.md.
   require_not_contains "AGENTS.md" "## Codex"
@@ -325,6 +332,9 @@ if [ -d "tool/agent_host_templates" ]; then
     "tool/check_agent_knowledge_base.sh"
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" \
+    "agent-maintain preflight" \
+    "agent-maintain closeout" \
+    "host_maintenance_automation.md" \
     "95% confident" \
     "Surgical diff" \
     "Self-verify final response" \

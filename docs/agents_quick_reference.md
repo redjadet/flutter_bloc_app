@@ -30,8 +30,9 @@ Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1. CI: [`ci_automation.md`](ci
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
 | Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
-| Cursor host setup (sync + install/trim/inventory) | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) · Cursor command: `/setup-cursor-agent-environment` |
-| Global vendor skills (Flutter/Dart/iOS/AI) | install: `bash tool/install_global_agent_skills.sh` · update: `bash tool/update_global_agent_skills.sh` · search: `bash tool/find_global_agent_skills.sh QUERY` · trim dupes: `bash tool/trim_duplicate_agent_skills.sh` (`--apply`, `--mode full`) |
+| Agent host maintain (sync, globals, workflows) | **Agents run:** `preflight` (task start), `after-host-edit` (templates), `closeout` (before finish; scope host + docs) · `./bin/agent-maintain help` · `routine --apply`, `host-full --apply` · [`host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (incl. [not changed by design](agent_kb/host_maintenance_automation.md#not-changed-by-design)) · `/agent-maintain` |
+| Cursor host setup (sync + install/trim/inventory) | `./bin/agent-maintain setup` (`--apply`, `--install`) or `bash tool/setup_cursor_agent_environment.sh` · `/setup-cursor-agent-environment` |
+| Global vendor skills (Flutter/Dart/iOS/AI) | `./bin/agent-maintain install` · `update` · `find QUERY` · `trim` (`--apply`, `--mode full`) or underlying `tool/install_global_agent_skills.sh` etc. |
 | IDE-open local env preflight | `.vscode/tasks.json` runs `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
 | Tracked secret literals | `./tool/check_tracked_secret_literals.sh` |
 | AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
@@ -60,7 +61,7 @@ Repo docs/scripts define behavior; external catalogs don't.
 | Flutter app-code/UI change with active debug run | Trigger hot reload; hot restart if reload cannot apply; report unavailable session | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
-| Cursor host setup / global skills install | `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`) or `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim scripts when using globals |
+| Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |
 
 Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/official docs before model memory. Host-template sync, cross-host review caveats: [`agent_knowledge_base.md`](agent_knowledge_base.md) (Host Parity, [`agent_environment_setup.md`](agent_environment_setup.md)).
 

@@ -23,6 +23,23 @@ echo "fixtures|start"
 echo "fixtures|agent_session_bootstrap|help"
 bash tool/agent_session_bootstrap.sh --help >/dev/null
 
+echo "fixtures|agent_maintain|help"
+bash tool/agent_maintain.sh --help >/dev/null
+
+echo "fixtures|agent_maintain|list"
+bash tool/agent_maintain.sh list >/dev/null
+
+echo "fixtures|agent_maintain|auto_dry"
+bash tool/agent_maintain.sh auto >/dev/null
+
+echo "fixtures|bin_agent_maintain|help"
+agent_maintain_help="$(./bin/agent-maintain --help)"
+if ! grep -q -- "Usage: ./bin/agent-maintain" <<<"$agent_maintain_help"; then
+  echo "❌ fixtures failed: agent-maintain --help missing Usage line" >&2
+  echo "$agent_maintain_help" >&2
+  exit 1
+fi
+
 echo "fixtures|validate_task_trackers|help"
 bash tool/validate_task_trackers.sh --help >/dev/null
 

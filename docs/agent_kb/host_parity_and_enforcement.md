@@ -20,7 +20,8 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
   `agents-supabase`, small workflow routers, and
   `flutter-cross-platform-modern`.
 - Behavior change order: owning source doc -> quick reference if command choice changed -> review protocol if acceptance changed -> Codex/Cursor templates if cold-start affected.
-- After host-template changes: `./tool/sync_agent_assets.sh --dry-run` -> `./tool/sync_agent_assets.sh --apply` -> dry-run clean -> `./tool/check_agent_asset_drift.sh`.
+- After host-template changes: `./bin/agent-maintain after-host-edit` (or inspect `./tool/sync_agent_assets.sh --dry-run`, then `./bin/agent-maintain sync --apply` + strict drift). Reload Cursor after `--apply`.
+- Before claiming host/docs/tooling work done: `./bin/agent-maintain closeout` (scope-based; see [`host_maintenance_automation.md`](host_maintenance_automation.md)).
 - No Cursor-only/Codex-only workaround unless host capability differs; document delta in template, not source rule.
 - Some overlap between [`AGENTS.md`](../../AGENTS.md), quick-reference reminders,
   and final contract is intentional. Do not merge them into one mega-doc just

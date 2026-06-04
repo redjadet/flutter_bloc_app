@@ -718,7 +718,8 @@ is_checklist_fast_compatible_path() {
     CHANGELOG|CHANGELOG.*|\
     LICENSE|LICENSE.*|\
     .gitignore|\
-    .cursor/*)
+    .cursor/*|\
+    .vscode/tasks.json)
       return 0
       ;;
     *)
@@ -1220,7 +1221,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
-      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
   fi
@@ -1265,7 +1266,7 @@ if is_docs_only_change_set; then
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
-      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
   fi
@@ -1298,7 +1299,7 @@ if is_tooling_only_change_set; then
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
     if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
-      echo "❌ Managed AI agent assets are out of sync; run ./tool/sync_agent_assets.sh --dry-run and reconcile the drift."
+      echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
   fi

@@ -65,7 +65,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Tool Orchestration
 
-Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md)
+Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) · host maintain: [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (`preflight` / `closeout` / `after-host-edit`)
 
 ## Prompt Hygiene
 

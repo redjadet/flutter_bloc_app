@@ -108,12 +108,9 @@ vendor/cache/
 analysis/agent_scorecard/scorecard-events.jsonl
 tmp/*
 tasks/*
-!tasks/codex/
-!tasks/codex/todo.md
-!tasks/cursor/
-!tasks/cursor/todo.md
-tasks/codex/history/*
-tasks/cursor/history/*
+# Local per-host task trackers (not versioned)
+tasks/codex/
+tasks/cursor/
 CLAUDE.md
 docs/gstack_integration.md
 docs/app_for_small_business.txt

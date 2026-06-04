@@ -1,0 +1,58 @@
+#!/bin/bash
+# Shortcut for AI agent host maintenance and common agent workflows.
+# Usage: agent-maintain <command> [options]
+
+show_help() {
+  cat <<'EOF'
+Usage: ./bin/agent-maintain <command> [options]
+
+Unified entry for Cursor/Codex host upkeep (sync, globals, trim, inventory)
+and composed workflows (routine, preflight, host-full).
+
+Options:
+  --apply    Apply mutating steps where supported (sync, trim, setup, host-full)
+
+Commands:
+  session, bootstrap     Read-only session map
+  sync                   Host template sync
+  setup                  Full host setup (--apply [--install] [--trim-mode MODE])
+  install, update, find, trim, drift, kb, memory, inventory, trackers, review
+  routine                Light upkeep (sync + drift + update check + memory + budgets)
+  preflight              Bootstrap + drift + task trackers
+  host-full              Full install + trim (requires --apply; network)
+  auto                   Scope-based closeout (preflight + host + docs-sync)
+  closeout               Run before claiming task done (alias for auto)
+  docs-sync              Auto-update validation docs + markdown links
+  after-host-edit        sync --apply + kb after template edits
+  list                   List commands
+  help                   Show full help
+
+Agents: docs/agent_kb/host_maintenance_automation.md
+
+Examples:
+  ./bin/agent-maintain preflight
+  ./bin/agent-maintain closeout
+  ./bin/agent-maintain after-host-edit
+  ./bin/agent-maintain sync --apply
+  ./bin/agent-maintain routine --apply
+  ./bin/agent-maintain setup --apply --install --trim-mode full
+  ./bin/agent-maintain list
+
+Full help: ./bin/agent-maintain help
+Canon: docs/agent_environment_setup.md
+EOF
+}
+
+case "${1:-}" in
+  -h|--help|help)
+    if [[ "${2:-}" == "" ]]; then
+      show_help
+      exit 0
+    fi
+    ;;
+esac
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+exec "$PROJECT_ROOT/tool/agent_maintain.sh" "$@"

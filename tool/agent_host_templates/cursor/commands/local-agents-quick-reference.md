@@ -30,7 +30,9 @@ Prefer repo entrypoints only:
 - ./bin/checklist
 - ./bin/integration_tests
 - ./bin/upgrade_validate_all
-- ./tool/check_agent_asset_drift.sh and ./tool/sync_agent_assets.sh --dry-run when host templates changed
+- ./bin/agent-maintain preflight (non-trivial task start); closeout (before finish; scope host + docs); after-host-edit (same turn after tool/agent_host_templates/**)
+- ./bin/agent-maintain routine --apply or host-full --apply when user asked host/globals upkeep (not app-only lanes)
+- ./tool/sync_agent_assets.sh --dry-run to inspect drift; reconcile with ./bin/agent-maintain sync --apply or after-host-edit
 - ./tool/check_design_md.sh when DESIGN.md changed
 - ./tool/run_mix_lint.sh when Mix tokens/styles changed
 - ./tool/request_codex_feedback.sh only for cross-host second opinion; do not self-delegate

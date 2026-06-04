@@ -44,6 +44,7 @@ managed_cursor_files=(
   "cursor/commands/upgrade-validate-all.md|$HOME/.cursor/commands/upgrade-validate-all.md"
   "cursor/commands/codex-feedback.md|$HOME/.cursor/commands/codex-feedback.md"
   "cursor/commands/setup-cursor-agent-environment.md|$HOME/.cursor/commands/setup-cursor-agent-environment.md"
+  "cursor/commands/agent-maintain.md|$HOME/.cursor/commands/agent-maintain.md"
   "cursor/commands/hot-reload.md|$HOME/.cursor/commands/hot-reload.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
   "cursor/rules/design-system.mdc|$HOME/.cursor/rules/design-system.mdc"

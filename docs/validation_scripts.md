@@ -15,8 +15,9 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 
 - **Run all checks**: `./bin/checklist` (or `./tool/run_validation.sh`)
 - **Run specific check**: `./tool/check_<name>.sh`
-- **Fix auto-fixable issues**: `./tool/fix_validation_docs.sh` (updates checklist index)
+- **Fix auto-fixable issues**: `./tool/fix_validation_docs.sh` (updates checklist index + catalog/overview counts)
 - **Validate docs**: `./tool/validate_validation_docs.sh`
+- **Agent host/docs closeout** (agents run before finish): `./bin/agent-maintain closeout` — policy [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); presets in [`validation_scripts/operations_host_skills.md`](validation_scripts/operations_host_skills.md)
 
 ## Contents
 

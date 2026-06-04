@@ -57,7 +57,7 @@ Use deterministic sensors first; use inferential review for business fit, edge c
 - Same doctrine. Source docs own behavior; host templates summarize/route.
 - Codex: direct repo shell entrypoints, tracker [`../tasks/codex/todo.md`](../tasks/codex/todo.md).
 - Cursor: thin skills/commands, tracker [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
-- Shared behavior changes start in owning source doc, then `tool/agent_host_templates/`, then `./tool/sync_agent_assets.sh --apply`.
+- Shared behavior changes start in owning source doc, then `tool/agent_host_templates/`, then `./bin/agent-maintain after-host-edit` (or `./tool/sync_agent_assets.sh --apply`). Agents: `preflight` at start, `closeout` before done. See [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
 - Cross-host review explicit-request-only; never replaces own review/validation/self-check.
 - Host prompts stay short: slice, constraints, files, validation, report fields.
 

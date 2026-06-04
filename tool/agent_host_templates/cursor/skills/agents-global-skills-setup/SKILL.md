@@ -8,7 +8,8 @@ description: Run repo host agent setup for Cursor—sync templates, install/upda
 Repo adapters: `tool/agent_host_templates/`. Vendor globals: `~/.agents/skills` ([skills CLI](https://skills.sh/)).
 
 ```bash
-bash tool/setup_cursor_agent_environment.sh --apply --install
+./bin/agent-maintain host-full --apply
+# or: bash tool/setup_cursor_agent_environment.sh --apply --install
 ```
 
-Slash: `/setup-cursor-agent-environment`. **Policy:** repo canon wins; trim after install; reload Cursor. Detail: [`docs/agent_environment_setup.md`](../../../../../docs/agent_environment_setup.md).
+Slash: `/agent-maintain` or `/setup-cursor-agent-environment`. **Policy:** repo canon wins; trim after install; reload Cursor. Detail: [`docs/agent_environment_setup.md`](../../../../../docs/agent_environment_setup.md).

@@ -80,4 +80,72 @@ run_fail bad_mode 2 ./bin/checklist-fast --mode invalid --print-changed
 assert_contains bad_mode "$tmp_dir/bad_mode.err" "usage-error|invalid --mode: invalid"
 assert_contains bad_mode "$tmp_dir/bad_mode.err" "hint|use --mode full or --mode fast"
 
+run_ok agent_maintain_help ./bin/agent-maintain --help
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "Usage: ./bin/agent-maintain"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "routine"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "host-full"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "closeout"
+
+run_ok agent_maintain_list ./bin/agent-maintain list
+assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "agent-maintain commands"
+
+run_ok agent_maintain_host_full_plan ./bin/agent-maintain host-full
+assert_contains agent_maintain_host_full_plan "$tmp_dir/agent_maintain_host_full_plan.out" "plan|host-full"
+
+scope_paths_file="$tmp_dir/agent_maintain_scope_paths.txt"
+cat >"$scope_paths_file" <<'EOF'
+docs/agent_knowledge_base.md
+tool/agent_host_templates/cursor/commands/removed-example.md
+EOF
+run_ok agent_maintain_scope_auto env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$scope_paths_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh auto
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "scope|agent_kb|yes"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "scope|host_templates|yes"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "auto_action|after-host-edit|"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "auto_action|docs-sync|"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "plan|after-host-edit|"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "plan|docs-sync|"
+
+run_ok agent_maintain_closeout_plan env AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh closeout
+assert_contains agent_maintain_closeout_plan "$tmp_dir/agent_maintain_closeout_plan.out" "workflow|closeout|"
+
+empty_scope_file="$tmp_dir/agent_maintain_empty_scope.txt"
+: >"$empty_scope_file"
+run_ok agent_maintain_closeout_skip_after_host env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$empty_scope_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh closeout
+assert_contains agent_maintain_closeout_skip_after_host \
+  "$tmp_dir/agent_maintain_closeout_skip_after_host.out" "scope|host_templates|no"
+if grep -q "auto_action|after-host-edit|" "$tmp_dir/agent_maintain_closeout_skip_after_host.out"; then
+  echo "❌ empty scope closeout must not plan after-host-edit" >&2
+  exit 1
+fi
+
+host_scope_file="$tmp_dir/agent_maintain_host_scope.txt"
+printf '%s\n' 'tool/agent_host_templates/cursor/rules/agent-execution.mdc' >"$host_scope_file"
+run_ok agent_maintain_after_host_edit_plan env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$host_scope_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh after-host-edit
+assert_contains agent_maintain_after_host_edit_plan \
+  "$tmp_dir/agent_maintain_after_host_edit_plan.out" \
+  "plan|after-host-edit|sync --apply + strict drift + kb"
+
+maintain_scope_file="$tmp_dir/agent_maintain_only_scope.txt"
+printf '%s\n' 'tool/agent_maintain.sh' >"$maintain_scope_file"
+run_ok agent_maintain_closeout_docs_sync_scope env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$maintain_scope_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh closeout
+assert_contains agent_maintain_closeout_docs_sync_scope \
+  "$tmp_dir/agent_maintain_closeout_docs_sync_scope.out" \
+  "scope|validation_tooling|yes"
+assert_contains agent_maintain_closeout_docs_sync_scope \
+  "$tmp_dir/agent_maintain_closeout_docs_sync_scope.out" \
+  "plan|docs-sync|"
+
 echo "✅ Checklist CLI contract passed"

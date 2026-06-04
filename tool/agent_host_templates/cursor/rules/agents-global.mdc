@@ -37,5 +37,6 @@ Canon starts at `AGENTS.md` + `docs/ai/context_loading.md`. Pointers: `docs/agen
 - **File verified reusable conclusions** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md` (not chat-only).
 - Agent/docs edits: semantic-lint duplicates/stale plans; keep `AGENTS.md` short; run `./tool/check_agent_knowledge_base.sh`.
 - Behavior changes: source docs first, then sync Codex/Cursor templates.
+- Host maintain: agents run `./bin/agent-maintain preflight` at task start; `after-host-edit` after template edits; `closeout` before finish; `docs/agent_kb/host_maintenance_automation.md`.
 - `DESIGN.md` edits → `./tool/check_design_md.sh`; Mix → `./tool/run_mix_lint.sh`.
 - Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md) (not repo-wide `WidgetTester.view` until a harness exists). Never deprecated `tester.binding.window` APIs.

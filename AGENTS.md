@@ -41,6 +41,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
 - Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)
 - Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
+- Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain`
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Docs index: [`docs/README.md`](docs/README.md)
@@ -67,4 +68,5 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Destructive/external side effects need current-turn confirmation: list affected items first.
 - Reports after coding tasks include Files Changed and Follow-up Actions.
 - Repeated failure => add repo capability, not longer prompt.
+- Non-trivial task start: `./bin/agent-maintain preflight`; before finish: `./bin/agent-maintain closeout` (scope host + doc sync); after `tool/agent_host_templates/**` edits run `./bin/agent-maintain after-host-edit` same turn; see [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md).
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never add `## Learned *` sections here—land durable prefs/facts in [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md) (linked from [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)).

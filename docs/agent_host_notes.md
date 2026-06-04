@@ -30,8 +30,10 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
 
 ## Agent doc edit loop
 
-Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_templates/`), run
-`./tool/check_agent_knowledge_base.sh` and `./tool/check_agent_memory_compounding.sh`,
-then `./tool/sync_agent_assets.sh --dry-run`, `./tool/sync_agent_assets.sh --apply`,
-dry-run clean, and `./tool/check_agent_asset_drift.sh`.
+Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_templates/`), then
+`./bin/agent-maintain after-host-edit` when templates changed (or `./bin/agent-maintain kb` for
+agent-map-only edits), and `./bin/agent-maintain closeout` before claiming host/docs work done.
+Low-level equivalent: `./tool/check_agent_knowledge_base.sh`, `./tool/check_agent_memory_compounding.sh`,
+inspect with `./tool/sync_agent_assets.sh --dry-run`, reconcile with `./bin/agent-maintain sync --apply`.
+Policy: [`docs/agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
 Re-measure with `dart run tool/skill_inventory.dart` → `docs/audits/skill_inventory_latest.json`.

@@ -7,7 +7,7 @@ Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1.
 Adapted from Vinod Pal’s March 8, 2026 checklist:
 <https://medium.com/%40vndpal/my-practical-approach-for-reviewing-ai-generated-code-268db27f3af8>
 
-Workflow: [`agent_knowledge_base.md`](agent_knowledge_base.md) (draft-first, traps, finish gate). Commands: [`agents_quick_reference.md`](agents_quick_reference.md). Validation lane: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Optional cross-host: `./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`.
+Workflow: [`agent_knowledge_base.md`](agent_knowledge_base.md) (draft-first, traps, finish gate). Commands: [`agents_quick_reference.md`](agents_quick_reference.md). Validation lane: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Host/docs/tooling finish gate: [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (`./bin/agent-maintain closeout`). Optional cross-host: `./tool/request_codex_feedback.sh`, `./tool/run_codex_plan_review.sh`.
 
 ## Builder and Validator
 

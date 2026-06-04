@@ -64,8 +64,11 @@ Typical path:
 - `bash tool/check_docs_gardening.sh` for cheap deterministic doc-rot detection
 - `bash tool/validate_task_trackers.sh` to ensure `tasks/*/todo.md` follows canonical tracker contract
 - `./tool/check_design_md.sh` when root [`DESIGN.md`](../../DESIGN.md) changed
-- `./tool/check_agent_asset_drift.sh` when `tool/agent_host_templates/` changed
-- `./tool/sync_agent_assets.sh --dry-run` when repo-managed host assets changed
+- Agents before finish: `./bin/agent-maintain closeout` (scope-based; `after-host-edit` only when `tool/agent_host_templates/**` in git scope)
+- Intentional limits (PLAN_ONLY contract tests, no live host apply in CI, scope-gated `docs-sync`): [`host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md#not-changed-by-design)
+- `./bin/agent-maintain after-host-edit` when `tool/agent_host_templates/**` changed (or `./tool/sync_agent_assets.sh --apply` + strict drift)
+- `./bin/agent-maintain kb` or `./tool/check_agent_knowledge_base.sh` when [`AGENTS.md`](../../AGENTS.md), `docs/agent_kb/**`, or [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md) changed
+- `./tool/sync_agent_assets.sh --dry-run` when previewing host asset copies without `agent-maintain`
 
 Escalate to `./tool/delivery_checklist.sh` / `./bin/checklist` when docs materially change validation guidance, delivery policy, or repo-wide operating rules (incl [`AGENTS.md`](../../AGENTS.md)).
 
@@ -75,7 +78,7 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 
 | Trigger (changed files) | Required lane(s) (minimum) |
 | --- | --- |
-| Docs/tooling only (e.g. `docs/**`, `llms.txt`, `tool/*.sh`, `bin/*`, `.cursor/**`) | `./bin/checklist-fast` + `bash tool/check_agent_knowledge_base.sh` |
+| Docs/tooling only (e.g. `docs/**`, `llms.txt`, `tool/*.sh`, `bin/*`, `.cursor/**`) | `./bin/checklist-fast` + `bash tool/check_agent_knowledge_base.sh`; agents: `./bin/agent-maintain closeout` before claiming done |
 | Feature code under `lib/features/**` (non-trivial / cross-layer) | `bash tool/check_feature_brief_linked.sh` (+ focused `flutter test`); `FEATURE_BRIEF_CHECK_STRICT=1` to fail; `./bin/checklist` if wide |
 | UI/design brief or design-system code ([`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md), `lib/core/theme/**`, `lib/shared/design_system/**`) | `./tool/check_design_md.sh` when [`DESIGN.md`](../../DESIGN.md) changed; `./tool/run_mix_lint.sh` when Mix tokens/styles changed; focused widget/app-visible proof when runtime UI changed |
 | Routing/auth gates (e.g. `lib/**/router/**`, `AppRoutes`, route guard code, auth UI) | `./bin/router_feature_validate` (+ `./bin/checklist` if wide diff). Full checklist also runs `./bin/router_feature_validate` when changed files match `.cursor/rules/router-feature-validation.mdc` globs (`CHECKLIST_SKIP_ROUTER_VALIDATE=1` to skip). |

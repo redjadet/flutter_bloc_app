@@ -2,11 +2,48 @@
 
 Router: [`../validation_scripts.md`](../validation_scripts.md).
 
+## Agent maintain (unified entry)
+
+Purpose: one command for host upkeep and composed workflows instead of ad-hoc shell chains.
+
+```bash
+./bin/agent-maintain help
+./bin/agent-maintain list
+./bin/agent-maintain preflight              # agents: non-trivial task start
+./bin/agent-maintain closeout               # before task finish (alias: auto)
+./bin/agent-maintain after-host-edit        # after tool/agent_host_templates/** edits
+./bin/agent-maintain session
+./bin/agent-maintain sync [--apply]         # dry-run warns on drift; --apply is strict
+./bin/agent-maintain kb
+./bin/agent-maintain docs-sync              # scope validation tooling + markdown docs
+./bin/agent-maintain routine [--apply]
+./bin/agent-maintain host-full --apply      # network; requires --apply
+```
+
+Implementation: `tool/agent_maintain.sh`. Wrapper: `bin/agent-maintain`. Cursor slash command: `/agent-maintain`.
+
+| Preset | What it runs |
+| --- | --- |
+| `routine` | sync dry-run + drift warn; `routine --apply` sync `--apply` + **strict** drift, `update --check`, memory `--verify`, budget report (if inventory exists) |
+| `preflight` | session bootstrap, drift (warn), task trackers |
+| `closeout` / `auto` | `preflight`; scope `docs-sync`; templates in scope → `after-host-edit`; else agent-map → `kb` |
+| `docs-sync` | `fix_validation_docs.sh` + `validate_validation_docs.sh` when `tool/agent_maintain.sh`, `bin/agent-maintain`, checklist scripts, or `docs/**` in scope; link gardening via `agent_memory_auto_maintain.sh` |
+| `after-host-edit` | `sync --apply` + strict drift + `kb` |
+| `host-full` | `setup --apply --install --trim-mode full` (network; requires `--apply`) |
+
+**Drift:** `check_agent_asset_drift.sh` is warn-only in `preflight`, `sync` dry-run, and `routine` (no `--apply`); **strict** after `sync --apply`, `routine --apply`, `after-host-edit`, or `closeout` / `auto` when templates are in scope. On failure: inspect with `./tool/sync_agent_assets.sh --dry-run`, then `./bin/agent-maintain sync --apply`.
+
+**Not changed (by design):** contract smoke uses `AGENT_MAINTAIN_PLAN_ONLY=1` (no real `sync --apply` in CI); `closeout` steps are scope-gated; `docs-sync` does not author narrative docs; `check_design_md.sh` is warn-only inside `docs-sync`. Full table: [`host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md#not-changed-by-design).
+
+Agent policy (when to run without user asking): [`docs/agent_kb/host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md).
+
+Low-level commands (`install`, `update`, `find`, `trim`, `inventory`, `review`, …) forward to the existing `tool/*` scripts documented below.
+
 ## Global agent skills (host machine)
 
 Purpose: install or update **global** vendor skills for Cursor (Flutter, Dart, iOS, AI workflow) via the [skills CLI](https://skills.sh/). Does not replace `./tool/sync_agent_assets.sh` (repo-managed Cursor/Codex adapters). Requires Node.js (`npx`).
 
-Orchestrated host setup (`tool/setup_cursor_agent_environment.sh`; Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup`):
+Orchestrated host setup (`tool/setup_cursor_agent_environment.sh`; Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup`; or `./bin/agent-maintain setup`):
 
 ```bash
 bash tool/setup_cursor_agent_environment.sh

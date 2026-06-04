@@ -11,6 +11,7 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
 - **Safety:** destructive/external side effects require current-turn confirmation after listing affected items.
 - **Prove:** plan → implement end-to-end → verify → report proof; narrowest honest validation lane.
+- **Host maintain (agents run):** start → `./bin/agent-maintain preflight`; before finish → `./bin/agent-maintain closeout`; after `tool/agent_host_templates/**` → `./bin/agent-maintain after-host-edit` same turn. Policy: `docs/agent_kb/host_maintenance_automation.md`.
 - **Report:** coding-task closeout includes Files Changed and Follow-up Actions.
 - **Stuck:** same failure twice → add durable repo capability (doc, test, fixture, script), not a longer prompt.
 - **Seams:** Clean Architecture, Cubit/BLoC, DI, GoRouter.

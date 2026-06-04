@@ -12,6 +12,14 @@ see inventory map in
 proof, `./bin/checklist` for full sweep, and `./bin/checklist-fast` only for
 clean-tree or narrow docs/tooling sanity.
 
+**Host agent upkeep:** [`./bin/agent-maintain`](../../bin/agent-maintain) routes
+composed workflows (`preflight`, scope `closeout`, `docs-sync`, `after-host-edit`)
+to existing `tool/*` scripts — see
+[`agent_kb/host_maintenance_automation.md`](../agent_kb/host_maintenance_automation.md)
+and [`operations_host_skills.md`](operations_host_skills.md). Catalog row:
+[`agent_maintain.sh`](catalog.md) (not part of `CHECK_SCRIPTS`; contract smoke via
+[`check_checklist_cli_contract.sh`](catalog.md)).
+
 For complete docs index, see [docs index](../README.md).
 
 ## Overview

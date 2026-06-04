@@ -13,6 +13,30 @@
       }
     },
     {
+      "label": "Agent maintain (routine preview)",
+      "type": "shell",
+      "command": "${workspaceFolder}/bin/agent-maintain",
+      "args": ["routine"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Agent maintain (routine apply)",
+      "type": "shell",
+      "command": "${workspaceFolder}/bin/agent-maintain",
+      "args": ["routine", "--apply"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
       "label": "Local IDE open preflight",
       "type": "shell",
       "command": "${workspaceFolder}/tool/local_ide_open_preflight.sh",

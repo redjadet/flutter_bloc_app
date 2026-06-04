@@ -8,6 +8,9 @@ description: Sync repo Cursor/Codex adapters, optionally install global vendor s
 Run the repo’s **host agent environment** lane for this machine. Repo canon and
 thin synced skills win over vendor globals.
 
+Prefer the unified entry when possible: `./bin/agent-maintain setup` (same flags)
+or `./bin/agent-maintain host-full --apply` for install + trim.
+
 ## When to use
 
 - New machine or fresh Cursor profile

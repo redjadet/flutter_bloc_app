@@ -34,8 +34,8 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Host Setup
 
-- Machine-wide Cursor rules/commands/skills: `bash tool/setup_cursor_agent_environment.sh --apply` plus optional `--install`.
-- Host drift: use `./tool/sync_agent_assets.sh --dry-run`, `./tool/sync_agent_assets.sh --apply`, dry-run clean, then `./tool/check_agent_asset_drift.sh`; no piecemeal `~/.cursor/` edits. Do not copy repo-managed skill names into workspace `.cursor/skills/` — `check_workspace_managed_skill_duplicates` fails drift when names overlap synced host skills.
+- Machine-wide Cursor rules/commands/skills: `./bin/agent-maintain host-full --apply` or `bash tool/setup_cursor_agent_environment.sh --apply` plus optional `--install`.
+- Host maintain (agents execute — do not delegate sync/KB/doc refresh to the user): `./bin/agent-maintain preflight` at non-trivial task start; `./bin/agent-maintain closeout` before claiming done (scope-based presets — `after-host-edit` only when `tool/agent_host_templates/**` is in git scope; `docs-sync` when validation/docs/agent-map paths are in scope; table in [`host_maintenance_automation.md`](host_maintenance_automation.md)). Same turn after `tool/agent_host_templates/**` edits: `./bin/agent-maintain after-host-edit` (not deferred to a later closeout). Low-level: `./tool/sync_agent_assets.sh --dry-run` / `--apply` then `./tool/check_agent_asset_drift.sh`. No piecemeal `~/.cursor/` edits. Do not copy repo-managed skill names into workspace `.cursor/skills/` — `check_workspace_managed_skill_duplicates` fails drift when names overlap synced host skills.
 - Global skill trim defaults to `--trim-mode balanced`; `--trim-mode full` archives more vendor trees under `~/.agents/skills/.archived/<timestamp>/` and is reversible. Use `full` only when operator explicitly asks.
 
 ## Durable Prefs
@@ -62,4 +62,4 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Repo Fact
 
-- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`. Inventory includes `~/.agents/skills` when present. Host setup orchestrator: `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`); Cursor `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` (see [`agent_environment_setup.md`](../agent_environment_setup.md)).
+- `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`. Inventory includes `~/.agents/skills` when present. Host upkeep entry: `./bin/agent-maintain` (`routine`, `setup`, `host-full`); orchestrator: `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`); Cursor `/setup-cursor-agent-environment` or `/agent-maintain`; skill `agents-global-skills-setup` (see [`agent_environment_setup.md`](../agent_environment_setup.md)).

@@ -41,16 +41,35 @@ High-signal categories: GitHub/CI, browser automation, docs retrieval, observabi
 
 Requires Node.js (`npx`). Installs under `~/.agents/skills/` and links them to **Cursor** (`-g -a cursor`).
 
-**Automated host setup** (sync repo adapters + optional install/trim/inventory; agent command `/setup-cursor-agent-environment`):
+**Unified entry** (recommended; wraps setup, sync, globals, and composed workflows):
 
 ```bash
-bash tool/setup_cursor_agent_environment.sh              # preview
-bash tool/setup_cursor_agent_environment.sh --apply      # sync + drift check
+./bin/agent-maintain help
+./bin/agent-maintain preflight                 # agents: run at non-trivial task start
+./bin/agent-maintain closeout                  # agents: before claiming task done (alias: auto)
+./bin/agent-maintain after-host-edit           # agents: after tool/agent_host_templates/** edits
+./bin/agent-maintain docs-sync                 # agents: mechanical validation-doc + link sync (also in closeout when in scope)
+./bin/agent-maintain routine --apply          # light upkeep: sync --apply + strict drift (no network install)
+./bin/agent-maintain host-full --apply        # full install + trim (network)
+```
+
+**Automated host setup** (same orchestrator via `setup` or direct script; Cursor `/setup-cursor-agent-environment`):
+
+```bash
+./bin/agent-maintain setup                    # preview
+./bin/agent-maintain setup --apply            # sync + drift check
+./bin/agent-maintain setup --apply --install
+./bin/agent-maintain setup --apply --install --trim-mode full
+
+bash tool/setup_cursor_agent_environment.sh              # equivalent
+bash tool/setup_cursor_agent_environment.sh --apply
 bash tool/setup_cursor_agent_environment.sh --apply --install
 bash tool/setup_cursor_agent_environment.sh --apply --install --trim-mode full
 ```
 
-Flags: `--sync-only`, `--install`, `--trim`, `--trim-mode` (`balanced`|`full`), `--skip-trim`, `--skip-inventory`. VS Code task: **Cursor agent environment setup (preview)**.
+Flags: `--sync-only`, `--install`, `--trim`, `--trim-mode` (`balanced`|`full`), `--skip-trim`, `--skip-inventory`. VS Code tasks: **Agent maintain (routine preview/apply)**, **Cursor agent environment setup (preview)**.
+
+**Agent automation policy:** [`docs/agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) — when agents must run `preflight` / `closeout` / `after-host-edit` without the user asking.
 
 Manual steps (same result, more control):
 
