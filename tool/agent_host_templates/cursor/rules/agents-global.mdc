@@ -7,36 +7,14 @@ alwaysApply: false
 
 Canon starts at `AGENTS.md` + `docs/ai/context_loading.md`. Pointers: `docs/agent_knowledge_base.md`, `docs/agent_project_context.md`, `docs/ai_code_review_protocol.md`. Commands: `docs/agents_quick_reference.md` only.
 
-## Execution (beyond always-on map)
+## Execution
 
-- Intent / spec / implementation stay separate (why+constraints vs eval contract vs repo tactics).
-- Vague or risky: boundaries, data flow, failure handling, smallest verifiable slice before codegen.
-- Loop: plan → tool → observe → revise; inspectable task state; empty or malformed tool output is not proof.
-- Tool orchestration: repo scripts/tests, browser/app proof, MCP/connectors, code graph; prompts alone are not proof; name inputs, side effects, retry safety, failure modes.
-- UI: `DESIGN.md` + `docs/design_system.md`; runtime tokens first; verify workflow, states, responsive no-overlap.
+Intent/spec/implementation separate. Vague/risky: boundaries, data flow, failures, smallest slice before codegen. Loop: plan → tool → observe → revise; bad tool output ≠ proof. Tools: repo scripts, MCP, browser/app proof — not prompt memory. UI: `DESIGN.md` + `docs/design_system.md`; states + responsive no-overlap.
 
-## Context budget
+## Context + quality
 
-- Smallest reads; targeted search beats dumps.
-- **context ladder:** canonical; memory/graph detail in `docs/agent_knowledge_base.md`.
-- Refactor/feature audit: landmines only (bugs, workarounds, deprecated patterns).
-
-## Quality bar
-
-- Reversible change for business goal + reliability bar.
-- Don't edit until **95% confident** in goal/scope/approach.
-- **Surgical diff:** each changed line traces to request or required validation/doc update.
-- Validation scripts are gates; change scripts only for demonstrated false positives.
-- AI output is draft until review passes; finish gate: edge cases, failures, ops, breakage impact.
-- **Self-verify before report:** request, changed files, proof, blockers, residual risk.
+**context ladder:** `docs/ai/context_loading.md`; depth in `docs/agent_knowledge_base.md`. Smallest reads; landmines only on audits. **95% confident** before edit. **Surgical diff** + validation gates (fix false positives only). Draft until review; **Self-verify before report**.
 
 ## Repo-first
 
-- Repo docs and shell entrypoints over host shortcuts.
-- Repeated failure → doc, fixture, test, script, route proof, or validation check.
-- **File verified reusable conclusions** → source doc, `docs/changes/`, `docs/plans/`, or `tasks/lessons.md` (not chat-only).
-- Agent/docs edits: semantic-lint duplicates/stale plans; keep `AGENTS.md` short; run `./tool/check_agent_knowledge_base.sh`.
-- Behavior changes: source docs first, then sync Codex/Cursor templates.
-- Host maintain: agents run `./bin/agent-maintain preflight` at task start; `after-host-edit` after template edits; `closeout` before finish; `docs/agent_kb/host_maintenance_automation.md`.
-- `DESIGN.md` edits → `./tool/check_design_md.sh`; Mix → `./tool/run_mix_lint.sh`.
-- Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md) (not repo-wide `WidgetTester.view` until a harness exists). Never deprecated `tester.binding.window` APIs.
+Repo docs/shell over host shortcuts. Repeated failure → doc/fixture/test/script. **File verified reusable conclusions** → owning doc / `docs/changes/` / `tasks/lessons.md`. **Semantic lint** on agent docs; `./tool/check_agent_knowledge_base.sh`. Source docs → templates → `./bin/agent-maintain` (`preflight` / `after-host-edit` / `closeout`). Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) + [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md) (no repo-wide `WidgetTester.view` yet).

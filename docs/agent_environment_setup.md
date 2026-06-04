@@ -37,6 +37,16 @@ High-signal categories: GitHub/CI, browser automation, docs retrieval, observabi
 
 **Cursor Marketplace plugins** (Figma, Firebase, BrowserStack, Context7, Superpowers, Compound Engineering, etc.): install or update from **Settings → Plugins** or [cursor.com/marketplace](https://cursor.com/marketplace). There is no repo script for marketplace plugins.
 
+**Flutter-first plugin slim-down (optional, biggest real context win):** Marketplace plugins load vendor skills into every session (~1M+ tokens in a typical install; see `docs/audits/vendor_plugin_inventory_latest.json`). That load is **not** counted in `skill_inventory_latest.json`. Audit:
+
+```bash
+bash tool/audit_vendor_plugin_skills.sh
+```
+
+Disable plugins you do not use this month under **Cursor → Settings → Plugins** (reversible). High-impact cuts for this repo (`recommendedForFlutter: false` in the audit): `compound-engineering`, `posthog`, `sentry`, `vercel`, `shopify-plugin`, `azure`, `harness`, `figma`, `huggingface-skills`, `render`, `superpowers`, `subtext`, `mongodb`, `atlassian`, `convex`. Keep what you need (e.g. Context7, Firebase, Supabase, BrowserStack, design tools).
+
+**Habits (inventory, plugins, reload):** [`validation_scripts/operations_host_skills.md`](validation_scripts/operations_host_skills.md) § Suggested habits; snapshot commands in [`audits/README.md`](audits/README.md) § Habits.
+
 **Global agent skills** (Flutter, Dart, iOS, AI workflow) use the [skills CLI](https://skills.sh/) via repo scripts. Official Flutter/Dart skills are optional task blueprints, not repo policy — read repo canon first; repo docs and scripts win on conflicts.
 
 Requires Node.js (`npx`). Installs under `~/.agents/skills/` and links them to **Cursor** (`-g -a cursor`).

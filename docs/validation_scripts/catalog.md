@@ -223,6 +223,8 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `check_delegate_wrapper_contracts.sh` | Manual | Delegate wrapper contract tests |
 | `check_continual_learning_index.sh` | Agent memory lane | Continual-learning index invariants |
 | `check_skill_budgets.sh` | Manual | Token budgets for skill inventory JSON — [`operations_host_skills.md`](operations_host_skills.md) |
+| `audit_vendor_plugin_skills.sh` | Manual | Marketplace plugin skill rollup (`vendor_plugin_inventory_latest.json`) — [`operations_host_skills.md`](operations_host_skills.md) |
+| `skill_vendor_plugin_inventory.dart` | Manual | Dart entry for vendor plugin audit — [`operations_host_skills.md`](operations_host_skills.md) |
 | `check_todo_keyboard_layout.sh` | Manual | Todo keyboard layout regression lane |
 | `check_row_action_overflow_fixtures.sh` | Self-test for `check_row_action_overflow.sh` | Fixture proof only (not a product guard) |
 

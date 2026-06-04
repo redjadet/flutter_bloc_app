@@ -19,20 +19,20 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
 | Harness beats model choice. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
 
-## AI Productivity Traps (And How This Repo Avoids Them)
+## AI Productivity Traps
 
-AI can be slower when it produces “almost correct” code: polished surface, subtle mismatches. Flutter amplifies mismatch cost (widget trees, rebuild/state, architectural seams).
+“Almost correct” AI output costs more in Flutter (widgets, state, seams). Repo response:
 
-Repo guardrails:
-
-- **AI output not default implementation**: treat as draft; prefer smallest coherent change inside existing seams (Clean Architecture, Cubit/BLoC, DI, GoRouter).
-- **Stop re-prompt loops**: if 2 cycles of “almost right” appear, stop generating. Switch to evidence: read owning code/docs, implement manually, add missing fixture/test/script.
-- **Prefer micro-edits over rewrites**: patch exact failing line(s) instead of regenerating whole files/widgets.
-- **Early proof beats late polish**: run narrowest honest validation lane early (see [`agents_quick_reference.md`](agents_quick_reference.md)). Catch subtle issues before they spread.
-- **Architecture consistency beats local correctness**: “works in isolation” code that violates repo patterns is net loss; align first, then iterate.
-- **System shape beats screen shape**: start from feature/domain boundary, dependency graph, and contracts. Avoid screen-centric rewrites, giant cubits/view models, hidden dependencies, and cross-feature leakage.
-- **Capabilities beat concrete classes**: reusable widgets/services receive narrow callbacks or domain/core ports, not feature implementations, when that keeps ownership explicit and tests cheap.
-- **Boring seams beat clever abstractions**: add interfaces, mixins, or shared services only when they remove repeated behavior or hide an external dependency; do not add indirection for style.
+| Trap | Response |
+| --- | --- |
+| Draft treated as ship | Draft until review; smallest change in Clean Architecture / Cubit/BLoC / DI / GoRouter seams |
+| Re-prompt loops | After 2 “almost right” cycles: read owning code/docs, patch manually, add fixture/test/script |
+| Full rewrites | Micro-edit failing lines; do not regenerate whole files/widgets |
+| Late validation | Narrowest lane early — [`agents_quick_reference.md`](agents_quick_reference.md) |
+| Local-only correctness | Align architecture before local fixes |
+| Screen-shaped changes | Feature/domain boundary + contracts first; no giant cubits or cross-feature leakage |
+| Concrete coupling | Reusable UI gets narrow callbacks/ports, not feature types |
+| Style abstractions | New indirection only for repeated behavior or external deps |
 
 ## Self-Improvement
 
@@ -50,7 +50,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Progressive Disclosure
 
-**Ladder (canonical numbered steps):** [`docs/ai/context_loading.md`](ai/context_loading.md) only. After ladder: this doc (rules) → project context → review protocol → [`agents_quick_reference.md`](agents_quick_reference.md) (commands) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
+After cold-start ladder (see § Context Navigation Ladder): this doc → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
 
 ## Adaptive Execution
 
@@ -69,24 +69,11 @@ Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) · hos
 
 ## Prompt Hygiene
 
-Agent-facing guidance stays short, stable, outcome-first.
-
-- Use `Goal / Context / Boundaries / Verification`; context = task-relevant repo facts only.
-- Stable doctrine first, task context last.
-- Prefer success criteria, evidence, side effects, stop/report contract over long process scripts.
-- Exact order only for safety, validation, migrations, codegen, destructive work, scaffold changes, or repo-required workflows.
-- Delete stale, duplicate, or nonessential instructions once script/test/doc owns invariant.
-- Add date/timezone only for task policy, user locale, or time-sensitive evidence.
+Short, stable, outcome-first: `Goal / Context / Boundaries / Verification`; doctrine before task context; evidence/stop contract over long scripts; step order only for safety/validation/migrations/codegen/destructive/repo-required flows; delete prose once script/test/doc owns invariant.
 
 ## Long Session Health
 
-Agent quality depends on harness architecture: context management, memory tiering, orchestration, cache/tool-output discipline, and failure recovery.
-
-- Treat memory as layers: in-context facts for active work, persistent files for durable evidence, and instruction files for rules that must survive summarization.
-- Compact tool output to decisions, evidence, paths, and blockers; do not carry long logs when a precise pointer is enough.
-- Watch circuit-breaker symptoms: repeated contradictions, stale file claims, lost goal, invented tool output, or circular repair attempts.
-- After two failed repair loops or clear context drift, stop generation, reread source files, restate Goal / Context / Boundaries / Verification, then continue from verified state.
-- If reset was needed because repo guidance was missing, add the smallest durable capability: doc pointer, script, test, fixture, skill, or automation rule.
+Harness = context tiers + compact tool output + recovery. Keep in-context facts, file-backed evidence, and instruction rules separate. Log pointers, not dumps. Circuit-breakers: contradictions, stale paths, lost goal, invented tool output, repair loops. After two failed repairs or drift: reread sources, restate Goal / Context / Boundaries / Verification, continue from verified state; missing guidance → smallest durable doc/script/test/fixture.
 
 ## Agent Legibility
 
@@ -94,15 +81,7 @@ Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish
 
 ## Missing Capability Loop
 
-don't answer repeated failure with bigger prompt.
-
-1. Identify missing capability: context, tool, fixture, test, script, ownership boundary, acceptance criterion.
-2. Add smallest durable repo capability.
-3. Validate directly.
-4. Update host templates only if Codex/Cursor need cold-start discovery.
-5. Remove stale guidance once mechanical guard covers it.
-
-Examples: route mistake -> route validator/doc; repeated review comment -> invariant/linter/test helper; UI proof gap -> smoke path/screenshot/integration map.
+Repeated failure → durable repo capability, not bigger prompt: identify gap (context, tool, fixture, test, script, boundary, acceptance) → add smallest fix → validate → sync host templates only for cold-start discovery → delete stale prose when a guard owns it.
 
 ## Finish Gate
 
@@ -133,7 +112,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Context Navigation Ladder
 
-Cold-start steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Unknown path: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md) § File discovery layers.
+Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Unnumbered discovery: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md).
 
 ## System Of Record Layout
 

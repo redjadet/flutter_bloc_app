@@ -1,8 +1,6 @@
 # Agent Quick Reference
 
-Commands + routing lookup. Map: [`AGENTS.md`](../AGENTS.md). Knowledge: [`agent_knowledge_base.md`](agent_knowledge_base.md). Project context: [`agent_project_context.md`](agent_project_context.md). Review: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). Validation detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
-
-Pinned repo toolchain: Flutter 3.44.1 / Dart 3.12.1. CI: [`ci_automation.md`](ci_automation.md).
+Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_base.md`](agent_knowledge_base.md); context [`agent_project_context.md`](agent_project_context.md); review [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Toolchain: Flutter 3.44.1 / Dart 3.12.1 · CI [`ci_automation.md`](ci_automation.md).
 
 ## Validation Chooser
 
@@ -63,11 +61,13 @@ Repo docs/scripts define behavior; external catalogs don't.
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |
 
-Version-sensitive APIs (Flutter, Dart, Firebase, Supabase, GoRouter): repo/official docs before model memory. Host-template sync, cross-host review caveats: [`agent_knowledge_base.md`](agent_knowledge_base.md) (Host Parity, [`agent_environment_setup.md`](agent_environment_setup.md)).
+Version-sensitive APIs: repo/official docs before model memory. Host parity: [`agent_knowledge_base.md`](agent_knowledge_base.md) · [`agent_environment_setup.md`](agent_environment_setup.md).
 
 ## Harness (pointers only)
 
-Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub). Required cold-start anchors: below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+
+Mechanical anchors (do not drop from this file): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
 ## Host Adapters
 

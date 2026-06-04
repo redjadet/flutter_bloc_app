@@ -87,6 +87,7 @@ Template deletes under `tool/agent_host_templates/**` still trigger sync/kb work
 
 - Narrow docs/tooling lane: `./bin/checklist-fast` already runs drift when policy docs change.
 - After `sync --apply`: tell user to reload Cursor if they use synced commands/rules.
+- Skill/plugin/inventory habits (regen inventory, vendor audit, trim/reload): [`validation_scripts/operations_host_skills.md`](../validation_scripts/operations_host_skills.md) § Suggested habits.
 - Validation catalog: [`validation_scripts/operations_host_skills.md`](../validation_scripts/operations_host_skills.md)
 - Contract smoke: `tool/check_checklist_cli_contract.sh` (help/list, scope `closeout`, PLAN_ONLY `after-host-edit` + `agent_maintain.sh` docs-sync scope; `AGENT_MAINTAIN_CHANGED_PATHS_FILE` + `AGENT_MAINTAIN_PLAN_ONLY=1` — **tests only**, not for agents)
 

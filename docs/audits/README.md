@@ -6,11 +6,21 @@ Machine-generated inventories and one-off reviews live here. **Git tracks** this
 
 ```bash
 dart run tool/skill_inventory.dart docs/audits/skill_inventory_latest.json
+bash tool/audit_vendor_plugin_skills.sh docs/audits/vendor_plugin_inventory_latest.json
 dart run tool/skill_rank.dart docs/audits/skill_inventory_latest.json docs/audits/skill_rank_latest.json
 bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json report
 ```
 
-Publish summaries in [`docs/changes/`](../changes/), not bulk JSON. Optional local-only audits (e.g. `ai_architecture_audit.md`, `ai_domain_language_report_v1.md`) may exist for cross-links — regenerate or `git add -f` only when promoting findings.
+Publish summaries in [`docs/changes/`](../changes/), not bulk JSON. Optional local-only audit markdown may exist beside this README — regenerate or `git add -f` only when promoting findings.
+
+## Habits
+
+Full table: [`validation_scripts/operations_host_skills.md`](../validation_scripts/operations_host_skills.md) § Suggested habits. Short version:
+
+- Regen inventory + budget **report** after global skill install/archive (stale JSON lies about `agentsSkills`).
+- Run **vendor plugin audit** after marketplace plugin changes; disable unused plugins in **Cursor → Settings → Plugins** for the largest context win.
+- **Reload Cursor** after `trim_duplicate_agent_skills.sh --apply` or `after-host-edit`.
+- Monthly (or after plugin churn): vendor audit → plugin toggles → regen inventory → budget report → reload.
 
 ## Code quality baseline (program)
 

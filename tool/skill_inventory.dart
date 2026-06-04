@@ -6,10 +6,14 @@ import 'dart:io';
 /// Output JSON: { generatedAt, roots, skills:[{path,origin,bytes,lines,chars,approxTokens,name,description}] }
 ///
 /// approxTokens: rough estimate (chars / 4). Good enough for ranking.
+///
+/// Vendor plugin cache (`~/.cursor/plugins/cache`) is **excluded by default**
+/// so budget/rank reports focus on editable skills. Use:
+///   `--include-plugin-cache` or `SKILL_INVENTORY_INCLUDE_PLUGIN_CACHE=1`
+/// For marketplace-only rollup, run `tool/skill_vendor_plugin_inventory.dart`.
 Future<void> main(List<String> args) async {
-  final outPath = args.isNotEmpty
-      ? args.first
-      : 'docs/audits/skill_inventory_latest.json';
+  final includePluginCache = _includePluginCache(args);
+  final outPath = _inventoryOutPath(args);
 
   final home = Platform.environment['HOME'] ?? '';
   final cursorSkillsRoot = home.isEmpty ? '' : '$home/.cursor/skills';
@@ -21,7 +25,8 @@ Future<void> main(List<String> args) async {
     'repoTemplates': '${Directory.current.path}/tool/agent_host_templates',
     if (cursorSkillsRoot.isNotEmpty) 'cursorSkills': cursorSkillsRoot,
     if (agentsSkillsRoot.isNotEmpty) 'agentsSkills': agentsSkillsRoot,
-    if (pluginCacheRoot.isNotEmpty) 'pluginCache': pluginCacheRoot,
+    if (includePluginCache && pluginCacheRoot.isNotEmpty)
+      'pluginCache': pluginCacheRoot,
   };
 
   final skills = <Map<String, Object?>>[];
@@ -65,6 +70,9 @@ Future<void> main(List<String> args) async {
 
   final payload = <String, Object?>{
     'generatedAt': DateTime.now().toUtc().toIso8601String(),
+    'excludePluginCache': !includePluginCache,
+    'vendorInventoryHint':
+        'dart run tool/skill_vendor_plugin_inventory.dart docs/audits/vendor_plugin_inventory_latest.json',
     'roots': roots,
     'skills': skills,
   };
@@ -76,6 +84,26 @@ Future<void> main(List<String> args) async {
   );
 
   stdout.writeln('Wrote ${skills.length} skills -> $outPath');
+  if (!includePluginCache) {
+    stdout.writeln(
+      'pluginCache: excluded (use --include-plugin-cache or vendor audit script)',
+    );
+  }
+}
+
+bool _includePluginCache(List<String> args) {
+  if (args.contains('--include-plugin-cache')) return true;
+  final env = Platform.environment['SKILL_INVENTORY_INCLUDE_PLUGIN_CACHE'];
+  return env == '1' || env?.toLowerCase() == 'true';
+}
+
+String _inventoryOutPath(List<String> args) {
+  final positional = args
+      .where((a) => !a.startsWith('--'))
+      .where((a) => !a.contains('='))
+      .toList();
+  if (positional.isNotEmpty) return positional.first;
+  return 'docs/audits/skill_inventory_latest.json';
 }
 
 bool _isIgnoredPath(String path) {

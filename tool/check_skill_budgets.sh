@@ -17,6 +17,7 @@ fi
 if [ -z "${inventory_path:-}" ] || [ ! -f "$inventory_path" ]; then
   echo "skill budgets: inventory not found: ${inventory_path:-<empty>}" >&2
   echo "hint: dart run tool/skill_inventory.dart docs/audits/skill_inventory_latest.json" >&2
+  echo "hint: bash tool/audit_vendor_plugin_skills.sh (marketplace plugin rollup)" >&2
   exit 2
 fi
 

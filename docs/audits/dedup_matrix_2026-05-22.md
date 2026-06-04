@@ -1,6 +1,10 @@
-# Agent instruction dedup matrix (2026-05-22)
+# Agent instruction dedup matrix (2026-05-22; pass 2026-06-04)
 
 Classify before edit. **Canonical** = single owner; others → pointer. **Echo** = minimal repeat for cold-start/CI anchors.
+
+**2026-06-04 pass:** Compressed [`agent_knowledge_base.md`](../agent_knowledge_base.md) (traps table, merged ladder pointer, dropped duplicate § Context Navigation Ladder), [`agents_quick_reference.md`](../agents_quick_reference.md) harness intro, [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md), host `agents-global.mdc` — mechanical anchors unchanged; `check_agent_knowledge_base.sh` green.
+
+**2026-06-04 review-protocol pass:** Compressed [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) (tighter checks table, merged ops/tool rows, pointer to [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md)); `#special-cases` and CI substrings preserved.
 
 | Theme | File | Class | Action |
 | --- | --- | --- | --- |
@@ -36,6 +40,9 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) (old § Context Navigation Ladder) | Resolved | Renamed/de-numbered 2026-05-22 pass 2 |
 | Cold-start bootstrap output | [`tool/agent_session_bootstrap.sh`](../../tool/agent_session_bootstrap.sh) | Canonical echo | `read_next` → [`context_loading.md`](../ai/context_loading.md); discovery pointer only (no 1–4 ladder) |
 | Auto memory upkeep | [`tool/agent_memory_auto_maintain.sh`](../../tool/agent_memory_auto_maintain.sh) | Canonical | `--verify` after sync `--apply`; `--if-changed` from KB check (local only) |
+| Review gate / checks table | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Canonical | Full checks + risk matrix + special cases |
+| Finish gate / report shape | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) | Canonical | Legibility + Files Changed / Follow-up Actions |
+| Finish gate | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Echo | Pointer only; no duplicate report-shape prose |
 
 ## WidgetTester.view note
 

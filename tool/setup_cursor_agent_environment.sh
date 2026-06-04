@@ -160,6 +160,8 @@ if (( ! skip_inventory && (apply || do_install || do_trim) )); then
   if (( apply )); then
     echo "setup-cursor-agent|stage|skill-inventory"
     dart run "$PROJECT_ROOT/tool/skill_inventory.dart" "$inventory_path"
+    bash "$PROJECT_ROOT/tool/audit_vendor_plugin_skills.sh" \
+      "$PROJECT_ROOT/docs/audits/vendor_plugin_inventory_latest.json" || true
     bash "$PROJECT_ROOT/tool/check_skill_budgets.sh" "$inventory_path" report || true
   else
     echo "setup-cursor-agent|plan|inventory|dart run tool/skill_inventory.dart $inventory_path"

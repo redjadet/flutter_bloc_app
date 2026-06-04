@@ -50,6 +50,8 @@ Future<void> main(List<String> args) async {
           as Map<String, Object?>;
   final skills = (inv['skills']! as List).cast<Map<String, Object?>>();
 
+  final excludePluginCache = inv['excludePluginCache'] == true;
+
   int sumRepo = 0;
   int sumCursor = 0;
   int sumAgents = 0;
@@ -85,7 +87,11 @@ Future<void> main(List<String> args) async {
     ..writeln('- repoTemplates approxTokens: $sumRepo (budget $repoBudget)')
     ..writeln('- cursorSkills approxTokens: $sumCursor (budget $cursorBudget)')
     ..writeln('- agentsSkills approxTokens: $sumAgents (budget $agentsBudget)')
-    ..writeln('- pluginCache approxTokens: $sumVendor (read-only)')
+    ..writeln(
+      excludePluginCache
+          ? '- pluginCache: excluded from inventory (run tool/audit_vendor_plugin_skills.sh)'
+          : '- pluginCache approxTokens: $sumVendor (read-only)',
+    )
     ..writeln(
       '- largest repoTemplates skill: $repoMax ($repoMaxPath) (max $maxSingleRepo)',
     );
