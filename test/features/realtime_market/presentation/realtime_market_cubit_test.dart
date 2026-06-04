@@ -55,6 +55,29 @@ void main() {
       },
     );
 
+    test('still watches feed when loadCached throws', () async {
+      final _FakeRepo repo = _FakeRepo(
+        cached: null,
+        loadCachedError: StateError('hive unavailable'),
+      );
+      final RealtimeMarketCubit cubit = RealtimeMarketCubit(
+        repository: repo,
+        pairId: 'btc_usdt',
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state.loadErrorMessage, contains('hive unavailable'));
+      expect(cubit.state.bootstrapComplete, isTrue);
+
+      repo.emit(_snap(last: 42));
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state.snapshot?.lastPrice, 42);
+      expect(cubit.state.loadErrorMessage, isNull);
+
+      await cubit.close();
+    });
+
     test('reconnect delegates to repository', () async {
       final _FakeRepo repo = _FakeRepo(cached: _snap(last: 1));
       final RealtimeMarketCubit cubit = RealtimeMarketCubit(
@@ -121,9 +144,10 @@ MarketFeedSnapshot _snap({required final double last}) => MarketFeedSnapshot(
 );
 
 final class _FakeRepo implements RealtimeMarketRepository {
-  _FakeRepo({this.cached});
+  _FakeRepo({this.cached, this.loadCachedError});
 
   final MarketFeedSnapshot? cached;
+  final Object? loadCachedError;
   final StreamController<MarketFeedSnapshot> _out =
       StreamController<MarketFeedSnapshot>.broadcast();
   var disposed = false;
@@ -142,7 +166,12 @@ final class _FakeRepo implements RealtimeMarketRepository {
   }
 
   @override
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) async => cached;
+  Future<MarketFeedSnapshot?> loadCached(final String pairId) async {
+    if (loadCachedError != null) {
+      Error.throwWithStackTrace(loadCachedError!, StackTrace.current);
+    }
+    return cached;
+  }
 
   @override
   Stream<MarketFeedSnapshot> watch(final String pairId) => _out.stream;
