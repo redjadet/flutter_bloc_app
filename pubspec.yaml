@@ -91,7 +91,7 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   # Keep compatible with codegen stack pinned to analyzer 8.4.x (via custom_lints).
-  json_annotation: ^4.12.0
+  json_annotation: ^4.9.0
   local_auth: ^3.0.1
   logger: ^2.7.0
   markdown: ^7.3.1
@@ -132,7 +132,7 @@ dev_dependencies:
   google_maps_flutter_platform_interface: ^2.15.0
   google_sign_in_mocks: ^0.3.0
   # json_serializable 6.14+ requires analyzer >=10, but custom_lints pin analyzer 8.4.x.
-  json_serializable: 6.14.0
+  json_serializable: 6.11.4
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
