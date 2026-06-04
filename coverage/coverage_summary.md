@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **73.35%** (21176/28871 lines)
+*Total line coverage*: **73.37%** (21189/28880 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -254,7 +254,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/di/register_supabase_services.dart` | 75.00% | 3/4 |
 | `lib/features/auth/presentation/widgets/logged_out_background_layer.dart` | 75.00% | 9/12 |
 | `lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart` | 75.00% | 36/48 |
-| `lib/features/google_maps/presentation/widgets/google_maps_messages.dart` | 75.00% | 12/16 |
 | `lib/features/todo_list/data/hive_todo_repository_migration.dart` | 75.38% | 49/65 |
 | `lib/features/ai_decision_demo/data/ai_decision_api_client.dart` | 75.51% | 37/49 |
 | `lib/shared/sync/presentation/sync_status_cubit.dart` | 75.56% | 34/45 |
@@ -276,7 +275,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/auth/presentation/widgets/logged_out_user_info.dart` | 77.14% | 27/35 |
 | `lib/features/graphql_demo/data/countries_graphql_repository_queries.part.dart` | 77.19% | 44/57 |
 | `lib/features/auth/presentation/widgets/fallback_sign_in_content.dart` | 77.42% | 24/31 |
-| `lib/features/google_maps/presentation/cubit/map_sample_cubit.dart` | 77.46% | 55/71 |
 | `lib/features/profile/presentation/widgets/profile_header.dart` | 77.55% | 38/49 |
 | `lib/features/chart/presentation/widgets/chart_line_graph_chart_data.part.dart` | 77.63% | 59/76 |
 | `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` | 77.78% | 21/27 |
@@ -305,6 +303,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/example/presentation/widgets/markdown_editor/markdown_toolbar.dart` | 79.66% | 47/59 |
 | `lib/shared/http/interceptors/retry_interceptor_retry.part.dart` | 79.71% | 55/69 |
 | `lib/features/chat/data/render_fastapi_chat_repository.dart` | 80.00% | 8/10 |
+| `lib/features/google_maps/presentation/cubit/map_sample_cubit.dart` | 80.00% | 64/80 |
 | `lib/features/realtime_market/presentation/pages/realtime_market_page.dart` | 80.00% | 32/40 |
 | `lib/shared/utils/cubit_state_emission_mixin.dart` | 80.00% | 4/5 |
 | `lib/shared/utils/date_time_formatting.dart` | 80.00% | 8/10 |
@@ -647,6 +646,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/google_maps/data/sample_map_location_repository.dart` | 100.00% | 2/2 |
 | `lib/features/google_maps/presentation/widgets/google_maps_controls.dart` | 100.00% | 25/25 |
 | `lib/features/google_maps/presentation/widgets/google_maps_location_list.dart` | 100.00% | 48/48 |
+| `lib/features/google_maps/presentation/widgets/google_maps_messages.dart` | 100.00% | 16/16 |
 | `lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart` | 100.00% | 9/9 |
 | `lib/features/graphql_demo/data/supabase_graphql_demo_parsers.dart` | 100.00% | 20/20 |
 | `lib/features/graphql_demo/domain/graphql_demo_exception.dart` | 100.00% | 3/3 |
