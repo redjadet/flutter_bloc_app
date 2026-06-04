@@ -437,10 +437,10 @@ packages:
     dependency: transitive
     description:
       name: dbus
-      sha256: "792974a4007974fbc5c1b5433eb2330a9db3e368c3f906253af4c007d0f49a91"
+      sha256: "0ce9b0a839e6dee59a37a623d2fc26a35bbbe6404213e419b0d6411023d62645"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.13"
+    version: "0.7.14"
   decimal:
     dependency: transitive
     description:
@@ -461,18 +461,18 @@ packages:
     dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: b4fed1b2835da9d670d7bed7db79ae2a94b0f5ad6312268158a9b5479abbacdd
+      sha256: "6a642e1daa10190af89ba6cb6386c0df7d071a3592080bfe1e44faa63ae1df65"
       url: "https://pub.dev"
     source: hosted
-    version: "12.4.0"
+    version: "13.1.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
-      sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
+      sha256: "04b173a92e2d9161dfead145667037c8d834db725ce2e7b942bfe18fd2f45a46"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.3"
+    version: "8.1.0"
   diff_match_patch:
     dependency: transitive
     description:
@@ -537,6 +537,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  ffi_leak_tracker:
+    dependency: transitive
+    description:
+      name: ffi_leak_tracker
+      sha256: "4093d4ef9ca06ffe2786e73bfb25e22aa92112b9bb4ec941f11e3e6b61489a97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   file:
     dependency: transitive
     description:
@@ -987,10 +995,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_secure_storage_windows
-      sha256: "3b7c8e068875dfd46719ff57c90d8c459c87f2302ed6b00ff006b3c9fcad1613"
+      sha256: "471951813a97006d899db4948acc654a4f28c440083ea08178935ce20b173ec1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.2"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -1114,10 +1122,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_linux
-      sha256: d64112a205931926f4363bb6bd48f14cb38e7326833041d170615586cd143797
+      sha256: b02993d59b753bf1967ed28862002841aec5cdd5090c1f495213b32ce488aced
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   geolocator_platform_interface:
     dependency: "direct dev"
     description:
@@ -1450,10 +1458,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "6300175e00616bbc832e2fc91bfa4d776af5402c81c7151bee6905bb08473c52"
+      sha256: f9881ff4998044947ec38d098bc7c8316ae1186fa786eddffdb867b9bc94dfce
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.1"
+    version: "4.8.0"
   image_picker:
     dependency: "direct main"
     description:
@@ -1522,34 +1530,34 @@ packages:
     dependency: "direct main"
     description:
       name: in_app_purchase
-      sha256: "5cddd7f463f3bddb1d37a72b95066e840d5822d66291331d7f8f05ce32c24b6c"
+      sha256: "0e9510b80b0074e89ab0a8e0fc901439b779dc9ae575ab8d419253c6e1627716"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.3"
+    version: "3.3.0"
   in_app_purchase_android:
     dependency: transitive
     description:
       name: in_app_purchase_android
-      sha256: "518b48a385dfc1aa278080472969c6cee0c3d41ef8b9511b0071dd015473ecf1"
+      sha256: "0585b7a762eb14b32187467c4bcadfab68d9978ae4b64d4164c54f06aaf73005"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0+11"
+    version: "0.5.0+2"
   in_app_purchase_platform_interface:
     dependency: transitive
     description:
       name: in_app_purchase_platform_interface
-      sha256: "1d353d38251da5b9fea6635c0ebfc6bb17a2d28d0e86ea5e083bf64244f1fb4c"
+      sha256: "0b0076cac8ce4fa7048f01e76af8b123aeb6a7c4e0dea2a5206d6664454f3e36"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.1"
   in_app_purchase_storekit:
     dependency: transitive
     description:
       name: in_app_purchase_storekit
-      sha256: f2cf3a6c5233f8f43b4bb148e658be881441f33c3d285fe6ae8348c4994e1a75
+      sha256: "5f9d59c86c15f56429a4fdf09097c99d5b412510e1fcf80cf874fc9638fab369"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.9"
+    version: "0.4.10"
   integration_test:
     dependency: "direct main"
     description: flutter
@@ -1830,18 +1838,18 @@ packages:
     dependency: "direct main"
     description:
       name: package_info_plus
-      sha256: "468c26b4254ab01979fa5e4a98cb343ea3631b9acee6f21028997419a80e1a20"
+      sha256: "4bf625947f6c7713ee242296a682e23e44823c09cf9d79e4f1238923c92db852"
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.1"
+    version: "10.1.0"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
       name: package_info_plus_platform_interface
-      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
+      sha256: db762cb2f4f25ee60fb6359773861b0f199e00b90d237bd85a76a1e806b46ef4
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.1"
+    version: "4.1.0"
   path:
     dependency: "direct main"
     description:
@@ -2675,18 +2683,18 @@ packages:
     dependency: transitive
     description:
       name: win32
-      sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
+      sha256: ba6f4bba816c8d7e3c1580e170f3786d216951cc6b94babc3b814c08d2cb2738
       url: "https://pub.dev"
     source: hosted
-    version: "5.15.0"
+    version: "6.3.0"
   win32_registry:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
+      sha256: "73b1d78920a9d6e03f8b4e43e612b87bf3152a0e5c5e5150267762b7c4116904"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "3.0.3"
   window_manager:
     dependency: "direct main"
     description:
@@ -2707,10 +2715,10 @@ packages:
     dependency: transitive
     description:
       name: xml
-      sha256: "67f0aff7be013d107995e9b75bf4e7f2c3ef2dfdb2c8e68024bba0a7fd5756a4"
+      sha256: "971043b3a0d3da28727e40ed3e0b5d18b742fa5a68665cca88e74b7876d5e025"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.1"
+    version: "6.6.1"
   yaml:
     dependency: transitive
     description:
