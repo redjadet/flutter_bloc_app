@@ -796,6 +796,78 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleEventBusDemoButton": "Ouvrir la démo Event Bus",
+  "@exampleEventBusDemoButton": {
+    "description": "Button label that navigates to the Event Bus pattern demo page"
+  },
+  "eventBusDemoTitle": "Démo Event Bus",
+  "@eventBusDemoTitle": {
+    "description": "Title for the Event Bus pattern interactive demo"
+  },
+  "eventBusDemoIntro": "Simule une communication découplée : le panneau de connexion publie des événements ; les panneaux d'accueil et de notification écoutent sans se référencer. Utilisez Event Bus avec parcimonie pour les signaux globaux — gardez l'état d'écran dans Cubit/BLoC.",
+  "@eventBusDemoIntro": {
+    "description": "Intro text on the Event Bus demo explaining the pattern"
+  },
+  "eventBusDemoLoginPanelTitle": "Écran de connexion (éditeur)",
+  "@eventBusDemoLoginPanelTitle": {
+    "description": "Card title for the login publisher panel in Event Bus demo"
+  },
+  "eventBusDemoHomePanelTitle": "Écran d'accueil (auditeur)",
+  "@eventBusDemoHomePanelTitle": {
+    "description": "Card title for the home listener panel in Event Bus demo"
+  },
+  "eventBusDemoNotificationPanelTitle": "Service de notification (auditeur)",
+  "@eventBusDemoNotificationPanelTitle": {
+    "description": "Card title for the notification listener panel in Event Bus demo"
+  },
+  "eventBusDemoUserIdLabel": "ID utilisateur",
+  "@eventBusDemoUserIdLabel": {
+    "description": "Label for user id text field in Event Bus demo"
+  },
+  "eventBusDemoLoginButton": "Émettre UserLoggedInEvent",
+  "@eventBusDemoLoginButton": {
+    "description": "Button that publishes a login event on the demo bus"
+  },
+  "eventBusDemoLogoutButton": "Émettre UserLoggedOutEvent",
+  "@eventBusDemoLogoutButton": {
+    "description": "Button that publishes a logout event on the demo bus"
+  },
+  "eventBusDemoHomeWaiting": "En attente de UserLoggedInEvent…",
+  "@eventBusDemoHomeWaiting": {
+    "description": "Home listener idle state in Event Bus demo"
+  },
+  "eventBusDemoHomeActive": "L'utilisateur {userId} est actif. Accueil actualisé {count} fois.",
+  "@eventBusDemoHomeActive": {
+    "description": "Home listener state after login events",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "eventBusDemoNotificationIdle": "Canal push inactif.",
+  "@eventBusDemoNotificationIdle": {
+    "description": "Notification listener idle state in Event Bus demo"
+  },
+  "eventBusDemoNotificationConnected": "Push connecté pour l'utilisateur {userId}.",
+  "@eventBusDemoNotificationConnected": {
+    "description": "Notification listener state after login event",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      }
+    }
+  },
+  "eventBusDemoGuidance": "Bon usage : analytics, toasts, hooks de modules légers. À éviter : état UI principal et flux métier — préférez Cubit/BLoC. Annulez toujours les abonnements dans dispose().",
+  "@eventBusDemoGuidance": {
+    "description": "Footer guidance on when to use Event Bus vs state management"
+  },
   "exampleGoogleMapsButton": "Ouvrir la démo Google Maps",
   "@exampleGoogleMapsButton": {
     "description": "Button label that navigates to the Google Maps sample page"

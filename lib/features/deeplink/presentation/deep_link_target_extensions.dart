@@ -24,6 +24,8 @@ extension DeepLinkTargetLocationX on DeepLinkTarget {
         return AppRoutes.graphqlPath;
       case DeepLinkTarget.profile:
         return AppRoutes.profilePath;
+      case DeepLinkTarget.eventBusDemo:
+        return AppRoutes.eventBusDemoPath;
     }
   }
 }

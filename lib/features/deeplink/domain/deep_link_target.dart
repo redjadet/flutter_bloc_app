@@ -10,4 +10,5 @@ enum DeepLinkTarget {
   googleMaps,
   graphqlDemo,
   profile,
+  eventBusDemo,
 }

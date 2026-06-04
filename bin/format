@@ -66,4 +66,5 @@ if [[ "${#dart_files[@]}" -eq 0 ]]; then
 fi
 
 DART_BIN="$(resolve_flutter_dart)"
-exec "$DART_BIN" format "${format_args[@]}" "${dart_files[@]}"
+"$DART_BIN" format "${format_args[@]}" "${dart_files[@]}"
+exit $?

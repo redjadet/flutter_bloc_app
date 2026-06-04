@@ -70,5 +70,6 @@ class DeepLinkParser {
         'google-maps': DeepLinkTarget.googleMaps,
         'graphql-demo': DeepLinkTarget.graphqlDemo,
         'profile': DeepLinkTarget.profile,
+        'event-bus-demo': DeepLinkTarget.eventBusDemo,
       };
 }

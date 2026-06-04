@@ -27,6 +27,8 @@ void main() {
       AppRoutes.caseStudyDemoHistoryDetailPath,
       '/case-study-demo/history/:id',
     );
+    expect(AppRoutes.eventBusDemo, 'event-bus-demo');
+    expect(AppRoutes.eventBusDemoPath, '/event-bus-demo');
   });
 
   group('AppRoutes.isSafeRedirectPath', () {

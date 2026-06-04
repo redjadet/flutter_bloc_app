@@ -15,6 +15,7 @@ import 'package:flutter_bloc_app/core/di/register_case_study_demo_services.dart'
     if (dart.library.html) 'package:flutter_bloc_app/core/di/register_case_study_demo_services_web.dart';
 import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
 import 'package:flutter_bloc_app/core/di/register_chat_services.dart';
+import 'package:flutter_bloc_app/core/di/register_event_bus_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_fcm_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_genui_services.dart';
 import 'package:flutter_bloc_app/core/di/register_graphql_services.dart';
@@ -69,8 +70,8 @@ import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 
 part 'groups/register_core_services.dart';
-part 'groups/register_feature_services.dart';
 part 'groups/register_demo_services.dart';
+part 'groups/register_feature_services.dart';
 
 const bool _isFlutterTestProcess = bool.fromEnvironment('FLUTTER_TEST');
 

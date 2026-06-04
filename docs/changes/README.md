@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-04_event-bus-demo-from-example.md`](2026-06-04_event-bus-demo-from-example.md): Event Bus pattern demo from Example page; route, deeplink, demo-scoped DI, l10n, unit/widget/integration tests.
 - [`2026-06-04_agent_host_maintain_automation.md`](2026-06-04_agent_host_maintain_automation.md): `./bin/agent-maintain` scope-based `closeout`, `docs-sync`, `after-host-edit`; PLAN_ONLY contract tests; policy shard and validation-doc auto-fix wiring.
 - [`2026-06-02_agent_doc_line_budget.md`](2026-06-02_agent_doc_line_budget.md): Frequent AI-agent docs and active trackers capped at 200 lines; self-improvement details split to a shard and tracker history archived.
 - [`2026-06-02_agent_self_improvement_stack.md`](2026-06-02_agent_self_improvement_stack.md): Safe self-improvement stack for repo agents: reflection, verified memory, reversible scaffold evolution; model/population evolution non-default.

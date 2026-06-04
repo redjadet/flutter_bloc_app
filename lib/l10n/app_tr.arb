@@ -797,6 +797,78 @@
   "@exampleWebsocketButton": {
     "description": "Button label that navigates to the WebSocket demo page"
   },
+  "exampleEventBusDemoButton": "Event Bus demosunu aç",
+  "@exampleEventBusDemoButton": {
+    "description": "Button label that navigates to the Event Bus pattern demo page"
+  },
+  "eventBusDemoTitle": "Event Bus demosu",
+  "@eventBusDemoTitle": {
+    "description": "Title for the Event Bus pattern interactive demo"
+  },
+  "eventBusDemoIntro": "Bağlantısız iletişimi simüle eder: giriş paneli olay yayınlar; ana sayfa ve bildirim panelleri birbirine referans vermeden dinler. Uygulama geneli sinyaller için Event Bus'u ölçülü kullanın — ekran durumunu Cubit/BLoC'ta tutun.",
+  "@eventBusDemoIntro": {
+    "description": "Intro text on the Event Bus demo explaining the pattern"
+  },
+  "eventBusDemoLoginPanelTitle": "Giriş ekranı (yayıncı)",
+  "@eventBusDemoLoginPanelTitle": {
+    "description": "Card title for the login publisher panel in Event Bus demo"
+  },
+  "eventBusDemoHomePanelTitle": "Ana sayfa (dinleyici)",
+  "@eventBusDemoHomePanelTitle": {
+    "description": "Card title for the home listener panel in Event Bus demo"
+  },
+  "eventBusDemoNotificationPanelTitle": "Bildirim servisi (dinleyici)",
+  "@eventBusDemoNotificationPanelTitle": {
+    "description": "Card title for the notification listener panel in Event Bus demo"
+  },
+  "eventBusDemoUserIdLabel": "Kullanıcı ID",
+  "@eventBusDemoUserIdLabel": {
+    "description": "Label for user id text field in Event Bus demo"
+  },
+  "eventBusDemoLoginButton": "UserLoggedInEvent gönder",
+  "@eventBusDemoLoginButton": {
+    "description": "Button that publishes a login event on the demo bus"
+  },
+  "eventBusDemoLogoutButton": "UserLoggedOutEvent gönder",
+  "@eventBusDemoLogoutButton": {
+    "description": "Button that publishes a logout event on the demo bus"
+  },
+  "eventBusDemoHomeWaiting": "UserLoggedInEvent bekleniyor…",
+  "@eventBusDemoHomeWaiting": {
+    "description": "Home listener idle state in Event Bus demo"
+  },
+  "eventBusDemoHomeActive": "Kullanıcı {userId} aktif. Ana sayfa {count} kez yenilendi.",
+  "@eventBusDemoHomeActive": {
+    "description": "Home listener state after login events",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      },
+      "count": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "eventBusDemoNotificationIdle": "Push kanalı boşta.",
+  "@eventBusDemoNotificationIdle": {
+    "description": "Notification listener idle state in Event Bus demo"
+  },
+  "eventBusDemoNotificationConnected": "Kullanıcı {userId} için push bağlandı.",
+  "@eventBusDemoNotificationConnected": {
+    "description": "Notification listener state after login event",
+    "placeholders": {
+      "userId": {
+        "type": "String",
+        "example": "101"
+      }
+    }
+  },
+  "eventBusDemoGuidance": "Uygun: analitik, tostlar, gevşek modül kancaları. Kaçının: birincil UI durumu ve iş akışları — bunun yerine Cubit/BLoC kullanın. dispose() içinde abonelikleri her zaman iptal edin.",
+  "@eventBusDemoGuidance": {
+    "description": "Footer guidance on when to use Event Bus vs state management"
+  },
   "exampleGoogleMapsButton": "Google Haritalar demosunu aç",
   "@exampleGoogleMapsButton": {
     "description": "Button label that navigates to the Google Maps sample page"

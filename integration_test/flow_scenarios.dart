@@ -26,6 +26,7 @@ void registerSmokeIntegrationFlows() {
   registerSettingsIntegrationFlow();
   registerTodoListIntegrationFlow();
   registerWebsocketIntegrationFlow();
+  registerEventBusDemoIntegrationFlow();
   registerWhiteboardIntegrationFlow();
 }
 

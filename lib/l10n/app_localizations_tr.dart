@@ -1068,6 +1068,55 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleWebsocketButton => 'WebSocket demosunu aç';
 
   @override
+  String get exampleEventBusDemoButton => 'Event Bus demosunu aç';
+
+  @override
+  String get eventBusDemoTitle => 'Event Bus demosu';
+
+  @override
+  String get eventBusDemoIntro =>
+      'Bağlantısız iletişimi simüle eder: giriş paneli olay yayınlar; ana sayfa ve bildirim panelleri birbirine referans vermeden dinler. Uygulama geneli sinyaller için Event Bus\'u ölçülü kullanın — ekran durumunu Cubit/BLoC\'ta tutun.';
+
+  @override
+  String get eventBusDemoLoginPanelTitle => 'Giriş ekranı (yayıncı)';
+
+  @override
+  String get eventBusDemoHomePanelTitle => 'Ana sayfa (dinleyici)';
+
+  @override
+  String get eventBusDemoNotificationPanelTitle =>
+      'Bildirim servisi (dinleyici)';
+
+  @override
+  String get eventBusDemoUserIdLabel => 'Kullanıcı ID';
+
+  @override
+  String get eventBusDemoLoginButton => 'UserLoggedInEvent gönder';
+
+  @override
+  String get eventBusDemoLogoutButton => 'UserLoggedOutEvent gönder';
+
+  @override
+  String get eventBusDemoHomeWaiting => 'UserLoggedInEvent bekleniyor…';
+
+  @override
+  String eventBusDemoHomeActive(String userId, int count) {
+    return 'Kullanıcı $userId aktif. Ana sayfa $count kez yenilendi.';
+  }
+
+  @override
+  String get eventBusDemoNotificationIdle => 'Push kanalı boşta.';
+
+  @override
+  String eventBusDemoNotificationConnected(String userId) {
+    return 'Kullanıcı $userId için push bağlandı.';
+  }
+
+  @override
+  String get eventBusDemoGuidance =>
+      'Uygun: analitik, tostlar, gevşek modül kancaları. Kaçının: birincil UI durumu ve iş akışları — bunun yerine Cubit/BLoC kullanın. dispose() içinde abonelikleri her zaman iptal edin.';
+
+  @override
   String get exampleGoogleMapsButton => 'Google Haritalar demosunu aç';
 
   @override

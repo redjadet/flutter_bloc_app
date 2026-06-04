@@ -1065,6 +1065,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleWebsocketButton => 'Open WebSocket demo';
 
   @override
+  String get exampleEventBusDemoButton => 'Open Event Bus demo';
+
+  @override
+  String get eventBusDemoTitle => 'Event Bus demo';
+
+  @override
+  String get eventBusDemoIntro =>
+      'Simulates decoupled communication: the login panel fires events; home and notification panels listen without referencing each other. Use Event Bus sparingly for app-wide signals — keep screen state in Cubit/BLoC.';
+
+  @override
+  String get eventBusDemoLoginPanelTitle => 'Login screen (publisher)';
+
+  @override
+  String get eventBusDemoHomePanelTitle => 'Home screen (listener)';
+
+  @override
+  String get eventBusDemoNotificationPanelTitle =>
+      'Notification service (listener)';
+
+  @override
+  String get eventBusDemoUserIdLabel => 'User ID';
+
+  @override
+  String get eventBusDemoLoginButton => 'Fire UserLoggedInEvent';
+
+  @override
+  String get eventBusDemoLogoutButton => 'Fire UserLoggedOutEvent';
+
+  @override
+  String get eventBusDemoHomeWaiting => 'Waiting for UserLoggedInEvent…';
+
+  @override
+  String eventBusDemoHomeActive(String userId, int count) {
+    return 'User $userId is active. Home refreshed $count time(s).';
+  }
+
+  @override
+  String get eventBusDemoNotificationIdle => 'Push channel idle.';
+
+  @override
+  String eventBusDemoNotificationConnected(String userId) {
+    return 'Push connected for user $userId.';
+  }
+
+  @override
+  String get eventBusDemoGuidance =>
+      'Good fits: analytics, toasts, loose module hooks. Avoid: primary UI state and business flows — use Cubit/BLoC instead. Always cancel stream subscriptions in dispose().';
+
+  @override
   String get exampleGoogleMapsButton => 'Open Google/Apple Maps demo';
 
   @override

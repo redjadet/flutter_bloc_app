@@ -178,6 +178,44 @@ void registerTodoListIntegrationFlow() {
   );
 }
 
+void registerEventBusDemoIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Event Bus demo flow',
+    testName: 'opens Event Bus demo from Example page and updates listeners',
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder eventBusButton = find.byKey(
+        const ValueKey('example-event-bus-demo-button'),
+      );
+      await tester.scrollUntilVisible(
+        eventBusButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, eventBusButton);
+      await pumpUntilFound(tester, find.text('Event Bus demo'));
+
+      expect(find.text('Event Bus demo'), findsWidgets);
+
+      await tapAndPump(
+        tester,
+        find.byKey(const ValueKey('event-bus-demo-login-button')),
+      );
+
+      await pumpUntilFound(
+        tester,
+        find.textContaining('User 101 is active'),
+      );
+      expect(find.textContaining('Push connected for user 101'), findsWidgets);
+    },
+  );
+}
+
 void registerWebsocketIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'WebSocket flow',
