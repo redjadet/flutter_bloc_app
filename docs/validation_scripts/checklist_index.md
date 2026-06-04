@@ -67,6 +67,8 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_sync_io_in_presentation.sh`
 - `check_remote_image_cache_hints.sh`
 - `check_cubit_subscription_cancel.sh`
+- `check_lifecycle_observer_dispose.sh`
+- `check_deferred_heavy_routes.sh`
 - `check_pyright_python.sh`
 
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:END -->

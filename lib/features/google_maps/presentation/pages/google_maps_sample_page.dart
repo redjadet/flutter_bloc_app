@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_s
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
@@ -25,6 +26,7 @@ abstract class _MapBodyData with _$MapBodyData {
     required final bool showLoading,
     required final bool hasError,
     required final String? errorMessage,
+    required final AppError? lastError,
   }) = __MapBodyData;
 }
 
@@ -110,6 +112,7 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
         showLoading: state.isLoading && state.markers.isEmpty,
         hasError: state.hasError,
         errorMessage: state.errorMessage,
+        lastError: state.lastError,
       ),
       builder: (final context, final data) {
         if (data.showLoading) {
@@ -118,6 +121,9 @@ class _GoogleMapsSamplePageState extends State<GoogleMapsSamplePage> {
         if (data.hasError) {
           return GoogleMapsErrorMessage(
             message: data.errorMessage ?? l10n.googleMapsPageGenericError,
+            onRetry: data.lastError?.isRetryable == true
+                ? () => unawaited(_cubit.loadLocations())
+                : null,
           );
         }
         return GoogleMapsContentLayout(

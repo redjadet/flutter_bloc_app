@@ -33,8 +33,15 @@ Selection logic is in
 
 Declared in `pubspec.yaml`:
 
-- `google_maps_flutter: ^2.14.0`
+- `google_maps_flutter: ^2.17.1`
+- `google_maps_flutter_ios_sdk10: ^2.18.4`
 - `apple_maps_flutter: ^1.4.0`
+
+`google_maps_flutter_ios_sdk10` selects the Swift Package Manager compatible
+Google Maps SDK 10.x implementation for iOS. The default
+`google_maps_flutter_ios` implementation still depends on CocoaPods for Google
+Maps SDK selection, so the SDK-specific package is kept as a direct dependency
+while the app remains hybrid SwiftPM + CocoaPods for unsupported plugins.
 
 ## Routing and Lazy Loading
 

@@ -80,6 +80,7 @@ dependencies:
   go_router: ^17.3.0
   google_fonts: ^8.1.0
   google_maps_flutter: ^2.17.1
+  google_maps_flutter_ios_sdk10: ^2.18.4
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   image_picker: ^1.2.2

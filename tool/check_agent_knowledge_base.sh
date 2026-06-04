@@ -139,6 +139,9 @@ if [ -f "AGENTS.md" ]; then
   require_not_contains "AGENTS.md" "## Codex"
   require_not_contains "AGENTS.md" "## Cursor"
   require_not_contains "AGENTS.md" "## Delegation"
+  require_not_contains "AGENTS.md" "## Learned User Preferences"
+  require_not_contains "AGENTS.md" "## Learned Workspace Facts"
+  require_contains "AGENTS.md" "operator_preferences_durable.md"
 else
   echo "AGENTS.md not present; skipping local injected-map size/link checks."
 fi

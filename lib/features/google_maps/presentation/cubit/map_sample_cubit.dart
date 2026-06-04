@@ -3,29 +3,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleCubit extends Cubit<MapSampleState> {
   MapSampleCubit({required this._repository}) : super(MapSampleState.initial());
 
   final MapLocationRepository _repository;
+  final RequestIdGuard _loadGuard = RequestIdGuard();
 
   Future<void> loadLocations() async {
+    if (isClosed) {
+      return;
+    }
+    if (state.isLoading) {
+      return;
+    }
+    await _fetchLocations();
+  }
+
+  /// Forces a new fetch even when [loadLocations] would coalesce an in-flight load.
+  Future<void> reloadLocations() async {
+    if (isClosed) {
+      return;
+    }
+    await _fetchLocations();
+  }
+
+  Future<void> _fetchLocations() async {
+    final int requestId = _loadGuard.next();
     emit(
       state.copyWith(
         isLoading: true,
         errorMessage: null,
+        lastError: null,
         markers: const <gmaps.Marker>{},
         locations: const <MapLocation>[],
         selectedMarkerId: null,
       ),
     );
+    AppError? latestError;
+
     await CubitExceptionHandler.executeAsync(
       operation: _repository.fetchSampleLocations,
-      isAlive: () => !isClosed,
+      isAlive: () => !isClosed && _loadGuard.isCurrent(requestId),
+      onAppError: (final appError) {
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
+        latestError = appError;
+      },
       onSuccess: (final locations) {
-        if (isClosed) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         final gmaps.MarkerId? firstMarkerId = locations.isEmpty
             ? null
             : gmaps.MarkerId(locations.first.id);
@@ -45,11 +75,13 @@ class MapSampleCubit extends Cubit<MapSampleState> {
         );
       },
       onError: (final errorMessage) {
-        if (isClosed) return;
+        if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           state.copyWith(
             isLoading: false,
             errorMessage: errorMessage,
+            lastError:
+                latestError ?? NetworkErrorMapper.getAppError(errorMessage),
             markers: const <gmaps.Marker>{},
             locations: const <MapLocation>[],
             selectedMarkerId: null,
@@ -76,6 +108,9 @@ class MapSampleCubit extends Cubit<MapSampleState> {
   }
 
   void selectLocation(final String locationId) {
+    if (locationId.trim().isEmpty) {
+      return;
+    }
     final MapLocation? location = state.locations.firstWhereOrNull(
       (final candidate) => candidate.id == locationId,
     );

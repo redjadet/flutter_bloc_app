@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GraphqlDemoState {
 
- ViewStatus get status; List<GraphqlCountry> get countries; List<GraphqlContinent> get continents; String? get activeContinentCode; String? get errorMessage; GraphqlDemoErrorType? get errorType; GraphqlDataSource get dataSource;
+ ViewStatus get status; List<GraphqlCountry> get countries; List<GraphqlContinent> get continents; String? get activeContinentCode; String? get errorMessage; GraphqlDemoErrorType? get errorType; AppError? get lastError; GraphqlDataSource get dataSource;
 /// Create a copy of GraphqlDemoState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $GraphqlDemoStateCopyWith<GraphqlDemoState> get copyWith => _$GraphqlDemoStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlDemoState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.countries, countries)&&const DeepCollectionEquality().equals(other.continents, continents)&&(identical(other.activeContinentCode, activeContinentCode) || other.activeContinentCode == activeContinentCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlDemoState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.countries, countries)&&const DeepCollectionEquality().equals(other.continents, continents)&&(identical(other.activeContinentCode, activeContinentCode) || other.activeContinentCode == activeContinentCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.lastError, lastError) || other.lastError == lastError)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(countries),const DeepCollectionEquality().hash(continents),activeContinentCode,errorMessage,errorType,dataSource);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(countries),const DeepCollectionEquality().hash(continents),activeContinentCode,errorMessage,errorType,lastError,dataSource);
 
 @override
 String toString() {
-  return 'GraphqlDemoState(status: $status, countries: $countries, continents: $continents, activeContinentCode: $activeContinentCode, errorMessage: $errorMessage, errorType: $errorType, dataSource: $dataSource)';
+  return 'GraphqlDemoState(status: $status, countries: $countries, continents: $continents, activeContinentCode: $activeContinentCode, errorMessage: $errorMessage, errorType: $errorType, lastError: $lastError, dataSource: $dataSource)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $GraphqlDemoStateCopyWith<$Res>  {
   factory $GraphqlDemoStateCopyWith(GraphqlDemoState value, $Res Function(GraphqlDemoState) _then) = _$GraphqlDemoStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, List<GraphqlCountry> countries, List<GraphqlContinent> continents, String? activeContinentCode, String? errorMessage, GraphqlDemoErrorType? errorType, GraphqlDataSource dataSource
+ ViewStatus status, List<GraphqlCountry> countries, List<GraphqlContinent> continents, String? activeContinentCode, String? errorMessage, GraphqlDemoErrorType? errorType, AppError? lastError, GraphqlDataSource dataSource
 });
 
 
@@ -62,7 +62,7 @@ class _$GraphqlDemoStateCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlDemoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? countries = null,Object? continents = null,Object? activeContinentCode = freezed,Object? errorMessage = freezed,Object? errorType = freezed,Object? dataSource = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? countries = null,Object? continents = null,Object? activeContinentCode = freezed,Object? errorMessage = freezed,Object? errorType = freezed,Object? lastError = freezed,Object? dataSource = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,countries: null == countries ? _self.countries : countries // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,8 @@ as List<GraphqlCountry>,continents: null == continents ? _self.continents : cont
 as List<GraphqlContinent>,activeContinentCode: freezed == activeContinentCode ? _self.activeContinentCode : activeContinentCode // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,errorType: freezed == errorType ? _self.errorType : errorType // ignore: cast_nullable_to_non_nullable
-as GraphqlDemoErrorType?,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as GraphqlDemoErrorType?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
 as GraphqlDataSource,
   ));
 }
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  GraphqlDataSource dataSource)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  AppError? lastError,  GraphqlDataSource dataSource)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GraphqlDemoState() when $default != null:
-return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.dataSource);case _:
+return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.lastError,_that.dataSource);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.status,_that.countries,_that.continents,_that.activeContin
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  GraphqlDataSource dataSource)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  AppError? lastError,  GraphqlDataSource dataSource)  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlDemoState():
-return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.dataSource);case _:
+return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.lastError,_that.dataSource);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.status,_that.countries,_that.continents,_that.activeContin
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  GraphqlDataSource dataSource)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<GraphqlCountry> countries,  List<GraphqlContinent> continents,  String? activeContinentCode,  String? errorMessage,  GraphqlDemoErrorType? errorType,  AppError? lastError,  GraphqlDataSource dataSource)?  $default,) {final _that = this;
 switch (_that) {
 case _GraphqlDemoState() when $default != null:
-return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.dataSource);case _:
+return $default(_that.status,_that.countries,_that.continents,_that.activeContinentCode,_that.errorMessage,_that.errorType,_that.lastError,_that.dataSource);case _:
   return null;
 
 }
@@ -212,7 +213,7 @@ return $default(_that.status,_that.countries,_that.continents,_that.activeContin
 
 
 class _GraphqlDemoState extends GraphqlDemoState {
-  const _GraphqlDemoState({this.status = ViewStatus.initial, final  List<GraphqlCountry> countries = const <GraphqlCountry>[], final  List<GraphqlContinent> continents = const <GraphqlContinent>[], this.activeContinentCode, this.errorMessage, this.errorType, this.dataSource = GraphqlDataSource.unknown}): _countries = countries,_continents = continents,super._();
+  const _GraphqlDemoState({this.status = ViewStatus.initial, final  List<GraphqlCountry> countries = const <GraphqlCountry>[], final  List<GraphqlContinent> continents = const <GraphqlContinent>[], this.activeContinentCode, this.errorMessage, this.errorType, this.lastError, this.dataSource = GraphqlDataSource.unknown}): _countries = countries,_continents = continents,super._();
   
 
 @override@JsonKey() final  ViewStatus status;
@@ -233,6 +234,7 @@ class _GraphqlDemoState extends GraphqlDemoState {
 @override final  String? activeContinentCode;
 @override final  String? errorMessage;
 @override final  GraphqlDemoErrorType? errorType;
+@override final  AppError? lastError;
 @override@JsonKey() final  GraphqlDataSource dataSource;
 
 /// Create a copy of GraphqlDemoState
@@ -245,16 +247,16 @@ _$GraphqlDemoStateCopyWith<_GraphqlDemoState> get copyWith => __$GraphqlDemoStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlDemoState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._countries, _countries)&&const DeepCollectionEquality().equals(other._continents, _continents)&&(identical(other.activeContinentCode, activeContinentCode) || other.activeContinentCode == activeContinentCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlDemoState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._countries, _countries)&&const DeepCollectionEquality().equals(other._continents, _continents)&&(identical(other.activeContinentCode, activeContinentCode) || other.activeContinentCode == activeContinentCode)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.errorType, errorType) || other.errorType == errorType)&&(identical(other.lastError, lastError) || other.lastError == lastError)&&(identical(other.dataSource, dataSource) || other.dataSource == dataSource));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_countries),const DeepCollectionEquality().hash(_continents),activeContinentCode,errorMessage,errorType,dataSource);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_countries),const DeepCollectionEquality().hash(_continents),activeContinentCode,errorMessage,errorType,lastError,dataSource);
 
 @override
 String toString() {
-  return 'GraphqlDemoState(status: $status, countries: $countries, continents: $continents, activeContinentCode: $activeContinentCode, errorMessage: $errorMessage, errorType: $errorType, dataSource: $dataSource)';
+  return 'GraphqlDemoState(status: $status, countries: $countries, continents: $continents, activeContinentCode: $activeContinentCode, errorMessage: $errorMessage, errorType: $errorType, lastError: $lastError, dataSource: $dataSource)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$GraphqlDemoStateCopyWith<$Res> implements $GraphqlDemoSta
   factory _$GraphqlDemoStateCopyWith(_GraphqlDemoState value, $Res Function(_GraphqlDemoState) _then) = __$GraphqlDemoStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, List<GraphqlCountry> countries, List<GraphqlContinent> continents, String? activeContinentCode, String? errorMessage, GraphqlDemoErrorType? errorType, GraphqlDataSource dataSource
+ ViewStatus status, List<GraphqlCountry> countries, List<GraphqlContinent> continents, String? activeContinentCode, String? errorMessage, GraphqlDemoErrorType? errorType, AppError? lastError, GraphqlDataSource dataSource
 });
 
 
@@ -282,7 +284,7 @@ class __$GraphqlDemoStateCopyWithImpl<$Res>
 
 /// Create a copy of GraphqlDemoState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? countries = null,Object? continents = null,Object? activeContinentCode = freezed,Object? errorMessage = freezed,Object? errorType = freezed,Object? dataSource = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? countries = null,Object? continents = null,Object? activeContinentCode = freezed,Object? errorMessage = freezed,Object? errorType = freezed,Object? lastError = freezed,Object? dataSource = null,}) {
   return _then(_GraphqlDemoState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,countries: null == countries ? _self._countries : countries // ignore: cast_nullable_to_non_nullable
@@ -290,7 +292,8 @@ as List<GraphqlCountry>,continents: null == continents ? _self._continents : con
 as List<GraphqlContinent>,activeContinentCode: freezed == activeContinentCode ? _self.activeContinentCode : activeContinentCode // ignore: cast_nullable_to_non_nullable
 as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,errorType: freezed == errorType ? _self.errorType : errorType // ignore: cast_nullable_to_non_nullable
-as GraphqlDemoErrorType?,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
+as GraphqlDemoErrorType?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,dataSource: null == dataSource ? _self.dataSource : dataSource // ignore: cast_nullable_to_non_nullable
 as GraphqlDataSource,
   ));
 }

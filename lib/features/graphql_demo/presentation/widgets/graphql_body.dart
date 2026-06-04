@@ -86,19 +86,24 @@ Widget buildGraphqlErrorWidget(
   final BuildContext context,
   final GraphqlBodyData data,
   final AppLocalizations l10n,
-) => AppMessage(
-  title: l10n.graphqlSampleErrorTitle,
-  message: buildGraphqlErrorMessage(l10n, data),
-  isError: true,
-  actions: [
-    PlatformAdaptive.button(
-      context: context,
-      onPressed: () =>
-          CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-            context,
-            (final cubit) => cubit.loadInitial(),
-          ),
-      child: Text(l10n.graphqlSampleRetryButton),
-    ),
-  ],
-);
+) {
+  final bool showRetry = data.lastError?.isRetryable ?? true;
+  return AppMessage(
+    title: l10n.graphqlSampleErrorTitle,
+    message: buildGraphqlErrorMessage(l10n, data),
+    isError: true,
+    actions: showRetry
+        ? [
+            PlatformAdaptive.button(
+              context: context,
+              onPressed: () =>
+                  CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
+                    context,
+                    (final cubit) => cubit.loadInitial(),
+                  ),
+              child: Text(l10n.graphqlSampleRetryButton),
+            ),
+          ]
+        : null,
+  );
+}

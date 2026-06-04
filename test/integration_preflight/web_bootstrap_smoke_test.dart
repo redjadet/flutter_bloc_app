@@ -50,5 +50,16 @@ void main() {
     expect(find.byType(MaterialApp), findsOneWidget);
     await pumpUntilFound(tester, find.text('0'));
     expect(find.text('0'), findsWidgets);
+
+    // Mirror the high-signal half of `registerAppLaunchIntegrationFlow` on web.
+    final Finder incrementButton = find.widgetWithIcon(FloatingActionButton, Icons.add).first;
+    await tapAndPump(tester, incrementButton);
+    await pumpUntilFound(tester, find.text('1'));
+    expect(find.text('1'), findsWidgets);
+
+    final Finder decrementButton = find.widgetWithIcon(FloatingActionButton, Icons.remove).first;
+    await tapAndPump(tester, decrementButton);
+    await pumpUntilFound(tester, find.text('0'));
+    expect(find.text('0'), findsWidgets);
   });
 }

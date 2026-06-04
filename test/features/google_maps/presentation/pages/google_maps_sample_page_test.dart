@@ -6,9 +6,10 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sam
 import 'package:flutter_bloc_app/features/google_maps/presentation/pages/google_maps_sample_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:mocktail/mocktail.dart';
 
 import '../../test_utils/fake_google_maps_flutter_platform.dart';
 
@@ -128,6 +129,29 @@ void main() {
       await tester.pump();
 
       expect(find.text('Error'), findsOneWidget);
+    });
+
+    testWidgets('retry button calls loadLocations when error is retryable', (tester) async {
+      when(() => platformService.hasGoogleMapsApiKey()).thenAnswer((_) async => true);
+      when(() => cubit.loadLocations()).thenAnswer((_) async {});
+      when(() => cubit.state).thenReturn(
+        MapSampleState.initial().copyWith(
+          isLoading: false,
+          errorMessage: 'Network down',
+          lastError: const NetworkError(message: 'Network down', kind: NetworkErrorKind.offline),
+        ),
+      );
+
+      await pumpPage(tester, platform: TargetPlatform.android);
+      await tester.pump();
+
+      expect(find.text('Network down'), findsOneWidget);
+      expect(find.text(l10n.retryButtonLabel), findsOneWidget);
+
+      await tester.tap(find.text(l10n.retryButtonLabel));
+      await tester.pump();
+
+      verify(() => cubit.loadLocations()).called(1);
     });
   });
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MapSampleState {
 
- gmaps.CameraPosition get cameraPosition; bool get isLoading; String? get errorMessage; Set<gmaps.Marker> get markers; gmaps.MapType get mapType; bool get trafficEnabled; List<MapLocation> get locations; gmaps.MarkerId? get selectedMarkerId;
+ gmaps.CameraPosition get cameraPosition; bool get isLoading; String? get errorMessage; AppError? get lastError; Set<gmaps.Marker> get markers; gmaps.MapType get mapType; bool get trafficEnabled; List<MapLocation> get locations; gmaps.MarkerId? get selectedMarkerId;
 /// Create a copy of MapSampleState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MapSampleStateCopyWith<MapSampleState> get copyWith => _$MapSampleStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapSampleState&&(identical(other.cameraPosition, cameraPosition) || other.cameraPosition == cameraPosition)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other.markers, markers)&&(identical(other.mapType, mapType) || other.mapType == mapType)&&(identical(other.trafficEnabled, trafficEnabled) || other.trafficEnabled == trafficEnabled)&&const DeepCollectionEquality().equals(other.locations, locations)&&(identical(other.selectedMarkerId, selectedMarkerId) || other.selectedMarkerId == selectedMarkerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MapSampleState&&(identical(other.cameraPosition, cameraPosition) || other.cameraPosition == cameraPosition)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError)&&const DeepCollectionEquality().equals(other.markers, markers)&&(identical(other.mapType, mapType) || other.mapType == mapType)&&(identical(other.trafficEnabled, trafficEnabled) || other.trafficEnabled == trafficEnabled)&&const DeepCollectionEquality().equals(other.locations, locations)&&(identical(other.selectedMarkerId, selectedMarkerId) || other.selectedMarkerId == selectedMarkerId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cameraPosition,isLoading,errorMessage,const DeepCollectionEquality().hash(markers),mapType,trafficEnabled,const DeepCollectionEquality().hash(locations),selectedMarkerId);
+int get hashCode => Object.hash(runtimeType,cameraPosition,isLoading,errorMessage,lastError,const DeepCollectionEquality().hash(markers),mapType,trafficEnabled,const DeepCollectionEquality().hash(locations),selectedMarkerId);
 
 @override
 String toString() {
-  return 'MapSampleState(cameraPosition: $cameraPosition, isLoading: $isLoading, errorMessage: $errorMessage, markers: $markers, mapType: $mapType, trafficEnabled: $trafficEnabled, locations: $locations, selectedMarkerId: $selectedMarkerId)';
+  return 'MapSampleState(cameraPosition: $cameraPosition, isLoading: $isLoading, errorMessage: $errorMessage, lastError: $lastError, markers: $markers, mapType: $mapType, trafficEnabled: $trafficEnabled, locations: $locations, selectedMarkerId: $selectedMarkerId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MapSampleStateCopyWith<$Res>  {
   factory $MapSampleStateCopyWith(MapSampleState value, $Res Function(MapSampleState) _then) = _$MapSampleStateCopyWithImpl;
 @useResult
 $Res call({
- gmaps.CameraPosition cameraPosition, bool isLoading, String? errorMessage, Set<gmaps.Marker> markers, gmaps.MapType mapType, bool trafficEnabled, List<MapLocation> locations, gmaps.MarkerId? selectedMarkerId
+ gmaps.CameraPosition cameraPosition, bool isLoading, String? errorMessage, AppError? lastError, Set<gmaps.Marker> markers, gmaps.MapType mapType, bool trafficEnabled, List<MapLocation> locations, gmaps.MarkerId? selectedMarkerId
 });
 
 
@@ -62,12 +62,13 @@ class _$MapSampleStateCopyWithImpl<$Res>
 
 /// Create a copy of MapSampleState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? cameraPosition = null,Object? isLoading = null,Object? errorMessage = freezed,Object? markers = null,Object? mapType = null,Object? trafficEnabled = null,Object? locations = null,Object? selectedMarkerId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? cameraPosition = null,Object? isLoading = null,Object? errorMessage = freezed,Object? lastError = freezed,Object? markers = null,Object? mapType = null,Object? trafficEnabled = null,Object? locations = null,Object? selectedMarkerId = freezed,}) {
   return _then(_self.copyWith(
 cameraPosition: null == cameraPosition ? _self.cameraPosition : cameraPosition // ignore: cast_nullable_to_non_nullable
 as gmaps.CameraPosition,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,markers: null == markers ? _self.markers : markers // ignore: cast_nullable_to_non_nullable
+as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,markers: null == markers ? _self.markers : markers // ignore: cast_nullable_to_non_nullable
 as Set<gmaps.Marker>,mapType: null == mapType ? _self.mapType : mapType // ignore: cast_nullable_to_non_nullable
 as gmaps.MapType,trafficEnabled: null == trafficEnabled ? _self.trafficEnabled : trafficEnabled // ignore: cast_nullable_to_non_nullable
 as bool,locations: null == locations ? _self.locations : locations // ignore: cast_nullable_to_non_nullable
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  AppError? lastError,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MapSampleState() when $default != null:
-return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
+return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.lastError,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  AppError? lastError,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)  $default,) {final _that = this;
 switch (_that) {
 case _MapSampleState():
-return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
+return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.lastError,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.ma
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( gmaps.CameraPosition cameraPosition,  bool isLoading,  String? errorMessage,  AppError? lastError,  Set<gmaps.Marker> markers,  gmaps.MapType mapType,  bool trafficEnabled,  List<MapLocation> locations,  gmaps.MarkerId? selectedMarkerId)?  $default,) {final _that = this;
 switch (_that) {
 case _MapSampleState() when $default != null:
-return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
+return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.lastError,_that.markers,_that.mapType,_that.trafficEnabled,_that.locations,_that.selectedMarkerId);case _:
   return null;
 
 }
@@ -213,12 +214,13 @@ return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.ma
 
 
 class _MapSampleState extends MapSampleState {
-  const _MapSampleState({required this.cameraPosition, this.isLoading = true, this.errorMessage, final  Set<gmaps.Marker> markers = const <gmaps.Marker>{}, this.mapType = gmaps.MapType.normal, this.trafficEnabled = false, final  List<MapLocation> locations = const <MapLocation>[], this.selectedMarkerId}): _markers = markers,_locations = locations,super._();
+  const _MapSampleState({required this.cameraPosition, this.isLoading = true, this.errorMessage, this.lastError, final  Set<gmaps.Marker> markers = const <gmaps.Marker>{}, this.mapType = gmaps.MapType.normal, this.trafficEnabled = false, final  List<MapLocation> locations = const <MapLocation>[], this.selectedMarkerId}): _markers = markers,_locations = locations,super._();
   
 
 @override final  gmaps.CameraPosition cameraPosition;
 @override@JsonKey() final  bool isLoading;
 @override final  String? errorMessage;
+@override final  AppError? lastError;
  final  Set<gmaps.Marker> _markers;
 @override@JsonKey() Set<gmaps.Marker> get markers {
   if (_markers is EqualUnmodifiableSetView) return _markers;
@@ -247,16 +249,16 @@ _$MapSampleStateCopyWith<_MapSampleState> get copyWith => __$MapSampleStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapSampleState&&(identical(other.cameraPosition, cameraPosition) || other.cameraPosition == cameraPosition)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&const DeepCollectionEquality().equals(other._markers, _markers)&&(identical(other.mapType, mapType) || other.mapType == mapType)&&(identical(other.trafficEnabled, trafficEnabled) || other.trafficEnabled == trafficEnabled)&&const DeepCollectionEquality().equals(other._locations, _locations)&&(identical(other.selectedMarkerId, selectedMarkerId) || other.selectedMarkerId == selectedMarkerId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MapSampleState&&(identical(other.cameraPosition, cameraPosition) || other.cameraPosition == cameraPosition)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.lastError, lastError) || other.lastError == lastError)&&const DeepCollectionEquality().equals(other._markers, _markers)&&(identical(other.mapType, mapType) || other.mapType == mapType)&&(identical(other.trafficEnabled, trafficEnabled) || other.trafficEnabled == trafficEnabled)&&const DeepCollectionEquality().equals(other._locations, _locations)&&(identical(other.selectedMarkerId, selectedMarkerId) || other.selectedMarkerId == selectedMarkerId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cameraPosition,isLoading,errorMessage,const DeepCollectionEquality().hash(_markers),mapType,trafficEnabled,const DeepCollectionEquality().hash(_locations),selectedMarkerId);
+int get hashCode => Object.hash(runtimeType,cameraPosition,isLoading,errorMessage,lastError,const DeepCollectionEquality().hash(_markers),mapType,trafficEnabled,const DeepCollectionEquality().hash(_locations),selectedMarkerId);
 
 @override
 String toString() {
-  return 'MapSampleState(cameraPosition: $cameraPosition, isLoading: $isLoading, errorMessage: $errorMessage, markers: $markers, mapType: $mapType, trafficEnabled: $trafficEnabled, locations: $locations, selectedMarkerId: $selectedMarkerId)';
+  return 'MapSampleState(cameraPosition: $cameraPosition, isLoading: $isLoading, errorMessage: $errorMessage, lastError: $lastError, markers: $markers, mapType: $mapType, trafficEnabled: $trafficEnabled, locations: $locations, selectedMarkerId: $selectedMarkerId)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$MapSampleStateCopyWith<$Res> implements $MapSampleStateCo
   factory _$MapSampleStateCopyWith(_MapSampleState value, $Res Function(_MapSampleState) _then) = __$MapSampleStateCopyWithImpl;
 @override @useResult
 $Res call({
- gmaps.CameraPosition cameraPosition, bool isLoading, String? errorMessage, Set<gmaps.Marker> markers, gmaps.MapType mapType, bool trafficEnabled, List<MapLocation> locations, gmaps.MarkerId? selectedMarkerId
+ gmaps.CameraPosition cameraPosition, bool isLoading, String? errorMessage, AppError? lastError, Set<gmaps.Marker> markers, gmaps.MapType mapType, bool trafficEnabled, List<MapLocation> locations, gmaps.MarkerId? selectedMarkerId
 });
 
 
@@ -284,12 +286,13 @@ class __$MapSampleStateCopyWithImpl<$Res>
 
 /// Create a copy of MapSampleState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? cameraPosition = null,Object? isLoading = null,Object? errorMessage = freezed,Object? markers = null,Object? mapType = null,Object? trafficEnabled = null,Object? locations = null,Object? selectedMarkerId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? cameraPosition = null,Object? isLoading = null,Object? errorMessage = freezed,Object? lastError = freezed,Object? markers = null,Object? mapType = null,Object? trafficEnabled = null,Object? locations = null,Object? selectedMarkerId = freezed,}) {
   return _then(_MapSampleState(
 cameraPosition: null == cameraPosition ? _self.cameraPosition : cameraPosition // ignore: cast_nullable_to_non_nullable
 as gmaps.CameraPosition,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,markers: null == markers ? _self._markers : markers // ignore: cast_nullable_to_non_nullable
+as String?,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,markers: null == markers ? _self._markers : markers // ignore: cast_nullable_to_non_nullable
 as Set<gmaps.Marker>,mapType: null == mapType ? _self.mapType : mapType // ignore: cast_nullable_to_non_nullable
 as gmaps.MapType,trafficEnabled: null == trafficEnabled ? _self.trafficEnabled : trafficEnabled // ignore: cast_nullable_to_non_nullable
 as bool,locations: null == locations ? _self._locations : locations // ignore: cast_nullable_to_non_nullable
