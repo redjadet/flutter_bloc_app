@@ -106,6 +106,17 @@ Default gates:
 - `flake_rerun_rate <= 20%`
 - `uncategorized_failure_count <= 0`
 
+## iOS simulator build prep (proactive)
+
+Before the first `flutter test` on an iPhone simulator (and again after
+simulator-build recovery retries), the runner:
+
+1. Enables the CocoaPods shim when applicable (see below).
+2. Runs `pod install` in `ios/` when the `pod` CLI is available.
+3. Runs `xcodebuild -resolvePackageDependencies` for `Runner.xcworkspace`.
+
+Set `INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP=1` to skip this path.
+
 ## CocoaPods shim (local / CI recovery)
 
 When the real `pod` CLI is missing or killed during version checks (exit `137`),

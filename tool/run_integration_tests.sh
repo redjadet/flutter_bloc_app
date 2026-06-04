@@ -25,6 +25,7 @@
 #   IOS_SIMULATOR_PREFERRED_RUNTIME_VERSION (optional pin, e.g. 26.5 or 18; unset = newest iOS runtime)
 #   ALLOW_DESKTOP_INTEGRATION_DEVICE (0|1, default 0)
 #   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY (0|1, default 1)
+#   INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP (0|1, default 0) — skip proactive pod install + SwiftPM resolve
 #   INTEGRATION_TESTS_ALLOW_POD_SHIM (0|1, default 1) — use tool/pod_shim when pod CLI is broken but Pods are in sync
 #
 # Behavior:
@@ -557,28 +558,49 @@ maybe_enable_pod_shim_if_needed() {
   log "CocoaPods CLI unavailable; Pods/Manifest.lock in sync — using tool/pod_shim for flutter iOS builds."
 }
 
-ensure_ios_swift_package_checkouts() {
+resolve_ios_swift_package_dependencies() {
+  local workspace="$PROJECT_ROOT/ios/Runner.xcworkspace"
+
+  [ -d "$workspace" ] || return 0
+
+  log "Resolving Xcode Swift package dependencies..."
+  (
+    cd "$PROJECT_ROOT/ios"
+    xcodebuild -resolvePackageDependencies \
+      -workspace Runner.xcworkspace \
+      -scheme Runner
+  )
+}
+
+run_ios_cocoapods_install() {
+  local ios_dir="$PROJECT_ROOT/ios"
+
+  [ -f "$ios_dir/Podfile" ] || return 0
+
+  if ! command -v pod >/dev/null 2>&1; then
+    log "⚠️ Skipping proactive pod install: CocoaPods CLI not found."
+    return 0
+  fi
+
+  log "Running CocoaPods install (proactive, before simulator build)..."
+  (
+    cd "$ios_dir"
+    pod install
+  )
+}
+
+prepare_ios_simulator_build() {
   local device_id="$1"
-  local packages_dir="$PROJECT_ROOT/ios/Flutter/ephemeral/Packages/.packages"
-  local link
 
   [ "$(uname -s)" = "Darwin" ] || return 0
   is_ios_simulator_device "$device_id" || return 0
-  [ -d "$packages_dir" ] || return 0
+  [ "${INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP:-0}" = "1" ] && return 0
+  [ -d "$PROJECT_ROOT/ios/Runner.xcworkspace" ] || return 0
 
-  for link in "$packages_dir"/*; do
-    [ -L "$link" ] || continue
-    if [ ! -e "$link" ]; then
-      log "Broken SwiftPM ephemeral symlink ($link). Resolving Xcode package dependencies..."
-      (
-        cd "$PROJECT_ROOT/ios"
-        xcodebuild -resolvePackageDependencies \
-          -workspace Runner.xcworkspace \
-          -scheme Runner
-      )
-      return 0
-    fi
-  done
+  log "Preparing iOS simulator build (CocoaPods + SwiftPM)..."
+  maybe_enable_pod_shim_if_needed
+  run_ios_cocoapods_install
+  resolve_ios_swift_package_dependencies
 }
 
 recover_ios_simulator_after_build_failure() {
@@ -722,6 +744,7 @@ run_integration_command() {
     log "Detected intermittent Xcode simulator build failure for $label. Retrying once after simulator recovery..."
     cleanup_project_xcodebuilds
     if recover_ios_simulator_after_build_failure "$DEVICE_ID"; then
+      prepare_ios_simulator_build "$DEVICE_ID"
       rm -f "$log_path"
       log_path="$(mktemp "$temp_dir/integration-tests.XXXXXX")"
       run_with_timeout \
@@ -1072,6 +1095,7 @@ IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
 IOS_SIMULATOR_PREFERRED_NAMES="${IOS_SIMULATOR_PREFERRED_NAMES:-iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16}"
 ALLOW_DESKTOP_INTEGRATION_DEVICE="${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}"
 XCODE_SIMULATOR_BUILD_RECOVERY_RETRY="${XCODE_SIMULATOR_BUILD_RECOVERY_RETRY:-1}"
+INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP="${INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP:-0}"
 INTEGRATION_TESTS_TIER="${INTEGRATION_TESTS_TIER:-exhaustive}"
 INTEGRATION_TESTS_TARGET_SET="${INTEGRATION_TESTS_TARGET_SET:-}"
 INTEGRATION_TESTS_ARTIFACTS_ROOT="${INTEGRATION_TESTS_ARTIFACTS_ROOT:-artifacts/integration}"
@@ -1129,6 +1153,11 @@ if ! [[ "$XCODE_SIMULATOR_BUILD_RECOVERY_RETRY" =~ ^(0|1)$ ]]; then
   XCODE_SIMULATOR_BUILD_RECOVERY_RETRY=1
 fi
 
+if ! [[ "$INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP" =~ ^(0|1)$ ]]; then
+  log "⚠️ Invalid INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP='$INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP'; using 0."
+  INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP=0
+fi
+
 INTEGRATION_TESTS_TIER="$(printf '%s' "$INTEGRATION_TESTS_TIER" | tr '[:upper:]' '[:lower:]')"
 case "$INTEGRATION_TESTS_TIER" in
   smoke|standard|exhaustive)
@@ -1169,8 +1198,7 @@ acquire_integration_lock "$@"
 
 DEVICE_ID="$(select_device_id)"
 DART_BIN="$(resolve_flutter_dart)"
-ensure_ios_swift_package_checkouts "$DEVICE_ID"
-maybe_enable_pod_shim_if_needed
+prepare_ios_simulator_build "$DEVICE_ID"
 
 if command -v lcov >/dev/null 2>&1; then
   HAS_LCOV=1
@@ -1327,6 +1355,7 @@ if [ "$#" -eq 0 ]; then
             log "Simulator $DEVICE_ID was already booted or boot request returned non-zero; continuing with boot wait."
           fi
           if wait_for_simulator_boot "$DEVICE_ID" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+            prepare_ios_simulator_build "$DEVICE_ID"
             set +e
             if [ "$RUN_COVERAGE" -eq 0 ]; then
               run_integration_command \
@@ -1384,6 +1413,7 @@ if [ "$#" -eq 0 ]; then
     INTEGRATION_RETRY_REASON="retry_on_failure_enabled"
     log "Integration tests failed with exit $exit_code. Retrying once after cleanup..."
     cleanup_project_xcodebuilds
+    prepare_ios_simulator_build "$DEVICE_ID"
     sleep 5
     if [ "$RUN_COVERAGE" -eq 0 ]; then
       run_integration_command \
