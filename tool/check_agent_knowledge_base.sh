@@ -42,6 +42,21 @@ require_line_budget() {
   fi
 }
 
+# Gitignored local per-host trackers; enforce budget only when present (CI/fresh clones skip).
+require_line_budget_if_present() {
+  local path="$1"
+  local max_lines="${2:-$MAX_AGENT_DOC_LINES}"
+  if [ ! -f "$path" ]; then
+    return 0
+  fi
+
+  local lines
+  lines="$(wc -l <"$path" | tr -d '[:space:]')"
+  if [ "$lines" -gt "$max_lines" ]; then
+    fail "$path has $lines lines; keep frequently used agent docs at or below $max_lines lines"
+  fi
+}
+
 require_contains() {
   local path="$1"
   local needle="$2"
@@ -117,12 +132,19 @@ line_budget_files=(
   "docs/agent_environment_setup.md"
   "docs/validation_scripts.md"
   "docs/validation_scripts/operations_host_skills.md"
-  "tasks/codex/todo.md"
-  "tasks/cursor/todo.md"
 )
 
 for path in "${line_budget_files[@]}"; do
   require_line_budget "$path"
+done
+
+local_line_budget_files=(
+  "tasks/codex/todo.md"
+  "tasks/cursor/todo.md"
+)
+
+for path in "${local_line_budget_files[@]}"; do
+  require_line_budget_if_present "$path"
 done
 
 if [ -f "AGENTS.md" ]; then
