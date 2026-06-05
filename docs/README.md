@@ -88,6 +88,7 @@ Source-of-truth docs for Flutter BLoC app.
 - [`engineering/agent_output_scorecard_v1.md`](engineering/agent_output_scorecard_v1.md) — agent scorecard event contract
 - [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md) — Cursor/Codex task tracker shape
 - [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md) — deferred work and scheduling patterns
+- [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) — iOS/macOS debug Hive + Keychain triage and regression guard
 - [`testing_integration_flows.md`](testing_integration_flows.md) — authoring integration flows (companion to policy/contract)
 
 ### Offline-first and local storage

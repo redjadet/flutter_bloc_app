@@ -306,6 +306,21 @@ Excerpt (Resources build phases):
 };
 ```
 
+### 11. Apple debug Hive / Keychain noise (simulator)
+
+**Symptoms** (unhealthy):
+
+```text
+flutter: FlutterSecureSecretStorage write failed ... -34018
+flutter: Recovering corrupted box.
+```
+
+**Healthy debug** (after fix): `Hive initialized in hive_ios_debug (...)` once;
+no Keychain -34018; no repeated box recovery.
+
+**Triage**: [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md)
+· `bash tool/check_apple_debug_hive_storage.sh`
+
 ## Testing Recommendations
 
 1. Test on real iOS device to verify network warnings are simulator-specific

@@ -12,10 +12,25 @@ abstract class SecretStorage {
   Future<T> withoutLogsAsync<T>(final Future<T> Function() action) => action();
 }
 
+/// Whether debug builds should avoid Keychain/secure storage on Apple platforms.
+///
+/// macOS and iOS simulators often lack the entitlements needed for
+/// `flutter_secure_storage`, which surfaces as Keychain error -34018 and
+/// breaks Hive persistence when encryption keys cannot be stored.
+bool useInMemorySecretStorageInDebug() {
+  if (kIsWeb || kReleaseMode) {
+    return false;
+  }
+  return defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.iOS;
+}
+
+/// Default secret storage for the current platform.
+///
+/// Apple-platform debug builds use [InMemorySecretStorage] because Keychain
+/// access is unreliable in local development (especially the iOS simulator).
 SecretStorage createDefaultSecretStorage() {
-  if (!kIsWeb &&
-      !kReleaseMode &&
-      defaultTargetPlatform == TargetPlatform.macOS) {
+  if (useInMemorySecretStorageInDebug()) {
     return InMemorySecretStorage();
   }
   return FlutterSecureSecretStorage();

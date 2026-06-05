@@ -13,6 +13,8 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_b
 | Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026) |
 | Integration journey / flow | `./bin/integration_tests` |
 | Early integration/bootstrap guardrails | `./bin/integration_preflight` |
+| iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
+| iOS/macOS debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) · `bash tool/check_apple_debug_hive_storage.sh` · cold restart on simulator |
 | Browser integration (Chrome/web; not `integration_test/` on device) | `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` (default) |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |

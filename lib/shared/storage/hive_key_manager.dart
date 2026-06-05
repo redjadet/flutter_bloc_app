@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
@@ -9,21 +8,17 @@ import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 /// Manages encryption key for Hive database using secure storage.
 class HiveKeyManager {
   HiveKeyManager({final SecretStorage? storage})
-    : _useMacOsDebugFallbackKey =
-          storage == null &&
-          !kIsWeb &&
-          !kReleaseMode &&
-          defaultTargetPlatform == TargetPlatform.macOS,
+    : _useAppleDebugFallbackKey = storage == null && useInMemorySecretStorageInDebug(),
       _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKey = 'hive_encryption_key';
   static const int _keyLengthBytes = 32; // 256 bits
-  static final List<int> _macOsDebugFallbackKey = List<int>.unmodifiable(
+  static final List<int> _appleDebugFallbackKey = List<int>.unmodifiable(
     List<int>.generate(_keyLengthBytes, (final index) => index),
   );
 
   final SecretStorage _storage;
-  final bool _useMacOsDebugFallbackKey;
+  final bool _useAppleDebugFallbackKey;
   List<int>? _cachedKey;
 
   /// Gets the encryption key, generating a new one if it doesn't exist.
@@ -34,9 +29,9 @@ class HiveKeyManager {
       if (cached != null && cached.length == _keyLengthBytes) {
         return cached;
       }
-      if (_useMacOsDebugFallbackKey) {
-        _cachedKey = _macOsDebugFallbackKey;
-        return _macOsDebugFallbackKey;
+      if (_useAppleDebugFallbackKey) {
+        _cachedKey = _appleDebugFallbackKey;
+        return _appleDebugFallbackKey;
       }
 
       final String? storedKey = await _storage.read(_storageKey);

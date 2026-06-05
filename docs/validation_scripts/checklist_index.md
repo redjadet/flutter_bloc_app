@@ -59,6 +59,8 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_feature_modularity_leaks.sh`
 - `check_memory_pressure_centralized.sh`
 - `check_macos_debug_web_guard.sh`
+- `check_apple_debug_hive_storage.sh`
+- `check_ios_pod_framework_embed.sh`
 - `check_agent_knowledge_base.sh`
 - `check_agent_memory_compounding.sh`
 - `check_tracked_secret_literals.sh`
