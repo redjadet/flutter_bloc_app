@@ -21,6 +21,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 - Continue until finished; stop only when stuck/blocker.
 - Don't revert doc or agent-knowledge edits during review/cleanup unless the user asks.
+- **Git commits:** create commits only when the user explicitly asks; do not commit working-tree fixes or doc landings proactively.
 - Review passes (review-changes-improve, cross-host review, ship-ready asks): fix every reported issue or explicitly defer with reason before claiming done.
 
 ## Validation
@@ -32,6 +33,8 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - After `lib/` or mixed `lib/` + `docs/` delivery, run [`./bin/checklist`](../../bin/checklist) until green. [`./bin/checklist-fast`](../../bin/checklist-fast) is docs/tooling-only; see [`engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md).
 - README or substantive `docs/**` edits: run `markdownlint-cli2` on touched paths until clean; see [`docs/agents_appendix.md`](../agents_appendix.md).
 - Pre-commit review: on client-facing Dart delivery, run final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR.
+- **Integration log gate:** `./bin/integration_tests` fails on warning/error logs via `_assertNoUnexpectedIntegrationLogs` unless narrowly allowlisted in `integration_test/test_harness_log_filtering.dart` — fix product code first; do not broaden allowlist without evidence.
+- **`upgrade_validate_all` step 2b:** after `flutter pub upgrade --major-versions`, runs `tool/check_pubspec_codegen_compat.sh` and auto-restores `json_serializable: 6.11.4` when major bumps break analyzer/`custom_lints` pins.
 
 ## Host Setup
 
@@ -48,7 +51,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - **Feature-brief:** `lib/features/**` diff → `bash tool/check_feature_brief_linked.sh` or `SKIP_FEATURE_BRIEF=1`.
 - **Tests as feature definition:** For non-trivial `lib/features/**` work, tests are the executable done contract—not post-implementation cleanup. Fill [`plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) **Tests** before broad implementation; add RED/unit/widget tests in the **same change series** as feature code. Widget patterns: [`testing/widget_test_playbook.md`](../testing/widget_test_playbook.md). Policy: [`changes/2026-05-22_tests-as-feature-definition.md`](../changes/2026-05-22_tests-as-feature-definition.md).
 - **Firebase local config:** Keep committed [`lib/firebase_options.dart`](../../lib/firebase_options.dart) placeholder-only; put real `FIREBASE_*` in gitignored `.envrc` after `flutterfire configure` (restore placeholder per [`firebase_setup.md`](../firebase_setup.md) step 3b). Secret scanning / history scrub: [`security_and_secrets.md`](../security_and_secrets.md), [`tool/firebase_secret_history_replacements.txt`](../../tool/firebase_secret_history_replacements.txt).
-- **Continual learning:** index `.cursor/hooks/state/continual-learning-index.json` with `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`. Run `dart run tool/continual_learning_index_refresh.dart`; process only new/changed rows. Prefer `agents-memory-updater` for full flow; land durable prefs here or owning docs, never learned sections in [`AGENTS.md`](../../AGENTS.md). Optional: `dart run tool/continual_learning_summarize.dart`. `lastProcessedAt: null` after refresh means first-scan backlog.
+- **Continual learning:** index `.cursor/hooks/state/continual-learning-index.json` with `CONTINUAL_LEARNING_INDEX_PATH` + `CURSOR_AGENT_TRANSCRIPTS_ROOT`. Run `dart run tool/continual_learning_index_refresh.dart` (parent transcripts only—no `/subagents/`; compact single-line JSON); process only new/changed rows. If `tool/check_continual_learning_index.sh` fails on size, run `bash tool/fix_continual_learning_index.sh`. Prefer `agents-memory-updater` for full flow; land durable prefs here or owning docs, never learned sections in [`AGENTS.md`](../../AGENTS.md). Optional: `dart run tool/continual_learning_summarize.dart`. `lastProcessedAt: null` after refresh means first-scan backlog.
 - **Dependency automation:** bot bumps can outrun CI (Dart/Flutter SDK ranges, `eslint` / `typescript-eslint` peers). Merge only after coordinated `pubspec`/tooling/package fixes; do not merge when only CodeQL (or other non-build checks) is green — require dependency-updates / `./bin/checklist` path that runs `flutter pub get` first. Close or split Renovate groups that hit documented pins at top of [`pubspec.yaml`](../../pubspec.yaml), for example `genui` ^0.7, `google_sign_in_mocks` ^0.3, Firebase vs `firebase_auth_mocks`. Ruby/Fastlane `Gemfile` advisories: [`DEPENDENCY_UPDATES.md`](../DEPENDENCY_UPDATES.md). See [`agent_environment_setup.md`](../agent_environment_setup.md) and [`REPOSITORY_LIFECYCLE.md`](../REPOSITORY_LIFECYCLE.md).
 
 ## Repo Guardrails
@@ -64,4 +67,5 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Repo Fact
 
+- **Apple debug Remote Config:** on iOS simulator / unsigned macOS debug, `RemoteConfigRepository` skips native `forceFetch` when `useInMemorySecretStorageInDebug()` — avoids Firebase Installations Keychain `-34018` failing integration log gate; Hive triage: [`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).
 - `./bin/checklist-fast` runs report-only skill-budget pass when skill inventory file resolves (`docs/audits/skill_inventory_latest.json`, otherwise newest dated `docs/audits/skill_inventory_*.json`); implemented in `tool/check_skill_budgets.sh`. Inventory includes `~/.agents/skills` when present. Host upkeep entry: `./bin/agent-maintain` (`routine`, `setup`, `host-full`); orchestrator: `bash tool/setup_cursor_agent_environment.sh` (`--apply`, `--install`); Cursor `/setup-cursor-agent-environment` or `/agent-maintain`; skill `agents-global-skills-setup` (see [`agent_environment_setup.md`](../agent_environment_setup.md)).

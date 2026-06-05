@@ -139,6 +139,29 @@ bool isIgnoredIntegrationLog(
     return true;
   }
 
+  // Firebase Installations/Remote Config can hit Keychain -34018 on Apple debug
+  // simulators. The repo disables native fetch and serves defaults/cache.
+  if (entry.message == 'RemoteConfig.forceFetch' ||
+      entry.message == 'RemoteConfig realtime fetch') {
+    final Object? error = entry.error;
+    if (error != null &&
+        (error.toString().contains('-34018') ||
+            error.toString().contains('SecItemCopyMatching') ||
+            error.toString().contains('Failed to get installations token'))) {
+      return true;
+    }
+  }
+  if (entry.message.startsWith(
+    'RemoteConfig.forceFetch disabled (Keychain unavailable)',
+  )) {
+    return true;
+  }
+  if (entry.message.startsWith(
+    'RemoteConfig realtime fetch disabled (Keychain unavailable)',
+  )) {
+    return true;
+  }
+
   return false;
 }
 

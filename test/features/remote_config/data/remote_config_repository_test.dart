@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
 
 class _MockFirebaseRemoteConfig extends Mock implements FirebaseRemoteConfig {}
 
@@ -206,18 +205,24 @@ void main() {
       },
     );
 
-    test('forceFetch skips native fetch on macOS debug', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    test('forceFetch skips native fetch on Apple debug', () async {
+      for (final TargetPlatform platform in <TargetPlatform>[
+        TargetPlatform.macOS,
+        TargetPlatform.iOS,
+      ]) {
+        debugDefaultTargetPlatformOverride = platform;
+        debugMessages.clear();
 
-      final repository = RemoteConfigRepository(
-        remoteConfig,
-        debugLogger: debugMessages.add,
-      );
+        final repository = RemoteConfigRepository(
+          remoteConfig,
+          debugLogger: debugMessages.add,
+        );
 
-      await repository.forceFetch();
+        await repository.forceFetch();
 
-      verifyNever(() => remoteConfig.fetchAndActivate());
-      verifyNever(() => remoteConfig.setConfigSettings(any()));
+        verifyNever(() => remoteConfig.fetchAndActivate());
+        verifyNever(() => remoteConfig.setConfigSettings(any()));
+      }
     });
 
     test(

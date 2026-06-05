@@ -52,6 +52,37 @@ void main() {
       );
     });
 
+    test('ignores Apple debug Remote Config Keychain noise', () {
+      const AppLogEntry keychainWarning = AppLogEntry(
+        level: AppLogLevel.warning,
+        message:
+            'RemoteConfig.forceFetch disabled (Keychain unavailable). '
+            'Apple debug/simulator unsigned builds cannot use Firebase Installations.',
+      );
+      const AppLogEntry keychainError = AppLogEntry(
+        level: AppLogLevel.error,
+        message: 'RemoteConfig.forceFetch',
+        error:
+            '[firebase_remote_config/unknown] Failed to get installations token. '
+            'SecItemCopyMatching (-34018)',
+      );
+
+      expect(
+        test_harness_log_filtering.isIgnoredIntegrationLog(
+          keychainWarning,
+          isWeb: false,
+        ),
+        isTrue,
+      );
+      expect(
+        test_harness_log_filtering.isIgnoredIntegrationLog(
+          keychainError,
+          isWeb: false,
+        ),
+        isTrue,
+      );
+    });
+
     test('still ignores known remote config cancellation noise', () {
       const AppLogEntry remoteConfigCancellation = AppLogEntry(
         level: AppLogLevel.error,

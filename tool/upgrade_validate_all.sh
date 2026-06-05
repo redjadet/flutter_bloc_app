@@ -190,6 +190,35 @@ if parse_bool_env "SKIP_PUB_UPGRADE" "$SKIP_PUB_UPGRADE_MODE"; then
 else
   echo "==> Step 2/6: Upgrade packages (major versions when possible)"
   "$FLUTTER_BIN" pub upgrade --major-versions
+  echo "==> Step 2b/6: Verify pubspec codegen/analyzer compatibility"
+  if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
+    echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring json_serializable 6.11.4."
+    python3 - <<'PY'
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+pubspec = Path("pubspec.yaml")
+text = pubspec.read_text(encoding="utf-8")
+text, count = re.subn(
+    r"^  json_serializable:.*$",
+    "  json_serializable: 6.11.4",
+    text,
+    count=1,
+    flags=re.MULTILINE,
+)
+if count != 1:
+    raise SystemExit("could not restore json_serializable pin in pubspec.yaml")
+pubspec.write_text(text, encoding="utf-8")
+PY
+    "$FLUTTER_BIN" pub get
+    if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
+      echo "❌ pubspec codegen/analyzer compatibility still failing after restore." >&2
+      exit 1
+    fi
+    echo "✅ Restored json_serializable 6.11.4; remaining upgrades kept."
+  fi
 fi
 
 echo "==> Step 3/6: Run delivery checklist"

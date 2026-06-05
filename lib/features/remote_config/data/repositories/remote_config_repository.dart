@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 
@@ -70,7 +70,7 @@ class RemoteConfigRepository implements RemoteConfigService {
 
   @override
   Future<void> forceFetch() async {
-    if (_disableFetchDueToKeychain || _shouldSkipNativeFetchOnMacOsDebug) {
+    if (_disableFetchDueToKeychain || _shouldSkipNativeFetchOnAppleDebug) {
       return;
     }
     await _remoteConfig.setConfigSettings(
@@ -81,14 +81,13 @@ class RemoteConfigRepository implements RemoteConfigService {
     );
     try {
       await _remoteConfig.fetchAndActivate();
-    } on Exception catch (error, stackTrace) {
+    } on Exception catch (error) {
       if (_looksLikeKeychainEntitlementError(error)) {
         _disableFetchDueToKeychain = true;
-        AppLogger.warning(
+        AppLogger.debug(
           'RemoteConfig.forceFetch disabled (Keychain unavailable). '
-          'macOS desktop unsigned builds cannot use Firebase Installations.',
+          'Apple debug/simulator unsigned builds cannot use Firebase Installations.',
         );
-        AppLogger.error('RemoteConfig.forceFetch', error, stackTrace);
         return;
       }
       rethrow;
@@ -143,7 +142,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   void _subscribeToRealtimeUpdates() {
-    if (_subscriptionManager.isDisposed || _shouldSkipNativeFetchOnMacOsDebug) {
+    if (_subscriptionManager.isDisposed || _shouldSkipNativeFetchOnAppleDebug) {
       return;
     }
     _configUpdatesSubscription ??= _remoteConfig.onConfigUpdated.listen(
@@ -165,13 +164,8 @@ class RemoteConfigRepository implements RemoteConfigService {
         } on Exception catch (error, stackTrace) {
           if (_looksLikeKeychainEntitlementError(error)) {
             _disableFetchDueToKeychain = true;
-            AppLogger.warning(
+            AppLogger.debug(
               'RemoteConfig realtime fetch disabled (Keychain unavailable).',
-            );
-            AppLogger.error(
-              'RemoteConfig realtime fetch',
-              error,
-              stackTrace,
             );
             return;
           }
@@ -218,6 +212,8 @@ class RemoteConfigRepository implements RemoteConfigService {
         message.contains('required entitlement');
   }
 
-  static bool get _shouldSkipNativeFetchOnMacOsDebug =>
-      !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
+  /// Firebase Installations uses Keychain; iOS simulators and unsigned macOS
+  /// debug builds hit -34018. Skip native fetch and rely on defaults/cache.
+  static bool get _shouldSkipNativeFetchOnAppleDebug =>
+      useInMemorySecretStorageInDebug();
 }
