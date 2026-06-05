@@ -10,7 +10,7 @@ mixin _CaseStudyHistoryDetailCubitActions on _CaseStudyHistoryDetailCubitBase {
     if (isClosed) return;
     final int requestId = _loadGuard.next();
 
-    if (_recordId.isEmpty) {
+    if (recordId.isEmpty) {
       emit(
         state.copyWith(
           status: CaseStudyHistoryDetailStatus.notFound,
@@ -103,9 +103,9 @@ mixin _CaseStudyHistoryDetailCubitActions on _CaseStudyHistoryDetailCubitBase {
   Future<void> refresh() => load(refresh: true);
 
   Future<bool> delete() async {
-    if (isClosed || state.isDeleting || _recordId.isEmpty) return false;
+    if (isClosed || state.isDeleting || recordId.isEmpty) return false;
 
-    final String? userId = _authRepository.currentUser?.id;
+    final String? userId = authRepository.currentUser?.id;
     if (userId == null || userId.isEmpty) return false;
 
     emit(state.copyWith(isDeleting: true, clearTransientError: true));
@@ -115,15 +115,15 @@ mixin _CaseStudyHistoryDetailCubitActions on _CaseStudyHistoryDetailCubitBase {
 
     try {
       if (isRemote) {
-        await _remoteDelete.deleteCaseStudyRemote(caseId: _recordId);
+        await _remoteDelete.deleteCaseStudyRemote(caseId: recordId);
       } else {
         await _local.ensureReady();
         final List<CaseStudyRecord> records = await _local.loadRecords(userId);
         final List<CaseStudyRecord> next = records
-            .where((final r) => r.id != _recordId)
+            .where((final r) => r.id != recordId)
             .toList();
         await _local.saveRecords(userId, next);
-        await _clipStore.deleteCaseFolder(_recordId);
+        await clipStore.deleteCaseFolder(recordId);
       }
       if (isClosed) return false;
       emit(state.copyWith(isDeleting: false));
@@ -148,14 +148,14 @@ mixin _CaseStudyHistoryDetailCubitActions on _CaseStudyHistoryDetailCubitBase {
   }
 
   Future<_DetailLoadResult> _fetchDetail() async {
-    final String? userId = _authRepository.currentUser?.id;
+    final String? userId = authRepository.currentUser?.id;
     if (userId == null || userId.isEmpty) {
       return const _DetailLoadResult.unavailable();
     }
 
     if (_remoteAuth.isConfigured && _remoteAuth.currentUser != null) {
       final RemoteCaseStudyDetail? detail = await _remote.getSubmittedCase(
-        caseId: _recordId,
+        caseId: recordId,
       );
       if (detail == null) {
         return const _DetailLoadResult.notFound();
@@ -182,7 +182,7 @@ mixin _CaseStudyHistoryDetailCubitActions on _CaseStudyHistoryDetailCubitBase {
     }
 
     await _local.ensureReady();
-    final CaseStudyRecord? record = await _local.getRecord(userId, _recordId);
+    final CaseStudyRecord? record = await _local.getRecord(userId, recordId);
     if (record == null) {
       return const _DetailLoadResult.notFound();
     }
