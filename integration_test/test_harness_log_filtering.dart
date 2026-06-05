@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 bool isUnexpectedIntegrationLog(
@@ -20,7 +21,10 @@ bool isIgnoredIntegrationLog(
   // cancellation from the plugin while the app is tearing down / relaunching
   // between flows. Treat this specific case as noise so it doesn't fail the
   // whole suite.
-  if (entry.message == 'OfflineFirstRemoteConfigRepository.forceFetch failed') {
+  if (entry.message ==
+      IntegrationLogMessages.offlineFirstRemoteConfigFetchFailed(
+        'forceFetch',
+      )) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains(
@@ -34,8 +38,7 @@ bool isIgnoredIntegrationLog(
   // When a feature tries to sync immediately, the repo logs an error and
   // queues the operation for retry. This is expected and shouldn't fail the
   // entire integration suite.
-  if (entry.message ==
-      'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry') {
+  if (entry.message == IntegrationLogMessages.offlineFirstTodoSaveSyncFailed) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_auth/no-current-user]') &&
@@ -45,7 +48,7 @@ bool isIgnoredIntegrationLog(
   }
 
   if (entry.message ==
-      'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry') {
+      IntegrationLogMessages.offlineFirstTodoDeleteSyncFailed) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_auth/no-current-user]') &&
@@ -57,7 +60,8 @@ bool isIgnoredIntegrationLog(
   // Some flows may bootstrap realtime subscriptions before a Firebase user is
   // available (or when running intentionally unauthenticated). Treat this as
   // expected noise for integration runs.
-  if (entry.message == 'RealtimeDatabaseTodoRepository.watchAll failed') {
+  if (entry.message ==
+      IntegrationLogMessages.realtimeDatabaseTodoWatchAllFailed) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_auth/no-current-user]') &&
@@ -66,7 +70,8 @@ bool isIgnoredIntegrationLog(
     }
   }
 
-  if (entry.message == 'RealtimeDatabaseCounterRepository.watch failed') {
+  if (entry.message ==
+      IntegrationLogMessages.realtimeDatabaseCounterWatchFailed) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_auth/no-current-user]') &&
@@ -78,12 +83,10 @@ bool isIgnoredIntegrationLog(
   // Staff demo push token registration can log an APNs token warning on iOS
   // simulators (or before APNs registration completes). This should not fail
   // the integration suite.
-  if (entry.message ==
-      'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not available yet') {
+  if (entry.message == IntegrationLogMessages.staffDemoPushApnsNotAvailable) {
     return true;
   }
-  if (entry.message ==
-      'FirestoreStaffDemoPushTokenRepository.registerTokens failed') {
+  if (entry.message == IntegrationLogMessages.staffDemoPushRegisterFailed) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_messaging/apns-token-not-set]')) {
@@ -92,13 +95,15 @@ bool isIgnoredIntegrationLog(
   }
 
   // App Check debug token guidance is expected on simulators during dev runs.
-  if (entry.message.startsWith('Using default App Check debug token.')) {
+  if (entry.message.startsWith(
+    IntegrationLogMessages.appCheckDebugTokenPrefix,
+  )) {
     return true;
   }
 
   // Staff demo messaging can be denied in dev projects (tight rules / missing
   // seed state). The walkthrough still provides value without this write.
-  if (entry.message == 'StaffDemoMessagesCubit.sendShiftAssignment') {
+  if (entry.message == IntegrationLogMessages.staffDemoSendShiftAssignment) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[cloud_firestore/permission-denied]')) {
@@ -109,7 +114,7 @@ bool isIgnoredIntegrationLog(
   // Firebase Storage quota can be exceeded in shared dev projects. Some flows
   // degrade gracefully in that case; don't fail the entire suite on this
   // external quota constraint.
-  if (entry.message == 'StaffDemoProofCubit.submit') {
+  if (entry.message == IntegrationLogMessages.staffDemoProofSubmit) {
     final Object? error = entry.error;
     if (error != null &&
         error.toString().contains('[firebase_storage/quota-exceeded]')) {
@@ -120,29 +125,29 @@ bool isIgnoredIntegrationLog(
   // Web tests cannot use the secure-storage-backed Hive key path. The app
   // falls back to an in-memory key for the session, which is expected for
   // browser integration runs and should not fail the suite.
-  if (isWeb && entry.message == 'HiveKeyManager.getEncryptionKey') {
+  if (isWeb &&
+      entry.message == IntegrationLogMessages.hiveKeyManagerGetEncryptionKey) {
     final Object? error = entry.error;
     if (error != null && error.toString().contains('OperationError')) {
       return true;
     }
   }
   if (isWeb &&
-      entry.message ==
-          'Failed to retrieve encryption key from secure storage, using temporary key (data will not persist across restarts).') {
+      entry.message == IntegrationLogMessages.hiveEncryptionKeyFallback) {
     return true;
   }
 
   // iOS simulators may not expose Keychain-backed secure storage for Hive keys.
   if (entry.message.startsWith(
-    'Secure storage unavailable; using non-persisted Hive encryption key',
+    IntegrationLogMessages.secureStorageUnavailablePrefix,
   )) {
     return true;
   }
 
   // Firebase Installations/Remote Config can hit Keychain -34018 on Apple debug
   // simulators. The repo disables native fetch and serves defaults/cache.
-  if (entry.message == 'RemoteConfig.forceFetch' ||
-      entry.message == 'RemoteConfig realtime fetch') {
+  if (entry.message == IntegrationLogMessages.remoteConfigForceFetch ||
+      entry.message == IntegrationLogMessages.remoteConfigRealtimeFetch) {
     final Object? error = entry.error;
     if (error != null &&
         (error.toString().contains('-34018') ||
@@ -152,12 +157,12 @@ bool isIgnoredIntegrationLog(
     }
   }
   if (entry.message.startsWith(
-    'RemoteConfig.forceFetch disabled (Keychain unavailable)',
+    IntegrationLogMessages.remoteConfigForceFetchDisabledPrefix,
   )) {
     return true;
   }
   if (entry.message.startsWith(
-    'RemoteConfig realtime fetch disabled (Keychain unavailable)',
+    IntegrationLogMessages.remoteConfigRealtimeFetchDisabledPrefix,
   )) {
     return true;
   }

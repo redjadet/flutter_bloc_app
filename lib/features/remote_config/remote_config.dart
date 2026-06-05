@@ -5,6 +5,8 @@ library;
 export 'data/repositories/remote_config_repository.dart';
 
 /// Domain exports
+export 'domain/remote_config_keys.dart';
+export 'domain/remote_config_remote_data_source.dart';
 export 'domain/remote_config_service.dart';
 export 'domain/remote_config_snapshot.dart';
 

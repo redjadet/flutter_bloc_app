@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
@@ -37,8 +38,8 @@ void main() {
     test('persists and reads snapshot metadata', () async {
       final RemoteConfigSnapshot snapshot = RemoteConfigSnapshot(
         values: <String, dynamic>{
-          'awesome_feature_enabled': true,
-          'test_value_1': 'cached',
+          RemoteConfigKeys.awesomeFeatureEnabled: true,
+          RemoteConfigKeys.testValue1: 'cached',
         },
         lastFetchedAt: DateTime.utc(2025, 01, 01),
         templateVersion: 'v1',
@@ -50,8 +51,14 @@ void main() {
 
       final RemoteConfigSnapshot? loaded = await repository.loadSnapshot();
       expect(loaded, isNotNull);
-      expect(loaded!.values, containsPair('awesome_feature_enabled', true));
-      expect(loaded.values, containsPair('test_value_1', 'cached'));
+      expect(
+        loaded!.values,
+        containsPair(RemoteConfigKeys.awesomeFeatureEnabled, true),
+      );
+      expect(
+        loaded.values,
+        containsPair(RemoteConfigKeys.testValue1, 'cached'),
+      );
       expect(loaded.lastFetchedAt, snapshot.lastFetchedAt);
       expect(loaded.templateVersion, 'v1');
       expect(loaded.dataSource, 'remote');

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_de
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:genui/genui.dart' as genui;
 
 part 'genui_demo_cubit_handlers.part.dart';
 
@@ -79,10 +80,21 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     registerSubscription(_errorSubscription);
 
     if (isClosed) return;
+    final Object? rawHostHandle = _agent.hostHandle;
+    final genui.A2uiMessageProcessor? hostHandle =
+        rawHostHandle is genui.A2uiMessageProcessor ? rawHostHandle : null;
+    if (rawHostHandle != null && hostHandle == null) {
+      emit(
+        const GenUiDemoState.error(
+          message: 'GenUI host handle has an unexpected type.',
+        ),
+      );
+      return;
+    }
     emit(
       GenUiDemoState.ready(
         surfaceIds: const [],
-        hostHandle: _agent.hostHandle,
+        hostHandle: hostHandle,
       ),
     );
   }

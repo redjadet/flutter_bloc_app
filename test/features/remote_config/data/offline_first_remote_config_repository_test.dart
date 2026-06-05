@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/offline_first_remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -14,8 +15,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _MockRemoteConfigRepository extends Mock
-    implements RemoteConfigRepository {}
+class _MockRemoteConfigRemoteDataSource extends Mock
+    implements RemoteConfigRemoteDataSource {}
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService(this._status);
@@ -41,7 +42,7 @@ void main() {
     late Directory tempDir;
     late HiveService hiveService;
     late RemoteConfigCacheRepository cacheRepository;
-    late _MockRemoteConfigRepository remoteRepository;
+    late _MockRemoteConfigRemoteDataSource remoteRepository;
     late _FakeNetworkStatusService networkStatusService;
     late SyncableRepositoryRegistry registry;
     late OfflineFirstRemoteConfigRepository repository;
@@ -54,41 +55,34 @@ void main() {
       );
       await hiveService.initialize();
       cacheRepository = RemoteConfigCacheRepository(hiveService: hiveService);
-      remoteRepository = _MockRemoteConfigRepository();
+      remoteRepository = _MockRemoteConfigRemoteDataSource();
       networkStatusService = _FakeNetworkStatusService(NetworkStatus.online);
       registry = SyncableRepositoryRegistry();
 
       when(() => remoteRepository.initialize()).thenAnswer((_) async {});
       when(() => remoteRepository.forceFetch()).thenAnswer((_) async {});
       when(
-        () => remoteRepository.getString(RemoteConfigRepository.testValueKey),
+        () => remoteRepository.getString(RemoteConfigKeys.testValue1),
       ).thenReturn('remote');
       when(
-        () =>
-            remoteRepository.getBool(RemoteConfigRepository.awesomeFeatureKey),
+        () => remoteRepository.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
       when(
-        () => remoteRepository.getBool(
-          RemoteConfigRepository.supabaseConfigEnabledKey,
-        ),
+        () => remoteRepository.getBool(RemoteConfigKeys.supabaseConfigEnabled),
       ).thenReturn(true);
       when(
-        () => remoteRepository.getString(RemoteConfigRepository.supabaseUrlKey),
+        () => remoteRepository.getString(RemoteConfigKeys.supabaseUrl),
+      ).thenReturn('');
+      when(
+        () => remoteRepository.getString(RemoteConfigKeys.supabaseAnonKey),
       ).thenReturn('');
       when(
         () => remoteRepository.getString(
-          RemoteConfigRepository.supabaseAnonKeyKey,
+          RemoteConfigKeys.renderChatDemoHfReadToken,
         ),
       ).thenReturn('');
       when(
-        () => remoteRepository.getString(
-          RemoteConfigRepository.renderChatDemoHfReadTokenKey,
-        ),
-      ).thenReturn('');
-      when(
-        () => remoteRepository.getInt(
-          RemoteConfigRepository.supabaseConfigVersionKey,
-        ),
+        () => remoteRepository.getInt(RemoteConfigKeys.supabaseConfigVersion),
       ).thenReturn(1);
 
       repository = OfflineFirstRemoteConfigRepository(
@@ -141,9 +135,7 @@ void main() {
 
     test('loads cached values when offline and skips remote fetch', () async {
       final RemoteConfigSnapshot snapshot = RemoteConfigSnapshot(
-        values: <String, dynamic>{
-          RemoteConfigRepository.testValueKey: 'cached',
-        },
+        values: <String, dynamic>{RemoteConfigKeys.testValue1: 'cached'},
       );
       await cacheRepository.saveSnapshot(snapshot);
       networkStatusService.setStatus(NetworkStatus.offline);
@@ -151,10 +143,7 @@ void main() {
       await repository.initialize();
       await repository.forceFetch();
 
-      expect(
-        repository.getString(RemoteConfigRepository.testValueKey),
-        'cached',
-      );
+      expect(repository.getString(RemoteConfigKeys.testValue1), 'cached');
       verifyNever(() => remoteRepository.forceFetch());
     });
 
@@ -165,8 +154,8 @@ void main() {
 
       final RemoteConfigSnapshot? cached = await cacheRepository.loadSnapshot();
       expect(cached, isNotNull);
-      expect(cached!.values[RemoteConfigRepository.testValueKey], 'remote');
-      expect(cached.values[RemoteConfigRepository.awesomeFeatureKey], isTrue);
+      expect(cached!.values[RemoteConfigKeys.testValue1], 'remote');
+      expect(cached.values[RemoteConfigKeys.awesomeFeatureEnabled], isTrue);
     });
 
     test('pullRemote skips fetch when offline', () async {
@@ -197,9 +186,7 @@ void main() {
 
     test('uses cache when remote fetch fails but cache exists', () async {
       final RemoteConfigSnapshot snapshot = RemoteConfigSnapshot(
-        values: <String, dynamic>{
-          RemoteConfigRepository.testValueKey: 'cached',
-        },
+        values: <String, dynamic>{RemoteConfigKeys.testValue1: 'cached'},
       );
       await cacheRepository.saveSnapshot(snapshot);
       await repository.initialize();
@@ -207,10 +194,7 @@ void main() {
 
       await repository.forceFetch();
 
-      expect(
-        repository.getString(RemoteConfigRepository.testValueKey),
-        'cached',
-      );
+      expect(repository.getString(RemoteConfigKeys.testValue1), 'cached');
     });
   });
 }

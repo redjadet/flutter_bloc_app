@@ -42,7 +42,7 @@ Future<void>? _configureDependenciesInFlight;
 /// - `Dio` - closes HTTP connections
 /// - `HuggingFaceApiClient` - disposes internal resources
 /// - `WebsocketRepository` - closes WebSocket connections and cancels subscriptions
-/// - `RemoteConfigRepository` - cancels config update subscriptions
+/// - `RemoteConfigRemoteDataSource` - cancels config update subscriptions
 ///
 /// The dispose callbacks are automatically called when `getIt.reset()` is invoked
 /// (typically during tests or app shutdown).

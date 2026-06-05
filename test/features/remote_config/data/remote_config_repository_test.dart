@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -35,9 +36,11 @@ void main() {
         () => remoteConfig.onConfigUpdated,
       ).thenAnswer((_) => const Stream<RemoteConfigUpdate>.empty());
       when(
-        () => remoteConfig.getBool('awesome_feature_enabled'),
+        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(false);
-      when(() => remoteConfig.getString('test_value_1')).thenReturn('');
+      when(
+        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
+      ).thenReturn('');
     });
 
     tearDown(() {
@@ -46,7 +49,7 @@ void main() {
 
     test('logs test_value_1 when getString is called', () {
       when(
-        () => remoteConfig.getString('test_value_1'),
+        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
       ).thenReturn('expected-value');
 
       final repository = RemoteConfigRepository(
@@ -54,7 +57,10 @@ void main() {
         debugLogger: debugMessages.add,
       );
 
-      expect(repository.getString('test_value_1'), 'expected-value');
+      expect(
+        repository.getString(RemoteConfigKeys.testValue1),
+        'expected-value',
+      );
       expect(
         debugMessages,
         contains('RemoteConfig[getString] test_value_1="expected-value"'),
@@ -63,7 +69,7 @@ void main() {
 
     test('logs awesome_feature_enabled when getBool is called', () {
       when(
-        () => remoteConfig.getBool('awesome_feature_enabled'),
+        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
 
       final repository = RemoteConfigRepository(
@@ -71,7 +77,10 @@ void main() {
         debugLogger: debugMessages.add,
       );
 
-      expect(repository.getBool('awesome_feature_enabled'), isTrue);
+      expect(
+        repository.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
+        isTrue,
+      );
       expect(
         debugMessages,
         contains('RemoteConfig[getBool] awesome_feature_enabled=true'),
@@ -93,7 +102,7 @@ void main() {
           () => remoteConfig.fetchAndActivate(),
         ).thenAnswer((_) async => true);
         when(
-          () => remoteConfig.getString('test_value_1'),
+          () => remoteConfig.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('latest-value');
 
         final repository = RemoteConfigRepository(
@@ -103,7 +112,9 @@ void main() {
 
         await repository.initialize();
 
-        controller.add(RemoteConfigUpdate(<String>{'test_value_1'}));
+        controller.add(
+          RemoteConfigUpdate(<String>{RemoteConfigKeys.testValue1}),
+        );
         await pumpEventQueue(times: 5);
 
         expect(
@@ -128,7 +139,7 @@ void main() {
           () => remoteConfig.fetchAndActivate(),
         ).thenAnswer((_) async => true);
         when(
-          () => remoteConfig.getBool('awesome_feature_enabled'),
+          () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
         ).thenReturn(true);
 
         final repository = RemoteConfigRepository(
@@ -138,7 +149,9 @@ void main() {
 
         await repository.initialize();
 
-        controller.add(RemoteConfigUpdate(<String>{'awesome_feature_enabled'}));
+        controller.add(
+          RemoteConfigUpdate(<String>{RemoteConfigKeys.awesomeFeatureEnabled}),
+        );
         await pumpEventQueue(times: 5);
 
         expect(
@@ -153,10 +166,10 @@ void main() {
     test('forceFetch logs tracked values', () async {
       when(() => remoteConfig.fetchAndActivate()).thenAnswer((_) async => true);
       when(
-        () => remoteConfig.getString('test_value_1'),
+        () => remoteConfig.getString(RemoteConfigKeys.testValue1),
       ).thenReturn('fetched-value');
       when(
-        () => remoteConfig.getBool('awesome_feature_enabled'),
+        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
 
       final repository = RemoteConfigRepository(
@@ -200,8 +213,10 @@ void main() {
         await repository.forceFetch();
 
         verify(() => remoteConfig.fetchAndActivate()).called(1);
-        verifyNever(() => remoteConfig.getString('test_value_1'));
-        verifyNever(() => remoteConfig.getBool('awesome_feature_enabled'));
+        verifyNever(() => remoteConfig.getString(RemoteConfigKeys.testValue1));
+        verifyNever(
+          () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
+        );
       },
     );
 

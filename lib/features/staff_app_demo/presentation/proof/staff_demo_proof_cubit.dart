@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
@@ -170,7 +171,7 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
               ),
             );
           },
-          logContext: 'StaffDemoProofCubit.submit',
+          logContext: IntegrationLogMessages.staffDemoProofSubmit,
         );
       }
     } finally {

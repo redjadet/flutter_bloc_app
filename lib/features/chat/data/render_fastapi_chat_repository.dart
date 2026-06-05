@@ -8,9 +8,9 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_chat_failure_mapper.dart';
-import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 

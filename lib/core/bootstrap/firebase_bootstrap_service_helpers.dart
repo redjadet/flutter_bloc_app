@@ -105,7 +105,7 @@ void _logAppCheckDebugToken(
   AppLogger.info('Firebase App Check debug token: $debugToken');
   if (debugTokenEnv.isEmpty) {
     AppLogger.warning(
-      'Using default App Check debug token. For a unique token, run with '
+      '${IntegrationLogMessages.appCheckDebugTokenPrefix} For a unique token, run with '
       '--dart-define=FIREBASE_APPCHECK_DEBUG_TOKEN=<token> and add it in '
       'Firebase Console → App Check → Manage debug tokens.',
     );

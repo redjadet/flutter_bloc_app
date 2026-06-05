@@ -6,13 +6,15 @@ import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_upload_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_cubit.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_detail_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_demo_home_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
@@ -138,14 +140,42 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
     GoRoute(
       path: AppRoutes.caseStudyDemoHistoryPath,
       name: AppRoutes.caseStudyDemoHistory,
-      builder: (context, state) => const CaseStudyHistoryPage(),
+      builder: (context, state) =>
+          BlocProviderHelpers.withAsyncInit<CaseStudyHistoryCubit>(
+            create: () => CaseStudyHistoryCubit(
+              authRepository: getIt<AuthRepository>(),
+              localRepository: getIt<CaseStudyLocalRepository>(),
+              remoteRepository: getIt<CaseStudyRemoteRepository>(),
+              remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+              clipStore: getIt<CaseStudyClipFileStore>(),
+              remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+            ),
+            init: (cubit) => cubit.load(),
+            child: const CaseStudyHistoryPage(),
+          ),
       routes: <RouteBase>[
         GoRoute(
           path: ':id',
           name: AppRoutes.caseStudyDemoHistoryDetail,
-          builder: (context, state) => CaseStudyHistoryDetailPage(
-            recordId: state.pathParameters['id'] ?? '',
-          ),
+          builder: (context, state) {
+            final String recordId = state.pathParameters['id'] ?? '';
+            return BlocProviderHelpers.withAsyncInit<
+              CaseStudyHistoryDetailCubit
+            >(
+              create: () => CaseStudyHistoryDetailCubit(
+                recordId: recordId,
+                authRepository: getIt<AuthRepository>(),
+                localRepository: getIt<CaseStudyLocalRepository>(),
+                remoteRepository: getIt<CaseStudyRemoteRepository>(),
+                remoteDeleteRepository:
+                    getIt<CaseStudyRemoteDeleteRepository>(),
+                clipStore: getIt<CaseStudyClipFileStore>(),
+                remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+              ),
+              init: (final cubit) => cubit.load(),
+              child: const CaseStudyHistoryDetailPage(),
+            );
+          },
         ),
       ],
     ),

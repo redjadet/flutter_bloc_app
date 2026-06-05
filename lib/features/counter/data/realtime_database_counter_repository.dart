@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/firebase/realtime_database_guard.dart';
 import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
@@ -71,7 +72,7 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
   @override
   Stream<CounterSnapshot> watch() => streamWithAuthUser<CounterSnapshot>(
     auth: _auth,
-    logContext: 'RealtimeDatabaseCounterRepository.watch',
+    logContext: IntegrationLogMessages.realtimeDatabaseCounterWatchLogContext,
     streamPerUser: (final user) => _counterRef
         .child(user.uid)
         .onValue

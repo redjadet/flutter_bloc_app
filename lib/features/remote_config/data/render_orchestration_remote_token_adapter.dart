@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
@@ -21,7 +21,7 @@ class RemoteConfigRenderOrchestrationTokenAdapter
   String? readDevToken() {
     try {
       final String raw = _remoteConfig.getString(
-        RemoteConfigRepository.renderChatDemoHfReadTokenKey,
+        RemoteConfigKeys.renderChatDemoHfReadToken,
       );
       final String trimmed = raw.trim();
       if (trimmed.isEmpty) {

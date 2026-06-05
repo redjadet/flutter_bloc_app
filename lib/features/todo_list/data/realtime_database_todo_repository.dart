@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/firebase/realtime_database_guard.dart';
 import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
@@ -47,7 +48,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Stream<List<TodoItem>> watchAll() => streamWithAuthUser<List<TodoItem>>(
     auth: _auth,
-    logContext: 'RealtimeDatabaseTodoRepository.watchAll',
+    logContext: IntegrationLogMessages.realtimeDatabaseTodoWatchAllLogContext,
     streamPerUser: (final user) => _todoRef
         .child(user.uid)
         .onValue

@@ -12,7 +12,7 @@ import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -270,11 +270,11 @@ Future<void> overrideMemoryServicesForTests() async {
 /// Remote Config client would try to contact Firebase Installations with
 /// invalid credentials. Keep the browser lane offline and deterministic.
 Future<void> overrideRemoteConfigRepositoryForWebSmoke() async {
-  if (getIt.isRegistered<RemoteConfigRepository>()) {
-    await getIt.unregister<RemoteConfigRepository>();
+  if (getIt.isRegistered<RemoteConfigRemoteDataSource>()) {
+    await getIt.unregister<RemoteConfigRemoteDataSource>();
   }
-  getIt.registerLazySingleton<RemoteConfigRepository>(
-    FakeRemoteConfigRepository.new,
+  getIt.registerLazySingleton<RemoteConfigRemoteDataSource>(
+    FakeRemoteConfigRemoteDataSource.new,
   );
 }
 

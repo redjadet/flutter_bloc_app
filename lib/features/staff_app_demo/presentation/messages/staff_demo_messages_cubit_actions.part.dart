@@ -157,7 +157,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
           ),
         );
       },
-      logContext: 'StaffDemoMessagesCubit.sendShiftAssignment',
+      logContext: IntegrationLogMessages.staffDemoSendShiftAssignment,
     );
   }
 }

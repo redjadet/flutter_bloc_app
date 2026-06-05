@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
@@ -8,7 +9,8 @@ import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 /// Manages encryption key for Hive database using secure storage.
 class HiveKeyManager {
   HiveKeyManager({final SecretStorage? storage})
-    : _useAppleDebugFallbackKey = storage == null && useInMemorySecretStorageInDebug(),
+    : _useAppleDebugFallbackKey =
+          storage == null && useInMemorySecretStorageInDebug(),
       _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKey = 'hive_encryption_key';
@@ -23,7 +25,7 @@ class HiveKeyManager {
 
   /// Gets the encryption key, generating a new one if it doesn't exist.
   Future<List<int>> getEncryptionKey() async => StorageGuard.run<List<int>>(
-    logContext: 'HiveKeyManager.getEncryptionKey',
+    logContext: IntegrationLogMessages.hiveKeyManagerGetEncryptionKey,
     action: () async {
       final List<int>? cached = _cachedKey;
       if (cached != null && cached.length == _keyLengthBytes) {
@@ -62,7 +64,7 @@ class HiveKeyManager {
       final String? verify = await _storage.read(_storageKey);
       if (verify != encoded) {
         AppLogger.warning(
-          'Secure storage unavailable; using non-persisted Hive encryption key '
+          '${IntegrationLogMessages.secureStorageUnavailablePrefix} '
           '(data will not persist across restarts).',
         );
       }
@@ -71,10 +73,7 @@ class HiveKeyManager {
     },
     fallback: () {
       // Fallback: generate a key but don't persist it
-      AppLogger.warning(
-        'Failed to retrieve encryption key from secure storage, '
-        'using temporary key (data will not persist across restarts).',
-      );
+      AppLogger.warning(IntegrationLogMessages.hiveEncryptionKeyFallback);
       final List<int> key = _generateKey();
       _cachedKey = key;
       return key;

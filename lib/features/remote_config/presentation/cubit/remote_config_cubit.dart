@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
@@ -8,11 +9,6 @@ export 'remote_config_state.dart';
 class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   RemoteConfigCubit(this._remoteConfigService)
     : super(const RemoteConfigState.initial());
-
-  static const String _awesomeFeatureKey = 'awesome_feature_enabled';
-  static const String _testValueKey = 'test_value_1';
-  static const String _dataSourceKey = 'last_data_source';
-  static const String _lastSyncedKey = 'last_synced_at';
 
   final RemoteConfigService _remoteConfigService;
   bool _hasInitialized = false;
@@ -100,17 +96,21 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   void _emitLoadedState() {
     if (isClosed) return;
     _hasInitialized = true;
-    final String dataSource = _remoteConfigService.getString(_dataSourceKey);
-    final String lastSyncedRaw = _remoteConfigService.getString(_lastSyncedKey);
+    final String dataSource = _remoteConfigService.getString(
+      RemoteConfigKeys.lastDataSource,
+    );
+    final String lastSyncedRaw = _remoteConfigService.getString(
+      RemoteConfigKeys.lastSyncedAt,
+    );
     final DateTime? lastSyncedAt = lastSyncedRaw.isEmpty
         ? null
         : DateTime.tryParse(lastSyncedRaw)?.toUtc();
     emit(
       RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: _remoteConfigService.getBool(
-          _awesomeFeatureKey,
+          RemoteConfigKeys.awesomeFeatureEnabled,
         ),
-        testValue: _remoteConfigService.getString(_testValueKey),
+        testValue: _remoteConfigService.getString(RemoteConfigKeys.testValue1),
         dataSource: dataSource.isEmpty ? null : dataSource,
         lastSyncedAt: lastSyncedAt,
       ),

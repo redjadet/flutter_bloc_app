@@ -9,7 +9,12 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.d
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/realtime_database_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
+import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/realtime_database_todo_repository.dart';
@@ -84,22 +89,29 @@ TodoRepository? _createRemoteTodoRepositoryOrNull() =>
       },
     );
 
-/// Creates a RemoteConfigRepository instance.
+/// Creates a [RemoteConfigRemoteDataSource] instance.
 ///
 /// Tries to create a Firebase-backed repository if Firebase is available,
 /// otherwise creates a fake implementation for testing.
-RemoteConfigRepository createRemoteConfigRepository() {
+RemoteConfigRemoteDataSource createRemoteConfigRemoteDataSource() {
   try {
     // Try to create with Firebase if available
     return RemoteConfigRepository(FirebaseRemoteConfig.instance);
   } on Object {
     // If Firebase is not available (e.g., in tests), create a fake implementation
-    return FakeRemoteConfigRepository();
+    return FakeRemoteConfigRemoteDataSource();
   }
 }
 
-/// Fake implementation of RemoteConfigRepository for testing.
-class FakeRemoteConfigRepository implements RemoteConfigRepository {
+/// Scoped market demo repo; disposed with its route-scoped cubit, not a singleton.
+RealtimeMarketRepository createScopedRealtimeMarketRepository() =>
+    RealtimeMarketRepositoryImpl(
+      localDataSource: getIt<RealtimeMarketLocalDataSource>(),
+      feed: getIt<SimulatedMarketFeed>(),
+    );
+
+/// Fake remote config client for tests and web smoke overrides.
+class FakeRemoteConfigRemoteDataSource implements RemoteConfigRemoteDataSource {
   @override
   Future<void> initialize() async {}
 

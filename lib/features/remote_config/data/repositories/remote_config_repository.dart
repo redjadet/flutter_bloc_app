@@ -1,29 +1,19 @@
 import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
 
-class RemoteConfigRepository implements RemoteConfigService {
+class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
   RemoteConfigRepository(
     this._remoteConfig, {
     final void Function(String message)? debugLogger,
   }) : _logDebug = debugLogger ?? AppLogger.debug;
 
-  static const String awesomeFeatureKey = 'awesome_feature_enabled';
-  static const String testValueKey = 'test_value_1';
-
-  // Supabase config (Remote Config)
-  static const String supabaseUrlKey = 'SUPABASE_URL';
-  static const String supabaseAnonKeyKey = 'SUPABASE_ANON_KEY';
-  static const String supabaseConfigVersionKey = 'SUPABASE_CONFIG_VERSION';
-  static const String supabaseConfigEnabledKey = 'SUPABASE_CONFIG_ENABLED';
-
-  /// Demo-scoped HF read token for Render `X-HF-Authorization` (dev Remote Config).
-  static const String renderChatDemoHfReadTokenKey =
-      'RENDER_CHAT_DEMO_HF_READ_TOKEN';
   static const Duration _fetchTimeout = Duration(minutes: 1);
   static const Duration _minimumFetchInterval = Duration(hours: 1);
   static const Duration _bypassFetchInterval = Duration.zero;
@@ -53,15 +43,15 @@ class RemoteConfigRepository implements RemoteConfigService {
     );
     await _remoteConfig.setDefaults(
       const <String, dynamic>{
-        awesomeFeatureKey: false,
-        testValueKey: '',
-        supabaseUrlKey: '',
-        supabaseAnonKeyKey: '',
-        supabaseConfigVersionKey: 1,
+        RemoteConfigKeys.awesomeFeatureEnabled: false,
+        RemoteConfigKeys.testValue1: '',
+        RemoteConfigKeys.supabaseUrl: '',
+        RemoteConfigKeys.supabaseAnonKey: '',
+        RemoteConfigKeys.supabaseConfigVersion: 1,
         // Default to enabled so missing console wiring doesn't brick config.
         // Remote disable is still supported by setting the key to false.
-        supabaseConfigEnabledKey: true,
-        renderChatDemoHfReadTokenKey: '',
+        RemoteConfigKeys.supabaseConfigEnabled: true,
+        RemoteConfigKeys.renderChatDemoHfReadToken: '',
       },
     );
 
@@ -85,7 +75,7 @@ class RemoteConfigRepository implements RemoteConfigService {
       if (_looksLikeKeychainEntitlementError(error)) {
         _disableFetchDueToKeychain = true;
         AppLogger.debug(
-          'RemoteConfig.forceFetch disabled (Keychain unavailable). '
+          '${IntegrationLogMessages.remoteConfigForceFetchDisabledPrefix}. '
           'Apple debug/simulator unsigned builds cannot use Firebase Installations.',
         );
         return;
@@ -112,7 +102,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   String getString(final String key) {
     final String value = _remoteConfig.getString(key);
 
-    if (key == testValueKey) {
+    if (key == RemoteConfigKeys.testValue1) {
       _logDebug('RemoteConfig[getString] $key="$value"');
     }
 
@@ -123,7 +113,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   bool getBool(final String key) {
     final bool value = _remoteConfig.getBool(key);
 
-    if (key == awesomeFeatureKey) {
+    if (key == RemoteConfigKeys.awesomeFeatureEnabled) {
       _logDebug('RemoteConfig[getBool] $key=$value');
     }
 
@@ -136,6 +126,7 @@ class RemoteConfigRepository implements RemoteConfigService {
   @override
   double getDouble(final String key) => _remoteConfig.getDouble(key);
 
+  @override
   Future<void> dispose() async {
     _configUpdatesSubscription = null;
     await _subscriptionManager.dispose();
@@ -149,10 +140,10 @@ class RemoteConfigRepository implements RemoteConfigService {
       (final update) async {
         if (_disableFetchDueToKeychain) return;
         final bool shouldLogTestValue = update.updatedKeys.contains(
-          testValueKey,
+          RemoteConfigKeys.testValue1,
         );
         final bool shouldLogAwesomeFeature = update.updatedKeys.contains(
-          awesomeFeatureKey,
+          RemoteConfigKeys.awesomeFeatureEnabled,
         );
 
         if (!shouldLogTestValue && !shouldLogAwesomeFeature) {
@@ -165,12 +156,12 @@ class RemoteConfigRepository implements RemoteConfigService {
           if (_looksLikeKeychainEntitlementError(error)) {
             _disableFetchDueToKeychain = true;
             AppLogger.debug(
-              'RemoteConfig realtime fetch disabled (Keychain unavailable).',
+              '${IntegrationLogMessages.remoteConfigRealtimeFetchDisabledPrefix}.',
             );
             return;
           }
           AppLogger.error(
-            'Remote Config realtime fetch failed for $testValueKey',
+            'Remote Config realtime fetch failed for ${RemoteConfigKeys.testValue1}',
             error,
             stackTrace,
           );
@@ -196,13 +187,19 @@ class RemoteConfigRepository implements RemoteConfigService {
   }
 
   void _logTestValue({required final String source}) {
-    final String value = _remoteConfig.getString(testValueKey);
-    _logDebug('RemoteConfig[$source] $testValueKey="$value"');
+    final String value = _remoteConfig.getString(RemoteConfigKeys.testValue1);
+    _logDebug(
+      'RemoteConfig[$source] ${RemoteConfigKeys.testValue1}="$value"',
+    );
   }
 
   void _logAwesomeFeatureFlag({required final String source}) {
-    final bool value = _remoteConfig.getBool(awesomeFeatureKey);
-    _logDebug('RemoteConfig[$source] $awesomeFeatureKey=$value');
+    final bool value = _remoteConfig.getBool(
+      RemoteConfigKeys.awesomeFeatureEnabled,
+    );
+    _logDebug(
+      'RemoteConfig[$source] ${RemoteConfigKeys.awesomeFeatureEnabled}=$value',
+    );
   }
 
   static bool _looksLikeKeychainEntitlementError(final Object error) {

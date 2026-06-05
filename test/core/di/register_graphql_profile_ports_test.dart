@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/di/register_graphql_services.dart';
 import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_cache_clear_port_adapter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -36,11 +37,12 @@ void main() {
   });
 
   test(
-    'GraphqlCacheClearPort and ProfileCacheControlsPort alias full repositories',
+    'GraphqlCacheClearPort adapter and ProfileCacheControlsPort alias repositories',
     () {
       final GraphqlCacheRepository fullCache = getIt<GraphqlCacheRepository>();
       final GraphqlCacheClearPort clearPort = getIt<GraphqlCacheClearPort>();
-      expect(identical(fullCache, clearPort), isTrue);
+      expect(clearPort, isA<GraphqlCacheClearPortAdapter>());
+      expect(identical(fullCache, clearPort), isFalse);
 
       final ProfileCacheRepository fullProfile =
           getIt<ProfileCacheRepository>();

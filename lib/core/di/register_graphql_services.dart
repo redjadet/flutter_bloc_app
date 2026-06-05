@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/auth_aware_graphql_remote_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_cache_clear_port_adapter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/offline_first_graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/supabase_graphql_demo_repository.dart';
@@ -18,7 +19,7 @@ void registerGraphqlServices() {
     () => GraphqlDemoCacheRepository(hiveService: getIt<HiveService>()),
   );
   registerLazySingletonIfAbsent<GraphqlCacheClearPort>(
-    () => getIt<GraphqlCacheRepository>(),
+    () => GraphqlCacheClearPortAdapter(getIt<GraphqlCacheRepository>()),
   );
 
   registerLazySingletonIfAbsent<GraphqlDemoRepository>(

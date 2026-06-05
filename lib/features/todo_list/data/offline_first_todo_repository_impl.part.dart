@@ -212,7 +212,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       await _markLocalItemSynchronized(normalized);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
-        'OfflineFirstTodoRepository.save immediate sync failed, queuing for retry',
+        IntegrationLogMessages.offlineFirstTodoSaveSyncFailed,
         error,
         stackTrace,
       );
@@ -235,7 +235,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       await remoteRepository.delete(normalizedId);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
-        'OfflineFirstTodoRepository.delete immediate sync failed, queuing for retry',
+        IntegrationLogMessages.offlineFirstTodoDeleteSyncFailed,
         error,
         stackTrace,
       );
