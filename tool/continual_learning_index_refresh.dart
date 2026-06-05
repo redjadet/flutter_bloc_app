@@ -46,6 +46,10 @@ Future<void> main(List<String> args) async {
       }
     }
 
+    indexState.transcripts.removeWhere(
+      (path, _) => path.contains('/subagents/'),
+    );
+
     await _writeIndexAtomic(indexFile, indexState);
 
     stdout.writeln(
@@ -59,7 +63,7 @@ Future<void> _withFileLock(String lockPath, Future<void> Function() fn) async {
   await lockFile.parent.create(recursive: true);
   final raf = await lockFile.open(mode: FileMode.writeOnlyAppend);
   try {
-    await raf.lock(FileLock.exclusive);
+    await raf.lock();
     await fn();
   } finally {
     await raf.unlock();
@@ -105,7 +109,7 @@ Future<void> _writeIndexAtomic(
   };
 
   final tmp = File('${indexFile.path}.tmp');
-  await tmp.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
+  await tmp.writeAsString(jsonEncode(payload));
   await tmp.rename(indexFile.path);
 }
 
@@ -130,7 +134,9 @@ Future<List<String>> _listTranscriptFiles(String root) async {
     recursive: true,
     followLinks: false,
   )) {
-    if (entity is File && entity.path.endsWith('.jsonl')) out.add(entity.path);
+    if (entity is! File || !entity.path.endsWith('.jsonl')) continue;
+    if (entity.path.contains('/subagents/')) continue;
+    out.add(entity.path);
   }
   return out;
 }
