@@ -15,9 +15,10 @@ import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 export 'case_study_history_detail_state.dart';
 
 part 'case_study_history_detail_cubit_actions.part.dart';
+part 'case_study_history_detail_cubit_fetch.part.dart';
 
 class CaseStudyHistoryDetailCubit extends _CaseStudyHistoryDetailCubitBase
-    with _CaseStudyHistoryDetailCubitActions {
+    with _CaseStudyHistoryDetailCubitFetch, _CaseStudyHistoryDetailCubitActions {
   CaseStudyHistoryDetailCubit({
     required super.recordId,
     required super.authRepository,
