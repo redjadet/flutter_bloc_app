@@ -23,11 +23,13 @@ import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repositor
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_chat_dio_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_fastapi_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
+import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart'
+    show LayeredRenderOrchestrationHfTokenProvider;
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';

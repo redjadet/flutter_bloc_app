@@ -89,6 +89,40 @@ void main() {
     );
 
     blocTest<GenUiDemoCubit, GenUiDemoState>(
+      'initialize emits error when host handle has unexpected type',
+      build: () {
+        final agent = _MockGenUiDemoAgent();
+        when(
+          () => agent.surfaceEvents,
+        ).thenAnswer((_) => const Stream<GenUiSurfaceEvent>.empty());
+        when(
+          () => agent.errors,
+        ).thenAnswer((_) => const Stream<String>.empty());
+        when(() => agent.hostHandle).thenReturn(Object());
+        when(() => agent.initialize()).thenAnswer((_) async {});
+        when(() => agent.dispose()).thenAnswer((_) async {});
+
+        final cubit = GenUiDemoCubit(agent: agent);
+        addTearDown(cubit.close);
+        return cubit;
+      },
+      act: (final cubit) async {
+        await cubit.initialize();
+      },
+      expect: () => [
+        const GenUiDemoState.loading(),
+        isA<GenUiDemoState>().having(
+          (final state) => state.maybeWhen(
+            error: (final message, _, _, _) => message,
+            orElse: () => '',
+          ),
+          'error message',
+          'GenUI host handle has an unexpected type.',
+        ),
+      ],
+    );
+
+    blocTest<GenUiDemoCubit, GenUiDemoState>(
       'initialize emits error state on failure',
       build: () {
         final agent = _MockGenUiDemoAgent();

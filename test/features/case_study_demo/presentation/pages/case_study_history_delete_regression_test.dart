@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
@@ -11,10 +12,12 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_ques
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_cubit.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_detail_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_page.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubAuthRepository implements AuthRepository {
@@ -109,7 +112,7 @@ class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
   }
 }
 
-class _NoopClipStore extends CaseStudyClipFileStore {
+class _NoopClipStore implements CaseStudyClipFileStore {
   int deleteFolderCount = 0;
   String? lastCaseId;
 
@@ -118,6 +121,33 @@ class _NoopClipStore extends CaseStudyClipFileStore {
     deleteFolderCount += 1;
     lastCaseId = caseId;
   }
+
+  @override
+  Future<void> deleteFileIfExists(final String? path) async {}
+
+  @override
+  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+
+  @override
+  Future<String> persistClip({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+  }) async => sourcePath;
+
+  @override
+  Future<String> persistClipToStaging({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+    required final int commitToken,
+  }) async => sourcePath;
+
+  @override
+  String promoteStagingToFinalSync({
+    required final String stagingPath,
+    required final String finalPath,
+  }) => finalPath;
 }
 
 class _MutableLocalRepository implements CaseStudyLocalRepository {
@@ -163,6 +193,37 @@ class _MutableLocalRepository implements CaseStudyLocalRepository {
     }
     return null;
   }
+}
+
+Widget _buildHistoryPage() {
+  return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryCubit>(
+    create: () => CaseStudyHistoryCubit(
+      authRepository: getIt<AuthRepository>(),
+      localRepository: getIt<CaseStudyLocalRepository>(),
+      remoteRepository: getIt<CaseStudyRemoteRepository>(),
+      remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+      clipStore: getIt<CaseStudyClipFileStore>(),
+      remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+    ),
+    init: (final cubit) => cubit.load(),
+    child: const CaseStudyHistoryPage(),
+  );
+}
+
+Widget _buildHistoryDetailPage({required final String recordId}) {
+  return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryDetailCubit>(
+    create: () => CaseStudyHistoryDetailCubit(
+      recordId: recordId,
+      authRepository: getIt<AuthRepository>(),
+      localRepository: getIt<CaseStudyLocalRepository>(),
+      remoteRepository: getIt<CaseStudyRemoteRepository>(),
+      remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+      clipStore: getIt<CaseStudyClipFileStore>(),
+      remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+    ),
+    init: (final cubit) => cubit.load(),
+    child: const CaseStudyHistoryDetailPage(),
+  );
 }
 
 Widget _buildApp({required final Widget home}) {
@@ -213,7 +274,7 @@ void main() {
     testWidgets('deletes from history list (local mode) after confirmation', (
       final tester,
     ) async {
-      await tester.pumpWidget(_buildApp(home: const CaseStudyHistoryPage()));
+      await tester.pumpWidget(_buildApp(home: _buildHistoryPage()));
       await tester.pumpAndSettle();
 
       expect(find.text('Dr. Test'), findsOneWidget);
@@ -248,7 +309,7 @@ void main() {
             '/': (final context) =>
                 const Scaffold(body: Text('root placeholder')),
             '/detail': (final context) =>
-                const CaseStudyHistoryDetailPage(recordId: 'r1'),
+                _buildHistoryDetailPage(recordId: 'r1'),
           },
         ),
       );
@@ -298,7 +359,7 @@ void main() {
         );
         getIt.registerSingleton<CaseStudyClipFileStore>(_NoopClipStore());
 
-        await tester.pumpWidget(_buildApp(home: const CaseStudyHistoryPage()));
+        await tester.pumpWidget(_buildApp(home: _buildHistoryPage()));
         await tester.pumpAndSettle();
 
         expect(find.text('Dr. Test'), findsOneWidget);
@@ -358,7 +419,7 @@ void main() {
             '/': (final context) =>
                 const Scaffold(body: Text('root placeholder')),
             '/detail': (final context) =>
-                const CaseStudyHistoryDetailPage(recordId: 'r1'),
+                _buildHistoryDetailPage(recordId: 'r1'),
           },
         ),
       );

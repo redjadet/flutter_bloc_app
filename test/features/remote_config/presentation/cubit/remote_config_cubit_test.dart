@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,16 +16,17 @@ void main() {
     setUp(() {
       remoteConfigService = _MockRemoteConfigService();
       when(
-        () => remoteConfigService.getBool('awesome_feature_enabled'),
+        () =>
+            remoteConfigService.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(false);
       when(
-        () => remoteConfigService.getString('test_value_1'),
+        () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
       ).thenReturn('initial');
       when(
-        () => remoteConfigService.getString('last_data_source'),
+        () => remoteConfigService.getString(RemoteConfigKeys.lastDataSource),
       ).thenReturn('');
       when(
-        () => remoteConfigService.getString('last_synced_at'),
+        () => remoteConfigService.getString(RemoteConfigKeys.lastSyncedAt),
       ).thenReturn('');
       when(() => remoteConfigService.clearCache()).thenAnswer((_) async {});
     });
@@ -35,10 +37,12 @@ void main() {
         when(() => remoteConfigService.initialize()).thenAnswer((_) async {});
         when(() => remoteConfigService.forceFetch()).thenAnswer((_) async {});
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(true);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('awesome');
         return RemoteConfigCubit(remoteConfigService);
       },
@@ -82,20 +86,24 @@ void main() {
         when(() => remoteConfigService.initialize()).thenAnswer((_) async {});
         when(() => remoteConfigService.forceFetch()).thenAnswer((_) async {});
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(true);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
       act: (cubit) async {
         await cubit.initialize();
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(false);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('updated');
         await cubit.fetchValues();
       },
@@ -122,10 +130,12 @@ void main() {
       build: () {
         when(() => remoteConfigService.forceFetch()).thenAnswer((_) async {});
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(true);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('cached');
         return RemoteConfigCubit(remoteConfigService);
       },
@@ -149,10 +159,12 @@ void main() {
         when(() => remoteConfigService.initialize()).thenAnswer((_) async {});
         when(() => remoteConfigService.forceFetch()).thenAnswer((_) async {});
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(true);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('initial');
         return RemoteConfigCubit(remoteConfigService);
       },
@@ -189,10 +201,12 @@ void main() {
           () => remoteConfigService.forceFetch(),
         ).thenAnswer((_) => overlappingCompleter.future);
         when(
-          () => remoteConfigService.getBool('awesome_feature_enabled'),
+          () => remoteConfigService.getBool(
+            RemoteConfigKeys.awesomeFeatureEnabled,
+          ),
         ).thenReturn(true);
         when(
-          () => remoteConfigService.getString('test_value_1'),
+          () => remoteConfigService.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('overlap');
         return RemoteConfigCubit(remoteConfigService);
       },

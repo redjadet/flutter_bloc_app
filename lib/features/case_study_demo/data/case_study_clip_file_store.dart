@@ -1,12 +1,14 @@
 import 'dart:io';
 
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 /// Persists picked videos under app documents for stable paths across restarts.
-class CaseStudyClipFileStore {
+class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   /// Copies [sourcePath] to a unique staging file so concurrent commits cannot
   /// overwrite each other's destination until promotion to the final path.
+  @override
   Future<String> persistClipToStaging({
     required final String sourcePath,
     required final String caseId,
@@ -27,6 +29,7 @@ class CaseStudyClipFileStore {
   ///
   /// Uses a per-pick unique filename so re-picking a clip for the same question
   /// produces a new path, forcing any video preview widgets to reinitialize.
+  @override
   String finalClipFilePathFromStaging(final String stagingPath) {
     // Staging paths are created by [persistClipToStaging] with:
     //   $questionId.staging.$commitToken.ext
@@ -39,6 +42,7 @@ class CaseStudyClipFileStore {
   /// Replaces the canonical clip. Call only after confirming the async commit
   /// id is still current, with no intervening `await`, so promotion cannot race
   /// a newer pick/commit for the same question.
+  @override
   String promoteStagingToFinalSync({
     required final String stagingPath,
     required final String finalPath,
@@ -58,6 +62,7 @@ class CaseStudyClipFileStore {
     );
   }
 
+  @override
   Future<String> persistClip({
     required final String sourcePath,
     required final String caseId,
@@ -72,6 +77,7 @@ class CaseStudyClipFileStore {
     return destPath;
   }
 
+  @override
   Future<void> deleteFileIfExists(final String? path) async {
     if (path == null || path.isEmpty) return;
     try {
@@ -84,6 +90,7 @@ class CaseStudyClipFileStore {
     }
   }
 
+  @override
   Future<void> deleteCaseFolder(final String caseId) async {
     if (caseId.isEmpty) return;
     final Directory docs = await getApplicationDocumentsDirectory();

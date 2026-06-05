@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_cubit.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_detail_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_page.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubAuthRepository implements AuthRepository {
@@ -84,6 +89,43 @@ class _StubRemoteRepository implements CaseStudyRemoteRepository {
   }) async => '';
 }
 
+class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
+  @override
+  Future<void> deleteCaseStudyRemote({required final String caseId}) async {}
+}
+
+class _NoopClipStore implements CaseStudyClipFileStore {
+  @override
+  Future<void> deleteCaseFolder(final String caseId) async {}
+
+  @override
+  Future<void> deleteFileIfExists(final String? path) async {}
+
+  @override
+  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+
+  @override
+  Future<String> persistClip({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+  }) async => sourcePath;
+
+  @override
+  Future<String> persistClipToStaging({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+    required final int commitToken,
+  }) async => sourcePath;
+
+  @override
+  String promoteStagingToFinalSync({
+    required final String stagingPath,
+    required final String finalPath,
+  }) => finalPath;
+}
+
 class _InMemoryLocalRepository implements CaseStudyLocalRepository {
   _InMemoryLocalRepository({required this.records, required this.byId});
 
@@ -120,6 +162,37 @@ class _InMemoryLocalRepository implements CaseStudyLocalRepository {
     final String userId,
     final String recordId,
   ) async => byId[recordId];
+}
+
+Widget _buildHistoryPage() {
+  return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryCubit>(
+    create: () => CaseStudyHistoryCubit(
+      authRepository: getIt<AuthRepository>(),
+      localRepository: getIt<CaseStudyLocalRepository>(),
+      remoteRepository: getIt<CaseStudyRemoteRepository>(),
+      remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+      clipStore: getIt<CaseStudyClipFileStore>(),
+      remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+    ),
+    init: (final cubit) => cubit.load(),
+    child: const CaseStudyHistoryPage(),
+  );
+}
+
+Widget _buildHistoryDetailPage({required final String recordId}) {
+  return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryDetailCubit>(
+    create: () => CaseStudyHistoryDetailCubit(
+      recordId: recordId,
+      authRepository: getIt<AuthRepository>(),
+      localRepository: getIt<CaseStudyLocalRepository>(),
+      remoteRepository: getIt<CaseStudyRemoteRepository>(),
+      remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+      clipStore: getIt<CaseStudyClipFileStore>(),
+      remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+    ),
+    init: (final cubit) => cubit.load(),
+    child: const CaseStudyHistoryDetailPage(),
+  );
 }
 
 Future<void> _pumpLocalizedPage(
@@ -177,6 +250,10 @@ void main() {
           byId: <String, CaseStudyRecord>{'r1': record},
         ),
       );
+      getIt.registerSingleton<CaseStudyRemoteDeleteRepository>(
+        _StubRemoteDeleteRepository(),
+      );
+      getIt.registerSingleton<CaseStudyClipFileStore>(_NoopClipStore());
     });
 
     tearDown(() async {
@@ -186,7 +263,7 @@ void main() {
     testWidgets('history list pull-to-refresh throws no exceptions', (
       final tester,
     ) async {
-      await _pumpLocalizedPage(tester, const CaseStudyHistoryPage());
+      await _pumpLocalizedPage(tester, _buildHistoryPage());
 
       expect(find.text('Dr. Test'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -200,10 +277,7 @@ void main() {
     testWidgets('history detail pull-to-refresh throws no exceptions', (
       final tester,
     ) async {
-      await _pumpLocalizedPage(
-        tester,
-        const CaseStudyHistoryDetailPage(recordId: 'r1'),
-      );
+      await _pumpLocalizedPage(tester, _buildHistoryDetailPage(recordId: 'r1'));
 
       expect(find.text('Dr. Test'), findsOneWidget);
       expect(tester.takeException(), isNull);

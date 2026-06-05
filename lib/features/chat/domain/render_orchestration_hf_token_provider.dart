@@ -1,4 +1,7 @@
-// Domain-facing import surface for presentation.
-//
-// Keeps presentation layer from importing `data/` paths directly (validation).
-export 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
+/// Hugging Face read token for Render `X-HF-Authorization` (per send).
+abstract class RenderOrchestrationHfTokenProvider {
+  Future<String?> readHfTokenForUpstream();
+
+  /// Clears demo-scoped material cached for Render (e.g. after Firebase sign-out).
+  Future<void> clearRenderOrchestrationTokenCache();
+}

@@ -163,7 +163,7 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
         localRepository: _StubLocalRepository(),
         videoRepository: _StubVideoRepository(),
         uploadRepository: _StubUploadRepository(),
-        clipStore: CaseStudyClipFileStore(),
+        clipStore: CaseStudyClipFileStoreImpl(),
         remoteDeleteRepository: _StubRemoteDeleteRepository(),
         remoteBackendAuth: _StubRemoteBackendAuth(),
         remoteRepository: _StubRemoteRepository(),

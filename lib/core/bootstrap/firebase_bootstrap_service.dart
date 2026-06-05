@@ -9,6 +9,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 part 'firebase_bootstrap_service_helpers.dart';

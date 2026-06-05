@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart'
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/shared/firebase/auth_helpers.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
@@ -128,13 +128,13 @@ final class SupabaseConfigProvider {
       }
 
       final String url = remoteConfig
-          .getString(RemoteConfigRepository.supabaseUrlKey)
+          .getString(RemoteConfigKeys.supabaseUrl)
           .trim();
       final String anonKey = remoteConfig
-          .getString(RemoteConfigRepository.supabaseAnonKeyKey)
+          .getString(RemoteConfigKeys.supabaseAnonKey)
           .trim();
       final int versionNumber = remoteConfig.getInt(
-        RemoteConfigRepository.supabaseConfigVersionKey,
+        RemoteConfigKeys.supabaseConfigVersion,
       );
 
       assert(
@@ -153,7 +153,7 @@ final class SupabaseConfigProvider {
       );
 
       final bool enabledFlag = remoteConfig.getBool(
-        RemoteConfigRepository.supabaseConfigEnabledKey,
+        RemoteConfigKeys.supabaseConfigEnabled,
       );
       if (!enabledFlag) {
         return SupabaseConfigFetchResult(

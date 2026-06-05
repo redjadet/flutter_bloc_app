@@ -33,7 +33,7 @@ extension _OfflineFirstRemoteConfigRepositorySync
       await _remoteRepository.forceFetch();
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
-        'OfflineFirstRemoteConfigRepository.$reason failed',
+        IntegrationLogMessages.offlineFirstRemoteConfigFetchFailed(reason),
         error,
         stackTrace,
       );
@@ -54,9 +54,8 @@ extension _OfflineFirstRemoteConfigRepositorySync
     final Map<String, dynamic> updatedValues = <String, dynamic>{
       ..._snapshot.values,
       ..._readTrackedValues(),
-      OfflineFirstRemoteConfigRepository._lastSyncedKey: fetchedAt
-          .toIso8601String(),
-      OfflineFirstRemoteConfigRepository._lastDataSourceKey: 'remote',
+      RemoteConfigKeys.lastSyncedAt: fetchedAt.toIso8601String(),
+      RemoteConfigKeys.lastDataSource: 'remote',
     };
     final RemoteConfigSnapshot nextSnapshot = _snapshot.copyWith(
       values: updatedValues,

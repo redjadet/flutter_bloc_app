@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
@@ -182,18 +182,72 @@ class _StubUploadRepository implements CaseStudyUploadRepository {
   Future<void> submitCase() async {}
 }
 
-class _NoopClipFileStore extends CaseStudyClipFileStore {
+class _NoopClipFileStore implements CaseStudyClipFileStore {
   @override
   Future<void> deleteCaseFolder(final String caseId) async {}
+
+  @override
+  Future<void> deleteFileIfExists(final String? path) async {}
+
+  @override
+  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+
+  @override
+  Future<String> persistClip({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+  }) async => sourcePath;
+
+  @override
+  Future<String> persistClipToStaging({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+    required final int commitToken,
+  }) async => sourcePath;
+
+  @override
+  String promoteStagingToFinalSync({
+    required final String stagingPath,
+    required final String finalPath,
+  }) => finalPath;
 }
 
-class _SpyClipFileStore extends CaseStudyClipFileStore {
+class _SpyClipFileStore implements CaseStudyClipFileStore {
   int deleteCount = 0;
 
   @override
   Future<void> deleteCaseFolder(final String caseId) async {
     deleteCount += 1;
   }
+
+  @override
+  Future<void> deleteFileIfExists(final String? path) async {}
+
+  @override
+  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+
+  @override
+  Future<String> persistClip({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+  }) async => sourcePath;
+
+  @override
+  Future<String> persistClipToStaging({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+    required final int commitToken,
+  }) async => sourcePath;
+
+  @override
+  String promoteStagingToFinalSync({
+    required final String stagingPath,
+    required final String finalPath,
+  }) => finalPath;
 }
 
 class _NoopRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {

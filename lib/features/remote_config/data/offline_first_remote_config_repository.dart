@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
@@ -35,22 +37,20 @@ class OfflineFirstRemoteConfigRepository
 
   static const String remoteConfigEntity = 'remote_config';
   static const List<String> _trackedBoolKeys = <String>[
-    RemoteConfigRepository.awesomeFeatureKey,
-    RemoteConfigRepository.supabaseConfigEnabledKey,
+    RemoteConfigKeys.awesomeFeatureEnabled,
+    RemoteConfigKeys.supabaseConfigEnabled,
   ];
   static const List<String> _trackedStringKeys = <String>[
-    RemoteConfigRepository.testValueKey,
-    RemoteConfigRepository.supabaseUrlKey,
-    RemoteConfigRepository.supabaseAnonKeyKey,
-    RemoteConfigRepository.renderChatDemoHfReadTokenKey,
+    RemoteConfigKeys.testValue1,
+    RemoteConfigKeys.supabaseUrl,
+    RemoteConfigKeys.supabaseAnonKey,
+    RemoteConfigKeys.renderChatDemoHfReadToken,
   ];
   static const List<String> _trackedIntKeys = <String>[
-    RemoteConfigRepository.supabaseConfigVersionKey,
+    RemoteConfigKeys.supabaseConfigVersion,
   ];
-  static const String _lastSyncedKey = 'last_synced_at';
-  static const String _lastDataSourceKey = 'last_data_source';
 
-  final RemoteConfigRepository _remoteRepository;
+  final RemoteConfigRemoteDataSource _remoteRepository;
   final RemoteConfigCacheRepository _cacheRepository;
   final NetworkStatusService _networkStatusService;
   final SyncableRepositoryRegistry _registry;

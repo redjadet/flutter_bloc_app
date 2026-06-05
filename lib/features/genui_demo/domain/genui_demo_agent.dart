@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
-import 'package:genui/genui.dart' as genui;
 
 /// Domain interface for GenUI agent operations.
-/// Keeps all types Flutter-free for clean architecture.
 abstract interface class GenUiDemoAgent {
   /// Initializes the agent and establishes connection.
   Future<void> initialize();
@@ -21,9 +19,8 @@ abstract interface class GenUiDemoAgent {
   /// Stream of error messages.
   Stream<String> get errors;
 
-  /// Opaque handle to pass into GenUiSurface widget.
-  /// Keep the type consistent with GenUiSurface.host (verify SDK type).
-  genui.A2uiMessageProcessor? get hostHandle;
+  /// Opaque handle for GenUiSurface; presentation casts to SDK type.
+  Object? get hostHandle;
 
   /// Disposes all resources.
   Future<void> dispose();

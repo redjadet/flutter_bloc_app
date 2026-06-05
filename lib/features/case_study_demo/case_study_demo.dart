@@ -19,6 +19,8 @@ export 'domain/case_study_remote_repository.dart';
 export 'domain/case_study_upload_repository.dart';
 export 'domain/case_study_video_repository.dart';
 // Presentation exports
+export 'presentation/cubit/case_study_history_cubit.dart';
+export 'presentation/cubit/case_study_history_detail_cubit.dart';
 export 'presentation/cubit/case_study_session_cubit.dart';
 export 'presentation/cubit/case_study_session_state.dart';
 export 'presentation/pages/case_study_demo_home_page.dart';

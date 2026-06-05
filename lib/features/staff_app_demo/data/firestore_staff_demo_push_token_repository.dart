@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class FirestoreStaffDemoPushTokenRepository
@@ -44,9 +45,7 @@ class FirestoreStaffDemoPushTokenRepository
         apnsToken = await _messaging.getAPNSToken();
       } on Exception catch (_) {
         // Expected on simulators or before APNs registration completes.
-        AppLogger.info(
-          'FirestoreStaffDemoPushTokenRepository.registerTokens APNs token not available yet',
-        );
+        AppLogger.info(IntegrationLogMessages.staffDemoPushApnsNotAvailable);
       }
 
       await _firestore.collection('staffDemoProfiles').doc(userId).set(
@@ -59,7 +58,7 @@ class FirestoreStaffDemoPushTokenRepository
       );
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
-        'FirestoreStaffDemoPushTokenRepository.registerTokens failed',
+        IntegrationLogMessages.staffDemoPushRegisterFailed,
         error,
         stackTrace,
       );
