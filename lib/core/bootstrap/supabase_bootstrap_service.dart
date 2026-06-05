@@ -88,7 +88,7 @@ class SupabaseBootstrapService {
   static Future<void> _defaultInitializeClient({
     required final String url,
     required final String anonKey,
-  }) => Supabase.initialize(url: url, anonKey: anonKey);
+  }) => Supabase.initialize(url: url, publishableKey: anonKey);
 
   static bool _hasCachedConfigProjectMismatch() {
     final String? cachedProjectId = SecretConfig.supabaseFirebaseProjectId

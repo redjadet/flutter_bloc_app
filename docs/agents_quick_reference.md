@@ -31,6 +31,7 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_b
 | Agent host maintain (sync, globals, workflows) | **Agents run:** `preflight` (task start), `after-host-edit` (templates), `closeout` (before finish; scope host + docs) · `./bin/agent-maintain help` · `routine --apply`, `host-full --apply` · [`host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) (incl. [not changed by design](agent_kb/host_maintenance_automation.md#not-changed-by-design)) · `/agent-maintain` |
 | Cursor host setup (sync + install/trim/inventory) | `./bin/agent-maintain setup` (`--apply`, `--install`) or `bash tool/setup_cursor_agent_environment.sh` · `/setup-cursor-agent-environment` |
 | Global vendor skills (Flutter/Dart/iOS/AI) | `./bin/agent-maintain install` · `update` · `find QUERY` · `trim` (`--apply`, `--mode full`) or underlying `tool/install_global_agent_skills.sh` etc. |
+| Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md) · shim `agents-skill-routing` · `bash tool/find_global_agent_skills.sh QUERY` |
 | IDE-open local env preflight | `.vscode/tasks.json` runs `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
 | Tracked secret literals | `./tool/check_tracked_secret_literals.sh` |
 | AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
@@ -60,12 +61,13 @@ Repo docs/scripts define behavior; external catalogs don't.
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |
+| Implementation / tests / debug / validation (pick skill) | [`ai/skill_routing.md`](ai/skill_routing.md); invoke matching skill before edits; skill `agents-skill-routing` | Same |
 
 Version-sensitive APIs: repo/official docs before model memory. Host parity: [`agent_knowledge_base.md`](agent_knowledge_base.md) · [`agent_environment_setup.md`](agent_environment_setup.md).
 
 ## Harness (pointers only)
 
-Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Skill routing:** [`ai/skill_routing.md`](ai/skill_routing.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
 Mechanical anchors (do not drop from this file): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
@@ -74,6 +76,7 @@ Mechanical anchors (do not drop from this file): below 95%; execute end-to-end, 
 | Need | Cursor | Codex |
 | --- | --- | --- |
 | Orientation + commands | `agents-quick-reference` | `agents-quick-reference` |
+| Skill discovery / routing | `agents-skill-routing` | `agents-skill-routing` |
 | Non-trivial delivery | `agents-delivery-workflow` | `agents-delivery-workflow` |
 | Plan/delegation reminders | `agents-meta-behavior` | — |
 | Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |

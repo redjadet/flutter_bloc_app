@@ -79,6 +79,7 @@ fi
 echo ""
 echo "read_next|AGENTS.md"
 echo "read_next|docs/ai/context_loading.md"
+echo "read_next|docs/ai/skill_routing.md"
 echo "read_next|docs/agent_knowledge_base.md"
 echo "read_next|docs/ai_code_review_protocol.md"
 echo "read_next|docs/agents_quick_reference.md"

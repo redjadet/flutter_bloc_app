@@ -7,7 +7,7 @@ Roles, handoffs, and stop conditions. Map entry: [`AGENTS.md`](../../AGENTS.md).
 | Role | Owns | Reads first | Output |
 | --- | --- | --- | --- |
 | Planner | Scope, phases, Feature Brief | `PLAN.md`, user request | Approved brief |
-| Implementer | Code + tests in bounds | `CODEMAP.md`, `CONTEXT_MAP.md` | PR-sized diff |
+| Implementer | Code + tests in bounds | [`CODEMAP.md`](../../CODEMAP.md), [`CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) | PR-sized diff |
 | Reviewer | Correctness, architecture, tests | Diff, review protocol | Findings |
 | Documenter | Canon docs, reports refresh | `docs/README.md` | Doc-only diff |
 | Validator | Commands and evidence | quick reference | Pass/fail proof |
@@ -32,7 +32,7 @@ One session may hold multiple roles; declare role in PR description.
 
 ## Context budget
 
-[`context_loading.md`](context_loading.md) ladder; expand only `CONTEXT_MAP` paths → barrel/DI as needed. No whole-feature tree scans unless refactoring.
+[`context_loading.md`](context_loading.md) ladder; skill picks: [`skill_routing.md`](skill_routing.md). Expand only [`CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) paths → barrel/DI as needed. No whole-feature tree scans unless refactoring.
 
 ## Evidence hygiene
 

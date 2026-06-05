@@ -107,6 +107,8 @@ bash tool/find_global_agent_skills.sh ios swift
 
 After install or update, reload Cursor (**Developer: Reload Window**). List globals: `npx skills list -g`.
 
+**Which skill to use:** [`docs/ai/skill_routing.md`](ai/skill_routing.md) (canonical task → skill table; repo canon wins over vendor skills). Synced shim: `agents-skill-routing`.
+
 Ad-hoc single skill:
 
 ```bash

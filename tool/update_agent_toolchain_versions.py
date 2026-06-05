@@ -121,13 +121,13 @@ def main() -> int:
         ),
         (
             PROJECT_ROOT / "docs/agents_quick_reference.md",
-            r"^(Pinned repo toolchain: Flutter )\S+( / Dart )\S+(\..*)$",
+            r"^(.*Toolchain: Flutter )\S+( / Dart )\S+(.*)$",
             rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
         (
             PROJECT_ROOT / "docs/ai_code_review_protocol.md",
-            r"^Pinned repo toolchain: Flutter \S+ / Dart \S+\.$",
-            f"Pinned repo toolchain: Flutter {flutter_version} / Dart {dart_version}.",
+            r"^(Toolchain: Flutter )\S+( / Dart )\S+(\..*)$",
+            rf"\g<1>{flutter_version}\g<2>{dart_version}\g<3>",
         ),
         (
             PROJECT_ROOT / "docs/new_developer_guide.md",

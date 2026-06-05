@@ -14,7 +14,7 @@ AGENTS file and Codex worktrees.
 ## Start
 
 1. `AGENTS.md`
-2. Canonical ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md)
+2. Canonical ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md); skills: [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md)
 3. Review/commands when needed:
    [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md),
    [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
@@ -52,7 +52,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
 - Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
 - Plans/history: [`docs/plans/README.md`](docs/plans/README.md), [`docs/changes/README.md`](docs/changes/README.md), [`docs/audits/README.md`](docs/audits/README.md)
-- AI engineering: [`PLAN.md`](PLAN.md), [`CODEMAP.md`](CODEMAP.md), [`docs/ai/governance.md`](docs/ai/governance.md), [`ai/reports/README.md`](ai/reports/README.md)
+- AI engineering: [`PLAN.md`](PLAN.md), [`CODEMAP.md`](CODEMAP.md), [`docs/ai/governance.md`](docs/ai/governance.md), [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md), [`ai/reports/README.md`](ai/reports/README.md)
 - Host/env notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md), [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Operator prefs/learning: [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)
 - Interview/portfolio walk: [`docs/interview_showcase.md`](docs/interview_showcase.md), [`docs/adr/0005-interview-showcase-scope.md`](docs/adr/0005-interview-showcase-scope.md)

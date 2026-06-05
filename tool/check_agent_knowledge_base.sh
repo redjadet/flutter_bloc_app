@@ -112,6 +112,7 @@ required_files=(
   "docs/architecture_details.md"
   "docs/CODE_QUALITY.md"
   "docs/engineering/validation_routing_fast_vs_full.md"
+  "docs/ai/skill_routing.md"
   "docs/plans/README.md"
   "docs/changes/README.md"
   "docs/audits/README.md"
@@ -126,6 +127,7 @@ line_budget_files=(
   "docs/agent_knowledge_base.md"
   "docs/agent_kb/self_improvement.md"
   "docs/ai/context_loading.md"
+  "docs/ai/skill_routing.md"
   "docs/ai_code_review_protocol.md"
   "docs/agents_quick_reference.md"
   "docs/agent_project_context.md"
@@ -171,6 +173,7 @@ if [ -f "AGENTS.md" ]; then
   require_not_contains "AGENTS.md" "## Learned User Preferences"
   require_not_contains "AGENTS.md" "## Learned Workspace Facts"
   require_contains "AGENTS.md" "operator_preferences_durable.md"
+  require_contains "AGENTS.md" "docs/ai/skill_routing.md"
 else
   echo "AGENTS.md not present; skipping local injected-map size/link checks."
 fi
@@ -493,8 +496,30 @@ if [ -d "tool/agent_host_templates" ]; then
     "tasks/cursor/team/<run-id>/" \
     "agent_knowledge_base.md#multi-agent-hub"
 
+  require_contains "tool/agent_asset_lib.sh" "agents-skill-routing/SKILL.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/shared/skills/agents-skill-routing/SKILL.md" \
+    "docs/ai/skill_routing.md" \
+    "agents-quick-reference" \
+    "agents-delivery-workflow" \
+    "agents-canonical-rules" \
+    "./bin/agent-maintain find"
+
+  require_all_contains \
+    "docs/ai/context_loading.md" \
+    "skill_routing.md" \
+    "agents-skill-routing"
+
+  require_all_contains \
+    "docs/agents_quick_reference.md" \
+    "ai/skill_routing.md" \
+    "agents-skill-routing"
+
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" \
+    "skill_routing.md" \
+    "agents-skill-routing" \
     "multi-agent hub" \
     "tasks/cursor/team/<run-id>/" \
     "agent_knowledge_base.md#multi-agent-hub" \

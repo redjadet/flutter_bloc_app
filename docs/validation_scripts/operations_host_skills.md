@@ -1,6 +1,6 @@
 # Validation scripts — host skills
 
-Router: [`../validation_scripts.md`](../validation_scripts.md).
+Router: [`../validation_scripts.md`](../validation_scripts.md). **Skill routing (which skill to invoke):** [`../ai/skill_routing.md`](../ai/skill_routing.md).
 
 ## Agent maintain (unified entry)
 

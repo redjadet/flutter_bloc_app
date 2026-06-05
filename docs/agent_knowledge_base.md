@@ -112,7 +112,7 @@ Required anchors (kept here for mechanical checks):
 
 ## Context Navigation Ladder
 
-Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Unnumbered discovery: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md).
+Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Before implementation, skill picks: [`docs/ai/skill_routing.md`](ai/skill_routing.md). Unnumbered discovery: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md).
 
 ## System Of Record Layout
 

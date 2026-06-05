@@ -70,6 +70,7 @@ if ! grep -qF "check_agent_memory_compounding.sh" docs/validation_scripts.md doc
   fail "validation_scripts router or shards must reference: check_agent_memory_compounding.sh"
 fi
 require_contains "tool/agent_session_bootstrap.sh" "docs/ai/context_loading.md"
+require_contains "tool/agent_session_bootstrap.sh" "docs/ai/skill_routing.md"
 require_contains "tool/agent_session_bootstrap.sh" "context_ladder|3|structural graph"
 
 if [[ -d "tool/agent_host_templates" ]]; then

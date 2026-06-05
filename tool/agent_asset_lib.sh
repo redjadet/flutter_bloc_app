@@ -12,6 +12,7 @@ has_agent_templates() {
 # shellcheck disable=SC2034
 managed_cursor_files=(
   "shared/skills/agents-quick-reference/SKILL.md|$HOME/.cursor/skills/agents-quick-reference/SKILL.md"
+  "shared/skills/agents-skill-routing/SKILL.md|$HOME/.cursor/skills/agents-skill-routing/SKILL.md"
   "shared/skills/agents-delivery-workflow/SKILL.md|$HOME/.cursor/skills/agents-delivery-workflow/SKILL.md"
   "cursor/skills/agents-meta-behavior/SKILL.md|$HOME/.cursor/skills/agents-meta-behavior/SKILL.md"
   "cursor/skills/agents-cursor-integration/SKILL.md|$HOME/.cursor/skills/agents-cursor-integration/SKILL.md"
@@ -55,6 +56,7 @@ managed_cursor_files=(
 managed_codex_files=(
   "__repo_root__/AGENTS.md|$HOME/.codex/AGENTS.md"
   "shared/skills/agents-quick-reference/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md"
+  "shared/skills/agents-skill-routing/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-skill-routing/SKILL.md"
   "shared/skills/agents-delivery-workflow/SKILL.md|$HOME/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md"
   "shared/skills/flutter-cross-platform-modern/SKILL.md|$HOME/.codex/skills/flutter-cross-platform-modern/SKILL.md"
   "shared/skills/agents-repo-context/SKILL.md|$HOME/.codex/skills/agents-repo-context/SKILL.md"
