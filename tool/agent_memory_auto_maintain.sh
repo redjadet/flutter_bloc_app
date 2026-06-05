@@ -84,7 +84,7 @@ is_agent_scope_path() {
     AGENTS.md|llms.txt) return 0 ;;
     docs/agent_environment_setup.md) return 0 ;;
     docs/agent_knowledge_base.md) return 0 ;;
-    docs/ai/context_loading.md) return 0 ;;
+    docs/ai/context_loading.md|docs/ai/skill_routing.md) return 0 ;;
     docs/agents_quick_reference.md) return 0 ;;
     tool/agent_session_bootstrap.sh) return 0 ;;
     tool/check_agent_memory_compounding.sh) return 0 ;;

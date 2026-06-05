@@ -54,3 +54,23 @@ post_install do |installer|
     end
   end
 end
+
+post_integrate do |_installer|
+  runner_project = Xcodeproj::Project.open(File.expand_path('Runner.xcodeproj', __dir__))
+  runner = runner_project.targets.find { |target| target.name == 'Runner' }
+  phase = runner&.shell_script_build_phases&.find { |build_phase| build_phase.name == '[CP] Embed Pods Frameworks' }
+
+  if phase
+    phase.shell_script = <<~SCRIPT
+      if [ "${PLATFORM_NAME}" = "iphonesimulator" ]; then
+        export CODE_SIGNING_ALLOWED=NO
+        export CODE_SIGNING_REQUIRED=NO
+        export COCOAPODS_PARALLEL_CODE_SIGN=NO
+        /bin/bash "${SRCROOT}/scripts/embed_pods_frameworks_for_simulator.sh"
+        exit $?
+      fi
+      /bin/bash "${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh"
+    SCRIPT
+    runner_project.save
+  end
+end

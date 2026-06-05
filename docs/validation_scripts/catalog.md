@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **81** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **63** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **83** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **65** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -53,6 +53,18 @@ below.
   `lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
   (barrel migration backlog). Not in `./bin/checklist` by default.
 - **`check_macos_debug_web_guard.sh`**: Ensures macOS debug-only fallbacks that check `defaultTargetPlatform == TargetPlatform.macOS` also include `!kIsWeb`, so Safari/Chrome on macOS do not inherit desktop-only debug behavior. Uses `rg` when available, falls back to `grep`.
+- **`check_apple_debug_hive_storage.sh`**: Guards Apple-platform debug Hive +
+  secret-storage invariants (`useInMemorySecretStorageInDebug`, `hive_ios_debug`,
+  stable `_appleDebugFallbackKey`, iOS debug tests). Prevents Keychain -34018 and
+  `Recovering corrupted box.` regressions. See
+  [`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).
+- **`check_ios_pod_framework_embed.sh`**: After an iOS simulator build,
+  verifies `Runner.app/Frameworks` contains every CocoaPods framework from
+  `Pods-Runner-frameworks-Debug-input-files.xcfilelist` and every
+  `@rpath/*.framework` referenced by `Runner.debug.dylib`. Skips when the
+  CocoaPods input list or simulator app is absent unless `--require-built-app`
+  is passed; use
+  `--self-test` for the no-trailing-newline fixture.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
 - **`check_design_md.sh`**: Runs Google DesignMD lint for root
   `../DESIGN.md`. Use after visual-brief changes; keep runtime
@@ -105,6 +117,9 @@ Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/che
   enabled when `INTEGRATION_TESTS_ALLOW_POD_SHIM=1` (default) and
   `ios/Podfile.lock` matches `ios/Pods/Manifest.lock`. Contract:
   [`integration_runner_contract.md`](../engineering/integration_runner_contract.md).
+- After `flutter build ios --simulator --debug`, run
+  `tool/check_ios_pod_framework_embed.sh --require-built-app` to catch missing
+  embedded frameworks before simulator launch/dyld failures.
 
 **Router companion inside checklist:** After static checks, `./bin/checklist` may run `./bin/router_feature_validate` when changed files match [`.cursor/rules/router-feature-validation.mdc`](../.cursor/rules/router-feature-validation.mdc) globs (same rules as `tool/check_router_trigger_precision.sh`). Expect extra time when router/auth UI changes. Skip locally: `CHECKLIST_SKIP_ROUTER_VALIDATE=1`.
 

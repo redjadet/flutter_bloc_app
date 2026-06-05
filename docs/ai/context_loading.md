@@ -10,6 +10,7 @@
 4. [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) for the feature/task
 5. Canon from [`docs/README.md`](../README.md)
 6. Debt claims only: `ai/reports/`, `docs/audits/` (`git add -f`)
+7. **Skill routing** (before implementation): [`skill_routing.md`](skill_routing.md) — shim `agents-skill-routing`; session list → routing table → `./bin/agent-maintain find QUERY` or `bash tool/find_global_agent_skills.sh QUERY`
 
 ## Avoid loading early
 

@@ -119,6 +119,23 @@ void main() {
       expect(secondKey, equals(firstKey));
       debugDefaultTargetPlatformOverride = null;
     });
+
+    test('uses stable debug key on iOS debug with default storage', () async {
+      addTearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final firstManager = HiveKeyManager();
+      final secondManager = HiveKeyManager();
+
+      final firstKey = await firstManager.getEncryptionKey();
+      final secondKey = await secondManager.getEncryptionKey();
+
+      expect(firstKey, hasLength(32));
+      expect(secondKey, equals(firstKey));
+      debugDefaultTargetPlatformOverride = null;
+    });
   });
 }
 

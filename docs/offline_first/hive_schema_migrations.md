@@ -132,4 +132,8 @@ bash tool/check_hive_schema_fingerprints.sh
 HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh
 ```
 
+**Apple debug (iOS simulator / macOS)**: `Recovering corrupted box.` at startup is
+often encryption-key / path drift, not a schema migration bug — see
+[`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).
+
 Continued in [`hive_schema_migrations_implementation.md`](hive_schema_migrations_implementation.md).

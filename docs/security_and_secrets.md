@@ -190,7 +190,14 @@ can still flag keys in **old commits**. If keys were ever pushed:
 
 - **Hive boxes are encrypted** using `HiveAesCipher` with a 32-byte (256-bit)
   key.
-- **The encryption key is stored in secure storage** (Keychain/Keystore).
+- **The encryption key is stored in secure storage** (Keychain/Keystore) in
+  **release** builds.
+- **Apple debug (iOS simulator + macOS desktop, non-web)**: Keychain is not
+  reliable without entitlements; the app uses in-memory secret storage and a
+  stable debug-only encryption key, with Hive roots under `hive_ios_debug` /
+  `hive_macos_debug`. Symptom triage and verification:
+  [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md).
+  Regression guard: `bash tool/check_apple_debug_hive_storage.sh`.
 - **Migrations are defensive**: when migrating legacy storage, data is validated
   before it is treated as trusted app state.
 
@@ -199,3 +206,4 @@ can still flag keys in **old commits**. If keys were ever pushed:
 - [Authentication](authentication.md)
 - [Repository lifecycle](REPOSITORY_LIFECYCLE.md)
 - [Clean architecture](clean_architecture.md)
+- [Apple debug Hive and secret storage](engineering/apple_debug_hive_storage.md)

@@ -1,8 +1,8 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +42,12 @@ void main() {
 
     test('default storage uses memory on macOS debug', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+
+      expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
+    });
+
+    test('default storage uses memory on iOS debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
     });
