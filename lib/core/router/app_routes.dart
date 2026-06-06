@@ -1,5 +1,4 @@
-// coverage:ignore-file - static container of route constants.
-/// Central place to keep route names and paths used by GoRouter.
+// coverage:ignore-file - route names and paths used by GoRouter.
 library;
 
 part 'app_routes_auth.part.dart';

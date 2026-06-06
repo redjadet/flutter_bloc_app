@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/firebase_options.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+part 'firebase_bootstrap_service_app_check.part.dart';
 part 'firebase_bootstrap_service_helpers.dart';
 
 /// Service responsible for Firebase initialization and configuration
