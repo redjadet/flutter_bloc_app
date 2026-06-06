@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
@@ -16,11 +17,13 @@ typedef SettingsQaExtrasBuilder = List<Widget> Function(BuildContext context);
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,
+    this.authRepository,
     this.buildQaExtras,
     super.key,
   });
 
   final AppInfoRepository appInfoRepository;
+  final AuthRepository? authRepository;
   final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
@@ -46,20 +49,27 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(final BuildContext context) => BlocProvider.value(
     value: _cubit,
-    child: _SettingsView(buildQaExtras: widget.buildQaExtras),
+    child: _SettingsView(
+      authRepository: widget.authRepository,
+      buildQaExtras: widget.buildQaExtras,
+    ),
   );
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView({this.buildQaExtras});
+  const _SettingsView({this.authRepository, this.buildQaExtras});
 
+  final AuthRepository? authRepository;
   final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final List<Widget> sections = <Widget>[
-      const AccountSection(key: ValueKey('settings-account')),
+      AccountSection(
+        key: const ValueKey('settings-account'),
+        authRepository: authRepository,
+      ),
       SizedBox(
         key: const ValueKey('settings-gap-1'),
         height: context.responsiveGapL,

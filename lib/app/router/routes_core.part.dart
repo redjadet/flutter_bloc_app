@@ -11,6 +11,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
       authPath: AppRoutes.authPath,
       child: SettingsPage(
         appInfoRepository: getIt<AppInfoRepository>(),
+        authRepository: getIt<AuthRepository>(),
         buildQaExtras: (final ctx) => <Widget>[
           GraphqlCacheControlsSection(
             key: const ValueKey('settings-qa-graphql-cache-controls'),

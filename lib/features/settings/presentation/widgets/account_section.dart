@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
@@ -11,18 +11,15 @@ import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {
-  const AccountSection({super.key, this._auth});
+  const AccountSection({super.key, this.authRepository});
 
-  final FirebaseAuth? _auth;
+  final AuthRepository? authRepository;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
-    final bool firebaseReady = Firebase.apps.isNotEmpty || _auth != null;
-    final FirebaseAuth? auth = firebaseReady
-        ? (_auth ?? FirebaseAuth.instance)
-        : null;
+    final AuthRepository? auth = authRepository;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,15 +30,14 @@ class AccountSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (!firebaseReady)
+              if (auth == null)
                 Text(l10n.accountSignedOutLabel)
-              else if (auth case final FirebaseAuth effectiveAuth)
-                StreamBuilder<User?>(
-                  initialData: effectiveAuth.currentUser,
-                  stream: effectiveAuth.authStateChanges(),
+              else
+                StreamBuilder<AuthUser?>(
+                  initialData: auth.currentUser,
+                  stream: auth.authStateChanges,
                   builder: (final context, final snapshot) {
-                    final User? user =
-                        snapshot.data ?? effectiveAuth.currentUser;
+                    final AuthUser? user = snapshot.data ?? auth.currentUser;
                     final bool waitingForFirstAuthEvent =
                         snapshot.connectionState == ConnectionState.waiting &&
                         user == null;
@@ -68,16 +64,10 @@ class AccountSection extends StatelessWidget {
                       );
                     }
 
-                    final bool isGuest = user.isAnonymous;
-                    final String? trimmedName = user.displayName?.trim();
-                    String displayName = user.email ?? user.uid;
-                    if (trimmedName != null && trimmedName.isNotEmpty) {
-                      displayName = trimmedName;
-                    }
-
+                    final String displayName = _resolveDisplayName(user);
                     final String? email = user.email?.trim();
 
-                    if (isGuest) {
+                    if (user.isAnonymous) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -141,13 +131,19 @@ class AccountSection extends StatelessWidget {
                       ],
                     );
                   },
-                )
-              else
-                Text(l10n.accountSignedOutLabel),
+                ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  static String _resolveDisplayName(final AuthUser user) {
+    final String? trimmedName = user.displayName?.trim();
+    if (trimmedName != null && trimmedName.isNotEmpty) {
+      return trimmedName;
+    }
+    return user.email ?? user.id;
   }
 }

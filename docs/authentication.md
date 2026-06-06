@@ -39,7 +39,7 @@ Protected examples:
   - Registers FirebaseUI actions to navigate to `/counter` on sign-in/user-created/credential-linked, and surfaces `FirebaseAuthException` messages through localized snackbars (`auth_error_message.dart` + `l10n` strings).
   - Anonymous sign-in triggers navigation to the counter page on success; failures show localized errors.
 - **Account management**:
-  - Settings `AccountSection` streams `authStateChanges()` to show signed-in, guest, or signed-out views and routes to `/auth` for upgrades or to `/manage-account` for profile management (`lib/features/settings/presentation/widgets/account_section.dart`).
+  - Settings `AccountSection` receives injected `AuthRepository` (wired from `SettingsPage` via `routes_core.part.dart`) and streams `authStateChanges` with `currentUser` as initial data to show signed-in, guest, or signed-out views; routes to `/auth` for upgrades or `/manage-account` for profile management. Sign-out UI still uses FirebaseUI `SignOutButton` (`lib/features/settings/presentation/widgets/account_section.dart`, `lib/core/auth/auth_repository.dart`, `lib/core/di/register_auth_services.dart`).
   - `/manage-account` hosts FirebaseUI `ProfileScreen` with sign-out redirecting to `/auth` (`lib/features/auth/presentation/pages/profile_page.dart`).
 
 ## Registration Flow (UI-Only)
