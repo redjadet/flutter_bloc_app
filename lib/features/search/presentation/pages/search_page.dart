@@ -19,6 +19,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -53,12 +54,13 @@ class _SearchPageContent extends StatelessWidget {
 
     final colorScheme = theme.colorScheme;
 
-    return Scaffold(
+    return CommonPageLayout(
       backgroundColor: colorScheme.surface,
       appBar: _SearchPageAppBar(
         backgroundColor: colorScheme.surface,
         preferredHeight: _searchAppBarHeight(context),
       ),
+      useResponsiveBody: false,
       body: SafeArea(
         child: CommonMaxWidth(
           child: SizedBox(

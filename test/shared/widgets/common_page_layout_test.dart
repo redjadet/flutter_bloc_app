@@ -34,5 +34,28 @@ void main() {
       expect(find.text('No Wrapper'), findsOneWidget);
       expect(find.text('Plain Body'), findsOneWidget);
     });
+
+    testWidgets('uses custom appBar instead of CommonAppBar title', (
+      tester,
+    ) async {
+      const customTitle = Key('custom-app-bar-title');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CommonPageLayout(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: AppBar(title: const Text('Custom', key: customTitle)),
+            ),
+            useResponsiveBody: false,
+            body: const Text('Custom Body'),
+          ),
+        ),
+      );
+
+      expect(find.byKey(customTitle), findsOneWidget);
+      expect(find.text('Custom Body'), findsOneWidget);
+      expect(find.text('Test Title'), findsNothing);
+    });
   });
 }

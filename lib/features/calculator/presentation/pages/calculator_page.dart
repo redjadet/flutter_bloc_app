@@ -8,8 +8,8 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -25,10 +25,9 @@ class CalculatorPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      appBar: CommonAppBar(
-        title: l10n.calculatorTitle,
-      ),
+    return CommonPageLayout(
+      title: l10n.calculatorTitle,
+      useResponsiveBody: false,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (final context, final constraints) {

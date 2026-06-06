@@ -10,8 +10,8 @@ import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_rep
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class ChatListPage extends StatefulWidget {
   const ChatListPage({
@@ -60,24 +60,25 @@ class _ChatListPageState extends State<ChatListPage> {
     final ThemeData theme = Theme.of(context);
     final Color backgroundColor = theme.scaffoldBackgroundColor;
     final Color foregroundColor = theme.colorScheme.onSurface;
+    final TextStyle appBarTitleStyle = _appBarTitleStyle(
+      context,
+      foregroundColor,
+    );
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: CommonAppBar(
-        title: context.l10n.chatHistoryPanelTitle,
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        titleTextStyle: _appBarTitleStyle(context, foregroundColor),
-        cupertinoBackgroundColor: backgroundColor,
-        cupertinoTitleStyle: _appBarTitleStyle(context, foregroundColor),
-        centerTitle: true,
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: theme.brightness == Brightness.dark
-              ? Brightness.light
-              : Brightness.dark,
-        ),
+    return CommonPageLayout(
+      title: context.l10n.chatHistoryPanelTitle,
+      appBarBackgroundColor: backgroundColor,
+      appBarForegroundColor: foregroundColor,
+      titleTextStyle: appBarTitleStyle,
+      cupertinoTitleStyle: appBarTitleStyle,
+      centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: theme.brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark,
       ),
+      useResponsiveBody: false,
       body: CommonMaxWidth(
         child: SizedBox.expand(
           child: BlocProvider.value(
