@@ -28,6 +28,25 @@ subsections (so the linter doesn’t treat it as a new section).
 | Components | `lib/shared/components/` | Design system primitives (buttons, inputs, chips). |
 | Widgets | `lib/shared/widgets/` | App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`). |
 
+### Page shell (`CommonPageLayout`)
+
+Default wrapper for feature screens (`lib/shared/widgets/common_page_layout.dart`).
+
+| Need | API |
+| ---- | --- |
+| Standard titled screen | `title:` (non-empty) + optional `actions`, `appBarBackgroundColor`, `titleTextStyle`, `centerTitle`, etc. |
+| Custom app bar (search field, counter menu, themed bar) | `appBar:` — bypasses default `CommonAppBar`; do not also pass title/actions for the default bar |
+| Full-bleed body (lists, grids, embedded search) | `useResponsiveBody: false` — page applies its own padding/safe area |
+| Themed scaffold surface | `backgroundColor:` (e.g. search uses `colorScheme.surface`) |
+| Keyboard-safe padded body | Keep `useResponsiveBody: true` (default) — `_ResponsiveBody` adds safe-area + keyboard inset |
+
+**Migrated examples:** search (`_SearchPageAppBar`), counter (`CounterPageAppBar`), chat list (themed `CommonAppBar` params), calculator (title only).
+
+**Skip:** FirebaseUI auth layouts, demo nav shells. Change log:
+[`docs/changes/2026-06-06_common-page-layout-appbar-widening.md`](changes/2026-06-06_common-page-layout-appbar-widening.md).
+
+**Tests:** `test/shared/widgets/common_page_layout_test.dart` (default + custom `appBar`).
+
 ## Mix (design tokens and styles)
 
 - **Tokens:** `AppMixTokens`, `AppMaterialColorTokens`, and `AppTextStyleTokens` in `mix_app_theme.dart` define space, radius, color, and text-style token names. Values are filled by `buildAppMixScope(context, child: ...)` from `UI`, `AppConstants`, and Material `Theme` (including `textTheme`).

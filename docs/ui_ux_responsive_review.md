@@ -7,7 +7,7 @@
 ## Strengths Observed
 
 - **Responsive System:** Centralized spacing, layout, typography, and grid helpers provide consistent responsive behavior. See `lib/shared/extensions/responsive.dart` and `lib/shared/extensions/responsive/`.
-- **Shared Layout Components:** Common page shell and app bar promote consistent navigation and structure. See `lib/shared/widgets/common_page_layout.dart` and `lib/shared/widgets/common_app_bar.dart`.
+- **Shared Layout Components:** Common page shell and app bar promote consistent navigation and structure. `CommonPageLayout` supports default `CommonAppBar` (via `title`) or a custom `appBar`, optional scaffold `backgroundColor`, and `useResponsiveBody` for shared safe-area/keyboard/max-width padding. See `lib/shared/widgets/common_page_layout.dart` and `lib/shared/widgets/common_app_bar.dart`; agent API table in [`docs/design_system.md`](design_system.md) § Page shell.
 - **Platform Adaptation:** Platform-aware buttons and dialog actions exist and are used in multiple features. See `lib/shared/utils/platform_adaptive.dart` and `lib/shared/widgets/common_empty_state.dart`.
 - **Good Patterns:** Several screens demonstrate proper safe-area handling and scroll behavior (e.g., `calculator_page.dart` uses `SafeArea` with keyboard insets). See `lib/features/calculator/presentation/pages/calculator_page.dart`.
 - **Platform-Aware Loading:** `CommonLoadingButton` correctly uses `CupertinoActivityIndicator` on iOS and `CircularProgressIndicator` on Android. See `lib/shared/widgets/common_loading_widget.dart`.

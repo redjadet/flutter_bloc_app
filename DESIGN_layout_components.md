@@ -49,6 +49,22 @@ Do not introduce larger rounded cards unless the shared token scale changes.
 - **Lists:** Prefer Material `ListTile` for standard rows. Use
   `AppStyles.listTile` only for custom row shells that cannot be expressed with
   `ListTile`.
+- **Page shell:** Prefer [`CommonPageLayout`](../lib/shared/widgets/common_page_layout.dart)
+  for feature screens instead of ad-hoc `Scaffold` roots.
+  - **Default bar:** Pass non-empty `title` (and optional `actions`, theme params);
+    shell builds [`CommonAppBar`](../lib/shared/widgets/common_app_bar.dart).
+  - **Custom bar:** Pass `appBar:` (`PreferredSizeWidget`); `title` and default
+    app-bar params are ignored. Require non-empty `title` **or** `appBar` (debug
+    assert).
+  - **Body layout:** `useResponsiveBody: true` (default) applies safe-area,
+    keyboard inset, max width, and page padding via `_ResponsiveBody`. Set
+    `useResponsiveBody: false` when the page owns full-bleed layout (search field
+    under bar, calculator grid, chat list, counter shell).
+  - **Scaffold extras:** Optional `backgroundColor`, `centerTitle`,
+    `floatingActionButtonLocation`, drawers, FAB, bottom nav — same as `Scaffold`.
+  - **Do not migrate:** FirebaseUI-owned auth screens and nav shells that are
+    not single feature pages (see
+    [`docs/changes/2026-06-06_common-page-layout-appbar-widening.md`](docs/changes/2026-06-06_common-page-layout-appbar-widening.md)).
 
 ## Do's and Don'ts
 
@@ -83,3 +99,9 @@ When generating or refactoring UI, keep these constraints in working memory:
 - **Responsive proof**: stable constraints for boards/rows/counters/icon
   buttons; check mobile/desktop for clipped text, overlap, unusable taps, or
   hidden primary content.
+- **Page shell**: use `CommonPageLayout` + `CommonMaxWidth` on wide viewports;
+  custom `appBar` only when default `CommonAppBar` cannot express the screen
+  (search bar in app bar, counter overflow menu); `useResponsiveBody: false` only
+  when body owns padding/insets. Detail:
+  [`docs/design_system.md`](docs/design_system.md) § Page shell,
+  [`docs/ui_ux_responsive_review.md`](docs/ui_ux_responsive_review.md).

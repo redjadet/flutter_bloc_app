@@ -14,6 +14,7 @@ alwaysApply: false
 # Design system
 
 - Before visual code, read `DESIGN.md` and `docs/design_system.md`.
+- Feature screens: prefer `CommonPageLayout` (see `docs/design_system.md` § Page shell); avoid new raw `Scaffold` unless FirebaseUI or nav shell.
 - Runtime source wins: `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`.
 - Avoid ad-hoc colors, spacing, typography, radii, component states when shared tokens/styles fit.
 - Build real workflow/demo first; avoid landing/marketing pages unless required.
