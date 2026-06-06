@@ -29,6 +29,7 @@ part 'online_therapy_demo_shell_client_details.part.dart';
 part 'online_therapy_demo_shell_client_part.dart';
 part 'online_therapy_demo_shell_controls.part.dart';
 part 'online_therapy_demo_shell_messaging_call.part.dart';
+part 'online_therapy_demo_shell_admin.part.dart';
 part 'online_therapy_demo_shell_therapist_admin_part.dart';
 
 /// Sidebar width for wide online-therapy demo split layouts.
