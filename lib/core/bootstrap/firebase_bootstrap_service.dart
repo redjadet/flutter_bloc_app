@@ -39,7 +39,12 @@ class FirebaseBootstrapService {
   static Future<bool> _initializeFirebaseOnce() async {
     try {
       if (Firebase.apps.isNotEmpty) {
-        return _reuseExistingFirebaseApp();
+        AppLogger.debug(
+          'Firebase already initialized: '
+          '${Firebase.apps.map((final app) => app.name).join(', ')}',
+        );
+        await _prepareReusedFirebaseApp();
+        return true;
       }
 
       final options = _resolveFirebaseOptions();
@@ -65,7 +70,12 @@ class FirebaseBootstrapService {
       return _initializeConfiguredFirebase(options);
     } on FirebaseException catch (error, stackTrace) {
       if (error.code == 'duplicate-app') {
-        return _reuseNativeFirebaseApp();
+        AppLogger.warning(
+          'Firebase already initialized natively. Reusing existing instance.',
+        );
+        Firebase.app();
+        await _prepareReusedFirebaseApp();
+        return true;
       }
       _logFirebaseInitializationFailure(error, stackTrace);
     } on Exception catch (error, stackTrace) {
@@ -140,24 +150,9 @@ class FirebaseBootstrapService {
     return true;
   }
 
-  static Future<bool> _reuseExistingFirebaseApp() async {
-    AppLogger.debug(
-      'Firebase already initialized: '
-      '${Firebase.apps.map((final app) => app.name).join(', ')}',
-    );
+  static Future<void> _prepareReusedFirebaseApp() async {
     await _markIosSimulatorInDebugIfNeeded();
     _enableDatabasePersistence();
-    return true;
-  }
-
-  static Future<bool> _reuseNativeFirebaseApp() async {
-    AppLogger.warning(
-      'Firebase already initialized natively. Reusing existing instance.',
-    );
-    Firebase.app();
-    await _markIosSimulatorInDebugIfNeeded();
-    _enableDatabasePersistence();
-    return true;
   }
 
   @visibleForTesting
