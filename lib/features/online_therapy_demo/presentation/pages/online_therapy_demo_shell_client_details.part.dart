@@ -64,97 +64,126 @@ class _TherapistDetails extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'Availability (today)',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                SliverList.separated(
-                  itemCount: availability.length,
-                  itemBuilder: (context, index) {
-                    final slot = availability[index];
-                    final canBook =
-                        slot.status == AvailabilitySlotStatus.available;
-                    return ListTile(
-                      key: ValueKey<String>(
-                        'client-booking-availability-${slot.startAt.toIso8601String()}',
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(formatDeviceDateTime(context, slot.startAt)),
-                      subtitle: Text(formatDeviceDateTime(context, slot.endAt)),
-                      trailing: ElevatedButton(
-                        onPressed: isBusy || !canBook
-                            ? null
-                            : () => onBook(slot),
-                        child: Text(
-                          canBook ? l10n.bookButtonLabel : l10n.bookedLabel,
-                        ),
-                      ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final double messagingHeight =
+                    _onlineTherapyEmbeddedPanelHeight(
+                      referenceHeight: constraints.maxHeight,
+                      viewportFraction: 0.35,
                     );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 1),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'My appointments',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                if (appointments.isEmpty)
-                  const SliverToBoxAdapter(child: Text('No appointments yet.'))
-                else
-                  SliverList.separated(
-                    itemCount: appointments.length,
-                    itemBuilder: (context, index) {
-                      final a = appointments[index];
-                      return ListTile(
-                        key: ValueKey<String>(
-                          'client-booking-appointment-${a.id}',
-                        ),
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(formatDeviceDateTime(context, a.startAt)),
-                        subtitle: Text('Status: ${a.status.name}'),
-                        trailing: a.status == AppointmentStatus.cancelled
-                            ? Text(l10n.cancelledLabel)
-                            : TextButton(
-                                onPressed: isBusy ? null : () => onCancel(a.id),
-                                child: Text(l10n.cancelButtonLabel),
-                              ),
-                      );
-                    },
-                    separatorBuilder: (context, index) =>
-                        const Divider(height: 1),
-                  ),
-                const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'Messaging',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 320, child: _MessagingPanel()),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'Video (pre-call + join/fallback)',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 280, child: _CallPanel()),
-                ),
-              ],
+                final double callHeight = _onlineTherapyEmbeddedPanelHeight(
+                  referenceHeight: constraints.maxHeight,
+                  viewportFraction: 0.3,
+                );
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'Availability (today)',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    SliverList.separated(
+                      itemCount: availability.length,
+                      itemBuilder: (context, index) {
+                        final slot = availability[index];
+                        final canBook =
+                            slot.status == AvailabilitySlotStatus.available;
+                        return ListTile(
+                          key: ValueKey<String>(
+                            'client-booking-availability-${slot.startAt.toIso8601String()}',
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            formatDeviceDateTime(context, slot.startAt),
+                          ),
+                          subtitle: Text(
+                            formatDeviceDateTime(context, slot.endAt),
+                          ),
+                          trailing: ElevatedButton(
+                            onPressed: isBusy || !canBook
+                                ? null
+                                : () => onBook(slot),
+                            child: Text(
+                              canBook ? l10n.bookButtonLabel : l10n.bookedLabel,
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'My appointments',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    if (appointments.isEmpty)
+                      const SliverToBoxAdapter(
+                        child: Text('No appointments yet.'),
+                      )
+                    else
+                      SliverList.separated(
+                        itemCount: appointments.length,
+                        itemBuilder: (context, index) {
+                          final a = appointments[index];
+                          return ListTile(
+                            key: ValueKey<String>(
+                              'client-booking-appointment-${a.id}',
+                            ),
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              formatDeviceDateTime(context, a.startAt),
+                            ),
+                            subtitle: Text('Status: ${a.status.name}'),
+                            trailing: a.status == AppointmentStatus.cancelled
+                                ? Text(l10n.cancelledLabel)
+                                : TextButton(
+                                    onPressed: isBusy
+                                        ? null
+                                        : () => onCancel(a.id),
+                                    child: Text(l10n.cancelButtonLabel),
+                                  ),
+                          );
+                        },
+                        separatorBuilder: (context, index) =>
+                            const Divider(height: 1),
+                      ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'Messaging',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: messagingHeight,
+                        child: const _MessagingPanel(),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'Video (pre-call + join/fallback)',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: callHeight,
+                        child: const _CallPanel(),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],

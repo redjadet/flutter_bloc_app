@@ -150,30 +150,36 @@ class ScapesGridSliver extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final metrics = _computeScapesGridMetrics(context, width);
+    return SliverLayoutBuilder(
+      builder: (final context, final constraints) {
+        final metrics = _computeScapesGridMetrics(
+          context,
+          constraints.crossAxisExtent,
+        );
 
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(
-        horizontal: metrics.gridLayout.horizontalPadding,
-      ),
-      sliver: SliverGrid(
-        gridDelegate: metrics.delegate,
-        delegate: SliverChildBuilderDelegate(
-          (final context, final index) {
-            final scape = scapes[index];
-            return RepaintBoundary(
-              key: ValueKey<String>('scape-${scape.id}'),
-              child: ScapeGridItem(
-                scape: scape,
-                onFavoritePressed: () => onFavoritePressed(scape.id),
-                onMorePressed: () => onMorePressed(scape.id),
-              ),
-            );
-          },
-          childCount: scapes.length,
-        ),
-      ),
+        return SliverPadding(
+          padding: EdgeInsets.symmetric(
+            horizontal: metrics.gridLayout.horizontalPadding,
+          ),
+          sliver: SliverGrid(
+            gridDelegate: metrics.delegate,
+            delegate: SliverChildBuilderDelegate(
+              (final context, final index) {
+                final scape = scapes[index];
+                return RepaintBoundary(
+                  key: ValueKey<String>('scape-${scape.id}'),
+                  child: ScapeGridItem(
+                    scape: scape,
+                    onFavoritePressed: () => onFavoritePressed(scape.id),
+                    onMorePressed: () => onMorePressed(scape.id),
+                  ),
+                );
+              },
+              childCount: scapes.length,
+            ),
+          ),
+        );
+      },
     );
   }
 }

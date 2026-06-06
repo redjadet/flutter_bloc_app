@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class ChatListPage extends StatefulWidget {
   const ChatListPage({
@@ -77,17 +78,21 @@ class _ChatListPageState extends State<ChatListPage> {
               : Brightness.dark,
         ),
       ),
-      body: BlocProvider.value(
-        value: _cubit,
-        child: ChatListView(
-          chatRepository: widget.chatRepository,
-          historyRepository: widget.historyRepository,
-          renderOrchestrationHfTokenProvider:
-              widget.renderOrchestrationHfTokenProvider,
-          firebaseAuthRepository: widget.firebaseAuthRepository,
-          supabaseAuthRepository: widget.supabaseAuthRepository,
-          errorNotificationService: widget.errorNotificationService,
-          pendingSyncRepository: widget.pendingSyncRepository,
+      body: CommonMaxWidth(
+        child: SizedBox.expand(
+          child: BlocProvider.value(
+            value: _cubit,
+            child: ChatListView(
+              chatRepository: widget.chatRepository,
+              historyRepository: widget.historyRepository,
+              renderOrchestrationHfTokenProvider:
+                  widget.renderOrchestrationHfTokenProvider,
+              firebaseAuthRepository: widget.firebaseAuthRepository,
+              supabaseAuthRepository: widget.supabaseAuthRepository,
+              errorNotificationService: widget.errorNotificationService,
+              pendingSyncRepository: widget.pendingSyncRepository,
+            ),
+          ),
         ),
       ),
     );

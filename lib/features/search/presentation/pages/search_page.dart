@@ -18,6 +18,7 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -59,60 +60,71 @@ class _SearchPageContent extends StatelessWidget {
         preferredHeight: _searchAppBarHeight(context),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: context.pageHorizontalPaddingInsets,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: context.responsiveGapL),
-                  const SearchTextField(),
-                  SizedBox(height: context.responsiveGapL),
-                  Text(
-                    context.l10n.searchAllResultsSectionTitle,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: context.responsiveCaptionSize * 0.04,
-                      fontSize: context.responsiveCaptionSize,
-                    ),
+        child: CommonMaxWidth(
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: context.pageHorizontalPaddingInsets,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: context.responsiveGapL),
+                      const SearchTextField(),
+                      SizedBox(height: context.responsiveGapL),
+                      Text(
+                        context.l10n.searchAllResultsSectionTitle,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: context.responsiveCaptionSize * 0.04,
+                          fontSize: context.responsiveCaptionSize,
+                        ),
+                      ),
+                      SizedBox(height: context.responsiveGapL),
+                    ],
                   ),
-                  SizedBox(height: context.responsiveGapL),
-                ],
-              ),
-            ),
-            Expanded(
-              child:
-                  ViewStatusSwitcher<SearchCubit, SearchState, _SearchBodyData>(
-                    selector: (final state) => _SearchBodyData(
-                      isLoading: state.isLoading,
-                      isError: state.status.isError,
-                      hasResults: state.hasResults,
-                      results: state.results,
-                    ),
-                    isLoading: (final data) => data.isLoading,
-                    isError: (final data) => data.isError,
-                    loadingBuilder: (final _) => const CommonLoadingWidget(),
-                    errorBuilder: (final context, final _) => CommonErrorView(
-                      message: context.l10n.searchErrorLoadingResults,
-                      onRetry: () =>
-                          context.cubit<SearchCubit>().search('dogs'),
-                    ),
-                    builder: (final context, final bodyData) {
-                      if (!bodyData.hasResults) {
-                        return CommonEmptyState(
-                          message: context.l10n.searchNoResultsFound,
-                        );
-                      }
+                ),
+                Expanded(
+                  child:
+                      ViewStatusSwitcher<
+                        SearchCubit,
+                        SearchState,
+                        _SearchBodyData
+                      >(
+                        selector: (final state) => _SearchBodyData(
+                          isLoading: state.isLoading,
+                          isError: state.status.isError,
+                          hasResults: state.hasResults,
+                          results: state.results,
+                        ),
+                        isLoading: (final data) => data.isLoading,
+                        isError: (final data) => data.isError,
+                        loadingBuilder: (final _) =>
+                            const CommonLoadingWidget(),
+                        errorBuilder: (final context, final _) =>
+                            CommonErrorView(
+                              message: context.l10n.searchErrorLoadingResults,
+                              onRetry: () =>
+                                  context.cubit<SearchCubit>().search('dogs'),
+                            ),
+                        builder: (final context, final bodyData) {
+                          if (!bodyData.hasResults) {
+                            return CommonEmptyState(
+                              message: context.l10n.searchNoResultsFound,
+                            );
+                          }
 
-                      return RepaintBoundary(
-                        child: SearchResultsGrid(results: bodyData.results),
-                      );
-                    },
-                  ),
+                          return RepaintBoundary(
+                            child: SearchResultsGrid(results: bodyData.results),
+                          );
+                        },
+                      ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

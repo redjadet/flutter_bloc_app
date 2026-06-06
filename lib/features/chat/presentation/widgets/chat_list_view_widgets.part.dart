@@ -29,25 +29,22 @@ class _ChatLoadedList extends StatelessWidget {
     return SafeArea(
       top: false,
       bottom: false,
-      child: CommonMaxWidth(
-        child: ListView.separated(
-          scrollCacheExtent: const ScrollCacheExtent.pixels(500),
-          padding: safeListPadding,
-          itemCount: contacts.length,
-          separatorBuilder: (final context, final index) =>
-              const _ChatDivider(),
-          itemBuilder: (final context, final index) {
-            final contact = contacts[index];
-            return _ChatContactListItem(
-              key: ValueKey<String>('chat-contact-row-${contact.id}'),
-              contact: contact,
-              isFirst: index == 0,
-              isLast: index == contacts.length - 1,
-              onTap: onContactTap,
-              onLongPress: onContactLongPress,
-            );
-          },
-        ),
+      child: ListView.separated(
+        scrollCacheExtent: const ScrollCacheExtent.pixels(500),
+        padding: safeListPadding,
+        itemCount: contacts.length,
+        separatorBuilder: (final context, final index) => const _ChatDivider(),
+        itemBuilder: (final context, final index) {
+          final contact = contacts[index];
+          return _ChatContactListItem(
+            key: ValueKey<String>('chat-contact-row-${contact.id}'),
+            contact: contact,
+            isFirst: index == 0,
+            isLast: index == contacts.length - 1,
+            onTap: onContactTap,
+            onLongPress: onContactLongPress,
+          );
+        },
       ),
     );
   }

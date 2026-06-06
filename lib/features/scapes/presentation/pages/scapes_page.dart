@@ -1,5 +1,6 @@
 // check-ignore: nonbuilder_lists - ScapesGridView is a custom widget, not GridView constructor
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
@@ -25,6 +26,7 @@ class ScapesPage extends StatelessWidget {
     final theme = Theme.of(context);
     final EpochThemeExtension epoch = context.epoch;
     final ThemeData pageTheme = theme.copyWith(
+      scaffoldBackgroundColor: epoch.darkGrey,
       extensions: () {
         final List<ThemeExtension<dynamic>> list = [
           epoch,
@@ -41,47 +43,47 @@ class ScapesPage extends StatelessWidget {
       ),
       child: Theme(
         data: pageTheme,
-        child: Scaffold(
-          backgroundColor: epoch.darkGrey,
-          appBar: AppBar(
-            backgroundColor: epoch.darkGrey,
-            foregroundColor: epoch.warmGreyLightest,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => NavigationUtils.popOrGoHome(context),
-              tooltip: 'Back',
-            ),
-            title: Text(
-              l10n.scapesPageTitle,
-              style: pageTheme.textTheme.titleLarge,
-            ),
+        child: CommonPageLayout(
+          title: l10n.scapesPageTitle,
+          appBarBackgroundColor: epoch.darkGrey,
+          appBarForegroundColor: epoch.warmGreyLightest,
+          titleTextStyle: pageTheme.textTheme.titleLarge?.copyWith(
+            color: epoch.warmGreyLightest,
           ),
-          body: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
-            selector: (final state) => state,
-            isLoading: (final state) => state.isLoading,
-            isError: (final state) => state.hasError,
-            loadingBuilder: (final _) => const CommonLoadingWidget(),
-            errorBuilder: (final context, final state) => CommonErrorView(
-              message: state.errorMessage ?? l10n.scapesErrorOccurred,
-              onRetry: () => context.cubit<ScapesCubit>().reload(),
-            ),
-            builder: (final context, final state) {
-              if (state.scapes.isEmpty) {
-                return CommonEmptyState(
-                  message: l10n.noScapesAvailable,
-                );
-              }
+          appBarElevation: 0,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
+          ),
+          useResponsiveBody: false,
+          body: CommonMaxWidth(
+            child: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
+              selector: (final state) => state,
+              isLoading: (final state) => state.isLoading,
+              isError: (final state) => state.hasError,
+              loadingBuilder: (final _) => const CommonLoadingWidget(),
+              errorBuilder: (final context, final state) => CommonErrorView(
+                message: state.errorMessage ?? l10n.scapesErrorOccurred,
+                onRetry: () => context.cubit<ScapesCubit>().reload(),
+              ),
+              builder: (final context, final state) {
+                if (state.scapes.isEmpty) {
+                  return CommonEmptyState(
+                    message: l10n.noScapesAvailable,
+                  );
+                }
 
-              return ScapesGridView(
-                scapes: state.scapes,
-                onFavoritePressed: (final id) =>
-                    context.cubit<ScapesCubit>().toggleFavorite(id),
-                onMorePressed: (final id) {
-                  AppLogger.debug('options menu clicked');
-                },
-              );
-            },
+                return ScapesGridView(
+                  scapes: state.scapes,
+                  onFavoritePressed: (final id) =>
+                      context.cubit<ScapesCubit>().toggleFavorite(id),
+                  onMorePressed: (final id) {
+                    AppLogger.debug('options menu clicked');
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),

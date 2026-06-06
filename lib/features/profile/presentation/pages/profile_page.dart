@@ -11,10 +11,10 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/view_status_switcher.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -28,18 +28,15 @@ class ProfilePage extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final l10n = context.l10n;
-    return Scaffold(
-      backgroundColor: colors.surface,
-      appBar: CommonAppBar(
-        title: l10n.profilePageTitle,
-        backgroundColor: colors.surface,
-        foregroundColor: colors.onSurface,
-        cupertinoBackgroundColor: colors.surface,
-        cupertinoTitleStyle: TextStyle(
-          color: colors.onSurface,
-          fontWeight: FontWeight.w600,
-        ),
+    return CommonPageLayout(
+      title: l10n.profilePageTitle,
+      appBarBackgroundColor: colors.surface,
+      appBarForegroundColor: colors.onSurface,
+      cupertinoTitleStyle: TextStyle(
+        color: colors.onSurface,
+        fontWeight: FontWeight.w600,
       ),
+      useResponsiveBody: false,
       bottomNavigationBar: const ProfileBottomNav(),
       body: ViewStatusSwitcher<ProfileCubit, ProfileState, _ProfileBodyData>(
         selector: (final state) => _ProfileBodyData(
