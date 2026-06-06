@@ -40,6 +40,22 @@ void main() {
     test('returns false for protocol-relative or external URLs', () {
       expect(AppRoutes.isSafeRedirectPath('//evil.com'), isFalse);
       expect(AppRoutes.isSafeRedirectPath('https://evil.com'), isFalse);
+      expect(AppRoutes.isSafeRedirectPath('/\\evil.com'), isFalse);
+      expect(AppRoutes.isSafeRedirectPath('/@evil.com'), isFalse);
+      expect(AppRoutes.isSafeRedirectPath('/foo:bar'), isFalse);
+      expect(AppRoutes.isSafeRedirectPath(' /counter'), isFalse);
+    });
+
+    test('authUpgradePath includes upgrade query and safe redirect', () {
+      expect(AppRoutes.authUpgradePath(), '/auth?upgrade=true');
+      expect(
+        AppRoutes.authUpgradePath(redirect: '/settings'),
+        '/auth?upgrade=true&redirect=%2Fsettings',
+      );
+      expect(
+        AppRoutes.authUpgradePath(redirect: 'https://evil.com'),
+        '/auth?upgrade=true',
+      );
     });
 
     test('returns true for local paths', () {

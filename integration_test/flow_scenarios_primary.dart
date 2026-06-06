@@ -1,5 +1,49 @@
 part of 'flow_scenarios.dart';
 
+void registerGuestSignInIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Guest sign-in',
+    testName: 'continue as guest reaches counter with anonymous session',
+    options: const IntegrationDependencyOptions(
+      authMode: IntegrationAuthMode.realFirebaseAuth,
+    ),
+    body: (final tester) async {
+      if (FirebaseAuth.instance.currentUser != null) {
+        await FirebaseAuth.instance.signOut();
+      }
+      addTearDown(FirebaseAuth.instance.signOut);
+
+      await launchTestApp(tester, requireAuth: true);
+      await pumpUntilFound(tester, find.byKey(signInGuestButtonKey));
+      await tapAndPump(tester, find.byKey(signInGuestButtonKey));
+      await pumpUntilFound(
+        tester,
+        find.text('Home Page'),
+        timeout: const Duration(seconds: 20),
+      );
+
+      final AuthRepository authRepository = getIt<AuthRepository>();
+      expect(authRepository.currentUser, isNotNull);
+      expect(authRepository.currentUser!.isAnonymous, isTrue);
+
+      final User? firebaseUser = FirebaseAuth.instance.currentUser;
+      final bool hasFirebaseAnon = firebaseUser?.isAnonymous ?? false;
+      final bool hasSimulatorLocalGuest =
+          authRepository.currentUser!.id == 'ios-simulator-debug-local-guest';
+      expect(
+        hasFirebaseAnon || hasSimulatorLocalGuest,
+        isTrue,
+        reason:
+            'Guest flow must yield Firebase anonymous auth or the iOS '
+            'simulator keychain fallback user.',
+      );
+
+      await pumpUntilFound(tester, find.text('0'));
+      expect(find.text('0'), findsWidgets);
+    },
+  );
+}
+
 void registerAppLaunchIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'App launch',

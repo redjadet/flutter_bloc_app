@@ -12,7 +12,7 @@
 - `MyApp` wires GoRouter with `refreshListenable: GoRouterRefreshStream(auth.authStateChanges())` so auth state transitions refresh navigation (`lib/app.dart`, `lib/app/router/go_router_refresh_stream.dart`).
 - `createAuthRedirect()` enforces:
   - Redirect unauthenticated users to `/auth` **except** when navigating to deep-link paths (anything other than `/`, `/counter`, `/auth`).
-  - Redirect authenticated users away from `/auth` to `/counter`, unless they are anonymous and upgrading (`lib/app/router/auth_redirect.dart`).
+  - Redirect authenticated users away from `/auth` to `/counter`; anonymous users stay on `/auth` only with `?upgrade=true` (Settings upgrade flow) (`lib/app/router/auth_redirect.dart`).
 - Routes needing auth today rely on this router-level guard; there is no per-page auth check beyond GoRouter redirects.
 
 ## Route-level protection (deep-link safe)
@@ -76,6 +76,14 @@ Protected examples:
 - On 401 responses, `AuthTokenInterceptor` performs one refresh flow and retries with
   the refreshed bearer token, avoiding chained forced-refresh calls.
 - If Firebase Auth is not configured, the interceptor will skip token injection and proceed with standard headers only.
+
+## Debug & Simulator Auth Behavior
+
+- **iOS simulator (debug):** Firebase App Check activation is skipped so anonymous sign-in can reach Firebase Auth without registering a debug token (`lib/core/bootstrap/firebase_bootstrap_service_helpers.dart`, [Firebase setup](firebase_setup.md#troubleshooting)). Firebase Auth still uses the Keychain on the simulator; when that fails (`keychain-error` / entitlement errors), DI falls back to a **local-only** guest session (`ios-simulator-debug-local-guest`) so the demo UI and router guards remain usable (`lib/core/di/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (same as macOS debug) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists. Physical iOS devices use real Firebase Auth and wired RTDB remotes.
+- **iOS device (debug):** Uses Firebase Auth normally. App Check runs with the debug provider; register the token from logs in Firebase Console → App Check → Manage debug tokens if Auth calls fail with App Check errors.
+- **macOS (debug):** When Firebase Auth hits Keychain entitlement errors (`SecItemAdd (-34018)` and similar), DI may fall back to a **local-only** guest session (`macos-debug-local-guest`) so the demo UI remains usable (`lib/core/di/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (`lib/core/di/injector_helpers.dart`) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists.
+- **Router:** Fresh anonymous sign-in navigates to `/counter`. Anonymous users stay on `/auth` only with `?upgrade=true` (Settings upgrade flow).
+- **Regression gates:** `./bin/router_feature_validate` runs `auth_redirect`, `register_auth_services`, `injector_helpers`, and `sign_in_page` tests; device proof lives in `integration_test/guest_sign_in_flow_test.dart` (`pr_smoke` / `smoke` tiers — see [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) J1).
 
 ## Auth Cache Safety
 

@@ -21,6 +21,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseBootstrapService', () {
+    tearDown(FirebaseBootstrapService.resetIosSimulatorInDebugForTest);
+
     test('initializeFirebase completes without throwing', () async {
       await expectLater(_tryInitializeFirebase(), completes);
     });

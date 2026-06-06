@@ -38,13 +38,13 @@ void registerAuthServices() {
       if (firebaseAuth == null) {
         return const _UnavailableAuthRepository();
       }
-      if (_shouldUseMacOsDebugGuestFallback) {
-        return _MacOsDebugGuestAuthRepository(firebaseAuth: firebaseAuth);
+      if (_shouldUseDebugKeychainGuestFallback) {
+        return _DebugKeychainGuestAuthRepository(firebaseAuth: firebaseAuth);
       }
       return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
     },
     dispose: (final repository) async {
-      if (repository case final _MacOsDebugGuestAuthRepository fallback) {
+      if (repository case final _DebugKeychainGuestAuthRepository fallback) {
         await fallback.dispose();
       }
     },
@@ -54,11 +54,19 @@ void registerAuthServices() {
   );
 }
 
-bool get _shouldUseMacOsDebugGuestFallback =>
-    !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
+bool get _shouldUseDebugKeychainGuestFallback {
+  if (kIsWeb || kReleaseMode) {
+    return false;
+  }
+  if (defaultTargetPlatform == TargetPlatform.macOS) {
+    return true;
+  }
+  return defaultTargetPlatform == TargetPlatform.iOS &&
+      FirebaseBootstrapService.isIosSimulatorInDebug;
+}
 
-class _MacOsDebugGuestAuthRepository extends FirebaseAuthRepository {
-  _MacOsDebugGuestAuthRepository({required super.firebaseAuth}) {
+class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
+  _DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
     _firebaseSubscription = super.authStateChanges.listen((final user) {
       if (user != null) {
         _localGuest = null;
@@ -71,6 +79,10 @@ class _MacOsDebugGuestAuthRepository extends FirebaseAuthRepository {
       StreamController<AuthUser?>.broadcast();
   StreamSubscription<AuthUser?>? _firebaseSubscription;
   AuthUser? _localGuest;
+
+  String get _localGuestId => defaultTargetPlatform == TargetPlatform.macOS
+      ? 'macos-debug-local-guest'
+      : 'ios-simulator-debug-local-guest';
 
   @override
   AuthUser? get currentUser => super.currentUser ?? _localGuest;
@@ -89,10 +101,7 @@ class _MacOsDebugGuestAuthRepository extends FirebaseAuthRepository {
       if (!_looksLikeKeychainEntitlementError(error)) {
         rethrow;
       }
-      _localGuest = const AuthUser(
-        id: 'macos-debug-local-guest',
-        isAnonymous: true,
-      );
+      _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
       _authStateController.add(_localGuest);
     }
   }
@@ -133,6 +142,9 @@ class _UnavailableAuthRepository implements AuthRepository {
 }
 
 bool _looksLikeKeychainEntitlementError(final Object error) {
+  if (error is FirebaseAuthException && error.code == 'keychain-error') {
+    return true;
+  }
   final String message = error.toString().toLowerCase();
   return message.contains('-34018') ||
       message.contains('secitemadd') ||

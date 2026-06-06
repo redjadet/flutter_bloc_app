@@ -44,16 +44,22 @@ Future<void> _activateAppCheck() async {
         );
         break;
       case TargetPlatform.iOS:
-        await _activateAppleAppCheck(
+        final bool activated = await _activateAppleAppCheck(
           debugToken: debugToken,
           logSimulatorInfo: true,
         );
+        if (!activated) {
+          return;
+        }
         break;
       case TargetPlatform.macOS:
-        await _activateAppleAppCheck(
+        final bool activated = await _activateAppleAppCheck(
           debugToken: debugToken,
           logSimulatorInfo: false,
         );
+        if (!activated) {
+          return;
+        }
         break;
       default:
         return;
@@ -70,16 +76,34 @@ Future<void> _activateAppCheck() async {
   }
 }
 
-Future<void> _activateAppleAppCheck({
+/// Marks [FirebaseBootstrapService.isIosSimulatorInDebug] in debug iOS simulators.
+/// Called from App Check activation and when reusing an existing Firebase app so
+/// DI still skips RTDB remotes after hot restart or duplicate-app reuse.
+Future<void> _markIosSimulatorInDebugIfNeeded() async {
+  if (!kDebugMode || defaultTargetPlatform != TargetPlatform.iOS) {
+    return;
+  }
+  try {
+    final IosDeviceInfo info = await DeviceInfoPlugin().iosInfo;
+    if (!info.isPhysicalDevice) {
+      FirebaseBootstrapService.isIosSimulatorInDebug = true;
+    }
+  } on Exception catch (_) {
+    // Best-effort; DI fallbacks remain disabled when detection fails.
+  }
+}
+
+Future<bool> _activateAppleAppCheck({
   required final String debugToken,
   required final bool logSimulatorInfo,
 }) async {
   if (kDebugMode && logSimulatorInfo) {
-    final IosDeviceInfo info = await DeviceInfoPlugin().iosInfo;
-    if (!info.isPhysicalDevice) {
+    await _markIosSimulatorInDebugIfNeeded();
+    if (FirebaseBootstrapService.isIosSimulatorInDebug) {
       AppLogger.info(
-        'iOS simulator detected; using Firebase App Check debug provider.',
+        'iOS simulator detected; skipping Firebase App Check activation in debug.',
       );
+      return false;
     }
   }
 
@@ -88,6 +112,7 @@ Future<void> _activateAppleAppCheck({
         ? AppleDebugProvider(debugToken: debugToken)
         : const AppleAppAttestWithDeviceCheckFallbackProvider(),
   );
+  return true;
 }
 
 String _resolveAppCheckDebugToken(final String debugTokenEnv) {

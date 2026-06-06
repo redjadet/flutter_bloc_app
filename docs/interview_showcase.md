@@ -65,13 +65,14 @@ INTEGRATION_TESTS_TIER=smoke ./bin/integration_tests
 
 Registered in `registerPrSmokeIntegrationFlows()`:
 
-1. App launch
-2. Charts
-3. Search
-4. Settings (theme/locale)
-5. Todo list
-6. Counter persistence
-7. Chat list
+1. Guest sign-in (anonymous → Home/counter; real Firebase Auth)
+2. App launch
+3. Charts
+4. Search
+5. Settings (theme/locale)
+6. Todo list
+7. Counter persistence
+8. Chat list
 
 ## 6. Testing story
 

@@ -5,11 +5,18 @@ tier expectations.
 
 ## J1 Auth/session lifecycle
 
-- **Goal:** App launch + session-safe navigation behavior.
-- **Primary target:** `integration_test/standard_flows_test.dart`
+- **Goal:** Anonymous guest sign-in reaches Home/counter; router allows
+  anonymous users off `/auth` except `?upgrade=true`; session-safe navigation.
+- **Primary target:** `integration_test/guest_sign_in_flow_test.dart`
+  (`registerGuestSignInIntegrationFlow`: real Firebase Auth, Continue as guest,
+  Home Page + anonymous `AuthRepository` user).
+- **Secondary target:** `integration_test/standard_flows_test.dart` (broader
+  auth/session navigation).
 - **Negative path:** stale session behavior during navigation guarded by app
-  state assertions.
-- **Tier:** `standard`, `exhaustive`
+  state assertions; unit/widget coverage in `test/app/router/auth_redirect_test.dart`,
+  `test/core/di/register_auth_services_test.dart`, `test/sign_in_page_test.dart`
+  via `./bin/router_feature_validate`.
+- **Tier:** `pr_smoke`, `smoke`, `standard`, `exhaustive`
 - **Owner:** feature QA owner
 
 ## J2 Core CRUD flow
@@ -49,8 +56,8 @@ tier expectations.
 ## Aggregate mapping
 
 - `pr_smoke` -> `integration_test/pr_smoke_flows_test.dart`
-  (`registerPrSmokeIntegrationFlows`: launch, charts, search, settings, todo,
-  counter persistence, chat list)
+  (`registerPrSmokeIntegrationFlows`: guest sign-in, launch, charts, search,
+  settings, todo, counter persistence, chat list)
 - `smoke` -> `integration_test/smoke_flows_test.dart`
 - `standard` -> `integration_test/standard_flows_test.dart`
   (`registerStandardIntegrationFlows`: smoke + extended; see `flow_scenarios.dart`)

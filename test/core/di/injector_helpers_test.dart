@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,6 +8,7 @@ void main() {
     tearDown(() {
       debugDefaultTargetPlatformOverride = null;
       integrationTestOmitFirebaseRemoteRepositories = false;
+      FirebaseBootstrapService.isIosSimulatorInDebug = false;
     });
 
     test('skips Firebase remote repositories on macOS desktop debug', () {
@@ -21,7 +23,20 @@ void main() {
       expect(repository, isNull);
     });
 
-    test('does not skip non-macOS debug remotes by default', () {
+    test('skips Firebase remote repositories on iOS simulator debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      FirebaseBootstrapService.isIosSimulatorInDebug = true;
+
+      final Object? repository = createRemoteRepositoryOrNull<Object>(
+        context: 'test repository',
+        factory: () => Object(),
+      );
+
+      expect(shouldSkipFirebaseRemoteRepositories, isTrue);
+      expect(repository, isNull);
+    });
+
+    test('does not skip iOS debug remotes on physical device by default', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       expect(shouldSkipFirebaseRemoteRepositories, isFalse);

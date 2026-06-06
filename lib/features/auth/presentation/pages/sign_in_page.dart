@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';
 

@@ -22,6 +22,10 @@ class FirebaseBootstrapService {
   /// and conditional UI such as the FCM demo entry).
   static bool get isFirebaseInitialized => Firebase.apps.isNotEmpty;
 
+  /// Set during debug Firebase bootstrap when [DeviceInfoPlugin] reports a
+  /// non-physical iOS device. Used for simulator-only auth keychain fallbacks.
+  static bool isIosSimulatorInDebug = false;
+
   /// Initialize Firebase with platform-specific configuration
   static Future<bool> initializeFirebase() => _firebaseInitialization ??=
       _initializeFirebaseOnce().then((final initialized) {
@@ -135,22 +139,29 @@ class FirebaseBootstrapService {
     return true;
   }
 
-  static bool _reuseExistingFirebaseApp() {
+  static Future<bool> _reuseExistingFirebaseApp() async {
     AppLogger.debug(
       'Firebase already initialized: '
       '${Firebase.apps.map((final app) => app.name).join(', ')}',
     );
+    await _markIosSimulatorInDebugIfNeeded();
     _enableDatabasePersistence();
     return true;
   }
 
-  static bool _reuseNativeFirebaseApp() {
+  static Future<bool> _reuseNativeFirebaseApp() async {
     AppLogger.warning(
       'Firebase already initialized natively. Reusing existing instance.',
     );
     Firebase.app();
+    await _markIosSimulatorInDebugIfNeeded();
     _enableDatabasePersistence();
     return true;
+  }
+
+  @visibleForTesting
+  static void resetIosSimulatorInDebugForTest() {
+    isIosSimulatorInDebug = false;
   }
 
   static void _logFirebaseInitializationFailure(

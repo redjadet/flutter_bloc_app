@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:get_it/get_it.dart';
 
@@ -68,7 +69,18 @@ T? createRemoteRepositoryOrNull<T>({
 
 @visibleForTesting
 bool get shouldSkipFirebaseRemoteRepositories =>
-    (!kIsWeb &&
-        !kReleaseMode &&
-        defaultTargetPlatform == TargetPlatform.macOS) ||
+    _shouldSkipFirebaseRemoteRepositoriesInDebug ||
     integrationTestOmitFirebaseRemoteRepositories;
+
+/// Omits RTDB remotes on macOS debug (Keychain) and iOS simulator debug when
+/// the app uses a local-only guest without a Firebase Auth session.
+bool get _shouldSkipFirebaseRemoteRepositoriesInDebug {
+  if (kIsWeb || kReleaseMode) {
+    return false;
+  }
+  if (defaultTargetPlatform == TargetPlatform.macOS) {
+    return true;
+  }
+  return defaultTargetPlatform == TargetPlatform.iOS &&
+      FirebaseBootstrapService.isIosSimulatorInDebug;
+}
