@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 echo "1/3 Formatting..."
-dart format lib/app/router/ lib/core/router/ lib/features/
+dart format lib/app/router/ lib/core/router/ lib/features/auth/ lib/features/settings/ lib/features/iot_demo/
 
 echo "2/3 Analyzing..."
 dart analyze lib/app/router/ lib/core/router/ lib/features/
@@ -16,7 +16,13 @@ router_feature_stderr="$(mktemp -t router_feature_validate.XXXXXX.stderr)"
 trap 'rm -f "$router_feature_stderr"' EXIT
 
 run_router_feature_tests() {
-  flutter test test/app/router/ test/features/iot_demo/ test/core/router/app_routes_test.dart
+  flutter test \
+    test/app/router/ \
+    test/features/iot_demo/ \
+    test/core/router/app_routes_test.dart \
+    test/core/di/register_auth_services_test.dart \
+    test/core/di/injector_helpers_test.dart \
+    test/sign_in_page_test.dart
 }
 
 rm -rf build/unit_test_assets

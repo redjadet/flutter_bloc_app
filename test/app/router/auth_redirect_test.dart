@@ -21,6 +21,7 @@ void main() {
       mockAuth = MockAuthRepository();
       mockState = MockGoRouterState();
       testContext = MockBuildContext();
+      when(() => mockState.uri).thenReturn(Uri.parse('/'));
     });
 
     test('redirects unauthenticated user to auth page', () {
@@ -64,10 +65,25 @@ void main() {
       expect(result, equals(AppRoutes.counterPath));
     });
 
-    test('allows anonymous user to stay on auth page to upgrade', () {
+    test('redirects anonymous user away from auth after guest sign-in', () {
       const anonymousUser = AuthUser(id: '1', isAnonymous: true);
       when(() => mockAuth.currentUser).thenReturn(anonymousUser);
       when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
+      when(() => mockState.uri).thenReturn(Uri.parse(AppRoutes.authPath));
+
+      final redirect = createAuthRedirect(mockAuth);
+      final result = redirect(testContext, mockState);
+
+      expect(result, equals(AppRoutes.counterPath));
+    });
+
+    test('allows anonymous user to stay on auth page when upgrading', () {
+      const anonymousUser = AuthUser(id: '1', isAnonymous: true);
+      when(() => mockAuth.currentUser).thenReturn(anonymousUser);
+      when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
+      when(
+        () => mockState.uri,
+      ).thenReturn(Uri.parse(AppRoutes.authUpgradePath()));
 
       final redirect = createAuthRedirect(mockAuth);
       final result = redirect(testContext, mockState);

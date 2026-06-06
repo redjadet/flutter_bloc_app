@@ -59,8 +59,25 @@
     },
     {
       "id": "auth_session",
-      "path_prefixes": ["lib/features/auth/", "lib/features/supabase_auth/"],
+      "path_prefixes": [
+        "lib/features/auth/data/",
+        "lib/features/auth/domain/",
+        "lib/features/supabase_auth/"
+      ],
       "target": "integration_test/standard_flows_test.dart"
+    },
+    {
+      "id": "auth_guest_sign_in",
+      "path_prefixes": [
+        "lib/app/router/auth_redirect.dart",
+        "lib/core/router/app_routes.dart",
+        "lib/core/di/register_auth_services.dart",
+        "lib/core/di/injector_helpers.dart",
+        "lib/core/bootstrap/firebase_bootstrap_service.dart",
+        "lib/core/bootstrap/firebase_bootstrap_service_helpers.dart",
+        "lib/features/auth/presentation/"
+      ],
+      "target": "integration_test/guest_sign_in_flow_test.dart"
     }
   ]
 }

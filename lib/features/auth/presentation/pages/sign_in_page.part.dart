@@ -10,6 +10,11 @@ void _showAuthError({
     return;
   }
   if (error is FirebaseAuthException) {
+    if (kDebugMode) {
+      AppLogger.warning(
+        'Sign-in failed (${error.code}): ${error.message ?? 'no message'}',
+      );
+    }
     final String message = authErrorMessage(l10n, error);
     ErrorHandling.clearSnackBars(context);
     ErrorHandling.showErrorSnackBar(context, message);

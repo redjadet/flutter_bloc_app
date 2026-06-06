@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/firebase_options.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+part 'firebase_bootstrap_service_app_check.part.dart';
 part 'firebase_bootstrap_service_helpers.dart';
 
 /// Service responsible for Firebase initialization and configuration
@@ -21,6 +22,10 @@ class FirebaseBootstrapService {
   /// Whether the default Firebase app has been created (e.g. for route guards
   /// and conditional UI such as the FCM demo entry).
   static bool get isFirebaseInitialized => Firebase.apps.isNotEmpty;
+
+  /// Set during debug Firebase bootstrap when [DeviceInfoPlugin] reports a
+  /// non-physical iOS device. Used for simulator-only auth keychain fallbacks.
+  static bool isIosSimulatorInDebug = false;
 
   /// Initialize Firebase with platform-specific configuration
   static Future<bool> initializeFirebase() => _firebaseInitialization ??=
@@ -135,22 +140,29 @@ class FirebaseBootstrapService {
     return true;
   }
 
-  static bool _reuseExistingFirebaseApp() {
+  static Future<bool> _reuseExistingFirebaseApp() async {
     AppLogger.debug(
       'Firebase already initialized: '
       '${Firebase.apps.map((final app) => app.name).join(', ')}',
     );
+    await _markIosSimulatorInDebugIfNeeded();
     _enableDatabasePersistence();
     return true;
   }
 
-  static bool _reuseNativeFirebaseApp() {
+  static Future<bool> _reuseNativeFirebaseApp() async {
     AppLogger.warning(
       'Firebase already initialized natively. Reusing existing instance.',
     );
     Firebase.app();
+    await _markIosSimulatorInDebugIfNeeded();
     _enableDatabasePersistence();
     return true;
+  }
+
+  @visibleForTesting
+  static void resetIosSimulatorInDebugForTest() {
+    isIosSimulatorInDebug = false;
   }
 
   static void _logFirebaseInitializationFailure(

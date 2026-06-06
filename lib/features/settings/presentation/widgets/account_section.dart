@@ -85,7 +85,8 @@ class AccountSection extends StatelessWidget {
                             width: double.infinity,
                             child: PlatformAdaptive.filledButton(
                               context: context,
-                              onPressed: () => context.go(AppRoutes.authPath),
+                              onPressed: () =>
+                                  context.go(AppRoutes.authUpgradePath()),
                               child: Text(l10n.accountUpgradeButton),
                             ),
                           ),

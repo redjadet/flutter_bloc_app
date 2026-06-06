@@ -17,12 +17,15 @@ import 'package:go_router/go_router.dart';
 /// protection should enforce it with a route-level auth gate.
 ///
 /// **Anonymous Account Upgrading:**
-/// When an anonymous user is on the auth page, they're allowed to stay there
-/// to upgrade their account. Once authenticated, they're redirected to `/counter`.
+/// Anonymous users may stay on `/auth` only when `?upgrade=true` is present
+/// (e.g. from Settings). Fresh guest sign-in redirects to `/counter`.
 GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
     (final context, final state) {
       final bool loggedIn = auth.currentUser != null;
       final bool loggingIn = state.matchedLocation == AppRoutes.authPath;
+      final bool upgradeIntent =
+          state.uri.queryParameters[AppRoutes.authUpgradeQueryKey] ==
+          AppRoutes.authUpgradeQueryValue;
 
       // Deep link detection: Allow navigation to any route other than
       // root paths (/counter, /auth, /) to proceed without authentication.
@@ -47,12 +50,10 @@ GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
 
       // Authenticated user flow
       if (loggingIn) {
-        // Allow anonymous users to stay on auth page to upgrade their account
         final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
-        if (upgradingAnonymous) {
-          return null; // Stay on auth page to complete upgrade
+        if (upgradingAnonymous && upgradeIntent) {
+          return null;
         }
-        // Redirect authenticated users away from auth page to counter
         return AppRoutes.counterPath;
       }
 

@@ -1,5 +1,8 @@
-// coverage:ignore-file - static container of route constants.
-/// Central place to keep route names and paths used by GoRouter.
+// coverage:ignore-file - route names and paths used by GoRouter.
+library;
+
+part 'app_routes_auth.part.dart';
+
 class AppRoutes {
   AppRoutes._();
 
@@ -41,6 +44,12 @@ class AppRoutes {
 
   static const auth = 'auth';
   static const authPath = '/auth';
+  static const String authUpgradeQueryKey = _authUpgradeQueryKey;
+  static const String authUpgradeQueryValue = _authUpgradeQueryValue;
+  static String authUpgradePath({final String? redirect}) =>
+      _appRoutesAuthUpgradePath(redirect: redirect);
+  static bool isSafeRedirectPath(final String? path) =>
+      _appRoutesIsSafeRedirectPath(path);
 
   static const profile = 'profile';
   static const profilePath = '/profile';
@@ -212,13 +221,4 @@ class AppRoutes {
   static const onlineTherapyDemoAdminAudit = 'online-therapy-demo-admin-audit';
   static const onlineTherapyDemoAdminAuditPath =
       '/online-therapy-demo/admin/audit';
-
-  /// Returns true if [path] is safe for post-login redirect (local path only).
-  /// Rejects null, empty, protocol-relative (//), and external URLs.
-  static bool isSafeRedirectPath(final String? path) {
-    if (path == null || path.isEmpty) return false;
-    if (!path.startsWith('/')) return false;
-    if (path.startsWith('//')) return false;
-    return true;
-  }
 }
