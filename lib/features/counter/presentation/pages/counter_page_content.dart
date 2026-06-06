@@ -22,11 +22,12 @@ class _CounterPageContent extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Scaffold(
+        CommonPageLayout(
           appBar: CounterPageAppBar(
             title: title,
             onOpenSettings: onOpenSettings,
           ),
+          useResponsiveBody: false,
           body: SingleChildScrollView(
             child: Padding(
               padding: context.pagePadding,

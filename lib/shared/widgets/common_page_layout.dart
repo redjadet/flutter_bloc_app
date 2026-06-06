@@ -10,9 +10,10 @@ import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 /// across the app with responsive design and common AppBar pattern.
 class CommonPageLayout extends StatelessWidget {
   const CommonPageLayout({
-    required this.title,
     required this.body,
     super.key,
+    this.title = '',
+    this.appBar,
     this.actions,
     this.appBarBackgroundColor,
     this.appBarForegroundColor,
@@ -28,9 +29,16 @@ class CommonPageLayout extends StatelessWidget {
     this.cupertinoTitleStyle,
     this.appBarElevation,
     this.systemOverlayStyle,
+    this.centerTitle,
+    this.floatingActionButtonLocation,
+    this.backgroundColor,
   });
 
+  /// Material/Cupertino title when [appBar] is null.
   final String title;
+
+  /// Custom app bar. When set, [title] and standard app bar params are ignored.
+  final PreferredSizeWidget? appBar;
 
   /// Optional custom app bar background color (applied to both Material
   /// and Cupertino navigation bars).
@@ -63,9 +71,22 @@ class CommonPageLayout extends StatelessWidget {
   /// Optional status bar / system overlay styling for the app bar region.
   final SystemUiOverlayStyle? systemOverlayStyle;
 
+  /// Optional Material app bar title centering (passed through to [CommonAppBar]).
+  final bool? centerTitle;
+
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+
+  /// Optional [Scaffold] background; defaults to theme scaffold background.
+  final Color? backgroundColor;
+
   @override
   Widget build(final BuildContext context) {
-    final l10n = context.l10n;
+    assert(
+      appBar != null || title.isNotEmpty,
+      'CommonPageLayout requires a non-empty title or a custom appBar.',
+    );
+    final PreferredSizeWidget resolvedAppBar =
+        appBar ?? _buildDefaultAppBar(context);
     final Widget content = useResponsiveBody
         ? _ResponsiveBody(child: body)
         : body;
@@ -73,26 +94,34 @@ class CommonPageLayout extends StatelessWidget {
     return PopScope(
       canPop: onWillPop?.call() ?? true,
       child: Scaffold(
-        appBar: CommonAppBar(
-          title: title,
-          actions: actions,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-          homeTooltip: l10n.homeTitle,
-          backgroundColor: appBarBackgroundColor,
-          foregroundColor: appBarForegroundColor,
-          titleTextStyle: titleTextStyle,
-          cupertinoBackgroundColor: appBarBackgroundColor,
-          cupertinoTitleStyle: cupertinoTitleStyle,
-          elevation: appBarElevation,
-          systemOverlayStyle: systemOverlayStyle,
-        ),
+        backgroundColor: backgroundColor,
+        appBar: resolvedAppBar,
         body: content,
         floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
         bottomNavigationBar: bottomNavigationBar,
         persistentFooterButtons: persistentFooterButtons,
         drawer: drawer,
         endDrawer: endDrawer,
       ),
+    );
+  }
+
+  PreferredSizeWidget _buildDefaultAppBar(final BuildContext context) {
+    final l10n = context.l10n;
+    return CommonAppBar(
+      title: title,
+      actions: actions,
+      automaticallyImplyLeading: automaticallyImplyLeading,
+      homeTooltip: l10n.homeTitle,
+      backgroundColor: appBarBackgroundColor,
+      foregroundColor: appBarForegroundColor,
+      titleTextStyle: titleTextStyle,
+      cupertinoBackgroundColor: appBarBackgroundColor,
+      cupertinoTitleStyle: cupertinoTitleStyle,
+      elevation: appBarElevation,
+      systemOverlayStyle: systemOverlayStyle,
+      centerTitle: centerTitle,
     );
   }
 }
