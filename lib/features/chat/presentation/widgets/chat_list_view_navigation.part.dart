@@ -18,6 +18,10 @@ extension _ChatListViewNavigation on ChatListView {
               final cubit = ChatCubit(
                 repository: chatRepository,
                 historyRepository: historyRepository,
+                renderOrchestrationHfTokenProvider:
+                    renderOrchestrationHfTokenProvider,
+                firebaseAuthRepository: firebaseAuthRepository,
+                supabaseAuthRepository: supabaseAuthRepository,
                 initialModel: SecretConfig.huggingfaceModel,
               );
               unawaited(cubit.loadHistory());

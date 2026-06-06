@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/account_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
 Widget _wrap(Widget child) {
   return MaterialApp(
@@ -19,7 +18,7 @@ Widget _wrap(Widget child) {
 }
 
 void main() {
-  testWidgets('AccountSection shows signed out label when Firebase missing', (
+  testWidgets('AccountSection shows signed out label when auth unavailable', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(_wrap(const AccountSection()));
@@ -32,8 +31,12 @@ void main() {
   testWidgets('AccountSection shows sign-in button when no user', (
     WidgetTester tester,
   ) async {
-    final mockAuth = MockFirebaseAuth();
-    await tester.pumpWidget(_wrap(AccountSection(auth: mockAuth)));
+    final AuthRepository authRepository = _FakeAuthRepository(
+      authStateChanges: Stream<AuthUser?>.value(null),
+    );
+    await tester.pumpWidget(
+      _wrap(AccountSection(authRepository: authRepository)),
+    );
     await tester.pump();
 
     expect(find.text(AppLocalizationsEn().accountSignInButton), findsOneWidget);
@@ -42,27 +45,28 @@ void main() {
   testWidgets(
     'AccountSection waits for first auth event before showing signed-out UI',
     (WidgetTester tester) async {
-      final StreamController<User?> authStreamController =
-          StreamController<User?>();
+      final StreamController<AuthUser?> authStreamController =
+          StreamController<AuthUser?>();
       addTearDown(authStreamController.close);
-      final _DelayedStreamFirebaseAuth auth = _DelayedStreamFirebaseAuth();
-      final MockUser signedInUser = MockUser(
-        uid: 'delayed-user',
-        email: 'delayed@example.com',
-        displayName: 'Delayed User',
+      final AuthRepository authRepository = _DelayedAuthRepository(
+        authStreamController,
       );
 
-      when(() => auth.currentUser).thenReturn(null);
-      when(
-        () => auth.authStateChanges(),
-      ).thenAnswer((_) => authStreamController.stream);
-
-      await tester.pumpWidget(_wrap(AccountSection(auth: auth)));
+      await tester.pumpWidget(
+        _wrap(AccountSection(authRepository: authRepository)),
+      );
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       expect(find.text(AppLocalizationsEn().accountSignInButton), findsNothing);
 
-      authStreamController.add(signedInUser);
+      authStreamController.add(
+        const AuthUser(
+          id: 'delayed-user',
+          email: 'delayed@example.com',
+          displayName: 'Delayed User',
+          isAnonymous: false,
+        ),
+      );
       await tester.pump();
 
       expect(
@@ -75,11 +79,15 @@ void main() {
   testWidgets('AccountSection handles guest users', (
     WidgetTester tester,
   ) async {
-    final mockAuth = MockFirebaseAuth(
-      signedIn: true,
-      mockUser: MockUser(isAnonymous: true),
+    final AuthRepository authRepository = _FakeAuthRepository(
+      currentUser: const AuthUser(id: 'guest', isAnonymous: true),
+      authStateChanges: Stream<AuthUser?>.value(
+        const AuthUser(id: 'guest', isAnonymous: true),
+      ),
     );
-    await tester.pumpWidget(_wrap(AccountSection(auth: mockAuth)));
+    await tester.pumpWidget(
+      _wrap(AccountSection(authRepository: authRepository)),
+    );
     await tester.pump();
 
     expect(find.text(AppLocalizationsEn().accountGuestLabel), findsOneWidget);
@@ -92,15 +100,25 @@ void main() {
   testWidgets('AccountSection shows manage buttons for signed in users', (
     WidgetTester tester,
   ) async {
-    final mockAuth = MockFirebaseAuth(
-      signedIn: true,
-      mockUser: MockUser(
-        uid: 'abc',
+    final AuthRepository authRepository = _FakeAuthRepository(
+      currentUser: const AuthUser(
+        id: 'abc',
         email: 'user@example.com',
         displayName: 'Test User',
+        isAnonymous: false,
+      ),
+      authStateChanges: Stream<AuthUser?>.value(
+        const AuthUser(
+          id: 'abc',
+          email: 'user@example.com',
+          displayName: 'Test User',
+          isAnonymous: false,
+        ),
       ),
     );
-    await tester.pumpWidget(_wrap(AccountSection(auth: mockAuth)));
+    await tester.pumpWidget(
+      _wrap(AccountSection(authRepository: authRepository)),
+    );
     await tester.pump();
 
     expect(
@@ -111,4 +129,24 @@ void main() {
   });
 }
 
-class _DelayedStreamFirebaseAuth extends Mock implements FirebaseAuth {}
+class _FakeAuthRepository implements AuthRepository {
+  _FakeAuthRepository({this.currentUser, required this.authStateChanges});
+
+  @override
+  final AuthUser? currentUser;
+
+  @override
+  final Stream<AuthUser?> authStateChanges;
+}
+
+class _DelayedAuthRepository implements AuthRepository {
+  _DelayedAuthRepository(this._controller);
+
+  final StreamController<AuthUser?> _controller;
+
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+}

@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
+import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
@@ -8,7 +11,9 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -777,6 +782,118 @@ void main() {
         },
       );
     });
+
+    group('auth-driven transport hint refresh', () {
+      test('clears HF token cache when Firebase auth emits sign-out', () async {
+        final _ControllableCoreAuthRepository auth =
+            _ControllableCoreAuthRepository(
+              initialUser: const AuthUser(id: 'u1', isAnonymous: false),
+            );
+        addTearDown(auth.dispose);
+        final _SpyHfTokenProvider provider = _SpyHfTokenProvider();
+        final ChatCubit cubit = ChatCubit(
+          repository: _MutableHintChatRepository(
+            hint: ChatInferenceTransport.supabase,
+          ),
+          historyRepository: FakeChatHistoryRepository(),
+          renderOrchestrationHfTokenProvider: provider,
+          firebaseAuthRepository: auth,
+        );
+        addTearDown(cubit.close);
+
+        auth.emitAuthState(null);
+        await pumpEventQueue();
+
+        expect(provider.clearCacheCalls, 1);
+      });
+
+      test(
+        'does not clear HF token cache when Firebase auth emits signed-in user',
+        () async {
+          final _ControllableCoreAuthRepository auth =
+              _ControllableCoreAuthRepository();
+          addTearDown(auth.dispose);
+          final _SpyHfTokenProvider provider = _SpyHfTokenProvider();
+          final ChatCubit cubit = ChatCubit(
+            repository: FakeChatRepository(),
+            historyRepository: FakeChatHistoryRepository(),
+            renderOrchestrationHfTokenProvider: provider,
+            firebaseAuthRepository: auth,
+          );
+          addTearDown(cubit.close);
+
+          auth.emitAuthState(
+            const AuthUser(id: 'u1', isAnonymous: false, email: 'a@b.c'),
+          );
+          await pumpEventQueue();
+
+          expect(provider.clearCacheCalls, 0);
+        },
+      );
+
+      test(
+        'refreshes runnableTransportHint when Firebase auth state changes',
+        () async {
+          final _ControllableCoreAuthRepository auth =
+              _ControllableCoreAuthRepository();
+          addTearDown(auth.dispose);
+          final _MutableHintChatRepository repo = _MutableHintChatRepository(
+            hint: ChatInferenceTransport.supabase,
+          );
+          final ChatCubit cubit = ChatCubit(
+            repository: repo,
+            historyRepository: FakeChatHistoryRepository(),
+            firebaseAuthRepository: auth,
+          );
+          addTearDown(cubit.close);
+
+          expect(
+            cubit.state.runnableTransportHint,
+            ChatInferenceTransport.supabase,
+          );
+
+          repo.hint = ChatInferenceTransport.direct;
+          auth.emitAuthState(
+            const AuthUser(id: 'u1', isAnonymous: false, email: 'a@b.c'),
+          );
+          await pumpEventQueue();
+
+          expect(
+            cubit.state.runnableTransportHint,
+            ChatInferenceTransport.direct,
+          );
+        },
+      );
+
+      test(
+        'refreshes runnableTransportHint when Supabase auth state changes',
+        () async {
+          final _ControllableSupabaseAuthRepository auth =
+              _ControllableSupabaseAuthRepository();
+          addTearDown(auth.dispose);
+          final _MutableHintChatRepository repo = _MutableHintChatRepository(
+            hint: ChatInferenceTransport.supabase,
+          );
+          final ChatCubit cubit = ChatCubit(
+            repository: repo,
+            historyRepository: FakeChatHistoryRepository(),
+            supabaseAuthRepository: auth,
+          );
+          addTearDown(cubit.close);
+
+          repo.hint = ChatInferenceTransport.direct;
+          auth.emitAuthState(
+            const AuthUser(id: 'sb1', isAnonymous: false, email: 's@b.c'),
+          );
+          await pumpEventQueue();
+
+          expect(
+            cubit.state.runnableTransportHint,
+            ChatInferenceTransport.direct,
+          );
+        },
+      );
+    });
   });
 }
 
@@ -851,6 +968,114 @@ class _ConfigurableTransportChatRepository implements ChatRepository {
       pastUserInputs: <String>[...pastUserInputs, prompt],
       generatedResponses: <String>[...generatedResponses, 'ok'],
       transportUsed: successTransport,
+    );
+  }
+}
+
+class _ControllableCoreAuthRepository implements core_auth.AuthRepository {
+  _ControllableCoreAuthRepository({this.initialUser})
+    : _currentUser = initialUser;
+
+  final AuthUser? initialUser;
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+  AuthUser? _currentUser;
+
+  @override
+  AuthUser? get currentUser => _currentUser;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+
+  void emitAuthState(final AuthUser? user) {
+    _currentUser = user;
+    _controller.add(user);
+  }
+
+  Future<void> dispose() => _controller.close();
+}
+
+class _ControllableSupabaseAuthRepository implements SupabaseAuthRepository {
+  _ControllableSupabaseAuthRepository({this.initialUser})
+    : _currentUser = initialUser;
+
+  final AuthUser? initialUser;
+  final StreamController<AuthUser?> _controller =
+      StreamController<AuthUser?>.broadcast();
+  AuthUser? _currentUser;
+
+  @override
+  bool get isConfigured => true;
+
+  @override
+  AuthUser? get currentUser => _currentUser;
+
+  @override
+  Stream<AuthUser?> get authStateChanges => _controller.stream;
+
+  void emitAuthState(final AuthUser? user) {
+    _currentUser = user;
+    _controller.add(user);
+  }
+
+  @override
+  Future<void> signInWithPassword({
+    required final String email,
+    required final String password,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> signUp({
+    required final String email,
+    required final String password,
+    final String? displayName,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> signOut() async {
+    emitAuthState(null);
+  }
+
+  Future<void> dispose() => _controller.close();
+}
+
+class _SpyHfTokenProvider implements RenderOrchestrationHfTokenProvider {
+  int clearCacheCalls = 0;
+
+  @override
+  Future<void> clearRenderOrchestrationTokenCache() async {
+    clearCacheCalls++;
+  }
+
+  @override
+  Future<String?> readHfTokenForUpstream() async => null;
+}
+
+class _MutableHintChatRepository implements ChatRepository {
+  _MutableHintChatRepository({this.hint});
+
+  ChatInferenceTransport? hint;
+
+  @override
+  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+
+  @override
+  Future<ChatResult> sendMessage({
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
+  }) async {
+    return ChatResult(
+      reply: const ChatMessage(author: ChatAuthor.assistant, text: 'ok'),
+      pastUserInputs: <String>[...pastUserInputs, prompt],
+      generatedResponses: <String>[...generatedResponses, 'ok'],
     );
   }
 }

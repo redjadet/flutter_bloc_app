@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
@@ -54,15 +55,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     builder: (final context, final state) => _withChatSupabaseSessionGate(
       state: state,
       child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
-        create: () => ChatCubit(
-          repository: getIt<ChatRepository>(),
-          historyRepository: getIt<ChatHistoryRepository>(),
-          renderOrchestrationHfTokenProvider:
-              getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
-              ? getIt<RenderOrchestrationHfTokenProvider>()
-              : null,
-          initialModel: SecretConfig.huggingfaceModel,
-        ),
+        create: _createChatCubit,
         init: (final cubit) => cubit.loadHistory(),
         child: ChatPage(
           errorNotificationService: getIt<ErrorNotificationService>(),
@@ -80,6 +73,12 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
         repository: getIt<ChatListRepository>(),
         chatRepository: getIt<ChatRepository>(),
         historyRepository: getIt<ChatHistoryRepository>(),
+        renderOrchestrationHfTokenProvider:
+            getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+            ? getIt<RenderOrchestrationHfTokenProvider>()
+            : null,
+        firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
+        supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
         errorNotificationService: getIt<ErrorNotificationService>(),
         pendingSyncRepository: getIt<PendingSyncRepository>(),
       ),

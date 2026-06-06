@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/features/chat/chat.dart';
+import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -16,6 +19,9 @@ class ChatListPage extends StatefulWidget {
     required this.historyRepository,
     required this.errorNotificationService,
     required this.pendingSyncRepository,
+    this.renderOrchestrationHfTokenProvider,
+    this.firebaseAuthRepository,
+    this.supabaseAuthRepository,
     super.key,
   });
 
@@ -24,6 +30,9 @@ class ChatListPage extends StatefulWidget {
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
   final PendingSyncRepository pendingSyncRepository;
+  final RenderOrchestrationHfTokenProvider? renderOrchestrationHfTokenProvider;
+  final core_auth.AuthRepository? firebaseAuthRepository;
+  final SupabaseAuthRepository? supabaseAuthRepository;
 
   @override
   State<ChatListPage> createState() => _ChatListPageState();
@@ -73,6 +82,10 @@ class _ChatListPageState extends State<ChatListPage> {
         child: ChatListView(
           chatRepository: widget.chatRepository,
           historyRepository: widget.historyRepository,
+          renderOrchestrationHfTokenProvider:
+              widget.renderOrchestrationHfTokenProvider,
+          firebaseAuthRepository: widget.firebaseAuthRepository,
+          supabaseAuthRepository: widget.supabaseAuthRepository,
           errorNotificationService: widget.errorNotificationService,
           pendingSyncRepository: widget.pendingSyncRepository,
         ),

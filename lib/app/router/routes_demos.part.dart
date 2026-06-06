@@ -52,6 +52,18 @@ RouteBase createEventBusDemoRoute() => GoRoute(
   builder: (final context, final state) => const EventBusDemoPage(),
 );
 
+ChatCubit _createChatCubit() => ChatCubit(
+  repository: getIt<ChatRepository>(),
+  historyRepository: getIt<ChatHistoryRepository>(),
+  renderOrchestrationHfTokenProvider:
+      getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+      ? getIt<RenderOrchestrationHfTokenProvider>()
+      : null,
+  firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
+  supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
+  initialModel: SecretConfig.huggingfaceModel,
+);
+
 /// When Supabase is configured ([SupabaseAuthRepository.isConfigured]), requires
 /// a Supabase session before showing chat; otherwise redirects to
 /// [AppRoutes.supabaseAuthPath] with return [GoRouterState.matchedLocation].

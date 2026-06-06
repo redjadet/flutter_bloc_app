@@ -39,12 +39,12 @@ Callbacks check `_isRequestActive()` before emitting, preventing older responses
 - **setState after async:** Validation scripts (`check_setstate_mounted.sh`) enforce `mounted` checks.
 - **RetrySnackBarListener:** Uses `if (!mounted) return` before showing snackbar in stream callback.
 
-### 1.4 Firebase Auth Stream Race (Fixed)
+### 1.4 Auth Stream Race (Fixed)
 
-`AccountSection` avoids the ~200ms `authStateChanges()` startup race by:
+`AccountSection` avoids the ~200ms `authStateChanges` startup race by listening to injected `AuthRepository` (not `FirebaseAuth` directly):
 
-- Using `initialData: effectiveAuth.currentUser` for synchronous initial state.
-- Falling back to `snapshot.data ?? effectiveAuth.currentUser` when the stream has not yet emitted.
+- Using `initialData: auth.currentUser` for synchronous initial state.
+- Falling back to `snapshot.data ?? auth.currentUser` when the stream has not yet emitted.
 - Showing `CommonLoadingWidget` only when truly waiting for the first auth event (`ConnectionState.waiting` and `user == null`).
 
 ### 1.5 GoRouter and Auth Redirect
