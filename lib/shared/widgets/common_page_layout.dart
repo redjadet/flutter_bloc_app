@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
@@ -23,6 +24,10 @@ class CommonPageLayout extends StatelessWidget {
     this.onWillPop,
     this.automaticallyImplyLeading = true,
     this.useResponsiveBody = true,
+    this.titleTextStyle,
+    this.cupertinoTitleStyle,
+    this.appBarElevation,
+    this.systemOverlayStyle,
   });
 
   final String title;
@@ -46,6 +51,18 @@ class CommonPageLayout extends StatelessWidget {
   /// Whether to wrap [body] with the shared responsive padding/constraints.
   final bool useResponsiveBody;
 
+  /// Optional Material app bar title style.
+  final TextStyle? titleTextStyle;
+
+  /// Optional Cupertino navigation bar title style.
+  final TextStyle? cupertinoTitleStyle;
+
+  /// Optional Material app bar elevation (also sets scrolled-under elevation).
+  final double? appBarElevation;
+
+  /// Optional status bar / system overlay styling for the app bar region.
+  final SystemUiOverlayStyle? systemOverlayStyle;
+
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
@@ -63,7 +80,11 @@ class CommonPageLayout extends StatelessWidget {
           homeTooltip: l10n.homeTitle,
           backgroundColor: appBarBackgroundColor,
           foregroundColor: appBarForegroundColor,
+          titleTextStyle: titleTextStyle,
           cupertinoBackgroundColor: appBarBackgroundColor,
+          cupertinoTitleStyle: cupertinoTitleStyle,
+          elevation: appBarElevation,
+          systemOverlayStyle: systemOverlayStyle,
         ),
         body: content,
         floatingActionButton: floatingActionButton,

@@ -48,60 +48,79 @@ class _TherapistPanel extends StatelessWidget {
               ),
             ),
           Expanded(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                if (appointments.isEmpty)
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: Text('No appointments yet.'),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final double messagingHeight =
+                    _onlineTherapyEmbeddedPanelHeight(
+                      referenceHeight: constraints.maxHeight,
+                      viewportFraction: 0.38,
+                    );
+                final double callHeight = _onlineTherapyEmbeddedPanelHeight(
+                  referenceHeight: constraints.maxHeight,
+                  viewportFraction: 0.32,
+                );
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    if (appointments.isEmpty)
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text('No appointments yet.'),
+                        ),
+                      )
+                    else
+                      SliverList.builder(
+                        itemCount: appointments.length,
+                        itemBuilder: (context, index) {
+                          if (index >= appointments.length) {
+                            return const SizedBox.shrink();
+                          }
+                          final a = appointments[index];
+                          return ListTile(
+                            title: Text(
+                              formatDeviceDateTime(context, a.startAt),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Text(
+                              'Client: ${a.clientId} • Status: ${a.status.name}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        },
+                      ),
+                    const SliverToBoxAdapter(child: Divider(height: 24)),
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'Messaging',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  )
-                else
-                  SliverList.builder(
-                    itemCount: appointments.length,
-                    itemBuilder: (context, index) {
-                      if (index >= appointments.length) {
-                        return const SizedBox.shrink();
-                      }
-                      final a = appointments[index];
-                      return ListTile(
-                        title: Text(
-                          formatDeviceDateTime(context, a.startAt),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          'Client: ${a.clientId} • Status: ${a.status.name}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    },
-                  ),
-                const SliverToBoxAdapter(child: Divider(height: 24)),
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'Messaging',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 360, child: _MessagingPanel()),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                const SliverToBoxAdapter(
-                  child: Text(
-                    'Video (pre-call + join/fallback)',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 320, child: _CallPanel()),
-                ),
-              ],
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: messagingHeight,
+                        child: const _MessagingPanel(),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                    const SliverToBoxAdapter(
+                      child: Text(
+                        'Video (pre-call + join/fallback)',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: callHeight,
+                        child: const _CallPanel(),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],

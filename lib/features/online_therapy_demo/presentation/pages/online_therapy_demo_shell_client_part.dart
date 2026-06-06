@@ -51,21 +51,24 @@ class _ClientBookingPanel extends StatelessWidget {
         );
 
         if (wide) {
+          final double sidebarWidth = _onlineTherapySidebarWidth(
+            constraints.maxWidth,
+          );
           return Row(
             children: <Widget>[
-              SizedBox(width: 320, child: therapistList),
+              SizedBox(width: sidebarWidth, child: therapistList),
               const VerticalDivider(width: 1),
               Expanded(child: details),
             ],
           );
         }
-        final List<Widget> items = <Widget>[
-          SizedBox(height: 360, child: therapistList),
-          const Divider(height: 1),
-          const SizedBox(height: 16),
-          SizedBox(height: 720, child: details),
-        ];
-        return ListView(children: items);
+        return Column(
+          children: <Widget>[
+            Expanded(flex: 2, child: therapistList),
+            const Divider(height: 1),
+            Expanded(flex: 3, child: details),
+          ],
+        );
       },
     );
   }

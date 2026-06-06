@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -41,18 +41,14 @@ class _RegisterView extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
 
-    return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: CommonAppBar(
-        title: l10n.registerTitle,
-        homeTooltip: l10n.homeTitle,
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.onSurface,
-        cupertinoBackgroundColor: colorScheme.surface,
-        cupertinoTitleStyle: theme.textTheme.titleMedium?.copyWith(
-          color: colorScheme.onSurface,
-        ),
+    return CommonPageLayout(
+      title: l10n.registerTitle,
+      appBarBackgroundColor: colorScheme.surface,
+      appBarForegroundColor: colorScheme.onSurface,
+      cupertinoTitleStyle: theme.textTheme.titleMedium?.copyWith(
+        color: colorScheme.onSurface,
       ),
+      useResponsiveBody: false,
       body: const SafeArea(
         child: ResponsiveRegisterBody(),
       ),

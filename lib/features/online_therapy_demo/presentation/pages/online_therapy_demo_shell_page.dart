@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,20 @@ part 'online_therapy_demo_shell_client_part.dart';
 part 'online_therapy_demo_shell_controls.part.dart';
 part 'online_therapy_demo_shell_messaging_call.part.dart';
 part 'online_therapy_demo_shell_therapist_admin_part.dart';
+
+/// Sidebar width for wide online-therapy demo split layouts.
+double _onlineTherapySidebarWidth(final double maxWidth) =>
+    math.min(320, maxWidth * 0.35).clamp(240, 320).toDouble();
+
+/// Height for embedded messaging/call panels inside scrollable demo shells.
+double _onlineTherapyEmbeddedPanelHeight({
+  required final double referenceHeight,
+  required final double viewportFraction,
+  final double minHeight = 220,
+  final double maxHeight = 420,
+}) {
+  return (referenceHeight * viewportFraction).clamp(minHeight, maxHeight);
+}
 
 class OnlineTherapyDemoShellPage extends StatelessWidget {
   const OnlineTherapyDemoShellPage({super.key});

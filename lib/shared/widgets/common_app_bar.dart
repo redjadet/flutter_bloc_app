@@ -21,6 +21,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.cupertinoTitleStyle,
     this.centerTitle,
     this.systemOverlayStyle,
+    this.elevation,
+    this.scrolledUnderElevation,
   });
 
   final String title;
@@ -34,6 +36,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextStyle? cupertinoTitleStyle;
   final bool? centerTitle;
   final SystemUiOverlayStyle? systemOverlayStyle;
+  final double? elevation;
+  final double? scrolledUnderElevation;
 
   @override
   Widget build(final BuildContext context) {
@@ -89,6 +93,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title, style: titleTextStyle),
       centerTitle: centerTitle,
       systemOverlayStyle: systemOverlayStyle,
+      elevation: elevation,
+      scrolledUnderElevation: scrolledUnderElevation ?? elevation,
       actions: actions,
     );
   }
