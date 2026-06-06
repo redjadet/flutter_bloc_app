@@ -29,6 +29,10 @@
   - Coalesces concurrent refresh triggers (`forceFetch` and `pullRemote`) behind
     one in-flight `Future<void>` to prevent overlapping Firebase Remote Config
     fetches
+  - Skips `pullRemote` network refresh when cache was updated within 60s
+    (`_pullRemoteMinInterval`, aligned with background sync); throttled skips
+    log/telemetry at most once per window (startup sync + cubit/provider triggers
+    can still fire `forceFetch` outside coalescing)
   - Gracefully swallows transient fetch errors when cached data already exists, but rethrows when no cache is available
   - Supports `clearCache()` to wipe the Hive snapshot and reset in-memory state before a fresh fetch (used by Settings diagnostics)
 

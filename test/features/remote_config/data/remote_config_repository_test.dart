@@ -47,10 +47,13 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    test('logs test_value_1 when getString is called', () {
+    test('getString and getBool do not log on every read', () {
       when(
         () => remoteConfig.getString(RemoteConfigKeys.testValue1),
       ).thenReturn('expected-value');
+      when(
+        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
+      ).thenReturn(true);
 
       final repository = RemoteConfigRepository(
         remoteConfig,
@@ -62,29 +65,10 @@ void main() {
         'expected-value',
       );
       expect(
-        debugMessages,
-        contains('RemoteConfig[getString] test_value_1="expected-value"'),
-      );
-    });
-
-    test('logs awesome_feature_enabled when getBool is called', () {
-      when(
-        () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
-      ).thenReturn(true);
-
-      final repository = RemoteConfigRepository(
-        remoteConfig,
-        debugLogger: debugMessages.add,
-      );
-
-      expect(
         repository.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
         isTrue,
       );
-      expect(
-        debugMessages,
-        contains('RemoteConfig[getBool] awesome_feature_enabled=true'),
-      );
+      expect(debugMessages, isEmpty);
     });
 
     test(

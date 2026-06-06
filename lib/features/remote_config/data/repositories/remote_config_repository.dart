@@ -99,26 +99,10 @@ class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
   }
 
   @override
-  String getString(final String key) {
-    final String value = _remoteConfig.getString(key);
-
-    if (key == RemoteConfigKeys.testValue1) {
-      _logDebug('RemoteConfig[getString] $key="$value"');
-    }
-
-    return value;
-  }
+  String getString(final String key) => _remoteConfig.getString(key);
 
   @override
-  bool getBool(final String key) {
-    final bool value = _remoteConfig.getBool(key);
-
-    if (key == RemoteConfigKeys.awesomeFeatureEnabled) {
-      _logDebug('RemoteConfig[getBool] $key=$value');
-    }
-
-    return value;
-  }
+  bool getBool(final String key) => _remoteConfig.getBool(key);
 
   @override
   int getInt(final String key) => _remoteConfig.getInt(key);

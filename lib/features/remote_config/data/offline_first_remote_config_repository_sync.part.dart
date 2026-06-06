@@ -24,6 +24,11 @@ extension _OfflineFirstRemoteConfigRepositorySync
       }
     }
 
+    if (reason == 'pullRemote' && _shouldSkipPullRemoteDueToRecentRefresh()) {
+      _maybeLogPullRemoteSkip();
+      return;
+    }
+
     await _fetchCoalescer.run(() => _doRefreshFromRemote(reason));
   }
 
@@ -64,6 +69,8 @@ extension _OfflineFirstRemoteConfigRepositorySync
       lastSyncedAt: fetchedAt,
     );
     _snapshot = nextSnapshot;
+    _lastSuccessfulRemoteRefreshAt = fetchedAt;
+    _loggedPullRemoteSkipInThrottleWindow = true;
     await _cacheRepository.saveSnapshot(nextSnapshot);
     stopwatch.stop();
     _telemetry(
@@ -81,7 +88,39 @@ extension _OfflineFirstRemoteConfigRepositorySync
     final RemoteConfigSnapshot? cached = await _cacheRepository.loadSnapshot();
     if (cached != null) {
       _snapshot = cached;
+      _lastSuccessfulRemoteRefreshAt = cached.lastFetchedAt;
     }
+  }
+
+  bool _shouldSkipPullRemoteDueToRecentRefresh() {
+    final DateTime? lastRefresh = _lastSuccessfulRemoteRefreshAt;
+    if (lastRefresh == null || !_snapshot.hasValues) {
+      _loggedPullRemoteSkipInThrottleWindow = false;
+      return false;
+    }
+    final Duration elapsed = DateTime.now().toUtc().difference(lastRefresh);
+    if (elapsed >= OfflineFirstRemoteConfigRepository._pullRemoteMinInterval) {
+      _loggedPullRemoteSkipInThrottleWindow = false;
+      return false;
+    }
+    return true;
+  }
+
+  void _maybeLogPullRemoteSkip() {
+    if (_loggedPullRemoteSkipInThrottleWindow) {
+      return;
+    }
+    _loggedPullRemoteSkipInThrottleWindow = true;
+    AppLogger.debug(
+      'OfflineFirstRemoteConfigRepository.pullRemote skipped (recent refresh)',
+    );
+    _telemetry(
+      'remote_config_fetch_skipped',
+      <String, Object?>{
+        'reason': 'recent_refresh',
+        'hasCache': _snapshot.hasValues,
+      },
+    );
   }
 
   Map<String, dynamic> _readTrackedValues() {

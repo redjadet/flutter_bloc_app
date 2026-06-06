@@ -50,6 +50,10 @@ class OfflineFirstRemoteConfigRepository
     RemoteConfigKeys.supabaseConfigVersion,
   ];
 
+  /// Matches background sync interval; avoids redundant network fetches when
+  /// sync cycles fire in quick succession at startup.
+  static const Duration _pullRemoteMinInterval = Duration(seconds: 60);
+
   final RemoteConfigRemoteDataSource _remoteRepository;
   final RemoteConfigCacheRepository _cacheRepository;
   final NetworkStatusService _networkStatusService;
@@ -57,6 +61,8 @@ class OfflineFirstRemoteConfigRepository
   final void Function(String event, Map<String, Object?> payload) _telemetry;
 
   RemoteConfigSnapshot _snapshot = RemoteConfigSnapshot.empty;
+  DateTime? _lastSuccessfulRemoteRefreshAt;
+  bool _loggedPullRemoteSkipInThrottleWindow = false;
   final InFlightCoalescer _fetchCoalescer = InFlightCoalescer();
 
   @visibleForTesting
@@ -115,6 +121,8 @@ class OfflineFirstRemoteConfigRepository
   @override
   Future<void> clearCache() async {
     _snapshot = RemoteConfigSnapshot.empty;
+    _lastSuccessfulRemoteRefreshAt = null;
+    _loggedPullRemoteSkipInThrottleWindow = false;
     await _cacheRepository.clear();
   }
 
