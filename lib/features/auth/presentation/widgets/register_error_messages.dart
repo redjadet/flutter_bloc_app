@@ -4,73 +4,48 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 String? fullNameErrorText(
   final AppLocalizations l10n,
   final RegisterFullNameError? error,
-) {
-  switch (error) {
-    case RegisterFullNameError.empty:
-      return l10n.registerFullNameEmptyError;
-    case RegisterFullNameError.tooShort:
-      return l10n.registerFullNameTooShortError;
-    case null:
-      return null;
-  }
-}
+) => switch (error) {
+  RegisterFullNameError.empty => l10n.registerFullNameEmptyError,
+  RegisterFullNameError.tooShort => l10n.registerFullNameTooShortError,
+  null => null,
+};
 
 String? emailErrorText(
   final AppLocalizations l10n,
   final RegisterEmailError? error,
-) {
-  switch (error) {
-    case RegisterEmailError.empty:
-      return l10n.registerEmailEmptyError;
-    case RegisterEmailError.invalid:
-      return l10n.registerEmailInvalidError;
-    case null:
-      return null;
-  }
-}
+) => switch (error) {
+  RegisterEmailError.empty => l10n.registerEmailEmptyError,
+  RegisterEmailError.invalid => l10n.registerEmailInvalidError,
+  null => null,
+};
 
 String? passwordErrorText(
   final AppLocalizations l10n,
   final RegisterPasswordError? error,
-) {
-  switch (error) {
-    case RegisterPasswordError.empty:
-      return l10n.registerPasswordEmptyError;
-    case RegisterPasswordError.tooShort:
-      return l10n.registerPasswordTooShortError;
-    case RegisterPasswordError.lettersAndNumbers:
-      return l10n.registerPasswordLettersAndNumbersError;
-    case RegisterPasswordError.whitespace:
-      return l10n.registerPasswordWhitespaceError;
-    case null:
-      return null;
-  }
-}
+) => switch (error) {
+  RegisterPasswordError.empty => l10n.registerPasswordEmptyError,
+  RegisterPasswordError.tooShort => l10n.registerPasswordTooShortError,
+  RegisterPasswordError.lettersAndNumbers =>
+    l10n.registerPasswordLettersAndNumbersError,
+  RegisterPasswordError.whitespace => l10n.registerPasswordWhitespaceError,
+  null => null,
+};
 
 String? confirmPasswordErrorText(
   final AppLocalizations l10n,
   final RegisterConfirmPasswordError? error,
-) {
-  switch (error) {
-    case RegisterConfirmPasswordError.empty:
-      return l10n.registerConfirmPasswordEmptyError;
-    case RegisterConfirmPasswordError.mismatch:
-      return l10n.registerConfirmPasswordMismatchError;
-    case null:
-      return null;
-  }
-}
+) => switch (error) {
+  RegisterConfirmPasswordError.empty => l10n.registerConfirmPasswordEmptyError,
+  RegisterConfirmPasswordError.mismatch =>
+    l10n.registerConfirmPasswordMismatchError,
+  null => null,
+};
 
 String? phoneErrorText(
   final AppLocalizations l10n,
   final RegisterPhoneError? error,
-) {
-  switch (error) {
-    case RegisterPhoneError.empty:
-      return l10n.registerPhoneEmptyError;
-    case RegisterPhoneError.invalid:
-      return l10n.registerPhoneInvalidError;
-    case null:
-      return null;
-  }
-}
+) => switch (error) {
+  RegisterPhoneError.empty => l10n.registerPhoneEmptyError,
+  RegisterPhoneError.invalid => l10n.registerPhoneInvalidError,
+  null => null,
+};

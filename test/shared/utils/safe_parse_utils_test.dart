@@ -24,6 +24,45 @@ void main() {
     });
   });
 
+  group('intFromDynamic', () {
+    test('parses int, num, and trimmed strings', () {
+      expect(intFromDynamic(7), 7);
+      expect(intFromDynamic(3.9), 3);
+      expect(intFromDynamic(' 12 '), 12);
+      expect(intFromDynamic('not-a-number'), isNull);
+      expect(intFromDynamic(null), isNull);
+      expect(intFromDynamic(true), isNull);
+    });
+  });
+
+  group('doubleFromDynamic', () {
+    test('parses num and strings or returns fallback', () {
+      expect(doubleFromDynamic(2.5, 0), 2.5);
+      expect(doubleFromDynamic('3.14', 0), closeTo(3.14, 0.001));
+      expect(doubleFromDynamic('bad', 1.5), 1.5);
+      expect(doubleFromDynamic(null, 9), 9);
+    });
+  });
+
+  group('mapFromDynamic', () {
+    test('returns typed map or coerces object-key map', () {
+      expect(mapFromDynamic(<String, dynamic>{'a': 1}), <String, dynamic>{
+        'a': 1,
+      });
+      expect(mapFromDynamic(<Object?, Object?>{'b': 2}), <String, dynamic>{
+        'b': 2,
+      });
+      expect(mapFromDynamic(<int>[1]), isNull);
+    });
+  });
+
+  group('stringFromDynamic', () {
+    test('returns string or null', () {
+      expect(stringFromDynamic('x'), 'x');
+      expect(stringFromDynamic(1), isNull);
+    });
+  });
+
   group('parseMapOfMaps', () {
     test('returns empty list for null or non-map value', () {
       expect(

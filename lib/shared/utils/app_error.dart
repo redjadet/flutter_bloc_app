@@ -40,19 +40,14 @@ final class NetworkError extends AppError {
   final NetworkErrorKind kind;
 
   @override
-  bool get isRetryable {
-    switch (kind) {
-      case NetworkErrorKind.timeout:
-      case NetworkErrorKind.offline:
-      case NetworkErrorKind.serviceUnavailable:
-      case NetworkErrorKind.rateLimited:
-      case NetworkErrorKind.server:
-        return true;
-      case NetworkErrorKind.client:
-      case NetworkErrorKind.unknown:
-        return false;
-    }
-  }
+  bool get isRetryable => switch (kind) {
+    NetworkErrorKind.timeout ||
+    NetworkErrorKind.offline ||
+    NetworkErrorKind.serviceUnavailable ||
+    NetworkErrorKind.rateLimited ||
+    NetworkErrorKind.server => true,
+    NetworkErrorKind.client || NetworkErrorKind.unknown => false,
+  };
 }
 
 final class StorageError extends AppError {
@@ -82,49 +77,34 @@ final class UnknownError extends AppError {
   }) : super(message, cause: cause);
 }
 
-NetworkErrorKind _networkKindFromStatusCode(final int statusCode) {
-  if (statusCode == 408) {
-    return NetworkErrorKind.timeout;
-  }
-  if (statusCode == 429) {
-    return NetworkErrorKind.rateLimited;
-  }
-  if (statusCode == 503) {
-    return NetworkErrorKind.serviceUnavailable;
-  }
-  if (statusCode >= 500) {
-    return NetworkErrorKind.server;
-  }
-  if (statusCode >= 400) {
-    return NetworkErrorKind.client;
-  }
-  return NetworkErrorKind.unknown;
-}
+NetworkErrorKind _networkKindFromStatusCode(final int statusCode) =>
+    switch (statusCode) {
+      408 => NetworkErrorKind.timeout,
+      429 => NetworkErrorKind.rateLimited,
+      503 => NetworkErrorKind.serviceUnavailable,
+      >= 500 => NetworkErrorKind.server,
+      >= 400 => NetworkErrorKind.client,
+      _ => NetworkErrorKind.unknown,
+    };
 
 AppError appErrorFromHttpStatus(
   final int statusCode, {
   required final String message,
   final Object? cause,
-}) {
-  if (statusCode == 401) {
-    return AuthError(
-      message: message,
-      kind: AuthErrorKind.unauthorized,
-      cause: cause,
-    );
-  }
-  if (statusCode == 403) {
-    return AuthError(
-      message: message,
-      kind: AuthErrorKind.forbidden,
-      cause: cause,
-    );
-  }
-
-  final NetworkErrorKind kind = _networkKindFromStatusCode(statusCode);
-  return NetworkError(
+}) => switch (statusCode) {
+  401 => AuthError(
     message: message,
-    kind: kind,
+    kind: AuthErrorKind.unauthorized,
     cause: cause,
-  );
-}
+  ),
+  403 => AuthError(
+    message: message,
+    kind: AuthErrorKind.forbidden,
+    cause: cause,
+  ),
+  _ => NetworkError(
+    message: message,
+    kind: _networkKindFromStatusCode(statusCode),
+    cause: cause,
+  ),
+};

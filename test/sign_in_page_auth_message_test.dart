@@ -41,6 +41,11 @@ void main() {
       messageFor('invalid-verification-id'),
       l10n.authErrorInvalidCredential,
     );
+    expect(
+      messageFor('network-request-failed'),
+      l10n.authErrorNetworkRequestFailed,
+    );
+    expect(messageFor('too-many-requests'), l10n.authErrorTooManyRequests);
   });
 
   test('authErrorMessage falls back to generic message', () {

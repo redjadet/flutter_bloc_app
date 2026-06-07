@@ -36,6 +36,9 @@ void registerAuthServices() {
   registerLazySingletonIfAbsent<AuthRepository>(
     () {
       if (firebaseAuth == null) {
+        if (_shouldUseDebugKeychainGuestFallback) {
+          return _DebugLocalGuestOnlyAuthRepository();
+        }
         return const _UnavailableAuthRepository();
       }
       if (_shouldUseDebugKeychainGuestFallback) {
@@ -122,6 +125,34 @@ class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
   Future<void> dispose() async {
     await _firebaseSubscription?.cancel();
     await _authStateController.close();
+  }
+}
+
+/// Local-only guest session when Firebase Auth is unavailable (placeholder
+/// config or skipped init) on macOS debug or iOS simulator debug.
+class _DebugLocalGuestOnlyAuthRepository implements AuthRepository {
+  AuthUser? _localGuest;
+
+  String get _localGuestId => defaultTargetPlatform == TargetPlatform.macOS
+      ? 'macos-debug-local-guest'
+      : 'ios-simulator-debug-local-guest';
+
+  @override
+  AuthUser? get currentUser => _localGuest;
+
+  @override
+  Stream<AuthUser?> get authStateChanges async* {
+    yield _localGuest;
+  }
+
+  @override
+  Future<void> signInAnonymously() async {
+    _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
+  }
+
+  @override
+  Future<void> signOut() async {
+    _localGuest = null;
   }
 }
 

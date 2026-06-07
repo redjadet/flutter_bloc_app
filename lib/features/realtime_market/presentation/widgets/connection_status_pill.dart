@@ -16,23 +16,23 @@ class ConnectionStatusPill extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
-    late final Color bg;
-    late final Color fg;
-    late final String label;
-    switch (status) {
-      case MarketConnectionStatus.live:
-        bg = colors.primaryContainer;
-        fg = colors.onPrimaryContainer;
-        label = l10n.realtimeMarketConnectionLive;
-      case MarketConnectionStatus.reconnecting:
-        bg = colors.secondaryContainer;
-        fg = colors.onSecondaryContainer;
-        label = l10n.realtimeMarketConnectionReconnecting;
-      case MarketConnectionStatus.offline:
-        bg = colors.errorContainer;
-        fg = colors.onErrorContainer;
-        label = l10n.realtimeMarketConnectionOffline;
-    }
+    final (Color bg, Color fg, String label) = switch (status) {
+      MarketConnectionStatus.live => (
+        colors.primaryContainer,
+        colors.onPrimaryContainer,
+        l10n.realtimeMarketConnectionLive,
+      ),
+      MarketConnectionStatus.reconnecting => (
+        colors.secondaryContainer,
+        colors.onSecondaryContainer,
+        l10n.realtimeMarketConnectionReconnecting,
+      ),
+      MarketConnectionStatus.offline => (
+        colors.errorContainer,
+        colors.onErrorContainer,
+        l10n.realtimeMarketConnectionOffline,
+      ),
+    };
     return Semantics(
       label: label,
       child: DecoratedBox(

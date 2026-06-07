@@ -43,6 +43,8 @@ void main() {
     );
 
     test('registers a safe fallback auth repository without Firebase', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
       registerAuthServices();
 
       final feature_auth.AuthRepository featureRepository =
@@ -55,6 +57,23 @@ void main() {
       expect(featureRepository.currentUser, isNull);
       expect(featureRepository.authStateChanges, emitsDone);
     });
+
+    test(
+      'iOS simulator debug without Firebase uses local-only guest repository',
+      () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        FirebaseBootstrapService.isIosSimulatorInDebug = true;
+
+        registerAuthServices();
+
+        final repository = getIt<feature_auth.AuthRepository>();
+        expect(repository, isNot(isA<FirebaseAuthRepository>()));
+
+        await repository.signInAnonymously();
+        expect(repository.currentUser?.id, 'ios-simulator-debug-local-guest');
+        expect(repository.currentUser?.isAnonymous, isTrue);
+      },
+    );
 
     test(
       'iOS debug registers FirebaseAuthRepository without local guest wrapper',

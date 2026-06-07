@@ -78,18 +78,17 @@ class CaseStudyRecord extends Equatable {
       if (parsed is! List) return <CaseStudyRecord>[];
       final List<CaseStudyRecord> out = <CaseStudyRecord>[];
       for (final Object? item in parsed) {
-        if (item is Map<String, Object?>) {
-          final CaseStudyRecord? r = CaseStudyRecord.fromJson(item);
-          if (r != null) out.add(r);
-        } else if (item is Map) {
-          final CaseStudyRecord? r = CaseStudyRecord.fromJson(
-            item.map(
+        final CaseStudyRecord? r = switch (item) {
+          final Map<String, Object?> map => CaseStudyRecord.fromJson(map),
+          final Map<Object?, Object?> map => CaseStudyRecord.fromJson(
+            map.map(
               (final dynamic k, final dynamic v) =>
                   MapEntry(k.toString(), v as Object?),
             ),
-          );
-          if (r != null) out.add(r);
-        }
+          ),
+          _ => null,
+        };
+        if (r != null) out.add(r);
       }
       return out;
     } on Object {

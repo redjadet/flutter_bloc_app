@@ -2,30 +2,17 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
 
 extension DeepLinkTargetLocationX on DeepLinkTarget {
-  String get location {
-    switch (this) {
-      case DeepLinkTarget.counter:
-        return AppRoutes.counterPath;
-      case DeepLinkTarget.example:
-        return AppRoutes.examplePath;
-      case DeepLinkTarget.charts:
-        return AppRoutes.chartsPath;
-      case DeepLinkTarget.settings:
-        return AppRoutes.settingsPath;
-      case DeepLinkTarget.chat:
-        return AppRoutes.chatPath;
-      case DeepLinkTarget.websocket:
-        return AppRoutes.websocketPath;
-      case DeepLinkTarget.realtimeMarket:
-        return AppRoutes.realtimeMarketPath;
-      case DeepLinkTarget.googleMaps:
-        return AppRoutes.googleMapsPath;
-      case DeepLinkTarget.graphqlDemo:
-        return AppRoutes.graphqlPath;
-      case DeepLinkTarget.profile:
-        return AppRoutes.profilePath;
-      case DeepLinkTarget.eventBusDemo:
-        return AppRoutes.eventBusDemoPath;
-    }
-  }
+  String get location => switch (this) {
+    DeepLinkTarget.counter => AppRoutes.counterPath,
+    DeepLinkTarget.example => AppRoutes.examplePath,
+    DeepLinkTarget.charts => AppRoutes.chartsPath,
+    DeepLinkTarget.settings => AppRoutes.settingsPath,
+    DeepLinkTarget.chat => AppRoutes.chatPath,
+    DeepLinkTarget.websocket => AppRoutes.websocketPath,
+    DeepLinkTarget.realtimeMarket => AppRoutes.realtimeMarketPath,
+    DeepLinkTarget.googleMaps => AppRoutes.googleMapsPath,
+    DeepLinkTarget.graphqlDemo => AppRoutes.graphqlPath,
+    DeepLinkTarget.profile => AppRoutes.profilePath,
+    DeepLinkTarget.eventBusDemo => AppRoutes.eventBusDemoPath,
+  };
 }

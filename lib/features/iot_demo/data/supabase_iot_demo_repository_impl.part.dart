@@ -184,24 +184,24 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
       'last_seen': now,
       'updated_at': now,
     };
-    if (command is IotDeviceCommandToggle) {
-      final Object? raw = await _fetchToggleState(deviceId);
-      final List<dynamic>? list = listFromDynamic(raw);
-      final Map<String, dynamic>? firstRow = list != null && list.isNotEmpty
-          ? mapFromDynamic(list.first)
-          : null;
-      final bool current = boolFromDynamic(
-        firstRow?['toggled_on'],
-        fallback: false,
-      );
-      updates['toggled_on'] = !current;
-    } else if (command is IotDeviceCommandSetValue) {
-      final double v = iotDemoClampAndRound(
-        command.value.toDouble(),
-        iotDemoValueMin,
-        iotDemoValueMax,
-      );
-      updates['value'] = v;
+    switch (command) {
+      case IotDeviceCommandToggle():
+        final Object? raw = await _fetchToggleState(deviceId);
+        final List<dynamic>? list = listFromDynamic(raw);
+        final Map<String, dynamic>? firstRow = list != null && list.isNotEmpty
+            ? mapFromDynamic(list.first)
+            : null;
+        final bool current = boolFromDynamic(
+          firstRow?['toggled_on'],
+          fallback: false,
+        );
+        updates['toggled_on'] = !current;
+      case IotDeviceCommandSetValue(:final value):
+        updates['value'] = iotDemoClampAndRound(
+          value.toDouble(),
+          iotDemoValueMin,
+          iotDemoValueMax,
+        );
     }
     await _updateDevice(deviceId, updates);
   }
@@ -263,12 +263,12 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     }
   }
 
-  static DateTime? _parseTimestamp(final dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    if (value is String) return DateTime.tryParse(value);
-    return null;
-  }
+  static DateTime? _parseTimestamp(final dynamic value) => switch (value) {
+    null => null,
+    final DateTime d => d,
+    final String s => DateTime.tryParse(s),
+    _ => null,
+  };
 
   static Future<Object?> _defaultFetchRows(
     final IotDemoDeviceFilter filter,

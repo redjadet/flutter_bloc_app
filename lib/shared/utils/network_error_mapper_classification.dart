@@ -1,52 +1,37 @@
 part of 'network_error_mapper.dart';
 
-AppErrorCode _getErrorCodeForStatusCode(final int statusCode) {
-  switch (statusCode) {
-    case 401:
-      return AppErrorCode.auth;
-    case 403:
-    case 404:
-      return AppErrorCode.client;
-    case 408:
-      return AppErrorCode.timeout;
-    case 429:
-      return AppErrorCode.rateLimit;
-    case 503:
-      return AppErrorCode.serviceUnavailable;
-    case 500:
-    case 502:
-    case 504:
-      return AppErrorCode.server;
-    default:
-      if (statusCode >= 400 && statusCode < 500) {
-        return AppErrorCode.client;
-      }
-      if (statusCode >= 500) {
-        return AppErrorCode.server;
-      }
-      return AppErrorCode.unknown;
-  }
-}
+AppErrorCode _getErrorCodeForStatusCode(final int statusCode) =>
+    switch (statusCode) {
+      401 => AppErrorCode.auth,
+      403 || 404 => AppErrorCode.client,
+      408 => AppErrorCode.timeout,
+      429 => AppErrorCode.rateLimit,
+      503 => AppErrorCode.serviceUnavailable,
+      500 || 502 || 504 => AppErrorCode.server,
+      >= 400 && < 500 => AppErrorCode.client,
+      >= 500 => AppErrorCode.server,
+      _ => AppErrorCode.unknown,
+    };
 
 AppErrorCode _getErrorCode(final dynamic error) {
-  if (error is HttpRequestFailure) {
-    return _getErrorCodeForStatusCode(error.statusCode);
+  if (error case HttpRequestFailure(:final statusCode)) {
+    return _getErrorCodeForStatusCode(statusCode);
   }
 
-  if (error is DioException) {
-    final int? statusCode = error.response?.statusCode;
-    if (statusCode != null) {
-      return _getErrorCodeForStatusCode(statusCode);
-    }
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return AppErrorCode.timeout;
-      case DioExceptionType.connectionError:
-        return AppErrorCode.network;
-      default:
-        break;
+  if (error case DioException(response: Response(:final statusCode?))) {
+    return _getErrorCodeForStatusCode(statusCode);
+  }
+
+  if (error case DioException(:final type)) {
+    final AppErrorCode? code = switch (type) {
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.sendTimeout ||
+      DioExceptionType.receiveTimeout => AppErrorCode.timeout,
+      DioExceptionType.connectionError => AppErrorCode.network,
+      _ => null,
+    };
+    if (code != null) {
+      return code;
     }
   }
 
@@ -96,22 +81,10 @@ int? _extractHttpStatusCode(final String value) {
   return int.tryParse(match.group(1) ?? '');
 }
 
-bool _hasExplicitStatusMessage(final int statusCode) {
-  switch (statusCode) {
-    case 401:
-    case 403:
-    case 404:
-    case 408:
-    case 429:
-    case 500:
-    case 502:
-    case 503:
-    case 504:
-      return true;
-    default:
-      return false;
-  }
-}
+bool _hasExplicitStatusMessage(final int statusCode) => switch (statusCode) {
+  401 || 403 || 404 || 408 || 429 || 500 || 502 || 503 || 504 => true,
+  _ => false,
+};
 
 bool _isNetworkError(final dynamic error) {
   if (error == null) return false;
@@ -127,15 +100,15 @@ bool _isNetworkError(final dynamic error) {
 
 bool _isTimeoutError(final dynamic error) {
   if (error == null) return false;
-  if (error is DioException) {
-    switch (error.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return true;
-      default:
-        break;
-    }
+  if (error case DioException(:final type)) {
+    return switch (type) {
+      DioExceptionType.connectionTimeout ||
+      DioExceptionType.sendTimeout ||
+      DioExceptionType.receiveTimeout => true,
+      _ =>
+        _containsTimeoutHint(error.toString().toLowerCase()) ||
+            error.toString().toLowerCase().contains('timed out'),
+    };
   }
 
   return _containsTimeoutHint(error.toString().toLowerCase()) ||

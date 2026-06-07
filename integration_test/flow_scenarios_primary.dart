@@ -8,10 +8,12 @@ void registerGuestSignInIntegrationFlow() {
       authMode: IntegrationAuthMode.realFirebaseAuth,
     ),
     body: (final tester) async {
-      if (FirebaseAuth.instance.currentUser != null) {
-        await FirebaseAuth.instance.signOut();
+      if (FirebaseBootstrapService.isFirebaseInitialized) {
+        if (FirebaseAuth.instance.currentUser != null) {
+          await FirebaseAuth.instance.signOut();
+        }
+        addTearDown(FirebaseAuth.instance.signOut);
       }
-      addTearDown(FirebaseAuth.instance.signOut);
 
       await launchTestApp(tester, requireAuth: true);
       await pumpUntilFound(tester, find.byKey(signInGuestButtonKey));
@@ -26,7 +28,9 @@ void registerGuestSignInIntegrationFlow() {
       expect(authRepository.currentUser, isNotNull);
       expect(authRepository.currentUser!.isAnonymous, isTrue);
 
-      final User? firebaseUser = FirebaseAuth.instance.currentUser;
+      final User? firebaseUser = FirebaseBootstrapService.isFirebaseInitialized
+          ? FirebaseAuth.instance.currentUser
+          : null;
       final bool hasFirebaseAnon = firebaseUser?.isAnonymous ?? false;
       final bool hasSimulatorLocalGuest =
           authRepository.currentUser!.id == 'ios-simulator-debug-local-guest';

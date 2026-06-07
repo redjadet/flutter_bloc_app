@@ -163,6 +163,35 @@ void main() {
       expect(thermostat.value, iotDemoValueMax);
     });
 
+    test(
+      'sendCommand setValue is no-op when clamped value is unchanged',
+      () async {
+        await repository.replaceDevices(<IotDevice>[
+          const IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 23.5,
+          ),
+        ]);
+        await repository.connect('thermostat-1');
+        final IotDevice connected = (await repository.watchDevices().first)
+            .firstWhere((final d) => d.id == 'thermostat-1');
+        expect(connected.lastSeen, isNotNull);
+        final DateTime before = connected.lastSeen!;
+
+        await repository.sendCommand(
+          'thermostat-1',
+          IotDeviceCommand.setValue(23.5),
+        );
+
+        final IotDevice thermostat = (await repository.watchDevices().first)
+            .firstWhere((final d) => d.id == 'thermostat-1');
+        expect(thermostat.value, 23.5);
+        expect(thermostat.lastSeen, before);
+      },
+    );
+
     test('sendCommand toggle persists and is visible on next watch', () async {
       await repository.replaceDevices(<IotDevice>[
         const IotDevice(
