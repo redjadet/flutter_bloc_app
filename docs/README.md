@@ -11,7 +11,9 @@ Source-of-truth docs for Flutter BLoC app.
   runner contract [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
 - **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
-  [`architecture_details.md`](architecture_details.md)
+  [`architecture_details.md`](architecture_details.md), [`bloc_standards.md`](bloc_standards.md),
+  [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
+  [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md)
 - **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
   [`design_system.md`](design_system.md),
   [`mix_design_system_plan.md`](mix_design_system_plan.md)
@@ -29,6 +31,8 @@ Source-of-truth docs for Flutter BLoC app.
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`agent_project_context.md`](agent_project_context.md),
   [`ai/skill_routing.md`](ai/skill_routing.md),
+  [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md),
+  [`ai/harness_scorecard.md`](ai/harness_scorecard.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
   [`agents_quick_reference.md`](agents_quick_reference.md),
   [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md),
@@ -52,6 +56,9 @@ Source-of-truth docs for Flutter BLoC app.
 - [`../DESIGN.md`](../DESIGN.md) — agent-readable visual brief and DesignMD tokens
 - [`clean_architecture.md`](clean_architecture.md)
 - [`architecture_details.md`](architecture_details.md)
+- [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for Cursor and Codex
+- [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) — feature folder and placement contract
+- [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) — use-case, DTO, mapper, and error-boundary policy
 - [`feature_overview.md`](feature_overview.md)
 - [`modularity.md`](modularity.md)
 - [`design_system.md`](design_system.md)
@@ -65,13 +72,24 @@ Source-of-truth docs for Flutter BLoC app.
 - [`agent_project_context.md`](agent_project_context.md)
 - [`agent_environment_setup.md`](agent_environment_setup.md)
 - [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) — when agents run `preflight` / `closeout` / `after-host-edit`
+- [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) — AI failure risk register and prevention/detection/recovery map
+- [`ai/harness_scorecard.md`](ai/harness_scorecard.md) — Cursor/Codex max-score proof gate
+- [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md) — Agent loop to preserve max harness score
 - [`validation_scripts.md`](validation_scripts.md)
 - [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md)
 - [`testing_overview.md`](testing_overview.md)
+- [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md)
 - [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — BLoC widget test how-to
 - [`logging.md`](logging.md)
 - [`code_review_graph.md`](code_review_graph.md)
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)
+- [`review/architecture_checklist.md`](review/architecture_checklist.md)
+- [`review/bloc_checklist.md`](review/bloc_checklist.md)
+- [`review/security_checklist.md`](review/security_checklist.md)
+- [`review/performance_checklist.md`](review/performance_checklist.md)
+- [`bloc/cubit_file_template.md`](bloc/cubit_file_template.md)
+- [`architecture/feature_brief_scaffold_example.md`](architecture/feature_brief_scaffold_example.md)
+- [`architecture/reference_features.md`](architecture/reference_features.md)
 - [`plans/checklist_quality_gates_baseline.md`](plans/checklist_quality_gates_baseline.md) — checklist quality-theme gates (MVP, May 2026)
 - [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)

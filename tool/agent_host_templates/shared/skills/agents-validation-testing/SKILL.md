@@ -11,6 +11,7 @@ Running checks, regression tests, Mix/lifecycle/offline-first touches.
 
 ## Pointers
 
+Pre-flight: `docs/ai/ai_failure_risks.md` (Minimum proof by task; `RISK-VALIDATION-SHORTCUT`).
 Chooser: `docs/agents_quick_reference.md` § Validation Chooser. Routing: `docs/engineering/validation_routing_fast_vs_full.md`. Catalog: `docs/validation_scripts.md` (**C** = in `./bin/checklist`).
 
 ## Do not duplicate

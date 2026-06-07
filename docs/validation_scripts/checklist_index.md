@@ -8,6 +8,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 
 - `check_flutter_domain_imports.sh`
+- `check_clean_architecture_imports.sh`
+- `check_feature_folder_contract.sh`
 - `check_material_buttons.sh`
 - `check_no_hive_openbox.sh`
 - `check_raw_timer.sh`
@@ -56,12 +58,15 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_row_action_overflow.sh`
 - `check_lifecycle_error_handling.sh`
 - `check_offline_first_remote_merge.sh`
+- `check_feature_brief_linked.sh`
 - `check_feature_modularity_leaks.sh`
 - `check_memory_pressure_centralized.sh`
 - `check_macos_debug_web_guard.sh`
 - `check_apple_debug_hive_storage.sh`
 - `check_ios_pod_framework_embed.sh`
 - `check_agent_knowledge_base.sh`
+- `check_harness_scorecard_gate.sh`
+- `check_ai_failure_risk_register.sh`
 - `check_agent_memory_compounding.sh`
 - `check_tracked_secret_literals.sh`
 - `check_ai_generated_code_smells.sh`

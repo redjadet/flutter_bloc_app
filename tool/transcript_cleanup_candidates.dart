@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'transcript_index_path.dart';
+
 Future<void> main(List<String> args) async {
   final transcriptsRoot = Platform.environment['CURSOR_AGENT_TRANSCRIPTS_ROOT'];
   if (transcriptsRoot == null || transcriptsRoot.trim().isEmpty) {
@@ -27,10 +29,12 @@ Future<void> main(List<String> args) async {
   final candidates = <Map<String, Object?>>[];
 
   for (final entry in index.entries) {
-    final path = entry.key;
+    final path = resolveTranscriptPath(entry.key, transcriptsRoot);
     final meta = entry.value;
     final f = File(path);
+    // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
     if (!await f.exists()) continue;
+    // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
     final stat = await f.stat();
     final mtimeMs = stat.modified.millisecondsSinceEpoch;
     if (mtimeMs >= cutoff) continue;
@@ -79,6 +83,7 @@ class TranscriptIndexEntry {
 }
 
 Future<Map<String, TranscriptIndexEntry>> _readIndex(File indexFile) async {
+  // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
   if (!await indexFile.exists()) return {};
   final decoded =
       jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;

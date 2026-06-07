@@ -26,6 +26,10 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 
 `lib/features/<name>/` — see [`ai/reports/feature_map.md`](ai/reports/feature_map.md) for per-feature paths and minimal context sets.
 
+Standard shape: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md). New Cubits go in `presentation/cubit/` only.
+
+**Legacy — do not copy:** `counter` keeps Cubit at `presentation/` root and predates the folder contract. Gold layouts: [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`remote_config`, `profile`, `todo_list`) or scaffold output.
+
 ## Do not
 
 - Treat `ai/reports/` as behavior canon—refresh evidence, link `docs/` for rules.

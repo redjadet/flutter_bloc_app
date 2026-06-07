@@ -18,6 +18,8 @@ needs a reload hint after `--apply`.
 | **After editing [`AGENTS.md`](../../AGENTS.md), [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md), `docs/agent_kb/**`, host scripts, or `bin/agent-maintain`** | `./bin/agent-maintain kb` (also via `closeout` when agent-map is in scope and templates are not) | No |
 | **Before claiming any non-trivial task done** | `./bin/agent-maintain closeout` (alias: `auto`) | Host + doc sync from git scope; agents run, never delegate |
 | **Before claiming host/docs/tooling work done** (narrow lane) | `./bin/agent-maintain closeout` | Same as above |
+| **Before claiming harness is max-score / optimized** | `./bin/agent-maintain harness-maintain` plus `closeout` | No |
+| **Harness paths in git scope (templates, `docs/ai/**`, scorecard gates, `.cursor/rules/**`, …)** | `closeout` runs `harness-maintain` automatically; see [`harness_auto_maintenance.md`](../ai/harness_auto_maintenance.md) | No |
 | **End of host-only session** (templates + agent docs, no app code) | `./bin/agent-maintain routine` | Optional (`routine --apply`: sync `--apply` + **strict** drift) |
 | **User asks: setup Cursor/Codex, install globals, new machine** | `./bin/agent-maintain host-full` | **Yes** (network) |
 | **User asks: refresh globals / trim duplicates** | `./bin/agent-maintain update` / `trim` | `trim` needs `--apply` |
@@ -38,6 +40,16 @@ you are finishing an explicit host-environment task. Prefer `preflight` + scoped
 2. **`docs-sync`** when validation tooling or markdown docs are in scope (see below)
 3. **`after-host-edit`** only when `tool/agent_host_templates/**` is in git scope (sync `--apply` + strict drift + `kb`) — **not** on every task
 4. **`kb`** only when agent-map paths changed **and** templates were not in scope
+5. **`harness-maintain`** when harness paths are in scope (see
+   [`harness_auto_maintenance.md`](../ai/harness_auto_maintenance.md)) — runs even
+   when `docs-sync` skipped the scorecard gate (for example `.cursor/rules/**`
+   only)
+
+For docs/tooling scopes, `docs-sync` also runs
+`tool/update_harness_score_badge.sh --check` through
+`tool/check_harness_scorecard_gate.sh` so README score visibility, scorecard
+owners, risk register, quick reference, skill routing, and synced skill
+declarations stay connected.
 
 `closeout` prints `auto_action|...` only for steps it will run, then executes them. Agents must run **`./bin/agent-maintain closeout`** before claiming done; do not run `after-host-edit` when scope is empty.
 
@@ -55,6 +67,9 @@ Mechanical doc updates agents run **before finish** (included in `closeout`; als
 | `docs/**`, [`AGENTS.md`](../../AGENTS.md), [`README.md`](../../README.md), [`SECURITY.md`](../../SECURITY.md), [`DESIGN.md`](../../DESIGN.md), `llms.txt` | `bash tool/agent_memory_auto_maintain.sh --fix-links` then `bash tool/check_docs_gardening.sh` on changed doc paths |
 | [`DESIGN.md`](../../DESIGN.md) | `bash tool/check_design_md.sh` (warn-only on failure if `npx` unavailable) |
 
+When validation tooling or markdown docs are in scope, `docs-sync` then runs
+`bash tool/check_harness_scorecard_gate.sh`.
+
 Agents still **author** narrative doc content in the same turn; `docs-sync` only applies deterministic sync (indexes, counts, links, validation-doc inventory). If `validate_validation_docs.sh` fails after `fix_validation_docs.sh`, add missing catalog/router entries before claiming done.
 
 ### Scope detection (git)
@@ -67,6 +82,7 @@ Template deletes under `tool/agent_host_templates/**` still trigger sync/kb work
 | `tool/agent_host_templates/**` | `after-host-edit` via `closeout` or run directly after edits |
 | [`AGENTS.md`](../../AGENTS.md), [`agent_knowledge_base.md`](../agent_knowledge_base.md), `docs/agent_kb/**`, listed host docs/scripts, `bin/agent-maintain` | `kb` via `closeout` when templates not in scope |
 | `tool/delivery_checklist.sh`, `tool/agent_maintain.sh`, `bin/agent-maintain`, `tool/check_*.sh`, `docs/**` (see doc-closeout table) | `docs-sync` via `closeout` |
+| Harness scope paths in [`harness_auto_maintenance.md`](../ai/harness_auto_maintenance.md) | `harness-maintain` via `closeout` |
 
 ### Drift checks
 
@@ -86,6 +102,9 @@ Template deletes under `tool/agent_host_templates/**` still trigger sync/kb work
 ## Proof and checklist alignment
 
 - Narrow docs/tooling lane: `./bin/checklist-fast` already runs drift when policy docs change.
+- Harness scorecard lane: `./bin/agent-maintain harness` and
+  `./bin/checklist-fast --no-reuse` update/check the README score badge and run
+  the static scorecard/risk/owner-link gate.
 - After `sync --apply`: tell user to reload Cursor if they use synced commands/rules.
 - Skill/plugin/inventory habits (regen inventory, vendor audit, trim/reload): [`validation_scripts/operations_host_skills.md`](../validation_scripts/operations_host_skills.md) § Suggested habits.
 - Validation catalog: [`validation_scripts/operations_host_skills.md`](../validation_scripts/operations_host_skills.md)

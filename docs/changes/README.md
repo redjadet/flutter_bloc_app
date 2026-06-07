@@ -7,12 +7,18 @@ that.
 
 ## Index
 
+- [`2026-06-08_agent_doc_dedup.md`](2026-06-08_agent_doc_dedup.md): Agent-facing doc dedup — canonical owners, thinned echoes, fixed `agent-maintain` command link.
+- [`2026-06-08_harness_auto_maintenance.md`](2026-06-08_harness_auto_maintenance.md): Scope-driven `harness-maintain` / closeout wiring for max-score preservation.
+- [`2026-06-08_ai_failure_risk_minimization.md`](2026-06-08_ai_failure_risk_minimization.md): AI failure risk register, Pre-Flight routing, static gate needles.
+- [`2026-06-08_harness_fill_gaps.md`](2026-06-08_harness_fill_gaps.md): [`reference_features.md`](../architecture/reference_features.md), folder-contract and import gates wired through skills and routing.
+- [`2026-06-08_harness_quick_wins.md`](2026-06-08_harness_quick_wins.md): Security/performance review checklists, BLoC standards, feature-delivery skills, architecture scripts.
+- [`2026-06-08_cursor_codex_harness_max_score.md`](2026-06-08_cursor_codex_harness_max_score.md): Cursor/Codex harness max-score contract and proof gate.
 - [`2026-06-07_layering-optimization.md`](2026-06-07_layering-optimization.md): Clean Architecture layering pass (domain shims, cubit-owned sync counts, composition roots, modularity guardrail).
 - [`2026-06-07_todo-sync-banner-not-on-page.md`](2026-06-07_todo-sync-banner-not-on-page.md): Product decision — `TodoSyncBanner` not mounted on live todo list page; widget/tests retained.
 - [`2026-06-06_guest-sign-in-ios-simulator.md`](2026-06-06_guest-sign-in-ios-simulator.md): iOS simulator guest sign-in (App Check skip, keychain local guest, router redirect, RTDB remote omit, regression tests + integration journey).
 - [`2026-06-06_common-page-layout-appbar-widening.md`](2026-06-06_common-page-layout-appbar-widening.md): `CommonPageLayout` optional custom `appBar`, scaffold `backgroundColor`, and migrations for search/counter/chat list/calculator shells.
 - [`2026-06-06_auth-repository-presentation-seams.md`](2026-06-06_auth-repository-presentation-seams.md): `AccountSection` + `ChatCubit` use injected `AuthRepository` (and chat Supabase/HF deps) instead of direct Firebase SDK in presentation; tests and auth docs updated.
-- [`2026-06-05_skill_routing.md`](2026-06-05_skill_routing.md): Canonical `docs/ai/skill_routing.md` + `agents-skill-routing` shim for automatic skill discovery (repo-first over vendor Dart/Flutter skills).
+- [`2026-06-05_skill_routing.md`](2026-06-05_skill_routing.md): Canonical [`ai/skill_routing.md`](../ai/skill_routing.md) + `agents-skill-routing` shim for automatic skill discovery (repo-first over vendor Dart/Flutter skills).
 - [`2026-06-04_event-bus-demo-from-example.md`](2026-06-04_event-bus-demo-from-example.md): Event Bus pattern demo from Example page; route, deeplink, demo-scoped DI, l10n, unit/widget/integration tests.
 - [`2026-06-04_agent_host_maintain_automation.md`](2026-06-04_agent_host_maintain_automation.md): `./bin/agent-maintain` scope-based `closeout`, `docs-sync`, `after-host-edit`; PLAN_ONLY contract tests; policy shard and validation-doc auto-fix wiring.
 - [`2026-06-02_agent_doc_line_budget.md`](2026-06-02_agent_doc_line_budget.md): Frequent AI-agent docs and active trackers capped at 200 lines; self-improvement details split to a shard and tracker history archived.

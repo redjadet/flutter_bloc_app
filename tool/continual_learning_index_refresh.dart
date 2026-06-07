@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'transcript_index_path.dart';
+
 Future<void> main(List<String> args) async {
   final transcriptsRoot = Platform.environment['CURSOR_AGENT_TRANSCRIPTS_ROOT'];
   if (transcriptsRoot == null || transcriptsRoot.trim().isEmpty) {
@@ -18,36 +20,43 @@ Future<void> main(List<String> args) async {
     final indexFile = File(indexPath);
     final indexState = await _readIndexState(indexFile);
 
-    final existingPaths = indexState.transcripts.keys.toSet();
+    final normalizedRoot = transcriptsRoot;
     final onDisk = await _listTranscriptFiles(transcriptsRoot);
-    final onDiskSet = onDisk.toSet();
+    final onDiskByKey = <String, String>{
+      for (final p in onDisk) transcriptIndexKey(p, normalizedRoot): p,
+    };
+
+    _migrateIndexKeysToRelative(indexState, normalizedRoot);
 
     // Remove deleted.
-    for (final p in existingPaths.difference(onDiskSet)) {
-      indexState.transcripts.remove(p);
-    }
+    indexState.transcripts.removeWhere(
+      (key, _) => !onDiskByKey.containsKey(key),
+    );
 
     // Add missing entries only. Keep existing mtimes so we can detect
     // “changed since last processed” by comparing on-disk mtime vs index mtime.
     var newerOnDiskCount = 0;
     var addedCount = 0;
-    for (final p in onDisk) {
-      final stat = await File(p).stat();
+    for (final entry in onDiskByKey.entries) {
+      final key = entry.key;
+      final path = entry.value;
+      // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
+      final stat = await File(path).stat();
       final mtimeMs = stat.modified.millisecondsSinceEpoch;
-      final prev = indexState.transcripts[p];
+      final prev = indexState.transcripts[key];
       if (prev == null) {
-        indexState.transcripts[p] = TranscriptIndexEntry(
+        indexState.transcripts[key] = TranscriptIndexEntry(
           lastProcessedAt: null,
           mtimeMs: mtimeMs,
         );
         addedCount++;
-      } else {
-        if (mtimeMs > prev.mtimeMs) newerOnDiskCount++;
+      } else if (mtimeMs > prev.mtimeMs) {
+        newerOnDiskCount++;
       }
     }
 
     indexState.transcripts.removeWhere(
-      (path, _) => path.contains('/subagents/'),
+      (key, _) => key.contains('/subagents/'),
     );
 
     await _writeIndexAtomic(indexFile, indexState);
@@ -72,6 +81,7 @@ Future<void> _withFileLock(String lockPath, Future<void> Function() fn) async {
 }
 
 Future<TranscriptIndexState> _readIndexState(File indexFile) async {
+  // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
   if (!await indexFile.exists()) return TranscriptIndexState({});
   final decoded =
       jsonDecode(await indexFile.readAsString()) as Map<String, Object?>;
@@ -92,6 +102,23 @@ Future<TranscriptIndexState> _readIndexState(File indexFile) async {
     }
   }
   return TranscriptIndexState(out);
+}
+
+void _migrateIndexKeysToRelative(
+  TranscriptIndexState state,
+  String transcriptsRoot,
+) {
+  final migrated = <String, TranscriptIndexEntry>{};
+  for (final entry in state.transcripts.entries) {
+    final key = transcriptIndexKey(entry.key, transcriptsRoot);
+    final existing = migrated[key];
+    if (existing == null || entry.value.mtimeMs > existing.mtimeMs) {
+      migrated[key] = entry.value;
+    }
+  }
+  state.transcripts
+    ..clear()
+    ..addAll(migrated);
 }
 
 Future<void> _writeIndexAtomic(
@@ -127,6 +154,7 @@ class TranscriptIndexEntry {
 
 Future<List<String>> _listTranscriptFiles(String root) async {
   final rootDir = Directory(root);
+  // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
   if (!await rootDir.exists()) return [];
 
   final out = <String>[];

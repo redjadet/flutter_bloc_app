@@ -1,11 +1,14 @@
 # Skill Routing For AI Agents
 
-**Canonical** guide for discovering and invoking suitable skills automatically in this repo. Install/update globals: [`agent_environment_setup.md`](../agent_environment_setup.md) and [`operations_host_skills.md`](../validation_scripts/operations_host_skills.md).
+Canonical guide for choosing skills in this repo. Install/update globals:
+[`agent_environment_setup.md`](../agent_environment_setup.md) and
+[`operations_host_skills.md`](../validation_scripts/operations_host_skills.md).
 
 ## When to invoke a skill
 
 | Situation | Action |
 | --- | --- |
+| Non-trivial task start (app code, harness, validation, architecture) | Read [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight; invoke `agents-common-pitfalls`; `./bin/agent-maintain preflight` |
 | Implementation, refactor, tests, validation, host setup, or debugging | **Find and invoke** a matching skill before editing or broad commands |
 | Pure read-only Q&A with no code change | Skill optional; use repo docs first |
 | Trivial one-line fix with obvious local convention | Skill optional only when confidence is at least 95% |
@@ -21,16 +24,17 @@ Progressive disclosure: skills load procedure, not full policy. **Repo canon win
 4. Global vendor skills (`~/.agents/skills/`, Cursor plugin skills)
 5. Model defaults
 
-Official [Dart and Flutter skills](https://blog.flutter.dev/introducing-skills-for-dart-and-flutter-23837c6ec0ae) are task blueprints. For this app, prefer **repo** skills (`agents-canonical-rules-*`, `agents-delivery-workflow`, `agents-validation-testing`) over generic vendor architecture/test skills when both apply.
+Official [Dart and Flutter skills](https://blog.flutter.dev/introducing-skills-for-dart-and-flutter-23837c6ec0ae)
+are task blueprints. Repo skills win when both apply.
 
 ## Discovery (find a skill automatically)
 
 Use in order:
 
-1. **Session skill list** — match user intent to each skill's `description` frontmatter.
-2. **This routing table** — choose task category → skill name(s) below.
-3. **Repo shim** — invoke `agents-skill-routing` when routing is ambiguous.
-4. **Search globals:**
+1. Match user intent to session skill descriptions.
+2. Use the repo-first table below.
+3. Invoke `agents-skill-routing` when ambiguous.
+4. Search globals:
 
    ```bash
    ./bin/agent-maintain find QUERY
@@ -39,11 +43,12 @@ Use in order:
    npx skills ls -g
    ```
 
-5. **Inventory snapshot** — `docs/audits/skill_inventory_latest.json` (report-only; optional until generated). Regenerate after install/trim: `dart run tool/skill_inventory.dart docs/audits/skill_inventory_latest.json`. If missing, `./bin/checklist-fast` falls back to the newest dated `docs/audits/skill_inventory_*.json`.
+5. Optional inventory: `docs/audits/skill_inventory_latest.json`.
 
 Reload Cursor after install/update (**Developer: Reload Window**).
 
-**Host parity:** Cursor and Codex both sync the shim with `name: agents-skill-routing`. Codex path: `~/.codex/skills/flutter-bloc-app-skill-routing/SKILL.md`.
+**Host parity:** Cursor and Codex both sync the shim with `name: agents-skill-routing`.
+Codex installs it as the `flutter-bloc-app-skill-routing` skill.
 
 ## Automatic selection rule
 
@@ -52,17 +57,20 @@ For any non-trivial task:
 1. Normalize the request to task verbs: implement, refactor, test, debug, validate, design, host setup, docs, release.
 2. Pick repo skill first if a row below matches.
 3. Add official Dart/Flutter skill only when it gives task-specific procedure missing from repo docs.
-4. Read only the selected skill's `SKILL.md` (from the session list, routing table, or search) — not every skill upfront — then follow repo validation overrides below.
+4. Read only the selected skill entrypoint (from the session list, routing table, or search) — not every skill upfront — then follow repo validation overrides below.
 5. If no route matches, run `./bin/agent-maintain find "<task keywords>"`; if still none, continue from repo docs and report no skill match.
 
 ## Repo-first routing (always consider)
 
 | Trigger | Skill(s) |
 | --- | --- |
+| Pre-flight / frequent agent mistakes | `agents-common-pitfalls`; owner [`ai_failure_risks.md`](ai_failure_risks.md) |
 | Cold start / commands / validation chooser | `agents-quick-reference` |
 | Non-trivial delivery loop | `agents-delivery-workflow` |
 | Plan, delegation, finish gates | `agents-meta-behavior` |
-| Feature code in this repo (layers, Cubit, DI, Freezed) | `agents-canonical-rules` → open matching child (`architecture`, `async`, `platform`, `presentation`) |
+| Feature code in this repo (layers, Cubit, DI, Freezed) | `agents-feature-delivery`, then `agents-canonical-rules` → open matching child (`architecture`, `async`, `platform`, `presentation`) |
+| Cubit/BLoC state, lifecycle, side effects, or tests | `agents-bloc-standards`, then `agents-validation-testing` |
+| Add new Cubit to a feature | `agents-create-cubit`, then `agents-bloc-standards` |
 | Flutter baseline (theme, l10n, BLoC access) | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern`; search `type-safe-bloc-access` if available |
 | Cross-platform / responsive / platform behavior | `flutter-cross-platform-modern` |
 | Checks, regression guards, test routing | `agents-validation-testing` |
@@ -72,36 +80,16 @@ For any non-trivial task:
 | Install/trim/sync global skills | `agents-global-skills-setup` when available; otherwise `./bin/agent-maintain install/update/trim` |
 | Unknown skill exists? | `find-skills` (vendor) |
 
-Repo skill sources: [`tool/agent_host_templates/shared/skills/`](../../tool/agent_host_templates/shared/skills/) (and `cursor/skills/` for Cursor-only shims).
+Repo skill sources: [`tool/agent_host_templates/shared/skills/`](../../tool/agent_host_templates/shared/skills/) (and `cursor/skills/` for Cursor-only shims). New shared skills must be listed in `tool/agent_asset_lib.sh` for both Cursor and Codex.
 
-## Official Dart skills (`dart-lang/skills`)
+## Official Dart/Flutter Skills
 
-| Task | Skill |
-| --- | --- |
-| Unit tests (`package:test`) | `dart-add-unit-test` |
-| CLI / scripts | `dart-build-cli-app` |
-| Coverage / LCOV | `dart-collect-coverage` |
-| Active app stack trace + hot reload fix | `dart-fix-runtime-errors` |
-| Mockito + build_runner mocks | `dart-generate-test-mocks` |
-| Matcher → checks migration | `dart-migrate-to-checks-package` |
-| `pub get` version conflicts | `dart-resolve-package-conflicts` |
-| `dart analyze` / `dart fix --apply` | `dart-run-static-analysis` |
-| Switch expressions / patterns | `dart-use-pattern-matching` |
+Use official skills only for task procedure missing from repo docs:
 
-## Official Flutter skills (`flutter/skills`)
-
-| Task | Skill |
-| --- | --- |
-| Integration tests / `integration_test` | `flutter-add-integration-test` |
-| Widget previews (`previews.dart`) | `flutter-add-widget-preview` |
-| Widget tests (`WidgetTester`) | `flutter-add-widget-test` |
-| Layered UI/Logic/Data (greenfield only; repo rules override here) | `flutter-apply-architecture-best-practices` |
-| Responsive layout | `flutter-build-responsive-layout` |
-| Overflow / unbounded constraints | `flutter-fix-layout-issues` |
-| Manual JSON models | `flutter-implement-json-serialization` |
-| GoRouter / `MaterialApp.router` | `flutter-setup-declarative-routing` |
-| l10n setup | `flutter-setup-localization` |
-| `http` package REST | `flutter-use-http-package` |
+- Dart tests, CLI, coverage, mocks, analyzer, version conflicts, patterns.
+- Flutter widget/integration tests, responsive/layout fixes, routing, l10n,
+  JSON/HTTP implementation.
+- Search exact names with `./bin/agent-maintain find <task>`.
 
 ## Process skills (vendor; use when trigger matches)
 

@@ -29,22 +29,27 @@ Offline-first sync: `lib/shared/sync/`.
 
 Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
 (credentials/tooling, unsafe ambiguity below 95% confident, user-owned choice).
-Non-trivial work: [`tasks/codex/todo.md`](tasks/codex/todo.md) or
-[`tasks/cursor/todo.md`](tasks/cursor/todo.md) + context ladder + one
-observe/revise loop.
+Non-trivial work: [`docs/ai/ai_failure_risks.md`](docs/ai/ai_failure_risks.md) Pre-Flight +
+`agents-common-pitfalls`; [`tasks/codex/todo.md`](tasks/codex/todo.md) or
+[`tasks/cursor/todo.md`](tasks/cursor/todo.md) + context ladder + one observe/revise loop.
 Outcome: Goal / Context / Boundaries / Verification. Finish gate:
 [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
 Long session health: compact evidence, watch context drift, reset plan when state corrupts.
 
 ## Map
 
-- Harness: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Doctrine: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
+- Harness scorecard: [`docs/ai/harness_scorecard.md`](docs/ai/harness_scorecard.md)
+- Harness auto-maintenance: [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md)
+- AI failure risks: [`docs/ai/ai_failure_risks.md`](docs/ai/ai_failure_risks.md)
 - Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)
 - Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain`
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Docs index: [`docs/README.md`](docs/README.md)
+- Feature harness: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md), [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md), [`docs/testing/matrix_required_by_change.md`](docs/testing/matrix_required_by_change.md)
+- BLoC standards: [`docs/bloc_standards.md`](docs/bloc_standards.md), [`docs/bloc/cubit_file_template.md`](docs/bloc/cubit_file_template.md), [`docs/review/bloc_checklist.md`](docs/review/bloc_checklist.md), [`docs/review/security_checklist.md`](docs/review/security_checklist.md), [`docs/review/performance_checklist.md`](docs/review/performance_checklist.md)
 - Design/UI: [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
 - Architecture: [`docs/architecture_details.md`](docs/architecture_details.md), [`docs/clean_architecture.md`](docs/clean_architecture.md)
@@ -68,5 +73,5 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Destructive/external side effects need current-turn confirmation: list affected items first.
 - Reports after coding tasks include Files Changed and Follow-up Actions.
 - Repeated failure => add repo capability, not longer prompt.
-- Non-trivial task start: `./bin/agent-maintain preflight`; before finish: `./bin/agent-maintain closeout` (scope host + doc sync); after `tool/agent_host_templates/**` edits run `./bin/agent-maintain after-host-edit` same turn; see [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md).
+- Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) — `agent-maintain preflight` / `agent-maintain closeout` / `after-host-edit`; harness: [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md).
 - Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never add `## Learned *` sections here—land durable prefs/facts in [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md) (linked from [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)).

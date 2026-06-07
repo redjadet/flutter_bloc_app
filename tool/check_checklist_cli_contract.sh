@@ -85,6 +85,8 @@ assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "Usage: .
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "routine"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "host-full"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "closeout"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness-maintain"
 
 run_ok agent_maintain_list ./bin/agent-maintain list
 assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "agent-maintain commands"
@@ -107,6 +109,7 @@ assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.ou
 assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "auto_action|docs-sync|"
 assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "plan|after-host-edit|"
 assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "plan|docs-sync|"
+assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.out" "harness gate"
 
 run_ok agent_maintain_closeout_plan env AGENT_MAINTAIN_PLAN_ONLY=1 \
   bash tool/agent_maintain.sh closeout
@@ -134,6 +137,20 @@ run_ok agent_maintain_after_host_edit_plan env \
 assert_contains agent_maintain_after_host_edit_plan \
   "$tmp_dir/agent_maintain_after_host_edit_plan.out" \
   "plan|after-host-edit|sync --apply + strict drift + kb"
+
+run_ok agent_maintain_closeout_harness_scope env \
+  AGENT_MAINTAIN_CHANGED_PATHS_FILE="$host_scope_file" \
+  AGENT_MAINTAIN_PLAN_ONLY=1 \
+  bash tool/agent_maintain.sh closeout
+assert_contains agent_maintain_closeout_harness_scope \
+  "$tmp_dir/agent_maintain_closeout_harness_scope.out" \
+  "scope|harness|yes"
+assert_contains agent_maintain_closeout_harness_scope \
+  "$tmp_dir/agent_maintain_closeout_harness_scope.out" \
+  "auto_action|harness-maintain|"
+assert_contains agent_maintain_closeout_harness_scope \
+  "$tmp_dir/agent_maintain_closeout_harness_scope.out" \
+  "plan|harness-maintain|"
 
 maintain_scope_file="$tmp_dir/agent_maintain_only_scope.txt"
 printf '%s\n' 'tool/agent_maintain.sh' >"$maintain_scope_file"
