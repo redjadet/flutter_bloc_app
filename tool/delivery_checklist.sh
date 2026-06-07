@@ -1362,6 +1362,7 @@ VALIDATION_FAILED=0
 CHECK_MESSAGES=(
   "Checking for Flutter imports in domain layer..."
   "Checking Clean Architecture import boundaries..."
+  "Checking feature folder contract..."
   "Checking for raw Material buttons..."
   "Checking for direct Hive.openBox usage..."
   "Checking for raw Timer usage..."
@@ -1504,6 +1505,7 @@ CHECK_SCRIPTS=(
   "tool/check_pyright_python.sh"
 )
 CHECK_SCRIPT_THEMES=(
+  "architecture"
   "architecture"
   "architecture"
   "ui"
