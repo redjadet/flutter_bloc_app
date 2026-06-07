@@ -5,21 +5,17 @@ part of 'staff_demo_messages_cubit.dart';
 
 extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
   Future<void> hydrateFromRecipientsImpl(
-    final List<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+    final List<StaffDemoInboxRecipientSnapshot> recipients,
     final int hydrationToken,
   ) async {
     try {
       final items = <StaffDemoInboxItem>[];
 
-      for (final doc in docs) {
+      for (final recipient in recipients) {
         if (isClosed || hydrationToken != _inboxHydrationToken) return;
-        final data = doc.data();
-        final messageId = data['messageId'] as String?;
-        if (messageId == null || messageId.isEmpty) continue;
-        final Object? confirmedAtRaw = data['confirmedAt'];
-        final int? confirmedAtMs = confirmedAtRaw is Timestamp
-            ? confirmedAtRaw.toDate().millisecondsSinceEpoch
-            : null;
+        final messageId = recipient.messageId;
+        if (messageId.isEmpty) continue;
+        final confirmedAtMs = recipient.confirmedAtMs;
 
         final msg = await _inboxRepository.loadMessage(messageId);
         if (hydrationToken != _inboxHydrationToken) return;

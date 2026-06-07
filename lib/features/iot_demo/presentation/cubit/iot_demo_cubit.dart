@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
@@ -19,15 +19,21 @@ class IotDemoCubit extends Cubit<IotDemoState>
     with CubitSubscriptionMixin<IotDemoState> {
   IotDemoCubit({
     required this._repository,
-    this._l10n,
   }) : super(const IotDemoState.initial());
 
   final IotDemoRepository _repository;
-  final AppLocalizations? _l10n;
   // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin.
   StreamSubscription<List<IotDevice>>? _devicesSubscription;
   int _devicesWatchRequestId = 0;
   List<IotDevice> _allDevices = const <IotDevice>[];
+
+  void _emitError(
+    final IotDemoErrorCode code, {
+    final String? detail,
+  }) {
+    if (isClosed) return;
+    emit(IotDemoState.error(code: code, detail: detail));
+  }
 
   /// Subscribe to device stream and emit initial/loading then loaded states.
   /// Uses [filterOverride] when provided, else filter from loaded state, else all.
@@ -76,14 +82,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.connect(deviceId),
       isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          IotDemoState.error(
-            _l10n?.iotDemoErrorConnect ?? message,
-          ),
-        );
-      },
+      onError: (final message) =>
+          _emitError(IotDemoErrorCode.connect, detail: message),
       logContext: 'IotDemoCubit.connect',
     );
   }
@@ -92,14 +92,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.disconnect(deviceId),
       isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          IotDemoState.error(
-            _l10n?.iotDemoErrorDisconnect ?? message,
-          ),
-        );
-      },
+      onError: (final message) =>
+          _emitError(IotDemoErrorCode.disconnect, detail: message),
       logContext: 'IotDemoCubit.disconnect',
     );
   }
@@ -111,14 +105,8 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.sendCommand(deviceId, command),
       isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          IotDemoState.error(
-            _l10n?.iotDemoErrorCommand ?? message,
-          ),
-        );
-      },
+      onError: (final message) =>
+          _emitError(IotDemoErrorCode.command, detail: message),
       logContext: 'IotDemoCubit.sendCommand',
     );
   }
@@ -127,26 +115,17 @@ class IotDemoCubit extends Cubit<IotDemoState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => _repository.addDevice(device),
       isAlive: () => !isClosed,
-      onError: (final message) {
-        if (isClosed) return;
-        emit(
-          IotDemoState.error(
-            _l10n?.iotDemoErrorAdd ?? message,
-          ),
-        );
-      },
+      onError: (final message) =>
+          _emitError(IotDemoErrorCode.add, detail: message),
       logContext: 'IotDemoCubit.addDevice',
       specificExceptionHandlers: <Type, void Function(Object, StackTrace?)>{
         ArgumentError: (final error, final _) {
           if (isClosed) return;
           final String msg =
               ((error as ArgumentError).message as String?) ?? error.toString();
-          emit(
-            IotDemoState.error(
-              msg.isNotEmpty
-                  ? msg
-                  : (_l10n?.iotDemoErrorAdd ?? error.toString()),
-            ),
+          _emitError(
+            IotDemoErrorCode.add,
+            detail: msg.isNotEmpty ? msg : error.toString(),
           );
         },
       },

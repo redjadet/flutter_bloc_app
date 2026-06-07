@@ -34,7 +34,10 @@ void main() {
       final therapists = FakeTherapistRepository(api: api);
       final appointments = FakeAppointmentRepository(api: api);
 
-      final sessionCubit = OnlineTherapyDemoSessionCubit(auth: auth, api: api);
+      final sessionCubit = OnlineTherapyDemoSessionCubit(
+        auth: auth,
+        networkModeController: api,
+      );
       final slot = AvailabilitySlot(
         id: 'slot-1',
         therapistId: 'therapist-1',

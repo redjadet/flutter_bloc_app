@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
@@ -8,7 +8,7 @@ class StaffDemoAdminCubit extends Cubit<StaffDemoAdminState> {
     required this._timeEntriesRepository,
   }) : super(const StaffDemoAdminState());
 
-  final FirestoreStaffDemoTimeEntriesRepository _timeEntriesRepository;
+  final StaffDemoTimeEntriesRepository _timeEntriesRepository;
 
   Future<void> load() async {
     emit(state.copyWith(status: StaffDemoAdminStatus.loading));

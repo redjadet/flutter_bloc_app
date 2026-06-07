@@ -1,4 +1,18 @@
-// Domain-facing import surface for presentation.
-//
-// Keeps presentation layer from importing `data/` paths directly (validation).
-export 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
+
+abstract interface class AiDecisionRepository {
+  Future<List<AiDecisionCaseSummary>> getCases();
+
+  Future<AiDecisionCaseDetail> getCaseDetail(final String caseId);
+
+  Future<AiDecisionDecisionResult> runDecisionSupport({
+    required final String caseId,
+    required final String operatorNote,
+  });
+
+  Future<void> createAction({
+    required final String caseId,
+    required final String actionType,
+    required final String note,
+  });
+}

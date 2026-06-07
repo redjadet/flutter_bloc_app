@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
@@ -192,4 +193,35 @@ class OfflineFirstCounterRepository
   static String _generateChangeId() =>
       DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
       Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
+
+  @override
+  Future<int> pendingSyncOperationCount({DateTime? now}) async {
+    final List<SyncOperation> operations = await _pendingSyncRepository
+        .getPendingOperations(
+          now: now ?? DateTime.now().toUtc(),
+        );
+    return operations
+        .where((final op) => op.entityType == counterEntity)
+        .length;
+  }
+
+  @override
+  Future<List<CounterSyncQueueEntry>> pendingSyncQueueEntries({
+    DateTime? now,
+  }) async {
+    final List<SyncOperation> operations = await _pendingSyncRepository
+        .getPendingOperations(
+          now: now ?? DateTime.now().toUtc(),
+        );
+    return operations
+        .where((final op) => op.entityType == counterEntity)
+        .map(
+          (final operation) => CounterSyncQueueEntry(
+            id: operation.id,
+            entityType: operation.entityType,
+            retryCount: operation.retryCount,
+          ),
+        )
+        .toList(growable: false);
+  }
 }

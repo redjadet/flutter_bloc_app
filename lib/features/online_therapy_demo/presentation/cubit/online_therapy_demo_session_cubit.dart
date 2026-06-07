@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/fake/online_therapy_fake_api.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/fake/online_therapy_network_mode.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_auth_repository.dart';
 
 class OnlineTherapyDemoSessionState {
@@ -46,13 +44,13 @@ class OnlineTherapyDemoSessionCubit
     extends Cubit<OnlineTherapyDemoSessionState> {
   OnlineTherapyDemoSessionCubit({
     required final TherapyAuthRepository auth,
-    required final OnlineTherapyFakeApi api,
+    required final OnlineTherapyNetworkModeController networkModeController,
   }) : _auth = auth,
-       _api = api,
+       _networkModeController = networkModeController,
        super(
          OnlineTherapyDemoSessionState(
            role: TherapyRole.client,
-           networkMode: api.mode,
+           networkMode: networkModeController.mode,
            isBusy: false,
            user: auth.currentUser,
            emailDraft: 'demo@example.com',
@@ -60,7 +58,7 @@ class OnlineTherapyDemoSessionCubit
        );
 
   final TherapyAuthRepository _auth;
-  final OnlineTherapyFakeApi _api;
+  final OnlineTherapyNetworkModeController _networkModeController;
 
   Future<void> setRole(final TherapyRole role) async {
     if (state.role == role) return;
@@ -92,7 +90,7 @@ class OnlineTherapyDemoSessionCubit
 
   void setNetworkMode(final OnlineTherapyNetworkMode mode) {
     if (state.networkMode == mode) return;
-    _api.mode = mode;
+    _networkModeController.mode = mode;
     emit(state.copyWith(networkMode: mode));
   }
 

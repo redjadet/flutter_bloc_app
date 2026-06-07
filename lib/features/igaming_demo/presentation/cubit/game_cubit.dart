@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_state.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';

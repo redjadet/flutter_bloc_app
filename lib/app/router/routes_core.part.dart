@@ -39,6 +39,16 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
           const SyncDiagnosticsSection(
             key: ValueKey('settings-qa-sync-diagnostics'),
           ),
+          SizedBox(
+            key: const ValueKey('settings-qa-gap-sync-counter-inspector'),
+            height: ctx.responsiveGapL,
+          ),
+          CounterSyncQueueInspectorButton(
+            key: const ValueKey('settings-qa-counter-sync-queue-inspector'),
+            repository: getIt<CounterRepository>(),
+            onPendingSyncEnqueued:
+                getIt<PendingSyncRepository>().onOperationEnqueued,
+          ),
         ],
       ),
     ),

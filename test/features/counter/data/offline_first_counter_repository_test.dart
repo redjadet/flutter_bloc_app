@@ -12,7 +12,9 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
-class _FakeRemoteRepository implements CounterRepository {
+class _FakeRemoteRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _FakeRemoteRepository({CounterSnapshot? initial}) : _snapshot = initial;
 
   CounterSnapshot? _snapshot;
@@ -34,7 +36,9 @@ class _FakeRemoteRepository implements CounterRepository {
   }
 }
 
-class _StreamRemoteRepository implements CounterRepository {
+class _StreamRemoteRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _StreamRemoteRepository();
 
   final StreamController<CounterSnapshot> controller =
@@ -171,6 +175,39 @@ void main() {
         expect(lastSyncedMs <= after.millisecondsSinceEpoch, isTrue);
       },
     );
+
+    test('pending sync reads filter to counter entity only', () async {
+      final OfflineFirstCounterRepository repository =
+          OfflineFirstCounterRepository(
+            localRepository: localRepository,
+            pendingSyncRepository: pendingRepository,
+            registry: registry,
+          );
+
+      await pendingRepository.enqueue(
+        SyncOperation.create(
+          entityType: OfflineFirstCounterRepository.counterEntity,
+          payload: const CounterSnapshot(count: 1).toJson(),
+          idempotencyKey: 'counter-op',
+        ),
+      );
+      await pendingRepository.enqueue(
+        SyncOperation.create(
+          entityType: 'todo',
+          payload: const <String, dynamic>{},
+          idempotencyKey: 'todo-op',
+        ),
+      );
+
+      expect(await repository.pendingSyncOperationCount(), 1);
+      final List<CounterSyncQueueEntry> entries = await repository
+          .pendingSyncQueueEntries();
+      expect(entries, hasLength(1));
+      expect(
+        entries.single.entityType,
+        OfflineFirstCounterRepository.counterEntity,
+      );
+    });
 
     test(
       'remote watch does not overwrite newer unsynced local count',

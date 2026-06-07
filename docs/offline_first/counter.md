@@ -40,8 +40,9 @@ This document defines how the counter feature adopts the shared offline-first st
 
 ## UI Integration
 
-- No sync banner on the counter page; sync status is logged. For sync observability, use Settings → Sync Diagnostics (dev/qa only).
-- `CounterCubit` works transparently with the offline-first repository - no changes needed to cubit logic.
+- `CounterSyncBanner` on the counter page (`CounterPageBody`) shows offline/syncing/pending state and last-synced metadata via `CounterCubit` pending-sync APIs (entity-scoped to `counter`, not the global queue).
+- Dev/qa: Settings → Sync Diagnostics includes `CounterSyncQueueInspectorButton` with optional `CounterRepository` injection (works without `CounterCubit` in the tree).
+- `CounterCubit` exposes `pendingSyncOperationCount`, `pendingSyncQueueEntries`, and `refreshPendingSyncMetadata()`; repository handles persistence and enqueue.
 - Counter state loads instantly from Hive on app start.
 
 ## Testing Checklist
@@ -55,7 +56,7 @@ This document defines how the counter feature adopts the shared offline-first st
   - Registry registration.
 - ✅ **Bloc tests**: `test/counter_cubit_test.dart` covers offline-first flows, ensuring cubit handles queued operations and sync state updates.
 - ✅ **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers banner visibility, offline/syncing states, and metadata display.
-- ✅ **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers the banner widget in isolation (banner not displayed on counter page).
+- ✅ **Widget tests**: `test/features/counter/presentation/widgets/counter_sync_banner_test.dart` covers the banner widget in isolation; `CounterPageBody` composes `CounterSyncBanner` on the live counter page.
 - All tests use `FakeTimerService` + mock connectivity to cover offline/online transitions deterministically.
 
 ## Data Retention Policy
@@ -70,7 +71,7 @@ This document defines how the counter feature adopts the shared offline-first st
 
 - `HiveCounterRepository` with sync metadata support (`lib/features/counter/data/hive_counter_repository.dart`)
 - `OfflineFirstCounterRepository` implementing `SyncableRepository` (`lib/features/counter/data/offline_first_counter_repository.dart`)
-- `CounterSyncBanner` widget exists but is not displayed; sync diagnostics in Settings (dev/qa only)
+- `CounterSyncBanner` composed in `CounterPageBody` (offline/syncing/pending + last-synced metadata); dev-only sync queue inspector remains in Settings
 - Full DI wiring in `lib/core/di/injector_registrations.dart` and registry registration
 - Comprehensive test coverage:
   - Unit tests: `test/features/counter/data/hive_counter_repository_test.dart`

@@ -60,6 +60,7 @@ class _CounterContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+        CounterSyncBanner(l10n: l10n),
         if (showFlavorBadge) ...[
           const Padding(
             padding: EdgeInsets.all(1),

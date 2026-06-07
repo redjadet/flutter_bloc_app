@@ -38,6 +38,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.save(item),
       isAlive: () => !isClosed,
+      onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(
@@ -124,6 +125,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.delete(item.id),
       isAlive: () => !isClosed,
+      onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
         lastDeletedItem = null;
@@ -150,6 +152,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: repository.clearCompleted,
       isAlive: () => !isClosed,
+      onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(

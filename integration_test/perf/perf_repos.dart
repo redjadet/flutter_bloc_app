@@ -52,7 +52,9 @@ class _PerfChartRepository extends ChartRepository {
   ChartDataSource get lastSource => ChartDataSource.cache;
 }
 
-class _PerfTodoRepository implements TodoRepository {
+class _PerfTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _PerfTodoRepository({required final int itemCount})
     : _items = List<TodoItem>.generate(
         itemCount,

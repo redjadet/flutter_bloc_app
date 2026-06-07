@@ -26,6 +26,7 @@
 
 ## ✅ Recent Improvements
 
+- **Layering optimization (2026-06)**: Removed domain→data re-export shims (ai_decision, IAP, chat diagnostics, online_therapy network mode, staff timeclock local store). Presentation reads sync/pending state via cubits; composition roots (`routes_*.dart`, DI) own `getIt` and data impl wiring. `tool/check_feature_modularity_leaks.sh` now fails on domain re-exports of `data/`.
 - **DI Organization**: Split `injector_registrations.dart` into feature-specific registration files (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - **Repository Factory Pattern**: Created generic `createRemoteRepositoryOrNull<T>()` helper to consolidate duplicate error handling in repository factories.
 - **Typography Consolidation**: Created `AppTypography` helper class for consistent typography using theme as single source of truth.

@@ -16,6 +16,7 @@ part 'hive_counter_repository_migration.dart';
 
 /// Hive-backed implementation of [CounterRepository].
 class HiveCounterRepository extends HiveRepositoryBase
+    with CounterRepositoryNoPendingSync
     implements CounterRepository {
   HiveCounterRepository({required super.hiveService}) {
     _watchHelper = HiveCounterRepositoryWatchHelper(

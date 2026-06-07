@@ -161,6 +161,7 @@ class InMemoryRepository<T> {
 
 /// Counter repository mock backed by [InMemoryRepository] to share logic.
 class MockCounterRepository extends InMemoryRepository<CounterSnapshot>
+    with CounterRepositoryNoPendingSync
     implements CounterRepository {
   MockCounterRepository({
     CounterSnapshot? snapshot,

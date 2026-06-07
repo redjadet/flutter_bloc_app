@@ -16,4 +16,13 @@ abstract class TodoRepository {
 
   /// Removes all completed todo items.
   Future<void> clearCompleted();
+
+  /// Count of pending sync operations for entity type `todo`.
+  Future<int> pendingSyncOperationCount({DateTime? now});
+}
+
+/// No-op pending-sync count for repositories without an offline queue.
+mixin TodoRepositoryNoPendingSync {
+  Future<int> pendingSyncOperationCount({DateTime? now}) =>
+      Future<int>.value(0);
 }

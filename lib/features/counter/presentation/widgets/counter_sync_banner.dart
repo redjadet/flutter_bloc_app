@@ -1,193 +1,119 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 
 /// Sync status banner for the counter feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
-class CounterSyncBanner extends StatefulWidget {
+class CounterSyncBanner extends StatelessWidget {
   const CounterSyncBanner({
     required this.l10n,
-    required this.pendingRepository,
-    required this.counterRepository,
     super.key,
   });
 
   final AppLocalizations l10n;
-  final PendingSyncRepository pendingRepository;
-  final CounterRepository counterRepository;
 
   @override
-  State<CounterSyncBanner> createState() => _CounterSyncBannerState();
-}
-
-class _CounterSyncBannerState extends State<CounterSyncBanner> {
-  final DisposableBag _disposables = DisposableBag();
-  int _pendingCount = 0;
-  DateTime? _lastSyncedAt;
-  String? _lastChangeId;
-  bool _didInitializeInheritedState = false;
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_refreshPendingCount());
-    // Listen to counter snapshot changes for real-time lastSyncedAt/changeId updates
-    _disposables.trackSubscription(
-      widget.counterRepository.watch().listen(
-        (final snapshot) {
-          if (!mounted) return;
-          setState(() {
-            _lastSyncedAt = snapshot.lastSyncedAt;
-            _lastChangeId = snapshot.changeId;
-          });
-        },
-        onError: (final Object error, final StackTrace stackTrace) {
-          AppLogger.error(
-            'CounterSyncBanner counter watch stream error',
-            error,
-            stackTrace,
-          );
-        },
-      ),
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didInitializeInheritedState) {
-      return;
-    }
-    _didInitializeInheritedState = true;
-    context.ensureSyncStartedIfAvailable();
-    if (CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(context)) {
-      final CounterCubit cubit = context.cubit<CounterCubit>();
-      _lastSyncedAt = cubit.state.lastSyncedAt;
-      _lastChangeId = cubit.state.changeId;
-    }
-  }
-
-  @override
-  void dispose() {
-    unawaited(_disposables.dispose());
-    super.dispose();
-  }
-
-  Future<void> _refreshPendingCount() async {
-    final int count = (await widget.pendingRepository.getPendingOperations(
-      now: DateTime.now().toUtc(),
-    )).length;
-    if (!mounted) return;
-    setState(() => _pendingCount = count);
-  }
-
-  @override
-  Widget build(
-    final BuildContext context,
-  ) {
-    final Widget
-    banner = TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
-      listener: (final context, final state) {
-        // Refresh pending count when sync status changes (operations may have been processed)
-        // check-ignore: listener callback is event-driven, not a build side effect
-        unawaited(_refreshPendingCount());
-      },
-      builder: (final context, final state) {
-        final bool isOffline = state.networkStatus == NetworkStatus.offline;
-        final bool isSyncing = state.syncStatus == SyncStatus.syncing;
-        final bool hasMetadata =
-            (_lastSyncedAt != null) || (_lastChangeId?.isNotEmpty ?? false);
-        final bool shouldHide =
-            !isOffline && !isSyncing && _pendingCount == 0 && !hasMetadata;
-        if (shouldHide) {
-          return const SizedBox.shrink();
-        }
-        final AppLocalizations l10n = widget.l10n;
-        final bool isError = isOffline;
-        final (String title, String message) = syncBannerTitleAndMessage(
-          l10n,
-          isOffline: isOffline,
-          isSyncing: isSyncing,
-          pendingCount: _pendingCount,
-        );
-        final MaterialLocalizations materialLocalizations =
-            MaterialLocalizations.of(context);
-        final String? lastSyncedText = switch (_lastSyncedAt) {
-          final t? => _formatLastSynced(materialLocalizations, t),
-          _ => null,
-        };
-        final String? changeIdText = switch (_lastChangeId) {
-          final id? when id.isNotEmpty => l10n.counterChangeId(id),
-          _ => null,
-        };
-
-        return Padding(
-          padding: EdgeInsets.only(bottom: context.responsiveGapS),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              AppMessage(
-                title: title,
-                message: message,
-                isError: isError,
-              ),
-              if (lastSyncedText case final synced?) ...[
-                SizedBox(height: context.responsiveGapXS),
-                Text(
-                  l10n.counterLastSynced(synced),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                if (changeIdText case final changeId?)
-                  Text(
-                    changeId,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ] else if (changeIdText case final changeId?) ...[
-                SizedBox(height: context.responsiveGapXS),
-                Text(
-                  changeId,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-            ],
-          ),
-        );
-      },
-    );
-
-    CounterCubit? counterCubit;
-    if (CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
+  Widget build(final BuildContext context) {
+    if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
-      counterCubit = context.cubit<CounterCubit>();
-    } else {
-      counterCubit = null;
+      return const SizedBox.shrink();
     }
 
-    if (counterCubit == null) {
-      return banner;
-    }
+    context.ensureSyncStartedIfAvailable();
 
-    return TypeSafeBlocListener<CounterCubit, CounterState>(
-      bloc: counterCubit,
-      listenWhen: (final previous, final current) =>
-          previous.count != current.count,
+    return TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
+        if (!CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
+          context,
+        )) {
+          return;
+        }
         // check-ignore: listener callback is event-driven, not a build side effect
-        unawaited(_refreshPendingCount());
+        unawaited(context.cubit<CounterCubit>().refreshPendingSyncCount());
       },
-      child: banner,
+      builder: (final context, final syncState) {
+        if (!CubitHelpers.isCubitAvailable<CounterCubit, CounterState>(
+          context,
+        )) {
+          return const SizedBox.shrink();
+        }
+
+        return TypeSafeBlocBuilder<CounterCubit, CounterState>(
+          builder: (final context, final counterState) {
+            final bool isOffline =
+                syncState.networkStatus == NetworkStatus.offline;
+            final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
+            final int pendingCount = counterState.pendingSyncCount;
+            final DateTime? lastSyncedAt = counterState.lastSyncedAt;
+            final String? lastChangeId = counterState.changeId;
+            final bool hasMetadata =
+                (lastSyncedAt != null) || (lastChangeId?.isNotEmpty ?? false);
+            final bool shouldHide =
+                !isOffline && !isSyncing && pendingCount == 0 && !hasMetadata;
+            if (shouldHide) {
+              return const SizedBox.shrink();
+            }
+            final bool isError = isOffline;
+            final (String title, String message) = syncBannerTitleAndMessage(
+              l10n,
+              isOffline: isOffline,
+              isSyncing: isSyncing,
+              pendingCount: pendingCount,
+            );
+            final MaterialLocalizations materialLocalizations =
+                MaterialLocalizations.of(context);
+            final String? lastSyncedText = switch (lastSyncedAt) {
+              final t? => _formatLastSynced(materialLocalizations, t),
+              _ => null,
+            };
+            final String? changeIdText = switch (lastChangeId) {
+              final id? when id.isNotEmpty => l10n.counterChangeId(id),
+              _ => null,
+            };
+
+            return Padding(
+              padding: EdgeInsets.only(bottom: context.responsiveGapS),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  AppMessage(
+                    title: title,
+                    message: message,
+                    isError: isError,
+                  ),
+                  if (lastSyncedText case final synced?) ...[
+                    SizedBox(height: context.responsiveGapXS),
+                    Text(
+                      l10n.counterLastSynced(synced),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    if (changeIdText case final changeId?)
+                      Text(
+                        changeId,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                  ] else if (changeIdText case final changeId?) ...[
+                    SizedBox(height: context.responsiveGapXS),
+                    Text(
+                      changeId,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

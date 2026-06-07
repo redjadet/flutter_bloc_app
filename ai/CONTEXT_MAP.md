@@ -20,7 +20,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 1. `lib/features/chat/chat.dart`
 2. `lib/features/chat/domain/` (repository + models)
 3. `lib/features/chat/data/` (one primary repository impl)
-4. `lib/features/chat/presentation/chat_cubit.dart` (or list cubit if list-only change)
+4. `lib/features/chat/presentation/cubit/chat_cubit.dart` (or list cubit if list-only change)
 5. `lib/shared/sync/` (if sync behavior)
 6. `docs/offline_first/adoption_guide.md`
 7. `docs/ai_integration.md`

@@ -6,22 +6,26 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_forms_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_push_token_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_site_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/mock_staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_inbox_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_messaging_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
@@ -29,7 +33,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -42,8 +47,8 @@ void registerStaffAppDemoServices() {
     StaffDemoLocationService.new,
   );
 
-  registerLazySingletonIfAbsent<StaffDemoTimeclockLocalRepository>(
-    () => StaffDemoTimeclockLocalRepository(hiveService: getIt<HiveService>()),
+  registerLazySingletonIfAbsent<StaffDemoTimeclockLocalStore>(
+    () => HiveStaffDemoTimeclockLocalStore(hiveService: getIt<HiveService>()),
   );
 
   registerLazySingletonIfAbsent<StaffDemoProfileRepository>(
@@ -83,7 +88,7 @@ void registerStaffAppDemoServices() {
         shiftRepository: getIt<StaffDemoShiftRepository>(),
         siteRepository: getIt<StaffDemoSiteRepository>(),
         locationService: getIt<StaffDemoLocationService>(),
-        localRepository: getIt<StaffDemoTimeclockLocalRepository>(),
+        localRepository: getIt<StaffDemoTimeclockLocalStore>(),
         pendingSyncRepository: getIt<PendingSyncRepository>(),
         registry: getIt<SyncableRepositoryRegistry>(),
       ),
@@ -91,16 +96,16 @@ void registerStaffAppDemoServices() {
     ),
   );
 
-  registerLazySingletonIfAbsent<FirestoreStaffDemoTimeEntriesRepository>(
-    () => _withFirestoreOrFallback<FirestoreStaffDemoTimeEntriesRepository>(
+  registerLazySingletonIfAbsent<StaffDemoTimeEntriesRepository>(
+    () => _withFirestoreOrFallback<StaffDemoTimeEntriesRepository>(
       (firestore) =>
           FirestoreStaffDemoTimeEntriesRepository(firestore: firestore),
       fallback: () => throw StateError('Firebase unavailable'),
     ),
   );
 
-  registerLazySingletonIfAbsent<FirestoreStaffDemoMessagingRepository>(
-    () => _withFirestoreOrFallback<FirestoreStaffDemoMessagingRepository>(
+  registerLazySingletonIfAbsent<StaffDemoMessagingRepository>(
+    () => _withFirestoreOrFallback<StaffDemoMessagingRepository>(
       (firestore) => FirestoreStaffDemoMessagingRepository(
         firestore: firestore,
         authRepository: getIt<AuthRepository>(),
@@ -109,8 +114,8 @@ void registerStaffAppDemoServices() {
     ),
   );
 
-  registerLazySingletonIfAbsent<FirestoreStaffDemoInboxRepository>(
-    () => _withFirestoreOrFallback<FirestoreStaffDemoInboxRepository>(
+  registerLazySingletonIfAbsent<StaffDemoInboxRepository>(
+    () => _withFirestoreOrFallback<StaffDemoInboxRepository>(
       (firestore) => FirestoreStaffDemoInboxRepository(firestore: firestore),
       fallback: () => throw StateError('Firebase unavailable'),
     ),
@@ -147,7 +152,7 @@ void registerStaffAppDemoServices() {
   );
 
   registerLazySingletonIfAbsent<StaffDemoProofFileStore>(
-    StaffDemoProofFileStore.new,
+    LocalStaffDemoProofFileStore.new,
   );
 
   registerLazySingletonIfAbsent<StaffDemoEventProofRepository>(

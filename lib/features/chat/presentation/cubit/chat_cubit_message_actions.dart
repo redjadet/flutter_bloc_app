@@ -56,7 +56,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         'hint=$hint badge=$badge model=$_currentModel',
       );
       if (hint == ChatInferenceTransport.renderOrchestration) {
-        logChatRenderOrchestrationIfDebug('cubit_sendMessage_attempt');
+        logRenderOrchestrationIfDebug('cubit_sendMessage_attempt');
       }
     }
 
@@ -80,7 +80,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           );
           if (result.transportUsed ==
               ChatInferenceTransport.renderOrchestration) {
-            logChatRenderOrchestrationIfDebug(
+            logRenderOrchestrationIfDebug(
               'cubit_sendMessage_render_success',
             );
           }

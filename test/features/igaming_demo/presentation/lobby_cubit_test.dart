@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_state.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_state.dart';
 
 class _StubDemoBalanceRepository implements DemoBalanceRepository {
   _StubDemoBalanceRepository({this.balance, this.throwOnGet});

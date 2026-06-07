@@ -5,20 +5,16 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
   testWidgets(
@@ -55,7 +51,6 @@ void main() {
             ],
             child: ChatPage(
               errorNotificationService: _FakeErrorNotificationService(),
-              pendingSyncRepository: _FakePendingSyncRepository(),
               renderTransportDemoStrictOverride: true,
             ),
           ),
@@ -116,52 +111,6 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
     final String title,
     final String message,
   ) async {}
-}
-
-class _FakePendingSyncRepository implements PendingSyncRepository {
-  @override
-  HiveBoxSchema? get schema => null;
-
-  @override
-  String get boxName => 'fake-pending-sync';
-
-  @override
-  Stream<void> get onOperationEnqueued => Stream<void>.empty();
-
-  @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async =>
-      operation;
-  @override
-  Future<int> prune({
-    final int maxRetryCount = 10,
-    final Duration maxAge = const Duration(days: 30),
-  }) async => 0;
-
-  @override
-  Future<List<SyncOperation>> getPendingOperations({
-    final DateTime? now,
-    final int? limit,
-    final String? supabaseUserIdFilter,
-  }) async => const <SyncOperation>[];
-  @override
-  Future<void> markCompleted(final String operationId) async {}
-  @override
-  Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
-  }) async {}
-  @override
-  Future<void> clear() async {}
-  @override
-  Future<void> dispose() async {}
-
-  @override
-  Future<Box<dynamic>> getBox() =>
-      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
-
-  @override
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {

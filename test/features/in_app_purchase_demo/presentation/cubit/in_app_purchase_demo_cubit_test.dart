@@ -27,6 +27,8 @@ void main() {
     InAppPurchaseDemoCubit buildCubit() => InAppPurchaseDemoCubit(
       fakeRepository: fakeRepo,
       realRepository: fakeRepo,
+      fakeOutcomeControls: fakeRepo,
+      realDemoControls: fakeRepo,
     );
 
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(

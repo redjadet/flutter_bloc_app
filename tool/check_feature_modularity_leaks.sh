@@ -66,6 +66,9 @@ if command -v rg &>/dev/null; then
     hits=$(rg -n "$pat" "${DOMAIN_GLOBS[@]}" 2>/dev/null || true)
     append_block "$msg" "$hits"
   done
+
+  hits=$(rg -n "^export ['\"]" "${DOMAIN_GLOBS[@]}" 2>/dev/null | rg "/data/" || true)
+  append_block "Domain: re-exports of data/ layer" "$hits"
 else
   while IFS='|' read -r dir pattern label; do
     [[ -z "$dir" || "$dir" =~ ^# ]] && continue
@@ -86,7 +89,65 @@ else
   hits=$(grep -Rsn "package:flutter_bloc_app/features/" lib/shared --include="*.dart" 2>/dev/null || true)
   append_block "lib/shared must not import package:flutter_bloc_app/features/*" "$hits"
 
-  echo "⚠️  ripgrep not found: skipping automated domain import patterns (install rg or rely on CI)."
+  domain_files=$(find lib/features -path '*/domain/*.dart' \
+    ! -name '*.g.dart' ! -name '*.freezed.dart' ! -name '*.gr.dart' \
+    2>/dev/null || true)
+
+  if [[ -n "$domain_files" ]]; then
+    domain_forbidden_grep=(
+      "package:flutter/"
+      "package:get_it/"
+      "package:hive/"
+      "package:supabase"
+      "package:dio/"
+      "package:retrofit/"
+      "package:flutter_bloc_app/app/"
+      "package:flutter_bloc_app/core/di/"
+    )
+    domain_msgs_grep=(
+      "Domain: Flutter imports (use pure Dart in domain)"
+      "Domain: get_it imports"
+      "Domain: hive imports"
+      "Domain: supabase imports"
+      "Domain: dio imports"
+      "Domain: retrofit imports"
+      "Domain: app/ imports"
+      "Domain: core/di imports"
+    )
+    for i in "${!domain_forbidden_grep[@]}"; do
+      needle="${domain_forbidden_grep[$i]}"
+      msg="${domain_msgs_grep[$i]}"
+      hits=""
+      while IFS= read -r file; do
+        [[ -z "$file" ]] && continue
+        file_hits=$(grep -n "$needle" "$file" 2>/dev/null || true)
+        if [[ -n "$file_hits" ]]; then
+          hits+="${file}:${file_hits}"$'\n'
+        fi
+      done <<< "$domain_files"
+      append_block "$msg" "$hits"
+    done
+
+    hits=""
+    while IFS= read -r file; do
+      [[ -z "$file" ]] && continue
+      file_hits=$(grep -nE "package:flutter_bloc_app/features/[^'\"]+/(presentation|data)/" "$file" 2>/dev/null || true)
+      if [[ -n "$file_hits" ]]; then
+        hits+="${file}:${file_hits}"$'\n'
+      fi
+    done <<< "$domain_files"
+    append_block "Domain: imports of feature presentation/ or data/ layers" "$hits"
+
+    hits=""
+    while IFS= read -r file; do
+      [[ -z "$file" ]] && continue
+      file_hits=$(grep -n "^export ['\"]" "$file" 2>/dev/null | grep "/data/" || true)
+      if [[ -n "$file_hits" ]]; then
+        hits+="${file}:${file_hits}"$'\n'
+      fi
+    done <<< "$domain_files"
+    append_block "Domain: re-exports of data/ layer" "$hits"
+  fi
 fi
 
 if [[ -n "$VIOLATIONS" ]]; then

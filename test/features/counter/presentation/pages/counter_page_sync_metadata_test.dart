@@ -23,7 +23,9 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../test_helpers.dart' as test_helpers;
 import '../../../../test_helpers.dart' show FakeTimerService;
 
-class _MetadataCounterRepository implements CounterRepository {
+class _MetadataCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _MetadataCounterRepository()
     : snapshot = CounterSnapshot(
         userId: 'tester',
@@ -198,15 +200,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Verify that sync metadata is available in CounterCubit state
     final CounterState state = counterCubit.state;
-    expect(state.lastSyncedAt, equals(repository.snapshot.lastSyncedAt));
-    expect(state.changeId, equals(repository.snapshot.changeId));
-
-    // Verify the metadata values are not null
-    expect(state.lastSyncedAt, isNotNull);
-    expect(state.changeId, isNotNull);
     expect(state.lastSyncedAt, equals(DateTime.utc(2024, 1, 2, 15, 30)));
     expect(state.changeId, equals('sync-123'));
+
+    final AppLocalizations l10n = AppLocalizations.of(
+      tester.element(find.byType(CounterPage)),
+    );
+    expect(find.text(l10n.counterChangeId('sync-123')), findsOneWidget);
   });
 }

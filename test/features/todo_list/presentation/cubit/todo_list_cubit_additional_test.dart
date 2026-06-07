@@ -684,7 +684,9 @@ void main() {
   });
 }
 
-class _ErrorTodoRepository implements TodoRepository {
+class _ErrorTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   @override
   Future<List<TodoItem>> fetchAll() async {
     throw Exception('Test error');
@@ -711,7 +713,9 @@ class _ErrorTodoRepository implements TodoRepository {
   }
 }
 
-class _FakeTodoRepository implements TodoRepository {
+class _FakeTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _FakeTodoRepository({final List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(

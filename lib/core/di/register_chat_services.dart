@@ -2,15 +2,17 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_auth_session_port_adapter.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics_adapter.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/demo_first_chat_repository.dart';
@@ -26,10 +28,13 @@ import 'package:flutter_bloc_app/features/chat/data/render_fastapi_chat_reposito
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart'
     show LayeredRenderOrchestrationHfTokenProvider;
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -196,5 +201,16 @@ void registerChatServices() {
   registerLazySingletonIfAbsent<ChatListRepository>(
     MockChatListRepository.new,
   );
-  logChatRenderOrchestrationIfDebug('register_chat_services_done');
+  registerLazySingletonIfAbsent<ChatRenderOrchestrationDiagnosticsPort>(
+    () => const ChatRenderOrchestrationDiagnosticsAdapter(),
+  );
+  registerLazySingletonIfAbsent<ChatAuthSessionPort>(
+    () => ChatAuthSessionPortAdapter(
+      firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
+      supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
+    ),
+  );
+  getIt<ChatRenderOrchestrationDiagnosticsPort>().logIfDebug(
+    'register_chat_services_done',
+  );
 }

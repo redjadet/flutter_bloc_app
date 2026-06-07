@@ -2,12 +2,36 @@ import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/audit_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_admin_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_auth_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/online_therapy_demo.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_dependencies.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart';
 import 'package:go_router/go_router.dart';
 
+OnlineTherapyDemoDependencies _onlineTherapyDemoDependencies() =>
+    OnlineTherapyDemoDependencies(
+      auth: getIt<TherapyAuthRepository>(),
+      networkModeController: getIt<OnlineTherapyFakeApi>(),
+      therapists: getIt<TherapistRepository>(),
+      appointments: getIt<AppointmentRepository>(),
+      admin: getIt<TherapyAdminRepository>(),
+      audit: getIt<AuditRepository>(),
+      messaging: getIt<TherapyMessagingRepository>(),
+      calls: getIt<TherapyCallRepository>(),
+    );
+
 RouteBase createOnlineTherapyDemoRoute() => ShellRoute(
-  builder: (context, state, child) => OnlineTherapyDemoScope(child: child),
+  builder: (context, state, child) => OnlineTherapyDemoScope(
+    deps: _onlineTherapyDemoDependencies(),
+    child: child,
+  ),
   routes: <RouteBase>[
     GoRoute(
       path: AppRoutes.onlineTherapyDemoPath,

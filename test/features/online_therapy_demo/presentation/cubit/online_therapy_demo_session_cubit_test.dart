@@ -45,7 +45,10 @@ void main() {
         final OnlineTherapyFakeApi api = OnlineTherapyFakeApi();
 
         final OnlineTherapyDemoSessionCubit cubit =
-            OnlineTherapyDemoSessionCubit(auth: auth, api: api);
+            OnlineTherapyDemoSessionCubit(
+              auth: auth,
+              networkModeController: api,
+            );
 
         expect(cubit.state.user, clientUser);
         expect(cubit.state.role, TherapyRole.client);

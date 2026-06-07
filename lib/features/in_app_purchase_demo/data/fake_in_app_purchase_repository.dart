@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/iap_demo_credits_store.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_entitlement.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 
-class FakeInAppPurchaseRepository implements InAppPurchaseRepository {
+class FakeInAppPurchaseRepository
+    implements InAppPurchaseRepository, IapFakeOutcomePort {
   FakeInAppPurchaseRepository({
     required this._timerService,
     final IapDemoCreditsStore? creditsStore,
@@ -24,10 +26,12 @@ class FakeInAppPurchaseRepository implements InAppPurchaseRepository {
   final StreamController<IapPurchaseResult> _resultsController =
       StreamController<IapPurchaseResult>.broadcast();
 
+  @override
   IapDemoForcedOutcome forcedOutcome = IapDemoForcedOutcome.deterministic;
 
   IapEntitlements _entitlements = const IapEntitlements();
 
+  @override
   void resetDemoState() {
     _entitlements = _entitlements.copyWith(
       isPremiumOwned: false,

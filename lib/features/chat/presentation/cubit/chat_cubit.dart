@@ -3,17 +3,16 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -35,8 +34,8 @@ class ChatCubit extends _ChatCubitCore
     required super.repository,
     required super.historyRepository,
     super.renderOrchestrationHfTokenProvider,
-    super.firebaseAuthRepository,
-    super.supabaseAuthRepository,
+    super.authSessionPort,
+    super.renderOrchestrationDiagnostics,
     super.initialModel,
     super.supportedModels,
   });
@@ -47,8 +46,8 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     required this._repository,
     required this._historyRepository,
     this._renderOrchestrationHfTokenProvider,
-    this._firebaseAuthRepository,
-    this._supabaseAuthRepository,
+    this._authSessionPort,
+    this._renderOrchestrationDiagnostics,
     final String? initialModel,
     final List<String>? supportedModels,
   }) : _models = _buildModelList(initialModel, supportedModels),
@@ -65,8 +64,8 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   final ChatRepository _repository;
   final ChatHistoryRepository _historyRepository;
   final RenderOrchestrationHfTokenProvider? _renderOrchestrationHfTokenProvider;
-  final core_auth.AuthRepository? _firebaseAuthRepository;
-  final SupabaseAuthRepository? _supabaseAuthRepository;
+  final ChatAuthSessionPort? _authSessionPort;
+  final ChatRenderOrchestrationDiagnosticsPort? _renderOrchestrationDiagnostics;
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
   StreamSubscription<AuthUser?>? _supabaseAuthSubscription;
@@ -114,12 +113,17 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     }
   }
 
+  @protected
+  void logRenderOrchestrationIfDebug(final String tag) {
+    _renderOrchestrationDiagnostics?.logIfDebug(tag);
+  }
+
   void _listenFirebaseAuthForTransportHint() {
-    final authRepository = _firebaseAuthRepository;
-    if (authRepository == null) {
+    final authSession = _authSessionPort;
+    if (authSession == null) {
       return;
     }
-    _firebaseAuthSubscription = authRepository.authStateChanges.listen(
+    _firebaseAuthSubscription = authSession.firebaseAuthStateChanges.listen(
       (user) {
         final provider = _renderOrchestrationHfTokenProvider;
         if (user == null && provider != null) {
@@ -138,11 +142,11 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   }
 
   void _listenSupabaseAuthForTransportHint() {
-    final authRepository = _supabaseAuthRepository;
-    if (authRepository == null) {
+    final authSession = _authSessionPort;
+    if (authSession == null) {
       return;
     }
-    _supabaseAuthSubscription = authRepository.authStateChanges.listen(
+    _supabaseAuthSubscription = authSession.supabaseAuthStateChanges.listen(
       (_) {
         _refreshRunnableTransportHintOnly();
       },
@@ -170,7 +174,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
         '(badge uses lastCompletion first; chip can stay Supabase after a '
         'Supabase fallback reply even when FastAPI Cloud demo is configured)',
       );
-      logChatRenderOrchestrationIfDebug('cubit_transport_hint');
+      logRenderOrchestrationIfDebug('cubit_transport_hint');
     }
     if (hint == state.runnableTransportHint) {
       return;

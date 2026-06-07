@@ -5,7 +5,6 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
     path: AppRoutes.iotDemoPath,
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
-      final l10n = context.l10n;
       return IotDemoAuthGate(
         isSupabaseInitialized: SupabaseBootstrapService.isSupabaseInitialized,
         getCurrentUser: () => getIt<SupabaseAuthRepository>().currentUser,
@@ -14,10 +13,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
         supabaseAuthPath: AppRoutes.supabaseAuthPath,
         redirectReturnPath: AppRoutes.iotDemoPath,
         child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
-          create: () => IotDemoCubit(
-            repository: getIt<IotDemoRepository>(),
-            l10n: l10n,
-          ),
+          create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
           init: (final cubit) => cubit.initialize(),
           child: const IotDemoPage(),
         ),
@@ -29,10 +25,16 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
     name: AppRoutes.iapDemo,
     builder: (final context, final state) =>
         BlocProviderHelpers.withAsyncInit<InAppPurchaseDemoCubit>(
-          create: () => InAppPurchaseDemoCubit(
-            fakeRepository: getIt<FakeInAppPurchaseRepository>(),
-            realRepository: getIt<FlutterInAppPurchaseRepository>(),
-          ),
+          create: () {
+            final fake = getIt<FakeInAppPurchaseRepository>();
+            final real = getIt<FlutterInAppPurchaseRepository>();
+            return InAppPurchaseDemoCubit(
+              fakeRepository: fake,
+              realRepository: real,
+              fakeOutcomeControls: fake,
+              realDemoControls: real,
+            );
+          },
           init: (final cubit) => cubit.initialize(),
           child: const InAppPurchaseDemoPage(),
         ),
@@ -40,7 +42,13 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   GoRoute(
     path: AppRoutes.aiDecisionDemoPath,
     name: AppRoutes.aiDecisionDemo,
-    builder: (final context, final state) => const AiDecisionDemoPage(),
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<AiDecisionCubit>(
+          create: () =>
+              AiDecisionCubit(repository: getIt<AiDecisionRepository>()),
+          init: (final cubit) => cubit.loadQueue(),
+          child: const AiDecisionDemoPage(),
+        ),
   ),
   createEventBusDemoRoute(),
   createOnlineTherapyDemoRoute(),
@@ -59,8 +67,9 @@ ChatCubit _createChatCubit() => ChatCubit(
       getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
       ? getIt<RenderOrchestrationHfTokenProvider>()
       : null,
-  firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
-  supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
+  authSessionPort: getIt<ChatAuthSessionPort>(),
+  renderOrchestrationDiagnostics:
+      getIt<ChatRenderOrchestrationDiagnosticsPort>(),
   initialModel: SecretConfig.huggingfaceModel,
 );
 

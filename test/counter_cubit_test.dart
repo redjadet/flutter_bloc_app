@@ -216,6 +216,39 @@ void main() {
       },
     );
 
+    test(
+      'loadInitial clears loading after cannotGoBelowZero during load',
+      () async {
+        final Completer<CounterSnapshot> completer =
+            Completer<CounterSnapshot>();
+        final _DelayedLoadCounterRepository repository =
+            _DelayedLoadCounterRepository(
+              completer: completer,
+              initialWatchSnapshot: const CounterSnapshot(count: 0),
+            );
+        final CounterCubit cubit = createCubit(
+          repository: repository,
+          startTicker: false,
+        );
+
+        unawaited(cubit.loadInitial());
+        await pumpEventQueue();
+        expect(cubit.state.status, ViewStatus.loading);
+
+        await cubit.decrement();
+        expect(cubit.state.count, 0);
+        expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
+
+        completer.complete(const CounterSnapshot(count: 0));
+        await pumpEventQueue();
+        await pumpEventQueue();
+
+        expect(cubit.state.count, 0);
+        expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
+        expect(cubit.state.status, ViewStatus.initial);
+      },
+    );
+
     test('updates state when repository emits flushed snapshot', () async {
       final _RecordingCounterRepository recordingRepo =
           _RecordingCounterRepository(const CounterSnapshot(count: 1));
@@ -225,8 +258,12 @@ void main() {
       );
       await cubit.loadInitial();
       expect(cubit.state.count, 1);
+      // Let watch() finish yielding the initial snapshot and attach to the
+      // broadcast controller before save() emits a flushed remote update.
+      await pumpEventQueue();
 
       await recordingRepo.save(const CounterSnapshot(count: 6));
+      await pumpEventQueue();
       await pumpEventQueue();
 
       expect(cubit.state.count, 6);
@@ -539,7 +576,9 @@ void main() {
   });
 }
 
-class _RecordingCounterRepository implements CounterRepository {
+class _RecordingCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _RecordingCounterRepository(this._initial)
     : _controller = StreamController<CounterSnapshot>.broadcast();
 
@@ -564,7 +603,9 @@ class _RecordingCounterRepository implements CounterRepository {
   }
 }
 
-class _DelayedLoadCounterRepository implements CounterRepository {
+class _DelayedLoadCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _DelayedLoadCounterRepository({
     required this.completer,
     required CounterSnapshot initialWatchSnapshot,

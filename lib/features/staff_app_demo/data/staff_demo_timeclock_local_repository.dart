@@ -1,27 +1,11 @@
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 
-class StaffDemoOpenEntrySnapshot {
-  const StaffDemoOpenEntrySnapshot({
-    required this.entryId,
-    required this.clockInAtUtc,
-    required this.shiftId,
-    required this.siteId,
-    required this.payload,
-  });
-
-  final String entryId;
-  final DateTime clockInAtUtc;
-  final String? shiftId;
-  final String? siteId;
-
-  /// Original punch evidence (lat/lng/accuracy/etc). This is intentionally
-  /// opaque so we can preserve evidence without tightly coupling the schema.
-  final Map<String, dynamic> payload;
-}
-
-class StaffDemoTimeclockLocalRepository extends HiveRepositoryBase {
-  StaffDemoTimeclockLocalRepository({required super.hiveService});
+class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
+    implements StaffDemoTimeclockLocalStore {
+  HiveStaffDemoTimeclockLocalStore({required super.hiveService});
 
   static const String _boxName = 'staff_demo_timeclock_local';
 
@@ -30,10 +14,11 @@ class StaffDemoTimeclockLocalRepository extends HiveRepositoryBase {
 
   String _openEntryKey(final String userId) => 'openEntry:$userId';
 
+  @override
   Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
     required final String userId,
   }) => StorageGuard.run<StaffDemoOpenEntrySnapshot?>(
-    logContext: 'StaffDemoTimeclockLocalRepository.loadOpenEntry',
+    logContext: 'HiveStaffDemoTimeclockLocalStore.loadOpenEntry',
     action: () async {
       final box = await getBox();
       final dynamic raw = box.get(_openEntryKey(userId));
@@ -63,12 +48,13 @@ class StaffDemoTimeclockLocalRepository extends HiveRepositoryBase {
     fallback: () => null,
   );
 
+  @override
   Future<void> saveOpenEntry({
     required final String userId,
     required final StaffDemoOpenEntrySnapshot snapshot,
   }) async {
     await StorageGuard.run<void>(
-      logContext: 'StaffDemoTimeclockLocalRepository.saveOpenEntry',
+      logContext: 'HiveStaffDemoTimeclockLocalStore.saveOpenEntry',
       action: () async {
         final box = await getBox();
         await box.put(_openEntryKey(userId), <String, dynamic>{
@@ -82,9 +68,10 @@ class StaffDemoTimeclockLocalRepository extends HiveRepositoryBase {
     );
   }
 
+  @override
   Future<void> clearOpenEntry({required final String userId}) async {
     await StorageGuard.run<void>(
-      logContext: 'StaffDemoTimeclockLocalRepository.clearOpenEntry',
+      logContext: 'HiveStaffDemoTimeclockLocalStore.clearOpenEntry',
       action: () async {
         final box = await getBox();
         await box.delete(_openEntryKey(userId));

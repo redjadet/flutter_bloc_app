@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_models.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/pages/ai_decision_demo_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,6 +13,13 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../test_helpers.dart';
 
 class _MockAiDecisionRepository extends Mock implements AiDecisionRepository {}
+
+Widget _wrapPage(final AiDecisionRepository repository) => wrapWithProviders(
+  child: BlocProvider(
+    create: (_) => AiDecisionCubit(repository: repository)..loadQueue(),
+    child: const AiDecisionDemoPage(),
+  ),
+);
 
 void main() {
   testWidgets('AiDecisionDemoPage disables actions until case detail loads', (
@@ -46,12 +54,7 @@ void main() {
       () => repository.getCaseDetail('case_1'),
     ).thenAnswer((_) => detailCompleter.future);
 
-    await getIt.reset();
-    getIt.registerSingleton<AiDecisionRepository>(repository);
-
-    await tester.pumpWidget(
-      wrapWithProviders(child: const AiDecisionDemoPage()),
-    );
+    await tester.pumpWidget(_wrapPage(repository));
     await tester.pump();
     await tester.pump();
 
@@ -118,12 +121,7 @@ void main() {
     });
     when(() => repository.getCaseDetail(any())).thenAnswer((_) async => detail);
 
-    await getIt.reset();
-    getIt.registerSingleton<AiDecisionRepository>(repository);
-
-    await tester.pumpWidget(
-      wrapWithProviders(child: const AiDecisionDemoPage()),
-    );
+    await tester.pumpWidget(_wrapPage(repository));
     await tester.pumpAndSettle();
 
     expect(
@@ -214,12 +212,7 @@ void main() {
       ),
     ).thenAnswer((_) async => decision);
 
-    await getIt.reset();
-    getIt.registerSingleton<AiDecisionRepository>(repository);
-
-    await tester.pumpWidget(
-      wrapWithProviders(child: const AiDecisionDemoPage()),
-    );
+    await tester.pumpWidget(_wrapPage(repository));
 
     await tester.pumpAndSettle();
 
@@ -275,12 +268,7 @@ void main() {
     when(repository.getCases).thenAnswer((_) async => queue);
     when(() => repository.getCaseDetail(any())).thenAnswer((_) async => detail);
 
-    await getIt.reset();
-    getIt.registerSingleton<AiDecisionRepository>(repository);
-
-    await tester.pumpWidget(
-      wrapWithProviders(child: const AiDecisionDemoPage()),
-    );
+    await tester.pumpWidget(_wrapPage(repository));
     await tester.pumpAndSettle();
 
     final text = tester.widget<Text>(

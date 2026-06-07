@@ -28,7 +28,9 @@ part 'rest_counter_repository_watch.dart';
 /// 3. Implement proper error handling for your API
 /// 4. Add request/response models as needed
 /// 5. Register in `lib/core/di/injector.dart` if needed
-class RestCounterRepository implements CounterRepository {
+class RestCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   RestCounterRepository({
     required final String baseUrl,
     final Dio? client,

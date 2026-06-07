@@ -80,7 +80,9 @@ void main() {
   });
 }
 
-class _NoopRepo implements CounterRepository {
+class _NoopRepo
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async =>
       const CounterSnapshot(userId: 'noop', count: 0);

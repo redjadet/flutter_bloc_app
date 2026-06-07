@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/iap_demo_credits_store.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_entitlement.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
@@ -15,7 +16,8 @@ part 'flutter_in_app_purchase_repository_purchases.part.dart';
 /// - This is **demo-grade** and intentionally avoids backend receipt validation.
 /// - Premium/subscription entitlements are kept in-memory for now.
 /// - Consumable credits are persisted locally (demo UX) via [IapDemoCreditsStore].
-class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
+class FlutterInAppPurchaseRepository
+    implements InAppPurchaseRepository, IapDemoControlsPort {
   FlutterInAppPurchaseRepository({
     final InAppPurchase? store,
     final IapDemoCreditsStore? creditsStore,
@@ -32,6 +34,7 @@ class FlutterInAppPurchaseRepository implements InAppPurchaseRepository {
 
   IapEntitlements _entitlements = const IapEntitlements();
 
+  @override
   void resetDemoState() {
     _entitlements = _entitlements.copyWith(
       isPremiumOwned: false,

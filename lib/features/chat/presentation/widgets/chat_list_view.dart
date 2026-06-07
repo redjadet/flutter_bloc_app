@@ -5,17 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/navigation.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_empty_state.dart';
@@ -33,20 +33,18 @@ class ChatListView extends StatelessWidget {
     required this.chatRepository,
     required this.historyRepository,
     required this.errorNotificationService,
-    required this.pendingSyncRepository,
     this.renderOrchestrationHfTokenProvider,
-    this.firebaseAuthRepository,
-    this.supabaseAuthRepository,
+    this.authSessionPort,
+    this.renderOrchestrationDiagnostics,
     super.key,
   });
 
   final ChatRepository chatRepository;
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
-  final PendingSyncRepository pendingSyncRepository;
   final RenderOrchestrationHfTokenProvider? renderOrchestrationHfTokenProvider;
-  final core_auth.AuthRepository? firebaseAuthRepository;
-  final SupabaseAuthRepository? supabaseAuthRepository;
+  final ChatAuthSessionPort? authSessionPort;
+  final ChatRenderOrchestrationDiagnosticsPort? renderOrchestrationDiagnostics;
 
   @override
   Widget build(final BuildContext context) =>

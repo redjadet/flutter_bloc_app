@@ -17,7 +17,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-class ThrowingRepo implements CounterRepository {
+class ThrowingRepo
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async {
     throw Exception('load failed');

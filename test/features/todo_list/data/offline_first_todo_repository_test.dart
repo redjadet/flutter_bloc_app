@@ -18,7 +18,9 @@ import '../../../test_helpers.dart' show FakeTimerService;
 /// Fake remote that tracks [watchAll] calls and exposes a stream that can be
 /// closed to trigger onDone. Used to assert no restart-after-dispose (no second
 /// watchAll call after dispose).
-class _FakeRemoteRepositoryWithWatchTracking extends TodoRepository {
+class _FakeRemoteRepositoryWithWatchTracking
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _FakeRemoteRepositoryWithWatchTracking() {
     _watchController.add(List<TodoItem>.from(_items));
   }
@@ -61,7 +63,9 @@ class _FakeRemoteRepositoryWithWatchTracking extends TodoRepository {
 
 /// Fake remote that tracks active stream listeners so tests can detect
 /// duplicate subscriptions after error-triggered restarts.
-class _FakeRemoteRepositoryWithErrorTracking extends TodoRepository {
+class _FakeRemoteRepositoryWithErrorTracking
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _FakeRemoteRepositoryWithErrorTracking() {
     _watchController = StreamController<List<TodoItem>>.broadcast(
       onListen: () => activeWatchListeners++,
@@ -109,7 +113,9 @@ class _FakeRemoteRepositoryWithErrorTracking extends TodoRepository {
   Future<void> clearCompleted() async {}
 }
 
-class _FakeRemoteRepository extends TodoRepository {
+class _FakeRemoteRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _FakeRemoteRepository({
     List<TodoItem>? initial,
     this.shouldThrowOnSave = false,

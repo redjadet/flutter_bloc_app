@@ -2,13 +2,13 @@
 library;
 
 // Domain exports
-export 'domain/firestore_staff_demo_inbox_repository.dart';
-export 'domain/firestore_staff_demo_messaging_repository.dart';
-export 'domain/firestore_staff_demo_time_entries_repository.dart';
+export 'domain/staff_demo_inbox_repository.dart';
+export 'domain/staff_demo_messaging_repository.dart';
 export 'domain/staff_demo_profile.dart';
 export 'domain/staff_demo_site.dart';
 export 'domain/staff_demo_site_repository.dart';
-export 'domain/staff_demo_timeclock_local_repository.dart';
+export 'domain/staff_demo_time_entries_repository.dart';
+export 'domain/staff_demo_timeclock_local_store.dart';
 export 'domain/staff_demo_timeclock_repository.dart';
 // Presentation exports
 export 'presentation/admin/staff_demo_admin_cubit.dart';

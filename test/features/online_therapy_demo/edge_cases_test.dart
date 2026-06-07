@@ -12,7 +12,10 @@ void main() {
     final api = OnlineTherapyFakeApi(timerService: _ImmediateTimerService());
     final auth = FakeTherapyAuthRepository(api: api);
     final admin = FakeTherapyAdminRepository(api: api);
-    final cubit = OnlineTherapyDemoSessionCubit(auth: auth, api: api);
+    final cubit = OnlineTherapyDemoSessionCubit(
+      auth: auth,
+      networkModeController: api,
+    );
     addTearDown(cubit.close);
 
     await cubit.login();

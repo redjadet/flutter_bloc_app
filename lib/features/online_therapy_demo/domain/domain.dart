@@ -7,3 +7,5 @@ export 'entities/message.dart';
 export 'entities/therapist_profile.dart';
 export 'entities/therapy_role.dart';
 export 'entities/therapy_user.dart';
+export 'online_therapy_network_mode.dart';
+export 'online_therapy_network_mode_controller.dart';

@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/ai_decision_demo.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/event_bus_demo.dart';
@@ -21,12 +25,12 @@ import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dar
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/pages/genui_demo_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/lobby_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/game_page.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/pages/lobby_page.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/fake_in_app_purchase_repository.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/flutter_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
@@ -54,12 +58,17 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     name: AppRoutes.chat,
     builder: (final context, final state) => _withChatSupabaseSessionGate(
       state: state,
-      child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
-        create: _createChatCubit,
-        init: (final cubit) => cubit.loadHistory(),
-        child: ChatPage(
-          errorNotificationService: getIt<ErrorNotificationService>(),
-          pendingSyncRepository: getIt<PendingSyncRepository>(),
+      child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
+        create: () => ChatSyncStatusCubit(
+          pendingRepository: getIt<PendingSyncRepository>(),
+        ),
+        init: (final cubit) => cubit.refresh(),
+        child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
+          create: _createChatCubit,
+          init: (final cubit) => cubit.loadHistory(),
+          child: ChatPage(
+            errorNotificationService: getIt<ErrorNotificationService>(),
+          ),
         ),
       ),
     ),
@@ -69,18 +78,24 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     name: AppRoutes.chatList,
     builder: (final context, final state) => _withChatSupabaseSessionGate(
       state: state,
-      child: ChatListPage(
-        repository: getIt<ChatListRepository>(),
-        chatRepository: getIt<ChatRepository>(),
-        historyRepository: getIt<ChatHistoryRepository>(),
-        renderOrchestrationHfTokenProvider:
-            getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
-            ? getIt<RenderOrchestrationHfTokenProvider>()
-            : null,
-        firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
-        supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
-        errorNotificationService: getIt<ErrorNotificationService>(),
-        pendingSyncRepository: getIt<PendingSyncRepository>(),
+      child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
+        create: () => ChatSyncStatusCubit(
+          pendingRepository: getIt<PendingSyncRepository>(),
+        ),
+        init: (final cubit) => cubit.refresh(),
+        child: ChatListPage(
+          repository: getIt<ChatListRepository>(),
+          chatRepository: getIt<ChatRepository>(),
+          historyRepository: getIt<ChatHistoryRepository>(),
+          renderOrchestrationHfTokenProvider:
+              getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+              ? getIt<RenderOrchestrationHfTokenProvider>()
+              : null,
+          authSessionPort: getIt<ChatAuthSessionPort>(),
+          renderOrchestrationDiagnostics:
+              getIt<ChatRenderOrchestrationDiagnosticsPort>(),
+          errorNotificationService: getIt<ErrorNotificationService>(),
+        ),
       ),
     ),
   ),

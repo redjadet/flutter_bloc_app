@@ -18,6 +18,7 @@ mixin _TodoListCubitMethods
   RequestIdGuard get loadRequestIdGuard;
   int get loadRequestId;
   set loadRequestId(final int value);
+  Future<void> refreshPendingSyncCount();
 
   Set<String> _trimSelection(final List<TodoItem> items) {
     if (state.selectedItemIds.isEmpty) {
@@ -154,6 +155,7 @@ mixin _TodoListCubitMethods
         );
         try {
           await startWatching();
+          await refreshPendingSyncCount();
         } finally {
           isLoading = false;
         }

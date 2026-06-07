@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -279,10 +280,10 @@ void main() {
     ) async {
       await _pumpPage(
         tester,
-        state: IotDemoState.error('Something went wrong'),
+        state: IotDemoState.error(code: IotDemoErrorCode.load),
       );
 
-      expect(find.text('Something went wrong'), findsOneWidget);
+      expect(find.text('Failed to load devices'), findsOneWidget);
     });
 
     testWidgets(
