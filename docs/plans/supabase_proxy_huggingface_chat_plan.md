@@ -322,7 +322,7 @@ and this section in the same change set.
 | `lib/features/chat/presentation/widgets/chat_transport_badge.dart` | Add a dedicated badge widget for **Supabase** / **Direct**. Reuse `AppStyles.chip` and the same visual language as the existing data-source badges. |
 | `lib/features/chat/presentation/widgets/chat_offline_badge.dart` | Add a dedicated offline chip widget unless the team decides to fold it into a shared reusable badge widget in the same pass. |
 | [`lib/features/chat/presentation/widgets/chat_sync_banner.dart`](../../lib/features/chat/presentation/widgets/chat_sync_banner.dart) | Keep banner copy aligned with the new queue classification; do not duplicate chip semantics incorrectly. |
-| `lib/features/chat/presentation/chat_cubit.dart` and helpers | Surface auth/config/busy errors distinctly enough for the page/banner to render the right UX. |
+| `lib/features/chat/presentation/cubit/chat_cubit.dart` and helpers | Surface auth/config/busy errors distinctly enough for the page/banner to render the right UX. |
 | `lib/l10n/app_en.arb` and peer ARB files | Add offline/transport chip labels, semantics/tooltip text, and any new auth/config/rate-limit copy. Run `flutter gen-l10n` afterward. |
 
 #### UI acceptance tasks

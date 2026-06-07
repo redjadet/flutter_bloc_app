@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart';
 
-class FirestoreStaffDemoTimeEntriesRepository {
+class FirestoreStaffDemoTimeEntriesRepository
+    implements StaffDemoTimeEntriesRepository {
   FirestoreStaffDemoTimeEntriesRepository({
     required this._firestore,
   });
 
   final FirebaseFirestore _firestore;
 
+  @override
   Future<List<StaffDemoTimeEntrySummary>> fetchRecent({
     final int limit = 20,
   }) async {

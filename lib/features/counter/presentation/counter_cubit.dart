@@ -14,9 +14,12 @@ import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
 export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
 
 part 'counter_cubit_base.dart';
+part 'counter_cubit_load.part.dart';
+part 'counter_cubit_sync.part.dart';
 
 /// Cubit that orchestrates counter state, persistence, and timers.
-class CounterCubit extends _CounterCubitBase {
+class CounterCubit extends _CounterCubitBase
+    with _CounterCubitSyncMixin, _CounterCubitLoadMixin {
   CounterCubit({
     required super.repository,
     final TimerService? timerService,
@@ -35,87 +38,10 @@ class CounterCubit extends _CounterCubitBase {
     }
   }
 
-  TimerDisposable? _initialLoadHandle;
-  int _initialLoadRequestId = 0;
-  int _localMutationRevision = 0;
-
   /// Throttle for manual +/− button taps only (not auto-decrement or restore).
   static const Duration _manualThrottle = Duration(milliseconds: 500);
   final Duration _manualThrottleDuration;
   DateTime? _lastManualChangeAt;
-
-  Future<void> loadInitial() async {
-    final int requestId = ++_initialLoadRequestId;
-    final int startingRevision = _localMutationRevision;
-    emit(state.copyWith(status: ViewStatus.loading));
-
-    if (_initialLoadDelay > Duration.zero) {
-      _initialLoadHandle?.dispose();
-      unregisterTimer(_initialLoadHandle);
-      late final TimerDisposable handle;
-      handle = _timerService.runOnce(_initialLoadDelay, () {
-        unregisterTimer(handle);
-        if (identical(_initialLoadHandle, handle)) {
-          _initialLoadHandle = null;
-        }
-        if (isClosed) return;
-        unawaited(
-          _runLoadInitialAfterDelay(
-            requestId: requestId,
-            startingRevision: startingRevision,
-          ),
-        );
-      });
-      _initialLoadHandle = registerTimer(handle);
-      return;
-    }
-
-    await _runLoadInitialAfterDelay(
-      requestId: requestId,
-      startingRevision: startingRevision,
-    );
-  }
-
-  Future<void> _runLoadInitialAfterDelay({
-    required final int requestId,
-    required final int startingRevision,
-  }) async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        final CounterSnapshot snapshot = await _repository.load();
-        if (isClosed || requestId != _initialLoadRequestId) {
-          return;
-        }
-        if (_localMutationRevision != startingRevision) {
-          _subscribeToRepository();
-          return;
-        }
-        final RestorationResult restoration = restoreStateFromSnapshot(
-          snapshot,
-        );
-        await applyRestorationOutcome(
-          restoration,
-          onHoldChanged: ({required final holdSideEffects}) =>
-              _pauseCountdownForOneTick = holdSideEffects,
-          onAfterEmit: _syncTickerForState,
-          onPersist: _persistState,
-          logContext: 'CounterCubit.loadInitial',
-        );
-        _subscribeToRepository();
-      },
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      logContext: 'CounterCubit.loadInitial',
-      onErrorWithDetails: (final error, final stackTrace) {
-        _handleError(
-          error,
-          stackTrace ?? StackTrace.current,
-          CounterError.load,
-          'CounterCubit.loadInitial failed',
-        );
-      },
-    );
-  }
 
   @override
   Future<void> close() async {
@@ -220,5 +146,6 @@ class CounterCubit extends _CounterCubitBase {
         );
       },
     );
+    await refreshPendingSyncCount();
   }
 }

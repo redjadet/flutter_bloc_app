@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/features/search/presentation/search_cubit.dart';
+import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:mocktail/mocktail.dart';

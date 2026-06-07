@@ -5,16 +5,14 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -53,9 +51,6 @@ class _MemoryHistoryRepository implements ChatHistoryRepository {
   }
 }
 
-class _MockPendingSyncRepository extends Mock
-    implements PendingSyncRepository {}
-
 class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
 class _MockBackgroundSyncCoordinator extends Mock
@@ -74,23 +69,15 @@ void main() {
 
   group('ChatPage history selection', () {
     late _MemoryHistoryRepository historyRepository;
-    late _MockPendingSyncRepository pendingSyncRepository;
     late _MockNetworkStatusService networkStatusService;
     late _MockBackgroundSyncCoordinator coordinator;
     late _MockErrorNotificationService errorNotificationService;
 
     setUp(() {
-      pendingSyncRepository = _MockPendingSyncRepository();
       networkStatusService = _MockNetworkStatusService();
       coordinator = _MockBackgroundSyncCoordinator();
       errorNotificationService = _MockErrorNotificationService();
 
-      when(
-        () => pendingSyncRepository.getPendingOperations(
-          now: any(named: 'now'),
-          limit: any(named: 'limit'),
-        ),
-      ).thenAnswer((_) async => <SyncOperation>[]);
       when(
         () => networkStatusService.statusStream,
       ).thenAnswer((_) => Stream<NetworkStatus>.value(NetworkStatus.online));
@@ -130,10 +117,7 @@ void main() {
             ),
           ),
         ],
-        child: ChatPage(
-          errorNotificationService: errorNotificationService,
-          pendingSyncRepository: pendingSyncRepository,
-        ),
+        child: ChatPage(errorNotificationService: errorNotificationService),
       ),
     );
 

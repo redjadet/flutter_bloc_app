@@ -174,7 +174,9 @@ void main() {
             sessionCubit: sessionCubit,
             messagesCubit: messagesCubit,
             sitesCubit: sitesCubit,
-            child: const StaffAppDemoMessagesPage(),
+            child: StaffAppDemoMessagesPage(
+              profileRepository: profileRepository,
+            ),
           ),
         );
         await tester.pump();
@@ -340,9 +342,10 @@ void main() {
         ),
       ).thenAnswer((_) async {});
 
+      final profileRepository = _MockStaffDemoProfileRepository();
       final sessionCubit = StaffDemoSessionCubit(
         authRepository: authRepository,
-        profileRepository: _MockStaffDemoProfileRepository(),
+        profileRepository: profileRepository,
         pushTokenRepository: _MockStaffDemoPushTokenRepository(),
       );
       addTearDown(sessionCubit.close);
@@ -386,7 +389,7 @@ void main() {
         _wrapWithProviders(
           sessionCubit: sessionCubit,
           messagesCubit: messagesCubit,
-          child: const StaffAppDemoMessagesPage(),
+          child: StaffAppDemoMessagesPage(profileRepository: profileRepository),
         ),
       );
       await tester.pump();
@@ -407,9 +410,10 @@ void main() {
     testWidgets('messages page pull to refresh reinitializes the cubit', (
       tester,
     ) async {
+      final profileRepository = _MockStaffDemoProfileRepository();
       final sessionCubit = StaffDemoSessionCubit(
         authRepository: _MockAuthRepository(),
-        profileRepository: _MockStaffDemoProfileRepository(),
+        profileRepository: profileRepository,
         pushTokenRepository: _MockStaffDemoPushTokenRepository(),
       );
       addTearDown(sessionCubit.close);
@@ -453,7 +457,7 @@ void main() {
         _wrapWithProviders(
           sessionCubit: sessionCubit,
           messagesCubit: messagesCubit,
-          child: const StaffAppDemoMessagesPage(),
+          child: StaffAppDemoMessagesPage(profileRepository: profileRepository),
         ),
       );
       await tester.pump();

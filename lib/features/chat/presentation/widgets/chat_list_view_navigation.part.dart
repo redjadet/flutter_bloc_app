@@ -13,25 +13,40 @@ extension _ChatListViewNavigation on ChatListView {
     unawaited(
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (final context) => BlocProvider(
-            create: (final context) {
-              final cubit = ChatCubit(
-                repository: chatRepository,
-                historyRepository: historyRepository,
-                renderOrchestrationHfTokenProvider:
-                    renderOrchestrationHfTokenProvider,
-                firebaseAuthRepository: firebaseAuthRepository,
-                supabaseAuthRepository: supabaseAuthRepository,
-                initialModel: SecretConfig.huggingfaceModel,
-              );
-              unawaited(cubit.loadHistory());
-              return cubit;
-            },
-            child: ChatPage(
-              errorNotificationService: errorNotificationService,
-              pendingSyncRepository: pendingSyncRepository,
-            ),
-          ),
+          builder: (final routeContext) {
+            final List<BlocProvider<dynamic>> providers =
+                <BlocProvider<dynamic>>[
+                  if (CubitHelpers.isCubitAvailable<
+                    ChatSyncStatusCubit,
+                    ChatSyncStatusState
+                  >(context))
+                    BlocProvider<ChatSyncStatusCubit>.value(
+                      value: context.cubit<ChatSyncStatusCubit>(),
+                    ),
+                  BlocProvider<ChatCubit>(
+                    create: (final _) {
+                      final ChatCubit cubit = ChatCubit(
+                        repository: chatRepository,
+                        historyRepository: historyRepository,
+                        renderOrchestrationHfTokenProvider:
+                            renderOrchestrationHfTokenProvider,
+                        authSessionPort: authSessionPort,
+                        renderOrchestrationDiagnostics:
+                            renderOrchestrationDiagnostics,
+                        initialModel: SecretConfig.huggingfaceModel,
+                      );
+                      unawaited(cubit.loadHistory());
+                      return cubit;
+                    },
+                  ),
+                ];
+            return MultiBlocProvider(
+              providers: providers,
+              child: ChatPage(
+                errorNotificationService: errorNotificationService,
+              ),
+            );
+          },
         ),
       ),
     );

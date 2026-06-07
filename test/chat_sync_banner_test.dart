@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_sync_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -26,6 +27,9 @@ void main() {
 
   setUp(() {
     pendingRepository = MockPendingSyncRepository();
+    when(
+      () => pendingRepository.onOperationEnqueued,
+    ).thenAnswer((_) => const Stream<void>.empty());
     coordinator = _TestBackgroundSyncCoordinator();
     networkStatusService = _TestNetworkStatusService();
   });
@@ -40,14 +44,21 @@ void main() {
     coordinator: coordinator,
   );
 
-  Widget buildTestWidget(final SyncStatusCubit cubit) => MaterialApp(
+  ChatSyncStatusCubit buildChatSyncStatusCubit() =>
+      ChatSyncStatusCubit(pendingRepository: pendingRepository);
+
+  Widget buildTestWidget({
+    required SyncStatusCubit syncCubit,
+    required ChatSyncStatusCubit chatSyncCubit,
+  }) => MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    home: BlocProvider<SyncStatusCubit>(
-      create: (_) => cubit,
-      child: Scaffold(
-        body: ChatSyncBanner(pendingRepository: pendingRepository),
-      ),
+    home: MultiBlocProvider(
+      providers: <BlocProvider<dynamic>>[
+        BlocProvider<SyncStatusCubit>.value(value: syncCubit),
+        BlocProvider<ChatSyncStatusCubit>.value(value: chatSyncCubit),
+      ],
+      child: const Scaffold(body: ChatSyncBanner()),
     ),
   );
 
@@ -58,8 +69,17 @@ void main() {
       () => pendingRepository.getPendingOperations(now: any(named: 'now')),
     ).thenAnswer((_) async => <SyncOperation>[]);
 
-    await tester.pumpWidget(buildTestWidget(buildSyncStatusCubit()));
-    await tester.pump();
+    final SyncStatusCubit syncCubit = buildSyncStatusCubit();
+    final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
+    addTearDown(() async {
+      await syncCubit.close();
+      await chatSyncCubit.close();
+    });
+
+    await tester.pumpWidget(
+      buildTestWidget(syncCubit: syncCubit, chatSyncCubit: chatSyncCubit),
+    );
+    await tester.pumpAndSettle();
 
     expect(find.byType(AppMessage), findsNothing);
   });
@@ -79,13 +99,21 @@ void main() {
       ],
     );
 
-    final SyncStatusCubit cubit = buildSyncStatusCubit();
+    final SyncStatusCubit syncCubit = buildSyncStatusCubit();
+    final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
+    addTearDown(() async {
+      await syncCubit.close();
+      await chatSyncCubit.close();
+    });
+
     networkStatusService.emit(NetworkStatus.offline);
-    await tester.pumpWidget(buildTestWidget(cubit));
-    await tester.pump();
+    await tester.pumpWidget(
+      buildTestWidget(syncCubit: syncCubit, chatSyncCubit: chatSyncCubit),
+    );
+    await tester.pumpAndSettle();
 
     expect(find.byType(AppMessage), findsOneWidget);
-    expect(cubit.state.networkStatus, NetworkStatus.offline);
+    expect(syncCubit.state.networkStatus, NetworkStatus.offline);
     final Finder buttonFinder = find.text('Sync now');
     expect(buttonFinder, findsOneWidget);
     final _ButtonVariant button = _resolveButtonVariant(tester, buttonFinder);
@@ -109,8 +137,17 @@ void main() {
       ],
     );
 
-    await tester.pumpWidget(buildTestWidget(buildSyncStatusCubit()));
-    await tester.pump();
+    final SyncStatusCubit syncCubit = buildSyncStatusCubit();
+    final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
+    addTearDown(() async {
+      await syncCubit.close();
+      await chatSyncCubit.close();
+    });
+
+    await tester.pumpWidget(
+      buildTestWidget(syncCubit: syncCubit, chatSyncCubit: chatSyncCubit),
+    );
+    await tester.pumpAndSettle();
 
     final Finder buttonFinder = find.text('Sync now');
     expect(buttonFinder, findsOneWidget);
@@ -120,6 +157,7 @@ void main() {
 
     await tester.tap(button.finder);
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
 
     expect(coordinator.flushCount, 1);
   });

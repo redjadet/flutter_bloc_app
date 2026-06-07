@@ -40,7 +40,10 @@ void main() {
       endAt: slot.endAt,
     );
 
-    final sessionCubit = OnlineTherapyDemoSessionCubit(auth: auth, api: api);
+    final sessionCubit = OnlineTherapyDemoSessionCubit(
+      auth: auth,
+      networkModeController: api,
+    );
     final bookingCubit = _TestClientBookingCubit(
       therapists: therapists,
       appointments: appointments,

@@ -77,6 +77,22 @@ class TodoListCubit extends Cubit<TodoListState>
     await loadInitial();
   }
 
+  @override
+  Future<void> refreshPendingSyncCount() async {
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () async {
+        final int count = await repository.pendingSyncOperationCount();
+        if (isClosed) {
+          return;
+        }
+        emit(state.copyWith(pendingSyncCount: count));
+      },
+      isAlive: () => !isClosed,
+      onError: (_) {},
+      logContext: 'TodoListCubit.refreshPendingSyncCount',
+    );
+  }
+
   void setFilter(final TodoFilter filter) {
     if (isClosed || filter == state.filter) return;
     emit(state.copyWith(filter: filter));

@@ -8,27 +8,67 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_sync_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mocktail/mocktail.dart';
+
+class _MockPendingSyncRepository extends Mock
+    implements PendingSyncRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(DateTime.fromMillisecondsSinceEpoch(0));
+  });
+
+  testWidgets('ChatPage mounts ChatSyncBanner when sync cubits are provided', (
+    final WidgetTester tester,
+  ) async {
+    final _TestChatCubit cubit = _TestChatCubit(
+      supportedModels: const <String>['only-model'],
+    );
+    addTearDown(cubit.close);
+
+    final _MockPendingSyncRepository pendingRepository =
+        _MockPendingSyncRepository();
+    when(
+      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+    ).thenAnswer((_) async => <SyncOperation>[]);
+    when(
+      () => pendingRepository.onOperationEnqueued,
+    ).thenAnswer((_) => const Stream<void>.empty());
+
+    final SyncStatusCubit syncCubit = _buildSyncStatusCubit();
+    final ChatSyncStatusCubit chatSyncCubit = ChatSyncStatusCubit(
+      pendingRepository: pendingRepository,
+    );
+    addTearDown(() async {
+      await syncCubit.close();
+      await chatSyncCubit.close();
+    });
+
+    await tester.pumpWidget(
+      _wrapWithCubit(cubit, syncCubit, null, chatSyncCubit),
+    );
+    await tester.pump();
+
+    expect(find.byType(ChatSyncBanner), findsOneWidget);
+  });
+
   testWidgets('ChatPage sends message via ChatCubit', (
     WidgetTester tester,
   ) async {
@@ -128,7 +168,6 @@ void main() {
           ],
           child: ChatPage(
             errorNotificationService: _FakeErrorNotificationService(),
-            pendingSyncRepository: _FakePendingSyncRepository(),
           ),
         ),
       ),
@@ -221,29 +260,10 @@ void main() {
     final _PendingStateChatCubit cubit = _PendingStateChatCubit();
     addTearDown(cubit.close);
 
-    final _MockPendingSyncRepository pendingRepository =
-        _MockPendingSyncRepository();
-    int pendingCount = 0;
-    final SyncOperation pendingOperation = SyncOperation.create(
-      entityType: chatSyncEntityType,
-      payload: const <String, dynamic>{},
-      idempotencyKey: 'pending',
-    );
-
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer(
-      (_) async => pendingCount > 0
-          ? <SyncOperation>[pendingOperation]
-          : <SyncOperation>[],
-    );
-    when(() => pendingRepository.markCompleted(any())).thenAnswer((_) async {});
-
     final _TestNetworkStatusService networkService =
         _TestNetworkStatusService();
     final _ManualFlushCoordinator coordinator = _ManualFlushCoordinator(
       onFlush: () async {
-        pendingCount = 0;
         await cubit.markSynced();
       },
     );
@@ -255,16 +275,10 @@ void main() {
     networkService.emit(NetworkStatus.online);
 
     await tester.pumpWidget(
-      _wrapWithCubit(
-        cubit,
-        syncCubit,
-        _FakeErrorNotificationService(),
-        pendingRepository,
-      ),
+      _wrapWithCubit(cubit, syncCubit, _FakeErrorNotificationService()),
     );
     await tester.pump();
 
-    pendingCount = 1;
     await tester.enterText(find.byType(TextField), 'Offline pending message');
     await tester.tap(find.byIcon(Icons.send));
     await tester.pump();
@@ -334,10 +348,19 @@ Widget _wrapWithCubit(
   ChatCubit cubit, [
   SyncStatusCubit? syncCubit,
   ErrorNotificationService? errorNotificationService,
-  PendingSyncRepository? pendingSyncRepository,
+  ChatSyncStatusCubit? chatSyncCubit,
 ]) {
   final SyncStatusCubit sync = syncCubit ?? _buildSyncStatusCubit();
   addTearDown(sync.close);
+  final List<BlocProvider<dynamic>> providers = <BlocProvider<dynamic>>[
+    BlocProvider<ChatCubit>.value(value: cubit),
+    BlocProvider<SyncStatusCubit>.value(value: sync),
+  ];
+  if (chatSyncCubit != null) {
+    providers.add(
+      BlocProvider<ChatSyncStatusCubit>.value(value: chatSyncCubit),
+    );
+  }
   return MaterialApp(
     locale: const Locale('en'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -345,15 +368,10 @@ Widget _wrapWithCubit(
     builder: (final BuildContext context, final Widget? child) =>
         buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
     home: MultiBlocProvider(
-      providers: <BlocProvider<dynamic>>[
-        BlocProvider<ChatCubit>.value(value: cubit),
-        BlocProvider<SyncStatusCubit>.value(value: sync),
-      ],
+      providers: providers,
       child: ChatPage(
         errorNotificationService:
             errorNotificationService ?? _FakeErrorNotificationService(),
-        pendingSyncRepository:
-            pendingSyncRepository ?? _FakePendingSyncRepository(),
       ),
     ),
   );
@@ -432,57 +450,6 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
     String title,
     String message,
   ) async {}
-}
-
-class _FakePendingSyncRepository implements PendingSyncRepository {
-  @override
-  HiveBoxSchema? get schema => null;
-
-  @override
-  String get boxName => 'fake-pending-sync';
-
-  @override
-  Stream<void> get onOperationEnqueued => Stream<void>.empty();
-
-  @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async =>
-      operation;
-
-  @override
-  Future<int> prune({
-    int maxRetryCount = 10,
-    Duration maxAge = const Duration(days: 30),
-  }) async => 0;
-
-  @override
-  Future<List<SyncOperation>> getPendingOperations({
-    DateTime? now,
-    int? limit,
-    String? supabaseUserIdFilter,
-  }) async => const <SyncOperation>[];
-
-  @override
-  Future<void> markCompleted(final String operationId) async {}
-
-  @override
-  Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
-  }) async {}
-
-  @override
-  Future<void> clear() async {}
-
-  @override
-  Future<void> dispose() async {}
-
-  @override
-  Future<Box<dynamic>> getBox() =>
-      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
-
-  @override
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }
 
 class _PendingStateChatCubit extends ChatCubit {
@@ -640,6 +607,3 @@ class _ManualFlushCoordinator implements BackgroundSyncCoordinator {
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}
 }
-
-class _MockPendingSyncRepository extends Mock
-    implements PendingSyncRepository {}

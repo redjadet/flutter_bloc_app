@@ -1,6 +1,6 @@
 part of 'online_therapy_fake_api.dart';
 
-class OnlineTherapyFakeApi {
+class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   OnlineTherapyFakeApi({
     OnlineTherapyNetworkMode initialMode = OnlineTherapyNetworkMode.normal,
     TimerService? timerService,
@@ -11,6 +11,7 @@ class OnlineTherapyFakeApi {
     _seed();
   }
 
+  @override
   OnlineTherapyNetworkMode mode;
   final TimerService _timerService;
   final DateTime Function() _nowFn;

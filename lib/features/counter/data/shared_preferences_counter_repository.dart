@@ -7,7 +7,9 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// SharedPreferences-backed implementation of [CounterRepository].
-class SharedPreferencesCounterRepository implements CounterRepository {
+class SharedPreferencesCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   SharedPreferencesCounterRepository([final SharedPreferences? instance])
     : _preferencesInstance = instance;
 

@@ -3,13 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/features/chat/chat.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -19,10 +18,9 @@ class ChatListPage extends StatefulWidget {
     required this.chatRepository,
     required this.historyRepository,
     required this.errorNotificationService,
-    required this.pendingSyncRepository,
     this.renderOrchestrationHfTokenProvider,
-    this.firebaseAuthRepository,
-    this.supabaseAuthRepository,
+    this.authSessionPort,
+    this.renderOrchestrationDiagnostics,
     super.key,
   });
 
@@ -30,10 +28,9 @@ class ChatListPage extends StatefulWidget {
   final ChatRepository chatRepository;
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
-  final PendingSyncRepository pendingSyncRepository;
   final RenderOrchestrationHfTokenProvider? renderOrchestrationHfTokenProvider;
-  final core_auth.AuthRepository? firebaseAuthRepository;
-  final SupabaseAuthRepository? supabaseAuthRepository;
+  final ChatAuthSessionPort? authSessionPort;
+  final ChatRenderOrchestrationDiagnosticsPort? renderOrchestrationDiagnostics;
 
   @override
   State<ChatListPage> createState() => _ChatListPageState();
@@ -88,10 +85,10 @@ class _ChatListPageState extends State<ChatListPage> {
               historyRepository: widget.historyRepository,
               renderOrchestrationHfTokenProvider:
                   widget.renderOrchestrationHfTokenProvider,
-              firebaseAuthRepository: widget.firebaseAuthRepository,
-              supabaseAuthRepository: widget.supabaseAuthRepository,
+              authSessionPort: widget.authSessionPort,
+              renderOrchestrationDiagnostics:
+                  widget.renderOrchestrationDiagnostics,
               errorNotificationService: widget.errorNotificationService,
-              pendingSyncRepository: widget.pendingSyncRepository,
             ),
           ),
         ),

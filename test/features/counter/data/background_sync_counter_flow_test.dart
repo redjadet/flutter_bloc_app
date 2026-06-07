@@ -19,7 +19,9 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
-class _FakeRemoteCounterRepository implements CounterRepository {
+class _FakeRemoteCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   CounterSnapshot _snapshot = const CounterSnapshot(count: 0);
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
@@ -26,7 +25,10 @@ class _StaffDemoShiftComposeResult {
 }
 
 /// Manager/accountant shift assignment compose flow (Firestore-backed demo).
-Future<void> showStaffDemoShiftComposeDialog(final BuildContext context) async {
+Future<void> showStaffDemoShiftComposeDialog(
+  final BuildContext context, {
+  required final StaffDemoProfileRepository profileRepository,
+}) async {
   final l10n = context.l10n;
   final DateTime defaultStartUtc = DateTime.now().toUtc().add(
     const Duration(minutes: 30),
@@ -35,8 +37,6 @@ Future<void> showStaffDemoShiftComposeDialog(final BuildContext context) async {
     const Duration(hours: 4),
   );
 
-  final StaffDemoProfileRepository profileRepository =
-      getIt<StaffDemoProfileRepository>();
   final Future<List<StaffDemoProfile>> staffFuture = profileRepository
       .listAssignableStaff();
 

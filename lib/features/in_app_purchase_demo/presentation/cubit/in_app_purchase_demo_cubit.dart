@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/fake_in_app_purchase_repository.dart';
-import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/flutter_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls_port.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
@@ -15,6 +14,8 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
   InAppPurchaseDemoCubit({
     required this._fakeRepository,
     required this._realRepository,
+    this._fakeOutcomeControls,
+    this._realDemoControls,
   }) : super(const InAppPurchaseDemoState()) {
     _sub = registerSubscription(
       _activeRepository.watchPurchaseResults().listen(
@@ -26,6 +27,8 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
 
   final InAppPurchaseRepository _fakeRepository;
   final InAppPurchaseRepository _realRepository;
+  final IapFakeOutcomePort? _fakeOutcomeControls;
+  final IapDemoControlsPort? _realDemoControls;
 
   // ignore: cancel_subscriptions - Lifecycle is centralized via CubitSubscriptionMixin.
   StreamSubscription<IapPurchaseResult>? _sub;
@@ -33,9 +36,6 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
 
   InAppPurchaseRepository get _activeRepository =>
       state.useFakeRepository ? _fakeRepository : _realRepository;
-
-  FakeInAppPurchaseRepository? get _fakeRepoOrNull =>
-      _fakeRepository is FakeInAppPurchaseRepository ? _fakeRepository : null;
 
   Future<void> initialize() async {
     _resetActiveDemoState();
@@ -65,15 +65,11 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
   }
 
   void _resetActiveDemoState() {
-    final active = _activeRepository;
-    if (active is FakeInAppPurchaseRepository) {
-      active.resetDemoState();
+    if (state.useFakeRepository) {
+      _fakeOutcomeControls?.resetDemoState();
       return;
     }
-    if (active is FlutterInAppPurchaseRepository) {
-      active.resetDemoState();
-      return;
-    }
+    _realDemoControls?.resetDemoState();
   }
 
   Future<void> toggleRepository({required final bool useFake}) async {
@@ -102,9 +98,9 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
   }
 
   void setForcedOutcome(final IapDemoForcedOutcome outcome) {
-    final fake = _fakeRepoOrNull;
-    if (fake == null) return;
-    fake.forcedOutcome = outcome;
+    final fakeControls = _fakeOutcomeControls;
+    if (fakeControls == null) return;
+    fakeControls.forcedOutcome = outcome;
     if (isClosed) return;
     emit(state.copyWith(forcedOutcome: outcome));
   }

@@ -23,6 +23,10 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   final DateTime Function() _now;
   final Duration _initialLoadDelay;
 
+  TimerDisposable? _initialLoadHandle;
+  int _initialLoadRequestId = 0;
+  int _localMutationRevision = 0;
+
   TimerDisposable? _countdownTicker;
   // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin
   StreamSubscription<CounterSnapshot>? _repositorySubscription;
@@ -172,36 +176,5 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
         : errorFactory(originalError: error);
     emit(state.copyWith(error: counterError, status: ViewStatus.error));
     _stopCountdownTicker();
-  }
-
-  void _subscribeToRepository() {
-    final StreamSubscription<CounterSnapshot>? oldSubscription =
-        _repositorySubscription;
-    _repositorySubscription = null;
-    unawaited(cancelRegisteredSubscription(oldSubscription));
-    _repositorySubscription = registerSubscription(
-      _repository.watch().listen(
-        (final snapshot) {
-          if (isClosed) return;
-          if (shouldIgnoreRemoteSnapshot(state, snapshot)) return;
-
-          final RestorationResult restoration = restoreStateFromSnapshot(
-            snapshot,
-          );
-          unawaited(
-            applyRestorationOutcome(
-              restoration,
-              onHoldChanged: ({required final holdSideEffects}) =>
-                  _pauseCountdownForOneTick = holdSideEffects,
-              onAfterEmit: _syncTickerForState,
-              logContext: 'CounterCubit._subscribeToRepository',
-            ),
-          );
-        },
-        onError: (final Object error, final StackTrace stackTrace) {
-          AppLogger.error('CounterCubit.watch failed', error, stackTrace);
-        },
-      ),
-    );
   }
 }

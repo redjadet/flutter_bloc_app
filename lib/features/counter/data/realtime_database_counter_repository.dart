@@ -13,7 +13,9 @@ import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
-class RealtimeDatabaseCounterRepository implements CounterRepository {
+class RealtimeDatabaseCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   RealtimeDatabaseCounterRepository({
     final FirebaseDatabase? database,
     final DatabaseReference? counterRef,

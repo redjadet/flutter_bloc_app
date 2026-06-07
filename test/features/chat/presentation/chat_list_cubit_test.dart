@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

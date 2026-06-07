@@ -74,7 +74,10 @@ extension _IotDemoCubitDevices on IotDemoCubit {
           );
           if (isClosed || requestId != _devicesWatchRequestId) return;
           emitIotState(
-            IotDemoState.error(_l10n?.iotDemoErrorLoad ?? error.toString()),
+            IotDemoState.error(
+              code: IotDemoErrorCode.load,
+              detail: error.toString(),
+            ),
           );
         },
         cancelOnError: true,

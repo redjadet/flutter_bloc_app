@@ -2,19 +2,44 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sync_banner.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 
-class _MockPendingSyncRepository extends Mock
-    implements PendingSyncRepository {}
+import '../../../../test_helpers.dart';
+
+class _FakeTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
+  _FakeTodoRepository();
+
+  int pendingCount = 0;
+
+  @override
+  Future<void> clearCompleted() async {}
+
+  @override
+  Future<void> delete(final String id) async {}
+
+  @override
+  Future<List<TodoItem>> fetchAll() async => const <TodoItem>[];
+
+  @override
+  Future<void> save(final TodoItem item) async {}
+
+  @override
+  Stream<List<TodoItem>> watchAll() => const Stream<List<TodoItem>>.empty();
+
+  @override
+  Future<int> pendingSyncOperationCount({DateTime? now}) async => pendingCount;
+}
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   @override
@@ -77,31 +102,29 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('TodoSyncBanner', () {
-    late _MockPendingSyncRepository pendingRepository;
-    var getPendingOperationsCalls = 0;
+    Widget buildWidget({
+      final SyncStatusCubit? syncCubit,
+      final TodoListCubit? todoCubit,
+    }) {
+      final Widget banner = const TodoSyncBanner();
+      final Widget body = syncCubit == null && todoCubit == null
+          ? banner
+          : MultiBlocProvider(
+              providers: <BlocProvider<dynamic>>[
+                if (syncCubit != null)
+                  BlocProvider<SyncStatusCubit>.value(value: syncCubit),
+                if (todoCubit != null)
+                  BlocProvider<TodoListCubit>.value(value: todoCubit),
+              ],
+              child: banner,
+            );
 
-    setUp(() {
-      pendingRepository = _MockPendingSyncRepository();
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async {
-        getPendingOperationsCalls += 1;
-        return const <SyncOperation>[];
-      });
-    });
-
-    Widget buildWidget({final SyncStatusCubit? cubit}) => MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Scaffold(
-        body: cubit == null
-            ? TodoSyncBanner(pendingRepository: pendingRepository)
-            : BlocProvider<SyncStatusCubit>.value(
-                value: cubit,
-                child: TodoSyncBanner(pendingRepository: pendingRepository),
-              ),
-      ),
-    );
+      return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(body: body),
+      );
+    }
 
     testWidgets('renders safely without SyncStatusCubit', (tester) async {
       await tester.pumpWidget(buildWidget());
@@ -115,23 +138,31 @@ void main() {
     testWidgets('starts sync once from didChangeDependencies', (tester) async {
       final _FakeBackgroundSyncCoordinator coordinator =
           _FakeBackgroundSyncCoordinator();
-      final SyncStatusCubit cubit = SyncStatusCubit(
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
         networkStatusService: _FakeNetworkStatusService(),
         coordinator: coordinator,
       );
+      final TodoListCubit todoCubit = TodoListCubit(
+        repository: _FakeTodoRepository(),
+        timerService: FakeTimerService(),
+      );
 
       addTearDown(() async {
-        await cubit.close();
+        await syncCubit.close();
+        await todoCubit.close();
         await coordinator.dispose();
       });
 
-      await tester.pumpWidget(buildWidget(cubit: cubit));
+      await tester.pumpWidget(
+        buildWidget(syncCubit: syncCubit, todoCubit: todoCubit),
+      );
       await tester.pump();
-      await tester.pumpWidget(buildWidget(cubit: cubit));
+      await tester.pumpWidget(
+        buildWidget(syncCubit: syncCubit, todoCubit: todoCubit),
+      );
       await tester.pump();
 
       expect(coordinator.ensureStartedCalls, 1);
-      expect(getPendingOperationsCalls, greaterThanOrEqualTo(1));
     });
   });
 }

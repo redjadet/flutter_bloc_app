@@ -15,7 +15,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_helpers.dart' show FakeTimerService;
 
-class _DelayedCounterRepository implements CounterRepository {
+class _DelayedCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   _DelayedCounterRepository({required this.completer, required this.snapshot});
 
   final Completer<CounterSnapshot> completer;

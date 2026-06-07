@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -13,7 +12,6 @@ part 'chat_page_actions.part.dart';
 class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
-    required this.pendingSyncRepository,
 
     /// When non-null, overrides [SecretConfig.chatRenderDemoStrict] for the transport chip strict line (widget tests).
     this.renderTransportDemoStrictOverride,
@@ -21,7 +19,6 @@ class ChatPage extends StatefulWidget {
   });
 
   final ErrorNotificationService errorNotificationService;
-  final PendingSyncRepository pendingSyncRepository;
 
   final bool? renderTransportDemoStrictOverride;
 
@@ -125,6 +122,7 @@ class _ChatPageState extends State<ChatPage> {
               ],
             ),
           ),
+          const ChatSyncBanner(),
           Expanded(
             child: ChatMessageList(
               controller: _scrollController,

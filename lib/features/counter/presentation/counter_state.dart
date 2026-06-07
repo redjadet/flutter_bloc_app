@@ -14,6 +14,7 @@ abstract class CounterState with _$CounterState {
     @Default(CounterState.defaultCountdownSeconds) final int countdownSeconds,
     final CounterError? error,
     @Default(ViewStatus.initial) final ViewStatus status,
+    @Default(0) final int pendingSyncCount,
   }) = _CounterState;
   const CounterState._();
 
@@ -23,6 +24,7 @@ abstract class CounterState with _$CounterState {
     final DateTime? lastSyncedAt,
     final String? changeId,
     final int countdownSeconds = CounterState.defaultCountdownSeconds,
+    final int pendingSyncCount = 0,
   }) => CounterState(
     count: count,
     lastChanged: lastChanged,
@@ -30,6 +32,7 @@ abstract class CounterState with _$CounterState {
     changeId: changeId,
     countdownSeconds: countdownSeconds,
     status: ViewStatus.success,
+    pendingSyncCount: pendingSyncCount,
   );
 
   static const int defaultCountdownSeconds = 5;

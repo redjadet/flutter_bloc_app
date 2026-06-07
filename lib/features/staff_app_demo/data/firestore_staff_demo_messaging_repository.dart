@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
 
-class FirestoreStaffDemoMessagingRepository {
+class FirestoreStaffDemoMessagingRepository
+    implements StaffDemoMessagingRepository {
   FirestoreStaffDemoMessagingRepository({
     required this._firestore,
     required this._authRepository,
@@ -10,6 +12,7 @@ class FirestoreStaffDemoMessagingRepository {
   final FirebaseFirestore _firestore;
   final AuthRepository _authRepository;
 
+  @override
   Future<String> sendShiftAssignment({
     required final String toUserId,
     required final String body,
@@ -57,6 +60,7 @@ class FirestoreStaffDemoMessagingRepository {
     return msgRef.id;
   }
 
+  @override
   Future<void> confirmShiftAssignment({
     required final String messageId,
     required final String shiftId,

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_models.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 
 typedef _JsonMap = Map<String, dynamic>;

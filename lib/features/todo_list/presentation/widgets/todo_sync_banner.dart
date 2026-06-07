@@ -1,103 +1,77 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 
 /// Sync status banner for the todo list feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
-class TodoSyncBanner extends StatefulWidget {
-  const TodoSyncBanner({
-    required this.pendingRepository,
-    super.key,
-  });
-
-  final PendingSyncRepository pendingRepository;
-
-  @override
-  State<TodoSyncBanner> createState() => _TodoSyncBannerState();
-}
-
-class _TodoSyncBannerState extends State<TodoSyncBanner> {
-  int _pendingCount = 0;
-  static const String _todoEntityType = 'todo';
-  bool _didEnsureSyncStarted = false;
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_refreshPendingCount());
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didEnsureSyncStarted) {
-      return;
-    }
-    _didEnsureSyncStarted = true;
-    context.ensureSyncStartedIfAvailable();
-  }
-
-  Future<void> _refreshPendingCount() async {
-    final List<SyncOperation> pending = await widget.pendingRepository
-        .getPendingOperations(now: DateTime.now().toUtc());
-    final int count = pending
-        .where((final op) => op.entityType == _todoEntityType)
-        .length;
-    if (!mounted) return;
-    setState(() => _pendingCount = count);
-  }
+class TodoSyncBanner extends StatelessWidget {
+  const TodoSyncBanner({super.key});
 
   @override
   Widget build(final BuildContext context) {
+    context.ensureSyncStartedIfAvailable();
+
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {
       return const SizedBox.shrink();
     }
-    final AppLocalizations l10n = context.l10n;
-    final Widget
-    banner = TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
+
+    return TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
-        // Refresh pending count when sync status changes (operations may have been processed)
+        if (!CubitHelpers.isCubitAvailable<TodoListCubit, TodoListState>(
+          context,
+        )) {
+          return;
+        }
         // check-ignore: listener callback is event-driven, not a build side effect
-        unawaited(_refreshPendingCount());
+        unawaited(context.cubit<TodoListCubit>().refreshPendingSyncCount());
       },
-      builder: (final context, final state) {
-        final bool isOffline = state.networkStatus == NetworkStatus.offline;
-        final bool isSyncing = state.syncStatus == SyncStatus.syncing;
-        if (!shouldShowSyncBanner(
-          isOffline: isOffline,
-          isSyncing: isSyncing,
-          pendingCount: _pendingCount,
+      builder: (final context, final syncState) {
+        if (!CubitHelpers.isCubitAvailable<TodoListCubit, TodoListState>(
+          context,
         )) {
           return const SizedBox.shrink();
         }
-        final (String title, String message) = syncBannerTitleAndMessage(
-          l10n,
-          isOffline: isOffline,
-          isSyncing: isSyncing,
-          pendingCount: _pendingCount,
-        );
-        return Padding(
-          padding: EdgeInsets.only(bottom: context.responsiveGapS),
-          child: SyncBannerContent(
-            title: title,
-            message: message,
-            isError: isOffline,
-          ),
+
+        return TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
+          builder: (final context, final todoState) {
+            final bool isOffline =
+                syncState.networkStatus == NetworkStatus.offline;
+            final bool isSyncing = syncState.syncStatus == SyncStatus.syncing;
+            final int pendingCount = todoState.pendingSyncCount;
+            if (!shouldShowSyncBanner(
+              isOffline: isOffline,
+              isSyncing: isSyncing,
+              pendingCount: pendingCount,
+            )) {
+              return const SizedBox.shrink();
+            }
+            final (String title, String message) = syncBannerTitleAndMessage(
+              context.l10n,
+              isOffline: isOffline,
+              isSyncing: isSyncing,
+              pendingCount: pendingCount,
+            );
+            return Padding(
+              padding: EdgeInsets.only(bottom: context.responsiveGapS),
+              child: SyncBannerContent(
+                title: title,
+                message: message,
+                isError: isOffline,
+              ),
+            );
+          },
         );
       },
     );
-
-    return banner;
   }
 }

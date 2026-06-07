@@ -23,7 +23,9 @@ import 'test_helpers.dart' as test_helpers;
 // Import test helpers directly for convenience
 import 'test_helpers.dart' show FakeTimerService;
 
-class _FakeCounterRepository implements CounterRepository {
+class _FakeCounterRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async =>
       const CounterSnapshot(userId: 'test', count: 0);

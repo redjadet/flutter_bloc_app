@@ -92,7 +92,7 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
 - **App shell** – `lib/main_bootstrap.dart`, `lib/core/bootstrap/`, `lib/app.dart`,
   and `lib/app/app_scope.dart` own startup, DI bootstrapping, router creation,
   and app-scope providers/listeners.
-- **Counter + Remote Config** – The counter feature does not import remote_config. The counter page exposes an optional **banner slot** (`Widget? optionalBanner`). The **router** (`lib/app/router/routes_core.dart`) builds `CounterPage` and passes `AwesomeFeatureWidget()` as the banner. Counter stays agnostic; composition is in the app.
+- **Counter + Remote Config** – The counter feature does not import remote_config. `CounterPageBody` always composes `CounterSyncBanner` for offline-first UX. The page also exposes an optional **banner slot** (`Widget? optionalBanner`) for app-level widgets; the **router** (`lib/app/router/routes_core.dart`) passes `AwesomeFeatureWidget()` there. Counter stays agnostic; remote-config composition stays in the app.
 - **Auth gates** – `AppRouteAuthGate` and feature-level gates (e.g. `IotDemoAuthGate`) take `getCurrentUser` and `authStateChanges` (or an auth repository) as parameters. The router supplies these from DI. Gates depend on the core `AuthUser` type only.
 
 ## Feature barrel (`lib/features/features.dart`)

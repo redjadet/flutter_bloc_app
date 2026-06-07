@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
+import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
@@ -271,7 +272,10 @@ void main() {
       expect: () => <IotDemoState>[
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
-        IotDemoState.error('Exception: connect failed'),
+        IotDemoState.error(
+          code: IotDemoErrorCode.connect,
+          detail: 'Exception: connect failed',
+        ),
       ],
     );
 
@@ -287,7 +291,10 @@ void main() {
       expect: () => <IotDemoState>[
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
-        IotDemoState.error('Exception: command failed'),
+        IotDemoState.error(
+          code: IotDemoErrorCode.command,
+          detail: 'Exception: command failed',
+        ),
       ],
     );
 
@@ -303,7 +310,10 @@ void main() {
       expect: () => <IotDemoState>[
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
-        IotDemoState.error('Exception: disconnect failed'),
+        IotDemoState.error(
+          code: IotDemoErrorCode.disconnect,
+          detail: 'Exception: disconnect failed',
+        ),
       ],
     );
 
@@ -321,7 +331,10 @@ void main() {
       expect: () => <IotDemoState>[
         const IotDemoState.loading(),
         IotDemoState.loaded(_fakeDevices, selectedDeviceId: null),
-        IotDemoState.error('device name must not exceed 255 characters'),
+        IotDemoState.error(
+          code: IotDemoErrorCode.add,
+          detail: 'device name must not exceed 255 characters',
+        ),
       ],
     );
 

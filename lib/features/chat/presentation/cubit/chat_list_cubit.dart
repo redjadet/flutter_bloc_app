@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_list_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 export 'chat_list_state.dart';

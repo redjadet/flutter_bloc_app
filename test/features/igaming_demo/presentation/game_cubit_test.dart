@@ -4,8 +4,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_cubit.dart';
-import 'package:flutter_bloc_app/features/igaming_demo/presentation/game_state.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_cubit.dart';
+import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_helpers.dart' show FakeTimerService;

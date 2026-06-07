@@ -39,6 +39,15 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   String get entityType => todoEntity;
 
   @override
+  Future<int> pendingSyncOperationCount({DateTime? now}) async {
+    final List<SyncOperation> pending = await _pendingSyncRepository
+        .getPendingOperations(
+          now: now ?? DateTime.now().toUtc(),
+        );
+    return pending.where((final op) => op.entityType == todoEntity).length;
+  }
+
+  @override
   Future<List<TodoItem>> fetchAll() => _localRepository.fetchAll();
 
   // ignore: cancel_subscriptions - Subscription is managed per watchAll() call lifecycle

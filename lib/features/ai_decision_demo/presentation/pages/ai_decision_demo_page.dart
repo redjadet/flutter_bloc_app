@@ -3,14 +3,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
-import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/pages/ai_decision_demo_proof_widgets.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -66,24 +63,20 @@ class _AiDecisionDemoPageState extends State<AiDecisionDemoPage> {
   @override
   Widget build(final BuildContext context) {
     const title = 'AI Decision Workbench';
-    return BlocProviderHelpers.withAsyncInit<AiDecisionCubit>(
-      create: () => AiDecisionCubit(repository: getIt<AiDecisionRepository>()),
-      init: (final cubit) => cubit.loadQueue(),
-      child: CommonPageLayout(
-        title: title,
-        body: Builder(
-          builder: (final context) {
-            return _buildBody(
-              context: context,
-              operatorNote: _operatorNote,
-              actionNote: _actionNote,
-              onCaseChanged: _onCaseChanged,
-              onRunDecisionSupport: _onRunDecisionSupport,
-              bandColor: _bandColor,
-              pillBuilder: _pill,
-            );
-          },
-        ),
+    return CommonPageLayout(
+      title: title,
+      body: Builder(
+        builder: (final context) {
+          return _buildBody(
+            context: context,
+            operatorNote: _operatorNote,
+            actionNote: _actionNote,
+            onCaseChanged: _onCaseChanged,
+            onRunDecisionSupport: _onRunDecisionSupport,
+            bandColor: _bandColor,
+            pillBuilder: _pill,
+          );
+        },
       ),
     );
   }

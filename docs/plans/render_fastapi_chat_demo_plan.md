@@ -395,7 +395,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 - **`ChatResult.transportUsed`:** Single source of truth for **which backend produced the assistant text** for this completion. After successful fallthrough, value is **`supabase` or `direct`**, not the Render orchestration enum.
 - **`chatRemoteTransportHint`:** May still reflect **“orchestration path configured and tried first”** (e.g. `renderOrchestration`) when demo URL is enabled—used for badge **pre-send** “likely path” only if product chooses that UX; document in ARB/tooltip.
-- **`ChatState.lastCompletionTransport`:** Set from `result.transportUsed` on success ([`chat_cubit_message_actions`](../../lib/features/chat/presentation/chat_cubit_message_actions.dart)); drives **post-send** chip for “what actually answered.”
+- **`ChatState.lastCompletionTransport`:** Set from `result.transportUsed` on success ([`chat_cubit_message_actions`](../../lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart)); drives **post-send** chip for “what actually answered.”
 - **Tests:** Assert badge/state after (a) orchestration success, (b) retryable orchestration failure + composite success, (c) non-retryable orchestration failure (no fallback).
 
 ## Security and auth contract
@@ -516,7 +516,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 ### Model `Auto` in the AI Chat UI
 
-- **Shipped:** **`Auto`** in the chat model list ([`ChatCubit`](../../lib/features/chat/presentation/chat_cubit.dart) `models` + [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) label via ARB `chatModelAuto`).
+- **Shipped:** **`Auto`** in the chat model list ([`ChatCubit`](../../lib/features/chat/presentation/cubit/chat_cubit.dart) `models` + [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) label via ARB `chatModelAuto`).
 - **Shipped:** When **Auto** is selected, [`HuggingFacePayloadBuilder`](../../lib/features/chat/data/huggingface_payload_builder.dart) sends `model: "auto"` on the **Render** path so FastAPI runs **AI orchestration** (complexity → 20B vs 120B). Fixed Hub selections keep sending their explicit ids.
 
 ### Repositories

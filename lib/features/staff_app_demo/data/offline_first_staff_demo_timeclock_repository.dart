@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_punch_evaluator.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
@@ -43,7 +44,7 @@ class OfflineFirstStaffDemoTimeclockRepository
   final StaffDemoShiftRepository _shiftRepository;
   final StaffDemoSiteRepository _siteRepository;
   final StaffDemoLocationService _locationService;
-  final StaffDemoTimeclockLocalRepository _localRepository;
+  final StaffDemoTimeclockLocalStore _localRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
 

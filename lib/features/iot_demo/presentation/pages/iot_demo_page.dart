@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
+import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_error_messages.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_body.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -145,11 +146,15 @@ class _IotDemoBodySection extends StatelessWidget {
                   selectedDeviceId: selectedDeviceId,
                   errorMessage: null,
                 ),
-            error: (final message) => (
+            error: (final code, final detail) => (
               isLoading: false,
               devices: null,
               selectedDeviceId: null,
-              errorMessage: message,
+              errorMessage: resolveIotDemoErrorMessage(
+                context.l10n,
+                code,
+                detail,
+              ),
             ),
           ),
         );

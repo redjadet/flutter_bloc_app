@@ -15,7 +15,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../test_helpers.dart';
 
-class _FakeTodoRepository implements TodoRepository {
+class _FakeTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
   _FakeTodoRepository({final List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(

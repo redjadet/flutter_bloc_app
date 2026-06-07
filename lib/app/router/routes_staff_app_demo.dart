@@ -2,11 +2,12 @@ import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_inbox_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_messaging_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/firestore_staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/content/staff_demo_content_cubit.dart';
@@ -71,7 +72,7 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
             create: () => StaffDemoTimeclockCubit(
               authRepository: getIt<AuthRepository>(),
               repository: getIt<StaffDemoTimeclockRepository>(),
-              localRepository: getIt<StaffDemoTimeclockLocalRepository>(),
+              localRepository: getIt<StaffDemoTimeclockLocalStore>(),
             ),
             init: (cubit) => cubit.load(),
             child: const StaffAppDemoTimeclockPage(),
@@ -84,12 +85,13 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
           BlocProviderHelpers.withAsyncInit<StaffDemoMessagesCubit>(
             create: () => StaffDemoMessagesCubit(
               authRepository: getIt<AuthRepository>(),
-              inboxRepository: getIt<FirestoreStaffDemoInboxRepository>(),
-              messagingRepository:
-                  getIt<FirestoreStaffDemoMessagingRepository>(),
+              inboxRepository: getIt<StaffDemoInboxRepository>(),
+              messagingRepository: getIt<StaffDemoMessagingRepository>(),
             ),
             init: (cubit) => cubit.initialize(),
-            child: const StaffAppDemoMessagesPage(),
+            child: StaffAppDemoMessagesPage(
+              profileRepository: getIt<StaffDemoProfileRepository>(),
+            ),
           ),
     ),
     GoRoute(
@@ -135,8 +137,7 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
       builder: (context, state) =>
           BlocProviderHelpers.withAsyncInit<StaffDemoAdminCubit>(
             create: () => StaffDemoAdminCubit(
-              timeEntriesRepository:
-                  getIt<FirestoreStaffDemoTimeEntriesRepository>(),
+              timeEntriesRepository: getIt<StaffDemoTimeEntriesRepository>(),
             ),
             init: (cubit) => cubit.load(),
             child: const StaffAppDemoAdminPage(),

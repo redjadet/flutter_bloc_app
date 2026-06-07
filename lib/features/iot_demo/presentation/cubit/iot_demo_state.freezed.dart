@@ -128,13 +128,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult Function( IotDemoErrorCode code,  String? detail)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial();case _IotDemoLoading() when loading != null:
 return loading();case _IotDemoLoaded() when loaded != null:
 return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError() when error != null:
-return error(_that.message);case _:
+return error(_that.code,_that.detail);case _:
   return orElse();
 
 }
@@ -152,13 +152,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)  loaded,required TResult Function( IotDemoErrorCode code,  String? detail)  error,}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial():
 return initial();case _IotDemoLoading():
 return loading();case _IotDemoLoaded():
 return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError():
-return error(_that.message);case _:
+return error(_that.code,_that.detail);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -175,13 +175,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<IotDevice> devices,  String? selectedDeviceId,  IotDemoDeviceFilter filter)?  loaded,TResult? Function( IotDemoErrorCode code,  String? detail)?  error,}) {final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial();case _IotDemoLoading() when loading != null:
 return loading();case _IotDemoLoaded() when loaded != null:
 return loaded(_that.devices,_that.selectedDeviceId,_that.filter);case _IotDemoError() when error != null:
-return error(_that.message);case _:
+return error(_that.code,_that.detail);case _:
   return null;
 
 }
@@ -333,10 +333,11 @@ as IotDemoDeviceFilter,
 
 
 class _IotDemoError implements IotDemoState {
-  const _IotDemoError(this.message);
+  const _IotDemoError({required this.code, this.detail});
   
 
- final  String message;
+ final  IotDemoErrorCode code;
+ final  String? detail;
 
 /// Create a copy of IotDemoState
 /// with the given fields replaced by the non-null parameter values.
@@ -348,16 +349,16 @@ _$IotDemoErrorCopyWith<_IotDemoError> get copyWith => __$IotDemoErrorCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IotDemoError&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IotDemoError&&(identical(other.code, code) || other.code == code)&&(identical(other.detail, detail) || other.detail == detail));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,code,detail);
 
 @override
 String toString() {
-  return 'IotDemoState.error(message: $message)';
+  return 'IotDemoState.error(code: $code, detail: $detail)';
 }
 
 
@@ -368,7 +369,7 @@ abstract mixin class _$IotDemoErrorCopyWith<$Res> implements $IotDemoStateCopyWi
   factory _$IotDemoErrorCopyWith(_IotDemoError value, $Res Function(_IotDemoError) _then) = __$IotDemoErrorCopyWithImpl;
 @useResult
 $Res call({
- String message
+ IotDemoErrorCode code, String? detail
 });
 
 
@@ -385,10 +386,11 @@ class __$IotDemoErrorCopyWithImpl<$Res>
 
 /// Create a copy of IotDemoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? code = null,Object? detail = freezed,}) {
   return _then(_IotDemoError(
-null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as IotDemoErrorCode,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

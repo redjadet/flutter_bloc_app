@@ -28,6 +28,7 @@ abstract class TodoListState with _$TodoListState {
     @Default(TodoSortOrder.dateDesc) final TodoSortOrder sortOrder,
     @Default(<String, int>{}) final Map<String, int> manualOrder,
     @Default(<String>{}) final Set<String> selectedItemIds,
+    @Default(0) final int pendingSyncCount,
     final String? errorMessage,
   }) = _TodoListState;
 

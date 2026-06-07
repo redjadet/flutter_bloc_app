@@ -4,16 +4,12 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/chat_list_cubit.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_list_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockChatListRepository extends Mock implements ChatListRepository {}
@@ -74,7 +70,6 @@ void main() {
               chatRepository: chatRepository,
               historyRepository: historyRepository,
               errorNotificationService: errorNotificationService,
-              pendingSyncRepository: _FakePendingSyncRepository(),
             ),
           ),
         ),
@@ -181,7 +176,6 @@ void main() {
                 chatRepository: chatRepository,
                 historyRepository: historyRepository,
                 errorNotificationService: errorNotificationService,
-                pendingSyncRepository: _FakePendingSyncRepository(),
               ),
             ),
           ),
@@ -353,50 +347,4 @@ void main() {
       expect(find.byType(ListView), findsOneWidget);
     });
   });
-}
-
-class _FakePendingSyncRepository implements PendingSyncRepository {
-  @override
-  HiveBoxSchema? get schema => null;
-
-  @override
-  String get boxName => 'fake-pending-sync';
-
-  @override
-  Stream<void> get onOperationEnqueued => Stream<void>.empty();
-
-  @override
-  Future<SyncOperation> enqueue(final SyncOperation operation) async =>
-      operation;
-  @override
-  Future<int> prune({
-    int maxRetryCount = 10,
-    Duration maxAge = const Duration(days: 30),
-  }) async => 0;
-
-  @override
-  Future<List<SyncOperation>> getPendingOperations({
-    final DateTime? now,
-    final int? limit,
-    final String? supabaseUserIdFilter,
-  }) async => const <SyncOperation>[];
-  @override
-  Future<void> markCompleted(final String operationId) async {}
-  @override
-  Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
-  }) async {}
-  @override
-  Future<void> clear() async {}
-  @override
-  Future<void> dispose() async {}
-
-  @override
-  Future<Box<dynamic>> getBox() =>
-      Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
-
-  @override
-  Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }
