@@ -194,34 +194,29 @@ class OfflineFirstCounterRepository
       DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
       Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
 
-  @override
-  Future<int> pendingSyncOperationCount({DateTime? now}) async {
+  Future<List<SyncOperation>> _counterPendingOperations({DateTime? now}) async {
     final List<SyncOperation> operations = await _pendingSyncRepository
-        .getPendingOperations(
-          now: now ?? DateTime.now().toUtc(),
-        );
+        .getPendingOperations(now: now ?? DateTime.now().toUtc());
     return operations
         .where((final op) => op.entityType == counterEntity)
-        .length;
+        .toList(growable: false);
   }
+
+  @override
+  Future<int> pendingSyncOperationCount({DateTime? now}) async =>
+      (await _counterPendingOperations(now: now)).length;
 
   @override
   Future<List<CounterSyncQueueEntry>> pendingSyncQueueEntries({
     DateTime? now,
-  }) async {
-    final List<SyncOperation> operations = await _pendingSyncRepository
-        .getPendingOperations(
-          now: now ?? DateTime.now().toUtc(),
-        );
-    return operations
-        .where((final op) => op.entityType == counterEntity)
-        .map(
-          (final operation) => CounterSyncQueueEntry(
-            id: operation.id,
-            entityType: operation.entityType,
-            retryCount: operation.retryCount,
-          ),
-        )
-        .toList(growable: false);
-  }
+  }) async =>
+      (await _counterPendingOperations(now: now))
+          .map(
+            (final operation) => CounterSyncQueueEntry(
+              id: operation.id,
+              entityType: operation.entityType,
+              retryCount: operation.retryCount,
+            ),
+          )
+          .toList(growable: false);
 }
