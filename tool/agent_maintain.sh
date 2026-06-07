@@ -25,6 +25,7 @@ Commands (low-level):
                          --apply [--mode balanced|full|flutter-repo|...]
   drift                  Host-template drift check
   kb, knowledge          Agent map / KB invariants
+  harness|harness-maintain  Cursor/Codex harness scorecard + risk register gates
   memory                 agent_memory_auto_maintain.sh (--verify, --if-changed, ...)
   inventory              Regenerate skill inventory + budget report
                          --enforce to fail on budget breach
@@ -72,6 +73,7 @@ agent-maintain commands
   trim                  Dedupe global skills (--apply)
   drift                 Template drift check
   kb knowledge          KB / AGENTS invariants
+  harness harness-maintain  Harness scorecard + risk register gates
   memory                Memory auto-maintain lane
   inventory             Skill inventory + budgets
   trackers              Task tracker contract
@@ -165,6 +167,41 @@ scope_has_markdown_docs_edits() {
       DESIGN.md|\
       llms.txt|\
       docs/*)
+        return 0
+        ;;
+    esac
+  done < <(collect_changed_paths || true)
+  return 1
+}
+
+scope_has_harness_edits() {
+  local path
+  while IFS= read -r path; do
+    case "$path" in
+      AGENTS.md|\
+      .cursor/rules/*|\
+      tool/agent_host_templates/*|\
+      tool/agent_host_templates/*/*|\
+      tool/agent_host_templates/*/*/*|\
+      tool/agent_host_templates/*/*/*/*|\
+      docs/ai/*|\
+      docs/architecture/feature_structure_contract.md|\
+      docs/architecture/reference_features.md|\
+      docs/architecture/use_case_dto_policy.md|\
+      docs/bloc_standards.md|\
+      docs/bloc/*|\
+      docs/review/*|\
+      docs/feature_implementation_guide.md|\
+      docs/testing/matrix_required_by_change.md|\
+      tool/check_harness_scorecard_gate.sh|\
+      tool/update_harness_score_badge.sh|\
+      tool/check_ai_failure_risk_register.sh|\
+      tool/check_clean_architecture_imports.sh|\
+      tool/check_feature_folder_contract.sh|\
+      tool/scaffold_feature_contract.sh|\
+      tool/agent_maintain.sh|\
+      bin/agent-maintain|\
+      docs/agent_kb/host_maintenance_automation.md)
         return 0
         ;;
     esac
@@ -289,6 +326,22 @@ cmd_kb() {
   run_stage bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"
 }
 
+cmd_harness_maintain() {
+  log "workflow|harness-maintain"
+  if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
+    log "plan|harness-badge|bash tool/update_harness_score_badge.sh"
+    log "plan|harness-maintain|bash tool/check_harness_scorecard_gate.sh"
+    log "plan|harness-scorecard-gate|includes check_ai_failure_risk_register.sh"
+    return 0
+  fi
+  run_stage bash "$PROJECT_ROOT/tool/update_harness_score_badge.sh"
+  run_stage bash "$PROJECT_ROOT/tool/check_harness_scorecard_gate.sh"
+}
+
+cmd_harness() {
+  cmd_harness_maintain "$@"
+}
+
 cmd_memory() {
   run_stage bash "$PROJECT_ROOT/tool/agent_memory_auto_maintain.sh" "$@"
 }
@@ -366,6 +419,12 @@ cmd_preflight() {
   run_stage bash "$PROJECT_ROOT/tool/agent_session_bootstrap.sh" "$@"
   run_drift_check 0
   run_stage bash "$PROJECT_ROOT/tool/validate_task_trackers.sh"
+  if scope_has_harness_edits; then
+    log "scope|harness|yes"
+    log "hint|harness-maintain|./bin/agent-maintain harness-maintain before max-score claim; closeout runs when scoped"
+  else
+    log "scope|harness|no"
+  fi
 }
 
 cmd_host_full() {
@@ -416,7 +475,7 @@ cmd_docs_sync() {
   fi
 
   if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
-    log "plan|docs-sync|fix-validation-docs + fix-links + gardening verify"
+    log "plan|docs-sync|fix-validation-docs + fix-links + gardening + harness gate"
     return 0
   fi
 
@@ -445,6 +504,7 @@ cmd_docs_sync() {
     else
       run_stage bash "$PROJECT_ROOT/tool/check_docs_gardening.sh"
     fi
+    run_stage bash "$PROJECT_ROOT/tool/check_harness_scorecard_gate.sh"
   fi
 }
 
@@ -470,6 +530,12 @@ cmd_auto() {
   else
     log "scope|agent_kb|no"
   fi
+  if scope_has_harness_edits; then
+    log "scope|harness|yes"
+    log "auto_action|harness-maintain|./bin/agent-maintain harness-maintain"
+  else
+    log "scope|harness|no"
+  fi
   log "auto_action|preflight|./bin/agent-maintain preflight"
   log "auto_action|docs-sync|./bin/agent-maintain docs-sync"
 
@@ -480,6 +546,10 @@ cmd_auto() {
     cmd_after_host_edit
   elif (( agent_kb )); then
     cmd_kb
+  fi
+
+  if scope_has_harness_edits; then
+    cmd_harness_maintain
   fi
 }
 
@@ -543,6 +613,9 @@ case "$command" in
     ;;
   kb | knowledge)
     cmd_kb "$@"
+    ;;
+  harness | harness-maintain)
+    cmd_harness_maintain "$@"
     ;;
   memory)
     cmd_memory "$@"

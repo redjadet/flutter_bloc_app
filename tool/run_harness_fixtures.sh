@@ -49,6 +49,42 @@ bash tool/check_docs_gardening.sh --help >/dev/null
 echo "fixtures|check_agent_memory_compounding|help"
 bash tool/check_agent_memory_compounding.sh --help >/dev/null
 
+echo "fixtures|check_harness_scorecard_gate|help"
+bash tool/check_harness_scorecard_gate.sh --help >/dev/null
+
+echo "fixtures|update_harness_score_badge|help"
+bash tool/update_harness_score_badge.sh --help >/dev/null
+
+echo "fixtures|update_harness_score_badge|check"
+bash tool/update_harness_score_badge.sh --check >/dev/null
+
+echo "fixtures|check_harness_scorecard_gate|current"
+bash tool/check_harness_scorecard_gate.sh >/dev/null
+
+echo "fixtures|check_ai_failure_risk_register|help"
+bash tool/check_ai_failure_risk_register.sh --help >/dev/null
+
+echo "fixtures|check_ai_failure_risk_register|negative"
+tmp_risk_doc="$(mktemp)"
+printf '# Incomplete risk doc\n\nRISK-ARCH-LAYER\n' >"$tmp_risk_doc"
+set +e
+  risk_bad_output="$(bash tool/check_ai_failure_risk_register.sh --path "$tmp_risk_doc" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_risk_doc"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected AI failure risk register check to fail on incomplete doc" >&2
+  exit 1
+fi
+if ! grep -q -- "RISK-BLOC-DIVERGENCE" <<<"$risk_bad_output"; then
+  echo "❌ fixtures failed: AI failure risk register failure missing required token" >&2
+  echo "$risk_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_ai_failure_risk_register|current"
+bash tool/check_ai_failure_risk_register.sh >/dev/null
+
 echo "fixtures|agent_memory_auto_maintain|help"
 bash tool/agent_memory_auto_maintain.sh --help >/dev/null
 
@@ -72,6 +108,141 @@ trap - EXIT
 
 echo "fixtures|checklist_cli_contract"
 bash tool/check_checklist_cli_contract.sh >/dev/null
+
+echo "fixtures|check_clean_architecture_imports|help"
+bash tool/check_clean_architecture_imports.sh --help >/dev/null
+
+fixture_clean_arch="tool/fixtures/clean_architecture_imports"
+
+echo "fixtures|check_clean_architecture_imports|bad_package"
+set +e
+  clean_arch_bad_package="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/domain/bad_package.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on bad_package.dart" >&2
+  exit 1
+fi
+if ! grep -q -- "domain must not import Flutter" <<<"$clean_arch_bad_package"; then
+  echo "❌ fixtures failed: clean architecture package failure missing reason" >&2
+  echo "$clean_arch_bad_package" >&2
+  exit 1
+fi
+
+echo "fixtures|check_clean_architecture_imports|bad_relative"
+set +e
+  clean_arch_bad_relative="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/domain/bad_relative.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on bad_relative.dart" >&2
+  exit 1
+fi
+if ! grep -q -- "domain must not import relative data/presentation" <<<"$clean_arch_bad_relative"; then
+  echo "❌ fixtures failed: clean architecture relative failure missing reason" >&2
+  echo "$clean_arch_bad_relative" >&2
+  exit 1
+fi
+
+echo "fixtures|check_clean_architecture_imports|presentation_data"
+set +e
+  clean_arch_bad_presentation="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/presentation/bad_data_import.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on presentation data import" >&2
+  exit 1
+fi
+if ! grep -q -- "presentation must not import relative data layer" <<<"$clean_arch_bad_presentation"; then
+  echo "❌ fixtures failed: clean architecture presentation failure missing reason" >&2
+  echo "$clean_arch_bad_presentation" >&2
+  exit 1
+fi
+
+echo "fixtures|check_clean_architecture_imports|data_presentation"
+set +e
+  clean_arch_bad_data="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/data/bad_presentation_import.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected clean architecture check to fail on data presentation import" >&2
+  exit 1
+fi
+if ! grep -q -- "data must not import relative presentation layer" <<<"$clean_arch_bad_data"; then
+  echo "❌ fixtures failed: clean architecture data failure missing reason" >&2
+  echo "$clean_arch_bad_data" >&2
+  exit 1
+fi
+
+echo "fixtures|check_clean_architecture_imports|suppressed_good"
+bash tool/check_clean_architecture_imports.sh --paths \
+  "$fixture_clean_arch/lib/features/orders/domain/suppressed.dart" \
+  "$fixture_clean_arch/lib/features/orders/domain/good.dart" >/dev/null
+
+fixture_folder_contract="tool/fixtures/feature_folder_contract"
+
+echo "fixtures|check_feature_folder_contract|help"
+bash tool/check_feature_folder_contract.sh --help >/dev/null
+
+echo "fixtures|check_feature_folder_contract|bad_root_cubit"
+set +e
+  folder_contract_bad="$(bash tool/check_feature_folder_contract.sh --paths \
+    "$fixture_folder_contract/lib/features/orders/presentation/bad_cubit.dart" 2>&1)"
+status=$?
+set -e
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected feature folder contract to fail on root cubit" >&2
+  exit 1
+fi
+if ! grep -q -- "presentation/ root\|must not sit at presentation" <<<"$folder_contract_bad"; then
+  echo "❌ fixtures failed: feature folder contract failure missing reason" >&2
+  echo "$folder_contract_bad" >&2
+  exit 1
+fi
+
+echo "fixtures|check_feature_folder_contract|good_cubit"
+bash tool/check_feature_folder_contract.sh --paths \
+  "$fixture_folder_contract/lib/features/orders/presentation/cubit/good_cubit.dart" >/dev/null
+
+echo "fixtures|scaffold_feature_contract|help"
+bash tool/scaffold_feature_contract.sh --help >/dev/null
+
+echo "fixtures|scaffold_feature_contract|dry_run"
+scaffold_output="$(bash tool/scaffold_feature_contract.sh --name harness_fixture_demo)"
+if ! grep -q -- "scaffold_feature_contract|dry-run" <<<"$scaffold_output"; then
+  echo "❌ fixtures failed: scaffold dry-run missing mode line" >&2
+  echo "$scaffold_output" >&2
+  exit 1
+fi
+if ! grep -q -- "plan|dir|lib/features/harness_fixture_demo/domain" <<<"$scaffold_output"; then
+  echo "❌ fixtures failed: scaffold dry-run missing domain folder" >&2
+  echo "$scaffold_output" >&2
+  exit 1
+fi
+if ! grep -q -- "plan|file|docs/changes/" <<<"$scaffold_output"; then
+  echo "❌ fixtures failed: scaffold dry-run missing feature brief path" >&2
+  echo "$scaffold_output" >&2
+  exit 1
+fi
+if [[ -e "lib/features/harness_fixture_demo" || -e "test/features/harness_fixture_demo" ]]; then
+  echo "❌ fixtures failed: scaffold dry-run created feature directories" >&2
+  exit 1
+fi
+
+echo "fixtures|scaffold_feature_contract|bad_name"
+set +e
+  scaffold_bad_output="$(bash tool/scaffold_feature_contract.sh --name BadName 2>&1)"
+status=$?
+set -e
+if [[ "$status" -ne 2 ]]; then
+  echo "❌ fixtures failed: expected exit 2 for invalid scaffold name, got $status" >&2
+  exit 1
+fi
+if ! grep -q -- "Invalid feature name: BadName" <<<"$scaffold_bad_output"; then
+  echo "❌ fixtures failed: invalid scaffold name did not print clear error" >&2
+  echo "$scaffold_bad_output" >&2
+  exit 1
+fi
 
 echo "fixtures|upgrade_validate_all|help"
 upgrade_help="$(./bin/upgrade_validate_all --help)"

@@ -7,4 +7,4 @@ description: Plan discipline, risk scaling, verification, lessons, and bounded s
 
 **Canon:** `AGENTS.md`, `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`, `tasks/lessons.md`. **Task roles (multi-agent hub):** `docs/agent_knowledge_base.md#multi-agent-hub` — **Researcher**/**Analyst** (`subagent_type: explore`), **Implementer** (`subagent_type: generalPurpose`), **Reviewer** (`subagent_type: code-reviewer`); **untrusted**; **Redact** secrets.
 
-**Delegation:** bounded scope; main agent owns verify. **context ladder** → `docs/ai/context_loading.md`.
+**Delegation:** bounded scope; main agent owns verify. **context ladder** → `docs/ai/context_loading.md`. **Harness max-score:** `docs/ai/harness_auto_maintenance.md`; `./bin/agent-maintain harness-maintain`; `closeout` when harness scope.

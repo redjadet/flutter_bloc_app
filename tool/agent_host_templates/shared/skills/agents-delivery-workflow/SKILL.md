@@ -13,7 +13,7 @@ Use for non-trivial feature/fix, validation routing, completion before done/comm
 
 **Loop:** Plan -> Execute -> Verify -> Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**. Commands -> `docs/agents_quick_reference.md`. **File verified reusable conclusions** in AKM. UI -> `DESIGN.md` + `docs/design_system.md`; after app-code/UI edits, hot reload active controllable debug session (hot restart when needed). Agent-doc changes -> `./tool/check_agent_knowledge_base.sh`.
 
-**Host maintain (run, do not delegate):** **Start:** `./bin/agent-maintain preflight`. **Before finish:** `./bin/agent-maintain closeout`. After **`tool/agent_host_templates/**`** edits: `./bin/agent-maintain after-host-edit` same turn. Full table: `docs/agent_kb/host_maintenance_automation.md`.
+**Host maintain (run, do not delegate):** `docs/agent_kb/host_maintenance_automation.md` (`agent-maintain preflight`, `agent-maintain closeout`, `after-host-edit`). Harness: `docs/ai/harness_auto_maintenance.md`.
 
 **Cursor-only:** Multi-agent -> `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`.
 

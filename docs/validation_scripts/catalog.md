@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **83** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **65** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **87** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **70** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -27,6 +27,16 @@ below.
 ### Architecture & Dependency Injection
 
 - **`check_flutter_domain_imports.sh`**: Ensures domain layer is Flutter-agnostic (no `package:flutter` imports)
+- **`check_clean_architecture_imports.sh`**: Enforces feature/shared import
+  boundaries for both `package:` and relative imports/exports. Domain cannot
+  import Flutter, SDK/DI/app/data/presentation paths; presentation cannot import
+  data; data cannot import presentation; shared cannot import features. Supports
+  `--paths` fixture/focused runs and `check-ignore`.
+- **`check_feature_folder_contract.sh`**: Enforces feature folder shape:
+  cubit/state under `presentation/cubit/` (or legacy `cubits/`); bans
+  `application/`, `infrastructure/`, `viewmodels/`, `providers/` top-level
+  layers. Legacy drift under `lib/features` warns; `--strict` fails. Supports
+  `--paths` fixture runs. Included in `./bin/checklist`.
 - **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation widgets (should inject via constructors/cubits). Note: demo-only feature folders (`*_demo`) are excluded.
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
 - **`check_unvalidated_base_url_parse.sh`**: Prevents `Uri.parse(...)` directly on dynamic `baseUrl`-like values without validation helper
@@ -34,9 +44,9 @@ below.
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
 - **`check_feature_brief_linked.sh`**: When `lib/features/**/*.dart` changes vs a git base,
-  requires a matching `docs/changes/*.md` note (Feature Brief / change log). **Warn**
-  by default (exit 0); `FEATURE_BRIEF_CHECK_STRICT=1` fails; `SKIP_FEATURE_BRIEF=1`
-  skips. Not in `./bin/checklist` by default. See [`docs/plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
+  requires a matching `docs/changes/*.md` note (Feature Brief / change log). Fails
+  by default; `FEATURE_BRIEF_CHECK_STRICT=0` warns; `SKIP_FEATURE_BRIEF=1`
+  skips. Included in `./bin/checklist`. See [`docs/plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
 - **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
   (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
   `remote_config` / `settings`). **Universal failures:** `lib/shared/**` must not
@@ -66,6 +76,9 @@ below.
   is passed; use
   `--self-test` for the no-trailing-newline fixture.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
+- **`check_ai_failure_risk_register.sh`**: Ensures
+  [`ai_failure_risks.md`](../ai/ai_failure_risks.md) keeps required Cursor/Codex
+  failure IDs and proof commands for prevention, detection, and recovery.
 - **`check_design_md.sh`**: Runs Google DesignMD lint for root
   `../DESIGN.md`. Use after visual-brief changes; keep runtime
   values in `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` aligned with
@@ -243,4 +256,4 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `check_todo_keyboard_layout.sh` | Manual | Todo keyboard layout regression lane |
 | `check_row_action_overflow_fixtures.sh` | Self-test for `check_row_action_overflow.sh` | Fixture proof only (not a product guard) |
 
-Report-only / optional (also in Architecture section above): `check_feature_brief_linked.sh`, `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`.
+Report-only / optional (also in Architecture section above): `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`.

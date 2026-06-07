@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'transcript_index_path.dart';
+
 class TranscriptEntry {
   TranscriptEntry({
     required this.path,
@@ -86,6 +88,7 @@ Future<void> main(List<String> args) async {
 
 Future<Map<String, int>> _readIndex(String indexPath) async {
   final file = File(indexPath);
+  // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
   if (!await file.exists()) return {};
 
   final decoded = jsonDecode(await file.readAsString()) as Map<String, Object?>;
@@ -108,6 +111,7 @@ Future<List<TranscriptEntry>> _scanTranscripts(
   Map<String, int> index,
 ) async {
   final rootDir = Directory(root);
+  // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
   if (!await rootDir.exists()) {
     stderr.writeln('missing-dir|$root');
     exitCode = 2;
@@ -122,11 +126,13 @@ Future<List<TranscriptEntry>> _scanTranscripts(
     if (entity is! File) continue;
     if (!entity.path.endsWith('.jsonl')) continue;
 
+    // ignore: avoid_slow_async_io -- async tool; avoid *Sync per harness guard.
     final stat = await entity.stat();
     final bytes = stat.size;
     final approxTokens = (bytes / 4).ceil();
     final mtimeMs = stat.modified.millisecondsSinceEpoch;
-    final indexedMtimeMs = index[entity.path];
+    final indexedMtimeMs =
+        index[transcriptIndexKey(entity.path, root)] ?? index[entity.path];
 
     entries.add(
       TranscriptEntry(
@@ -163,8 +169,9 @@ void _printSummary({
   final files = totals['files'];
   final bytes = totals['bytes'];
   final tokens = totals['approxTokens'];
-  stdout.writeln('transcripts|files=$files|bytes=$bytes|approxTokens=$tokens');
-  stdout.writeln('transcripts|changedSinceIndex=$changedCount');
+  stdout
+    ..writeln('transcripts|files=$files|bytes=$bytes|approxTokens=$tokens')
+    ..writeln('transcripts|changedSinceIndex=$changedCount');
   for (final e in top) {
     stdout.writeln(
       'top|${_sanitizeId(e.path)}|bytes=${e.bytes}|approxTokens=${e.approxTokens}',

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'transcript_index_path.dart';
+
 const int _defaultMaxReadBytes = 64 * 1024;
 
 Future<void> main(List<String> args) async {
@@ -30,25 +32,30 @@ Future<void> main(List<String> args) async {
   await _withFileLock(lockPath, () async {
     final indexFile = File(indexPath);
     final index = await _readIndex(indexFile);
+    _migrateIndexKeys(index, transcriptsRoot);
 
     final onDisk = await _listTranscriptFiles(transcriptsRoot);
-    final onDiskSet = onDisk.toSet();
+    final onDiskByKey = <String, String>{
+      for (final p in onDisk) transcriptIndexKey(p, transcriptsRoot): p,
+    };
 
     // Remove deleted.
-    index.removeWhere((p, _) => !onDiskSet.contains(p));
+    index.removeWhere((key, _) => !onDiskByKey.containsKey(key));
 
     final changed = <String>[];
-    for (final p in onDisk) {
+    for (final entry in onDiskByKey.entries) {
+      final key = entry.key;
+      final path = entry.value;
       // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
-      final stat = await File(p).stat();
+      final stat = await File(path).stat();
       final mtimeMs = stat.modified.millisecondsSinceEpoch;
-      final entry = index[p];
+      final indexed = index[key];
       // Include never-seen paths, content newer than indexed mtime, or first
       // scan after index_refresh (mtime recorded but lastProcessedAt still null).
-      if (entry == null ||
-          mtimeMs > entry.mtimeMs ||
-          entry.lastProcessedAt == null) {
-        changed.add(p);
+      if (indexed == null ||
+          mtimeMs > indexed.mtimeMs ||
+          indexed.lastProcessedAt == null) {
+        changed.add(path);
       }
     }
 
@@ -74,7 +81,7 @@ Future<void> main(List<String> args) async {
     await File(outPath).parent.create(recursive: true);
     await File(outPath).writeAsString(md);
 
-    await _markTranscriptsProcessed(index, changed);
+    await _markTranscriptsProcessed(index, changed, transcriptsRoot);
     await _writeIndexAtomic(indexFile, index);
 
     if (findings.isEmpty) {
@@ -122,7 +129,9 @@ Future<List<String>> _listTranscriptFiles(String root) async {
     recursive: true,
     followLinks: false,
   )) {
-    if (entity is File && entity.path.endsWith('.jsonl')) out.add(entity.path);
+    if (entity is! File || !entity.path.endsWith('.jsonl')) continue;
+    if (entity.path.contains('/subagents/')) continue;
+    out.add(entity.path);
   }
   return out;
 }
@@ -171,23 +180,42 @@ Future<void> _writeIndexAtomic(
     },
   };
   final tmp = File('${indexFile.path}.tmp');
-  await tmp.writeAsString(const JsonEncoder.withIndent('  ').convert(payload));
+  await tmp.writeAsString(jsonEncode(payload));
   await tmp.rename(indexFile.path);
 }
 
 Future<void> _markTranscriptsProcessed(
   Map<String, TranscriptIndexEntry> index,
   Iterable<String> paths,
+  String transcriptsRoot,
 ) async {
   final nowIso = DateTime.now().toUtc().toIso8601String();
   for (final p in paths) {
     // ignore: avoid_slow_async_io -- async main; avoid *Sync (tool/check_tool_dart_async_main_blocking_io.sh).
     final stat = await File(p).stat();
-    index[p] = TranscriptIndexEntry(
+    final key = transcriptIndexKey(p, transcriptsRoot);
+    index[key] = TranscriptIndexEntry(
       lastProcessedAt: nowIso,
       mtimeMs: stat.modified.millisecondsSinceEpoch,
     );
   }
+}
+
+void _migrateIndexKeys(
+  Map<String, TranscriptIndexEntry> index,
+  String transcriptsRoot,
+) {
+  final migrated = <String, TranscriptIndexEntry>{};
+  for (final entry in index.entries) {
+    final key = transcriptIndexKey(entry.key, transcriptsRoot);
+    final existing = migrated[key];
+    if (existing == null || entry.value.mtimeMs > existing.mtimeMs) {
+      migrated[key] = entry.value;
+    }
+  }
+  index
+    ..clear()
+    ..addAll(migrated);
 }
 
 Future<String> _readTranscriptTailRedacted(String path, int maxBytes) async {

@@ -709,6 +709,9 @@ is_checklist_fast_compatible_path() {
     pyrightconfig.json|\
     demos/render_chat_api/pyrightconfig.json|\
     AGENTS.md|\
+    CODEMAP.md|\
+    PLAN.md|\
+    DESIGN.md|\
     .markdownlintignore|\
     .markdownlint-cli2ignore|\
     docs/*|\
@@ -1158,6 +1161,11 @@ run_harness_docs_checks() {
     echo "❌ Harness fixture tests failed; fix harness scripts or fixtures."
     return 1
   fi
+
+  if ! bash "$PROJECT_ROOT/tool/check_harness_scorecard_gate.sh"; then
+    echo "❌ Harness scorecard gate failed; keep Cursor/Codex max-score docs and proof gates in sync."
+    return 1
+  fi
 }
 
 print_checklist_fast_incompatibilities() {
@@ -1353,6 +1361,8 @@ echo ""
 VALIDATION_FAILED=0
 CHECK_MESSAGES=(
   "Checking for Flutter imports in domain layer..."
+  "Checking Clean Architecture import boundaries..."
+  "Checking feature folder contract..."
   "Checking for raw Material buttons..."
   "Checking for direct Hive.openBox usage..."
   "Checking for raw Timer usage..."
@@ -1401,12 +1411,15 @@ CHECK_MESSAGES=(
   "Checking for Row+multi-button action overflow risk (OverflowBar, Wrap, or Expanded)..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
   "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
+  "Checking feature brief/change note is linked for feature Dart changes..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
   "Checking centralized memory-pressure handling..."
   "Checking macOS debug fallback web guards..."
   "Checking Apple debug Hive + secret-storage guards..."
   "Checking iOS simulator CocoaPods framework embed..."
   "Checking agent knowledge base map..."
+  "Checking Cursor/Codex harness scorecard gate..."
+  "Checking AI failure risk register..."
   "Checking agent memory compounding..."
   "Checking tracked files for secret-like literals..."
   "Checking AI-generated-code smells (high-signal)..."
@@ -1421,6 +1434,8 @@ CHECK_MESSAGES=(
 
 CHECK_SCRIPTS=(
   "tool/check_flutter_domain_imports.sh"
+  "tool/check_clean_architecture_imports.sh"
+  "tool/check_feature_folder_contract.sh"
   "tool/check_material_buttons.sh"
   "tool/check_no_hive_openbox.sh"
   "tool/check_raw_timer.sh"
@@ -1469,12 +1484,15 @@ CHECK_SCRIPTS=(
   "tool/check_row_action_overflow.sh"
   "tool/check_lifecycle_error_handling.sh"
   "tool/check_offline_first_remote_merge.sh"
+  "tool/check_feature_brief_linked.sh"
   "tool/check_feature_modularity_leaks.sh"
   "tool/check_memory_pressure_centralized.sh"
   "tool/check_macos_debug_web_guard.sh"
   "tool/check_apple_debug_hive_storage.sh"
   "tool/check_ios_pod_framework_embed.sh"
   "tool/check_agent_knowledge_base.sh"
+  "tool/check_harness_scorecard_gate.sh"
+  "tool/check_ai_failure_risk_register.sh"
   "tool/check_agent_memory_compounding.sh"
   "tool/check_tracked_secret_literals.sh"
   "tool/check_ai_generated_code_smells.sh"
@@ -1487,6 +1505,8 @@ CHECK_SCRIPTS=(
   "tool/check_pyright_python.sh"
 )
 CHECK_SCRIPT_THEMES=(
+  "architecture"
+  "architecture"
   "architecture"
   "ui"
   "architecture"
@@ -1537,10 +1557,13 @@ CHECK_SCRIPT_THEMES=(
   "async"
   "background"
   "architecture"
+  "architecture"
   "memory"
   "memory"
   "ui"
   "ios-native"
+  "meta"
+  "meta"
   "meta"
   "meta"
   "security"

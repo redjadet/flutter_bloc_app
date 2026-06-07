@@ -1,0 +1,3 @@
+class OrderPage {
+  const OrderPage();
+}

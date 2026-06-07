@@ -5,8 +5,11 @@ repeating the implementation detail already covered elsewhere. Use it as a
 routing document: it tells you where to build, what to update, and which docs
 own each concern.
 
-Non-trivial features should start from the Feature Brief and AI alignment checklist in
-[`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) (honor system until automated gates exist).
+Non-trivial features should start from the Feature Brief and AI alignment
+checklist in [`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md).
+`./bin/checklist` runs `tool/check_feature_brief_linked.sh`, which fails by
+default for feature Dart changes without a `docs/changes/` note. Use
+`SKIP_FEATURE_BRIEF=1` only for documented trivial fixes.
 
 ## Definition of done
 
@@ -27,13 +30,16 @@ A new or materially changed feature should usually include:
 | --- | --- |
 | Brief + contract | Copy [`FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md); fill **Tests** (behaviour, state, unit, integration as needed). |
 | Reuse first | Check `lib/shared/`, `lib/core/`, and adjacent features before adding new abstractions. |
+| Place files | Follow [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md); copy live layout from [`architecture/reference_features.md`](architecture/reference_features.md). |
 | Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |
+| Use cases / DTOs | Apply [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md). |
+| Model state | Apply [`bloc_standards.md`](bloc_standards.md) before adding or changing Cubit/BLoC code. |
 | Domain / data | RED unit or cubit tests for contracts; minimal implementation to green. |
 | Register dependencies | Use the feature-specific `register_*_services.dart` files or `injector_registrations.dart`. |
 | Wire routes intentionally | Add route constants first, then update the route group that owns the flow. |
 | Presentation | RED widget tests for behaviour + state where P0/P1 applies; then UI. |
 | Update generated code | Run `build_runner` when touching Freezed, JSON, Retrofit, or related annotations. |
-| Prove | `flutter test <paths>` from the brief; pick validation lane in [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). |
+| Prove | `bash tool/check_feature_folder_contract.sh`; `flutter test <paths>` from the brief; pick validation lane in [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). |
 | Update docs | Refresh the doc that is already the source of truth instead of copying text into multiple places. |
 
 ## Source docs by concern
@@ -84,4 +90,10 @@ Avoid copying the same setup or implementation prose into multiple docs.
 - [Feature Overview](feature_overview.md)
 - [Tech Stack](tech_stack.md)
 - [Testing Overview](testing_overview.md)
+- [Testing Matrix Required By Change](testing/matrix_required_by_change.md)
+- [Feature Structure Contract](architecture/feature_structure_contract.md)
+- [Use Case And DTO Policy](architecture/use_case_dto_policy.md)
+- [BLoC Standards](bloc_standards.md)
+- [Architecture Review Checklist](review/architecture_checklist.md)
+- [BLoC Review Checklist](review/bloc_checklist.md)
 - [Contributing](contributing.md)

@@ -115,7 +115,8 @@ This separation lets the cubit and UI remain testable without Firebase while the
 - Implement the contract in **data** (local/remote/offline-first) and register it in DI (`injector_registrations.dart` or `injector_factories.dart`).
 - Build a **Cubit/Bloc** that depends only on the domain contract, uses `CubitExceptionHandler` for async work, and respects lifecycle guards.
 - Create **responsive, platform-adaptive widgets** that invoke cubit methods and
-  render `Equatable`/`freezed` states. Avoid putting business logic in widgets;
+  render Freezed states (prefer Freezed for new code; legacy Equatable may
+  remain). Avoid putting business logic in widgets;
   keep `build()` pure.
 - For persistence or timers, rely on shared abstractions (`HiveService`, `SharedPreferencesMigrationService`, `TimerService`, `NetworkStatusService`) to keep layers consistent and testable.
 - Keep offline-first logic in the **data layer**; presentation can show pending

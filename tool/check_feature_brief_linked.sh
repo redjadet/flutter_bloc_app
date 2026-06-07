@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Remind agents/PRs to link a Feature Brief when lib/features/ changes.
-# Phase 5 (AI-first plan): honor-system gate — warn by default, strict optional.
+# Phase 5 (AI-first plan): fail by default; warning mode is explicit.
 #
 # Satisfied when any of:
 #   - docs/changes/*.md touched in the same diff
@@ -12,7 +12,7 @@
 #
 # Environment:
 #   SKIP_FEATURE_BRIEF=1              -> skip (exit 0)
-#   FEATURE_BRIEF_CHECK_STRICT=1      -> exit 1 on violation (else warn, exit 0)
+#   FEATURE_BRIEF_CHECK_STRICT=0      -> warn on violation (else fail, exit 1)
 
 set -euo pipefail
 
@@ -21,8 +21,8 @@ usage() {
 Usage: tool/check_feature_brief_linked.sh [--base <git-ref>]
 
 When Dart under lib/features/ changes, require a docs/changes/*.md note in the
-same diff (Feature Brief / change log). Warn by default; set
-FEATURE_BRIEF_CHECK_STRICT=1 to fail the check.
+same diff (Feature Brief / change log). Fails by default; set
+FEATURE_BRIEF_CHECK_STRICT=0 to warn only.
 EOF
 }
 
@@ -107,10 +107,10 @@ if [[ ${#feature_dart[@]} -gt 5 ]]; then
 fi
 msg+=$'\nAdd a note under docs/changes/ (see docs/plans/FEATURE_TEMPLATE.md) or set SKIP_FEATURE_BRIEF=1 for trivial fixes.'
 
-if [[ "${FEATURE_BRIEF_CHECK_STRICT:-0}" == "1" ]]; then
-  echo "$msg" >&2
-  exit 1
+if [[ "${FEATURE_BRIEF_CHECK_STRICT:-1}" == "0" ]]; then
+  echo "warn|$msg" >&2
+  exit 0
 fi
 
-echo "warn|$msg" >&2
-exit 0
+echo "$msg" >&2
+exit 1
