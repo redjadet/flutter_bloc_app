@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart'
+    show OfflineFirstCounterRepository;
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 
 /// Snapshot merge and normalization helpers for [OfflineFirstCounterRepository].
