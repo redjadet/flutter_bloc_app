@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-06-07_layering-optimization.md`](2026-06-07_layering-optimization.md): Clean Architecture layering pass (domain shims, cubit-owned sync counts, composition roots, modularity guardrail).
+- [`2026-06-07_todo-sync-banner-not-on-page.md`](2026-06-07_todo-sync-banner-not-on-page.md): Product decision — `TodoSyncBanner` not mounted on live todo list page; widget/tests retained.
 - [`2026-06-06_guest-sign-in-ios-simulator.md`](2026-06-06_guest-sign-in-ios-simulator.md): iOS simulator guest sign-in (App Check skip, keychain local guest, router redirect, RTDB remote omit, regression tests + integration journey).
 - [`2026-06-06_common-page-layout-appbar-widening.md`](2026-06-06_common-page-layout-appbar-widening.md): `CommonPageLayout` optional custom `appBar`, scaffold `backgroundColor`, and migrations for search/counter/chat list/calculator shells.
 - [`2026-06-06_auth-repository-presentation-seams.md`](2026-06-06_auth-repository-presentation-seams.md): `AccountSection` + `ChatCubit` use injected `AuthRepository` (and chat Supabase/HF deps) instead of direct Firebase SDK in presentation; tests and auth docs updated.

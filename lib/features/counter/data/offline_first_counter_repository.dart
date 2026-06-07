@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
@@ -41,12 +41,18 @@ class OfflineFirstCounterRepository
 
   @override
   Future<void> save(final CounterSnapshot snapshot) async {
-    final CounterSnapshot normalized = _normalizeSnapshot(snapshot);
+    final CounterSnapshot normalized =
+        OfflineFirstCounterRepositoryHelpers.normalizeSnapshot(
+          snapshot,
+          hasRemoteRepository: _remoteRepository != null,
+        );
     await _localRepository.save(normalized);
     if (_remoteRepository == null) {
       return;
     }
-    final String changeId = normalized.changeId ?? _generateChangeId();
+    final String changeId =
+        normalized.changeId ??
+        OfflineFirstCounterRepositoryHelpers.generateChangeId();
     final SyncOperation operation = SyncOperation.create(
       entityType: entityType,
       payload: normalized.toJson(),
@@ -73,10 +79,15 @@ class OfflineFirstCounterRepository
         remoteSub = _remoteRepository.watch().listen(
           (final remote) async {
             final CounterSnapshot local = await _localRepository.load();
-            if (_shouldApplyRemote(local, remote)) {
+            if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
+              local,
+              remote,
+            )) {
               await _localRepository.save(
                 remote.copyWith(
-                  changeId: remote.changeId ?? _generateChangeId(),
+                  changeId:
+                      remote.changeId ??
+                      OfflineFirstCounterRepositoryHelpers.generateChangeId(),
                   lastSyncedAt: DateTime.now().toUtc(),
                   synchronized: true,
                 ),
@@ -137,10 +148,15 @@ class OfflineFirstCounterRepository
     try {
       final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
       final CounterSnapshot localSnapshot = await _localRepository.load();
-      if (_shouldApplyRemote(localSnapshot, remoteSnapshot)) {
+      if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
+        localSnapshot,
+        remoteSnapshot,
+      )) {
         await _localRepository.save(
           remoteSnapshot.copyWith(
-            changeId: remoteSnapshot.changeId ?? _generateChangeId(),
+            changeId:
+                remoteSnapshot.changeId ??
+                OfflineFirstCounterRepositoryHelpers.generateChangeId(),
             lastSyncedAt: DateTime.now().toUtc(),
             synchronized: true,
           ),
@@ -154,45 +170,6 @@ class OfflineFirstCounterRepository
       );
     }
   }
-
-  CounterSnapshot _normalizeSnapshot(final CounterSnapshot snapshot) {
-    final DateTime now = DateTime.now().toUtc();
-    final String changeId = snapshot.changeId ?? _generateChangeId();
-    return snapshot.copyWith(
-      lastChanged: snapshot.lastChanged ?? now,
-      changeId: changeId,
-      synchronized: _remoteRepository == null,
-      lastSyncedAt: _remoteRepository == null ? now : snapshot.lastSyncedAt,
-    );
-  }
-
-  bool _shouldApplyRemote(
-    final CounterSnapshot localSnapshot,
-    final CounterSnapshot remoteSnapshot,
-  ) {
-    // When we have local unsynced changes, never overwrite them with a remote
-    // snapshot unless the remote is clearly newer.
-    if (!localSnapshot.synchronized) {
-      final DateTime? remote = remoteSnapshot.lastChanged;
-      final DateTime? local = localSnapshot.lastChanged;
-      if (local == null) return true;
-      if (remote == null) return false;
-      return remote.isAfter(local);
-    }
-
-    // When local is synchronized, allow applying count-only edits (e.g. manual
-    // console edit) even if remote timestamp isn't newer.
-    if (remoteSnapshot.count != localSnapshot.count) return true;
-    final DateTime? remote = remoteSnapshot.lastChanged;
-    final DateTime? local = localSnapshot.lastChanged;
-    if (remote == null) return true;
-    if (local == null) return true;
-    return remote.isAfter(local);
-  }
-
-  static String _generateChangeId() =>
-      DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
-      Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
 
   Future<List<SyncOperation>> _counterPendingOperations({DateTime? now}) async {
     final List<SyncOperation> operations = await _pendingSyncRepository

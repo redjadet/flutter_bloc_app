@@ -40,3 +40,7 @@ flutter test test/features/ai_decision_demo/ test/features/in_app_purchase_demo/
 
 - event_bus / case_study demo `getIt` sandboxes
 - Remaining l10n-in-cubit features (walletconnect, supabase_auth, playlearn, igaming) — follow-up PRs
+
+## Product decisions
+
+- **Todo sync banner not on list page** — `TodoSyncBanner` stays tested but unmounted on `TodoListPageBody`; see [2026-06-07_todo-sync-banner-not-on-page.md](2026-06-07_todo-sync-banner-not-on-page.md).
