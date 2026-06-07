@@ -86,7 +86,10 @@ if [[ "${rules_status%%|*}" != "ok" ]]; then
   failures=1
 fi
 
-if ! check_toolchain_mentions; then
+toolchain_raw_status="$(check_toolchain_mentions)" || true
+toolchain_status="$(normalize_status_line "$toolchain_raw_status")"
+echo "${toolchain_status:-$toolchain_raw_status}"
+if [[ "${toolchain_status%%|*}" != "ok" ]]; then
   failures=1
 fi
 
