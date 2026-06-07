@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:go_router/go_router.dart' show GoRouter, RouteBase;
 
@@ -40,9 +41,12 @@ class _MyAppState extends State<MyApp> {
   GoRouter _createRouter() {
     final List<RouteBase> routes = createAppRoutes();
 
-    // When auth is not required or Firebase is not initialized, run without
-    // auth redirect so the app still runs (Firebase-dependent features disabled).
-    final bool useAuth = widget.requireAuth && Firebase.apps.isNotEmpty;
+    // When auth is not required, or neither Firebase nor debug local-guest auth
+    // is available, run without auth redirect.
+    final bool useAuth =
+        widget.requireAuth &&
+        (Firebase.apps.isNotEmpty ||
+            FirebaseBootstrapService.supportsDebugLocalGuestAuth);
 
     if (!useAuth) {
       return GoRouter(initialLocation: AppRoutes.counterPath, routes: routes);

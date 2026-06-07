@@ -27,6 +27,24 @@ class FirebaseBootstrapService {
   /// non-physical iOS device. Used for simulator-only auth keychain fallbacks.
   static bool isIosSimulatorInDebug = false;
 
+  /// Best-effort iOS simulator detection for debug auth fallbacks when Firebase
+  /// bootstrap is skipped (placeholder config, integration tests, hot restart).
+  static Future<void> ensureIosSimulatorDebugFlag() async {
+    await _markIosSimulatorInDebugIfNeeded();
+  }
+
+  /// Whether auth routing and local-only guest sign-in should work without a
+  /// configured Firebase app (macOS debug or iOS simulator debug).
+  static bool get supportsDebugLocalGuestAuth {
+    if (kIsWeb || kReleaseMode) {
+      return false;
+    }
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
+      return true;
+    }
+    return defaultTargetPlatform == TargetPlatform.iOS && isIosSimulatorInDebug;
+  }
+
   /// Initialize Firebase with platform-specific configuration
   static Future<bool> initializeFirebase() => _firebaseInitialization ??=
       _initializeFirebaseOnce().then((final initialized) {

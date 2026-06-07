@@ -108,13 +108,11 @@ void _applySecrets(final Map<String, dynamic> json) {
   if (json.containsKey('HUGGINGFACE_USE_CHAT_COMPLETIONS')) {
     if (SecretConfig._useChatCompletions == null) {
       final Object? flag = json['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
-      if (flag is bool) {
-        SecretConfig._useChatCompletions = flag;
-      } else if (flag is String) {
-        SecretConfig._useChatCompletions = flag.toLowerCase() == 'true';
-      } else {
-        SecretConfig._useChatCompletions = false;
-      }
+      SecretConfig._useChatCompletions = switch (flag) {
+        final bool v => v,
+        final String v => v.toLowerCase() == 'true',
+        _ => false,
+      };
     }
   }
   if (json.containsKey('GOOGLE_API_KEY') ||

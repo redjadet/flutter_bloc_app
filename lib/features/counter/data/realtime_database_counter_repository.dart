@@ -88,32 +88,47 @@ class RealtimeDatabaseCounterRepository implements CounterRepository {
     required final String userId,
     final bool logUnexpected = true,
   }) {
-    if (value == null) {
-      return CounterSnapshot(userId: userId, count: 0);
-    }
+    return switch (value) {
+      null => CounterSnapshot(userId: userId, count: 0),
+      final num v => CounterSnapshot(userId: userId, count: v.toInt()),
+      final Map<Object?, Object?> data => _snapshotFromMap(
+        data,
+        userId: userId,
+      ),
+      _ => _unexpectedSnapshotValue(
+        value,
+        userId: userId,
+        logUnexpected: logUnexpected,
+      ),
+    };
+  }
 
-    if (value is num) {
-      return CounterSnapshot(userId: userId, count: value.toInt());
-    }
+  static CounterSnapshot _snapshotFromMap(
+    final Map<Object?, Object?> data, {
+    required final String userId,
+  }) {
+    final Map<Object?, Object?> map = Map<Object?, Object?>.from(data);
+    final int count = intFromDynamic(map['count']) ?? 0;
+    final int? lastChangedMs = intFromDynamic(map['last_changed']);
+    final DateTime? lastChanged = lastChangedMs != null
+        ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
+        : null;
+    final String snapshotId =
+        stringFromDynamicTrimmed(map['userId']) ??
+        stringFromDynamicTrimmed(map['id']) ??
+        userId;
+    return CounterSnapshot(
+      userId: snapshotId,
+      count: count,
+      lastChanged: lastChanged,
+    );
+  }
 
-    if (value is Map) {
-      final Map<Object?, Object?> data = Map<Object?, Object?>.from(value);
-      final int count = intFromDynamic(data['count']) ?? 0;
-      final int? lastChangedMs = intFromDynamic(data['last_changed']);
-      final DateTime? lastChanged = lastChangedMs != null
-          ? DateTime.fromMillisecondsSinceEpoch(lastChangedMs)
-          : null;
-      final String snapshotId =
-          stringFromDynamicTrimmed(data['userId']) ??
-          stringFromDynamicTrimmed(data['id']) ??
-          userId;
-      return CounterSnapshot(
-        userId: snapshotId,
-        count: count,
-        lastChanged: lastChanged,
-      );
-    }
-
+  static CounterSnapshot _unexpectedSnapshotValue(
+    final Object? value, {
+    required final String userId,
+    required final bool logUnexpected,
+  }) {
     if (logUnexpected) {
       AppLogger.warning(
         'RealtimeDatabaseCounterRepository.load unexpected payload type: '

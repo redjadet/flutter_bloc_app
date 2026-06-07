@@ -18,33 +18,28 @@ AppError graphqlDemoAppErrorFromType(
 }) {
   final String trimmed = message?.trim() ?? '';
   final String resolved = trimmed.isNotEmpty ? trimmed : 'GraphQL demo error';
-  switch (type) {
-    case GraphqlDemoErrorType.network:
-      return NetworkError(
-        message: resolved,
-        kind: NetworkErrorKind.offline,
-        cause: cause,
-      );
-    case GraphqlDemoErrorType.server:
-      return NetworkError(
-        message: resolved,
-        kind: NetworkErrorKind.server,
-        cause: cause,
-      );
-    case GraphqlDemoErrorType.invalidRequest:
-      return NetworkError(
-        message: resolved,
-        kind: NetworkErrorKind.client,
-        cause: cause,
-      );
-    case GraphqlDemoErrorType.data:
-      return StorageError(
-        message: resolved,
-        kind: StorageErrorKind.read,
-        cause: cause,
-      );
-    case GraphqlDemoErrorType.unknown:
-    case null:
-      return UnknownError(message: resolved, cause: cause);
-  }
+  return switch (type) {
+    GraphqlDemoErrorType.network => NetworkError(
+      message: resolved,
+      kind: NetworkErrorKind.offline,
+      cause: cause,
+    ),
+    GraphqlDemoErrorType.server => NetworkError(
+      message: resolved,
+      kind: NetworkErrorKind.server,
+      cause: cause,
+    ),
+    GraphqlDemoErrorType.invalidRequest => NetworkError(
+      message: resolved,
+      kind: NetworkErrorKind.client,
+      cause: cause,
+    ),
+    GraphqlDemoErrorType.data => StorageError(
+      message: resolved,
+      kind: StorageErrorKind.read,
+      cause: cause,
+    ),
+    GraphqlDemoErrorType.unknown ||
+    null => UnknownError(message: resolved, cause: cause),
+  };
 }

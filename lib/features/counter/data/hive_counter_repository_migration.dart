@@ -60,42 +60,33 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     }
   }
 
-  int? _coerceCount(final dynamic raw) {
-    if (raw is int) {
-      return raw < 0 ? 0 : raw;
+  int? _coerceCount(final dynamic raw) => switch (raw) {
+    final int v => v < 0 ? 0 : v,
+    final num v when !v.isFinite => null,
+    final num v => _nonNegativeInt(v.toInt()),
+    final String v => _nonNegativeInt(int.tryParse(v.trim())),
+    _ => null,
+  };
+
+  int? _nonNegativeInt(final int? value) {
+    if (value == null) {
+      return null;
     }
-    if (raw is num) {
-      if (!raw.isFinite) return null;
-      final int v = raw.toInt();
-      return v < 0 ? 0 : v;
-    }
-    if (raw is String) {
-      final int? v = int.tryParse(raw.trim());
-      if (v == null) return null;
-      return v < 0 ? 0 : v;
-    }
-    return null;
+    return value < 0 ? 0 : value;
   }
 
   int? _coerceTimestampMs(final dynamic raw) {
-    int? timestampMs;
-    if (raw is int) {
-      timestampMs = raw;
-    } else if (raw is num) {
-      if (!raw.isFinite) return null;
-      timestampMs = raw.toInt();
-    } else if (raw is String && raw.trim().isNotEmpty) {
-      final String trimmed = raw.trim();
-      final int? asInt = int.tryParse(trimmed);
-      if (asInt != null) {
-        timestampMs = asInt;
-      } else {
-        final DateTime? parsed = DateTime.tryParse(trimmed);
-        timestampMs = parsed?.toUtc().millisecondsSinceEpoch;
-      }
-    } else if (raw is DateTime) {
-      timestampMs = raw.toUtc().millisecondsSinceEpoch;
-    }
+    final int? timestampMs = switch (raw) {
+      final int v => v,
+      final num v when !v.isFinite => null,
+      final num v => v.toInt(),
+      final String v when v.trim().isEmpty => null,
+      final String v =>
+        int.tryParse(v.trim()) ??
+            DateTime.tryParse(v.trim())?.toUtc().millisecondsSinceEpoch,
+      final DateTime v => v.toUtc().millisecondsSinceEpoch,
+      _ => null,
+    };
 
     if (timestampMs == null) {
       return null;
@@ -105,32 +96,23 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     )?.millisecondsSinceEpoch;
   }
 
-  bool? _coerceBool(final dynamic raw) {
-    if (raw is bool) return raw;
-    if (raw is int) {
-      if (raw == 0) return false;
-      if (raw == 1) return true;
-      return null;
-    }
-    if (raw is num) {
-      final int v = raw.toInt();
-      if (v == 0) return false;
-      if (v == 1) return true;
-      return null;
-    }
-    if (raw is String && raw.isNotEmpty) {
-      final String normalized = raw.trim().toLowerCase();
-      if (normalized == 'true') return true;
-      if (normalized == 'false') return false;
-      if (normalized == '0') return false;
-      if (normalized == '1') return true;
-      return null;
-    }
-    return null;
-  }
+  bool? _coerceBool(final dynamic raw) => switch (raw) {
+    final bool v => v,
+    final int v when v == 0 => false,
+    final int v when v == 1 => true,
+    final num v when v.toInt() == 0 => false,
+    final num v when v.toInt() == 1 => true,
+    final String v when v.isEmpty => null,
+    final String v => switch (v.trim().toLowerCase()) {
+      'true' || '1' => true,
+      'false' || '0' => false,
+      _ => null,
+    },
+    _ => null,
+  };
 
-  String? _coerceNonEmptyString(final dynamic raw) {
-    if (raw is String && raw.trim().isNotEmpty) return raw.trim();
-    return null;
-  }
+  String? _coerceNonEmptyString(final dynamic raw) => switch (raw) {
+    final String v when v.trim().isNotEmpty => v.trim(),
+    _ => null,
+  };
 }

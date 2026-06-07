@@ -147,14 +147,12 @@ class MockIotDemoRepository implements IotDemoRepository {
     final i = _indexOf(deviceId);
     if (i < 0) return;
     final d = _devices[i];
-    final IotDevice updated;
-    if (command is IotDeviceCommandToggle) {
-      updated = d.copyWith(toggledOn: !d.toggledOn);
-    } else if (command is IotDeviceCommandSetValue) {
-      updated = d.copyWith(value: command.value.toDouble());
-    } else {
-      updated = d;
-    }
+    final IotDevice updated = switch (command) {
+      IotDeviceCommandToggle() => d.copyWith(toggledOn: !d.toggledOn),
+      IotDeviceCommandSetValue(:final value) => d.copyWith(
+        value: value.toDouble(),
+      ),
+    };
     _devices[i] = updated.copyWith(lastSeen: DateTime.now());
     _emitDevices();
   }

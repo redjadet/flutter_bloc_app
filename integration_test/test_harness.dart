@@ -156,9 +156,16 @@ Future<void> configureIntegrationTestDependencies({
   final AppLocale? locale = const AppLocale(languageCode: 'en'),
   final IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
 }) async {
-  if (authMode == IntegrationAuthMode.realFirebaseAuth) {
-    // Real auth uses plugin-backed FirebaseAuth; Firebase must exist first.
-    await FirebaseBootstrapService.initializeFirebase();
+  final bool requestedRealFirebaseAuth =
+      authMode == IntegrationAuthMode.realFirebaseAuth;
+  var firebaseInitialized = false;
+  if (requestedRealFirebaseAuth) {
+    // Real auth uses plugin-backed FirebaseAuth when bootstrap succeeds.
+    firebaseInitialized = await FirebaseBootstrapService.initializeFirebase();
+    if (!firebaseInitialized) {
+      // Placeholder/missing config: still detect iOS simulator for local guest.
+      await FirebaseBootstrapService.ensureIosSimulatorDebugFlag();
+    }
   }
   PackageInfo.setMockInitialValues(
     appName: 'Flutter Demo',
@@ -169,9 +176,10 @@ Future<void> configureIntegrationTestDependencies({
   );
 
   // RTDB repos rely on plugin-backed auth to produce valid RTDB credentials.
-  // Under mock auth they can hang/time out; omit only in that mode.
+  // Omit under mock auth or when real auth fell back to local guest only.
   integrationTestOmitFirebaseRemoteRepositories =
-      authMode == IntegrationAuthMode.mockFirebaseAuth;
+      authMode == IntegrationAuthMode.mockFirebaseAuth ||
+      (requestedRealFirebaseAuth && !firebaseInitialized);
 
   await test_helpers.setupTestDependencies(
     test_helpers.TestSetupOptions(

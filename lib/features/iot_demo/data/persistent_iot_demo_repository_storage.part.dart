@@ -178,12 +178,9 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
         final int i = _indexOf(devices, deviceId);
         if (i < 0) return;
         final IotDevice d = devices[i];
-        final IotDevice updated;
-        if (command is IotDeviceCommandToggle) {
-          updated = d.copyWith(toggledOn: !d.toggledOn);
-        } else if (command is IotDeviceCommandSetValue) {
+        if (command case IotDeviceCommandSetValue(:final value)) {
           final double nextValue = iotDemoClampAndRound(
-            command.value.toDouble(),
+            value.toDouble(),
             iotDemoValueMin,
             iotDemoValueMax,
           );
@@ -191,10 +188,17 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
           if (nextValue == d.value) {
             return;
           }
-          updated = d.copyWith(value: nextValue);
-        } else {
-          updated = d;
         }
+        final IotDevice updated = switch (command) {
+          IotDeviceCommandToggle() => d.copyWith(toggledOn: !d.toggledOn),
+          IotDeviceCommandSetValue(:final value) => d.copyWith(
+            value: iotDemoClampAndRound(
+              value.toDouble(),
+              iotDemoValueMin,
+              iotDemoValueMax,
+            ),
+          ),
+        };
         final List<IotDevice> list = List<IotDevice>.from(devices);
         list[i] = updated.copyWith(lastSeen: DateTime.now());
         await _saveDevices(box, list);

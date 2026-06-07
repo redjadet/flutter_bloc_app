@@ -4,15 +4,9 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 String counterErrorMessage(
   final AppLocalizations l10n,
   final CounterError error,
-) {
-  switch (error.type) {
-    case CounterErrorType.cannotGoBelowZero:
-      return l10n.cannotGoBelowZero;
-    case CounterErrorType.loadError:
-      return l10n.loadErrorMessage;
-    case CounterErrorType.saveError:
-      return l10n.saveErrorMessage;
-    case CounterErrorType.unknown:
-      return error.message ?? l10n.loadErrorMessage;
-  }
-}
+) => switch (error.type) {
+  CounterErrorType.cannotGoBelowZero => l10n.cannotGoBelowZero,
+  CounterErrorType.loadError => l10n.loadErrorMessage,
+  CounterErrorType.saveError => l10n.saveErrorMessage,
+  CounterErrorType.unknown => error.message ?? l10n.loadErrorMessage,
+};

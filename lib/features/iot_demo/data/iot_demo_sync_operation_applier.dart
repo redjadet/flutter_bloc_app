@@ -97,36 +97,29 @@ Future<void> applyIotDemoSyncOperation(
   }
 }
 
-IotDeviceType? _parseDeviceTypeFromName(final String value) {
-  switch (value) {
-    case 'light':
-      return IotDeviceType.light;
-    case 'thermostat':
-      return IotDeviceType.thermostat;
-    case 'plug':
-      return IotDeviceType.plug;
-    case 'sensor':
-      return IotDeviceType.sensor;
-    case 'switch_':
-      return IotDeviceType.switch_;
-    default:
-      return null;
-  }
-}
+IotDeviceType? _parseDeviceTypeFromName(final String value) => switch (value) {
+  'light' => IotDeviceType.light,
+  'thermostat' => IotDeviceType.thermostat,
+  'plug' => IotDeviceType.plug,
+  'sensor' => IotDeviceType.sensor,
+  'switch_' => IotDeviceType.switch_,
+  _ => null,
+};
 
 IotDeviceCommand? _payloadToCommand(final Map<String, dynamic> payload) {
   final String? kind = stringFromDynamicTrimmed(payload['kind']);
-  if (kind == 'toggle') {
-    return const IotDeviceCommand.toggle();
-  }
-  if (kind == 'setValue') {
-    final double v = doubleFromDynamic(
-      payload['value'],
-      iotDemoValueMin,
-    );
-    return IotDeviceCommand.setValue(
-      iotDemoClampAndRound(v, iotDemoValueMin, iotDemoValueMax),
-    );
-  }
-  return null;
+  return switch (kind) {
+    'toggle' => const IotDeviceCommand.toggle(),
+    'setValue' => IotDeviceCommand.setValue(
+      iotDemoClampAndRound(
+        doubleFromDynamic(
+          payload['value'],
+          iotDemoValueMin,
+        ),
+        iotDemoValueMin,
+        iotDemoValueMax,
+      ),
+    ),
+    _ => null,
+  };
 }

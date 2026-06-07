@@ -8,8 +8,10 @@ library;
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Returns [value] as [String] if it is a [String], otherwise null.
-String? stringFromDynamic(final dynamic value) =>
-    value is String ? value : null;
+String? stringFromDynamic(final dynamic value) => switch (value) {
+  final String s => s,
+  _ => null,
+};
 
 /// Returns trimmed [value] as [String], or null if not a string or empty.
 String? stringFromDynamicTrimmed(final dynamic value) {
@@ -19,60 +21,52 @@ String? stringFromDynamicTrimmed(final dynamic value) {
 }
 
 /// Returns [value] as [int] if possible (int, num, or parseable String).
-int? intFromDynamic(final dynamic value) {
-  if (value == null) return null;
-  if (value is int) return value;
-  if (value is num) return value.toInt();
-  if (value is String) return int.tryParse(value.trim());
-  return null;
-}
+int? intFromDynamic(final dynamic value) => switch (value) {
+  null => null,
+  final int v => v,
+  final num v => v.toInt(),
+  final String v => int.tryParse(v.trim()),
+  _ => null,
+};
 
 /// Returns [value] as [double], or [fallback] if null/not parseable.
-double doubleFromDynamic(final dynamic value, final double fallback) {
-  if (value == null) return fallback;
-  if (value is num) return value.toDouble();
-  if (value is String) return double.tryParse(value) ?? fallback;
-  return fallback;
-}
+double doubleFromDynamic(final dynamic value, final double fallback) =>
+    switch (value) {
+      null => fallback,
+      final num v => v.toDouble(),
+      final String v => double.tryParse(v) ?? fallback,
+      _ => fallback,
+    };
 
 /// Returns [value] as [Map<String, dynamic>], or null if not a map.
-Map<String, dynamic>? mapFromDynamic(final dynamic value) {
-  if (value is Map<String, dynamic>) return value;
-  if (value is Map) return Map<String, dynamic>.from(value);
-  return null;
-}
+Map<String, dynamic>? mapFromDynamic(final dynamic value) => switch (value) {
+  final Map<String, dynamic> map => map,
+  final Map<Object?, Object?> map => Map<String, dynamic>.from(map),
+  _ => null,
+};
 
 /// Returns [value] as [List], or null if not a list.
-List<dynamic>? listFromDynamic(final dynamic value) {
-  if (value is List) return value;
-  return null;
-}
+List<dynamic>? listFromDynamic(final dynamic value) => switch (value) {
+  final List<dynamic> list => list,
+  _ => null,
+};
 
 /// Returns [value] as [bool] if possible, or [fallback] when not parseable.
 ///
 /// Accepted truthy values: `true`, non-zero numbers, `'true'`, `'1'`.
 /// Accepted falsy values: `false`, zero numbers, `'false'`, `'0'`.
-bool boolFromDynamic(final dynamic value, {required final bool fallback}) {
-  if (value == null) {
-    return fallback;
-  }
-  if (value is bool) {
-    return value;
-  }
-  if (value is num) {
-    return value != 0;
-  }
-  if (value is String) {
-    final String normalized = value.trim().toLowerCase();
-    if (normalized == 'true' || normalized == '1') {
-      return true;
-    }
-    if (normalized == 'false' || normalized == '0') {
-      return false;
-    }
-  }
-  return fallback;
-}
+bool boolFromDynamic(final dynamic value, {required final bool fallback}) =>
+    switch (value) {
+      null => fallback,
+      final bool v => v,
+      final num v => v != 0,
+      final String v => switch (v.trim().toLowerCase()) {
+        'true' || '1' => true,
+        'false' || '0' => false,
+        _ => fallback,
+      },
+      _ => fallback,
+    };
 
 /// Parses a map-of-maps (e.g. Realtime DB snapshot) into a list of [T] by
 /// calling [parseItem] for each map value. Skips non-map values and entries

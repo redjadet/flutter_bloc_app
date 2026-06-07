@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
@@ -554,8 +555,10 @@ Future<void> setupTestDependencies([
 
   await configureDependencies();
 
-  if (!options.useMockFirebaseAuth) {
-    // Integration tests can use the real plugin-backed FirebaseAuth.
+  if (!options.useMockFirebaseAuth &&
+      FirebaseBootstrapService.isFirebaseInitialized) {
+    // Integration tests can use the real plugin-backed FirebaseAuth when a
+    // default Firebase app exists (skipped when placeholder config is used).
     if (!getIt.isRegistered<FirebaseAuth>()) {
       getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
     }

@@ -178,21 +178,19 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       final String key = entry.key as String;
       final dynamic value = entry.value;
 
-      if (value is Map<dynamic, dynamic>) {
-        // Recursively convert nested maps
-        result[key] = _convertMapToTyped(value);
-      } else if (value is List<dynamic>) {
-        // Convert lists that may contain maps
-        result[key] = value.map((final dynamic item) {
-          if (item is Map<dynamic, dynamic>) {
-            return _convertMapToTyped(item);
-          }
-          return item;
-        }).toList();
-      } else {
-        // Primitive values can be copied directly
-        result[key] = value;
-      }
+      result[key] = switch (value) {
+        final Map<dynamic, dynamic> map => _convertMapToTyped(map),
+        final List<dynamic> list =>
+          list
+              .map(
+                (final dynamic item) => switch (item) {
+                  final Map<dynamic, dynamic> map => _convertMapToTyped(map),
+                  _ => item,
+                },
+              )
+              .toList(),
+        _ => value,
+      };
     }
     return result;
   }
