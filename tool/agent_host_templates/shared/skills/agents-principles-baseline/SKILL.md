@@ -7,4 +7,4 @@ description: Architectural principles and non-negotiable baseline for this repo.
 
 **Canon:** [`docs/clean_architecture.md`](../../../../../docs/clean_architecture.md), [`docs/solid_principles.md`](../../../../../docs/solid_principles.md), [`docs/dry_principles.md`](../../../../../docs/dry_principles.md), [`docs/CODE_QUALITY.md`](../../../../../docs/CODE_QUALITY.md). **Rules router:** `agents-canonical-rules` (+ scoped children).
 
-TDD; DRY/SRP/SoC; low coupling; `AppLogger`; KISS/YAGNI. **Baseline:** `isClosed`/`mounted` guards; responsive + l10n/theme tokens; type-safe BLoC (`type-safe-bloc-access`).
+TDD; DRY/SRP/SoC; low coupling; `AppLogger`; KISS/YAGNI. **Baseline:** `isClosed`/`mounted` guards; responsive + l10n/theme tokens; type-safe BLoC (`type-safe-bloc-access`). **Platforms:** iOS, Android, Web, Desktop (macOS) — [`tech_stack.md`](../../../../../docs/tech_stack.md) § Supported platforms; `flutter-cross-platform-modern` for shared UI/platform work.

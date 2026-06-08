@@ -21,9 +21,9 @@ AGENTS file and Codex worktrees.
 
 ## Snapshot
 
-Flutter 3.44.1 / Dart 3.12.1. Clean Architecture:
-`Presentation -> Domain <- Data`; Cubit/BLoC, `get_it`, GoRouter.
-Offline-first sync: `lib/shared/sync/`.
+Flutter 3.44.1 / Dart 3.12.1. Pinned facts and caveats:
+[`docs/agent_project_context.md`](docs/agent_project_context.md),
+[`docs/tech_stack.md`](docs/tech_stack.md).
 
 ## Loop
 
@@ -65,13 +65,16 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 
 ## Must Keep
 
+Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/agent_project_context.md) § Current Caveat Shortlist.
+
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
-- Flutter app-code/UI edits: hot reload active controllable debug session; hot restart when needed; see [`docs/agent_kb/tool_orchestration.md`](docs/agent_kb/tool_orchestration.md).
-- Shared state in Cubit/BLoC; domain pure Dart; update DI/routes/l10n/codegen when touched.
-- UI/design: read `DESIGN.md` + `docs/design_system.md`; use `AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`; prove responsive/no-overlap states.
-- Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) § Feature-defined testing; layout-sensitive sizing in [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
-- Destructive/external side effects need current-turn confirmation: list affected items first.
-- Reports after coding tasks include Files Changed and Follow-up Actions.
-- Repeated failure => add repo capability, not longer prompt.
-- Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) — `agent-maintain preflight` / `agent-maintain closeout` / `after-host-edit`; harness: [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md).
-- Verified reusable agent conclusion => owning source doc, `docs/changes/`, `docs/plans/`, or [`tasks/lessons.md`](tasks/lessons.md); never add `## Learned *` sections here—land durable prefs/facts in [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md) (linked from [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)).
+- Flutter/UI edits: hot reload when session active; runtime bugs → DTD — [`docs/agent_kb/tool_orchestration.md`](docs/agent_kb/tool_orchestration.md), [`docs/agent_kb/devtools_runtime_errors.md`](docs/agent_kb/devtools_runtime_errors.md).
+- Pub APIs: MCP + pinned source — [`docs/agent_kb/package_docs_mcp.md`](docs/agent_kb/package_docs_mcp.md).
+- Presentation Cubit/BLoC only; domain pure Dart; wire DI/routes/l10n/codegen when touched — [`docs/clean_architecture.md`](docs/clean_architecture.md).
+- Platforms & UI: `flutter-cross-platform-modern`; [`DESIGN.md`](DESIGN.md) + [`docs/design_system.md`](docs/design_system.md) (reusable widgets, responsive layout, cross-platform form factors).
+- Widget tests — [`docs/testing_overview.md`](docs/testing_overview.md), [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
+- Destructive/external side effects: confirm same turn; list affected items first.
+- Coding reports: Files Changed + Follow-up Actions.
+- Repeated failure ⇒ repo capability — [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) § Missing Capability Loop.
+- Host maintain: `agent-maintain preflight` / `agent-maintain closeout` — [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md), [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md).
+- Verified reusable agent conclusion → owning doc / [`tasks/lessons.md`](tasks/lessons.md); never `## Learned *` here — [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md).

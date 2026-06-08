@@ -17,6 +17,7 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | --- | --- | --- |
 | Flutter/UI imports in `domain/` | `RISK-ARCH-LAYER` | `agents-feature-delivery`; `check_clean_architecture_imports.sh` |
 | Copy legacy cubit layout (`cubits/`, root cubits) | `RISK-ARCH-LAYER` | [`reference_features.md`](../../../../../docs/architecture/reference_features.md); `presentation/cubit/` |
+| MVVM outside presentation (`viewmodels/`, repo in ViewModel folder) | `RISK-ARCH-LAYER` | [`clean_architecture.md`](../../../../../docs/clean_architecture.md) § Architecture skeleton; [`feature_structure_contract.md`](../../../../../docs/architecture/feature_structure_contract.md) |
 | `context.read` / `BlocProvider.of` | `RISK-BLOC-DIVERGENCE` | `type-safe-bloc-access`; `context.cubit<T>()` |
 | Emit after `close()` or leaked subscriptions | `RISK-ASYNC-LIFECYCLE` | `agents-canonical-rules-async`; cancel in `close()` |
 | `context` after `await` without `mounted` | `RISK-ASYNC-LIFECYCLE` | Guard `mounted`; keep side effects in Cubit |
@@ -31,5 +32,10 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | Direct `Hive.openBox` / ad-hoc Dio | `RISK-ARCH-LAYER` | DI entrypoints; `agents-canonical-rules-platform` |
 | `print` instead of `AppLogger` | `RISK-UI-REGRESSION` | logging standards |
 | Hardcoded colors/strings | `RISK-UI-REGRESSION` | `DESIGN.md`; `AppTheme` / l10n |
+| Page-only UI (no extractable leaf widget for preview/test) | `RISK-UI-REGRESSION` | [`design_system.md`](../../../../../docs/design_system.md) § Reusable widgets; `word_card_test.dart` pattern |
+| Fixed width/height on reflowable UI (skip LayoutBuilder/MediaQuery/responsive helpers) | `RISK-UI-REGRESSION` | [`design_system.md`](../../../../../docs/design_system.md) § Responsive layout; [`ui_ux_responsive_review.md`](../../../../../docs/ui_ux_responsive_review.md) |
+| UI change only tested on one platform/host | `RISK-PLATFORM-SCOPE` | [`tech_stack.md`](../../../../../docs/tech_stack.md) § Supported platforms; [`design_system.md`](../../../../../docs/design_system.md) § Cross-platform form factors; `flutter-cross-platform-modern` |
+| Widget works on debug device only (tablet/web/desktop not considered) | `RISK-PLATFORM-SCOPE` | Mobile + wide widget tests; `ui_ux_responsive_review.md` § Cross-platform form factors |
+| Guess pub API from model memory | `RISK-STALE-API` | [`package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Context7 + `read_package_uris` |
 
 After scan: map task to Minimum proof by task in `ai_failure_risks.md`.

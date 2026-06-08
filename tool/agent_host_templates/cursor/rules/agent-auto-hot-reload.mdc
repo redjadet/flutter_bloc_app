@@ -26,3 +26,10 @@ Fallback (no DTD / no running app):
 Escalation:
 
 - If hot reload cannot apply (init/DI/codegen/native), use `hot_restart`.
+
+Runtime errors (bugs, red screen, “fix this crash”):
+
+- With a running debug app, **read errors before guessing**: connect DTD (same as above), then `get_runtime_errors` (use `appUri` if multiple apps).
+- Reproduce the failure, read errors again, open the top stack frame, use `lsp` → `hover` when types/context are unclear.
+- After a fix: `hot_reload` or `hot_restart`, re-run the flow, `get_runtime_errors` again before claiming fixed.
+- Full loop: [`docs/agent_kb/devtools_runtime_errors.md`](docs/agent_kb/devtools_runtime_errors.md).

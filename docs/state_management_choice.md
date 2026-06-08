@@ -4,8 +4,9 @@ This document explains why **BLoC/Cubit** was selected as the state management s
 
 ## Executive Summary
 
-This application uses **BLoC/Cubit** via `flutter_bloc` for feature and
-app-scope state. The decision was based on predictability, testability,
+This application uses **BLoC/Cubit** via `flutter_bloc` for **presentation-layer
+state management** (feature `presentation/cubit/` and app-scope presentation).
+The decision was based on predictability, testability,
 performance, architectural alignment, and team familiarity.
 
 ## Why BLoC/Cubit?

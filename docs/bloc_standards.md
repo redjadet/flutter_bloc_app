@@ -1,7 +1,9 @@
 # BLoC Standards
 
 Canonical state-management rules for Cursor and Codex agents building or
-reviewing feature code. This complements [Clean Architecture](clean_architecture.md),
+reviewing feature code. **Cubit/BLoC is presentation-layer state management
+only** — under `lib/features/*/presentation/cubit/` or app-scope presentation
+(`AppScope`); never in `domain/` or `data/`. This complements [Clean Architecture](clean_architecture.md),
 [Feature Structure Contract](architecture/feature_structure_contract.md), and
 [State Management Choice](state_management_choice.md).
 

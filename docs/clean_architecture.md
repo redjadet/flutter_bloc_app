@@ -21,14 +21,57 @@ together without blurring layer responsibilities.
 > - [Code Quality](CODE_QUALITY.md) - Architecture compliance verification and code quality metrics
 > - [Flutter Best Practices Review](flutter_best_practices_review.md) - Architecture review and best practices checklist
 
+## Architecture skeleton
+
+**Clean Architecture is the main skeleton** for every feature. Dependency rule:
+`Presentation -> Domain <- Data`. Domain never depends on presentation or data.
+
+**MVVM applies only inside the presentation layer** — it is not a parallel
+app-wide architecture and must not introduce extra top-level layers such as
+`application/`, `infrastructure/`, or `viewmodels/`.
+
+**Cubit/BLoC is presentation-layer state management only** — live under
+`presentation/cubit/` (or app-scope presentation in `AppScope`). Never in
+`domain/` or `data/`. Domain rules and invariants belong in domain models and
+use cases; data owns I/O and mapping.
+
+```text
+presentation/                 ← MVVM boundary (UI + ViewModel only)
+  pages/, widgets/            ← View
+  cubit/                      ← ViewModel (Cubit / BLoC)
+
+domain/
+  <entity>.dart               ← Entity / domain model (pure Dart)
+  use_cases/                  ← Use case (when policy requires; see use_case_dto_policy)
+  <feature>_repository.dart   ← Repository interface
+
+data/
+  <feature>_repository_impl   ← Repository implementation
+  *_remote_*, *_local_*, etc.  ← Data source (HTTP, Hive, SDK adapters)
+  *_dto.dart                  ← DTO
+  *_mapper.dart               ← DTO ↔ domain mapping
+```
+
+| MVVM role | This repo |
+| --- | --- |
+| View | `presentation/pages/`, `presentation/widgets/` — render state; no business rules |
+| ViewModel | `presentation/cubit/` — Cubit/BLoC: **presentation state management**; orchestrates user flow and calls domain |
+| Model (read) | Domain entities + repository contracts; data implements behind the interface |
+
+Presentation ViewModels call **domain** (repository or use case), never concrete
+data classes, DTOs, or SDK types. Orchestration that spans multiple domain
+ports belongs in `domain/use_cases/` per
+[`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md),
+not in widgets.
+
 ## Mental Model
 
 Use this model when placing code:
 
 - **App shell** starts the app, configures DI, owns top-level routing, and
   provides app-scope state.
-- **Presentation** owns widgets, pages, cubits/blocs, and route-scoped user
-  flows.
+- **Presentation** owns widgets, pages, and **Cubit/BLoC state management**
+  (`presentation/cubit/`) for route- and app-scoped user flows.
 - **Domain** owns repository/service contracts and pure models.
 - **Data** implements domain contracts and owns storage, HTTP/SDKs, sync, and
   merge policies.
@@ -39,7 +82,7 @@ Use this model when placing code:
 
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `lib/features/counter/domain/counter_repository.dart`, `lib/features/remote_config/domain/remote_config_service.dart`, `lib/features/deeplink/domain/deep_link_parser.dart`.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
-- **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Examples: `lib/features/counter/presentation/counter_cubit.dart`, `lib/features/remote_config/presentation/cubit/remote_config_cubit.dart`, `lib/features/deeplink/presentation/deep_link_listener.dart`.
+- **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`). Legacy root-level cubits (e.g. `counter/presentation/counter_cubit.dart`) remain until migrated — see [`architecture/reference_features.md`](architecture/reference_features.md).
 - **Shared cross-cutting** — Reusable utilities that stay Flutter-agnostic when possible (`lib/shared/sync/`, `lib/shared/storage/`, `lib/shared/utils/`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of all shared utilities.
 - **Dependency injection** — `lib/core/di/injector.dart` bootstraps everything via `registerAllDependencies()` in `lib/core/di/injector_registrations.dart`, wiring domain contracts to concrete implementations (often lazy singletons with dispose callbacks). Use `registerLazySingletonIfAbsent` helpers to keep DI idempotent.
 

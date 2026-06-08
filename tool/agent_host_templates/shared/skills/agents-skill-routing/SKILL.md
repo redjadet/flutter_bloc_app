@@ -23,7 +23,8 @@ For non-trivial work, find and invoke a suitable skill before editing or broad c
 | Flutter baseline | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern` |
 | Cross-platform UI | `flutter-cross-platform-modern` |
 | Checks / tests routing | `agents-validation-testing` |
-| Analyze / layout / runtime | `systematic-debugging`, `dart-fix-runtime-errors`, `flutter-fix-layout-issues` |
+| Analyze / layout / runtime | [`docs/agent_kb/devtools_runtime_errors.md`](../../../../../docs/agent_kb/devtools_runtime_errors.md); `dart-fix-runtime-errors`, `systematic-debugging`, `flutter-fix-layout-issues` |
+| Pub dependency / API docs | [`docs/agent_kb/package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Context7 + `user-dart`; `context7-mcp`, `flutter-ai-rules` |
 | Globals install/trim | `agents-global-skills-setup` or `./bin/agent-maintain install/update/trim` |
 
 ## Find skills

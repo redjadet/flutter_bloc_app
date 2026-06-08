@@ -50,6 +50,8 @@ managed_cursor_files=(
   "cursor/commands/setup-cursor-agent-environment.md|$HOME/.cursor/commands/setup-cursor-agent-environment.md"
   "cursor/commands/agent-maintain.md|$HOME/.cursor/commands/agent-maintain.md"
   "cursor/commands/hot-reload.md|$HOME/.cursor/commands/hot-reload.md"
+  "cursor/commands/runtime-errors.md|$HOME/.cursor/commands/runtime-errors.md"
+  "cursor/commands/package-docs.md|$HOME/.cursor/commands/package-docs.md"
   "cursor/rules/agents-global.mdc|$HOME/.cursor/rules/agents-global.mdc"
   "cursor/rules/design-system.mdc|$HOME/.cursor/rules/design-system.mdc"
   "cursor/rules/agent-auto-hot-reload.mdc|$HOME/.cursor/rules/agent-auto-hot-reload.mdc"

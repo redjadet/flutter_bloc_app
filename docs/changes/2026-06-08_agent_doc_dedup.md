@@ -20,6 +20,8 @@ Reduce redundant prose across frequently loaded agent files while keeping
   repo-root paths.
 - [`audits/dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md): 2026-06-08 pass; Stale → Echo for
   gate-required quick-ref rows.
+- Second pass: [`AGENTS.md`](../../AGENTS.md) Snapshot + Must Keep trimmed to map/invariant
+  links; UI/platform/responsive detail → [`agent_project_context.md`](../agent_project_context.md) § Current Caveat Shortlist + [`design_system.md`](../design_system.md).
 
 ## Proof
 

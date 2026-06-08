@@ -10,6 +10,9 @@ Use before creating or reviewing Cubit/BLoC code.
 Read: `docs/bloc_standards.md`, then `docs/review/bloc_checklist.md` for review.
 
 Rules:
+
+- Cubit/BLoC = **presentation state management only** (`presentation/cubit/` or
+  app-scope presentation); never in `domain/` or `data/`.
 - Default `Cubit`; use `Bloc` only for event queue/transformer complexity.
 - State/domain models prefer Freezed.
 - Cubit/Bloc depends on domain/core contracts only.

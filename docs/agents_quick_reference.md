@@ -14,6 +14,8 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_b
 | Integration journey / flow | `./bin/integration_tests` |
 | Early integration/bootstrap guardrails | `./bin/integration_preflight` |
 | iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
+| Runtime error / red screen / active debug bug | DTD → `get_runtime_errors` → fix → hot reload → re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md) · skill `dart-fix-runtime-errors` · shell: `bash tool/check_runtime_errors.sh` |
+| Unfamiliar pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) · Context7 + `user-dart` · `/package-docs` |
 | iOS/macOS debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) · `bash tool/check_apple_debug_hive_storage.sh` · cold restart on simulator |
 | Browser integration (Chrome/web; not `integration_test/` on device) | `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` (default) |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
@@ -61,11 +63,13 @@ Repo docs/scripts define behavior; external catalogs don't.
 | --- | --- | --- |
 | Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
 | Broad/high-risk work | Run [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation clearly helps and is allowed |
-| API/version-sensitive change | Official/repo-pinned docs before model memory | Same |
+| API/version-sensitive change | MCP package docs + repo-pinned source before model memory — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) | Same |
 | External/live state | Use owning tool/MCP/connector/browser where available; summarize evidence, not transcripts | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
 | UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
 | Flutter app-code/UI change with active debug run | Trigger hot reload; hot restart if reload cannot apply; report unavailable session | Same |
+| Runtime bug / crash with active debug run | DTD + `get_runtime_errors`; propose fix from stack; verify with reload + second read — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md) | Same |
+| Pub dependency / unfamiliar API | `read_package_uris` / Context7 `query-docs` before coding — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |

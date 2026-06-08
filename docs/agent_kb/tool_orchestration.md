@@ -13,6 +13,8 @@ Use capabilities as an execution system, not decoration.
 - Faster/mechanical tools or models may do repetitive edits only after the owner has fixed scope, write set, and validation; final judgment stays with the coordinating agent.
 - Protocol: `dart mcp-server` uses **newline-delimited JSON-RPC** (NDJSON), not `Content-Length` framing.
 - After Flutter app-code, UI, route, asset, or localization edits, trigger hot reload for any already-running controllable debug session before manual inspection; use hot restart when reload cannot apply (init, DI, codegen, native, `dart-define`), and report when no session was available instead of silently starting one.
+- For runtime bugs or before claiming a UI fix on an active debug session, connect DTD and call `get_runtime_errors` (then `lsp` at the failing site); verify with hot reload + a second `get_runtime_errors`. Full loop: [`devtools_runtime_errors.md`](devtools_runtime_errors.md).
+- Before using unfamiliar or version-sensitive **package APIs**, read pinned dependency source and current docs via MCP — do not guess from model memory. Full loop: [`package_docs_mcp.md`](package_docs_mcp.md).
 - More agents/tools are not automatically better. Add them when they reduce uncertainty, isolate context, or verify a risky decision.
 - Setup details live in [`agent_environment_setup.md`](../agent_environment_setup.md).
 - Host upkeep automation (when agents run `preflight` / `closeout` / `after-host-edit`): [`host_maintenance_automation.md`](host_maintenance_automation.md).

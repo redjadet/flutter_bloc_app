@@ -1,8 +1,46 @@
 # UI/UX + Responsive/Adaptive Review
 
-**Scope:** Mobile-first UI/UX behavior (iOS + Android), responsive layout helpers, platform-adaptive widgets, accessibility (text scaling, safe areas), and representative presentation screens.
+**Scope:** Mobile-first UI/UX behavior (iOS + Android), **web and desktop (macOS)**,
+responsive layout helpers, platform-adaptive widgets, accessibility (text scaling,
+safe areas), and representative presentation screens.
 
-**Review Focus:** iOS gesture bars, Android cutouts, keyboard handling, text scaling, and platform-specific UI patterns.
+**Review Focus:** iOS gesture bars, Android cutouts, keyboard handling, text
+scaling, web viewport/deep links, desktop keyboard/focus/window sizing, and
+platform-specific UI patterns.
+
+## Agent rules (responsive layout)
+
+Non-negotiable for new or touched UI:
+
+1. **No fixed sizes** for shells, text regions, or multi-control rows that must
+   reflow — use flex, wrap, scroll, and shared responsive helpers.
+2. **`LayoutBuilder`** when layout branches on **parent** `constraints` (compact
+   card, keypad, grid inside a pane).
+3. **`MediaQuery`** when layout depends on **screen/viewport** (keyboard insets,
+   text scale, safe area, or breakpoint when parent width ≠ screen width).
+4. **Prefer** `lib/shared/extensions/responsive.dart` and shared widgets
+   (`CommonPageLayout`, `ResponsiveDualCtaRow`) before bespoke breakpoints.
+5. **Prove** compact width + large text scale where layout is contractually
+   sensitive ([`widget_test_playbook.md`](testing/widget_test_playbook.md)).
+
+Canon detail: [`design_system.md`](design_system.md) § Responsive layout (avoid fixed sizes).
+
+## Agent rules (cross-platform form factors)
+
+Non-negotiable for shared widgets and pages:
+
+1. **All four targets** — mobile (phone), tablet, web, desktop (macOS). See
+   [`tech_stack.md`](tech_stack.md) § Supported platforms.
+2. **Mobile & tablet** — breakpoint-driven layout (&lt;800 / 800–1199 / ≥1200);
+   tablet must not look like a stretched phone when width allows columns or
+   side-by-side content.
+3. **Web** — web-safe imports; routing/URL behavior; pointer and focus; no
+   mobile-only scroll or tap assumptions.
+4. **Desktop** — keyboard traversal, focus visibility, **narrow window** width
+   (not only maximized macOS).
+5. **One tree** — adaptive/responsive shared widgets; platform IO in adapters only.
+
+Canon detail: [`design_system.md`](design_system.md) § Cross-platform form factors.
 
 ## Strengths Observed
 

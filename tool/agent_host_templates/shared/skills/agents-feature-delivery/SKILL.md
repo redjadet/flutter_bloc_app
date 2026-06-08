@@ -24,8 +24,17 @@ Do:
   `bash tool/scaffold_feature_contract.sh --name <feature>`; use `--apply`
   only after the name is final.
 - Fill feature brief tests first for non-trivial work.
-- Keep `Presentation -> Domain <- Data`.
+- Keep `Presentation -> Domain <- Data` (CA skeleton). MVVM only in
+  presentation — View = `pages/`/`widgets/`; ViewModel = `presentation/cubit/`.
+  Domain = entity + repository interface (+ use cases when policy requires).
+  Data = repository impl + datasource + DTO.
 - Place DTO/mappers in data; view-data mappers in presentation/core diagnostics.
+- Extract **reusable leaf widgets** for preview, widget test, and design iteration —
+  [`docs/design_system.md`](../../../../../docs/design_system.md) § Reusable widgets;
+  mirror tests under `test/features/<feature>/presentation/widgets/`.
+- Prove **mobile, tablet, web, desktop** for shared UI —
+  [`docs/design_system.md`](../../../../../docs/design_system.md) § Cross-platform form factors;
+  `flutter-cross-platform-modern`.
 - Add use case only for reusable multi-repository/domain workflow.
 - Wire DI/routes/l10n/codegen in same change when touched.
 

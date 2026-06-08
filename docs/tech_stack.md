@@ -20,6 +20,28 @@ not a replacement for `pubspec.yaml`.
 | App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |
 | Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
+## Supported platforms
+
+First-class targets for feature work, UI, routing, and validation. Agents must
+consider **all four** when changing shared presentation, platform adapters,
+plugins, or bootstrap — not only the device or host they are debugging on.
+
+**Form factors:** mobile (phone), **tablet** (mid-width layouts), **web**
+(browser), **desktop** (macOS window + keyboard). Widget policy:
+[`design_system.md`](design_system.md) § Cross-platform form factors.
+
+| Target | Notes |
+| --- | --- |
+| **iOS** | Simulator/device; Keychain/Hive debug caveats — [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) |
+| **Android** | Emulator/device; Gradle/Firebase config in platform folders |
+| **Web** | Chrome default for integration preflight; web-safe imports (`kIsWeb`) |
+| **Desktop (macOS)** | Supported desktop target; keyboard/focus/window sizing matter |
+
+Platform-specific code belongs in data/shared adapters or guarded presentation
+helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
+`flutter-cross-platform-modern`; risk: `RISK-PLATFORM-SCOPE` in
+[`ai/ai_failure_risks.md`](ai/ai_failure_risks.md).
+
 ## Core architecture
 
 | Concern | Libraries or approach |

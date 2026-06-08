@@ -442,4 +442,13 @@ bash tool/check_tool_dart_async_main_blocking_io.sh --paths \
   "$tmp_tool_io_dir/ok_comment_only.dart" \
   "$tmp_tool_io_dir/ok_ignored.dart" >/dev/null
 
+echo "fixtures|check_runtime_errors|help"
+bash tool/check_runtime_errors.sh --help >/dev/null
+
+echo "fixtures|check_runtime_errors|self_test"
+bash tool/check_runtime_errors.sh --self-test >/dev/null
+
+echo "fixtures|check_runtime_errors|skip_no_app"
+bash tool/check_runtime_errors.sh >/dev/null
+
 echo "fixtures|done"

@@ -12,7 +12,9 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - Data implements domain contracts and owns SDK, HTTP, persistence, DTOs, and
   sync.
 - Presentation owns Cubit/BLoC, pages, widgets, route-level user flow, and
-  visible state.
+  visible state. **MVVM applies here only:** View = `pages/`/`widgets/`; ViewModel
+  = `presentation/cubit/` — **presentation state management only** (see
+  [`clean_architecture.md`](../clean_architecture.md) § Architecture skeleton).
 - App/router/core compose features from above; feature code does not import
   another feature unless an explicit exception exists in [Modularity](../modularity.md).
 

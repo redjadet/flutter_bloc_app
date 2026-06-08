@@ -13,6 +13,26 @@ How-to for screen-level widget tests. **Policy:** [`testing_overview.md`](../tes
 
 Use P0–P2 guidance in testing_overview before skipping widget coverage.
 
+## Component-level (reusable widget) tests
+
+Policy: [`design_system.md`](../design_system.md) § Reusable widgets (preview,
+test, design iteration).
+
+| Prefer component test when | Prefer page test when |
+| --- | --- |
+| Layout, badges, buttons, list tiles, dialogs (widget only) | Route args, `GoRouter`, multi-step navigation |
+| Callback fired on tap | Cubit stream drives multiple widgets |
+| Empty / error / success **branch UI** with seeded props | Full screen integration of cubit + widgets |
+
+Pattern:
+
+1. Pump the **widget directly** with fixture constructor args (no live DI).
+2. Reuse the same minimal shell as previews: `MaterialApp` + l10n; Mix scope when needed.
+3. Mirror path: `test/features/<feature>/presentation/widgets/<widget>_test.dart`.
+4. Example: [`word_card_test.dart`](../../test/features/playlearn/presentation/widgets/word_card_test.dart).
+
+Add `@Preview` targets with the **same fixtures** when using Flutter Widget Preview.
+
 ## Minimal app shell
 
 Wrap the subject with `MaterialApp`, localization delegates, and supported locales.

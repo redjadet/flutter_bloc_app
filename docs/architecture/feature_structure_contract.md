@@ -4,6 +4,34 @@ Canonical folder contract for Cursor and Codex agents. Use with
 [Feature Delivery Guide](../feature_implementation_guide.md) and
 [Clean Architecture](../clean_architecture.md).
 
+## Skeleton (non-negotiable)
+
+**Clean Architecture** is the feature skeleton. **MVVM is presentation-only**
+(View + ViewModel); domain and data are not MVVM layers. **Cubit/BLoC is
+presentation state management only** — never place Cubit/BLoC under `domain/`
+or `data/`.
+
+```text
+presentation/                 ← MVVM lives here only
+  pages/, widgets/            ← View
+  cubit/                      ← ViewModel (Cubit / BLoC)
+
+domain/
+  <entity>.dart               ← Entity / domain model
+  use_cases/                  ← Use case (optional; see use_case_dto_policy)
+  <feature>_repository.dart   ← Repository interface
+
+data/
+  <feature>_repository_impl   ← Repository implementation
+  *_remote_*, *_local_*, …    ← Data source
+  *_dto.dart                  ← DTO
+  *_mapper.dart
+```
+
+Do not add parallel skeletons (`application/`, `infrastructure/`, top-level
+`viewmodels/`, `providers/`) — Cubit/BLoC **is** the ViewModel under
+`presentation/cubit/`.
+
 ## Standard Shape
 
 Start with `bash tool/scaffold_feature_contract.sh --name <feature>` to preview
@@ -44,6 +72,8 @@ layer names such as `application/`, `infrastructure/`, `viewmodels/`, or
 | Cubit | `<Feature><Flow>Cubit` in `presentation/cubit/` |
 | Page | `<Feature><Flow>Page` in `presentation/pages/` |
 | Reusable widget | Feature-owned widget first; move to `shared/widgets/` only after reuse is real |
+| Widget preview | Optional co-located `*_preview.dart` or top-level `@Preview` in `presentation/widgets/` |
+| Widget test (component) | `test/features/<feature>/presentation/widgets/<name>_test.dart` mirrors `presentation/widgets/` |
 
 **New code rule:** use `presentation/cubit/` (singular) only. Do not add new
 Cubits at `presentation/` root or under `presentation/cubits/`.
@@ -54,6 +84,27 @@ should use the standard shape above.
 
 Example filled brief: [`feature_brief_scaffold_example.md`](feature_brief_scaffold_example.md).
 In-repo gold layouts: [`reference_features.md`](reference_features.md).
+
+## Reusable presentation widgets
+
+Extract widgets when a screen block is reused, has multiple visual states, or
+needs isolated preview/test/iteration. Full contract:
+[`design_system.md`](../design_system.md) § Reusable widgets (preview, test,
+design iteration).
+
+- **Leaf widgets** take data + callbacks; **pages** own cubit lookup and routing.
+- **Do not** embed business rules or repository calls in reusable widgets.
+- **Do** add `@Preview` + a matching widget test for non-trivial new widgets when
+  the feature brief or testing matrix calls for UI proof.
+- **Do** use responsive layout — avoid fixed sizes on reflowable UI; prefer
+  `context.responsive*` then `LayoutBuilder` / `MediaQuery` when suitable
+  ([`design_system.md`](../design_system.md) § Responsive layout).
+
+## Cross-platform form factors
+
+Shared widgets must work on **mobile, tablet, web, and desktop (macOS)** — see
+[`design_system.md`](../design_system.md) § Cross-platform form factors and
+[`tech_stack.md`](../tech_stack.md) § Supported platforms.
 
 ## Placement Rules
 

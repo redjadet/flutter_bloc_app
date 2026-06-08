@@ -23,10 +23,13 @@ then apply this repo's architecture, package, migration, and validation rules.
 
 | Need | Source of truth |
 | --- | --- |
-| Toolchain / entrypoints | [`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md) |
-| Architecture boundaries | [`clean_architecture.md`](clean_architecture.md), [`CODE_QUALITY.md`](CODE_QUALITY.md) |
+| Toolchain / entrypoints / **supported platforms** | [`tech_stack.md`](tech_stack.md) (§ Supported platforms), [`architecture_details.md`](architecture_details.md) |
+| Architecture boundaries | [`clean_architecture.md`](clean_architecture.md) (CA skeleton; MVVM presentation-only), [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`CODE_QUALITY.md`](CODE_QUALITY.md) |
+| Agent runtime / package APIs | [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md), [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) |
 | DI / routing / app startup | [`architecture_details.md`](architecture_details.md), [`app_initialization_and_feature_control.md`](app_initialization_and_feature_control.md) |
 | UI/design tokens | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md) |
+| Reusable widgets / responsive / cross-platform UI | [`design_system.md`](design_system.md) § Reusable widgets, § Responsive layout, § Cross-platform form factors; [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md) |
+| Agent execution invariants (`AGENTS.md` § Must Keep) | This file § Current Caveat Shortlist; [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract |
 | Validation lanes | [`validation_scripts.md`](validation_scripts.md), [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) |
 | Testing strategy | [`testing_overview.md`](testing_overview.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md) |
 | Official skill setup | [`agent_environment_setup.md`](agent_environment_setup.md) |
@@ -49,7 +52,15 @@ the answer.
 
 - Flutter 3.44.1 / Dart 3.12.1 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
+- **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
+  presentation, plugins, routing, and bootstrap changes must account for all
+  four — not only the host under debug (`flutter-cross-platform-modern`).
 - Domain layer stays pure Dart; no `package:flutter` imports.
+- Feature skeleton is Clean Architecture (`presentation/` → `domain/` ← `data/`);
+  MVVM naming applies in presentation only (Cubit/BLoC = ViewModel and
+  **presentation state management** — not domain or data).
+- Active debug bugs: use DTD `get_runtime_errors` before claiming UI fixes;
+  unfamiliar pub APIs: read pinned source + MCP docs before coding.
 - Shared state lives in Cubit/BLoC; use existing type-safe access/selectors
   before new state patterns.
 - GoRouter, DI, l10n, codegen, and route gates are coupled surfaces; update and
@@ -65,8 +76,14 @@ the answer.
   (native `plugins:` in `analysis_options.yaml`) on analyzer 10 via
   `dependency_overrides`; `custom_lint` / `custom_lint_builder` are not used.
 - UI work should start from real workflow/demo surface, not marketing
-  landing page. Check responsive stability, complete states, and no
-  text/control overlap at mobile/tablet/desktop widths.
+  landing page. Tokens/helpers: `AppTheme`, `buildAppMixScope`, `AppStyles`,
+  `UI` — [`design_system.md`](design_system.md). Reusable leaf widgets:
+  constructor-driven, `@Preview`, widget tests — § Reusable widgets. Responsive
+  layout: prefer repo helpers; `LayoutBuilder` / `MediaQuery` when suitable; no
+  fixed sizes on reflowable UI — § Responsive layout. One adaptive tree for
+  mobile / tablet / web / desktop (macOS); no presentation `dart:io` — §
+  Cross-platform form factors. Proof: responsive stability, complete states, no
+  overlap at mobile/tablet/desktop widths.
 - Hive stored-shape changes are manifest-driven; runtime `getBox()` can run
   `ensureSchema`, but schema changes still require spec, fingerprint,
   migrator, and tests.

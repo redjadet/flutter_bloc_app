@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **87** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **88** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **70** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -75,6 +75,10 @@ below.
   CocoaPods input list or simulator app is absent unless `--require-built-app`
   is passed; use
   `--self-test` for the no-trailing-newline fixture.
+- **`check_runtime_errors.sh`**: Optional local preflight — reads VM runtime
+  errors via `dart mcp-server` (`script/mcp_runtime_errors.js`). Skips (exit 0)
+  when no DTD or no connected debug app; `--strict` fails in that case. Not in
+  `./bin/checklist`. See [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md).
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
 - **`check_ai_failure_risk_register.sh`**: Ensures
   [`ai_failure_risks.md`](../ai/ai_failure_risks.md) keeps required Cursor/Codex

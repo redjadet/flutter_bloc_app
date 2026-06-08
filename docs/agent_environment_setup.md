@@ -21,8 +21,8 @@ Enable only tools you will use; disabled stale servers create noise.
 
 Suggested for this Flutter repo (Cursor MCP settings):
 
-- `user-dart` (Flutter/Dart tooling + run/analyze/test)
-- `plugin-context7-plugin-context7` (docs retrieval for drift-prone APIs)
+- `user-dart` (Flutter/Dart tooling: analyze, DTD, **`get_runtime_errors`**, hot reload — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); **`read_package_uris`**, **`rip_grep_packages`**, `pub_dev_search` — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md))
+- `plugin-context7-plugin-context7` (current library docs for drift-prone APIs — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md))
 - `cursor-ide-browser` (runtime proof, screenshots)
 - optional: `user-playwright` (repeatable browser flows)
 - optional: `user-github` (PRs/comments/checks)
