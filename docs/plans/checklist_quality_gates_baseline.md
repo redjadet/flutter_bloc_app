@@ -84,7 +84,7 @@ Full backlog (IDs, unblock criteria, reject vs defer):
 
 Summary:
 
-- **Defer:** `bloc_lint`, `file_length_lint`, `check_bloc_rebuild_scoping`,
+- **Defer:** `bloc_lint`, `check_bloc_rebuild_scoping`,
   `check_context_read_watch`, `check_deferred_heavy_routes`,
   `check_startup_work_in_build`, `check_lifecycle_observer_dispose`,
   `CHECK_THEME` filter, warn→fail promotion

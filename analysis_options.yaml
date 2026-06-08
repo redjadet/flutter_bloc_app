@@ -5,20 +5,28 @@
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
 #
-# NOTE: Native Dart analyzer plugin configuration
+# Native analyzer plugins (Dart ≥ 3.10): mix_lint + file_length_lint use analysis_server_plugin.
+# See https://dart.dev/tools/analyzer-plugins
 #
-# file_length_lint is configured as a native analyzer plugin using the
-# top-level `plugins:` section. It runs automatically with `flutter analyze`.
-# See https://dart.dev/tools/analyzer-plugins for more information.
-#
-# Plugin diagnostics can be configured under the plugin's diagnostics section.
-# Lint rules are disabled by default and must be explicitly enabled.
-
 include: package:very_good_analysis/analysis_options.yaml
 
+plugins:
+  file_length_lint:
+    path: custom_lints/file_length_lint
+    diagnostics:
+      file_too_long: error
+  mix_lint:
+    path: custom_lints/mix_lint
+    diagnostics:
+      mix_avoid_defining_tokens_within_style: true
+      mix_avoid_defining_tokens_within_scope: true
+      mix_avoid_empty_variants: true
+      mix_max_number_of_attributes_per_style: true
+      mix_variants_last: true
+      mix_mixable_styler_has_create: true
+      mix_prefer_dot_shorthands: true
+
 analyzer:
-  plugins:
-    - custom_lint
   language:
     strict-casts: true
     strict-inference: true

@@ -4,7 +4,7 @@
 # 1. flutter pub get (only when dependency metadata changed)
 # 2. ./bin/format --changed (changed Dart files only)
 # 3. flutter analyze
-# 4. Best practices validation (parallel static checks + mix_lint + optional focused tests)
+# 4. Best practices validation (parallel static checks + mix_lint + file_length_lint + optional focused tests)
 # 5. tool/test_coverage.sh (optional via CHECKLIST_RUN_COVERAGE=0/auto)
 
 set -euo pipefail
@@ -36,6 +36,7 @@ Env overrides:
   CHECKLIST_RUN_COVERAGE=auto|0|1
   CHECKLIST_RUN_FOCUSED_TESTS=auto|0|1
   CHECKLIST_RUN_MIX_LINT=auto|0|1
+  CHECKLIST_RUN_FILE_LENGTH_LINT=auto|0|1
   CHECKLIST_RUN_TODO_LAYOUT_TESTS=auto|0|1
   CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=auto|0|1
   CHECKLIST_RUN_ANALYZE=auto|0|1
@@ -315,6 +316,7 @@ validate_checklist_configuration() {
   local extra_scripts=(
     "tool/resolve_flutter_dart.sh"
     "tool/run_mix_lint.sh"
+    "tool/run_file_length_lint.sh"
     "tool/test_coverage.sh"
     "tool/check_regression_guards.sh"
     "tool/check_todo_keyboard_layout.sh"
@@ -581,6 +583,10 @@ should_run_mix_lint_auto() {
   done
 
   return 1
+}
+
+should_run_file_length_lint_auto() {
+  should_run_flutter_analyze_auto
 }
 
 should_run_pubspec_codegen_compat_preflight() {
@@ -940,6 +946,7 @@ CHECKLIST_MODE="${CHECKLIST_MODE:-full}"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-auto}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
+RUN_FILE_LENGTH_LINT="${CHECKLIST_RUN_FILE_LENGTH_LINT:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 RUN_ACTION_BAR_LAYOUT_TESTS="${CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
@@ -1011,6 +1018,10 @@ fi
 if ! [[ "$RUN_MIX_LINT" =~ ^(auto|0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_MIX_LINT='$RUN_MIX_LINT'; using auto"
   RUN_MIX_LINT=auto
+fi
+if ! [[ "$RUN_FILE_LENGTH_LINT" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_FILE_LENGTH_LINT='$RUN_FILE_LENGTH_LINT'; using auto"
+  RUN_FILE_LENGTH_LINT=auto
 fi
 
 if ! [[ "$RUN_TODO_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
@@ -1684,6 +1695,24 @@ if [ "$should_run_mix_lint" -eq 1 ]; then
   fi
 else
   echo "  Skipping mix_lint (no Mix-related changes; override with CHECKLIST_RUN_MIX_LINT=1)"
+fi
+
+should_run_file_length_lint=1
+if [ "$RUN_FILE_LENGTH_LINT" = "0" ]; then
+  should_run_file_length_lint=0
+elif [ "$RUN_FILE_LENGTH_LINT" = "auto" ]; then
+  if ! should_run_file_length_lint_auto; then
+    should_run_file_length_lint=0
+  fi
+fi
+
+if [ "$should_run_file_length_lint" -eq 1 ]; then
+  echo "  Running file_length_lint checks..."
+  if ! bash tool/run_file_length_lint.sh; then
+    VALIDATION_FAILED=1
+  fi
+else
+  echo "  Skipping file_length_lint (no Dart/analyzer-relevant changes; override with CHECKLIST_RUN_FILE_LENGTH_LINT=1)"
 fi
 echo ""
 

@@ -24,7 +24,7 @@ environment:
 # - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
 # - device_info_plus 13 + package_info_plus 10: geolocator_linux caps package_info_plus ^9; win32 major split vs device_info_plus 13.
 # - genui 0.9: genui_google_generative_ai 0.7.x requires genui ^0.7.
-# - json_serializable 6.12+ needs analyzer >=9; 6.13+ needs >=10; 6.11.x fits analyzer 8.4 pin.
+# - json_serializable 6.14+ needs analyzer >=10; mix_lint 2.x uses analysis_server_plugin (see analysis_options.yaml plugins).
 # - google_sign_in_mocks 0.4+: needs google_sign_in 7; firebase_ui_oauth_google stays on google_sign_in 6.
 # - meta 1.18: flutter_test from the SDK pins meta 1.17.0.
 
@@ -91,8 +91,7 @@ dependencies:
   integration_test:
     sdk: flutter
   intl: ^0.20.2
-  # Keep compatible with codegen stack pinned to analyzer 8.4.x (via custom_lints).
-  json_annotation: ^4.9.0
+  json_annotation: ^4.12.0
   local_auth: ^3.0.1
   logger: ^2.7.0
   markdown: ^7.3.1
@@ -117,7 +116,6 @@ dependencies:
 dev_dependencies:
   bloc_test: ^10.0.0
   build_runner: ^2.15.0
-  custom_lint: ^0.8.1
   fake_async: ^1.3.3
   file_length_lint:
     path: custom_lints/file_length_lint
@@ -132,8 +130,7 @@ dev_dependencies:
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
   google_sign_in_mocks: ^0.3.0
-  # Exact pin: `pub upgrade --major-versions` rewrites caret constraints; 6.12+ needs analyzer >=9.
-  json_serializable: 6.11.4
+  json_serializable: ^6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
@@ -145,10 +142,9 @@ dev_dependencies:
   video_player_platform_interface: ^6.7.0
 
 dependency_overrides:
-  # Analyzer pinned by custom_lints (mix_lint/file_length_lint) compatibility.
-  analyzer: 8.4.1
-  # Keep dart_style aligned with analyzer 8.4.x.
-  dart_style: 3.1.3
+  # json_serializable 6.14 + mix_lint 2.x / file_length_lint (override unifies analyzer graph).
+  analyzer: 10.0.2
+  dart_style: 3.1.4
   # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17
   # Using the newer version required by genui
   # genui_google_generative_ai 0.7.x supports genui ^0.7 only; raise genui when that package does.

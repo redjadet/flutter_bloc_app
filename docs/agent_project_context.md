@@ -59,8 +59,11 @@ the answer.
   (not repo-wide `WidgetTester.view` until a harness exists). Never deprecated
   `tester.binding.window`.
 - Mix/style changes use runtime source first (`AppTheme`, `buildAppMixScope`,
-  `AppStyles`, `UI`) and `./tool/run_mix_lint.sh`; local `mix_lint` is pinned
-  under `custom_lints/mix_lint` for analyzer 8 / custom_lint 0.8 compatibility.
+  `AppStyles`, `UI`) and `./tool/run_mix_lint.sh`. Large `lib/` files: keep under
+  225 lines (`file_too_long` via `./tool/run_file_length_lint.sh`). Vendored `mix_lint` 2.x
+  (`custom_lints/mix_lint`) and `file_length_lint` use `analysis_server_plugin`
+  (native `plugins:` in `analysis_options.yaml`) on analyzer 10 via
+  `dependency_overrides`; `custom_lint` / `custom_lint_builder` are not used.
 - UI work should start from real workflow/demo surface, not marketing
   landing page. Check responsive stability, complete states, and no
   text/control overlap at mobile/tablet/desktop widths.

@@ -8,6 +8,7 @@ blocking merge of the four new gates. Source plan:
 
 - Fail: `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh`
 - Fail (promoted 2026-06-03): `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`
+- Fail (promoted 2026-06-08): `file_length_lint` / `file_too_long` (native plugin, max 225 lines under `lib/`)
 - `CHECK_SCRIPT_THEMES`, `CHECKLIST_EXPLAIN_THEMES=1`, path-triggered
   `./bin/router_feature_validate`, `background_sync_coordinator_test.dart` regression
 
@@ -31,7 +32,7 @@ When an item ships, remove its row here and note the change in
 | ID | Theme | Proposed gate / tool | Decision | Why deferred | Unblock criteria |
 | --- | --- | --- | --- | --- | --- |
 | **QG-D01** | State / rebuild | `bloc_lint` (custom analyzer) | defer | Overlaps [`check_cubit_isclosed.sh`](../validation_scripts.md); needs `analysis_options.yaml` + CI time budget; rule set not curated for this repo. | Document which `bloc_lint` rules replace vs complement `check_cubit_isclosed`; run on `lib/` with agreed allowlist; checklist runtime delta measured on cold + warm run. |
-| **QG-D02** | File size | `file_length_lint` (native plugin) | defer | Requires enabling plugin in `analysis_options.yaml` and baseline of existing long files; high churn if turned on fail-first. | List files over limit from one dry-run; agree per-path excludes or refactor slices; `dart analyze` + checklist pass with plugin enabled. |
+| **QG-D02** | File size | `file_length_lint` (native plugin) | **promoted (fail)** | Shipped 2026-06-08: plugin enabled in `analysis_options.yaml`, `file_too_long: error`, `max_lines: 225`, 0 violations on `lib/`; `./tool/run_file_length_lint.sh`. | Split oversized files into `*.part.dart`; do not raise `max_lines` to hide violations; change note [`../changes/2026-06-08_file_length_lint_qg-d02.md`](../changes/2026-06-08_file_length_lint_qg-d02.md). |
 | **QG-D03** | Rebuild | `check_bloc_rebuild_scoping.sh` | defer | `BlocBuilder` without `buildWhen` is common in demos; false-positive rate unknown without fixture matrix. | Fixture trio (good/bad/suppressed); FP rate &lt; agreed threshold on `lib/features/**/presentation/**` sample; owner accepts fix churn count. |
 | **QG-D04** | Rebuild / context | `check_context_read_watch.sh` (presentation) | defer | Noisy in `*_demo` features (`context.read` in build for DI shortcuts); overlaps existing context-mount checks. | Scope glob excludes demo features **or** allowlist file in repo; precision script TP/FP/FN on held-out router/widget files. |
 | **QG-D05** | Navigation / perf | `check_deferred_heavy_routes.sh` | **promoted (fail)** | Shipped 2026-06-03 warn; flipped 2026-06-03: default `CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail` (0 violations on `lib/app/router`). | Revert to warn only if a second deferred route file is added intentionally; keep fixtures under `tool/fixtures/deferred_heavy_routes/`. |

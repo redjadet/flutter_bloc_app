@@ -100,7 +100,7 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | Theme (representative) | Existing coverage | New / wired in MVP |
 | --- | --- | --- |
 | Architecture / layering | domain imports, SOLID imports, modularity | **fail** `check_navigation_outside_presentation.sh` |
-| Rebuild / widget trees | context read/watch, widget identity, row overflow | (deferred: bloc rebuild scoping) |
+| Rebuild / widget trees | context read/watch, widget identity, row overflow | **fail** `file_too_long` via `file_length_lint` plugin (`./tool/run_file_length_lint.sh`); (deferred: bloc rebuild scoping) |
 | Blocking main isolate | compute/isolate guards | **fail** `check_sync_io_in_presentation.sh` (presentation only) |
 | Images / cache | raw network images, image cache width | **fail** `check_remote_image_cache_hints.sh` |
 | State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
@@ -115,11 +115,12 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_lifecycle_observer_dispose.sh`**: Fail-by-default `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=warn` to soften locally. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
 - **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `lib/app/router/route_groups.dart` / `lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
+- **`run_file_length_lint.sh`**: Fail when `dart analyze --format machine .` reports `FILE_TOO_LONG` under `lib/` (native `file_length_lint` plugin via `plugins.file_length_lint.path`; max 225 lines). Exits 1 on analyzer plugin failures. Skipped with `SKIP_FILE_LENGTH_LINT=1` or `CHECKLIST_RUN_FILE_LENGTH_LINT=0`. Also surfaced by `flutter analyze` when the plugin is enabled.
 
 Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).
 
 **Deferred / not in MVP:** [`docs/plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md)
-(`bloc_lint`, file length, rebuild scoping, context read/watch, startup-in-build,
+(`bloc_lint`, rebuild scoping, context read/watch, startup-in-build,
 `CHECK_THEME` filter; lib-wide sync-io **rejected**).
 
 ### Integration testing

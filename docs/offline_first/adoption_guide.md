@@ -84,6 +84,6 @@ Once a feature is onboarded, consider these enhancements:
 
 - Use the pending sync inspector (where available) to view queued operations.
 - Inject fake timers and mock connectivity to deterministically test retry/backoff.
-- Keep files under 250 LOC to satisfy `file_length_lint`.
+- Keep files under 225 lines (`file_too_long`) to satisfy `file_length_lint`.
 - Check `BackgroundSyncCoordinator.statusStream` to monitor sync state in real-time.
 - Use `PendingSyncRepository.getPendingOperations()` to inspect queued operations during development.

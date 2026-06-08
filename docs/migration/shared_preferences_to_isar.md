@@ -42,9 +42,8 @@ These requirements are incompatible.
 
 To proceed with implementation, you may need to:
 
-- Temporarily disable `file_length_lint` (also has analyzer version conflicts)
-- Use dependency overrides (documented in `pubspec.yaml`)
-- Or wait for package updates
+- Keep `file_length_lint` enabled; split new files with `*.part.dart` if over 225 lines
+- Use dependency overrides for analyzer 10 (documented in `pubspec.yaml`); verify with `./tool/check_pubspec_codegen_compat.sh`
 
 ## Architecture
 

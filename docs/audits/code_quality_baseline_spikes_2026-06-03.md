@@ -55,8 +55,9 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 
 ## Spike: QG-D02 — file_length_lint
 
-- **Script:** analyzer plugin — **not wired**
-- **Label:** **reject** for wave 1 (wave 3 per promotion queue)
+- **Script:** `./tool/run_file_length_lint.sh` + native `plugins:` in `analysis_options.yaml`
+- **Label (2026-06-03):** **reject** for wave 1 (wave 3 per promotion queue)
+- **Status (2026-06-08):** **promoted (fail)** — see [`../changes/2026-06-08_file_length_lint_qg-d02.md`](../changes/2026-06-08_file_length_lint_qg-d02.md)
 
 ## Spike: QG-D10 — sync IO in all lib
 
@@ -68,7 +69,7 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 2. QG-D05 — **ready** → PR #290 (warn) → PR #292 (**fail**)
 3. QG-D08 — **needs_fixtures** (subset runner safety); no script
 4. QG-D03 / QG-D04 / QG-D06 — **needs_fixtures**; scripts missing
-5. QG-D01 / QG-D02 — **reject** wave 1 (analyzer plugins)
+5. QG-D01 — **reject** wave 1 (analyzer plugin); QG-D02 — **promoted** 2026-06-08
 
 ## Phase 2 wave closure (2026-06-03)
 
