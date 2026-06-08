@@ -33,11 +33,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        externalNativeBuild {
-            cmake {
-                cppFlags ""
-            }
-        }
         def googleMapsAndroidApiKey =
             project.findProperty("GOOGLE_MAPS_ANDROID_API_KEY") ?:
             System.getenv("GOOGLE_MAPS_ANDROID_API_KEY") ?:
