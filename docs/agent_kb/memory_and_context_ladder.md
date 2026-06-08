@@ -22,7 +22,7 @@ Next session smarter, no bloated wiki.
 - For this repo, prefer maps, `rg`, code-review-graph, and targeted validation as the repo RAG path over a separate RAG layer.
 - Semantic lint during doc/agent changes: stale plans, duplicate rules, source/host-template contradictions, reusable conclusions stranded in task notes.
 - Before feature/refactor work, do a context audit: related code, tests, docs, plans, known bugs, workarounds, deprecated patterns, unusual helpers. Record only high-signal landmines in tracker or owning doc.
-- If an approach needs more than two attempts, record failed approaches, cause, and final fix in the owning doc, [`tasks/lessons.md`](../../tasks/lessons.md), or `docs/changes/` so future agents avoid the same path.
+- If an approach needs more than two attempts, record failed approaches, cause, and final fix in the owning doc, [`tasks/lessons.md`](../../tasks/lessons.md), or `docs/changes/` so future agents avoid the same path. Use the reflection prompt **"What did you get wrong, and how did you fix it?"** (see [`operator_preferences_durable.md`](operator_preferences_durable.md) § Workflow).
 
 ## File discovery layers
 

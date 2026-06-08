@@ -108,6 +108,7 @@ vendor/cache/
 analysis/agent_scorecard/scorecard-events.jsonl
 tmp/*
 tasks/*
+!tasks/lessons.md
 # Local per-host task trackers (not versioned)
 tasks/codex/
 tasks/cursor/

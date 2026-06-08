@@ -196,6 +196,10 @@ require_contains "docs/agent_knowledge_base.md" "Mechanical Enforcement"
 require_contains "docs/agent_knowledge_base.md" "tasks/codex/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/cursor/todo.md"
 require_contains "docs/agent_knowledge_base.md" "tasks/lessons.md"
+if git check-ignore -q tasks/lessons.md 2>/dev/null; then
+  fail "tasks/lessons.md must be tracked in git (not gitignored)"
+fi
+require_file "tasks/lessons.md"
 require_contains "docs/agent_knowledge_base.md" "reusable conclusions"
 require_contains "docs/agent_knowledge_base.md" "Semantic lint"
 require_all_contains \

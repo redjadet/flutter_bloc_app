@@ -19,6 +19,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Workflow
 
+- **Wrong → fix record:** After a meaningful miss, failed approach, or user correction, answer **"What did you get wrong, and how did you fix it?"** and land a compact entry in [`tasks/lessons.md`](../../tasks/lessons.md) (or owning `docs/changes/` when the fix is feature-scoped). Same trigger after two+ attempts on the same failure. Skip for trivial typos with no reusable pattern. **[`tasks/lessons.md`](../../tasks/lessons.md) is git-tracked** — commit lesson updates with the related fix/docs change; do not treat it as a local-only scratch file.
 - Continue until finished; stop only when stuck/blocker.
 - When responsive/architecture/review passes surface follow-ups with clear value (layout widening, checklist fixes, review should-fixes), complete them in the same delivery series unless the user narrows scope — includes "do all follow-ups if beneficial" / low-risk deferred items.
 - Don't revert doc or agent-knowledge edits during review/cleanup unless the user asks.
