@@ -133,7 +133,7 @@ dev_dependencies:
   google_maps_flutter_platform_interface: ^2.15.0
   google_sign_in_mocks: ^0.3.0
   # Exact pin: `pub upgrade --major-versions` rewrites caret constraints; 6.12+ needs analyzer >=9.
-  json_serializable: 6.11.4
+  json_serializable: ^6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
   mix_lint:
