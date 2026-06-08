@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-08_file_length_lint_qg-d02.md`](2026-06-08_file_length_lint_qg-d02.md): QG-D02 promoted — `file_too_long` at error (225 lines), `run_file_length_lint.sh`, checklist hook.
 - [`2026-06-08_agent_doc_dedup.md`](2026-06-08_agent_doc_dedup.md): Agent-facing doc dedup — canonical owners, thinned echoes, fixed `agent-maintain` command link.
 - [`2026-06-08_harness_auto_maintenance.md`](2026-06-08_harness_auto_maintenance.md): Scope-driven `harness-maintain` / closeout wiring for max-score preservation.
 - [`2026-06-08_ai_failure_risk_minimization.md`](2026-06-08_ai_failure_risk_minimization.md): AI failure risk register, Pre-Flight routing, static gate needles.

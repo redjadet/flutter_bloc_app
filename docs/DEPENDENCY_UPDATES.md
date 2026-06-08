@@ -28,10 +28,11 @@ This project uses automated dependency update monitoring to keep dependencies up
 - **Dev dependencies**: Patch updates are auto-merged (if tests pass)
 - **Security updates**: Created immediately, regardless of schedule
 
-**Coordinated pub pins** (see comments at top of `pubspec.yaml`; enforced in `renovate.json` via `allowedVersions`):
+**Coordinated pub pins** (see comments at top of `pubspec.yaml`; enforced in `renovate.json` via `allowedVersions` / `enabled: false`):
 
 - `genui` — held below `0.8.0` while `genui_google_generative_ai` `0.7.x` requires `genui ^0.7`
 - `google_sign_in_mocks` (dev) — held below `0.4.0` while `firebase_ui_oauth_google` stays on `google_sign_in` 6
+- `json_serializable` — `^6.14.0` with `dependency_overrides: analyzer: 10.0.2`, `dart_style: 3.1.4` (6.14+ needs analyzer ≥10; 10.0.2 aligns native plugin CLI with `analysis_server_plugin`). Path plugins `mix_lint` 2.x and `file_length_lint` use `analysis_server_plugin` via `analysis_options.yaml` `plugins:` + `path:`; `custom_lint` is not in the graph. Renovate caps `json_serializable` at `<7.0.0` and does not auto-bump `analyzer` / `analyzer_plugin`. Verify with `./tool/check_pubspec_codegen_compat.sh`; `upgrade_validate_all.sh` step 2b restores pins after major pub upgrades.
 
 ### Backup: Dependabot
 
@@ -136,7 +137,7 @@ To temporarily disable updates for a specific package, add a comment to `renovat
 | Dashboard message | Cause | Action |
 | --- | --- | --- |
 | `Failed to look up maven package dev.flutter.flutter-plugin-loader` | Plugin ID is resolved via Gradle plugin portal, not Maven Central | Listed in `renovate.json` `ignoreDeps` and Gradle rule (`enabled: false`). Upgrade the version in `android/settings.gradle` with Flutter/SDK release notes. |
-| `dart-minor-patch` PR fails `pubspec-compat` on `json_serializable` | `6.12+` needs analyzer ≥9; `6.13+` needs ≥10; repo pins analyzer 8.4.x for `custom_lints` | `renovate.json` holds `json_serializable` to `<6.12.0`. Close/rebase the broken Renovate PR after merge. |
+| `pubspec-compat` fails after a dependency PR bumps codegen or analyzer | `json_serializable` 6.14+ needs analyzer ≥10; path lints need matching `analysis_server_plugin` / overrides | Keep `json_serializable: ^6.14.0` and `dependency_overrides` (`analyzer: 10.0.2`, `dart_style: 3.1.4`). Run `./tool/check_pubspec_codegen_compat.sh`. Rebase or close the Renovate PR and restore pins via `upgrade_validate_all.sh` step 2b if needed. |
 | `Custom registries are not allowed for this datasource` | Harmless Renovate warning when `Gemfile` pins `fastlane` from GitHub (`git-refs` datasource); see [renovate#37432](https://github.com/renovatebot/renovate/issues/37432) | Safe to ignore until `fastlane` returns to a Rubygems release (see `Gemfile` comment). |
 | Rate-limited / blocked PRs | Renovate concurrency or manual edit/close | Use checkboxes on the dashboard or merge open dependency PRs; see **PR Edited (Blocked)** / **PR Closed (Blocked)** sections. |
 

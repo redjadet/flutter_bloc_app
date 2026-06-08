@@ -192,7 +192,7 @@ else
   "$FLUTTER_BIN" pub upgrade --major-versions
   echo "==> Step 2b/6: Verify pubspec codegen/analyzer compatibility"
   if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
-    echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring json_serializable 6.11.4."
+    echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring json_serializable 6.14 stack."
     python3 - <<'PY'
 from __future__ import annotations
 
@@ -201,15 +201,29 @@ from pathlib import Path
 
 pubspec = Path("pubspec.yaml")
 text = pubspec.read_text(encoding="utf-8")
-text, count = re.subn(
-    r"^  json_serializable:.*$",
-    "  json_serializable: 6.11.4",
-    text,
-    count=1,
-    flags=re.MULTILINE,
-)
-if count != 1:
-    raise SystemExit("could not restore json_serializable pin in pubspec.yaml")
+
+def sub_one(pattern: str, repl: str, label: str) -> None:
+    global text
+    text, count = re.subn(pattern, repl, text, count=1, flags=re.MULTILINE)
+    if count != 1:
+        raise SystemExit(f"could not restore {label} in pubspec.yaml")
+
+sub_one(r"^  json_serializable:.*$", "  json_serializable: ^6.14.0", "json_serializable")
+sub_one(r"^  json_annotation:.*$", "  json_annotation: ^4.12.0", "json_annotation")
+
+for key, value in (("analyzer", "10.0.2"), ("dart_style", "3.1.4")):
+    line = f"  {key}: {value}"
+    if re.search(rf"^  {key}:.*$", text, flags=re.MULTILINE):
+        text, _ = re.subn(rf"^  {key}:.*$", line, text, count=1, flags=re.MULTILINE)
+    elif "dependency_overrides:" in text:
+        text = text.replace(
+            "dependency_overrides:\n",
+            f"dependency_overrides:\n{line}\n",
+            1,
+        )
+    else:
+        raise SystemExit(f"missing dependency_overrides block for {key}")
+
 pubspec.write_text(text, encoding="utf-8")
 PY
     "$FLUTTER_BIN" pub get
@@ -217,16 +231,12 @@ PY
       echo "❌ pubspec codegen/analyzer compatibility still failing after restore." >&2
       exit 1
     fi
-    echo "✅ Restored json_serializable 6.11.4; remaining upgrades kept."
+    echo "✅ Restored json_serializable ^6.14.0 + analyzer 10 overrides; remaining upgrades kept."
   fi
 fi
 
 echo "==> Step 3/6: Run delivery checklist"
-# custom_lint_client (transitive of custom_lint) currently pins an exact SDK
-# patch version, which breaks when Flutter upgrades Dart (e.g. 3.12.0 -> 3.12.1).
-# Keep the upgrade lane unblocked by skipping mix_lint here; the rest of the
-# checklist (analyze + tests + static checks) still runs.
-CHECKLIST_RUN_MIX_LINT=0 "$PROJECT_ROOT/bin/checklist"
+"$PROJECT_ROOT/bin/checklist"
 
 echo "==> Step 4/6: Run integration tests"
 "$PROJECT_ROOT/bin/integration_tests"

@@ -54,7 +54,7 @@ BoxStyler get _appStylesStatusSuccess => BoxStyler()
 TextStyler get _appStylesStatusSuccessText => TextStyler()
     .style(AppTextStyleTokens.labelMedium.mix())
     .color(AppMaterialColorTokens.onSurface())
-    .fontWeight(FontWeight.w600);
+    .fontWeight(.w600);
 
 BoxStyler get _appStylesStatusError => BoxStyler()
     .color(AppMaterialColorTokens.error())
@@ -69,7 +69,7 @@ BoxStyler get _appStylesStatusError => BoxStyler()
 TextStyler get _appStylesStatusErrorText => TextStyler()
     .style(AppTextStyleTokens.labelMedium.mix())
     .color(AppMaterialColorTokens.onPrimary())
-    .fontWeight(FontWeight.w600);
+    .fontWeight(.w600);
 
 BoxStyler get _appStylesDialogContent => BoxStyler().padding(
   EdgeInsetsGeometryMix.only(

@@ -11,7 +11,8 @@ best practices for AI-assisted Flutter development.
 | **Language** | `analyzer.language` | `strict-casts`, `strict-inference`, `strict-raw-types` |
 | **Severity overrides** | `analyzer.errors` | Key rules promoted to error (e.g. `use_build_context_synchronously`, `prefer_const_constructors`) |
 | **Custom preferences** | `linter.rules` | Project overrides (e.g. `lines_longer_than_80_chars: false`, `use_decorated_box: true`) |
-| **Plugin** | `file_length_lint` | Max file length (500 lines), excludes generated |
+| **Plugin** | `file_length_lint` | `file_too_long` at error; max **225** lines (`file_length_lint.max_lines`); default excludes generated/tests/tools; extra `integration_test/**` exclude |
+| **Plugin** | `mix_lint` | Mix design-system rules (see `analysis_options.yaml` `plugins.mix_lint.diagnostics`) |
 
 ## Strengths
 

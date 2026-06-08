@@ -21,9 +21,12 @@ Creating custom lint rules requires:
 
 ## Current Implementation
 
-This codebase already has a custom lint plugin example: `custom_lints/file_length_lint`
+This codebase already has native analyzer plugin examples:
 
-You can use this as a reference for creating BLoC-specific lint rules.
+- `custom_lints/file_length_lint` (`analysis_server_plugin`, `file_too_long`)
+- `custom_lints/mix_lint` (vendored Mix design-system lints)
+
+Use `mix_lint` / `file_length_lint` as references when adding BLoC-specific rules.
 
 ## Creating a BLoC Lint Rule
 
@@ -37,125 +40,85 @@ dart create --template=package .
 
 ### Step 2: Add Dependencies
 
-In `custom_lints/bloc_lint/pubspec.yaml`:
+In `custom_lints/bloc_lint/pubspec.yaml` (match repo pins — see root `pubspec.yaml` `dependency_overrides`):
 
 ```yaml
+name: bloc_lint
+publish_to: none
+
+environment:
+  sdk: ^3.12.0
+
 dependencies:
-  analyzer: ^6.0.0
-  analyzer_plugin: ^0.11.0
-  meta: ^1.11.0
+  analysis_server_plugin: ^0.3.0
+  analyzer: ^10.0.0
+
+dev_dependencies:
+  analyzer_testing: ^0.4.0
+  test: ^1.25.0
 ```
+
+Add a path dev_dependency in the root `pubspec.yaml` and register the plugin under `plugins:` in `analysis_options.yaml` (same pattern as `mix_lint` / `file_length_lint`).
 
 ### Step 3: Create Lint Rule
 
-Create `lib/src/bloc_lifecycle_guard_lint.dart`:
+Use `AnalysisRule` from `package:analyzer/analysis_rule/analysis_rule.dart`. Minimal shape (see `custom_lints/file_length_lint/lib/src/file_too_long_rule.dart`):
 
 ```dart
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/analysis_rule/analysis_rule.dart';
+import 'package:analyzer/analysis_rule/rule_context.dart';
+import 'package:analyzer/analysis_rule/rule_visitor_registry.dart';
 import 'package:analyzer/error/error.dart';
-import 'package:analyzer/error/listener.dart';
-import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-/// Lint rule that checks for missing `isClosed` guards before `emit()` in async methods.
-class BlocLifecycleGuardLint extends DartLintRule {
-  const BlocLifecycleGuardLint() : super(code: _code);
-
-  static const _code = LintCode(
-    name: 'bloc_lifecycle_guard',
-    problemMessage: 'Missing isClosed check before emit() in async method',
+class BlocLifecycleGuardRule extends AnalysisRule {
+  static const LintCode code = LintCode(
+    'bloc_lifecycle_guard',
+    'Missing isClosed check before emit() in async method',
     correctionMessage: 'Add "if (isClosed) return;" before emit()',
   );
 
+  BlocLifecycleGuardRule()
+    : super(
+        name: 'bloc_lifecycle_guard',
+        description: 'Requires isClosed guard before emit in async Cubit/Bloc methods.',
+      );
+
   @override
-  void run(
-    CustomLintResolver resolver,
-    ErrorReporter reporter,
-    CustomLintContext context,
+  bool get canUseParsedResult => true;
+
+  @override
+  LintCode get diagnosticCode => code;
+
+  @override
+  void registerNodeProcessors(
+    RuleVisitorRegistry registry,
+    RuleContext context,
   ) {
-    context.registry.addMethodDeclaration((node) {
-      // Check if method is async and in a Cubit/Bloc class
-      if (node.isAsynchronous && _isInBlocClass(node)) {
-        // Check for emit() calls without isClosed guard
-        node.visitChildren(_EmitVisitor(reporter, node));
-      }
-    });
-  }
-
-  bool _isInBlocClass(MethodDeclaration node) {
-    final parent = node.parent;
-    if (parent is ClassDeclaration) {
-      final className = parent.name.lexeme;
-      return className.endsWith('Cubit') || className.endsWith('Bloc');
-    }
-    return false;
-  }
-}
-
-class _EmitVisitor extends RecursiveAstVisitor<void> {
-  _EmitVisitor(this.reporter, this.method);
-
-  final ErrorReporter reporter;
-  final MethodDeclaration method;
-
-  @override
-  void visitMethodInvocation(MethodInvocation node) {
-    if (node.methodName.name == 'emit' && _isInAsyncContext(node)) {
-      if (!_hasIsClosedGuard(node)) {
-        reporter.atNode(
-          node,
-          BlocLifecycleGuardLint._code,
-        );
-      }
-    }
-    super.visitMethodInvocation(node);
-  }
-
-  bool _isInAsyncContext(AstNode node) {
-    // Check if node is within an async method
-    AstNode? current = node;
-    while (current != null) {
-      if (current is MethodDeclaration && current.isAsynchronous) {
-        return true;
-      }
-      current = current.parent;
-    }
-    return false;
-  }
-
-  bool _hasIsClosedGuard(AstNode node) {
-    // Check if there's an isClosed check before this node
-    // This is simplified - actual implementation would need more sophisticated AST traversal
-    final parent = node.parent;
-    if (parent is IfStatement) {
-      final condition = parent.condition;
-      if (condition.toString().contains('isClosed')) {
-        return true;
-      }
-    }
-    return false;
+    // Register AST visitors; report with context.reportAtNode(code, node, ...).
   }
 }
 ```
 
 ### Step 4: Register the Plugin
 
-Create `lib/bloc_lint_plugin.dart`:
+Create `lib/main.dart` (analysis server loads `lib/main.dart` and expects `plugin`):
 
 ```dart
-import 'package:analyzer_plugin/plugin/plugin.dart';
-import 'package:analyzer_plugin/plugin/plugin_capabilities.dart';
-import 'package:analyzer_plugin/protocol/protocol.dart';
-import 'package:custom_lints/bloc_lint/src/bloc_lifecycle_guard_lint.dart';
+import 'package:analysis_server_plugin/plugin.dart';
+import 'package:analysis_server_plugin/registry.dart';
 
-class BlocLintPlugin extends ServerPlugin {
-  BlocLintPlugin(super.resourceProvider);
+import 'src/bloc_lifecycle_guard_rule.dart';
+
+final plugin = BlocLintPlugin();
+
+class BlocLintPlugin extends Plugin {
+  @override
+  String get name => 'bloc_lint';
 
   @override
-  List<LintRule> getLintRules() => [
-    const BlocLifecycleGuardLint(),
-    // Add more lint rules here
-  ];
+  void register(PluginRegistry registry) {
+    registry.registerLintRule(BlocLifecycleGuardRule());
+  }
 }
 ```
 
@@ -164,10 +127,15 @@ class BlocLintPlugin extends ServerPlugin {
 ```yaml
 plugins:
   bloc_lint:
-    path: custom_lints/bloc_lint
     diagnostics:
       bloc_lifecycle_guard: error
+
+dev_dependencies:
+  bloc_lint:
+    path: custom_lints/bloc_lint
 ```
+
+Run with `dart analyze lib` or `./tool/run_<plugin>_lint.sh` (grep machine output for your diagnostic id). Do **not** use `custom_lint` / `custom_lint_builder`; this repo uses native analyzer plugins only.
 
 ## Example Lint Rules
 
@@ -227,10 +195,8 @@ final cubit = context.cubit<CounterCubit>(); // ✅ Type-safe access
 You can integrate custom lint rules with existing validation scripts:
 
 ```bash
-# tool/check_bloc_lifecycle_guards.sh
-#!/bin/bash
-# Run custom BLoC lint rules
-flutter analyze --no-fatal-infos | grep -E "bloc_lifecycle_guard|bloc_use_type_safe_access"
+# tool/run_bloc_lint.sh (pattern mirrors run_mix_lint.sh / run_file_length_lint.sh)
+dart analyze --format machine . | grep -E '\|bloc_lifecycle_guard\|' | grep '/lib/'
 ```
 
 ## Limitations

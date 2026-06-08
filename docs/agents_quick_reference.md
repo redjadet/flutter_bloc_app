@@ -23,11 +23,11 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_b
 | Cold start map | `bash tool/agent_session_bootstrap.sh` |
 | Agent doc compression | `./tool/compress_agent_doc.sh PATH` only on explicit redundant targets; avoid anchor blocks until checks are updated |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
-| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); run `./tool/check_design_md.sh` if brief changed |
+| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); run `./tool/check_design_md.sh` if brief changed; Mix → `./tool/run_mix_lint.sh`; large `lib/` files → ≤225 lines, `./tool/run_file_length_lint.sh` |
 | Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad impl; widget patterns [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md); policy [`testing_overview.md`](testing_overview.md) § Feature-defined testing |
 | New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` previews folders + feature brief; add `--apply` only when the name is final |
 | Feature folder/use-case/DTO/test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) + [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) + [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
-| Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md) + [`review/bloc_checklist.md`](review/bloc_checklist.md); skill `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` |
+| Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md) + [`review/bloc_checklist.md`](review/bloc_checklist.md); skill `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` (flutter analyze + mix_lint + file_length_lint) |
 | Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
 | AI failure-risk register | `bash tool/check_ai_failure_risk_register.sh` |
 | Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |

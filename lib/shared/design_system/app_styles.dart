@@ -26,7 +26,7 @@ class AppStyles {
   static BoxStyler get card => BoxStyler()
       .color(AppMaterialColorTokens.surface())
       .borderRadiusAll(AppMixTokens.radiusM())
-      .elevation(ElevationShadow.one)
+      .elevation(.one)
       .padding(
         EdgeInsetsGeometryMix.only(
           top: AppMixTokens.cardPadV(),
@@ -42,7 +42,7 @@ class AppStyles {
   static BoxStyler get profileOutlinedButton => BoxStyler()
       .color(AppMaterialColorTokens.surface())
       .border(
-        BorderMix.all(
+        .all(
           BorderSideMix(
             color: AppMaterialColorTokens.primary(),
             width: 2,
@@ -56,7 +56,7 @@ class AppStyles {
   static TextStyler get profileOutlinedButtonText => TextStyler()
       .style(_labelLargeToken.mix())
       .color(AppMaterialColorTokens.onSurface())
-      .fontWeight(FontWeight.w900);
+      .fontWeight(.w900);
 
   static BoxStyler get filledButton => BoxStyler()
       .color(AppMaterialColorTokens.primary())
@@ -67,12 +67,12 @@ class AppStyles {
   static TextStyler get filledButtonText => TextStyler()
       .style(_labelLargeToken.mix())
       .color(AppMaterialColorTokens.onPrimary())
-      .fontWeight(FontWeight.w600);
+      .fontWeight(.w600);
 
   static BoxStyler get outlinedButton => BoxStyler()
       .color(AppMaterialColorTokens.surface())
       .border(
-        BorderMix.all(
+        .all(
           BorderSideMix(
             color: AppMaterialColorTokens.primary(),
             width: 1.5,
@@ -86,7 +86,7 @@ class AppStyles {
   static TextStyler get outlinedButtonText => TextStyler()
       .style(_labelLargeToken.mix())
       .color(AppMaterialColorTokens.onSurface())
-      .fontWeight(FontWeight.w600);
+      .fontWeight(.w600);
 
   /// List-tile row style: horizontal and vertical padding from tokens.
   /// On tablet/desktop breakpoints, horizontal padding increases.
@@ -106,7 +106,7 @@ class AppStyles {
   static BoxStyler get inputField => BoxStyler()
       .color(AppMaterialColorTokens.surfaceContainerHighest())
       .border(
-        BorderMix.all(
+        .all(
           BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
         ),
       )
@@ -124,7 +124,7 @@ class AppStyles {
   static BoxStyler get inputFieldShell => BoxStyler()
       .color(AppMaterialColorTokens.surfaceContainerHighest())
       .border(
-        BorderMix.all(
+        .all(
           BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
         ),
       )
@@ -134,7 +134,7 @@ class AppStyles {
   /// borders without adopting [inputField] padding/background.
   static BoxStyler get inputOutline => BoxStyler()
       .border(
-        BorderMix.all(
+        .all(
           BorderSideMix(color: AppMaterialColorTokens.outlineVariant()),
         ),
       )

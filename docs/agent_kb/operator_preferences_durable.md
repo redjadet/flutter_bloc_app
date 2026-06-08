@@ -35,7 +35,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - README or substantive `docs/**` edits: run `markdownlint-cli2` on touched paths until clean; see [`docs/agents_appendix.md`](../agents_appendix.md).
 - Pre-commit review: on client-facing Dart delivery, run final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR.
 - **Integration log gate:** `./bin/integration_tests` fails on warning/error logs via `_assertNoUnexpectedIntegrationLogs` unless narrowly allowlisted in `integration_test/test_harness_log_filtering.dart` — fix product code first; do not broaden allowlist without evidence.
-- **`upgrade_validate_all` step 2b:** after `flutter pub upgrade --major-versions`, runs `tool/check_pubspec_codegen_compat.sh` and auto-restores `json_serializable: 6.11.4` when major bumps break analyzer/`custom_lints` pins.
+- **`upgrade_validate_all` step 2b:** after `flutter pub upgrade --major-versions`, runs `tool/check_pubspec_codegen_compat.sh` and auto-restores `json_serializable: ^6.14.0` + `analyzer: 10.0.2` / `dart_style: 3.1.4` overrides when major bumps break the codegen graph. Native lints use `analysis_server_plugin` (`plugins:` + `path:` in `analysis_options.yaml`); `custom_lint` removed from root `pubspec.yaml`.
 
 ## Host Setup
 

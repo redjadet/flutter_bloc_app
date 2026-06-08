@@ -3,7 +3,7 @@
 #
 # Primary guardrail:
 # - json_serializable has hard analyzer API requirements.
-# - This repo uses custom_lints (path deps) that may pin analyzer (e.g. mix_lint).
+# - Path analyzer plugins (mix_lint, file_length_lint) use analysis_server_plugin on analyzer 10 via overrides.
 #
 # Keep this check cheap: parse pubspec.yaml (and pubspec.lock when present), no `pub get`.
 
@@ -271,8 +271,9 @@ if errors:
         print(f"- {e}")
     print("")
     print("Fix options (pick one coherent set):")
-    print("- keep analyzer 8.x (common with custom_lints): pin json_serializable 6.11.x + json_annotation ^4.9.0")
-    print("- move analyzer >=10 (required by json_serializable 6.13+): upgrade/remove analyzer pin and make custom_lints compatible")
+    print("- preferred: json_serializable ^6.14.0 + json_annotation ^4.12.0 + dependency_overrides analyzer 10.0.2, dart_style 3.1.4 + mix_lint 2.x (analysis_server_plugin)")
+    print("- legacy: analyzer 8.x + json_serializable 6.11.x + json_annotation ^4.9.0 + custom_lint 0.8.x")
+    print("- move analyzer >=10 without overrides: keep mix_lint on analysis_server_plugin; migrate other custom_lints off custom_lint_builder")
     if mix_lint_present or file_length_lint_present:
         print("")
         print(
