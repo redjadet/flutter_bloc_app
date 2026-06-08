@@ -34,6 +34,24 @@ void main() {
       expect(target, DeepLinkTarget.eventBusDemo);
     });
 
+    test('parses native-platform-showcase segment', () {
+      final target = parser.parse(
+        Uri.parse(
+          '${DeepLinkConfig.universalScheme}://${DeepLinkConfig.universalHost}/native-platform-showcase',
+        ),
+      );
+      expect(target, DeepLinkTarget.nativePlatformShowcase);
+    });
+
+    test('supports fallback scheme for native-platform-showcase host', () {
+      final target = parser.parse(
+        Uri.parse(
+          '${DeepLinkConfig.fallbackScheme}://native-platform-showcase',
+        ),
+      );
+      expect(target, DeepLinkTarget.nativePlatformShowcase);
+    });
+
     test('parses realtime-market segment', () {
       final target = parser.parse(
         Uri.parse(

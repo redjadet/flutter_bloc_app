@@ -17,6 +17,12 @@ build/
 AGENTS.md
 GEMINI.md
 
+# Exclude archived task history snapshots (repeated section headings).
+tasks/**/history/**
+
+# Exclude vendored custom_lint plugin docs (upstream markdown style).
+custom_lints/**
+
 # Exclude todo trackers from markdownlint checks.
 **/todo.md
 **/TODO.md

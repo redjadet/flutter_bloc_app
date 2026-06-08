@@ -29,6 +29,8 @@ void main() {
     );
     expect(AppRoutes.eventBusDemo, 'event-bus-demo');
     expect(AppRoutes.eventBusDemoPath, '/event-bus-demo');
+    expect(AppRoutes.nativePlatformShowcase, 'native-platform-showcase');
+    expect(AppRoutes.nativePlatformShowcasePath, '/native-platform-showcase');
   });
 
   group('AppRoutes.isSafeRedirectPath', () {

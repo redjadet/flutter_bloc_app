@@ -71,5 +71,6 @@ class DeepLinkParser {
         'graphql-demo': DeepLinkTarget.graphqlDemo,
         'profile': DeepLinkTarget.profile,
         'event-bus-demo': DeepLinkTarget.eventBusDemo,
+        'native-platform-showcase': DeepLinkTarget.nativePlatformShowcase,
       };
 }

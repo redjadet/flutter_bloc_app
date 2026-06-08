@@ -15,6 +15,7 @@ choice into a deterministic routing step.
 | Golden / visual regression | Golden tests for shared design-system widgets or stable visual contracts; update with `flutter test --update-goldens` after intentional visual change or Flutter upgrade | New/changed shared widget in `lib/shared/`, theme token, or typography affecting goldens |
 | Offline-first/sync | Repository/unit tests plus existing sync regression anchors | Queue replay, conflict merge, lifecycle, or background coordinator touched |
 | Native/platform | Focused platform build/check from validation routing | iOS/macOS/Android dependencies, entitlements, pods/SPM touched |
+| Example demo showcase | Unit + widget under `test/features/<feature>/`; `./bin/router_feature_validate` when route/deeplink changes; device integration via selective map (e.g. `native_platform_showcase` → `integration_test/native_platform_showcase_flow_test.dart`); web reachability in `test/integration_preflight/web_bootstrap_smoke_test.dart` when no `kIsWeb` guard | `PlatformAdaptive` layout, Example entry, or journey **J6** in [`integration_journey_map.md`](../engineering/integration_journey_map.md) |
 | Docs/tooling only | `./bin/checklist-fast` and doc/tool-specific check | Validation policy, host templates, or repo-wide rules changed |
 
 ## Skip Rules
@@ -39,5 +40,8 @@ before broad implementation unless the change is a documented trivial fix.
 
 1. Run focused tests named by the changed behavior.
 2. Run `./tool/analyze.sh` for Dart/app code.
-3. Add router/integration/native lanes only when path triggers require them.
+3. Add router/integration/native lanes when path triggers require them; resolve
+   selective device integration with
+   [`tool/integration_selective_map.json`](../../tool/integration_selective_map.json)
+   (`python3 tool/integration_selective_resolve.py`).
 4. Run `./bin/checklist` for broad, shared, pre-ship, or uncertain blast radius.

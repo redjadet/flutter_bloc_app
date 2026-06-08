@@ -17,6 +17,7 @@ import FirebaseAppCheck
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private let channelName = "com.example.flutter_bloc_app/native"
+  private let showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
   private var hasConfiguredFirebase = false
   private let firebaseConfigQueue = DispatchQueue(label: "com.example.flutter_bloc_app.firebaseConfigQueue")
 
@@ -75,6 +76,19 @@ import FirebaseAppCheck
       name: channelName,
       binaryMessenger: engineBridge.applicationRegistrar.messenger()
     )
+
+    let showcaseChannel = FlutterMethodChannel(
+      name: showcaseChannelName,
+      binaryMessenger: engineBridge.applicationRegistrar.messenger()
+    )
+    showcaseChannel.setMethodCallHandler { call, result in
+      switch call.method {
+      case "invokeSwift":
+        result(NativeShowcaseBridge.greeting())
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
 
     channel.setMethodCallHandler { [weak self] call, result in
       guard self != nil else {

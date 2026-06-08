@@ -13,6 +13,7 @@ layouts — not legacy demos listed under [Legacy drift](#legacy-drift).
 | `iot_demo` | Cubit + domain/data split without extra legacy folders | `lib/features/iot_demo/presentation/cubit/` |
 | `profile` | Straightforward cubit + page feature | `lib/features/profile/presentation/cubit/` |
 | `todo_list` | Larger cubit split across part files — still under `presentation/cubit/` | `lib/features/todo_list/presentation/cubit/` |
+| `native_platform_showcase` | Educational demo: use case + repository + **platform service ports** (MethodChannel / FFI behind data adapters); cubit depends on use case only | `lib/features/native_platform_showcase/domain/use_cases/`, `domain/native_showcase_*_service.dart`, `data/*_service.dart`, [`README.md`](../../lib/features/native_platform_showcase/README.md) |
 
 Scaffold output (no runtime code) matches the same shape:
 [`feature_brief_scaffold_example.md`](feature_brief_scaffold_example.md).

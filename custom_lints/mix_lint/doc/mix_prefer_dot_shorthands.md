@@ -45,4 +45,3 @@ final baseStyle = TextStyler()
 final baseStyle = TextStyler()
     .onHovered(.color(Colors.red))
 ```
-

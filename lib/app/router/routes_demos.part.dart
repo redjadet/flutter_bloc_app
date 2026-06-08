@@ -52,7 +52,21 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   ),
   createEventBusDemoRoute(),
   createOnlineTherapyDemoRoute(),
+  createNativePlatformShowcaseRoute(),
 ];
+
+RouteBase createNativePlatformShowcaseRoute() => GoRoute(
+  path: AppRoutes.nativePlatformShowcasePath,
+  name: AppRoutes.nativePlatformShowcase,
+  builder: (final context, final state) =>
+      BlocProviderHelpers.withAsyncInit<NativePlatformShowcaseCubit>(
+        create: () => NativePlatformShowcaseCubit(
+          loadShowcase: getIt<LoadNativePlatformShowcaseUseCase>(),
+        ),
+        init: (final cubit) => cubit.load(),
+        child: const NativePlatformShowcasePage(),
+      ),
+);
 
 RouteBase createEventBusDemoRoute() => GoRoute(
   path: AppRoutes.eventBusDemoPath,

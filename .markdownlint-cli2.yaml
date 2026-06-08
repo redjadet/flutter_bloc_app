@@ -8,6 +8,8 @@ config:
 ignores:
   - "**/todo.md"
   - "**/TODO.md"
+  - "tasks/**/history/**"
+  - "custom_lints/**"
   - ".agents/**"
   - "third_party/**"
   - "vendor/**"

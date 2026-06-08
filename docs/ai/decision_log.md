@@ -12,6 +12,7 @@
 | 2026-05-21 | Phase 5 feature-brief guard | `tool/check_feature_brief_linked.sh` | Fails by default in `./bin/checklist`; `FEATURE_BRIEF_CHECK_STRICT=0` warns |
 | 2026-06-08 | Cursor/Codex feature harness contracts | Feature structure, use-case/DTO, BLoC, testing matrix skills/docs | `agents-feature-delivery` + `agents-bloc-standards` synced to Cursor/Codex |
 | 2026-06-08 | Cursor/Codex max-score claim requires proof gate | Avoid unverified 10/10 harness claims | [`harness_scorecard.md`](harness_scorecard.md) defines required commands |
+| 2026-06-08 | Feature map 17 full + 15 stub (`native_platform_showcase`) | Live MethodChannel/FFI demo behind clean-arch ports | Gold reference in [`reference_features.md`](../architecture/reference_features.md); depth branch per ADR-0005 |
 | 2026-05-21 | `/commit-push-pr` closed loop | `watch_merge_cleanup` + post-merge sync doc | [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md) |
 
 Add rows when plan or architecture choices change.

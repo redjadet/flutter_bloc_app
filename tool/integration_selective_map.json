@@ -23,6 +23,14 @@
       "target": "integration_test/graphql_demo_flow_test.dart"
     },
     {
+      "id": "native_platform_showcase",
+      "path_prefixes": [
+        "lib/features/native_platform_showcase/",
+        "lib/core/di/register_native_platform_showcase_services.dart"
+      ],
+      "target": "integration_test/native_platform_showcase_flow_test.dart"
+    },
+    {
       "id": "search",
       "path_prefixes": ["lib/features/search/"],
       "target": "integration_test/search_flow_test.dart"

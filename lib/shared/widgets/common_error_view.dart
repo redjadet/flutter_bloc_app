@@ -10,6 +10,8 @@ class CommonErrorView extends StatelessWidget {
     required this.message,
     super.key,
     this.onRetry,
+    this.retryLabel,
+    this.retryButtonKey,
     this.icon,
     this.iconSize,
     this.iconColor,
@@ -17,6 +19,8 @@ class CommonErrorView extends StatelessWidget {
 
   final String message;
   final VoidCallback? onRetry;
+  final String? retryLabel;
+  final Key? retryButtonKey;
   final IconData? icon;
   final double? iconSize;
   final Color? iconColor;
@@ -40,8 +44,9 @@ class CommonErrorView extends StatelessWidget {
       ),
       action: switch (onRetry) {
         final cb? => CommonRetryButton(
+          key: retryButtonKey,
           onPressed: cb,
-          label: context.l10n.retryButtonLabel,
+          label: retryLabel ?? context.l10n.retryButtonLabel,
         ),
         _ => null,
       },

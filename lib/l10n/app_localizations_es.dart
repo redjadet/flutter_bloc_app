@@ -1080,6 +1080,152 @@ class AppLocalizationsEs extends AppLocalizations {
   String get exampleEventBusDemoButton => 'Abrir demo de Event Bus';
 
   @override
+  String get exampleNativePlatformShowcaseButton =>
+      'Abrir vitrina de plataforma nativa';
+
+  @override
+  String get nativePlatformShowcaseTitle => 'Vitrina de plataforma nativa';
+
+  @override
+  String get nativePlatformShowcaseIntro =>
+      'Flutter se ejecuta en muchas plataformas. Esta página llama a Swift, Kotlin y C/C++ desde Dart para mostrar cómo encaja el código que no es Dart detrás de repositorios y canales.';
+
+  @override
+  String get nativePlatformShowcaseInteropTitle => 'Interop nativa en vivo';
+
+  @override
+  String get nativePlatformShowcaseInteropSubtitle =>
+      'Cada fila es una llamada real de Dart al código host o nativo en este dispositivo.';
+
+  @override
+  String get nativePlatformShowcaseInteropSwiftLabel =>
+      'Dart → Swift (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropKotlinLabel =>
+      'Dart → Kotlin (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropCppLabel => 'Dart → C/C++ (FFI)';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusSuccess => 'Correcto';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusUnavailable =>
+      'No disponible en esta plataforma';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusFailed => 'Llamada fallida';
+
+  @override
+  String get nativePlatformShowcaseRuntimePlatformLabel =>
+      'Plataforma en ejecución';
+
+  @override
+  String get nativePlatformShowcaseUiFamilyLabel => 'Familia de UI';
+
+  @override
+  String get nativePlatformShowcaseUiCupertino => 'Cupertino';
+
+  @override
+  String get nativePlatformShowcaseUiMaterial => 'Material';
+
+  @override
+  String get nativePlatformShowcasePlatformAndroid => 'Android';
+
+  @override
+  String get nativePlatformShowcasePlatformIos => 'iOS';
+
+  @override
+  String get nativePlatformShowcasePlatformMacos => 'macOS';
+
+  @override
+  String get nativePlatformShowcasePlatformWindows => 'Windows';
+
+  @override
+  String get nativePlatformShowcasePlatformLinux => 'Linux';
+
+  @override
+  String get nativePlatformShowcasePlatformWeb => 'Web';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle =>
+      'Incrustación de vistas nativas';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary =>
+      'Incrusta superficies UI nativas en diseños Flutter cuando los widgets no bastan.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle =>
+      'Empaquetado de plataforma';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary =>
+      'Distribuye y actualiza paquetes de plataforma junto al bundle de Flutter.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle =>
+      'Interop de código nativo';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary =>
+      'Llama a lenguajes de plataforma detrás de repositorios y canales.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle =>
+      'Gráficos de bajo nivel';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary =>
+      'Accede a APIs con GPU cuando el lienzo de Flutter se queda corto.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle =>
+      'Gestos adaptativos';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary =>
+      'Ajusta movimiento, háptica y navegación a las expectativas de cada plataforma.';
+
+  @override
+  String get nativePlatformShowcaseLesson1Title => 'Componer, no reemplazar';
+
+  @override
+  String get nativePlatformShowcaseLesson1Body =>
+      'Flutter puede integrarse con vistas nativas de plataforma en lugar de reemplazarlas.';
+
+  @override
+  String get nativePlatformShowcaseLesson2Title => 'Desacoplar design systems';
+
+  @override
+  String get nativePlatformShowcaseLesson2Body =>
+      'Los design systems deben desacoplarse de la lógica central de la app.';
+
+  @override
+  String get nativePlatformShowcaseLesson3Title =>
+      'Aislar comportamiento de plataforma';
+
+  @override
+  String get nativePlatformShowcaseLesson3Body =>
+      'El comportamiento específico de plataforma debe aislarse, no dispersarse en widgets.';
+
+  @override
+  String get nativePlatformShowcaseLesson4Title => 'Abstraer interop nativa';
+
+  @override
+  String get nativePlatformShowcaseLesson4Body =>
+      'La interop nativa debe ir detrás de abstracciones para mantener la app testeable.';
+
+  @override
+  String get nativePlatformShowcaseLoadError =>
+      'No se pudieron cargar los datos de la vitrina.';
+
+  @override
+  String get nativePlatformShowcaseRetry => 'Reintentar';
+
+  @override
   String get eventBusDemoTitle => 'Demo de Event Bus';
 
   @override

@@ -1,6 +1,6 @@
 # Todo sync banner — not mounted on list page
 
-**Date:** 2026-06-07  
+**Date:** 2026-06-07
 **Related:** [Layering optimization](2026-06-07_layering-optimization.md) (PR #310)
 
 ## Decision
@@ -18,7 +18,7 @@ Counter and chat surfaces show offline/pending-sync banners; the todo list **int
 ## What stays in the repo
 
 | Asset | Status |
-|-------|--------|
+| --- | --- |
 | `lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` | Kept — uses shared `sync_banner_helpers` |
 | `test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart` | Kept — widget contract tests |
 | `todo_list_page_body.dart` comment | Documents product decision at mount site |

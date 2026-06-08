@@ -216,6 +216,94 @@ void registerEventBusDemoIntegrationFlow() {
   );
 }
 
+void registerNativePlatformShowcaseIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Native platform showcase flow',
+    testName: 'opens showcase from Example and renders platform summary',
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder showcaseButton = find.byKey(
+        const ValueKey('example-native-platform-showcase-button'),
+      );
+      await tester.scrollUntilVisible(
+        showcaseButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, showcaseButton);
+      await pumpUntilFound(tester, find.text('Native platform showcase'));
+
+      expect(find.text('Native platform showcase'), findsWidgets);
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-summary')),
+        findsOneWidget,
+      );
+      final String expectedPlatformLabel = kIsWeb
+          ? 'Web'
+          : switch (defaultTargetPlatform) {
+              TargetPlatform.iOS => 'iOS',
+              TargetPlatform.android => 'Android',
+              TargetPlatform.macOS => 'macOS',
+              TargetPlatform.windows => 'Windows',
+              TargetPlatform.linux => 'Linux',
+              _ => 'iOS',
+            };
+      expect(find.text(expectedPlatformLabel), findsWidgets);
+
+      final bool expectsMaterialUi =
+          kIsWeb ||
+          defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.linux ||
+          defaultTargetPlatform == TargetPlatform.windows;
+      expect(
+        find.text(expectsMaterialUi ? 'Material' : 'Cupertino'),
+        findsWidgets,
+      );
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-interop-swift')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-interop-kotlin')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-interop-cpp')),
+        findsOneWidget,
+      );
+      if (!kIsWeb &&
+          (defaultTargetPlatform == TargetPlatform.iOS ||
+              defaultTargetPlatform == TargetPlatform.macOS)) {
+        expect(
+          find.text('Hello from Apple native FFI (21 + 21 = 42)'),
+          findsOneWidget,
+        );
+      }
+      final Finder lessonZero = find.byKey(
+        const ValueKey('native-platform-showcase-lesson-0'),
+      );
+      await tester.scrollUntilVisible(
+        lessonZero,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(lessonZero, findsOneWidget);
+      final Finder nativeViewEmbedding = find.text('Native view embedding');
+      await tester.scrollUntilVisible(
+        nativeViewEmbedding,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(nativeViewEmbedding, findsOneWidget);
+    },
+  );
+}
+
 void registerWebsocketIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'WebSocket flow',

@@ -11,6 +11,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`lib/shared/`](lib/shared/) |
 | Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`lib/shared/sync/`](lib/shared/sync/) |
 | HTTP / retries | [`lib/shared/http/`](lib/shared/http/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
+| Native interop (MethodChannel / FFI) | [`lib/features/native_platform_showcase/`](lib/features/native_platform_showcase/), [`README`](lib/features/native_platform_showcase/README.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`native_platform_showcase` row) |
 | Tests | [`docs/testing_overview.md`](docs/testing_overview.md), [`test/`](test/) |
 | Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |
 | Feature catalog | [`docs/feature_overview.md`](docs/feature_overview.md) |

@@ -1,6 +1,6 @@
 # Feature map
 
-Per-feature agent context. **16 full** + **15 stub** = 31 modules (2026-05-21). Catalog: [`docs/feature_overview.md`](../../docs/feature_overview.md).
+Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). Catalog: [`docs/feature_overview.md`](../../docs/feature_overview.md).
 
 **Legend:** `minimal_context` = smallest file set before editing (expand only as needed).
 
@@ -170,6 +170,20 @@ Per-feature agent context. **16 full** + **15 stub** = 31 modules (2026-05-21). 
 | Routes | `/walletconnect-auth` |
 | LOC | 1413 |
 | minimal_context | `walletconnect_auth.dart`, repository impl, auth page impl part |
+
+### native_platform_showcase (`status: full`)
+
+| Field | Value |
+| --- | --- |
+| Purpose | Platform capability catalog + live MethodChannel (Swift/Kotlin) and FFI (C/C++) interop demos |
+| Routes | `/native-platform-showcase` (Example hub entry) |
+| LOC | 2345 |
+| Layers | `domain/` (ports + use case), `data/` (MethodChannel, FFI, mapper), `presentation/cubit/` |
+| Key paths | `lib/features/native_platform_showcase/native_platform_showcase.dart`, `presentation/pages/native_platform_showcase_page.dart` |
+| Native | `ios/Runner/NativeShowcaseBridge.swift`, `macos/Runner/NativeShowcaseBridge.swift`, `android/.../MainActivity.kt`, `native/native_showcase/` |
+| Tests | `test/features/native_platform_showcase/`, `integration_test/native_platform_showcase_flow_test.dart`, web smoke in `test/integration_preflight/web_bootstrap_smoke_test.dart` |
+| Docs | [`lib/features/native_platform_showcase/README.md`](../../lib/features/native_platform_showcase/README.md), brief [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md) |
+| minimal_context | `native_platform_showcase.dart`, `load_native_platform_showcase_use_case.dart`, `native_platform_info_repository_impl.dart`, method channel + FFI services, `native_platform_showcase_cubit.dart`, showcase page |
 
 ---
 

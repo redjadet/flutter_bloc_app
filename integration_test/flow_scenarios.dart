@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -33,6 +34,7 @@ void registerSmokeIntegrationFlows() {
   registerTodoListIntegrationFlow();
   registerWebsocketIntegrationFlow();
   registerEventBusDemoIntegrationFlow();
+  registerNativePlatformShowcaseIntegrationFlow();
   registerWhiteboardIntegrationFlow();
 }
 

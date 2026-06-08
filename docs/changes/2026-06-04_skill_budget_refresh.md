@@ -9,7 +9,7 @@
 ## Results
 
 | Bucket | Approx tokens | Budget | Status |
-|--------|---------------|--------|--------|
+| --- | --- | --- | --- |
 | repoTemplates | ~5,060 | 12,000 | OK |
 | cursorSkills | ~37,092 | 120,000 | OK |
 | agentsSkills | ~66,584 | 80,000 | OK (was overstated when inventory was stale) |

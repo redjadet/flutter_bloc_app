@@ -23,7 +23,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
-**Depth on request** (not spine): case study, staff app, therapy, charts, GraphQL, iGaming, etc. → [feature_overview.md](feature_overview.md).
+**Depth on request** (not spine): case study, staff app, therapy, charts, GraphQL, iGaming, **native platform showcase** (MethodChannel + FFI layering), etc. → [feature_overview.md](feature_overview.md).
 
 ## 4. JD evidence table
 
@@ -39,6 +39,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 | Agile / SaaS | CI + vertical demos as depth | README badges, [feature_overview.md](feature_overview.md) | CI badge; depth table §13 |
 | Mixpanel / Sentry (nice) | **Not shipped** — documented seams | [plans/future_observability.md](plans/future_observability.md) | Interview appendix script §12 |
 | Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
+| Platform channels / FFI (nice) | Live Swift/Kotlin/C interop behind clean-arch ports; web compiles with unavailable stubs | [`lib/features/native_platform_showcase/`](../lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `flutter test test/features/native_platform_showcase/` |
 | Store release (nice) | Release scripts + deployment doc | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference) |
 
 ## 5. Proof commands
@@ -130,6 +131,7 @@ See [plans/future_observability.md](plans/future_observability.md).
 
 | Topic | Doc |
 | --- | --- |
+| Native platform showcase (MethodChannel, FFI, layered ports) | [`lib/features/native_platform_showcase/README.md`](../lib/features/native_platform_showcase/README.md), [2026-06-08 brief](changes/2026-06-08_native_platform_showcase_feature_brief.md) |
 | Case studies | [case_studies/README.md](case_studies/README.md) |
 | Staff app demo | [staff_app_demo_walkthrough.md](staff_app_demo_walkthrough.md) |
 | Online therapy | [online_therapy_demo/README.md](online_therapy_demo/README.md) |

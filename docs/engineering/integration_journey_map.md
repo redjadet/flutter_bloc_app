@@ -53,6 +53,24 @@ tier expectations.
 - **Tier:** targeted real-Firebase proof, not aggregate tier by default
 - **Owner:** feature QA owner
 
+## J6 Demo showcase reachability
+
+- **Goal:** Example-page demos open and render primary content (educational
+  showcases reachable without platform guards).
+- **Primary target (native platform):**
+  `integration_test/native_platform_showcase_flow_test.dart`
+  (`registerNativePlatformShowcaseIntegrationFlow`: Example →
+  `example-native-platform-showcase-button` → summary + live interop tiles
+  `native-platform-showcase-interop-{swift,kotlin,cpp}` + lesson 0 + platform/UI
+  family labels).
+- **Web lane:** `test/integration_preflight/web_bootstrap_smoke_test.dart`
+  (`opens native platform showcase from Example on web`; via `./bin/integration_preflight`;
+  showcase channel mock registered globally in `test/flutter_test_config.dart` —
+  not `integration_test` on web).
+- **Tier:** `smoke`, `standard`, `exhaustive` (device integration); web via
+  `./bin/integration_preflight`
+- **Owner:** feature QA owner
+
 ## Aggregate mapping
 
 - `pr_smoke` -> `integration_test/pr_smoke_flows_test.dart`

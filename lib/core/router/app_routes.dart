@@ -142,7 +142,8 @@ class AppRoutes {
 
   static const eventBusDemo = 'event-bus-demo';
   static const eventBusDemoPath = '/event-bus-demo';
-
+  static const nativePlatformShowcase = 'native-platform-showcase';
+  static const nativePlatformShowcasePath = '/native-platform-showcase';
   static const staffAppDemoDashboard = 'staff-app-demo-dashboard';
   static const staffAppDemoDashboardPath = '/staff-app-demo/dashboard';
 
@@ -195,7 +196,6 @@ class AppRoutes {
   static const onlineTherapyDemoClientCall = 'online-therapy-demo-client-call';
   static const onlineTherapyDemoClientCallPath =
       '/online-therapy-demo/client/call';
-
   static const onlineTherapyDemoTherapist = 'online-therapy-demo-therapist';
   static const onlineTherapyDemoTherapistPath =
       '/online-therapy-demo/therapist';

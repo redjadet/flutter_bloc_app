@@ -12,6 +12,7 @@ void main() {
       final theme = ThemeData.light();
       await tester.pumpWidget(
         MaterialApp(
+          theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
           home: ExamplePageBody(
             l10n: AppLocalizationsEn(),
             theme: theme,
@@ -47,6 +48,7 @@ void main() {
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
             onOpenEventBusDemo: () {},
+            onOpenNativePlatformShowcase: () {},
           ),
         ),
       );
@@ -69,6 +71,7 @@ void main() {
       final theme = ThemeData.light();
       await tester.pumpWidget(
         MaterialApp(
+          theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
           home: ExamplePageBody(
             l10n: AppLocalizationsEn(),
             theme: theme,
@@ -104,6 +107,7 @@ void main() {
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
             onOpenEventBusDemo: () {},
+            onOpenNativePlatformShowcase: () {},
           ),
         ),
       );
@@ -124,6 +128,7 @@ void main() {
       final l10n = AppLocalizationsEn();
       await tester.pumpWidget(
         MaterialApp(
+          theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
           home: ExamplePageBody(
             l10n: l10n,
             theme: theme,
@@ -158,6 +163,7 @@ void main() {
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
             onOpenEventBusDemo: () {},
+            onOpenNativePlatformShowcase: () {},
           ),
         ),
       );
@@ -177,6 +183,7 @@ void main() {
       final theme = ThemeData.light();
       await tester.pumpWidget(
         MaterialApp(
+          theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
           home: ExamplePageBody(
             l10n: AppLocalizationsEn(),
             theme: theme,
@@ -211,6 +218,7 @@ void main() {
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
             onOpenEventBusDemo: () {},
+            onOpenNativePlatformShowcase: () {},
           ),
         ),
       );
@@ -237,6 +245,7 @@ void main() {
       final l10n = AppLocalizationsEn();
       await tester.pumpWidget(
         MaterialApp(
+          theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
           home: ExamplePageBody(
             l10n: l10n,
             theme: theme,
@@ -269,6 +278,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenNativePlatformShowcase: () {},
             onOpenEventBusDemo: () {
               tapped = true;
             },
@@ -290,5 +300,70 @@ void main() {
 
       expect(tapped, isTrue);
     });
+
+    testWidgets(
+      'invokes onOpenNativePlatformShowcase when tapping showcase button',
+      (final tester) async {
+        var tapped = false;
+        final theme = ThemeData.light();
+        final l10n = AppLocalizationsEn();
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: theme.copyWith(splashFactory: NoSplash.splashFactory),
+            home: ExamplePageBody(
+              l10n: l10n,
+              theme: theme,
+              colors: theme.colorScheme,
+              onBackPressed: () {},
+              onLoadPlatformInfo: () {},
+              onOpenWebsocket: () {},
+              onOpenRealtimeMarket: () {},
+              onOpenSearch: () {},
+              onOpenTodoList: () {},
+              onOpenProfile: () {},
+              onOpenRegister: () {},
+              onOpenLoggedOut: () {},
+              onRunIsolates: () {},
+              isRunningIsolates: false,
+              isolateError: null,
+              fibonacciInput: null,
+              fibonacciResult: null,
+              parallelValues: const <int>[],
+              parallelDuration: Duration.zero,
+              onOpenChatList: () {},
+              onOpenLibraryDemo: () {},
+              onOpenIgamingDemo: () {},
+              onOpenStaffAppDemo: () {},
+              onOpenFcmDemo: () {},
+              onOpenScapes: () {},
+              onOpenWalletconnectAuth: () {},
+              onOpenCameraGallery: () {},
+              onOpenCaseStudyDemo: () {},
+              onOpenIapDemo: () {},
+              onOpenAiDecisionDemo: () {},
+              onOpenOnlineTherapyDemo: () {},
+              onOpenEventBusDemo: () {},
+              onOpenNativePlatformShowcase: () {
+                tapped = true;
+              },
+            ),
+          ),
+        );
+
+        final button = find.byKey(
+          const ValueKey('example-native-platform-showcase-button'),
+        );
+        await tester.scrollUntilVisible(
+          button,
+          300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pump();
+        await tester.tap(button, warnIfMissed: false);
+        await tester.pump();
+
+        expect(tapped, isTrue);
+      },
+    );
   });
 }

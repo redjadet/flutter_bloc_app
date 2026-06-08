@@ -1383,6 +1383,98 @@
   "@exampleEventBusDemoButton": {
     "description": "Button label that navigates to the Event Bus pattern demo page"
   },
+  "exampleNativePlatformShowcaseButton": "Open Native Platform showcase",
+  "@exampleNativePlatformShowcaseButton": {
+    "description": "Button label that navigates to the native platform showcase demo"
+  },
+  "nativePlatformShowcaseTitle": "Native platform showcase",
+  "@nativePlatformShowcaseTitle": {
+    "description": "Title for the native platform showcase demo page"
+  },
+  "nativePlatformShowcaseIntro": "Flutter runs on many platforms. This page calls Swift, Kotlin, and C/C++ from Dart so you can see how non-Dart code fits behind repositories and channels.",
+  "@nativePlatformShowcaseIntro": {
+    "description": "Intro paragraph on the native platform showcase page"
+  },
+  "nativePlatformShowcaseInteropTitle": "Live native interop",
+  "@nativePlatformShowcaseInteropTitle": {
+    "description": "Section title for live Swift, Kotlin, and C/C++ calls"
+  },
+  "nativePlatformShowcaseInteropSubtitle": "Each row is a real call from Dart into host or native code on this device.",
+  "@nativePlatformShowcaseInteropSubtitle": {
+    "description": "Section subtitle explaining live interop demos"
+  },
+  "nativePlatformShowcaseInteropSwiftLabel": "Dart → Swift (MethodChannel)",
+  "@nativePlatformShowcaseInteropSwiftLabel": {
+    "description": "Label for Swift interop demo row"
+  },
+  "nativePlatformShowcaseInteropKotlinLabel": "Dart → Kotlin (MethodChannel)",
+  "@nativePlatformShowcaseInteropKotlinLabel": {
+    "description": "Label for Kotlin interop demo row"
+  },
+  "nativePlatformShowcaseInteropCppLabel": "Dart → C/C++ (FFI)",
+  "@nativePlatformShowcaseInteropCppLabel": {
+    "description": "Label for C/C++ FFI demo row"
+  },
+  "nativePlatformShowcaseInteropStatusSuccess": "Success",
+  "@nativePlatformShowcaseInteropStatusSuccess": {
+    "description": "Status label when a native interop call succeeds"
+  },
+  "nativePlatformShowcaseInteropStatusUnavailable": "Unavailable on this platform",
+  "@nativePlatformShowcaseInteropStatusUnavailable": {
+    "description": "Status label when a native interop bridge is not supported on the current platform"
+  },
+  "nativePlatformShowcaseInteropStatusFailed": "Call failed",
+  "@nativePlatformShowcaseInteropStatusFailed": {
+    "description": "Status label when a native interop call throws or returns an error"
+  },
+  "nativePlatformShowcaseRuntimePlatformLabel": "Runtime platform",
+  "@nativePlatformShowcaseRuntimePlatformLabel": {
+    "description": "Label for detected runtime platform in summary card"
+  },
+  "nativePlatformShowcaseUiFamilyLabel": "UI family",
+  "@nativePlatformShowcaseUiFamilyLabel": {
+    "description": "Label for adaptive UI family in summary card"
+  },
+  "nativePlatformShowcaseUiCupertino": "Cupertino",
+  "@nativePlatformShowcaseUiCupertino": {
+    "description": "Cupertino UI family label"
+  },
+  "nativePlatformShowcaseUiMaterial": "Material",
+  "@nativePlatformShowcaseUiMaterial": {
+    "description": "Material UI family label"
+  },
+  "nativePlatformShowcasePlatformAndroid": "Android",
+  "nativePlatformShowcasePlatformIos": "iOS",
+  "nativePlatformShowcasePlatformMacos": "macOS",
+  "nativePlatformShowcasePlatformWindows": "Windows",
+  "nativePlatformShowcasePlatformLinux": "Linux",
+  "nativePlatformShowcasePlatformWeb": "Web",
+  "nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle": "Native view embedding",
+  "nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary": "Embed native UI surfaces inside Flutter layouts when widgets are not enough.",
+  "nativePlatformShowcaseCapabilityPlatformPackageManagerTitle": "Platform packaging",
+  "nativePlatformShowcaseCapabilityPlatformPackageManagerSummary": "Ship and update platform packages alongside the Flutter bundle.",
+  "nativePlatformShowcaseCapabilityNativeCodeInteropTitle": "Native code interop",
+  "nativePlatformShowcaseCapabilityNativeCodeInteropSummary": "Call platform languages behind repositories and platform channels.",
+  "nativePlatformShowcaseCapabilityLowLevelGraphicsTitle": "Low-level graphics",
+  "nativePlatformShowcaseCapabilityLowLevelGraphicsSummary": "Reach GPU-backed APIs when Flutter's canvas layer needs a boost.",
+  "nativePlatformShowcaseCapabilityAdaptiveGesturesTitle": "Adaptive gestures",
+  "nativePlatformShowcaseCapabilityAdaptiveGesturesSummary": "Tune motion, haptics, and navigation to each platform's expectations.",
+  "nativePlatformShowcaseLesson1Title": "Compose, don't replace",
+  "nativePlatformShowcaseLesson1Body": "Flutter can integrate with native platform views instead of replacing them.",
+  "nativePlatformShowcaseLesson2Title": "Decouple design systems",
+  "nativePlatformShowcaseLesson2Body": "Design systems should be decoupled from core app logic.",
+  "nativePlatformShowcaseLesson3Title": "Isolate platform behavior",
+  "nativePlatformShowcaseLesson3Body": "Platform-specific behaviour should be isolated, not scattered across widgets.",
+  "nativePlatformShowcaseLesson4Title": "Abstract native interop",
+  "nativePlatformShowcaseLesson4Body": "Native interop should sit behind abstractions so the app remains testable.",
+  "nativePlatformShowcaseLoadError": "Could not load platform showcase data.",
+  "@nativePlatformShowcaseLoadError": {
+    "description": "Error message when showcase repository load fails"
+  },
+  "nativePlatformShowcaseRetry": "Try again",
+  "@nativePlatformShowcaseRetry": {
+    "description": "Retry button on native platform showcase error state"
+  },
   "eventBusDemoTitle": "Event Bus demo",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

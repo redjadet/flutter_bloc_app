@@ -11,4 +11,5 @@ enum DeepLinkTarget {
   graphqlDemo,
   profile,
   eventBusDemo,
+  nativePlatformShowcase,
 }

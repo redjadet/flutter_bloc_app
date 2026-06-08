@@ -14,5 +14,7 @@ extension DeepLinkTargetLocationX on DeepLinkTarget {
     DeepLinkTarget.graphqlDemo => AppRoutes.graphqlPath,
     DeepLinkTarget.profile => AppRoutes.profilePath,
     DeepLinkTarget.eventBusDemo => AppRoutes.eventBusDemoPath,
+    DeepLinkTarget.nativePlatformShowcase =>
+      AppRoutes.nativePlatformShowcasePath,
   };
 }

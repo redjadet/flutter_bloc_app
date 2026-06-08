@@ -11,9 +11,21 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
   private val channelName = "com.example.flutter_bloc_app/native"
+  private val showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, showcaseChannelName)
+      .setMethodCallHandler { call, result ->
+        when (call.method) {
+          "invokeKotlin" -> {
+            result.success(
+              "Hello from Kotlin (API ${Build.VERSION.SDK_INT})",
+            )
+          }
+          else -> result.notImplemented()
+        }
+      }
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
       .setMethodCallHandler { call, result ->
         when (call.method) {
