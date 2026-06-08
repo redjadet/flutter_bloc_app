@@ -31,7 +31,6 @@
 		8D849889FB4AB66F89D5162E /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26D39AFD1BB834C8E35AB3EA /* Pods_Runner.framework */; };
 		D37C6E39AE7CE29F4845E90D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F756EE7E40133FF5BB3BCDE7 /* GoogleService-Info.plist */; };
 		E72A13BA8C6D753FD04BC9A1 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 393DD7705E50F0619BE04FAE /* Pods_RunnerTests.framework */; };
-		C3D4E5F60718293A4B5E061 /* native_showcase.c in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F60718293A4B5E062 /* native_showcase.c */; };
 		C3D4E5F60718293A4B5E063 /* NativeShowcaseBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F60718293A4B5E064 /* NativeShowcaseBridge.swift */; };
 /* End PBXBuildFile section */
 

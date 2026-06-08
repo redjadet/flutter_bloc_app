@@ -20,7 +20,7 @@ Interviewers and learners need a concise, cross-platform explanation of how Flut
 - [x] presentation (interop section UI; cubit → use case only)
 - [x] DI (`registerNativePlatformShowcaseServices` via `register_demo_services.dart`)
 - [x] routes / l10n
-- [x] native (iOS Swift, Android Kotlin, shared C, macOS Swift + C, Linux/Windows CMake)
+- [x] native (iOS/macOS Swift `@_cdecl` FFI + MethodChannel, Android Kotlin + CMake `.so`, Linux/Windows CMake)
 - [x] shared (`CommonErrorView` optional `retryLabel` / `retryButtonKey`)
 
 ## Architecture

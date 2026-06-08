@@ -8,7 +8,7 @@ Educational demo that explains how Flutter apps integrate with each host platfor
 | Dart → Kotlin | Same channel | `android/.../MainActivity.kt` |
 | Dart → C/C++ | `dart:ffi` | `native/native_showcase/native_showcase.c` |
 
-On web, host bridges report **unavailable**; FFI uses a stub. Desktop Linux/Windows link the C library in CMake. macOS links the C library in Xcode and registers the Swift MethodChannel in `MainFlutterWindow.swift`.
+On web, host bridges report **unavailable**; FFI uses a stub. Desktop Linux/Windows link `native_showcase.c` in CMake. **iOS and macOS** expose FFI via Swift `@_cdecl` in `NativeShowcaseBridge.swift` only (the shared `.c` file is a project reference, not compiled—avoid duplicate `native_showcase_*` symbols). macOS registers the MethodChannel in `MainFlutterWindow.swift`.
 
 ## Entry points
 
