@@ -1071,6 +1071,148 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exampleEventBusDemoButton => 'افتح العرض التوضيحي لـ Event Bus';
 
   @override
+  String get exampleNativePlatformShowcaseButton => 'افتح عرض المنصة الأصلية';
+
+  @override
+  String get nativePlatformShowcaseTitle => 'عرض المنصة الأصلية';
+
+  @override
+  String get nativePlatformShowcaseIntro =>
+      'يعمل Flutter على منصات متعددة. تستدعي هذه الصفحة Swift وKotlin وC/C++ من Dart لإظهار كيف يعمل الكود غير Dart خلف المستودعات والقنوات.';
+
+  @override
+  String get nativePlatformShowcaseInteropTitle => 'تكامل أصلي مباشر';
+
+  @override
+  String get nativePlatformShowcaseInteropSubtitle =>
+      'كل صف هو استدعاء حقيقي من Dart إلى كود المضيف أو الأصلي على هذا الجهاز.';
+
+  @override
+  String get nativePlatformShowcaseInteropSwiftLabel =>
+      'Dart → Swift (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropKotlinLabel =>
+      'Dart → Kotlin (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropCppLabel => 'Dart → C/C++ (FFI)';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusSuccess => 'نجاح';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusUnavailable =>
+      'غير متاح على هذه المنصة';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusFailed => 'فشل الاستدعاء';
+
+  @override
+  String get nativePlatformShowcaseRuntimePlatformLabel => 'منصة وقت التشغيل';
+
+  @override
+  String get nativePlatformShowcaseUiFamilyLabel => 'عائلة الواجهة';
+
+  @override
+  String get nativePlatformShowcaseUiCupertino => 'Cupertino';
+
+  @override
+  String get nativePlatformShowcaseUiMaterial => 'Material';
+
+  @override
+  String get nativePlatformShowcasePlatformAndroid => 'Android';
+
+  @override
+  String get nativePlatformShowcasePlatformIos => 'iOS';
+
+  @override
+  String get nativePlatformShowcasePlatformMacos => 'macOS';
+
+  @override
+  String get nativePlatformShowcasePlatformWindows => 'Windows';
+
+  @override
+  String get nativePlatformShowcasePlatformLinux => 'Linux';
+
+  @override
+  String get nativePlatformShowcasePlatformWeb => 'Web';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle =>
+      'تضمين العرض الأصلي';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary =>
+      'ضمّن واجهات UI أصلية داخل تخطيطات Flutter عندما لا تكفي الودجات.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle =>
+      'تعبئة المنصة';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary =>
+      'وزّع حزم المنصة وحدّثها مع حزمة Flutter.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle =>
+      'تعاون الكود الأصلي';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary =>
+      'استدعِ لغات المنصة خلف المستودعات وقنوات المنصة.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle =>
+      'رسوميات منخفضة المستوى';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary =>
+      'الوصول إلى واجهات GPU عندما لا يكفي طبقة الرسم في Flutter.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle =>
+      'إيماءات متكيفة';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary =>
+      'اضبط الحركة واللمس والتنقل وفق توقعات كل منصة.';
+
+  @override
+  String get nativePlatformShowcaseLesson1Title => 'التركيب لا الاستبدال';
+
+  @override
+  String get nativePlatformShowcaseLesson1Body =>
+      'يمكن لـ Flutter التكامل مع عروض المنصة الأصلية بدلاً من استبدالها.';
+
+  @override
+  String get nativePlatformShowcaseLesson2Title => 'فصل أنظمة التصميم';
+
+  @override
+  String get nativePlatformShowcaseLesson2Body =>
+      'يجب فصل أنظمة التصميم عن منطق التطبيق الأساسي.';
+
+  @override
+  String get nativePlatformShowcaseLesson3Title => 'عزل سلوك المنصة';
+
+  @override
+  String get nativePlatformShowcaseLesson3Body =>
+      'يجب عزل السلوك الخاص بالمنصة وعدم نشره عبر الودجات.';
+
+  @override
+  String get nativePlatformShowcaseLesson4Title => 'تجريد التعاون الأصلي';
+
+  @override
+  String get nativePlatformShowcaseLesson4Body =>
+      'يجب أن يبقى التعاون الأصلي خلف تجريدات ليبقى التطبيق قابلاً للاختبار.';
+
+  @override
+  String get nativePlatformShowcaseLoadError => 'تعذر تحميل بيانات العرض.';
+
+  @override
+  String get nativePlatformShowcaseRetry => 'حاول مجدداً';
+
+  @override
   String get eventBusDemoTitle => 'عرض Event Bus';
 
   @override

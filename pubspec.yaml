@@ -49,6 +49,7 @@ dependencies:
   equatable: ^2.0.8
   event_bus: ^2.0.1
   fancy_shimmer_image: ^2.0.3
+  ffi: ^2.1.4
   firebase_analytics: ^12.4.2
   firebase_app_check: ^0.4.4+1
   firebase_auth: ^6.5.2

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(runner LANGUAGES CXX)
+project(runner LANGUAGES C CXX)
 
 # Define the application target. To change its name, change BINARY_NAME in the
 # top-level CMakeLists.txt, not the value here, or `flutter run` will no longer
@@ -11,10 +11,17 @@ add_executable(${BINARY_NAME} WIN32
   "main.cpp"
   "utils.cpp"
   "win32_window.cpp"
+  "${CMAKE_SOURCE_DIR}/../../native/native_showcase/native_showcase.c"
   "${FLUTTER_MANAGED_DIR}/generated_plugin_registrant.cc"
   "Runner.rc"
   "runner.exe.manifest"
 )
+
+target_include_directories(${BINARY_NAME} PRIVATE
+  "${CMAKE_SOURCE_DIR}/../../native/native_showcase"
+)
+
+set_target_properties(${BINARY_NAME} PROPERTIES ENABLE_EXPORTS TRUE)
 
 # Apply the standard set of build settings. This can be removed for applications
 # that need different build settings.

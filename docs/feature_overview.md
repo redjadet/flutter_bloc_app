@@ -55,6 +55,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Feature | Route or entry | Code | Notes |
 | --- | --- | --- | --- |
 | Google / Apple Maps | `/google-maps` | `lib/features/google_maps/` | Deferred-loaded map experience with platform-specific map providers. |
+| Native Platform Showcase | `/native-platform-showcase` (Example hub entry) | `lib/features/native_platform_showcase/` | Capability catalog plus live MethodChannel (Swift/Kotlin) and FFI (C/C++) demos; presentation → use case → repository → platform-service ports. Web builds with unavailable stubs. README: [`lib/features/native_platform_showcase/README.md`](../lib/features/native_platform_showcase/README.md). Portfolio depth: [`interview_showcase.md`](interview_showcase.md) §13. |
 | WebSocket Demo | `/websocket` | `lib/features/websocket/` | Deferred-loaded reconnecting WebSocket flow. |
 | Realtime market demo (simulated) | `/realtime-market` (Example hub entry) | `lib/features/realtime_market/` | Simulated order book + trades; Hive cache; no production exchange. Doc: [`features/realtime_market.md`](features/realtime_market.md). |
 | Camera Gallery | `/camera-gallery` | `lib/features/camera_gallery/` | Camera and gallery picker demo. |
@@ -119,3 +120,4 @@ See [Architecture Details](architecture_details.md) and
 - [FCM Demo Integration](fcm_demo_integration.md)
 - [GenUI Demo User Guide](genui_demo_user_guide.md)
 - [Google Maps Integration](google_maps_integration.md)
+- [Native Platform Showcase](../lib/features/native_platform_showcase/README.md) (feature README; brief: [2026-06-08](changes/2026-06-08_native_platform_showcase_feature_brief.md))

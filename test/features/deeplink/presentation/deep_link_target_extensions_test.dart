@@ -51,5 +51,12 @@ void main() {
     test('location returns correct path for eventBusDemo', () {
       expect(DeepLinkTarget.eventBusDemo.location, AppRoutes.eventBusDemoPath);
     });
+
+    test('location returns correct path for nativePlatformShowcase', () {
+      expect(
+        DeepLinkTarget.nativePlatformShowcase.location,
+        AppRoutes.nativePlatformShowcasePath,
+      );
+    });
   });
 }

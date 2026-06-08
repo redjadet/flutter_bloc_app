@@ -57,8 +57,15 @@ PlatformAdaptive.filledButton(context: context, onPressed: handle, child: Text('
 **Contents:**
 
 - `biometric_authenticator.dart` - Biometric authentication (Face ID, Touch ID, fingerprint)
-- `native_platform_service.dart` - Native platform information via MethodChannel
+- `native_platform_service.dart` - App-wide platform information via MethodChannel (`com.example.flutter_bloc_app/native`)
 - `secure_secret_storage.dart` - Secure storage for secrets (API keys, tokens)
+
+**Not shared:** the **Native Platform Showcase** feature uses its own channel
+(`com.example.flutter_bloc_app/native_showcase`) and FFI surface under
+`lib/features/native_platform_showcase/` with domain ports
+(`NativeShowcaseHostLanguageService`, `NativeShowcaseNativeCodeService`). Do not
+route showcase interop through `NativePlatformService`; see
+[`lib/features/native_platform_showcase/README.md`](../lib/features/native_platform_showcase/README.md).
 
 **Usage Example:**
 
@@ -321,6 +328,14 @@ final String encoded = await encodeJsonIsolate(object); // For size estimation
 CommonErrorView(
   message: 'Failed to load data',
   onRetry: () => loadData(),
+)
+
+// Optional custom retry label / test key (e.g. native platform showcase)
+CommonErrorView(
+  message: 'Failed to load showcase',
+  onRetry: () => cubit.load(),
+  retryLabel: l10n.nativePlatformShowcaseRetry,
+  retryButtonKey: const ValueKey('native-platform-showcase-retry'),
 )
 
 // Common loading widget

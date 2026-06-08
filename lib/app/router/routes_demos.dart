@@ -35,6 +35,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubi
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page.dart';
 import 'package:flutter_bloc_app/features/iot_demo/iot_demo.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/native_platform_showcase.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';

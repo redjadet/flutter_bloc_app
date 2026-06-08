@@ -10,6 +10,19 @@ class MainFlutterWindow: NSWindow {
 
     RegisterGeneratedPlugins(registry: flutterViewController)
 
+    let showcaseChannel = FlutterMethodChannel(
+      name: "com.example.flutter_bloc_app/native_showcase",
+      binaryMessenger: flutterViewController.engine.binaryMessenger
+    )
+    showcaseChannel.setMethodCallHandler { call, result in
+      switch call.method {
+      case "invokeSwift":
+        result(NativeShowcaseBridge.greeting())
+      default:
+        result(FlutterMethodNotImplemented)
+      }
+    }
+
     super.awakeFromNib()
   }
 }

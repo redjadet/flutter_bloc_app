@@ -13,6 +13,7 @@ export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';
 export 'iot_demo/iot_demo.dart';
 export 'library_demo/presentation/pages/library_demo_page.dart';
+export 'native_platform_showcase/native_platform_showcase.dart';
 export 'playlearn/playlearn.dart';
 export 'profile/profile.dart';
 export 'realtime_market/realtime_market.dart';

@@ -29,4 +29,17 @@ void main() {
       isTrue,
     );
   });
+
+  test('createDemoRoutes includes Native Platform Showcase route', () {
+    final List<RouteBase> routes = createDemoRoutes();
+    expect(
+      routes.any(
+        (final RouteBase r) =>
+            r is GoRoute &&
+            r.name == AppRoutes.nativePlatformShowcase &&
+            r.path == AppRoutes.nativePlatformShowcasePath,
+      ),
+      isTrue,
+    );
+  });
 }

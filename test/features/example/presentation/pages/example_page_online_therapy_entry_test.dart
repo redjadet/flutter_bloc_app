@@ -42,6 +42,7 @@ void main() {
                 tapped = true;
               },
               onOpenEventBusDemo: () {},
+              onOpenNativePlatformShowcase: () {},
               onRunIsolates: null,
               isRunningIsolates: false,
               isolateError: null,

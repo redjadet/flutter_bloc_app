@@ -1089,6 +1089,154 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exampleEventBusDemoButton => 'Event-Bus-Demo öffnen';
 
   @override
+  String get exampleNativePlatformShowcaseButton =>
+      'Native-Platform-Showcase öffnen';
+
+  @override
+  String get nativePlatformShowcaseTitle => 'Native-Platform-Showcase';
+
+  @override
+  String get nativePlatformShowcaseIntro =>
+      'Flutter läuft auf vielen Plattformen. Diese Seite ruft Swift, Kotlin und C/C++ aus Dart auf und zeigt, wie Nicht-Dart-Code hinter Repositories und Kanälen sitzt.';
+
+  @override
+  String get nativePlatformShowcaseInteropTitle => 'Live native Interop';
+
+  @override
+  String get nativePlatformShowcaseInteropSubtitle =>
+      'Jede Zeile ist ein echter Aufruf von Dart in Host- oder nativen Code auf diesem Gerät.';
+
+  @override
+  String get nativePlatformShowcaseInteropSwiftLabel =>
+      'Dart → Swift (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropKotlinLabel =>
+      'Dart → Kotlin (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropCppLabel => 'Dart → C/C++ (FFI)';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusSuccess => 'Erfolg';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusUnavailable =>
+      'Auf dieser Plattform nicht verfügbar';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusFailed =>
+      'Aufruf fehlgeschlagen';
+
+  @override
+  String get nativePlatformShowcaseRuntimePlatformLabel => 'Laufzeitplattform';
+
+  @override
+  String get nativePlatformShowcaseUiFamilyLabel => 'UI-Familie';
+
+  @override
+  String get nativePlatformShowcaseUiCupertino => 'Cupertino';
+
+  @override
+  String get nativePlatformShowcaseUiMaterial => 'Material';
+
+  @override
+  String get nativePlatformShowcasePlatformAndroid => 'Android';
+
+  @override
+  String get nativePlatformShowcasePlatformIos => 'iOS';
+
+  @override
+  String get nativePlatformShowcasePlatformMacos => 'macOS';
+
+  @override
+  String get nativePlatformShowcasePlatformWindows => 'Windows';
+
+  @override
+  String get nativePlatformShowcasePlatformLinux => 'Linux';
+
+  @override
+  String get nativePlatformShowcasePlatformWeb => 'Web';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle =>
+      'Einbettung nativer Views';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary =>
+      'Native UI-Oberflächen in Flutter-Layouts einbetten, wenn Widgets nicht reichen.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle =>
+      'Plattform-Packaging';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary =>
+      'Plattformpakete zusammen mit dem Flutter-Bundle ausliefern und aktualisieren.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle =>
+      'Native Code-Interop';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary =>
+      'Plattformsprachen hinter Repositories und Platform Channels aufrufen.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle =>
+      'Low-Level-Grafik';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary =>
+      'GPU-gestützte APIs nutzen, wenn Flutters Canvas-Schicht an Grenzen stößt.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle =>
+      'Adaptive Gesten';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary =>
+      'Bewegung, Haptik und Navigation an Plattformerwartungen anpassen.';
+
+  @override
+  String get nativePlatformShowcaseLesson1Title =>
+      'Komponieren, nicht ersetzen';
+
+  @override
+  String get nativePlatformShowcaseLesson1Body =>
+      'Flutter kann native Plattform-Views integrieren, statt sie zu ersetzen.';
+
+  @override
+  String get nativePlatformShowcaseLesson2Title => 'Designsysteme entkoppeln';
+
+  @override
+  String get nativePlatformShowcaseLesson2Body =>
+      'Designsysteme sollten von der Kern-App-Logik getrennt sein.';
+
+  @override
+  String get nativePlatformShowcaseLesson3Title =>
+      'Plattformverhalten isolieren';
+
+  @override
+  String get nativePlatformShowcaseLesson3Body =>
+      'Plattformspezifisches Verhalten soll isoliert sein, nicht über Widgets verstreut.';
+
+  @override
+  String get nativePlatformShowcaseLesson4Title =>
+      'Native Interop abstrahieren';
+
+  @override
+  String get nativePlatformShowcaseLesson4Body =>
+      'Native Interop gehört hinter Abstraktionen, damit die App testbar bleibt.';
+
+  @override
+  String get nativePlatformShowcaseLoadError =>
+      'Showcase-Daten konnten nicht geladen werden.';
+
+  @override
+  String get nativePlatformShowcaseRetry => 'Erneut versuchen';
+
+  @override
   String get eventBusDemoTitle => 'Event-Bus-Demo';
 
   @override

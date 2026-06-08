@@ -8,7 +8,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [dependency_map.md](dependency_map.md) | Feature LOC, barrels, fan-in, cross-feature edges |
 | [anti_patterns.md](anti_patterns.md) | Repo-specific smells with file pointers |
 | [data_flow_map.md](data_flow_map.md) | Offline-first and remote paths |
-| [feature_map.md](feature_map.md) | Per-feature context (16 full + 15 stub) |
+| [feature_map.md](feature_map.md) | Per-feature context (17 full + 15 stub) |
 | [context_hotspots.md](context_hotspots.md) | Largest files; Phase 4 candidates |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
 | [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | ARCH-001/002 closure + metrics (shipped PR #240) |

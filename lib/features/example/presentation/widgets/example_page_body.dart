@@ -33,6 +33,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onOpenIapDemo,
     required this.onOpenAiDecisionDemo,
     required this.onOpenEventBusDemo,
+    required this.onOpenNativePlatformShowcase,
     required this.onOpenOnlineTherapyDemo,
     required this.onRunIsolates,
     required this.isRunningIsolates,
@@ -71,6 +72,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback onOpenIapDemo;
   final VoidCallback onOpenAiDecisionDemo;
   final VoidCallback onOpenEventBusDemo;
+  final VoidCallback onOpenNativePlatformShowcase;
   final VoidCallback onOpenOnlineTherapyDemo;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
@@ -107,6 +109,7 @@ class ExamplePageBody extends StatelessWidget {
     onOpenIapDemo: onOpenIapDemo,
     onOpenAiDecisionDemo: onOpenAiDecisionDemo,
     onOpenEventBusDemo: onOpenEventBusDemo,
+    onOpenNativePlatformShowcase: onOpenNativePlatformShowcase,
     onOpenOnlineTherapyDemo: onOpenOnlineTherapyDemo,
     onRunIsolates: onRunIsolates,
     isRunningIsolates: isRunningIsolates,

@@ -45,4 +45,4 @@ to `tool/agent_host_templates/shared/` after this baseline.
 
 ## Dedup matrix
 
-Committed: [`README.md`](../audits/README.md), [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses docs/audits/* plus !docs/audits/README.md and !docs/audits/dedup_matrix_*.md (not docs/audits/, which blocks re-includes).
+Committed: [`README.md`](../audits/README.md), [`dedup_matrix_2026-05-22.md`](../audits/dedup_matrix_2026-05-22.md). `.gitignore` uses docs/audits/*plus !docs/audits/README.md and !docs/audits/dedup_matrix_*.md (not docs/audits/, which blocks re-includes).

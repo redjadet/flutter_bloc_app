@@ -1068,6 +1068,150 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exampleEventBusDemoButton => 'Open Event Bus demo';
 
   @override
+  String get exampleNativePlatformShowcaseButton =>
+      'Open Native Platform showcase';
+
+  @override
+  String get nativePlatformShowcaseTitle => 'Native platform showcase';
+
+  @override
+  String get nativePlatformShowcaseIntro =>
+      'Flutter runs on many platforms. This page calls Swift, Kotlin, and C/C++ from Dart so you can see how non-Dart code fits behind repositories and channels.';
+
+  @override
+  String get nativePlatformShowcaseInteropTitle => 'Live native interop';
+
+  @override
+  String get nativePlatformShowcaseInteropSubtitle =>
+      'Each row is a real call from Dart into host or native code on this device.';
+
+  @override
+  String get nativePlatformShowcaseInteropSwiftLabel =>
+      'Dart → Swift (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropKotlinLabel =>
+      'Dart → Kotlin (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropCppLabel => 'Dart → C/C++ (FFI)';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusSuccess => 'Success';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusUnavailable =>
+      'Unavailable on this platform';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusFailed => 'Call failed';
+
+  @override
+  String get nativePlatformShowcaseRuntimePlatformLabel => 'Runtime platform';
+
+  @override
+  String get nativePlatformShowcaseUiFamilyLabel => 'UI family';
+
+  @override
+  String get nativePlatformShowcaseUiCupertino => 'Cupertino';
+
+  @override
+  String get nativePlatformShowcaseUiMaterial => 'Material';
+
+  @override
+  String get nativePlatformShowcasePlatformAndroid => 'Android';
+
+  @override
+  String get nativePlatformShowcasePlatformIos => 'iOS';
+
+  @override
+  String get nativePlatformShowcasePlatformMacos => 'macOS';
+
+  @override
+  String get nativePlatformShowcasePlatformWindows => 'Windows';
+
+  @override
+  String get nativePlatformShowcasePlatformLinux => 'Linux';
+
+  @override
+  String get nativePlatformShowcasePlatformWeb => 'Web';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle =>
+      'Native view embedding';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary =>
+      'Embed native UI surfaces inside Flutter layouts when widgets are not enough.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle =>
+      'Platform packaging';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary =>
+      'Ship and update platform packages alongside the Flutter bundle.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle =>
+      'Native code interop';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary =>
+      'Call platform languages behind repositories and platform channels.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle =>
+      'Low-level graphics';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary =>
+      'Reach GPU-backed APIs when Flutter\'s canvas layer needs a boost.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle =>
+      'Adaptive gestures';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary =>
+      'Tune motion, haptics, and navigation to each platform\'s expectations.';
+
+  @override
+  String get nativePlatformShowcaseLesson1Title => 'Compose, don\'t replace';
+
+  @override
+  String get nativePlatformShowcaseLesson1Body =>
+      'Flutter can integrate with native platform views instead of replacing them.';
+
+  @override
+  String get nativePlatformShowcaseLesson2Title => 'Decouple design systems';
+
+  @override
+  String get nativePlatformShowcaseLesson2Body =>
+      'Design systems should be decoupled from core app logic.';
+
+  @override
+  String get nativePlatformShowcaseLesson3Title => 'Isolate platform behavior';
+
+  @override
+  String get nativePlatformShowcaseLesson3Body =>
+      'Platform-specific behaviour should be isolated, not scattered across widgets.';
+
+  @override
+  String get nativePlatformShowcaseLesson4Title => 'Abstract native interop';
+
+  @override
+  String get nativePlatformShowcaseLesson4Body =>
+      'Native interop should sit behind abstractions so the app remains testable.';
+
+  @override
+  String get nativePlatformShowcaseLoadError =>
+      'Could not load platform showcase data.';
+
+  @override
+  String get nativePlatformShowcaseRetry => 'Try again';
+
+  @override
   String get eventBusDemoTitle => 'Event Bus demo';
 
   @override

@@ -1071,6 +1071,155 @@ class AppLocalizationsTr extends AppLocalizations {
   String get exampleEventBusDemoButton => 'Event Bus demosunu aç';
 
   @override
+  String get exampleNativePlatformShowcaseButton =>
+      'Yerel Platform vitrinini aç';
+
+  @override
+  String get nativePlatformShowcaseTitle => 'Yerel platform vitrini';
+
+  @override
+  String get nativePlatformShowcaseIntro =>
+      'Flutter birçok platformda çalışır. Bu sayfa Dart\'tan Swift, Kotlin ve C/C++ çağırarak Dart dışı kodun depolar ve kanallar arkasında nasıl çalıştığını gösterir.';
+
+  @override
+  String get nativePlatformShowcaseInteropTitle =>
+      'Canlı yerel birlikte çalışma';
+
+  @override
+  String get nativePlatformShowcaseInteropSubtitle =>
+      'Her satır, bu cihazda Dart\'tan ana veya yerel koda gerçek bir çağrıdır.';
+
+  @override
+  String get nativePlatformShowcaseInteropSwiftLabel =>
+      'Dart → Swift (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropKotlinLabel =>
+      'Dart → Kotlin (MethodChannel)';
+
+  @override
+  String get nativePlatformShowcaseInteropCppLabel => 'Dart → C/C++ (FFI)';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusSuccess => 'Başarılı';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusUnavailable =>
+      'Bu platformda kullanılamıyor';
+
+  @override
+  String get nativePlatformShowcaseInteropStatusFailed => 'Çağrı başarısız';
+
+  @override
+  String get nativePlatformShowcaseRuntimePlatformLabel =>
+      'Çalışma zamanı platformu';
+
+  @override
+  String get nativePlatformShowcaseUiFamilyLabel => 'UI ailesi';
+
+  @override
+  String get nativePlatformShowcaseUiCupertino => 'Cupertino';
+
+  @override
+  String get nativePlatformShowcaseUiMaterial => 'Material';
+
+  @override
+  String get nativePlatformShowcasePlatformAndroid => 'Android';
+
+  @override
+  String get nativePlatformShowcasePlatformIos => 'iOS';
+
+  @override
+  String get nativePlatformShowcasePlatformMacos => 'macOS';
+
+  @override
+  String get nativePlatformShowcasePlatformWindows => 'Windows';
+
+  @override
+  String get nativePlatformShowcasePlatformLinux => 'Linux';
+
+  @override
+  String get nativePlatformShowcasePlatformWeb => 'Web';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle =>
+      'Yerel görünüm gömme';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary =>
+      'Widget\'lar yetmediğinde yerel UI yüzeylerini Flutter düzenlerine gömün.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle =>
+      'Platform paketleme';
+
+  @override
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary =>
+      'Platform paketlerini Flutter paketiyle birlikte dağıtın ve güncelleyin.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle =>
+      'Yerel kod birlikte çalışabilirliği';
+
+  @override
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary =>
+      'Depolar ve platform kanalları arkasında platform dillerini çağırın.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle =>
+      'Düşük seviye grafik';
+
+  @override
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary =>
+      'Flutter tuvali yetersiz kaldığında GPU destekli API\'lere erişin.';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle =>
+      'Uyarlanabilir jestler';
+
+  @override
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary =>
+      'Hareket, dokunsal geri bildirim ve gezinmeyi platform beklentilerine göre ayarlayın.';
+
+  @override
+  String get nativePlatformShowcaseLesson1Title => 'Değiştirmeyin, birleştirin';
+
+  @override
+  String get nativePlatformShowcaseLesson1Body =>
+      'Flutter, yerel platform görünümlerini değiştirmek yerine onlarla entegre olabilir.';
+
+  @override
+  String get nativePlatformShowcaseLesson2Title =>
+      'Tasarım sistemlerini ayırın';
+
+  @override
+  String get nativePlatformShowcaseLesson2Body =>
+      'Tasarım sistemleri çekirdek uygulama mantığından ayrılmalıdır.';
+
+  @override
+  String get nativePlatformShowcaseLesson3Title =>
+      'Platform davranışını izole edin';
+
+  @override
+  String get nativePlatformShowcaseLesson3Body =>
+      'Platforma özgü davranış widget\'lara dağılmamalı, izole edilmelidir.';
+
+  @override
+  String get nativePlatformShowcaseLesson4Title =>
+      'Yerel birlikte çalışmayı soyutlayın';
+
+  @override
+  String get nativePlatformShowcaseLesson4Body =>
+      'Yerel birlikte çalışma soyutlamaların arkasında kalmalı; uygulama test edilebilir olmalı.';
+
+  @override
+  String get nativePlatformShowcaseLoadError =>
+      'Platform vitrin verisi yüklenemedi.';
+
+  @override
+  String get nativePlatformShowcaseRetry => 'Tekrar dene';
+
+  @override
   String get eventBusDemoTitle => 'Event Bus demosu';
 
   @override

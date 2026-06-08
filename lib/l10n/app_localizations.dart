@@ -2023,6 +2023,252 @@ abstract class AppLocalizations {
   /// **'Open Event Bus demo'**
   String get exampleEventBusDemoButton;
 
+  /// Button label that navigates to the native platform showcase demo
+  ///
+  /// In en, this message translates to:
+  /// **'Open Native Platform showcase'**
+  String get exampleNativePlatformShowcaseButton;
+
+  /// Title for the native platform showcase demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Native platform showcase'**
+  String get nativePlatformShowcaseTitle;
+
+  /// Intro paragraph on the native platform showcase page
+  ///
+  /// In en, this message translates to:
+  /// **'Flutter runs on many platforms. This page calls Swift, Kotlin, and C/C++ from Dart so you can see how non-Dart code fits behind repositories and channels.'**
+  String get nativePlatformShowcaseIntro;
+
+  /// Section title for live Swift, Kotlin, and C/C++ calls
+  ///
+  /// In en, this message translates to:
+  /// **'Live native interop'**
+  String get nativePlatformShowcaseInteropTitle;
+
+  /// Section subtitle explaining live interop demos
+  ///
+  /// In en, this message translates to:
+  /// **'Each row is a real call from Dart into host or native code on this device.'**
+  String get nativePlatformShowcaseInteropSubtitle;
+
+  /// Label for Swift interop demo row
+  ///
+  /// In en, this message translates to:
+  /// **'Dart → Swift (MethodChannel)'**
+  String get nativePlatformShowcaseInteropSwiftLabel;
+
+  /// Label for Kotlin interop demo row
+  ///
+  /// In en, this message translates to:
+  /// **'Dart → Kotlin (MethodChannel)'**
+  String get nativePlatformShowcaseInteropKotlinLabel;
+
+  /// Label for C/C++ FFI demo row
+  ///
+  /// In en, this message translates to:
+  /// **'Dart → C/C++ (FFI)'**
+  String get nativePlatformShowcaseInteropCppLabel;
+
+  /// Status label when a native interop call succeeds
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get nativePlatformShowcaseInteropStatusSuccess;
+
+  /// Status label when a native interop bridge is not supported on the current platform
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable on this platform'**
+  String get nativePlatformShowcaseInteropStatusUnavailable;
+
+  /// Status label when a native interop call throws or returns an error
+  ///
+  /// In en, this message translates to:
+  /// **'Call failed'**
+  String get nativePlatformShowcaseInteropStatusFailed;
+
+  /// Label for detected runtime platform in summary card
+  ///
+  /// In en, this message translates to:
+  /// **'Runtime platform'**
+  String get nativePlatformShowcaseRuntimePlatformLabel;
+
+  /// Label for adaptive UI family in summary card
+  ///
+  /// In en, this message translates to:
+  /// **'UI family'**
+  String get nativePlatformShowcaseUiFamilyLabel;
+
+  /// Cupertino UI family label
+  ///
+  /// In en, this message translates to:
+  /// **'Cupertino'**
+  String get nativePlatformShowcaseUiCupertino;
+
+  /// Material UI family label
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get nativePlatformShowcaseUiMaterial;
+
+  /// No description provided for @nativePlatformShowcasePlatformAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Android'**
+  String get nativePlatformShowcasePlatformAndroid;
+
+  /// No description provided for @nativePlatformShowcasePlatformIos.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS'**
+  String get nativePlatformShowcasePlatformIos;
+
+  /// No description provided for @nativePlatformShowcasePlatformMacos.
+  ///
+  /// In en, this message translates to:
+  /// **'macOS'**
+  String get nativePlatformShowcasePlatformMacos;
+
+  /// No description provided for @nativePlatformShowcasePlatformWindows.
+  ///
+  /// In en, this message translates to:
+  /// **'Windows'**
+  String get nativePlatformShowcasePlatformWindows;
+
+  /// No description provided for @nativePlatformShowcasePlatformLinux.
+  ///
+  /// In en, this message translates to:
+  /// **'Linux'**
+  String get nativePlatformShowcasePlatformLinux;
+
+  /// No description provided for @nativePlatformShowcasePlatformWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Web'**
+  String get nativePlatformShowcasePlatformWeb;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Native view embedding'**
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Embed native UI surfaces inside Flutter layouts when widgets are not enough.'**
+  String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityPlatformPackageManagerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform packaging'**
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityPlatformPackageManagerSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Ship and update platform packages alongside the Flutter bundle.'**
+  String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityNativeCodeInteropTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Native code interop'**
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityNativeCodeInteropSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Call platform languages behind repositories and platform channels.'**
+  String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityLowLevelGraphicsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-level graphics'**
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityLowLevelGraphicsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach GPU-backed APIs when Flutter\'s canvas layer needs a boost.'**
+  String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityAdaptiveGesturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adaptive gestures'**
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle;
+
+  /// No description provided for @nativePlatformShowcaseCapabilityAdaptiveGesturesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Tune motion, haptics, and navigation to each platform\'s expectations.'**
+  String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary;
+
+  /// No description provided for @nativePlatformShowcaseLesson1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Compose, don\'t replace'**
+  String get nativePlatformShowcaseLesson1Title;
+
+  /// No description provided for @nativePlatformShowcaseLesson1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Flutter can integrate with native platform views instead of replacing them.'**
+  String get nativePlatformShowcaseLesson1Body;
+
+  /// No description provided for @nativePlatformShowcaseLesson2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Decouple design systems'**
+  String get nativePlatformShowcaseLesson2Title;
+
+  /// No description provided for @nativePlatformShowcaseLesson2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Design systems should be decoupled from core app logic.'**
+  String get nativePlatformShowcaseLesson2Body;
+
+  /// No description provided for @nativePlatformShowcaseLesson3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Isolate platform behavior'**
+  String get nativePlatformShowcaseLesson3Title;
+
+  /// No description provided for @nativePlatformShowcaseLesson3Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform-specific behaviour should be isolated, not scattered across widgets.'**
+  String get nativePlatformShowcaseLesson3Body;
+
+  /// No description provided for @nativePlatformShowcaseLesson4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Abstract native interop'**
+  String get nativePlatformShowcaseLesson4Title;
+
+  /// No description provided for @nativePlatformShowcaseLesson4Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Native interop should sit behind abstractions so the app remains testable.'**
+  String get nativePlatformShowcaseLesson4Body;
+
+  /// Error message when showcase repository load fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load platform showcase data.'**
+  String get nativePlatformShowcaseLoadError;
+
+  /// Retry button on native platform showcase error state
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get nativePlatformShowcaseRetry;
+
   /// Title for the Event Bus pattern interactive demo
   ///
   /// In en, this message translates to:
