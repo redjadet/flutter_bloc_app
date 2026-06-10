@@ -1106,10 +1106,10 @@ packages:
     dependency: "direct dev"
     description:
       name: geolocator_platform_interface
-      sha256: "30cb64f0b9adcc0fb36f628b4ebf4f731a2961a0ebd849f4b56200205056fe67"
+      sha256: dde05dae7d584db6e82feb87dd9fb0b4b4c83ed68065667b4bef637be38e13a7
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.6"
+    version: "4.2.7"
   geolocator_web:
     dependency: transitive
     description:
@@ -1966,10 +1966,10 @@ packages:
     dependency: transitive
     description:
       name: postgrest
-      sha256: "9d61b3d4a88fcf9424d400127c54d49ed1b56ec30838fc0a33a64f31d4e694cc"
+      sha256: dbe357f9eacac45a98cd70194006e59c44c8ce6de0fafbdfef1f0c397c20f5de
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
+    version: "2.7.1"
   process:
     dependency: transitive
     description:
@@ -2022,10 +2022,10 @@ packages:
     dependency: transitive
     description:
       name: realtime_client
-      sha256: "7dfccf372d2f55aacfeefb6186f65a06f3ffae383fe042dbeef9d85d33487576"
+      sha256: ae16ad5bbd9f77a025ae1042b0310bc9440902e51d62ffd761a6691788af9ae9
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.3"
+    version: "2.7.4"
   record_use:
     dependency: transitive
     description:
@@ -2331,10 +2331,10 @@ packages:
     dependency: transitive
     description:
       name: storage_client
-      sha256: "6e3ba029fd6321541434a00ed0f1ae78af29ee0788bcca577d467f93a2578d68"
+      sha256: "05b04c3a1578b5469b8e1f51670feb4e183e8b1be20d9b47e7882bf7048777b5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.5"
+    version: "2.5.6"
   stream_channel:
     dependency: transitive
     description:
@@ -2363,18 +2363,18 @@ packages:
     dependency: transitive
     description:
       name: supabase
-      sha256: c18ecf2663bd5269c4097353690e286568d1083ca910a394ef308c74879a52e4
+      sha256: ebae283b56df8a97491b8484aa34b60115c60bc612de24bd83b4918c85a14f31
       url: "https://pub.dev"
     source: hosted
-    version: "2.12.1"
+    version: "2.12.2"
   supabase_flutter:
     dependency: "direct main"
     description:
       name: supabase_flutter
-      sha256: de3e8c1e9e47de9c28e371f7c5306709e0110eb9910281649760fc9d6992587d
+      sha256: "205f732f0e75163b197a7c4da8ee6654c792ace1efb15643e82d5b9bced5e94d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.14.1"
+    version: "2.14.2"
   sync_http:
     dependency: transitive
     description:
