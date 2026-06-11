@@ -118,7 +118,9 @@ ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
     GoRoute(
       path: AppRoutes.caseStudyDemoPath,
       name: AppRoutes.caseStudyDemo,
-      builder: (context, state) => const CaseStudyDemoHomePage(),
+      builder: (context, state) => CaseStudyDemoHomePage(
+        remoteAuth: getIt<RemoteBackendAuthPort>(),
+      ),
     ),
     GoRoute(
       path: AppRoutes.caseStudyDemoNewPath,

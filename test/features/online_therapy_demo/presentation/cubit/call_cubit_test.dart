@@ -1,0 +1,200 @@
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  final sampleAppointment = Appointment(
+    id: 'appt-1',
+    therapistId: 'therapist-1',
+    clientId: 'client-1',
+    startAt: DateTime.utc(2026, 4, 22, 10),
+    endAt: DateTime.utc(2026, 4, 22, 11),
+    status: AppointmentStatus.confirmed,
+    createdAt: DateTime.utc(2026, 4, 20),
+  );
+
+  final sampleSession = CallSession(
+    id: 'session-1',
+    appointmentId: 'appt-1',
+    roomId: 'room-1',
+    provider: CallProvider.simulated,
+    joinStatus: CallJoinStatus.idle,
+  );
+
+  final joinedSession = CallSession(
+    id: 'session-1',
+    appointmentId: 'appt-1',
+    roomId: 'room-1',
+    provider: CallProvider.simulated,
+    joinStatus: CallJoinStatus.connected,
+  );
+
+  group('CallCubit', () {
+    test('refresh loads appointments and selects first', () async {
+      final cubit = CallCubit(
+        appointments: _FakeAppointmentRepository(
+          listResult: <Appointment>[sampleAppointment],
+        ),
+        calls: _FakeCallRepository(),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.appointments, <Appointment>[sampleAppointment]);
+      expect(cubit.state.selectedAppointmentId, 'appt-1');
+      expect(cubit.state.errorMessage, isNull);
+    });
+
+    test(
+      'createSession creates call session for selected appointment',
+      () async {
+        final cubit = CallCubit(
+          appointments: _FakeAppointmentRepository(
+            listResult: <Appointment>[sampleAppointment],
+          ),
+          calls: _FakeCallRepository(createResult: sampleSession),
+        );
+        addTearDown(cubit.close);
+
+        await cubit.refresh();
+        await cubit.createSession();
+
+        expect(cubit.state.isBusy, isFalse);
+        expect(cubit.state.session, sampleSession);
+      },
+    );
+
+    test('join requires camera and microphone permissions', () async {
+      final cubit = CallCubit(
+        appointments: _FakeAppointmentRepository(
+          listResult: <Appointment>[sampleAppointment],
+        ),
+        calls: _FakeCallRepository(),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+      await cubit.createSession();
+      await cubit.join();
+
+      expect(
+        cubit.state.errorMessage,
+        'Permissions required (camera + microphone)',
+      );
+      expect(cubit.state.session?.joinStatus, CallJoinStatus.idle);
+    });
+
+    test('join updates session when permissions granted', () async {
+      final cubit = CallCubit(
+        appointments: _FakeAppointmentRepository(
+          listResult: <Appointment>[sampleAppointment],
+        ),
+        calls: _FakeCallRepository(
+          createResult: sampleSession,
+          joinResult: joinedSession,
+        ),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+      cubit.toggleCameraPermission(granted: true);
+      cubit.toggleMicrophonePermission(granted: true);
+      await cubit.createSession();
+      await cubit.join();
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.session, joinedSession);
+    });
+
+    test('refresh surfaces repository failure', () async {
+      final cubit = CallCubit(
+        appointments: _ThrowingAppointmentRepository(),
+        calls: _FakeCallRepository(),
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.errorMessage, isNotNull);
+    });
+  });
+}
+
+class _FakeAppointmentRepository implements AppointmentRepository {
+  _FakeAppointmentRepository({required this.listResult});
+
+  final List<Appointment> listResult;
+
+  @override
+  Future<Appointment> cancelAppointment({
+    required String appointmentId,
+    required String reason,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Appointment> createAppointment({
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<List<Appointment>> listAppointmentsForCurrentRole() async =>
+      listResult;
+}
+
+class _ThrowingAppointmentRepository implements AppointmentRepository {
+  @override
+  Future<Appointment> cancelAppointment({
+    required String appointmentId,
+    required String reason,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Appointment> createAppointment({
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<List<Appointment>> listAppointmentsForCurrentRole() {
+    throw StateError('list failed');
+  }
+}
+
+class _FakeCallRepository implements TherapyCallRepository {
+  _FakeCallRepository({this.createResult, this.joinResult});
+
+  final CallSession? createResult;
+  final CallSession? joinResult;
+
+  @override
+  Future<CallSession> createSession({required String appointmentId}) async {
+    return createResult ??
+        CallSession(
+          id: 'generated',
+          appointmentId: appointmentId,
+          roomId: 'room',
+          provider: CallProvider.simulated,
+          joinStatus: CallJoinStatus.idle,
+        );
+  }
+
+  @override
+  Future<CallSession> join({required String callSessionId}) async {
+    return joinResult ??
+        CallSession(
+          id: callSessionId,
+          appointmentId: 'appt',
+          roomId: 'room',
+          provider: CallProvider.simulated,
+          joinStatus: CallJoinStatus.connected,
+        );
+  }
+}

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/domain/event_bus_demo_events.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_listener_card.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_login_panel.dart';
@@ -14,7 +13,9 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 /// https://medium.com/@savaliya.ravi.rs/what-is-the-event-bus-pattern-in-flutter-c008c9e0813d
 /// without coupling screens via direct references.
 class EventBusDemoPage extends StatefulWidget {
-  const EventBusDemoPage({super.key});
+  const EventBusDemoPage({required this.eventBus, super.key});
+
+  final EventBus eventBus;
 
   @override
   State<EventBusDemoPage> createState() => _EventBusDemoPageState();
@@ -37,7 +38,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
   @override
   void initState() {
     super.initState();
-    _eventBus = getIt<EventBus>();
+    _eventBus = widget.eventBus;
     _userIdController.addListener(_onUserIdChanged);
     _loginSubscription = _eventBus.on<UserLoggedInEvent>().listen(
       _onLoggedIn,

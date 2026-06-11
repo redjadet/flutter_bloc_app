@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_messaging_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class MessagingState {
@@ -89,9 +90,9 @@ class MessagingCubit extends Cubit<MessagingState> {
       if (selected != null) {
         await selectConversation(selected);
       }
-    } on Object catch (e) {
+    } on Object catch (e, st) {
       if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(e, st, 'MessagingCubit.refresh');
     }
   }
 
@@ -133,9 +134,9 @@ class MessagingCubit extends Cubit<MessagingState> {
           clearErrorMessage: true,
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, st) {
       if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(e, st, 'MessagingCubit.selectConversation');
     }
   }
 
@@ -163,9 +164,9 @@ class MessagingCubit extends Cubit<MessagingState> {
           draft: '',
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, st) {
       if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(e, st, 'MessagingCubit.send');
     }
   }
 
@@ -190,9 +191,26 @@ class MessagingCubit extends Cubit<MessagingState> {
           messages: messages,
         ),
       );
-    } on Object catch (e) {
+    } on Object catch (e, st) {
       if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(e, st, 'MessagingCubit.retry');
     }
+  }
+
+  void _handleOperationError(
+    final Object error,
+    final StackTrace stackTrace,
+    final String logContext,
+  ) {
+    if (isClosed) return;
+    CubitExceptionHandler.handleException(
+      error,
+      stackTrace,
+      logContext,
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+    );
   }
 }

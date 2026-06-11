@@ -22,6 +22,12 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 - **Reload Cursor** after `trim_duplicate_agent_skills.sh --apply` or `after-host-edit`.
 - Monthly (or after plugin churn): vendor audit → plugin toggles → regen inventory → budget report → reload.
 
+## Architecture reviews
+
+| Review | Path |
+| --- | --- |
+| Build Readiness program (2026-06) | [architecture_review_2026-06.md](architecture_review_2026-06.md) |
+
 ## Code quality baseline (program)
 
 [Code quality baseline and gate promotion (2026-06)](../plans/code_quality_baseline_and_gate_promotion_2026-06.md):

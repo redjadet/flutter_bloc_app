@@ -128,7 +128,7 @@ On the success path, there is no emit, so no `isClosed` check is required. On th
 
 ### 3.2 applyRestorationOutcome – Used with unawaited
 
-**Location:** `lib/features/counter/presentation/counter_cubit_base.dart`
+**Location:** `lib/features/counter/presentation/cubit/counter_cubit_base.dart`
 
 `applyRestorationOutcome` is called via `unawaited(applyRestorationOutcome(...))` from a stream callback. The mixin checks `isClosed` before emitting. The async part (persistence) runs after the emit; if the cubit closes during that time, the emit has already occurred. This is acceptable. The `StateRestorationMixin` correctly guards the emit.
 

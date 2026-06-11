@@ -414,7 +414,8 @@ lib/features/counter/
 ├── data/
 │   └── offline_first_counter_repository.dart (implementation)
 └── presentation/
-    ├── counter_cubit.dart (business logic)
+    ├── cubit/
+    │   └── counter_cubit.dart (business logic)
     └── widgets/
         └── counter_display.dart (UI)
 ```

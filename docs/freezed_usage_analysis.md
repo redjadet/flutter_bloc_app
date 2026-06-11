@@ -33,7 +33,7 @@ The project already uses Freezed in many places:
 | --------- | ------ | -------- |
 | `lib/features/chat/presentation/chat_state.dart` | State | Single state class with many fields |
 | `lib/features/search/presentation/search_state.dart` | State | |
-| `lib/features/counter/presentation/counter_state.dart` | State | |
+| `lib/features/counter/presentation/cubit/counter_state.dart` | State | |
 | `lib/features/counter/domain/counter_snapshot.dart` | Domain | |
 | `lib/features/counter/domain/counter_error.dart` | Domain (sealed union) | `CounterError` – sealed with `.when()` |
 | `lib/features/genui_demo/presentation/cubit/genui_demo_state.dart` | State | Union-style (GenuiDemoState) |
@@ -49,7 +49,7 @@ The project already uses Freezed in many places:
 | `lib/shared/sync/presentation/sync_status_state.dart` | State | SyncStatusState (sync status cubit) |
 | `lib/features/remote_config/presentation/cubit/remote_config_state.dart` | State (union) | RemoteConfigState |
 | `lib/features/chat/presentation/chat_list_state.dart` | State (union) | ChatListState |
-| `lib/features/deeplink/presentation/deep_link_state.dart` | State (union) | DeepLinkState |
+| `lib/features/deeplink/presentation/cubit/deep_link_state.dart` | State (union) | DeepLinkState |
 | `lib/features/auth/presentation/cubit/register/register_state.dart` | State | RegisterState + RegisterFieldState |
 | `lib/features/chat/domain/chat_contact.dart` | Domain | ChatContact |
 | `lib/features/profile/domain/profile_user.dart` | Domain | ProfileUser + ProfileImage |
@@ -80,7 +80,7 @@ These are **sealed state hierarchies** or **large state classes** that benefit m
 | ------ | --------- | ----------------- |
 | `lib/features/remote_config/presentation/cubit/remote_config_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `RemoteConfigState.initial()`, `.loading()`, `.loaded(...)`, `.error(message)`. |
 | `lib/features/chat/presentation/chat_list_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `ChatListState.initial()`, `.loading()`, `.loaded(contacts)`, `.error(message)`. |
-| `lib/features/deeplink/presentation/deep_link_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `DeepLinkState.idle()`, `.loading()`, `.navigate(target, origin)`, `.error(message)`. |
+| `lib/features/deeplink/presentation/cubit/deep_link_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `DeepLinkState.idle()`, `.loading()`, `.navigate(target, origin)`, `.error(message)`. |
 | `lib/features/auth/presentation/cubit/register/register_state.dart` | ~~RegisterState + RegisterFieldState (Equatable)~~ | **Done.** Both converted to Freezed; validation getters in private constructor. |
 | `lib/shared/sync/presentation/sync_status_cubit.dart` | ~~`SyncStatusState` (Equatable, `copyWith`, getters)~~ | **Done.** State moved to `sync_status_state.dart` with Freezed; `isOnline` / `isSyncing` in private constructor. |
 

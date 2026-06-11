@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
-import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_cubit.dart';
-import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_state.dart';
+import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_cubit.dart';
+import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';

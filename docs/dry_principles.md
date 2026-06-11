@@ -81,7 +81,7 @@ implementation and have similar lifecycle.
 
 For cross-cutting concerns that can be applied to multiple classes:
 
-- **`CubitErrorHandler`**: Standardized error handling in cubits
+- **`CubitExceptionHandler`**: Standardized async error handling in cubits
 - **`CubitSubscriptionMixin`**: Subscription lifecycle management
 - **`StateRestorationMixin`**: State restoration from snapshots
 

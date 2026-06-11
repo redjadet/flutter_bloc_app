@@ -18,7 +18,7 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
@@ -185,9 +185,10 @@ Widget wrapWithProviders({
   builder: (context, _) => MultiBlocProvider(
     providers: [
       BlocProvider(
-        create: (ctx) =>
-            CounterCubit(repository: repository ?? MockCounterRepository())
-              ..loadInitial(),
+        create: (ctx) => CounterCubit(
+          repository: repository ?? MockCounterRepository(),
+          timerService: FakeTimerService(),
+        )..loadInitial(),
       ),
       BlocProvider(
         create: (_) =>

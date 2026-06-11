@@ -3,7 +3,6 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_to
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
@@ -41,7 +41,8 @@ class ChatCubit extends _ChatCubitCore
   });
 }
 
-abstract class _ChatCubitCore extends Cubit<ChatState> {
+abstract class _ChatCubitCore extends Cubit<ChatState>
+    with CubitSubscriptionMixin<ChatState> {
   _ChatCubitCore({
     required this._repository,
     required this._historyRepository,
@@ -68,8 +69,6 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
   final ChatRenderOrchestrationDiagnosticsPort? _renderOrchestrationDiagnostics;
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
-  StreamSubscription<AuthUser?>? _supabaseAuthSubscription;
-  StreamSubscription<AuthUser?>? _firebaseAuthSubscription;
 
   List<String> get models => _models;
   String get _currentModel {
@@ -123,21 +122,23 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     if (authSession == null) {
       return;
     }
-    _firebaseAuthSubscription = authSession.firebaseAuthStateChanges.listen(
-      (user) {
-        final provider = _renderOrchestrationHfTokenProvider;
-        if (user == null && provider != null) {
-          unawaited(provider.clearRenderOrchestrationTokenCache());
-        }
-        _refreshRunnableTransportHintOnly();
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'ChatCubit.onFirebaseAuthStateChange',
-          error,
-          stackTrace,
-        );
-      },
+    registerSubscription(
+      authSession.firebaseAuthStateChanges.listen(
+        (user) {
+          final provider = _renderOrchestrationHfTokenProvider;
+          if (user == null && provider != null) {
+            unawaited(provider.clearRenderOrchestrationTokenCache());
+          }
+          _refreshRunnableTransportHintOnly();
+        },
+        onError: (final Object error, final StackTrace stackTrace) {
+          AppLogger.error(
+            'ChatCubit.onFirebaseAuthStateChange',
+            error,
+            stackTrace,
+          );
+        },
+      ),
     );
   }
 
@@ -146,17 +147,19 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
     if (authSession == null) {
       return;
     }
-    _supabaseAuthSubscription = authSession.supabaseAuthStateChanges.listen(
-      (_) {
-        _refreshRunnableTransportHintOnly();
-      },
-      onError: (Object error, StackTrace stackTrace) {
-        AppLogger.error(
-          'ChatCubit.onAuthStateChange',
-          error,
-          stackTrace,
-        );
-      },
+    registerSubscription(
+      authSession.supabaseAuthStateChanges.listen(
+        (_) {
+          _refreshRunnableTransportHintOnly();
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          AppLogger.error(
+            'ChatCubit.onAuthStateChange',
+            error,
+            stackTrace,
+          );
+        },
+      ),
     );
   }
 
@@ -180,14 +183,5 @@ abstract class _ChatCubitCore extends Cubit<ChatState> {
       return;
     }
     emitState(state.copyWith(runnableTransportHint: hint));
-  }
-
-  @override
-  Future<void> close() async {
-    await _supabaseAuthSubscription?.cancel();
-    _supabaseAuthSubscription = null;
-    await _firebaseAuthSubscription?.cancel();
-    _firebaseAuthSubscription = null;
-    return super.close();
   }
 }

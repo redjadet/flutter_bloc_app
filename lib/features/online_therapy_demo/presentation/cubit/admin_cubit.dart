@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/audit_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_admin_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class AdminState {
   const AdminState({
@@ -47,42 +47,58 @@ class AdminCubit extends Cubit<AdminState> {
 
   Future<void> refresh() async {
     emit(state.copyWith(isBusy: true));
-    try {
-      final list = await _admin.listPendingTherapists();
-      final auditEvents = await _audit.listEvents();
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          isBusy: false,
-          pendingTherapists: list,
-          auditEvents: auditEvents,
-        ),
-      );
-    } on Object catch (e, st) {
-      AppLogger.error('AdminCubit.refresh failed', e, st);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () async {
+        final list = await _admin.listPendingTherapists();
+        final auditEvents = await _audit.listEvents();
+        return (list, auditEvents);
+      },
+      onSuccess: (data) {
+        final (list, auditEvents) = data;
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            isBusy: false,
+            pendingTherapists: list,
+            auditEvents: auditEvents,
+          ),
+        );
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'AdminCubit.refresh',
+      isAlive: () => !isClosed,
+    );
   }
 
   Future<void> approve(final String therapistId) async {
     emit(state.copyWith(isBusy: true));
-    try {
-      await _admin.approveTherapist(therapistId: therapistId);
-      final list = await _admin.listPendingTherapists();
-      final auditEvents = await _audit.listEvents();
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          isBusy: false,
-          pendingTherapists: list,
-          auditEvents: auditEvents,
-        ),
-      );
-    } on Object catch (e, st) {
-      AppLogger.error('AdminCubit.approve failed', e, st);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () async {
+        await _admin.approveTherapist(therapistId: therapistId);
+        final list = await _admin.listPendingTherapists();
+        final auditEvents = await _audit.listEvents();
+        return (list, auditEvents);
+      },
+      onSuccess: (data) {
+        final (list, auditEvents) = data;
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            isBusy: false,
+            pendingTherapists: list,
+            auditEvents: auditEvents,
+          ),
+        );
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'AdminCubit.approve',
+      isAlive: () => !isClosed,
+    );
   }
 }

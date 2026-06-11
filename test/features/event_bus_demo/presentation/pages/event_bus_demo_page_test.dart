@@ -1,6 +1,5 @@
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/domain/event_bus_demo_events.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/pages/event_bus_demo_page.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_login_panel.dart';
@@ -13,19 +12,13 @@ void main() {
   group('EventBusDemoPage', () {
     late EventBus eventBus;
 
-    setUp(() async {
-      await getIt.reset();
+    setUp(() {
       eventBus = EventBus();
-      getIt.registerSingleton<EventBus>(eventBus);
-    });
-
-    tearDown(() async {
-      await getIt.reset(dispose: true);
     });
 
     testWidgets('disables login when user id is empty', (final tester) async {
       await tester.pumpWidget(
-        wrapWithProviders(child: const EventBusDemoPage()),
+        wrapWithProviders(child: EventBusDemoPage(eventBus: eventBus)),
       );
       await tester.pumpAndSettle();
 
@@ -47,7 +40,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       await tester.pumpWidget(
-        wrapWithProviders(child: const EventBusDemoPage()),
+        wrapWithProviders(child: EventBusDemoPage(eventBus: eventBus)),
       );
       await tester.pumpAndSettle();
 
@@ -84,7 +77,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       await tester.pumpWidget(
-        wrapWithProviders(child: const EventBusDemoPage()),
+        wrapWithProviders(child: EventBusDemoPage(eventBus: eventBus)),
       );
       await tester.pumpAndSettle();
 

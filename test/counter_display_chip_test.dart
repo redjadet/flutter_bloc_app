@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
@@ -9,6 +9,8 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+import 'test_helpers.dart';
 
 Widget _wrap(Widget child) => ScreenUtilInit(
   designSize: const Size(390, 844),
@@ -30,6 +32,7 @@ void main() {
     CounterCubit createCubit({CounterRepository? repository}) {
       final cubit = CounterCubit(
         repository: repository ?? _NoopRepo(),
+        timerService: FakeTimerService(),
         startTicker: false,
       );
       addTearDown(cubit.close);

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class TherapistHomeState {
   const TherapistHomeState({
@@ -34,13 +35,18 @@ class TherapistHomeCubit extends Cubit<TherapistHomeState> {
 
   Future<void> refresh() async {
     emit(state.copyWith(isBusy: true));
-    try {
-      final list = await _appointments.listAppointmentsForCurrentRole();
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, appointments: list));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _appointments.listAppointmentsForCurrentRole(),
+      onSuccess: (list) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, appointments: list));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'TherapistHomeCubit.refresh',
+      isAlive: () => !isClosed,
+    );
   }
 }

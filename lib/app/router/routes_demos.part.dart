@@ -71,7 +71,8 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
 RouteBase createEventBusDemoRoute() => GoRoute(
   path: AppRoutes.eventBusDemoPath,
   name: AppRoutes.eventBusDemo,
-  builder: (final context, final state) => const EventBusDemoPage(),
+  builder: (final context, final state) =>
+      EventBusDemoPage(eventBus: getIt<EventBus>()),
 );
 
 ChatCubit _createChatCubit() => ChatCubit(

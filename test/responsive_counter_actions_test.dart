@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_actions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -50,6 +50,7 @@ void main() {
     testWidgets('renders without overflow on small screen', (tester) async {
       final cubit = CounterCubit(
         repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
         startTicker: false,
       );
       addTearDown(cubit.close);
@@ -62,6 +63,7 @@ void main() {
     testWidgets('renders without overflow on large screen', (tester) async {
       final cubit = CounterCubit(
         repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
         startTicker: false,
       );
       addTearDown(cubit.close);

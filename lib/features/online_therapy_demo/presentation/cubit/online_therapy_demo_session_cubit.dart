@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_auth_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class OnlineTherapyDemoSessionState {
   const OnlineTherapyDemoSessionState({
@@ -69,23 +70,28 @@ class OnlineTherapyDemoSessionCubit
 
     final TherapyUser? previousUser = state.user;
     final TherapyRole previousRole = state.role;
+    final email = (state.emailDraft ?? '').trim();
     emit(state.copyWith(role: role, isBusy: true, user: null));
-    try {
-      final email = (state.emailDraft ?? '').trim();
-      final user = await _auth.login(email: email, role: role);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, user: user));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          role: previousRole,
-          isBusy: false,
-          user: previousUser,
-          errorMessage: e.toString(),
-        ),
-      );
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _auth.login(email: email, role: role),
+      onSuccess: (user) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, user: user));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            role: previousRole,
+            isBusy: false,
+            user: previousUser,
+            errorMessage: message,
+          ),
+        );
+      },
+      logContext: 'OnlineTherapyDemoSessionCubit.setRole',
+      isAlive: () => !isClosed,
+    );
   }
 
   void setNetworkMode(final OnlineTherapyNetworkMode mode) {
@@ -101,27 +107,39 @@ class OnlineTherapyDemoSessionCubit
   Future<void> login() async {
     if (state.isBusy) return;
     emit(state.copyWith(isBusy: true));
-    try {
-      final email = (state.emailDraft ?? '').trim();
-      final user = await _auth.login(email: email, role: state.role);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, user: user));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () {
+        final email = (state.emailDraft ?? '').trim();
+        return _auth.login(email: email, role: state.role);
+      },
+      onSuccess: (user) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, user: user));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'OnlineTherapyDemoSessionCubit.login',
+      isAlive: () => !isClosed,
+    );
   }
 
   Future<void> logout() async {
     if (state.isBusy) return;
     emit(state.copyWith(isBusy: true));
-    try {
-      await _auth.logout();
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, user: null));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _auth.logout(),
+      onSuccess: () {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, user: null));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'OnlineTherapyDemoSessionCubit.logout',
+      isAlive: () => !isClosed,
+    );
   }
 }

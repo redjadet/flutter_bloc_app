@@ -9,7 +9,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 1. `lib/features/counter/counter.dart`
 2. `lib/features/counter/domain/` (repository contract)
 3. `lib/features/counter/data/hive_counter_repository.dart`
-4. `lib/features/counter/presentation/counter_cubit_base.dart`
+4. `lib/features/counter/presentation/cubit/counter_cubit_base.dart`
 5. `lib/features/counter/presentation/pages/counter_page.dart`
 6. `lib/core/di/register_counter_services.dart` (if exists) or `injector_registrations.dart`
 7. `test/features/counter/` (nearest test)
