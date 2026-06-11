@@ -10,7 +10,7 @@
 ## What shipped
 
 - **`tool/modular_metrics.sh`** — read-only baseline; `--cross-feature-only` for import inventory.
-- **[`audits/modular_baseline_2026-05-12.md`](../audits/modular_baseline_2026-05-12.md)** — captured output (use `git add -f` if `docs/audits/` is gitignored).
+- **Modular baseline audit** — captured output under ignored `docs/audits/` during the implementation session; recreate with `tool/modular_metrics.sh` when a fresh snapshot is needed.
 - **`tool/check_feature_modularity_leaks.sh`** — declarative pairwise rules + universal **shared→features** + **domain import purity** (with `rg`; grep fallback for pairwise only).
 - **`AppMemoryService`** — removed `shared` → `chart` import; chart trim wired via `onChartMemoryTrim` from [`lib/core/di/injector_registrations.dart`](../../lib/core/di/injector_registrations.dart).
 - **DI orchestration** — [`injector_registrations.dart`](../../lib/core/di/injector_registrations.dart) split into `part` files under [`lib/core/di/groups/`](../../lib/core/di/groups/): `register_core_services.dart`, `register_feature_services.dart`, `register_demo_services.dart` (`registerCoreServices`, `registerFeatureServices`, `registerDemoServices`).
@@ -35,7 +35,7 @@ Top paths (commit count, approximate):
 | 43 | `lib/core/di/injector.dart` |
 | 40 | `lib/app.dart` |
 | 39 | `lib/core/di/injector_registrations.dart` |
-| 38 | `lib/features/counter/presentation/counter_cubit.dart` |
+| 38 | `lib/features/counter/presentation/cubit/counter_cubit.dart` (migrated 2026-06) |
 
 Re-run quarterly after large refactors.
 

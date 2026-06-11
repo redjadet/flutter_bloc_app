@@ -3,7 +3,6 @@ library;
 
 export 'bloc_provider_helpers.dart';
 export 'cubit_async_operations.dart';
-export 'cubit_error_handler.dart';
 export 'cubit_helpers.dart';
 export 'cubit_state_emission_mixin.dart';
 export 'cubit_subscription_mixin.dart';

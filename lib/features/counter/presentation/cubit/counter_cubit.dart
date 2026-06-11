@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
 
-export 'package:flutter_bloc_app/features/counter/presentation/counter_state.dart';
+export 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
 
 part 'counter_cubit_base.dart';
 part 'counter_cubit_load.part.dart';
@@ -22,14 +22,13 @@ class CounterCubit extends _CounterCubitBase
     with _CounterCubitSyncMixin, _CounterCubitLoadMixin {
   CounterCubit({
     required super.repository,
-    final TimerService? timerService,
+    required super.timerService,
     final bool startTicker = true,
     final Duration loadDelay = Duration.zero,
     final DateTime Function()? now,
     final Duration? manualThrottle,
   }) : _manualThrottleDuration = manualThrottle ?? _manualThrottle,
        super(
-         timerService: timerService ?? DefaultTimerService(),
          now: now ?? DateTime.now,
          initialLoadDelay: loadDelay,
        ) {

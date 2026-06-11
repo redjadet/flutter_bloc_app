@@ -98,7 +98,7 @@ tool/test_coverage.sh
 ./bin/integration_tests integration_test/pr_smoke_flows_test.dart
 
 # Run a single test file
-flutter test test/features/counter/presentation/counter_cubit_test.dart
+flutter test test/counter_cubit_test.dart
 
 # Regenerate golden files
 flutter test --update-goldens

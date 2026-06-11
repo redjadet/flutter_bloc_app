@@ -19,6 +19,7 @@ Tracked under `docs/audits/` (directory is `.gitignore`d—use `git add -f` when
 
 - [`docs/audits/ai_architecture_audit.md`](../../docs/audits/ai_architecture_audit.md) — `ARCH-###` issues
 - [`docs/audits/ai_domain_language_report_v1.md`](../../docs/audits/ai_domain_language_report_v1.md) — naming v1
+- [`docs/audits/architecture_review_2026-06.md`](../../docs/audits/architecture_review_2026-06.md) — Build Readiness program outcomes (2026-06)
 
 **Generated:** 2026-05-21 via `tool/modular_metrics.sh` and repository scans.
 

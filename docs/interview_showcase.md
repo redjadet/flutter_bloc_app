@@ -29,7 +29,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 
 | JD theme | Claim | Proof path | Command / demo |
 | --- | --- | --- | --- |
-| Flutter / Dart / Cubit | Production-style feature modules, typed state | Spine #1–3 | Run app; open `counter_cubit.dart`, `todo_list_cubit.dart`, `chat_cubit.dart` |
+| Flutter / Dart / Cubit | Production-style feature modules, typed state | Spine #1–3 | Run app; open `counter/presentation/cubit/counter_cubit.dart`, `todo_list_cubit.dart`, `chat_cubit.dart` |
 | Modular architecture | Feature boundaries + leak checks | [modularity.md](modularity.md), `tool/check_feature_modularity_leaks.sh` | `bash tool/check_feature_modularity_leaks.sh` |
 | Automated testing | Unit/widget + integration tiers | [testing_overview.md](testing_overview.md) | `./bin/checklist-fast`; PR smoke below |
 | API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](ai_integration.md), `lib/shared/http/` | Spine #3; badges on chat |

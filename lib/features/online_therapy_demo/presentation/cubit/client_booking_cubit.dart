@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_state.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 export 'client_booking_state.dart';
@@ -43,9 +43,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
-      AppLogger.error('ClientBookingCubit.refresh failed', e, st);
-      if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(requestId, e, st, 'ClientBookingCubit.refresh');
     }
   }
 
@@ -59,9 +57,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
-      AppLogger.error('ClientBookingCubit.loadTherapists failed', e, st);
-      if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(
+        requestId,
+        e,
+        st,
+        'ClientBookingCubit.loadTherapists',
+      );
     }
   }
 
@@ -127,9 +128,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         ),
       );
     } on Object catch (e, st) {
-      AppLogger.error('ClientBookingCubit.loadAvailability failed', e, st);
-      if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(
+        requestId,
+        e,
+        st,
+        'ClientBookingCubit.loadAvailability',
+      );
     }
   }
 
@@ -141,9 +145,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
-      AppLogger.error('ClientBookingCubit.loadAppointments failed', e, st);
-      if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(
+        requestId,
+        e,
+        st,
+        'ClientBookingCubit.loadAppointments',
+      );
     }
   }
 
@@ -166,13 +173,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
       return true;
     } on Object catch (e, st) {
-      AppLogger.error(
-        'ClientBookingCubit.createAppointmentFromSlot failed',
+      _handleOperationError(
+        requestId,
         e,
         st,
+        'ClientBookingCubit.createAppointmentFromSlot',
       );
-      if (!_isRequestStillActive(requestId)) return false;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
       return false;
     }
   }
@@ -199,9 +205,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
-      AppLogger.error('ClientBookingCubit.cancelAppointment failed', e, st);
-      if (!_isRequestStillActive(requestId)) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      _handleOperationError(
+        requestId,
+        e,
+        st,
+        'ClientBookingCubit.cancelAppointment',
+      );
     }
   }
 }

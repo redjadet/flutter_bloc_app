@@ -139,7 +139,7 @@ void configureDependencies() {
   );
 }
 
-// 4. Presentation - Cubit (lib/features/counter/presentation/counter_cubit.dart)
+// 4. Presentation - Cubit (lib/features/counter/presentation/cubit/counter_cubit.dart)
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({required CounterRepository repository})
       : _repository = repository,
@@ -294,7 +294,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Widget that displays a circular progress ring based on counter state.
@@ -687,7 +687,7 @@ Here's a complete example showing both CustomPainter and RenderObject working to
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Example page showcasing CustomPainter and RenderObject usage

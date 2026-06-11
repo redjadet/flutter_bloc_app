@@ -3,6 +3,24 @@
 
 part of 'client_booking_cubit.dart';
 
+extension _ClientBookingCubitHelpers on ClientBookingCubit {
+  void _handleOperationError(
+    final int requestId,
+    final Object error,
+    final StackTrace stackTrace,
+    final String operation,
+  ) {
+    if (!_isRequestStillActive(requestId)) return;
+    CubitExceptionHandler.handleException(
+      error,
+      stackTrace,
+      operation,
+      onError: (final message) =>
+          emit(state.copyWith(isBusy: false, errorMessage: message)),
+    );
+  }
+}
+
 extension _ClientBookingCubitLoaders on ClientBookingCubit {
   Future<void> _loadTherapistsBody(final int requestId) async {
     final list = await _therapists.listTherapists();

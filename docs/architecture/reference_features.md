@@ -13,6 +13,7 @@ layouts — not legacy demos listed under [Legacy drift](#legacy-drift).
 | `iot_demo` | Cubit + domain/data split without extra legacy folders | `lib/features/iot_demo/presentation/cubit/` |
 | `profile` | Straightforward cubit + page feature | `lib/features/profile/presentation/cubit/` |
 | `todo_list` | Larger cubit split across part files — still under `presentation/cubit/` | `lib/features/todo_list/presentation/cubit/` |
+| `counter` | Offline-first reference + part-file cubit split under `presentation/cubit/` (2026-06 migration) | `lib/features/counter/presentation/cubit/`, `data/offline_first_counter_repository.dart` |
 | `native_platform_showcase` | Educational demo: use case + repository + **platform service ports** (MethodChannel / FFI behind data adapters); cubit depends on use case only | `lib/features/native_platform_showcase/domain/use_cases/`, `domain/native_showcase_*_service.dart`, `data/*_service.dart`, [`README.md`](../../lib/features/native_platform_showcase/README.md) |
 
 Scaffold output (no runtime code) matches the same shape:
@@ -22,9 +23,9 @@ Scaffold output (no runtime code) matches the same shape:
 
 | Feature / path | Reason |
 | --- | --- |
-| `counter` | Cubit at `presentation/` root; predates folder contract ([`CODEMAP.md`](../../CODEMAP.md)) |
 | `settings/presentation/cubits/` | Legacy plural folder; new code uses `presentation/cubit/` only |
-| `playlearn`, `graphql_demo`, `scapes`, `deeplink`, `chat` | Root-level cubit/state files (some also have `presentation/cubit/` — do not extend root pattern) |
+| `playlearn`, `graphql_demo`, `scapes`, `chat` | Root-level cubit/state files (some also have `presentation/cubit/` — do not extend root pattern) |
+| `deeplink` listener/widgets | Cubit migrated to `presentation/cubit/`; `deep_link_listener.dart` still at `presentation/` root until touched |
 | `staff_app_demo/presentation/<flow>/` | Flow subfolders with cubit at subfolder root — migrate to `presentation/cubit/` when touched |
 
 ## Legacy drift

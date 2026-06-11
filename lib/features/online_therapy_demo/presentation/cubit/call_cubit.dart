@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class CallState {
   const CallState({
@@ -75,30 +76,36 @@ class CallCubit extends Cubit<CallState> {
 
   Future<void> refresh() async {
     emit(state.copyWith(isBusy: true));
-    try {
-      final list = await _appointments.listAppointmentsForCurrentRole();
-      final currentSelection = state.selectedAppointmentId;
-      final selected =
-          currentSelection != null && list.any((a) => a.id == currentSelection)
-          ? currentSelection
-          : list.isEmpty
-          ? null
-          : list.first.id;
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          isBusy: false,
-          appointments: list,
-          selectedAppointmentId: selected,
-          session: selected == state.selectedAppointmentId
-              ? CallState._noChange
-              : null,
-        ),
-      );
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _appointments.listAppointmentsForCurrentRole(),
+      onSuccess: (list) {
+        final currentSelection = state.selectedAppointmentId;
+        final selected =
+            currentSelection != null &&
+                list.any((a) => a.id == currentSelection)
+            ? currentSelection
+            : list.isEmpty
+            ? null
+            : list.first.id;
+        if (isClosed) return;
+        emit(
+          state.copyWith(
+            isBusy: false,
+            appointments: list,
+            selectedAppointmentId: selected,
+            session: selected == state.selectedAppointmentId
+                ? CallState._noChange
+                : null,
+          ),
+        );
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'CallCubit.refresh',
+      isAlive: () => !isClosed,
+    );
   }
 
   void selectAppointment(final String appointmentId) {
@@ -109,14 +116,19 @@ class CallCubit extends Cubit<CallState> {
     final apptId = state.selectedAppointmentId;
     if (apptId == null) return;
     emit(state.copyWith(isBusy: true));
-    try {
-      final session = await _calls.createSession(appointmentId: apptId);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, session: session));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _calls.createSession(appointmentId: apptId),
+      onSuccess: (session) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, session: session));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'CallCubit.createSession',
+      isAlive: () => !isClosed,
+    );
   }
 
   Future<void> join() async {
@@ -131,13 +143,18 @@ class CallCubit extends Cubit<CallState> {
       return;
     }
     emit(state.copyWith(isBusy: true));
-    try {
-      final updated = await _calls.join(callSessionId: session.id);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, session: updated));
-    } on Object catch (e) {
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
-    }
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _calls.join(callSessionId: session.id),
+      onSuccess: (updated) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, session: updated));
+      },
+      onError: (message) {
+        if (isClosed) return;
+        emit(state.copyWith(isBusy: false, errorMessage: message));
+      },
+      logContext: 'CallCubit.join',
+      isAlive: () => !isClosed,
+    );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.d
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -36,7 +36,7 @@ void main() {
     }) {
       final CounterCubit cubit = CounterCubit(
         repository: repository ?? MockCounterRepository(),
-        timerService: timerService,
+        timerService: timerService ?? FakeTimerService(),
         startTicker: startTicker,
         loadDelay: loadDelay,
         manualThrottle: manualThrottle,
@@ -57,7 +57,10 @@ void main() {
 
     blocTest<CounterCubit, CounterState>(
       'emits state with count 1 and lastChanged set on increment',
-      build: () => CounterCubit(repository: MockCounterRepository()),
+      build: () => CounterCubit(
+        repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
+      ),
       act: (cubit) => cubit.increment(),
       expect: () => [
         isA<CounterState>()
@@ -74,7 +77,10 @@ void main() {
 
     blocTest<CounterCubit, CounterState>(
       'does not go below 0 and emits error on decrement at 0',
-      build: () => CounterCubit(repository: MockCounterRepository()),
+      build: () => CounterCubit(
+        repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
+      ),
       act: (cubit) => cubit.decrement(),
       expect: () => [
         isA<CounterState>()

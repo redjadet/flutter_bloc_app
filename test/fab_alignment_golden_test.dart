@@ -4,7 +4,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_actions.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -40,6 +40,7 @@ void main() {
         repository: MockCounterRepository(
           snapshot: const CounterSnapshot(count: 1),
         ),
+        timerService: FakeTimerService(),
         startTicker: false,
       );
 
@@ -69,6 +70,7 @@ void main() {
         repository: MockCounterRepository(
           snapshot: const CounterSnapshot(count: 1),
         ),
+        timerService: FakeTimerService(),
         startTicker: false,
       );
 

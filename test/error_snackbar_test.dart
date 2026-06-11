@@ -6,7 +6,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
@@ -16,6 +16,8 @@ import 'package:flutter_bloc_app/shared/services/error_notification_service.dart
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+import 'test_helpers.dart';
 
 class ThrowingRepo
     with CounterRepositoryNoPendingSync
@@ -40,6 +42,7 @@ void main() {
     await initializeDateFormatting('en');
     final CounterCubit cubit = CounterCubit(
       repository: ThrowingRepo(),
+      timerService: FakeTimerService(),
       startTicker: false,
     );
     addTearDown(() => cubit.close());

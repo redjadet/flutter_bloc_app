@@ -82,7 +82,7 @@ Use this model when placing code:
 
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `lib/features/counter/domain/counter_repository.dart`, `lib/features/remote_config/domain/remote_config_service.dart`, `lib/features/deeplink/domain/deep_link_parser.dart`.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
-- **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`). Legacy root-level cubits (e.g. `counter/presentation/counter_cubit.dart`) remain until migrated — see [`architecture/reference_features.md`](architecture/reference_features.md).
+- **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`, `counter/presentation/cubit/counter_cubit.dart`). Remaining legacy root-level cubits are listed in [`architecture/reference_features.md`](architecture/reference_features.md).
 - **Shared cross-cutting** — Reusable utilities that stay Flutter-agnostic when possible (`lib/shared/sync/`, `lib/shared/storage/`, `lib/shared/utils/`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of all shared utilities.
 - **Dependency injection** — `lib/core/di/injector.dart` bootstraps everything via `registerAllDependencies()` in `lib/core/di/injector_registrations.dart`, wiring domain contracts to concrete implementations (often lazy singletons with dispose callbacks). Use `registerLazySingletonIfAbsent` helpers to keep DI idempotent.
 
@@ -132,7 +132,7 @@ and composition code around the feature layers.
 
 - **Domain** — `lib/features/counter/domain/counter_repository.dart` exposes `load/save/watch` over `CounterSnapshot` (pure value object).
 - **Data** — `lib/features/counter/data/offline_first_counter_repository.dart` wraps `HiveCounterRepository` for local persistence, optionally forwards writes to a remote `CounterRepository`, and enqueues sync operations via `PendingSyncRepository` + `SyncableRepositoryRegistry`.
-- **Presentation** — `lib/features/counter/presentation/counter_cubit.dart` drives auto-decrement timers through `TimerService`, persists state through the domain contract, guards lifecycle (`isClosed` checks, `CubitExceptionHandler`), and updates UI widgets such as `lib/features/counter/presentation/pages/counter_page.dart` (which uses responsive padding and `PlatformAdaptive.filledButton`).
+- **Presentation** — `lib/features/counter/presentation/cubit/counter_cubit.dart` drives auto-decrement timers through `TimerService`, persists state through the domain contract, guards lifecycle (`isClosed` checks, `CubitExceptionHandler`), and updates UI widgets such as `lib/features/counter/presentation/pages/counter_page.dart` (which uses responsive padding and `PlatformAdaptive.filledButton`).
 
 Key takeaways: business logic (count rules, sync flow) lives in the cubit + domain; storage and sync concerns stay in the data layer; widgets stay focused on layout.
 
@@ -148,7 +148,7 @@ This separation lets the cubit and UI remain testable without Firebase while the
 
 - **Domain** — `lib/features/deeplink/domain/deep_link_parser.dart` and `lib/features/deeplink/domain/deep_link_target.dart` translate URIs into domain-level targets with no router knowledge.
 - **Data** — `lib/features/deeplink/data/app_links_deep_link_service.dart` listens to platform links and hands raw URLs to the parser.
-- **Presentation** — `lib/features/deeplink/presentation/deep_link_cubit.dart` consumes the domain service and uses `lib/features/deeplink/presentation/deep_link_target_extensions.dart` to map domain targets to `GoRouter` locations. Routing decisions remain in presentation, keeping domain free of navigation dependencies.
+- **Presentation** — `lib/features/deeplink/presentation/cubit/deep_link_cubit.dart` consumes the domain service and uses `lib/features/deeplink/presentation/deep_link_target_extensions.dart` to map domain targets to `GoRouter` locations. Routing decisions remain in presentation, keeping domain free of navigation dependencies.
 
 ## Working Within the Architecture
 

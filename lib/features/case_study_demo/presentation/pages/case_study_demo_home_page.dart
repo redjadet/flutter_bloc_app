@@ -9,12 +9,13 @@ import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
 class CaseStudyDemoHomePage extends StatelessWidget {
-  const CaseStudyDemoHomePage({super.key});
+  const CaseStudyDemoHomePage({required this.remoteAuth, super.key});
+
+  final RemoteBackendAuthPort remoteAuth;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
     final CaseStudyDataMode mode = CaseStudyDataModeBadge.fromRemoteBackendAuth(
       remoteAuth,
     );

@@ -15,7 +15,7 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | Purpose | Home flow; persisted count + timer behavior |
 | Routes | `/` |
 | LOC | 3983 |
-| Layers | `domain/`, `data/` (Hive, REST), `presentation/counter_cubit*` |
+| Layers | `domain/`, `data/` (Hive, REST), `presentation/cubit/counter_cubit*` |
 | Key paths | `lib/features/counter/counter.dart`, `presentation/pages/counter_page.dart` |
 | Tests | `test/features/counter/` |
 | Docs | [`docs/feature_overview.md`](../../docs/feature_overview.md) |
