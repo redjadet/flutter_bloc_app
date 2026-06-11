@@ -1,2 +1,2 @@
-sentence-transformers>=4.1.0,<5
+sentence-transformers>=5.5.1,<6
 numpy>=2.4.6,<3
