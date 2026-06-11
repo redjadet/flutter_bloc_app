@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_OPTIONS = ROOT / "analysis_options.yaml"
 
-DEFAULT_MAX_LINES = 275
+DEFAULT_MAX_LINES = 225
 # Mirrors custom_lints/file_length_lint defaultExcludedPatterns + common lib paths.
 DEFAULT_EXCLUDES = (
     "**/*.g.dart",
@@ -80,10 +80,24 @@ def _load_file_length_config() -> tuple[int, list[str]]:
 
 
 def _glob_to_regex(pattern: str) -> re.Pattern[str]:
-    escaped = re.escape(pattern).replace(r"\*\*/", "(?:.*/)?")
-    escaped = escaped.replace(r"\*\*", ".*")
-    escaped = escaped.replace(r"\*", "[^/]*")
-    return re.compile(f"^{escaped}$")
+    """Mirror custom_lints/file_length_lint Glob._createRegex (char-wise, not replace chain)."""
+    parts: list[str] = ["^"]
+    i = 0
+    while i < len(pattern):
+        char = pattern[i]
+        if char == "*":
+            if i + 1 < len(pattern) and pattern[i + 1] == "*":
+                parts.append(".*")
+                i += 1
+            else:
+                parts.append("[^/]*")
+        elif char == "?":
+            parts.append("[^/]")
+        else:
+            parts.append(re.escape(char))
+        i += 1
+    parts.append("$")
+    return re.compile("".join(parts))
 
 
 def _matches_any(relative_posix: str, patterns: list[str]) -> bool:
