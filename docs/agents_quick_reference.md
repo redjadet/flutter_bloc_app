@@ -1,6 +1,6 @@
 # Agent Quick Reference
 
-Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_base.md`](agent_knowledge_base.md); context [`agent_project_context.md`](agent_project_context.md); review [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Toolchain: Flutter 3.44.1 / Dart 3.12.1 · CI [`ci_automation.md`](ci_automation.md).
+Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_base.md`](agent_knowledge_base.md); context [`agent_project_context.md`](agent_project_context.md); review [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Toolchain: Flutter 3.44.2 / Dart 3.12.2 · CI [`ci_automation.md`](ci_automation.md).
 
 ## Validation Chooser
 
