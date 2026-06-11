@@ -34,7 +34,7 @@ This document defines how the counter feature adopts the shared offline-first st
 ## Conflict Resolution
 
 - Client generates `changeId` (timestamp + random hex) for each local mutation.
-- On sync, compare `lastChanged` timestamps: if remote is newer, apply remote; otherwise keep local.
+- On sync, compare `lastChanged` timestamps: apply remote only when it is newer; reject stale remote over newer local (same rule as `TodoMergePolicy`).
 - Counter increments/decrements are additive operations, so conflicts are resolved by timestamp comparison (last write wins).
 - `changeId` ensures idempotency when replaying queued operations.
 
@@ -49,6 +49,7 @@ This document defines how the counter feature adopts the shared offline-first st
 
 - ✅ **Unit tests**: `test/features/counter/data/hive_counter_repository_test.dart` covers Hive serialization and sync metadata persistence.
 - ✅ **Repository tests**: `test/features/counter/data/offline_first_counter_repository_test.dart` covers:
+  - Stale-remote rejection when local `lastChanged` is newer than remote.
   - `save` enqueues operations when remote exists.
   - `save` marks snapshot as unsynchronized and generates `changeId`.
   - `processOperation` syncs to remote and updates local metadata.
