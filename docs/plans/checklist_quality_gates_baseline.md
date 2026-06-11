@@ -53,7 +53,7 @@ Heuristic `check_deferred_heavy_routes` remains **deferred** until allowlist str
 ## Checklist metadata
 
 - `CHECK_SCRIPT_THEMES` (59 entries) aligned with `CHECK_SCRIPTS` / `CHECK_MESSAGES`
-- Validated in `validate_checklist_configuration()` at checklist start
+- Validated in `validate_checklist_configuration()` at checklist start (tool `*.dart` via `dart compile kernel`, not `dart analyze`, to avoid analyzer-plugin hangs on excluded `tool/**` paths)
 - `CHECKLIST_EXPLAIN_THEMES=1` prints `explain|theme|…` per script
 
 ## M4 proof (2026-05-20)
