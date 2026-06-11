@@ -90,6 +90,26 @@ class RunFileLengthLintTest(unittest.TestCase):
             f"script should pass; probe uses one physical line\n{combined}",
         )
 
+    def test_default_max_lines_matches_analysis_options(self) -> None:
+        checker = _load_physical_checker()
+        loaded_max, _ = checker._load_file_length_config()
+
+        self.assertEqual(
+            checker.DEFAULT_MAX_LINES,
+            MAX_LINES,
+            "DEFAULT_MAX_LINES must match documented policy (225)",
+        )
+        self.assertEqual(
+            loaded_max,
+            MAX_LINES,
+            "analysis_options.yaml file_length_lint.max_lines must be 225",
+        )
+        self.assertEqual(
+            checker.DEFAULT_MAX_LINES,
+            loaded_max,
+            "fallback DEFAULT_MAX_LINES must match parsed max_lines",
+        )
+
     def test_glob_excludes_lib_root_generated_files(self) -> None:
         checker = _load_physical_checker()
         patterns = list(checker.DEFAULT_EXCLUDES)

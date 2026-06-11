@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_OPTIONS = ROOT / "analysis_options.yaml"
 
+# Must match analysis_options.yaml file_length_lint.max_lines (parse fallback).
 DEFAULT_MAX_LINES = 225
 # Mirrors custom_lints/file_length_lint defaultExcludedPatterns + common lib paths.
 DEFAULT_EXCLUDES = (
