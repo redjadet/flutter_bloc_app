@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_state.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
+import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 /// Helper class for managing Hive box watch subscriptions and stream emissions.
@@ -15,7 +17,9 @@ class HiveCounterRepositoryWatchHelper {
     required this.loadSnapshot,
     required this.emptySnapshot,
     required this.getBox,
-  }) : _watchState = HiveCounterRepositoryWatchState(
+    final TimerService? timerService,
+  }) : _timerService = timerService ?? DefaultTimerService(),
+       _watchState = HiveCounterRepositoryWatchState(
          loadSnapshot: loadSnapshot,
          emptySnapshot: emptySnapshot,
        );
@@ -31,7 +35,9 @@ class HiveCounterRepositoryWatchHelper {
 
   StreamSubscription<BoxEvent>? _boxSubscription;
   final HiveCounterRepositoryWatchState _watchState;
+  final TimerService _timerService;
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
+  final TimerHandleManager _timerHandles = TimerHandleManager();
   bool _boxWatchRestartScheduled = false;
 
   static const String _keyCount = 'count';
@@ -146,8 +152,8 @@ class HiveCounterRepositoryWatchHelper {
       return;
     }
     _boxWatchRestartScheduled = true;
-    unawaited(
-      Future<void>.delayed(const Duration(seconds: 2), () {
+    _timerHandles.register(
+      _timerService.runOnce(const Duration(seconds: 2), () {
         _boxWatchRestartScheduled = false;
         if (_subscriptionManager.isDisposed ||
             !_watchState.hasActiveListeners) {
@@ -171,6 +177,7 @@ class HiveCounterRepositoryWatchHelper {
   Future<void> dispose() async {
     _boxWatchRestartScheduled = false;
     _boxSubscription = null;
+    await _timerHandles.dispose();
     await _subscriptionManager.dispose();
     await _watchState.dispose();
   }

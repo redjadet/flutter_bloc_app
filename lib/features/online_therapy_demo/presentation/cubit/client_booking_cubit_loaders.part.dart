@@ -6,7 +6,7 @@ part of 'client_booking_cubit.dart';
 extension _ClientBookingCubitLoaders on ClientBookingCubit {
   Future<void> _loadTherapistsBody(final int requestId) async {
     final list = await _therapists.listTherapists();
-    if (_isStale(requestId)) return;
+    if (!_isRequestStillActive(requestId)) return;
     final currentSelection = state.selectedTherapistId;
     final selected =
         currentSelection != null && list.any((t) => t.id == currentSelection)
@@ -27,7 +27,7 @@ extension _ClientBookingCubitLoaders on ClientBookingCubit {
 
   Future<void> _loadAppointmentsBody(final int requestId) async {
     final list = await _appointments.listAppointmentsForCurrentRole();
-    if (_isStale(requestId)) return;
+    if (!_isRequestStillActive(requestId)) return;
     emit(state.copyWith(appointments: list));
   }
 
@@ -38,7 +38,7 @@ extension _ClientBookingCubitLoaders on ClientBookingCubit {
       therapistId: selected,
       date: ClientBookingCubit._demoAvailabilityDate,
     );
-    if (_isStale(requestId)) return;
+    if (!_isRequestStillActive(requestId)) return;
     if (state.selectedTherapistId != selected) return;
     emit(state.copyWith(availability: slots, clearErrorMessage: true));
   }

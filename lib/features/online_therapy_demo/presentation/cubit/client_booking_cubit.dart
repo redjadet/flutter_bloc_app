@@ -28,23 +28,23 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
   final RequestIdGuard _operationGuard = RequestIdGuard();
   static final DateTime _demoAvailabilityDate = DateTime.utc(2026, 4, 22);
 
-  bool _isStale(final int requestId) =>
-      isClosed || !_operationGuard.isCurrent(requestId);
+  bool _isRequestStillActive(final int requestId) =>
+      !isClosed && _operationGuard.isCurrent(requestId);
 
   Future<void> refresh() async {
     final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _loadTherapistsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadSelectedAvailabilityBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadAppointmentsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.refresh failed', e, st);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -54,13 +54,13 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _loadTherapistsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadSelectedAvailabilityBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadTherapists failed', e, st);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -114,7 +114,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         therapistId: therapistId,
         date: _demoAvailabilityDate,
       );
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       if (state.selectedTherapistId != therapistId) {
         emit(state.copyWith(isBusy: false));
         return;
@@ -128,7 +128,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       );
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadAvailability failed', e, st);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -138,11 +138,11 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _loadAppointmentsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadAppointments failed', e, st);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -157,12 +157,12 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         startAt: slot.startAt,
         endAt: slot.endAt,
       );
-      if (_isStale(requestId)) return false;
+      if (!_isRequestStillActive(requestId)) return false;
       emit(state.copyWith(pendingBookingSlot: null));
       await _loadSelectedAvailabilityBody(requestId);
-      if (_isStale(requestId)) return false;
+      if (!_isRequestStillActive(requestId)) return false;
       await _loadAppointmentsBody(requestId);
-      if (_isStale(requestId)) return false;
+      if (!_isRequestStillActive(requestId)) return false;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
       return true;
     } on Object catch (e, st) {
@@ -171,7 +171,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         e,
         st,
       );
-      if (_isStale(requestId)) return false;
+      if (!_isRequestStillActive(requestId)) return false;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
       return false;
     }
@@ -190,17 +190,17 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         appointmentId: appointmentId,
         reason: 'Cancelled in demo',
       );
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadTherapistsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadSelectedAvailabilityBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       await _loadAppointmentsBody(requestId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.cancelAppointment failed', e, st);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }

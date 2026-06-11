@@ -57,15 +57,15 @@ class MessagingCubit extends Cubit<MessagingState> {
   final TherapyMessagingRepository _messaging;
   final RequestIdGuard _operationGuard = RequestIdGuard();
 
-  bool _isStale(final int requestId) =>
-      isClosed || !_operationGuard.isCurrent(requestId);
+  bool _isRequestStillActive(final int requestId) =>
+      !isClosed && _operationGuard.isCurrent(requestId);
 
   Future<void> refresh() async {
     final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final conversations = await _messaging.listConversations();
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       final currentSelection = state.selectedConversationId;
       final selected =
           currentSelection != null &&
@@ -85,12 +85,12 @@ class MessagingCubit extends Cubit<MessagingState> {
               : <Message>[],
         ),
       );
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       if (selected != null) {
         await selectConversation(selected);
       }
     } on Object catch (e) {
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -121,7 +121,7 @@ class MessagingCubit extends Cubit<MessagingState> {
       final messages = await _messaging.listMessages(
         conversationId: conversationId,
       );
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       if (state.selectedConversationId != conversationId) {
         emit(state.copyWith(isBusy: false));
         return;
@@ -134,7 +134,7 @@ class MessagingCubit extends Cubit<MessagingState> {
         ),
       );
     } on Object catch (e) {
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -152,9 +152,9 @@ class MessagingCubit extends Cubit<MessagingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _messaging.sendMessage(conversationId: convId, body: draft);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       final messages = await _messaging.listMessages(conversationId: convId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(
         state.copyWith(
           isBusy: false,
@@ -164,7 +164,7 @@ class MessagingCubit extends Cubit<MessagingState> {
         ),
       );
     } on Object catch (e) {
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -179,10 +179,10 @@ class MessagingCubit extends Cubit<MessagingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final msg = await _messaging.retryMessage(messageId: messageId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       final convId = msg.conversationId;
       final messages = await _messaging.listMessages(conversationId: convId);
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(
         state.copyWith(
           isBusy: false,
@@ -191,7 +191,7 @@ class MessagingCubit extends Cubit<MessagingState> {
         ),
       );
     } on Object catch (e) {
-      if (_isStale(requestId)) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
