@@ -26,17 +26,21 @@ class OfflineFirstCounterRepositoryHelpers {
     final CounterSnapshot localSnapshot,
     final CounterSnapshot remoteSnapshot,
   ) {
+    final DateTime? remote = remoteSnapshot.lastChanged;
+    final DateTime? local = localSnapshot.lastChanged;
+
+    // Never apply an older remote over a newer local (see TodoMergePolicy).
+    if (local != null && remote != null && local.isAfter(remote)) {
+      return false;
+    }
+
     if (!localSnapshot.synchronized) {
-      final DateTime? remote = remoteSnapshot.lastChanged;
-      final DateTime? local = localSnapshot.lastChanged;
       if (local == null) return true;
       if (remote == null) return false;
       return remote.isAfter(local);
     }
 
     if (remoteSnapshot.count != localSnapshot.count) return true;
-    final DateTime? remote = remoteSnapshot.lastChanged;
-    final DateTime? local = localSnapshot.lastChanged;
     if (remote == null) return true;
     if (local == null) return true;
     return remote.isAfter(local);
