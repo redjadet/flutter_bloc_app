@@ -37,6 +37,7 @@ Env overrides:
   CHECKLIST_RUN_FOCUSED_TESTS=auto|0|1
   CHECKLIST_RUN_MIX_LINT=auto|0|1
   CHECKLIST_RUN_FILE_LENGTH_LINT=auto|0|1
+  CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=auto|0|1
   CHECKLIST_RUN_TODO_LAYOUT_TESTS=auto|0|1
   CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS=auto|0|1
   CHECKLIST_RUN_ANALYZE=auto|0|1
@@ -317,6 +318,7 @@ validate_checklist_configuration() {
     "tool/resolve_flutter_dart.sh"
     "tool/run_mix_lint.sh"
     "tool/run_file_length_lint.sh"
+    "tool/run_file_length_lint_test.py"
     "tool/test_coverage.sh"
     "tool/check_regression_guards.sh"
     "tool/check_todo_keyboard_layout.sh"
@@ -587,6 +589,30 @@ should_run_mix_lint_auto() {
 
 should_run_file_length_lint_auto() {
   should_run_flutter_analyze_auto
+}
+
+should_run_file_length_lint_integration_test_auto() {
+  if [ "$HAS_GIT_REPO" -ne 1 ]; then
+    return 0
+  fi
+
+  if [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      custom_lints/file_length_lint/*|\
+      analysis_options.yaml|\
+      tool/run_file_length_lint.sh|\
+      tool/run_file_length_lint_test.py)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
 }
 
 should_run_pubspec_codegen_compat_preflight() {
@@ -947,6 +973,7 @@ RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-auto}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
 RUN_MIX_LINT="${CHECKLIST_RUN_MIX_LINT:-auto}"
 RUN_FILE_LENGTH_LINT="${CHECKLIST_RUN_FILE_LENGTH_LINT:-auto}"
+RUN_FILE_LENGTH_LINT_INTEGRATION_TEST="${CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST:-auto}"
 RUN_TODO_LAYOUT_TESTS="${CHECKLIST_RUN_TODO_LAYOUT_TESTS:-auto}"
 RUN_ACTION_BAR_LAYOUT_TESTS="${CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS:-auto}"
 RUN_ANALYZE="${CHECKLIST_RUN_ANALYZE:-auto}"
@@ -1022,6 +1049,10 @@ fi
 if ! [[ "$RUN_FILE_LENGTH_LINT" =~ ^(auto|0|1)$ ]]; then
   echo "⚠️  Invalid CHECKLIST_RUN_FILE_LENGTH_LINT='$RUN_FILE_LENGTH_LINT'; using auto"
   RUN_FILE_LENGTH_LINT=auto
+fi
+if ! [[ "$RUN_FILE_LENGTH_LINT_INTEGRATION_TEST" =~ ^(auto|0|1)$ ]]; then
+  echo "⚠️  Invalid CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST='$RUN_FILE_LENGTH_LINT_INTEGRATION_TEST'; using auto"
+  RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=auto
 fi
 
 if ! [[ "$RUN_TODO_LAYOUT_TESTS" =~ ^(auto|0|1)$ ]]; then
@@ -1713,6 +1744,24 @@ if [ "$should_run_file_length_lint" -eq 1 ]; then
   fi
 else
   echo "  Skipping file_length_lint (no Dart/analyzer-relevant changes; override with CHECKLIST_RUN_FILE_LENGTH_LINT=1)"
+fi
+
+should_run_file_length_lint_integration_test=1
+if [ "$RUN_FILE_LENGTH_LINT_INTEGRATION_TEST" = "0" ]; then
+  should_run_file_length_lint_integration_test=0
+elif [ "$RUN_FILE_LENGTH_LINT_INTEGRATION_TEST" = "auto" ]; then
+  if ! should_run_file_length_lint_integration_test_auto; then
+    should_run_file_length_lint_integration_test=0
+  fi
+fi
+
+if [ "$should_run_file_length_lint_integration_test" -eq 1 ]; then
+  echo "  Running file_length_lint integration regression test..."
+  if ! python3 tool/run_file_length_lint_test.py; then
+    VALIDATION_FAILED=1
+  fi
+else
+  echo "  Skipping file_length_lint integration test (no lint-wiring changes; override with CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=1)"
 fi
 echo ""
 

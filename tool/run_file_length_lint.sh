@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Run file_length_lint via the native analyzer plugin (analysis_server_plugin).
 # Enforces file_too_long at error severity (see analysis_options.yaml plugins + file_length_lint:).
+# Counts physical lines (wc -l), not comment tokens on one line.
+# Regression: python3 tool/run_file_length_lint_test.py
 # Run from project root: ./tool/run_file_length_lint.sh
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
