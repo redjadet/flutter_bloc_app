@@ -210,6 +210,80 @@ void main() {
     });
 
     test(
+      'pullRemote does not overwrite newer synchronized local count',
+      () async {
+        final DateTime localChanged = DateTime(2024, 1, 2, 12);
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          initial: CounterSnapshot(
+            count: 4,
+            lastChanged: DateTime(2024, 1, 1, 12),
+          ),
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await localRepository.save(
+          CounterSnapshot(
+            count: 5,
+            lastChanged: localChanged,
+            synchronized: true,
+            lastSyncedAt: localChanged,
+          ),
+        );
+
+        await repository.pullRemote();
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 5);
+        expect(local.lastChanged, localChanged);
+      },
+    );
+
+    test(
+      'remote watch does not overwrite newer synchronized local count',
+      () async {
+        final _StreamRemoteRepository remote = _StreamRemoteRepository();
+        addTearDown(remote.controller.close);
+
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final DateTime localChanged = DateTime(2024, 1, 2, 12);
+        await localRepository.save(
+          CounterSnapshot(
+            count: 5,
+            lastChanged: localChanged,
+            synchronized: true,
+            lastSyncedAt: localChanged,
+          ),
+        );
+
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
+
+        remote.controller.add(
+          CounterSnapshot(count: 4, lastChanged: DateTime(2024, 1, 1, 12)),
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 5);
+
+        await sub.cancel();
+      },
+    );
+
+    test(
       'remote watch does not overwrite newer unsynced local count',
       () async {
         final _StreamRemoteRepository remote = _StreamRemoteRepository();
