@@ -32,6 +32,7 @@ class HiveCounterRepositoryWatchHelper {
   StreamSubscription<BoxEvent>? _boxSubscription;
   final HiveCounterRepositoryWatchState _watchState;
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
+  bool _boxWatchRestartScheduled = false;
 
   static const String _keyCount = 'count';
   static const String _keyChanged = 'last_changed';
@@ -73,6 +74,7 @@ class HiveCounterRepositoryWatchHelper {
 
   /// Handles when a listener unsubscribes from the watch stream.
   Future<void> handleOnCancel() async {
+    _boxWatchRestartScheduled = false;
     final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
     _boxSubscription = null;
     await _subscriptionManager.cancelRegistered(subscription);
@@ -119,6 +121,7 @@ class HiveCounterRepositoryWatchHelper {
           final StreamSubscription<BoxEvent>? subscription = _boxSubscription;
           _boxSubscription = null;
           unawaited(_subscriptionManager.cancelRegistered(subscription));
+          _scheduleBoxWatchRestart();
         },
         cancelOnError: false, // We handle errors manually
       );
@@ -131,9 +134,28 @@ class HiveCounterRepositoryWatchHelper {
       );
       // Reset subscription on failure to allow retry
       _boxSubscription = null;
-      // Don't crash - fallback to polling if watch fails
-      // This is handled gracefully by the stream controller
+      _scheduleBoxWatchRestart();
     }
+  }
+
+  void _scheduleBoxWatchRestart() {
+    if (_boxWatchRestartScheduled || _subscriptionManager.isDisposed) {
+      return;
+    }
+    if (!_watchState.hasActiveListeners) {
+      return;
+    }
+    _boxWatchRestartScheduled = true;
+    unawaited(
+      Future<void>.delayed(const Duration(seconds: 2), () {
+        _boxWatchRestartScheduled = false;
+        if (_subscriptionManager.isDisposed ||
+            !_watchState.hasActiveListeners) {
+          return;
+        }
+        unawaited(_startBoxWatch());
+      }),
+    );
   }
 
   /// Checks if a Hive box key is relevant for counter updates.
@@ -147,6 +169,7 @@ class HiveCounterRepositoryWatchHelper {
 
   /// Disposes of all resources.
   Future<void> dispose() async {
+    _boxWatchRestartScheduled = false;
     _boxSubscription = null;
     await _subscriptionManager.dispose();
     await _watchState.dispose();

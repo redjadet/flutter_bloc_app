@@ -18,6 +18,8 @@ class HiveCounterRepositoryWatchState {
 
   CounterSnapshot? get cachedSnapshot => _cachedSnapshot;
 
+  bool get hasActiveListeners => _watchController?.hasListener ?? false;
+
   set cachedSnapshot(final CounterSnapshot snapshot) =>
       _cachedSnapshot = snapshot;
 

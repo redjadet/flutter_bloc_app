@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_messaging_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class MessagingState {
   const MessagingState({
@@ -28,6 +29,7 @@ class MessagingState {
     List<Message>? messages,
     String? draft,
     String? errorMessage,
+    bool clearErrorMessage = false,
   }) => MessagingState(
     isBusy: isBusy ?? this.isBusy,
     conversations: conversations ?? this.conversations,
@@ -36,7 +38,9 @@ class MessagingState {
         : selectedConversationId as String?,
     messages: messages ?? this.messages,
     draft: draft ?? this.draft,
-    errorMessage: errorMessage,
+    errorMessage: clearErrorMessage
+        ? null
+        : (errorMessage ?? this.errorMessage),
   );
 }
 
@@ -51,11 +55,17 @@ class MessagingCubit extends Cubit<MessagingState> {
       );
 
   final TherapyMessagingRepository _messaging;
+  final RequestIdGuard _operationGuard = RequestIdGuard();
+
+  bool _isStale(final int requestId) =>
+      isClosed || !_operationGuard.isCurrent(requestId);
 
   Future<void> refresh() async {
-    emit(state.copyWith(isBusy: true));
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final conversations = await _messaging.listConversations();
+      if (_isStale(requestId)) return;
       final currentSelection = state.selectedConversationId;
       final selected =
           currentSelection != null &&
@@ -64,10 +74,10 @@ class MessagingCubit extends Cubit<MessagingState> {
           : conversations.isEmpty
           ? null
           : conversations.first.id;
-      if (isClosed) return;
       emit(
         state.copyWith(
           isBusy: false,
+          clearErrorMessage: true,
           conversations: conversations,
           selectedConversationId: selected,
           messages: selected != null && selected == currentSelection
@@ -75,20 +85,35 @@ class MessagingCubit extends Cubit<MessagingState> {
               : <Message>[],
         ),
       );
+      if (_isStale(requestId)) return;
       if (selected != null) {
         await selectConversation(selected);
       }
     } on Object catch (e) {
-      if (isClosed) return;
+      if (_isStale(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
 
   Future<void> selectConversation(final String conversationId) async {
+    if (conversationId.trim().isEmpty) {
+      _operationGuard.invalidate();
+      emit(
+        state.copyWith(
+          isBusy: false,
+          selectedConversationId: null,
+          messages: <Message>[],
+          clearErrorMessage: true,
+        ),
+      );
+      return;
+    }
+    final requestId = _operationGuard.next();
     emit(
       state.copyWith(
         selectedConversationId: conversationId,
         isBusy: true,
+        clearErrorMessage: true,
         messages: <Message>[],
       ),
     );
@@ -96,11 +121,20 @@ class MessagingCubit extends Cubit<MessagingState> {
       final messages = await _messaging.listMessages(
         conversationId: conversationId,
       );
-      if (isClosed) return;
-      if (state.selectedConversationId != conversationId) return;
-      emit(state.copyWith(isBusy: false, messages: messages));
+      if (_isStale(requestId)) return;
+      if (state.selectedConversationId != conversationId) {
+        emit(state.copyWith(isBusy: false));
+        return;
+      }
+      emit(
+        state.copyWith(
+          isBusy: false,
+          messages: messages,
+          clearErrorMessage: true,
+        ),
+      );
     } on Object catch (e) {
-      if (isClosed) return;
+      if (_isStale(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
@@ -114,28 +148,50 @@ class MessagingCubit extends Cubit<MessagingState> {
     final draft = (state.draft ?? '').trim();
     if (convId == null || draft.isEmpty) return;
 
-    emit(state.copyWith(isBusy: true));
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _messaging.sendMessage(conversationId: convId, body: draft);
+      if (_isStale(requestId)) return;
       final messages = await _messaging.listMessages(conversationId: convId);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, messages: messages, draft: ''));
+      if (_isStale(requestId)) return;
+      emit(
+        state.copyWith(
+          isBusy: false,
+          clearErrorMessage: true,
+          messages: messages,
+          draft: '',
+        ),
+      );
     } on Object catch (e) {
-      if (isClosed) return;
+      if (_isStale(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
 
   Future<void> retry(final String messageId) async {
-    emit(state.copyWith(isBusy: true));
+    if (messageId.trim().isEmpty) {
+      _operationGuard.invalidate();
+      emit(state.copyWith(isBusy: false));
+      return;
+    }
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final msg = await _messaging.retryMessage(messageId: messageId);
+      if (_isStale(requestId)) return;
       final convId = msg.conversationId;
       final messages = await _messaging.listMessages(conversationId: convId);
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, messages: messages));
+      if (_isStale(requestId)) return;
+      emit(
+        state.copyWith(
+          isBusy: false,
+          clearErrorMessage: true,
+          messages: messages,
+        ),
+      );
     } on Object catch (e) {
-      if (isClosed) return;
+      if (_isStale(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
