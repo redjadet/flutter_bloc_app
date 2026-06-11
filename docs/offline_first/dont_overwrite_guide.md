@@ -4,16 +4,17 @@ This guide describes the **don’t overwrite** rule for offline-first repositori
 
 ## The rule
 
-**When local has unsynced changes, never apply a remote snapshot over local unless the remote is strictly newer (e.g. by timestamp).**
+**Never apply a remote snapshot over local when local is strictly newer (e.g. by timestamp)—whether local is synchronized or still pending upload.**
 
-If you apply remote whenever “remote ≠ local” (e.g. `remote.count != local.count`) without checking sync status and timestamps, a stale remote event can overwrite newer user changes and cause UI flicker (e.g. counter up → down → up).
+When local is **not** synchronized, also require remote to be strictly newer before applying. If you apply remote whenever “remote ≠ local” (e.g. `remote.count != local.count`) without that timestamp gate, a stale remote event can overwrite newer user changes and cause UI flicker (e.g. counter up → down → up), including after a successful sync when an old RTDB snapshot arrives late.
 
 ## Correct pattern: `_shouldApplyRemote`-style check
 
 Before writing remote data over local, gate it with a predicate that:
 
-1. If **local is not synchronized** (has pending changes): apply remote **only if** remote is strictly newer than local (e.g. `remote.lastChanged.isAfter(local.lastChanged)`).
-2. If **local is synchronized**: you can apply remote when it’s equal or newer, or when it carries different data you want to merge (depending on your conflict policy).
+1. **Always:** if both timestamps exist and `local.lastChanged` is after `remote.lastChanged`, reject remote (do not apply).
+2. If **local is not synchronized** (has pending changes): apply remote **only if** remote is strictly newer than local.
+3. If **local is synchronized**: apply remote when values differ or when remote is equal or newer (policy-dependent); step 1 still blocks stale remotes.
 
 ### Single-entity (e.g. counter)
 
@@ -22,17 +23,22 @@ bool _shouldApplyRemote(
   final LocalSnapshot local,
   final RemoteSnapshot remote,
 ) {
+  final remoteTs = remote.lastChanged;
+  final localTs = local.lastChanged;
+
+  // Never apply an older remote over a newer local (unsynced or synced).
+  if (localTs != null && remoteTs != null && localTs.isAfter(remoteTs)) {
+    return false;
+  }
+
   if (!local.synchronized) {
-    final remoteTs = remote.lastChanged;
-    final localTs = local.lastChanged;
     if (localTs == null) return true;
     if (remoteTs == null) return false;
     return remoteTs.isAfter(localTs);
   }
+
   // Local synced: accept remote if different or newer (policy-dependent).
   if (remote.value != local.value) return true;
-  final remoteTs = remote.lastChanged;
-  final localTs = local.lastChanged;
   if (remoteTs == null) return true;
   if (localTs == null) return true;
   return remoteTs.isAfter(localTs);
@@ -65,13 +71,12 @@ See `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` (`_
 
 ## Regression test (for use in any repo)
 
-Add a test that:
+Add tests that:
 
-1. Puts the app in a state where **local has unsynced data** (newer timestamp).
-2. Injects a **stale remote snapshot** (older timestamp, different value).
-3. Asserts **local value is unchanged** after the remote event is delivered.
+1. Put local in **unsynced** state with a **newer** timestamp; inject **stale** remote; assert local unchanged.
+2. Put local in **synchronized** state with a **newer** timestamp; inject **stale** remote; assert local unchanged (catches late RTDB snapshots after sync).
 
-Example (counter-style):
+Example (counter-style, unsynced local):
 
 ```dart
 test('remote watch does not overwrite newer unsynced local count', () async {
@@ -107,13 +112,13 @@ test('remote watch does not overwrite newer unsynced local count', () async {
 });
 ```
 
-Run this test (and any other “don’t overwrite” tests) in CI. In this repo, `tool/check_offline_first_remote_merge.sh` runs the relevant tests; you can add a similar script in other repos that runs the same kind of test.
+Run these tests (and any other “don’t overwrite” tests) in CI. In this repo, `tool/check_offline_first_remote_merge.sh` runs the relevant test files; you can add a similar script in other repos.
 
 ## References in this repo
 
-- **Counter (single-entity):** `lib/features/counter/data/offline_first_counter_repository.dart` — `_shouldApplyRemote`, and `watch()` merging remote stream.
+- **Counter (single-entity):** `lib/features/counter/data/offline_first_counter_repository_helpers.dart` — `shouldApplyRemote`; `offline_first_counter_repository.dart` — `watch()` / `pullRemote()` merge.
 - **Todo (list-entity):** `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldApplyRemote`, `_mergeRemoteIntoLocal`.
-- **Regression test:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`.
+- **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`.
 - **Validation script:** `tool/check_offline_first_remote_merge.sh` (run via `./bin/checklist` or directly).
 - **Docs:** [`validation_scripts.md`](../validation_scripts.md) § “check_offline_first_remote_merge.sh”.
 
@@ -122,9 +127,10 @@ Run this test (and any other “don’t overwrite” tests) in CI. In this repo,
 When adding or reviewing offline-first “remote watch → merge into local”:
 
 - [ ] Before applying remote over local, use a `_shouldApplyRemote`-style check.
+- [ ] Reject remote when `local.lastChanged` is strictly after `remote.lastChanged` (all sync states).
 - [ ] When local is not synchronized, apply remote only if remote is strictly newer (timestamp).
-- [ ] Add a regression test: older remote must not overwrite newer unsynced local.
-- [ ] Run that test in CI (e.g. a small script like `check_offline_first_remote_merge.sh`).
+- [ ] Add regression tests: older remote must not overwrite newer **unsynced** or **synchronized** local.
+- [ ] Run those tests in CI (e.g. a small script like `check_offline_first_remote_merge.sh`).
 
 ---
 
@@ -139,12 +145,12 @@ Use these steps to adopt the don't-overwrite rule in a different codebase.
 
 ### 2. Implement `_shouldApplyRemote` when merging remote watch into local
 
-- **Single-entity (e.g. one counter/settings blob):** Before applying a remote snapshot over local, call a predicate. If local is not synchronized, return true only when remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). If local is synchronized, apply your policy (e.g. accept when remote is equal or newer). Use the "Single-entity" code sketch in this guide.
+- **Single-entity (e.g. one counter/settings blob):** Before applying a remote snapshot over local, call a predicate. First reject when both timestamps exist and local is strictly newer. If local is not synchronized, return true only when remote is strictly newer. If local is synchronized, apply your policy (e.g. accept when remote differs or is equal/newer). Use the "Single-entity" code sketch in this guide.
 - **List-entity (e.g. todos/items):** In your merge loop, for each remote item skip when `localItem.updatedAt.isAfter(remoteItem.updatedAt)`. When local item is unsynced, apply remote only if same `changeId` or `remoteItem.updatedAt.isAfter(localItem.updatedAt)`. Use the "List-entity" bullets and, for a full example, the Todo helpers in this repo (`lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`).
 
 ### 3. Add the regression test
 
-- Add a test that: (1) builds an offline-first repo with a fake/injectable remote, (2) saves local state with a **newer** timestamp (unsynced), (3) emits a **stale** remote snapshot (older timestamp, different value), (4) after a short delay, asserts that local state is **unchanged** (e.g. still the user's value). Use the "Regression test" example in this guide and name the test e.g. `remote watch does not overwrite newer unsynced local …`.
+- Add tests that: (1) build an offline-first repo with a fake/injectable remote, (2) save local with a **newer** timestamp (unsynced and synchronized cases), (3) emit a **stale** remote snapshot (older timestamp, different value), (4) assert local state is **unchanged**. Use the "Regression test" example in this guide; name tests e.g. `remote watch does not overwrite newer unsynced local …` and `… synchronized local …`.
 
 ### 4. Run the test in CI (optional script)
 

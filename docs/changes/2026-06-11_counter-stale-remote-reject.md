@@ -5,7 +5,8 @@
 ## Summary
 
 - **`OfflineFirstCounterRepositoryHelpers.shouldApplyRemote`**: When local `lastChanged` is strictly after remote `lastChanged`, skip applying the remote snapshot so a stale RTDB write cannot overwrite newer local state (aligned with `TodoMergePolicy` / offline-first don't-overwrite guide).
-- Test: regression in `offline_first_counter_repository_test.dart` for stale-remote-over-newer-local.
+- Tests: regression in `offline_first_counter_repository_test.dart` for stale remote over newer unsynced and synchronized local (`pullRemote` + `watch`).
+- Docs: `docs/offline_first/counter.md`, `docs/offline_first/dont_overwrite_guide.md` aligned with global timestamp gate.
 
 ## Verification
 
