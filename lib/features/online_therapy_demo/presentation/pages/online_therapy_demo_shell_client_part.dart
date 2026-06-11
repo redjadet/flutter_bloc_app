@@ -45,7 +45,9 @@ class _ClientBookingPanel extends StatelessWidget {
           appointments: viewState.appointments,
           isBusy: viewState.isBusy,
           error: viewState.errorMessage,
-          onBook: cubit.createAppointmentFromSlot,
+          onBook: (final slot) async {
+            await cubit.createAppointmentFromSlot(slot);
+          },
           onCancel: cubit.cancelAppointment,
           onRefresh: cubit.refresh,
         );

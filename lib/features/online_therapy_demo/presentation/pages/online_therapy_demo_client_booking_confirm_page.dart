@@ -33,6 +33,10 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (final state) => state.isBusy,
         );
+    final errorMessage = context
+        .selectState<ClientBookingCubit, ClientBookingState, String?>(
+          selector: (final state) => state.errorMessage,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
     final List<Widget> items = <Widget>[
       if (!isLoggedIn) const OnlineTherapyLoggedOutPrompt(),
@@ -67,6 +71,16 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
             ),
           ),
         ),
+      if (errorMessage != null) ...<Widget>[
+        const SizedBox(height: 12),
+        Card(
+          color: Theme.of(context).colorScheme.errorContainer,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(errorMessage),
+          ),
+        ),
+      ],
       const SizedBox(height: 12),
       ResponsiveDualCtaRow(
         start: OutlinedButton(
@@ -82,11 +96,13 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
           onPressed: isBusy || slot == null
               ? null
               : () async {
-                  await cubit.createAppointmentFromSlot(slot);
+                  final booked = await cubit.createAppointmentFromSlot(slot);
                   if (!context.mounted) return;
-                  context.goNamed(
-                    AppRoutes.onlineTherapyDemoClientAppointments,
-                  );
+                  if (booked) {
+                    context.goNamed(
+                      AppRoutes.onlineTherapyDemoClientAppointments,
+                    );
+                  }
                 },
           child: Text(isBusy ? 'Booking…' : 'Confirm'),
         ),

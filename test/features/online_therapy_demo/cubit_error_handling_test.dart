@@ -24,6 +24,31 @@ void main() {
     },
   );
 
+  test(
+    'ClientBookingCubit.createAppointmentFromSlot returns false on failure',
+    () async {
+      final cubit = ClientBookingCubit(
+        therapists: _NoopTherapistRepository(),
+        appointments: _ThrowingAppointmentRepository(),
+      );
+      addTearDown(cubit.close);
+
+      final booked = await cubit.createAppointmentFromSlot(
+        AvailabilitySlot(
+          id: 'slot-1',
+          therapistId: 't_1',
+          startAt: DateTime.utc(2026, 4, 22, 10),
+          endAt: DateTime.utc(2026, 4, 22, 11),
+          status: AvailabilitySlotStatus.available,
+        ),
+      );
+
+      expect(booked, isFalse);
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.errorMessage, isNotNull);
+    },
+  );
+
   test('AdminCubit.refresh clears busy and surfaces error', () async {
     final cubit = AdminCubit(
       admin: _ThrowingAdminRepository(),
@@ -60,6 +85,49 @@ class _ThrowingTherapistRepository implements TherapistRepository {
   }) async {
     throw StateError('boom');
   }
+}
+
+class _NoopTherapistRepository implements TherapistRepository {
+  @override
+  Future<TherapistProfile> getTherapist({required String therapistId}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<AvailabilitySlot>> listAvailability({
+    required String therapistId,
+    required DateTime date,
+  }) async => <AvailabilitySlot>[];
+
+  @override
+  Future<List<TherapistProfile>> listTherapists({
+    String? query,
+    String? specialty,
+    String? language,
+  }) async => <TherapistProfile>[];
+}
+
+class _ThrowingAppointmentRepository implements AppointmentRepository {
+  @override
+  Future<Appointment> cancelAppointment({
+    required String appointmentId,
+    required String reason,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Appointment> createAppointment({
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
+  }) async {
+    throw StateError('boom');
+  }
+
+  @override
+  Future<List<Appointment>> listAppointmentsForCurrentRole() async =>
+      <Appointment>[];
 }
 
 class _NoopAppointmentRepository implements AppointmentRepository {

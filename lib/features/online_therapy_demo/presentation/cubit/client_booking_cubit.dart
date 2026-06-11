@@ -2,55 +2,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_state.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
-class ClientBookingState {
-  const ClientBookingState({
-    required this.isBusy,
-    required this.therapists,
-    required this.availability,
-    required this.appointments,
-    this.pendingBookingSlot,
-    this.selectedTherapistId,
-    this.errorMessage,
-  });
+export 'client_booking_state.dart';
 
-  final bool isBusy;
-  final List<TherapistProfile> therapists;
-  final String? selectedTherapistId;
-  final List<AvailabilitySlot> availability;
-  final List<Appointment> appointments;
-  final AvailabilitySlot? pendingBookingSlot;
-  final String? errorMessage;
-
-  static const Object _noChange = Object();
-
-  TherapistProfile? get selectedTherapist => selectedTherapistId == null
-      ? null
-      : therapists.where((t) => t.id == selectedTherapistId).firstOrNull;
-
-  ClientBookingState copyWith({
-    bool? isBusy,
-    List<TherapistProfile>? therapists,
-    Object? selectedTherapistId = _noChange,
-    List<AvailabilitySlot>? availability,
-    List<Appointment>? appointments,
-    Object? pendingBookingSlot = _noChange,
-    String? errorMessage,
-  }) => ClientBookingState(
-    isBusy: isBusy ?? this.isBusy,
-    therapists: therapists ?? this.therapists,
-    selectedTherapistId: identical(selectedTherapistId, _noChange)
-        ? this.selectedTherapistId
-        : selectedTherapistId as String?,
-    availability: availability ?? this.availability,
-    appointments: appointments ?? this.appointments,
-    pendingBookingSlot: identical(pendingBookingSlot, _noChange)
-        ? this.pendingBookingSlot
-        : pendingBookingSlot as AvailabilitySlot?,
-    errorMessage: errorMessage,
-  );
-}
+part 'client_booking_cubit_loaders.part.dart';
 
 class ClientBookingCubit extends Cubit<ClientBookingState> {
   ClientBookingCubit({
@@ -67,47 +25,59 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
 
   final TherapistRepository _therapists;
   final AppointmentRepository _appointments;
+  final RequestIdGuard _operationGuard = RequestIdGuard();
   static final DateTime _demoAvailabilityDate = DateTime.utc(2026, 4, 22);
 
+  bool _isRequestStillActive(final int requestId) =>
+      !isClosed && _operationGuard.isCurrent(requestId);
+
   Future<void> refresh() async {
-    await loadTherapists();
-    await loadAppointments();
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
+    try {
+      await _loadTherapistsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadSelectedAvailabilityBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadAppointmentsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      emit(state.copyWith(isBusy: false, clearErrorMessage: true));
+    } on Object catch (e, st) {
+      AppLogger.error('ClientBookingCubit.refresh failed', e, st);
+      if (!_isRequestStillActive(requestId)) return;
+      emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+    }
   }
 
   Future<void> loadTherapists() async {
-    if (state.isBusy) return;
-    emit(state.copyWith(isBusy: true));
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
-      final list = await _therapists.listTherapists();
-      final currentSelection = state.selectedTherapistId;
-      final selected =
-          currentSelection != null && list.any((t) => t.id == currentSelection)
-          ? currentSelection
-          : list.isEmpty
-          ? null
-          : list.first.id;
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          isBusy: false,
-          therapists: list,
-          selectedTherapistId: selected,
-          availability: selected != null && selected == currentSelection
-              ? null
-              : <AvailabilitySlot>[],
-        ),
-      );
-      if (selected != null) {
-        await loadAvailability(therapistId: selected);
-      }
+      await _loadTherapistsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadSelectedAvailabilityBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadTherapists failed', e, st);
-      if (isClosed) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
 
   Future<void> selectTherapist(final String therapistId) async {
+    if (therapistId.trim().isEmpty) {
+      _operationGuard.invalidate();
+      emit(
+        state.copyWith(
+          isBusy: false,
+          selectedTherapistId: null,
+          availability: <AvailabilitySlot>[],
+          clearErrorMessage: true,
+        ),
+      );
+      return;
+    }
     emit(
       state.copyWith(
         selectedTherapistId: therapistId,
@@ -126,75 +96,112 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
   }
 
   Future<void> loadAvailability({required final String therapistId}) async {
-    emit(state.copyWith(isBusy: true));
+    if (therapistId.trim().isEmpty) {
+      _operationGuard.invalidate();
+      emit(
+        state.copyWith(
+          isBusy: false,
+          availability: <AvailabilitySlot>[],
+          clearErrorMessage: true,
+        ),
+      );
+      return;
+    }
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final slots = await _therapists.listAvailability(
         therapistId: therapistId,
         date: _demoAvailabilityDate,
       );
-      if (isClosed) return;
-      if (state.selectedTherapistId != therapistId) return;
-      emit(state.copyWith(isBusy: false, availability: slots));
+      if (!_isRequestStillActive(requestId)) return;
+      if (state.selectedTherapistId != therapistId) {
+        emit(state.copyWith(isBusy: false));
+        return;
+      }
+      emit(
+        state.copyWith(
+          isBusy: false,
+          availability: slots,
+          clearErrorMessage: true,
+        ),
+      );
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadAvailability failed', e, st);
-      if (isClosed) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
 
   Future<void> loadAppointments() async {
-    emit(state.copyWith(isBusy: true));
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
-      final list = await _appointments.listAppointmentsForCurrentRole();
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, appointments: list));
+      await _loadAppointmentsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.loadAppointments failed', e, st);
-      if (isClosed) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
 
-  Future<void> createAppointmentFromSlot(final AvailabilitySlot slot) async {
-    emit(state.copyWith(isBusy: true));
+  /// Returns `true` when the appointment was created and the list refreshed.
+  Future<bool> createAppointmentFromSlot(final AvailabilitySlot slot) async {
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _appointments.createAppointment(
         therapistId: slot.therapistId,
         startAt: slot.startAt,
         endAt: slot.endAt,
       );
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false, pendingBookingSlot: null));
-      await refresh();
+      if (!_isRequestStillActive(requestId)) return false;
+      emit(state.copyWith(pendingBookingSlot: null));
+      await _loadSelectedAvailabilityBody(requestId);
+      if (!_isRequestStillActive(requestId)) return false;
+      await _loadAppointmentsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return false;
+      emit(state.copyWith(isBusy: false, clearErrorMessage: true));
+      return true;
     } on Object catch (e, st) {
       AppLogger.error(
         'ClientBookingCubit.createAppointmentFromSlot failed',
         e,
         st,
       );
-      if (isClosed) return;
+      if (!_isRequestStillActive(requestId)) return false;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
+      return false;
     }
   }
 
   Future<void> cancelAppointment(final String appointmentId) async {
-    emit(state.copyWith(isBusy: true));
+    if (appointmentId.trim().isEmpty) {
+      _operationGuard.invalidate();
+      emit(state.copyWith(isBusy: false));
+      return;
+    }
+    final requestId = _operationGuard.next();
+    emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _appointments.cancelAppointment(
         appointmentId: appointmentId,
         reason: 'Cancelled in demo',
       );
-      if (isClosed) return;
-      emit(state.copyWith(isBusy: false));
-      await refresh();
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadTherapistsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadSelectedAvailabilityBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      await _loadAppointmentsBody(requestId);
+      if (!_isRequestStillActive(requestId)) return;
+      emit(state.copyWith(isBusy: false, clearErrorMessage: true));
     } on Object catch (e, st) {
       AppLogger.error('ClientBookingCubit.cancelAppointment failed', e, st);
-      if (isClosed) return;
+      if (!_isRequestStillActive(requestId)) return;
       emit(state.copyWith(isBusy: false, errorMessage: e.toString()));
     }
   }
-}
-
-extension _FirstOrNull<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }
