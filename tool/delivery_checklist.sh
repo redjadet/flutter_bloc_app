@@ -306,6 +306,29 @@ reuse_checklist_if_available() {
   return 1
 }
 
+# dart analyze on explicit paths under tool/** still loads root analyzer plugins
+# (file_length_lint, mix_lint) even though tool/** is excluded from normal analysis.
+# That plugin graph can hang indefinitely on standalone tool scripts.
+validate_standalone_dart_syntax() {
+  local -a files=("$@")
+  local file
+  local tmp_dill=""
+
+  if [ "${#files[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  for file in "${files[@]}"; do
+    tmp_dill="$(mktemp "${TMPDIR:-/tmp}/checklist-dart-syntax.XXXXXX.dill")"
+    if ! dart compile kernel --output "$tmp_dill" "$file"; then
+      rm -f "$tmp_dill"
+      return 1
+    fi
+    rm -f "$tmp_dill"
+  done
+  return 0
+}
+
 validate_checklist_configuration() {
   local failed=0
   local script
@@ -391,7 +414,7 @@ validate_checklist_configuration() {
   done
 
   if [ "${#dart_analyze_files[@]}" -gt 0 ]; then
-    if ! dart analyze "${dart_analyze_files[@]}"; then
+    if ! validate_standalone_dart_syntax "${dart_analyze_files[@]}"; then
       syntax_exit=1
     fi
   fi
@@ -470,7 +493,7 @@ validate_tooling_only_dependencies() {
   done
 
   if [ "${#dart_analyze_files[@]}" -gt 0 ]; then
-    if ! dart analyze "${dart_analyze_files[@]}"; then
+    if ! validate_standalone_dart_syntax "${dart_analyze_files[@]}"; then
       failed=1
     fi
   fi

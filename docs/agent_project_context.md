@@ -29,7 +29,7 @@ then apply this repo's architecture, package, migration, and validation rules.
 | DI / routing / app startup | [`architecture_details.md`](architecture_details.md), [`app_initialization_and_feature_control.md`](app_initialization_and_feature_control.md) |
 | UI/design tokens | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md) |
 | Reusable widgets / responsive / cross-platform UI | [`design_system.md`](design_system.md) § Reusable widgets, § Responsive layout, § Cross-platform form factors; [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md) |
-| Agent execution invariants (`AGENTS.md` § Must Keep) | This file § Current Caveat Shortlist; [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract |
+| Agent execution invariants ([`AGENTS.md`](../AGENTS.md) § Must Keep) | This file § Current Caveat Shortlist; [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract |
 | Validation lanes | [`validation_scripts.md`](validation_scripts.md), [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) |
 | Testing strategy | [`testing_overview.md`](testing_overview.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md) |
 | Official skill setup | [`agent_environment_setup.md`](agent_environment_setup.md) |
@@ -50,7 +50,7 @@ the answer.
 
 ## Current Caveat Shortlist
 
-- Flutter 3.44.1 / Dart 3.12.1 pinned; version-sensitive APIs need official or
+- Flutter 3.44.2 / Dart 3.12.2 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
 - **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
   presentation, plugins, routing, and bootstrap changes must account for all
