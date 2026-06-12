@@ -25,7 +25,7 @@ class OfflineFirstCounterRepository
 
   static const String counterEntity = 'counter';
 
-  final HiveCounterRepository _localRepository;
+  final CounterRepository _localRepository;
   final CounterRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
@@ -78,21 +78,7 @@ class OfflineFirstCounterRepository
         );
         remoteSub = _remoteRepository.watch().listen(
           (final remote) async {
-            final CounterSnapshot local = await _localRepository.load();
-            if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
-              local,
-              remote,
-            )) {
-              await _localRepository.save(
-                remote.copyWith(
-                  changeId:
-                      remote.changeId ??
-                      OfflineFirstCounterRepositoryHelpers.generateChangeId(),
-                  lastSyncedAt: DateTime.now().toUtc(),
-                  synchronized: true,
-                ),
-              );
-            }
+            await _applyRemoteSnapshotIfCurrent(remote);
           },
           onError: (final Object e, final StackTrace st) {
             AppLogger.error(
@@ -147,21 +133,7 @@ class OfflineFirstCounterRepository
     }
     try {
       final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
-      final CounterSnapshot localSnapshot = await _localRepository.load();
-      if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
-        localSnapshot,
-        remoteSnapshot,
-      )) {
-        await _localRepository.save(
-          remoteSnapshot.copyWith(
-            changeId:
-                remoteSnapshot.changeId ??
-                OfflineFirstCounterRepositoryHelpers.generateChangeId(),
-            lastSyncedAt: DateTime.now().toUtc(),
-            synchronized: true,
-          ),
-        );
-      }
+      await _applyRemoteSnapshotIfCurrent(remoteSnapshot);
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstCounterRepository.pullRemote failed',
@@ -169,6 +141,38 @@ class OfflineFirstCounterRepository
         stackTrace,
       );
     }
+  }
+
+  Future<void> _applyRemoteSnapshotIfCurrent(
+    final CounterSnapshot remoteSnapshot,
+  ) async {
+    final CounterSnapshot localSnapshot = await _localRepository.load();
+    if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
+      localSnapshot,
+      remoteSnapshot,
+    )) {
+      return;
+    }
+
+    // Re-read before save so a local write during the first load cannot be
+    // overwritten by a stale remote decision (TOCTOU).
+    final CounterSnapshot freshLocal = await _localRepository.load();
+    if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
+      freshLocal,
+      remoteSnapshot,
+    )) {
+      return;
+    }
+
+    await _localRepository.save(
+      remoteSnapshot.copyWith(
+        changeId:
+            remoteSnapshot.changeId ??
+            OfflineFirstCounterRepositoryHelpers.generateChangeId(),
+        lastSyncedAt: DateTime.now().toUtc(),
+        synchronized: true,
+      ),
+    );
   }
 
   Future<List<SyncOperation>> _counterPendingOperations({DateTime? now}) async {
