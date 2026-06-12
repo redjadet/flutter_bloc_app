@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
@@ -203,6 +204,45 @@ void main() {
     );
     expect(cubit.state.isBusy, isFalse);
   });
+
+  test(
+    'createAppointmentFromSlot reports success when superseded after write',
+    () async {
+      final api = OnlineTherapyFakeApi(timerService: _ImmediateTimerService());
+      final auth = FakeTherapyAuthRepository(api: api);
+      final therapists = FakeTherapistRepository(api: api);
+      final appointments = _GatedAppointmentRepository(
+        FakeAppointmentRepository(api: api),
+      );
+      final cubit = ClientBookingCubit(
+        therapists: therapists,
+        appointments: appointments,
+      );
+      addTearDown(cubit.close);
+
+      await auth.login(email: 'demo@example.com', role: TherapyRole.client);
+      await cubit.refresh();
+      final slot = cubit.state.availability.firstWhere(
+        (slot) => slot.status == AvailabilitySlotStatus.available,
+      );
+
+      final Future<bool> booking = cubit.createAppointmentFromSlot(slot);
+      await cubit.refresh();
+      appointments.releaseCreate();
+      final booked = await booking;
+
+      expect(booked, isTrue);
+      final created = await appointments.listAppointmentsForCurrentRole();
+      expect(
+        created.any(
+          (appointment) =>
+              appointment.therapistId == slot.therapistId &&
+              appointment.startAt == slot.startAt,
+        ),
+        isTrue,
+      );
+    },
+  );
 
   test('createAppointmentFromSlot refreshes availability state', () async {
     final api = OnlineTherapyFakeApi(timerService: _ImmediateTimerService());
@@ -604,6 +644,46 @@ class _DelayedAvailabilityTherapistRepository implements TherapistRepository {
     specialty: specialty,
     language: language,
   );
+}
+
+class _GatedAppointmentRepository implements AppointmentRepository {
+  _GatedAppointmentRepository(this._inner);
+
+  final AppointmentRepository _inner;
+  final Completer<void> _createGate = Completer<void>();
+
+  void releaseCreate() {
+    if (!_createGate.isCompleted) {
+      _createGate.complete();
+    }
+  }
+
+  @override
+  Future<Appointment> cancelAppointment({
+    required final String appointmentId,
+    required final String reason,
+  }) => _inner.cancelAppointment(
+    appointmentId: appointmentId,
+    reason: reason,
+  );
+
+  @override
+  Future<Appointment> createAppointment({
+    required final String therapistId,
+    required final DateTime startAt,
+    required final DateTime endAt,
+  }) async {
+    await _createGate.future;
+    return _inner.createAppointment(
+      therapistId: therapistId,
+      startAt: startAt,
+      endAt: endAt,
+    );
+  }
+
+  @override
+  Future<List<Appointment>> listAppointmentsForCurrentRole() =>
+      _inner.listAppointmentsForCurrentRole();
 }
 
 class _DelayedMessagingRepository implements TherapyMessagingRepository {

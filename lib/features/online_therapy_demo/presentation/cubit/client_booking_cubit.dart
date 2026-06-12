@@ -164,7 +164,8 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         startAt: slot.startAt,
         endAt: slot.endAt,
       );
-      if (!_isRequestStillActive(requestId)) return false;
+      // Appointment was created even if a newer request superseded this one.
+      if (!_isRequestStillActive(requestId)) return true;
       emit(state.copyWith(pendingBookingSlot: null));
       await _loadSelectedAvailabilityBody(requestId);
       if (!_isRequestStillActive(requestId)) return false;
@@ -196,6 +197,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
         appointmentId: appointmentId,
         reason: 'Cancelled in demo',
       );
+      // Cancellation persisted even if a newer request superseded this one.
       if (!_isRequestStillActive(requestId)) return;
       await _loadTherapistsBody(requestId);
       if (!_isRequestStillActive(requestId)) return;

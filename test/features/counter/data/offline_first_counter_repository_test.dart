@@ -36,6 +36,31 @@ class _FakeRemoteRepository
   }
 }
 
+class _ReReadAwareLocalRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
+  _ReReadAwareLocalRepository(this._inner);
+
+  final CounterRepository _inner;
+  Future<void> Function()? onSecondLoad;
+  int _loadCount = 0;
+
+  @override
+  Future<CounterSnapshot> load() async {
+    _loadCount++;
+    if (_loadCount == 2 && onSecondLoad != null) {
+      await onSecondLoad!();
+    }
+    return _inner.load();
+  }
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) => _inner.save(snapshot);
+
+  @override
+  Stream<CounterSnapshot> watch() => _inner.watch();
+}
+
 class _StreamRemoteRepository
     with CounterRepositoryNoPendingSync
     implements CounterRepository {
@@ -278,6 +303,59 @@ void main() {
 
         final CounterSnapshot local = await localRepository.load();
         expect(local.count, 5);
+
+        await sub.cancel();
+      },
+    );
+
+    test(
+      'remote watch re-checks local before save when local advances',
+      () async {
+        final _StreamRemoteRepository remote = _StreamRemoteRepository();
+        addTearDown(remote.controller.close);
+
+        final _ReReadAwareLocalRepository local =
+            _ReReadAwareLocalRepository(localRepository);
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: local,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final DateTime initialChanged = DateTime(2024, 1, 1, 12);
+        await localRepository.save(
+          CounterSnapshot(
+            count: 3,
+            lastChanged: initialChanged,
+            synchronized: true,
+            lastSyncedAt: initialChanged,
+          ),
+        );
+
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
+
+        local.onSecondLoad = () async {
+          final DateTime newerChanged = DateTime(2024, 1, 3, 12);
+          await localRepository.save(
+            CounterSnapshot(
+              count: 4,
+              lastChanged: newerChanged,
+              synchronized: false,
+            ),
+          );
+        };
+
+        remote.controller.add(
+          CounterSnapshot(count: 5, lastChanged: DateTime(2024, 1, 2, 12)),
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+
+        final CounterSnapshot stored = await localRepository.load();
+        expect(stored.count, 4);
+        expect(stored.lastChanged, DateTime(2024, 1, 3, 12));
 
         await sub.cancel();
       },
