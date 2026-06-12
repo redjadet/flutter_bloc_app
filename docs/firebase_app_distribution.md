@@ -10,7 +10,7 @@ This document describes how to distribute **pre-release** versions of this Flutt
 
 ## Prerequisites
 
-1. **Firebase project** – Already set up for this app (see [firebase.json](../firebase.json), [WalletConnect Auth Status](walletconnect_auth_status.md)).
+1. **Firebase project** – Already set up for this app (see [firebase.json.example](../firebase.json.example); copy to gitignored `firebase.json` locally — [WalletConnect Auth Status](walletconnect_auth_status.md)).
 2. **Firebase CLI** – Install or update the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) (standalone binary recommended). Sign in, select this repo’s default project (from [`.firebaserc`](../.firebaserc)), then confirm access:
 
    ```bash
@@ -64,7 +64,7 @@ Before distributing an Android pre-release via Firebase App Distribution, confir
 
 | Check | Action |
 | ------ | ------ |
-| **Firebase project** | Project is set up; Android app is registered. See [firebase.json](../firebase.json) and [Firebase Console](https://console.firebase.google.com/). |
+| **Firebase project** | Project is set up; Android app is registered. See [firebase.json.example](../firebase.json.example) (local `firebase.json` is gitignored) and [Firebase Console](https://console.firebase.google.com/). |
 | **google-services.json** | File exists at `android/app/google-services.json` (gitignored; generate via [FlutterFire CLI](https://firebase.flutter.dev/docs/overview#1-install-the-flutterfire-cli): `flutterfire configure`). |
 | **firebase_options.dart** | Committed placeholder at `lib/firebase_options.dart`; local `FIREBASE_*` in `.envrc` (see [Firebase setup](firebase_setup.md)). Run `flutterfire configure` for platform files, then restore the placeholder Dart file (step 3b). |
 | **Firebase CLI** | Installed and signed in: `firebase login`; `firebase projects:list` shows your project. |

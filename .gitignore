@@ -75,6 +75,7 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 firebase.json
+# Tracked template: firebase.json.example (copy locally; fill project/app IDs).
 # Placeholder `lib/firebase_options.dart` is committed so the app runs
 # without Firebase. `flutterfire configure` overwrites it; do not commit
 # real project config.

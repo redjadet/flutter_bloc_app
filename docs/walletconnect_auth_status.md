@@ -534,7 +534,7 @@ Linking creates an anonymous user when none exists.
 
 The app uses a single rule for `users/{userId}`: only the signed-in user (by Firebase Auth UID) can read/write their own document (linkage + profile).
 
-**Reference rules** are in the repo: [firestore.rules](../firestore.rules). To deploy from the CLI, ensure [firebase.json](../firebase.json) includes a `firestore` target (e.g. `"firestore": { "rules": "firestore.rules" }`), then run `firebase deploy --only firestore:rules`. Example:
+**Reference rules** are in the repo: [firestore.rules](../firestore.rules). To deploy from the CLI, ensure local `firebase.json` (copy from [firebase.json.example](../firebase.json.example)) includes a `firestore` target (e.g. `"firestore": { "rules": "firestore.rules" }`), then run `firebase deploy --only firestore:rules`. Example:
 
 ```javascript
 match /users/{userId} {
@@ -592,4 +592,4 @@ After enabling Anonymous auth and deploying Firestore rules, “Link to Account�
 ## See also
 
 - [Firebase UI Auth overflow fix](firebase_ui_auth_overflow_fix.md) – If the **profile screen** shows a RenderFlex overflow after linking a wallet (long display name), apply the fix described there.
-- **Firestore rules** – [firestore.rules](../firestore.rules) in the project root defines rules for `users/{userId}` (one doc per user: linkage + profile). [firebase.json](../firebase.json) must include a `firestore` target for `firebase deploy --only firestore:rules` to work.
+- **Firestore rules** – [firestore.rules](../firestore.rules) in the project root defines rules for `users/{userId}` (one doc per user: linkage + profile). Local `firebase.json` (from [firebase.json.example](../firebase.json.example)) must include a `firestore` target for `firebase deploy --only firestore:rules` to work.

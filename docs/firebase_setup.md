@@ -4,7 +4,8 @@ The repo includes a **placeholder** `lib/firebase_options.dart` so the project *
 
 To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below.
 
-- **Gitignored (local only):** `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `macos/Runner/GoogleService-Info.plist`, and `.envrc`.
+- **Gitignored (local only):** `firebase.json`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `macos/Runner/GoogleService-Info.plist`, and `.envrc`.
+- **Committed template:** [`firebase.json.example`](../firebase.json.example) — copy to `firebase.json` and set your `projectId` / app IDs (or run `flutterfire configure`, which writes `firebase.json` for you).
 - **Committed (placeholders only):** `lib/firebase_options.dart` uses `String.fromEnvironment('FIREBASE_*', …)` so real API keys are injected via `--dart-define`, not hardcoded in git.
 - **`flutterfire configure`** downloads platform files and *can* overwrite `lib/firebase_options.dart` with hardcoded keys — restore the committed placeholder after configuring (see [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)) and put values in `.envrc` instead.
 
