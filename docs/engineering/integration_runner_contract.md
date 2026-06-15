@@ -48,7 +48,8 @@ high-signal target for PR-level confidence; current PR CI runs
 | `INTEGRATION_TESTS_TIMEOUT_SECONDS` | `1800` | Per-invocation timeout passed to `flutter test` |
 | `INTEGRATION_TESTS_ALLOW_CONCURRENT` | `0` | Set `1` to bypass single-run lock (unsafe) |
 | `INTEGRATION_TESTS_ARTIFACTS_ROOT` | `artifacts/integration` | Artifact root directory |
-| `CHECKLIST_INTEGRATION_DEVICE` | auto-discovered | Device id for `flutter test -d` |
+| `CHECKLIST_INTEGRATION_DEVICE` | auto-discovered | Device id for `flutter test -d`; when set, runner validates via `simctl`/`adb` first and skips slow `flutter devices` when the id is already usable |
+| `INTEGRATION_TEST_DEVICE` | — | Alias for `CHECKLIST_INTEGRATION_DEVICE` |
 | `INTEGRATION_TESTS_SOURCE_ONLY` | `0` | Set `1` to source helper functions and exit before preflight/device work (runner contract tests) |
 
 ## Artifact contract
