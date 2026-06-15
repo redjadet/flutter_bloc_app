@@ -293,7 +293,10 @@ check_codex_rules_block() {
 check_workspace_managed_skill_duplicates() {
   local workspace_skills="$repo_root/.cursor/skills"
   local mapping dst skill_dir workspace_skill
-  [[ -d "$workspace_skills" ]] || return 0
+  if [[ ! -d "$workspace_skills" ]]; then
+    echo "ok|$workspace_skills"
+    return 0
+  fi
   for mapping in "${managed_cursor_files[@]}"; do
     dst="${mapping##*|}"
     skill_dir="$(basename "$(dirname "$dst")")"
