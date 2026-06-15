@@ -153,7 +153,13 @@ class MessagingCubit extends Cubit<MessagingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       await _messaging.sendMessage(conversationId: convId, body: draft);
-      if (!_isRequestStillActive(requestId)) return;
+      // Message was sent even if a newer request superseded this one.
+      if (!_isRequestStillActive(requestId)) {
+        if (!isClosed && state.selectedConversationId == convId) {
+          emit(state.copyWith(draft: ''));
+        }
+        return;
+      }
       final messages = await _messaging.listMessages(conversationId: convId);
       if (!_isRequestStillActive(requestId)) return;
       emit(
@@ -180,6 +186,7 @@ class MessagingCubit extends Cubit<MessagingState> {
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
       final msg = await _messaging.retryMessage(messageId: messageId);
+      // Retry completed even if a newer request superseded this one.
       if (!_isRequestStillActive(requestId)) return;
       final convId = msg.conversationId;
       final messages = await _messaging.listMessages(conversationId: convId);
