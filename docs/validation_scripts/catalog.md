@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **88** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **70** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **89** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **71** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -244,7 +244,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 
 | Script | Typical invocation | Purpose |
 | --- | --- | --- |
-| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs) | Runs fixed widget/unit regression tests for past lifecycle/race bugs |
+| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race bugs |
 | `check_action_bar_layout.sh` | `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS` is `auto` or `1` | Widget tests for action-bar / icon-label row layout regressions |
 | `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
 | `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |

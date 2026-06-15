@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-15_mutation-success-guard.md`](2026-06-15_mutation-success-guard.md): Static guard + regression routing for mutation success after `RequestIdGuard` supersession (therapy booking bug class).
 - [`2026-06-15_agent_harness_structure.md`](2026-06-15_agent_harness_structure.md): AI-agent harness structure — prompts, evaluators, tests, runtime checks, and feedback loops over repeated prompt tweaks.
 - [`2026-06-15_therapy-booking-reload-supersession.md`](2026-06-15_therapy-booking-reload-supersession.md): Therapy demo — `createAppointmentFromSlot` returns success when `RequestIdGuard` superseded during post-create reload (complements 2026-06-12 write-phase fix).
 - [`2026-06-08_native_platform_showcase_feature_brief.md`](2026-06-08_native_platform_showcase_feature_brief.md): Native platform showcase from Example; layered architecture (use case → repository → platform services → MethodChannel/FFI), live interop, route/deeplink, smoke integration + web preflight.

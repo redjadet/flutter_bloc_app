@@ -24,6 +24,9 @@ Use with [BLoC Standards](../bloc_standards.md) for Cursor/Codex reviews.
 - Async calls use existing exception handling patterns.
 - No emit after `close()`.
 - Stale request completions cannot overwrite newer state.
+- After a successful mutation, inactive `RequestIdGuard` must not yield
+  `false` / failure—return success (`true` or bare `return`). See
+  `tool/check_mutation_success_after_guard.sh` and therapy demo cubits.
 - Streams/timers/controllers/listeners are disposed in `close()`.
 - `Future.delayed` and raw `Timer` are replaced with repo timer abstractions
   when cancellation or test control matters.
