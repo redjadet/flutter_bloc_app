@@ -23,7 +23,7 @@ import 'package:flutter_bloc_app/features/example/presentation/pages/example_pag
 import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/whiteboard_page.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_cubit.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/pages/library_demo_page.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';

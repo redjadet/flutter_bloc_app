@@ -1,0 +1,22 @@
+# Architecture (entry hub)
+
+> **Do not duplicate** — this page links to canonical docs. Edit the targets, not this hub.
+
+Thin map for structure, layering, and modularity. For day-to-day implementation, start with [clean_architecture.md](clean_architecture.md) and [architecture_details.md](architecture_details.md).
+
+## Start here
+
+- [clean_architecture.md](clean_architecture.md) — layer rules, dependency flow, Cubit placement
+- [architecture_details.md](architecture_details.md) — app shell, routing, DI, bootstrap
+- [architecture/feature_structure_contract.md](architecture/feature_structure_contract.md) — feature folder contract
+- [architecture/use_case_dto_policy.md](architecture/use_case_dto_policy.md) — use cases, DTOs, mappers
+- [adr/README.md](adr/README.md) — accepted architecture decisions (ADR index)
+- [modularity.md](modularity.md) — feature barrels, cross-feature import guards
+- [system_design_showcase.md](system_design_showcase.md) — interview/portfolio talk track (claims → proof)
+- [bloc_standards.md](bloc_standards.md) — Cubit/BLoC conventions
+
+## Verification
+
+- `bash tool/check_clean_architecture_imports.sh`
+- `bash tool/check_feature_modularity_leaks.sh`
+- `bash tool/modular_metrics.sh`

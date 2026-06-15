@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_direct_failure_mapper.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';

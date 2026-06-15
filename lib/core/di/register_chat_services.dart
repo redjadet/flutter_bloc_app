@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
@@ -34,7 +35,6 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart'
 import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -207,7 +207,7 @@ void registerChatServices() {
   registerLazySingletonIfAbsent<ChatAuthSessionPort>(
     () => ChatAuthSessionPortAdapter(
       firebaseAuthRepository: getIt<core_auth.AuthRepository>(),
-      supabaseAuthRepository: getIt<SupabaseAuthRepository>(),
+      supabaseAuthRepository: getIt<RemoteBackendAuthPort>(),
     ),
   );
   getIt<ChatRenderOrchestrationDiagnosticsPort>().logIfDebug(

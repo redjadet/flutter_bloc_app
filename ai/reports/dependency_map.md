@@ -48,14 +48,15 @@
 
 ## Cross-feature imports
 
-**11 edges** detected (presentation/data importing another feature’s domain). Primary pattern:
+**0 edges** as of 2026-06-15 (staff review R6 / AP-01). Prior snapshot (2026-05-21) listed **11** edges including chat→`supabase_auth` and `case_study_demo`→`camera_gallery` / `supabase_auth`.
 
-- `case_study_demo` → `camera_gallery` (domain types for video capture)
-- `case_study_demo` → `supabase_auth` (repository for storage mode)
+Regenerate:
 
-Full list: `bash tool/modular_metrics.sh --cross-feature-only`.
+```bash
+bash tool/modular_metrics.sh --cross-feature-only
+```
 
-**Guidance:** Prefer shared domain types in `lib/shared/` or explicit ports when adding new cross-feature deps—see [`docs/modularity.md`](../../docs/modularity.md).
+**Guidance:** Prefer shared domain types in `lib/shared/` or explicit ports in `lib/core/` when features need another backend’s session—see [`docs/modularity.md`](../../docs/modularity.md) and [`docs/flutter-anti-patterns.md`](../../docs/flutter-anti-patterns.md) (AP-01).
 
 ## Shared → feature imports
 

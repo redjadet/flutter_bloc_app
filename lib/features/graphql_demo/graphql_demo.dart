@@ -12,7 +12,7 @@ export 'domain/graphql_demo_exception.dart';
 export 'domain/graphql_demo_repository.dart';
 export 'domain/graphql_remote_repository.dart';
 // Presentation exports
-export 'presentation/graphql_demo_cubit.dart';
+export 'presentation/cubit/graphql_demo_cubit.dart';
 export 'presentation/graphql_demo_state.dart';
 export 'presentation/graphql_demo_view_models.dart';
 export 'presentation/pages/graphql_demo_page.dart';

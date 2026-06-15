@@ -1,5 +1,16 @@
 # Authentication Overview
 
+## Repository roles (app-wide)
+
+| Type | DI token | Scope | Use when |
+| --- | --- | --- | --- |
+| `AuthRepository` | `getIt<AuthRepository>()` | **Firebase** (or debug guest fallback) | Router redirect, Settings account section, sign-in/sign-out, HTTP `AuthTokenInterceptor`, counter RTDB scoping |
+| `SupabaseAuthRepository` | `getIt<SupabaseAuthRepository>()` | **Supabase** email/password on `/supabase-auth` | Supabase auth page, sign-in/up/out against Supabase project |
+| `RemoteBackendAuthPort` | `getIt<RemoteBackendAuthPort>()` | **Read-only** remote-backend session (`authStateChanges`, `currentUser`, `signOut`) | Cross-feature seams (chat session port, case study demo) without importing `supabase_auth/domain` |
+| `WalletConnectAuthRepository` | `getIt<WalletConnectAuthRepository>()` | **WalletConnect** on `/walletconnect-auth` | Web3 wallet sign-in demo; separate from Firebase routing |
+
+`SupabaseAuthRepository` implements `RemoteBackendAuthPort`; DI registers the same instance for both types (`register_supabase_services.dart`). Do not use Supabase or WalletConnect repos for GoRouter guards—those use `AuthRepository` only.
+
 ## What We Use
 
 - **Firebase Auth + FirebaseUI** for primary sign-in, backed by GoRouter guards. Providers are built via `buildAuthProviders()` to ensure email/password is always available and to append Google auth when configured (`lib/features/auth/presentation/helpers/provider_builder.dart`, `helpers/google_provider_helper.dart`).
@@ -28,7 +39,7 @@ Protected examples:
 
 - `/profile` (gated by `AppRouteAuthGate` + `AppRoutePolicies.profile`)
 - `/manage-account` (gated by `AppRouteAuthGate` + `AppRoutePolicies.manageAccount`)
-- `/settings` (gated by `AppRouteAuthGate` + `AppRoutePolicies.settings`)
+- `/settings` — policy `publicRoute` (biometric gate on page, not router auth); matches `AppRoutePolicies.settings`
 - `/walletconnect-auth` (gated by `AppRouteAuthGate` + `AppRoutePolicies.walletconnectAuth`)
 - Online therapy demo admin routes (gated by `AppRouteAuthGate` + `AppRoutePolicies.onlineTherapyDemoAdmin*`)
 
