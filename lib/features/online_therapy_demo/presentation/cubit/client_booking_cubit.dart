@@ -168,9 +168,10 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
       if (!_isRequestStillActive(requestId)) return true;
       emit(state.copyWith(pendingBookingSlot: null));
       await _loadSelectedAvailabilityBody(requestId);
-      if (!_isRequestStillActive(requestId)) return false;
+      // Appointment was created even if reload was superseded mid-flight.
+      if (!_isRequestStillActive(requestId)) return true;
       await _loadAppointmentsBody(requestId);
-      if (!_isRequestStillActive(requestId)) return false;
+      if (!_isRequestStillActive(requestId)) return true;
       emit(state.copyWith(isBusy: false, clearErrorMessage: true));
       return true;
     } on Object catch (e, st) {
