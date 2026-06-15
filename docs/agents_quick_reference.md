@@ -68,9 +68,10 @@ Repo docs/scripts define behavior; external catalogs don't.
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
 | UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
 | Flutter app-code/UI change with active debug run | Trigger hot reload; hot restart if reload cannot apply; report unavailable session | Same |
-| Runtime bug / crash with active debug run | DTD + `get_runtime_errors`; propose fix from stack; verify with reload + second read — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md) | Same |
-| Pub dependency / unfamiliar API | `read_package_uris` / Context7 `query-docs` before coding — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) | Same |
+| Runtime bug / crash with active debug run | Use Validation Chooser runtime row | Same |
+| Pub dependency / unfamiliar API | Use Validation Chooser pub API row | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
+| Prompt tweak repeats | Add evaluator/test/runtime check/fixture/feedback loop; then trim prompt prose | Same |
 | Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
 | Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |
 | Implementation / tests / debug / validation (pick skill) | [`ai/skill_routing.md`](ai/skill_routing.md); invoke matching skill before edits; skill `agents-skill-routing` | Same |
