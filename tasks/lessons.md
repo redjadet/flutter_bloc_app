@@ -38,6 +38,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `.cursor/rules/flutter-isolate-presentation.mdc`
   `tool/check_no_isolate_run_in_presentation.sh`
 
+### 2026-06-15 - RequestIdGuard supersession after successful mutation
+
+- What went wrong:
+  Cubit returned `false` from booking flows when concurrent `refresh()` superseded
+  `RequestIdGuard` during post-mutation reload—even after the appointment was
+  persisted—blocking navigation and risking duplicate user actions.
+- How it was fixed:
+  Return success (`true` / bare `return`) when the guard is inactive after a
+  successful mutation; add static guard `tool/check_mutation_success_after_guard.sh`
+  and regression tests (therapy PR #328 write path, PR #330 reload path).
+- Pattern:
+  Stale-read supersession is not mutation failure; `return false` surfaces a
+  false error UI.
+- Preventive rule:
+  Never `return false` only because `!_isRequestStillActive`; run
+  `tool/check_mutation_success_after_guard.sh` on cubit edits that touch guards.
+- Evidence or affected files:
+  `lib/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart`
+  `tool/check_mutation_success_after_guard.sh`
+  `docs/changes/2026-06-15_mutation-success-guard.md`
+
 ### 2026-04-17 - Caveman-lite is the default when suitable
 
 - Correction:
