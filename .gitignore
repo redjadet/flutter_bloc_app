@@ -122,6 +122,7 @@ docs/audits/*
 !docs/audits/README.md
 !docs/audits/code_quality_baseline_*.md
 !docs/audits/dedup_matrix_*.md
+!docs/audits/*_review_*.md
 
 # Python demo local virtualenv (e.g. demos/render_chat_api)
 demos/**/.venv/

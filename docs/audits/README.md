@@ -1,6 +1,6 @@
 # Audits (local snapshots)
 
-Machine-generated inventories and one-off reviews live here. **Git tracks** this README and `dedup_matrix_*.md`; JSON and other snapshots are gitignored (see root `.gitignore`).
+Machine-generated inventories and one-off reviews live here. **Git tracks** this README, `code_quality_baseline_*.md`, `dedup_matrix_*.md`, and promoted `*_review_*.md` audits; JSON and other snapshots are gitignored (see root `.gitignore`).
 
 ## Regenerate
 
@@ -11,7 +11,7 @@ dart run tool/skill_rank.dart docs/audits/skill_inventory_latest.json docs/audit
 bash tool/check_skill_budgets.sh docs/audits/skill_inventory_latest.json report
 ```
 
-Publish summaries in [`docs/changes/`](../changes/), not bulk JSON. Optional local-only audit markdown may exist beside this README — regenerate or `git add -f` only when promoting findings.
+Publish **change notes** in [`docs/changes/`](../changes/) for why/what/proof; link to full `*_review_*.md` audits here when scores and evidence tables belong in version control. Bulk JSON stays local — regenerate as needed.
 
 ## Habits
 
@@ -26,6 +26,7 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 
 | Review | Path |
 | --- | --- |
+| Staff+ production review (2026-06-15) | [staff_production_review_2026-06-15.md](staff_production_review_2026-06-15.md) |
 | Build Readiness program (2026-06) | [architecture_review_2026-06.md](architecture_review_2026-06.md) |
 
 ## Code quality baseline (program)

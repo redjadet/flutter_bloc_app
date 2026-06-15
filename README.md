@@ -19,7 +19,7 @@ CI, quality & supply chain
 [![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-74%2E05%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-72%2E12%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
 [![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
 [![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
@@ -72,9 +72,10 @@ Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.
 | Topic | Doc |
 | --- | --- |
 | Index | [docs/README.md](docs/README.md) |
+| Entry hubs | [docs/architecture.md](docs/architecture.md), [docs/testing.md](docs/testing.md), [docs/engineering-decisions.md](docs/engineering-decisions.md), [docs/ai-workflow.md](docs/ai-workflow.md) |
 | Quick start (agents) | [docs/quick_start.md](docs/quick_start.md) |
 | Features | [docs/feature_overview.md](docs/feature_overview.md) |
-| Architecture | [docs/clean_architecture.md](docs/clean_architecture.md), [docs/architecture_details.md](docs/architecture_details.md) |
+| Architecture | [docs/architecture.md](docs/architecture.md) → [docs/clean_architecture.md](docs/clean_architecture.md), [docs/architecture_details.md](docs/architecture_details.md) |
 | ADRs | [docs/adr/README.md](docs/adr/README.md) |
 | Design | [DESIGN.md](DESIGN.md), [docs/design_system.md](docs/design_system.md) |
 | Validation | [docs/validation_scripts.md](docs/validation_scripts.md), [docs/testing_overview.md](docs/testing_overview.md) |

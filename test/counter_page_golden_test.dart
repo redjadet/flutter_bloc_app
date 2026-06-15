@@ -201,6 +201,26 @@ void main() {
       );
       addTearDown(cubit.close);
     });
+
+    testGoldens('spine reference counter layout', (tester) async {
+      final cubit = CounterCubit(
+        repository: MockCounterRepository(),
+        timerService: FakeTimerService(),
+        now: _fixedNow,
+      )..loadInitial();
+      addTearDown(cubit.close);
+      await tester.pumpWidget(
+        _buildCounterPageApp(cubit: cubit, theme: ThemeData.light()),
+      );
+      await tester.pump();
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      await waitForCounterCubitsToLoad(tester);
+      await multiScreenGolden(
+        tester,
+        'spine_counter_reference',
+        devices: const [Device.phone],
+      );
+    });
   });
 }
 
