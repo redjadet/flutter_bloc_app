@@ -244,6 +244,45 @@ void main() {
     },
   );
 
+  test(
+    'createAppointmentFromSlot reports success when superseded during reload',
+    () async {
+      final api = OnlineTherapyFakeApi(timerService: _ImmediateTimerService());
+      final auth = FakeTherapyAuthRepository(api: api);
+      final therapists = _DelayedAvailabilityTherapistRepository(
+        FakeTherapistRepository(api: api),
+      );
+      final appointments = FakeAppointmentRepository(api: api);
+      final cubit = ClientBookingCubit(
+        therapists: therapists,
+        appointments: appointments,
+      );
+      addTearDown(cubit.close);
+
+      await auth.login(email: 'demo@example.com', role: TherapyRole.client);
+      await cubit.refresh();
+      final slot = cubit.state.availability.firstWhere(
+        (slot) => slot.status == AvailabilitySlotStatus.available,
+      );
+
+      final Future<bool> booking = cubit.createAppointmentFromSlot(slot);
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      await cubit.refresh();
+      final booked = await booking;
+
+      expect(booked, isTrue);
+      final created = await appointments.listAppointmentsForCurrentRole();
+      expect(
+        created.any(
+          (appointment) =>
+              appointment.therapistId == slot.therapistId &&
+              appointment.startAt == slot.startAt,
+        ),
+        isTrue,
+      );
+    },
+  );
+
   test('createAppointmentFromSlot refreshes availability state', () async {
     final api = OnlineTherapyFakeApi(timerService: _ImmediateTimerService());
     final auth = FakeTherapyAuthRepository(api: api);
