@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
