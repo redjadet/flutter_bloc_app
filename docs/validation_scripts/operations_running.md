@@ -52,6 +52,26 @@ checklist is also change-aware:
 - exits early for local tooling-only change sets (`tool/*.sh`, `bin/*`, host-template files, and validation-guidance docs) after syntax/doc-sync/drift checks instead of running app-wide Flutter validation
 - caches checklist self-validation until checklist script/dependency scripts or validation docs change
 
+## Git pre-commit hook (optional, local)
+
+Install once per clone:
+
+```bash
+./bin/install-git-hooks
+```
+
+Sets `git config core.hooksPath githooks`. The tracked `githooks/pre-commit` runs
+`tool/check_mutation_success_after_guard.sh --staged`:
+
+- scans staged `lib/**/*.dart` when any are staged
+- scans all of `lib/` when `request_id_guard.dart`, the guard script, or fixtures change
+- skips when the index has no relevant paths
+
+Full static sweep still runs in `./bin/checklist` / CI. Pre-commit is a narrow early
+lane for the RequestIdGuard supersession bug class only.
+
+Uninstall: `git config --unset core.hooksPath` (or point at your own hooks dir).
+
 ## Git · local branch cleanup
 
 - **`commit_push_pr_rebase_on_main.sh`**: **Start of `/commit-push-pr`**: `git fetch` + **`git rebase <remote>/<branch>`** (default **`origin/main`**). Optional **`--remote`**, **`--branch`**. See `bash tool/commit_push_pr_rebase_on_main.sh --help`.

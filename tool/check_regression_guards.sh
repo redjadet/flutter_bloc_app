@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 # Runs focused regression tests for previously fixed race-condition/lifecycle bugs.
+#
+# Usage:
+#   tool/check_regression_guards.sh
+#   CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh
+#   CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths lib/shared/utils/request_id_guard.dart
+#
+# --paths overrides git-derived changed files in auto mode (fixture / local repro).
 
 set -euo pipefail
 
@@ -7,6 +14,31 @@ PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
 REGRESSION_GUARDS_MODE="${CHECK_REGRESSION_GUARDS_MODE:-always}"
+MANUAL_CHANGED_FILES=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --paths)
+      shift
+      if [[ $# -eq 0 ]]; then
+        echo "❌ --paths requires at least one path" >&2
+        exit 1
+      fi
+      while [[ $# -gt 0 && "$1" != --* ]]; do
+        MANUAL_CHANGED_FILES+=("$1")
+        shift
+      done
+      ;;
+    -h|--help)
+      sed -n '1,12p' "$0" | tail -n +2
+      exit 0
+      ;;
+    *)
+      echo "❌ Unknown argument: $1 (try --paths or --help)" >&2
+      exit 1
+      ;;
+  esac
+done
 
 ALL_TESTS=(
   "test/account_section_test.dart"
@@ -33,6 +65,7 @@ ALL_TESTS=(
   "test/features/counter/data/offline_first_counter_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
+  "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
 )
 
 collect_changed_files() {
@@ -83,7 +116,12 @@ select_regression_guard_tests() {
     return 0
   fi
 
-  collect_changed_files changed_files
+  if [ "${#MANUAL_CHANGED_FILES[@]}" -gt 0 ]; then
+    changed_files=("${MANUAL_CHANGED_FILES[@]}")
+  else
+    collect_changed_files changed_files
+  fi
+
   if [ "${#changed_files[@]}" -eq 0 ]; then
     out_ref=("${ALL_TESTS[@]}")
     return 0
@@ -96,7 +134,16 @@ select_regression_guard_tests() {
       AGENTS.md|\
       analysis_options.yaml|\
       pubspec.yaml|\
-      pubspec.lock|\
+      pubspec.lock)
+        out_ref=("${ALL_TESTS[@]}")
+        return 0
+        ;;
+      lib/features/online_therapy_demo/*|\
+      test/features/online_therapy_demo/*|\
+      lib/shared/utils/request_id_guard.dart|\
+      tool/check_mutation_success_after_guard.sh)
+        add_test_once out_ref "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
+        ;;
       lib/shared/*|\
       test/shared/*|\
       lib/shared/sync/*|\
@@ -147,6 +194,18 @@ select_regression_guard_tests() {
   fi
 }
 
+run_regression_test() {
+  local spec="$1"
+  local file="${spec%%::*}"
+  local filter="${spec#*::}"
+
+  if [[ "$spec" == *"::"* ]]; then
+    flutter test --no-pub --name "$filter" "$file"
+  else
+    flutter test --no-pub "$file"
+  fi
+}
+
 case "$REGRESSION_GUARDS_MODE" in
   always)
     tests=("${ALL_TESTS[@]}")
@@ -167,6 +226,8 @@ for test_file in "${tests[@]}"; do
   echo "  • $test_file"
 done
 
-flutter test --no-pub "${tests[@]}"
+for test_file in "${tests[@]}"; do
+  run_regression_test "$test_file"
+done
 
 echo "✅ Regression guard tests passed"

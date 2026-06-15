@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Pre-commit: mutation success after RequestIdGuard supersession (staged lib only).
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+exec bash "$ROOT/tool/check_mutation_success_after_guard.sh" --staged
