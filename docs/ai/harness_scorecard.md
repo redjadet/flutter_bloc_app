@@ -22,6 +22,16 @@ score in the table below.
 | Memory System | 10/10 | [`agent_knowledge_base.md`](../agent_knowledge_base.md), `docs/changes/`, [`tasks/lessons.md`](../../tasks/lessons.md), `tool/check_agent_memory_compounding.sh` |
 | Verification System | 10/10 | `./bin/checklist`, `./bin/checklist-fast`, CI `./bin/checklist`, `./bin/agent-maintain closeout` |
 
+## Harness Surfaces
+
+| Surface | Owner |
+| --- | --- |
+| Prompts / context | [`AGENTS.md`](../../AGENTS.md), [`context_loading.md`](context_loading.md), [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| Evaluators | `tool/check_*`, `./bin/checklist*`, [`ai_failure_risks.md`](ai_failure_risks.md) |
+| Tests | [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md), focused unit/cubit/widget/integration tests |
+| Runtime checks | [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md), `tool/check_runtime_errors.sh`, `./bin/integration_preflight` |
+| Feedback loops | [`harness_auto_maintenance.md`](harness_auto_maintenance.md), `./bin/agent-maintain closeout`, [`tasks/lessons.md`](../../tasks/lessons.md) |
+
 ## Max-Score Claim Gate
 
 Agents may claim `10/10` only after all apply:
@@ -47,23 +57,8 @@ file to scoring and proof gates only.
 
 ## Automatic Maintenance
 
-Canon: [`harness_auto_maintenance.md`](harness_auto_maintenance.md). Agents run
-the loop there; do not claim max score without passing gates.
-
-- `./bin/checklist-fast --no-reuse` runs `tool/check_harness_scorecard_gate.sh`
-  through harness docs checks.
-- `./bin/checklist` runs `tool/check_harness_scorecard_gate.sh` in the full
-  check script list.
-- `tool/check_harness_scorecard_gate.sh` enforces the README score badge so the
-  visible repo entrypoint stays aligned with this scorecard.
-- `./bin/agent-maintain harness-maintain` updates the README badge before
-  running scorecard gates.
-- `./bin/agent-maintain closeout` runs `harness-maintain` when harness paths
-  are in git scope (including host-only template or `.cursor/rules` edits).
-- `./bin/agent-maintain docs-sync` still runs the scorecard gate when validation
-  tooling or markdown docs are in scope.
-- Agents may run `./bin/agent-maintain harness-maintain` (alias `harness`) any
-  time before max-score claims.
+Maintenance mechanics live in [`harness_auto_maintenance.md`](harness_auto_maintenance.md).
+This scorecard stays limited to scoring, owners, and proof gates.
 
 ## Owner Map
 

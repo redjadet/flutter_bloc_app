@@ -15,9 +15,10 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Missing capability beats retry. | Repeated failure => add doc/tool/test/fixture/script. |
 | Enforce invariants, not taste. | Automate boundaries; keep local implementation freedom. |
 | Tools beat prompts. | Prefer repo/MCP/browser/connector evidence over longer instructions. |
+| Harness beats model choice. | Optimize prompts, evaluators, tests, runtime checks, and feedback loops before blaming the model. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
-| Harness beats model choice. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
+| Session harness beats willpower. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
 
 ## AI Productivity Traps
 
@@ -69,11 +70,11 @@ Owner: [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) · hos
 
 ## Prompt Hygiene
 
-Short, stable, outcome-first: `Goal / Context / Boundaries / Verification`; doctrine before task context; evidence/stop contract over long scripts; step order only for safety/validation/migrations/codegen/destructive/repo-required flows; delete prose once script/test/doc owns invariant.
+Short, stable, outcome-first: `Goal / Context / Boundaries / Verification`; prompts name the target, while evaluators/tests/runtime checks decide trust. Doctrine before task context; evidence/stop contract over long scripts; step order only for safety/validation/migrations/codegen/destructive/repo-required flows; delete prose once script/test/doc owns invariant.
 
 ## Long Session Health
 
-Harness = context tiers + compact tool output + recovery. Keep in-context facts, file-backed evidence, and instruction rules separate. Log pointers, not dumps. Circuit-breakers: contradictions, stale paths, lost goal, invented tool output, repair loops. After two failed repairs or drift: reread sources, restate Goal / Context / Boundaries / Verification, continue from verified state; missing guidance → smallest durable doc/script/test/fixture.
+Harness = context tiers + evaluators + tests + runtime checks + compact tool output + recovery. Keep in-context facts, file-backed evidence, and instruction rules separate. Log pointers, not dumps. Circuit-breakers: contradictions, stale paths, lost goal, invented tool output, repair loops. After two failed repairs or drift: reread sources, restate Goal / Context / Boundaries / Verification, continue from verified state; missing guidance → smallest durable doc/script/test/fixture.
 
 ## Agent Legibility
 
@@ -81,7 +82,7 @@ Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish
 
 ## Missing Capability Loop
 
-Repeated failure → durable repo capability, not bigger prompt: identify gap (context, tool, fixture, test, script, boundary, acceptance) → add smallest fix → validate → sync host templates only for cold-start discovery → delete stale prose when a guard owns it.
+Repeated failure → durable repo capability, not bigger prompt: identify gap (prompt, evaluator, runtime check, context, tool, fixture, test, script, boundary, acceptance) → add smallest fix → validate → sync host templates only for cold-start discovery → delete stale prose when a guard owns it.
 
 ## Finish Gate
 
