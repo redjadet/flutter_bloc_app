@@ -3,6 +3,8 @@
 Agents keep the Cursor/Codex harness at max score by running scoped gates and
 fixing owner wiring in the same turn. Canon: [`harness_scorecard.md`](harness_scorecard.md),
 [`ai_failure_risks.md`](ai_failure_risks.md) (`RISK-HARNESS-SCORE-DROP`).
+Better model choice helps, but repo value comes from harness structure:
+prompts, evaluators, tests, runtime checks, and feedback loops.
 
 ## Agent loop
 
@@ -49,6 +51,7 @@ Git paths (staged, unstaged, untracked, deleted) matching:
 | New architecture/BLoC policy | Update contract + [`reference_features.md`](../architecture/reference_features.md) + scorecard gate needles |
 | Scorecard area or README badge below 10 | Add missing owner doc, script, synced skill, or README badge update; extend `check_harness_scorecard_gate.sh` |
 | Repeated agent mistake | Follow [Update Rule](ai_failure_risks.md#update-rule): script, fixture, doc, or skill |
+| Repeated prompt tweak | Add evaluator, test, runtime check, fixture, or feedback loop before adding more prose |
 
 ## Commands
 

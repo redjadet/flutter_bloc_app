@@ -468,6 +468,7 @@ validate_tooling_only_dependencies() {
   local failed=0
   local file
   local -a dart_analyze_files=()
+  local -a python_test_files=()
 
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
@@ -489,11 +490,25 @@ validate_tooling_only_dependencies() {
         fi
         dart_analyze_files+=("$PROJECT_ROOT/$file")
         ;;
+      tool/*_test.py)
+        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+          echo "❌ Missing tooling test file: $file"
+          failed=1
+          continue
+        fi
+        python_test_files+=("$file")
+        ;;
     esac
   done
 
   if [ "${#dart_analyze_files[@]}" -gt 0 ]; then
     if ! validate_standalone_dart_syntax "${dart_analyze_files[@]}"; then
+      failed=1
+    fi
+  fi
+
+  if [ "${#python_test_files[@]}" -gt 0 ]; then
+    if ! python3 -m unittest "${python_test_files[@]}"; then
       failed=1
     fi
   fi
@@ -710,6 +725,7 @@ is_tooling_only_change_set() {
     case "$file" in
       tool/*.sh|\
       tool/*.dart|\
+      tool/*_test.py|\
       tool/direnv/bin/*|\
       bin/*|\
       tool/agent_host_templates/*|\
@@ -757,6 +773,7 @@ is_checklist_fast_compatible_path() {
   case "$file" in
     tool/*.sh|\
     tool/*.dart|\
+    tool/*_test.py|\
     tool/direnv/bin/*|\
     bin/*|\
     tool/agent_host_templates/*|\
