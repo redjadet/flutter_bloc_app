@@ -4,6 +4,7 @@
 # Usage:
 #   tool/run_integration_tests.sh
 #   CHECKLIST_INTEGRATION_DEVICE=<deviceId> tool/run_integration_tests.sh
+#   INTEGRATION_TEST_DEVICE=<deviceId> — alias for CHECKLIST_INTEGRATION_DEVICE
 #   INTEGRATION_TESTS_RUN_COVERAGE=0 tool/run_integration_tests.sh
 #   INTEGRATION_TESTS_RUN_COVERAGE=true tool/run_integration_tests.sh
 #   INTEGRATION_TESTS_RUN_COVERAGE=false tool/run_integration_tests.sh
@@ -31,6 +32,8 @@
 # Behavior:
 #   - No arguments: aggregated suite (integration_test/all_flows_test.dart),
 #     optional coverage merge, and coverage/coverage_summary.md refresh.
+#   - When CHECKLIST_INTEGRATION_DEVICE / INTEGRATION_TEST_DEVICE is set, device
+#     discovery uses simctl/adb fast-path when possible and skips `flutter devices`.
 #   - With arguments: runs flutter test for those targets (e.g. smoke or extended suite).
 #   - If coverage/lcov.base.info exists from tool/test_coverage.sh, the full-suite
 #     run can merge integration coverage into that baseline before the summary refresh.
@@ -371,17 +374,25 @@ PY
   return "$failed"
 }
 
+requested_integration_device_id() {
+  if [ -n "${CHECKLIST_INTEGRATION_DEVICE:-}" ]; then
+    printf '%s\n' "$CHECKLIST_INTEGRATION_DEVICE"
+  else
+    printf '%s\n' "${INTEGRATION_TEST_DEVICE:-}"
+  fi
+}
+
 # When running in GitHub Actions, integration tests need a booted iOS simulator.
 # - push/pull_request/schedule: skip (main CI macOS job covers integration when enabled).
-# - workflow_dispatch on Linux without CHECKLIST_INTEGRATION_DEVICE: skip (e.g. drift weekly lane on ubuntu-latest).
+# - workflow_dispatch on Linux without pinned device: skip (e.g. drift weekly lane on ubuntu-latest).
 if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   if [ "${GITHUB_EVENT_NAME:-}" != "workflow_dispatch" ]; then
     log "Skipping integration tests: requires workflow_dispatch (got GITHUB_EVENT_NAME='${GITHUB_EVENT_NAME:-unset}')."
     INTEGRATION_SCORECARD_SKIPPED=1
     exit 0
   fi
-  if [ "$(uname -s)" = "Linux" ] && [ -z "${CHECKLIST_INTEGRATION_DEVICE:-}" ]; then
-    log "Skipping integration tests: Linux GitHub Actions runner has no iOS simulator (set CHECKLIST_INTEGRATION_DEVICE to override)."
+  if [ "$(uname -s)" = "Linux" ] && [ -z "$(requested_integration_device_id)" ]; then
+    log "Skipping integration tests: Linux GitHub Actions runner has no iOS simulator (set CHECKLIST_INTEGRATION_DEVICE or INTEGRATION_TEST_DEVICE to override)."
     INTEGRATION_SCORECARD_SKIPPED=1
     exit 0
   fi
@@ -449,6 +460,76 @@ raise SystemExit(1)
 ' "$device_id"
 }
 
+is_booted_ios_simulator_device() {
+  local device_id="$1"
+
+  [ "$(uname -s)" = "Darwin" ] || return 1
+  command -v xcrun >/dev/null 2>&1 || return 1
+
+  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 -c '
+import json
+import sys
+
+device_id = sys.argv[1]
+data = json.load(sys.stdin)
+
+for runtime_name, devices in data.get("devices", {}).items():
+    if "iOS" not in runtime_name:
+        continue
+    for device in devices:
+        if device.get("udid") == device_id and device.get("state") == "Booted":
+            raise SystemExit(0)
+
+raise SystemExit(1)
+' "$device_id"
+}
+
+is_adb_visible_device() {
+  local device_id="$1"
+
+  command -v adb >/dev/null 2>&1 || return 1
+  adb devices 2>/dev/null | awk -v id="$device_id" '
+    NR > 1 && $1 == id && $2 == "device" { found = 1 }
+    END { exit(found ? 0 : 1) }
+  '
+}
+
+# When CHECKLIST_INTEGRATION_DEVICE is pinned, avoid slow `flutter devices` when
+# simctl/adb already prove the target is usable.
+try_fast_path_requested_device() {
+  local requested_device="$1"
+  local boot_timeout_seconds="${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"
+
+  [ -n "$requested_device" ] || return 1
+
+  if [ "$(uname -s)" = "Darwin" ] && is_booted_ios_simulator_device "$requested_device"; then
+    log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (booted iOS simulator; skipped flutter devices discovery)."
+    printf '%s\n' "$requested_device"
+    return 0
+  fi
+
+  if [ "$(uname -s)" = "Darwin" ] && is_ios_simulator_device "$requested_device"; then
+    log "Booting requested iOS simulator '$requested_device' (skipped flutter devices discovery)."
+    if ! xcrun simctl boot "$requested_device" 2>/dev/null; then
+      log "Simulator $requested_device was already booted or boot request returned non-zero; continuing with boot wait."
+    fi
+    if wait_for_simulator_boot "$requested_device" "$boot_timeout_seconds"; then
+      printf '%s\n' "$requested_device"
+      return 0
+    fi
+    log "Requested simulator '$requested_device' failed to boot; falling back to flutter devices discovery."
+    return 1
+  fi
+
+  if is_adb_visible_device "$requested_device"; then
+    log "Using CHECKLIST_INTEGRATION_DEVICE='$requested_device' (adb-visible; skipped flutter devices discovery)."
+    printf '%s\n' "$requested_device"
+    return 0
+  fi
+
+  return 1
+}
+
 wait_for_simulator_boot() {
   local device_id="$1"
   local timeout_seconds="$2"
@@ -503,7 +584,7 @@ boot_preferred_ios_simulator() {
     log "Simulator $simulator_udid was already booted or boot request returned non-zero; continuing with boot wait."
   fi
 
-  if ! wait_for_simulator_boot "$simulator_udid" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+  if ! wait_for_simulator_boot "$simulator_udid" "${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"; then
     log "Timed out waiting for simulator $simulator_udid to boot."
     return 1
   fi
@@ -612,7 +693,7 @@ recover_ios_simulator_after_build_failure() {
   if ! xcrun simctl boot "$device_id" 2>/dev/null; then
     log "Simulator $device_id was already booted or boot request returned non-zero; continuing with boot wait."
   fi
-  if ! wait_for_simulator_boot "$device_id" "$IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS"; then
+  if ! wait_for_simulator_boot "$device_id" "${IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS:-180}"; then
     log "Timed out waiting for simulator $device_id to boot after recovery."
     return 1
   fi
@@ -852,11 +933,11 @@ list_supported_devices() {
     IFS='•' read -r _ id _ <<< "$line"
     id="$(trim "$id")"
     [ -n "$id" ] && printf '%s\t%s\n' "$id" "$line"
-  done < <(run_flutter_devices "$DEVICE_DISCOVERY_TIMEOUT_SECONDS")
+  done < <(run_flutter_devices "${DEVICE_DISCOVERY_TIMEOUT_SECONDS:-60}")
 }
 
 select_device_id() {
-  local requested_device="${CHECKLIST_INTEGRATION_DEVICE:-${INTEGRATION_TEST_DEVICE:-}}"
+  local requested_device
   local preferred_device
   local device_id
   local device_line
@@ -865,8 +946,19 @@ select_device_id() {
   local attempt=1
   local max_attempts=6
   local retry_delay_seconds=5
+  local fast_path_device=""
   local -a supported_device_ids=()
   local -a supported_device_lines=()
+
+  requested_device="$(requested_integration_device_id)"
+
+  if [ -n "$requested_device" ]; then
+    fast_path_device="$(try_fast_path_requested_device "$requested_device" || true)"
+    if [ -n "$fast_path_device" ]; then
+      echo "$fast_path_device"
+      return
+    fi
+  fi
 
   while true; do
     supported_device_ids=()
@@ -969,7 +1061,7 @@ select_device_id() {
   done
 
   preferred_device="$(host_desktop_device_id)"
-  if [ "$ALLOW_DESKTOP_INTEGRATION_DEVICE" -eq 1 ] && [ -n "$preferred_device" ]; then
+  if [ "${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}" -eq 1 ] && [ -n "$preferred_device" ]; then
     for device_id in "${supported_device_ids[@]}"; do
       if [ "$device_id" = "$preferred_device" ]; then
         echo "$device_id"
@@ -978,7 +1070,7 @@ select_device_id() {
     done
   fi
 
-  if [ "${#supported_device_ids[@]}" -eq 1 ] && [ "$ALLOW_DESKTOP_INTEGRATION_DEVICE" -eq 1 ]; then
+  if [ "${#supported_device_ids[@]}" -eq 1 ] && [ "${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}" -eq 1 ]; then
     echo "${supported_device_ids[0]}"
     return
   fi
