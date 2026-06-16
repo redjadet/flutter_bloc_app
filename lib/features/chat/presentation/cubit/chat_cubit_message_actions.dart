@@ -71,7 +71,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       ),
       isAlive: () => !isClosed,
       onSuccess: (final result) {
-        if (isClosed || !isRequestCurrent(requestId)) {
+        if (isClosed) {
           return;
         }
         if (kDebugMode) {
@@ -103,6 +103,24 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           withAssistant,
         );
 
+        if (!isRequestCurrent(requestId)) {
+          // Reply was generated even if a newer request superseded this one.
+          if (_state.history.any((final c) => c.id == withUser.id)) {
+            unawaited(_persistHistory(finalHistory));
+            if (_state.activeConversationId == withUser.id) {
+              _emitConversationSnapshot(
+                active: withAssistant,
+                history: finalHistory,
+                isLoading: false,
+                lastCompletionTransport: result.transportUsed,
+              );
+              return;
+            }
+          }
+          _clearStuckLoading();
+          return;
+        }
+
         _emitConversationSnapshot(
           active: withAssistant,
           history: finalHistory,
@@ -113,7 +131,11 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         unawaited(_persistHistory(finalHistory));
       },
       onError: (final errorMessage) {
-        if (isClosed || !isRequestCurrent(requestId)) {
+        if (isClosed) {
+          return;
+        }
+        if (!isRequestCurrent(requestId)) {
+          _clearStuckLoading();
           return;
         }
         _emitConversationSnapshot(
@@ -129,7 +151,11 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         ChatRemoteFailureException: (final error, final stackTrace) {
           final ChatRemoteFailureException exception =
               error as ChatRemoteFailureException;
-          if (isClosed || !isRequestCurrent(requestId)) {
+          if (isClosed) {
+            return;
+          }
+          if (!isRequestCurrent(requestId)) {
+            _clearStuckLoading();
             return;
           }
           _emitConversationSnapshot(
@@ -143,7 +169,11 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         },
         ChatException: (final error, final stackTrace) {
           final ChatException exception = error as ChatException;
-          if (isClosed || !isRequestCurrent(requestId)) {
+          if (isClosed) {
+            return;
+          }
+          if (!isRequestCurrent(requestId)) {
+            _clearStuckLoading();
             return;
           }
           _emitConversationSnapshot(
@@ -156,7 +186,11 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         },
         ChatOfflineEnqueuedException: (final error, final stackTrace) {
           AppLogger.info('Chat message queued for offline sync');
-          if (isClosed || !isRequestCurrent(requestId)) {
+          if (isClosed) {
+            return;
+          }
+          if (!isRequestCurrent(requestId)) {
+            _clearStuckLoading();
             return;
           }
           _emitConversationSnapshot(

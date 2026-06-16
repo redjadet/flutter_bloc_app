@@ -43,6 +43,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       active: active,
       history: history,
       currentModel: resolvedModel,
+      isLoading: false,
       clearLastCompletionTransport: true,
     );
   }
@@ -103,6 +104,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
         active: fresh,
         history: const <ChatConversation>[],
         currentModel: _currentModel,
+        isLoading: false,
         clearLastCompletionTransport: true,
       );
       return;
@@ -120,6 +122,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       active: desiredActive,
       history: history,
       currentModel: resolvedModel,
+      isLoading: false,
       clearLastCompletionTransport: true,
     );
   }
