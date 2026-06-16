@@ -1726,6 +1726,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cameraGalleryGenericError => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
 
   @override
+  String get cameraGalleryFileTooLarge =>
+      'هذا الملف كبير جداً. اختر صورة أصغر.';
+
+  @override
   String get cameraGalleryCameraUnavailable =>
       'الكاميرا غير متوفرة. استخدم جهازًا حقيقيًا أو اختر من المعرض.';
 

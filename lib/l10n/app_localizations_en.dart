@@ -1708,6 +1708,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again.';
 
   @override
+  String get cameraGalleryFileTooLarge =>
+      'This file is too large. Choose a smaller image.';
+
+  @override
   String get cameraGalleryCameraUnavailable =>
       'Camera is not available. Use a real device or pick from gallery.';
 

@@ -1410,6 +1410,7 @@
   "cameraGalleryPermissionDenied": "Se denegó el acceso a la cámara o la galería.",
   "cameraGalleryCancelled": "Se canceló la selección.",
   "cameraGalleryGenericError": "Algo salió mal. Por favor, inténtelo de nuevo.",
+  "cameraGalleryFileTooLarge": "Este archivo es demasiado grande. Elija una imagen más pequeña.",
   "cameraGalleryCameraUnavailable": "La cámara no está disponible. Use un dispositivo real o elija de la galería.",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {

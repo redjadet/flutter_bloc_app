@@ -1,6 +1,9 @@
+import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -298,5 +301,97 @@ void main() {
       await hiveService.deleteBox('test_box_1');
       await hiveService.deleteBox('test_box_2');
     });
+
+    test(
+      'getEncryptionCipher propagates HiveKeyReadException on read failure',
+      () async {
+        final failingStorage = _FailingSecretStorage();
+        final failingKeyManager = HiveKeyManager(storage: failingStorage);
+        final failingHiveService = HiveService(
+          keyManager: failingKeyManager,
+          initializeHiveStorage: () async => true,
+        );
+
+        await failingHiveService.initialize();
+
+        await expectLater(
+          failingHiveService.getEncryptionCipher(),
+          throwsA(isA<HiveKeyReadException>()),
+        );
+      },
+    );
+
+    test(
+      'openBox propagates HiveKeyReadException when encryption key read fails',
+      () async {
+        final failingStorage = _FailingSecretStorage();
+        final failingKeyManager = HiveKeyManager(storage: failingStorage);
+        final failingHiveService = HiveService(
+          keyManager: failingKeyManager,
+          initializeHiveStorage: () async => true,
+        );
+
+        await failingHiveService.initialize();
+
+        await expectLater(
+          failingHiveService.openBox('encrypted_fail_box'),
+          throwsA(isA<HiveKeyReadException>()),
+        );
+      },
+    );
+
+    test(
+      'openBox propagates HiveKeyPersistenceException when key persist fails',
+      () async {
+        final noPersistStorage = _NoPersistWriteSecretStorage();
+        final persistFailKeyManager = HiveKeyManager(storage: noPersistStorage);
+        final persistFailHiveService = HiveService(
+          keyManager: persistFailKeyManager,
+          initializeHiveStorage: () async => true,
+        );
+
+        await persistFailHiveService.initialize();
+
+        await expectLater(
+          persistFailHiveService.openBox('encrypted_persist_fail_box'),
+          throwsA(isA<HiveKeyPersistenceException>()),
+        );
+      },
+    );
   });
+}
+
+class _NoPersistWriteSecretStorage extends InMemorySecretStorage {
+  @override
+  Future<void> write(final String key, final String value) async {}
+}
+
+class _FailingSecretStorage implements SecretStorage {
+  @override
+  Future<String?> read(final String key) async {
+    throw Exception('Storage read failed');
+  }
+
+  @override
+  Future<Result<String?>> readResult(final String key) async =>
+      const FailureResult<String?>(
+        UnknownFailure(message: 'Storage read failed'),
+      );
+
+  @override
+  Future<void> write(final String key, final String value) async {
+    throw Exception('Storage write failed');
+  }
+
+  @override
+  Future<void> delete(final String key) async {
+    throw Exception('Storage delete failed');
+  }
+
+  @override
+  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+
+  @override
+  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+      AppLogger.silenceAsync(action);
 }

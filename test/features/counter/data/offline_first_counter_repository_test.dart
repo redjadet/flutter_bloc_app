@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -90,7 +91,9 @@ void main() {
     setUp(() async {
       tempDir = Directory.systemTemp.createTempSync('offline_counter_repo_');
       Hive.init(tempDir.path);
-      hiveService = HiveService(keyManager: HiveKeyManager());
+      hiveService = HiveService(
+        keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
+      );
       await hiveService.initialize();
       localRepository = HiveCounterRepository(hiveService: hiveService);
       pendingRepository = PendingSyncRepository(hiveService: hiveService);
@@ -314,8 +317,9 @@ void main() {
         final _StreamRemoteRepository remote = _StreamRemoteRepository();
         addTearDown(remote.controller.close);
 
-        final _ReReadAwareLocalRepository local =
-            _ReReadAwareLocalRepository(localRepository);
+        final _ReReadAwareLocalRepository local = _ReReadAwareLocalRepository(
+          localRepository,
+        );
         final OfflineFirstCounterRepository repository =
             OfflineFirstCounterRepository(
               localRepository: local,

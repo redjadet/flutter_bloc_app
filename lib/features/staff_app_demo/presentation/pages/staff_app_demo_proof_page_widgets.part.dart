@@ -86,30 +86,38 @@ class _PhotoSection extends StatelessWidget {
               children: <Widget>[
                 FilledButton.icon(
                   onPressed: () async {
-                    final picker = ImagePicker();
-                    final XFile? file = await picker.pickImage(
-                      source: ImageSource.camera,
-                    );
+                    final String? errorKey = await context
+                        .cubit<StaffDemoProofCubit>()
+                        .pickPhotoFromCamera();
                     if (!context.mounted) return;
-                    if (file == null) return;
-                    await context.cubit<StaffDemoProofCubit>().addPhotoFromPath(
-                      file.path,
-                    );
+                    if (errorKey != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            cameraGalleryErrorMessage(l10n, errorKey),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   icon: const Icon(Icons.camera_alt),
                   label: Text(l10n.staffDemoProofTakePhoto),
                 ),
                 OutlinedButton.icon(
                   onPressed: () async {
-                    final picker = ImagePicker();
-                    final XFile? file = await picker.pickImage(
-                      source: ImageSource.gallery,
-                    );
+                    final String? errorKey = await context
+                        .cubit<StaffDemoProofCubit>()
+                        .pickPhotoFromGallery();
                     if (!context.mounted) return;
-                    if (file == null) return;
-                    await context.cubit<StaffDemoProofCubit>().addPhotoFromPath(
-                      file.path,
-                    );
+                    if (errorKey != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            cameraGalleryErrorMessage(l10n, errorKey),
+                          ),
+                        ),
+                      );
+                    }
                   },
                   icon: const Icon(Icons.photo_library),
                   label: Text(l10n.staffDemoProofPickPhoto),

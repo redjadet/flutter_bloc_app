@@ -1,11 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SecureChatHistoryRepository.load', () {
@@ -129,6 +130,10 @@ class _RecordingSecretStorage implements SecretStorage {
 
   @override
   Future<String?> read(String key) async => _readValues[key];
+
+  @override
+  Future<Result<String?>> readResult(String key) async =>
+      Success<String?>(_readValues[key]);
 
   @override
   Future<void> write(String key, String value) async {

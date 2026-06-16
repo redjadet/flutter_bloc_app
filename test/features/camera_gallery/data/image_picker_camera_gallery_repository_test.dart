@@ -96,6 +96,82 @@ void main() {
       },
     );
 
+    test('returns cancelled when camera pick returns null', () async {
+      when(
+        () => picker.pickImage(source: ImageSource.camera),
+      ).thenAnswer((_) async => null);
+
+      final CameraGalleryResult result = await repository.pickFromCamera();
+
+      expect(result, const CameraGalleryResult.cancelled());
+    });
+
+    test('returns success path when camera pick succeeds', () async {
+      when(
+        () => picker.pickImage(source: ImageSource.camera),
+      ).thenAnswer((_) async => XFile('/tmp/camera.jpg'));
+
+      final CameraGalleryResult result = await repository.pickFromCamera();
+
+      expect(result, const CameraGalleryResult.success('/tmp/camera.jpg'));
+    });
+
+    test('maps gallery permission denial to permissionDenied key', () async {
+      when(() => picker.pickImage(source: ImageSource.gallery)).thenThrow(
+        PlatformException(
+          code: 'photo_access_denied',
+          message: 'The user did not allow photo library access.',
+        ),
+      );
+
+      final CameraGalleryResult result = await repository.pickFromGallery();
+
+      expect(
+        result,
+        const CameraGalleryResult.failure(
+          errorKey: CameraGalleryErrorKeys.permissionDenied,
+        ),
+      );
+    });
+
+    test(
+      'maps gallery generic platform exception to generic failure',
+      () async {
+        when(() => picker.pickImage(source: ImageSource.gallery)).thenThrow(
+          PlatformException(
+            code: 'unknown_error',
+            message: 'Something went wrong',
+          ),
+        );
+
+        final CameraGalleryResult result = await repository.pickFromGallery();
+
+        expect(
+          result,
+          const CameraGalleryResult.failure(
+            errorKey: CameraGalleryErrorKeys.generic,
+            message: 'Something went wrong',
+          ),
+        );
+      },
+    );
+
+    test('maps gallery generic exception to generic failure', () async {
+      when(
+        () => picker.pickImage(source: ImageSource.gallery),
+      ).thenThrow(Exception('gallery unavailable'));
+
+      final CameraGalleryResult result = await repository.pickFromGallery();
+
+      expect(
+        result,
+        const CameraGalleryResult.failure(
+          errorKey: CameraGalleryErrorKeys.generic,
+          message: 'Exception: gallery unavailable',
+        ),
+      );
+    });
+
     test('returns cancelled when gallery pick returns null', () async {
       when(
         () => picker.pickImage(source: ImageSource.gallery),

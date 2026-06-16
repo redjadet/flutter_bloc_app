@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -109,6 +111,41 @@ void main() {
 
       final storage = FlutterSecureSecretStorage();
       expect(await storage.read('token'), isNull);
+    });
+
+    test('readResult maps PlatformException to StorageFailure', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            throw PlatformException(code: 'error');
+          });
+
+      final storage = FlutterSecureSecretStorage();
+      final result = await storage.readResult('token');
+
+      expect(result, isA<FailureResult<String?>>());
+      expect(result.failureOrNull, isA<StorageFailure>());
+    });
+
+    test('readResult maps MissingPluginException to PlatformFailure', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (MethodCall call) async {
+            throw MissingPluginException('unavailable');
+          });
+
+      final storage = FlutterSecureSecretStorage();
+      final result = await storage.readResult('token');
+
+      expect(result.failureOrNull, isA<PlatformFailure>());
+    });
+
+    test('readResult returns Success on happy path', () async {
+      final storage = FlutterSecureSecretStorage();
+      await storage.write('token', 'secure');
+
+      final result = await storage.readResult('token');
+
+      expect(result, isA<Success<String?>>());
+      expect(result.getOrNull(), 'secure');
     });
 
     test('write and delete swallow platform errors', () async {

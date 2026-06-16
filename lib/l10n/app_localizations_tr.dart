@@ -1716,6 +1716,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bir şeyler yanlış gitti. Lütfen tekrar deneyin.';
 
   @override
+  String get cameraGalleryFileTooLarge =>
+      'Bu dosya çok büyük. Daha küçük bir görsel seçin.';
+
+  @override
   String get cameraGalleryCameraUnavailable =>
       'Kamera kullanılamıyor. Gerçek cihaz kullanın veya galeriden seçin.';
 

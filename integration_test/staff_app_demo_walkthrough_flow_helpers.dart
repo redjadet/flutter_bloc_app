@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
@@ -23,12 +24,14 @@ class FakeStaffDemoLocationService extends StaffDemoLocationService {
   final double lng;
 
   @override
-  Future<StaffDemoCapturedLocation?> captureCurrentLocation() async {
-    return StaffDemoCapturedLocation(
-      lat: lat,
-      lng: lng,
-      accuracyMeters: 12,
-      capturedAtUtc: DateTime.now().toUtc(),
+  Future<Result<StaffDemoCapturedLocation>> captureCurrentLocation() async {
+    return Success(
+      StaffDemoCapturedLocation(
+        lat: lat,
+        lng: lng,
+        accuracyMeters: 12,
+        capturedAtUtc: DateTime.now().toUtc(),
+      ),
     );
   }
 }

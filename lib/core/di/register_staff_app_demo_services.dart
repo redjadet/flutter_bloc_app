@@ -19,6 +19,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staf
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
@@ -30,6 +31,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messa
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
@@ -49,6 +51,10 @@ part 'register_staff_app_demo_services.part.dart';
 void registerStaffAppDemoServices() {
   registerLazySingletonIfAbsent<StaffDemoLocationService>(
     StaffDemoLocationService.new,
+  );
+
+  registerLazySingletonIfAbsent<StaffDemoProofPhotoPicker>(
+    ImagePickerStaffDemoProofPhotoPicker.new,
   );
 
   registerLazySingletonIfAbsent<StaffDemoTimeclockLocalStore>(

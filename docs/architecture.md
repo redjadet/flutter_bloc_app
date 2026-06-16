@@ -14,6 +14,8 @@ Thin map for structure, layering, and modularity. For day-to-day implementation,
 - [modularity.md](modularity.md) — feature barrels, cross-feature import guards
 - [system_design_showcase.md](system_design_showcase.md) — interview/portfolio talk track (claims → proof)
 - [bloc_standards.md](bloc_standards.md) — Cubit/BLoC conventions
+- [plugin_failure_mode_strategy.md](plugin_failure_mode_strategy.md) — plugin wrappers, `Result`/`Failure`, presentation mapping
+- [storage_rules.md](storage_rules.md) — prefs vs secure storage vs Hive
 
 ## Verification
 
