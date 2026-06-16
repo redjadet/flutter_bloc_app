@@ -69,6 +69,7 @@ class CaseStudyReviewPage extends StatelessWidget {
               for (final CaseStudyQuestionId qid
                   in CaseStudyQuestions.orderedIds)
                 ExpansionTile(
+                  key: ValueKey<CaseStudyQuestionId>(qid),
                   title: Text(caseStudyQuestionPrompt(l10n, qid)),
                   children: [
                     Padding(
@@ -76,6 +77,9 @@ class CaseStudyReviewPage extends StatelessWidget {
                       child: switch (draft.answers[qid]) {
                         final String path when path.isNotEmpty =>
                           CaseStudyVideoTile(
+                            key: ValueKey<String>(
+                              'case-study-video-$qid-$path',
+                            ),
                             videoPath: path,
                             l10n: l10n,
                           ),

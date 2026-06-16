@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WebsocketMessage {
 
- WebsocketMessageDirection get direction; String get text;
+/// Stable identifier for widget keys and diffing.
+/// Assigned by the producer (cubit/repository) and expected to be unique
+/// within a session.
+ int get sequence; WebsocketMessageDirection get direction; String get text;
 /// Create a copy of WebsocketMessage
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +28,16 @@ $WebsocketMessageCopyWith<WebsocketMessage> get copyWith => _$WebsocketMessageCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WebsocketMessage&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WebsocketMessage&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.text, text) || other.text == text));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,direction,text);
+int get hashCode => Object.hash(runtimeType,sequence,direction,text);
 
 @override
 String toString() {
-  return 'WebsocketMessage(direction: $direction, text: $text)';
+  return 'WebsocketMessage(sequence: $sequence, direction: $direction, text: $text)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $WebsocketMessageCopyWith<$Res>  {
   factory $WebsocketMessageCopyWith(WebsocketMessage value, $Res Function(WebsocketMessage) _then) = _$WebsocketMessageCopyWithImpl;
 @useResult
 $Res call({
- WebsocketMessageDirection direction, String text
+ int sequence, WebsocketMessageDirection direction, String text
 });
 
 
@@ -62,9 +65,10 @@ class _$WebsocketMessageCopyWithImpl<$Res>
 
 /// Create a copy of WebsocketMessage
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? direction = null,Object? text = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sequence = null,Object? direction = null,Object? text = null,}) {
   return _then(_self.copyWith(
-direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
+sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
 as WebsocketMessageDirection,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -151,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WebsocketMessageDirection direction,  String text)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int sequence,  WebsocketMessageDirection direction,  String text)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WebsocketMessage() when $default != null:
-return $default(_that.direction,_that.text);case _:
+return $default(_that.sequence,_that.direction,_that.text);case _:
   return orElse();
 
 }
@@ -172,10 +176,10 @@ return $default(_that.direction,_that.text);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WebsocketMessageDirection direction,  String text)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int sequence,  WebsocketMessageDirection direction,  String text)  $default,) {final _that = this;
 switch (_that) {
 case _WebsocketMessage():
-return $default(_that.direction,_that.text);case _:
+return $default(_that.sequence,_that.direction,_that.text);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +196,10 @@ return $default(_that.direction,_that.text);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WebsocketMessageDirection direction,  String text)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int sequence,  WebsocketMessageDirection direction,  String text)?  $default,) {final _that = this;
 switch (_that) {
 case _WebsocketMessage() when $default != null:
-return $default(_that.direction,_that.text);case _:
+return $default(_that.sequence,_that.direction,_that.text);case _:
   return null;
 
 }
@@ -207,9 +211,13 @@ return $default(_that.direction,_that.text);case _:
 
 
 class _WebsocketMessage implements WebsocketMessage {
-  const _WebsocketMessage({required this.direction, required this.text});
+  const _WebsocketMessage({required this.sequence, required this.direction, required this.text});
   
 
+/// Stable identifier for widget keys and diffing.
+/// Assigned by the producer (cubit/repository) and expected to be unique
+/// within a session.
+@override final  int sequence;
 @override final  WebsocketMessageDirection direction;
 @override final  String text;
 
@@ -223,16 +231,16 @@ _$WebsocketMessageCopyWith<_WebsocketMessage> get copyWith => __$WebsocketMessag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WebsocketMessage&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.text, text) || other.text == text));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WebsocketMessage&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.text, text) || other.text == text));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,direction,text);
+int get hashCode => Object.hash(runtimeType,sequence,direction,text);
 
 @override
 String toString() {
-  return 'WebsocketMessage(direction: $direction, text: $text)';
+  return 'WebsocketMessage(sequence: $sequence, direction: $direction, text: $text)';
 }
 
 
@@ -243,7 +251,7 @@ abstract mixin class _$WebsocketMessageCopyWith<$Res> implements $WebsocketMessa
   factory _$WebsocketMessageCopyWith(_WebsocketMessage value, $Res Function(_WebsocketMessage) _then) = __$WebsocketMessageCopyWithImpl;
 @override @useResult
 $Res call({
- WebsocketMessageDirection direction, String text
+ int sequence, WebsocketMessageDirection direction, String text
 });
 
 
@@ -260,9 +268,10 @@ class __$WebsocketMessageCopyWithImpl<$Res>
 
 /// Create a copy of WebsocketMessage
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? direction = null,Object? text = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sequence = null,Object? direction = null,Object? text = null,}) {
   return _then(_WebsocketMessage(
-direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
+sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
 as WebsocketMessageDirection,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
 as String,
   ));

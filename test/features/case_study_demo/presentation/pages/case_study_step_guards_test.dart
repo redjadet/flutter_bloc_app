@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -24,6 +23,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -278,5 +278,70 @@ void main() {
 
       expect(find.text('Record responses'), findsOneWidget);
     });
+
+    testWidgets(
+      'review page keeps expansion and video tile keys after rebuild',
+      (final tester) async {
+        final Map<String, String> completeAnswers = <String, String>{
+          for (final CaseStudyQuestionId id in CaseStudyQuestions.orderedIds)
+            id: '/tmp/case-study-$id.mp4',
+        };
+        cubit.emitState(
+          CaseStudySessionState(
+            hydration: CaseStudyHydrationStatus.ready,
+            draft: CaseStudyDraft(
+              caseId: 'case-1',
+              doctorName: 'Dr. Ada',
+              caseType: CaseStudyCaseType.implant,
+              notes: 'notes',
+              answers: completeAnswers,
+              currentQuestionIndex: 9,
+              phase: CaseStudyDraftPhase.reviewing,
+              remoteObjectKeysByQuestion: const <String, String>{},
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(
+          _buildApp(
+            cubit: cubit,
+            initialLocation: AppRoutes.caseStudyDemoReviewPath,
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+
+        const CaseStudyQuestionId q1 = 'q1';
+        const String q1VideoPath = '/tmp/case-study-q1.mp4';
+        final ValueKey<CaseStudyQuestionId> expansionKey =
+            ValueKey<CaseStudyQuestionId>(q1);
+        final ValueKey<String> videoKey = ValueKey<String>(
+          'case-study-video-$q1-$q1VideoPath',
+        );
+
+        expect(find.byKey(expansionKey), findsOneWidget);
+
+        await tester.tap(find.byKey(expansionKey));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.byKey(videoKey), findsOneWidget);
+
+        cubit.emitState(
+          cubit.state.copyWith(
+            draft: cubit.state.draft.copyWith(notes: 'notes-updated'),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.byKey(expansionKey), findsOneWidget);
+
+        await tester.tap(find.byKey(expansionKey));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.byKey(videoKey), findsOneWidget);
+      },
+    );
   });
 }

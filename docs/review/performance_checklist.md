@@ -19,6 +19,9 @@ Primary references:
 - Long lists use builder constructors — not eager `children:` lists.
 - `shrinkWrap: true` is justified and bounded; prefer slivers when nested.
 - Repaint boundaries added for expensive list cells or animations when needed.
+- Builder rows use `ValueKey` with durable domain ids (not index-only or
+  `ObjectKey` on per-tick model instances). Run `bash tool/check_widget_identity.sh`
+  on list-heavy presentation diffs.
 - Run `bash tool/check_perf_nonbuilder_lists.sh` and
   `bash tool/check_perf_shrinkwrap_lists.sh` on layout-sensitive diffs.
 - Run `bash tool/check_perf_missing_repaint_boundary.sh` when scroll jank is

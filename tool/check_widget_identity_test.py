@@ -36,6 +36,13 @@ class CheckWidgetIdentityTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("no issues found", result.stdout)
 
+    def test_flags_object_key_in_builder_row(self):
+        result = self.run_guard("bad_builder_object_key.dart")
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("ObjectKey", result.stderr)
+        self.assertIn("stable domain id", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

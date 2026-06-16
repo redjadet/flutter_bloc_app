@@ -155,6 +155,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
         ChatMessage(
           author: ChatAuthor.user,
           text: userText,
+          clientMessageId: '${conversation.id}-user-$i',
           createdAt: conversation.createdAt.add(Duration(seconds: i * 2)),
         ),
       );
@@ -164,6 +165,7 @@ mixin _ChatCubitSelectionActions on _ChatCubitCore, _ChatCubitHelpers {
           ChatMessage(
             author: ChatAuthor.assistant,
             text: reply,
+            clientMessageId: '${conversation.id}-assistant-$i',
             createdAt: conversation.createdAt.add(Duration(seconds: i * 2 + 1)),
           ),
         );

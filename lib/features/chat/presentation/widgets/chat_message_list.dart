@@ -100,7 +100,7 @@ class ChatMessageList extends StatelessWidget {
                         ?.trim();
 
                     return RepaintBoundary(
-                      key: _chatMessageKey(message),
+                      key: _chatMessageKey(message, index),
                       child: Column(
                         crossAxisAlignment: isUser
                             ? CrossAxisAlignment.end
@@ -149,7 +149,7 @@ class ChatMessageList extends StatelessWidget {
   }
 }
 
-Key _chatMessageKey(final ChatMessage message) {
+Key _chatMessageKey(final ChatMessage message, final int index) {
   if (message.clientMessageId case final messageId?) {
     return ValueKey<String>('chat-message-$messageId');
   }
@@ -158,7 +158,9 @@ Key _chatMessageKey(final ChatMessage message) {
       'chat-message-${message.author.name}-${createdAt.microsecondsSinceEpoch}',
     );
   }
-  return ObjectKey(message);
+  return ValueKey<String>(
+    'chat-message-fallback-$index-${message.author.name}',
+  );
 }
 
 @freezed

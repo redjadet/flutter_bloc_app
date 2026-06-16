@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_message_list.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
@@ -222,7 +222,7 @@ void main() {
     },
   );
 
-  testWidgets('ChatMessageList uses identity-based repaint keys', (
+  testWidgets('ChatMessageList uses stable repaint keys', (
     WidgetTester tester,
   ) async {
     final DateTime replyTimestamp = DateTime.utc(2024, 1, 1, 12);
@@ -242,6 +242,7 @@ void main() {
           ChatMessage(
             author: ChatAuthor.assistant,
             text: 'hello',
+            clientMessageId: 'user-1-reply',
             createdAt: replyTimestamp,
           ),
           fallbackMessage,
@@ -265,15 +266,13 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.byKey(
-        ValueKey<String>(
-          'chat-message-assistant-'
-          '${replyTimestamp.microsecondsSinceEpoch}',
-        ),
-      ),
+      find.byKey(const ValueKey<String>('chat-message-user-1-reply')),
       findsOneWidget,
     );
-    expect(find.byKey(ObjectKey(fallbackMessage)), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('chat-message-fallback-2-system')),
+      findsOneWidget,
+    );
   });
 }
 

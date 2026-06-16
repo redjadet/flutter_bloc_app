@@ -32,6 +32,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   StreamSubscription<dynamic>? _channelSubscription;
   final CompleterHelper<void> _connectionCompleter = CompleterHelper<void>();
   int _connectionFollowerCount = 0;
+  int _messageSequence = 0;
 
   final StreamController<WebsocketMessage> _messagesController =
       StreamController<WebsocketMessage>.broadcast();
@@ -128,6 +129,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     }
     _messagesController.add(
       WebsocketMessage(
+        sequence: _messageSequence++,
         direction: WebsocketMessageDirection.incoming,
         text: message,
       ),
