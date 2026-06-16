@@ -115,7 +115,7 @@ void main() {
     expect(find.byType(AppMessage), findsOneWidget);
     expect(syncCubit.state.networkStatus, NetworkStatus.offline);
     final AppLocalizations l10n =
-        AppLocalizations.of(tester.element(find.byType(ChatSyncBanner)))!;
+        AppLocalizations.of(tester.element(find.byType(ChatSyncBanner)));
     final Finder buttonFinder = find.text(l10n.syncStatusSyncNowButton);
     expect(buttonFinder, findsOneWidget);
     final _ButtonVariant button = _resolveButtonVariant(tester, buttonFinder);
