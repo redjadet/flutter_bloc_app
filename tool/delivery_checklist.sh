@@ -1008,6 +1008,29 @@ should_run_coverage_auto() {
   return 1
 }
 
+should_run_regression_guards_before_coverage() {
+  if [ "$HAS_GIT_REPO" -ne 1 ] || [ "${#changed_files[@]}" -eq 0 ]; then
+    return 1
+  fi
+
+  local file
+  for file in "${changed_files[@]+"${changed_files[@]}"}"; do
+    case "$file" in
+      lib/shared/utils/request_id_guard.dart|\
+      lib/features/chat/*|\
+      test/features/chat/*|\
+      lib/features/online_therapy_demo/*|\
+      test/features/online_therapy_demo/*|\
+      tool/check_mutation_success_after_guard.sh|\
+      tool/check_regression_guards.sh)
+        return 0
+        ;;
+    esac
+  done
+
+  return 1
+}
+
 CHECKLIST_MODE="${CHECKLIST_MODE:-full}"
 RUN_COVERAGE="${CHECKLIST_RUN_COVERAGE:-auto}"
 RUN_FOCUSED_TESTS="${CHECKLIST_RUN_FOCUSED_TESTS:-auto}"
@@ -1824,7 +1847,9 @@ should_run_focused_tests=1
 if [ "$RUN_FOCUSED_TESTS" = "0" ]; then
   should_run_focused_tests=0
 elif [ "$RUN_FOCUSED_TESTS" = "auto" ] && [ "$should_run_coverage" -eq 1 ]; then
-  should_run_focused_tests=0
+  if ! should_run_regression_guards_before_coverage; then
+    should_run_focused_tests=0
+  fi
 fi
 
 if [ "$should_run_focused_tests" -eq 1 ]; then

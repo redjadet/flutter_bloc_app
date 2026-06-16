@@ -66,6 +66,7 @@ ALL_TESTS=(
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
   "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
+  "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
 )
 
 collect_changed_files() {
@@ -143,6 +144,11 @@ select_regression_guard_tests() {
       lib/shared/utils/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh)
         add_test_once out_ref "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
+        add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
+        ;;
+      lib/features/chat/*|\
+      test/features/chat/*)
+        add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
         ;;
       lib/shared/*|\
       test/shared/*|\
