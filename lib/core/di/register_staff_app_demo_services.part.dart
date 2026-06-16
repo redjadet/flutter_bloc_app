@@ -5,10 +5,13 @@ T _withFirestoreOrFallback<T>(
   required final T Function() fallback,
 }) {
   try {
+    if (Firebase.apps.isEmpty) {
+      return fallback();
+    }
     final app = Firebase.app();
     final firestore = FirebaseFirestore.instanceFor(app: app);
     return builder(firestore);
-  } on Exception {
+  } on Object {
     return fallback();
   }
 }
@@ -19,11 +22,14 @@ T _withFirestoreAndStorageOrFallback<T>(
   required final T Function() fallback,
 }) {
   try {
+    if (Firebase.apps.isEmpty) {
+      return fallback();
+    }
     final app = Firebase.app();
     final firestore = FirebaseFirestore.instanceFor(app: app);
     final storage = FirebaseStorage.instanceFor(app: app);
     return builder(firestore, storage);
-  } on Exception {
+  } on Object {
     return fallback();
   }
 }
@@ -46,13 +52,137 @@ class _NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
 
 class _NoOpStaffDemoTimeclockRepository
     implements StaffDemoTimeclockRepository {
-  @override
-  Future<StaffDemoClockResult> clockIn() async =>
-      throw StateError('Firebase unavailable');
+  _NoOpStaffDemoTimeclockRepository({
+    required this._authRepository,
+    required this._localRepository,
+  });
+
+  final AuthRepository _authRepository;
+  final StaffDemoTimeclockLocalStore _localRepository;
+
+  String? _currentUserId() => _authRepository.currentUser?.id;
 
   @override
-  Future<StaffDemoClockResult> clockOut() async =>
-      throw StateError('Firebase unavailable');
+  Future<StaffDemoClockResult> clockIn() async {
+    final userId = _currentUserId();
+    if (userId == null || userId.isEmpty) {
+      throw StateError('Not signed in');
+    }
+
+    final existing = await _localRepository.loadOpenEntry(userId: userId);
+    if (existing != null) {
+      throw StateError('Already clocked in');
+    }
+
+    final nowUtc = DateTime.now().toUtc();
+    final entryId = 'te_offline_${userId}_${nowUtc.microsecondsSinceEpoch}';
+
+    await _localRepository.saveOpenEntry(
+      userId: userId,
+      snapshot: StaffDemoOpenEntrySnapshot(
+        entryId: entryId,
+        clockInAtUtc: nowUtc,
+        shiftId: null,
+        siteId: null,
+        payload: <String, dynamic>{
+          'action': 'clock_in',
+          'mode': 'offline_no_firebase',
+          'entryId': entryId,
+          'userId': userId,
+          'clockInAtClientMs': nowUtc.millisecondsSinceEpoch,
+          'flags': const StaffDemoTimeEntryFlags.none().toJson(),
+        },
+      ),
+    );
+
+    return StaffDemoClockResult(
+      entryId: entryId,
+      flags: const StaffDemoTimeEntryFlags.none(),
+      shiftId: null,
+      siteId: null,
+      distanceMeters: null,
+      radiusMeters: null,
+    );
+  }
+
+  @override
+  Future<StaffDemoClockResult> clockOut() async {
+    final userId = _currentUserId();
+    if (userId == null || userId.isEmpty) {
+      throw StateError('Not signed in');
+    }
+
+    final existing = await _localRepository.loadOpenEntry(userId: userId);
+    if (existing == null) {
+      throw StateError('Not clocked in');
+    }
+
+    await _localRepository.clearOpenEntry(userId: userId);
+
+    return StaffDemoClockResult(
+      entryId: existing.entryId,
+      flags: const StaffDemoTimeEntryFlags.none(),
+      shiftId: existing.shiftId,
+      siteId: existing.siteId,
+      distanceMeters: null,
+      radiusMeters: null,
+    );
+  }
+}
+
+class _NoOpStaffDemoTimeEntriesRepository
+    implements StaffDemoTimeEntriesRepository {
+  @override
+  Future<List<StaffDemoTimeEntrySummary>> fetchRecent({int limit = 20}) async =>
+      const <StaffDemoTimeEntrySummary>[];
+}
+
+class _NoOpStaffDemoMessagingRepository
+    implements StaffDemoMessagingRepository {
+  @override
+  Future<String> sendShiftAssignment({
+    required String toUserId,
+    required String body,
+    required String siteId,
+    required DateTime startAtUtc,
+    required DateTime endAtUtc,
+    required String timezoneName,
+  }) async => 'offline-noop-${DateTime.now().microsecondsSinceEpoch}';
+
+  @override
+  Future<void> confirmShiftAssignment({
+    required String messageId,
+    required String shiftId,
+  }) async {}
+}
+
+class _NoOpStaffDemoInboxRepository implements StaffDemoInboxRepository {
+  @override
+  Stream<List<StaffDemoInboxRecipientSnapshot>> watchRecipients({
+    required String userId,
+  }) => const Stream<List<StaffDemoInboxRecipientSnapshot>>.empty();
+
+  @override
+  Future<Map<String, dynamic>?> loadMessage(String messageId) async => null;
+
+  @override
+  Future<String?> loadShiftStatus(String shiftId) async => null;
+}
+
+class _NoOpStaffDemoFormsRepository implements StaffDemoFormsRepository {
+  @override
+  Future<void> submitAvailability({
+    required String userId,
+    required DateTime weekStartUtc,
+    required Map<String, bool> availabilityByIsoDate,
+  }) async {}
+
+  @override
+  Future<void> submitManagerReport({
+    required String userId,
+    required String siteId,
+    required String notes,
+  }) async {}
 }
 
 class _NoOpStaffDemoPushTokenRepository

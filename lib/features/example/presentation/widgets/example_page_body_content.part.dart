@@ -196,14 +196,13 @@ class _ExamplePageBodyContent extends StatelessWidget {
             label: l10n.exampleTodoListButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          if (!kIsWeb)
-            _buildIconButton(
-              context: context,
-              onPressed: onOpenProfile,
-              icon: Icons.person,
-              label: l10n.exampleProfileButton,
-            ),
-          if (!kIsWeb) SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenProfile,
+            icon: Icons.person,
+            label: l10n.exampleProfileButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenRegister,
@@ -254,6 +253,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
             onPressed: onOpenStaffAppDemo,
             icon: Icons.badge_outlined,
             label: 'Staff App Demo',
+            key: const ValueKey('example-staff-app-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           if (onOpenFcmDemo != null)
@@ -280,14 +280,13 @@ class _ExamplePageBodyContent extends StatelessWidget {
             label: l10n.exampleScapesButton,
           ),
           SizedBox(height: context.responsiveGapS),
-          if (!kIsWeb)
-            _buildIconButton(
-              context: context,
-              onPressed: onOpenWalletconnectAuth,
-              icon: Icons.account_balance_wallet_outlined,
-              label: l10n.exampleWalletconnectAuthButton,
-            ),
-          if (!kIsWeb) SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenWalletconnectAuth,
+            icon: Icons.account_balance_wallet_outlined,
+            label: l10n.exampleWalletconnectAuthButton,
+          ),
+          SizedBox(height: context.responsiveGapS),
           _buildIconButton(
             context: context,
             onPressed: onOpenCameraGallery,

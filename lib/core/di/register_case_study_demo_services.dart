@@ -17,7 +17,7 @@ import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 
 void registerCaseStudyDemoServices() {
   registerLazySingletonIfAbsent<CaseStudyClipFileStore>(
-    () => CaseStudyClipFileStoreImpl(),
+    () => CaseStudyClipFileStoreImpl(hiveService: getIt<HiveService>()),
   );
   registerLazySingletonIfAbsent<CaseStudyLocalRepository>(
     () => CaseStudyHiveLocalRepository(hiveService: getIt<HiveService>()),
@@ -34,6 +34,8 @@ void registerCaseStudyDemoServices() {
   );
 
   registerLazySingletonIfAbsent<CaseStudyRemoteRepository>(
-    SupabaseCaseStudyRemoteRepository.new,
+    () => SupabaseCaseStudyRemoteRepository(
+      clipFileStore: getIt<CaseStudyClipFileStore>(),
+    ),
   );
 }

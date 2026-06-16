@@ -52,6 +52,8 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   ),
   createEventBusDemoRoute(),
   createOnlineTherapyDemoRoute(),
+  createStaffAppDemoShellRoute(),
+  createCaseStudyDemoShellRoute(),
   createNativePlatformShowcaseRoute(),
 ];
 

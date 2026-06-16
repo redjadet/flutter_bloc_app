@@ -1,5 +1,5 @@
-import 'dart:io' show Platform;
-
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
@@ -18,7 +18,8 @@ class CaseStudyImagePickerVideoRepository implements CaseStudyVideoRepository {
   final ImagePicker _picker;
   final bool Function() _isAndroid;
 
-  static bool _defaultIsAndroid() => Platform.isAndroid;
+  static bool _defaultIsAndroid() =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   @override
   Future<MediaPickResult> pickVideoFromCamera() async =>

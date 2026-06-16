@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
 
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_initializer.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
+import 'package:flutter_bloc_app/shared/storage/hive_recoverable_errors.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -85,12 +88,20 @@ class HiveService with HiveServiceBoxOperations {
         // Open and close a temporary box to verify initialization.
         final String testBoxName =
             '_init_check_${DateTime.now().millisecondsSinceEpoch}';
-        final Box<dynamic> testBox = await Hive.openBox(
-          testBoxName,
-          crashRecovery: false,
-        );
+        final Box<dynamic> testBox = useInMemoryHiveBoxesInDebug()
+            ? await Hive.openBox(
+                testBoxName,
+                bytes: Uint8List(0),
+                crashRecovery: false,
+              )
+            : await Hive.openBox(
+                testBoxName,
+                crashRecovery: false,
+              );
         await testBox.close();
-        await Hive.deleteBoxFromDisk(testBoxName);
+        if (!useInMemoryHiveBoxesInDebug()) {
+          await Hive.deleteBoxFromDisk(testBoxName);
+        }
         AppLogger.debug('Hive already initialized, skipping initFlutter');
       } on Exception {
         AppLogger.error(

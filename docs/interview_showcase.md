@@ -17,7 +17,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 
 | Step | Route | Say this | Open in code |
 | --- | --- | --- | --- |
-| 1 | `/` Counter | Offline-first counter: local Hive, pending sync queue, Cubit lifecycle. Tap +/-; mention sync banner and queue inspector when pending ops exist. | [`lib/features/counter/`](../lib/features/counter/) |
+| 1 | `/` Counter | Offline-first counter: local Hive, sync, Cubit lifecycle. Tap +/-; mention sync banner. Pending-queue UI (counts + inspector) is behind `--dart-define=SHOW_PENDING_SYNC_QUEUE_UI=true` (default off). | [`lib/features/counter/`](../lib/features/counter/) |
 | 2 | `/todo-list` | List CRUD with filters, selection, realtime-capable repo; same sync patterns as counter. | [`lib/features/todo_list/`](../lib/features/todo_list/) |
 | 3 | `/chat-list` → `/chat` | API-first chat: local history, transport badges (Supabase / direct / Render orchestration). Open one thread; send is gated on connectivity/state. | [`lib/features/chat/`](../lib/features/chat/) |
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |

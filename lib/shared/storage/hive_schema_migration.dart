@@ -168,7 +168,7 @@ class HiveSchemaMigratorService {
     dynamic raw;
     try {
       raw = box.get(metaKeyFingerprints);
-    } on Exception {
+    } on Object {
       return <String, String>{};
     }
     if (raw is Map) {

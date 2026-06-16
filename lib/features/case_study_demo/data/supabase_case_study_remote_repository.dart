@@ -1,15 +1,21 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_mime.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'supabase_case_study_remote_repository_queries.part.dart';
 
 class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
-  const SupabaseCaseStudyRemoteRepository();
+  const SupabaseCaseStudyRemoteRepository({
+    required this._clipFileStore,
+  });
+
+  final CaseStudyClipFileStore _clipFileStore;
 
   static const String _bucket = 'case_study_videos';
   static const Duration _maxTtl = kCaseStudySignedPlaybackUrlTtl;
@@ -23,23 +29,24 @@ class SupabaseCaseStudyRemoteRepository implements CaseStudyRemoteRepository {
     ensureSupabaseConfigured();
     final User? user = Supabase.instance.client.auth.currentUser;
     if (user == null) {
-      throw StateError('Supabase user is not signed in');
+      throw Exception('Supabase user is not signed in');
     }
 
     final String clipId = DateTime.now().microsecondsSinceEpoch.toString();
+    final String ext = fileExtensionForCaseStudyVideoPath(localPath);
     final String objectKey =
-        'user/${user.id}/case/$caseId/question/$questionId/$clipId.mp4';
+        'user/${user.id}/case/$caseId/question/$questionId/$clipId.$ext';
 
-    final File file = File(localPath);
+    final List<int> bytes = await _clipFileStore.readClipBytes(localPath);
 
     try {
       await Supabase.instance.client.storage
           .from(_bucket)
-          .upload(
+          .uploadBinary(
             objectKey,
-            file,
-            fileOptions: const FileOptions(
-              contentType: 'video/mp4',
+            Uint8List.fromList(bytes),
+            fileOptions: FileOptions(
+              contentType: mimeTypeForCaseStudyVideoPath(localPath),
             ),
           );
       return objectKey;

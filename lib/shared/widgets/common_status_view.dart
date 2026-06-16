@@ -70,10 +70,22 @@ class CommonStatusView extends StatelessWidget {
     );
     final EdgeInsetsGeometry? resolvedPadding =
         padding ?? (hasMixTheme ? null : context.responsiveStatePadding);
-    final Widget content = Center(
-      child: resolvedPadding != null
-          ? Padding(padding: resolvedPadding, child: column)
-          : Box(style: AppStyles.emptyState, child: column),
+    final Widget container = resolvedPadding != null
+        ? Padding(padding: resolvedPadding, child: column)
+        : Box(style: AppStyles.emptyState, child: column);
+    final Widget content = LayoutBuilder(
+      builder: (final context, final constraints) {
+        final double maxHeight = constraints.maxHeight;
+        if (maxHeight.isInfinite) {
+          return Center(child: container);
+        }
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: maxHeight),
+            child: Center(child: container),
+          ),
+        );
+      },
     );
 
     if (semanticsLabel == null) {

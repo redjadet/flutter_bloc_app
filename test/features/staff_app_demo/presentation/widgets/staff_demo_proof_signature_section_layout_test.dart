@@ -51,6 +51,8 @@ void main() {
     when(() => authRepository.currentUser).thenReturn(
       const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
     );
+    when(() => fileStore.fileExists(any())).thenAnswer((_) async => false);
+    when(() => fileStore.deleteFileAtPath(any())).thenAnswer((_) async {});
     cubit = StaffDemoProofCubit(
       authRepository: authRepository,
       repository: repository,

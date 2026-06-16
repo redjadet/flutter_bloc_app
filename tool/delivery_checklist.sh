@@ -1513,6 +1513,7 @@ CHECK_MESSAGES=(
   "Checking WidgetsBindingObserver removeObserver in dispose..."
   "Checking deferred route imports stay on router allowlist..."
   "Running Pyright on Python (Render chat demo + tool/)..."
+  "Checking for Flutter layout overflows in tests..."
 )
 
 CHECK_SCRIPTS=(
@@ -1587,6 +1588,7 @@ CHECK_SCRIPTS=(
   "tool/check_lifecycle_observer_dispose.sh"
   "tool/check_deferred_heavy_routes.sh"
   "tool/check_pyright_python.sh"
+  "tool/check_flutter_layout_overflows.sh"
 )
 CHECK_SCRIPT_THEMES=(
   "architecture"
@@ -1660,6 +1662,7 @@ CHECK_SCRIPT_THEMES=(
   "lifecycle"
   "navigation"
   "tooling"
+  "ui"
 )
 
 DEFAULT_CHECKLIST_JOBS="$(detect_cpu_count)"

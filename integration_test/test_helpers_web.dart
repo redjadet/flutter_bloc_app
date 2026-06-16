@@ -388,5 +388,10 @@ class _FakePendingSyncRepository implements PendingSyncRepository {
       Future<Box<dynamic>>.error(UnimplementedError('Not used in fake'));
 
   @override
+  Future<T> runWithBox<T>(
+    final Future<T> Function(Box<dynamic> box) action,
+  ) async => Future<T>.error(UnimplementedError('Not used in fake'));
+
+  @override
   Future<void> safeDeleteKey(final Box<dynamic> box, final String key) async {}
 }

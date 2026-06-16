@@ -124,6 +124,9 @@ class _NoopClipStore implements CaseStudyClipFileStore {
     required final String stagingPath,
     required final String finalPath,
   }) => finalPath;
+
+  @override
+  Future<List<int>> readClipBytes(final String path) async => const <int>[];
 }
 
 class _InMemoryLocalRepository implements CaseStudyLocalRepository {

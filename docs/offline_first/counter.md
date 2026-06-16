@@ -72,7 +72,7 @@ This document defines how the counter feature adopts the shared offline-first st
 
 - `HiveCounterRepository` with sync metadata support (`lib/features/counter/data/hive_counter_repository.dart`)
 - `OfflineFirstCounterRepository` implementing `SyncableRepository` (`lib/features/counter/data/offline_first_counter_repository.dart`)
-- `CounterSyncBanner` composed in `CounterPageBody` (offline/syncing/pending + last-synced metadata); dev-only sync queue inspector remains in Settings
+- `CounterSyncBanner` composed in `CounterPageBody` (offline/syncing + last-synced metadata). Pending-queue UI (e.g. “Changes queued” / sync queue inspector) is hidden by default and can be enabled with `--dart-define=SHOW_PENDING_SYNC_QUEUE_UI=true`.
 - Full DI wiring in `lib/core/di/injector_registrations.dart` and registry registration
 - Comprehensive test coverage:
   - Unit tests: `test/features/counter/data/hive_counter_repository_test.dart`
