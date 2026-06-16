@@ -77,6 +77,37 @@ void main() {
       expect(result, equals(AppRoutes.counterPath));
     });
 
+    test(
+      'redirects authenticated user to safe requested path after sign-in',
+      () {
+        const user = AuthUser(id: '1', isAnonymous: false);
+        when(() => mockAuth.currentUser).thenReturn(user);
+        when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
+        when(() => mockState.uri).thenReturn(
+          Uri.parse('${AppRoutes.authPath}?redirect=%2Fstaff-app-demo'),
+        );
+
+        final redirect = createAuthRedirect(mockAuth);
+        final result = redirect(testContext, mockState);
+
+        expect(result, equals(AppRoutes.staffAppDemoPath));
+      },
+    );
+
+    test('ignores unsafe redirect query after sign-in', () {
+      const user = AuthUser(id: '1', isAnonymous: false);
+      when(() => mockAuth.currentUser).thenReturn(user);
+      when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
+      when(() => mockState.uri).thenReturn(
+        Uri.parse('${AppRoutes.authPath}?redirect=https://evil.test'),
+      );
+
+      final redirect = createAuthRedirect(mockAuth);
+      final result = redirect(testContext, mockState);
+
+      expect(result, equals(AppRoutes.counterPath));
+    });
+
     test('allows anonymous user to stay on auth page when upgrading', () {
       const anonymousUser = AuthUser(id: '1', isAnonymous: true);
       when(() => mockAuth.currentUser).thenReturn(anonymousUser);

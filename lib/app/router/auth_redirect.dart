@@ -26,6 +26,7 @@ GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
       final bool upgradeIntent =
           state.uri.queryParameters[AppRoutes.authUpgradeQueryKey] ==
           AppRoutes.authUpgradeQueryValue;
+      final String? redirectAfterLogin = state.uri.queryParameters['redirect'];
 
       // Deep link detection: Allow navigation to any route other than
       // root paths (/counter, /auth, /) to proceed without authentication.
@@ -53,6 +54,9 @@ GoRouterRedirect createAuthRedirect(final AuthRepository auth) =>
         final bool upgradingAnonymous = auth.currentUser?.isAnonymous ?? false;
         if (upgradingAnonymous && upgradeIntent) {
           return null;
+        }
+        if (AppRoutes.isSafeRedirectPath(redirectAfterLogin)) {
+          return redirectAfterLogin;
         }
         return AppRoutes.counterPath;
       }
