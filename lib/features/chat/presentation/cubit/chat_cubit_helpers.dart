@@ -103,6 +103,26 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     return null;
   }
 
+  ChatConversation _currentActiveConversation() {
+    final ChatConversation? existing = _conversationById(
+      _state.history,
+      _state.activeConversationId,
+    );
+    return existing ?? _createEmptyConversation(model: _state.currentModel);
+  }
+
+  /// Clears [ChatState.isLoading] without changing the active conversation view.
+  void _clearStuckLoading() {
+    if (isClosed || !_state.isLoading) {
+      return;
+    }
+    _emitConversationSnapshot(
+      active: _currentActiveConversation(),
+      history: _state.history,
+      isLoading: false,
+    );
+  }
+
   Future<void> _persistHistory(final List<ChatConversation> history) async {
     if (isClosed) {
       return;
