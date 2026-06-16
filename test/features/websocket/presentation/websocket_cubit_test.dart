@@ -70,6 +70,7 @@ void main() {
       when(() => repository.send(any())).thenAnswer((_) async {
         messageController.add(
           const WebsocketMessage(
+            sequence: 0,
             direction: WebsocketMessageDirection.incoming,
             text: 'echo: hi',
           ),
@@ -86,10 +87,12 @@ void main() {
     },
     expect: () {
       final WebsocketMessage outgoing = const WebsocketMessage(
+        sequence: 0,
         direction: WebsocketMessageDirection.outgoing,
         text: 'hi',
       );
       final WebsocketMessage incoming = const WebsocketMessage(
+        sequence: 1,
         direction: WebsocketMessageDirection.incoming,
         text: 'echo: hi',
       );
@@ -151,6 +154,7 @@ void main() {
     connectionController.add(const WebsocketConnectionState.connected());
     messageController.add(
       const WebsocketMessage(
+        sequence: 0,
         direction: WebsocketMessageDirection.incoming,
         text: 'late message',
       ),
@@ -198,6 +202,48 @@ void main() {
       expect(cubit.state.isSending, isFalse);
       verify(() => repository.send('a')).called(1);
       verify(() => repository.send('b')).called(1);
+
+      await cubit.close();
+    },
+  );
+
+  test(
+    'disconnect keeps messages and message sequence monotonic after reconnect',
+    () async {
+      when(() => repository.send(any())).thenAnswer((_) async {});
+      final WebsocketCubit cubit = WebsocketCubit(repository: repository);
+      connectionController.add(const WebsocketConnectionState.connected());
+      await Future<void>.delayed(Duration.zero);
+
+      await cubit.sendMessage('first');
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.messages, hasLength(1));
+      expect(cubit.state.messages.first.sequence, 0);
+
+      connectionController.add(const WebsocketConnectionState.disconnected());
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.messages, hasLength(1));
+
+      connectionController.add(const WebsocketConnectionState.connected());
+      await Future<void>.delayed(Duration.zero);
+
+      messageController.add(
+        const WebsocketMessage(
+          sequence: 999,
+          direction: WebsocketMessageDirection.incoming,
+          text: 'after reconnect',
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      await cubit.sendMessage('second');
+      await Future<void>.delayed(Duration.zero);
+
+      final List<int> sequences = cubit.state.messages
+          .map((final WebsocketMessage message) => message.sequence)
+          .toList();
+      expect(sequences.toSet(), hasLength(sequences.length));
+      expect(sequences, containsAll(<int>[0, 1, 2]));
 
       await cubit.close();
     },

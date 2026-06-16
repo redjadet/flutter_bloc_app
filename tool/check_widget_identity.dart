@@ -104,6 +104,19 @@ void _scanFile(
       // If the returned widget is obviously inert, ignore.
       if (_isTriviallySafeReturn(returnedCall.constructorName)) continue;
 
+      if (_usesObjectKey(returnedCall.callText)) {
+        out.add(
+          _Finding(
+            path: path,
+            line: i + 1,
+            message:
+                'Builder row uses ObjectKey; prefer ValueKey with a stable domain id.',
+            snippet: line,
+          ),
+        );
+        continue;
+      }
+
       if (!returnedCall.hasKeyArgument) {
         out.add(
           _Finding(
@@ -548,6 +561,9 @@ String? _extractNamedArgExpression(
   final slice = after.split('\n').take(8).join('\n');
   return slice;
 }
+
+bool _usesObjectKey(final String callText) =>
+    RegExp(r'\bObjectKey\s*\(').hasMatch(callText);
 
 bool _isTriviallySafeReturn(final String name) =>
     name.startsWith('_build') ||

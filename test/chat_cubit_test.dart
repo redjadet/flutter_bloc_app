@@ -55,6 +55,13 @@ void main() {
       expect(cubit.state.messages.length, 2);
       expect(cubit.state.messages.first.author, ChatAuthor.user);
       expect(cubit.state.messages.last.author, ChatAuthor.assistant);
+      final ChatMessage userMessage = cubit.state.messages.first;
+      final ChatMessage assistantMessage = cubit.state.messages.last;
+      expect(userMessage.clientMessageId, isNotNull);
+      expect(
+        assistantMessage.clientMessageId,
+        '${userMessage.clientMessageId}-reply',
+      );
       expect(cubit.state.isLoading, false);
     });
 

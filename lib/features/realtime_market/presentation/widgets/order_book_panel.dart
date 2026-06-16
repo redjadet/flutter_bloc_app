@@ -94,7 +94,9 @@ class OrderBookPanel extends StatelessWidget {
                     ? (r.quantity / maxQty).clamp(0.0, 1.0)
                     : 0.0;
                 return Padding(
-                  key: ValueKey<String>('order_book_${r.side.name}_${r.price}'),
+                  key: ValueKey<String>(
+                    'order_book_${i}_${r.side.name}_${r.price}',
+                  ),
                   padding: EdgeInsets.symmetric(
                     vertical: context.responsiveGapXS / 2,
                   ),

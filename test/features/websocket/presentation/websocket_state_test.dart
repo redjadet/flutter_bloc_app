@@ -10,6 +10,7 @@ void main() {
     expect(
       () => state.messages.add(
         const WebsocketMessage(
+          sequence: 0,
           direction: WebsocketMessageDirection.incoming,
           text: 'hello',
         ),
@@ -21,6 +22,7 @@ void main() {
   test('appendMessage does not mutate previous state', () {
     final WebsocketState state = WebsocketState.initial(endpoint);
     final WebsocketMessage message = const WebsocketMessage(
+      sequence: 0,
       direction: WebsocketMessageDirection.outgoing,
       text: 'ping',
     );

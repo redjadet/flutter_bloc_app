@@ -47,6 +47,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
   /// Count of in-flight `repository.send` calls so overlapping sends do not
   /// clear [WebsocketState.isSending] while another send is still pending.
   int _inFlightSends = 0;
+  int _messageSequence = 0;
 
   Future<void> connect() async {
     if (state.isConnected || state.isConnecting) {
@@ -93,6 +94,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
       state
           .appendMessage(
             WebsocketMessage(
+              sequence: _messageSequence++,
               direction: WebsocketMessageDirection.outgoing,
               text: message,
             ),
@@ -134,7 +136,11 @@ class WebsocketCubit extends Cubit<WebsocketState>
 
   void _onIncomingMessage(final WebsocketMessage message) {
     if (isClosed) return;
-    emit(state.appendMessage(message));
+    emit(
+      state.appendMessage(
+        message.copyWith(sequence: _messageSequence++),
+      ),
+    );
   }
 
   void _onConnectionState(final WebsocketConnectionState connectionState) {

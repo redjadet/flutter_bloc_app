@@ -82,6 +82,7 @@ class _FakeWebsocketRepository implements WebsocketRepository {
       StreamController<WebsocketConnectionState>.broadcast();
   final StreamController<WebsocketMessage> _messageController =
       StreamController<WebsocketMessage>.broadcast();
+  int _messageSequence = 0;
 
   WebsocketConnectionState _state =
       const WebsocketConnectionState.disconnected();
@@ -112,6 +113,7 @@ class _FakeWebsocketRepository implements WebsocketRepository {
   Future<void> send(String message) async {
     _messageController.add(
       WebsocketMessage(
+        sequence: _messageSequence++,
         direction: WebsocketMessageDirection.incoming,
         text: 'echo: $message',
       ),

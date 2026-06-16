@@ -30,10 +30,12 @@ class WebsocketMessageList extends StatelessWidget {
         reverse: true,
         itemCount: messages.length,
         itemBuilder: (final context, final index) {
-          final WebsocketMessage message =
-              messages[messages.length - 1 - index];
+          final int messageIndex = messages.length - 1 - index;
+          final WebsocketMessage message = messages[messageIndex];
           return RepaintBoundary(
-            key: ObjectKey(message),
+            key: ValueKey(
+              'ws-msg-${message.direction.name}-${message.sequence}',
+            ),
             child: MessageBubble(
               message: message.text,
               isOutgoing:

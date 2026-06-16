@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-16_widget-list-stable-keys.md`](2026-06-16_widget-list-stable-keys.md): Widget identity in dynamic lists — stable `ValueKey`s (websocket `sequence`, chat `clientMessageId`, case-study `CaseStudyQuestionId`, order-book side+price); monotonic websocket sequence across disconnect; `check_widget_identity` `ObjectKey` advisory.
 - [`2026-06-16_chat-send-supersession-loading.md`](2026-06-16_chat-send-supersession-loading.md): Chat — `sendMessage` clears stuck `isLoading` and persists assistant reply when `RequestIdGuard` superseded by history actions.
 - [`2026-06-15_web-parity-staff-case-study.md`](2026-06-15_web-parity-staff-case-study.md): Web parity for staff proof + case-study clip playback — removed web DI/route shims, io/web file stores, video blob lifecycle, MIME on Supabase upload, transient submit errors.
 - [`2026-06-15_staff-production-review.md`](2026-06-15_staff-production-review.md): Staff+ production review — R1–R7 remediation, judgement docs, doc hubs; audit [`staff_production_review_2026-06-15.md`](../audits/staff_production_review_2026-06-15.md).

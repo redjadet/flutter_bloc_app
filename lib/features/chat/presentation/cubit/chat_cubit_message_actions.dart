@@ -89,6 +89,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         final ChatMessage replyWithMetadata = ChatMessage(
           author: result.reply.author,
           text: result.reply.text,
+          clientMessageId: '$clientMessageId-reply',
           createdAt: replyTimestamp,
           lastSyncedAt: replyTimestamp,
         );
