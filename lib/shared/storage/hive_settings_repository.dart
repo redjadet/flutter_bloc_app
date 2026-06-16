@@ -46,8 +46,7 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
   /// Loads the value from Hive with validation and error handling.
   Future<T?> load() async => StorageGuard.run<T?>(
     logContext: '$runtimeType.load',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () async => runWithBox((final box) async {
       final dynamic storedValue = box.get(key);
 
       // Handle null/empty values
@@ -85,7 +84,7 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
         }
 
         return parsedValue;
-      } on Exception catch (error, stackTrace) {
+      } on Object catch (error, stackTrace) {
         AppLogger.error(
           'Invalid value in Hive for key: $key',
           error,
@@ -95,22 +94,21 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
         await safeDeleteKey(box, key);
         return null;
       }
-    },
+    }),
     fallback: () => null,
   );
 
   /// Saves the value to Hive.
   Future<void> save(final T? value) async => StorageGuard.run<void>(
     logContext: '$runtimeType.save',
-    action: () async {
-      final Box<dynamic> box = await getBox();
+    action: () async => runWithBox((final box) async {
       if (value == null) {
         await box.delete(key);
       } else {
         final String stringValue = toStringValue(value);
         await box.put(key, stringValue);
       }
-    },
+    }),
     fallback: () {},
   );
 
@@ -118,7 +116,13 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
     final Box<dynamic> box, {
     required final String? fromFingerprint,
   }) async {
-    final dynamic storedValue = box.get(key);
+    final dynamic storedValue;
+    try {
+      storedValue = box.get(key);
+    } on Object {
+      await safeDeleteKey(box, key);
+      return;
+    }
     if (storedValue == null) {
       return;
     }
@@ -129,7 +133,7 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
     final T? parsed;
     try {
       parsed = fromString(storedValue);
-    } on Exception {
+    } on Object {
       await safeDeleteKey(box, key);
       return;
     }

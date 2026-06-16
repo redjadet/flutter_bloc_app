@@ -109,14 +109,35 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
 
   @override
   Widget build(final BuildContext context) {
-    return MultiBlocListener(
-      listeners: _buildListeners(),
-      child: _CounterPageContent(
-        title: widget.title,
-        showFlavorBadge: _showFlavorBadge,
-        optionalBanner: widget.optionalBanner,
-        confettiController: _confettiController,
-        onOpenSettings: () => _handleOpenSettings(context),
+    final GoRouter? router = GoRouter.maybeOf(context);
+    if (router == null) {
+      return MultiBlocListener(
+        listeners: _buildListeners(),
+        child: _CounterPageContent(
+          title: widget.title,
+          showFlavorBadge: _showFlavorBadge,
+          optionalBanner: widget.optionalBanner,
+          confettiController: _confettiController,
+          onOpenSettings: () => _handleOpenSettings(context),
+        ),
+      );
+    }
+
+    final String currentPath =
+        router.routerDelegate.currentConfiguration.uri.path;
+    final bool isActiveRoute = currentPath == AppRoutes.counterPath;
+
+    return Offstage(
+      offstage: !isActiveRoute,
+      child: MultiBlocListener(
+        listeners: _buildListeners(),
+        child: _CounterPageContent(
+          title: widget.title,
+          showFlavorBadge: _showFlavorBadge,
+          optionalBanner: widget.optionalBanner,
+          confettiController: _confettiController,
+          onOpenSettings: () => _handleOpenSettings(context),
+        ),
       ),
     );
   }

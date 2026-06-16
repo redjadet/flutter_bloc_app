@@ -114,7 +114,9 @@ void main() {
 
     expect(find.byType(AppMessage), findsOneWidget);
     expect(syncCubit.state.networkStatus, NetworkStatus.offline);
-    final Finder buttonFinder = find.text('Sync now');
+    final AppLocalizations l10n =
+        AppLocalizations.of(tester.element(find.byType(ChatSyncBanner)));
+    final Finder buttonFinder = find.text(l10n.syncStatusSyncNowButton);
     expect(buttonFinder, findsOneWidget);
     final _ButtonVariant button = _resolveButtonVariant(tester, buttonFinder);
     await tester.tap(button.finder);
@@ -122,7 +124,7 @@ void main() {
     expect(coordinator.flushCount, 0);
   });
 
-  testWidgets('tapping sync now triggers coordinator flush', (
+  testWidgets('hides pending-only banner when queue UI flag is off', (
     final WidgetTester tester,
   ) async {
     when(
@@ -149,17 +151,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final Finder buttonFinder = find.text('Sync now');
-    expect(buttonFinder, findsOneWidget);
-
-    final _ButtonVariant button = _resolveButtonVariant(tester, buttonFinder);
-    expect(button.isEnabled, isTrue);
-
-    await tester.tap(button.finder);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
-
-    expect(coordinator.flushCount, 1);
+    // Default behavior: pending-queue UI is hidden unless SHOW_PENDING_SYNC_QUEUE_UI
+    // is enabled at compile time. Banner still shows for offline/syncing states.
+    expect(find.byType(AppMessage), findsNothing);
+    expect(coordinator.flushCount, 0);
   });
 }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/shared/storage/hive_recoverable_errors.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Small helper to standardise repository error handling for local storage
@@ -21,6 +22,9 @@ class StorageGuard {
       return await action();
     } on Object catch (error, stackTrace) {
       AppLogger.error(logContext, error, stackTrace);
+      if (isRecoverableHiveFailure(error)) {
+        rethrow;
+      }
       if (fallback != null) {
         return await fallback();
       }

@@ -104,6 +104,10 @@ void main() {
       );
       expect(overflows, isEmpty);
       expect(tester.takeException(), isNull);
+
+      final displayText = find.byKey(const ValueKey('calculator-display-text'));
+      expect(displayText, findsOneWidget);
+      expect(tester.getSize(displayText).height, greaterThan(0));
     });
 
     testWidgets('constrains content width to max width', (tester) async {

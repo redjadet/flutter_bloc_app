@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/app_scope.dart';
+import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -46,6 +48,11 @@ void main() {
     tester,
   ) async {
     await launchTestApp(tester);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions during home launch.',
+    );
 
     expect(find.text('Home Page'), findsOneWidget);
     expect(find.byType(MaterialApp), findsOneWidget);
@@ -57,6 +64,11 @@ void main() {
         .widgetWithIcon(FloatingActionButton, Icons.add)
         .first;
     await tapAndPump(tester, incrementButton);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after increment.',
+    );
     await pumpUntilFound(tester, find.text('1'));
     expect(find.text('1'), findsWidgets);
 
@@ -64,6 +76,11 @@ void main() {
         .widgetWithIcon(FloatingActionButton, Icons.remove)
         .first;
     await tapAndPump(tester, decrementButton);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after decrement.',
+    );
     await pumpUntilFound(tester, find.text('0'));
     expect(find.text('0'), findsWidgets);
   });
@@ -72,9 +89,19 @@ void main() {
     tester,
   ) async {
     await launchTestApp(tester);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions during launch.',
+    );
 
     await pumpUntilFound(tester, find.byTooltip('Open example page'));
     await tapAndPump(tester, find.byTooltip('Open example page'));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after opening Example.',
+    );
     await pumpUntilFound(tester, find.text('Example Page'));
 
     final Finder showcaseButton = find.byKey(
@@ -86,6 +113,11 @@ void main() {
       scrollable: find.byType(Scrollable).first,
     );
     await tapAndPump(tester, showcaseButton);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after opening showcase.',
+    );
     await pumpUntilFound(
       tester,
       find.byKey(const ValueKey('native-platform-showcase-summary')),
@@ -115,5 +147,76 @@ void main() {
       scrollable: find.byType(Scrollable).last,
     );
     expect(lessonZero, findsOneWidget);
+  });
+
+  testWidgets('opens staff app demo shell on web after sign-in', (
+    tester,
+  ) async {
+    await launchTestApp(tester, ensureSignedIn: true);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions during signed-in launch.',
+    );
+
+    tester
+        .widget<AppScope>(find.byType(AppScope))
+        .router
+        .go(AppRoutes.staffAppDemoPath);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after routing to staff demo.',
+    );
+    await pumpUntilFound(
+      tester,
+      find.text('Home'),
+      timeout: const Duration(seconds: 15),
+    );
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after staff demo settle.',
+    );
+
+    expect(find.text('Staff demo'), findsWidgets);
+    expect(find.text('0', skipOffstage: true), findsNothing);
+  });
+
+  testWidgets('opens case study demo home on web after sign-in', (
+    tester,
+  ) async {
+    await launchTestApp(tester, ensureSignedIn: true);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions during signed-in launch.',
+    );
+
+    tester
+        .widget<AppScope>(find.byType(AppScope))
+        .router
+        .go(AppRoutes.caseStudyDemoPath);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after routing to case study demo.',
+    );
+    await pumpUntilFound(
+      tester,
+      find.text('Case study demo'),
+      timeout: const Duration(seconds: 15),
+    );
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after case study demo settle.',
+    );
+
+    expect(find.text('Home Page', skipOffstage: true), findsNothing);
   });
 }

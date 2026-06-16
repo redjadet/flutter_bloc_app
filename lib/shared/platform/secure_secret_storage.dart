@@ -12,23 +12,42 @@ abstract class SecretStorage {
   Future<T> withoutLogsAsync<T>(final Future<T> Function() action) => action();
 }
 
-/// Whether debug builds should avoid Keychain/secure storage on Apple platforms.
+/// Whether debug builds should avoid platform secure storage.
 ///
 /// macOS and iOS simulators often lack the entitlements needed for
 /// `flutter_secure_storage`, which surfaces as Keychain error -34018 and
 /// breaks Hive persistence when encryption keys cannot be stored.
+///
+/// Web debug uses a stable in-memory key so hot restarts do not desync Hive
+/// encryption from IndexedDB payloads (avoids "Invalid or corrupted pad block").
 bool useInMemorySecretStorageInDebug() {
-  if (kIsWeb || kReleaseMode) {
+  if (kReleaseMode) {
     return false;
+  }
+  if (kIsWeb) {
+    return true;
   }
   return defaultTargetPlatform == TargetPlatform.macOS ||
       defaultTargetPlatform == TargetPlatform.iOS;
 }
 
+/// Whether Hive boxes should skip AES encryption in debug builds.
+///
+/// Web IndexedDB + hot restart often leaves ciphertext that no longer matches
+/// the in-memory debug key ("Invalid or corrupted pad block"). Unencrypted
+/// boxes in web debug avoid that class of startup failures.
+bool useUnencryptedHiveBoxesInDebug() => !kReleaseMode && kIsWeb;
+
+/// Whether Hive boxes should use an in-memory backend in debug builds.
+///
+/// Keep disabled: web parity needs IndexedDB durability across reloads. Debug
+/// corruption recovery uses namespace rotation + box deletion instead.
+bool useInMemoryHiveBoxesInDebug() => false;
+
 /// Default secret storage for the current platform.
 ///
-/// Apple-platform debug builds use [InMemorySecretStorage] because Keychain
-/// access is unreliable in local development (especially the iOS simulator).
+/// Apple-platform and web debug builds use [InMemorySecretStorage] because
+/// Keychain / browser secure storage is unreliable in local development.
 SecretStorage createDefaultSecretStorage() {
   if (useInMemorySecretStorageInDebug()) {
     return InMemorySecretStorage();

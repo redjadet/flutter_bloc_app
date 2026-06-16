@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_s
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
@@ -101,6 +102,9 @@ class _CounterSyncQueueInspectorButtonState
 
   @override
   Widget build(final BuildContext context) {
+    if (!kShowPendingSyncQueueUi) {
+      return const SizedBox.shrink();
+    }
     context.ensureSyncStartedIfAvailable();
 
     final Widget child = widget.repository != null

@@ -34,10 +34,13 @@ class FirebaseBootstrapService {
   }
 
   /// Whether auth routing and local-only guest sign-in should work without a
-  /// configured Firebase app (macOS debug or iOS simulator debug).
+  /// configured Firebase app (web debug, macOS debug, or iOS simulator debug).
   static bool get supportsDebugLocalGuestAuth {
-    if (kIsWeb || kReleaseMode) {
+    if (kReleaseMode) {
       return false;
+    }
+    if (kIsWeb) {
+      return true;
     }
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       return true;

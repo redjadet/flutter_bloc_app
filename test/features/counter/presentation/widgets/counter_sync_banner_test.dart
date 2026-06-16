@@ -193,7 +193,9 @@ void main() {
       expect(find.text(l10n.syncStatusSyncingMessage(1)), findsOneWidget);
     });
 
-    testWidgets('shows pending banner when queued items exist', (tester) async {
+    testWidgets('hides pending banner when queue UI flag is off', (
+      tester,
+    ) async {
       counterRepository.pendingCount = 2;
       await counterCubit.refreshPendingSyncCount();
 
@@ -217,8 +219,8 @@ void main() {
       final AppLocalizations l10n = AppLocalizations.of(
         tester.element(find.byType(CounterSyncBanner)),
       );
-      expect(find.text(l10n.syncStatusPendingTitle), findsOneWidget);
-      expect(find.text(l10n.syncStatusPendingMessage(2)), findsOneWidget);
+      expect(find.text(l10n.syncStatusPendingTitle), findsNothing);
+      expect(find.text(l10n.syncStatusPendingMessage(2)), findsNothing);
     });
 
     testWidgets('renders last synced metadata when provided', (tester) async {
@@ -261,6 +263,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(l10n.counterChangeId('abc123')), findsOneWidget);
+      expect(find.byType(AppMessage), findsNothing);
     });
   });
 
@@ -290,7 +293,7 @@ void main() {
       await counterCubit.close();
     });
 
-    testWidgets('shows bottom sheet with operations when tapped', (
+    testWidgets('hides inspector button when queue UI flag is off', (
       tester,
     ) async {
       await counterCubit.refreshPendingSyncCount();
@@ -309,11 +312,7 @@ void main() {
       );
 
       await tester.pump();
-      await tester.tap(find.text('View sync queue'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Pending Sync Operations'), findsOneWidget);
-      expect(find.textContaining('Entity: counter'), findsOneWidget);
+      expect(find.text('View sync queue'), findsNothing);
     });
 
     testWidgets('repository-backed mode refreshes when enqueue stream fires', (
@@ -338,7 +337,7 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.text('View sync queue'), findsOneWidget);
+      expect(find.text('View sync queue'), findsNothing);
 
       counterRepository.pendingCount = 0;
       enqueueController.add(null);
@@ -370,7 +369,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
 
-      expect(find.text('View sync queue'), findsOneWidget);
+      expect(find.text('View sync queue'), findsNothing);
     });
   });
 }

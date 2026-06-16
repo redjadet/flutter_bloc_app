@@ -70,6 +70,11 @@ void main() {
       expect(target, DeepLinkTarget.chat);
     });
 
+    test('ignores bare localhost web origin without path segments', () {
+      final target = parser.parse(Uri.parse('http://localhost:7357/'));
+      expect(target, isNull);
+    });
+
     test('supports localhost web links for local web development', () {
       final target = parser.parse(Uri.parse('http://localhost:7357/settings'));
       expect(target, DeepLinkTarget.settings);

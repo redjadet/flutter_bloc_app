@@ -27,6 +27,18 @@ class DeepLinkParser {
           return _segmentMap[hostKey];
         }
       }
+      // Hash routes live in the fragment; bare http://localhost/ has no path
+      // segments — do not hijack GoRouter navigation to counter.
+      if (_isWebHttpScheme(uri.scheme)) {
+        if (_isLocalhostHost(uri.host)) {
+          return null;
+        }
+        if (uri.scheme == DeepLinkConfig.universalScheme &&
+            _isUniversalLinkHost(uri.host)) {
+          return DeepLinkTarget.counter;
+        }
+        return null;
+      }
       return DeepLinkTarget.counter;
     }
 

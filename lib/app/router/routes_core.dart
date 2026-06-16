@@ -62,26 +62,6 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
     ),
   ),
   GoRoute(
-    path: AppRoutes.counterPath,
-    name: AppRoutes.counter,
-    builder: (final context, final state) =>
-        BlocProviderHelpers.withAsyncInit<CounterCubit>(
-          create: () => CounterCubit(
-            repository: getIt<CounterRepository>(),
-            timerService: getIt<TimerService>(),
-            loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
-          ),
-          init: (final cubit) => cubit.loadInitial(),
-          child: CounterPage(
-            title: context.l10n.homeTitle,
-            errorNotificationService: getIt<ErrorNotificationService>(),
-            biometricAuthenticator: getIt<BiometricAuthenticator>(),
-            timerService: getIt<TimerService>(),
-            optionalBanner: const AwesomeFeatureWidget(),
-          ),
-        ),
-  ),
-  GoRoute(
     path: AppRoutes.calculatorPath,
     name: AppRoutes.calculator,
     builder: (final context, final state) => BlocProvider(
@@ -176,3 +156,26 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   ),
   ..._coreRoutesSettingsAndProfile(),
 ];
+
+/// Home route (counter demo). Kept last in `createAppRoutes` so more specific
+/// demo routes can win match precedence on web.
+RouteBase createCounterRoute() => GoRoute(
+  path: AppRoutes.counterPath,
+  name: AppRoutes.counter,
+  builder: (final context, final state) =>
+      BlocProviderHelpers.withAsyncInit<CounterCubit>(
+        create: () => CounterCubit(
+          repository: getIt<CounterRepository>(),
+          timerService: getIt<TimerService>(),
+          loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
+        ),
+        init: (final cubit) => cubit.loadInitial(),
+        child: CounterPage(
+          title: context.l10n.homeTitle,
+          errorNotificationService: getIt<ErrorNotificationService>(),
+          biometricAuthenticator: getIt<BiometricAuthenticator>(),
+          timerService: getIt<TimerService>(),
+          optionalBanner: const AwesomeFeatureWidget(),
+        ),
+      ),
+);

@@ -23,4 +23,6 @@ abstract class CaseStudyClipFileStore {
   Future<void> deleteFileIfExists(final String? path);
 
   Future<void> deleteCaseFolder(final String caseId);
+
+  Future<List<int>> readClipBytes(final String path);
 }

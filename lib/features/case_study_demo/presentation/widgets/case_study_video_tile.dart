@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/utils/case_study_local_video_exists.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/utils/case_study_video_blob_lifecycle.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/presentation/utils/case_study_video_controller_factory.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 
 /// Inline video preview with lifecycle-safe controller ownership.
@@ -37,14 +39,15 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
 
   Future<void> _init() async {
     final int token = ++_initToken;
+    final String videoPath = widget.videoPath;
 
-    final Uri? uri = Uri.tryParse(widget.videoPath);
-    final bool isNetwork =
-        uri != null && (uri.scheme == 'http' || uri.scheme == 'https');
+    final Uri? uri = Uri.tryParse(videoPath);
+    final bool skipExistsCheck =
+        uri != null &&
+        (uri.scheme == 'http' || uri.scheme == 'https' || uri.scheme == 'blob');
 
-    if (!isNetwork) {
-      final String localPath = widget.videoPath;
-      final bool onDisk = await caseStudyLocalVideoExists(localPath);
+    if (!skipExistsCheck) {
+      final bool onDisk = await caseStudyLocalVideoExists(videoPath);
       if (!onDisk) {
         if (mounted) {
           setState(() {
@@ -63,27 +66,41 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
       });
     }
 
-    final VideoPlayerController c = isNetwork
-        ? VideoPlayerController.networkUrl(uri)
-        : VideoPlayerController.file(File(widget.videoPath));
     try {
-      await c.initialize();
-      await c.setLooping(true);
-      if (!mounted) {
+      final VideoPlayerController c = await createCaseStudyVideoController(
+        videoPath,
+      );
+      try {
+        await c.initialize();
+        await c.setLooping(true);
+        if (!mounted || token != _initToken) {
+          await c.dispose();
+          releaseCaseStudyVideoBlobForPath(videoPath);
+          return;
+        }
+        setState(() {
+          _controller = c;
+        });
+        await c.play();
+      } on Object catch (error, stackTrace) {
         await c.dispose();
-        return;
+        releaseCaseStudyVideoBlobForPath(videoPath);
+        AppLogger.error('CaseStudyVideoTile init failed', error, stackTrace);
+        if (mounted && token == _initToken) {
+          setState(() {
+            _initFailed = true;
+            _controller = null;
+          });
+        }
       }
-      if (token != _initToken) {
-        await c.dispose();
-        return;
-      }
-      setState(() {
-        _controller = c;
-      });
-      await c.play();
-    } on Object {
-      await c.dispose();
-      if (mounted) {
+    } on Object catch (error, stackTrace) {
+      releaseCaseStudyVideoBlobForPath(videoPath);
+      AppLogger.error(
+        'CaseStudyVideoTile controller create failed',
+        error,
+        stackTrace,
+      );
+      if (mounted && token == _initToken) {
         setState(() {
           _initFailed = true;
           _controller = null;
@@ -115,11 +132,13 @@ class _CaseStudyVideoTileState extends State<CaseStudyVideoTile>
 
   void _disposeController() {
     _initToken++;
+    final String pathToRelease = widget.videoPath;
     final VideoPlayerController? c = _controller;
     _controller = null;
     if (c != null) {
       unawaited(c.dispose());
     }
+    releaseCaseStudyVideoBlobForPath(pathToRelease);
   }
 
   @override

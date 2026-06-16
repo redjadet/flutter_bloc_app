@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
+import 'package:flutter_bloc_app/app/router/app_navigator_keys.dart';
 import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
@@ -49,7 +50,11 @@ class _MyAppState extends State<MyApp> {
             FirebaseBootstrapService.supportsDebugLocalGuestAuth);
 
     if (!useAuth) {
-      return GoRouter(initialLocation: AppRoutes.counterPath, routes: routes);
+      return GoRouter(
+        initialLocation: AppRoutes.counterPath,
+        navigatorKey: rootNavigatorKey,
+        routes: routes,
+      );
     }
 
     final authRepository = getIt<AuthRepository>();
@@ -60,6 +65,7 @@ class _MyAppState extends State<MyApp> {
 
     return GoRouter(
       initialLocation: AppRoutes.counterPath,
+      navigatorKey: rootNavigatorKey,
       // Refresh router when auth state changes (login/logout)
       refreshListenable: authRefresh,
       redirect: createAuthRedirect(authRepository),

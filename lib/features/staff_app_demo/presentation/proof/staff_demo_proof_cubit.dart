@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
@@ -40,8 +40,9 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
   void removePhotoAt(final int index) {
     final updated = List<String>.from(state.photoPaths);
     if (index < 0 || index >= updated.length) return;
-    updated.removeAt(index);
+    final String removed = updated.removeAt(index);
     emit(state.copyWith(photoPaths: updated));
+    unawaited(_fileStore.deleteFileAtPath(removed));
   }
 
   void setSignaturePath(final String? path) {
@@ -93,14 +94,10 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
       return;
     }
 
-    if (_submitInFlight) {
-      return;
-    }
     final photoPaths = List<String>.unmodifiable(state.photoPaths);
     _submitInFlight = true;
     try {
-      // ignore: avoid_slow_async_io — sync-io gate blocks existsSync on UI isolate
-      if (!await File(signaturePath).exists()) {
+      if (!await _fileStore.fileExists(signaturePath)) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -112,12 +109,7 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
       }
 
       final photoExistence = await Future.wait<bool>(
-        photoPaths.map(
-          (final path) async {
-            // ignore: avoid_slow_async_io — sync-io gate blocks existsSync on UI isolate
-            return File(path).exists();
-          },
-        ),
+        photoPaths.map(_fileStore.fileExists),
       );
       if (photoExistence.contains(false)) {
         if (isClosed) return;

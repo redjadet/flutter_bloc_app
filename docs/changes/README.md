@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-15_web-parity-staff-case-study.md`](2026-06-15_web-parity-staff-case-study.md): Web parity for staff proof + case-study clip playback — removed web DI/route shims, io/web file stores, video blob lifecycle, MIME on Supabase upload, transient submit errors.
 - [`2026-06-15_staff-production-review.md`](2026-06-15_staff-production-review.md): Staff+ production review — R1–R7 remediation, judgement docs, doc hubs; audit [`staff_production_review_2026-06-15.md`](../audits/staff_production_review_2026-06-15.md).
 - [`2026-06-15_mutation-success-guard.md`](2026-06-15_mutation-success-guard.md): Static guard + regression routing for mutation success after `RequestIdGuard` supersession (therapy booking bug class).
 - [`2026-06-15_agent_harness_structure.md`](2026-06-15_agent_harness_structure.md): AI-agent harness structure — prompts, evaluators, tests, runtime checks, and feedback loops over repeated prompt tweaks.

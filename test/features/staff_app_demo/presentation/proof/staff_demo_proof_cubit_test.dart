@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +31,16 @@ Future<void> _pumpUntil(
     await Future<void>.delayed(step);
   }
   fail('Condition not met within ${step * maxAttempts}');
+}
+
+void _stubProofFileStore(_MockStaffDemoProofFileStore fileStore) {
+  when(() => fileStore.fileExists(any())).thenAnswer((
+    final Invocation inv,
+  ) async {
+    final path = inv.positionalArguments[0] as String;
+    return File(path).exists();
+  });
+  when(() => fileStore.deleteFileAtPath(any())).thenAnswer((_) async {});
 }
 
 void main() {
@@ -64,6 +74,7 @@ void main() {
             signaturePngFilePath: any(named: 'signaturePngFilePath'),
           ),
         ).thenAnswer((_) => completer.future);
+        _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
           authRepository: authRepository,
@@ -127,6 +138,7 @@ void main() {
             signaturePngFilePath: any(named: 'signaturePngFilePath'),
           ),
         ).thenThrow(const StaffDemoEventProofOfflineEnqueuedException());
+        _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
           authRepository: authRepository,
@@ -184,6 +196,7 @@ void main() {
             signaturePngFilePath: any(named: 'signaturePngFilePath'),
           ),
         ).thenAnswer((_) => completer.future);
+        _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
           authRepository: authRepository,
@@ -217,6 +230,30 @@ void main() {
       },
     );
 
+    test('removePhotoAt deletes persisted file from store', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+      _stubProofFileStore(fileStore);
+
+      when(() => authRepository.currentUser).thenReturn(
+        const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
+      );
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+      );
+      addTearDown(cubit.close);
+
+      cubit.setPhotos(<String>['/tmp/photo-a.jpg', '/tmp/photo-b.jpg']);
+      cubit.removePhotoAt(0);
+
+      expect(cubit.state.photoPaths, <String>['/tmp/photo-b.jpg']);
+      verify(() => fileStore.deleteFileAtPath('/tmp/photo-a.jpg')).called(1);
+    });
+
     test('surfaces error when signature file is missing on disk', () async {
       final authRepository = _MockAuthRepository();
       final repository = _MockStaffDemoEventProofRepository();
@@ -225,6 +262,7 @@ void main() {
       when(() => authRepository.currentUser).thenReturn(
         const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
       );
+      when(() => fileStore.fileExists(any())).thenAnswer((_) async => false);
 
       final cubit = StaffDemoProofCubit(
         authRepository: authRepository,
@@ -262,6 +300,15 @@ void main() {
       when(() => authRepository.currentUser).thenReturn(
         const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
       );
+      when(() => fileStore.fileExists(any())).thenAnswer((
+        final Invocation inv,
+      ) async {
+        final path = inv.positionalArguments[0] as String;
+        if (path.endsWith('missing-photo.jpg')) {
+          return false;
+        }
+        return File(path).exists();
+      });
 
       final cubit = StaffDemoProofCubit(
         authRepository: authRepository,

@@ -9,8 +9,7 @@ import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 /// Manages encryption key for Hive database using secure storage.
 class HiveKeyManager {
   HiveKeyManager({final SecretStorage? storage})
-    : _useAppleDebugFallbackKey =
-          storage == null && useInMemorySecretStorageInDebug(),
+    : _useStableDebugEncryptionKey = useInMemorySecretStorageInDebug(),
       _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKey = 'hive_encryption_key';
@@ -20,7 +19,7 @@ class HiveKeyManager {
   );
 
   final SecretStorage _storage;
-  final bool _useAppleDebugFallbackKey;
+  final bool _useStableDebugEncryptionKey;
   List<int>? _cachedKey;
 
   /// Gets the encryption key, generating a new one if it doesn't exist.
@@ -31,7 +30,7 @@ class HiveKeyManager {
       if (cached != null && cached.length == _keyLengthBytes) {
         return cached;
       }
-      if (_useAppleDebugFallbackKey) {
+      if (_useStableDebugEncryptionKey) {
         _cachedKey = _appleDebugFallbackKey;
         return _appleDebugFallbackKey;
       }

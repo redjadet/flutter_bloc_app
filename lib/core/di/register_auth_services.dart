@@ -36,7 +36,7 @@ void registerAuthServices() {
   registerLazySingletonIfAbsent<AuthRepository>(
     () {
       if (firebaseAuth == null) {
-        if (_shouldUseDebugKeychainGuestFallback) {
+        if (FirebaseBootstrapService.supportsDebugLocalGuestAuth) {
           return _DebugLocalGuestOnlyAuthRepository();
         }
         return const _UnavailableAuthRepository();
@@ -47,8 +47,13 @@ void registerAuthServices() {
       return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
     },
     dispose: (final repository) async {
-      if (repository case final _DebugKeychainGuestAuthRepository fallback) {
-        await fallback.dispose();
+      switch (repository) {
+        case final _DebugKeychainGuestAuthRepository fallback:
+          await fallback.dispose();
+        case final _DebugLocalGuestOnlyAuthRepository localOnly:
+          await localOnly.dispose();
+        default:
+          break;
       }
     },
   );
@@ -129,30 +134,44 @@ class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
 }
 
 /// Local-only guest session when Firebase Auth is unavailable (placeholder
-/// config or skipped init) on macOS debug or iOS simulator debug.
+/// config or skipped init) on web debug, macOS debug, or iOS simulator debug.
 class _DebugLocalGuestOnlyAuthRepository implements AuthRepository {
+  final StreamController<AuthUser?> _authStateController =
+      StreamController<AuthUser?>.broadcast();
   AuthUser? _localGuest;
 
-  String get _localGuestId => defaultTargetPlatform == TargetPlatform.macOS
-      ? 'macos-debug-local-guest'
-      : 'ios-simulator-debug-local-guest';
+  String get _localGuestId {
+    if (kIsWeb) {
+      return 'web-debug-local-guest';
+    }
+    return defaultTargetPlatform == TargetPlatform.macOS
+        ? 'macos-debug-local-guest'
+        : 'ios-simulator-debug-local-guest';
+  }
 
   @override
   AuthUser? get currentUser => _localGuest;
 
   @override
   Stream<AuthUser?> get authStateChanges async* {
-    yield _localGuest;
+    yield currentUser;
+    yield* _authStateController.stream;
   }
 
   @override
   Future<void> signInAnonymously() async {
     _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
+    _authStateController.add(_localGuest);
   }
 
   @override
   Future<void> signOut() async {
     _localGuest = null;
+    _authStateController.add(null);
+  }
+
+  Future<void> dispose() async {
+    await _authStateController.close();
   }
 }
 
