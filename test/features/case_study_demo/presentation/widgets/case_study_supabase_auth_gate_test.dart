@@ -23,11 +23,16 @@ void main() {
               isSupabaseInitialized: true,
               getCurrentUser: () => currentUser,
               authStateChanges: authController.stream,
-              fallbackPath: '/counter',
+              fallbackPath: '/auth',
               supabaseAuthPath: '/supabase-auth',
               redirectReturnPath: '/case-study-demo',
               child: const Scaffold(body: Text('case study child')),
             ),
+          ),
+          GoRoute(
+            path: '/auth',
+            builder: (final context, final state) =>
+                const Scaffold(body: Text('auth')),
           ),
           GoRoute(
             path: '/counter',
@@ -71,11 +76,16 @@ void main() {
               isSupabaseInitialized: false,
               getCurrentUser: () => null,
               authStateChanges: authController.stream,
-              fallbackPath: '/counter',
+              fallbackPath: '/auth',
               supabaseAuthPath: '/supabase-auth',
               redirectReturnPath: '/case-study-demo',
               child: const Scaffold(body: Text('case study child')),
             ),
+          ),
+          GoRoute(
+            path: '/auth',
+            builder: (final context, final state) =>
+                const Scaffold(body: Text('auth')),
           ),
           GoRoute(
             path: '/counter',
