@@ -2120,6 +2120,10 @@
   "@cameraGalleryGenericError": {
     "description": "Generic error message for camera or gallery failures"
   },
+  "cameraGalleryFileTooLarge": "This file is too large. Choose a smaller image.",
+  "@cameraGalleryFileTooLarge": {
+    "description": "Shown when a web gallery pick exceeds the size limit"
+  },
   "cameraGalleryCameraUnavailable": "Camera is not available. Use a real device or pick from gallery.",
   "@cameraGalleryCameraUnavailable": {
     "description": "Shown when camera cannot be used (e.g. iOS Simulator has no camera)"

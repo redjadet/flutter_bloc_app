@@ -20,6 +20,7 @@ enum NetworkErrorKind {
 enum StorageErrorKind {
   read,
   write,
+  delete,
   migration,
   corruption,
 }

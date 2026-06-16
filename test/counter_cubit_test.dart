@@ -287,7 +287,7 @@ void main() {
         });
         Hive.init(tempDir.path);
         final HiveService hiveService = HiveService(
-          keyManager: HiveKeyManager(),
+          keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
         );
         await hiveService.initialize();
         final PendingSyncRepository pendingRepository = PendingSyncRepository(

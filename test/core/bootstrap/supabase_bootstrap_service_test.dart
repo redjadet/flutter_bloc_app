@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -104,6 +105,10 @@ class _MemorySecretStorage implements SecretStorage {
 
   @override
   Future<String?> read(final String key) async => _values[key];
+
+  @override
+  Future<Result<String?>> readResult(final String key) async =>
+      Success<String?>(_values[key]);
 
   @override
   Future<void> write(final String key, final String value) async {

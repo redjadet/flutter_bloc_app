@@ -23,6 +23,8 @@ Start here for the big picture; drill into the linked docs for specifics.
 | What are the architecture decisions? | [ADRs](adr/) |
 | Code quality gates? | [Code Quality](CODE_QUALITY.md) |
 | Best practices checklist? | [Flutter Best Practices Review](flutter_best_practices_review.md) |
+| Plugin failures & wrappers? | [Plugin failure-mode strategy](plugin_failure_mode_strategy.md) |
+| Where to store secrets vs prefs? | [Storage rules](storage_rules.md) |
 
 ## Architecture Diagram
 

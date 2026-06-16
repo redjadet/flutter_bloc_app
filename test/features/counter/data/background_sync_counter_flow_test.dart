@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_rep
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
@@ -63,7 +64,9 @@ void main() {
     setUp(() async {
       tempDir = Directory.systemTemp.createTempSync('background_counter_flow');
       Hive.init(tempDir.path);
-      hiveService = HiveService(keyManager: HiveKeyManager());
+      hiveService = HiveService(
+        keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
+      );
       await hiveService.initialize();
       localRepository = HiveCounterRepository(hiveService: hiveService);
       pendingRepository = PendingSyncRepository(hiveService: hiveService);

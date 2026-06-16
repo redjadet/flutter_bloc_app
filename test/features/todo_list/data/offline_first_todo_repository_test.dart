@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.da
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
+import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -183,7 +184,9 @@ void main() {
     setUp(() async {
       tempDir = Directory.systemTemp.createTempSync('offline_todo_repo_');
       Hive.init(tempDir.path);
-      hiveService = HiveService(keyManager: HiveKeyManager());
+      hiveService = HiveService(
+        keyManager: HiveKeyManager(storage: InMemorySecretStorage()),
+      );
       await hiveService.initialize();
       localRepository = HiveTodoRepository(hiveService: hiveService);
       pendingRepository = PendingSyncRepository(hiveService: hiveService);

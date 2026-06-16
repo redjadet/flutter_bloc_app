@@ -1411,6 +1411,7 @@
   "cameraGalleryPermissionDenied": "Kamera veya galeri erişimi reddedildi.",
   "cameraGalleryCancelled": "Seçim iptal edildi.",
   "cameraGalleryGenericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
+  "cameraGalleryFileTooLarge": "Bu dosya çok büyük. Daha küçük bir görsel seçin.",
   "cameraGalleryCameraUnavailable": "Kamera kullanılamıyor. Gerçek cihaz kullanın veya galeriden seçin.",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {

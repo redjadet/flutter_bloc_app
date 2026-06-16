@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_result_unwrap.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_punch_evaluator.dart';
@@ -74,7 +75,10 @@ class OfflineFirstStaffDemoTimeclockRepository
         ? await _siteRepository.loadSite(siteId: shift.siteId)
         : null;
 
-    final location = await _locationService.captureCurrentLocation();
+    final location = unwrapStaffDemoLocationResult(
+      await _locationService.captureCurrentLocation(),
+      'Staff demo clock-in',
+    );
     final accuracyMeters = location?.accuracyMeters;
 
     double? distanceMeters;

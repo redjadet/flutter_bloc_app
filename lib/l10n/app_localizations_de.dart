@@ -1734,6 +1734,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Etwas ist schiefgelaufen. Bitte erneut versuchen.';
 
   @override
+  String get cameraGalleryFileTooLarge =>
+      'Diese Datei ist zu groß. Wählen Sie ein kleineres Bild.';
+
+  @override
   String get cameraGalleryCameraUnavailable =>
       'Kamera ist nicht verfügbar. Nutzen Sie ein echtes Gerät oder wählen Sie aus der Galerie.';
 

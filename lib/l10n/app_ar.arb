@@ -500,6 +500,7 @@
   "cameraGalleryPermissionDenied": "تم رفض الوصول إلى الكاميرا أو مكتبة الصور.",
   "cameraGalleryCancelled": "تم إلغاء الاختيار.",
   "cameraGalleryGenericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "cameraGalleryFileTooLarge": "هذا الملف كبير جداً. اختر صورة أصغر.",
   "cameraGalleryCameraUnavailable": "الكاميرا غير متوفرة. استخدم جهازًا حقيقيًا أو اختر من المعرض.",
   "scapesPageTitle": "المكتبة / المناظر",
   "scapeNameLabel": "اسم سكيب",

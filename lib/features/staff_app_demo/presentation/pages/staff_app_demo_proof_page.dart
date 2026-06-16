@@ -9,8 +9,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/st
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_messages.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
-import 'package:image_picker/image_picker.dart';
 
 part 'staff_app_demo_proof_page_widgets.part.dart';
 

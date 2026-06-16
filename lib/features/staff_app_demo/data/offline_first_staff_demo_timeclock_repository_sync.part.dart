@@ -14,7 +14,10 @@ extension _OfflineFirstStaffDemoTimeclockRepositorySync
     }
 
     final nowUtc = DateTime.now().toUtc();
-    final location = await _locationService.captureCurrentLocation();
+    final location = unwrapStaffDemoLocationResult(
+      await _locationService.captureCurrentLocation(),
+      'Staff demo clock-out',
+    );
     final accuracyMeters = location?.accuracyMeters;
     final bool locationInsufficient =
         accuracyMeters == null ||

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -259,6 +260,10 @@ class _FakeSecretStorage implements SecretStorage {
 
   @override
   Future<String?> read(String key) async => _values[key];
+
+  @override
+  Future<Result<String?>> readResult(String key) async =>
+      Success<String?>(_values[key]);
 
   @override
   Future<void> write(String key, String value) async {

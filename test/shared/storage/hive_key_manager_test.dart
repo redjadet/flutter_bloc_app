@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -67,26 +69,63 @@ void main() {
       },
     );
 
-    test('getEncryptionKey uses fallback when storage read fails', () async {
-      final storage = _FailingSecretStorage();
-      final keyManager = HiveKeyManager(storage: storage);
+    test(
+      'getEncryptionKey propagates read failure without rotating stored key',
+      () async {
+        final storage = _InterruptingReadSecretStorage();
+        final validKey = List<int>.generate(32, (final index) => index);
+        await storage.write('hive_encryption_key', base64Encode(validKey));
 
-      final key = await keyManager.getEncryptionKey();
+        storage.failReads = true;
+        final keyManager = HiveKeyManager(storage: storage);
 
-      // Should still return a valid key (from fallback)
-      expect(key, hasLength(32));
-    });
+        await expectLater(
+          keyManager.getEncryptionKey(),
+          throwsA(isA<HiveKeyReadException>()),
+        );
+
+        storage.failReads = false;
+        final stored = await storage.read('hive_encryption_key');
+        expect(stored, base64Encode(validKey));
+
+        final recoveredKey = await keyManager.getEncryptionKey();
+        expect(recoveredKey, equals(validKey));
+      },
+    );
 
     test(
-      'getEncryptionKey reuses temporary key after storage failure',
+      'getEncryptionKey propagates read failure when storage is empty',
       () async {
         final storage = _FailingSecretStorage();
         final keyManager = HiveKeyManager(storage: storage);
 
-        final firstKey = await keyManager.getEncryptionKey();
-        final secondKey = await keyManager.getEncryptionKey();
+        await expectLater(
+          keyManager.getEncryptionKey(),
+          throwsA(isA<HiveKeyReadException>()),
+        );
+      },
+    );
 
-        expect(secondKey, equals(firstKey));
+    test('getEncryptionKey throws when new key cannot be persisted', () async {
+      final storage = _NoPersistWriteSecretStorage();
+      final keyManager = HiveKeyManager(storage: storage);
+
+      await expectLater(
+        keyManager.getEncryptionKey(),
+        throwsA(isA<HiveKeyPersistenceException>()),
+      );
+    });
+
+    test(
+      'getEncryptionKey throws when persisted key fails verify read',
+      () async {
+        final storage = _VerifyMismatchSecretStorage();
+        final keyManager = HiveKeyManager(storage: storage);
+
+        await expectLater(
+          keyManager.getEncryptionKey(),
+          throwsA(isA<HiveKeyPersistenceException>()),
+        );
       },
     );
 
@@ -139,11 +178,102 @@ void main() {
   });
 }
 
+class _InterruptingReadSecretStorage implements SecretStorage {
+  final Map<String, String> _values = <String, String>{};
+  bool failReads = false;
+
+  @override
+  Future<String?> read(final String key) async {
+    final result = await readResult(key);
+    return result.getOrNull();
+  }
+
+  @override
+  Future<Result<String?>> readResult(final String key) async {
+    if (failReads) {
+      return FailureResult<String?>(
+        StorageFailure(kind: StorageFailureKind.read, key: key),
+      );
+    }
+    return Success(_values[key]);
+  }
+
+  @override
+  Future<void> write(final String key, final String value) async {
+    _values[key] = value;
+  }
+
+  @override
+  Future<void> delete(final String key) async {
+    _values.remove(key);
+  }
+
+  @override
+  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+
+  @override
+  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+      AppLogger.silenceAsync(action);
+}
+
+/// Simulates [FlutterSecureSecretStorage.write] swallowing write failures.
+class _NoPersistWriteSecretStorage extends InMemorySecretStorage {
+  @override
+  Future<void> write(final String key, final String value) async {}
+}
+
+class _VerifyMismatchSecretStorage implements SecretStorage {
+  int _readCount = 0;
+  String? _written;
+
+  @override
+  Future<String?> read(final String key) async {
+    final result = await readResult(key);
+    return result.getOrNull();
+  }
+
+  @override
+  Future<Result<String?>> readResult(final String key) async {
+    _readCount++;
+    if (_readCount == 1) {
+      return const Success(null);
+    }
+    if (_written != null) {
+      return Success('mismatch-$_written');
+    }
+    return const Success(null);
+  }
+
+  @override
+  Future<void> write(final String key, final String value) async {
+    _written = value;
+  }
+
+  @override
+  Future<void> delete(final String key) async {
+    _written = null;
+    _readCount = 0;
+  }
+
+  @override
+  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+
+  @override
+  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+      AppLogger.silenceAsync(action);
+}
+
 class _FailingSecretStorage implements SecretStorage {
   @override
   Future<String?> read(final String key) async {
     throw Exception('Storage read failed');
   }
+
+  @override
+  Future<Result<String?>> readResult(final String key) async =>
+      const FailureResult<String?>(
+        UnknownFailure(message: 'Storage read failed'),
+      );
 
   @override
   Future<void> write(final String key, final String value) async {

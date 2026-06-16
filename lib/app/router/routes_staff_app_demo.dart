@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
@@ -139,6 +140,7 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
             authRepository: getIt<AuthRepository>(),
             repository: getIt(),
             fileStore: getIt(),
+            photoPicker: getIt<StaffDemoProofPhotoPicker>(),
           ),
           init: (_) async {},
           child: const StaffAppDemoProofPage(),

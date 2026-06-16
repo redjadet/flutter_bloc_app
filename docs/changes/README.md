@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-16_staff-demo-plugin-hardening.md`](2026-06-16_staff-demo-plugin-hardening.md): Staff demo plugin audit — `Result`/`Failure` at location/media seams, proof photo picker port + DI, camera_gallery failure mapper, regression tests, storage/plugin-failure docs.
 - [`2026-06-16_widget-list-stable-keys.md`](2026-06-16_widget-list-stable-keys.md): Widget identity in dynamic lists — stable `ValueKey`s (websocket `sequence`, chat `clientMessageId`, case-study `CaseStudyQuestionId`, order-book side+price); monotonic websocket sequence across disconnect; `check_widget_identity` `ObjectKey` advisory.
 - [`2026-06-16_chat-send-supersession-loading.md`](2026-06-16_chat-send-supersession-loading.md): Chat — `sendMessage` clears stuck `isLoading` and persists assistant reply when `RequestIdGuard` superseded by history actions.
 - [`2026-06-15_web-parity-staff-case-study.md`](2026-06-15_web-parity-staff-case-study.md): Web parity for staff proof + case-study clip playback — removed web DI/route shims, io/web file stores, video blob lifecycle, MIME on Supabase upload, transient submit errors.

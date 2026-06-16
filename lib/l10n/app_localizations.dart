@@ -3109,6 +3109,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again.'**
   String get cameraGalleryGenericError;
 
+  /// Shown when a web gallery pick exceeds the size limit
+  ///
+  /// In en, this message translates to:
+  /// **'This file is too large. Choose a smaller image.'**
+  String get cameraGalleryFileTooLarge;
+
   /// Shown when camera cannot be used (e.g. iOS Simulator has no camera)
   ///
   /// In en, this message translates to:

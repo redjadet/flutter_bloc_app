@@ -5,21 +5,58 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
+import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
-class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
+part 'staff_demo_proof_cubit_submit.part.dart';
+
+class StaffDemoProofCubit extends _StaffDemoProofCubitBase
+    with _StaffDemoProofCubitSubmit {
   StaffDemoProofCubit({
+    required super.authRepository,
+    required super.repository,
+    required super.fileStore,
+    required super.photoPicker,
+  });
+}
+
+abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
+  _StaffDemoProofCubitBase({
     required this._authRepository,
     required this._repository,
     required this._fileStore,
+    required this._photoPicker,
   }) : super(const StaffDemoProofState(status: StaffDemoProofStatus.editing));
 
   final AuthRepository _authRepository;
   final StaffDemoEventProofRepository _repository;
   final StaffDemoProofFileStore _fileStore;
+  final StaffDemoProofPhotoPicker _photoPicker;
   bool _submitInFlight = false;
+  bool _pickInFlight = false;
+  bool _isClosing = false;
+  String? _pendingStagedPickPath;
+  Future<void>? _activePersistOperation;
+
+  @override
+  Future<void> close() async {
+    _isClosing = true;
+    final Future<void>? persist = _activePersistOperation;
+    if (persist != null) {
+      try {
+        await persist;
+      } on Object {
+        // Cubit is closing; swallow persist errors.
+      }
+    }
+    _releasePendingStagedPick();
+    await super.close();
+  }
 
   void setPhotos(final List<String> paths) {
     emit(state.copyWith(photoPaths: List<String>.from(paths)));
@@ -30,11 +67,99 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
   }
 
   Future<void> addPhotoFromPath(final String sourcePath) async {
+    final Future<void> operation = _persistPhotoFromPath(sourcePath);
+    _activePersistOperation = operation;
+    try {
+      await operation;
+    } finally {
+      if (identical(_activePersistOperation, operation)) {
+        _activePersistOperation = null;
+      }
+    }
+  }
+
+  Future<void> _persistPhotoFromPath(final String sourcePath) async {
     final String persisted = await _fileStore.persistPhotoFile(
       sourcePath: sourcePath,
     );
-    if (isClosed) return;
+    if (isClosed || _isClosing) return;
     emit(state.copyWith(photoPaths: <String>[...state.photoPaths, persisted]));
+  }
+
+  /// Returns an l10n error key when pick fails; `null` on success or cancel.
+  Future<String?> pickPhotoFromCamera() =>
+      _pickPhoto(_photoPicker.pickFromCamera);
+
+  /// Returns an l10n error key when pick fails; `null` on success or cancel.
+  Future<String?> pickPhotoFromGallery() =>
+      _pickPhoto(_photoPicker.pickFromGallery);
+
+  Future<String?> _pickPhoto(
+    final Future<MediaPickResult> Function() pick,
+  ) async {
+    if (_pickInFlight) {
+      return null;
+    }
+    _pickInFlight = true;
+    try {
+      return await _pickPhotoBody(pick);
+    } finally {
+      _pickInFlight = false;
+    }
+  }
+
+  Future<String?> _pickPhotoBody(
+    final Future<MediaPickResult> Function() pick,
+  ) async {
+    final MediaPickResult result = await pick();
+    if (isClosed || _isClosing) {
+      _releaseStagedFromResult(result);
+      return null;
+    }
+    return result.when(
+      success: (path) async {
+        _trackPendingStagedPick(path);
+        try {
+          await addPhotoFromPath(path);
+          _releasePendingStagedPick();
+          return null;
+        } on Object {
+          _releasePendingStagedPick();
+          return MediaPickErrorKeys.generic;
+        }
+      },
+      cancelled: () async => null,
+      failure: (errorKey, _) async => errorKey,
+    );
+  }
+
+  void _trackPendingStagedPick(final String path) {
+    if (!StaffDemoProofPickMemory.instance.isPickPath(path)) {
+      return;
+    }
+    _releasePendingStagedPick();
+    _pendingStagedPickPath = path;
+  }
+
+  void _releasePendingStagedPick() {
+    final String? path = _pendingStagedPickPath;
+    if (path == null) {
+      return;
+    }
+    StaffDemoProofPickMemory.instance.release(path);
+    _pendingStagedPickPath = null;
+  }
+
+  void _releaseStagedFromResult(final MediaPickResult result) {
+    result.when(
+      success: (path) {
+        if (StaffDemoProofPickMemory.instance.isPickPath(path)) {
+          StaffDemoProofPickMemory.instance.release(path);
+        }
+      },
+      cancelled: () {},
+      failure: (_, _) {},
+    );
   }
 
   void removePhotoAt(final int index) {
@@ -55,119 +180,5 @@ class StaffDemoProofCubit extends Cubit<StaffDemoProofState> {
     );
     if (isClosed) return;
     emit(state.copyWith(signaturePath: persisted));
-  }
-
-  Future<void> submit({
-    required final String siteId,
-    required final String? shiftId,
-  }) async {
-    if (_submitInFlight || state.status == StaffDemoProofStatus.submitting) {
-      return;
-    }
-    final userId = _authRepository.currentUser?.id;
-    if (userId == null || userId.isEmpty) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Not signed in.',
-        ),
-      );
-      return;
-    }
-    if (siteId.trim().isEmpty) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Site ID is required.',
-        ),
-      );
-      return;
-    }
-    final signaturePath = state.signaturePath;
-    if (signaturePath == null || signaturePath.isEmpty) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Signature is required.',
-        ),
-      );
-      return;
-    }
-
-    final photoPaths = List<String>.unmodifiable(state.photoPaths);
-    _submitInFlight = true;
-    try {
-      if (!await _fileStore.fileExists(signaturePath)) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.error,
-            errorMessage: 'Signature file missing.',
-          ),
-        );
-        return;
-      }
-
-      final photoExistence = await Future.wait<bool>(
-        photoPaths.map(_fileStore.fileExists),
-      );
-      if (photoExistence.contains(false)) {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.error,
-            errorMessage: 'A photo file is missing locally. Please re-add it.',
-          ),
-        );
-        return;
-      }
-
-      if (isClosed) return;
-      emit(state.copyWith(status: StaffDemoProofStatus.submitting));
-      try {
-        final proofId = await _repository.submitProof(
-          userId: userId,
-          siteId: siteId.trim(),
-          shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
-          photoFilePaths: photoPaths,
-          signaturePngFilePath: signaturePath,
-        );
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.success,
-            errorMessage: null,
-            lastProofId: proofId,
-          ),
-        );
-      } on StaffDemoEventProofOfflineEnqueuedException {
-        if (isClosed) return;
-        emit(
-          state.copyWith(
-            status: StaffDemoProofStatus.offlineQueued,
-            errorMessage: null,
-          ),
-        );
-      } on Exception catch (error, stackTrace) {
-        if (isClosed) return;
-        await CubitExceptionHandler.executeAsync<void>(
-          operation: () => Future<void>.error(error, stackTrace),
-          isAlive: () => !isClosed,
-          onSuccess: (_) {},
-          onError: (final message) {
-            if (isClosed) return;
-            emit(
-              state.copyWith(
-                status: StaffDemoProofStatus.error,
-                errorMessage: message,
-              ),
-            );
-          },
-          logContext: IntegrationLogMessages.staffDemoProofSubmit,
-        );
-      }
-    } finally {
-      _submitInFlight = false;
-    }
   }
 }
