@@ -73,109 +73,119 @@ FutureOr<String?> _redirectCaseStudyReview(
   return null;
 }
 
+Widget _buildCaseStudyDemoShell(
+  final BuildContext context,
+  final GoRouterState state,
+  final Widget child,
+) {
+  final AuthRepository auth = getIt<AuthRepository>();
+  final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
+  return AppRouteAuthGate(
+    policy: AppRoutePolicies.caseStudyDemo,
+    getCurrentUser: () => auth.currentUser,
+    authStateChanges: auth.authStateChanges,
+    authPath: AppRoutes.authPath,
+    child: CaseStudySupabaseAuthGate(
+      isSupabaseInitialized: remoteAuth.isConfigured,
+      getCurrentUser: () => remoteAuth.currentUser,
+      authStateChanges: remoteAuth.authStateChanges,
+      fallbackPath: AppRoutes.authPath,
+      supabaseAuthPath: AppRoutes.supabaseAuthPath,
+      redirectReturnPath: state.uri.toString(),
+      child: BlocProviderHelpers.withAsyncInit<CaseStudySessionCubit>(
+        create: () => CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: getIt<CaseStudyLocalRepository>(),
+          videoRepository: getIt<CaseStudyVideoRepository>(),
+          uploadRepository: getIt<CaseStudyUploadRepository>(),
+          clipStore: getIt<CaseStudyClipFileStore>(),
+          remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+          remoteBackendAuth: remoteAuth,
+          remoteRepository: getIt<CaseStudyRemoteRepository>(),
+          timerService: getIt<TimerService>(),
+        ),
+        init: (cubit) => cubit.hydrate(),
+        child: child,
+      ),
+    ),
+  );
+}
+
 /// Shell + routes for the dentist case-study demo (auth gate + session cubit).
 ShellRoute createCaseStudyDemoShellRoute() => ShellRoute(
-  builder:
-      (
-        context,
-        state,
-        child,
-      ) {
-        final AuthRepository auth = getIt<AuthRepository>();
-        final RemoteBackendAuthPort remoteAuth = getIt<RemoteBackendAuthPort>();
-        return AppRouteAuthGate(
-          policy: AppRoutePolicies.caseStudyDemo,
-          getCurrentUser: () => auth.currentUser,
-          authStateChanges: auth.authStateChanges,
-          authPath: AppRoutes.authPath,
-          child: CaseStudySupabaseAuthGate(
-            isSupabaseInitialized: remoteAuth.isConfigured,
-            getCurrentUser: () => remoteAuth.currentUser,
-            authStateChanges: remoteAuth.authStateChanges,
-            fallbackPath: AppRoutes.counterPath,
-            supabaseAuthPath: AppRoutes.supabaseAuthPath,
-            redirectReturnPath: state.uri.toString(),
-            child: BlocProviderHelpers.withAsyncInit<CaseStudySessionCubit>(
-              create: () => CaseStudySessionCubit(
-                authRepository: auth,
-                localRepository: getIt<CaseStudyLocalRepository>(),
-                videoRepository: getIt<CaseStudyVideoRepository>(),
-                uploadRepository: getIt<CaseStudyUploadRepository>(),
-                clipStore: getIt<CaseStudyClipFileStore>(),
-                remoteDeleteRepository:
-                    getIt<CaseStudyRemoteDeleteRepository>(),
-                remoteBackendAuth: remoteAuth,
-                remoteRepository: getIt<CaseStudyRemoteRepository>(),
-                timerService: getIt<TimerService>(),
-              ),
-              init: (cubit) => cubit.hydrate(),
-              child: child,
-            ),
-          ),
-        );
-      },
+  builder: (context, state, child) =>
+      _buildCaseStudyDemoShell(context, state, child),
   routes: <RouteBase>[
     GoRoute(
       path: AppRoutes.caseStudyDemoPath,
       name: AppRoutes.caseStudyDemo,
-      builder: (context, state) => CaseStudyDemoHomePage(
-        remoteAuth: getIt<RemoteBackendAuthPort>(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: CaseStudyDemoHomePage(
+          remoteAuth: getIt<RemoteBackendAuthPort>(),
+        ),
       ),
     ),
     GoRoute(
       path: AppRoutes.caseStudyDemoNewPath,
       name: AppRoutes.caseStudyDemoNew,
-      builder: (context, state) => const CaseStudyMetadataPage(),
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: CaseStudyMetadataPage()),
     ),
     GoRoute(
       path: AppRoutes.caseStudyDemoRecordPath,
       name: AppRoutes.caseStudyDemoRecord,
       redirect: _redirectCaseStudyRecord,
-      builder: (context, state) => const CaseStudyRecordPage(),
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: CaseStudyRecordPage()),
     ),
     GoRoute(
       path: AppRoutes.caseStudyDemoReviewPath,
       name: AppRoutes.caseStudyDemoReview,
       redirect: _redirectCaseStudyReview,
-      builder: (context, state) => const CaseStudyReviewPage(),
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: CaseStudyReviewPage()),
     ),
     GoRoute(
       path: AppRoutes.caseStudyDemoHistoryPath,
       name: AppRoutes.caseStudyDemoHistory,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<CaseStudyHistoryCubit>(
-            create: () => CaseStudyHistoryCubit(
-              authRepository: getIt<AuthRepository>(),
-              localRepository: getIt<CaseStudyLocalRepository>(),
-              remoteRepository: getIt<CaseStudyRemoteRepository>(),
-              remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
-              clipStore: getIt<CaseStudyClipFileStore>(),
-              remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
-            ),
-            init: (cubit) => cubit.load(),
-            child: const CaseStudyHistoryPage(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<CaseStudyHistoryCubit>(
+          create: () => CaseStudyHistoryCubit(
+            authRepository: getIt<AuthRepository>(),
+            localRepository: getIt<CaseStudyLocalRepository>(),
+            remoteRepository: getIt<CaseStudyRemoteRepository>(),
+            remoteDeleteRepository: getIt<CaseStudyRemoteDeleteRepository>(),
+            clipStore: getIt<CaseStudyClipFileStore>(),
+            remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
           ),
+          init: (cubit) => cubit.load(),
+          child: const CaseStudyHistoryPage(),
+        ),
+      ),
       routes: <RouteBase>[
         GoRoute(
           path: ':id',
           name: AppRoutes.caseStudyDemoHistoryDetail,
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final String recordId = state.pathParameters['id'] ?? '';
-            return BlocProviderHelpers.withAsyncInit<
-              CaseStudyHistoryDetailCubit
-            >(
-              create: () => CaseStudyHistoryDetailCubit(
-                recordId: recordId,
-                authRepository: getIt<AuthRepository>(),
-                localRepository: getIt<CaseStudyLocalRepository>(),
-                remoteRepository: getIt<CaseStudyRemoteRepository>(),
-                remoteDeleteRepository:
-                    getIt<CaseStudyRemoteDeleteRepository>(),
-                clipStore: getIt<CaseStudyClipFileStore>(),
-                remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
-              ),
-              init: (final cubit) => cubit.load(),
-              child: const CaseStudyHistoryDetailPage(),
+            return NoTransitionPage(
+              child:
+                  BlocProviderHelpers.withAsyncInit<
+                    CaseStudyHistoryDetailCubit
+                  >(
+                    create: () => CaseStudyHistoryDetailCubit(
+                      recordId: recordId,
+                      authRepository: getIt<AuthRepository>(),
+                      localRepository: getIt<CaseStudyLocalRepository>(),
+                      remoteRepository: getIt<CaseStudyRemoteRepository>(),
+                      remoteDeleteRepository:
+                          getIt<CaseStudyRemoteDeleteRepository>(),
+                      clipStore: getIt<CaseStudyClipFileStore>(),
+                      remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
+                    ),
+                    init: (final cubit) => cubit.load(),
+                    child: const CaseStudyHistoryDetailPage(),
+                  ),
             );
           },
         ),

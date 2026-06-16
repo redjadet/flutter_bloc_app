@@ -30,6 +30,7 @@ expected structure and “ownership” contract:
 | `./tool/delivery_checklist.sh` / `./bin/checklist` | Primary local quality gate. Broad/pre-ship runs still take the full sweep; narrow local docs/tooling work can use built-in fast paths while CI keeps the full bar (`delivery_checklist.sh` is canonical). |
 | `./bin/checklist-fast` | Local-only sanity shortcut for clean trees or narrow docs/tooling work. Refuses CI and broader app/runtime diffs. |
 | `./tool/check_pyright_python.sh` | Pyright on `demos/render_chat_api` and `tool/` Python (included in the full delivery gate; run alone when iterating on the Render FastAPI demo or shell tooling). |
+| `bash tool/check_flutter_layout_overflows.sh` | Runs a small high-signal test set with a **global fail-fast guard** for layout overflows (e.g. `RenderFlex overflow`). Included in the full checklist. |
 | `./bin/integration_tests` | Runs integration flows on a supported non-web device. |
 | `tool/test_coverage.sh` | Runs unit, bloc, widget, and other coverage-producing tests. |
 | `dart run tool/update_coverage_summary.dart` | Refreshes [`coverage/coverage_summary.md`](../coverage/coverage_summary.md). |

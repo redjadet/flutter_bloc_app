@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_constants.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_transient_submit_error.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
@@ -21,6 +23,7 @@ class OfflineFirstStaffDemoEventProofRepository
     required this._pendingSyncRepository,
     required this._registry,
     required this._operationFactory,
+    required this._proofFileStore,
     this._proofIdFactory,
   }) {
     _registry.register(this);
@@ -31,6 +34,7 @@ class OfflineFirstStaffDemoEventProofRepository
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
   final StaffDemoEventProofSyncOperationFactory _operationFactory;
+  final StaffDemoProofFileStore _proofFileStore;
   final String Function()? _proofIdFactory;
 
   @override
@@ -132,24 +136,37 @@ class OfflineFirstStaffDemoEventProofRepository
     final List<String> uploadedPhotoStoragePaths = <String>[];
     for (int i = 0; i < photoFilePaths.length; i++) {
       final path = photoFilePaths[i];
-      final file = File(path);
-      if (!file.existsSync()) continue;
+      if (!await _proofFileStore.fileExists(path)) {
+        throw StaffDemoProofFileMissingException('Photo file missing: $path');
+      }
+      final List<int> bytes = await _proofFileStore.readFileBytes(path);
       final storagePath =
           'staff-app-demo/proofs/$userId/$proofId/photos/photo_${i + 1}.jpg';
-      await _storage.ref(storagePath).putFile(file);
+      await _storage
+          .ref(storagePath)
+          .putData(
+            Uint8List.fromList(bytes),
+            SettableMetadata(contentType: 'image/jpeg'),
+          );
       uploadedPhotoStoragePaths.add(storagePath);
     }
 
-    final sigFile = File(signaturePngFilePath);
-    if (!sigFile.existsSync()) {
-      throw FileSystemException(
-        'Signature file missing.',
-        signaturePngFilePath,
+    if (!await _proofFileStore.fileExists(signaturePngFilePath)) {
+      throw StaffDemoProofFileMissingException(
+        'Signature file missing: $signaturePngFilePath',
       );
     }
+    final List<int> signatureBytes = await _proofFileStore.readFileBytes(
+      signaturePngFilePath,
+    );
     final String signatureStoragePath =
         'staff-app-demo/proofs/$userId/$proofId/signature.png';
-    await _storage.ref(signatureStoragePath).putFile(sigFile);
+    await _storage
+        .ref(signatureStoragePath)
+        .putData(
+          Uint8List.fromList(signatureBytes),
+          SettableMetadata(contentType: 'image/png'),
+        );
 
     await _firestore
         .collection(StaffDemoEventProofSyncConstants.firestoreCollection)
@@ -168,7 +185,7 @@ class OfflineFirstStaffDemoEventProofRepository
   Future<void> pullRemote() async {}
 
   bool _shouldQueueForOfflineRetry(final Object error) {
-    if (error is SocketException || error is TimeoutException) {
+    if (isStaffDemoTransientNetworkError(error)) {
       return true;
     }
     if (error is FirebaseException) {

@@ -30,17 +30,15 @@ void _registerCounterRepository() {
 }
 
 void _registerSupabaseConfigServices() {
-  registerLazySingletonIfAbsent<SupabaseConfigProvider>(
-    () => SupabaseConfigProvider(remoteConfig: getIt<RemoteConfigService>()),
-  );
-  if (!FirebaseBootstrapService.isFirebaseInitialized) {
-    return;
-  }
+  final FirebaseAuth? firebaseAuth = _registeredFirebaseAuthOrNull();
 
-  late final FirebaseAuth firebaseAuth;
-  try {
-    firebaseAuth = getIt<FirebaseAuth>();
-  } on Object {
+  registerLazySingletonIfAbsent<SupabaseConfigProvider>(
+    () => SupabaseConfigProvider(
+      auth: firebaseAuth,
+      remoteConfig: getIt<RemoteConfigService>(),
+    ),
+  );
+  if (firebaseAuth == null) {
     return;
   }
 
@@ -51,6 +49,18 @@ void _registerSupabaseConfigServices() {
     ),
     dispose: (final coordinator) => coordinator.dispose(),
   );
+}
+
+FirebaseAuth? _registeredFirebaseAuthOrNull() {
+  if (!FirebaseBootstrapService.isFirebaseInitialized) {
+    return null;
+  }
+
+  try {
+    return getIt<FirebaseAuth>();
+  } on Object {
+    return null;
+  }
 }
 
 /// `registerHttpServices` builds `Dio` with `NetworkStatusService`; chart setup

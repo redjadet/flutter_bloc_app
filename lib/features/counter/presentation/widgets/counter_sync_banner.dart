@@ -57,9 +57,12 @@ class CounterSyncBanner extends StatelessWidget {
             final String? lastChangeId = counterState.changeId;
             final bool hasMetadata =
                 (lastSyncedAt != null) || (lastChangeId?.isNotEmpty ?? false);
-            final bool shouldHide =
-                !isOffline && !isSyncing && pendingCount == 0 && !hasMetadata;
-            if (shouldHide) {
+            if (!shouldShowSyncBanner(
+              isOffline: isOffline,
+              isSyncing: isSyncing,
+              pendingCount: pendingCount,
+              hasMetadata: hasMetadata,
+            )) {
               return const SizedBox.shrink();
             }
             final bool isError = isOffline;
@@ -85,11 +88,12 @@ class CounterSyncBanner extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  AppMessage(
-                    title: title,
-                    message: message,
-                    isError: isError,
-                  ),
+                  if (title.isNotEmpty || message.isNotEmpty)
+                    AppMessage(
+                      title: title,
+                      message: message,
+                      isError: isError,
+                    ),
                   if (lastSyncedText case final synced?) ...[
                     SizedBox(height: context.responsiveGapXS),
                     Text(

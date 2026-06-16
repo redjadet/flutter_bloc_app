@@ -212,6 +212,9 @@ class _NoopClipFileStore implements CaseStudyClipFileStore {
     required final String stagingPath,
     required final String finalPath,
   }) => finalPath;
+
+  @override
+  Future<List<int>> readClipBytes(final String path) async => const <int>[];
 }
 
 class _SpyClipFileStore implements CaseStudyClipFileStore {
@@ -248,6 +251,9 @@ class _SpyClipFileStore implements CaseStudyClipFileStore {
     required final String stagingPath,
     required final String finalPath,
   }) => finalPath;
+
+  @override
+  Future<List<int>> readClipBytes(final String path) async => const <int>[];
 }
 
 class _NoopRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {

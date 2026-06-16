@@ -50,13 +50,13 @@ T? createRemoteRepositoryOrNull<T>({
   if (shouldSkipFirebaseRemoteRepositories) {
     return null;
   }
-  if (Firebase.apps.isEmpty) {
-    return null;
-  }
   // coverage:ignore-start
   try {
+    if (Firebase.apps.isEmpty) {
+      return null;
+    }
     return factory();
-  } on Exception catch (error, stackTrace) {
+  } on Object catch (error, stackTrace) {
     AppLogger.error(
       'Creating remote $context failed',
       error,

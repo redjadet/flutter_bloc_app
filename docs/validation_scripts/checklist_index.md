@@ -78,5 +78,6 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_lifecycle_observer_dispose.sh`
 - `check_deferred_heavy_routes.sh`
 - `check_pyright_python.sh`
+- `check_flutter_layout_overflows.sh`
 
 <!-- AUTO-GENERATED-CHECK_SCRIPTS:END -->

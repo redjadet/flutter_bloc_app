@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
@@ -27,12 +26,10 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   void initState() {
     super.initState();
     _cubit = context.cubit<WebsocketCubit>();
-    if (!kIsWeb) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (!mounted) return;
-        await _cubit.connect();
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await _cubit.connect();
+    });
   }
 
   @override
@@ -56,21 +53,6 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    if (kIsWeb) {
-      return CommonPageLayout(
-        title: l10n.websocketDemoTitle,
-        body: Center(
-          child: Padding(
-            padding: context.allGapL,
-            child: Text(
-              l10n.websocketDemoWebUnsupported,
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
-    }
     return CommonPageLayout(
       title: l10n.websocketDemoTitle,
       actions: const [_ReconnectAction()],

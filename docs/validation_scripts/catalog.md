@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **89** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **71** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **90** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **72** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -79,6 +79,10 @@ below.
   errors via `dart mcp-server` (`script/mcp_runtime_errors.js`). Skips (exit 0)
   when no DTD or no connected debug app; `--strict` fails in that case. Not in
   `./bin/checklist`. See [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md).
+- **`check_flutter_layout_overflows.sh`**: Runs a small, high-signal Flutter test
+  set under a **global fail-fast overflow guard** (wired in
+  `test/flutter_test_config.dart`). Fails the checklist on `RenderFlex` /
+  `RenderParagraph` overflow errors that can otherwise slip into manual web QA.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
 - **`check_ai_failure_risk_register.sh`**: Ensures
   [`ai_failure_risks.md`](../ai/ai_failure_risks.md) keeps required Cursor/Codex

@@ -60,6 +60,16 @@ require_pattern "$SECRET_TEST" 'iOS debug' \
 require_pattern "$KEY_TEST" 'iOS debug' \
   'iOS debug Hive key regression test'
 
+require_pattern "$SECRET_STORAGE" 'useUnencryptedHiveBoxesInDebug' \
+  'useUnencryptedHiveBoxesInDebug() web debug helper'
+require_pattern "$SECRET_STORAGE" 'useInMemoryHiveBoxesInDebug' \
+  'useInMemoryHiveBoxesInDebug() web debug helper'
+
+HIVE_INIT_WEB="lib/shared/storage/hive_initializer_web.dart"
+[ -f "$HIVE_INIT_WEB" ] || fail "Expected file missing: $HIVE_INIT_WEB"
+require_pattern "$HIVE_INIT_WEB" 'hive_web_debug_v4' \
+  'hive_web_debug_v4 IndexedDB namespace'
+
 require_pattern "$SECRET_STORAGE" 'if \(useInMemorySecretStorageInDebug\(\)\)' \
   'createDefaultSecretStorage routes Apple debug through useInMemorySecretStorageInDebug()'
 

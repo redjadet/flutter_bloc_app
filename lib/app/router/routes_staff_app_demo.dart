@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
@@ -28,31 +29,38 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/
 import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 import 'package:go_router/go_router.dart';
 
+Widget _buildStaffAppDemoShell(
+  final BuildContext context,
+  final GoRouterState state,
+  final Widget child,
+) {
+  final AuthRepository auth = getIt<AuthRepository>();
+  return AppRouteAuthGate(
+    policy: AppRoutePolicies.staffAppDemo,
+    getCurrentUser: () => auth.currentUser,
+    authStateChanges: auth.authStateChanges,
+    authPath: AppRoutes.authPath,
+    child: BlocProviderHelpers.withAsyncInit<StaffDemoSessionCubit>(
+      create: () => StaffDemoSessionCubit(
+        authRepository: auth,
+        profileRepository: getIt(),
+        pushTokenRepository: getIt(),
+      ),
+      init: (cubit) => cubit.hydrate(),
+      child: BlocProviderHelpers.withAsyncInit<StaffDemoSitesCubit>(
+        create: () =>
+            StaffDemoSitesCubit(repository: getIt<StaffDemoSiteRepository>()),
+        init: (cubit) => cubit.load(),
+        child: StaffAppDemoShellPage(child: child),
+      ),
+    ),
+  );
+}
+
 /// Shell + routes for the staff app demo (auth gate + session cubit).
 ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
-  builder: (context, state, child) {
-    final AuthRepository auth = getIt<AuthRepository>();
-    return AppRouteAuthGate(
-      policy: AppRoutePolicies.staffAppDemo,
-      getCurrentUser: () => auth.currentUser,
-      authStateChanges: auth.authStateChanges,
-      authPath: AppRoutes.authPath,
-      child: BlocProviderHelpers.withAsyncInit<StaffDemoSessionCubit>(
-        create: () => StaffDemoSessionCubit(
-          authRepository: auth,
-          profileRepository: getIt(),
-          pushTokenRepository: getIt(),
-        ),
-        init: (cubit) => cubit.hydrate(),
-        child: BlocProviderHelpers.withAsyncInit<StaffDemoSitesCubit>(
-          create: () =>
-              StaffDemoSitesCubit(repository: getIt<StaffDemoSiteRepository>()),
-          init: (cubit) => cubit.load(),
-          child: StaffAppDemoShellPage(child: child),
-        ),
-      ),
-    );
-  },
+  builder: (context, state, child) =>
+      _buildStaffAppDemoShell(context, state, child),
   routes: <RouteBase>[
     GoRoute(
       path: AppRoutes.staffAppDemoPath,
@@ -62,86 +70,93 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
     GoRoute(
       path: AppRoutes.staffAppDemoDashboardPath,
       name: AppRoutes.staffAppDemoDashboard,
-      builder: (context, state) => const StaffAppDemoDashboardPage(),
+      pageBuilder: (context, state) =>
+          const NoTransitionPage(child: StaffAppDemoDashboardPage()),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoTimeclockPath,
       name: AppRoutes.staffAppDemoTimeclock,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoTimeclockCubit>(
-            create: () => StaffDemoTimeclockCubit(
-              authRepository: getIt<AuthRepository>(),
-              repository: getIt<StaffDemoTimeclockRepository>(),
-              localRepository: getIt<StaffDemoTimeclockLocalStore>(),
-            ),
-            init: (cubit) => cubit.load(),
-            child: const StaffAppDemoTimeclockPage(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoTimeclockCubit>(
+          create: () => StaffDemoTimeclockCubit(
+            authRepository: getIt<AuthRepository>(),
+            repository: getIt<StaffDemoTimeclockRepository>(),
+            localRepository: getIt<StaffDemoTimeclockLocalStore>(),
           ),
+          init: (cubit) => cubit.load(),
+          child: const StaffAppDemoTimeclockPage(),
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoMessagesPath,
       name: AppRoutes.staffAppDemoMessages,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoMessagesCubit>(
-            create: () => StaffDemoMessagesCubit(
-              authRepository: getIt<AuthRepository>(),
-              inboxRepository: getIt<StaffDemoInboxRepository>(),
-              messagingRepository: getIt<StaffDemoMessagingRepository>(),
-            ),
-            init: (cubit) => cubit.initialize(),
-            child: StaffAppDemoMessagesPage(
-              profileRepository: getIt<StaffDemoProfileRepository>(),
-            ),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoMessagesCubit>(
+          create: () => StaffDemoMessagesCubit(
+            authRepository: getIt<AuthRepository>(),
+            inboxRepository: getIt<StaffDemoInboxRepository>(),
+            messagingRepository: getIt<StaffDemoMessagingRepository>(),
           ),
+          init: (cubit) => cubit.initialize(),
+          child: StaffAppDemoMessagesPage(
+            profileRepository: getIt<StaffDemoProfileRepository>(),
+          ),
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoContentPath,
       name: AppRoutes.staffAppDemoContent,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoContentCubit>(
-            create: () => StaffDemoContentCubit(repository: getIt()),
-            init: (cubit) => cubit.load(),
-            child: const StaffAppDemoContentPage(),
-          ),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoContentCubit>(
+          create: () => StaffDemoContentCubit(repository: getIt()),
+          init: (cubit) => cubit.load(),
+          child: const StaffAppDemoContentPage(),
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoFormsPath,
       name: AppRoutes.staffAppDemoForms,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoFormsCubit>(
-            create: () => StaffDemoFormsCubit(
-              authRepository: getIt<AuthRepository>(),
-              repository: getIt(),
-            ),
-            init: (_) async {},
-            child: const StaffAppDemoFormsPage(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoFormsCubit>(
+          create: () => StaffDemoFormsCubit(
+            authRepository: getIt<AuthRepository>(),
+            repository: getIt(),
           ),
+          init: (_) async {},
+          child: const StaffAppDemoFormsPage(),
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoProofPath,
       name: AppRoutes.staffAppDemoProof,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoProofCubit>(
-            create: () => StaffDemoProofCubit(
-              authRepository: getIt<AuthRepository>(),
-              repository: getIt(),
-              fileStore: getIt(),
-            ),
-            init: (_) async {},
-            child: const StaffAppDemoProofPage(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoProofCubit>(
+          create: () => StaffDemoProofCubit(
+            authRepository: getIt<AuthRepository>(),
+            repository: getIt(),
+            fileStore: getIt(),
           ),
+          init: (_) async {},
+          child: const StaffAppDemoProofPage(),
+        ),
+      ),
     ),
     GoRoute(
       path: AppRoutes.staffAppDemoAdminPath,
       name: AppRoutes.staffAppDemoAdmin,
-      builder: (context, state) =>
-          BlocProviderHelpers.withAsyncInit<StaffDemoAdminCubit>(
-            create: () => StaffDemoAdminCubit(
-              timeEntriesRepository: getIt<StaffDemoTimeEntriesRepository>(),
-            ),
-            init: (cubit) => cubit.load(),
-            child: const StaffAppDemoAdminPage(),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: BlocProviderHelpers.withAsyncInit<StaffDemoAdminCubit>(
+          create: () => StaffDemoAdminCubit(
+            timeEntriesRepository: getIt<StaffDemoTimeEntriesRepository>(),
           ),
+          init: (cubit) => cubit.load(),
+          child: const StaffAppDemoAdminPage(),
+        ),
+      ),
     ),
   ],
 );
