@@ -110,10 +110,10 @@
       "enabled": false
     },
     {
-      "description": "Hold eslint v10 until eslint-plugin-import supports it",
+      "description": "Hold eslint v9+ until flat config and @typescript-eslint v8 migration (functions/)",
       "matchManagers": ["npm"],
       "matchPackageNames": ["eslint"],
-      "allowedVersions": "<10"
+      "allowedVersions": "<9"
     },
     {
       "description": "Flutter plugin loader is not on Maven Central; Gradle resolves it via the plugin portal (fixes Renovate no-result on issue #2)",
