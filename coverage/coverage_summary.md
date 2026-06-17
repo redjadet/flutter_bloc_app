@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.72%** (22203/30533 lines)
+*Total line coverage*: **72.73%** (22217/30546 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -362,7 +362,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/data/hive_counter_repository_watch_state.dart` | 82.61% | 38/46 |
 | `lib/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart` | 82.76% | 24/29 |
 | `lib/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart` | 82.93% | 34/41 |
-| `lib/features/counter/data/offline_first_counter_repository.dart` | 82.93% | 68/82 |
 | `lib/features/chart/presentation/widgets/chart_message_list.dart` | 83.33% | 5/6 |
 | `lib/features/chat/data/composite_chat_repository.dart` | 83.33% | 30/36 |
 | `lib/features/chat/data/render_chat_dio_factory.dart` | 83.33% | 5/6 |
@@ -384,6 +383,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/cubit/chat_cubit_helpers.dart` | 84.44% | 76/90 |
 | `lib/features/iot_demo/presentation/pages/iot_demo_page_body.part.dart` | 84.54% | 82/97 |
 | `lib/core/config/supabase_config_provider.dart` | 84.62% | 44/52 |
+| `lib/features/counter/data/offline_first_counter_repository.dart` | 84.62% | 77/91 |
 | `lib/shared/utils/repository_watch_helper.dart` | 84.62% | 44/52 |
 | `lib/shared/widgets/view_status_switcher.dart` | 84.62% | 11/13 |
 | `lib/features/auth/presentation/pages/register_page.dart` | 84.78% | 39/46 |
@@ -438,7 +438,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/library_demo/presentation/widgets/library_demo_body.dart` | 88.50% | 100/113 |
 | `lib/features/chat/presentation/pages/chat_page.dart` | 88.73% | 63/71 |
 | `lib/features/chart/presentation/widgets/chart_data_source_badge.dart` | 88.89% | 16/18 |
-| `lib/features/counter/data/offline_first_counter_repository_helpers.dart` | 88.89% | 16/18 |
 | `lib/features/counter/data/rest_counter_repository_internal.dart` | 88.89% | 64/72 |
 | `lib/features/realtime_market/presentation/widgets/market_side_tabs.dart` | 88.89% | 16/18 |
 | `lib/shared/platform/secure_secret_storage.dart` | 88.89% | 48/54 |
@@ -540,6 +539,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/widgets/common_app_bar.dart` | 95.24% | 40/42 |
 | `lib/features/chat/presentation/pages/chat_page_actions.part.dart` | 95.35% | 41/43 |
 | `lib/features/profile/data/profile_cache_repository.dart` | 95.40% | 83/87 |
+| `lib/features/counter/data/offline_first_counter_repository_helpers.dart` | 95.45% | 21/22 |
 | `lib/features/event_bus_demo/presentation/widgets/event_bus_demo_login_panel.dart` | 95.45% | 21/22 |
 | `lib/features/iot_demo/data/offline_first_iot_demo_repository.dart` | 95.45% | 42/44 |
 | `lib/features/settings/data/shared_preferences_theme_repository.dart` | 95.45% | 21/22 |
