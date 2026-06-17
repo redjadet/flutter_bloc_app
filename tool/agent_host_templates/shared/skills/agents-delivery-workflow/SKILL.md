@@ -13,8 +13,12 @@ Use for non-trivial feature/fix, validation routing, completion before done/comm
 
 **Loop:** Plan -> Execute -> Verify -> Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**.
 
-Commands/routing: `docs/agents_quick_reference.md`. Doctrine/review/validation: `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`, `docs/engineering/validation_routing_fast_vs_full.md`.
+Commands/routing: `docs/agents_quick_reference.md`. Doctrine/review/validation: `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`, `docs/engineering/validation_routing_fast_vs_full.md`, `tool/check_agent_knowledge_base.sh`.
+
+UI/platform: `DESIGN.md`, `docs/design_system.md`.
+
+Host maintain: `agent-maintain preflight`, `agent-maintain closeout`, `host_maintenance_automation.md`.
 
 **File verified reusable conclusions** -> owning doc / `docs/changes/` / `tasks/lessons.md`.
 
-**Cursor-only:** multi-agent hub anchors `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`.
+**Cursor-only:** Multi-agent hub anchors `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`.
