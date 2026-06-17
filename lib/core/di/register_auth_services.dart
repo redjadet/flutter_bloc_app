@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
@@ -36,8 +37,16 @@ void registerAuthServices() {
   registerLazySingletonIfAbsent<AuthRepository>(
     () {
       if (firebaseAuth == null) {
+        final bool allowWebLocalGuestAuth =
+            getIt.isRegistered<BackendAvailability>() &&
+            getIt<BackendAvailability>().allowWebLocalGuestAuth;
+        if (allowWebLocalGuestAuth) {
+          return _LocalGuestOnlyAuthRepository(
+            localGuestIdOverride: 'web-local-guest',
+          );
+        }
         if (FirebaseBootstrapService.supportsDebugLocalGuestAuth) {
-          return _DebugLocalGuestOnlyAuthRepository();
+          return _LocalGuestOnlyAuthRepository();
         }
         return const _UnavailableAuthRepository();
       }
@@ -50,7 +59,7 @@ void registerAuthServices() {
       switch (repository) {
         case final _DebugKeychainGuestAuthRepository fallback:
           await fallback.dispose();
-        case final _DebugLocalGuestOnlyAuthRepository localOnly:
+        case final _LocalGuestOnlyAuthRepository localOnly:
           await localOnly.dispose();
         default:
           break;
@@ -133,16 +142,26 @@ class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
   }
 }
 
-/// Local-only guest session when Firebase Auth is unavailable (placeholder
-/// config or skipped init) on web debug, macOS debug, or iOS simulator debug.
-class _DebugLocalGuestOnlyAuthRepository implements AuthRepository {
+/// Local-only guest session when Firebase Auth is unavailable.
+///
+/// Web: enabled via [BackendAvailability.allowWebLocalGuestAuth] (including release).
+/// Non-web: enabled via existing debug/simulator policy gates.
+class _LocalGuestOnlyAuthRepository implements AuthRepository {
+  _LocalGuestOnlyAuthRepository({this.localGuestIdOverride});
+
+  final String? localGuestIdOverride;
+
   final StreamController<AuthUser?> _authStateController =
       StreamController<AuthUser?>.broadcast();
   AuthUser? _localGuest;
 
   String get _localGuestId {
+    final String? override = localGuestIdOverride;
+    if (override != null) {
+      return override;
+    }
     if (kIsWeb) {
-      return 'web-debug-local-guest';
+      return 'web-local-guest';
     }
     return defaultTargetPlatform == TargetPlatform.macOS
         ? 'macos-debug-local-guest'

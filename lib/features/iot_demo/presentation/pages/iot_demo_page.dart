@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/shared/widgets/backend_disabled_banner.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
@@ -46,12 +49,22 @@ class _IotDemoPageState extends State<IotDemoPage> {
           child: const Icon(Icons.add),
         ),
       ),
-      body: const Column(
+      body: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _IotDemoFilterSection(),
-          Expanded(
+          BackendDisabledBanner(
+            visible: () {
+              final BackendAvailability availability =
+                  getIt.isRegistered<BackendAvailability>()
+                  ? getIt<BackendAvailability>()
+                  : BackendAvailability.fromBootstrap();
+              return availability.webNoBackendMode &&
+                  !availability.supabaseInitialized;
+            }(),
+          ),
+          const _IotDemoFilterSection(),
+          const Expanded(
             child: _IotDemoBodySection(),
           ),
         ],

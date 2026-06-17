@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
@@ -57,6 +58,53 @@ void main() {
       expect(featureRepository.currentUser, isNull);
       expect(featureRepository.authStateChanges, emitsDone);
     });
+
+    test(
+      'does not enable local guest auth when web no-backend mode is false',
+      () async {
+        getIt.registerSingleton<BackendAvailability>(
+          const BackendAvailability(
+            firebaseInitialized: false,
+            supabaseInitialized: false,
+            webNoBackendMode: false,
+            allowWebLocalGuestAuth: false,
+            allowLocalChatFallback: false,
+          ),
+        );
+
+        registerAuthServices();
+
+        final repository = getIt<feature_auth.AuthRepository>();
+        await repository.signInAnonymously();
+
+        expect(repository, isNot(isA<FirebaseAuthRepository>()));
+        expect(repository.currentUser, isNull);
+      },
+    );
+
+    test(
+      'uses local guest auth when web no-backend policy is enabled',
+      () async {
+        getIt.registerSingleton<BackendAvailability>(
+          const BackendAvailability(
+            firebaseInitialized: false,
+            supabaseInitialized: false,
+            webNoBackendMode: true,
+            allowWebLocalGuestAuth: true,
+            allowLocalChatFallback: true,
+          ),
+        );
+
+        registerAuthServices();
+
+        final repository = getIt<feature_auth.AuthRepository>();
+        await repository.signInAnonymously();
+
+        expect(repository, isNot(isA<FirebaseAuthRepository>()));
+        expect(repository.currentUser?.id, 'web-local-guest');
+        expect(repository.currentUser?.isAnonymous, isTrue);
+      },
+    );
 
     test(
       'iOS simulator debug without Firebase uses local-only guest repository',

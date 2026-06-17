@@ -1028,6 +1028,8 @@
   "syncStatusPendingMessage": "{pendingCount, plural, one {# changement en attente de synchronisation.} other {# changements en attente de synchronisation.}}",
   "syncStatusDegradedTitle": "Problèmes de synchronisation détectés",
   "syncStatusDegradedMessage": "Certaines données ne sont peut-être pas synchronisées. Appuyez sur Réessayer pour relancer la synchronisation.",
+  "backendDisabledTitle": "Backend désactivé",
+  "backendDisabledMessage": "Mode web sans backend. Firebase/Supabase ne sont pas configurés.",
   "syncStatusSyncNowButton": "Synchroniser maintenant",
   "@syncStatusSyncNowButton": {
     "description": "Bouton pour lancer manuellement la synchronisation des changements en attente."

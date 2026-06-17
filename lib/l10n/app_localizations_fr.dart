@@ -1426,6 +1426,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Certaines données ne sont peut-être pas synchronisées. Appuyez sur Réessayer pour relancer la synchronisation.';
 
   @override
+  String get backendDisabledTitle => 'Backend désactivé';
+
+  @override
+  String get backendDisabledMessage =>
+      'Mode web sans backend. Firebase/Supabase ne sont pas configurés.';
+
+  @override
   String get syncStatusSyncNowButton => 'Synchroniser maintenant';
 
   @override

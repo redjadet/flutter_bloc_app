@@ -406,6 +406,8 @@
   "syncStatusPendingMessage": "{pendingCount, plural, zero {لا توجد تغييرات بانتظار المزامنة.} one {تغيير واحد بانتظار المزامنة.} two {تغييرين بانتظار المزامنة.} few {# تغييرات بانتظار المزامنة.} many {# تغييرًا بانتظار المزامنة.} other {# تغيير بانتظار المزامنة.}}",
   "syncStatusDegradedTitle": "تم اكتشاف مشكلات في المزامنة",
   "syncStatusDegradedMessage": "قد لا تتم مزامنة بعض البيانات. انقر فوق إعادة المحاولة لمحاولة المزامنة.",
+  "backendDisabledTitle": "تم تعطيل الخدمات الخلفية",
+  "backendDisabledMessage": "يعمل التطبيق في وضع الويب بدون خدمات خلفية. لم يتم إعداد Firebase/Supabase.",
   "syncStatusSyncNowButton": "مزامنة الآن",
   "counterLastSynced": "آخر مزامنة: {timestamp}",
   "counterChangeId": "معرف التغيير: {changeId}",

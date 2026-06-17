@@ -1406,6 +1406,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bazı veriler senkronize edilmemiş olabilir. Senkronizasyonu yeniden denemek için tekrar dene.';
 
   @override
+  String get backendDisabledTitle => 'Backend devre dışı';
+
+  @override
+  String get backendDisabledMessage =>
+      'Backend olmadan web modu. Firebase/Supabase yapılandırılmadı.';
+
+  @override
   String get syncStatusSyncNowButton => 'Şimdi senkronize et';
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/core/bootstrap/app_version_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
@@ -59,6 +60,12 @@ class BootstrapCoordinator {
       getIt<AppRuntimeConfig>();
 
   @visibleForTesting
+  static BackendAvailability Function() readBackendAvailability = () =>
+      getIt.isRegistered<BackendAvailability>()
+      ? getIt<BackendAvailability>()
+      : BackendAvailability.fromBootstrap();
+
+  @visibleForTesting
   static Future<void> Function() runMigration = () {
     return InitializationGuard.executeSafely(
       () => getIt<SharedPreferencesMigrationService>().migrateIfNeeded(),
@@ -101,6 +108,7 @@ class BootstrapCoordinator {
 
     // Materialize app runtime config at init (single place for feature/endpoint control)
     readRuntimeConfig();
+    readBackendAvailability();
 
     // Run migration (non-blocking, graceful failure)
     await runMigration();
@@ -142,6 +150,9 @@ class BootstrapCoordinator {
     initializeSupabase = SupabaseBootstrapService.initializeSupabase;
     setupDependencies = configureDependencies;
     readRuntimeConfig = () => getIt<AppRuntimeConfig>();
+    readBackendAvailability = () => getIt.isRegistered<BackendAvailability>()
+        ? getIt<BackendAvailability>()
+        : BackendAvailability.fromBootstrap();
     runMigration = () {
       return InitializationGuard.executeSafely(
         () => getIt<SharedPreferencesMigrationService>().migrateIfNeeded(),

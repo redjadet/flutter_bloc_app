@@ -1710,6 +1710,14 @@
   "@syncStatusDegradedMessage": {
     "description": "Message shown when background sync is degraded and the user can retry"
   },
+  "backendDisabledTitle": "Backend disabled",
+  "@backendDisabledTitle": {
+    "description": "Title for banner shown when Firebase/Supabase is not configured on web builds"
+  },
+  "backendDisabledMessage": "Running in web no-backend mode. Firebase/Supabase not configured.",
+  "@backendDisabledMessage": {
+    "description": "Body text for banner shown when Firebase/Supabase is not configured on web builds"
+  },
   "syncStatusSyncNowButton": "Sync now",
   "@syncStatusSyncNowButton": {
     "description": "Button label to trigger manual syncing of pending changes."

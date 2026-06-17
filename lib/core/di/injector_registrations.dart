@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/core/config/supabase_config_provider.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';

@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/chat/chat.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/shared/widgets/backend_disabled_banner.dart';
 
 part 'chat_page_actions.part.dart';
 
@@ -62,6 +65,17 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
+          BackendDisabledBanner(
+            visible: () {
+              final BackendAvailability availability =
+                  getIt.isRegistered<BackendAvailability>()
+                  ? getIt<BackendAvailability>()
+                  : BackendAvailability.fromBootstrap();
+              return availability.webNoBackendMode &&
+                  (!availability.firebaseInitialized ||
+                      !availability.supabaseInitialized);
+            }(),
+          ),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,

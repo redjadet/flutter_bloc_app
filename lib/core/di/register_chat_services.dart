@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
@@ -46,6 +47,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 const String _renderChatDioName = 'renderChatDio';
 
 bool _chatRenderOrchestrationRunnable() {
+  if (getIt.isRegistered<BackendAvailability>() &&
+      getIt<BackendAvailability>().webNoBackendMode) {
+    return false;
+  }
   if (!SecretConfig.chatRenderDemoEnabled) {
     return false;
   }
@@ -130,6 +135,9 @@ void registerChatServices() {
         return token != null && token.isNotEmpty;
       },
       isDirectPolicyAllowed: () => hfConfigured,
+      allowLocalFallback: () =>
+          getIt.isRegistered<BackendAvailability>() &&
+          getIt<BackendAvailability>().allowLocalChatFallback,
     ),
   );
   if (!getIt.isRegistered<Dio>(instanceName: _renderChatDioName)) {
