@@ -37,6 +37,58 @@ When Firebase initializes successfully, the app registers Flutter and zone error
 
 Crashlytics is **not** active when Firebase is disabled or fails to initialize (e.g. some test harnesses).
 
+## Sentry + Crashlytics (plan: dual-stack, single “source of truth”)
+
+Sentry is **not** installed or initialized today. If added, the plan is to run it **alongside Crashlytics** for a period, with an explicit division of responsibilities:
+
+- **Crashlytics**: canonical crash reporting for Firebase-enabled builds (fatals, ANR equivalent surfaces, basic crash aggregation).
+- **Sentry**: error monitoring + richer context (breadcrumbs, tracing/performance, release health, device/user segmentation) where it provides clear value.
+
+Key constraint: avoid “two tools, two truths”. Define which tool drives on-call / triage for each incident type, and prevent double-reporting where possible.
+
+### Recommended packaging for this repo
+
+If Firebase ecosystem is already in use, the default plan is **Crashlytics + Sentry together** (not “either/or”).
+
+- **Minimum setup**: Crashlytics
+- **Professional setup**: Crashlytics + Sentry + strong logging discipline (`AppLogger`)
+
+### Why add Sentry if Crashlytics exists
+
+- **Context**: breadcrumbs + structured context on failures (e.g. `AppErrorCode`, screen/route, offline-first sync steps).
+- **Performance**: tracing for cold start, navigation, HTTP spans, sync flush timings (Crashlytics is weak here).
+- **Release health**: version + distribution insights (esp. if expanding beyond Firebase-only flows).
+
+### Crashlytics vs Sentry (quick comparison)
+
+| Feature | Crashlytics | Sentry |
+| --- | --- | --- |
+| Crash tracking | Very good | Very good |
+| Non-fatal errors | Good | Very good |
+| Stack trace detail | Good | More detailed |
+| Breadcrumbs | Basic | Very strong |
+| User journey analysis | Weak | Strong |
+| Performance monitoring | Limited | Strong |
+| Release health | Basic | Strong |
+| Session replay | No | Yes |
+| Flutter support | Very good | Very good |
+| Setup | Very easy (5–10 min if Firebase already used) | Easy |
+| Cost | Included with Firebase | Free tier + paid plans |
+| Debugging experience | Simple | Advanced |
+
+### Why this matters more in 2026
+
+As code volume increases (including AI-assisted development), **time to find and fix** tends to cost more than time to write. Teams increasingly use Sentry not only for crash reports, but for broader **observability** (errors + context + performance).
+
+### Known risks / causes of bad outcomes
+
+- **Duplicate crash volume**: same fatal reported to both tools → noisy dashboards, inflated “issue count”.
+- **PII leakage**: breadcrumbs / HTTP data can accidentally include tokens, emails, request bodies.
+- **Symbolication mismatch**: iOS dSYM / Android mapping / Flutter symbol files not uploaded consistently → unusable stack traces.
+- **Sampling / cost drift**: tracing + session replay can become expensive if enabled broadly.
+
+Mitigations and rollout steps live in [plans/future_observability.md](plans/future_observability.md) under the Sentry section.
+
 ## Product analytics (not configured)
 
 There is **no** Mixpanel, Sentry product SDK, or custom `AnalyticsPort` implementation in `pubspec.yaml` today. Operational diagnostics UI data lives under [`lib/core/diagnostics/`](../lib/core/diagnostics/) (Remote Config view models, cache controls) — not product funnel analytics.
