@@ -31,7 +31,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
      - Push to remote (if available) then mark local as synced.
      - If user data doesn't exist locally yet, create and persist it first, then attempt remote call.
    - On `pullRemote`, merge remote snapshots when newer.
-   - **Don’t overwrite:** When merging a remote watch stream into local, use a `_shouldApplyRemote`-style check so older remote never overwrites newer unsynced local. See [Don’t overwrite guide](dont_overwrite_guide.md).
+   - **Don’t overwrite:** When merging remote into local or replaying queued local writes to remote, use timestamp gates so older sync data never overwrites newer state. See [Don’t overwrite guide](dont_overwrite_guide.md).
    - App resume sync stays debounced and flushes must not overlap; use
      `BackgroundSyncCoordinator.flush()` instead of starting parallel sync work.
 3. **Register in DI + registry**

@@ -1515,7 +1515,7 @@ CHECK_MESSAGES=(
   "Checking for Row+Icon+Text overflow risk (use IconLabelRow or Flexible/Expanded)..."
   "Checking for Row+multi-button action overflow risk (OverflowBar, Wrap, or Expanded)..."
   "Checking for lifecycle and error-handling (snackbar/listen/dialog mounted)..."
-  "Checking offline-first remote-merge (do not overwrite newer local with older remote)..."
+  "Checking offline-first stale-sync guard (do not overwrite newer state)..."
   "Checking mutation success after request-id guard supersession (no false failure after write)..."
   "Checking feature brief/change note is linked for feature Dart changes..."
   "Checking feature modularity (library_demo / settings cross-imports)..."
