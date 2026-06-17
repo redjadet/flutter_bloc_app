@@ -22,6 +22,23 @@ class OfflineFirstCounterRepositoryHelpers {
     );
   }
 
+  /// Whether a queued pending snapshot should be pushed to remote.
+  ///
+  /// Symmetric to [shouldApplyRemote]: never push an older pending write over a
+  /// newer remote (multi-device stale queue replay).
+  static bool shouldPushPendingToRemote(
+    final CounterSnapshot pendingSnapshot,
+    final CounterSnapshot remoteSnapshot,
+  ) {
+    final DateTime? pending = pendingSnapshot.lastChanged;
+    final DateTime? remote = remoteSnapshot.lastChanged;
+
+    if (pending != null && remote != null && remote.isAfter(pending)) {
+      return false;
+    }
+    return true;
+  }
+
   static bool shouldApplyRemote(
     final CounterSnapshot localSnapshot,
     final CounterSnapshot remoteSnapshot,
