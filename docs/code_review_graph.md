@@ -9,14 +9,11 @@ This is local developer tooling. It does not affect the Flutter app runtime.
 
 ## Context ladder fit
 
-This repo's Codex memory model is:
-
-1. map docs ([`AGENTS.md`](../AGENTS.md),
-   [`agent_knowledge_base.md`](agent_knowledge_base.md), [`README.md`](README.md))
-2. durable memory (`docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../tasks/lessons.md),
-   current host tracker)
-3. structural graph (`code-review-graph`)
-4. targeted raw-file reads for edits and proof
+This repo’s canonical discovery routing lives in
+[`ai/context_loading.md`](ai/context_loading.md) (cold-start) and
+[`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
+(unknown-path layers). `code-review-graph` fits as the **structural graph**
+layer that helps narrow scope before **targeted raw-file reads**.
 
 Use the graph as the structural layer, not as a replacement for source docs or
 code. If the graph cannot answer a question cheaply, fall back to `rg` and

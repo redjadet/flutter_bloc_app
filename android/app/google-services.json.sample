@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:000000000000:android:aaaaaaaaaaaaaaaaaaaaaa",
         "android_client_info": {
-          "package_name": "com.example.app"
+          "package_name": "com.ilkersevim.blocflutter"
         }
       },
       "oauth_client": [],

@@ -16,12 +16,10 @@ in a fixed order.
 
 ## Decision
 
-Codex should use this context ladder for non-trivial existing-code work:
-
-1. repo map docs
-2. durable repo memory
-3. `code-review-graph`
-4. targeted raw-file reads
+Codex should follow the repo’s canonical discovery routing (no second ladder
+text here): cold-start order in [`context_loading.md`](../ai/context_loading.md)
+and unknown-path layers in
+[`memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md).
 
 This preserves long-term memory and full-codebase awareness without creating a
 parallel chat transcript vault or treating generated graph output as source of

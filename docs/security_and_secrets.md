@@ -137,18 +137,25 @@ out of git. Optional match config: [`fastlane/Matchfile.example`](../fastlane/Ma
 Firebase config is split between **gitignored platform files** and a
 **committed Dart placeholder**:
 
-| Artifact | In git | Real values |
-| --- | --- | --- |
-| `android/app/google-services.json` | gitignored | Local / CI secret injection |
-| `ios/Runner/GoogleService-Info.plist` | gitignored | Local / CI secret injection |
-| `macos/Runner/GoogleService-Info.plist` | gitignored | Local / CI secret injection |
-| [`lib/firebase_options.dart`](../lib/firebase_options.dart) | committed placeholder | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
-| `.envrc` | gitignored | Maintainer machine only |
+| Artifact | In git | Template | Real values |
+| --- | --- | --- | --- |
+| `android/app/google-services.json` | gitignored | [`android/app/google-services.json.sample`](../android/app/google-services.json.sample) | Local / CI secret injection |
+| `ios/Runner/GoogleService-Info.plist` | gitignored | [`ios/Runner/GoogleService-Info.plist.sample`](../ios/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
+| `macos/Runner/GoogleService-Info.plist` | gitignored | [`macos/Runner/GoogleService-Info.plist.sample`](../macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
+| `firebase.json` | gitignored | [`firebase.json.example`](../firebase.json.example) | Local / CI project selection |
+| [`lib/firebase_options.dart`](../lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
+| `.envrc` | gitignored | [`docs/envrc.example`](envrc.example) | Maintainer machine only |
+| `assets/config/secrets.json` | gitignored | [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json) | Optional local asset fallback |
 
 To enable Firebase-dependent features (Auth, Remote Config, Realtime Database,
 etc.), follow [Firebase Setup](firebase_setup.md). The app should still run when
 Firebase is not configured; the relevant surfaces disable themselves or degrade
 gracefully.
+
+Fresh checkouts should build without copying any gitignored Firebase files. If a
+platform build starts requiring one of those local files, either make that build
+step optional or add a tracked placeholder template before relying on the local
+file.
 
 Tracked placeholder files such as [`lib/firebase_options.dart`](../lib/firebase_options.dart)
 and `ios/ci` / `macos/ci` plist files must not contain real API keys. CI uses

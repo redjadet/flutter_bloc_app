@@ -7,14 +7,14 @@ description: Shared Codex/Cursor delivery loop for non-trivial work, validation 
 
 Use for non-trivial feature/fix, validation routing, completion before done/commit.
 
-**Start:** `AGENTS.md` + **context ladder** (`docs/ai/context_loading.md`). Delivery pointers: `docs/agents_quick_reference.md`, `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`, `docs/engineering/validation_routing_fast_vs_full.md`.
+**Start:** `AGENTS.md` + **context ladder** (`docs/ai/context_loading.md`).
 
 **Tracker:** Codex `tasks/codex/todo.md`; Cursor `tasks/cursor/todo.md`.
 
-**Loop:** Plan -> Execute -> Verify -> Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**. Commands -> `docs/agents_quick_reference.md`. **File verified reusable conclusions** in AKM. UI -> `DESIGN.md` + `docs/design_system.md`; after app-code/UI edits, hot reload active controllable debug session (hot restart when needed). Agent-doc changes -> `./tool/check_agent_knowledge_base.sh`.
+**Loop:** Plan -> Execute -> Verify -> Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**.
 
-**Host maintain (run, do not delegate):** `docs/agent_kb/host_maintenance_automation.md` (`agent-maintain preflight`, `agent-maintain closeout`, `after-host-edit`). Harness: `docs/ai/harness_auto_maintenance.md`.
+Commands/routing: `docs/agents_quick_reference.md`. Doctrine/review/validation: `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`, `docs/engineering/validation_routing_fast_vs_full.md`.
 
-**Cursor-only:** Multi-agent -> `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`.
+**File verified reusable conclusions** -> owning doc / `docs/changes/` / `tasks/lessons.md`.
 
-**Codex-only:** no `./tool/request_codex_feedback.sh` unless user asks.
+**Cursor-only:** multi-agent hub anchors `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`.
