@@ -28,10 +28,12 @@ import google_sign_in_ios
 import in_app_purchase_storekit
 import local_auth_darwin
 import package_info_plus
+import passkeys_darwin
 import path_provider_foundation
 import screen_retriever_macos
 import shared_preferences_foundation
 import sqflite_darwin
+import ua_client_hints
 import url_launcher_macos
 import video_player_avfoundation
 import window_manager
@@ -60,10 +62,12 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   InAppPurchasePlugin.register(with: registry.registrar(forPlugin: "InAppPurchasePlugin"))
   LocalAuthPlugin.register(with: registry.registrar(forPlugin: "LocalAuthPlugin"))
   FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))
+  PasskeysPlugin.register(with: registry.registrar(forPlugin: "PasskeysPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   ScreenRetrieverMacosPlugin.register(with: registry.registrar(forPlugin: "ScreenRetrieverMacosPlugin"))
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
+  UAClientHintsPlugin.register(with: registry.registrar(forPlugin: "UAClientHintsPlugin"))
   UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
   VideoPlayerPlugin.register(with: registry.registrar(forPlugin: "VideoPlayerPlugin"))
   WindowManagerPlugin.register(with: registry.registrar(forPlugin: "WindowManagerPlugin"))
