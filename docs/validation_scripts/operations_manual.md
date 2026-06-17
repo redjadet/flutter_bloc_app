@@ -22,7 +22,7 @@ bash tool/check_cubit_isclosed.sh
 # Check lifecycle and error-handling (snackbar, stream.listen onError, dialog mounted)
 bash tool/check_lifecycle_error_handling.sh
 
-# Check offline-first remote-merge regression (don't overwrite newer local with older remote)
+# Check offline-first stale-sync regression (don't overwrite newer state)
 bash tool/check_offline_first_remote_merge.sh
 
 # Check for missing const constructors (heuristic)

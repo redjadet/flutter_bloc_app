@@ -1,12 +1,14 @@
 # Offline-First: Don’t Overwrite Newer Local with Older Remote
 
-This guide describes the **don’t overwrite** rule for offline-first repositories that merge a remote watch stream into local state. Use it in this repo and in other codebases when you add or review offline-first sync.
+This guide describes the **don’t overwrite** rule for offline-first repositories that merge a remote watch stream into local state or replay queued local operations to remote. Use it in this repo and in other codebases when you add or review offline-first sync.
 
 ## The rule
 
-**Never apply a remote snapshot over local when local is strictly newer (e.g. by timestamp)—whether local is synchronized or still pending upload.**
+**Never apply a remote snapshot over local when local is strictly newer (e.g. by timestamp)—whether local is synchronized or still pending upload. Never push a queued local snapshot over remote when remote is strictly newer.**
 
 When local is **not** synchronized, also require remote to be strictly newer before applying. If you apply remote whenever “remote ≠ local” (e.g. `remote.count != local.count`) without that timestamp gate, a stale remote event can overwrite newer user changes and cause UI flicker (e.g. counter up → down → up), including after a successful sync when an old RTDB snapshot arrives late.
+
+When replaying a pending queue item, load the current remote snapshot before the remote write. If remote has a strictly newer timestamp than the queued snapshot, skip the push and pull/apply the newer remote locally instead. This prevents an old offline operation from another device/session overwriting a newer remote value.
 
 ## Correct pattern: `_shouldApplyRemote`-style check
 
@@ -75,6 +77,7 @@ Add tests that:
 
 1. Put local in **unsynced** state with a **newer** timestamp; inject **stale** remote; assert local unchanged.
 2. Put local in **synchronized** state with a **newer** timestamp; inject **stale** remote; assert local unchanged (catches late RTDB snapshots after sync).
+3. Put a pending operation in the queue with an **older** timestamp than remote; process the operation; assert remote unchanged and local reconciled to remote.
 
 Example (counter-style, unsynced local):
 
@@ -118,7 +121,7 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 
 - **Counter (single-entity):** `lib/features/counter/data/offline_first_counter_repository_helpers.dart` — `shouldApplyRemote`; `offline_first_counter_repository.dart` — `watch()` / `pullRemote()` merge.
 - **Todo (list-entity):** `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldApplyRemote`, `_mergeRemoteIntoLocal`.
-- **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`.
+- **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`; `processOperation does not push stale pending over newer remote`.
 - **Validation script:** `tool/check_offline_first_remote_merge.sh` (run via `./bin/checklist` or directly).
 - **Docs:** [`validation_scripts.md`](../validation_scripts.md) § “check_offline_first_remote_merge.sh”.
 
@@ -129,7 +132,9 @@ When adding or reviewing offline-first “remote watch → merge into local”:
 - [ ] Before applying remote over local, use a `_shouldApplyRemote`-style check.
 - [ ] Reject remote when `local.lastChanged` is strictly after `remote.lastChanged` (all sync states).
 - [ ] When local is not synchronized, apply remote only if remote is strictly newer (timestamp).
+- [ ] Before pushing queued local to remote, reject the push when `remote.lastChanged` is strictly after queued local `lastChanged`.
 - [ ] Add regression tests: older remote must not overwrite newer **unsynced** or **synchronized** local.
+- [ ] Add regression tests: older queued local must not overwrite newer **remote** during pending replay.
 - [ ] Run those tests in CI (e.g. a small script like `check_offline_first_remote_merge.sh`).
 
 ---

@@ -156,20 +156,20 @@ stream.listen((data) {
 
 ### `check_offline_first_remote_merge.sh`
 
-**Purpose**: Regression guard to catch bugs where offline-first repositories overwrite newer unsynced local state with older remote snapshot (e.g. from remote watch stream). That can cause UI flicker (e.g. counter up then down then up).
+**Purpose**: Regression guard to catch bugs where offline-first repositories overwrite newer state with stale sync data. This covers older remote snapshots applied through watch/pull and older queued local snapshots replayed over newer remote state. Stale sync can cause UI flicker (e.g. counter up then down then up) or cross-device data loss.
 
 **What it checks**:
 
-- Runs focused tests that assert: when local has unsynced changes, applying remote snapshot with older timestamp must not overwrite local. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`).
+- Runs focused tests that assert stale sync data cannot overwrite newer state: older remote snapshots must not overwrite newer local state, and older queued pending snapshots must not overwrite newer remote state. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`, `processOperation does not push stale pending over newer remote`).
 
 **Why it matters**:
 
-- Offline-first repos merge remote watch into local state. If they apply remote whenever `remote.count != local.count` (or similar) without checking `synchronized` and `lastChanged`, stale remote event can overwrite newer user changes.
+- Offline-first repos merge remote watch into local state and replay queued local writes to remote. If they apply or push whenever values differ without checking `synchronized` and `lastChanged`, stale sync data can overwrite newer user changes.
 
 **Correct pattern**:
 
 - Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
 
-**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged; then add that test file to `tests` array in `tool/check_offline_first_remote_merge.sh`.
+**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`.
 
 ---

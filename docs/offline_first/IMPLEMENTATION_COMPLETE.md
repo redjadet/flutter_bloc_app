@@ -139,7 +139,7 @@ All core offline-first features have been successfully implemented, tested, and 
 
 - [`offline_first/offline_first_plan.md`](offline_first_plan.md) - Implementation plan and progress
 - [`offline_first/adoption_guide.md`](adoption_guide.md) - Step-by-step adoption guide
-- [`offline_first/dont_overwrite_guide.md`](dont_overwrite_guide.md) - Don’t overwrite newer local with older remote (for this repo and others)
+- [`offline_first/dont_overwrite_guide.md`](dont_overwrite_guide.md) - Don’t overwrite newer state with stale sync data (for this repo and others)
 
 ## Test Coverage
 

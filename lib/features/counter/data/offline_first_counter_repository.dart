@@ -110,6 +110,29 @@ class OfflineFirstCounterRepository
       );
       return;
     }
+    final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
+    if (!OfflineFirstCounterRepositoryHelpers.shouldPushPendingToRemote(
+      snapshot,
+      remoteSnapshot,
+    )) {
+      final CounterSnapshot localSnapshot = await _localRepository.load();
+      if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
+        localSnapshot,
+        remoteSnapshot,
+      )) {
+        await _localRepository.save(
+          remoteSnapshot.copyWith(
+            changeId:
+                remoteSnapshot.changeId ??
+                OfflineFirstCounterRepositoryHelpers.generateChangeId(),
+            lastSyncedAt: DateTime.now().toUtc(),
+            synchronized: true,
+          ),
+        );
+      }
+      return;
+    }
+
     await _remoteRepository.save(
       CounterSnapshot(
         count: snapshot.count,

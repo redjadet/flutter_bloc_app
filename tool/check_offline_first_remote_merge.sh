@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Regression guard: offline-first repos must not overwrite newer unsynced local
-# state with older remote (e.g. remote watch). Prevents UI flicker (e.g. counter
-# up then down then up). See AGENTS.md §5 Offline-first repositories and
+# Regression guard: offline-first repos must not overwrite newer state with
+# stale sync data. Covers remote-watch/pull applying older remote snapshots and
+# queued replay pushing older pending snapshots over newer remote state. See
+# AGENTS.md §5 Offline-first repositories and
 # test/features/counter/data/offline_first_counter_repository_test.dart.
 
 set -euo pipefail
@@ -143,7 +144,7 @@ case "$MERGE_GUARD_MODE" in
     ;;
 esac
 
-echo "🔍 Running offline-first remote-merge regression tests (don't overwrite newer local with older remote)..."
+echo "🔍 Running offline-first remote-merge regression tests (don't overwrite newer state with stale sync data)..."
 
 tests=()
 select_remote_merge_tests tests

@@ -399,5 +399,52 @@ void main() {
         await sub.cancel();
       },
     );
+
+    test(
+      'processOperation does not push stale pending over newer remote',
+      () async {
+        final DateTime pendingChanged = DateTime(2024, 1, 1, 12);
+        final DateTime remoteChanged = DateTime(2024, 1, 2, 12);
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          initial: CounterSnapshot(
+            count: 10,
+            lastChanged: remoteChanged,
+          ),
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await localRepository.save(
+          CounterSnapshot(
+            count: 6,
+            lastChanged: pendingChanged,
+            synchronized: false,
+          ),
+        );
+
+        final SyncOperation operation = SyncOperation.create(
+          entityType: OfflineFirstCounterRepository.counterEntity,
+          payload: CounterSnapshot(
+            count: 6,
+            lastChanged: pendingChanged,
+          ).toJson(),
+          idempotencyKey: 'stale-op',
+        );
+
+        await repository.processOperation(operation);
+
+        expect(remote.saved, isNull);
+        expect((await remote.load()).count, 10);
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 10);
+        expect(local.synchronized, isTrue);
+        expect(local.lastSyncedAt, isNotNull);
+      },
+    );
   });
 }

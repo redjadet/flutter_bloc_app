@@ -144,7 +144,7 @@ When fixing a bug class, extend these paths (or register in `tool/check_regressi
 | --- | --- |
 | Background sync races | `test/shared/sync/background_sync_coordinator_test.dart` |
 | Repo in-flight coalesce | `test/features/search/data/offline_first_search_repository_test.dart`, `test/features/profile/data/...`, `test/features/remote_config/data/...` |
-| Don't-overwrite local | `test/features/counter/data/offline_first_counter_repository_test.dart` (+ `tool/check_offline_first_remote_merge.sh`) |
+| Don't-overwrite stale sync | `test/features/counter/data/offline_first_counter_repository_test.dart` (+ `tool/check_offline_first_remote_merge.sh`) |
 | RequestIdGuard supersession | `test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded`, `test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart` (+ `tool/check_mutation_success_after_guard.sh`) |
 | HTTP error mapping | 401/429/503, unmapped fallback, `Retry-After` parsing |
 | Auth refresh single-flight | one forced refresh on 401 retry with new bearer |
