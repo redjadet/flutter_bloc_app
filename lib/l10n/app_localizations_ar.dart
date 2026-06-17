@@ -1408,6 +1408,13 @@ class AppLocalizationsAr extends AppLocalizations {
       'قد لا تتم مزامنة بعض البيانات. انقر فوق إعادة المحاولة لمحاولة المزامنة.';
 
   @override
+  String get backendDisabledTitle => 'تم تعطيل الخدمات الخلفية';
+
+  @override
+  String get backendDisabledMessage =>
+      'يعمل التطبيق في وضع الويب بدون خدمات خلفية. لم يتم إعداد Firebase/Supabase.';
+
+  @override
   String get syncStatusSyncNowButton => 'مزامنة الآن';
 
   @override

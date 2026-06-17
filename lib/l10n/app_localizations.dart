@@ -2545,6 +2545,18 @@ abstract class AppLocalizations {
   /// **'Some data may not be synced. Tap retry to attempt synchronization.'**
   String get syncStatusDegradedMessage;
 
+  /// Title for banner shown when Firebase/Supabase is not configured on web builds
+  ///
+  /// In en, this message translates to:
+  /// **'Backend disabled'**
+  String get backendDisabledTitle;
+
+  /// Body text for banner shown when Firebase/Supabase is not configured on web builds
+  ///
+  /// In en, this message translates to:
+  /// **'Running in web no-backend mode. Firebase/Supabase not configured.'**
+  String get backendDisabledMessage;
+
   /// Button label to trigger manual syncing of pending changes.
   ///
   /// In en, this message translates to:

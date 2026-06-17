@@ -2,6 +2,8 @@
 
 The repo includes a **placeholder** `lib/firebase_options.dart` so the project **compiles and runs** even when Firebase is not configured. In that case the app skips Firebase initialization and runs with Firebase-dependent features disabled (no crash, no login required).
 
+**Web builds** additionally use [BackendAvailability](../lib/core/config/backend_availability.dart) “no-backend mode”: Firebase and Supabase are opportunistic when configured, but never required for navigation, guest access, or local demo fallbacks (Chat/IoT). See [changes/2026-06-17_web-no-backend-mode.md](changes/2026-06-17_web-no-backend-mode.md).
+
 To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below.
 
 - **Gitignored (local only):** `firebase.json`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `macos/Runner/GoogleService-Info.plist`, and `.envrc`.
@@ -16,7 +18,9 @@ Before committing, run `./tool/check_tracked_secret_literals.sh`.
 Fresh checkouts must build and run without local Firebase files. The app uses
 the committed `lib/firebase_options.dart` placeholders and skips Firebase
 initialization when required `FIREBASE_*` values are missing. Platform build
-steps also skip optional Firebase upload/processing when local config is absent.
+steps also skip optional Firebase upload/processing when local config is absent
+(including Debug/simulator Crashlytics symbol upload via
+[`tool/patch_ios_flutterfire_crashlytics_upload.sh`](../tool/patch_ios_flutterfire_crashlytics_upload.sh)).
 
 Use these tracked templates only when you want Firebase-backed features locally:
 
@@ -24,7 +28,7 @@ Use these tracked templates only when you want Firebase-backed features locally:
 | --- | --- | --- |
 | `firebase.json` | [`firebase.json.example`](../firebase.json.example) | Optional; Crashlytics symbol upload skips when absent. |
 | `android/app/google-services.json` | [`android/app/google-services.json.sample`](../android/app/google-services.json.sample) | Optional; Android skips Google Services / Crashlytics Gradle plugins when absent. |
-| `ios/Runner/GoogleService-Info.plist` | [`ios/Runner/GoogleService-Info.plist.sample`](../ios/Runner/GoogleService-Info.plist.sample) | Optional; iOS does not require it as a build resource. |
+| `ios/Runner/GoogleService-Info.plist` | [`ios/Runner/GoogleService-Info.plist.sample`](../ios/Runner/GoogleService-Info.plist.sample) | Optional; iOS copies it into `Runner.app` only when present. |
 | `macos/Runner/GoogleService-Info.plist` | [`macos/Runner/GoogleService-Info.plist.sample`](../macos/Runner/GoogleService-Info.plist.sample) | Optional; macOS does not require it as a build resource. |
 | `.envrc` | [`docs/envrc.example`](envrc.example) | Optional; without it Firebase and remote-secret features stay disabled. |
 | `assets/config/secrets.json` | [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json) | Optional; not bundled by default. |
@@ -125,6 +129,9 @@ If you prefer not to use the CLI:
 3. **Add an iOS app**
    - Use the **bundle identifier** from `ios/Runner/Info.plist` (e.g. `CFBundleIdentifier`).
    - Download `GoogleService-Info.plist` and place it at **`ios/Runner/GoogleService-Info.plist`**.
+   - The Xcode project has a conditional build phase that copies this gitignored
+     plist into `Runner.app` when present. Do not add the local plist itself to
+     source control.
 
 4. **Add a macOS app** (optional, only if you run on macOS desktop)
    - Use the macOS bundle ID from your Xcode project.
@@ -280,7 +287,7 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 | **Firebase not initializing** | The app skips Firebase init when required `FIREBASE_*` values are missing or still placeholders (e.g. `your-project-id`). Add real values to `.envrc`, run `direnv allow`, and ensure gitignored platform files exist (`flutterfire configure` — then [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)). |
 | **`flutterfire configure` fails** (e.g. "Failed to write Dart configuration file", "UnsupportedError not found in macOS", or **"FormatException: Unexpected character (at character 1)"**) | See [Workaround when FlutterFire CLI fails on macOS](#workaround-when-flutterfire-cli-fails-on-macos) below. The FormatException often means the CLI got non-JSON output from a Firebase command (e.g. login prompt or proxy/network issue). |
 | **Missing google-services.json** | Fresh-checkout debug builds should still work. For Firebase-backed Android features, copy `android/app/google-services.json.sample` to `android/app/google-services.json` and replace placeholders, or run `flutterfire configure`. |
-| **Missing GoogleService-Info.plist** | Fresh-checkout iOS/macOS builds should still work. For Firebase-backed Apple features, copy the matching `.sample` plist and replace placeholders, or run `flutterfire configure`. |
+| **Missing GoogleService-Info.plist** | Fresh-checkout iOS/macOS builds should still work. For Firebase-backed Apple features, copy the matching `.sample` plist and replace placeholders, or run `flutterfire configure`. On iOS, the project copies `ios/Runner/GoogleService-Info.plist` into `Runner.app` only when that local file exists; if `FirebaseApp.configure()` crashes with “Could not locate configuration file,” confirm the source plist exists and rebuild from Xcode/Flutter so the copy phase runs. |
 | **iOS build errors after Firebase changes** | See [Common Troubleshooting](new_developer_guide.md#common-troubleshooting) (“Firebase upgrades break iOS build”) for clean steps (e.g. `flutter clean`, reinstall pods). |
 | **Todo list / Counter sync permission denied** | Deploy [Realtime Database rules](todo_list_firebase_security_rules.md) and ensure the user is signed in. |
 | **Charts show `UNAUTHENTICATED` but a Firebase user exists** | Check Cloud Run IAM for the Gen2 callable (see “Gen2 (Node 22) IAM note” above). |

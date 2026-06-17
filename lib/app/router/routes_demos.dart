@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/ai_decision_demo.dart';

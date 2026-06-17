@@ -5,6 +5,14 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
     path: AppRoutes.iotDemoPath,
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
+      final BackendAvailability availability = getIt<BackendAvailability>();
+      if (availability.webNoBackendMode) {
+        return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
+          create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
+          init: (final cubit) => cubit.initialize(),
+          child: const IotDemoPage(),
+        );
+      }
       return IotDemoAuthGate(
         isSupabaseInitialized: SupabaseBootstrapService.isSupabaseInitialized,
         getCurrentUser: () => getIt<SupabaseAuthRepository>().currentUser,
@@ -98,6 +106,10 @@ Widget _withChatSupabaseSessionGate({
   required final Widget child,
 }) {
   final SupabaseAuthRepository supa = getIt<SupabaseAuthRepository>();
+  final BackendAvailability availability = getIt<BackendAvailability>();
+  if (availability.webNoBackendMode) {
+    return child;
+  }
   return IotDemoAuthGate(
     isSupabaseInitialized: supa.isConfigured,
     getCurrentUser: () => supa.currentUser,

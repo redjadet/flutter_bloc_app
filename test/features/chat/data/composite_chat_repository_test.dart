@@ -347,5 +347,101 @@ void main() {
       );
       expect(direct.sendCount, 0);
     });
+
+    test(
+      'returns local demo response when local fallback is enabled',
+      () async {
+        final _StubEdgeRepo edge = _StubEdgeRepo(result: supabaseOk);
+        final _FakeHfDirect direct = _FakeHfDirect(result: directOk);
+        final CompositeChatRepository composite = CompositeChatRepository(
+          supabaseRepository: edge,
+          directRepository: direct,
+          networkStatusService: _FakeNetwork(NetworkStatus.online),
+          isSupabaseProxyRunnable: () => false,
+          isDirectPolicyAllowed: () => false,
+          allowLocalFallback: () => true,
+        );
+
+        final ChatResult result = await composite.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'hello',
+        );
+
+        expect(
+          result.reply.text,
+          'Backend disabled on web: using local demo response.',
+        );
+        expect(result.pastUserInputs, const <String>['hello']);
+        expect(result.generatedResponses, const <String>[
+          'Backend disabled on web: using local demo response.',
+        ]);
+        expect(result.transportUsed, isNull);
+        expect(direct.sendCount, 0);
+      },
+    );
+
+    test(
+      'returns local demo response while offline when no remote route exists',
+      () async {
+        final _StubEdgeRepo edge = _StubEdgeRepo(result: supabaseOk);
+        final _FakeHfDirect direct = _FakeHfDirect(result: directOk);
+        final CompositeChatRepository composite = CompositeChatRepository(
+          supabaseRepository: edge,
+          directRepository: direct,
+          networkStatusService: _FakeNetwork(NetworkStatus.offline),
+          isSupabaseProxyRunnable: () => false,
+          isDirectPolicyAllowed: () => false,
+          allowLocalFallback: () => true,
+        );
+
+        final ChatResult result = await composite.sendMessage(
+          pastUserInputs: const <String>['previous'],
+          generatedResponses: const <String>['prior'],
+          prompt: 'hello',
+        );
+
+        expect(
+          result.reply.text,
+          'Backend disabled on web: using local demo response.',
+        );
+        expect(result.pastUserInputs, const <String>['previous', 'hello']);
+        expect(result.generatedResponses, const <String>[
+          'prior',
+          'Backend disabled on web: using local demo response.',
+        ]);
+        expect(result.transportUsed, isNull);
+        expect(direct.sendCount, 0);
+      },
+    );
+
+    test('throws auth_required when local fallback is disabled', () async {
+      final _StubEdgeRepo edge = _StubEdgeRepo(result: supabaseOk);
+      final _FakeHfDirect direct = _FakeHfDirect(result: directOk);
+      final CompositeChatRepository composite = CompositeChatRepository(
+        supabaseRepository: edge,
+        directRepository: direct,
+        networkStatusService: _FakeNetwork(NetworkStatus.online),
+        isSupabaseProxyRunnable: () => false,
+        isDirectPolicyAllowed: () => false,
+        allowLocalFallback: () => false,
+      );
+
+      await expectLater(
+        () => composite.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'hello',
+        ),
+        throwsA(
+          isA<ChatRemoteFailureException>().having(
+            (final ChatRemoteFailureException e) => e.code,
+            'code',
+            'auth_required',
+          ),
+        ),
+      );
+      expect(direct.sendCount, 0);
+    });
   });
 }
