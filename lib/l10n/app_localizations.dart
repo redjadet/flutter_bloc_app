@@ -4015,6 +4015,312 @@ abstract class AppLocalizations {
   /// **'Off only'**
   String get iotDemoFilterOffOnly;
 
+  /// IoT demo hub Cloud tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get iotDemoHubTabCloud;
+
+  /// IoT demo hub BLE tab label
+  ///
+  /// In en, this message translates to:
+  /// **'BLE'**
+  String get iotDemoHubTabBle;
+
+  /// BLE status card title
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth status'**
+  String get iotBleStatusTitle;
+
+  /// BLE mock mode toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Mock'**
+  String get iotBleMockModeLabel;
+
+  /// BLE real mode toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Real'**
+  String get iotBleRealModeLabel;
+
+  /// Banner when platform cannot use real BLE
+  ///
+  /// In en, this message translates to:
+  /// **'Real BLE is only available on Android and iOS. Mock mode is used on this platform.'**
+  String get iotBlePlatformMockOnly;
+
+  /// BLE adapter state unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get iotBleAdapterUnknown;
+
+  /// BLE scan section title
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get iotBleScanTitle;
+
+  /// BLE scan timeout option
+  ///
+  /// In en, this message translates to:
+  /// **'10 seconds'**
+  String get iotBleScanTimeout10;
+
+  /// BLE scan timeout option
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get iotBleScanTimeout30;
+
+  /// BLE scan timeout option
+  ///
+  /// In en, this message translates to:
+  /// **'60 seconds'**
+  String get iotBleScanTimeout60;
+
+  /// Start BLE scan button
+  ///
+  /// In en, this message translates to:
+  /// **'Start scan'**
+  String get iotBleStartScan;
+
+  /// Stop BLE scan button
+  ///
+  /// In en, this message translates to:
+  /// **'Stop scan'**
+  String get iotBleStopScan;
+
+  /// Empty BLE device list
+  ///
+  /// In en, this message translates to:
+  /// **'No devices found. Start a scan to discover mock peripherals.'**
+  String get iotBleNoDevices;
+
+  /// BLE device list title
+  ///
+  /// In en, this message translates to:
+  /// **'Discovered devices'**
+  String get iotBleDeviceListTitle;
+
+  /// BLE connected panel title
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get iotBleConnectedTitle;
+
+  /// When no BLE device is selected
+  ///
+  /// In en, this message translates to:
+  /// **'No device selected'**
+  String get iotBleNoDeviceSelected;
+
+  /// Connect to BLE device
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get iotBleConnect;
+
+  /// Disconnect BLE device
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get iotBleDisconnect;
+
+  /// Reconnect BLE device
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get iotBleReconnect;
+
+  /// BLE services explorer title
+  ///
+  /// In en, this message translates to:
+  /// **'GATT services'**
+  String get iotBleServicesTitle;
+
+  /// Empty services list
+  ///
+  /// In en, this message translates to:
+  /// **'No services discovered yet'**
+  String get iotBleNoServices;
+
+  /// Characteristic count subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No characteristics} =1{1 characteristic} other{{count} characteristics}}'**
+  String iotBleCharacteristicCount(int count);
+
+  /// BLE characteristics explorer title
+  ///
+  /// In en, this message translates to:
+  /// **'Characteristics'**
+  String get iotBleCharacteristicsTitle;
+
+  /// BLE read write panel title
+  ///
+  /// In en, this message translates to:
+  /// **'Read / write'**
+  String get iotBleReadWriteTitle;
+
+  /// Toggle hex encoding for BLE writes
+  ///
+  /// In en, this message translates to:
+  /// **'Hex mode'**
+  String get iotBleHexMode;
+
+  /// Last read BLE value label
+  ///
+  /// In en, this message translates to:
+  /// **'Last value'**
+  String get iotBleLastValue;
+
+  /// BLE write field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Value to write'**
+  String get iotBleWriteHint;
+
+  /// Read characteristic button
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get iotBleRead;
+
+  /// Write characteristic button
+  ///
+  /// In en, this message translates to:
+  /// **'Write'**
+  String get iotBleWrite;
+
+  /// Write without response button
+  ///
+  /// In en, this message translates to:
+  /// **'Write (no response)'**
+  String get iotBleWriteNoResponse;
+
+  /// Subscribe to notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get iotBleSubscribe;
+
+  /// BLE event log title
+  ///
+  /// In en, this message translates to:
+  /// **'Event log'**
+  String get iotBleEventLogTitle;
+
+  /// Clear BLE event log
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get iotBleClearLog;
+
+  /// Empty BLE log
+  ///
+  /// In en, this message translates to:
+  /// **'No events yet'**
+  String get iotBleLogEmpty;
+
+  /// Classic Bluetooth section title
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Classic (mock)'**
+  String get iotBleClassicTitle;
+
+  /// Classic BT limitation copy
+  ///
+  /// In en, this message translates to:
+  /// **'Real RFCOMM is deferred. This section demonstrates a mock paired-device chat on all platforms.'**
+  String get iotBleClassicLimitation;
+
+  /// Classic BT message field
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get iotBleClassicMessageHint;
+
+  /// Send classic BT message
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get iotBleClassicSend;
+
+  /// BLE initialize error
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize BLE'**
+  String get iotBleErrorInitialize;
+
+  /// BLE permission error
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth permission denied'**
+  String get iotBleErrorPermissionDenied;
+
+  /// BLE disabled error
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth is disabled'**
+  String get iotBleErrorBluetoothDisabled;
+
+  /// BLE scan error
+  ///
+  /// In en, this message translates to:
+  /// **'Scan failed'**
+  String get iotBleErrorScan;
+
+  /// BLE connect error
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get iotBleErrorConnect;
+
+  /// BLE disconnect error
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect failed'**
+  String get iotBleErrorDisconnect;
+
+  /// BLE discover error
+  ///
+  /// In en, this message translates to:
+  /// **'Service discovery failed'**
+  String get iotBleErrorDiscover;
+
+  /// BLE read error
+  ///
+  /// In en, this message translates to:
+  /// **'Read failed'**
+  String get iotBleErrorRead;
+
+  /// BLE write error
+  ///
+  /// In en, this message translates to:
+  /// **'Write failed'**
+  String get iotBleErrorWrite;
+
+  /// BLE subscribe error
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe failed'**
+  String get iotBleErrorSubscribe;
+
+  /// BLE unsupported platform error
+  ///
+  /// In en, this message translates to:
+  /// **'BLE not supported on this platform'**
+  String get iotBleErrorUnsupportedPlatform;
+
+  /// BLE characteristic not found error
+  ///
+  /// In en, this message translates to:
+  /// **'Characteristic not found'**
+  String get iotBleErrorCharacteristicNotFound;
+
   /// Tooltip for navigating to the IoT demo page
   ///
   /// In en, this message translates to:

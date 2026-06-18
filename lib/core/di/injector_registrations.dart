@@ -23,6 +23,7 @@ import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/core/di/register_igaming_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_in_app_purchase_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_iot_demo_services.dart';
+import 'package:flutter_bloc_app/core/di/register_iot_services.dart';
 import 'package:flutter_bloc_app/core/di/register_native_platform_showcase_services.dart';
 import 'package:flutter_bloc_app/core/di/register_online_therapy_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_playlearn_services.dart';

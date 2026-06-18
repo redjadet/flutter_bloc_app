@@ -18,6 +18,7 @@ This directory contains design notes and execution plans.
 - [`ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md): Classification of prior AI/operability ideas vs this repo.
 - [`ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md): Metrics and outcomes snapshot (2026-05-21).
 - [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md): Feature Brief + executable **Tests** contract (behaviour, state, unit, integration, proof); enforced by `tool/check_feature_brief_linked.sh` for feature Dart diffs.
+- [`iot_ble_feature_brief.md`](iot_ble_feature_brief.md): **Shipped** — BLE showcase tab on `/iot-demo` (mock + mobile real BLE).
 - [`checklist_quality_gates_baseline.md`](checklist_quality_gates_baseline.md): MVP wiring for fourteen quality-theme checklist gates (May 2026).
 - [`checklist_quality_gates_deferred.md`](checklist_quality_gates_deferred.md): post-MVP deferred/rejected checklist gates (IDs, unblock criteria).
 - [`code_quality_baseline_and_gate_promotion_2026-06.md`](code_quality_baseline_and_gate_promotion_2026-06.md): **Ready to execute** — Phase 0a baseline audit, gate spikes (0b), one vertical slice per cadence; complements future architecture plan.

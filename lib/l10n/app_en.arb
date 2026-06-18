@@ -2760,6 +2760,215 @@
   "@iotDemoFilterOffOnly": {
     "description": "Filter option to show only devices with toggle off"
   },
+  "iotDemoHubTabCloud": "Cloud",
+  "@iotDemoHubTabCloud": {
+    "description": "IoT demo hub Cloud tab label"
+  },
+  "iotDemoHubTabBle": "BLE",
+  "@iotDemoHubTabBle": {
+    "description": "IoT demo hub BLE tab label"
+  },
+  "iotBleStatusTitle": "Bluetooth status",
+  "@iotBleStatusTitle": {
+    "description": "BLE status card title"
+  },
+  "iotBleMockModeLabel": "Mock",
+  "@iotBleMockModeLabel": {
+    "description": "BLE mock mode toggle label"
+  },
+  "iotBleRealModeLabel": "Real",
+  "@iotBleRealModeLabel": {
+    "description": "BLE real mode toggle label"
+  },
+  "iotBlePlatformMockOnly": "Real BLE is only available on Android and iOS. Mock mode is used on this platform.",
+  "@iotBlePlatformMockOnly": {
+    "description": "Banner when platform cannot use real BLE"
+  },
+  "iotBleAdapterUnknown": "Unknown",
+  "@iotBleAdapterUnknown": {
+    "description": "BLE adapter state unknown"
+  },
+  "iotBleScanTitle": "Scan",
+  "@iotBleScanTitle": {
+    "description": "BLE scan section title"
+  },
+  "iotBleScanTimeout10": "10 seconds",
+  "@iotBleScanTimeout10": {
+    "description": "BLE scan timeout option"
+  },
+  "iotBleScanTimeout30": "30 seconds",
+  "@iotBleScanTimeout30": {
+    "description": "BLE scan timeout option"
+  },
+  "iotBleScanTimeout60": "60 seconds",
+  "@iotBleScanTimeout60": {
+    "description": "BLE scan timeout option"
+  },
+  "iotBleStartScan": "Start scan",
+  "@iotBleStartScan": {
+    "description": "Start BLE scan button"
+  },
+  "iotBleStopScan": "Stop scan",
+  "@iotBleStopScan": {
+    "description": "Stop BLE scan button"
+  },
+  "iotBleNoDevices": "No devices found. Start a scan to discover mock peripherals.",
+  "@iotBleNoDevices": {
+    "description": "Empty BLE device list"
+  },
+  "iotBleDeviceListTitle": "Discovered devices",
+  "@iotBleDeviceListTitle": {
+    "description": "BLE device list title"
+  },
+  "iotBleConnectedTitle": "Connection",
+  "@iotBleConnectedTitle": {
+    "description": "BLE connected panel title"
+  },
+  "iotBleNoDeviceSelected": "No device selected",
+  "@iotBleNoDeviceSelected": {
+    "description": "When no BLE device is selected"
+  },
+  "iotBleConnect": "Connect",
+  "@iotBleConnect": {
+    "description": "Connect to BLE device"
+  },
+  "iotBleDisconnect": "Disconnect",
+  "@iotBleDisconnect": {
+    "description": "Disconnect BLE device"
+  },
+  "iotBleReconnect": "Reconnect",
+  "@iotBleReconnect": {
+    "description": "Reconnect BLE device"
+  },
+  "iotBleServicesTitle": "GATT services",
+  "@iotBleServicesTitle": {
+    "description": "BLE services explorer title"
+  },
+  "iotBleNoServices": "No services discovered yet",
+  "@iotBleNoServices": {
+    "description": "Empty services list"
+  },
+  "iotBleCharacteristicCount": "{count, plural, =0{No characteristics} =1{1 characteristic} other{{count} characteristics}}",
+  "@iotBleCharacteristicCount": {
+    "description": "Characteristic count subtitle",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "iotBleCharacteristicsTitle": "Characteristics",
+  "@iotBleCharacteristicsTitle": {
+    "description": "BLE characteristics explorer title"
+  },
+  "iotBleReadWriteTitle": "Read / write",
+  "@iotBleReadWriteTitle": {
+    "description": "BLE read write panel title"
+  },
+  "iotBleHexMode": "Hex mode",
+  "@iotBleHexMode": {
+    "description": "Toggle hex encoding for BLE writes"
+  },
+  "iotBleLastValue": "Last value",
+  "@iotBleLastValue": {
+    "description": "Last read BLE value label"
+  },
+  "iotBleWriteHint": "Value to write",
+  "@iotBleWriteHint": {
+    "description": "BLE write field hint"
+  },
+  "iotBleRead": "Read",
+  "@iotBleRead": {
+    "description": "Read characteristic button"
+  },
+  "iotBleWrite": "Write",
+  "@iotBleWrite": {
+    "description": "Write characteristic button"
+  },
+  "iotBleWriteNoResponse": "Write (no response)",
+  "@iotBleWriteNoResponse": {
+    "description": "Write without response button"
+  },
+  "iotBleSubscribe": "Subscribe",
+  "@iotBleSubscribe": {
+    "description": "Subscribe to notifications"
+  },
+  "iotBleEventLogTitle": "Event log",
+  "@iotBleEventLogTitle": {
+    "description": "BLE event log title"
+  },
+  "iotBleClearLog": "Clear",
+  "@iotBleClearLog": {
+    "description": "Clear BLE event log"
+  },
+  "iotBleLogEmpty": "No events yet",
+  "@iotBleLogEmpty": {
+    "description": "Empty BLE log"
+  },
+  "iotBleClassicTitle": "Bluetooth Classic (mock)",
+  "@iotBleClassicTitle": {
+    "description": "Classic Bluetooth section title"
+  },
+  "iotBleClassicLimitation": "Real RFCOMM is deferred. This section demonstrates a mock paired-device chat on all platforms.",
+  "@iotBleClassicLimitation": {
+    "description": "Classic BT limitation copy"
+  },
+  "iotBleClassicMessageHint": "Message",
+  "@iotBleClassicMessageHint": {
+    "description": "Classic BT message field"
+  },
+  "iotBleClassicSend": "Send",
+  "@iotBleClassicSend": {
+    "description": "Send classic BT message"
+  },
+  "iotBleErrorInitialize": "Failed to initialize BLE",
+  "@iotBleErrorInitialize": {
+    "description": "BLE initialize error"
+  },
+  "iotBleErrorPermissionDenied": "Bluetooth permission denied",
+  "@iotBleErrorPermissionDenied": {
+    "description": "BLE permission error"
+  },
+  "iotBleErrorBluetoothDisabled": "Bluetooth is disabled",
+  "@iotBleErrorBluetoothDisabled": {
+    "description": "BLE disabled error"
+  },
+  "iotBleErrorScan": "Scan failed",
+  "@iotBleErrorScan": {
+    "description": "BLE scan error"
+  },
+  "iotBleErrorConnect": "Connection failed",
+  "@iotBleErrorConnect": {
+    "description": "BLE connect error"
+  },
+  "iotBleErrorDisconnect": "Disconnect failed",
+  "@iotBleErrorDisconnect": {
+    "description": "BLE disconnect error"
+  },
+  "iotBleErrorDiscover": "Service discovery failed",
+  "@iotBleErrorDiscover": {
+    "description": "BLE discover error"
+  },
+  "iotBleErrorRead": "Read failed",
+  "@iotBleErrorRead": {
+    "description": "BLE read error"
+  },
+  "iotBleErrorWrite": "Write failed",
+  "@iotBleErrorWrite": {
+    "description": "BLE write error"
+  },
+  "iotBleErrorSubscribe": "Subscribe failed",
+  "@iotBleErrorSubscribe": {
+    "description": "BLE subscribe error"
+  },
+  "iotBleErrorUnsupportedPlatform": "BLE not supported on this platform",
+  "@iotBleErrorUnsupportedPlatform": {
+    "description": "BLE unsupported platform error"
+  },
+  "iotBleErrorCharacteristicNotFound": "Characteristic not found",
+  "@iotBleErrorCharacteristicNotFound": {
+    "description": "BLE characteristic not found error"
+  },
   "openIotDemoTooltip": "Open IoT Demo",
   "@openIotDemoTooltip": {
     "description": "Tooltip for navigating to the IoT demo page"

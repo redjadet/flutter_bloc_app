@@ -1,6 +1,6 @@
 # IoT Demo Offline-First Contract
 
-This document defines how the IoT demo feature adopts the shared offline-first stack with Supabase as the remote source of truth.
+This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts the shared offline-first stack with Supabase as the remote source of truth. The **BLE** tab is a separate local showcase — see [`features/iot_ble.md`](../features/iot_ble.md).
 
 ## Goals
 

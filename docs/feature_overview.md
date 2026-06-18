@@ -43,7 +43,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Charts | `/charts` | `lib/features/chart/` | Deferred-loaded chart experience with offline-first behavior. |
 | GraphQL Demo | `/graphql-demo` | `lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
 | Remote Config surfaces | Counter and Settings diagnostics | `lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
-| IoT Demo | `/iot-demo` | `lib/features/iot_demo/` | Offline-first device list and commands; uses Supabase when configured. |
+| IoT Demo | `/iot-demo` | `lib/features/iot_demo/` (+ BLE: `lib/features/iot/`) | **Cloud** tab: offline-first device list; Supabase when configured. **BLE** tab: local GATT showcase (mock + optional real mobile). Hub: `IotDemoHubPage`. Doc: [`features/iot_ble.md`](features/iot_ble.md); cloud contract: [`offline_first/iot_demo.md`](offline_first/iot_demo.md). |
 | Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](staff_app_demo_walkthrough.md). |
 | Online Therapy Demo | `/online-therapy-demo` and nested client, therapist, and admin paths | `lib/features/online_therapy_demo/` | Simulation-first product demo for booking, messaging, call state, verification, and admin audit flows. Walkthrough: [Online Therapy Demo](online_therapy_demo/README.md). |
 | Supabase Auth | `/supabase-auth` | `lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |

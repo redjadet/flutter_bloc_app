@@ -30,6 +30,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
   [`features/realtime_market.md`](features/realtime_market.md),
+  [`features/iot_ble.md`](features/iot_ble.md),
   [`features/counter_outcome_brief.md`](features/counter_outcome_brief.md)
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`agent_project_context.md`](agent_project_context.md),
@@ -135,6 +136,7 @@ Source-of-truth docs for Flutter BLoC app.
 - [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
 - [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
 - [`features/in_app_purchase_demo.md`](features/in_app_purchase_demo.md)
+- [`features/iot_ble.md`](features/iot_ble.md)
 - [`fcm_demo_integration.md`](fcm_demo_integration.md)
 - [`case_studies/README.md`](case_studies/README.md)
 - [`genui_demo_user_guide.md`](genui_demo_user_guide.md)

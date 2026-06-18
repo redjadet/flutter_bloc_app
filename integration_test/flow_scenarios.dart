@@ -52,6 +52,7 @@ void registerPrSmokeIntegrationFlows() {
 void registerExtendedIntegrationFlows() {
   registerChartsRefreshIntegrationFlow();
   registerCounterPersistenceIntegrationFlow();
+  registerIotDemoBleTabIntegrationFlow();
   registerNavigationIntegrationFlow();
   registerPlaylearnEmptyTopicsIntegrationFlow();
   registerSearchEmptyResultsIntegrationFlow();
