@@ -38,8 +38,8 @@ class AppConfig {
     supportedLocales: AppLocalizations.supportedLocales,
     localeListResolutionCallback: _localeListResolutionCallback,
     locale: locale,
-    theme: AppTheme.lightTheme(),
-    darkTheme: AppTheme.darkTheme(),
+    theme: _applyTestThemeOverrides(AppTheme.lightTheme()),
+    darkTheme: _applyTestThemeOverrides(AppTheme.darkTheme()),
     themeMode: themeMode,
     scrollBehavior: const _AppScrollBehavior(),
     builder: (final context, final appChild) {
@@ -142,6 +142,17 @@ class AppConfig {
     final List<Locale>? locales,
     final Iterable<Locale> supported,
   ) => _localeListResolutionCallback(locales, supported) ?? _defaultLocale;
+
+  /// Skips M3 [InkSparkle] splashes in widget/integration test bindings.
+  ///
+  /// Linux CI widget tests use a SkSL backend while `ink_sparkle.frag` may ship
+  /// Vulkan-only stages, which throws when tapping Material buttons.
+  static ThemeData _applyTestThemeOverrides(final ThemeData theme) {
+    if (!_isTestEnvironment()) {
+      return theme;
+    }
+    return theme.copyWith(splashFactory: NoSplash.splashFactory);
+  }
 
   /// Detects if we're running in a test environment.
   ///
