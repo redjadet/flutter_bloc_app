@@ -5,6 +5,7 @@ Future<void> registerDemoServices() async {
   registerFcmDemoServices();
   registerRealtimeMarketServices();
   registerIotDemoServices();
+  registerIotServices();
   registerInAppPurchaseDemoServices();
   registerStaffAppDemoServices();
   registerAiDecisionDemoServices();

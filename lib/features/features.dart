@@ -11,6 +11,7 @@ export 'fcm_demo/fcm_demo.dart';
 export 'genui_demo/genui_demo.dart';
 export 'google_maps/google_maps.dart';
 export 'graphql_demo/graphql_demo.dart';
+export 'iot/iot.dart';
 export 'iot_demo/iot_demo.dart';
 export 'library_demo/presentation/pages/library_demo_page.dart';
 export 'native_platform_showcase/native_platform_showcase.dart';

@@ -249,6 +249,25 @@ void registerIotDemoIntegrationFlow() {
   );
 }
 
+void registerIotDemoBleTabIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'IoT demo BLE tab flow',
+    testName: 'opens IoT demo BLE tab and shows mock BLE showcase',
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await _openOverflowDestination(tester, 'Open IoT Demo');
+      await pumpUntilFound(tester, find.text('IoT Demo'));
+
+      await tapAndPump(tester, find.text('BLE'));
+      await pumpUntilFound(tester, find.text('Bluetooth status'));
+
+      expect(find.text('Bluetooth status'), findsOneWidget);
+      expect(find.text('Mock'), findsWidgets);
+    },
+  );
+}
+
 void registerMarkdownEditorIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Markdown editor flow',

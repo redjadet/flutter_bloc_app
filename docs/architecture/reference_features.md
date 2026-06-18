@@ -14,6 +14,7 @@ layouts — not legacy demos listed under [Legacy drift](#legacy-drift).
 | `profile` | Straightforward cubit + page feature | `lib/features/profile/presentation/cubit/` |
 | `todo_list` | Larger cubit split across part files — still under `presentation/cubit/` | `lib/features/todo_list/presentation/cubit/` |
 | `counter` | Offline-first reference + part-file cubit split under `presentation/cubit/` (2026-06 migration) | `lib/features/counter/presentation/cubit/`, `data/offline_first_counter_repository.dart` |
+| `iot` | Separate feature module composed at app layer; multi-repo + `BleRadioClient` seam; cubit/repo part splits | `lib/features/iot/`, hub `lib/app/router/pages/iot_demo_hub_page.dart`, [`docs/features/iot_ble.md`](../features/iot_ble.md) |
 | `native_platform_showcase` | Educational demo: use case + repository + **platform service ports** (MethodChannel / FFI behind data adapters); cubit depends on use case only | `lib/features/native_platform_showcase/domain/use_cases/`, `domain/native_showcase_*_service.dart`, `data/*_service.dart`, [`README.md`](../../lib/features/native_platform_showcase/README.md) |
 
 Scaffold output (no runtime code) matches the same shape:

@@ -2215,6 +2215,172 @@ class AppLocalizationsAr extends AppLocalizations {
   String get iotDemoFilterOffOnly => 'إيقاف فقط';
 
   @override
+  String get iotDemoHubTabCloud => 'Cloud';
+
+  @override
+  String get iotDemoHubTabBle => 'BLE';
+
+  @override
+  String get iotBleStatusTitle => 'Bluetooth status';
+
+  @override
+  String get iotBleMockModeLabel => 'Mock';
+
+  @override
+  String get iotBleRealModeLabel => 'Real';
+
+  @override
+  String get iotBlePlatformMockOnly =>
+      'Real BLE is only available on Android and iOS. Mock mode is used on this platform.';
+
+  @override
+  String get iotBleAdapterUnknown => 'Unknown';
+
+  @override
+  String get iotBleScanTitle => 'Scan';
+
+  @override
+  String get iotBleScanTimeout10 => '10 seconds';
+
+  @override
+  String get iotBleScanTimeout30 => '30 seconds';
+
+  @override
+  String get iotBleScanTimeout60 => '60 seconds';
+
+  @override
+  String get iotBleStartScan => 'Start scan';
+
+  @override
+  String get iotBleStopScan => 'Stop scan';
+
+  @override
+  String get iotBleNoDevices =>
+      'No devices found. Start a scan to discover mock peripherals.';
+
+  @override
+  String get iotBleDeviceListTitle => 'Discovered devices';
+
+  @override
+  String get iotBleConnectedTitle => 'Connection';
+
+  @override
+  String get iotBleNoDeviceSelected => 'No device selected';
+
+  @override
+  String get iotBleConnect => 'Connect';
+
+  @override
+  String get iotBleDisconnect => 'Disconnect';
+
+  @override
+  String get iotBleReconnect => 'Reconnect';
+
+  @override
+  String get iotBleServicesTitle => 'GATT services';
+
+  @override
+  String get iotBleNoServices => 'No services discovered yet';
+
+  @override
+  String iotBleCharacteristicCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count characteristics',
+      one: '1 characteristic',
+      zero: 'No characteristics',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get iotBleCharacteristicsTitle => 'Characteristics';
+
+  @override
+  String get iotBleReadWriteTitle => 'Read / write';
+
+  @override
+  String get iotBleHexMode => 'Hex mode';
+
+  @override
+  String get iotBleLastValue => 'Last value';
+
+  @override
+  String get iotBleWriteHint => 'Value to write';
+
+  @override
+  String get iotBleRead => 'Read';
+
+  @override
+  String get iotBleWrite => 'Write';
+
+  @override
+  String get iotBleWriteNoResponse => 'Write (no response)';
+
+  @override
+  String get iotBleSubscribe => 'Subscribe';
+
+  @override
+  String get iotBleEventLogTitle => 'Event log';
+
+  @override
+  String get iotBleClearLog => 'Clear';
+
+  @override
+  String get iotBleLogEmpty => 'No events yet';
+
+  @override
+  String get iotBleClassicTitle => 'Bluetooth Classic (mock)';
+
+  @override
+  String get iotBleClassicLimitation =>
+      'Real RFCOMM is deferred. This section demonstrates a mock paired-device chat on all platforms.';
+
+  @override
+  String get iotBleClassicMessageHint => 'Message';
+
+  @override
+  String get iotBleClassicSend => 'Send';
+
+  @override
+  String get iotBleErrorInitialize => 'Failed to initialize BLE';
+
+  @override
+  String get iotBleErrorPermissionDenied => 'Bluetooth permission denied';
+
+  @override
+  String get iotBleErrorBluetoothDisabled => 'Bluetooth is disabled';
+
+  @override
+  String get iotBleErrorScan => 'Scan failed';
+
+  @override
+  String get iotBleErrorConnect => 'Connection failed';
+
+  @override
+  String get iotBleErrorDisconnect => 'Disconnect failed';
+
+  @override
+  String get iotBleErrorDiscover => 'Service discovery failed';
+
+  @override
+  String get iotBleErrorRead => 'Read failed';
+
+  @override
+  String get iotBleErrorWrite => 'Write failed';
+
+  @override
+  String get iotBleErrorSubscribe => 'Subscribe failed';
+
+  @override
+  String get iotBleErrorUnsupportedPlatform =>
+      'BLE not supported on this platform';
+
+  @override
+  String get iotBleErrorCharacteristicNotFound => 'Characteristic not found';
+
+  @override
   String get openIotDemoTooltip => 'افتح العرض التجريبي لإنترنت الأشياء';
 
   @override
