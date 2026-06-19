@@ -236,6 +236,55 @@ void main() {
       },
     );
 
+    test(
+      'processOperation does not push stale pending over newer remote',
+      () async {
+        final DateTime pendingUpdated = DateTime.utc(2024, 1, 1, 12);
+        final DateTime remoteUpdated = DateTime.utc(2024, 1, 2, 12);
+        final TodoItem remoteItem = TodoItem(
+          id: 'todo-stale-push',
+          title: 'Remote newer title',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: remoteUpdated,
+          synchronized: true,
+        );
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          initial: <TodoItem>[remoteItem],
+        );
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        final TodoItem stalePending = remoteItem.copyWith(
+          title: 'Stale local title',
+          updatedAt: pendingUpdated,
+          synchronized: false,
+        );
+        await localRepository.save(stalePending);
+
+        final SyncOperation operation = SyncOperation.create(
+          entityType: OfflineFirstTodoRepository.todoEntity,
+          payload: stalePending.toJson(),
+          idempotencyKey: 'stale-todo-op',
+        );
+
+        await repository.processOperation(operation);
+
+        expect(remote.savedItems, isEmpty);
+        final List<TodoItem> remoteItems = await remote.fetchAll();
+        expect(remoteItems.single.title, 'Remote newer title');
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local.single.title, 'Remote newer title');
+        expect(local.single.synchronized, isTrue);
+        expect(local.single.lastSyncedAt, isNotNull);
+      },
+    );
+
     test('processOperation skips malformed save payload safely', () async {
       final _FakeRemoteRepository remote = _FakeRemoteRepository();
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(
