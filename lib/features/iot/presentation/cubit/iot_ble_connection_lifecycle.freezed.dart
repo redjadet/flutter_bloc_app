@@ -176,7 +176,7 @@ return active(_that.phase);case _:
 
 class IotBleConnectionIdle extends IotBleConnectionLifecycle {
   const IotBleConnectionIdle({this.selectedDeviceId}): super._();
-
+  
 
  final  String? selectedDeviceId;
 
@@ -242,7 +242,7 @@ as String?,
 
 class IotBleConnectionActive extends IotBleConnectionLifecycle {
   const IotBleConnectionActive(this.phase): super._();
-
+  
 
  final  BleConnectionPhase phase;
 

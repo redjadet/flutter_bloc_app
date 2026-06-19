@@ -207,7 +207,7 @@ return unknown(_that.message,_that.cause);case _:
 
 class ProfileLoadFailure extends ProfileFailure {
   const ProfileLoadFailure({this.message, this.cause}): super._();
-
+  
 
 @override final  String? message;
 @override final  Object? cause;
@@ -274,7 +274,7 @@ as String?,cause: freezed == cause ? _self.cause : cause ,
 
 class ProfileUnknownFailure extends ProfileFailure {
   const ProfileUnknownFailure({this.message, this.cause}): super._();
-
+  
 
 @override final  String? message;
 @override final  Object? cause;
