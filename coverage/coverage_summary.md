@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.22%** (22833/31616 lines)
+*Total line coverage*: **72.23%** (22849/31632 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -504,7 +504,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/data/huggingface_chat_repository.dart` | 91.11% | 41/45 |
 | `lib/features/case_study_demo/domain/case_study_draft.dart` | 91.30% | 63/69 |
 | `lib/shared/http/app_dio.dart` | 91.30% | 21/23 |
-| `lib/features/todo_list/data/offline_first_todo_repository_impl.part.dart` | 91.37% | 127/139 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_messages_page.dart` | 91.49% | 43/47 |
 | `lib/core/di/injector.dart` | 91.67% | 11/12 |
 | `lib/features/auth/presentation/helpers/provider_builder.dart` | 91.67% | 11/12 |
@@ -514,6 +513,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/counter/data/shared_preferences_counter_repository.dart` | 92.06% | 58/63 |
 | `lib/features/calculator/presentation/cubit/calculator_cubit_helpers.dart` | 92.11% | 35/38 |
 | `lib/features/auth/presentation/widgets/register_phone_field.dart` | 92.16% | 47/51 |
+| `lib/features/todo_list/data/offline_first_todo_repository_impl.part.dart` | 92.16% | 141/153 |
 | `lib/features/in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page_cards.part.dart` | 92.31% | 108/117 |
 | `lib/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart` | 92.31% | 12/13 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_dashboard_page.dart` | 92.31% | 24/26 |
@@ -837,7 +837,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/supabase_auth/domain/supabase_auth_repository.dart` | 100.00% | 5/5 |
 | `lib/features/supabase_auth/presentation/pages/supabase_auth_page_cards.part.dart` | 100.00% | 33/33 |
 | `lib/features/todo_list/data/todo_payload_builder.dart` | 100.00% | 7/7 |
-| `lib/features/todo_list/domain/todo_merge_policy.dart` | 100.00% | 8/8 |
+| `lib/features/todo_list/domain/todo_merge_policy.dart` | 100.00% | 10/10 |
 | `lib/features/todo_list/domain/todo_repository.dart` | 100.00% | 2/2 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods_reorder.part.dart` | 100.00% | 25/25 |
 | `lib/features/todo_list/presentation/helpers/todo_list_dialog_content.dart` | 100.00% | 22/22 |

@@ -3,7 +3,8 @@
 # stale sync data. Covers remote-watch/pull applying older remote snapshots and
 # queued replay pushing older pending snapshots over newer remote state. See
 # AGENTS.md §5 Offline-first repositories and
-# test/features/counter/data/offline_first_counter_repository_test.dart.
+# test/features/counter/data/offline_first_counter_repository_test.dart and
+# test/features/todo_list/data/offline_first_todo_repository_test.dart.
 
 set -euo pipefail
 
@@ -12,6 +13,7 @@ cd "$PROJECT_ROOT"
 
 MERGE_GUARD_MODE="${CHECK_OFFLINE_FIRST_REMOTE_MERGE_MODE:-always}"
 COUNTER_TEST="test/features/counter/data/offline_first_counter_repository_test.dart"
+TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
 
 collect_changed_files() {
@@ -53,8 +55,10 @@ should_run_remote_merge_guard_auto() {
     case "$file" in
       lib/shared/sync/*|\
       lib/features/counter/data/*|\
+      lib/features/todo_list/data/*|\
       lib/features/iot_demo/data/*|\
       test/features/counter/data/*|\
+      test/features/todo_list/data/*|\
       test/features/iot_demo/data/*|\
       tool/check_offline_first_remote_merge.sh|\
       docs/offline_first/*|\
@@ -74,24 +78,25 @@ select_remote_merge_tests() {
   local file
   local -a changed_files=()
   local needs_counter=0
+  local needs_todo=0
   local needs_iot=0
   local needs_all=0
 
   out_ref=()
 
   if [ -n "${CI:-}" ]; then
-    out_ref=("$COUNTER_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
     return 0
   fi
 
   if ! command -v git >/dev/null 2>&1 || ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    out_ref=("$COUNTER_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
     return 0
   fi
 
   collect_changed_files changed_files
   if [ "${#changed_files[@]}" -eq 0 ]; then
-    out_ref=("$COUNTER_TEST" "$IOT_TEST")
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
     return 0
   fi
 
@@ -109,6 +114,10 @@ select_remote_merge_tests() {
       test/features/counter/data/*)
         needs_counter=1
         ;;
+      lib/features/todo_list/data/*|\
+      test/features/todo_list/data/*)
+        needs_todo=1
+        ;;
       lib/features/iot_demo/data/*|\
       test/features/iot_demo/data/*)
         needs_iot=1
@@ -116,13 +125,16 @@ select_remote_merge_tests() {
     esac
   done
 
-  if [ "$needs_all" -eq 1 ] || { [ "$needs_counter" -eq 0 ] && [ "$needs_iot" -eq 0 ]; }; then
-    out_ref=("$COUNTER_TEST" "$IOT_TEST")
+  if [ "$needs_all" -eq 1 ] || { [ "$needs_counter" -eq 0 ] && [ "$needs_todo" -eq 0 ] && [ "$needs_iot" -eq 0 ]; }; then
+    out_ref=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
     return 0
   fi
 
   if [ "$needs_counter" -eq 1 ]; then
     out_ref+=("$COUNTER_TEST")
+  fi
+  if [ "$needs_todo" -eq 1 ]; then
+    out_ref+=("$TODO_TEST")
   fi
   if [ "$needs_iot" -eq 1 ]; then
     out_ref+=("$IOT_TEST")
