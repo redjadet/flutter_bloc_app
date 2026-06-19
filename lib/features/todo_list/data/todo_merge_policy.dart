@@ -7,10 +7,6 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 class TodoMergePolicy {
   const TodoMergePolicy();
 
-  /// Returns true if [remoteItem] should be written to local storage.
-  ///
-  /// When local is synchronized, accepts remote if equal or newer; when local
-  /// has unsynced changes, accepts only if remote is strictly newer.
   /// Whether a queued pending item should be pushed to remote.
   ///
   /// Symmetric to [shouldApplyRemote]: never push an older pending write over a

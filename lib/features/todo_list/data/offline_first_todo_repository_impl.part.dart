@@ -273,17 +273,19 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   Future<void> _processSaveOperation(final TodoItem item) async {
     if (_remoteRepository case final TodoRepository remoteRepository?) {
-      final Iterable<TodoItem> remoteMatches = (await remoteRepository
-              .fetchAll())
-          .where((final TodoItem candidate) => candidate.id == item.id);
+      final Iterable<TodoItem> remoteMatches =
+          (await remoteRepository.fetchAll()).where(
+            (final candidate) => candidate.id == item.id,
+          );
       final TodoItem? remoteItem = remoteMatches.isEmpty
           ? null
           : remoteMatches.first;
       if (remoteItem != null &&
           !_mergePolicy.shouldPushPendingToRemote(item, remoteItem)) {
-        final Iterable<TodoItem> localMatches = (await _localRepository
-                .fetchAll())
-            .where((final TodoItem candidate) => candidate.id == item.id);
+        final Iterable<TodoItem> localMatches =
+            (await _localRepository.fetchAll()).where(
+              (final candidate) => candidate.id == item.id,
+            );
         final TodoItem? localItem = localMatches.isEmpty
             ? null
             : localMatches.first;
