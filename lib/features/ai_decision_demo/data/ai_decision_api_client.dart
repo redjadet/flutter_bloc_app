@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_dto.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 
@@ -39,7 +40,8 @@ class AiDecisionApiClient {
         final cases = (json['cases'] as List<dynamic>? ?? <dynamic>[])
             .cast<_JsonMap>();
         return cases
-            .map(AiDecisionCaseSummary.fromJson)
+            .map(AiDecisionCaseSummaryDto.fromJson)
+            .map((final dto) => dto.toDomain())
             .toList(growable: false);
       },
     );
@@ -50,7 +52,7 @@ class AiDecisionApiClient {
       '/cases/$caseId',
       emptyResponseMessage:
           'AI Decision API returned empty case detail response.',
-      mapper: AiDecisionCaseDetail.fromJson,
+      mapper: (final json) => AiDecisionCaseDetailDto.fromJson(json).toDomain(),
     );
   }
 
@@ -62,7 +64,8 @@ class AiDecisionApiClient {
       '/cases/$caseId/decision',
       data: <String, dynamic>{'operator_note': operatorNote},
       emptyResponseMessage: 'AI Decision API returned empty decision response.',
-      mapper: AiDecisionDecisionResult.fromJson,
+      mapper: (final json) =>
+          AiDecisionDecisionResultDto.fromJson(json).toDomain(),
     );
   }
 

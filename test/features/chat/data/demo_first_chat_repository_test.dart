@@ -10,12 +10,12 @@ void main() {
       'chatRemoteTransportHint uses composite hint when render is not attempted first',
       () async {
         final _RecordingRepo render = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.renderOrchestration),
-          hint: ChatInferenceTransport.renderOrchestration,
+          result: _dummyResult(ChatRemotePath.renderOrchestration),
+          hint: ChatRemotePath.renderOrchestration,
         );
         final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.direct),
-          hint: ChatInferenceTransport.direct,
+          result: _dummyResult(ChatRemotePath.directApi),
+          hint: ChatRemotePath.directApi,
         );
         final DemoFirstChatRepository repo = DemoFirstChatRepository(
           renderRepository: render,
@@ -24,7 +24,7 @@ void main() {
           isRenderStrict: () => false,
         );
 
-        expect(repo.chatRemoteTransportHint, ChatInferenceTransport.direct);
+        expect(repo.chatRemoteTransportHint, ChatRemotePath.directApi);
       },
     );
 
@@ -32,12 +32,12 @@ void main() {
       'chatRemoteTransportHint falls back to composite when render hint is unavailable',
       () async {
         final _RecordingRepo render = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.renderOrchestration),
+          result: _dummyResult(ChatRemotePath.renderOrchestration),
           hint: null,
         );
         final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.supabase),
-          hint: ChatInferenceTransport.supabase,
+          result: _dummyResult(ChatRemotePath.edgeProxy),
+          hint: ChatRemotePath.edgeProxy,
         );
         final DemoFirstChatRepository repo = DemoFirstChatRepository(
           renderRepository: render,
@@ -46,16 +46,16 @@ void main() {
           isRenderStrict: () => false,
         );
 
-        expect(repo.chatRemoteTransportHint, ChatInferenceTransport.supabase);
+        expect(repo.chatRemoteTransportHint, ChatRemotePath.edgeProxy);
       },
     );
 
     test('skips render when not attempted first', () async {
       final _RecordingRepo render = _RecordingRepo(
-        result: _dummyResult(ChatInferenceTransport.renderOrchestration),
+        result: _dummyResult(ChatRemotePath.renderOrchestration),
       );
       final _RecordingRepo composite = _RecordingRepo(
-        result: _dummyResult(ChatInferenceTransport.direct),
+        result: _dummyResult(ChatRemotePath.directApi),
       );
       final DemoFirstChatRepository repo = DemoFirstChatRepository(
         renderRepository: render,
@@ -86,7 +86,7 @@ void main() {
         ),
       );
       final _RecordingRepo composite = _RecordingRepo(
-        result: _dummyResult(ChatInferenceTransport.supabase),
+        result: _dummyResult(ChatRemotePath.edgeProxy),
       );
       final DemoFirstChatRepository repo = DemoFirstChatRepository(
         renderRepository: render,
@@ -103,7 +103,7 @@ void main() {
 
       expect(render.calls, 1);
       expect(composite.calls, 1);
-      expect(out.transportUsed, ChatInferenceTransport.supabase);
+      expect(out.transportUsed, ChatRemotePath.edgeProxy);
     });
 
     test(
@@ -118,7 +118,7 @@ void main() {
           ),
         );
         final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.direct),
+          result: _dummyResult(ChatRemotePath.directApi),
         );
         final DemoFirstChatRepository repo = DemoFirstChatRepository(
           renderRepository: render,
@@ -135,7 +135,7 @@ void main() {
 
         expect(render.calls, 1);
         expect(composite.calls, 1);
-        expect(out.transportUsed, ChatInferenceTransport.direct);
+        expect(out.transportUsed, ChatRemotePath.directApi);
       },
     );
 
@@ -151,7 +151,7 @@ void main() {
           ),
         );
         final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatInferenceTransport.direct),
+          result: _dummyResult(ChatRemotePath.directApi),
         );
         final DemoFirstChatRepository repo = DemoFirstChatRepository(
           renderRepository: render,
@@ -182,7 +182,7 @@ void main() {
         ),
       );
       final _RecordingRepo composite = _RecordingRepo(
-        result: _dummyResult(ChatInferenceTransport.direct),
+        result: _dummyResult(ChatRemotePath.directApi),
       );
       final DemoFirstChatRepository repo = DemoFirstChatRepository(
         renderRepository: render,
@@ -204,7 +204,7 @@ void main() {
   });
 }
 
-ChatResult _dummyResult(final ChatInferenceTransport transport) => ChatResult(
+ChatResult _dummyResult(final ChatRemotePath transport) => ChatResult(
   reply: const ChatMessage(author: ChatAuthor.assistant, text: 'ok'),
   pastUserInputs: const <String>['hi'],
   generatedResponses: const <String>['ok'],
@@ -216,13 +216,13 @@ class _RecordingRepo implements ChatRepository {
 
   final ChatResult? result;
   final ChatRemoteFailureException? throwRemote;
-  final ChatInferenceTransport? hint;
+  final ChatRemotePath? hint;
   int calls = 0;
   String? lastModel;
   final List<String?> clientMessageIds = <String?>[];
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+  ChatRemotePath? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({

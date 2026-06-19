@@ -29,6 +29,8 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_b
 | Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad impl; widget patterns [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md); policy [`testing_overview.md`](testing_overview.md) § Feature-defined testing |
 | New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` previews folders + feature brief; add `--apply` only when the name is final |
 | Feature folder/use-case/DTO/test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) + [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) + [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
+| Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades before copying code |
+| Domain wire-shape grep (warn-only) | `bash tool/check_domain_wire_leaks.sh` — optional; see reduce_surprise_patterns pre-ship checklist |
 | Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md) + [`review/bloc_checklist.md`](review/bloc_checklist.md); skill `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` (flutter analyze + mix_lint + file_length_lint) |
 | Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
 | AI failure-risk register | `bash tool/check_ai_failure_risk_register.sh` |

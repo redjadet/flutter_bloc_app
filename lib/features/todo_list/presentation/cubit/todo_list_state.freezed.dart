@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TodoListState {
 
- ViewStatus get status; List<TodoItem> get items; TodoFilter get filter; String get searchQuery; TodoSortOrder get sortOrder; Map<String, int> get manualOrder; Set<String> get selectedItemIds; int get pendingSyncCount; String? get errorMessage;
+ ViewStatus get status; List<TodoItem> get items; TodoFilter get filter; String get searchQuery; TodoSortOrder get sortOrder; Map<String, int> get manualOrder; Set<String> get selectedItemIds; int get pendingSyncCount; AppError? get lastError;
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TodoListStateCopyWith<TodoListState> get copyWith => _$TodoListStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&const DeepCollectionEquality().equals(other.manualOrder, manualOrder)&&const DeepCollectionEquality().equals(other.selectedItemIds, selectedItemIds)&&(identical(other.pendingSyncCount, pendingSyncCount) || other.pendingSyncCount == pendingSyncCount)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&const DeepCollectionEquality().equals(other.manualOrder, manualOrder)&&const DeepCollectionEquality().equals(other.selectedItemIds, selectedItemIds)&&(identical(other.pendingSyncCount, pendingSyncCount) || other.pendingSyncCount == pendingSyncCount)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),filter,searchQuery,sortOrder,const DeepCollectionEquality().hash(manualOrder),const DeepCollectionEquality().hash(selectedItemIds),pendingSyncCount,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(items),filter,searchQuery,sortOrder,const DeepCollectionEquality().hash(manualOrder),const DeepCollectionEquality().hash(selectedItemIds),pendingSyncCount,lastError);
 
 @override
 String toString() {
-  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, sortOrder: $sortOrder, manualOrder: $manualOrder, selectedItemIds: $selectedItemIds, pendingSyncCount: $pendingSyncCount, errorMessage: $errorMessage)';
+  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, sortOrder: $sortOrder, manualOrder: $manualOrder, selectedItemIds: $selectedItemIds, pendingSyncCount: $pendingSyncCount, lastError: $lastError)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TodoListStateCopyWith<$Res>  {
   factory $TodoListStateCopyWith(TodoListState value, $Res Function(TodoListState) _then) = _$TodoListStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, TodoSortOrder sortOrder, Map<String, int> manualOrder, Set<String> selectedItemIds, int pendingSyncCount, String? errorMessage
+ ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, TodoSortOrder sortOrder, Map<String, int> manualOrder, Set<String> selectedItemIds, int pendingSyncCount, AppError? lastError
 });
 
 
@@ -62,7 +62,7 @@ class _$TodoListStateCopyWithImpl<$Res>
 
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? sortOrder = null,Object? manualOrder = null,Object? selectedItemIds = null,Object? pendingSyncCount = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? sortOrder = null,Object? manualOrder = null,Object? selectedItemIds = null,Object? pendingSyncCount = null,Object? lastError = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
@@ -72,8 +72,8 @@ as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: 
 as TodoSortOrder,manualOrder: null == manualOrder ? _self.manualOrder : manualOrder // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,selectedItemIds: null == selectedItemIds ? _self.selectedItemIds : selectedItemIds // ignore: cast_nullable_to_non_nullable
 as Set<String>,pendingSyncCount: null == pendingSyncCount ? _self.pendingSyncCount : pendingSyncCount // ignore: cast_nullable_to_non_nullable
-as int,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
@@ -158,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
-return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.lastError);case _:
   return orElse();
 
 }
@@ -179,10 +179,10 @@ return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.so
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  AppError? lastError)  $default,) {final _that = this;
 switch (_that) {
 case _TodoListState():
-return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.lastError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +199,10 @@ return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.so
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  List<TodoItem> items,  TodoFilter filter,  String searchQuery,  TodoSortOrder sortOrder,  Map<String, int> manualOrder,  Set<String> selectedItemIds,  int pendingSyncCount,  AppError? lastError)?  $default,) {final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
-return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.errorMessage);case _:
+return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.sortOrder,_that.manualOrder,_that.selectedItemIds,_that.pendingSyncCount,_that.lastError);case _:
   return null;
 
 }
@@ -214,7 +214,7 @@ return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.so
 
 
 class _TodoListState extends TodoListState {
-  const _TodoListState({this.status = ViewStatus.initial, final  List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.searchQuery = '', this.sortOrder = TodoSortOrder.dateDesc, final  Map<String, int> manualOrder = const <String, int>{}, final  Set<String> selectedItemIds = const <String>{}, this.pendingSyncCount = 0, this.errorMessage}): _items = items,_manualOrder = manualOrder,_selectedItemIds = selectedItemIds,super._();
+  const _TodoListState({this.status = ViewStatus.initial, final  List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.searchQuery = '', this.sortOrder = TodoSortOrder.dateDesc, final  Map<String, int> manualOrder = const <String, int>{}, final  Set<String> selectedItemIds = const <String>{}, this.pendingSyncCount = 0, this.lastError}): _items = items,_manualOrder = manualOrder,_selectedItemIds = selectedItemIds,super._();
   
 
 @override@JsonKey() final  ViewStatus status;
@@ -243,7 +243,7 @@ class _TodoListState extends TodoListState {
 }
 
 @override@JsonKey() final  int pendingSyncCount;
-@override final  String? errorMessage;
+@override final  AppError? lastError;
 
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
@@ -255,16 +255,16 @@ _$TodoListStateCopyWith<_TodoListState> get copyWith => __$TodoListStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&const DeepCollectionEquality().equals(other._manualOrder, _manualOrder)&&const DeepCollectionEquality().equals(other._selectedItemIds, _selectedItemIds)&&(identical(other.pendingSyncCount, pendingSyncCount) || other.pendingSyncCount == pendingSyncCount)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoListState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.filter, filter) || other.filter == filter)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&const DeepCollectionEquality().equals(other._manualOrder, _manualOrder)&&const DeepCollectionEquality().equals(other._selectedItemIds, _selectedItemIds)&&(identical(other.pendingSyncCount, pendingSyncCount) || other.pendingSyncCount == pendingSyncCount)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),filter,searchQuery,sortOrder,const DeepCollectionEquality().hash(_manualOrder),const DeepCollectionEquality().hash(_selectedItemIds),pendingSyncCount,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_items),filter,searchQuery,sortOrder,const DeepCollectionEquality().hash(_manualOrder),const DeepCollectionEquality().hash(_selectedItemIds),pendingSyncCount,lastError);
 
 @override
 String toString() {
-  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, sortOrder: $sortOrder, manualOrder: $manualOrder, selectedItemIds: $selectedItemIds, pendingSyncCount: $pendingSyncCount, errorMessage: $errorMessage)';
+  return 'TodoListState(status: $status, items: $items, filter: $filter, searchQuery: $searchQuery, sortOrder: $sortOrder, manualOrder: $manualOrder, selectedItemIds: $selectedItemIds, pendingSyncCount: $pendingSyncCount, lastError: $lastError)';
 }
 
 
@@ -275,7 +275,7 @@ abstract mixin class _$TodoListStateCopyWith<$Res> implements $TodoListStateCopy
   factory _$TodoListStateCopyWith(_TodoListState value, $Res Function(_TodoListState) _then) = __$TodoListStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, TodoSortOrder sortOrder, Map<String, int> manualOrder, Set<String> selectedItemIds, int pendingSyncCount, String? errorMessage
+ ViewStatus status, List<TodoItem> items, TodoFilter filter, String searchQuery, TodoSortOrder sortOrder, Map<String, int> manualOrder, Set<String> selectedItemIds, int pendingSyncCount, AppError? lastError
 });
 
 
@@ -292,7 +292,7 @@ class __$TodoListStateCopyWithImpl<$Res>
 
 /// Create a copy of TodoListState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? sortOrder = null,Object? manualOrder = null,Object? selectedItemIds = null,Object? pendingSyncCount = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? items = null,Object? filter = null,Object? searchQuery = null,Object? sortOrder = null,Object? manualOrder = null,Object? selectedItemIds = null,Object? pendingSyncCount = null,Object? lastError = freezed,}) {
   return _then(_TodoListState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ViewStatus,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
@@ -302,8 +302,8 @@ as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: 
 as TodoSortOrder,manualOrder: null == manualOrder ? _self._manualOrder : manualOrder // ignore: cast_nullable_to_non_nullable
 as Map<String, int>,selectedItemIds: null == selectedItemIds ? _self._selectedItemIds : selectedItemIds // ignore: cast_nullable_to_non_nullable
 as Set<String>,pendingSyncCount: null == pendingSyncCount ? _self.pendingSyncCount : pendingSyncCount // ignore: cast_nullable_to_non_nullable
-as int,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 

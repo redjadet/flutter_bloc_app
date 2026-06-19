@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/api/countries_graphql_api.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
@@ -55,7 +56,8 @@ class CountriesGraphqlRepository
       rawContinents
           .map(mapFromDynamic)
           .whereType<Map<String, dynamic>>()
-          .map(GraphqlContinent.fromJson)
+          .map(GraphqlContinentDto.fromJson)
+          .map((final dto) => dto.toDomain())
           .toList(),
     );
   }

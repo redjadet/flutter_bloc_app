@@ -9,6 +9,7 @@
 3. [`CODEMAP.md`](../../CODEMAP.md) or [`PLAN.md`](../../PLAN.md) (AI engineering)
 4. [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md)
 5. [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) for the feature/task
+5b. Feature implementation semantics: [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) semantic grades
 6. Canon from [`docs/README.md`](../README.md)
 7. Debt claims only: `ai/reports/`, `docs/audits/` (`git add -f`)
 8. **Skill routing** (before implementation): [`skill_routing.md`](skill_routing.md) — shim `agents-skill-routing`; session list → routing table → `./bin/agent-maintain find QUERY` or `bash tool/find_global_agent_skills.sh QUERY`

@@ -205,7 +205,9 @@ void main() {
         timerService.elapse(const Duration(milliseconds: 350));
 
         expect(cubit.state.isLoading, isFalse);
-        expect(cubit.state.errorMessage, contains('sync load failure'));
+        expect(cubit.state.hasError, isTrue);
+        expect(cubit.state.lastError, isNotNull);
+        expect(cubit.state.errorMessage, isNotEmpty);
       },
     );
   });

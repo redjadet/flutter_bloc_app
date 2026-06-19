@@ -44,6 +44,7 @@ class ProfilePage extends StatelessWidget {
           hasError: state.hasError,
           hasUser: state.hasUser,
           user: state.user,
+          errorMessage: state.errorMessage,
         ),
         isLoading: (final data) => data.isLoading && !data.hasUser,
         isError: (final data) => data.hasError && !data.hasUser,
@@ -51,8 +52,8 @@ class ProfilePage extends StatelessWidget {
           final colors = Theme.of(context).colorScheme;
           return CommonLoadingWidget(color: colors.onSurface);
         },
-        errorBuilder: (final context, final _) => CommonErrorView(
-          message: context.l10n.featureLoadError,
+        errorBuilder: (final context, final data) => CommonErrorView(
+          message: data.errorMessage ?? context.l10n.featureLoadError,
           onRetry: () => context.cubit<ProfileCubit>().loadProfile(),
         ),
         builder: (final context, final bodyData) {
@@ -151,5 +152,6 @@ abstract class _ProfileBodyData with _$ProfileBodyData {
     required final bool hasError,
     required final bool hasUser,
     required final ProfileUser? user,
+    final String? errorMessage,
   }) = __ProfileBodyData;
 }

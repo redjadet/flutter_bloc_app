@@ -88,7 +88,7 @@ extension _SupabaseChatRepositoryEdge on SupabaseChatRepository {
       reply: ChatMessage(author: ChatAuthor.assistant, text: content.trim()),
       pastUserInputs: <String>[...pastUserInputs, prompt],
       generatedResponses: <String>[...generatedResponses, content.trim()],
-      transportUsed: ChatInferenceTransport.supabase,
+      transportUsed: ChatRemotePath.edgeProxy,
     );
   }
 }

@@ -31,20 +31,22 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
       state.copyWith(
         items: List<TodoItem>.unmodifiable(updatedItems),
         status: ViewStatus.success,
-        errorMessage: null,
+        lastError: null,
         manualOrder: updatedManualOrder,
       ),
     );
+    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.save(item),
       isAlive: () => !isClosed,
+      onAppError: (final appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            errorMessage: errorMessage,
+            lastError: latestError ?? UnknownError(message: errorMessage),
           ),
         );
       },
@@ -122,9 +124,11 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         .where((final current) => current.id != item.id)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
+    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.delete(item.id),
       isAlive: () => !isClosed,
+      onAppError: (final appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
@@ -132,7 +136,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            errorMessage: errorMessage,
+            lastError: latestError ?? UnknownError(message: errorMessage),
           ),
         );
       },
@@ -149,16 +153,18 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
         .where((final item) => !item.isCompleted)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
+    AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: repository.clearCompleted,
       isAlive: () => !isClosed,
+      onAppError: (final appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
       onError: (final errorMessage) {
         if (isClosed) return;
         emit(
           previousState.copyWith(
             status: ViewStatus.error,
-            errorMessage: errorMessage,
+            lastError: latestError ?? UnknownError(message: errorMessage),
           ),
         );
       },

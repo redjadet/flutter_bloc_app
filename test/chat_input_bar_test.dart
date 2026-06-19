@@ -89,7 +89,7 @@ class _StubChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

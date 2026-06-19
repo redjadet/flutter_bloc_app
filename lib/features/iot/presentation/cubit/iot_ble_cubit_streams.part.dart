@@ -51,8 +51,7 @@ mixin IotBleCubitStreams on IotBleCubitCore {
       state.copyWith(
         useMockBle: useMock,
         devices: const <BleDiscoveredDevice>[],
-        selectedDeviceId: null,
-        connection: null,
+        connectionLifecycle: const IotBleConnectionLifecycle.idle(),
         services: const <BleService>[],
         selectedCharacteristic: null,
         lastReadValue: null,
@@ -68,7 +67,8 @@ mixin IotBleCubitStreams on IotBleCubitCore {
 
   /// Retry after a full-screen BLE error. Unsupported real mode falls back to mock.
   Future<void> recoverFromBleError() async {
-    if (!state.useMockBle && state.errorCode == IotBleErrorCode.unsupportedPlatform) {
+    if (!state.useMockBle &&
+        state.errorCode == IotBleErrorCode.unsupportedPlatform) {
       await toggleBleMode(useMock: true);
       return;
     }

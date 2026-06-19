@@ -29,7 +29,7 @@ class _FakeRemoteChatRepository implements ChatRepository {
   final ChatRemoteFailureException? failWithRemote;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

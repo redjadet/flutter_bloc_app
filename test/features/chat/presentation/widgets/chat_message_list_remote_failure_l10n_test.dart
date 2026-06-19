@@ -14,7 +14,6 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -41,7 +40,6 @@ void main() {
           ],
           error: 'opaque-upstream-detail',
           remoteFailureL10nCode: 'token_missing',
-          status: ViewStatus.error,
         ),
       );
       await tester.pump();
@@ -74,7 +72,6 @@ void main() {
           ],
           error: 'rate limit detail',
           remoteFailureL10nCode: 'rate_limited',
-          status: ViewStatus.error,
         ),
       );
       await tester.pump();
@@ -107,7 +104,6 @@ void main() {
           ],
           error: 'opaque-forbidden-detail',
           remoteFailureL10nCode: 'forbidden',
-          status: ViewStatus.error,
         ),
       );
       await tester.pump();
@@ -229,7 +225,7 @@ class _StubChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

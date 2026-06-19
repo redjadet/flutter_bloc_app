@@ -63,6 +63,8 @@ Source-of-truth docs for Flutter BLoC app.
 - [`bloc_standards.md`](bloc_standards.md) — deterministic Cubit/BLoC rules for Cursor and Codex
 - [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) — feature folder and placement contract
 - [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) — use-case, DTO, mapper, and error-boundary policy
+- [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) — semantic patterns (DTO, sealed state, errors)
+- [`architecture/reference_features.md`](architecture/reference_features.md) — gold layouts + semantic grades
 - [`feature_overview.md`](feature_overview.md)
 - [`modularity.md`](modularity.md)
 - [`design_system.md`](design_system.md)

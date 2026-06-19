@@ -6,16 +6,22 @@ layouts — not legacy demos listed under [Legacy drift](#legacy-drift).
 
 ## Gold references
 
-| Feature | Why copy it | Key paths |
-| --- | --- | --- |
-| `remote_config` | Full Clean Architecture stack, offline-first data, Freezed state, `presentation/cubit/` | `lib/features/remote_config/domain/`, `data/`, `presentation/cubit/`, `presentation/widgets/` |
-| `case_study_demo` | Smaller feature with standard cubit folder + pages | `lib/features/case_study_demo/presentation/cubit/` |
-| `iot_demo` | Cubit + domain/data split without extra legacy folders | `lib/features/iot_demo/presentation/cubit/` |
-| `profile` | Straightforward cubit + page feature | `lib/features/profile/presentation/cubit/` |
-| `todo_list` | Larger cubit split across part files — still under `presentation/cubit/` | `lib/features/todo_list/presentation/cubit/` |
-| `counter` | Offline-first reference + part-file cubit split under `presentation/cubit/` (2026-06 migration) | `lib/features/counter/presentation/cubit/`, `data/offline_first_counter_repository.dart` |
-| `iot` | Separate feature module composed at app layer; multi-repo + `BleRadioClient` seam; cubit/repo part splits | `lib/features/iot/`, hub `lib/app/router/pages/iot_demo_hub_page.dart`, [`docs/features/iot_ble.md`](../features/iot_ble.md) |
-| `native_platform_showcase` | Educational demo: use case + repository + **platform service ports** (MethodChannel / FFI behind data adapters); cubit depends on use case only | `lib/features/native_platform_showcase/domain/use_cases/`, `domain/native_showcase_*_service.dart`, `data/*_service.dart`, [`README.md`](../../lib/features/native_platform_showcase/README.md) |
+Semantic grades (P3–P6): G/Y/R — detail in
+[`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md).
+Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
+
+| Feature | Why copy it | P3 | P4 | P5 | P6 | Key paths |
+| --- | --- | --- | --- | --- | --- | --- |
+| `remote_config` | Full stack, offline-first, sealed Freezed state | G | G | G | Y | `lib/features/remote_config/` |
+| `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `lib/features/profile/presentation/cubit/` |
+| `todo_list` | DTO sync boundary, domain merge policy, AppError | G | Y | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
+| `native_platform_showcase` | Platform ports; cubit → use case only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart` |
+| `deeplink` | Sealed deep-link state | G | G | G | G | `presentation/cubit/deep_link_state.dart` |
+| `calculator` | Pure domain payment rules | G | G | G | G | `domain/payment_calculator.dart` |
+| `counter` | Offline-first + `CounterError` | Y | Y | G | G | `presentation/cubit/`, `domain/counter_error.dart` |
+| `case_study_demo` | Smaller standard cubit folder | G | Y | G | G | `presentation/cubit/` |
+| `iot_demo` | Cubit + domain/data split | G | Y | G | G | `presentation/cubit/` |
+| `iot` | BLE mappers + phased connection state | G | Y | G | G | `lib/features/iot/` |
 
 Scaffold output (no runtime code) matches the same shape:
 [`feature_brief_scaffold_example.md`](feature_brief_scaffold_example.md).
@@ -25,9 +31,10 @@ Scaffold output (no runtime code) matches the same shape:
 | Feature / path | Reason |
 | --- | --- |
 | `settings/presentation/cubits/` | Legacy plural folder; new code uses `presentation/cubit/` only |
-| `playlearn`, `graphql_demo`, `scapes`, `chat` | Root-level cubit/state files (some also have `presentation/cubit/` — do not extend root pattern) |
-| `deeplink` listener/widgets | Cubit migrated to `presentation/cubit/`; `deep_link_listener.dart` still at `presentation/` root until touched |
+| `playlearn`, `scapes` | Root-level cubit/state files — do not extend |
+| `ai_decision_demo` (state) | Equatable bag state — copy DTO boundary only until state migrates |
 | `staff_app_demo/presentation/<flow>/` | Flow subfolders with cubit at subfolder root — migrate to `presentation/cubit/` when touched |
+| `staff_app_demo` Firestore maps | `Map<String,dynamic>?` contract — deferred; copy submit validator pattern only |
 
 ## Legacy drift
 

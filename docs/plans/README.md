@@ -22,6 +22,7 @@ This directory contains design notes and execution plans.
 - [`checklist_quality_gates_baseline.md`](checklist_quality_gates_baseline.md): MVP wiring for fourteen quality-theme checklist gates (May 2026).
 - [`checklist_quality_gates_deferred.md`](checklist_quality_gates_deferred.md): post-MVP deferred/rejected checklist gates (IDs, unblock criteria).
 - [`code_quality_baseline_and_gate_promotion_2026-06.md`](code_quality_baseline_and_gate_promotion_2026-06.md): **Ready to execute** — Phase 0a baseline audit, gate spikes (0b), one vertical slice per cadence; complements future architecture plan.
+- [`senior_patterns_optimization_2026-06.md`](senior_patterns_optimization_2026-06.md): **Complete (June 2026)** — reduce-surprise program index (DTO boundaries, sealed state, AppError); canonical guide [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
 - [`dependency_validator_feasibility.md`](dependency_validator_feasibility.md): spike outcome — defer `dependency_validator` in CI (noisy on this repo layout).
 - [`feature_scoped_di_feasibility.md`](feature_scoped_di_feasibility.md): `get_it` push/pop scope spike — defer; risks vs sync/IoT.
 - [`melos_package_split_feasibility.md`](melos_package_split_feasibility.md): stay single-package until trigger conditions; costs/benefits matrix.

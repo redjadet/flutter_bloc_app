@@ -40,7 +40,6 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       history: historyAfterUser,
       isLoading: true,
       clearError: true,
-      status: ViewStatus.loading,
     );
 
     await _persistHistory(historyAfterUser);
@@ -49,13 +48,13 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
     }
 
     if (kDebugMode) {
-      final ChatInferenceTransport? hint = state.runnableTransportHint;
-      final ChatInferenceTransport? badge = state.transportForBadge;
+      final ChatRemotePath? hint = state.runnableTransportHint;
+      final ChatRemotePath? badge = state.transportForBadge;
       AppLogger.info(
         'Chat: sendMessage dispatch '
         'hint=$hint badge=$badge model=$_currentModel',
       );
-      if (hint == ChatInferenceTransport.renderOrchestration) {
+      if (hint == ChatRemotePath.renderOrchestration) {
         logRenderOrchestrationIfDebug('cubit_sendMessage_attempt');
       }
     }
@@ -78,8 +77,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           AppLogger.info(
             'Chat: sendMessage success transportUsed=${result.transportUsed}',
           );
-          if (result.transportUsed ==
-              ChatInferenceTransport.renderOrchestration) {
+          if (result.transportUsed == ChatRemotePath.renderOrchestration) {
             logRenderOrchestrationIfDebug(
               'cubit_sendMessage_render_success',
             );
@@ -144,7 +142,6 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
           history: historyAfterUser,
           isLoading: false,
           error: errorMessage,
-          status: ViewStatus.error,
         );
       },
       logContext: 'ChatCubit.sendMessage',
@@ -165,7 +162,6 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             isLoading: false,
             error: exception.message,
             remoteFailureL10nCode: exception.code,
-            status: ViewStatus.error,
           );
         },
         ChatException: (final error, final stackTrace) {
@@ -182,7 +178,6 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             history: historyAfterUser,
             isLoading: false,
             error: exception.message,
-            status: ViewStatus.error,
           );
         },
         ChatOfflineEnqueuedException: (final error, final stackTrace) {

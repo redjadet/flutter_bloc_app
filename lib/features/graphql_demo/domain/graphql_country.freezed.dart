@@ -11,7 +11,6 @@ part of 'graphql_country.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$GraphqlContinent {
 
@@ -22,8 +21,6 @@ mixin _$GraphqlContinent {
 @pragma('vm:prefer-inline')
 $GraphqlContinentCopyWith<GraphqlContinent> get copyWith => _$GraphqlContinentCopyWithImpl<GraphqlContinent>(this as GraphqlContinent, _$identity);
 
-  /// Serializes this GraphqlContinent to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlContinent&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name);
 
@@ -207,11 +204,11 @@ return $default(_that.code,_that.name);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _GraphqlContinent implements GraphqlContinent {
   const _GraphqlContinent({required this.code, required this.name});
-  factory _GraphqlContinent.fromJson(Map<String, dynamic> json) => _$GraphqlContinentFromJson(json);
+
 
 @override final  String code;
 @override final  String name;
@@ -222,17 +219,14 @@ class _GraphqlContinent implements GraphqlContinent {
 @pragma('vm:prefer-inline')
 _$GraphqlContinentCopyWith<_GraphqlContinent> get copyWith => __$GraphqlContinentCopyWithImpl<_GraphqlContinent>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$GraphqlContinentToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlContinent&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name);
 
@@ -277,7 +271,6 @@ as String,
 
 }
 
-
 /// @nodoc
 mixin _$GraphqlCountry {
 
@@ -288,8 +281,6 @@ mixin _$GraphqlCountry {
 @pragma('vm:prefer-inline')
 $GraphqlCountryCopyWith<GraphqlCountry> get copyWith => _$GraphqlCountryCopyWithImpl<GraphqlCountry>(this as GraphqlCountry, _$identity);
 
-  /// Serializes this GraphqlCountry to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -297,7 +288,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.continent, continent) || other.continent == continent)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,continent,capital,currency,emoji);
 
@@ -347,7 +338,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $GraphqlContinentCopyWith<$Res> get continent {
-  
+
   return $GraphqlContinentCopyWith<$Res>(_self.continent, (value) {
     return _then(_self.copyWith(continent: value));
   });
@@ -486,11 +477,11 @@ return $default(_that.code,_that.name,_that.continent,_that.capital,_that.curren
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _GraphqlCountry implements GraphqlCountry {
   const _GraphqlCountry({required this.code, required this.name, required this.continent, this.capital, this.currency, this.emoji});
-  factory _GraphqlCountry.fromJson(Map<String, dynamic> json) => _$GraphqlCountryFromJson(json);
+
 
 @override final  String code;
 @override final  String name;
@@ -505,17 +496,14 @@ class _GraphqlCountry implements GraphqlCountry {
 @pragma('vm:prefer-inline')
 _$GraphqlCountryCopyWith<_GraphqlCountry> get copyWith => __$GraphqlCountryCopyWithImpl<_GraphqlCountry>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$GraphqlCountryToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _GraphqlCountry&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.continent, continent) || other.continent == continent)&&(identical(other.capital, capital) || other.capital == capital)&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.emoji, emoji) || other.emoji == emoji));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,code,name,continent,capital,currency,emoji);
 
@@ -566,7 +554,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $GraphqlContinentCopyWith<$Res> get continent {
-  
+
   return $GraphqlContinentCopyWith<$Res>(_self.continent, (value) {
     return _then(_self.copyWith(continent: value));
   });
