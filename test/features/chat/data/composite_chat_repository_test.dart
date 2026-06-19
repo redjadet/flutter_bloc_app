@@ -12,8 +12,7 @@ class _StubEdgeRepo implements ChatRepository {
   final ChatRemoteFailureException? throwOnSend;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
-      ChatInferenceTransport.supabase;
+  ChatRemotePath? get chatRemoteTransportHint => ChatRemotePath.edgeProxy;
 
   @override
   Future<ChatResult> sendMessage({
@@ -48,8 +47,7 @@ class _FakeHfDirect implements HuggingfaceChatRepository {
   bool get usesChatCompletions => true;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
-      ChatInferenceTransport.direct;
+  ChatRemotePath? get chatRemoteTransportHint => ChatRemotePath.directApi;
 
   @override
   Future<ChatResult> sendMessage({
@@ -86,13 +84,13 @@ void main() {
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'edge'),
       pastUserInputs: const <String>['a'],
       generatedResponses: const <String>['edge'],
-      transportUsed: ChatInferenceTransport.supabase,
+      transportUsed: ChatRemotePath.edgeProxy,
     );
     final ChatResult directOk = ChatResult(
       reply: const ChatMessage(author: ChatAuthor.assistant, text: 'direct'),
       pastUserInputs: const <String>['a'],
       generatedResponses: const <String>['direct'],
-      transportUsed: ChatInferenceTransport.direct,
+      transportUsed: ChatRemotePath.directApi,
     );
 
     test('online uses Edge when proxy runnable and Edge succeeds', () async {

@@ -69,6 +69,7 @@ For any non-trivial task:
 | Non-trivial delivery loop | `agents-delivery-workflow` |
 | Plan, delegation, finish gates | `agents-meta-behavior` |
 | Feature code in this repo (layers, Cubit, DI, Freezed) | `agents-feature-delivery`, then `agents-canonical-rules` → open matching child (`architecture`, `async`, `platform`, `presentation`) |
+| New feature / external API / DTO / cubit state / sync / typed errors | Read [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md); then `agents-feature-delivery` + `agents-canonical-rules-architecture`; verify copy target semantic grade in [`reference_features.md`](../architecture/reference_features.md) |
 | Cubit/BLoC state, lifecycle, side effects, or tests | `agents-bloc-standards`, then `agents-validation-testing` |
 | Add new Cubit to a feature | `agents-create-cubit`, then `agents-bloc-standards` |
 | Flutter baseline (theme, l10n, BLoC access) | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern`; search `type-safe-bloc-access` if available |

@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_submit_eligibility.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/proof/staff_demo_proof_state.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';

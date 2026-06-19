@@ -40,8 +40,8 @@ class HuggingfaceChatRepository implements ChatRepository {
   bool get hasApiKey => _apiClient.hasApiKey;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
-      _apiClient.hasApiKey ? ChatInferenceTransport.direct : null;
+  ChatRemotePath? get chatRemoteTransportHint =>
+      _apiClient.hasApiKey ? ChatRemotePath.directApi : null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -109,7 +109,7 @@ class HuggingfaceChatRepository implements ChatRepository {
       reply: parsed.reply,
       pastUserInputs: parsed.pastUserInputs,
       generatedResponses: parsed.generatedResponses,
-      transportUsed: ChatInferenceTransport.direct,
+      transportUsed: ChatRemotePath.directApi,
     );
   }
 
@@ -143,7 +143,7 @@ class HuggingfaceChatRepository implements ChatRepository {
       reply: parsed.reply,
       pastUserInputs: parsed.pastUserInputs,
       generatedResponses: parsed.generatedResponses,
-      transportUsed: ChatInferenceTransport.direct,
+      transportUsed: ChatRemotePath.directApi,
     );
   }
 

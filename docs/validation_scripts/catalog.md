@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **90** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **91** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **72** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -56,7 +56,10 @@ below.
   `*.freezed.dart` / `*.gr.dart` excluded). Without `rg`, domain pattern checks are
   skipped (install ripgrep for full coverage). See [modularity.md](../modularity.md).
   Included in `./bin/checklist`.
-- **`modular_metrics.sh`**: Read-only modular baseline (per-feature LOC, barrels,
+- **`check_domain_wire_leaks.sh`**: Warn-only scan for `fromJson`/`toJson` in
+  `lib/features/*/domain` (AP-11). Always exit 0; use during DTO/boundary PRs.
+  See [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
+  Not in `./bin/checklist`.
   shared→feature probe, domain→app/di probe, fan-in heuristics, cross-feature import
   report). Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
 - **`check_feature_barrel_exports.sh`**: **Report-only** (always exit 0). Summarizes
@@ -266,5 +269,6 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `skill_vendor_plugin_inventory.dart` | Manual | Dart entry for vendor plugin audit — [`operations_host_skills.md`](operations_host_skills.md) |
 | `check_todo_keyboard_layout.sh` | Manual | Todo keyboard layout regression lane |
 | `check_row_action_overflow_fixtures.sh` | Self-test for `check_row_action_overflow.sh` | Fixture proof only (not a product guard) |
+| `check_domain_wire_leaks.sh` | Manual / DTO boundary PRs | Warn-only domain `fromJson`/`toJson` scan (AP-11) |
 
-Report-only / optional (also in Architecture section above): `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`.
+Report-only / optional (also in Architecture section above): `check_feature_barrel_exports.sh`, `check_transcript_budgets.sh`, `check_domain_wire_leaks.sh`.

@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/iot/domain/entities/ble_log_entry.dart
 import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/classic_bt_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
+import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_connection_lifecycle.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'iot_ble_state.freezed.dart';
@@ -21,8 +22,8 @@ abstract class IotBleState with _$IotBleState {
     @Default(Duration(seconds: 30)) final Duration scanTimeout,
     final BleAdapterStatus? adapterStatus,
     @Default(<BleDiscoveredDevice>[]) final List<BleDiscoveredDevice> devices,
-    final String? selectedDeviceId,
-    final BleConnectionPhase? connection,
+    @Default(IotBleConnectionLifecycle.idle())
+    final IotBleConnectionLifecycle connectionLifecycle,
     @Default(<BleService>[]) final List<BleService> services,
     final BleCharacteristicRef? selectedCharacteristic,
     final List<int>? lastReadValue,
@@ -40,7 +41,12 @@ abstract class IotBleState with _$IotBleState {
   static const int maxLogs = 200;
 
   bool get isReady => status == IotBleStatus.ready;
-  bool get isConnected => connection?.phase == BleConnectionPhaseKind.connected;
+
+  String? get selectedDeviceId => connectionLifecycle.selectedDeviceId;
+
+  BleConnectionPhase? get connection => connectionLifecycle.connectionPhase;
+
+  bool get isConnected => connectionLifecycle.isConnected;
 
   IotBleState appendLog(final BleLogEntry entry) {
     final List<BleLogEntry> next = <BleLogEntry>[...logs, entry];

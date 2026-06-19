@@ -14,7 +14,6 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -65,7 +64,6 @@ void main() {
           ChatMessage(author: ChatAuthor.assistant, text: 'hello'),
         ],
         error: 'boom',
-        status: ViewStatus.error,
       ),
     );
     await tester.pump();
@@ -124,7 +122,6 @@ void main() {
         ],
         error: 'opaque-upstream-detail',
         remoteFailureL10nCode: 'auth_required',
-        status: ViewStatus.error,
       ),
     );
     await tester.pump();
@@ -319,7 +316,7 @@ class _StubChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

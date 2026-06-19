@@ -86,7 +86,7 @@ mixin _TodoListCubitMethods
       state.copyWith(
         items: List<TodoItem>.unmodifiable(items),
         status: ViewStatus.success,
-        errorMessage: null,
+        lastError: null,
         selectedItemIds: updatedSelection,
         manualOrder: updatedManualOrder,
       ),
@@ -104,7 +104,7 @@ mixin _TodoListCubitMethods
       state.copyWith(
         status: ViewStatus.success,
         items: List<TodoItem>.unmodifiable(items),
-        errorMessage: null,
+        lastError: null,
         selectedItemIds: updatedSelection,
         manualOrder: updatedManualOrder,
       ),
@@ -125,7 +125,7 @@ mixin _TodoListCubitMethods
           emit(
             state.copyWith(
               status: ViewStatus.error,
-              errorMessage: _todoWatchErrorMessage(error, stackTrace),
+              lastError: _todoWatchError(error, stackTrace),
             ),
           );
         },
@@ -138,10 +138,17 @@ mixin _TodoListCubitMethods
     isLoading = true;
     if (stopLoadingIfClosed()) return;
     final int requestId = loadRequestIdGuard.next();
-    emit(state.copyWith(status: ViewStatus.loading, errorMessage: null));
+    emit(state.copyWith(status: ViewStatus.loading, lastError: null));
+    AppError? latestError;
     await CubitExceptionHandler.executeAsync<List<TodoItem>>(
       operation: repository.fetchAll,
       isAlive: () => !isClosed,
+      onAppError: (final appError) {
+        if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
+          return;
+        }
+        latestError = appError;
+      },
       onSuccess: (final items) async {
         if (stopLoadingIfClosed() || !loadRequestIdGuard.isCurrent(requestId)) {
           return;
@@ -150,7 +157,7 @@ mixin _TodoListCubitMethods
           state.copyWith(
             status: ViewStatus.success,
             items: List<TodoItem>.unmodifiable(items),
-            errorMessage: null,
+            lastError: null,
           ),
         );
         try {
@@ -167,7 +174,7 @@ mixin _TodoListCubitMethods
         emit(
           state.copyWith(
             status: ViewStatus.error,
-            errorMessage: errorMessage,
+            lastError: latestError ?? UnknownError(message: errorMessage),
           ),
         );
         isLoading = false;

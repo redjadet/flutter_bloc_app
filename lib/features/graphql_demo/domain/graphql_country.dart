@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'graphql_country.freezed.dart';
-part 'graphql_country.g.dart';
 
 @freezed
 abstract class GraphqlContinent with _$GraphqlContinent {
@@ -9,9 +8,6 @@ abstract class GraphqlContinent with _$GraphqlContinent {
     required final String code,
     required final String name,
   }) = _GraphqlContinent;
-
-  factory GraphqlContinent.fromJson(final Map<String, dynamic> json) =>
-      _$GraphqlContinentFromJson(json);
 }
 
 @freezed
@@ -24,7 +20,4 @@ abstract class GraphqlCountry with _$GraphqlCountry {
     final String? currency,
     final String? emoji,
   }) = _GraphqlCountry;
-
-  factory GraphqlCountry.fromJson(final Map<String, dynamic> json) =>
-      _$GraphqlCountryFromJson(json);
 }

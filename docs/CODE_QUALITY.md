@@ -16,7 +16,7 @@ Top gaps tracked there (cadence 3+):
 
 1. **Coverage** — total 73.35% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)); integration merge can raise rollup.
 2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
-3. **Next arch slice** — Todo list `AppError` (recommended); see baseline audit § Future-plan next target.
+3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 
 Promoted checklist gates (**fail** default): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md) and [deferred gates](plans/checklist_quality_gates_deferred.md). Proof on `main`: 0 violations; env overrides `CHECK_*_MODE=warn` for staged fixes.
 

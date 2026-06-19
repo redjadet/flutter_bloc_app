@@ -1,5 +1,6 @@
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo_list_state.freezed.dart';
@@ -29,10 +30,12 @@ abstract class TodoListState with _$TodoListState {
     @Default(<String, int>{}) final Map<String, int> manualOrder,
     @Default(<String>{}) final Set<String> selectedItemIds,
     @Default(0) final int pendingSyncCount,
-    final String? errorMessage,
+    final AppError? lastError,
   }) = _TodoListState;
 
   const TodoListState._();
+
+  String? get errorMessage => lastError?.message;
 
   bool get isLoading => status.isLoading;
   bool get hasError => status.isError;

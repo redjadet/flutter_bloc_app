@@ -98,7 +98,7 @@ class _ChatPageState extends State<ChatPage> {
                     return TypeSafeBlocSelector<
                       ChatCubit,
                       ChatState,
-                      ChatInferenceTransport?
+                      ChatRemotePath?
                     >(
                       selector: (final s) => s.transportForBadge,
                       builder: (context, transport) {
@@ -106,8 +106,7 @@ class _ChatPageState extends State<ChatPage> {
                           return const SizedBox.shrink();
                         }
                         final bool showFastApiCloudBadge =
-                            transport ==
-                                ChatInferenceTransport.renderOrchestration &&
+                            transport == ChatRemotePath.renderOrchestration &&
                             SecretConfig.chatRenderDemoBaseUrl.contains(
                               'fastapicloud',
                             );

@@ -174,7 +174,7 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
         reply: parsed.reply,
         pastUserInputs: parsed.pastUserInputs,
         generatedResponses: parsed.generatedResponses,
-        transportUsed: ChatInferenceTransport.renderOrchestration,
+        transportUsed: ChatRemotePath.renderOrchestration,
       );
     } on ChatRemoteFailureException {
       rethrow;

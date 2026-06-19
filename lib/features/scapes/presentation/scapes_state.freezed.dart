@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScapesState {
 
- List<Scape> get scapes; ScapesViewMode get viewMode; bool get isLoading; String? get errorMessage;
+ List<Scape> get scapes; ScapesViewMode get viewMode; bool get isLoading; AppError? get lastError;
 /// Create a copy of ScapesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ScapesStateCopyWith<ScapesState> get copyWith => _$ScapesStateCopyWithImpl<Scap
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesState&&const DeepCollectionEquality().equals(other.scapes, scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesState&&const DeepCollectionEquality().equals(other.scapes, scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(scapes),viewMode,isLoading,errorMessage);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(scapes),viewMode,isLoading,lastError);
 
 @override
 String toString() {
-  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, errorMessage: $errorMessage)';
+  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, lastError: $lastError)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ScapesStateCopyWith<$Res>  {
   factory $ScapesStateCopyWith(ScapesState value, $Res Function(ScapesState) _then) = _$ScapesStateCopyWithImpl;
 @useResult
 $Res call({
- List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, String? errorMessage
+ List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, AppError? lastError
 });
 
 
@@ -62,13 +62,13 @@ class _$ScapesStateCopyWithImpl<$Res>
 
 /// Create a copy of ScapesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? lastError = freezed,}) {
   return _then(_self.copyWith(
 scapes: null == scapes ? _self.scapes : scapes // ignore: cast_nullable_to_non_nullable
 as List<Scape>,viewMode: null == viewMode ? _self.viewMode : viewMode // ignore: cast_nullable_to_non_nullable
 as ScapesViewMode,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScapesState() when $default != null:
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);case _:
+return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)  $default,) {final _that = this;
 switch (_that) {
 case _ScapesState():
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);case _:
+return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +194,10 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)?  $default,) {final _that = this;
 switch (_that) {
 case _ScapesState() when $default != null:
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);case _:
+return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
   return null;
 
 }
@@ -209,7 +209,7 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.errorMessage);
 
 
 class _ScapesState extends ScapesState {
-  const _ScapesState({final  List<Scape> scapes = const <Scape>[], this.viewMode = ScapesViewMode.grid, this.isLoading = false, this.errorMessage}): _scapes = scapes,super._();
+  const _ScapesState({final  List<Scape> scapes = const <Scape>[], this.viewMode = ScapesViewMode.grid, this.isLoading = false, this.lastError}): _scapes = scapes,super._();
   
 
  final  List<Scape> _scapes;
@@ -221,7 +221,7 @@ class _ScapesState extends ScapesState {
 
 @override@JsonKey() final  ScapesViewMode viewMode;
 @override@JsonKey() final  bool isLoading;
-@override final  String? errorMessage;
+@override final  AppError? lastError;
 
 /// Create a copy of ScapesState
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +233,16 @@ _$ScapesStateCopyWith<_ScapesState> get copyWith => __$ScapesStateCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScapesState&&const DeepCollectionEquality().equals(other._scapes, _scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScapesState&&const DeepCollectionEquality().equals(other._scapes, _scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastError, lastError) || other.lastError == lastError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_scapes),viewMode,isLoading,errorMessage);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_scapes),viewMode,isLoading,lastError);
 
 @override
 String toString() {
-  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, errorMessage: $errorMessage)';
+  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, lastError: $lastError)';
 }
 
 
@@ -253,7 +253,7 @@ abstract mixin class _$ScapesStateCopyWith<$Res> implements $ScapesStateCopyWith
   factory _$ScapesStateCopyWith(_ScapesState value, $Res Function(_ScapesState) _then) = __$ScapesStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, String? errorMessage
+ List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, AppError? lastError
 });
 
 
@@ -270,13 +270,13 @@ class __$ScapesStateCopyWithImpl<$Res>
 
 /// Create a copy of ScapesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? lastError = freezed,}) {
   return _then(_ScapesState(
 scapes: null == scapes ? _self._scapes : scapes // ignore: cast_nullable_to_non_nullable
 as List<Scape>,viewMode: null == viewMode ? _self.viewMode : viewMode // ignore: cast_nullable_to_non_nullable
 as ScapesViewMode,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
+as AppError?,
   ));
 }
 

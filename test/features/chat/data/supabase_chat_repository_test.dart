@@ -170,7 +170,7 @@ void main() {
         expect(seenBody!['messages'], isA<List<dynamic>>());
         expect(result.reply.text, 'Edge says hello');
         expect(result.reply.author, ChatAuthor.assistant);
-        expect(result.transportUsed, ChatInferenceTransport.supabase);
+        expect(result.transportUsed, ChatRemotePath.edgeProxy);
       },
     );
 
@@ -579,10 +579,7 @@ void main() {
           readAccessToken: () => 'tok',
           readAnonKey: () => 'anon',
         );
-        expect(
-          repository.chatRemoteTransportHint,
-          ChatInferenceTransport.supabase,
-        );
+        expect(repository.chatRemoteTransportHint, ChatRemotePath.edgeProxy);
       },
     );
 

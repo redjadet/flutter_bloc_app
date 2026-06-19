@@ -17,7 +17,14 @@ mixin IotBleCubitConnection on IotBleCubitCore {
       }
       emit(state.copyWith(isScanning: false));
     }
-    emit(state.copyWith(selectedDeviceId: deviceId, errorCode: null));
+    emit(
+      state.copyWith(
+        connectionLifecycle: IotBleConnectionLifecycle.idle(
+          selectedDeviceId: deviceId,
+        ),
+        errorCode: null,
+      ),
+    );
     await cancelConnectionSubscription();
     _connectionSubscription = registerSubscription(
       activeRepository
@@ -27,7 +34,11 @@ mixin IotBleCubitConnection on IotBleCubitCore {
               if (isClosed) {
                 return;
               }
-              emit(state.copyWith(connection: phase));
+              emit(
+                state.copyWith(
+                  connectionLifecycle: IotBleConnectionLifecycle.active(phase),
+                ),
+              );
             },
             onError: (final Object error, final StackTrace stackTrace) {
               AppLogger.error(
@@ -72,7 +83,9 @@ mixin IotBleCubitConnection on IotBleCubitCore {
     }
     emit(
       state.copyWith(
-        connection: null,
+        connectionLifecycle: IotBleConnectionLifecycle.idle(
+          selectedDeviceId: state.selectedDeviceId,
+        ),
         services: const <BleService>[],
         selectedCharacteristic: null,
         lastReadValue: null,

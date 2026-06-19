@@ -17,6 +17,7 @@ import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/classic_bt_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_failure_mapper.dart';
+import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_connection_lifecycle.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -92,7 +93,13 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
   }
 
   void selectDevice(final String deviceId) {
-    emit(state.copyWith(selectedDeviceId: deviceId));
+    emit(
+      state.copyWith(
+        connectionLifecycle: IotBleConnectionLifecycle.idle(
+          selectedDeviceId: deviceId,
+        ),
+      ),
+    );
   }
 
   void selectCharacteristic(final BleCharacteristicRef ref) {

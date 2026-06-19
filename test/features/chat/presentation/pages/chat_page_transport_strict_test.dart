@@ -28,7 +28,7 @@ void main() {
       addTearDown(cubit.close);
       cubit.emit(
         cubit.state.copyWith(
-          runnableTransportHint: ChatInferenceTransport.renderOrchestration,
+          runnableTransportHint: ChatRemotePath.renderOrchestration,
         ),
       );
 
@@ -72,8 +72,8 @@ void main() {
 
 class _OrchestrationHintRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
-      ChatInferenceTransport.renderOrchestration;
+  ChatRemotePath? get chatRemoteTransportHint =>
+      ChatRemotePath.renderOrchestration;
 
   @override
   Future<ChatResult> sendMessage({

@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 
@@ -14,7 +15,7 @@ class TodoPayloadBuilder {
     final String idempotencyKey,
   ) => SyncOperation.create(
     entityType: entityType,
-    payload: item.toJson(),
+    payload: TodoItemDto.fromDomain(item).toMap(),
     idempotencyKey: idempotencyKey,
   );
 

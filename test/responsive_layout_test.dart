@@ -235,7 +235,7 @@ SyncStatusCubit _buildSyncStatusCubit() => SyncStatusCubit(
 
 class _FakeChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

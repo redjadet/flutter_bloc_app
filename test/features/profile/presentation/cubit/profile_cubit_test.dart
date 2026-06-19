@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/profile/profile.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _profileUser = ProfileUser(
@@ -34,8 +33,8 @@ void main() {
       ),
       act: (final cubit) => cubit.loadProfile(),
       expect: () => <ProfileState>[
-        const ProfileState(status: ViewStatus.loading),
-        const ProfileState(status: ViewStatus.success, user: _profileUser),
+        const ProfileState.loading(),
+        const ProfileState.ready(_profileUser),
       ],
     );
 
@@ -46,10 +45,12 @@ void main() {
       ),
       act: (final cubit) => cubit.loadProfile(),
       expect: () => <dynamic>[
-        const ProfileState(status: ViewStatus.loading),
-        isA<ProfileState>()
-            .having((final state) => state.status, 'status', ViewStatus.error)
-            .having((final state) => state.error, 'error', isA<Exception>()),
+        const ProfileState.loading(),
+        isA<ProfileState>().having(
+          (final state) => state.hasError,
+          'hasError',
+          isTrue,
+        ),
       ],
     );
 
@@ -72,14 +73,14 @@ void main() {
         await cubit.loadProfile();
       },
       expect: () => <dynamic>[
-        const ProfileState(status: ViewStatus.loading),
+        const ProfileState.loading(),
         isA<ProfileState>().having(
-          (final state) => state.status,
-          'status',
-          ViewStatus.error,
+          (final state) => state.hasError,
+          'hasError',
+          isTrue,
         ),
-        const ProfileState(status: ViewStatus.loading),
-        const ProfileState(status: ViewStatus.success, user: _profileUser),
+        const ProfileState.loading(),
+        const ProfileState.ready(_profileUser),
       ],
     );
 
@@ -118,13 +119,15 @@ void main() {
       },
       expect: () => <Matcher>[
         isA<ProfileState>().having(
-          (final state) => state.status,
-          'status',
-          ViewStatus.loading,
+          (final state) => state.isLoading,
+          'isLoading',
+          isTrue,
         ),
-        isA<ProfileState>()
-            .having((final state) => state.status, 'status', ViewStatus.success)
-            .having((final state) => state.user?.name, 'user.name', 'New'),
+        isA<ProfileState>().having(
+          (final state) => state.user?.name,
+          'user.name',
+          'New',
+        ),
       ],
       verify: (_) {
         expect(raceRepository.callCount, 2);

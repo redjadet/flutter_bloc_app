@@ -14,74 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileState {
 
- ViewStatus get status; ProfileUser? get user; Object? get error;
-/// Create a copy of ProfileState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$ProfileStateCopyWith<ProfileState> get copyWith => _$ProfileStateCopyWithImpl<ProfileState>(this as ProfileState, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&const DeepCollectionEquality().equals(other.error, error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileState);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,user,const DeepCollectionEquality().hash(error));
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProfileState(status: $status, user: $user, error: $error)';
+  return 'ProfileState()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ProfileStateCopyWith<$Res>  {
-  factory $ProfileStateCopyWith(ProfileState value, $Res Function(ProfileState) _then) = _$ProfileStateCopyWithImpl;
-@useResult
-$Res call({
- ViewStatus status, ProfileUser? user, Object? error
-});
-
-
-$ProfileUserCopyWith<$Res>? get user;
-
-}
-/// @nodoc
-class _$ProfileStateCopyWithImpl<$Res>
-    implements $ProfileStateCopyWith<$Res> {
-  _$ProfileStateCopyWithImpl(this._self, this._then);
-
-  final ProfileState _self;
-  final $Res Function(ProfileState) _then;
-
-/// Create a copy of ProfileState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? user = freezed,Object? error = freezed,}) {
-  return _then(_self.copyWith(
-status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ViewStatus,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as ProfileUser?,error: freezed == error ? _self.error : error ,
-  ));
-}
-/// Create a copy of ProfileState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ProfileUserCopyWith<$Res>? get user {
-    if (_self.user == null) {
-    return null;
-  }
-
-  return $ProfileUserCopyWith<$Res>(_self.user!, (value) {
-    return _then(_self.copyWith(user: value));
-  });
-}
+class $ProfileStateCopyWith<$Res>  {
+$ProfileStateCopyWith(ProfileState _, $Res Function(ProfileState) __);
 }
 
 
@@ -99,11 +55,14 @@ extension ProfileStatePatterns on ProfileState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProfileState value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProfileInitial value)?  initial,TResult Function( ProfileLoading value)?  loading,TResult Function( ProfileReady value)?  ready,TResult Function( ProfileError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _ProfileState() when $default != null:
-return $default(_that);case _:
+case ProfileInitial() when initial != null:
+return initial(_that);case ProfileLoading() when loading != null:
+return loading(_that);case ProfileReady() when ready != null:
+return ready(_that);case ProfileError() when error != null:
+return error(_that);case _:
   return orElse();
 
 }
@@ -121,14 +80,14 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProfileState value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProfileInitial value)  initial,required TResult Function( ProfileLoading value)  loading,required TResult Function( ProfileReady value)  ready,required TResult Function( ProfileError value)  error,}){
 final _that = this;
 switch (_that) {
-case _ProfileState():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case ProfileInitial():
+return initial(_that);case ProfileLoading():
+return loading(_that);case ProfileReady():
+return ready(_that);case ProfileError():
+return error(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -142,11 +101,14 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProfileState value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProfileInitial value)?  initial,TResult? Function( ProfileLoading value)?  loading,TResult? Function( ProfileReady value)?  ready,TResult? Function( ProfileError value)?  error,}){
 final _that = this;
 switch (_that) {
-case _ProfileState() when $default != null:
-return $default(_that);case _:
+case ProfileInitial() when initial != null:
+return initial(_that);case ProfileLoading() when loading != null:
+return loading(_that);case ProfileReady() when ready != null:
+return ready(_that);case ProfileError() when error != null:
+return error(_that);case _:
   return null;
 
 }
@@ -163,10 +125,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  ProfileUser? user,  Object? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( ProfileUser user)?  ready,TResult Function( ProfileFailure failure)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _ProfileState() when $default != null:
-return $default(_that.status,_that.user,_that.error);case _:
+case ProfileInitial() when initial != null:
+return initial();case ProfileLoading() when loading != null:
+return loading();case ProfileReady() when ready != null:
+return ready(_that.user);case ProfileError() when error != null:
+return error(_that.failure);case _:
   return orElse();
 
 }
@@ -184,13 +149,13 @@ return $default(_that.status,_that.user,_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  ProfileUser? user,  Object? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( ProfileUser user)  ready,required TResult Function( ProfileFailure failure)  error,}) {final _that = this;
 switch (_that) {
-case _ProfileState():
-return $default(_that.status,_that.user,_that.error);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case ProfileInitial():
+return initial();case ProfileLoading():
+return loading();case ProfileReady():
+return ready(_that.user);case ProfileError():
+return error(_that.failure);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -204,10 +169,13 @@ return $default(_that.status,_that.user,_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  ProfileUser? user,  Object? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( ProfileUser user)?  ready,TResult? Function( ProfileFailure failure)?  error,}) {final _that = this;
 switch (_that) {
-case _ProfileState() when $default != null:
-return $default(_that.status,_that.user,_that.error);case _:
+case ProfileInitial() when initial != null:
+return initial();case ProfileLoading() when loading != null:
+return loading();case ProfileReady() when ready != null:
+return ready(_that.user);case ProfileError() when error != null:
+return error(_that.failure);case _:
   return null;
 
 }
@@ -218,66 +186,127 @@ return $default(_that.status,_that.user,_that.error);case _:
 /// @nodoc
 
 
-class _ProfileState extends ProfileState {
-  const _ProfileState({this.status = ViewStatus.initial, this.user, this.error}): super._();
-  
+class ProfileInitial extends ProfileState {
+  const ProfileInitial(): super._();
 
-@override@JsonKey() final  ViewStatus status;
-@override final  ProfileUser? user;
-@override final  Object? error;
 
-/// Create a copy of ProfileState
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$ProfileStateCopyWith<_ProfileState> get copyWith => __$ProfileStateCopyWithImpl<_ProfileState>(this, _$identity);
+
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileState&&(identical(other.status, status) || other.status == status)&&(identical(other.user, user) || other.user == user)&&const DeepCollectionEquality().equals(other.error, error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileInitial);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,user,const DeepCollectionEquality().hash(error));
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ProfileState(status: $status, user: $user, error: $error)';
+  return 'ProfileState.initial()';
 }
 
 
 }
+
+
+
 
 /// @nodoc
-abstract mixin class _$ProfileStateCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
-  factory _$ProfileStateCopyWith(_ProfileState value, $Res Function(_ProfileState) _then) = __$ProfileStateCopyWithImpl;
-@override @useResult
-$Res call({
- ViewStatus status, ProfileUser? user, Object? error
-});
 
 
-@override $ProfileUserCopyWith<$Res>? get user;
+class ProfileLoading extends ProfileState {
+  const ProfileLoading(): super._();
+
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ProfileState.loading()';
+}
+
 
 }
-/// @nodoc
-class __$ProfileStateCopyWithImpl<$Res>
-    implements _$ProfileStateCopyWith<$Res> {
-  __$ProfileStateCopyWithImpl(this._self, this._then);
 
-  final _ProfileState _self;
-  final $Res Function(_ProfileState) _then;
+
+
+
+/// @nodoc
+
+
+class ProfileReady extends ProfileState {
+  const ProfileReady(this.user): super._();
+
+
+ final  ProfileUser user;
 
 /// Create a copy of ProfileState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? user = freezed,Object? error = freezed,}) {
-  return _then(_ProfileState(
-status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ViewStatus,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as ProfileUser?,error: freezed == error ? _self.error : error ,
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProfileReadyCopyWith<ProfileReady> get copyWith => _$ProfileReadyCopyWithImpl<ProfileReady>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileReady&&(identical(other.user, user) || other.user == user));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,user);
+
+@override
+String toString() {
+  return 'ProfileState.ready(user: $user)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ProfileReadyCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
+  factory $ProfileReadyCopyWith(ProfileReady value, $Res Function(ProfileReady) _then) = _$ProfileReadyCopyWithImpl;
+@useResult
+$Res call({
+ ProfileUser user
+});
+
+
+$ProfileUserCopyWith<$Res> get user;
+
+}
+/// @nodoc
+class _$ProfileReadyCopyWithImpl<$Res>
+    implements $ProfileReadyCopyWith<$Res> {
+  _$ProfileReadyCopyWithImpl(this._self, this._then);
+
+  final ProfileReady _self;
+  final $Res Function(ProfileReady) _then;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? user = null,}) {
+  return _then(ProfileReady(
+null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as ProfileUser,
   ));
 }
 
@@ -285,13 +314,85 @@ as ProfileUser?,error: freezed == error ? _self.error : error ,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileUserCopyWith<$Res>? get user {
-    if (_self.user == null) {
-    return null;
-  }
+$ProfileUserCopyWith<$Res> get user {
 
-  return $ProfileUserCopyWith<$Res>(_self.user!, (value) {
+  return $ProfileUserCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class ProfileError extends ProfileState {
+  const ProfileError(this.failure): super._();
+
+
+ final  ProfileFailure failure;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ProfileErrorCopyWith<ProfileError> get copyWith => _$ProfileErrorCopyWithImpl<ProfileError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileError&&(identical(other.failure, failure) || other.failure == failure));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,failure);
+
+@override
+String toString() {
+  return 'ProfileState.error(failure: $failure)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ProfileErrorCopyWith<$Res> implements $ProfileStateCopyWith<$Res> {
+  factory $ProfileErrorCopyWith(ProfileError value, $Res Function(ProfileError) _then) = _$ProfileErrorCopyWithImpl;
+@useResult
+$Res call({
+ ProfileFailure failure
+});
+
+
+$ProfileFailureCopyWith<$Res> get failure;
+
+}
+/// @nodoc
+class _$ProfileErrorCopyWithImpl<$Res>
+    implements $ProfileErrorCopyWith<$Res> {
+  _$ProfileErrorCopyWithImpl(this._self, this._then);
+
+  final ProfileError _self;
+  final $Res Function(ProfileError) _then;
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? failure = null,}) {
+  return _then(ProfileError(
+null == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as ProfileFailure,
+  ));
+}
+
+/// Create a copy of ProfileState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProfileFailureCopyWith<$Res> get failure {
+
+  return $ProfileFailureCopyWith<$Res>(_self.failure, (value) {
+    return _then(_self.copyWith(failure: value));
   });
 }
 }

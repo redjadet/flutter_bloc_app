@@ -36,12 +36,12 @@ class CompositeChatRepository implements ChatRepository {
       _allowLocalFallback() && !_proxyRunnable && !_canUseDirect;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint {
+  ChatRemotePath? get chatRemoteTransportHint {
     if (_proxyRunnable) {
-      return ChatInferenceTransport.supabase;
+      return ChatRemotePath.edgeProxy;
     }
     if (_canUseDirect) {
-      return ChatInferenceTransport.direct;
+      return ChatRemotePath.directApi;
     }
     return null;
   }
