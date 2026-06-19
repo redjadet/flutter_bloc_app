@@ -161,6 +161,8 @@ stream.listen((data) {
 **What it checks**:
 
 - Runs focused tests that assert stale sync data cannot overwrite newer state: older remote snapshots must not overwrite newer local state, and older queued pending snapshots must not overwrite newer remote state. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`, `processOperation does not push stale pending over newer remote`).
+- Verifies guard wiring before skip/test selection: if a stale-sync regression test file exists under `test/features/*/data/*offline_first*_repository_test.dart` but is not listed in `tool/check_offline_first_remote_merge.sh`, the guard fails early.
+- Runs near the start of the checklist static sweep so stale-sync data-loss regressions surface before slower quality gates.
 
 **Why it matters**:
 
@@ -170,6 +172,6 @@ stream.listen((data) {
 
 - Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
 
-**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`.
+**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`; the guard fails if it discovers a matching stale-sync regression test that is not wired in.
 
 ---

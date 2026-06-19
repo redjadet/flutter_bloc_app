@@ -15,6 +15,7 @@ MERGE_GUARD_MODE="${CHECK_OFFLINE_FIRST_REMOTE_MERGE_MODE:-always}"
 COUNTER_TEST="test/features/counter/data/offline_first_counter_repository_test.dart"
 TODO_TEST="test/features/todo_list/data/offline_first_todo_repository_test.dart"
 IOT_TEST="test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
+GUARDED_TESTS=("$COUNTER_TEST" "$TODO_TEST" "$IOT_TEST")
 
 collect_changed_files() {
   local file
@@ -56,6 +57,7 @@ should_run_remote_merge_guard_auto() {
       lib/shared/sync/*|\
       lib/features/counter/data/*|\
       lib/features/todo_list/data/*|\
+      lib/features/todo_list/domain/todo_merge_policy.dart|\
       lib/features/iot_demo/data/*|\
       test/features/counter/data/*|\
       test/features/todo_list/data/*|\
@@ -115,6 +117,7 @@ select_remote_merge_tests() {
         needs_counter=1
         ;;
       lib/features/todo_list/data/*|\
+      lib/features/todo_list/domain/todo_merge_policy.dart|\
       test/features/todo_list/data/*)
         needs_todo=1
         ;;
@@ -140,6 +143,63 @@ select_remote_merge_tests() {
     out_ref+=("$IOT_TEST")
   fi
 }
+
+validate_guard_inventory() {
+  local test_file
+  local discovered_file
+  local known=0
+  local failed=0
+  local -a discovered_files=()
+
+  for test_file in "${GUARDED_TESTS[@]}"; do
+    if [ ! -f "$test_file" ]; then
+      echo "ERROR: offline-first stale-sync guard references missing test file: $test_file" >&2
+      failed=1
+    fi
+  done
+
+  if command -v rg >/dev/null 2>&1; then
+    while IFS= read -r discovered_file; do
+      [ -z "$discovered_file" ] && continue
+      discovered_files+=("$discovered_file")
+    done < <(
+      rg -l \
+        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending" \
+        test/features/*/data/*offline_first*_repository_test.dart \
+        2>/dev/null || true
+    )
+  else
+    while IFS= read -r discovered_file; do
+      [ -z "$discovered_file" ] && continue
+      discovered_files+=("$discovered_file")
+    done < <(
+      find test/features -path '*/data/*offline_first*_repository_test.dart' -type f \
+        -exec grep -lE \
+          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending" \
+          {} + 2>/dev/null || true
+    )
+  fi
+
+  for discovered_file in "${discovered_files[@]}"; do
+    known=0
+    for test_file in "${GUARDED_TESTS[@]}"; do
+      if [ "$discovered_file" = "$test_file" ]; then
+        known=1
+        break
+      fi
+    done
+    if [ "$known" -eq 0 ]; then
+      echo "ERROR: stale-sync regression test is not wired into tool/check_offline_first_remote_merge.sh: $discovered_file" >&2
+      failed=1
+    fi
+  done
+
+  return "$failed"
+}
+
+if ! validate_guard_inventory; then
+  exit 1
+fi
 
 case "$MERGE_GUARD_MODE" in
   always)
