@@ -23,7 +23,6 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -107,7 +106,6 @@ void main() {
             ],
           ),
         ],
-        status: ViewStatus.success,
       ),
     );
 
@@ -150,7 +148,6 @@ void main() {
             ],
           ),
         ],
-        status: ViewStatus.success,
       ),
     );
 
@@ -415,7 +412,7 @@ class _TestChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

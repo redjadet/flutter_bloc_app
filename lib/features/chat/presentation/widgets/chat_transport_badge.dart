@@ -12,25 +12,24 @@ class ChatTransportBadge extends StatelessWidget {
     super.key,
   });
 
-  final ChatInferenceTransport transport;
+  final ChatRemotePath transport;
 
-  /// When true with [ChatInferenceTransport.renderOrchestration], shows strict-mode copy under the chip.
+  /// When true with [ChatRemotePath.renderOrchestration], shows strict-mode copy under the chip.
   final bool renderDemoStrict;
 
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final String label = switch (transport) {
-      ChatInferenceTransport.supabase => l10n.chatTransportSupabase,
-      ChatInferenceTransport.direct => l10n.chatTransportDirect,
-      ChatInferenceTransport.renderOrchestration =>
+      ChatRemotePath.edgeProxy => l10n.chatTransportSupabase,
+      ChatRemotePath.directApi => l10n.chatTransportDirect,
+      ChatRemotePath.renderOrchestration =>
         l10n.chatTransportRenderOrchestration,
     };
     final String semanticsLabel = switch (transport) {
-      ChatInferenceTransport.supabase =>
-        l10n.chatTransportSupabaseSemanticsLabel,
-      ChatInferenceTransport.direct => l10n.chatTransportDirectSemanticsLabel,
-      ChatInferenceTransport.renderOrchestration =>
+      ChatRemotePath.edgeProxy => l10n.chatTransportSupabaseSemanticsLabel,
+      ChatRemotePath.directApi => l10n.chatTransportDirectSemanticsLabel,
+      ChatRemotePath.renderOrchestration =>
         l10n.chatTransportRenderOrchestrationSemanticsLabel,
     };
     final ThemeData theme = Theme.of(context);
@@ -46,8 +45,7 @@ class ChatTransportBadge extends StatelessWidget {
       ),
     );
 
-    if (transport == ChatInferenceTransport.renderOrchestration &&
-        renderDemoStrict) {
+    if (transport == ChatRemotePath.renderOrchestration && renderDemoStrict) {
       final String strictLine = l10n.chatRenderStrictMode;
       return Semantics(
         label: '$semanticsLabel. $strictLine',

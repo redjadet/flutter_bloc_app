@@ -10,7 +10,8 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
       list
           .map(mapFromDynamic)
           .whereType<Map<String, dynamic>>()
-          .map(GraphqlCountry.fromJson)
+          .map(GraphqlCountryDto.fromJson)
+          .map((final dto) => dto.toDomain())
           .toList(),
     );
   }

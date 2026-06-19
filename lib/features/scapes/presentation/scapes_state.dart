@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'scapes_state.freezed.dart';
@@ -11,10 +12,12 @@ abstract class ScapesState with _$ScapesState {
     @Default(<Scape>[]) final List<Scape> scapes,
     @Default(ScapesViewMode.grid) final ScapesViewMode viewMode,
     @Default(false) final bool isLoading,
-    final String? errorMessage,
+    final AppError? lastError,
   }) = _ScapesState;
 
   const ScapesState._();
 
-  bool get hasError => errorMessage != null;
+  String? get errorMessage => lastError?.message;
+
+  bool get hasError => lastError != null;
 }

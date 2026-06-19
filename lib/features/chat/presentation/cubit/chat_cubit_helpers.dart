@@ -137,12 +137,11 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           return;
         }
         final ChatState current = _state;
-        if (current.status == ViewStatus.error || current.error != null) {
+        if (current.error != null) {
           emitState(
             current.copyWith(
               error: null,
               remoteFailureL10nCode: null,
-              status: ViewStatus.success,
             ),
           );
         }
@@ -156,7 +155,6 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         emitState(
           current.copyWith(
             error: current.error ?? message,
-            status: ViewStatus.error,
           ),
         );
       },
@@ -172,19 +170,18 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   void _emitConversationSnapshot({
     required final ChatConversation active,
     required final List<ChatConversation> history,
-    final ViewStatus status = ViewStatus.success,
     final bool? isLoading,
     final bool clearError = false,
     final String? error,
     final String? remoteFailureL10nCode,
     final String? currentModel,
-    final ChatInferenceTransport? lastCompletionTransport,
+    final ChatRemotePath? lastCompletionTransport,
     final bool clearLastCompletionTransport = false,
   }) {
     // Check if cubit is closed before emitting to prevent errors
     if (isClosed) return;
     final ChatState current = _state;
-    final ChatInferenceTransport? nextCompletion = clearLastCompletionTransport
+    final ChatRemotePath? nextCompletion = clearLastCompletionTransport
         ? null
         : (lastCompletionTransport ?? current.lastCompletionTransport);
     final String? nextError = clearError ? null : error ?? current.error;
@@ -201,7 +198,6 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         messages: active.messages,
         pastUserInputs: active.pastUserInputs,
         generatedResponses: active.generatedResponses,
-        status: status,
         isLoading: isLoading ?? current.isLoading,
         error: nextError,
         remoteFailureL10nCode: nextRemoteCode,

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_remote_path.dart';
 
-/// Active remote inference path for chrome / diagnostics (Supabase Edge vs direct HF).
-enum ChatInferenceTransport { supabase, direct, renderOrchestration }
+export 'chat_remote_path.dart';
 
 mixin ChatRepository {
   Future<ChatResult> sendMessage({
@@ -13,8 +13,8 @@ mixin ChatRepository {
     final String? clientMessageId,
   });
 
-  /// Hint for UI chrome when not mid-flight; see plan badge semantics.
-  ChatInferenceTransport? get chatRemoteTransportHint;
+  /// Hint for UI chrome when not mid-flight.
+  ChatRemotePath? get chatRemoteTransportHint;
 }
 
 class ChatException implements Exception {
@@ -64,5 +64,5 @@ class ChatResult {
   final List<String> generatedResponses;
 
   /// Which path produced this completion (for request-scoped transport chip).
-  final ChatInferenceTransport? transportUsed;
+  final ChatRemotePath? transportUsed;
 }

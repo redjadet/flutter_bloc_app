@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
@@ -42,7 +43,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
             (final json) {
               // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
-              return GraphqlContinent.fromJson(typedJson);
+              return GraphqlContinentDto.fromJson(typedJson).toDomain();
             },
           )
           .toList(growable: false);
@@ -95,7 +96,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
             (final json) {
               // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
-              return GraphqlCountry.fromJson(typedJson);
+              return GraphqlCountryDto.fromJson(typedJson).toDomain();
             },
           )
           .toList(growable: false);

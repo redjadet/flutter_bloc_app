@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 
 /// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
 class ScapesCubit extends Cubit<ScapesState>
@@ -22,7 +23,7 @@ class ScapesCubit extends Cubit<ScapesState>
   TimerDisposable? _loadDelayHandle;
 
   void _loadScapes() {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(isLoading: true, lastError: null));
 
     _loadDelayHandle?.dispose();
     unregisterTimer(_loadDelayHandle);
@@ -57,7 +58,7 @@ class ScapesCubit extends Cubit<ScapesState>
       emit(
         state.copyWith(
           isLoading: false,
-          errorMessage: e.toString(),
+          lastError: NetworkErrorMapper.getAppError(e),
         ),
       );
     }

@@ -9,7 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _MemoryHistoryRepository implements ChatHistoryRepository {
   _MemoryHistoryRepository([List<ChatConversation>? seed])
-    : _conversations = List<ChatConversation>.from(seed ?? <ChatConversation>[]);
+    : _conversations = List<ChatConversation>.from(
+        seed ?? <ChatConversation>[],
+      );
 
   List<ChatConversation> _conversations;
 
@@ -29,7 +31,7 @@ class _DelayedChatRepository implements ChatRepository {
   final Completer<void> releaseSend = Completer<void>();
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

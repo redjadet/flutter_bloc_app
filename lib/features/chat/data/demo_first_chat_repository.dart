@@ -25,7 +25,7 @@ class DemoFirstChatRepository implements ChatRepository {
   final bool Function() _isRenderStrict;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint {
+  ChatRemotePath? get chatRemoteTransportHint {
     if (_isRenderAttemptedFirst()) {
       return _render.chatRemoteTransportHint ??
           _composite.chatRemoteTransportHint;

@@ -13,11 +13,15 @@ Use with [BLoC Standards](../bloc_standards.md) for Cursor/Codex reviews.
 ## State Model
 
 - State is immutable and preferably Freezed.
+- Prefer **sealed unions** for user-visible lifecycle — see
+  [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md)
+  § P4 and [`bloc/cubit_file_template.md`](../bloc/cubit_file_template.md).
 - Loading, success, error, empty, retry, offline, and pending states are explicit
   when visible to users.
 - State exposes domain models or view data, not data DTOs.
 - Derived getters remove duplicated UI branching.
-- Error state uses existing localized/domain error patterns.
+- Error state uses typed domain failures or `AppError` — not `Object?` or raw
+  `e.toString()` (P6).
 
 ## Async And Lifecycle
 

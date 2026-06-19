@@ -12,7 +12,6 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -106,7 +105,6 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
         state.copyWith(
           error: null,
           remoteFailureL10nCode: null,
-          status: ViewStatus.initial,
         ),
       );
     }

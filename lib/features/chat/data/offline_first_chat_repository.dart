@@ -33,7 +33,7 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   String get entityType => chatEntity;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
+  ChatRemotePath? get chatRemoteTransportHint =>
       _remoteRepository.chatRemoteTransportHint;
 
   @override

@@ -1,7 +1,8 @@
 # Cubit File Template
 
 Copy-paste starting point for new feature Cubits. Canon:
-[`bloc_standards.md`](../bloc_standards.md), [`review/bloc_checklist.md`](../review/bloc_checklist.md).
+[`bloc_standards.md`](../bloc_standards.md), [`review/bloc_checklist.md`](../review/bloc_checklist.md),
+[`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) § P4.
 
 Place files under `lib/features/<feature>/presentation/cubit/` only (singular
 `cubit/`, not `cubits/`).

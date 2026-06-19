@@ -43,8 +43,8 @@ class RenderFastApiChatRepository implements ChatRepository {
   final bool Function() _isRunnable;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint =>
-      _isRunnable() ? ChatInferenceTransport.renderOrchestration : null;
+  ChatRemotePath? get chatRemoteTransportHint =>
+      _isRunnable() ? ChatRemotePath.renderOrchestration : null;
 
   @override
   Future<ChatResult> sendMessage({

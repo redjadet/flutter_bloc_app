@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileBodyData {
 
- bool get isLoading; bool get hasError; bool get hasUser; ProfileUser? get user;
+ bool get isLoading; bool get hasError; bool get hasUser; ProfileUser? get user; String? get errorMessage;
 /// Create a copy of _ProfileBodyData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ _$ProfileBodyDataCopyWith<_ProfileBodyData> get copyWith => __$ProfileBodyDataCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.hasUser, hasUser) || other.hasUser == hasUser)&&(identical(other.user, user) || other.user == user));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.hasUser, hasUser) || other.hasUser == hasUser)&&(identical(other.user, user) || other.user == user)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,hasUser,user);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,hasUser,user,errorMessage);
 
 @override
 String toString() {
-  return '_ProfileBodyData(isLoading: $isLoading, hasError: $hasError, hasUser: $hasUser, user: $user)';
+  return '_ProfileBodyData(isLoading: $isLoading, hasError: $hasError, hasUser: $hasUser, user: $user, errorMessage: $errorMessage)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class _$ProfileBodyDataCopyWith<$Res>  {
   factory _$ProfileBodyDataCopyWith(_ProfileBodyData value, $Res Function(_ProfileBodyData) _then) = __$ProfileBodyDataCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool hasError, bool hasUser, ProfileUser? user
+ bool isLoading, bool hasError, bool hasUser, ProfileUser? user, String? errorMessage
 });
 
 
@@ -62,13 +62,14 @@ class __$ProfileBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of _ProfileBodyData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? hasUser = null,Object? user = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? hasUser = null,Object? user = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,hasUser: null == hasUser ? _self.hasUser : hasUser // ignore: cast_nullable_to_non_nullable
 as bool,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as ProfileUser?,
+as ProfileUser?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 /// Create a copy of _ProfileBodyData
@@ -165,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case __ProfileBodyData() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
+return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -186,10 +187,10 @@ return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case __ProfileBodyData():
-return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
+return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +207,10 @@ return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  bool hasUser,  ProfileUser? user,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case __ProfileBodyData() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
+return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user,_that.errorMessage);case _:
   return null;
 
 }
@@ -221,13 +222,14 @@ return $default(_that.isLoading,_that.hasError,_that.hasUser,_that.user);case _:
 
 
 class __ProfileBodyData implements _ProfileBodyData {
-  const __ProfileBodyData({required this.isLoading, required this.hasError, required this.hasUser, required this.user});
+  const __ProfileBodyData({required this.isLoading, required this.hasError, required this.hasUser, required this.user, this.errorMessage});
   
 
 @override final  bool isLoading;
 @override final  bool hasError;
 @override final  bool hasUser;
 @override final  ProfileUser? user;
+@override final  String? errorMessage;
 
 /// Create a copy of _ProfileBodyData
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ _$_ProfileBodyDataCopyWith<__ProfileBodyData> get copyWith => __$_ProfileBodyDat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is __ProfileBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.hasUser, hasUser) || other.hasUser == hasUser)&&(identical(other.user, user) || other.user == user));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is __ProfileBodyData&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.hasUser, hasUser) || other.hasUser == hasUser)&&(identical(other.user, user) || other.user == user)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,hasUser,user);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,hasUser,user,errorMessage);
 
 @override
 String toString() {
-  return '_ProfileBodyData(isLoading: $isLoading, hasError: $hasError, hasUser: $hasUser, user: $user)';
+  return '_ProfileBodyData(isLoading: $isLoading, hasError: $hasError, hasUser: $hasUser, user: $user, errorMessage: $errorMessage)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$_ProfileBodyDataCopyWith<$Res> implements _$ProfileBodyDa
   factory _$_ProfileBodyDataCopyWith(__ProfileBodyData value, $Res Function(__ProfileBodyData) _then) = __$_ProfileBodyDataCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool hasError, bool hasUser, ProfileUser? user
+ bool isLoading, bool hasError, bool hasUser, ProfileUser? user, String? errorMessage
 });
 
 
@@ -276,13 +278,14 @@ class __$_ProfileBodyDataCopyWithImpl<$Res>
 
 /// Create a copy of _ProfileBodyData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? hasUser = null,Object? user = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? hasUser = null,Object? user = freezed,Object? errorMessage = freezed,}) {
   return _then(__ProfileBodyData(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,hasUser: null == hasUser ? _self.hasUser : hasUser // ignore: cast_nullable_to_non_nullable
 as bool,user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as ProfileUser?,
+as ProfileUser?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

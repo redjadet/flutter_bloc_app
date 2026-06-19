@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
@@ -13,7 +14,7 @@ List<GraphqlContinent> parseGraphqlContinentsFromRaw(final Object? raw) {
     final Map<String, dynamic>? map = mapFromDynamic(item);
     if (map == null) continue;
     try {
-      out.add(GraphqlContinent.fromJson(map));
+      out.add(GraphqlContinentDto.fromJson(map).toDomain());
     } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository skip invalid continent row',
@@ -39,7 +40,7 @@ List<GraphqlCountry> parseGraphqlCountriesFromRaw(final Object? raw) {
     final Map<String, dynamic>? map = mapFromDynamic(item);
     if (map == null) continue;
     try {
-      out.add(GraphqlCountry.fromJson(map));
+      out.add(GraphqlCountryDto.fromJson(map).toDomain());
     } on Object catch (error, stackTrace) {
       AppLogger.warning(
         'SupabaseGraphqlDemoRepository skip invalid country row',

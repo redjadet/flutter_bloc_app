@@ -52,7 +52,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - BLoC standards: [`docs/bloc_standards.md`](docs/bloc_standards.md), [`docs/bloc/cubit_file_template.md`](docs/bloc/cubit_file_template.md), [`docs/review/bloc_checklist.md`](docs/review/bloc_checklist.md), [`docs/review/security_checklist.md`](docs/review/security_checklist.md), [`docs/review/performance_checklist.md`](docs/review/performance_checklist.md)
 - Design/UI: [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md)
 - Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
-- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md), [`docs/clean_architecture.md`](docs/clean_architecture.md)
+- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md), [`docs/clean_architecture.md`](docs/clean_architecture.md), [`docs/architecture/reduce_surprise_patterns.md`](docs/architecture/reduce_surprise_patterns.md)
 - Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md), [`docs/testing_overview.md`](docs/testing_overview.md)
 - Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
 - Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)

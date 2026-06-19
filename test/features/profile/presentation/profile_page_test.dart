@@ -204,7 +204,7 @@ void main() {
       await _pumpProfilePage(tester, repository: repository);
       await _resolveAsyncWork(tester);
 
-      expect(find.text(AppLocalizationsEn().featureLoadError), findsOneWidget);
+      expect(find.text('Exception: network down'), findsOneWidget);
       expect(find.text(AppLocalizationsEn().retryButtonLabel), findsOneWidget);
 
       await tester.tap(find.text(AppLocalizationsEn().retryButtonLabel));

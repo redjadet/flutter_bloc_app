@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('shows Supabase label for ChatInferenceTransport.supabase', (
+  testWidgets('shows Supabase label for ChatRemotePath.edgeProxy', (
     final WidgetTester tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();
@@ -20,7 +20,7 @@ void main() {
         builder: (final BuildContext context, final Widget? child) =>
             buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
         home: const Scaffold(
-          body: ChatTransportBadge(transport: ChatInferenceTransport.supabase),
+          body: ChatTransportBadge(transport: ChatRemotePath.edgeProxy),
         ),
       ),
     );
@@ -39,7 +39,7 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('shows Direct label for ChatInferenceTransport.direct', (
+  testWidgets('shows Direct label for ChatRemotePath.directApi', (
     final WidgetTester tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();
@@ -52,7 +52,7 @@ void main() {
         builder: (final BuildContext context, final Widget? child) =>
             buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
         home: const Scaffold(
-          body: ChatTransportBadge(transport: ChatInferenceTransport.direct),
+          body: ChatTransportBadge(transport: ChatRemotePath.directApi),
         ),
       ),
     );
@@ -72,7 +72,7 @@ void main() {
   });
 
   testWidgets(
-    'shows Orchestration label for ChatInferenceTransport.renderOrchestration',
+    'shows Orchestration label for ChatRemotePath.renderOrchestration',
     (final WidgetTester tester) async {
       final SemanticsHandle handle = tester.ensureSemantics();
 
@@ -88,7 +88,7 @@ void main() {
               ),
           home: const Scaffold(
             body: ChatTransportBadge(
-              transport: ChatInferenceTransport.renderOrchestration,
+              transport: ChatRemotePath.renderOrchestration,
             ),
           ),
         ),
@@ -124,7 +124,7 @@ void main() {
               ),
           home: const Scaffold(
             body: ChatTransportBadge(
-              transport: ChatInferenceTransport.renderOrchestration,
+              transport: ChatRemotePath.renderOrchestration,
               renderDemoStrict: true,
             ),
           ),
@@ -155,7 +155,7 @@ void main() {
               ),
           home: const Scaffold(
             body: ChatTransportBadge(
-              transport: ChatInferenceTransport.supabase,
+              transport: ChatRemotePath.edgeProxy,
               renderDemoStrict: true,
             ),
           ),

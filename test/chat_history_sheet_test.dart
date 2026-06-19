@@ -4,21 +4,18 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_history_sheet.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('ChatHistorySheet shows empty message when no history', (
     WidgetTester tester,
   ) async {
-    final _StubChatCubit cubit = _StubChatCubit(
-      const ChatState(status: ViewStatus.success),
-    );
+    final _StubChatCubit cubit = _StubChatCubit(const ChatState());
     addTearDown(cubit.close);
 
     int closeCount = 0;
@@ -54,7 +51,6 @@ void main() {
       messages: conversation.messages,
       pastUserInputs: conversation.pastUserInputs,
       generatedResponses: conversation.generatedResponses,
-      status: ViewStatus.success,
     );
 
     final _StubChatCubit cubit = _StubChatCubit(seededState);
@@ -135,7 +131,6 @@ void main() {
       history: <ChatConversation>[conversationWithMessages],
       activeConversationId: conversationWithMessages.id,
       messages: conversationWithMessages.messages,
-      status: ViewStatus.success,
     );
 
     final _StubChatCubit cubitWithMessages = _StubChatCubit(withMessagesState);
@@ -155,7 +150,6 @@ void main() {
       history: <ChatConversation>[conversationNoMessages],
       activeConversationId: conversationNoMessages.id,
       messages: const <ChatMessage>[],
-      status: ViewStatus.success,
     );
     final _StubChatCubit cubitNoMessages = _StubChatCubit(withoutMessagesState);
     addTearDown(cubitNoMessages.close);
@@ -221,7 +215,7 @@ class _StubChatCubit extends ChatCubit {
 
 class _StubChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({

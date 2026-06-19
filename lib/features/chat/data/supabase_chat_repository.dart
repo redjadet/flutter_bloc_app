@@ -44,7 +44,7 @@ class SupabaseChatRepository implements ChatRepository {
   _invoke;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint {
+  ChatRemotePath? get chatRemoteTransportHint {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       return null;
     }
@@ -52,7 +52,7 @@ class SupabaseChatRepository implements ChatRepository {
     if (token == null || token.isEmpty) {
       return null;
     }
-    return ChatInferenceTransport.supabase;
+    return ChatRemotePath.edgeProxy;
   }
 
   @override

@@ -9,35 +9,27 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
       return;
     }
     final userId = _authRepository.currentUser?.id;
-    if (userId == null || userId.isEmpty) {
+    final StaffDemoProofSubmitBlockReason? blockReason =
+        StaffDemoProofSubmitEligibility.validateDraft(
+          userId: userId,
+          siteId: siteId,
+          signaturePath: state.signaturePath,
+        );
+    if (blockReason != null) {
       emit(
         state.copyWith(
           status: StaffDemoProofStatus.error,
-          errorMessage: 'Not signed in.',
-        ),
-      );
-      return;
-    }
-    if (siteId.trim().isEmpty) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Site ID is required.',
-        ),
-      );
-      return;
-    }
-    final signaturePath = state.signaturePath;
-    if (signaturePath == null || signaturePath.isEmpty) {
-      emit(
-        state.copyWith(
-          status: StaffDemoProofStatus.error,
-          errorMessage: 'Signature is required.',
+          errorMessage: StaffDemoProofSubmitEligibility.messageFor(blockReason),
         ),
       );
       return;
     }
 
+    final String? signaturePath = state.signaturePath?.trim();
+    final String? resolvedUserId = userId;
+    if (signaturePath == null || resolvedUserId == null) {
+      return;
+    }
     final photoPaths = List<String>.unmodifiable(state.photoPaths);
     _submitInFlight = true;
     try {
@@ -70,7 +62,7 @@ mixin _StaffDemoProofCubitSubmit on _StaffDemoProofCubitBase {
       emit(state.copyWith(status: StaffDemoProofStatus.submitting));
       try {
         final proofId = await _repository.submitProof(
-          userId: userId,
+          userId: resolvedUserId,
           siteId: siteId.trim(),
           shiftId: shiftId?.trim().isEmpty == true ? null : shiftId?.trim(),
           photoFilePaths: photoPaths,

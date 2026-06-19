@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart'
 import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -97,7 +98,9 @@ void main() {
       await tester.pump();
       expect(buildCount, 1);
 
-      streamController.add(initial.copyWith(errorMessage: 'boom'));
+      streamController.add(
+        initial.copyWith(lastError: const UnknownError(message: 'boom')),
+      );
       await tester.pump();
       expect(buildCount, 2);
     });

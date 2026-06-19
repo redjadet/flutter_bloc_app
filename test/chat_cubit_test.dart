@@ -22,7 +22,6 @@ import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
@@ -100,7 +99,7 @@ void main() {
       await cubit.sendMessage('offline');
 
       expect(cubit.state.error, isNull);
-      expect(cubit.state.status, anyOf(ViewStatus.success, ViewStatus.initial));
+      expect(cubit.state.hasError, isFalse);
       expect(cubit.state.messages.length, 1);
       final ChatMessage message = cubit.state.messages.single;
       expect(message.author, ChatAuthor.user);
@@ -229,8 +228,8 @@ void main() {
       () async {
         final _ConfigurableTransportChatRepository repo =
             _ConfigurableTransportChatRepository(
-              hint: ChatInferenceTransport.supabase,
-              successTransport: ChatInferenceTransport.direct,
+              hint: ChatRemotePath.edgeProxy,
+              successTransport: ChatRemotePath.directApi,
             );
         final FakeChatHistoryRepository history = FakeChatHistoryRepository();
 
@@ -242,11 +241,8 @@ void main() {
         addTearDown(first.close);
 
         await first.sendMessage('Hi');
-        expect(
-          first.state.lastCompletionTransport,
-          ChatInferenceTransport.direct,
-        );
-        expect(first.state.transportForBadge, ChatInferenceTransport.direct);
+        expect(first.state.lastCompletionTransport, ChatRemotePath.directApi);
+        expect(first.state.transportForBadge, ChatRemotePath.directApi);
 
         await first.close();
 
@@ -260,14 +256,8 @@ void main() {
         await restarted.loadHistory();
 
         expect(restarted.state.lastCompletionTransport, isNull);
-        expect(
-          restarted.state.runnableTransportHint,
-          ChatInferenceTransport.supabase,
-        );
-        expect(
-          restarted.state.transportForBadge,
-          ChatInferenceTransport.supabase,
-        );
+        expect(restarted.state.runnableTransportHint, ChatRemotePath.edgeProxy);
+        expect(restarted.state.transportForBadge, ChatRemotePath.edgeProxy);
       },
     );
 
@@ -298,7 +288,7 @@ void main() {
       await cubit.sendMessage('Hello');
       await pumpEventQueue();
 
-      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.hasError, isTrue);
       expect(cubit.state.error, 'Exception: history-save-failed');
       expect(history.conversations, isEmpty);
 
@@ -309,7 +299,7 @@ void main() {
       expect(history.conversations, isNotEmpty);
       expect(history.conversations.first.messages, isNotEmpty);
       // Error should be cleared on successful write
-      expect(cubit.state.status, ViewStatus.success);
+      expect(cubit.state.hasError, isFalse);
       expect(cubit.state.error, isNull);
     });
 
@@ -326,7 +316,7 @@ void main() {
       await cubit.sendMessage('Test');
       await pumpEventQueue();
 
-      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.hasError, isTrue);
       expect(cubit.state.error, isNotNull);
 
       // Recover and verify error is cleared
@@ -335,7 +325,7 @@ void main() {
       await pumpEventQueue();
 
       // Error should be cleared after successful persistence
-      expect(cubit.state.status, ViewStatus.success);
+      expect(cubit.state.hasError, isFalse);
       expect(cubit.state.error, isNull);
     });
 
@@ -750,8 +740,8 @@ void main() {
         'after queued flush and loadHistory, transport badge follows hint not replay transportUsed',
         () async {
           remoteRepository.shouldFail = true;
-          remoteRepository.hint = ChatInferenceTransport.supabase;
-          remoteRepository.successTransport = ChatInferenceTransport.direct;
+          remoteRepository.hint = ChatRemotePath.edgeProxy;
+          remoteRepository.successTransport = ChatRemotePath.directApi;
           final ChatCubit cubit = ChatCubit(
             repository: offlineRepository,
             historyRepository: localDataSource,
@@ -775,14 +765,8 @@ void main() {
 
           expect(cubit.state.messages.length, 2);
           expect(cubit.state.lastCompletionTransport, isNull);
-          expect(
-            cubit.state.runnableTransportHint,
-            ChatInferenceTransport.supabase,
-          );
-          expect(
-            cubit.state.transportForBadge,
-            ChatInferenceTransport.supabase,
-          );
+          expect(cubit.state.runnableTransportHint, ChatRemotePath.edgeProxy);
+          expect(cubit.state.transportForBadge, ChatRemotePath.edgeProxy);
 
           queued = await pendingRepository.getPendingOperations(
             now: DateTime.now().toUtc(),
@@ -802,7 +786,7 @@ void main() {
         final _SpyHfTokenProvider provider = _SpyHfTokenProvider();
         final ChatCubit cubit = ChatCubit(
           repository: _MutableHintChatRepository(
-            hint: ChatInferenceTransport.supabase,
+            hint: ChatRemotePath.edgeProxy,
           ),
           historyRepository: FakeChatHistoryRepository(),
           renderOrchestrationHfTokenProvider: provider,
@@ -847,7 +831,7 @@ void main() {
               _ControllableCoreAuthRepository();
           addTearDown(auth.dispose);
           final _MutableHintChatRepository repo = _MutableHintChatRepository(
-            hint: ChatInferenceTransport.supabase,
+            hint: ChatRemotePath.edgeProxy,
           );
           final ChatCubit cubit = ChatCubit(
             repository: repo,
@@ -856,21 +840,15 @@ void main() {
           );
           addTearDown(cubit.close);
 
-          expect(
-            cubit.state.runnableTransportHint,
-            ChatInferenceTransport.supabase,
-          );
+          expect(cubit.state.runnableTransportHint, ChatRemotePath.edgeProxy);
 
-          repo.hint = ChatInferenceTransport.direct;
+          repo.hint = ChatRemotePath.directApi;
           auth.emitAuthState(
             const AuthUser(id: 'u1', isAnonymous: false, email: 'a@b.c'),
           );
           await pumpEventQueue();
 
-          expect(
-            cubit.state.runnableTransportHint,
-            ChatInferenceTransport.direct,
-          );
+          expect(cubit.state.runnableTransportHint, ChatRemotePath.directApi);
         },
       );
 
@@ -881,7 +859,7 @@ void main() {
               _ControllableSupabaseAuthRepository();
           addTearDown(auth.dispose);
           final _MutableHintChatRepository repo = _MutableHintChatRepository(
-            hint: ChatInferenceTransport.supabase,
+            hint: ChatRemotePath.edgeProxy,
           );
           final ChatCubit cubit = ChatCubit(
             repository: repo,
@@ -890,16 +868,13 @@ void main() {
           );
           addTearDown(cubit.close);
 
-          repo.hint = ChatInferenceTransport.direct;
+          repo.hint = ChatRemotePath.directApi;
           auth.emitAuthState(
             const AuthUser(id: 'sb1', isAnonymous: false, email: 's@b.c'),
           );
           await pumpEventQueue();
 
-          expect(
-            cubit.state.runnableTransportHint,
-            ChatInferenceTransport.direct,
-          );
+          expect(cubit.state.runnableTransportHint, ChatRemotePath.directApi);
         },
       );
     });
@@ -933,11 +908,11 @@ class _FlakyRemoteChatRepository implements ChatRepository {
 
   bool shouldFail = false;
   String replyText = 'Synced';
-  ChatInferenceTransport? hint;
-  ChatInferenceTransport? successTransport;
+  ChatRemotePath? hint;
+  ChatRemotePath? successTransport;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+  ChatRemotePath? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({
@@ -967,11 +942,11 @@ class _ConfigurableTransportChatRepository implements ChatRepository {
     required this.successTransport,
   });
 
-  final ChatInferenceTransport hint;
-  final ChatInferenceTransport successTransport;
+  final ChatRemotePath hint;
+  final ChatRemotePath successTransport;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+  ChatRemotePath? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1077,10 +1052,10 @@ class _SpyHfTokenProvider implements RenderOrchestrationHfTokenProvider {
 class _MutableHintChatRepository implements ChatRepository {
   _MutableHintChatRepository({this.hint});
 
-  ChatInferenceTransport? hint;
+  ChatRemotePath? hint;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => hint;
+  ChatRemotePath? get chatRemoteTransportHint => hint;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1101,7 +1076,7 @@ class _MutableHintChatRepository implements ChatRepository {
 
 class FakeChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1127,7 +1102,7 @@ class _DelayedChatRepository implements ChatRepository {
   int callCount = 0;
 
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1217,7 +1192,7 @@ class _HydratingHistoryRepository implements ChatHistoryRepository {
 
 class _ErrorChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1234,7 +1209,7 @@ class _ErrorChatRepository implements ChatRepository {
 
 class _RemoteFailureChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
@@ -1256,7 +1231,7 @@ class _RemoteFailureChatRepository implements ChatRepository {
 
 class _OfflineQueueingChatRepository implements ChatRepository {
   @override
-  ChatInferenceTransport? get chatRemoteTransportHint => null;
+  ChatRemotePath? get chatRemoteTransportHint => null;
 
   @override
   Future<ChatResult> sendMessage({
