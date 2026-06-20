@@ -70,6 +70,7 @@ mapfile -t changed < <(
     git diff --name-only "$base_ref" 2>/dev/null || true
     git diff --name-only --cached 2>/dev/null || true
     git diff --name-only 2>/dev/null || true
+    git ls-files --others --exclude-standard 2>/dev/null || true
   } | awk 'NF' | sort -u
 )
 

@@ -81,6 +81,8 @@ _CoalescedPendingOperations _coalescePendingOperations(
       if (a.createdAt.isAfter(b.createdAt)) {
         return a;
       }
+      // Same timestamp: prefer the later enqueued op (pending list is sorted by
+      // createdAt, so the right-hand operand is newer when timestamps tie).
       return b;
     });
     operations.add(latestCounterOp);

@@ -12,6 +12,26 @@ class _SimState {
     required this.chartCloses,
   });
 
+  factory _SimState.fromSnapshot(final MarketFeedSnapshot snapshot) {
+    final double denominator = 1 + snapshot.changePct24h / 100;
+    final double reconstructedOpen = denominator > 0
+        ? snapshot.lastPrice / denominator
+        : snapshot.lastPrice;
+    final double open24 = reconstructedOpen.isFinite
+        ? reconstructedOpen
+        : snapshot.lastPrice;
+    return _SimState(
+      pairId: snapshot.pairId,
+      lastPrice: snapshot.lastPrice,
+      open24: open24,
+      bids: List<OrderBookLevel>.from(snapshot.bids),
+      asks: List<OrderBookLevel>.from(snapshot.asks),
+      recentTrades: List<RecentTrade>.from(snapshot.recentTrades),
+      stats: snapshot.stats,
+      chartCloses: List<double>.from(snapshot.chartCloses),
+    );
+  }
+
   factory _SimState.initial({required final String pairId}) {
     const double price = 43250;
     const double open = 43000;

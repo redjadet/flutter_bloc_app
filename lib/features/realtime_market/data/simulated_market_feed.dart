@@ -27,8 +27,16 @@ class SimulatedMarketFeed {
   final DateTime Function() _clock;
 
   /// Single-subscription stream; cancel subscription to stop timers.
-  Stream<MarketFeedSnapshot> watch(final String pairId) {
-    _SimState state = _SimState.initial(pairId: pairId);
+  ///
+  /// When [resumeFrom] is set (e.g. Hive cache on reconnect), the simulator
+  /// continues from that snapshot instead of resetting to [_SimState.initial].
+  Stream<MarketFeedSnapshot> watch(
+    final String pairId, {
+    final MarketFeedSnapshot? resumeFrom,
+  }) {
+    var state = resumeFrom != null
+        ? _SimState.fromSnapshot(resumeFrom)
+        : _SimState.initial(pairId: pairId);
     var tradeSeq = 0;
     TimerDisposable? zeroShot;
     TimerDisposable? fastHandle;

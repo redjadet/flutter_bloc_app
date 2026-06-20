@@ -165,6 +165,54 @@ void main() {
       },
     );
 
+    test(
+      'reconnect resumes from cached snapshot instead of feed bootstrap',
+      () async {
+        final RealtimeMarketLocalDataSource local =
+            RealtimeMarketLocalDataSource(hiveService: hiveService);
+        final MarketFeedSnapshot rich =
+            _sampleSnapshot(
+              lastPrice: 44000,
+              updatedAt: DateTime.utc(2024, 6, 1, 10),
+            ).copyWith(
+              recentTrades: <RecentTrade>[
+                RecentTrade(
+                  id: 't1',
+                  price: 44000,
+                  quantity: 1,
+                  isBuy: true,
+                  at: DateTime.utc(2024, 6, 1, 9),
+                ),
+              ],
+              chartCloses: <double>[43000, 43500, 44000],
+            );
+        await local.saveSnapshot('btc_usdt', rich);
+
+        final _ResumeRecordingFeed feed = _ResumeRecordingFeed();
+        final RealtimeMarketRepositoryImpl repo = RealtimeMarketRepositoryImpl(
+          localDataSource: local,
+          feed: feed,
+        );
+        final List<MarketFeedSnapshot> out = <MarketFeedSnapshot>[];
+        final StreamSubscription<MarketFeedSnapshot> sub = repo
+            .watch('btc_usdt')
+            .listen(out.add);
+        await Future<void>.delayed(Duration.zero);
+        await repo.reconnect('btc_usdt');
+        await Future<void>.delayed(Duration.zero);
+        await sub.cancel();
+        await repo.dispose();
+
+        final MarketFeedSnapshot? cached = await local.loadCached('btc_usdt');
+        expect(cached, isNotNull);
+        expect(cached!.recentTrades.length, greaterThanOrEqualTo(1));
+        expect(cached.chartCloses.length, greaterThanOrEqualTo(3));
+        expect(cached.lastPrice, rich.lastPrice);
+        expect(feed.resumeSnapshots, isNotEmpty);
+        expect(feed.resumeSnapshots.every((final s) => s == rich), isTrue);
+      },
+    );
+
     test('reconnect restarts feed without throwing', () async {
       final RealtimeMarketLocalDataSource local = RealtimeMarketLocalDataSource(
         hiveService: hiveService,
@@ -225,10 +273,37 @@ class _BurstMarketFeed extends SimulatedMarketFeed {
   final List<MarketFeedSnapshot> snapshots;
 
   @override
-  Stream<MarketFeedSnapshot> watch(final String pairId) async* {
+  Stream<MarketFeedSnapshot> watch(
+    final String pairId, {
+    final MarketFeedSnapshot? resumeFrom,
+  }) async* {
     for (final MarketFeedSnapshot snapshot in snapshots) {
       yield snapshot;
     }
+  }
+}
+
+class _ResumeRecordingFeed extends SimulatedMarketFeed {
+  _ResumeRecordingFeed()
+    : super(
+        random: Random(0),
+        timerService: DefaultTimerService(),
+        clock: () => DateTime.utc(2024),
+      );
+
+  final List<MarketFeedSnapshot> resumeSnapshots = <MarketFeedSnapshot>[];
+
+  @override
+  Stream<MarketFeedSnapshot> watch(
+    final String pairId, {
+    final MarketFeedSnapshot? resumeFrom,
+  }) async* {
+    if (resumeFrom != null) {
+      resumeSnapshots.add(resumeFrom);
+      yield resumeFrom;
+      return;
+    }
+    yield _sampleSnapshot(lastPrice: 43250, updatedAt: DateTime.utc(2024));
   }
 }
 
