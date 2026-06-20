@@ -78,6 +78,7 @@ mixin IotBleCubitStreams on IotBleCubitCore {
   @override
   Future<void> close() async {
     await teardownActiveSession();
+    await classicRepository.disconnect();
     await _adapterSubscription?.cancel();
     _adapterSubscription = null;
     await _scanSubscription?.cancel();
@@ -147,10 +148,8 @@ mixin IotBleCubitStreams on IotBleCubitCore {
   }
 
   Future<void> teardownActiveSession() async {
-    unawaited(_notifySubscription?.cancel());
-    _notifySubscription = null;
-    unawaited(_connectionSubscription?.cancel());
-    _connectionSubscription = null;
+    await cancelNotifySubscription();
+    await cancelConnectionSubscription();
     cancelScanTimeout();
     await sessionCoordinator.teardown();
     await activeRepository.stopScan();
