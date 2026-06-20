@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analysis_server_plugin
-      sha256: c58b2a05b260a023eefd0848496ff6b113a318c6c95dad4215165a4bd54ae600
+      sha256: "41ccc9b73012c5355b27a3b5bb3748dcbf65fdba45704514c1dd222e74f536fc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.18"
+    version: "0.3.19"
   analyzer:
     dependency: "direct overridden"
     description:
@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: c2a75baf1657171cc7872db96a12b07e385873cf7a73f2b4f7638e9d0701ee53
+      sha256: a43d6463a4411039ab6e43c02a257b784511b81d3ee923243f5242138a5772c3
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.12"
+    version: "0.14.13"
   app_links:
     dependency: "direct main"
     description:
@@ -1862,10 +1862,10 @@ packages:
     dependency: transitive
     description:
       name: passkeys_doctor
-      sha256: "2198f73517c772684b7b804278a382294a68ed4d28bd13391a42f7403ba01112"
+      sha256: "83cbed79bff4b63b54a3f3b5d80aa8f68c9009b6a85fb432b5bb7918bb47c681"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.1"
   passkeys_platform_interface:
     dependency: transitive
     description:
@@ -2683,10 +2683,10 @@ packages:
     dependency: "direct dev"
     description:
       name: very_good_analysis
-      sha256: d1cb1d66a5aae2c702d68caca6c8347306d35e728fd94555fa21fa0448a972e0
+      sha256: "481af67ab5877af20325251dc215a4ebac7666a1c8cf09198ffd457bc612b33d"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "10.3.0"
   video_player:
     dependency: "direct main"
     description:
