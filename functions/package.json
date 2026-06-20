@@ -27,7 +27,7 @@
   },
   "overrides": {
     "@tootallnate/once": "^3.0.1",
-    "protobufjs": "^8.6.3",
+    "protobufjs": "^8.6.4",
     "uuid": "^14.0.0"
   },
   "devDependencies": {
