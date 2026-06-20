@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.32%** (22887/31649 lines)
+*Total line coverage*: **72.32%** (22894/31656 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -798,7 +798,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/profile/presentation/widgets/profile_gallery.dart` | 100.00% | 37/37 |
 | `lib/features/realtime_market/data/mappers/market_snapshot_mapper.dart` | 100.00% | 8/8 |
 | `lib/features/realtime_market/data/realtime_market_local_data_source.dart` | 100.00% | 14/14 |
-| `lib/features/realtime_market/data/simulated_market_feed.dart` | 100.00% | 28/28 |
+| `lib/features/realtime_market/data/simulated_market_feed.dart` | 100.00% | 35/35 |
 | `lib/features/realtime_market/domain/use_cases/load_cached_market_snapshot.dart` | 100.00% | 3/3 |
 | `lib/features/realtime_market/domain/use_cases/reconnect_realtime_market.dart` | 100.00% | 2/2 |
 | `lib/features/realtime_market/domain/use_cases/watch_realtime_market.dart` | 100.00% | 3/3 |

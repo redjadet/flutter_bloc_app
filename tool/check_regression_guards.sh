@@ -64,6 +64,7 @@ ALL_TESTS=(
   "test/shared/widgets/action_bar_layout_regression_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
+  "test/features/realtime_market/data/simulated_market_feed_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
   "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
   "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
@@ -183,6 +184,10 @@ select_regression_guard_tests() {
       lib/features/iot_demo/*|\
       test/features/iot_demo/*)
         add_test_once out_ref "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
+        ;;
+      lib/features/realtime_market/*|\
+      test/features/realtime_market/*)
+        add_test_once out_ref "test/features/realtime_market/data/simulated_market_feed_test.dart"
         ;;
       lib/features/staff_app_demo/*|\
       test/features/staff_app_demo/*|\

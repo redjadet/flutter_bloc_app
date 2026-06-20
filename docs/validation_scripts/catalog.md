@@ -251,7 +251,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 
 | Script | Typical invocation | Purpose |
 | --- | --- | --- |
-| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; RequestIdGuard/chat supersession paths run before coverage even when Step 5 is enabled); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race bugs |
+| `check_regression_guards.sh` | `./bin/checklist` (focused regression lane; subset on local feature diffs; RequestIdGuard/chat supersession and realtime trade-id paths run before coverage even when Step 5 is enabled); `CHECK_REGRESSION_GUARDS_MODE=auto … --paths FILE` for local repro | Runs fixed widget/unit regression tests for past lifecycle/race and data-integrity bugs |
 | `check_action_bar_layout.sh` | `./bin/checklist` when `CHECKLIST_RUN_ACTION_BAR_LAYOUT_TESTS` is `auto` or `1` | Widget tests for action-bar / icon-label row layout regressions |
 | `check_docs_gardening.sh` | `./bin/checklist-fast`, docs/tooling lanes | Doc link rot + `validate_validation_docs.sh` |
 | `check_design_md.sh` | Design/agent lane | Google DesignMD lint on root [`DESIGN.md`](../../DESIGN.md) |

@@ -10,6 +10,22 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/entities/recent
 
 part 'simulated_market_feed_state.part.dart';
 
+/// Highest numeric suffix from simulator trade ids (`t42` -> 42).
+int _initialTradeSeqFromRecentTrades(final List<RecentTrade> recentTrades) {
+  var maxSeq = 0;
+  for (final RecentTrade trade in recentTrades) {
+    final String id = trade.id;
+    if (!id.startsWith('t') || id.length <= 1) {
+      continue;
+    }
+    final int? parsed = int.tryParse(id.substring(1));
+    if (parsed != null && parsed > maxSeq) {
+      maxSeq = parsed;
+    }
+  }
+  return maxSeq;
+}
+
 /// High-frequency simulated crypto book (demo only; no exchange).
 class SimulatedMarketFeed {
   SimulatedMarketFeed({
@@ -37,7 +53,7 @@ class SimulatedMarketFeed {
     var state = resumeFrom != null
         ? _SimState.fromSnapshot(resumeFrom)
         : _SimState.initial(pairId: pairId);
-    var tradeSeq = 0;
+    var tradeSeq = _initialTradeSeqFromRecentTrades(state.recentTrades);
     TimerDisposable? zeroShot;
     TimerDisposable? fastHandle;
     TimerDisposable? emitHandle;

@@ -38,6 +38,59 @@ void main() {
       });
     });
 
+    test('resume continues trade ids after cached recent trades', () {
+      fakeAsync((final FakeAsync async) {
+        final SimulatedMarketFeed feed = SimulatedMarketFeed(
+          random: Random(1),
+          timerService: DefaultTimerService(),
+          clock: () => DateTime.utc(2024, 1, 1),
+        );
+        MarketFeedSnapshot? first;
+        final StreamSubscription<MarketFeedSnapshot> sub = feed
+            .watch(
+              'btc_usdt',
+              resumeFrom: MarketFeedSnapshot(
+                pairId: 'btc_usdt',
+                lastPrice: 44000,
+                changePct24h: 0,
+                connection: MarketConnectionStatus.live,
+                bids: <OrderBookLevel>[],
+                asks: <OrderBookLevel>[],
+                recentTrades: <RecentTrade>[
+                  RecentTrade(
+                    id: 't5',
+                    price: 44000,
+                    quantity: 1,
+                    isBuy: true,
+                    at: DateTime.utc(2024, 1, 1, 9),
+                  ),
+                  RecentTrade(
+                    id: 't3',
+                    price: 43900,
+                    quantity: 0.5,
+                    isBuy: false,
+                    at: DateTime.utc(2024, 1, 1, 8),
+                  ),
+                ],
+                stats: MarketStats(high24h: 44000, low24h: 43900, volume24h: 1),
+                chartCloses: <double>[43900, 44000],
+                updatedAt: DateTime.utc(2024, 1, 1, 10),
+              ),
+            )
+            .listen((final MarketFeedSnapshot s) => first = s);
+        async.elapse(Duration.zero);
+
+        expect(first, isNotNull);
+        expect(first!.recentTrades.first.id, 't6');
+        expect(
+          first!.recentTrades.map((final RecentTrade t) => t.id).toSet().length,
+          first!.recentTrades.length,
+        );
+        sub.cancel();
+        async.flushMicrotasks();
+      });
+    });
+
     test('resume snapshot with full loss keeps finite prices', () {
       fakeAsync((final FakeAsync async) {
         final SimulatedMarketFeed feed = SimulatedMarketFeed(
