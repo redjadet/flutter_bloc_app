@@ -173,6 +173,22 @@ class _FakeRemoteRepository
   }
 }
 
+class _ReReadAwareHiveTodoRepository extends HiveTodoRepository {
+  _ReReadAwareHiveTodoRepository({required super.hiveService});
+
+  Future<void> Function()? onSecondFetchAll;
+  int _fetchAllCount = 0;
+
+  @override
+  Future<List<TodoItem>> fetchAll() async {
+    _fetchAllCount++;
+    if (_fetchAllCount == 2 && onSecondFetchAll != null) {
+      await onSecondFetchAll!();
+    }
+    return super.fetchAll();
+  }
+}
+
 void main() {
   group('OfflineFirstTodoRepository', () {
     late Directory tempDir;
@@ -282,6 +298,60 @@ void main() {
         expect(local.single.title, 'Remote newer title');
         expect(local.single.synchronized, isTrue);
         expect(local.single.lastSyncedAt, isNotNull);
+      },
+    );
+
+    test(
+      'pullRemote re-checks local before save when local advances',
+      () async {
+        final DateTime initialUpdated = DateTime.utc(2024, 1, 1, 12);
+        final DateTime remoteUpdated = DateTime.utc(2024, 1, 2, 12);
+        final DateTime newerUpdated = DateTime.utc(2024, 1, 3, 12);
+        final TodoItem syncedLocal = TodoItem(
+          id: 'todo-toctou',
+          title: 'Synced local',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: initialUpdated,
+          synchronized: true,
+          lastSyncedAt: initialUpdated,
+        );
+        final TodoItem remoteItem = syncedLocal.copyWith(
+          title: 'Remote title',
+          updatedAt: remoteUpdated,
+        );
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          initial: <TodoItem>[remoteItem],
+        );
+        final _ReReadAwareHiveTodoRepository interceptingLocal =
+            _ReReadAwareHiveTodoRepository(hiveService: hiveService);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: interceptingLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        await interceptingLocal.save(syncedLocal);
+
+        interceptingLocal.onSecondFetchAll = () async {
+          await interceptingLocal.save(
+            syncedLocal.copyWith(
+              title: 'User edit during merge',
+              updatedAt: newerUpdated,
+              synchronized: false,
+              changeId: 'local-change-id',
+            ),
+          );
+        };
+
+        await repository.pullRemote();
+
+        final List<TodoItem> local = await interceptingLocal.fetchAll();
+        expect(local.single.title, 'User edit during merge');
+        expect(local.single.updatedAt, newerUpdated);
+        expect(local.single.synchronized, isFalse);
       },
     );
 
