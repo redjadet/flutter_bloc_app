@@ -270,13 +270,16 @@ path.
 Todo uses per-item merge rules rather than whole-list replacement.
 
 `TodoMergePolicy.shouldApplyRemote()` and
-`_mergeRemoteIntoLocal()` in todo repository helpers do three important
+`_mergeRemoteIntoLocal()` in todo repository helpers do four important
 things:
 
 - skip remote items when local `updatedAt` is newer
 - preserve local unsynced items unless remote version carries same
   `changeId` or is strictly newer
-- remove local synchronized items that no longer exist remotely
+- re-read local immediately before each merge `save` or delete so a
+  concurrent edit after the initial snapshot cannot be lost (TOCTOU)
+- remove local synchronized items that no longer exist remotely (re-check
+  `synchronized` on the fresh row before delete)
 
 This is stronger fit for list entities where each item may be in different
 sync state.
@@ -341,19 +344,23 @@ Important checks include:
 
 - repository tests for queueing and replay
 - merge tests that prove stale remote state doesn't overwrite newer local state
+- TOCTOU merge tests that intercept the second local read and assert concurrent
+  local edits survive (`re-checks local before save` / `… before deleting`)
 - cubit tests for queued-success UX paths
 - diagnostics support through `SyncCycleSummary` and Settings sync views
 
 Relevant references:
 
 - `test/features/counter/data/offline_first_counter_repository_test.dart`
+- `test/features/todo_list/data/offline_first_todo_repository_test.dart`
 - `test/shared/sync/background_sync_coordinator_test.dart`
 - `test/shared/services/network_status_service_test.dart`
 - `tool/check_offline_first_remote_merge.sh`
 - `./bin/checklist`
 
 design specifically treats "older remote must not overwrite newer unsynced
-local" as regression class worth dedicated validation path.
+local" and "concurrent local edit during merge must survive remote apply
+(TOCTOU)" as regression classes worth dedicated validation paths.
 
 ## Trade-offs
 

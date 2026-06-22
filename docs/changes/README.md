@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-22_todo-remote-merge-toctou.md`](2026-06-22_todo-remote-merge-toctou.md): Todo list-entity remote merge TOCTOU — re-read before save/delete, full counter/todo regression parity (pullRemote + watch, static stale-remote + TOCTOU), `dont_overwrite_guide` + remote-merge guard inventory.
 - [`2026-06-19_senior-patterns-reduce-surprise.md`](2026-06-19_senior-patterns-reduce-surprise.md): Reduce-surprise program — DTO boundaries, sealed states, domain policies, typed errors; agent guide + AP-11…17; scorecard closeout.
 - [`2026-06-16_staff-demo-plugin-hardening.md`](2026-06-16_staff-demo-plugin-hardening.md): Staff demo plugin audit — `Result`/`Failure` at location/media seams, proof photo picker port + DI, camera_gallery failure mapper, regression tests, storage/plugin-failure docs.
 - [`2026-06-16_widget-list-stable-keys.md`](2026-06-16_widget-list-stable-keys.md): Widget identity in dynamic lists — stable `ValueKey`s (websocket `sequence`, chat `clientMessageId`, case-study `CaseStudyQuestionId`, order-book side+price); monotonic websocket sequence across disconnect; `check_widget_identity` `ObjectKey` advisory.

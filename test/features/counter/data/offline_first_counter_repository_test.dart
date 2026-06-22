@@ -273,6 +273,57 @@ void main() {
     );
 
     test(
+      'pullRemote re-checks local before save when local advances',
+      () async {
+        final DateTime initialChanged = DateTime(2024, 1, 1, 12);
+        final DateTime remoteChanged = DateTime(2024, 1, 2, 12);
+        final DateTime newerChanged = DateTime(2024, 1, 3, 12);
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          initial: CounterSnapshot(
+            count: 5,
+            lastChanged: remoteChanged,
+          ),
+        );
+        final _ReReadAwareLocalRepository local = _ReReadAwareLocalRepository(
+          localRepository,
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: local,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await localRepository.save(
+          CounterSnapshot(
+            count: 3,
+            lastChanged: initialChanged,
+            synchronized: true,
+            lastSyncedAt: initialChanged,
+          ),
+        );
+
+        local.onSecondLoad = () async {
+          await localRepository.save(
+            CounterSnapshot(
+              count: 4,
+              lastChanged: newerChanged,
+              synchronized: false,
+            ),
+          );
+        };
+
+        await repository.pullRemote();
+
+        final CounterSnapshot stored = await localRepository.load();
+        expect(stored.count, 4);
+        expect(stored.lastChanged, newerChanged);
+        expect(stored.synchronized, isFalse);
+      },
+    );
+
+    test(
       'remote watch does not overwrite newer synchronized local count',
       () async {
         final _StreamRemoteRepository remote = _StreamRemoteRepository();

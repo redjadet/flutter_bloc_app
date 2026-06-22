@@ -224,7 +224,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
-- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots or older queued pending replay). It also fails when stale-sync regression test files exist but are not wired into the guard. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
+- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots, TOCTOU races between merge snapshot and save/delete, or older queued pending replay). Inventory scan also matches `re-checks local before save|deleting` tests. Fails when matching regression test files exist but are not wired into the guard. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
 
 ### Context & async safety (checklist; detail in guide shard)
 
