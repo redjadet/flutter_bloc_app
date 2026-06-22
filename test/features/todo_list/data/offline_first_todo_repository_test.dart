@@ -173,16 +173,44 @@ class _FakeRemoteRepository
   }
 }
 
+class _StreamRemoteTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
+  _StreamRemoteTodoRepository();
+
+  final StreamController<List<TodoItem>> controller =
+      StreamController<List<TodoItem>>.broadcast();
+
+  @override
+  Future<List<TodoItem>> fetchAll() async => <TodoItem>[];
+
+  @override
+  Stream<List<TodoItem>> watchAll() => controller.stream;
+
+  @override
+  Future<void> save(final TodoItem item) async {}
+
+  @override
+  Future<void> delete(final String id) async {}
+
+  @override
+  Future<void> clearCompleted() async {}
+}
+
 class _ReReadAwareHiveTodoRepository extends HiveTodoRepository {
   _ReReadAwareHiveTodoRepository({required super.hiveService});
 
   Future<void> Function()? onSecondFetchAll;
   int _fetchAllCount = 0;
+  bool _hookTriggered = false;
 
   @override
   Future<List<TodoItem>> fetchAll() async {
     _fetchAllCount++;
-    if (_fetchAllCount == 2 && onSecondFetchAll != null) {
+    if (!_hookTriggered &&
+        _fetchAllCount >= 2 &&
+        onSecondFetchAll != null) {
+      _hookTriggered = true;
       await onSecondFetchAll!();
     }
     return super.fetchAll();
@@ -351,6 +379,190 @@ void main() {
         final List<TodoItem> local = await interceptingLocal.fetchAll();
         expect(local.single.title, 'User edit during merge');
         expect(local.single.updatedAt, newerUpdated);
+        expect(local.single.synchronized, isFalse);
+      },
+    );
+
+    test(
+      'remote watch re-checks local before save when local advances',
+      () async {
+        final DateTime initialUpdated = DateTime.utc(2024, 1, 1, 12);
+        final DateTime remoteUpdated = DateTime.utc(2024, 1, 2, 12);
+        final DateTime newerUpdated = DateTime.utc(2024, 1, 3, 12);
+        final TodoItem syncedLocal = TodoItem(
+          id: 'todo-watch-toctou',
+          title: 'Synced local',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: initialUpdated,
+          synchronized: true,
+          lastSyncedAt: initialUpdated,
+        );
+        final TodoItem remoteItem = syncedLocal.copyWith(
+          title: 'Remote title',
+          updatedAt: remoteUpdated,
+        );
+        final _StreamRemoteTodoRepository remote = _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final _ReReadAwareHiveTodoRepository interceptingLocal =
+            _ReReadAwareHiveTodoRepository(hiveService: hiveService);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: interceptingLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+        expect(repository.hasRemoteRepository, isTrue);
+
+        await interceptingLocal.save(syncedLocal);
+
+        interceptingLocal.onSecondFetchAll = () async {
+          await interceptingLocal.save(
+            syncedLocal.copyWith(
+              title: 'User edit during merge',
+              updatedAt: newerUpdated,
+              synchronized: false,
+              changeId: 'local-change-id',
+            ),
+          );
+        };
+
+        remote.controller.add(<TodoItem>[remoteItem]);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        final List<TodoItem> local = await interceptingLocal.fetchAll();
+        expect(local.single.title, 'User edit during merge');
+        expect(local.single.updatedAt, newerUpdated);
+        expect(local.single.synchronized, isFalse);
+      },
+    );
+
+    test(
+      'remote watch re-checks local before deleting a missing remote item',
+      () async {
+        final DateTime initialUpdated = DateTime.utc(2024, 1, 1, 12);
+        final DateTime newerUpdated = DateTime.utc(2024, 1, 2, 12);
+        final TodoItem syncedLocal = TodoItem(
+          id: 'todo-watch-delete-toctou',
+          title: 'Synced local',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: initialUpdated,
+          synchronized: true,
+          lastSyncedAt: initialUpdated,
+        );
+        final _StreamRemoteTodoRepository remote = _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final _ReReadAwareHiveTodoRepository interceptingLocal =
+            _ReReadAwareHiveTodoRepository(hiveService: hiveService);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: interceptingLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+        expect(repository.hasRemoteRepository, isTrue);
+
+        await interceptingLocal.save(syncedLocal);
+
+        interceptingLocal.onSecondFetchAll = () async {
+          await interceptingLocal.save(
+            syncedLocal.copyWith(
+              title: 'User edit during merge',
+              updatedAt: newerUpdated,
+              synchronized: false,
+              changeId: 'local-change-id',
+            ),
+          );
+        };
+
+        remote.controller.add(<TodoItem>[]);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        final List<TodoItem> local = await interceptingLocal.fetchAll();
+        expect(local.single.title, 'User edit during merge');
+        expect(local.single.updatedAt, newerUpdated);
+        expect(local.single.synchronized, isFalse);
+      },
+    );
+
+    test(
+      'remote watch does not overwrite newer synchronized local item',
+      () async {
+        final DateTime localUpdated = DateTime.utc(2024, 1, 2, 12);
+        final TodoItem syncedLocal = TodoItem(
+          id: 'todo-watch-stale-synced',
+          title: 'Local newer title',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: localUpdated,
+          synchronized: true,
+          lastSyncedAt: localUpdated,
+        );
+        final TodoItem staleRemote = syncedLocal.copyWith(
+          title: 'Stale remote title',
+          updatedAt: DateTime.utc(2024, 1, 1, 12),
+        );
+        final _StreamRemoteTodoRepository remote = _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+        expect(repository.hasRemoteRepository, isTrue);
+
+        await localRepository.save(syncedLocal);
+
+        remote.controller.add(<TodoItem>[staleRemote]);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local.single.title, 'Local newer title');
+        expect(local.single.updatedAt, localUpdated);
+      },
+    );
+
+    test(
+      'remote watch does not overwrite newer unsynced local item',
+      () async {
+        final DateTime localUpdated = DateTime.utc(2024, 1, 2, 12);
+        final TodoItem unsyncedLocal = TodoItem(
+          id: 'todo-watch-stale-unsynced',
+          title: 'Local unsynced title',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: localUpdated,
+          synchronized: false,
+          changeId: 'local-change-id',
+        );
+        final TodoItem staleRemote = unsyncedLocal.copyWith(
+          title: 'Stale remote title',
+          updatedAt: DateTime.utc(2024, 1, 1, 12),
+        );
+        final _StreamRemoteTodoRepository remote = _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+        expect(repository.hasRemoteRepository, isTrue);
+
+        await localRepository.save(unsyncedLocal);
+
+        remote.controller.add(<TodoItem>[staleRemote]);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local.single.title, 'Local unsynced title');
+        expect(local.single.updatedAt, localUpdated);
         expect(local.single.synchronized, isFalse);
       },
     );

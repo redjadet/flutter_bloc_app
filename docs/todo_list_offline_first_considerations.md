@@ -187,6 +187,7 @@ The system actively listens to changes in Firebase Realtime Database:
 
 - `_startRemoteWatch()` subscribes to `_remoteRepository.watchAll()`
 - `_mergeRemoteIntoLocal()` processes incoming remote items and applies conflict resolution
+- Re-reads local state immediately before each merge `save`/`delete` so concurrent local edits after the initial snapshot are not overwritten (TOCTOU); see [`offline_first/dont_overwrite_guide.md`](offline_first/dont_overwrite_guide.md)
 - Only one subscription is active at a time (guarded by `_remoteWatchSubscription`)
 - Errors are logged but don't break the subscription (error handling in stream listener)
 

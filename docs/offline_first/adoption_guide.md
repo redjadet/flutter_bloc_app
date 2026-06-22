@@ -31,7 +31,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
      - Push to remote (if available) then mark local as synced.
      - If user data doesn't exist locally yet, create and persist it first, then attempt remote call.
    - On `pullRemote`, merge remote snapshots when newer.
-   - **Don’t overwrite:** When merging remote into local or replaying queued local writes to remote, use timestamp gates so older sync data never overwrites newer state. See [Don’t overwrite guide](dont_overwrite_guide.md).
+   - **Don’t overwrite:** When merging remote into local or replaying queued local writes to remote, use timestamp gates so older sync data never overwrites newer state. Re-read local immediately before each merge `save`/`delete` (TOCTOU). See [Don’t overwrite guide](dont_overwrite_guide.md).
    - App resume sync stays debounced and flushes must not overlap; use
      `BackgroundSyncCoordinator.flush()` instead of starting parallel sync work.
 3. **Register in DI + registry**
@@ -46,6 +46,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
      failed-migrator fingerprint behavior, malformed legacy payloads, and
      metadata/temp/dead-letter key filtering where relevant.
    - Repository tests for `save` queueing (if applicable) and `processOperation`/`pullRemote` paths.
+   - For remote merge: timestamp-gate tests (`does not overwrite newer …`), queue replay tests (`does not push stale pending …`), and TOCTOU re-read tests (`re-checks local before save` / `… before deleting`); wire file into `tool/check_offline_first_remote_merge.sh`.
    - Bloc/widget tests for sync flows; Sync Diagnostics (Settings, dev/qa) for manual inspection.
    - **Reference patterns**:
      - **Write-heavy features (Counter/Chat)**: See `test/chat_cubit_test.dart`, `test/chat_page_test.dart`, and `test/features/counter/presentation/pages/counter_page_sync_metadata_test.dart`.

@@ -160,8 +160,8 @@ stream.listen((data) {
 
 **What it checks**:
 
-- Runs focused tests that assert stale sync data cannot overwrite newer state: older remote snapshots must not overwrite newer local state, and older queued pending snapshots must not overwrite newer remote state. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` (e.g. `remote watch does not overwrite newer unsynced local count`, `processOperation does not push stale pending over newer remote`).
-- Verifies guard wiring before skip/test selection: if a stale-sync regression test file exists under `test/features/*/data/*offline_first*_repository_test.dart` but is not listed in `tool/check_offline_first_remote_merge.sh`, the guard fails early.
+- Runs focused tests that assert stale sync data cannot overwrite newer state: older remote snapshots must not overwrite newer local state, older queued pending snapshots must not overwrite newer remote state, and concurrent local edits during merge must survive remote apply (TOCTOU `re-checks local before save` / `… before deleting`). Counter and todo repositories should maintain the parity matrix in [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) § Coverage parity. Tests live in `test/features/counter/data/offline_first_counter_repository_test.dart` and `test/features/todo_list/data/offline_first_todo_repository_test.dart` (e.g. `pullRemote re-checks local before save when local advances`, `remote watch does not overwrite newer unsynced local count`, `processOperation does not push stale pending over newer remote`).
+- Verifies guard wiring before skip/test selection: if a stale-sync or TOCTOU regression test file exists under `test/features/*/data/*offline_first*_repository_test.dart` (matched by `does not overwrite newer`, `does not push stale pending`, `does not overwrite local when there are pending`, or `re-checks local before save|deleting`) but is not listed in `tool/check_offline_first_remote_merge.sh`, the guard fails early.
 - Runs near the start of the checklist static sweep so stale-sync data-loss regressions surface before slower quality gates.
 
 **Why it matters**:
@@ -170,8 +170,8 @@ stream.listen((data) {
 
 **Correct pattern**:
 
-- Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). See `OfflineFirstCounterRepository._shouldApplyRemote` and AGENTS.md §5 Offline-first repositories.
+- Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). After the initial local read in a merge loop, **re-read immediately before each `save`/`delete`** and re-run the predicate (TOCTOU). See `OfflineFirstCounterRepository._applyRemoteSnapshotIfCurrent`, `offline_first_todo_repository_helpers.dart`, and [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md).
 
-**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`; the guard fails if it discovers a matching stale-sync regression test that is not wired in.
+**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. Add TOCTOU tests that intercept the second local read during merge and assert a concurrent local edit wins. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`; the guard fails if it discovers a matching regression test that is not wired in.
 
 ---

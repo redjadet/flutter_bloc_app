@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Regression guard: offline-first repos must not overwrite newer state with
-# stale sync data. Covers remote-watch/pull applying older remote snapshots and
+# stale sync data. Covers remote-watch/pull applying older remote snapshots,
+# TOCTOU races between initial local snapshot and per-item save/delete, and
 # queued replay pushing older pending snapshots over newer remote state. See
-# AGENTS.md §5 Offline-first repositories and
+# docs/offline_first/dont_overwrite_guide.md and
 # test/features/counter/data/offline_first_counter_repository_test.dart and
 # test/features/todo_list/data/offline_first_todo_repository_test.dart.
 
@@ -164,7 +165,7 @@ validate_guard_inventory() {
       discovered_files+=("$discovered_file")
     done < <(
       rg -l \
-        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending" \
+        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|re-checks local before save|re-checks local before deleting" \
         test/features/*/data/*offline_first*_repository_test.dart \
         2>/dev/null || true
     )
@@ -175,7 +176,7 @@ validate_guard_inventory() {
     done < <(
       find test/features -path '*/data/*offline_first*_repository_test.dart' -type f \
         -exec grep -lE \
-          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending" \
+          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|re-checks local before save|re-checks local before deleting" \
           {} + 2>/dev/null || true
     )
   fi
