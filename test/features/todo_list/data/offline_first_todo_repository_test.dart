@@ -355,6 +355,53 @@ void main() {
       },
     );
 
+    test(
+      'pullRemote re-checks local before deleting a missing remote item',
+      () async {
+        final DateTime initialUpdated = DateTime.utc(2024, 1, 1, 12);
+        final DateTime newerUpdated = DateTime.utc(2024, 1, 2, 12);
+        final TodoItem syncedLocal = TodoItem(
+          id: 'todo-delete-toctou',
+          title: 'Synced local',
+          createdAt: DateTime.utc(2024, 1, 1, 10),
+          updatedAt: initialUpdated,
+          synchronized: true,
+          lastSyncedAt: initialUpdated,
+        );
+        final _FakeRemoteRepository remote = _FakeRemoteRepository();
+        final _ReReadAwareHiveTodoRepository interceptingLocal =
+            _ReReadAwareHiveTodoRepository(hiveService: hiveService);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: interceptingLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        await interceptingLocal.save(syncedLocal);
+
+        interceptingLocal.onSecondFetchAll = () async {
+          await interceptingLocal.save(
+            syncedLocal.copyWith(
+              title: 'User edit during merge',
+              updatedAt: newerUpdated,
+              synchronized: false,
+              changeId: 'local-change-id',
+            ),
+          );
+        };
+
+        await repository.pullRemote();
+
+        final List<TodoItem> local = await interceptingLocal.fetchAll();
+        expect(local.single.title, 'User edit during merge');
+        expect(local.single.updatedAt, newerUpdated);
+        expect(local.single.synchronized, isFalse);
+      },
+    );
+
     test('processOperation skips malformed save payload safely', () async {
       final _FakeRemoteRepository remote = _FakeRemoteRepository();
       final OfflineFirstTodoRepository repository = OfflineFirstTodoRepository(

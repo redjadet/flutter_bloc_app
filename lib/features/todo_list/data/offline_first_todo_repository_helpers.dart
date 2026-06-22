@@ -31,9 +31,7 @@ Future<void> _mergeRemoteIntoLocal(
     final Map<String, TodoItem> localMap = {
       for (final TodoItem item in localItems) item.id: item,
     };
-    final Set<String> remoteIds = remoteItems
-        .map((final item) => item.id)
-        .toSet();
+    final Set<String> remoteIds = remoteItems.map((item) => item.id).toSet();
 
     // Merge remote items into local, applying conflict resolution
     for (final TodoItem remoteItem in remoteItems) {
@@ -50,10 +48,11 @@ Future<void> _mergeRemoteIntoLocal(
       // overwritten by a stale remote decision (TOCTOU).
       final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
       final Iterable<TodoItem> freshMatches = freshLocalItems.where(
-        (final TodoItem item) => item.id == remoteItem.id,
+        (item) => item.id == remoteItem.id,
       );
-      final TodoItem? freshLocalItem =
-          freshMatches.isEmpty ? null : freshMatches.first;
+      final TodoItem? freshLocalItem = freshMatches.isEmpty
+          ? null
+          : freshMatches.first;
       if (!_shouldMergeRemoteItem(
         localItem: freshLocalItem,
         remoteItem: remoteItem,
@@ -73,7 +72,18 @@ Future<void> _mergeRemoteIntoLocal(
 
     for (final TodoItem localItem in localItems) {
       if (!remoteIds.contains(localItem.id) && localItem.synchronized) {
-        await localRepository.delete(localItem.id);
+        // Re-read before delete for the same reason as remote saves: a local
+        // edit may have made this item pending after the initial snapshot.
+        final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
+        final Iterable<TodoItem> freshMatches = freshLocalItems.where(
+          (item) => item.id == localItem.id,
+        );
+        final TodoItem? freshLocalItem = freshMatches.isEmpty
+            ? null
+            : freshMatches.first;
+        if (freshLocalItem != null && freshLocalItem.synchronized) {
+          await localRepository.delete(localItem.id);
+        }
       }
     }
   } on Exception catch (error, stackTrace) {
