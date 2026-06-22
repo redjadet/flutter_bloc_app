@@ -59,6 +59,47 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `tool/check_mutation_success_after_guard.sh`
   `docs/changes/2026-06-15_mutation-success-guard.md`
 
+### 2026-06-22 - initState guard missed context.cubit generic form
+
+- What went wrong:
+  `check_inherited_widget_in_initstate.sh` matched `context.cubit(` only; therapy and websocket pages using `context.cubit<CallCubit>()` in `initState` passed the guard while still reading InheritedWidget too early.
+- How it was fixed:
+  Extended the guard for `context.cubit<` and allowed reads inside `addPostFrameCallback`; migrated violating pages to postFrameCallback + `mounted` before cubit calls.
+- Pattern:
+  Type-safe cubit access uses generics; static guards and audits must include the `<` form.
+- Preventive rule:
+  When adding `context.cubit<T>()` startup reads, verify the initState guard covers them; defer reads to postFrameCallback unless the guard explicitly allows in-callback access.
+- Evidence or affected files:
+  `tool/check_inherited_widget_in_initstate.sh`
+  `docs/changes/2026-06-22_batch-c-therapy-initstate-call-guard.md`
+
+### 2026-06-22 - Chat resetConversation emitted before persist
+
+- What went wrong:
+  `resetConversation` emitted cleared UI before history save finished; persist failure left UI cleared while storage still held prior conversation (`clearHistory` was already persist-first).
+- How it was fixed:
+  Persist-first via `CubitExceptionHandler`; emit cleared snapshot only after successful save; on failure keep prior state and surface error.
+- Pattern:
+  Destructive chat/history mutations must persist-before-emit, same as other history actions.
+- Preventive rule:
+  Any reset/clear path that mutates stored history should mirror `clearHistory` ordering and have a regression test for save failure.
+- Evidence or affected files:
+  `lib/features/chat/presentation/cubit/chat_cubit_history_actions.dart`
+  `test/chat_cubit_test.dart`
+
+### 2026-06-22 - GraphQL pull-to-refresh did not await cubit
+
+- What went wrong:
+  `RefreshIndicator.onRefresh` used `CubitHelpers.safeExecute` with a void callback, so the spinner dismissed before `cubit.refresh()` completed.
+- How it was fixed:
+  `onRefresh: () => cubit.refresh()` so the returned `Future` is awaited by `RefreshIndicator`.
+- Pattern:
+  Pull-to-refresh must return the cubit refresh `Future`; void wrapper helpers break the refresh contract.
+- Preventive rule:
+  For `RefreshIndicator`, pass `() => cubit.refresh()` or an explicit `async` handler that awaits — not void `safeExecute`.
+- Evidence or affected files:
+  `lib/features/graphql_demo/presentation/pages/graphql_demo_page.dart`
+
 ### 2026-04-17 - Caveman-lite is the default when suitable
 
 - Correction:

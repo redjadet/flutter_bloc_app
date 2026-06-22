@@ -134,6 +134,29 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     );
     final List<ChatConversation> history = _replaceConversation(conversation);
 
+    var persisted = false;
+    await CubitExceptionHandler.executeAsyncVoid(
+      operation: () => _historyRepository.save(history),
+      isAlive: () => !isClosed,
+      logContext: 'ChatCubit.resetConversation',
+      onSuccess: () => persisted = true,
+      onError: (final message) {
+        AppLogger.error('Chat reset persistence failed', message);
+        if (isClosed) {
+          return;
+        }
+        final ChatState current = _state;
+        emitState(
+          current.copyWith(
+            error: current.error ?? message,
+          ),
+        );
+      },
+    );
+    if (!persisted || isClosed) {
+      return;
+    }
+
     _emitConversationSnapshot(
       active: conversation,
       history: history,
@@ -141,7 +164,5 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       clearError: true,
       clearLastCompletionTransport: true,
     );
-
-    await _persistHistory(history);
   }
 }

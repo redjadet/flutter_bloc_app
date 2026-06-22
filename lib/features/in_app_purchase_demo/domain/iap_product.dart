@@ -26,6 +26,9 @@ class IapDemoProductIds {
   static const nonConsumablePremium = 'demo_nonconsumable_premium';
   static const subscriptionMonthly = 'demo_subscription_monthly';
 
+  /// Placeholder when the store stream errors without a product context.
+  static const unknownPurchaseStream = 'unknown_purchase_stream';
+
   static const all = <String>[
     consumableCredits100,
     nonConsumablePremium,

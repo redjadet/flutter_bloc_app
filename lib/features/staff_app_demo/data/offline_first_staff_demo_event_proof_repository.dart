@@ -182,6 +182,8 @@ class OfflineFirstStaffDemoEventProofRepository
   }
 
   @override
+  /// Intentional no-op: staff demo proofs are push-only; sync coordinator
+  /// registers this repo but remote pull is not part of the demo contract.
   Future<void> pullRemote() async {}
 
   bool _shouldQueueForOfflineRetry(final Object error) {

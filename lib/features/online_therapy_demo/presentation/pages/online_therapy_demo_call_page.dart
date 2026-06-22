@@ -20,7 +20,10 @@ class _OnlineTherapyDemoCallPageState extends State<OnlineTherapyDemoCallPage> {
   @override
   void initState() {
     super.initState();
-    unawaited(context.cubit<CallCubit>().refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(context.cubit<CallCubit>().refresh());
+    });
   }
 
   @override

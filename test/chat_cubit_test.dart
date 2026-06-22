@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_auth_session_port_adapter.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_auth_session_port_adapter.dart';
 import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
@@ -328,6 +328,35 @@ void main() {
       expect(cubit.state.hasError, isFalse);
       expect(cubit.state.error, isNull);
     });
+
+    test(
+      'resetConversation keeps prior state when persistence fails',
+      () async {
+        final FakeChatRepository repo = FakeChatRepository();
+        final _ThrowingChatHistoryRepository history =
+            _ThrowingChatHistoryRepository();
+        history.setShouldThrow(false);
+        final ChatCubit cubit = createCubit(
+          repository: repo,
+          historyRepository: history,
+        );
+
+        await cubit.sendMessage('Hello');
+        await pumpEventQueue();
+
+        final int priorMessageCount = cubit.state.messages.length;
+        final int priorHistoryCount = cubit.state.history.length;
+        expect(priorMessageCount, greaterThan(0));
+
+        history.setShouldThrow(true);
+        await cubit.resetConversation();
+        await pumpEventQueue();
+
+        expect(cubit.state.hasError, isTrue);
+        expect(cubit.state.messages.length, priorMessageCount);
+        expect(cubit.state.history.length, priorHistoryCount);
+      },
+    );
 
     test('sendMessage ignores re-entrant calls while loading', () async {
       final _DelayedChatRepository repo = _DelayedChatRepository(

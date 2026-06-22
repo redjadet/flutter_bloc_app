@@ -50,7 +50,18 @@ class OfflineFirstProfileRepository
       }
       // Return cached immediately and refresh in the background when online.
       // In-flight coalescing: concurrent callers share one refresh.
-      unawaited(_refreshAndCache());
+      unawaited(
+        _refreshAndCache().catchError((
+          final Object error,
+          final StackTrace st,
+        ) {
+          AppLogger.error(
+            'OfflineFirstProfileRepository background refresh failed',
+            error,
+            st,
+          );
+        }),
+      );
       return cached;
     }
 
@@ -94,16 +105,8 @@ class OfflineFirstProfileRepository
       _refreshCoalescer.run(() => _doRefreshAndCache());
 
   Future<void> _doRefreshAndCache() async {
-    try {
-      final ProfileUser profile = await _remoteRepository.getProfile();
-      await _saveProfileToCache(profile);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'OfflineFirstProfileRepository._refreshAndCache failed',
-        error,
-        stackTrace,
-      );
-    }
+    final ProfileUser profile = await _remoteRepository.getProfile();
+    await _saveProfileToCache(profile);
   }
 
   Future<void> _saveProfileToCache(final ProfileUser profile) async {
@@ -115,6 +118,7 @@ class OfflineFirstProfileRepository
         error,
         stackTrace,
       );
+      rethrow;
     }
   }
 }

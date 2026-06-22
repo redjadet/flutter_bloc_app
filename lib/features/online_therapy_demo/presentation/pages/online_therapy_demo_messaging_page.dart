@@ -21,7 +21,10 @@ class _OnlineTherapyDemoMessagingPageState
   @override
   void initState() {
     super.initState();
-    unawaited(context.cubit<MessagingCubit>().refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(context.cubit<MessagingCubit>().refresh());
+    });
   }
 
   @override

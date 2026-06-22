@@ -84,6 +84,45 @@ void main() {
       },
     );
 
+    test(
+      'emits error state when channel stream errors then reconnects',
+      () async {
+        final _MockWebSocketChannel channel = _MockWebSocketChannel();
+        final _MockWebSocketSink sink = _MockWebSocketSink();
+        final StreamController<dynamic> controller =
+            StreamController<dynamic>.broadcast();
+        when(() => channel.stream).thenAnswer((_) => controller.stream);
+        when(() => channel.sink).thenReturn(sink);
+        when(() => sink.add(any<dynamic>())).thenReturn(null);
+        when(() => sink.close()).thenAnswer((_) async {});
+
+        final EchoWebsocketRepository repository = EchoWebsocketRepository(
+          endpoint: Uri.parse('wss://echo.websocket.events'),
+          connector: (_) => channel,
+          connectionTimeout: Duration.zero,
+        );
+        final List<WebsocketConnectionState> states =
+            <WebsocketConnectionState>[];
+        final StreamSubscription<WebsocketConnectionState> stateSub = repository
+            .connectionStates
+            .listen(states.add);
+
+        await repository.connect();
+        controller.addError(Exception('transient stream failure'));
+        await Future<void>.delayed(Duration.zero);
+        expect(states.last.status, WebsocketStatus.error);
+
+        await repository.connect();
+        controller.add('after-reconnect');
+        await Future<void>.delayed(Duration.zero);
+        expect(states.last.status, WebsocketStatus.connected);
+
+        await stateSub.cancel();
+        await controller.close();
+        await repository.dispose();
+      },
+    );
+
     test('emits error state when connector throws', () async {
       final EchoWebsocketRepository repository = EchoWebsocketRepository(
         connector: (_) => throw Exception('unable to connect'),

@@ -20,22 +20,26 @@ class WebsocketDemoPage extends StatefulWidget {
 
 class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   final TextEditingController _messageController = TextEditingController();
-  late final WebsocketCubit _cubit;
+  WebsocketCubit? _cubit;
 
   @override
   void initState() {
     super.initState();
-    _cubit = context.cubit<WebsocketCubit>();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted) return;
-      await _cubit.connect();
+      final WebsocketCubit cubit = context.cubit<WebsocketCubit>();
+      _cubit = cubit;
+      await cubit.connect();
     });
   }
 
   @override
   void dispose() {
     _messageController.dispose();
-    unawaited(_cubit.disconnect());
+    final WebsocketCubit? cubit = _cubit;
+    if (cubit != null) {
+      unawaited(cubit.disconnect());
+    }
     super.dispose();
   }
 
@@ -44,7 +48,8 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
     if (raw.trim().isEmpty) {
       return;
     }
-    final bool didSend = await _cubit.sendMessage(raw);
+    final WebsocketCubit cubit = _cubit ?? context.cubit<WebsocketCubit>();
+    final bool didSend = await cubit.sendMessage(raw);
     if (didSend) {
       _messageController.clear();
     }

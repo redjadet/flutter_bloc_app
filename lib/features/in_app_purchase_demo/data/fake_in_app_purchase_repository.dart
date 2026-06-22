@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_entitl
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
+import 'package:meta/meta.dart';
 
 class FakeInAppPurchaseRepository
     implements InAppPurchaseRepository, IapFakeOutcomePort {
@@ -68,6 +69,21 @@ class FakeInAppPurchaseRepository
 
   @override
   Stream<IapPurchaseResult> watchPurchaseResults() => _resultsController.stream;
+
+  /// Simulates a platform purchase-stream failure for cubit regression tests.
+  @visibleForTesting
+  void simulatePurchaseStreamError(
+    final Object error, [
+    final StackTrace? stackTrace,
+  ]) {
+    _resultsController.addError(error, stackTrace ?? StackTrace.current);
+  }
+
+  /// Simulates a terminal purchase result on the results stream.
+  @visibleForTesting
+  void simulatePurchaseResult(final IapPurchaseResult result) {
+    _resultsController.add(result);
+  }
 
   @override
   Future<IapPurchaseResult> purchase(final IapProduct product) async {

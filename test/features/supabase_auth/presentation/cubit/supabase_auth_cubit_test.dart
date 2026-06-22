@@ -98,6 +98,33 @@ void main() {
       expect(authenticatedStates, hasLength(1));
     });
 
+    test('still receives auth events after stream error', () async {
+      final controller = StreamController<AuthUser?>.broadcast();
+      addTearDown(controller.close);
+
+      const user = AuthUser(id: 'uid', isAnonymous: false, email: 'a@b.c');
+      when(() => mockRepository.isConfigured).thenReturn(true);
+      when(() => mockRepository.currentUser).thenReturn(null);
+      when(
+        () => mockRepository.authStateChanges,
+      ).thenAnswer((_) => controller.stream);
+
+      await cubit.loadSession();
+      controller.addError(
+        const SupabaseAuthException(
+          'Network unavailable',
+          code: SupabaseAuthErrorCode.network,
+        ),
+        StackTrace.current,
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      controller.add(user);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state, SupabaseAuthState.authenticated(user));
+    });
+
     test('emits mapped error when auth state stream fails', () async {
       final controller = StreamController<AuthUser?>.broadcast();
       addTearDown(controller.close);

@@ -13,8 +13,14 @@ class _MessagingPanelState extends State<_MessagingPanel> {
   @override
   void initState() {
     super.initState();
-    final state = context.cubit<MessagingCubit>().state;
-    _controller = TextEditingController(text: state.draft ?? '');
+    _controller = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final draft = context.cubit<MessagingCubit>().state.draft ?? '';
+      if (_controller.text != draft) {
+        _controller.text = draft;
+      }
+    });
   }
 
   @override

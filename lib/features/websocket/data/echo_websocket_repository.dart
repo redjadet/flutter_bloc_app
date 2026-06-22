@@ -93,7 +93,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
         _handleIncoming,
         onError: _handleError,
         onDone: _handleDone,
-        cancelOnError: true,
+        cancelOnError: false,
       );
       _updateState(const WebsocketConnectionState.connected());
       _connectionCompleter.completeAndReset();

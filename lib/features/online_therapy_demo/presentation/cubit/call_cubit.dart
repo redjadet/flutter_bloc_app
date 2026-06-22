@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 class CallState {
   const CallState({
@@ -65,6 +66,10 @@ class CallCubit extends Cubit<CallState> {
 
   final AppointmentRepository _appointments;
   final TherapyCallRepository _calls;
+  final RequestIdGuard _operationGuard = RequestIdGuard();
+
+  bool _isRequestStillActive(final int requestId) =>
+      !isClosed && _operationGuard.isCurrent(requestId);
 
   void toggleCameraPermission({required final bool granted}) {
     emit(state.copyWith(cameraPermissionGranted: granted));
@@ -75,10 +80,12 @@ class CallCubit extends Cubit<CallState> {
   }
 
   Future<void> refresh() async {
+    final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true));
     await CubitExceptionHandler.executeAsync(
       operation: () => _appointments.listAppointmentsForCurrentRole(),
       onSuccess: (list) {
+        if (!_isRequestStillActive(requestId)) return;
         final currentSelection = state.selectedAppointmentId;
         final selected =
             currentSelection != null &&
@@ -87,7 +94,6 @@ class CallCubit extends Cubit<CallState> {
             : list.isEmpty
             ? null
             : list.first.id;
-        if (isClosed) return;
         emit(
           state.copyWith(
             isBusy: false,
@@ -100,7 +106,7 @@ class CallCubit extends Cubit<CallState> {
         );
       },
       onError: (message) {
-        if (isClosed) return;
+        if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, errorMessage: message));
       },
       logContext: 'CallCubit.refresh',

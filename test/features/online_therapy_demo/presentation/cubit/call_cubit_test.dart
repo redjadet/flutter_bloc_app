@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
@@ -122,6 +124,38 @@ void main() {
       expect(cubit.state.isBusy, isFalse);
       expect(cubit.state.errorMessage, isNotNull);
     });
+
+    test('stale refresh does not overwrite newer appointments', () async {
+      final delayedRepo = _DelayedAppointmentRepository(
+        first: <Appointment>[sampleAppointment],
+        second: <Appointment>[
+          Appointment(
+            id: 'appt-2',
+            therapistId: 'therapist-1',
+            clientId: 'client-1',
+            startAt: DateTime.utc(2026, 4, 23, 10),
+            endAt: DateTime.utc(2026, 4, 23, 11),
+            status: AppointmentStatus.confirmed,
+            createdAt: DateTime.utc(2026, 4, 21),
+          ),
+        ],
+      );
+      final cubit = CallCubit(
+        appointments: delayedRepo,
+        calls: _FakeCallRepository(),
+      );
+      addTearDown(cubit.close);
+
+      unawaited(cubit.refresh());
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      await cubit.refresh();
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.selectedAppointmentId, 'appt-2');
+      expect(cubit.state.appointments.length, 1);
+      expect(cubit.state.appointments.single.id, 'appt-2');
+    });
   });
 }
 
@@ -146,6 +180,37 @@ class _FakeAppointmentRepository implements AppointmentRepository {
   @override
   Future<List<Appointment>> listAppointmentsForCurrentRole() async =>
       listResult;
+}
+
+class _DelayedAppointmentRepository implements AppointmentRepository {
+  _DelayedAppointmentRepository({required this.first, required this.second});
+
+  final List<Appointment> first;
+  final List<Appointment> second;
+  int _callCount = 0;
+
+  @override
+  Future<Appointment> cancelAppointment({
+    required String appointmentId,
+    required String reason,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<Appointment> createAppointment({
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<List<Appointment>> listAppointmentsForCurrentRole() async {
+    _callCount++;
+    if (_callCount == 1) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      return first;
+    }
+    return second;
+  }
 }
 
 class _ThrowingAppointmentRepository implements AppointmentRepository {

@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purcha
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     with CubitSubscriptionMixin<InAppPurchaseDemoState> {
@@ -17,12 +18,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     this._fakeOutcomeControls,
     this._realDemoControls,
   }) : super(const InAppPurchaseDemoState()) {
-    _sub = registerSubscription(
-      _activeRepository.watchPurchaseResults().listen(
-        _onPurchaseResult,
-        onError: (final Object error, final StackTrace stackTrace) {},
-      ),
-    );
+    _subscribePurchaseResults();
   }
 
   final InAppPurchaseRepository _fakeRepository;
@@ -74,7 +70,6 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
 
   Future<void> toggleRepository({required final bool useFake}) async {
     if (state.isBusy) return;
-
     _attempt++;
     emit(
       state.copyWith(
@@ -83,17 +78,10 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         errorMessage: null,
       ),
     );
-
     final StreamSubscription<IapPurchaseResult>? previousSubscription = _sub;
     _sub = null;
     await cancelRegisteredSubscription(previousSubscription);
-    _sub = registerSubscription(
-      _activeRepository.watchPurchaseResults().listen(
-        _onPurchaseResult,
-        onError: (final Object error, final StackTrace stackTrace) {},
-      ),
-    );
-
+    _subscribePurchaseResults();
     await initialize();
   }
 
@@ -117,17 +105,13 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         errorMessage: null,
       ),
     );
-
     try {
       final result = await _activeRepository.purchase(product);
-      // If repository returns an immediate result (fake repo), surface it.
-      if (attempt == _attempt) {
-        if (isClosed) return;
+      if (attempt == _attempt && !isClosed) {
         emit(state.copyWith(lastResult: result));
       }
     } on Exception catch (e) {
-      if (attempt != _attempt) return;
-      if (isClosed) return;
+      if (attempt != _attempt || isClosed) return;
       emit(
         state.copyWith(
           lastResult: IapPurchaseResult.failure(
@@ -137,15 +121,13 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         ),
       );
     } finally {
-      if (attempt == _attempt) {
-        if (!isClosed) {
-          emit(
-            state.copyWith(
-              isBusy: false,
-              status: InAppPurchaseDemoStatus.ready,
-            ),
-          );
-        }
+      if (attempt == _attempt && !isClosed) {
+        emit(
+          state.copyWith(
+            isBusy: false,
+            status: InAppPurchaseDemoStatus.ready,
+          ),
+        );
       }
     }
   }
@@ -162,32 +144,22 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
         errorMessage: null,
       ),
     );
-
     try {
       await _activeRepository.restorePurchases();
       final entitlements = await _activeRepository.refreshEntitlements();
-      if (attempt != _attempt) return;
-      if (isClosed) return;
-      emit(
-        state.copyWith(
-          entitlements: entitlements,
-          lastResult: null,
-        ),
-      );
+      if (attempt != _attempt || isClosed) return;
+      emit(state.copyWith(entitlements: entitlements, lastResult: null));
     } on Exception catch (e) {
-      if (attempt != _attempt) return;
-      if (isClosed) return;
+      if (attempt != _attempt || isClosed) return;
       emit(state.copyWith(errorMessage: e.toString()));
     } finally {
-      if (attempt == _attempt) {
-        if (!isClosed) {
-          emit(
-            state.copyWith(
-              isBusy: false,
-              status: InAppPurchaseDemoStatus.ready,
-            ),
-          );
-        }
+      if (attempt == _attempt && !isClosed) {
+        emit(
+          state.copyWith(
+            isBusy: false,
+            status: InAppPurchaseDemoStatus.ready,
+          ),
+        );
       }
     }
   }
@@ -198,11 +170,45 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     emit(state.copyWith(entitlements: entitlements));
   }
 
+  void _subscribePurchaseResults() {
+    _sub = registerSubscription(
+      _activeRepository.watchPurchaseResults().listen(
+        _onPurchaseResult,
+        onError: _onPurchaseStreamError,
+      ),
+    );
+  }
+
   Future<void> _onPurchaseResult(final IapPurchaseResult result) async {
-    // Latest-attempt-wins: accept purchase stream updates but never regress busy state.
     if (isClosed) return;
-    emit(state.copyWith(lastResult: result));
+    final bool isPending = result.maybeWhen(
+      pending: (_, _) => true,
+      orElse: () => false,
+    );
+    emit(
+      state.copyWith(
+        lastResult: result,
+        isBusy: isPending && state.isBusy,
+        status: isPending ? state.status : InAppPurchaseDemoStatus.ready,
+      ),
+    );
     await refreshEntitlements();
+  }
+
+  void _onPurchaseStreamError(final Object error, final StackTrace stackTrace) {
+    AppLogger.error(
+      'InAppPurchaseDemoCubit.watchPurchaseResults',
+      error,
+      stackTrace,
+    );
+    if (isClosed) return;
+    emit(
+      state.copyWith(
+        status: InAppPurchaseDemoStatus.error,
+        isBusy: false,
+        errorMessage: error.toString(),
+      ),
+    );
   }
 
   @override
