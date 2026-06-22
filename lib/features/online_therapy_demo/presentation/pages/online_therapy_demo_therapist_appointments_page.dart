@@ -22,7 +22,10 @@ class _OnlineTherapyDemoTherapistAppointmentsPageState
   @override
   void initState() {
     super.initState();
-    unawaited(context.cubit<TherapistHomeCubit>().refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(context.cubit<TherapistHomeCubit>().refresh());
+    });
   }
 
   @override

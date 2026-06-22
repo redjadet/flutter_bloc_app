@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_entitl
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/in_app_purchase_repository.dart';
+import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
 part 'flutter_in_app_purchase_repository_purchases.part.dart';

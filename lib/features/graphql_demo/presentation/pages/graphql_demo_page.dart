@@ -63,12 +63,7 @@ class GraphqlDemoPage extends StatelessWidget {
           // Only rebuild body when countries/error/loading changes
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async {
-                CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
-                  context,
-                  (final cubit) => cubit.refresh(),
-                );
-              },
+              onRefresh: () => context.cubit<GraphqlDemoCubit>().refresh(),
               child:
                   ViewStatusSwitcher<
                     GraphqlDemoCubit,

@@ -106,8 +106,15 @@ class _LoginPanelState extends State<_LoginPanel> {
   @override
   void initState() {
     super.initState();
-    final state = context.cubit<OnlineTherapyDemoSessionCubit>().state;
-    _controller = TextEditingController(text: state.emailDraft ?? '');
+    _controller = TextEditingController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final emailDraft =
+          context.cubit<OnlineTherapyDemoSessionCubit>().state.emailDraft ?? '';
+      if (_controller.text != emailDraft) {
+        _controller.text = emailDraft;
+      }
+    });
   }
 
   @override

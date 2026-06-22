@@ -7,6 +7,12 @@ that.
 
 ## Index
 
+- [`2026-06-22_bug-hunt-inventory.md`](2026-06-22_bug-hunt-inventory.md): Full-repo bug hunt — mechanical inventory, 34-feature audit worksheet, disposition table (B–D fixes + deferred B6–B10/D4/D7).
+- [`2026-06-22_batch-b-stream-error-hardening.md`](2026-06-22_batch-b-stream-error-hardening.md): Stream error hardening — supabase `cancelOnError: false`, IAP/websocket/IoT purchase or watch paths.
+- [`2026-06-22_batch-c-therapy-initstate-call-guard.md`](2026-06-22_batch-c-therapy-initstate-call-guard.md): Therapy `CallCubit` `RequestIdGuard`, initState → postFrameCallback (10 files), initState guard regex for `context.cubit<`.
+- [`2026-06-22_batch-d-data-chat-profile-graphql.md`](2026-06-22_batch-d-data-chat-profile-graphql.md): Chat reset persist-first, profile `pullRemote` failure propagation, GraphQL refresh await.
+- [`2026-06-22_batch-e-feature-audit-closeout.md`](2026-06-22_batch-e-feature-audit-closeout.md): 34-feature audit closeout — repro-first deferrals (B7–B10, D4, D7), staff `pullRemote` documented + test.
+- [`2026-06-22_batch-f-ship-proof.md`](2026-06-22_batch-f-ship-proof.md): Full checklist + iOS integration proof; review follow-ups (IAP terminal/unknown product, profile cache rethrow).
 - [`2026-06-22_todo-remote-merge-toctou.md`](2026-06-22_todo-remote-merge-toctou.md): Todo list-entity remote merge TOCTOU — re-read before save/delete, full counter/todo regression parity (pullRemote + watch, static stale-remote + TOCTOU), `dont_overwrite_guide` + remote-merge guard inventory.
 - [`2026-06-19_senior-patterns-reduce-surprise.md`](2026-06-19_senior-patterns-reduce-surprise.md): Reduce-surprise program — DTO boundaries, sealed states, domain policies, typed errors; agent guide + AP-11…17; scorecard closeout.
 - [`2026-06-16_staff-demo-plugin-hardening.md`](2026-06-16_staff-demo-plugin-hardening.md): Staff demo plugin audit — `Result`/`Failure` at location/media seams, proof photo picker port + DI, camera_gallery failure mapper, regression tests, storage/plugin-failure docs.

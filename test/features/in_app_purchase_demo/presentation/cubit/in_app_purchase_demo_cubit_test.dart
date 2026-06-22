@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
+import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,6 +63,60 @@ void main() {
       },
       verify: (final cubit) {
         expect(cubit.state.entitlements.credits, greaterThanOrEqualTo(100));
+      },
+    );
+
+    blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
+      'purchase stream error clears busy state and surfaces message',
+      build: buildCubit,
+      act: (final cubit) async {
+        await cubit.initialize();
+        fakeRepo.simulatePurchaseStreamError(Exception('store stream failed'));
+        await Future<void>.delayed(Duration.zero);
+      },
+      verify: (final cubit) {
+        expect(cubit.state.status, InAppPurchaseDemoStatus.error);
+        expect(cubit.state.isBusy, isFalse);
+        expect(cubit.state.errorMessage, contains('store stream failed'));
+      },
+    );
+
+    blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
+      'terminal failure result clears busy state and returns to ready',
+      build: buildCubit,
+      act: (final cubit) async {
+        await cubit.initialize();
+        final consumable = cubit.state.products.firstWhere(
+          (p) => p.type == IapProductType.consumable,
+        );
+        fakeRepo.forcedOutcome = IapDemoForcedOutcome.success;
+        final buyFuture = cubit.buy(consumable);
+        await Future<void>.delayed(Duration.zero);
+        fakeRepo.simulatePurchaseResult(
+          IapPurchaseResult.failure(
+            productId: consumable.id,
+            message: 'purchase failed',
+          ),
+        );
+        await buyFuture;
+        await Future<void>.delayed(Duration.zero);
+      },
+      verify: (final cubit) {
+        expect(cubit.state.status, InAppPurchaseDemoStatus.ready);
+        expect(cubit.state.isBusy, isFalse);
+        expect(
+          cubit.state.lastResult,
+          isA<IapPurchaseResult>().having(
+            (r) => r.maybeWhen(
+              failure: (id, message) =>
+                  id == IapDemoProductIds.consumableCredits100 &&
+                  message == 'purchase failed',
+              orElse: () => false,
+            ),
+            'failure result',
+            isTrue,
+          ),
+        );
       },
     );
 

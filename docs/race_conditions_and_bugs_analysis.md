@@ -162,10 +162,25 @@ The project's automated checks (`./bin/checklist`) cover:
 
 These align with the patterns analyzed above. The codebase consistently follows the lifecycle rules.
 
----
-
 ## 6. Related Documentation
 
 - [Validation Scripts](validation_scripts.md) – Automated lifecycle checks
 - [CODE_QUALITY.md](CODE_QUALITY.md) – Quality expectations and historical fixes
 - [Architecture Details](architecture_details.md) – Architecture overview
+
+---
+
+## 7. 2026-06-22 full-repo bug hunt (addendum)
+
+Point-in-time program: mechanical ripgrep inventory, repro-first fixes, 34-feature audit worksheet. **Owner:** [`changes/2026-06-22_bug-hunt-inventory.md`](changes/2026-06-22_bug-hunt-inventory.md).
+
+| Bug class | Mitigation |
+| --- | --- |
+| `cancelOnError: true` on long-lived auth/connection streams | `cancelOnError: false` + error handler (supabase auth, websocket echo, IoT device watch) |
+| Empty purchase-stream `onError` (IAP) | Emit error state + clear busy flag |
+| `context.cubit<T>()` in `initState` (guard false negative) | Post-frame callback + `mounted`; extend `check_inherited_widget_in_initstate.sh` |
+| `RequestIdGuard` missing on therapy `CallCubit.refresh` | Guard + overlapping-refresh regression test |
+| Chat `resetConversation` emit-before-persist | Persist-first; keep prior state on save failure |
+| Counter remote-watch merge tests flaky under load | Poll-until-stable helpers (not fixed `Future.delayed`) |
+
+Deferred without repro in timebox: deeplink init `CubitExceptionHandler` dead `onError`, realtime/counter/todo badge `onError`, chat kill-mid-persist, DI `ensureConfigured`.

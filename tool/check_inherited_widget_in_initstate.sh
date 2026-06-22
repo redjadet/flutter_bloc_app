@@ -46,6 +46,7 @@ while IFS= read -r file; do
       BEGIN {
         in_init = 0
         brace_depth = 0
+        post_frame_entry_depth = 0
       }
       {
         line = $0
@@ -58,20 +59,28 @@ while IFS= read -r file; do
           in_init = 1
           brace_depth = update_brace_depth(stripped)
           started_this_line = 1
+          post_frame_entry_depth = 0
         }
 
         if (in_init) {
+          if (stripped ~ /addPostFrameCallback/) {
+            post_frame_entry_depth = brace_depth + 1
+          }
+
           has_inherited_read = \
             (stripped ~ /context\.l10n/ || \
              stripped ~ /Theme\.of[[:space:]]*\([^)]*context[^)]*\)/ || \
              stripped ~ /Localizations\.of[[:space:]]*\([^)]*context[^)]*\)/ || \
              stripped ~ /AppLocalizations\.of[[:space:]]*\([^)]*context[^)]*\)/ || \
-             stripped ~ /context\.(bloc|cubit|read|watch|watchCubit|watchBloc|state|watchState|selectState|tryBloc|tryCubit)[[:space:]]*\(/ || \
+             stripped ~ /context\.(bloc|cubit|read|watch|watchCubit|watchBloc|state|watchState|selectState|tryBloc|tryCubit)[[:space:]]*(\(|<)/ || \
              stripped ~ /BlocProvider\.of[[:space:]]*</ || \
              stripped ~ /context\.ensureSyncStartedIfAvailable[[:space:]]*\(/ || \
              stripped ~ /CubitHelpers\.(isCubitAvailable|getCurrentState|safeExecute|safeExecuteWithResult)[^;]*context/)
 
-          if (has_inherited_read && line !~ /check-ignore/) {
+          inside_post_frame = \
+            post_frame_entry_depth > 0 && brace_depth >= post_frame_entry_depth
+
+          if (has_inherited_read && !inside_post_frame && line !~ /check-ignore/) {
             print file ":" NR ":" line
           }
 
@@ -81,6 +90,9 @@ while IFS= read -r file; do
           if (brace_depth <= 0) {
             in_init = 0
             brace_depth = 0
+            post_frame_entry_depth = 0
+          } else if (post_frame_entry_depth > 0 && brace_depth < post_frame_entry_depth) {
+            post_frame_entry_depth = 0
           }
         }
       }

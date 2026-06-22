@@ -80,7 +80,7 @@ extension _IotDemoCubitDevices on IotDemoCubit {
             ),
           );
         },
-        cancelOnError: true,
+        cancelOnError: false,
       ),
     );
   }

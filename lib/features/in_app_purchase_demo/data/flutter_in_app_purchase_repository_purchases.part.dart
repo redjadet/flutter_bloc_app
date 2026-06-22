@@ -5,7 +5,27 @@ extension _FlutterInAppPurchaseRepositoryPurchases
   void ensurePurchaseSubscriptionImpl() {
     _purchaseSub ??= _store.purchaseStream.listen(
       onPurchaseUpdatesImpl,
-      onError: (final Object error, final StackTrace st) {},
+      onError: onPurchaseStreamErrorImpl,
+    );
+  }
+
+  void onPurchaseStreamErrorImpl(
+    final Object error,
+    final StackTrace stackTrace,
+  ) {
+    AppLogger.error(
+      'FlutterInAppPurchaseRepository.purchaseStream',
+      error,
+      stackTrace,
+    );
+    if (_resultsController.isClosed) {
+      return;
+    }
+    _resultsController.add(
+      IapPurchaseResult.failure(
+        productId: IapDemoProductIds.unknownPurchaseStream,
+        message: error.toString(),
+      ),
     );
   }
 

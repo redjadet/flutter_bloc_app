@@ -45,6 +45,27 @@ class _StubProfileRepository implements ProfileRepository {
   }
 }
 
+class _FailingSaveProfileCacheRepository implements ProfileCacheRepository {
+  @override
+  Future<ProfileUser?> loadProfile() async => null;
+
+  @override
+  Future<void> saveProfile(final ProfileUser profile) async {
+    throw Exception('cache write failed');
+  }
+
+  @override
+  Future<void> clearProfile() async {}
+
+  @override
+  Future<ProfileCacheMetadata> loadMetadata() async =>
+      const ProfileCacheMetadata(
+        hasProfile: false,
+        lastSyncedAt: null,
+        sizeBytes: null,
+      );
+}
+
 class _CompletingProfileCacheRepository implements ProfileCacheRepository {
   _CompletingProfileCacheRepository({
     required this._delegate,
@@ -235,6 +256,57 @@ void main() {
           );
 
       expect(repository.getProfile, throwsA(isA<Exception>()));
+    });
+
+    test('pullRemote propagates remote failure and keeps cache', () async {
+      await cacheRepository.saveProfile(cachedUser);
+      final _StubProfileRepository remote = _StubProfileRepository(
+        onGetProfile: () async {
+          throw Exception('network');
+        },
+      );
+
+      final OfflineFirstProfileRepository repository =
+          OfflineFirstProfileRepository(
+            remoteRepository: remote,
+            cacheRepository: cacheRepository,
+            networkStatusService: networkStatus,
+            registry: registry,
+          );
+
+      await expectLater(repository.pullRemote(), throwsA(isA<Exception>()));
+      final ProfileUser? cached = await cacheRepository.loadProfile();
+      expect(cached!.name, cachedUser.name);
+    });
+
+    test('pullRemote propagates cache save failure', () async {
+      final _StubProfileRepository remote = _StubProfileRepository(
+        onGetProfile: () async => remoteUser,
+      );
+      final OfflineFirstProfileRepository repository =
+          OfflineFirstProfileRepository(
+            remoteRepository: remote,
+            cacheRepository: _FailingSaveProfileCacheRepository(),
+            networkStatusService: networkStatus,
+            registry: registry,
+          );
+
+      await expectLater(repository.pullRemote(), throwsA(isA<Exception>()));
+    });
+
+    test('cold getProfile propagates cache save failure', () async {
+      final _StubProfileRepository remote = _StubProfileRepository(
+        onGetProfile: () async => remoteUser,
+      );
+      final OfflineFirstProfileRepository repository =
+          OfflineFirstProfileRepository(
+            remoteRepository: remote,
+            cacheRepository: _FailingSaveProfileCacheRepository(),
+            networkStatusService: networkStatus,
+            registry: registry,
+          );
+
+      await expectLater(repository.getProfile(), throwsA(isA<Exception>()));
     });
   });
 }

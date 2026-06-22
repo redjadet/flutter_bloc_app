@@ -80,6 +80,44 @@ class _StreamRemoteRepository
   Stream<CounterSnapshot> watch() => controller.stream;
 }
 
+Future<CounterSnapshot> _waitForLocalCount(
+  final CounterRepository repository,
+  final int expectedCount, {
+  final Duration timeout = const Duration(seconds: 2),
+}) async {
+  final DateTime deadline = DateTime.now().add(timeout);
+  while (DateTime.now().isBefore(deadline)) {
+    final CounterSnapshot snapshot = await repository.load();
+    if (snapshot.count == expectedCount) {
+      return snapshot;
+    }
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+  }
+  return repository.load();
+}
+
+Future<void> _waitForWatchMergeSettled(
+  final CounterRepository repository, {
+  final Duration timeout = const Duration(seconds: 2),
+}) async {
+  final DateTime deadline = DateTime.now().add(timeout);
+  var stableReads = 0;
+  CounterSnapshot? previous;
+  while (DateTime.now().isBefore(deadline)) {
+    final CounterSnapshot current = await repository.load();
+    if (previous != null && current.count == previous.count) {
+      stableReads++;
+      if (stableReads >= 3) {
+        return;
+      }
+    } else {
+      stableReads = 0;
+    }
+    previous = current;
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+  }
+}
+
 void main() {
   group('OfflineFirstCounterRepository', () {
     late Directory tempDir;
@@ -279,10 +317,7 @@ void main() {
         final DateTime remoteChanged = DateTime(2024, 1, 2, 12);
         final DateTime newerChanged = DateTime(2024, 1, 3, 12);
         final _FakeRemoteRepository remote = _FakeRemoteRepository(
-          initial: CounterSnapshot(
-            count: 5,
-            lastChanged: remoteChanged,
-          ),
+          initial: CounterSnapshot(count: 5, lastChanged: remoteChanged),
         );
         final _ReReadAwareLocalRepository local = _ReReadAwareLocalRepository(
           localRepository,
@@ -353,7 +388,7 @@ void main() {
         remote.controller.add(
           CounterSnapshot(count: 4, lastChanged: DateTime(2024, 1, 1, 12)),
         );
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await _waitForWatchMergeSettled(localRepository);
 
         final CounterSnapshot local = await localRepository.load();
         expect(local.count, 5);
@@ -406,9 +441,10 @@ void main() {
         remote.controller.add(
           CounterSnapshot(count: 5, lastChanged: DateTime(2024, 1, 2, 12)),
         );
-        await Future<void>.delayed(const Duration(milliseconds: 20));
-
-        final CounterSnapshot stored = await localRepository.load();
+        final CounterSnapshot stored = await _waitForLocalCount(
+          localRepository,
+          4,
+        );
         expect(stored.count, 4);
         expect(stored.lastChanged, DateTime(2024, 1, 3, 12));
 
@@ -442,7 +478,7 @@ void main() {
         remote.controller.add(
           CounterSnapshot(count: 4, lastChanged: DateTime(2024, 1, 1, 12)),
         );
-        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await _waitForWatchMergeSettled(localRepository);
 
         final CounterSnapshot local = await localRepository.load();
         expect(local.count, 5);
@@ -457,10 +493,7 @@ void main() {
         final DateTime pendingChanged = DateTime(2024, 1, 1, 12);
         final DateTime remoteChanged = DateTime(2024, 1, 2, 12);
         final _FakeRemoteRepository remote = _FakeRemoteRepository(
-          initial: CounterSnapshot(
-            count: 10,
-            lastChanged: remoteChanged,
-          ),
+          initial: CounterSnapshot(count: 10, lastChanged: remoteChanged),
         );
         final OfflineFirstCounterRepository repository =
             OfflineFirstCounterRepository(

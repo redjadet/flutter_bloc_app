@@ -6,14 +6,14 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_constants.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
+import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_constants.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -204,6 +204,29 @@ void main() {
 
       verifyNever(() => storage.ref(any()));
       verifyNever(() => pendingSyncRepository.enqueue(any()));
+    });
+
+    test('pullRemote is intentional no-op for push-only proof sync', () async {
+      final firestore = _MockFirebaseFirestore();
+      final storage = _MockFirebaseStorage();
+      final pendingSyncRepository = _MockPendingSyncRepository();
+      final registry = _MockSyncableRepositoryRegistry();
+      final operationFactory = _MockStaffDemoEventProofSyncOperationFactory();
+      final proofFileStore = _DiskProofFileStore();
+
+      when(() => registry.register(any())).thenReturn(null);
+
+      final repository = OfflineFirstStaffDemoEventProofRepository(
+        firestore: firestore,
+        storage: storage,
+        pendingSyncRepository: pendingSyncRepository,
+        registry: registry,
+        operationFactory: operationFactory,
+        proofFileStore: proofFileStore,
+        proofIdFactory: () => 'proof-no-pull',
+      );
+
+      await expectLater(repository.pullRemote(), completes);
     });
   });
 }

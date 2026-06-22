@@ -42,7 +42,7 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
       _repository.authStateChanges.listen(
         _handleAuthStateChanged,
         onError: _handleAuthStateError,
-        cancelOnError: true,
+        cancelOnError: false,
       ),
     );
   }

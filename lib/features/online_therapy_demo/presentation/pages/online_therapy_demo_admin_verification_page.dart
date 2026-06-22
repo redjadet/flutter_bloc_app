@@ -22,7 +22,10 @@ class _OnlineTherapyDemoAdminVerificationPageState
   @override
   void initState() {
     super.initState();
-    unawaited(context.cubit<AdminCubit>().refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(context.cubit<AdminCubit>().refresh());
+    });
   }
 
   @override

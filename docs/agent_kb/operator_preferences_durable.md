@@ -68,6 +68,9 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Repo Guardrails
 
+- **`tool/check_inherited_widget_in_initstate.sh`:** Match `context.cubit<` (not only `context.cubit(`); allow inherited reads inside `addPostFrameCallback`. Fixes → postFrameCallback + `mounted` ([`changes/2026-06-22_batch-c-therapy-initstate-call-guard.md`](../changes/2026-06-22_batch-c-therapy-initstate-call-guard.md)).
+- **Dense `docs/changes/` inventory tables:** Wide pipe tables may need `<!-- markdownlint-disable MD060 -->` at file top (bug-hunt inventory precedent).
+- **Stream bug-hunt inventory:** Before stream hardening, ripgrep `cancelOnError:\s*true` and `onError:\s*\(_\)\s*\{\s*\}` under `lib/`; repro-first per hit ([`changes/2026-06-22_batch-b-stream-error-hardening.md`](../changes/2026-06-22_batch-b-stream-error-hardening.md)).
 - **`file_too_long`:** split into `*.part.dart`; do not raise `defaultMaxLines` to hide the lint.
 - **RequestIdGuard after mutation:** successful write then `return false` when guard superseded = false-failure UI; return success instead. Static guard `tool/check_mutation_success_after_guard.sh`; optional local pre-commit via `./bin/install-git-hooks`. [`changes/2026-06-15_mutation-success-guard.md`](../changes/2026-06-15_mutation-success-guard.md).
 - **Orphan codegen:** orphan `*.g.dart` / `*.freezed.dart` with no matching source are safe to delete; regenerate when source exists.
