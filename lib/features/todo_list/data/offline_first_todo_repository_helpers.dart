@@ -1,5 +1,24 @@
 part of 'offline_first_todo_repository.dart';
 
+bool _shouldMergeRemoteItem({
+  required final TodoItem? localItem,
+  required final TodoItem remoteItem,
+  required final bool Function(TodoItem? localItem, TodoItem remoteItem)
+  shouldApplyRemote,
+}) {
+  if (localItem != null && localItem.updatedAt.isAfter(remoteItem.updatedAt)) {
+    return false;
+  }
+  if (localItem != null && !localItem.synchronized) {
+    // Preserve local pending changes until they sync.
+    if (localItem.changeId == null ||
+        localItem.changeId != remoteItem.changeId) {
+      return false;
+    }
+  }
+  return shouldApplyRemote(localItem, remoteItem);
+}
+
 Future<void> _mergeRemoteIntoLocal(
   final HiveTodoRepository localRepository,
   final List<TodoItem> remoteItems,
@@ -12,38 +31,59 @@ Future<void> _mergeRemoteIntoLocal(
     final Map<String, TodoItem> localMap = {
       for (final TodoItem item in localItems) item.id: item,
     };
-    final Set<String> remoteIds = remoteItems
-        .map((final item) => item.id)
-        .toSet();
+    final Set<String> remoteIds = remoteItems.map((item) => item.id).toSet();
 
     // Merge remote items into local, applying conflict resolution
     for (final TodoItem remoteItem in remoteItems) {
       final TodoItem? localItem = localMap[remoteItem.id];
-      if (localItem != null &&
-          localItem.updatedAt.isAfter(remoteItem.updatedAt)) {
+      if (!_shouldMergeRemoteItem(
+        localItem: localItem,
+        remoteItem: remoteItem,
+        shouldApplyRemote: shouldApplyRemote,
+      )) {
         continue;
       }
-      if (localItem != null && !localItem.synchronized) {
-        // Preserve local pending changes until they sync.
-        if (localItem.changeId == null ||
-            localItem.changeId != remoteItem.changeId) {
-          continue;
-        }
+
+      // Re-read before save so a local write during the initial fetch cannot be
+      // overwritten by a stale remote decision (TOCTOU).
+      final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
+      final Iterable<TodoItem> freshMatches = freshLocalItems.where(
+        (item) => item.id == remoteItem.id,
+      );
+      final TodoItem? freshLocalItem = freshMatches.isEmpty
+          ? null
+          : freshMatches.first;
+      if (!_shouldMergeRemoteItem(
+        localItem: freshLocalItem,
+        remoteItem: remoteItem,
+        shouldApplyRemote: shouldApplyRemote,
+      )) {
+        continue;
       }
-      if (shouldApplyRemote(localItem, remoteItem)) {
-        await localRepository.save(
-          remoteItem.copyWith(
-            changeId: remoteItem.changeId ?? generateChangeId(),
-            lastSyncedAt: DateTime.now().toUtc(),
-            synchronized: true,
-          ),
-        );
-      }
+
+      await localRepository.save(
+        remoteItem.copyWith(
+          changeId: remoteItem.changeId ?? generateChangeId(),
+          lastSyncedAt: DateTime.now().toUtc(),
+          synchronized: true,
+        ),
+      );
     }
 
     for (final TodoItem localItem in localItems) {
       if (!remoteIds.contains(localItem.id) && localItem.synchronized) {
-        await localRepository.delete(localItem.id);
+        // Re-read before delete for the same reason as remote saves: a local
+        // edit may have made this item pending after the initial snapshot.
+        final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
+        final Iterable<TodoItem> freshMatches = freshLocalItems.where(
+          (item) => item.id == localItem.id,
+        );
+        final TodoItem? freshLocalItem = freshMatches.isEmpty
+            ? null
+            : freshMatches.first;
+        if (freshLocalItem != null && freshLocalItem.synchronized) {
+          await localRepository.delete(localItem.id);
+        }
       }
     }
   } on Exception catch (error, stackTrace) {
