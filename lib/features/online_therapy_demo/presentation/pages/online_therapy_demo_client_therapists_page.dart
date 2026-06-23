@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
@@ -33,14 +34,13 @@ class _OnlineTherapyDemoClientTherapistsPageState
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (final state) => state.isBusy,
         );
-    final verifiedTherapists = context
-        .selectState<
-          ClientBookingCubit,
-          ClientBookingState,
-          List<TherapistProfile>
-        >(
-          selector: (final state) => state.verifiedTherapists,
-        );
+    final _VerifiedTherapistsViewData verifiedTherapists = context.selectState<
+      ClientBookingCubit,
+      ClientBookingState,
+      _VerifiedTherapistsViewData
+    >(
+      selector: _VerifiedTherapistsViewData.fromState,
+    );
     final cubit = context.cubit<ClientBookingCubit>();
 
     return CommonPageLayout(
@@ -49,7 +49,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
         onRefresh: cubit.loadTherapists,
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
-          itemCount: verifiedTherapists.length + 1,
+          itemCount: verifiedTherapists.items.length + 1,
           separatorBuilder: (final context, final index) =>
               const Divider(height: 1),
           itemBuilder: (context, index) {
@@ -65,7 +65,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
               );
             }
 
-            final t = verifiedTherapists[index - 1];
+            final t = verifiedTherapists.items[index - 1];
             return ListTile(
               key: ValueKey<String>('online-therapy-therapist-${t.id}'),
               title: Text(
@@ -95,6 +95,28 @@ class _OnlineTherapyDemoClientTherapistsPageState
       ),
     );
   }
+}
+
+@immutable
+class _VerifiedTherapistsViewData {
+  const _VerifiedTherapistsViewData(this.items);
+
+  factory _VerifiedTherapistsViewData.fromState(
+    final ClientBookingState state,
+  ) =>
+      _VerifiedTherapistsViewData(state.verifiedTherapists);
+
+  final List<TherapistProfile> items;
+
+  static const DeepCollectionEquality _eq = DeepCollectionEquality();
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) ||
+      other is _VerifiedTherapistsViewData && _eq.equals(other.items, items);
+
+  @override
+  int get hashCode => _eq.hash(items);
 }
 
 // eof
