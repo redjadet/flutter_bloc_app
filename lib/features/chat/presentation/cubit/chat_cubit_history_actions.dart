@@ -79,6 +79,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
   }
 
   Future<void> deleteConversation(final String conversationId) async {
+    _bumpPersistEpoch();
     final int requestId = nextRequestId();
     final List<ChatConversation> history = List<ChatConversation>.from(
       state.history,

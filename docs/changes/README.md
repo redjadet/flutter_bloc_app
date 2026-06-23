@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-06-23_business-logic-ui-separation.md`](2026-06-23_business-logic-ui-separation.md): Business logic / UI separation — derived state getters, staff shift assignment cubit/domain defaults, chat relative-time helper, agent guidance.
+- [`2026-06-23_chat-persist-epoch.md`](2026-06-23_chat-persist-epoch.md): Chat persist epoch — late unawaited assistant saves cannot restore history after clear/delete; regression tests cover destructive history races.
 - [`2026-06-22_bug-hunt-inventory.md`](2026-06-22_bug-hunt-inventory.md): Full-repo bug hunt — mechanical inventory, 34-feature audit worksheet, disposition table (B–D fixes + deferred B6–B10/D4/D7).
 - [`2026-06-22_batch-b-stream-error-hardening.md`](2026-06-22_batch-b-stream-error-hardening.md): Stream error hardening — supabase `cancelOnError: false`, IAP/websocket/IoT purchase or watch paths.
 - [`2026-06-22_batch-c-therapy-initstate-call-guard.md`](2026-06-22_batch-c-therapy-initstate-call-guard.md): Therapy `CallCubit` `RequestIdGuard`, initState → postFrameCallback (10 files), initState guard regex for `context.cubit<`.

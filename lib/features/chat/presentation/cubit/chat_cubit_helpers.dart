@@ -127,13 +127,19 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     if (isClosed) {
       return;
     }
+    final int persistEpoch = capturePersistEpoch();
     await CubitExceptionHandler.executeAsyncVoid(
-      operation: () => _historyRepository.save(history),
-      isAlive: () => !isClosed,
+      operation: () async {
+        if (!isPersistEpochCurrent(persistEpoch)) {
+          return;
+        }
+        await _historyRepository.save(history);
+      },
+      isAlive: () => !isClosed && isPersistEpochCurrent(persistEpoch),
       logContext: 'ChatCubit._persistHistory',
       onSuccess: () {
         // Clear error on successful write to prevent stale error banners
-        if (isClosed) {
+        if (isClosed || !isPersistEpochCurrent(persistEpoch)) {
           return;
         }
         final ChatState current = _state;

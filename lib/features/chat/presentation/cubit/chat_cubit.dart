@@ -68,6 +68,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   final ChatRenderOrchestrationDiagnosticsPort? _renderOrchestrationDiagnostics;
   final List<String> _models;
   final RequestIdGuard _requestIdGuard = RequestIdGuard();
+  int _persistEpoch = 0;
 
   List<String> get models => _models;
   String get _currentModel {
@@ -96,7 +97,18 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   @protected
   void invalidateRequests() {
     _requestIdGuard.invalidate();
+    _bumpPersistEpoch();
   }
+
+  void _bumpPersistEpoch() {
+    _persistEpoch++;
+  }
+
+  @protected
+  int capturePersistEpoch() => _persistEpoch;
+
+  @protected
+  bool isPersistEpochCurrent(final int epoch) => epoch == _persistEpoch;
 
   void clearError() {
     if (isClosed) return;
