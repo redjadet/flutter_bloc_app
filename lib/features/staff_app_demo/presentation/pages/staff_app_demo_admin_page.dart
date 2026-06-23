@@ -1,6 +1,7 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
@@ -13,15 +14,19 @@ class StaffAppDemoAdminPage extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    final state = context.watch<StaffDemoAdminCubit>().state;
-    final flagged = state.flaggedEntries;
+    final data = context
+        .selectState<
+          StaffDemoAdminCubit,
+          StaffDemoAdminState,
+          _StaffDemoAdminViewData
+        >(selector: _StaffDemoAdminViewData.fromState);
     final l10n = context.l10n;
 
     return CommonPageLayout(
       title: l10n.staffDemoAdminTitle,
       body: RefreshIndicator(
         onRefresh: context.cubit<StaffDemoAdminCubit>().load,
-        child: switch (state.status) {
+        child: switch (data.status) {
           StaffDemoAdminStatus.initial ||
           StaffDemoAdminStatus.loading => ListView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -38,7 +43,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
               SizedBox(
                 height: 240,
                 child: CommonErrorView(
-                  message: state.errorMessage ?? l10n.errorUnknown,
+                  message: data.errorMessage ?? l10n.errorUnknown,
                 ),
               ),
             ],
@@ -48,17 +53,18 @@ class StaffAppDemoAdminPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: <Widget>[
               Text(
-                l10n.staffDemoAdminRecentEntries(state.recentEntries.length),
+                l10n.staffDemoAdminRecentEntries(data.recentCount),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                l10n.staffDemoAdminFlagged(state.flaggedCount),
+                l10n.staffDemoAdminFlagged(data.flaggedCount),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 8),
-              if (flagged.isEmpty) Text(l10n.staffDemoAdminNoFlagged),
-              for (final entry in flagged)
+              if (data.flaggedEntries.isEmpty)
+                Text(l10n.staffDemoAdminNoFlagged),
+              for (final entry in data.flaggedEntries)
                 ListTile(
                   dense: true,
                   title: Text(entry.entryId),
@@ -75,4 +81,55 @@ class StaffAppDemoAdminPage extends StatelessWidget {
       ),
     );
   }
+}
+
+@immutable
+class _StaffDemoAdminViewData {
+  const _StaffDemoAdminViewData({
+    required this.status,
+    required this.errorMessage,
+    required this.recentCount,
+    required this.flaggedEntries,
+  });
+
+  factory _StaffDemoAdminViewData.fromState(final StaffDemoAdminState state) {
+    final flaggedEntries = <StaffDemoTimeEntrySummary>[
+      for (final entry in state.recentEntries)
+        if (entry.isFlagged) entry,
+    ];
+    return _StaffDemoAdminViewData(
+      status: state.status,
+      errorMessage: state.errorMessage,
+      recentCount: state.recentEntries.length,
+      flaggedEntries: List<StaffDemoTimeEntrySummary>.unmodifiable(
+        flaggedEntries,
+      ),
+    );
+  }
+
+  final StaffDemoAdminStatus status;
+  final String? errorMessage;
+  final int recentCount;
+  final List<StaffDemoTimeEntrySummary> flaggedEntries;
+
+  int get flaggedCount => flaggedEntries.length;
+
+  static const DeepCollectionEquality _listEq = DeepCollectionEquality();
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) ||
+      other is _StaffDemoAdminViewData &&
+          other.status == status &&
+          other.errorMessage == errorMessage &&
+          other.recentCount == recentCount &&
+          _listEq.equals(other.flaggedEntries, flaggedEntries);
+
+  @override
+  int get hashCode => Object.hash(
+    status,
+    errorMessage,
+    recentCount,
+    _listEq.hash(flaggedEntries),
+  );
 }

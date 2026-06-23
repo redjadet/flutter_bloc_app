@@ -24,10 +24,6 @@ class ClientBookingState {
   TherapistProfile? get selectedTherapist =>
       selectedTherapistId == null ? null : therapistById(selectedTherapistId!);
 
-  List<TherapistProfile> get verifiedTherapists => therapists
-      .where((final therapist) => therapist.isVerified)
-      .toList(growable: false);
-
   TherapistProfile? therapistById(final String therapistId) {
     for (final therapist in therapists) {
       if (therapist.id == therapistId) return therapist;

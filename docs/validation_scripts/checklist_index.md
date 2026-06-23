@@ -42,6 +42,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_perf_missing_repaint_boundary.sh`
 - `check_perf_unnecessary_rebuilds.sh`
 - `check_live_state_list_indexing.sh`
+- `check_select_state_allocating_getters.sh`
 - `check_memory_unclosed_streams.sh`
 - `check_memory_missing_dispose.sh`
 - `check_dialog_controller_dispose.sh`

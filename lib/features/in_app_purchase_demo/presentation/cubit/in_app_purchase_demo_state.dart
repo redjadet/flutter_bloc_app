@@ -31,16 +31,4 @@ abstract class InAppPurchaseDemoState with _$InAppPurchaseDemoState {
   }) = _InAppPurchaseDemoState;
 
   const InAppPurchaseDemoState._();
-
-  List<IapProduct> get consumableProducts => products
-      .where((final product) => product.type == IapProductType.consumable)
-      .toList(growable: false);
-
-  List<IapProduct> get nonConsumableProducts => products
-      .where((final product) => product.type == IapProductType.nonConsumable)
-      .toList(growable: false);
-
-  List<IapProduct> get subscriptionProducts => products
-      .where((final product) => product.type == IapProductType.subscription)
-      .toList(growable: false);
 }

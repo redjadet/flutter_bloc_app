@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
@@ -34,13 +34,14 @@ class _OnlineTherapyDemoClientTherapistsPageState
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (final state) => state.isBusy,
         );
-    final _VerifiedTherapistsViewData verifiedTherapists = context.selectState<
-      ClientBookingCubit,
-      ClientBookingState,
-      _VerifiedTherapistsViewData
-    >(
-      selector: _VerifiedTherapistsViewData.fromState,
-    );
+    final _VerifiedTherapistsViewData verifiedTherapists = context
+        .selectState<
+          ClientBookingCubit,
+          ClientBookingState,
+          _VerifiedTherapistsViewData
+        >(
+          selector: _VerifiedTherapistsViewData.fromState,
+        );
     final cubit = context.cubit<ClientBookingCubit>();
 
     return CommonPageLayout(
@@ -103,8 +104,15 @@ class _VerifiedTherapistsViewData {
 
   factory _VerifiedTherapistsViewData.fromState(
     final ClientBookingState state,
-  ) =>
-      _VerifiedTherapistsViewData(state.verifiedTherapists);
+  ) {
+    final items = <TherapistProfile>[
+      for (final therapist in state.therapists)
+        if (therapist.isVerified) therapist,
+    ];
+    return _VerifiedTherapistsViewData(
+      List<TherapistProfile>.unmodifiable(items),
+    );
+  }
 
   final List<TherapistProfile> items;
 
