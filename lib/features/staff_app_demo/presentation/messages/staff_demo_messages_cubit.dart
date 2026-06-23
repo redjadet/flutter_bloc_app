@@ -5,6 +5,9 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_defaults.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_inbox_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_state.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
@@ -20,11 +23,13 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
     required this._authRepository,
     required this._inboxRepository,
     required this._messagingRepository,
+    required this._profileRepository,
   }) : super(const StaffDemoMessagesState());
 
   final AuthRepository _authRepository;
   final StaffDemoInboxRepository _inboxRepository;
   final StaffDemoMessagingRepository _messagingRepository;
+  final StaffDemoProfileRepository _profileRepository;
 
   // ignore: cancel_subscriptions - Replaced via cancelRegisteredSubscription; mixin closes on dispose.
   StreamSubscription<List<StaffDemoInboxRecipientSnapshot>>? _subscription;
@@ -88,6 +93,25 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
   }
 
   Future<void> confirm(final StaffDemoInboxItem item) => confirmImpl(item);
+
+  Future<List<StaffDemoProfile>> loadAssignableStaff() =>
+      _profileRepository.listAssignableStaff();
+
+  Future<void> sendShiftAssignmentWithDefaults({
+    required final String toUserId,
+    required final String body,
+    required final String siteId,
+  }) {
+    final ({DateTime startAtUtc, DateTime endAtUtc}) window =
+        StaffDemoShiftDefaults.defaultWindowUtc();
+    return sendShiftAssignment(
+      toUserId: toUserId,
+      body: body,
+      siteId: siteId,
+      startAtUtc: window.startAtUtc,
+      endAtUtc: window.endAtUtc,
+    );
+  }
 
   Future<void> sendShiftAssignment({
     required final String toUserId,

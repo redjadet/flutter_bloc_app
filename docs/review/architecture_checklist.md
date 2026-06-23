@@ -44,6 +44,9 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - `Hive.openBox` outside shared storage abstractions.
 - Raw SDK/client calls from Cubit/BLoC or widgets.
 - Repository construction inside widgets.
+- Business filtering, grouping, counting, lookup-by-id, or default workflow
+  windows inside widgets/pages; move derived view data to state getters/cubit
+  methods and pure workflow rules to domain helpers.
 - Navigation from domain/data.
 - Shared utility buckets named only `Utils`, `Helper`, `Manager`, or `Base*`
   without a narrow capability.

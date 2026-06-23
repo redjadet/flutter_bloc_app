@@ -130,28 +130,13 @@ class _ProductsCard extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     final cubit = context.cubit<InAppPurchaseDemoCubit>();
-    final productsState = context
-        .selectState<
-          InAppPurchaseDemoCubit,
-          InAppPurchaseDemoState,
-          ({
-            InAppPurchaseDemoStatus status,
-            List<IapProduct> products,
-            IapEntitlements entitlements,
-            bool isBusy,
-            IapPurchaseResult? lastResult,
-            String? errorMessage,
-          })
-        >(
-          selector: (final state) => (
-            status: state.status,
-            products: state.products,
-            entitlements: state.entitlements,
-            isBusy: state.isBusy,
-            lastResult: state.lastResult,
-            errorMessage: state.errorMessage,
-          ),
-        );
+    final _IapProductsViewData productsState = context.selectState<
+      InAppPurchaseDemoCubit,
+      InAppPurchaseDemoState,
+      _IapProductsViewData
+    >(
+      selector: _IapProductsViewData.fromState,
+    );
 
     return CommonCard(
       margin: EdgeInsets.zero,
@@ -170,12 +155,7 @@ class _ProductsCard extends StatelessWidget {
             else ...[
               _ProductSection(
                 title: l10n.iapDemoConsumablesTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.consumable,
-                    )
-                    .toList(growable: false),
+                products: productsState.consumableProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,
@@ -183,12 +163,7 @@ class _ProductsCard extends StatelessWidget {
               SizedBox(height: context.responsiveGapM),
               _ProductSection(
                 title: l10n.iapDemoNonConsumablesTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.nonConsumable,
-                    )
-                    .toList(growable: false),
+                products: productsState.nonConsumableProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,
@@ -196,12 +171,7 @@ class _ProductsCard extends StatelessWidget {
               SizedBox(height: context.responsiveGapM),
               _ProductSection(
                 title: l10n.iapDemoSubscriptionsTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.subscription,
-                    )
-                    .toList(growable: false),
+                products: productsState.subscriptionProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,
@@ -231,4 +201,85 @@ class _ProductsCard extends StatelessWidget {
       ),
     );
   }
+}
+
+@immutable
+class _IapProductsViewData {
+  const _IapProductsViewData({
+    required this.status,
+    required this.consumableProducts,
+    required this.nonConsumableProducts,
+    required this.subscriptionProducts,
+    required this.entitlements,
+    required this.isBusy,
+    required this.lastResult,
+    required this.errorMessage,
+  });
+
+  factory _IapProductsViewData.fromState(final InAppPurchaseDemoState state) {
+    final List<IapProduct> consumable = <IapProduct>[];
+    final List<IapProduct> nonConsumable = <IapProduct>[];
+    final List<IapProduct> subscriptions = <IapProduct>[];
+
+    for (final product in state.products) {
+      switch (product.type) {
+        case IapProductType.consumable:
+          consumable.add(product);
+          break;
+        case IapProductType.nonConsumable:
+          nonConsumable.add(product);
+          break;
+        case IapProductType.subscription:
+          subscriptions.add(product);
+          break;
+      }
+    }
+
+    return _IapProductsViewData(
+      status: state.status,
+      consumableProducts: List<IapProduct>.unmodifiable(consumable),
+      nonConsumableProducts: List<IapProduct>.unmodifiable(nonConsumable),
+      subscriptionProducts: List<IapProduct>.unmodifiable(subscriptions),
+      entitlements: state.entitlements,
+      isBusy: state.isBusy,
+      lastResult: state.lastResult,
+      errorMessage: state.errorMessage,
+    );
+  }
+
+  final InAppPurchaseDemoStatus status;
+  final List<IapProduct> consumableProducts;
+  final List<IapProduct> nonConsumableProducts;
+  final List<IapProduct> subscriptionProducts;
+  final IapEntitlements entitlements;
+  final bool isBusy;
+  final IapPurchaseResult? lastResult;
+  final String? errorMessage;
+
+  static const DeepCollectionEquality _listEq = DeepCollectionEquality();
+
+  @override
+  bool operator ==(final Object other) =>
+      identical(this, other) ||
+      other is _IapProductsViewData &&
+          other.status == status &&
+          other.isBusy == isBusy &&
+          other.lastResult == lastResult &&
+          other.errorMessage == errorMessage &&
+          other.entitlements == entitlements &&
+          _listEq.equals(other.consumableProducts, consumableProducts) &&
+          _listEq.equals(other.nonConsumableProducts, nonConsumableProducts) &&
+          _listEq.equals(other.subscriptionProducts, subscriptionProducts);
+
+  @override
+  int get hashCode => Object.hash(
+        status,
+        isBusy,
+        lastResult,
+        errorMessage,
+        entitlements,
+        _listEq.hash(consumableProducts),
+        _listEq.hash(nonConsumableProducts),
+        _listEq.hash(subscriptionProducts),
+      );
 }

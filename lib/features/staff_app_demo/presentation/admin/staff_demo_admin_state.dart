@@ -13,4 +13,6 @@ abstract class StaffDemoAdminState with _$StaffDemoAdminState {
     final List<StaffDemoTimeEntrySummary> recentEntries,
     final String? errorMessage,
   }) = _StaffDemoAdminState;
+
+  const StaffDemoAdminState._();
 }

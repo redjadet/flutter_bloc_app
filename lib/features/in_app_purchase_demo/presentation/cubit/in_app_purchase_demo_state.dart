@@ -29,4 +29,6 @@ abstract class InAppPurchaseDemoState with _$InAppPurchaseDemoState {
     final IapDemoForcedOutcome forcedOutcome,
     @Default(false) final bool isBusy,
   }) = _InAppPurchaseDemoState;
+
+  const InAppPurchaseDemoState._();
 }

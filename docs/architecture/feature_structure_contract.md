@@ -93,7 +93,11 @@ needs isolated preview/test/iteration. Full contract:
 design iteration).
 
 - **Leaf widgets** take data + callbacks; **pages** own cubit lookup and routing.
-- **Do not** embed business rules or repository calls in reusable widgets.
+- **Do not** embed business rules, derived list logic, repository calls, or
+  aggregation/counting in reusable widgets or `build()` methods.
+- **Do** expose filtered/grouped/derived data via cubit state getters (or cubit
+  methods for async/repository work) so widgets only render ready-to-display
+  values.
 - **Do** add `@Preview` + a matching widget test for non-trivial new widgets when
   the feature brief or testing matrix calls for UI proof.
 - **Do** use responsive layout — avoid fixed sizes on reflowable UI; prefer

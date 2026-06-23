@@ -23,8 +23,8 @@ class TodoStatsWidget extends StatelessWidget {
     return TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoStatsData>(
       selector: (final state) => _TodoStatsData(
         total: state.items.length,
-        completed: state.items.where((final item) => item.isCompleted).length,
-        active: state.items.where((final item) => !item.isCompleted).length,
+        completed: state.completedCount,
+        active: state.activeCount,
       ),
       builder: (final context, final data) {
         if (data.total == 0) {

@@ -182,8 +182,12 @@ Use these as review questions before accepting generated feature/refactor code:
   then domain/core/shared service or mixin only after repeated behavior is
   proven. Avoid global `Utils`, `Helper`, `Manager`, and `Base*` buckets.
 - Keep widgets dumb: render state, expose callbacks, delegate actions. Do not
-  add networking, sync decisions, navigation policy, or unrelated state
-  mutation inside `build()`.
+  add networking, sync decisions, navigation policy, filtering, aggregation,
+  or unrelated state mutation inside `build()`.
+- Put **derived view data** (counts, filtered lists, grouped products, lookup
+  by id) on `presentation/cubit` state getters or cubit methods — not in pages
+  or reusable widgets. Pure domain helpers (date windows, schedule defaults)
+  belong in `domain/` and are called from cubits.
 - Centralize navigation ownership: map domain targets to GoRouter locations in
   presentation/app routing code; do not scatter raw route strings or
   `context.go` calls through reusable widgets.

@@ -35,6 +35,20 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Concrete coupling | Reusable UI gets narrow callbacks/ports, not feature types |
 | Style abstractions | New indirection only for repeated behavior or external deps |
 
+## Business logic must be separated from UI (agent rule)
+
+Short rule: **keep widgets/pages dumb**. `build()` renders only; business rules,
+derived data, and async work move to **cubit/state** (presentation) or **domain**.
+
+Owner docs: [`clean_architecture.md`](clean_architecture.md) and
+[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md).
+Detection scripts: `bash tool/check_solid_presentation_data_imports.sh`,
+`bash tool/check_direct_getit.sh`.
+
+Full agent-facing guidance lives in
+[`agent_knowledge_base_details.md`](agent_knowledge_base_details.md)
+§ “Business logic must be separated from UI”.
+
 ## Self-Improvement
 
 Owner: [`agent_kb/self_improvement.md`](agent_kb/self_improvement.md)

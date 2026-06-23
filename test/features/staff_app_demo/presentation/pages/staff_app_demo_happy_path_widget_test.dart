@@ -50,6 +50,7 @@ class _RefreshingMessagesCubit extends StaffDemoMessagesCubit {
     required super.authRepository,
     required super.inboxRepository,
     required super.messagingRepository,
+    required super.profileRepository,
   });
 
   int initializeCount = 0;
@@ -142,6 +143,7 @@ void main() {
           authRepository: _MockAuthRepository(),
           inboxRepository: _MockInboxRepository(),
           messagingRepository: _MockMessagingRepository(),
+          profileRepository: profileRepository,
         );
         addTearDown(messagesCubit.close);
         messagesCubit.emit(
@@ -174,9 +176,7 @@ void main() {
             sessionCubit: sessionCubit,
             messagesCubit: messagesCubit,
             sitesCubit: sitesCubit,
-            child: StaffAppDemoMessagesPage(
-              profileRepository: profileRepository,
-            ),
+            child: const StaffAppDemoMessagesPage(),
           ),
         );
         await tester.pump();
@@ -367,6 +367,7 @@ void main() {
         authRepository: authRepository,
         inboxRepository: inboxRepository,
         messagingRepository: messagingRepository,
+        profileRepository: _MockStaffDemoProfileRepository(),
       );
       addTearDown(messagesCubit.close);
       messagesCubit.emit(
@@ -389,7 +390,7 @@ void main() {
         _wrapWithProviders(
           sessionCubit: sessionCubit,
           messagesCubit: messagesCubit,
-          child: StaffAppDemoMessagesPage(profileRepository: profileRepository),
+          child: const StaffAppDemoMessagesPage(),
         ),
       );
       await tester.pump();
@@ -435,6 +436,7 @@ void main() {
         authRepository: _MockAuthRepository(),
         inboxRepository: _MockInboxRepository(),
         messagingRepository: _MockMessagingRepository(),
+        profileRepository: _MockStaffDemoProfileRepository(),
       );
       addTearDown(messagesCubit.close);
       messagesCubit.emit(
@@ -457,7 +459,7 @@ void main() {
         _wrapWithProviders(
           sessionCubit: sessionCubit,
           messagesCubit: messagesCubit,
-          child: StaffAppDemoMessagesPage(profileRepository: profileRepository),
+          child: const StaffAppDemoMessagesPage(),
         ),
       );
       await tester.pump();

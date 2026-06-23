@@ -5,9 +5,7 @@ Future<void> _handleClearCompleted(
   final List<TodoItem> items,
   final TodoListCubit cubit,
 ) async {
-  final int completedCount = items
-      .where((final item) => item.isCompleted)
-      .length;
+  final int completedCount = cubit.state.completedCount;
   final bool? shouldClear = await showTodoClearCompletedConfirmDialog(
     context: context,
     count: completedCount,

@@ -41,6 +41,29 @@ class _TodoAppBarData {
     required this.hasSelectedCompleted,
     required this.selectedCount,
   });
+
+  factory _TodoAppBarData.fromState(final TodoListState state) {
+    final filtered = state.filteredItems;
+    final ids = state.selectedItemIds;
+    final items = state.items;
+    final allSelected =
+        filtered.isNotEmpty && filtered.every((final i) => ids.contains(i.id));
+    final hasSelectedActive = items.any(
+      (final i) => ids.contains(i.id) && !i.isCompleted,
+    );
+    final hasSelectedCompleted = items.any(
+      (final i) => ids.contains(i.id) && i.isCompleted,
+    );
+    return _TodoAppBarData(
+      hasFilteredItems: filtered.isNotEmpty,
+      allFilteredSelected: allSelected,
+      hasSelection: state.hasSelectedItems,
+      hasSelectedActive: hasSelectedActive,
+      hasSelectedCompleted: hasSelectedCompleted,
+      selectedCount: state.selectedCount,
+    );
+  }
+
   final bool hasFilteredItems;
   final bool allFilteredSelected;
   final bool hasSelection;
@@ -80,28 +103,7 @@ class TodoListPage extends StatelessWidget {
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
     return TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoAppBarData>(
-      selector: (final state) {
-        final filtered = state.filteredItems;
-        final ids = state.selectedItemIds;
-        final items = state.items;
-        final allSelected =
-            filtered.isNotEmpty &&
-            filtered.every((final i) => ids.contains(i.id));
-        final hasSelectedActive = items.any(
-          (final i) => ids.contains(i.id) && !i.isCompleted,
-        );
-        final hasSelectedCompleted = items.any(
-          (final i) => ids.contains(i.id) && i.isCompleted,
-        );
-        return _TodoAppBarData(
-          hasFilteredItems: filtered.isNotEmpty,
-          allFilteredSelected: allSelected,
-          hasSelection: state.hasSelectedItems,
-          hasSelectedActive: hasSelectedActive,
-          hasSelectedCompleted: hasSelectedCompleted,
-          selectedCount: state.selectedCount,
-        );
-      },
+      selector: _TodoAppBarData.fromState,
       builder: (final context, final barData) {
         return CommonPageLayout(
           title: l10n.todoListTitle,

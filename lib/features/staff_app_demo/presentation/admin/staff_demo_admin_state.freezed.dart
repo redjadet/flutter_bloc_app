@@ -207,8 +207,8 @@ return $default(_that.status,_that.recentEntries,_that.errorMessage);case _:
 /// @nodoc
 
 
-class _StaffDemoAdminState implements StaffDemoAdminState {
-  const _StaffDemoAdminState({this.status = StaffDemoAdminStatus.initial, final  List<StaffDemoTimeEntrySummary> recentEntries = const <StaffDemoTimeEntrySummary>[], this.errorMessage}): _recentEntries = recentEntries;
+class _StaffDemoAdminState extends StaffDemoAdminState {
+  const _StaffDemoAdminState({this.status = StaffDemoAdminStatus.initial, final  List<StaffDemoTimeEntrySummary> recentEntries = const <StaffDemoTimeEntrySummary>[], this.errorMessage}): _recentEntries = recentEntries,super._();
   
 
 @override@JsonKey() final  StaffDemoAdminStatus status;

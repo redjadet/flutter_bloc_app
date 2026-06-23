@@ -26,20 +26,7 @@ class _TodoListBodyState extends State<_TodoListBody> {
   Widget build(
     final BuildContext context,
   ) => TypeSafeBlocSelector<TodoListCubit, TodoListState, TodoListViewData>(
-    selector: (final state) => TodoListViewData(
-      isLoading: state.isLoading,
-      hasError: state.hasError,
-      errorMessage: state.errorMessage,
-      items: state.items,
-      filteredItems: state.filteredItems,
-      filter: state.filter,
-      hasCompleted: state.hasCompleted,
-      searchQuery: state.searchQuery,
-      sortOrder: state.sortOrder,
-      selectedItemIds: state.selectedItemIds,
-      hasSelectedItems: state.hasSelectedItems,
-      selectedCount: state.selectedCount,
-    ),
+    selector: TodoListViewData.fromState,
     builder: (final context, final data) {
       if (data.isLoading) {
         return const CommonLoadingWidget();

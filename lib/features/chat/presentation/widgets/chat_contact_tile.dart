@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_avatar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_details.dart';
+import 'package:flutter_bloc_app/shared/utils/relative_time_formatting.dart';
 
 class ChatContactTile extends StatelessWidget {
   const ChatContactTile({
@@ -21,7 +22,7 @@ class ChatContactTile extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final config = ChatContactTileConfig.fromContext(context);
-    final timeText = _formatTime(contact.lastMessageTime);
+    final timeText = formatRelativeTimeShort(contact.lastMessageTime);
 
     return Semantics(
       button: true,
@@ -55,20 +56,5 @@ class ChatContactTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatTime(final DateTime time) {
-    final now = DateTime.now();
-    final difference = now.difference(time);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m';
-    } else {
-      return 'now';
-    }
   }
 }

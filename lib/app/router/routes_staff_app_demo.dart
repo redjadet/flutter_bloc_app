@@ -98,11 +98,10 @@ ShellRoute createStaffAppDemoShellRoute() => ShellRoute(
             authRepository: getIt<AuthRepository>(),
             inboxRepository: getIt<StaffDemoInboxRepository>(),
             messagingRepository: getIt<StaffDemoMessagingRepository>(),
-          ),
-          init: (cubit) => cubit.initialize(),
-          child: StaffAppDemoMessagesPage(
             profileRepository: getIt<StaffDemoProfileRepository>(),
           ),
+          init: (cubit) => cubit.initialize(),
+          child: const StaffAppDemoMessagesPage(),
         ),
       ),
     ),
