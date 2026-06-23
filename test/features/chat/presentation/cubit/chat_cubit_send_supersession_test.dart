@@ -127,8 +127,63 @@ void main() {
       await cubit.deleteConversation(conversationId);
       repository.releaseSend.complete();
       await send;
+      await pumpEventQueue();
 
       expect(cubit.state.isLoading, isFalse);
+    },
+  );
+
+  test(
+    'clearHistory is not undone by stale sendMessage assistant persist',
+    () async {
+      final _DelayedChatRepository repository = _DelayedChatRepository();
+      final _MemoryHistoryRepository history = _MemoryHistoryRepository();
+      final ChatCubit cubit = ChatCubit(
+        repository: repository,
+        historyRepository: history,
+      );
+      addTearDown(cubit.close);
+
+      final Future<void> send = cubit.sendMessage('hello');
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state.isLoading, isTrue);
+      expect((await history.load()).isNotEmpty, isTrue);
+
+      await cubit.clearHistory();
+      expect(await history.load(), isEmpty);
+
+      repository.releaseSend.complete();
+      await send;
+      await pumpEventQueue();
+
+      expect(await history.load(), isEmpty);
+    },
+  );
+
+  test(
+    'deleteConversation is not undone by stale sendMessage assistant persist',
+    () async {
+      final _DelayedChatRepository repository = _DelayedChatRepository();
+      final _MemoryHistoryRepository history = _MemoryHistoryRepository();
+      final ChatCubit cubit = ChatCubit(
+        repository: repository,
+        historyRepository: history,
+      );
+      addTearDown(cubit.close);
+
+      final Future<void> send = cubit.sendMessage('hello');
+      await Future<void>.delayed(Duration.zero);
+      final String conversationId = cubit.state.activeConversationId!;
+      expect(cubit.state.isLoading, isTrue);
+
+      await cubit.deleteConversation(conversationId);
+      expect(await history.load(), isEmpty);
+
+      repository.releaseSend.complete();
+      await send;
+      await pumpEventQueue();
+
+      expect(await history.load(), isEmpty);
     },
   );
 }
