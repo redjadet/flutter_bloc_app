@@ -103,4 +103,8 @@ echo "Updating coverage summary..."
 "$DART_BIN" run tool/update_coverage_summary.dart
 
 echo ""
+echo "Enforcing coverage threshold..."
+"$DART_BIN" run tool/update_coverage_summary.dart --enforce-threshold
+
+echo ""
 echo "✅ Test coverage complete! Reports updated in coverage/"

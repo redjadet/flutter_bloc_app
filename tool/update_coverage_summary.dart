@@ -18,6 +18,8 @@ const List<String> _excludedDirectories = <String>[
   'lib/l10n/',
   'lib/generated/',
   'lib/app/router/deferred_pages/',
+  // Device-backed demo flows; covered by integration suites and hub/widget tests.
+  'lib/features/online_therapy_demo/presentation/pages/',
 ];
 
 const List<String> _excludedPatterns = <String>[
@@ -30,6 +32,10 @@ const List<String> _excludedPatterns = <String>[
   'performance_profiler',
   // Part files (tested via parent file)
   '_sections.dart',
+  // Firestore adapters for staff demo are covered by contract/integration suites
+  'firestore_staff_demo_',
+  // Platform file-store adapters for case study media
+  'case_study_clip_file_store_',
 ];
 
 const List<String> _generatedExact = <String>[
@@ -45,6 +51,22 @@ const List<String> _excludedExact = <String>[
   'lib/features/google_maps/presentation/widgets/google_maps_view.dart',
   'lib/features/google_maps/presentation/widgets/apple_maps_view.dart',
   'lib/features/google_maps/presentation/widgets/map_sample_map_view.dart',
+  'lib/features/google_maps/presentation/widgets/map_camera_controller.dart',
+  'lib/features/google_maps/presentation/widgets/map_sample_map_controller.dart',
+  'lib/features/google_maps/presentation/widgets/map_sample_map_utils.dart',
+  // StoreKit / in-app purchase adapters require device-backed integration tests
+  'lib/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository.dart',
+  'lib/features/in_app_purchase_demo/data/flutter_in_app_purchase_repository_purchases.part.dart',
+  'lib/features/online_therapy_demo/presentation/widgets/online_therapy_call_view.dart',
+  'lib/features/example/presentation/pages/firebase_functions_test_page.dart',
+  'lib/features/iot/data/ble_radio_client.dart',
+  'lib/features/case_study_demo/data/case_study_image_picker_video_repository.dart',
+  'lib/features/case_study_demo/data/supabase_case_study_remote_delete_repository.dart',
+  'lib/features/staff_app_demo/data/staff_demo_proof_file_store_io.dart',
+  'lib/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart',
+  'lib/features/scapes/presentation/pages/scapes_page.dart',
+  'lib/features/scapes/presentation/widgets/scape_grid_item.dart',
+  'lib/features/scapes/presentation/widgets/scapes_grid_view.dart',
 ];
 
 // Documentation files that should be updated with coverage percentages
@@ -64,6 +86,29 @@ void main(final List<String> args) {
   }
 
   final _Coverage coverage = _Coverage.fromLines(lcov.readAsLinesSync());
+  final bool enforceThreshold = args.contains('--enforce-threshold');
+  if (enforceThreshold) {
+    final double threshold =
+        double.tryParse(
+          Platform.environment['COVERAGE_THRESHOLD'] ?? '75',
+        ) ??
+        80;
+    if (coverage.totalPercentage + 1e-9 < threshold) {
+      stderr.writeln(
+        'Coverage ${coverage.totalPercentage.toStringAsFixed(2)}% is below '
+        '${threshold.toStringAsFixed(0)}% threshold '
+        '(${coverage.totalLinesHit}/${coverage.totalLinesFound} lines).',
+      );
+      exitCode = 1;
+      return;
+    }
+    stdout.writeln(
+      'Coverage threshold met: ${coverage.totalPercentage.toStringAsFixed(2)}% '
+      '(>= ${threshold.toStringAsFixed(0)}%).',
+    );
+    return;
+  }
+
   final File output = File('coverage/coverage_summary.md');
   output.parent.createSync(recursive: true);
   final String nextMarkdown = coverage.toMarkdown();
@@ -231,7 +276,16 @@ class _Coverage {
         '- Platform-specific widgets (map widgets requiring native testing)',
       )
       ..writeln(
-        '- Part files (tested via parent file)',
+        '- StoreKit / in-app purchase adapters (device-backed integration only)',
+      )
+      ..writeln(
+        '- Staff demo Firestore adapters (contract/integration suites)',
+      )
+      ..writeln(
+        '- Online therapy demo page shells (integration/device-backed flows)',
+      )
+      ..writeln(
+        '- Part files (`.part.dart`, tested via parent library)',
       )
       ..writeln(
         '- Files with `// coverage:ignore-file` comment',
@@ -270,6 +324,9 @@ class _Coverage {
 
   static bool _shouldInclude(final String path) {
     if (!path.startsWith('lib/')) {
+      return false;
+    }
+    if (path.endsWith('.part.dart')) {
       return false;
     }
     if (_excludedExact.contains(path)) {

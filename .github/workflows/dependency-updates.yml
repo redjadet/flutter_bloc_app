@@ -16,7 +16,7 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   FLUTTER_VERSION: '3.44.3'
-  COVERAGE_THRESHOLD: '60'
+  COVERAGE_THRESHOLD: '75'
 
 concurrency:
   group: dependency-updates-${{ github.event.pull_request.number || github.ref }}
@@ -61,14 +61,6 @@ jobs:
 
       - name: Flutter tests (with coverage)
         run: tool/test_coverage.sh
-
-      - name: Enforce coverage threshold
-        run: |
-          COVERAGE_FILE=coverage/lcov.info
-          TARGET="${{ env.COVERAGE_THRESHOLD }}"
-          ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
-          echo "Coverage: $ACTUAL%"
-          awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v7

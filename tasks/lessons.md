@@ -59,6 +59,20 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `tool/check_mutation_success_after_guard.sh`
   `docs/changes/2026-06-15_mutation-success-guard.md`
 
+### 2026-06-23 - Mix bottom-sheet widget tests need MaterialApp builder scope
+
+- What went wrong:
+  `register_country_picker_test` pumped `buildAppMixScope` only under `home`; `showModalBottomSheet` used the navigator overlay context without Mix, so the test failed to find sheet content.
+- How it was fixed:
+  Wrap via `MaterialApp.builder: (context, child) => buildAppMixScope(context, child: child ?? const SizedBox.shrink())` so overlay routes inherit Mix scope.
+- Pattern:
+  Widget tests that open modal routes/sheets for Mix-styled pickers need scope on the app builder, not only the home subtree.
+- Preventive rule:
+  For Mix + `showModalBottomSheet` / `showCountryPicker`, use `MaterialApp.builder` (or an equivalent root scope) before tapping open actions.
+- Evidence or affected files:
+  `test/features/auth/presentation/widgets/register_country_picker_test.dart`
+  `lib/core/theme/mix_app_theme.dart`
+
 ### 2026-06-22 - initState guard missed context.cubit generic form
 
 - What went wrong:

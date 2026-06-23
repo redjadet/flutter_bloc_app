@@ -45,7 +45,8 @@ workflow dispatch and supports the
 ## Coverage
 
 - Coverage is tracked in [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
-- CI enforces a line-coverage threshold using `coverage/lcov.info`.
+- CI enforces a **75%** filtered line-coverage threshold (see
+  `tool/update_coverage_summary.dart`) using `coverage/lcov.info`.
 - Generated files, localization output, simple data classes, and other
   low-signal artifacts are excluded from totals.
 
