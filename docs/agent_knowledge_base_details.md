@@ -52,6 +52,51 @@ Use deterministic sensors first; use inferential review for business fit, edge c
 - Surgical diffs. Changed lines trace to request or required validation/doc updates.
 - Keep custom checks narrow/reversible; delete/relax stale checks.
 
+## Business logic must be separated from UI (agent rule)
+
+Owner docs: [`clean_architecture.md`](clean_architecture.md),
+[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
+[`review/architecture_checklist.md`](review/architecture_checklist.md).
+
+**Goal:** keep `build()` and reusable widgets pure rendering. Keep rules and data
+shape decisions testable without widget pumps.
+
+### Allowed in UI (widgets/pages)
+
+- Render immutable state + handle user gestures.
+- Call cubit methods (`onPressed: cubit.doThing`) and navigate (presentation-only).
+- **Pure visual math** (layout sizing, chart bounds, formatting for display).
+
+### Forbidden in UI (widgets/pages)
+
+- **Repository calls** (even via constructor-injected repo) inside widgets/pages.
+- Derived business rules in `build()`:
+  - filtering/grouping products or entities
+  - counting/aggregating domain state
+  - “find by id” lookups across domain lists
+  - default scheduling windows or date windows used by workflows
+- Network/storage/auth decisions in `build()` or reusable widgets.
+
+### Where this logic goes instead
+
+- **Cubit/state** (`presentation/cubit`): derived view data getters (counts,
+  filtered lists, lookup helpers), action orchestration, lifecycle guards.
+- **Domain** (`domain/`): pure rules/helpers (no Flutter imports), used by cubits.
+- **Data** (`data/`): persistence, SDK/HTTP, offline-first/sync.
+
+### Quick detection (scripts)
+
+- `bash tool/check_clean_architecture_imports.sh`
+- `bash tool/check_solid_presentation_data_imports.sh`
+- `bash tool/check_direct_getit.sh`
+
+### Fix pattern (repeatable)
+
+- Move `.where()/.map()/.reduce()/.sort()` from UI into a state getter.
+- Replace widget repo calls with a cubit method (async work stays out of UI).
+- If the UI needs defaults (e.g. week start, shift window), extract a **pure
+  domain helper** and call it from cubit, not from the widget.
+
 ## Codex And Cursor
 
 - Same doctrine. Source docs own behavior; host templates summarize/route.

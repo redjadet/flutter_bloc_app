@@ -14,7 +14,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final state = context.watch<StaffDemoAdminCubit>().state;
-    final flagged = state.recentEntries.where((e) => e.isFlagged).toList();
+    final flagged = state.flaggedEntries;
     final l10n = context.l10n;
 
     return CommonPageLayout(
@@ -53,7 +53,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                l10n.staffDemoAdminFlagged(flagged.length),
+                l10n.staffDemoAdminFlagged(state.flaggedCount),
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(height: 8),

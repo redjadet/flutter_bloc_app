@@ -167,6 +167,11 @@ abstract class TodoListState with _$TodoListState {
 
   bool get hasCompleted => items.any((final item) => item.isCompleted);
 
+  int get completedCount =>
+      items.where((final item) => item.isCompleted).length;
+
+  int get activeCount => items.length - completedCount;
+
   bool get hasSelectedItems => selectedItemIds.isNotEmpty;
 
   bool isItemSelected(final String itemId) => selectedItemIds.contains(itemId);

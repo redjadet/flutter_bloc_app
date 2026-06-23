@@ -13,4 +13,12 @@ abstract class StaffDemoAdminState with _$StaffDemoAdminState {
     final List<StaffDemoTimeEntrySummary> recentEntries,
     final String? errorMessage,
   }) = _StaffDemoAdminState;
+
+  const StaffDemoAdminState._();
+
+  List<StaffDemoTimeEntrySummary> get flaggedEntries => recentEntries
+      .where((final entry) => entry.isFlagged)
+      .toList(growable: false);
+
+  int get flaggedCount => flaggedEntries.length;
 }

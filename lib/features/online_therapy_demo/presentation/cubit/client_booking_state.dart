@@ -21,9 +21,19 @@ class ClientBookingState {
 
   static const Object _noChange = Object();
 
-  TherapistProfile? get selectedTherapist => selectedTherapistId == null
-      ? null
-      : therapists.where((t) => t.id == selectedTherapistId).firstOrNull;
+  TherapistProfile? get selectedTherapist =>
+      selectedTherapistId == null ? null : therapistById(selectedTherapistId!);
+
+  List<TherapistProfile> get verifiedTherapists => therapists
+      .where((final therapist) => therapist.isVerified)
+      .toList(growable: false);
+
+  TherapistProfile? therapistById(final String therapistId) {
+    for (final therapist in therapists) {
+      if (therapist.id == therapistId) return therapist;
+    }
+    return null;
+  }
 
   ClientBookingState copyWith({
     bool? isBusy,
@@ -49,8 +59,4 @@ class ClientBookingState {
         ? null
         : (errorMessage ?? this.errorMessage),
   );
-}
-
-extension _FirstOrNull<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }

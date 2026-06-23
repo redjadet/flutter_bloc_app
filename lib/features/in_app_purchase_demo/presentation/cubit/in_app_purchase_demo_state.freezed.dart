@@ -233,8 +233,8 @@ return $default(_that.status,_that.products,_that.entitlements,_that.lastResult,
 /// @nodoc
 
 
-class _InAppPurchaseDemoState implements InAppPurchaseDemoState {
-  const _InAppPurchaseDemoState({this.status = InAppPurchaseDemoStatus.initial, final  List<IapProduct> products = const <IapProduct>[], this.entitlements = const IapEntitlements(), this.lastResult, this.errorMessage, this.useFakeRepository = true, this.forcedOutcome = IapDemoForcedOutcome.deterministic, this.isBusy = false}): _products = products;
+class _InAppPurchaseDemoState extends InAppPurchaseDemoState {
+  const _InAppPurchaseDemoState({this.status = InAppPurchaseDemoStatus.initial, final  List<IapProduct> products = const <IapProduct>[], this.entitlements = const IapEntitlements(), this.lastResult, this.errorMessage, this.useFakeRepository = true, this.forcedOutcome = IapDemoForcedOutcome.deterministic, this.isBusy = false}): _products = products,super._();
   
 
 @override@JsonKey() final  InAppPurchaseDemoStatus status;

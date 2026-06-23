@@ -136,7 +136,9 @@ class _ProductsCard extends StatelessWidget {
           InAppPurchaseDemoState,
           ({
             InAppPurchaseDemoStatus status,
-            List<IapProduct> products,
+            List<IapProduct> consumableProducts,
+            List<IapProduct> nonConsumableProducts,
+            List<IapProduct> subscriptionProducts,
             IapEntitlements entitlements,
             bool isBusy,
             IapPurchaseResult? lastResult,
@@ -145,7 +147,9 @@ class _ProductsCard extends StatelessWidget {
         >(
           selector: (final state) => (
             status: state.status,
-            products: state.products,
+            consumableProducts: state.consumableProducts,
+            nonConsumableProducts: state.nonConsumableProducts,
+            subscriptionProducts: state.subscriptionProducts,
             entitlements: state.entitlements,
             isBusy: state.isBusy,
             lastResult: state.lastResult,
@@ -170,12 +174,7 @@ class _ProductsCard extends StatelessWidget {
             else ...[
               _ProductSection(
                 title: l10n.iapDemoConsumablesTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.consumable,
-                    )
-                    .toList(growable: false),
+                products: productsState.consumableProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,
@@ -183,12 +182,7 @@ class _ProductsCard extends StatelessWidget {
               SizedBox(height: context.responsiveGapM),
               _ProductSection(
                 title: l10n.iapDemoNonConsumablesTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.nonConsumable,
-                    )
-                    .toList(growable: false),
+                products: productsState.nonConsumableProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,
@@ -196,12 +190,7 @@ class _ProductsCard extends StatelessWidget {
               SizedBox(height: context.responsiveGapM),
               _ProductSection(
                 title: l10n.iapDemoSubscriptionsTitle,
-                products: productsState.products
-                    .where(
-                      (final product) =>
-                          product.type == IapProductType.subscription,
-                    )
-                    .toList(growable: false),
+                products: productsState.subscriptionProducts,
                 entitlements: productsState.entitlements,
                 isBusy: productsState.isBusy,
                 onBuy: cubit.buy,

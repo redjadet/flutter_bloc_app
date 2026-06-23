@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
@@ -26,19 +25,13 @@ class _StaffDemoShiftComposeResult {
 
 /// Manager/accountant shift assignment compose flow (Firestore-backed demo).
 Future<void> showStaffDemoShiftComposeDialog(
-  final BuildContext context, {
-  required final StaffDemoProfileRepository profileRepository,
-}) async {
+  final BuildContext context,
+) async {
   final l10n = context.l10n;
-  final DateTime defaultStartUtc = DateTime.now().toUtc().add(
-    const Duration(minutes: 30),
-  );
-  final DateTime defaultEndUtc = defaultStartUtc.add(
-    const Duration(hours: 4),
-  );
-
-  final Future<List<StaffDemoProfile>> staffFuture = profileRepository
-      .listAssignableStaff();
+  final StaffDemoMessagesCubit messagesCubit = context
+      .cubit<StaffDemoMessagesCubit>();
+  final Future<List<StaffDemoProfile>> staffFuture = messagesCubit
+      .loadAssignableStaff();
 
   final StaffDemoSitesCubit sitesCubit = context.cubit<StaffDemoSitesCubit>();
 
@@ -57,11 +50,9 @@ Future<void> showStaffDemoShiftComposeDialog(
   if (!context.mounted) return;
   if (result == null) return;
 
-  await context.cubit<StaffDemoMessagesCubit>().sendShiftAssignment(
+  await messagesCubit.sendShiftAssignmentWithDefaults(
     toUserId: result.toUserId,
     body: result.body,
     siteId: result.siteId,
-    startAtUtc: defaultStartUtc,
-    endAtUtc: defaultEndUtc,
   );
 }

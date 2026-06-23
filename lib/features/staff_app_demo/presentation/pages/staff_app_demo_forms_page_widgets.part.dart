@@ -39,29 +39,11 @@ class _AvailabilityCard extends StatefulWidget {
 class _AvailabilityCardState extends State<_AvailabilityCard> {
   final Map<String, bool> _availability = <String, bool>{};
 
-  DateTime _weekStartUtc() {
-    final now = DateTime.now().toUtc();
-    final day = now.weekday; // Mon=1..Sun=7
-    final start = DateTime.utc(
-      now.year,
-      now.month,
-      now.day,
-    ).subtract(Duration(days: day - 1));
-    return start;
-  }
-
-  List<DateTime> _weekDaysUtc(final DateTime weekStartUtc) =>
-      List<DateTime>.generate(
-        7,
-        (i) => weekStartUtc.add(Duration(days: i)),
-        growable: false,
-      );
-
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final start = _weekStartUtc();
-    final days = _weekDaysUtc(start);
+    final start = StaffDemoWeekCalendar.weekStartUtc();
+    final days = StaffDemoWeekCalendar.weekDaysUtc(start);
 
     return Card(
       child: Padding(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_inbox_item.dart';
@@ -14,12 +13,7 @@ import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class StaffAppDemoMessagesPage extends StatelessWidget {
-  const StaffAppDemoMessagesPage({
-    required this.profileRepository,
-    super.key,
-  });
-
-  final StaffDemoProfileRepository profileRepository;
+  const StaffAppDemoMessagesPage({super.key});
 
   @override
   Widget build(final BuildContext context) {
@@ -65,10 +59,7 @@ class StaffAppDemoMessagesPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: FilledButton.icon(
-                    onPressed: () => showStaffDemoShiftComposeDialog(
-                      context,
-                      profileRepository: profileRepository,
-                    ),
+                    onPressed: () => showStaffDemoShiftComposeDialog(context),
                     icon: const Icon(Icons.send),
                     label: Text(l10n.staffDemoComposeSendShiftAssignment),
                   ),

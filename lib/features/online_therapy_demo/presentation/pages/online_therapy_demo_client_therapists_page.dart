@@ -33,19 +33,15 @@ class _OnlineTherapyDemoClientTherapistsPageState
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
           selector: (final state) => state.isBusy,
         );
-    final selectedTherapists = context
+    final verifiedTherapists = context
         .selectState<
           ClientBookingCubit,
           ClientBookingState,
           List<TherapistProfile>
         >(
-          selector: (final state) => state.therapists,
+          selector: (final state) => state.verifiedTherapists,
         );
     final cubit = context.cubit<ClientBookingCubit>();
-
-    final verifiedTherapists = selectedTherapists
-        .where((final therapist) => therapist.isVerified)
-        .toList(growable: false);
 
     return CommonPageLayout(
       title: 'Therapists',

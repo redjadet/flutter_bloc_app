@@ -52,10 +52,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
         );
     final therapist = context
         .selectState<ClientBookingCubit, ClientBookingState, TherapistProfile?>(
-          selector: (final state) => state.therapists
-              .where((final therapist) => therapist.id == widget.therapistId)
-              .cast<TherapistProfile?>()
-              .firstOrNull,
+          selector: (final state) => state.therapistById(widget.therapistId),
         );
     final availability = context
         .selectState<
@@ -165,10 +162,6 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
       ),
     );
   }
-}
-
-extension _FirstOrNull<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
 }
 
 // eof
