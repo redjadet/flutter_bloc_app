@@ -1,7 +1,8 @@
 source 'https://rubygems.org'
 
-# jwt CVE-2026-45363 needs >= 3.2.0. Rubygems fastlane 2.234.0 still caps jwt < 3;
-# use commit from fastlane/fastlane#30042 until 2.235.0 ships, then revert to
-# gem 'fastlane', '2.235.0' (or current).
-gem 'fastlane', github: 'fastlane/fastlane', ref: 'ca59d7e57888c85002aa998126ffb6383a44f468'
+# jwt CVE-2026-45363 needs >= 3.2.0; faraday CVE-2026-54297 needs >= 2.14.3.
+# Rubygems fastlane 2.236.x still pins faraday ~> 1.0 — use faraday-2 branch from
+# fastlane/fastlane#30089 until a release ships, then revert to a pinned gem version.
+gem 'fastlane', github: 'fastlane/fastlane', ref: '2ed5e781d60f9d54ab96f8e4cea9501f1e3d9e21'
 gem 'jwt', '~> 3.2'
+gem 'faraday', '>= 2.14.3'

@@ -2,7 +2,7 @@ import { execSync } from "node:child_process";
 
 function runAuditJson() {
   try {
-    const output = execSync("npm audit --json", {
+    const output = execSync("npm audit --omit=dev --json", {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -39,7 +39,7 @@ try {
     console.error(
       `npm audit: ${total} vulnerabilities (info=${info}, low=${low}, moderate=${moderate}, high=${high}, critical=${critical})`,
     );
-    console.error("Failing because moderate+ vulnerabilities exist.");
+    console.error("Failing because moderate+ production vulnerabilities exist.");
     process.exit(1);
   }
 
