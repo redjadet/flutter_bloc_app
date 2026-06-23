@@ -50,7 +50,7 @@ the answer.
 
 ## Current Caveat Shortlist
 
-- Flutter 3.44.2 / Dart 3.12.2 pinned; version-sensitive APIs need official or
+- Flutter 3.44.3 / Dart 3.12.2 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
 - **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
   presentation, plugins, routing, and bootstrap changes must account for all

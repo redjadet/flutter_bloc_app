@@ -11,7 +11,7 @@ For the complete docs index, see [docs index](README.md).
 
 ### Toolchain
 
-- Flutter `3.44.2`
+- Flutter `3.44.3`
 - Dart `3.12.2`
 - Xcode for iOS/macOS work; Swift Package Manager is the preferred native
   dependency path. CocoaPods remains installed/usable for existing Podfiles and
