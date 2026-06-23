@@ -46,6 +46,10 @@ ALL_TESTS=(
   "test/features/counter/presentation/pages/counter_page_snackbar_timeout_test.dart"
   "test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart"
   "test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart"
+  "test/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit_test.dart"
+  "test/features/profile/data/offline_first_profile_repository_test.dart"
+  "test/features/supabase_auth/presentation/cubit/supabase_auth_cubit_test.dart"
+  "test/features/websocket/data/echo_websocket_repository_test.dart"
   "test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart"
   "test/features/todo_list/data/offline_first_todo_repository_test.dart"
   "test/features/todo_list/data/realtime_database_todo_repository_test.dart"
@@ -67,7 +71,9 @@ ALL_TESTS=(
   "test/features/realtime_market/data/simulated_market_feed_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
   "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
+  "test/features/online_therapy_demo/presentation/cubit/call_cubit_test.dart"
   "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
+  "test/chat_cubit_test.dart"
 )
 
 collect_changed_files() {
@@ -145,11 +151,14 @@ select_regression_guard_tests() {
       lib/shared/utils/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh)
         add_test_once out_ref "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
+        add_test_once out_ref "test/features/online_therapy_demo/presentation/cubit/call_cubit_test.dart"
         add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
         ;;
       lib/features/chat/*|\
-      test/features/chat/*)
+      test/features/chat/*|\
+      test/chat_cubit_test.dart)
         add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
+        add_test_once out_ref "test/chat_cubit_test.dart"
         ;;
       lib/shared/*|\
       test/shared/*|\
@@ -173,6 +182,22 @@ select_regression_guard_tests() {
       test/features/graphql_demo/*)
         add_test_once out_ref "test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart"
         add_test_once out_ref "test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart"
+        ;;
+      lib/features/in_app_purchase_demo/*|\
+      test/features/in_app_purchase_demo/*)
+        add_test_once out_ref "test/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit_test.dart"
+        ;;
+      lib/features/profile/*|\
+      test/features/profile/*)
+        add_test_once out_ref "test/features/profile/data/offline_first_profile_repository_test.dart"
+        ;;
+      lib/features/supabase_auth/*|\
+      test/features/supabase_auth/*)
+        add_test_once out_ref "test/features/supabase_auth/presentation/cubit/supabase_auth_cubit_test.dart"
+        ;;
+      lib/features/websocket/*|\
+      test/features/websocket/*)
+        add_test_once out_ref "test/features/websocket/data/echo_websocket_repository_test.dart"
         ;;
       lib/features/todo_list/*|\
       test/features/todo_list/*)

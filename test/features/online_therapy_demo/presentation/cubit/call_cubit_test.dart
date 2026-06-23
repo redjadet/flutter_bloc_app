@@ -16,6 +16,15 @@ void main() {
     status: AppointmentStatus.confirmed,
     createdAt: DateTime.utc(2026, 4, 20),
   );
+  final secondAppointment = Appointment(
+    id: 'appt-2',
+    therapistId: 'therapist-1',
+    clientId: 'client-1',
+    startAt: DateTime.utc(2026, 4, 23, 10),
+    endAt: DateTime.utc(2026, 4, 23, 11),
+    status: AppointmentStatus.confirmed,
+    createdAt: DateTime.utc(2026, 4, 21),
+  );
 
   final sampleSession = CallSession(
     id: 'session-1',
@@ -128,17 +137,7 @@ void main() {
     test('stale refresh does not overwrite newer appointments', () async {
       final delayedRepo = _DelayedAppointmentRepository(
         first: <Appointment>[sampleAppointment],
-        second: <Appointment>[
-          Appointment(
-            id: 'appt-2',
-            therapistId: 'therapist-1',
-            clientId: 'client-1',
-            startAt: DateTime.utc(2026, 4, 23, 10),
-            endAt: DateTime.utc(2026, 4, 23, 11),
-            status: AppointmentStatus.confirmed,
-            createdAt: DateTime.utc(2026, 4, 21),
-          ),
-        ],
+        second: <Appointment>[secondAppointment],
       );
       final cubit = CallCubit(
         appointments: delayedRepo,
@@ -155,6 +154,56 @@ void main() {
       expect(cubit.state.selectedAppointmentId, 'appt-2');
       expect(cubit.state.appointments.length, 1);
       expect(cubit.state.appointments.single.id, 'appt-2');
+    });
+
+    test('stale createSession does not overwrite appointment change', () async {
+      final calls = _DelayedCallRepository();
+      final cubit = CallCubit(
+        appointments: _FakeAppointmentRepository(
+          listResult: <Appointment>[sampleAppointment, secondAppointment],
+        ),
+        calls: calls,
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+      expect(cubit.state.selectedAppointmentId, 'appt-1');
+
+      final Future<void> createFuture = cubit.createSession();
+      await Future<void>.delayed(Duration.zero);
+      cubit.selectAppointment('appt-2');
+      calls.completeCreate(sampleSession);
+      await createFuture;
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.selectedAppointmentId, 'appt-2');
+      expect(cubit.state.session, isNull);
+    });
+
+    test('stale join does not overwrite appointment change', () async {
+      final calls = _DelayedCallRepository(createResult: sampleSession);
+      final cubit = CallCubit(
+        appointments: _FakeAppointmentRepository(
+          listResult: <Appointment>[sampleAppointment, secondAppointment],
+        ),
+        calls: calls,
+      );
+      addTearDown(cubit.close);
+
+      await cubit.refresh();
+      await cubit.createSession();
+      cubit.toggleCameraPermission(granted: true);
+      cubit.toggleMicrophonePermission(granted: true);
+
+      final Future<void> joinFuture = cubit.join();
+      await Future<void>.delayed(Duration.zero);
+      cubit.selectAppointment('appt-2');
+      calls.completeJoin(joinedSession);
+      await joinFuture;
+
+      expect(cubit.state.isBusy, isFalse);
+      expect(cubit.state.selectedAppointmentId, 'appt-2');
+      expect(cubit.state.session, isNull);
     });
   });
 }
@@ -261,5 +310,36 @@ class _FakeCallRepository implements TherapyCallRepository {
           provider: CallProvider.simulated,
           joinStatus: CallJoinStatus.connected,
         );
+  }
+}
+
+class _DelayedCallRepository implements TherapyCallRepository {
+  _DelayedCallRepository({this.createResult});
+
+  final CallSession? createResult;
+  Completer<CallSession>? _createCompleter;
+  Completer<CallSession>? _joinCompleter;
+
+  void completeCreate(final CallSession session) {
+    _createCompleter?.complete(session);
+  }
+
+  void completeJoin(final CallSession session) {
+    _joinCompleter?.complete(session);
+  }
+
+  @override
+  Future<CallSession> createSession({required String appointmentId}) {
+    if (createResult case final session?) {
+      return Future<CallSession>.value(session);
+    }
+    _createCompleter = Completer<CallSession>();
+    return _createCompleter!.future;
+  }
+
+  @override
+  Future<CallSession> join({required String callSessionId}) {
+    _joinCompleter = Completer<CallSession>();
+    return _joinCompleter!.future;
   }
 }

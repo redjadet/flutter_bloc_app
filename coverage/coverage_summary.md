@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **72.39%** (22965/31724 lines)
+*Total line coverage*: **72.40%** (22971/31728 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -423,7 +423,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/platform/native_platform_service.dart` | 85.71% | 30/35 |
 | `lib/shared/utils/context_utils.dart` | 85.71% | 6/7 |
 | `lib/shared/widgets/deferred_page.dart` | 85.71% | 18/21 |
-| `lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart` | 85.94% | 55/64 |
 | `lib/features/search/presentation/widgets/search_text_field.dart` | 85.96% | 49/57 |
 | `lib/features/native_platform_showcase/presentation/widgets/native_showcase_l10n_extensions.dart` | 86.21% | 25/29 |
 | `lib/shared/widgets/diagnostics/graphql_cache_controls_section.dart` | 86.49% | 32/37 |
@@ -477,6 +476,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/data/offline_first_chat_repository.dart` | 89.47% | 34/38 |
 | `lib/features/search/data/offline_first_search_repository.dart` | 89.47% | 34/38 |
 | `lib/shared/widgets/root_aware_back_button.dart` | 89.47% | 17/19 |
+| `lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart` | 89.71% | 61/68 |
 | `lib/core/di/register_iot_demo_services.dart` | 90.00% | 18/20 |
 | `lib/features/auth/presentation/widgets/register_body.dart` | 90.00% | 9/10 |
 | `lib/features/in_app_purchase_demo/data/iap_demo_credits_store.dart` | 90.00% | 18/20 |
