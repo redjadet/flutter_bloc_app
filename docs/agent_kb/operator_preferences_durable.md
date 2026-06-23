@@ -41,6 +41,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - README or substantive `docs/**` edits: run `markdownlint-cli2` on touched paths until clean; see [`docs/agents_appendix.md`](../agents_appendix.md).
 - Pre-commit review: on client-facing Dart delivery, run final diff review (`review-changes-improve`, `pre-delivery-flutter-review`) and close findings before commit/PR.
 - **Integration log gate:** `./bin/integration_tests` fails on warning/error logs via `_assertNoUnexpectedIntegrationLogs` unless narrowly allowlisted in `integration_test/test_harness_log_filtering.dart` — fix product code first; do not broaden allowlist without evidence.
+- **Coverage CI floor:** CI enforces **75%** *filtered* rollup from [`tool/update_coverage_summary.dart`](../../tool/update_coverage_summary.dart) (not raw `lcov`); team target **85%** in [`CODE_QUALITY.md`](../CODE_QUALITY.md). `COVERAGE_THRESHOLD=75` in CI workflows; `tool/test_coverage.sh` ends with `dart run tool/update_coverage_summary.dart --enforce-threshold`. Rollup exclusions (`.part.dart`, platform/demo adapters) live in the tool — do not compare against unfiltered `lcov --summary`.
 - **`upgrade_validate_all` step 2b:** after `flutter pub upgrade --major-versions`, runs `tool/check_pubspec_codegen_compat.sh` and auto-restores `json_serializable: ^6.14.0` + `analyzer: 10.0.2` / `dart_style: 3.1.4` overrides when major bumps break the codegen graph. Native lints use `analysis_server_plugin` (`plugins:` + `path:` in `analysis_options.yaml`); `custom_lint` removed from root `pubspec.yaml`.
 
 ## Host Setup
@@ -68,6 +69,8 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Repo Guardrails
 
+- **Business logic / UI separation:** Keep filtering, lookup, aggregation, default workflow windows, and repository calls in cubit/domain—not widgets/pages. Preflight: `RISK-PRES-LOGIC-IN-UI` in [`ai/ai_failure_risks.md`](../ai/ai_failure_risks.md). Detail: [`changes/2026-06-23_business-logic-ui-separation.md`](../changes/2026-06-23_business-logic-ui-separation.md).
+- **`tool/check_select_state_allocating_getters.sh`:** `selectState` must not read presentation state list getters that allocate via `.toList()`—use value-equality view data, selector-local filtering, or memoization instead.
 - **`tool/check_inherited_widget_in_initstate.sh`:** Match `context.cubit<` (not only `context.cubit(`); allow inherited reads inside `addPostFrameCallback`. Fixes → postFrameCallback + `mounted` ([`changes/2026-06-22_batch-c-therapy-initstate-call-guard.md`](../changes/2026-06-22_batch-c-therapy-initstate-call-guard.md)).
 - **Dense `docs/changes/` inventory tables:** Wide pipe tables may need `<!-- markdownlint-disable MD060 -->` at file top (bug-hunt inventory precedent).
 - **Stream bug-hunt inventory:** Before stream hardening, ripgrep `cancelOnError:\s*true` and `onError:\s*\(_\)\s*\{\s*\}` under `lib/`; repro-first per hit ([`changes/2026-06-22_batch-b-stream-error-hardening.md`](../changes/2026-06-22_batch-b-stream-error-hardening.md)).

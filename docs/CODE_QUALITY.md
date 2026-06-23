@@ -14,7 +14,7 @@ layer.
 Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
 Top gaps tracked there (cadence 3+):
 
-1. **Coverage** — total 73.35% vs 85% team target ([coverage summary](../coverage/coverage_summary.md)); integration merge can raise rollup.
+1. **Coverage** — CI minimum **75%** filtered rollup; team target **85%** ([coverage summary](../coverage/coverage_summary.md)); integration merge can raise rollup.
 2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
 3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 
@@ -68,7 +68,7 @@ Source of truth for gates and guardrails:
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage target: 85% (team standard). Current value: see [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+- Coverage minimum: **75%** filtered rollup (CI gate). Team target: **85%** — see [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
 

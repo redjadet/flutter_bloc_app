@@ -56,7 +56,7 @@ When Renovate or Dependabot creates a pull request, GitHub Actions automatically
 1. Runs `flutter pub get`
 2. Runs `flutter analyze`
 3. Runs `flutter test --coverage`
-4. Enforces coverage threshold (60%)
+4. Enforces coverage threshold (75% filtered rollup)
 5. Comments on the PR with test results
 
 See `.github/workflows/dependency-updates.yml` for details.

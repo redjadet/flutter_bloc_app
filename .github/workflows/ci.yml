@@ -50,7 +50,7 @@ concurrency:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   FLUTTER_VERSION: '3.44.3'
-  COVERAGE_THRESHOLD: '60'
+  COVERAGE_THRESHOLD: '75'
   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
   IOS_SIMULATOR_PREFERRED_NAMES: 'iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16'
   INTEGRATION_TESTS_TIMEOUT_SECONDS: '1800'
@@ -182,17 +182,6 @@ jobs:
           github.event.inputs.run_tests != 'false' &&
           github.event.inputs.run_analyze == 'false'
         run: tool/test_coverage.sh
-
-      - name: Enforce coverage threshold
-        if: >-
-          github.event_name != 'workflow_dispatch' ||
-          github.event.inputs.run_tests != 'false'
-        run: |
-          COVERAGE_FILE=coverage/lcov.info
-          TARGET="${{ env.COVERAGE_THRESHOLD }}"
-          ACTUAL=$(lcov --summary "$COVERAGE_FILE" | awk '/lines/ {print $2}' | sed 's/%//')
-          echo "Coverage: $ACTUAL%"
-          awk -v actual="$ACTUAL" -v target="$TARGET" 'BEGIN { exit (actual + 0 >= target + 0 ? 0 : 1) }'
 
       - name: Upload coverage report
         if: >-
