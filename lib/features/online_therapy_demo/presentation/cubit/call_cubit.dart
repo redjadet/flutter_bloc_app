@@ -115,21 +115,29 @@ class CallCubit extends Cubit<CallState> {
   }
 
   void selectAppointment(final String appointmentId) {
-    emit(state.copyWith(selectedAppointmentId: appointmentId, session: null));
+    _operationGuard.invalidate();
+    emit(
+      state.copyWith(
+        isBusy: false,
+        selectedAppointmentId: appointmentId,
+        session: null,
+      ),
+    );
   }
 
   Future<void> createSession() async {
     final apptId = state.selectedAppointmentId;
     if (apptId == null) return;
+    final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true));
     await CubitExceptionHandler.executeAsync(
       operation: () => _calls.createSession(appointmentId: apptId),
       onSuccess: (session) {
-        if (isClosed) return;
+        if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, session: session));
       },
       onError: (message) {
-        if (isClosed) return;
+        if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, errorMessage: message));
       },
       logContext: 'CallCubit.createSession',
@@ -148,15 +156,16 @@ class CallCubit extends Cubit<CallState> {
       );
       return;
     }
+    final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true));
     await CubitExceptionHandler.executeAsync(
       operation: () => _calls.join(callSessionId: session.id),
       onSuccess: (updated) {
-        if (isClosed) return;
+        if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, session: updated));
       },
       onError: (message) {
-        if (isClosed) return;
+        if (!_isRequestStillActive(requestId)) return;
         emit(state.copyWith(isBusy: false, errorMessage: message));
       },
       logContext: 'CallCubit.join',
