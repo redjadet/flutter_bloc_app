@@ -121,6 +121,7 @@ class _FakeRemoteRepository
     List<TodoItem>? initial,
     this.shouldThrowOnSave = false,
     this.shouldThrowOnDelete = false,
+    this.shouldThrowOnFetch = false,
     // Keep disabled by default to avoid background merges affecting tests.
     this.enableWatch = false,
   }) : _items = initial ?? [];
@@ -130,10 +131,16 @@ class _FakeRemoteRepository
   final List<String> deletedIds = [];
   final bool shouldThrowOnSave;
   final bool shouldThrowOnDelete;
+  final bool shouldThrowOnFetch;
   final bool enableWatch;
 
   @override
-  Future<List<TodoItem>> fetchAll() async => List<TodoItem>.from(_items);
+  Future<List<TodoItem>> fetchAll() async {
+    if (shouldThrowOnFetch) {
+      throw Exception('Simulated remote fetch failure');
+    }
+    return List<TodoItem>.from(_items);
+  }
 
   @override
   Stream<List<TodoItem>> watchAll() async* {
@@ -747,6 +754,39 @@ void main() {
       final List<TodoItem> local = await localRepository.fetchAll();
       expect(local, isEmpty);
     });
+
+    test(
+      'pullRemote does not delete local items when remote fetch fails',
+      () async {
+        final TodoItem localItem = TodoItem.create(
+          title: 'Synced Local',
+        ).copyWith(
+          synchronized: true,
+          lastSyncedAt: DateTime.now().toUtc(),
+        );
+        await localRepository.save(localItem);
+
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          shouldThrowOnFetch: true,
+          enableWatch: false,
+        );
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        await repository.pullRemote();
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local.length, 1);
+        expect(local.first.id, localItem.id);
+        expect(local.first.title, 'Synced Local');
+      },
+    );
 
     test('pullRemote applies newer remote items', () async {
       final DateTime remoteTimestamp = DateTime.now().toUtc().subtract(

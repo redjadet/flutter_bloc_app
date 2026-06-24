@@ -128,7 +128,7 @@ void main() {
       expect(result.last.id, 'todo-1'); // Older last
     });
 
-    test('fetchAll falls back to empty list on firebase exception', () async {
+    test('fetchAll rethrows firebase exception', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
         signedIn: true,
         mockUser: MockUser(uid: 'user-456'),
@@ -145,11 +145,12 @@ void main() {
       final RealtimeDatabaseTodoRepository repository =
           RealtimeDatabaseTodoRepository(todoRef: rootRef, auth: auth);
 
-      final List<TodoItem> result = await AppLogger.silenceAsync(() {
-        return repository.fetchAll();
+      await AppLogger.silenceAsync(() async {
+        await expectLater(
+          repository.fetchAll(),
+          throwsA(isA<FirebaseException>()),
+        );
       });
-
-      expect(result, isEmpty);
     });
 
     test('fetchAll skips invalid entries and logs errors', () async {
