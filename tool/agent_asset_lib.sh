@@ -289,6 +289,29 @@ check_codex_rules_block() {
   echo "ok|$target"
 }
 
+# Workspace .cursor/rules must not repeat files synced to ~/.cursor/rules (double always-on / glob context).
+check_workspace_managed_rule_duplicates() {
+  local workspace_rules="$repo_root/.cursor/rules"
+  local mapping src_rel dst rule_file workspace_rule
+  if [[ ! -d "$workspace_rules" ]]; then
+    echo "ok|$workspace_rules"
+    return 0
+  fi
+  for mapping in "${managed_cursor_files[@]}"; do
+    src_rel="${mapping%%|*}"
+    [[ "$src_rel" == cursor/rules/* ]] || continue
+    dst="${mapping##*|}"
+    rule_file="$(basename "$dst")"
+    workspace_rule="$workspace_rules/$rule_file"
+    if [[ -f "$workspace_rule" ]]; then
+      echo "workspace-rule-duplicate|$workspace_rule|remove; canon syncs to $dst"
+      return 1
+    fi
+  done
+  echo "ok|$workspace_rules"
+  return 0
+}
+
 # Workspace .cursor/skills must not repeat names synced to ~/.cursor/skills (duplicate picker entries).
 check_workspace_managed_skill_duplicates() {
   local workspace_skills="$repo_root/.cursor/skills"

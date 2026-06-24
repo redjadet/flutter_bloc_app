@@ -36,6 +36,6 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 - `./tool/check_agent_memory_compounding.sh`: source-aligned memory-compounding; autonomous action explicit-approval-gated.
 - `./tool/validate_validation_docs.sh`: validation docs vs on-disk `check_*.sh` inventory and catalog counts.
 - `./tool/normalize_doc_links.py`: clickable local links.
-- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates.
+- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates; fails on workspace `.cursor/skills/` or `.cursor/rules/` duplicates of synced host assets.
 - `./bin/checklist`: full gate. `./bin/checklist-fast`: local-only clean/narrow docs/tooling.
 - `.original.md` compression backups temporary; delete after verifying active docs.

@@ -47,7 +47,7 @@ normalize_status_line() {
 
   while IFS= read -r line; do
     [[ -z "$line" ]] && continue
-    if [[ "$line" =~ (ok|update|missing-source|missing-target|toolchain-drift|workspace-skill-duplicate)\|.*$ ]]; then
+    if [[ "$line" =~ (ok|update|missing-source|missing-target|toolchain-drift|workspace-rule-duplicate|workspace-skill-duplicate)\|.*$ ]]; then
       extracted="${BASH_REMATCH[0]}"
     fi
   done <<< "$raw"
@@ -90,6 +90,13 @@ toolchain_raw_status="$(check_toolchain_mentions)" || true
 toolchain_status="$(normalize_status_line "$toolchain_raw_status")"
 echo "${toolchain_status:-$toolchain_raw_status}"
 if [[ "${toolchain_status%%|*}" != "ok" ]]; then
+  failures=1
+fi
+
+rule_dup_raw_status="$(check_workspace_managed_rule_duplicates)" || true
+rule_dup_status="$(normalize_status_line "$rule_dup_raw_status")"
+echo "${rule_dup_status:-$rule_dup_raw_status}"
+if [[ "${rule_dup_status%%|*}" != "ok" ]]; then
   failures=1
 fi
 

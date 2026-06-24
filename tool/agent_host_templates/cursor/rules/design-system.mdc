@@ -19,7 +19,11 @@ alwaysApply: false
 - Avoid ad-hoc colors, spacing, typography, radii, component states when shared tokens/styles fit.
 - Build real workflow/demo first; avoid landing/marketing pages unless required.
 - Verify states: loading, empty, error, disabled, offline/sync, success.
-- Check mobile/tablet/desktop for clipped text, overlap, unstable controls, hidden primary content.
+- Responsive: no fixed sizes on reflowable UI; `LayoutBuilder` / `MediaQuery` when suitable — `docs/design_system.md` § Responsive layout.
+- Cross-platform: widgets must work on mobile, tablet, web, desktop — `docs/design_system.md` § Cross-platform form factors; `flutter-cross-platform-modern`.
+- Check mobile/tablet/desktop (and web pointer/focus when applicable) for clipped text, overlap, unstable controls, hidden primary content.
 - If `DESIGN.md` changed, run `./tool/check_design_md.sh`.
 - If Mix tokens/styles changed, run `./tool/run_mix_lint.sh` plus focused
   widget/app-visible proof where practical.
+- Large `lib/` edits: keep files ≤225 lines (`file_too_long`); run
+  `./tool/run_file_length_lint.sh` when splitting or adding substantial code.

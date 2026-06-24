@@ -42,6 +42,7 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | File discovery layers | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) (old § Context Navigation Ladder) | Resolved | Renamed/de-numbered 2026-05-22 pass 2 |
 | Cold-start bootstrap output | [`tool/agent_session_bootstrap.sh`](../../tool/agent_session_bootstrap.sh) | Canonical echo | `read_next` → [`context_loading.md`](../ai/context_loading.md); discovery pointer only (no 1–4 ladder) |
 | Auto memory upkeep | [`tool/agent_memory_auto_maintain.sh`](../../tool/agent_memory_auto_maintain.sh) | Canonical | `--verify` after sync `--apply`; `--if-changed` from KB check (local only) |
+| Workspace rule duplicates | [`tool/agent_asset_lib.sh`](../../tool/agent_asset_lib.sh) `check_workspace_managed_rule_duplicates` | Canonical | Fail drift when `.cursor/rules/` repeats files synced to `~/.cursor/rules/` |
 | Review gate / checks table | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Canonical | Full checks + risk matrix + special cases |
 | Finish gate / report shape | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) | Canonical | Legibility + Files Changed / Follow-up Actions |
 | Finish gate | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Echo | Pointer only; no duplicate report-shape prose |
