@@ -16,14 +16,22 @@ import 'package:hive/hive.dart';
 class _FakeRemoteRepository
     with CounterRepositoryNoPendingSync
     implements CounterRepository {
-  _FakeRemoteRepository({CounterSnapshot? initial}) : _snapshot = initial;
+  _FakeRemoteRepository({
+    CounterSnapshot? initial,
+    this.shouldThrowOnLoad = false,
+  }) : _snapshot = initial;
 
   CounterSnapshot? _snapshot;
   CounterSnapshot? saved;
+  final bool shouldThrowOnLoad;
 
   @override
-  Future<CounterSnapshot> load() async =>
-      _snapshot ?? const CounterSnapshot(count: 0);
+  Future<CounterSnapshot> load() async {
+    if (shouldThrowOnLoad) {
+      throw Exception('Simulated remote load failure');
+    }
+    return _snapshot ?? const CounterSnapshot(count: 0);
+  }
 
   @override
   Future<void> save(final CounterSnapshot snapshot) async {
@@ -278,6 +286,38 @@ void main() {
     });
 
     test(
+      'pullRemote does not overwrite local when remote load fails',
+      () async {
+        final DateTime localChanged = DateTime(2024, 1, 2, 12);
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          shouldThrowOnLoad: true,
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await localRepository.save(
+          CounterSnapshot(
+            count: 5,
+            lastChanged: localChanged,
+            synchronized: true,
+            lastSyncedAt: localChanged,
+          ),
+        );
+
+        await repository.pullRemote();
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 5);
+        expect(local.synchronized, isTrue);
+      },
+    );
+
+    test(
       'pullRemote does not overwrite newer synchronized local count',
       () async {
         final DateTime localChanged = DateTime(2024, 1, 2, 12);
@@ -342,7 +382,7 @@ void main() {
         );
 
         local.onSecondLoad = () async {
-        await local.save(
+          await local.save(
             CounterSnapshot(
               count: 4,
               lastChanged: newerChanged,
@@ -417,7 +457,7 @@ void main() {
             );
 
         final DateTime initialChanged = DateTime(2024, 1, 1, 12);
-      final DateTime newerChanged = DateTime(2024, 1, 3, 12);
+        final DateTime newerChanged = DateTime(2024, 1, 3, 12);
         await localRepository.save(
           CounterSnapshot(
             count: 3,
@@ -428,7 +468,7 @@ void main() {
         );
 
         local.onSecondLoad = () async {
-        await local.save(
+          await local.save(
             CounterSnapshot(
               count: 4,
               lastChanged: newerChanged,
@@ -437,19 +477,19 @@ void main() {
           );
         };
 
-      final StreamSubscription sub = repository.watch().listen((_) {});
-      addTearDown(sub.cancel);
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
 
         remote.controller.add(
           CounterSnapshot(count: 5, lastChanged: DateTime(2024, 1, 2, 12)),
         );
-      final CounterSnapshot stored = await _waitForLocalSnapshot(
+        final CounterSnapshot stored = await _waitForLocalSnapshot(
           localRepository,
-        (final CounterSnapshot snapshot) =>
-            snapshot.count == 4 && snapshot.lastChanged == newerChanged,
+          (final CounterSnapshot snapshot) =>
+              snapshot.count == 4 && snapshot.lastChanged == newerChanged,
         );
         expect(stored.count, 4);
-      expect(stored.lastChanged, newerChanged);
+        expect(stored.lastChanged, newerChanged);
 
         await sub.cancel();
       },

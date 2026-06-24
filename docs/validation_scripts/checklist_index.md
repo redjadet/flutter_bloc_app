@@ -11,6 +11,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_clean_architecture_imports.sh`
 - `check_feature_folder_contract.sh`
 - `check_offline_first_remote_merge.sh`
+- `check_remote_fetch_failure_fallback.sh`
 - `check_material_buttons.sh`
 - `check_no_hive_openbox.sh`
 - `check_raw_timer.sh`

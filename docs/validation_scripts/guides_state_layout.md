@@ -172,6 +172,21 @@ stream.listen((data) {
 
 - Before applying remote over local, use `_shouldApplyRemote`-style check: when local is not synchronized, apply remote only if remote is strictly newer (e.g. `remote.lastChanged.isAfter(local.lastChanged)`). After the initial local read in a merge loop, **re-read immediately before each `save`/`delete`** and re-run the predicate (TOCTOU). See `OfflineFirstCounterRepository._applyRemoteSnapshotIfCurrent`, `offline_first_todo_repository_helpers.dart`, and [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md).
 
-**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. Add TOCTOU tests that intercept the second local read during merge and assert a concurrent local edit wins. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`; the guard fails if it discovers a matching regression test that is not wired in.
+**Adding tests**: When adding new offline-first repository that merges remote watch into local, add regression test that emits older remote snapshot and asserts local is unchanged. Add TOCTOU tests that intercept the second local read during merge and assert a concurrent local edit wins. When the repository replays queued writes, add a regression test that refuses to push an older queued snapshot over newer remote state. Add a regression test that `pullRemote` retains local data when remote `fetchAll`/`load` fails. Add that test file to the selection in `tool/check_offline_first_remote_merge.sh`; the guard fails if it discovers a matching regression test that is not wired in.
+
+---
+
+### `check_remote_fetch_failure_fallback.sh`
+
+**Purpose**: Catch remote read ops that swallow fetch errors via `onFailureFallback`. An empty list or default snapshot on failure is indistinguishable from a real empty remote and can trigger offline-first mass-delete during `pullRemote`.
+
+**What it checks**:
+
+- Scans `lib/` for `_executeForUser` / `runWithAuthUser` calls where `operation` is a read (`fetchAll`, `load`, `getAll`, `fetch`, `read`, `list`) and `onFailureFallback` is present.
+- Write ops (`save`, `delete`, …) may still use no-op fallbacks.
+
+**Correct pattern**: Remove `onFailureFallback` from remote reads; let `OfflineFirst*Repository.pullRemote` catch and log without merging.
+
+**Reference**: [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) § Remote fetch failures.
 
 ---

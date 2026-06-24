@@ -44,7 +44,6 @@ class RealtimeDatabaseTodoRepository
       );
       return _itemsFromValue(snapshot.value, userId: user.uid);
     },
-    onFailureFallback: () async => const <TodoItem>[],
   );
 
   @override

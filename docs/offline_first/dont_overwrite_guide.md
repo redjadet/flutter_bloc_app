@@ -61,6 +61,19 @@ remoteSub = _remoteRepository.watch().listen((final remote) async {
 });
 ```
 
+## Remote fetch failures are not empty remotes
+
+**Never** use `onFailureFallback` on remote **read** operations (`fetchAll`, `load`, …) when that fallback returns an empty list or default snapshot. A failed fetch is not the same as “remote has no data.”
+
+If the read swallows the error, offline-first `pullRemote()` may merge the fallback as truth. For list entities, synchronized locals missing from an empty remote snapshot can be **deleted**. For single-entity repos, a default `count: 0` can overwrite a synced local value.
+
+**Correct pattern:** let read errors propagate to `pullRemote`’s `try/catch` (log and skip merge). Write ops (`save`/`delete`) may still use no-op fallbacks where appropriate.
+
+**Guards in this repo:**
+
+- Static: `tool/check_remote_fetch_failure_fallback.sh` (wired in `./bin/checklist`).
+- Regression: `pullRemote does not delete local items when remote fetch fails` (todo), `pullRemote does not overwrite local when remote load fails` (counter); run via `tool/check_offline_first_remote_merge.sh`.
+
 ### List-entity (e.g. todos)
 
 For lists, run the same idea per item: **do not overwrite a local item with a remote item when local is newer or when local is unsynced and remote isn’t clearly newer.**
@@ -158,6 +171,7 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 | TOCTOU delete on `pullRemote` | N/A (single-entity) | `pullRemote re-checks local before deleting a missing remote item` |
 | TOCTOU delete on watch | N/A (single-entity) | `remote watch re-checks local before deleting a missing remote item` |
 | Stale pending queue replay | `processOperation does not push stale pending over newer remote` | `processOperation does not push stale pending over newer remote` |
+| Remote fetch/load failure on `pullRemote` | `pullRemote does not overwrite local when remote load fails` | `pullRemote does not delete local items when remote fetch fails` |
 
 ## Checklist for other repos
 

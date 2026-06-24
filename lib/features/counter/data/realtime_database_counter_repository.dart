@@ -27,7 +27,6 @@ class RealtimeDatabaseCounterRepository
        _auth = auth ?? FirebaseAuth.instance;
 
   static const String _defaultCounterPath = 'counter';
-  static const CounterSnapshot _emptySnapshot = CounterSnapshot(count: 0);
 
   final DatabaseReference _counterRef;
   final FirebaseAuth _auth;
@@ -45,10 +44,6 @@ class RealtimeDatabaseCounterRepository
         '${snapshot.exists}',
       );
       return snapshotFromValue(snapshot.value, userId: user.uid);
-    },
-    onFailureFallback: () async {
-      final String? userId = _auth.currentUser?.uid;
-      return _emptySnapshot.copyWith(userId: userId);
     },
   );
 

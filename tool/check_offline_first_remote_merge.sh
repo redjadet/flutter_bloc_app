@@ -165,7 +165,7 @@ validate_guard_inventory() {
       discovered_files+=("$discovered_file")
     done < <(
       rg -l \
-        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|re-checks local before save|re-checks local before deleting" \
+        "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting" \
         test/features/*/data/*offline_first*_repository_test.dart \
         2>/dev/null || true
     )
@@ -176,7 +176,7 @@ validate_guard_inventory() {
     done < <(
       find test/features -path '*/data/*offline_first*_repository_test.dart' -type f \
         -exec grep -lE \
-          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|re-checks local before save|re-checks local before deleting" \
+          "does not push stale pending over newer remote|does not overwrite newer|does not overwrite local when there are pending|does not delete local.*when remote fetch fails|does not overwrite local when remote load fails|re-checks local before save|re-checks local before deleting" \
           {} + 2>/dev/null || true
     )
   fi
