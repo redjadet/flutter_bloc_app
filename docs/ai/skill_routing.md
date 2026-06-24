@@ -75,6 +75,7 @@ For any non-trivial task:
 | Flutter baseline (theme, l10n, BLoC access) | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern`; search `type-safe-bloc-access` if available |
 | Cross-platform / responsive / platform behavior | `flutter-cross-platform-modern` |
 | Checks, regression guards, test routing | `agents-validation-testing` |
+| After non-trivial bug fix / prevent recurrence / harden fix | `agents-regression-capture` (same turn, before done); then `agents-validation-testing` for wiring |
 | Analysis / layout / runtime errors (active debug) | [`agent_kb/devtools_runtime_errors.md`](../agent_kb/devtools_runtime_errors.md); then `dart-fix-runtime-errors`, `systematic-debugging`, `flutter-fix-layout-issues` |
 | Pub dependency / version-sensitive API | [`agent_kb/package_docs_mcp.md`](../agent_kb/package_docs_mcp.md); Context7 `resolve-library-id` + `query-docs`; `user-dart` `read_package_uris` / `rip_grep_packages`; skill `context7-mcp`, `flutter-ai-rules` |
 | Supabase schema / migrations | `agents-supabase`; search `ai-safe-supabase-workflow` if available |
@@ -99,9 +100,9 @@ Use official skills only for task procedure missing from repo docs:
 | --- | --- |
 | Ambiguous feature / scope unclear | `brainstorming` |
 | Multi-step work before coding | `writing-plans` |
-| Bug / test failure / unexpected behavior | `systematic-debugging` |
+| Bug / test failure / unexpected behavior | `systematic-debugging`; after fix lands → `agents-regression-capture` |
 | Before claiming done / commit / PR | `verification-before-completion` |
-| New logic or bugfix with tests requested | `test-driven-development` |
+| New logic or bugfix with tests requested | `test-driven-development` (during fix); `agents-regression-capture` after fix for wiring/lessons — skip when class already guarded |
 
 ## Repo validation overrides
 

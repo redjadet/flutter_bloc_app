@@ -1,6 +1,11 @@
 ---
 name: agents-skill-routing
-description: Discover and invoke the right agent skills for Flutter BLoC app tasks — repo-first routing, official Dart/Flutter skills, discovery commands. Use when starting implementation, tests, debugging, validation, or host setup; or when unsure which skill applies.
+description: >-
+  Discover and invoke the right agent skills for Flutter BLoC app tasks —
+  repo-first routing, official Dart/Flutter skills, discovery commands, and
+  bug-fix hardening via agents-regression-capture. Use when starting
+  implementation, tests, debugging, validation, or host setup; or when unsure
+  which skill applies.
 ---
 
 # Skill Routing
@@ -23,6 +28,7 @@ For non-trivial work, find and invoke a suitable skill before editing or broad c
 | Flutter baseline | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern` |
 | Cross-platform UI | `flutter-cross-platform-modern` |
 | Checks / tests routing | `agents-validation-testing` |
+| Bug fixed / prevent recurrence | `agents-regression-capture` → `agents-validation-testing` |
 | Analyze / layout / runtime | [`docs/agent_kb/devtools_runtime_errors.md`](../../../../../docs/agent_kb/devtools_runtime_errors.md); `dart-fix-runtime-errors`, `systematic-debugging`, `flutter-fix-layout-issues` |
 | Pub dependency / API docs | [`docs/agent_kb/package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Context7 + `user-dart`; `context7-mcp`, `flutter-ai-rules` |
 | Globals install/trim | `agents-global-skills-setup` or `./bin/agent-maintain install/update/trim` |

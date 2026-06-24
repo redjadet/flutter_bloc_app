@@ -321,6 +321,7 @@ if [ -d "tool/agent_host_templates" ]; then
   require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-async/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-canonical-rules-platform/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-validation-testing/SKILL.md"
+  require_absent "tool/agent_host_templates/cursor/skills/agents-regression-capture/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-common-pitfalls/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-modularity/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/agents-shared-patterns/SKILL.md"
@@ -367,7 +368,9 @@ if [ -d "tool/agent_host_templates" ]; then
     "95% confident" \
     "Surgical diff" \
     "Self-verify final response" \
-    "Report only after Verify"
+    "Report only after Verify" \
+    "agents-regression-capture" \
+    "Finish gate"
 
   require_absent "tool/agent_host_templates/codex/skills/flutter-cross-platform-modern/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/flutter-cross-platform-modern/SKILL.md"
@@ -501,6 +504,11 @@ if [ -d "tool/agent_host_templates" ]; then
     "agent_knowledge_base.md#multi-agent-hub"
 
   require_contains "tool/agent_asset_lib.sh" "agents-skill-routing/SKILL.md"
+  require_contains "tool/agent_asset_lib.sh" "agents-regression-capture/SKILL.md"
+
+  require_all_contains \
+    "docs/ai/skill_routing.md" \
+    "agents-regression-capture"
 
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-skill-routing/SKILL.md" \

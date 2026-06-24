@@ -1,13 +1,17 @@
 ---
 name: agents-validation-testing
-description: Validation scripts, regression guards, and testing requirements for this repo. Use when running checks, adding regression tests, or touching Mix/lifecycle/offline-first.
+description: >-
+  Validation scripts, regression guards, and testing requirements for this repo.
+  After non-trivial bug fix, use with agents-regression-capture. Use when
+  running checks, adding regression tests, or touching Mix/lifecycle/offline-first.
 ---
 
 # Validation and testing
 
 ## When to use
 
-Running checks, regression tests, Mix/lifecycle/offline-first touches.
+Running checks, regression tests, Mix/lifecycle/offline-first touches. After a
+non-trivial bug fix, run `agents-regression-capture` first (same turn).
 
 ## Pointers
 

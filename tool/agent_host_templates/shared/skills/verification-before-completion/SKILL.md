@@ -6,3 +6,5 @@ description: Auto-use before “done”; require proof before claiming done.
 # Verification before completion
 
 Use before claiming done. Repo rule: execute end-to-end, verify, report proof; validation chooser in `docs/agents_quick_reference.md`.
+
+After a non-trivial bug fix, complete `agents-regression-capture` same turn before done (see `agents-delivery-workflow` finish gate).

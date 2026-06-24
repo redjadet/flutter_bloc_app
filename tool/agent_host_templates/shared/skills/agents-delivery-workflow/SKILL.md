@@ -1,6 +1,9 @@
 ---
 name: agents-delivery-workflow
-description: Shared Codex/Cursor delivery loop for non-trivial work, validation routing, tracker choice, and completion gate before done or commit.
+description: >-
+  Shared Codex/Cursor delivery loop for non-trivial work, validation routing,
+  tracker choice, and completion gate before done or commit. Includes finish
+  gate with post-bug agents-regression-capture before report.
 ---
 
 # Delivery workflow
@@ -20,5 +23,12 @@ UI/platform: `DESIGN.md`, `docs/design_system.md`.
 Host maintain: `agent-maintain preflight`, `agent-maintain closeout`, `host_maintenance_automation.md`.
 
 **File verified reusable conclusions** -> owning doc / `docs/changes/` / `tasks/lessons.md`.
+
+## Finish gate (before done / commit)
+
+1. **Verify** — run narrowest honest validation lane (`docs/engineering/validation_routing_fast_vs_full.md`); report proof, not intent.
+2. **Bug-fix hardening** — if this task fixed a non-trivial bug, race, lifecycle issue, flaky test, or one-off failure that could recur: invoke `agents-regression-capture` **same turn** (before step 3). Skip only with explicit reason in report.
+3. **Report** — Goal / Context / Boundaries / Verification; **Regression capture** block when step 2 ran (or skip reason).
+4. **Host** — `./bin/agent-maintain closeout` when templates or agent docs touched.
 
 **Cursor-only:** Multi-agent hub anchors `Benefit: team` / `Benefit: single`; `tasks/cursor/team/<run-id>/`; `agent_knowledge_base.md#multi-agent-hub`.

@@ -96,7 +96,7 @@ Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish
 
 ## Missing Capability Loop
 
-Repeated failure → durable repo capability, not bigger prompt: identify gap (prompt, evaluator, runtime check, context, tool, fixture, test, script, boundary, acceptance) → add smallest fix → validate → sync host templates only for cold-start discovery → delete stale prose when a guard owns it.
+Repeated failure → durable repo capability, not bigger prompt: identify gap (prompt, evaluator, runtime check, context, tool, fixture, test, script, boundary, acceptance) → add smallest fix → validate → sync host templates only for cold-start discovery → delete stale prose when a guard owns it. Post-bug procedure: `agents-regression-capture` skill.
 
 ## Finish Gate
 
