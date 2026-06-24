@@ -204,6 +204,26 @@ echo "fixtures|check_feature_folder_contract|good_cubit"
 bash tool/check_feature_folder_contract.sh --paths \
   "$fixture_folder_contract/lib/features/orders/presentation/cubit/good_cubit.dart" >/dev/null
 
+fixture_remote_fetch="tool/fixtures/remote_fetch_failure_fallback"
+
+echo "fixtures|check_remote_fetch_failure_fallback|help"
+bash tool/check_remote_fetch_failure_fallback.sh --help >/dev/null
+
+echo "fixtures|check_remote_fetch_failure_fallback|bad"
+if bad_out="$(bash tool/check_remote_fetch_failure_fallback.sh --paths \
+  "$fixture_remote_fetch/bad_fetch_all_fallback.dart" 2>&1)"; then
+  echo "❌ fixtures failed: expected remote fetch fallback check to fail on bad fixture" >&2
+  exit 1
+fi
+if ! printf '%s' "$bad_out" | grep -q "onFailureFallback"; then
+  echo "❌ fixtures failed: remote fetch fallback failure missing reason" >&2
+  exit 1
+fi
+
+echo "fixtures|check_remote_fetch_failure_fallback|good"
+bash tool/check_remote_fetch_failure_fallback.sh --paths \
+  "$fixture_remote_fetch/good_read_no_fallback.dart" >/dev/null
+
 echo "fixtures|scaffold_feature_contract|help"
 bash tool/scaffold_feature_contract.sh --help >/dev/null
 

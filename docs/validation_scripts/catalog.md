@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **92** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **73** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **93** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **74** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -225,7 +225,8 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.
 - **`check_lifecycle_error_handling.sh`**: Snackbar via ErrorHandling, `stream.listen` onError, `context.mounted` after show\*Dialog (see Context & Async Safety below)
-- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots, TOCTOU races between merge snapshot and save/delete, or older queued pending replay). Inventory scan also matches `re-checks local before save|deleting` tests. Fails when matching regression test files exist but are not wired into the guard. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
+- **`check_offline_first_remote_merge.sh`**: Early regression guard ensuring offline-first repos don't overwrite newer state with stale sync data (older remote snapshots, TOCTOU races between merge snapshot and save/delete, or older queued pending replay). Inventory scan also matches `re-checks local before save|deleting` and remote-fetch-failure retention tests. Fails when matching regression test files exist but are not wired into the guard. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local change sets that don't touch offline-first surfaces, but still runs in CI or when relevant files changed.
+- **`check_remote_fetch_failure_fallback.sh`**: Static guard: remote read ops (`fetchAll`, `load`, …) must not use `onFailureFallback` (empty/default fallbacks look like successful empty remotes and can cause offline-first mass-delete on transient errors). See [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) § Remote fetch failures.
 
 ### Context & async safety (checklist; detail in guide shard)
 

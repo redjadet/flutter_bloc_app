@@ -168,7 +168,7 @@ void main() {
       expect(result.lastChanged, isNotNull);
     });
 
-    test('load falls back to empty snapshot on firebase exception', () async {
+    test('load rethrows firebase exception', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
         signedIn: true,
         mockUser: MockUser(uid: 'user-456'),
@@ -185,12 +185,9 @@ void main() {
       final RealtimeDatabaseCounterRepository repository =
           RealtimeDatabaseCounterRepository(counterRef: rootRef, auth: auth);
 
-      final CounterSnapshot result = await AppLogger.silenceAsync(() {
-        return repository.load();
+      await AppLogger.silenceAsync(() async {
+        await expectLater(repository.load(), throwsA(isA<FirebaseException>()));
       });
-
-      expect(result.userId, 'user-456');
-      expect(result.count, 0);
     });
 
     test('save writes normalized snapshot to database', () async {
