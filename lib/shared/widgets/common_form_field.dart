@@ -21,6 +21,9 @@ class CommonFormField extends StatelessWidget {
     this.maxLength,
     this.prefixIcon,
     this.suffixIcon,
+    this.autofillHints,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
     this.enabled = true,
     this.autofocus = false,
   });
@@ -40,6 +43,9 @@ class CommonFormField extends StatelessWidget {
   final int? maxLength;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final Iterable<String>? autofillHints;
+  final bool autocorrect;
+  final bool enableSuggestions;
   final bool enabled;
   final bool autofocus;
 
@@ -57,6 +63,9 @@ class CommonFormField extends StatelessWidget {
       obscureText: obscureText,
       maxLines: maxLines,
       maxLength: maxLength,
+      autofillHints: autofillHints,
+      autocorrect: autocorrect,
+      enableSuggestions: enableSuggestions,
       enabled: enabled,
       autofocus: autofocus,
       decoration: buildCommonInputDecoration(

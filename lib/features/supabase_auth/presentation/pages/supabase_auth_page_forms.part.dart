@@ -83,11 +83,7 @@ class SupabaseAuthSignInForm extends StatelessWidget {
   final bool canSubmit;
   final VoidCallback onFieldsChanged;
   final void Function(String email, String password) onSignIn;
-  final void Function(
-    String email,
-    String password,
-    String? displayName,
-  )
+  final void Function(String email, String password, String? displayName)
   onSignUp;
   final ThemeData theme;
   final ColorScheme colors;
@@ -111,6 +107,9 @@ class SupabaseAuthSignInForm extends StatelessWidget {
           labelText: l10n.supabaseAuthEmailLabel,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
+          autofillHints: const <String>[AutofillHints.email],
+          autocorrect: false,
+          enableSuggestions: false,
           onChanged: (_) => onFieldsChanged(),
         ),
         SizedBox(height: context.responsiveGapM),
@@ -120,6 +119,9 @@ class SupabaseAuthSignInForm extends StatelessWidget {
           helperText: l10n.supabaseAuthPasswordMinLength,
           obscureText: true,
           textInputAction: TextInputAction.done,
+          autofillHints: const <String>[AutofillHints.password],
+          autocorrect: false,
+          enableSuggestions: false,
           onChanged: (_) => onFieldsChanged(),
         ),
         SizedBox(height: context.responsiveGapL),
