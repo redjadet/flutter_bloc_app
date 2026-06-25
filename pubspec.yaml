@@ -134,7 +134,7 @@ dev_dependencies:
   geolocator_platform_interface: ^4.2.8
   golden_toolkit: ^0.15.0
   google_maps_flutter_platform_interface: ^2.15.0
-  google_sign_in_mocks: ^0.3.0
+  google_sign_in_mocks: ^0.4.1
   json_serializable: ^6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
