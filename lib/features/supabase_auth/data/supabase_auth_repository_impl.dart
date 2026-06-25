@@ -37,10 +37,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   final bool Function()? _isConfiguredOverride;
   final User? Function() _readCurrentUser;
   final Stream<AuthState> Function() _authStateChangesStream;
-  final Future<void> Function({
-    required String email,
-    required String password,
-  })
+  final Future<void> Function({required String email, required String password})
   _signInWithPasswordImpl;
   final Future<void> Function({
     required String email,
@@ -77,12 +74,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     }
     return _authStateChangesStream().map((final data) {
       if (kDebugMode) {
-        final String token = data.session?.accessToken ?? '';
-        if (token.isNotEmpty) {
-          AppLogger.debug(
-            'Supabase auth state changed (session present, token len=${token.length})',
-          );
-        }
+        AppLogger.debug(
+          'Supabase auth state changed (session=${data.session != null}).',
+        );
       }
       return _mapSupabaseUser(data.session?.user);
     });
@@ -94,20 +88,10 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     required final String password,
   }) async {
     _requireConfigured();
+    _validateCredentialInputs(email: email, password: password);
     try {
-      await _signInWithPasswordImpl(
-        email: email.trim(),
-        password: password,
-      );
-      if (kDebugMode) {
-        final String token =
-            Supabase.instance.client.auth.currentSession?.accessToken ?? '';
-        if (token.isNotEmpty) {
-          AppLogger.debug(
-            'Supabase sign-in complete (token len=${token.length})',
-          );
-        }
-      }
+      await _signInWithPasswordImpl(email: email.trim(), password: password);
+      if (kDebugMode) AppLogger.debug('Supabase sign-in complete.');
     } on AuthException catch (e) {
       throw _authExceptionFromSupabase(e);
     } on Object catch (error, stackTrace) {
@@ -127,6 +111,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     final String? displayName,
   }) async {
     _requireConfigured();
+    _validateCredentialInputs(email: email, password: password);
     try {
       await _signUpImpl(
         email: email.trim(),

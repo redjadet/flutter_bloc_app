@@ -1,90 +1,84 @@
 # Agent Quick Reference
 
-Commands + routing. Map [`AGENTS.md`](../AGENTS.md); harness [`agent_knowledge_base.md`](agent_knowledge_base.md); context [`agent_project_context.md`](agent_project_context.md); review [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md). Toolchain: Flutter 3.44.3 / Dart 3.12.2 · CI [`ci_automation.md`](ci_automation.md).
+Commands + routing. Map [`AGENTS.md`](../AGENTS.md); context
+[`agent_project_context.md`](agent_project_context.md); harness
+[`agent_knowledge_base.md`](agent_knowledge_base.md); review
+[`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation detail
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Toolchain: Flutter 3.44.4 / Dart 3.12.2
 
 ## Validation Chooser
 
 | Situation | Command |
 | --- | --- |
+| Cold start map | `bash tool/agent_session_bootstrap.sh` |
+| Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight` |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
-| Format Dart source | `./bin/format` or `./bin/format --changed` (respects `.gitignore`; avoids generated `build/` and `.dart_tool/`) |
-| Router / `AppRoutes` / gates / auth UI | `./bin/router_feature_validate` |
+| Format Dart source | `./bin/format` or `./bin/format --changed` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
-| Checklist script → theme mapping | `CHECKLIST_EXPLAIN_THEMES=1 ./bin/checklist` — see [`validation_scripts/catalog.md`](validation_scripts/catalog.md#quality-theme-gates-checklist-mvp-may-2026) |
+| Router / `AppRoutes` / auth gates / auth UI | `./bin/router_feature_validate` |
 | Integration journey / flow | `./bin/integration_tests` |
-| Early integration/bootstrap guardrails | `./bin/integration_preflight` |
+| Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |
+| Runtime error / red screen / active debug bug | DTD `get_runtime_errors` -> fix -> hot reload -> re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); shell: `bash tool/check_runtime_errors.sh` |
+| Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Context7 + `user-dart`; `/package-docs` |
 | iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
-| Runtime error / red screen / active debug bug | DTD → `get_runtime_errors` → fix → hot reload → re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md) · skill `dart-fix-runtime-errors` · shell: `bash tool/check_runtime_errors.sh` |
-| Unfamiliar pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) · Context7 + `user-dart` · `/package-docs` |
-| iOS/macOS debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) · `bash tool/check_apple_debug_hive_storage.sh` · cold restart on simulator |
-| Browser integration (Chrome/web; not `integration_test/` on device) | `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` (default) |
+| Apple debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold restart simulator |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
-| Large refactor with graph installed | `./tool/refresh_code_review_graph.sh` |
-| Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight` |
-| Cold start map | `bash tool/agent_session_bootstrap.sh` |
-| Agent doc compression | `./tool/compress_agent_doc.sh PATH` only on explicit redundant targets; avoid anchor blocks until checks are updated |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
-| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); run `./tool/check_design_md.sh` if brief changed; Mix → `./tool/run_mix_lint.sh`; large `lib/` files → ≤225 lines, `./tool/run_file_length_lint.sh` |
-| Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) **Tests** before broad impl; widget patterns [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md); policy [`testing_overview.md`](testing_overview.md) § Feature-defined testing |
-| New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` previews folders + feature brief; add `--apply` only when the name is final |
-| Feature folder/use-case/DTO/test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md) + [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md) + [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
-| Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades before copying code |
-| Domain wire-shape grep (warn-only) | `bash tool/check_domain_wire_leaks.sh` — optional; see reduce_surprise_patterns pre-ship checklist |
-| Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md) + [`review/bloc_checklist.md`](review/bloc_checklist.md); skill `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` (flutter analyze + mix_lint + file_length_lint) |
-| Agent/map drift | `./tool/check_agent_knowledge_base.sh` |
+| UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
+| Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
+| New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` preview; add `--apply` only when final |
+| Feature folder / use-case / DTO / test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md), [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
+| Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades |
+| Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md), [`review/bloc_checklist.md`](review/bloc_checklist.md); `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` |
+| Agent docs / map drift | `./tool/check_agent_knowledge_base.sh` |
 | AI failure-risk register | `bash tool/check_ai_failure_risk_register.sh` |
-| Memory-compounding drift | `./tool/check_agent_memory_compounding.sh` |
-| Agent-memory auto upkeep (local) | `./tool/agent_memory_auto_maintain.sh` (`--if-changed`, `--verify`, `--codex-memory-health`; wired into KB check + sync `--apply`; Codex memory health is report-only) |
+| Harness max-score claim | [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md); `./bin/agent-maintain harness-maintain`; `./bin/agent-maintain closeout` |
+| Agent-memory / memory-compounding drift | `./tool/check_agent_memory_compounding.sh`; `./tool/agent_memory_auto_maintain.sh --if-changed --verify` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |
-| Host-template preview/apply | `./tool/sync_agent_assets.sh --dry-run` / `--apply` |
-| Agent host maintain (sync, globals, workflows) | When-table: [`host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain help` · `/agent-maintain` |
-| Harness max-score claim | [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md) · `./bin/agent-maintain harness-maintain` updates README badge · `closeout` when scoped |
-| Cursor host setup (sync + install/trim/inventory) | `./bin/agent-maintain setup` (`--apply`, `--install`) or `bash tool/setup_cursor_agent_environment.sh` · `/setup-cursor-agent-environment` |
-| Global vendor skills (Flutter/Dart/iOS/AI) | `./bin/agent-maintain install` · `update` · `find QUERY` · `trim` (`--apply`, `--mode full`) or underlying `tool/install_global_agent_skills.sh` etc. |
-| Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md) · shim `agents-skill-routing` · `bash tool/find_global_agent_skills.sh QUERY` |
-| IDE-open local env preflight | `.vscode/tasks.json` runs `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
-| Tracked secret literals | `./tool/check_tracked_secret_literals.sh` |
-| AI-generated-code smells | `./tool/check_ai_generated_code_smells.sh` |
-| Cross-host review (explicit only) | `./tool/request_codex_feedback.sh` |
-| Cross-host plan review | `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
-| Transcript context budgets (report-only) | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` (or `./bin/checklist-fast`) |
-| Hive fingerprints | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated` + `bash tool/check_hive_schema_fingerprints.sh` |
-| Strict Hive input drift | `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
-| Store release (both platforms) | `./tool/release_both_stores.sh preflight` then `deploy` after checklist/integration gates ([`deployment.md`](deployment.md)) |
-| Store release (Android only) | `./tool/release_android_play.sh preflight` / `upload_internal` ([`android_play_store_release_sop.md`](android_play_store_release_sop.md)) |
+| Host-template sync | `./tool/sync_agent_assets.sh --dry-run` / `--apply`; after template edits: `./bin/agent-maintain after-host-edit` |
+| Agent host maintain | [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); `./bin/agent-maintain help`; `/agent-maintain` |
+| Cursor/Codex host setup | `./bin/agent-maintain setup --apply`; install/trim only on explicit request |
+| Global vendor skills | `./bin/agent-maintain install` / `update` / `find QUERY` / `trim`; underlying `tool/install_global_agent_skills.sh` |
+| Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md); shim `agents-skill-routing`; `bash tool/find_global_agent_skills.sh QUERY` |
+| IDE-open local env preflight | `.vscode/tasks.json` -> `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
+| Security scans | `./tool/check_tracked_secret_literals.sh`; `./tool/check_ai_generated_code_smells.sh` |
+| Cross-host review (explicit only) | `./tool/request_codex_feedback.sh`; plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
+| Transcript context budgets | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` or `./bin/checklist-fast` |
+| Hive shape changes | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated`; `bash tool/check_hive_schema_fingerprints.sh`; strict input drift: `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
+| Store release | Both: `./tool/release_both_stores.sh preflight` then `deploy`; Android: `./tool/release_android_play.sh preflight` / `upload_internal` |
 
-Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls `ensureSchema` (per-box lock); kill switch `--dart-define=HIVE_SCHEMA_MIGRATIONS=false`. Shape changes still need manifest/spec/fingerprint/migrator/tests. Fastlane: prefer `./tool/fastlane.sh`; both stores `./tool/release_both_stores.sh deploy` (see [`deployment.md`](deployment.md)).
+Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls
+`ensureSchema`; shape changes still need manifest/spec/fingerprint/migrator/tests.
+Fastlane: prefer `./tool/fastlane.sh`.
 
 ## Automatic Workflow Triggers
-
-Repo docs/scripts define behavior; external catalogs don't.
 
 | Trigger | Cursor | Codex |
 | --- | --- | --- |
 | Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
-| Broad/high-risk work | Run [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation clearly helps and is allowed |
-| API/version-sensitive change | MCP package docs + repo-pinned source before model memory — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) | Same |
-| External/live state | Use owning tool/MCP/connector/browser where available; summarize evidence, not transcripts | Same |
-| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + [`validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Same |
-| UI/design/theme/Mix work | Validation chooser **UI/theme/Mix** row + widget/responsive proof | Same |
-| Flutter app-code/UI change with active debug run | Trigger hot reload; hot restart if reload cannot apply; report unavailable session | Same |
-| Runtime bug / crash with active debug run | Use Validation Chooser runtime row | Same |
-| Pub dependency / unfamiliar API | Use Validation Chooser pub API row | Same |
+| Broad/high-risk work | Use [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation helps and is allowed |
+| API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |
+| External/live state | Use owning tool/MCP/connector/browser; summarize evidence | Same |
+| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + validation routing | Same |
+| UI/design/theme/Mix work | Validation chooser UI row + widget/responsive proof | Same |
+| Flutter app-code/UI change with active debug run | Hot reload; hot restart if reload cannot apply; report unavailable session | Same |
+| Runtime bug / crash with active debug run | Use runtime row | Same |
 | Same failure repeats | Add repo capability; do not inflate prompts | Same |
-| Prompt tweak repeats | Add evaluator/test/runtime check/fixture/feedback loop; then trim prompt prose | Same |
-| Agent behavior/host template changed | Source docs -> [`tool/agent_host_templates/`](../tool/agent_host_templates/) -> dry-run -> apply -> dry-run clean -> drift check | Same |
-| Cursor host setup / global skills install | `./bin/agent-maintain` (`routine`, `setup`, `host-full`) or `/agent-maintain` / `/setup-cursor-agent-environment`; skill `agents-global-skills-setup` | Host-template row above for sync; install/trim via `agent-maintain` subcommands |
-| Implementation / tests / debug / validation (pick skill) | [`ai/skill_routing.md`](ai/skill_routing.md); invoke matching skill before edits; skill `agents-skill-routing` | Same |
+| Prompt tweak repeats | Add evaluator/test/runtime check/fixture/feedback loop; trim prompt prose | Same |
+| Agent behavior/host template changed | Source docs -> `tool/agent_host_templates/` -> dry-run -> apply -> dry-run clean -> drift check | Same |
+| Implementation / tests / debug / validation | Invoke matching skill via [`ai/skill_routing.md`](ai/skill_routing.md); skill `agents-skill-routing` | Same |
 
-Version-sensitive APIs: repo/official docs before model memory. Host parity: [`agent_knowledge_base.md`](agent_knowledge_base.md) · [`agent_environment_setup.md`](agent_environment_setup.md).
+## Harness
 
-## Harness (pointers only)
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:**
+[`ai/context_loading.md`](ai/context_loading.md). **Skill routing:**
+[`ai/skill_routing.md`](ai/skill_routing.md). **Multi-Agent Hub:**
+[`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
 
-Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:** [`ai/context_loading.md`](ai/context_loading.md). **Skill routing:** [`ai/skill_routing.md`](ai/skill_routing.md). **Multi-Agent Hub:** [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
-
-Mechanical anchors (do not drop from this file): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
+Mechanical anchors (do not drop): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
 ## Host Adapters
 
@@ -95,13 +89,14 @@ Mechanical anchors (do not drop from this file): below 95%; execute end-to-end, 
 | Cubit/BLoC standards | `agents-bloc-standards` | `agents-bloc-standards` |
 | Feature delivery contract | `agents-feature-delivery` | `agents-feature-delivery` |
 | Non-trivial delivery | `agents-delivery-workflow` | `agents-delivery-workflow` |
-| Plan/delegation reminders | `agents-meta-behavior` | — |
+| Plan/delegation reminders | `agents-meta-behavior` | - |
 | Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |
 
-Shared host-neutral skill source: [`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/).
+Shared host-neutral skill source:
+[`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/).
+Repo-managed Cursor commands: `/local-agents-quick-reference`,
+`/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`.
 
-Repo-managed Cursor commands: `/local-agents-quick-reference`, `/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`. **`/commit-push-pr`:** playbook [`changes/2026-05-21_agent_automated_delivery_loop.md`](changes/2026-05-21_agent_automated_delivery_loop.md); script reference [`validation_scripts/operations_running.md`](validation_scripts/operations_running.md#git--local-branch-cleanup).
-
-## Task doc routing
+## Task Doc Routing
 
 Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI engineering index: [`PLAN.md`](../PLAN.md).

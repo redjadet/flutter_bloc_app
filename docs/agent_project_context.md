@@ -50,8 +50,13 @@ the answer.
 
 ## Current Caveat Shortlist
 
-- Flutter 3.44.3 / Dart 3.12.2 pinned; version-sensitive APIs need official or
+- Flutter 3.44.4 / Dart 3.12.2 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
+- Flutter/Dart SDK and core framework sources are external read-only
+  dependencies. Do not edit `/Users/ilkersevim/Flutter_SDK/flutter/**`,
+  Flutter framework files, Dart SDK files, or toolchain cache files to fix app
+  behavior; fix repo code, add an adapter/workaround, or use documented
+  dependency/toolchain upgrade flow.
 - **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
   presentation, plugins, routing, and bootstrap changes must account for all
   four — not only the host under debug (`flutter-cross-platform-modern`).

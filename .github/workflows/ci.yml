@@ -49,7 +49,7 @@ concurrency:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  FLUTTER_VERSION: '3.44.3'
+  FLUTTER_VERSION: '3.44.4'
   COVERAGE_THRESHOLD: '75'
   IOS_SIMULATOR_BOOT_TIMEOUT_SECONDS: '300'
   IOS_SIMULATOR_PREFERRED_NAMES: 'iPhone 17e,iPhone 17 Pro,iPhone 17,iPhone 16e,iPhone 16 Pro,iPhone 16'
@@ -135,7 +135,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -203,7 +203,7 @@ jobs:
       preflight_passed: ${{ steps.status.outputs.preflight_passed }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -258,7 +258,7 @@ jobs:
       needs.integration-preflight.outputs.preflight_passed == 'true'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2

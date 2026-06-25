@@ -153,10 +153,16 @@ void main() {
           feed: _BurstMarketFeed(snapshots: <MarketFeedSnapshot>[older, newer]),
         );
         final List<MarketFeedSnapshot> emitted = <MarketFeedSnapshot>[];
+        final Completer<void> sawTwoSnapshots = Completer<void>();
         final StreamSubscription<MarketFeedSnapshot> sub = repo
             .watch('btc_usdt')
-            .listen(emitted.add);
-        await Future<void>.delayed(const Duration(milliseconds: 120));
+            .listen((final MarketFeedSnapshot snapshot) {
+              emitted.add(snapshot);
+              if (emitted.length >= 2 && !sawTwoSnapshots.isCompleted) {
+                sawTwoSnapshots.complete();
+              }
+            });
+        await sawTwoSnapshots.future.timeout(const Duration(seconds: 2));
         await sub.cancel();
         expect(emitted.length, greaterThanOrEqualTo(2));
         final MarketFeedSnapshot? cached = await repo.loadCached('btc_usdt');

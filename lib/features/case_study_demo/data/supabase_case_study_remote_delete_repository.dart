@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,22 +15,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
     return anonKey.isEmpty ? null : anonKey;
   }
 
-  static Future<String?> _tryExtractJwtIssuer(final String token) async {
-    // JWT: header.payload.signature (base64url)
-    final List<String> parts = token.split('.');
-    if (parts.length < 2) return null;
-    try {
-      final String normalized = base64Url.normalize(parts[1]);
-      final String payloadJson = utf8.decode(base64Url.decode(normalized));
-      final Map<String, dynamic> payload = await decodeJsonMap(payloadJson);
-      final Object? iss = payload['iss'];
-      return iss is String && iss.trim().isNotEmpty ? iss.trim() : null;
-    } on Object {
-      return null;
-    }
-  }
-
-  Future<void> _debugLogAuthSnapshot(final String label) async {
+  void _debugLogAuthSnapshot(final String label) {
     if (!kDebugMode) return;
     if (!SupabaseBootstrapService.isSupabaseInitialized) return;
     try {
@@ -41,22 +23,10 @@ class SupabaseCaseStudyRemoteDeleteRepository
       final Session? session = client.auth.currentSession;
       final User? user = client.auth.currentUser;
       final DateTime nowUtc = DateTime.now().toUtc();
-      final String? token = session?.accessToken;
-      if (token != null && token.isNotEmpty) {
-        AppLogger.debug(
-          'Supabase delete-case-study: session token present (len=${token.length})',
-        );
-      }
-      final String? tokenIssuer = token == null || token.isEmpty
-          ? null
-          : await _tryExtractJwtIssuer(token);
       final int? expiresAt = session?.expiresAt;
       final DateTime? expiresAtUtc = expiresAt == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              expiresAt * 1000,
-              isUtc: true,
-            );
+          : DateTime.fromMillisecondsSinceEpoch(expiresAt * 1000, isUtc: true);
       final String? apiKey = _readSupabaseAnonKey();
       AppLogger.debug(
         [
@@ -64,8 +34,6 @@ class SupabaseCaseStudyRemoteDeleteRepository
           'url=${Supabase.instance.client.rest.url}',
           'hasSession=${session != null}',
           'userId=${user?.id ?? 'null'}',
-          'tokenLen=${token?.length ?? 0}',
-          'tokenIss=${tokenIssuer ?? 'null'}',
           'hasApiKey=${apiKey != null}',
           'expiresAtUtc=${expiresAtUtc?.toIso8601String() ?? 'null'}',
           'nowUtc=${nowUtc.toIso8601String()}',
@@ -87,7 +55,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
     if (!SupabaseBootstrapService.isSupabaseInitialized) return;
 
     try {
-      await _debugLogAuthSnapshot('before');
+      _debugLogAuthSnapshot('before');
       final Session? session = Supabase.instance.client.auth.currentSession;
       final String? token = session?.accessToken;
       if (token == null || token.isEmpty) {
@@ -110,7 +78,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
       );
       if (kDebugMode) {
         AppLogger.debug(
-          'delete-case-study response: status=${response.status} data=${response.data}',
+          'delete-case-study response: status=${response.status}',
         );
       }
 
@@ -126,9 +94,9 @@ class SupabaseCaseStudyRemoteDeleteRepository
       if (error.status == 401 &&
           SupabaseBootstrapService.isSupabaseInitialized) {
         try {
-          await _debugLogAuthSnapshot('401_before_refresh');
+          _debugLogAuthSnapshot('401_before_refresh');
           await Supabase.instance.client.auth.refreshSession();
-          await _debugLogAuthSnapshot('401_after_refresh');
+          _debugLogAuthSnapshot('401_after_refresh');
           final Session? refreshed =
               Supabase.instance.client.auth.currentSession;
           final String? refreshedToken = refreshed?.accessToken;
@@ -152,7 +120,7 @@ class SupabaseCaseStudyRemoteDeleteRepository
           );
           if (kDebugMode) {
             AppLogger.debug(
-              'delete-case-study retry response: status=${retry.status} data=${retry.data}',
+              'delete-case-study retry response: status=${retry.status}',
             );
           }
           if (retry.status == 200) {
