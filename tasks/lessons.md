@@ -59,6 +59,36 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `tool/check_mutation_success_after_guard.sh`
   `docs/changes/2026-06-15_mutation-success-guard.md`
 
+### 2026-06-24 - Coverage delivery ask is not CI gate bump
+
+- What went wrong:
+  Operator asked for test coverage at least 80%; agent raised CI `COVERAGE_THRESHOLD` to 80% and updated docs to match.
+- How it was fixed:
+  Operator clarified CI minimum floor stays 75%; reverted threshold in workflows and `update_coverage_summary.dart`; kept measured rollup improvements (~80.28%).
+- Pattern:
+  Delivery coverage target ≠ CI enforcement threshold.
+- Preventive rule:
+  "Coverage at least X%" → add tests/exclusions to raise filtered rollup; keep `COVERAGE_THRESHOLD=75` unless the operator explicitly asks to change the CI gate.
+- Evidence or affected files:
+  `docs/CODE_QUALITY.md`
+  `docs/agent_kb/operator_preferences_durable.md` § Validation
+  `.github/workflows/ci.yml`
+  PR #375
+
+### 2026-06-24 - Stage new harness/skill paths before commit
+
+- What went wrong:
+  Harness/skill delivery left new `agents-regression-capture` files untracked; review flagged them and the operator had to request untracked paths in the commit.
+- How it was fixed:
+  Staged `tool/agent_host_templates/shared/skills/agents-regression-capture/SKILL.md` and `docs/changes/2026-06-24_agents-regression-capture-skill.md` in the same commit as routing/harness edits.
+- Pattern:
+  Host-template skill work creates new `??` paths under `tool/agent_host_templates/` and `docs/changes/`.
+- Preventive rule:
+  Before commit on harness/skill changes, scan `git status` for untracked deliverables and stage them with the routing/sync edits.
+- Evidence or affected files:
+  `tool/agent_host_templates/shared/skills/agents-regression-capture/SKILL.md`
+  commit `04deee32`
+
 ### 2026-06-23 - Mix bottom-sheet widget tests need MaterialApp builder scope
 
 - What went wrong:
