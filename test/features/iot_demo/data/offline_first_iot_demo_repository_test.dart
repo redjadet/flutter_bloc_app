@@ -458,6 +458,41 @@ void main() {
     );
 
     test(
+      'pullRemote does not overwrite local setValue while debounce is pending',
+      () async {
+        final FakeTimerService fakeTimer = FakeTimerService();
+        remoteRepository.devices = <IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: remoteRepository,
+          timerService: fakeTimer,
+        );
+        await repo.pullRemote();
+        await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.8));
+
+        remoteRepository.devices = <IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ];
+        await repo.pullRemote();
+
+        final List<IotDevice> local = await repo.watchDevices().first;
+        expect(local, hasLength(1));
+        expect(local.first.value, 0.8);
+      },
+    );
+
+    test(
       'setValue debounces: only one sync op after delay without change',
       () async {
         final FakeTimerService fakeTimer = FakeTimerService();
