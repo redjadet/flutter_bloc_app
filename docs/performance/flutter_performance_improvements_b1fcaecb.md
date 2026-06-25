@@ -6,9 +6,9 @@ This file was moved from repo root to keep docs organized.
 
 ## Environment
 
-- **Pinned toolchain (current):** Flutter 3.44.3 / Dart 3.12.2 (see [README](../../README.md))
+- **Pinned toolchain (current):** Flutter 3.44.4 / Dart 3.12.2 (see [README](../../README.md))
 - **Date**: 2026-03-25
-- **Flutter**: 3.44.3 (stable)
+- **Flutter**: 3.44.4 (stable)
 - **Dart**: 3.12.2
 - **DevTools**: 2.54.2
 - **Target**: iOS (iPhone simulator)

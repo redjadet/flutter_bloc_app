@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-25_flutter-sdk-mutation-guard.md`](2026-06-25_flutter-sdk-mutation-guard.md): AI agents must not patch core Flutter/Dart SDK or framework sources; add read-only rule across agent map, project caveats, risk register, and common-pitfalls skill.
 - [`2026-06-24_agents-regression-capture-skill.md`](2026-06-24_agents-regression-capture-skill.md): Post-fix hardening skill — regression tests, static guards, checklist wiring, lessons; delivery finish gate + harness needles.
 - [`2026-06-23_business-logic-ui-separation.md`](2026-06-23_business-logic-ui-separation.md): Business logic / UI separation — derived state getters, staff shift assignment cubit/domain defaults, chat relative-time helper, agent guidance.
 - [`2026-06-23_chat-persist-epoch.md`](2026-06-23_chat-persist-epoch.md): Chat persist epoch — late unawaited assistant saves cannot restore history after clear/delete; regression tests cover destructive history races.
