@@ -235,13 +235,16 @@ void main() {
       );
 
       await expectLater(
-        repository.signInWithPassword(email: 'user@example.com', password: 'x'),
+        repository.signInWithPassword(
+          email: 'user@example.com',
+          password: 'secret',
+        ),
         throwsA(
           isA<SupabaseAuthException>()
               .having(
                 (final SupabaseAuthException error) => error.message,
                 'message',
-                'Bad state: boom',
+                'Authentication request failed.',
               )
               .having(
                 (final SupabaseAuthException error) => error.cause,
@@ -250,6 +253,62 @@ void main() {
               ),
         ),
       );
+    });
+
+    test('rejects malformed email before sign in transport', () async {
+      var signInCalls = 0;
+      final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
+        isConfiguredOverride: () => true,
+        signInWithPasswordImpl:
+            ({
+              required final String email,
+              required final String password,
+            }) async {
+              signInCalls += 1;
+            },
+      );
+
+      await expectLater(
+        repository.signInWithPassword(
+          email: 'not-an-email',
+          password: 'secret',
+        ),
+        throwsA(
+          isA<SupabaseAuthException>().having(
+            (final SupabaseAuthException error) => error.code,
+            'code',
+            SupabaseAuthErrorCode.invalidEmail,
+          ),
+        ),
+      );
+      expect(signInCalls, 0);
+    });
+
+    test('rejects short password before sign up transport', () async {
+      var signUpCalls = 0;
+      final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
+        isConfiguredOverride: () => true,
+        signUpImpl:
+            ({
+              required final String email,
+              required final String password,
+              final Map<String, dynamic>? data,
+            }) async {
+              signUpCalls += 1;
+            },
+      );
+
+      await expectLater(
+        repository.signUp(email: 'user@example.com', password: '12345'),
+        throwsA(
+          isA<SupabaseAuthException>().having(
+            (final SupabaseAuthException error) => error.code,
+            'code',
+            SupabaseAuthErrorCode.weakPassword,
+          ),
+        ),
+      );
+      expect(signUpCalls, 0);
     });
 
     test(

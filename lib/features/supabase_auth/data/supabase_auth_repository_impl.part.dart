@@ -13,6 +13,30 @@ extension _SupabaseAuthRepositoryImplPrivate on SupabaseAuthRepositoryImpl {
   }
 }
 
+const int _minimumSupabasePasswordLength = 6;
+const String _genericUnexpectedAuthMessage = 'Authentication request failed.';
+final RegExp _basicEmailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+void _validateCredentialInputs({
+  required final String email,
+  required final String password,
+}) {
+  final String normalizedEmail = email.trim();
+  if (normalizedEmail.isEmpty ||
+      !_basicEmailPattern.hasMatch(normalizedEmail)) {
+    throw const SupabaseAuthException(
+      'Please enter a valid email address.',
+      code: SupabaseAuthErrorCode.invalidEmail,
+    );
+  }
+  if (password.length < _minimumSupabasePasswordLength) {
+    throw const SupabaseAuthException(
+      'Password must be at least 6 characters.',
+      code: SupabaseAuthErrorCode.weakPassword,
+    );
+  }
+}
+
 app_auth.AuthUser? _mapSupabaseUser(final User? user) =>
     user == null ? null : _toAuthUser(user);
 
@@ -36,7 +60,7 @@ SupabaseAuthException _authExceptionFromSupabase(final AuthException error) {
 }
 
 SupabaseAuthException _unexpectedAuthException(final Object error) =>
-    SupabaseAuthException(error.toString(), cause: error);
+    SupabaseAuthException(_genericUnexpectedAuthMessage, cause: error);
 
 app_auth.AuthUser _toAuthUser(final User user) {
   final meta = user.userMetadata;
