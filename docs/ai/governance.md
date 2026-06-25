@@ -6,10 +6,10 @@ Roles, handoffs, and stop conditions. Map entry: [`AGENTS.md`](../../AGENTS.md).
 
 | Role | Owns | Reads first | Output |
 | --- | --- | --- | --- |
-| Planner | Scope, phases, Feature Brief | `PLAN.md`, user request | Approved brief |
+| Planner | Scope, phases, Feature Brief | [`PLAN.md`](../../PLAN.md), user request | Approved brief |
 | Implementer | Code + tests in bounds | [`CODEMAP.md`](../../CODEMAP.md), [`CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) | PR-sized diff |
 | Reviewer | Correctness, architecture, tests | Diff, review protocol | Findings |
-| Documenter | Canon docs, reports refresh | `docs/README.md` | Doc-only diff |
+| Documenter | Canon docs, reports refresh | [`README.md`](../README.md) | Doc-only diff |
 | Validator | Commands and evidence | quick reference | Pass/fail proof |
 
 One session may hold multiple roles; declare role in PR description.
@@ -29,6 +29,10 @@ One session may hold multiple roles; declare role in PR description.
 - Secrets or credentials in diff
 - Ambiguity below 95% confidence on product behavior
 - Repeated validation failure: same error twice means add repo script/doc, not longer prompt
+- UX, visual, or naming preference without an agreed spec
+- Architecture redesign outside the approved scope
+- Product behavior decision not covered by brief or request
+- Benchmarking, model training, or long-running experiments
 
 ## Context budget
 

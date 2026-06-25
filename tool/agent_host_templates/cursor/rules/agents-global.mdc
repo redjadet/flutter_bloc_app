@@ -20,3 +20,5 @@ Intent/spec/implementation separate. Vague/risky: boundaries, data flow, failure
 Repo docs/shell over host shortcuts. Repeated failure → doc/fixture/test/script. **File verified reusable conclusions** → owning doc / `docs/changes/` / `tasks/lessons.md`. **Semantic lint** on agent docs; `./tool/check_agent_knowledge_base.sh`. Source docs → templates → `./bin/agent-maintain` (`preflight` / `after-host-edit` / `closeout`). Widget tests: [`docs/testing_overview.md`](docs/testing_overview.md) + [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md) (no repo-wide `WidgetTester.view` yet).
 
 Flutter SDK/framework read-only: do not patch `/Users/ilkersevim/Flutter_SDK/flutter/**` or Dart/Flutter toolchain sources to fix app issues.
+
+T1/T2 coding discipline: `docs/ai/agent_operating_manual.md`.

@@ -6,6 +6,7 @@
 
 1. [`AGENTS.md`](../../AGENTS.md)
 2. Non-trivial implementation: [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight; invoke `agents-common-pitfalls`
+2b. Non-trivial coding discipline: [`agent_operating_manual.md`](agent_operating_manual.md) (after Pre-Flight; mission, pre-coding checklist, routing)
 3. [`CODEMAP.md`](../../CODEMAP.md) or [`PLAN.md`](../../PLAN.md) (AI engineering)
 4. [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md)
 5. [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) for the feature/task

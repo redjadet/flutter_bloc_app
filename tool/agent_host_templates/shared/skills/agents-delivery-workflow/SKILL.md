@@ -12,6 +12,8 @@ Use for non-trivial feature/fix, validation routing, completion before done/comm
 
 **Start:** `AGENTS.md` + **context ladder** (`docs/ai/context_loading.md`).
 
+**Operating discipline:** `docs/ai/agent_operating_manual.md` (T1/T2; pointer-only).
+
 **Tracker:** Codex `tasks/codex/todo.md`; Cursor `tasks/cursor/todo.md`.
 
 **Loop:** Plan -> Execute -> Verify -> Report; **95% confident**; **Surgical diff**; **Report only after Verify**; **Self-verify final response**.
