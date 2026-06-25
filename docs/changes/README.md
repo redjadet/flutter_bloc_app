@@ -9,6 +9,7 @@ that.
 
 - [`2026-06-25_flutter-sdk-mutation-guard.md`](2026-06-25_flutter-sdk-mutation-guard.md): AI agents must not patch core Flutter/Dart SDK or framework sources; add read-only rule across agent map, project caveats, risk register, and common-pitfalls skill.
 - [`2026-06-24_agents-regression-capture-skill.md`](2026-06-24_agents-regression-capture-skill.md): Post-fix hardening skill — regression tests, static guards, checklist wiring, lessons; delivery finish gate + harness needles.
+- [`2026-06-25_iot-debounced-setvalue-pull-guard.md`](2026-06-25_iot-debounced-setvalue-pull-guard.md): IoT demo debounced `setValue` pull guard — prevents stale remote pulls from overwriting in-flight slider changes.
 - [`2026-06-23_business-logic-ui-separation.md`](2026-06-23_business-logic-ui-separation.md): Business logic / UI separation — derived state getters, staff shift assignment cubit/domain defaults, chat relative-time helper, agent guidance.
 - [`2026-06-23_chat-persist-epoch.md`](2026-06-23_chat-persist-epoch.md): Chat persist epoch — late unawaited assistant saves cannot restore history after clear/delete; regression tests cover destructive history races.
 - [`2026-06-22_bug-hunt-inventory.md`](2026-06-22_bug-hunt-inventory.md): Full-repo bug hunt — mechanical inventory, 34-feature audit worksheet, disposition table (B–D fixes + deferred B6–B10/D4/D7).

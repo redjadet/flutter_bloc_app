@@ -67,7 +67,10 @@ Future<void> _doPullRemoteImpl({
       (final op) =>
           op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
     );
-    if (hasPendingIotOps) {
+    final bool hasDebouncedSetValue = r._pendingSetValueByDevice.keys.any(
+      (final key) => key.startsWith('$userIdBefore::'),
+    );
+    if (hasPendingIotOps || hasDebouncedSetValue) {
       final List<IotDevice> localDevices = await local.watchDevices().first;
       if (localDevices.isNotEmpty) {
         return;
