@@ -164,6 +164,9 @@ if [ -f "AGENTS.md" ]; then
   require_contains "AGENTS.md" "host_maintenance_automation.md"
   require_contains "AGENTS.md" "agent-maintain preflight"
   require_contains "AGENTS.md" "agent-maintain closeout"
+  require_contains "AGENTS.md" "Flutter SDK/framework is read-only"
+  require_contains "docs/agent_project_context.md" "Flutter/Dart SDK and core framework sources are external read-only"
+  require_contains "docs/ai/ai_failure_risks.md" "RISK-FLUTTER-SDK-MUTATION"
   require_contains "docs/agent_kb/tool_orchestration.md" "host_maintenance_automation.md"
 
   # Guard map-only invariant: host-specific guidance lives in docs/agent_host_notes.md.

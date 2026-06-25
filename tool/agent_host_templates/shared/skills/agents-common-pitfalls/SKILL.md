@@ -27,6 +27,7 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | Claim done without focused tests | `RISK-TEST-GAP` | testing matrix; `flutter test <paths>` |
 | Auth/PII/payments without security pass | `RISK-SECURITY-GAP` | `review/security_checklist.md` |
 | Commit or print secrets | `RISK-SECRET-LEAK` | `check_tracked_secret_literals.sh` |
+| Patch Flutter/Dart SDK or core framework files | `RISK-FLUTTER-SDK-MUTATION` | Treat `/Users/ilkersevim/Flutter_SDK/flutter/**` as read-only; fix repo code or upgrade toolchain via docs |
 | `rm`, deploy, or external mutation without ask | `RISK-DESTRUCTIVE-SIDE-EFFECT` | List affected items; current-turn confirm |
 | Reuse stale checklist / partial proof | `RISK-VALIDATION-SHORTCUT` | `--no-reuse`; scorecard gates |
 | Direct `Hive.openBox` / ad-hoc Dio | `RISK-ARCH-LAYER` | DI entrypoints; `agents-canonical-rules-platform` |

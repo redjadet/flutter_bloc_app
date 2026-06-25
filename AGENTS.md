@@ -21,7 +21,7 @@ AGENTS file and Codex worktrees.
 
 ## Snapshot
 
-Flutter 3.44.3 / Dart 3.12.2. Pinned facts and caveats:
+Flutter 3.44.4 / Dart 3.12.2. Pinned facts and caveats:
 [`docs/agent_project_context.md`](docs/agent_project_context.md),
 [`docs/tech_stack.md`](docs/tech_stack.md).
 
@@ -69,6 +69,7 @@ Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/age
 
 - Smallest reversible change; Surgical diff: every changed line traces to request or required validation/doc update.
 - Flutter/UI edits: hot reload when session active; runtime bugs → DTD — [`docs/agent_kb/tool_orchestration.md`](docs/agent_kb/tool_orchestration.md), [`docs/agent_kb/devtools_runtime_errors.md`](docs/agent_kb/devtools_runtime_errors.md).
+- Flutter SDK/framework is read-only; do not patch `/Flutter_SDK/flutter/**` or Dart/Flutter toolchain sources to fix app issues.
 - Pub APIs: MCP + pinned source — [`docs/agent_kb/package_docs_mcp.md`](docs/agent_kb/package_docs_mcp.md).
 - Presentation Cubit/BLoC only; domain pure Dart; wire DI/routes/l10n/codegen when touched — [`docs/clean_architecture.md`](docs/clean_architecture.md).
 - Platforms & UI: `flutter-cross-platform-modern`; [`DESIGN.md`](DESIGN.md) + [`docs/design_system.md`](docs/design_system.md) (reusable widgets, responsive layout, cross-platform form factors).

@@ -71,6 +71,7 @@ should_run_auto() {
 }
 
 scan_paths=("lib")
+explicit_paths=0
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   usage
@@ -82,6 +83,7 @@ elif [[ "${1:-}" == "--paths" ]]; then
     exit 2
   fi
   scan_paths=("$@")
+  explicit_paths=1
 elif [[ "$#" -gt 0 ]]; then
   echo "❌ Unknown argument: $1" >&2
   usage >&2
@@ -92,7 +94,7 @@ case "$MODE" in
   always)
     ;;
   auto)
-    if ! should_run_auto; then
+    if [[ "$explicit_paths" -eq 0 ]] && ! should_run_auto; then
       echo "Skipping remote fetch failure fallback guard (no relevant local changes; override with CHECK_REMOTE_FETCH_FAILURE_FALLBACK_MODE=always)"
       exit 0
     fi
