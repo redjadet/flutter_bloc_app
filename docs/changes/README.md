@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-06-25_agent_operating_manual.md`](2026-06-25_agent_operating_manual.md): Project AI Operating Manual — thin router, finish-gate response tiers, context ladder 2b, check-script and host-template needles.
 - [`2026-06-25_flutter-sdk-mutation-guard.md`](2026-06-25_flutter-sdk-mutation-guard.md): AI agents must not patch core Flutter/Dart SDK or framework sources; add read-only rule across agent map, project caveats, risk register, and common-pitfalls skill.
 - [`2026-06-24_agents-regression-capture-skill.md`](2026-06-24_agents-regression-capture-skill.md): Post-fix hardening skill — regression tests, static guards, checklist wiring, lessons; delivery finish gate + harness needles.
 - [`2026-06-25_iot-debounced-setvalue-pull-guard.md`](2026-06-25_iot-debounced-setvalue-pull-guard.md): IoT demo debounced `setValue` pull guard — prevents stale remote pulls from overwriting in-flight slider changes.

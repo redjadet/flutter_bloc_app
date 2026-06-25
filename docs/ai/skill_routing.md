@@ -44,6 +44,7 @@ Host parity: Cursor/Codex sync shim `agents-skill-routing`; Codex installs it as
 | Pre-flight / frequent agent mistakes | `agents-common-pitfalls`; owner [`ai_failure_risks.md`](ai_failure_risks.md) |
 | Cold start / commands / validation chooser | `agents-quick-reference` |
 | Non-trivial delivery / finish gate | `agents-delivery-workflow` |
+| Non-trivial coding / operating discipline | `agents-delivery-workflow`; [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Plan / delegation reminders | `agents-meta-behavior` |
 | Feature code in this repo | `agents-feature-delivery`, then `agents-canonical-rules` + matching child (`architecture`, `async`, `platform`, `presentation`) |
 | New feature / external API / DTO / cubit state / sync / typed errors | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md), [`architecture/reference_features.md`](../architecture/reference_features.md), then `agents-feature-delivery` + `agents-canonical-rules-architecture` |

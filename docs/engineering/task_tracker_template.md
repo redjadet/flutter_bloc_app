@@ -2,18 +2,27 @@
 
 Use this template for non-trivial work trackers under `tasks/*/todo.md`.
 
+Matches planning response shape in [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) § Planning response shape.
+
 Keep it short. Enforce clarity (write-set + proof), not style.
 
 ## Goal
 
-One sentence. What outcome is being delivered?
+One sentence. What outcome is being delivered? (Maps to **Understanding**.)
 
 ## Write-set
 
-Explicit files/dirs you intend to change. Update as scope changes.
+Explicit files/dirs you intend to change. Update as scope changes. (Maps to **Files to modify**.)
 
 - `path/to/file.dart`
 - `docs/<some_doc>.md`
+
+## Plan
+
+3–5 implementation bullets. (Maps to **Plan**.)
+
+- Step one
+- Step two
 
 ## Risks
 
@@ -36,7 +45,7 @@ If no command is required, state why (rare).
 
 ## Evidence/result
 
-What proved it worked? Provide the key outputs (pass/fail) and any important notes.
+What proved it worked? Provide the key outputs (pass/fail) and any important notes. (Maps to **Verification**.)
 
 - `./bin/checklist-fast`: PASS
 - Residual risk: <what remains, if any>

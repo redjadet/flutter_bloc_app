@@ -46,6 +46,10 @@ Classify before edit. **Canonical** = single owner; others → pointer. **Echo**
 | Review gate / checks table | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Canonical | Full checks + risk matrix + special cases |
 | Finish gate / report shape | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) | Canonical | Legibility + Files Changed / Follow-up Actions |
 | Finish gate | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Echo | Pointer only; no duplicate report-shape prose |
+| Operating manual router | [`ai/agent_operating_manual.md`](../ai/agent_operating_manual.md) | Canonical | Mission, pre-coding, routing, verification mapping, behaviour rules |
+| Response tiers / DoD | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) | Canonical | T0/T1/T2, planning/closeout shapes, definition of done |
+| Operating manual tier echo | [`ai/agent_operating_manual.md`](../ai/agent_operating_manual.md) | Echo | One-line pointer to legibility § Response tiers |
+| Protocol response tiers | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Echo | Legibility pointer includes response tiers |
 
 ## WidgetTester.view note
 

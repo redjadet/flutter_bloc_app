@@ -113,6 +113,7 @@ required_files=(
   "docs/CODE_QUALITY.md"
   "docs/engineering/validation_routing_fast_vs_full.md"
   "docs/ai/skill_routing.md"
+  "docs/ai/agent_operating_manual.md"
   "docs/plans/README.md"
   "docs/changes/README.md"
   "docs/audits/README.md"
@@ -139,6 +140,12 @@ line_budget_files=(
 for path in "${line_budget_files[@]}"; do
   require_line_budget "$path"
 done
+
+require_line_budget "docs/ai/agent_operating_manual.md" 120
+require_contains "docs/ai/context_loading.md" "agent_operating_manual.md"
+require_contains "docs/agent_knowledge_base.md" "agent_operating_manual.md"
+require_contains "docs/agent_kb/legibility_and_finish_gate.md" "Planning response shape"
+require_line_budget "docs/agent_kb/legibility_and_finish_gate.md" 120
 
 local_line_budget_files=(
   "tasks/codex/todo.md"
@@ -373,8 +380,8 @@ if [ -d "tool/agent_host_templates" ]; then
     "Self-verify final response" \
     "Report only after Verify" \
     "agents-regression-capture" \
-    "Finish gate"
-
+    "Finish gate" \
+    "docs/ai/agent_operating_manual.md"
   require_absent "tool/agent_host_templates/codex/skills/flutter-cross-platform-modern/SKILL.md"
   require_absent "tool/agent_host_templates/cursor/skills/flutter-cross-platform-modern/SKILL.md"
   require_all_contains \
@@ -413,7 +420,12 @@ if [ -d "tool/agent_host_templates" ]; then
     "tool/agent_host_templates/cursor/rules/agents-global.mdc" \
     "95% confident" \
     "Surgical diff" \
-    "Self-verify before report"
+    "Self-verify before report" \
+    "docs/ai/agent_operating_manual.md"
+
+  require_all_contains \
+    "tool/agent_host_templates/cursor/rules/agent-execution.mdc" \
+    "docs/ai/agent_operating_manual.md"
 
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md" \

@@ -22,6 +22,25 @@ Agents reason over inspectable state.
 - Prefer repo-local schemas/examples/generated clients/test harnesses over chat-only claims.
 - For UI/runtime work, expose narrow runnable surface first: route tile, demo control, smoke test, or fixture.
 
+## Response tiers
+
+| Tier | When | Planning shape | Closeout shape | Tracker |
+| --- | --- | --- | --- | --- |
+| **T0** | Obvious one-liner; ≥95% confidence | Optional | **Required** | Optional |
+| **T1** | `lib/`, behavior, harness, or multi-file | **Required** (chat or tracker) before edit | **Required** | Recommended |
+| **T2** | Plan mode, feature brief, or cross-feature | **Required** (plan = deliverable) | N/A until impl | Goal / Write-set / Plan / Risks |
+
+## Planning response shape
+
+Before first edit on T1/T2 work, provide (in chat or [`task_tracker_template.md`](../engineering/task_tracker_template.md)):
+
+- **Understanding** — brief summary of the request
+- **Plan** — step-by-step implementation strategy
+- **Files to modify** — write-set only
+- **Risks** — potential side effects
+
+Mapping: Goal ↔ Understanding; Plan ↔ Plan; Write-set ↔ Files; Evidence/result ↔ Verification.
+
 ## Finish Gate
 
 Last 20% builds trust. Before report/commit, ask when suitable:
@@ -41,3 +60,23 @@ For coding tasks, start with outcome/proof and include:
 - Follow-up Actions: required next steps, manual actions, or `None`.
 
 Keep unrelated observations separate from the change summary.
+
+## Closeout response shape
+
+For coding tasks after implementation, include:
+
+- **Files Changed** — each changed file plus one-line modification summary
+- **Follow-up Actions** — required next steps, manual actions, or `None`
+- **Verification** — command + pass/fail/skipped/N/A per lane (format, analyze, tests)
+
+Never fabricate verification results.
+
+## Definition of done
+
+- Requirement implemented; existing architecture preserved
+- Smallest practical diff; no duplicated logic
+- `./bin/format` or `./bin/format --changed` when Dart touched
+- `./tool/analyze.sh` when Dart touched
+- Tests per [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) or `Tests: N/A — reason`
+- Cross-platform behavior preserved when shared UI/platform code touched
+- Documentation updated when behavior or policy changed

@@ -164,7 +164,7 @@ untrusted
 
 ## Final Agent Contract
 
-Loop: [`AGENTS.md`](../AGENTS.md) § Loop. Execution: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md). Finish/report: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md). Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). **Report after checking** request, diff, proof, blockers (details in legibility doc).
+Loop: [`AGENTS.md`](../AGENTS.md) § Loop. Execution: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md). Finish/report: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md). Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). **Report after checking** request, diff, proof, blockers (details in legibility doc). T1/T2 coding discipline: [`docs/ai/agent_operating_manual.md`](ai/agent_operating_manual.md).
 
 ## Host Parity
 

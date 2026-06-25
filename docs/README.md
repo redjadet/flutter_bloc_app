@@ -35,6 +35,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **AI agent harness**: [`agent_knowledge_base.md`](agent_knowledge_base.md),
   [`agent_project_context.md`](agent_project_context.md),
   [`ai/skill_routing.md`](ai/skill_routing.md),
+  [`ai/agent_operating_manual.md`](ai/agent_operating_manual.md),
   [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md),
   [`ai/harness_scorecard.md`](ai/harness_scorecard.md),
   [`ai_code_review_protocol.md`](ai_code_review_protocol.md),
