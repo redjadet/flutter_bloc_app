@@ -93,7 +93,7 @@ dependencies:
   # when listed under dev_dependencies; keep it in dependencies so release builds compile.
   integration_test:
     sdk: flutter
-  intl: ^0.20.2
+  intl: ^0.20.3
   json_annotation: ^4.12.0
   local_auth: ^3.0.1
   logger: ^2.7.0
