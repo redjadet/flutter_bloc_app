@@ -20,7 +20,7 @@ This project uses automated dependency update monitoring to keep dependencies up
 
 **Update Strategy**:
 
-- **Minor/Patch updates**: Grouped together as "dart-minor-patch" (`genui` and `google_sign_in_mocks` use separate `pub-coordinated-pins` group plus `allowedVersions` rules below)
+- **Minor/Patch updates**: Grouped together as "dart-minor-patch" (`genui`, `google_sign_in_mocks`, and `intl` use separate `pub-coordinated-pins` group plus `allowedVersions` rules below)
 - **Major updates**: Separated by category:
   - Flutter SDK major updates
   - Firebase major updates
@@ -32,6 +32,7 @@ This project uses automated dependency update monitoring to keep dependencies up
 
 - `genui` — held below `0.8.0` while `genui_google_generative_ai` `0.7.x` requires `genui ^0.7`
 - `google_sign_in_mocks` (dev) — held below `0.4.0` while `firebase_ui_oauth_google` stays on `google_sign_in` 6
+- `intl` — held below `0.20.3` while `flutter_localizations` from the Flutter SDK pins `intl 0.20.2` (re-check when upgrading Flutter)
 - `json_serializable` — `^6.14.0` with `dependency_overrides: analyzer: 10.0.2`, `dart_style: 3.1.4` (6.14+ needs analyzer ≥10; 10.0.2 aligns native plugin CLI with `analysis_server_plugin`). Path plugins `mix_lint` 2.x and `file_length_lint` use `analysis_server_plugin` via `analysis_options.yaml` `plugins:` + `path:`; `custom_lint` is not in the graph. Renovate caps `json_serializable` at `<7.0.0` and does not auto-bump `analyzer` / `analyzer_plugin`. Verify with `./tool/check_pubspec_codegen_compat.sh`; `upgrade_validate_all.sh` step 2b restores pins after major pub upgrades.
 
 ### Backup: Dependabot
