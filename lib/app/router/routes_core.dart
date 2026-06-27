@@ -32,8 +32,8 @@ import 'package:flutter_bloc_app/features/profile/presentation/pages/profile_pag
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/awesome_feature_widget.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/remote_config_diagnostics_section.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/pages/scapes_page.dart';
-import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';

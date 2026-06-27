@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _AuthRepo implements AuthRepository {
@@ -44,7 +44,9 @@ class _LocalStore implements StaffDemoTimeclockLocalStore {
   }
 
   @override
-  Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({required final String userId}) async => _open;
+  Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
+    required final String userId,
+  }) async => _open;
 
   @override
   Future<void> saveOpenEntry({
@@ -85,7 +87,9 @@ void main() {
 
     test('load emits ready when no open entry exists', () async {
       final cubit = StaffDemoTimeclockCubit(
-        authRepository: _AuthRepo(const AuthUser(id: 'user-1', isAnonymous: false)),
+        authRepository: _AuthRepo(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        ),
         repository: _TimeclockRepo(
           clockInResult: _clockResult('in-1'),
           clockOutResult: _clockResult('out-1'),
@@ -102,7 +106,9 @@ void main() {
 
     test('load emits clockedIn when open entry exists', () async {
       final cubit = StaffDemoTimeclockCubit(
-        authRepository: _AuthRepo(const AuthUser(id: 'user-1', isAnonymous: false)),
+        authRepository: _AuthRepo(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        ),
         repository: _TimeclockRepo(
           clockInResult: _clockResult('in-1'),
           clockOutResult: _clockResult('out-1'),
@@ -127,7 +133,9 @@ void main() {
 
     test('clockIn transitions to clockedIn', () async {
       final cubit = StaffDemoTimeclockCubit(
-        authRepository: _AuthRepo(const AuthUser(id: 'user-1', isAnonymous: false)),
+        authRepository: _AuthRepo(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        ),
         repository: _TimeclockRepo(
           clockInResult: _clockResult('entry-42'),
           clockOutResult: _clockResult('entry-42'),
@@ -144,7 +152,9 @@ void main() {
 
     test('clockOut returns to ready', () async {
       final cubit = StaffDemoTimeclockCubit(
-        authRepository: _AuthRepo(const AuthUser(id: 'user-1', isAnonymous: false)),
+        authRepository: _AuthRepo(
+          const AuthUser(id: 'user-1', isAnonymous: false),
+        ),
         repository: _TimeclockRepo(
           clockInResult: _clockResult('entry-42'),
           clockOutResult: _clockResult('entry-42'),

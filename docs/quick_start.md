@@ -22,7 +22,7 @@ Agent host sync (optional, once per machine): [agent_environment_setup.md](agent
 | Narrow change / pre-commit | `./bin/checklist-fast` |
 | Architecture import guards | `bash tool/check_clean_architecture_imports.sh` |
 | Feature modularity | `bash tool/check_feature_modularity_leaks.sh` |
-| Folder contract (legacy warnings OK) | `bash tool/check_feature_folder_contract.sh` |
+| Folder contract (legacy allowlisted on full scan) | `bash tool/check_feature_folder_contract.sh` |
 | Analyze changed Dart | `./tool/analyze.sh` |
 | Feature cubit tests | `flutter test test/features/<feature>` |
 

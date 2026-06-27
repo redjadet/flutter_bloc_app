@@ -11,9 +11,9 @@ export 'domain/app_info_repository.dart';
 export 'domain/locale_repository.dart';
 export 'domain/theme_repository.dart';
 // Presentation exports
-export 'presentation/cubits/app_info_cubit.dart';
-export 'presentation/cubits/locale_cubit.dart';
-export 'presentation/cubits/theme_cubit.dart';
+export 'presentation/cubit/app_info_cubit.dart';
+export 'presentation/cubit/locale_cubit.dart';
+export 'presentation/cubit/theme_cubit.dart';
 export 'presentation/pages/settings_page.dart';
 export 'presentation/widgets/account_section.dart';
 export 'presentation/widgets/app_info_section.dart';

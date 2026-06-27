@@ -30,15 +30,15 @@ Scaffold output (no runtime code) matches the same shape:
 
 | Feature / path | Reason |
 | --- | --- |
-| `settings/presentation/cubits/` | Legacy plural folder; new code uses `presentation/cubit/` only |
-| `playlearn`, `scapes` | Root-level cubit/state files — do not extend |
 | `ai_decision_demo` (state) | Equatable bag state — copy DTO boundary only until state migrates |
-| `staff_app_demo/presentation/<flow>/` | Flow subfolders with cubit at subfolder root — migrate to `presentation/cubit/` when touched |
 | `staff_app_demo` Firestore maps | `Map<String,dynamic>?` contract — deferred; copy submit validator pattern only |
 
 ## Legacy drift
 
-Default scan warns but does not fail CI until legacy features migrate:
+Default scan warns but does not fail CI until legacy features migrate.
+Known legacy paths are listed in
+[`tool/config/legacy_feature_folder_allowlist.txt`](../../tool/config/legacy_feature_folder_allowlist.txt);
+the default `lib/features` scan suppresses those entries. New drift fails the gate.
 
 ```bash
 bash tool/check_feature_folder_contract.sh

@@ -11,17 +11,17 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_role.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/admin/staff_demo_admin_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_state.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_inbox_item.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_messages_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_messages_state.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_admin_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_dashboard_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_messages_page.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/sites/staff_demo_sites_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_sites_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

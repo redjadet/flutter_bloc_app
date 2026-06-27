@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/cubits/theme_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

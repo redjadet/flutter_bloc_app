@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/timeclock/staff_demo_timeclock_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoTimeclockCubit extends Cubit<StaffDemoTimeclockState> {

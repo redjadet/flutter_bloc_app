@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_cubit.dart';
-import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_state.dart';
+import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
