@@ -458,6 +458,53 @@ void main() {
     );
 
     test(
+      'pullRemote does not overwrite local setValue started during remote fetch',
+      () async {
+        final FakeTimerService fakeTimer = FakeTimerService();
+        final Completer<List<IotDevice>> fetchCompleter =
+            Completer<List<IotDevice>>();
+        final _ControllableSupabaseRemote controllableRemote =
+            _ControllableSupabaseRemote(
+              fetchHandler: () => fetchCompleter.future,
+            );
+        remoteRepository.devices = <IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository seedRepo = buildRepository(
+          remote: remoteRepository,
+        );
+        await seedRepo.pullRemote();
+
+        final OfflineFirstIotDemoRepository repo = buildRepository(
+          remote: controllableRemote,
+          timerService: fakeTimer,
+        );
+        final Future<void> pullFuture = repo.pullRemote();
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.8));
+
+        fetchCompleter.complete(<IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ]);
+        await pullFuture;
+
+        final List<IotDevice> local = await repo.watchDevices().first;
+        expect(local, hasLength(1));
+        expect(local.first.value, 0.8);
+      },
+    );
+
+    test(
       'pullRemote does not overwrite local setValue while debounce is pending',
       () async {
         final FakeTimerService fakeTimer = FakeTimerService();
