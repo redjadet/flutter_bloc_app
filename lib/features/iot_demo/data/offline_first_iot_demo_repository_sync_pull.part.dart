@@ -52,6 +52,28 @@ Future<void> pullRemoteImpl(final OfflineFirstIotDemoRepository r) async {
   return future;
 }
 
+Future<bool> _shouldSkipPullRemoteReplaceImpl({
+  required final OfflineFirstIotDemoRepository r,
+  required final PersistentIotDemoRepository local,
+  required final String userId,
+}) async {
+  final List<SyncOperation> pending = await r._pendingSyncRepository
+      .getPendingOperations(
+        supabaseUserIdFilter: userId,
+      );
+  final bool hasPendingIotOps = pending.any(
+    (final op) => op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
+  );
+  final bool hasDebouncedSetValue = r._pendingSetValueByDevice.keys.any(
+    (final key) => key.startsWith('$userId::'),
+  );
+  if (!hasPendingIotOps && !hasDebouncedSetValue) {
+    return false;
+  }
+  final List<IotDevice> localDevices = await local.watchDevices().first;
+  return localDevices.isNotEmpty;
+}
+
 Future<void> _doPullRemoteImpl({
   required final OfflineFirstIotDemoRepository r,
   required final SupabaseIotDemoRepository remote,
@@ -59,29 +81,26 @@ Future<void> _doPullRemoteImpl({
   required final String userIdBefore,
 }) async {
   try {
-    final List<SyncOperation> pending = await r._pendingSyncRepository
-        .getPendingOperations(
-          supabaseUserIdFilter: userIdBefore,
-        );
-    final bool hasPendingIotOps = pending.any(
-      (final op) =>
-          op.entityType == OfflineFirstIotDemoRepository.iotDemoEntity,
-    );
-    final bool hasDebouncedSetValue = r._pendingSetValueByDevice.keys.any(
-      (final key) => key.startsWith('$userIdBefore::'),
-    );
-    if (hasPendingIotOps || hasDebouncedSetValue) {
-      final List<IotDevice> localDevices = await local.watchDevices().first;
-      if (localDevices.isNotEmpty) {
-        return;
-      }
+    if (await _shouldSkipPullRemoteReplaceImpl(
+      r: r,
+      local: local,
+      userId: userIdBefore,
+    )) {
+      return;
     }
     final List<IotDevice> remoteDevices = await remote.fetchDevices();
     final String? userIdAfter = r._currentSupabaseUserId();
     if (userIdAfter != userIdBefore) return;
     final PersistentIotDemoRepository? localNow = r._getLocalRepository();
     if (localNow == null || localNow != local) return;
-    await local.replaceDevices(
+    if (await _shouldSkipPullRemoteReplaceImpl(
+      r: r,
+      local: localNow,
+      userId: userIdAfter,
+    )) {
+      return;
+    }
+    await localNow.replaceDevices(
       List<IotDevice>.unmodifiable(remoteDevices),
     );
   } on Object catch (error, stackTrace) {
