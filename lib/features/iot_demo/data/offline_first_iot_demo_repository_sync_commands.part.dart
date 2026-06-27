@@ -116,10 +116,20 @@ void _scheduleSetValueSyncImpl(
   timer = r._timerService.runOnce(
     OfflineFirstIotDemoRepository.setValueSyncDebounce,
     () {
-      r._pendingSetValueByDevice.remove(pendingKey);
       r._timerHandles.unregister(timer);
       unawaited(
-        _enqueueSetValueCommandImpl(r, deviceId, value, supabaseUserId: userId),
+        () async {
+          try {
+            await _enqueueSetValueCommandImpl(
+              r,
+              deviceId,
+              value,
+              supabaseUserId: userId,
+            );
+          } finally {
+            r._pendingSetValueByDevice.remove(pendingKey);
+          }
+        }(),
       );
     },
   );

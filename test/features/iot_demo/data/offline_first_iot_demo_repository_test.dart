@@ -505,6 +505,66 @@ void main() {
     );
 
     test(
+      'pullRemote does not overwrite local setValue while enqueue is flushing',
+      () async {
+        final FakeTimerService fakeTimer = FakeTimerService();
+        final _GatePendingSyncRepository gatedPending =
+            _GatePendingSyncRepository(hiveService: hiveService);
+        final Completer<void> releaseEnqueue = Completer<void>();
+        gatedPending.releaseEnqueue = releaseEnqueue;
+        remoteRepository.devices = <IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ];
+        final OfflineFirstIotDemoRepository repo =
+            OfflineFirstIotDemoRepository(
+              getCurrentSupabaseUserId: () => _testSupabaseUserId,
+              getPersistentRepository: (final String id) =>
+                  PersistentIotDemoRepository(
+                    hiveService: hiveService,
+                    supabaseUserId: id,
+                    timerService: fakeTimer,
+                  ),
+              pendingSyncRepository: gatedPending,
+              registry: registry,
+              timerService: fakeTimer,
+              remoteRepository: remoteRepository,
+            );
+        await repo.pullRemote();
+        await repo.sendCommand('thermostat-1', IotDeviceCommand.setValue(0.8));
+
+        remoteRepository.devices = <IotDevice>[
+          IotDevice(
+            id: 'thermostat-1',
+            name: 'Thermostat',
+            type: IotDeviceType.thermostat,
+            value: 0.5,
+          ),
+        ];
+        fakeTimer.elapse(OfflineFirstIotDemoRepository.setValueSyncDebounce);
+        await Future<void>.delayed(Duration.zero);
+
+        final Future<void> pull = repo.pullRemote();
+        await Future<void>.delayed(Duration.zero);
+
+        final List<IotDevice> duringPull = await repo.watchDevices().first;
+        expect(duringPull, hasLength(1));
+        expect(duringPull.first.value, 0.8);
+
+        releaseEnqueue.complete();
+        await pull;
+
+        final List<IotDevice> local = await repo.watchDevices().first;
+        expect(local, hasLength(1));
+        expect(local.first.value, 0.8);
+      },
+    );
+
+    test(
       'pullRemote does not overwrite local setValue while debounce is pending',
       () async {
         final FakeTimerService fakeTimer = FakeTimerService();
@@ -715,6 +775,21 @@ void main() {
       expect(registry.resolve('iot_demo'), equals(repo));
     });
   });
+}
+
+class _GatePendingSyncRepository extends PendingSyncRepository {
+  _GatePendingSyncRepository({required super.hiveService});
+
+  Completer<void>? releaseEnqueue;
+
+  @override
+  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+    final Completer<void>? gate = releaseEnqueue;
+    if (gate != null) {
+      await gate.future;
+    }
+    return super.enqueue(operation);
+  }
 }
 
 class _FakeSupabaseRemote extends SupabaseIotDemoRepository {
