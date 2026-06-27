@@ -11,10 +11,10 @@ export 'domain/chat_history_repository.dart';
 export 'domain/chat_list_repository.dart';
 export 'domain/chat_message.dart';
 export 'domain/chat_repository.dart';
-export 'presentation/cubit/chat_state.dart';
 // Presentation exports
 export 'presentation/cubit/chat_cubit.dart';
 export 'presentation/cubit/chat_list_cubit.dart';
+export 'presentation/cubit/chat_state.dart';
 export 'presentation/cubit/chat_sync_status_cubit.dart';
 export 'presentation/pages/chat_list_page.dart';
 export 'presentation/pages/chat_page.dart';
