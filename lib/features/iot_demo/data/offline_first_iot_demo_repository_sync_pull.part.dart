@@ -96,7 +96,7 @@ Future<void> _doPullRemoteImpl({
     if (await _shouldSkipPullRemoteReplaceImpl(
       r: r,
       local: localNow,
-      userId: userIdAfter,
+      userId: userIdBefore,
     )) {
       return;
     }
