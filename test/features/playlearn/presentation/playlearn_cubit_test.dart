@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_servic
 import 'package:flutter_bloc_app/features/playlearn/domain/topic_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
-import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_cubit.dart';
-import 'package:flutter_bloc_app/features/playlearn/presentation/playlearn_state.dart';
+import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn_cubit.dart';
+import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

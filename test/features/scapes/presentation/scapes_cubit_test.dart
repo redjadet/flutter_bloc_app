@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
-import 'package:flutter_bloc_app/features/scapes/presentation/scapes_cubit.dart';
-import 'package:flutter_bloc_app/features/scapes/presentation/scapes_state.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
+import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_helpers.dart' show FakeTimerService;

@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/forms/staff_demo_forms_state.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_messages_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_forms_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_messages_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String staffDemoMessagesResolvedError(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/features/settings/presentation/cubits/locale_cubit.dart';
+import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeLocaleRepository implements LocaleRepository {

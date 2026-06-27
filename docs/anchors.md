@@ -7,9 +7,9 @@
 
 - Entry page: `lib/features/settings/presentation/pages/settings_page.dart`
 - State class(es):
-  - `ThemeCubit` (`lib/features/settings/presentation/cubits/theme_cubit.dart`)
-  - `LocaleCubit` (`lib/features/settings/presentation/cubits/locale_cubit.dart`)
-  - `AppInfoCubit` (`lib/features/settings/presentation/cubits/app_info_cubit.dart`)
+  - `ThemeCubit` (`lib/features/settings/presentation/cubit/theme_cubit.dart`)
+  - `LocaleCubit` (`lib/features/settings/presentation/cubit/locale_cubit.dart`)
+  - `AppInfoCubit` (`lib/features/settings/presentation/cubit/app_info_cubit.dart`)
 - Use cases/services: `AppInfoRepository`, `ThemeRepository`, `LocaleRepository`
 - Repositories: implemented in `lib/features/settings/data/**` (Hive/SharedPreferences/package_info based)
 - Data sources/clients: local storage (Hive, SharedPreferences), package info APIs

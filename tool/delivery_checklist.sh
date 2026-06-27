@@ -1442,7 +1442,13 @@ fi
 
 if [ "$SHOULD_RUN_PUB_GET" -eq 1 ]; then
   echo "  Dependency metadata changed, running 'flutter pub get'"
-  flutter pub get
+  pub_get_log="$(mktemp)"
+  if ! flutter pub get >"$pub_get_log" 2>&1; then
+    cat "$pub_get_log" >&2
+    rm -f "$pub_get_log"
+    exit 1
+  fi
+  rm -f "$pub_get_log"
 else
   echo "  Dependencies already up-to-date, skipping 'flutter pub get'"
 fi
