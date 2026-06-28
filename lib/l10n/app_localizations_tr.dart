@@ -2410,6 +2410,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loggedOutPhotoLabel => 'fotoğraf';
 
   @override
+  String get sessionExpiredMessage =>
+      'Oturumunun süresi doldu. Lütfen yeniden oturum aç.';
+
+  @override
   String get supabaseAuthTitle => 'Supabase Kimlik Doğrulama';
 
   @override

@@ -2,9 +2,15 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
+import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
+import 'package:flutter_bloc_app/shared/http/auth_token_refresh_classifier.dart';
 import 'package:flutter_bloc_app/shared/http/interceptors/retry_interceptor.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+
+part 'auth_token_interceptor_retry.part.dart';
 
 /// Injects Firebase auth token and retries once on 401 after refresh.
 class AuthTokenInterceptor extends QueuedInterceptor {
@@ -12,11 +18,20 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     required this._authTokenManager,
     required this._createRetryDio,
     this._firebaseAuth,
+    this._sessionCoordinator,
   });
 
   final AuthTokenManager _authTokenManager;
   final Dio Function() _createRetryDio;
   final FirebaseAuth? _firebaseAuth;
+  final SessionLifecycleCoordinator? _sessionCoordinator;
+
+  late final _AuthTokenUnauthorizedRetrier _unauthorizedRetrier =
+      _AuthTokenUnauthorizedRetrier(
+        authTokenManager: _authTokenManager,
+        createRetryDio: _createRetryDio,
+        sessionCoordinator: _sessionCoordinator,
+      );
 
   static const String requestExtraAuthRetried = 'auth_401_retried';
   static const String requestExtraManagedAuthUser = 'managed_auth_user';
@@ -66,7 +81,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     final Response<dynamic> response,
     final ResponseInterceptorHandler handler,
   ) async {
-    final _RetryUnauthorizedResult result = await _retryUnauthorizedResponse(
+    final _RetryUnauthorizedResult result = await _unauthorizedRetrier.retry(
       response,
     );
     if (result.response case final Response<dynamic> retried) {
@@ -90,7 +105,7 @@ class AuthTokenInterceptor extends QueuedInterceptor {
       handler.next(err);
       return;
     }
-    final _RetryUnauthorizedResult result = await _retryUnauthorizedResponse(
+    final _RetryUnauthorizedResult result = await _unauthorizedRetrier.retry(
       response,
     );
     if (result.response case final Response<dynamic> retried) {
@@ -103,121 +118,4 @@ class AuthTokenInterceptor extends QueuedInterceptor {
     }
     handler.next(err);
   }
-
-  Future<_RetryUnauthorizedResult> _retryUnauthorizedResponse(
-    final Response<dynamic> response,
-  ) async {
-    if (response.statusCode != 401) {
-      return const _RetryUnauthorizedResult.noRetry();
-    }
-    final RequestOptions requestOptions = response.requestOptions;
-    if (requestOptions.extra[requestExtraSkipAuthHandling] == true ||
-        requestOptions.extra[requestExtraAuthRetried] == true) {
-      return const _RetryUnauthorizedResult.noRetry();
-    }
-
-    final String method = requestOptions.method.toUpperCase();
-    if (!_isIdempotentMethod(method) &&
-        requestOptions.extra[requestExtraAllowAuthRetryNonIdempotent] != true) {
-      AppLogger.debug(
-        'AuthTokenInterceptor: skip auth retry (non-idempotent): '
-        '$method ${requestOptions.uri}',
-      );
-      return const _RetryUnauthorizedResult.noRetry();
-    }
-
-    final User? user = _managedUserFrom(requestOptions);
-    if (user == null) {
-      return const _RetryUnauthorizedResult.noRetry();
-    }
-    final String? refreshedToken = await _refreshManagedUserToken(user);
-    if (refreshedToken == null) {
-      return const _RetryUnauthorizedResult.noRetry();
-    }
-    final RequestOptions retryOptions = requestOptions.copyWith(
-      headers: Map<String, dynamic>.from(requestOptions.headers),
-      extra: Map<String, dynamic>.from(requestOptions.extra),
-    );
-    retryOptions.extra[requestExtraAuthRetried] = true;
-    retryOptions.extra[requestExtraSkipAuthHandling] = true;
-    retryOptions.headers['Authorization'] = 'Bearer $refreshedToken';
-    retryOptions.extra[requestExtraManagedAuthUser] = user;
-    // Option A (strict): auth 401 replay must not multiply attempts by also
-    // entering RetryInterceptor. The auth replay is already "one extra try".
-    retryOptions.extra[RetryInterceptor.extraSkipRetry] = true;
-    try {
-      return _RetryUnauthorizedResult.response(
-        await _createRetryDio().fetch<dynamic>(retryOptions),
-      );
-    } on DioException catch (error, stackTrace) {
-      AppLogger.error(
-        'AuthTokenInterceptor retry request failed',
-        error,
-        stackTrace,
-      );
-      return _RetryUnauthorizedResult.error(error);
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'AuthTokenInterceptor retry failed',
-        error,
-        stackTrace,
-      );
-      return _RetryUnauthorizedResult.error(
-        DioException(
-          requestOptions: retryOptions,
-          error: error,
-          stackTrace: stackTrace,
-        ),
-      );
-    }
-  }
-
-  User? _managedUserFrom(final RequestOptions options) {
-    final Object? value = options.extra[requestExtraManagedAuthUser];
-    return value is User ? value : null;
-  }
-
-  Future<String?> _refreshManagedUserToken(final User user) async {
-    try {
-      return await _authTokenManager.refreshTokenAndGet(user);
-    } on Object catch (error, stackTrace) {
-      AppLogger.error(
-        'AuthTokenInterceptor failed to refresh token',
-        error,
-        stackTrace,
-      );
-      return null;
-    }
-  }
-
-  bool _isIdempotentMethod(final String method) {
-    switch (method.toUpperCase()) {
-      case 'GET':
-      case 'HEAD':
-      case 'PUT':
-      case 'DELETE':
-      case 'OPTIONS':
-      case 'TRACE':
-        return true;
-    }
-    return false;
-  }
-}
-
-class _RetryUnauthorizedResult {
-  const _RetryUnauthorizedResult._({
-    this.response,
-    this.error,
-  });
-
-  const _RetryUnauthorizedResult.noRetry() : this._();
-
-  const _RetryUnauthorizedResult.response(final Response<dynamic> response)
-    : this._(response: response);
-
-  const _RetryUnauthorizedResult.error(final DioException error)
-    : this._(error: error);
-
-  final Response<dynamic>? response;
-  final DioException? error;
 }

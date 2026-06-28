@@ -4405,6 +4405,12 @@ abstract class AppLocalizations {
   /// **'photo'**
   String get loggedOutPhotoLabel;
 
+  /// Snackbar shown when Firebase session is invalidated after token refresh failure
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Please sign in again.'**
+  String get sessionExpiredMessage;
+
   /// Title for the Supabase authentication page
   ///
   /// In en, this message translates to:

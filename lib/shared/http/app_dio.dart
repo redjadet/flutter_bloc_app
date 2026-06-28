@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_bloc_app/shared/http/interceptors/auth_token_interceptor.dart';
 import 'package:flutter_bloc_app/shared/http/interceptors/network_check_interceptor.dart';
@@ -13,7 +14,9 @@ import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart
 Dio createAppDio({
   required final NetworkStatusService networkStatusService,
   required final String userAgent,
+  required final AuthTokenManager authTokenManager,
   final FirebaseAuth? firebaseAuth,
+  final SessionLifecycleCoordinator? sessionCoordinator,
   final RetryNotificationService? retryNotificationService,
   final TelemetryEventSink? telemetryEventSink,
   final Future<void> Function(Duration delay)? waitForRetryDelay,
@@ -21,15 +24,13 @@ Dio createAppDio({
   final bool enableRetry = true,
   final int maxRetries = 3,
 }) {
-  final AuthTokenManager authTokenManager = AuthTokenManager(
-    firebaseAuth: firebaseAuth,
-  );
   final Dio dio = Dio(_createBaseOptions(userAgent: userAgent));
   _configureInterceptors(
     dio: dio,
     networkStatusService: networkStatusService,
     authTokenManager: authTokenManager,
     firebaseAuth: firebaseAuth,
+    sessionCoordinator: sessionCoordinator,
     retryNotificationService: retryNotificationService,
     telemetryEventSink: telemetryEventSink,
     waitForRetryDelay: waitForRetryDelay,
@@ -78,6 +79,7 @@ void _configureInterceptors({
   required final int maxRetries,
   final AuthTokenManager? authTokenManager,
   final FirebaseAuth? firebaseAuth,
+  final SessionLifecycleCoordinator? sessionCoordinator,
   final Dio Function()? createAuthRetryDio,
 }) {
   dio.interceptors.add(NetworkCheckInterceptor(networkStatusService));
@@ -104,6 +106,7 @@ void _configureInterceptors({
         authTokenManager: resolvedAuthTokenManager,
         createRetryDio: resolvedCreateAuthRetryDio,
         firebaseAuth: firebaseAuth,
+        sessionCoordinator: sessionCoordinator,
       ),
     );
   }

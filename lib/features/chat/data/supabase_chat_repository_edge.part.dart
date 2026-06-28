@@ -98,9 +98,6 @@ String? _defaultReadAccessToken() =>
 
 String? _defaultReadAnonKey() => SecretConfig.supabaseAnonKey;
 
-Future<void> _defaultRefreshSessionAfter401() =>
-    Supabase.instance.client.auth.refreshSession();
-
 Future<FunctionResponse> _defaultInvoke({
   required final String accessToken,
   required final String anonKey,

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/shared/http/app_dio.dart';
+import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_bloc_app/shared/http/interceptors/retry_interceptor.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,6 +117,7 @@ void main() {
         networkStatusService: networkStatusService,
         userAgent: 'test-agent',
         firebaseAuth: auth,
+        authTokenManager: AuthTokenManager(firebaseAuth: auth),
         telemetryEventSink: telemetryEventSink,
         waitForRetryDelay: waitForRetryDelay,
         maxRetries: maxRetries,

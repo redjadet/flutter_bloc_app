@@ -295,13 +295,10 @@ class SecretConfig {
       return;
     }
 
-    final String suffix = token.length > 4
-        ? token.substring(token.length - 4)
-        : token;
     final String selectedModel = model ?? 'HuggingFaceH4/zephyr-7b-beta';
     AppLogger.info(
       'SecretConfig: Hugging Face token loaded '
-      '(source=$source, len=${token.length}, suffix=***$suffix, model=$selectedModel)',
+      '(source=$source, len=${token.length}, model=$selectedModel)',
     );
   }
 

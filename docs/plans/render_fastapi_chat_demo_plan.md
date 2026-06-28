@@ -615,6 +615,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 | **Offline `auth_required` loops** | [Replay and token lifecycle](#replay-and-token-lifecycle); non-retryable policy |
 | **Multi-worker / multi-process** breaks cache + semaphore | [STOP #11](#stop--frozen-defaults-cursor-agents-must-implement); enforce in `render.yaml` / Dockerfile |
 | **Stale token after user switch** | [Session and user-switch hygiene](#session-and-user-switch-hygiene-flutter); tests |
+| **Global Firebase sign-out on Render 401** | **Deferred** — [AUTH-D01](auth_security_hardening_deferred.md#auth-d01-render-fastapi-coordinator-hook). PR A clears HF token on Firebase sign-out; orchestration 401 uses feature-local terminal failure (`chatAuthRefreshRequired`) unless repro proves coordinator hook is required. |
 
 ## Resolved gaps vs earlier draft
 

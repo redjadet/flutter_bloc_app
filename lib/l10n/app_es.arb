@@ -1736,6 +1736,10 @@
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
   },
+  "sessionExpiredMessage": "Tu sesión ha expirado. Vuelve a iniciar sesión.",
+  "@sessionExpiredMessage": {
+    "description": "Snackbar shown when Firebase session is invalidated after token refresh failure"
+  },
   "supabaseAuthTitle": "Auth de Supabase",
   "supabaseAuthSignIn": "Iniciar sesión",
   "supabaseAuthSignUp": "Registrarse",

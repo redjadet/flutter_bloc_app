@@ -2434,6 +2434,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loggedOutPhotoLabel => 'photo';
 
   @override
+  String get sessionExpiredMessage =>
+      'Ta session a expiré. Reconnecte-toi pour continuer.';
+
+  @override
   String get supabaseAuthTitle => 'Auth Supabase';
 
   @override

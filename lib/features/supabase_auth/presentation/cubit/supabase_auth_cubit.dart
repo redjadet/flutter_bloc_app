@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -9,18 +11,52 @@ import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
+part 'supabase_auth_cubit_handlers.part.dart';
+
 /// Cubit managing Supabase authentication state and actions.
 class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
-    with CubitSubscriptionMixin<SupabaseAuthState> {
+    with CubitSubscriptionMixin<SupabaseAuthState>, _SupabaseAuthCubitHandlers {
   SupabaseAuthCubit({
     required this._repository,
     this._l10n,
+    this._sessionCoordinator,
   }) : super(const SupabaseAuthState.initial());
 
   final SupabaseAuthRepository _repository;
   final AppLocalizations? _l10n;
-  // ignore: cancel_subscriptions - Subscription is managed explicitly and by the mixin.
+  final SessionLifecycleCoordinator? _sessionCoordinator;
   StreamSubscription<Object?>? _authStateSubscription;
+  StreamSubscription<SessionInvalidationEvent>? _invalidationSubscription;
+
+  @override
+  SupabaseAuthRepository get supabaseAuthRepository => _repository;
+
+  @override
+  AppLocalizations? get supabaseAuthL10n => _l10n;
+
+  @override
+  SessionLifecycleCoordinator? get supabaseSessionCoordinator =>
+      _sessionCoordinator;
+
+  @override
+  StreamSubscription<Object?>? get supabaseAuthStateSubscription =>
+      _authStateSubscription;
+
+  @override
+  set supabaseAuthStateSubscription(final StreamSubscription<Object?>? value) {
+    _authStateSubscription = value;
+  }
+
+  @override
+  StreamSubscription<SessionInvalidationEvent>?
+  get supabaseInvalidationSubscription => _invalidationSubscription;
+
+  @override
+  set supabaseInvalidationSubscription(
+    final StreamSubscription<SessionInvalidationEvent>? value,
+  ) {
+    _invalidationSubscription = value;
+  }
 
   /// Loads current session and subscribes to auth state changes.
   Future<void> loadSession() async {
@@ -45,6 +81,18 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
         cancelOnError: false,
       ),
     );
+
+    await _disposeInvalidationSubscription();
+    final SessionLifecycleCoordinator? coordinator = _sessionCoordinator;
+    if (coordinator != null) {
+      _invalidationSubscription = registerSubscription(
+        coordinator.invalidationEvents.listen(
+          _handleInvalidationEvent,
+          onError: _handleAuthStateError,
+          cancelOnError: false,
+        ),
+      );
+    }
   }
 
   /// Signs in with email and password.
@@ -104,121 +152,7 @@ class SupabaseAuthCubit extends Cubit<SupabaseAuthState>
   @override
   Future<void> close() {
     _authStateSubscription = null;
+    _invalidationSubscription = null;
     return super.close();
-  }
-
-  Future<void> _runAuthAction({
-    required final String logContext,
-    required final Future<void> Function() operation,
-    final void Function()? onSuccess,
-  }) async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        if (isClosed) return;
-        emit(const SupabaseAuthState.loading());
-
-        await operation();
-        if (isClosed) return;
-
-        if (onSuccess case final runOnSuccess?) {
-          runOnSuccess();
-          return;
-        }
-
-        _emitCurrentAuthState();
-      },
-      logContext: logContext,
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
-        _emitActionError(
-          context: logContext,
-          error: error,
-          stackTrace: stackTrace,
-        );
-      },
-    );
-  }
-
-  void _emitCurrentAuthState() {
-    if (isClosed) return;
-
-    final user = _repository.currentUser;
-    if (user != null) {
-      emit(SupabaseAuthState.authenticated(user));
-      return;
-    }
-
-    emit(const SupabaseAuthState.unauthenticated());
-  }
-
-  void _handleAuthStateChanged(final AuthUser? user) {
-    if (isClosed) return;
-
-    if (user != null) {
-      emit(SupabaseAuthState.authenticated(user));
-      return;
-    }
-
-    emit(const SupabaseAuthState.unauthenticated());
-  }
-
-  void _handleAuthStateError(final Object error, final StackTrace stackTrace) {
-    AppLogger.error('SupabaseAuthCubit.authStateChanges', error, stackTrace);
-    if (isClosed) return;
-    emit(SupabaseAuthState.error(_mapErrorMessage(error)));
-  }
-
-  void _emitActionError({
-    required final String context,
-    required final Object error,
-    required final StackTrace? stackTrace,
-  }) {
-    // Expected user errors (wrong password, weak password) log at debug to avoid console noise.
-    final bool isExpectedAuthFailure =
-        error is SupabaseAuthException &&
-        (error.code == SupabaseAuthErrorCode.invalidCredentials ||
-            error.code == SupabaseAuthErrorCode.weakPassword ||
-            error.code == SupabaseAuthErrorCode.invalidEmail ||
-            error.code == SupabaseAuthErrorCode.userAlreadyExists);
-    if (isExpectedAuthFailure) {
-      AppLogger.debug('$context: $error');
-    } else {
-      AppLogger.error(context, error, stackTrace);
-    }
-    if (isClosed) return;
-    emit(SupabaseAuthState.error(_mapErrorMessage(error)));
-  }
-
-  String _mapErrorMessage(final Object error) {
-    if (error is SupabaseAuthException) {
-      switch (error.code) {
-        case SupabaseAuthErrorCode.invalidCredentials:
-          return _l10n?.supabaseAuthErrorInvalidCredentials ?? error.message;
-        case SupabaseAuthErrorCode.network:
-          return _l10n?.supabaseAuthErrorNetwork ?? error.message;
-        case SupabaseAuthErrorCode.weakPassword:
-          return _l10n?.supabaseAuthErrorWeakPassword ?? error.message;
-        case SupabaseAuthErrorCode.invalidEmail:
-          return _l10n?.supabaseAuthErrorInvalidEmail ?? error.message;
-        case SupabaseAuthErrorCode.userAlreadyExists:
-          return _l10n?.supabaseAuthErrorUserAlreadyExists ?? error.message;
-        case null:
-          break;
-      }
-
-      final String trimmedMessage = error.message.trim();
-      if (trimmedMessage.isNotEmpty) {
-        return trimmedMessage;
-      }
-    }
-
-    return error.toString();
-  }
-
-  Future<void> _disposeAuthStateSubscription() async {
-    final StreamSubscription<Object?>? subscription = _authStateSubscription;
-    _authStateSubscription = null;
-    await cancelRegisteredSubscription(subscription);
   }
 }

@@ -2,13 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseCaseStudyRemoteDeleteRepository
     implements CaseStudyRemoteDeleteRepository {
-  const SupabaseCaseStudyRemoteDeleteRepository();
+  SupabaseCaseStudyRemoteDeleteRepository({
+    SupabaseSessionManager? sessionManager,
+  }) : _sessionManager = sessionManager ?? SupabaseSessionManager();
+
+  final SupabaseSessionManager _sessionManager;
 
   static String? _readSupabaseAnonKey() {
     final String anonKey = SecretConfig.supabaseAnonKey?.trim() ?? '';
@@ -56,78 +61,25 @@ class SupabaseCaseStudyRemoteDeleteRepository
 
     try {
       _debugLogAuthSnapshot('before');
-      final Session? session = Supabase.instance.client.auth.currentSession;
-      final String? token = session?.accessToken;
+      final String? token = _sessionManager.getAccessToken();
       if (token == null || token.isEmpty) {
         throw const HttpRequestFailure(401, 'Authentication required');
       }
-      final String? apiKey = _readSupabaseAnonKey();
-      if (apiKey == null) {
-        throw const HttpRequestFailure(
-          500,
-          'Supabase anon key missing (SUPABASE_ANON_KEY)',
-        );
-      }
-      final response = await Supabase.instance.client.functions.invoke(
-        'delete-case-study',
-        body: <String, Object?>{'caseId': trimmed},
-        headers: <String, String>{
-          'Authorization': 'Bearer $token',
-          'apikey': apiKey,
-        },
-      );
-      if (kDebugMode) {
-        AppLogger.debug(
-          'delete-case-study response: status=${response.status}',
-        );
-      }
-
-      if (response.status != 200) {
-        throw HttpRequestFailure(
-          response.status,
-          'Edge delete-case-study failed: ${response.data ?? response.status}',
-        );
-      }
+      await _invokeDelete(caseId: trimmed, token: token);
     } on FunctionException catch (error, stackTrace) {
-      // Common: access token expired -> refreshSession fixes it. If refresh fails
-      // (revoked/invalid refresh token), sign out so UI can re-auth cleanly.
       if (error.status == 401 &&
           SupabaseBootstrapService.isSupabaseInitialized) {
         try {
           _debugLogAuthSnapshot('401_before_refresh');
-          await Supabase.instance.client.auth.refreshSession();
+          final String? refreshedToken = await _sessionManager
+              .refreshAccessTokenAfterUnauthorized();
           _debugLogAuthSnapshot('401_after_refresh');
-          final Session? refreshed =
-              Supabase.instance.client.auth.currentSession;
-          final String? refreshedToken = refreshed?.accessToken;
-          if (refreshedToken == null || refreshedToken.isEmpty) {
-            throw const HttpRequestFailure(401, 'Authentication required');
-          }
-          final String? apiKey = _readSupabaseAnonKey();
-          if (apiKey == null) {
-            throw const HttpRequestFailure(
-              500,
-              'Supabase anon key missing (SUPABASE_ANON_KEY)',
-            );
-          }
-          final retry = await Supabase.instance.client.functions.invoke(
-            'delete-case-study',
-            body: <String, Object?>{'caseId': trimmed},
-            headers: <String, String>{
-              'Authorization': 'Bearer $refreshedToken',
-              'apikey': apiKey,
-            },
-          );
-          if (kDebugMode) {
-            AppLogger.debug(
-              'delete-case-study retry response: status=${retry.status}',
-            );
-          }
-          if (retry.status == 200) {
+          if (refreshedToken != null && refreshedToken.isNotEmpty) {
+            await _invokeDelete(caseId: trimmed, token: refreshedToken);
             return;
           }
         } on Object {
-          // Ignore and fall through to user-facing error.
+          // Fall through to user-facing error.
         }
       }
 
@@ -151,6 +103,38 @@ class SupabaseCaseStudyRemoteDeleteRepository
         stackTrace,
       );
       rethrow;
+    }
+  }
+
+  Future<void> _invokeDelete({
+    required final String caseId,
+    required final String token,
+  }) async {
+    final String? apiKey = _readSupabaseAnonKey();
+    if (apiKey == null) {
+      throw const HttpRequestFailure(
+        500,
+        'Supabase anon key missing (SUPABASE_ANON_KEY)',
+      );
+    }
+    final response = await Supabase.instance.client.functions.invoke(
+      'delete-case-study',
+      body: <String, Object?>{'caseId': caseId},
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+        'apikey': apiKey,
+      },
+    );
+    if (kDebugMode) {
+      AppLogger.debug(
+        'delete-case-study response: status=${response.status}',
+      );
+    }
+    if (response.status != 200) {
+      throw HttpRequestFailure(
+        response.status,
+        'Edge delete-case-study failed: ${response.data ?? response.status}',
+      );
     }
   }
 }

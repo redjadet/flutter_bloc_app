@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_upload_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 
 void registerCaseStudyDemoServices() {
@@ -30,7 +31,9 @@ void registerCaseStudyDemoServices() {
   );
 
   registerLazySingletonIfAbsent<CaseStudyRemoteDeleteRepository>(
-    SupabaseCaseStudyRemoteDeleteRepository.new,
+    () => SupabaseCaseStudyRemoteDeleteRepository(
+      sessionManager: getIt<SupabaseSessionManager>(),
+    ),
   );
 
   registerLazySingletonIfAbsent<CaseStudyRemoteRepository>(

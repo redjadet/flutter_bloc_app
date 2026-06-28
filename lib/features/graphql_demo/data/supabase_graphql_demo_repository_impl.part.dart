@@ -85,41 +85,17 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
     if (error is! FunctionException) return;
     if (error.status != 401) return;
 
-    final String? iss = _tryReadJwtIssuer(accessToken);
+    final JwtClaims? claims = tryReadJwtClaims(accessToken);
+    final String? iss = claims?.iss;
     final String? userId = _readCurrentUserId();
-    final int tokenLength = accessToken?.length ?? 0;
     final String? configuredUrl = SecretConfig.supabaseUrl;
     AppLogger.warning(
       'SupabaseGraphqlDemoRepository edge 401 Invalid JWT diagnostics: '
       'initialized=${SupabaseBootstrapService.isSupabaseInitialized} '
       'configuredUrl=${configuredUrl ?? 'null'} '
       'userId=${userId ?? 'null'} '
-      'iss=${iss ?? 'null'} '
-      'tokenLength=$tokenLength',
+      'iss=${iss ?? 'null'}',
     );
-  }
-
-  String? _tryReadJwtIssuer(final String? token) {
-    if (token == null || token.isEmpty) return null;
-    final List<String> parts = token.split('.');
-    if (parts.length < 2) return null;
-    try {
-      final String payload = _base64UrlDecodeToString(parts[1]);
-      // check-ignore: small payload (<8KB) — JWT claim segment only
-      final dynamic decoded = jsonDecode(payload);
-      if (decoded is! Map<String, dynamic>) return null;
-      final Object? iss = decoded['iss'];
-      return iss is String ? iss : null;
-    } on FormatException {
-      return null;
-    } on Exception {
-      return null;
-    }
-  }
-
-  String _base64UrlDecodeToString(final String input) {
-    final String normalized = base64Url.normalize(input);
-    return utf8.decode(base64Url.decode(normalized));
   }
 
   Future<List<GraphqlContinent>> _fetchContinentsFromTables() async {

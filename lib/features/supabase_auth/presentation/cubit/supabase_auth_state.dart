@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'supabase_auth_state.freezed.dart';
@@ -10,6 +11,9 @@ abstract class SupabaseAuthState with _$SupabaseAuthState {
   const factory SupabaseAuthState.authenticated(final AuthUser user) =
       _Authenticated;
   const factory SupabaseAuthState.unauthenticated() = _Unauthenticated;
+  const factory SupabaseAuthState.sessionExpired(
+    final SessionInvalidationReason reason,
+  ) = _SessionExpired;
   const factory SupabaseAuthState.error(final String message) = _Error;
   const factory SupabaseAuthState.notConfigured() = _NotConfigured;
 }

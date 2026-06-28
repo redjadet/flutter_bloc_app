@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
+import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_cubit.dart';
@@ -178,6 +181,41 @@ void main() {
         const SupabaseAuthState.loading(),
         SupabaseAuthState.error(l10n.supabaseAuthErrorInvalidCredentials),
       ],
+    );
+  });
+
+  group('sessionExpired', () {
+    test(
+      'emits sessionExpired when coordinator invalidates supabase',
+      () async {
+        final SessionLifecycleCoordinatorImpl coordinator =
+            SessionLifecycleCoordinatorImpl();
+        final SupabaseAuthCubit testCubit = SupabaseAuthCubit(
+          repository: mockRepository,
+          l10n: l10n,
+          sessionCoordinator: coordinator,
+        );
+        when(() => mockRepository.isConfigured).thenReturn(true);
+        when(() => mockRepository.currentUser).thenReturn(null);
+        when(
+          () => mockRepository.authStateChanges,
+        ).thenAnswer((_) => const Stream<AuthUser?>.empty());
+
+        await testCubit.loadSession();
+        await coordinator.invalidateSession(
+          provider: AuthProviderKind.supabase,
+          reason: SessionInvalidationReason.supabaseSessionInvalid,
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        expect(
+          testCubit.state,
+          const SupabaseAuthState.sessionExpired(
+            SessionInvalidationReason.supabaseSessionInvalid,
+          ),
+        );
+        await testCubit.close();
+      },
     );
   });
 
