@@ -103,7 +103,9 @@ void _logAppCheckDebugToken(
     return;
   }
 
-  AppLogger.info('Firebase App Check debug token: $debugToken');
+  AppLogger.info(
+    'Firebase App Check debug token registered (len=${debugToken.length})',
+  );
   if (debugTokenEnv.isEmpty) {
     AppLogger.warning(
       '${IntegrationLogMessages.appCheckDebugTokenPrefix} For a unique token, run with '

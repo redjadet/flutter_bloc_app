@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.d
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'supabase_chat_repository_edge.part.dart';
@@ -13,19 +14,18 @@ part 'supabase_chat_repository_edge.part.dart';
 class SupabaseChatRepository implements ChatRepository {
   SupabaseChatRepository({
     required this._payloadBuilder,
+    SupabaseSessionManager? sessionManager,
     final String? Function()? readAccessToken,
     final String? Function()? readAnonKey,
-    final Future<void> Function()? refreshSessionAfter401,
     final Future<FunctionResponse> Function({
       required String accessToken,
       required String anonKey,
       required Map<String, dynamic> body,
     })?
     invoke,
-  }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
+  }) : _sessionManager = sessionManager ?? SupabaseSessionManager(),
+       _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _readAnonKey = readAnonKey ?? _defaultReadAnonKey,
-       _refreshSessionAfter401 =
-           refreshSessionAfter401 ?? _defaultRefreshSessionAfter401,
        _invoke = invoke ?? _defaultInvoke;
 
   static const String functionName = 'chat-complete';
@@ -33,9 +33,9 @@ class SupabaseChatRepository implements ChatRepository {
   static const String authorizationHeader = 'Authorization';
 
   final HuggingFacePayloadBuilder _payloadBuilder;
+  final SupabaseSessionManager _sessionManager;
   final String? Function() _readAccessToken;
   final String? Function() _readAnonKey;
-  final Future<void> Function() _refreshSessionAfter401;
   final Future<FunctionResponse> Function({
     required String accessToken,
     required String anonKey,
@@ -132,8 +132,7 @@ class SupabaseChatRepository implements ChatRepository {
     } on FunctionException catch (e) {
       if (e.status == 401 && SupabaseBootstrapService.isSupabaseInitialized) {
         try {
-          await _refreshSessionAfter401();
-          token = _readAccessToken();
+          token = await _sessionManager.refreshAccessTokenAfterUnauthorized();
           if (token != null && token.isNotEmpty) {
             try {
               return await invokeEdgeAndParse(

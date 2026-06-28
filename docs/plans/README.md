@@ -36,6 +36,7 @@ This directory contains design notes and execution plans.
 - [`dio_retrofit_integration_plan.md`](dio_retrofit_integration_plan.md): integration plan for Dio/Retrofit patterns.
 - [`supabase_proxy_huggingface_chat_plan.md`](supabase_proxy_huggingface_chat_plan.md): Action plan for Supabase Edge → Hugging Face chat proxy (offline-first contract: [`offline_first/chat.md`](../offline_first/chat.md)).
 - [`supabase_proxy_huggingface_chat_plan_codex_review.md`](supabase_proxy_huggingface_chat_plan_codex_review.md): Archival verbatim Codex (**gpt-5.4**) operability review of that plan.
-- [`render_fastapi_chat_demo_plan.md`](render_fastapi_chat_demo_plan.md): FastAPI on Render as **AI orchestration** demo wired into existing Flutter chat (Render → FastAPI pipeline, fallthrough to Supabase/HF, security/Dio/testing contract).
+- [`render_fastapi_chat_demo_plan.md`](render_fastapi_chat_demo_plan.md): FastAPI on Render as **AI orchestration** demo wired into existing Flutter chat (Render → FastAPI pipeline, fallthrough to Supabase/HF, security/Dio/testing contract). **Deferred auth hook:** [AUTH-D01](auth_security_hardening_deferred.md#auth-d01-render-fastapi-coordinator-hook).
+- [`auth_security_hardening_deferred.md`](auth_security_hardening_deferred.md): Post–PR A–C deferred auth/security items (Render coordinator, RegisterPage backend, role/claims ADR, `auth_injection_failed` extra).
 - [`future_observability.md`](future_observability.md): doc-only seams for Mixpanel/Sentry/Patrol (not in `pubspec.yaml`); interview appendix.
 - [`patrol_e2e_pilot.md`](patrol_e2e_pilot.md): Patrol E2E pilot plan (native sync diagnostics, settings theme); not shipped.

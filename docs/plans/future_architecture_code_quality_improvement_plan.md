@@ -149,7 +149,7 @@ They are anchors, not a complete file list.
 
 | Phase | Depends on | Gate to proceed |
 | ----- | ---------- | --------------- |
-| Phase 1 | None | Role source and route policy shape are agreed before broad route edits |
+| Phase 1 | None | Role source and route policy shape are agreed before broad route edits — see [AUTH-D03](auth_security_hardening_deferred.md#auth-d03-roleclaims-authorization) |
 | Phase 2 | Phase 1 token propagation audit is preferred if sync triggers call authenticated services | Trigger contract is defined before coordinator changes land |
 | Phase 3 | Phase 5 baseline coverage is preferred on the chosen pilot slice | Spike ends with an explicit yes/no adoption decision |
 | Phase 4 | None | Shared error model is defined before feature-by-feature UI adoption |
@@ -207,6 +207,8 @@ handles roles, deep links, biometric-sensitive screens, and consistent token
 attachment outside the shared Dio path.
 
 ### Phase 1 Work Items
+
+**Prerequisite:** Role/claims work is **[AUTH-D03](auth_security_hardening_deferred.md#auth-d03-roleclaims-authorization)** — requires ADR before role-restricted `AppRoutePolicies`. Session lifecycle coordinator (PR A–C) is shipped; see [`authentication.md`](../authentication.md).
 
 1. Design a minimal role/claims model that covers near-term requirements such
    as `user`, `admin`, and `betaTester`.

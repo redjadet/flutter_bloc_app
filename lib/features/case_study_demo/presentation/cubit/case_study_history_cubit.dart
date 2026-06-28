@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_state.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
 import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 
 export 'case_study_history_state.dart';
@@ -113,13 +112,6 @@ class CaseStudyHistoryCubit extends Cubit<CaseStudyHistoryState> {
       emit(state.copyWith(clearDeletingRecordId: true));
       await load();
     } on Object catch (error) {
-      if (error is HttpRequestFailure && error.statusCode == 401) {
-        try {
-          await _remoteAuth.signOut();
-        } on Object {
-          // Best-effort only; still surface the error to the UI.
-        }
-      }
       if (isClosed) return;
       emit(
         state.copyWith(

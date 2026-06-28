@@ -1755,6 +1755,10 @@
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
   },
+  "sessionExpiredMessage": "Oturumunun süresi doldu. Lütfen yeniden oturum aç.",
+  "@sessionExpiredMessage": {
+    "description": "Snackbar shown when Firebase session is invalidated after token refresh failure"
+  },
   "supabaseAuthTitle": "Supabase Kimlik Doğrulama",
   "supabaseAuthSignIn": "Giriş yap",
   "supabaseAuthSignUp": "Kayıt ol",

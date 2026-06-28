@@ -2424,6 +2424,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loggedOutPhotoLabel => 'صورة';
 
   @override
+  String get sessionExpiredMessage =>
+      'انتهت جلستك. يُرجى تسجيل الدخول مرة أخرى.';
+
+  @override
   String get supabaseAuthTitle => 'مصادقة سوباباس';
 
   @override

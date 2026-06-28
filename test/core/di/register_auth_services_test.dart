@@ -6,12 +6,29 @@ import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
     as feature_auth;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
+void _stubFirebaseAuthStreams(final FirebaseAuth firebaseAuth) {
+  when(() => firebaseAuth.currentUser).thenReturn(null);
+  when(
+    () => firebaseAuth.authStateChanges(),
+  ).thenAnswer((_) => const Stream<User?>.empty());
+}
+
+feature_auth.AuthRepository _unwrapAuthRepository(
+  final feature_auth.AuthRepository repository,
+) {
+  if (repository is SignOutAwareAuthRepository) {
+    return repository.delegate;
+  }
+  return repository;
+}
 
 void main() {
   setUp(() async {
@@ -29,7 +46,9 @@ void main() {
     test(
       'registers the core auth contract as the same singleton as feature auth',
       () {
-        getIt.registerSingleton<FirebaseAuth>(_MockFirebaseAuth());
+        final firebaseAuth = _MockFirebaseAuth();
+        _stubFirebaseAuthStreams(firebaseAuth);
+        getIt.registerSingleton<FirebaseAuth>(firebaseAuth);
 
         registerAuthServices();
 
@@ -38,7 +57,11 @@ void main() {
         final core_auth.AuthRepository coreRepository =
             getIt<core_auth.AuthRepository>();
 
-        expect(featureRepository, isA<FirebaseAuthRepository>());
+        expect(featureRepository, isA<SignOutAwareAuthRepository>());
+        expect(
+          _unwrapAuthRepository(featureRepository),
+          isA<FirebaseAuthRepository>(),
+        );
         expect(identical(coreRepository, featureRepository), isTrue);
       },
     );
@@ -127,12 +150,19 @@ void main() {
       'iOS debug registers FirebaseAuthRepository without local guest wrapper',
       () {
         debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-        getIt.registerSingleton<FirebaseAuth>(_MockFirebaseAuth());
+        final firebaseAuth = _MockFirebaseAuth();
+        _stubFirebaseAuthStreams(firebaseAuth);
+        getIt.registerSingleton<FirebaseAuth>(firebaseAuth);
 
         registerAuthServices();
 
-        final repository = getIt<feature_auth.AuthRepository>();
-        expect(repository.runtimeType, FirebaseAuthRepository);
+        final feature_auth.AuthRepository repository =
+            getIt<feature_auth.AuthRepository>();
+        expect(repository, isA<SignOutAwareAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<FirebaseAuthRepository>(),
+        );
       },
     );
 
@@ -190,7 +220,10 @@ void main() {
         final repository = getIt<feature_auth.AuthRepository>();
         await repository.signInAnonymously();
 
-        expect(repository, isA<FirebaseAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<FirebaseAuthRepository>(),
+        );
         expect(repository.currentUser?.id, 'ios-simulator-debug-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
       },
@@ -218,7 +251,10 @@ void main() {
         final repository = getIt<feature_auth.AuthRepository>();
         await repository.signInAnonymously();
 
-        expect(repository, isA<FirebaseAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<FirebaseAuthRepository>(),
+        );
         expect(repository.currentUser?.id, 'macos-debug-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
       },

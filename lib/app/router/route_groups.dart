@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
@@ -100,6 +101,9 @@ List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[
         create: () => SupabaseAuthCubit(
           repository: getIt<SupabaseAuthRepository>(),
           l10n: l10n,
+          sessionCoordinator: getIt.isRegistered<SessionLifecycleCoordinator>()
+              ? getIt<SessionLifecycleCoordinator>()
+              : null,
         ),
         init: (final cubit) => cubit.loadSession(),
         child: SupabaseAuthPage(

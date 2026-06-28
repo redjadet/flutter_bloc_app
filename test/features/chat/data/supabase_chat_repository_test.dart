@@ -2,6 +2,7 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,6 +12,11 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const HuggingFacePayloadBuilder payloadBuilder = HuggingFacePayloadBuilder();
+
+  SupabaseSessionManager noopRefreshSessionManager() => SupabaseSessionManager(
+    refreshSession: () async => AuthResponse(),
+    readAccessToken: () => 't',
+  );
 
   setUp(() async {
     await initializeSupabaseForTest();
@@ -385,7 +391,7 @@ void main() {
           payloadBuilder: payloadBuilder,
           readAccessToken: () => 't',
           readAnonKey: () => 'anon',
-          refreshSessionAfter401: () async {},
+          sessionManager: noopRefreshSessionManager(),
           invoke:
               ({
                 required final String accessToken,
@@ -433,7 +439,7 @@ void main() {
         payloadBuilder: payloadBuilder,
         readAccessToken: () => 't',
         readAnonKey: () => 'anon',
-        refreshSessionAfter401: () async {},
+        sessionManager: noopRefreshSessionManager(),
         invoke:
             ({
               required final String accessToken,

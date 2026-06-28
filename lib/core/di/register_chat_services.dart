@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
@@ -36,6 +37,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart'
 import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
@@ -44,41 +46,9 @@ import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const String _renderChatDioName = 'renderChatDio';
+part 'register_chat_services_render.part.dart';
 
-bool _chatRenderOrchestrationRunnable() {
-  if (getIt.isRegistered<BackendAvailability>() &&
-      getIt<BackendAvailability>().webNoBackendMode) {
-    return false;
-  }
-  if (!SecretConfig.chatRenderDemoEnabled) {
-    return false;
-  }
-  final String base = SecretConfig.chatRenderDemoBaseUrl.trim();
-  if (base.isEmpty) {
-    return false;
-  }
-  if (kReleaseMode) {
-    final Uri? parsed = Uri.tryParse(base);
-    if (parsed == null || parsed.scheme != 'https') {
-      return false;
-    }
-  }
-  if (!getIt.isRegistered<FirebaseAuth>()) {
-    return false;
-  }
-  final bool hasUser = getIt<FirebaseAuth>().currentUser != null;
-  if (kDebugMode) {
-    AppLogger.info(
-      'Chat: orchestration_runnable_check '
-      'enabled=${SecretConfig.chatRenderDemoEnabled} '
-      'isFastApiCloud=${base.contains('fastapicloud')} '
-      'baseUrlChars=${base.length} '
-      'firebaseUser=$hasUser',
-    );
-  }
-  return hasUser;
-}
+const String _renderChatDioName = 'renderChatDio';
 
 /// Registers all chat-related services and repositories.
 void registerChatServices() {
@@ -119,6 +89,7 @@ void registerChatServices() {
   registerLazySingletonIfAbsent<SupabaseChatRepository>(
     () => SupabaseChatRepository(
       payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
+      sessionManager: getIt<SupabaseSessionManager>(),
     ),
   );
   registerLazySingletonIfAbsent<CompositeChatRepository>(
@@ -140,50 +111,7 @@ void registerChatServices() {
           getIt<BackendAvailability>().allowLocalChatFallback,
     ),
   );
-  if (!getIt.isRegistered<Dio>(instanceName: _renderChatDioName)) {
-    getIt.registerLazySingleton<Dio>(
-      () {
-        final String raw = SecretConfig.chatRenderDemoBaseUrl.trim();
-        return createRenderChatDio(
-          baseUrl: raw.isEmpty ? 'http://127.0.0.1' : raw,
-        );
-      },
-      instanceName: _renderChatDioName,
-      dispose: (dio) => dio.close(),
-    );
-  }
-  registerLazySingletonIfAbsent<RenderCallerAuthHeaderProvider>(
-    () => DefaultRenderCallerAuthHeaderProvider(() => getIt<FirebaseAuth>()),
-  );
-  registerLazySingletonIfAbsent<RenderOrchestrationHfTokenProvider>(
-    () => LayeredRenderOrchestrationHfTokenProvider(
-      runtime: getIt<AppRuntimeConfig>(),
-      remoteTokenPort: getIt<RenderOrchestrationRemoteTokenPort>(),
-      storage: SecretConfig.storage ?? createDefaultSecretStorage(),
-      firebaseAuth:
-          getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
-          ? getIt<FirebaseAuth>()
-          : null,
-    ),
-  );
-  registerLazySingletonIfAbsent<RenderFastApiChatRepository>(
-    () => RenderFastApiChatRepository(
-      dio: getIt<Dio>(instanceName: _renderChatDioName),
-      payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
-      responseParser: getIt<HuggingFaceResponseParser>(),
-      callerAuth: getIt<RenderCallerAuthHeaderProvider>(),
-      hfTokenProvider: getIt<RenderOrchestrationHfTokenProvider>(),
-      isRunnable: _chatRenderOrchestrationRunnable,
-    ),
-  );
-  registerLazySingletonIfAbsent<DemoFirstChatRepository>(
-    () => DemoFirstChatRepository(
-      renderRepository: getIt<RenderFastApiChatRepository>(),
-      compositeRepository: getIt<CompositeChatRepository>(),
-      isRenderAttemptedFirst: _chatRenderOrchestrationRunnable,
-      isRenderStrict: () => SecretConfig.chatRenderDemoStrict,
-    ),
-  );
+  _registerChatRenderOrchestrationServices();
   registerLazySingletonIfAbsent<ChatHistoryRepository>(
     () => ChatLocalDataSource(hiveService: getIt<HiveService>()),
   );

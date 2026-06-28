@@ -55,14 +55,15 @@ extension SupabaseAuthStatePatterns on SupabaseAuthState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Authenticated value)?  authenticated,TResult Function( _Unauthenticated value)?  unauthenticated,TResult Function( _Error value)?  error,TResult Function( _NotConfigured value)?  notConfigured,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Authenticated value)?  authenticated,TResult Function( _Unauthenticated value)?  unauthenticated,TResult Function( _SessionExpired value)?  sessionExpired,TResult Function( _Error value)?  error,TResult Function( _NotConfigured value)?  notConfigured,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated(_that);case _Error() when error != null:
+return unauthenticated(_that);case _SessionExpired() when sessionExpired != null:
+return sessionExpired(_that);case _Error() when error != null:
 return error(_that);case _NotConfigured() when notConfigured != null:
 return notConfigured(_that);case _:
   return orElse();
@@ -82,14 +83,15 @@ return notConfigured(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Authenticated value)  authenticated,required TResult Function( _Unauthenticated value)  unauthenticated,required TResult Function( _Error value)  error,required TResult Function( _NotConfigured value)  notConfigured,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Authenticated value)  authenticated,required TResult Function( _Unauthenticated value)  unauthenticated,required TResult Function( _SessionExpired value)  sessionExpired,required TResult Function( _Error value)  error,required TResult Function( _NotConfigured value)  notConfigured,}){
 final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
 return loading(_that);case _Authenticated():
 return authenticated(_that);case _Unauthenticated():
-return unauthenticated(_that);case _Error():
+return unauthenticated(_that);case _SessionExpired():
+return sessionExpired(_that);case _Error():
 return error(_that);case _NotConfigured():
 return notConfigured(_that);case _:
   throw StateError('Unexpected subclass');
@@ -108,14 +110,15 @@ return notConfigured(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Authenticated value)?  authenticated,TResult? Function( _Unauthenticated value)?  unauthenticated,TResult? Function( _Error value)?  error,TResult? Function( _NotConfigured value)?  notConfigured,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Authenticated value)?  authenticated,TResult? Function( _Unauthenticated value)?  unauthenticated,TResult? Function( _SessionExpired value)?  sessionExpired,TResult? Function( _Error value)?  error,TResult? Function( _NotConfigured value)?  notConfigured,}){
 final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
 return loading(_that);case _Authenticated() when authenticated != null:
 return authenticated(_that);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated(_that);case _Error() when error != null:
+return unauthenticated(_that);case _SessionExpired() when sessionExpired != null:
+return sessionExpired(_that);case _Error() when error != null:
 return error(_that);case _NotConfigured() when notConfigured != null:
 return notConfigured(_that);case _:
   return null;
@@ -134,13 +137,14 @@ return notConfigured(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( AuthUser user)?  authenticated,TResult Function()?  unauthenticated,TResult Function( String message)?  error,TResult Function()?  notConfigured,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( AuthUser user)?  authenticated,TResult Function()?  unauthenticated,TResult Function( SessionInvalidationReason reason)?  sessionExpired,TResult Function( String message)?  error,TResult Function()?  notConfigured,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Authenticated() when authenticated != null:
 return authenticated(_that.user);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated();case _Error() when error != null:
+return unauthenticated();case _SessionExpired() when sessionExpired != null:
+return sessionExpired(_that.reason);case _Error() when error != null:
 return error(_that.message);case _NotConfigured() when notConfigured != null:
 return notConfigured();case _:
   return orElse();
@@ -160,13 +164,14 @@ return notConfigured();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( AuthUser user)  authenticated,required TResult Function()  unauthenticated,required TResult Function( String message)  error,required TResult Function()  notConfigured,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( AuthUser user)  authenticated,required TResult Function()  unauthenticated,required TResult Function( SessionInvalidationReason reason)  sessionExpired,required TResult Function( String message)  error,required TResult Function()  notConfigured,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _Authenticated():
 return authenticated(_that.user);case _Unauthenticated():
-return unauthenticated();case _Error():
+return unauthenticated();case _SessionExpired():
+return sessionExpired(_that.reason);case _Error():
 return error(_that.message);case _NotConfigured():
 return notConfigured();case _:
   throw StateError('Unexpected subclass');
@@ -185,13 +190,14 @@ return notConfigured();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( AuthUser user)?  authenticated,TResult? Function()?  unauthenticated,TResult? Function( String message)?  error,TResult? Function()?  notConfigured,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( AuthUser user)?  authenticated,TResult? Function()?  unauthenticated,TResult? Function( SessionInvalidationReason reason)?  sessionExpired,TResult? Function( String message)?  error,TResult? Function()?  notConfigured,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Authenticated() when authenticated != null:
 return authenticated(_that.user);case _Unauthenticated() when unauthenticated != null:
-return unauthenticated();case _Error() when error != null:
+return unauthenticated();case _SessionExpired() when sessionExpired != null:
+return sessionExpired(_that.reason);case _Error() when error != null:
 return error(_that.message);case _NotConfigured() when notConfigured != null:
 return notConfigured();case _:
   return null;
@@ -206,7 +212,7 @@ return notConfigured();case _:
 
 class _Initial implements SupabaseAuthState {
   const _Initial();
-  
+
 
 
 
@@ -362,6 +368,72 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _SessionExpired implements SupabaseAuthState {
+  const _SessionExpired(this.reason);
+
+
+ final  SessionInvalidationReason reason;
+
+/// Create a copy of SupabaseAuthState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SessionExpiredCopyWith<_SessionExpired> get copyWith => __$SessionExpiredCopyWithImpl<_SessionExpired>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionExpired&&(identical(other.reason, reason) || other.reason == reason));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,reason);
+
+@override
+String toString() {
+  return 'SupabaseAuthState.sessionExpired(reason: $reason)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SessionExpiredCopyWith<$Res> implements $SupabaseAuthStateCopyWith<$Res> {
+  factory _$SessionExpiredCopyWith(_SessionExpired value, $Res Function(_SessionExpired) _then) = __$SessionExpiredCopyWithImpl;
+@useResult
+$Res call({
+ SessionInvalidationReason reason
+});
+
+
+
+
+}
+/// @nodoc
+class __$SessionExpiredCopyWithImpl<$Res>
+    implements _$SessionExpiredCopyWith<$Res> {
+  __$SessionExpiredCopyWithImpl(this._self, this._then);
+
+  final _SessionExpired _self;
+  final $Res Function(_SessionExpired) _then;
+
+/// Create a copy of SupabaseAuthState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? reason = null,}) {
+  return _then(_SessionExpired(
+null == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as SessionInvalidationReason,
+  ));
+}
+
+
+}
 
 /// @nodoc
 

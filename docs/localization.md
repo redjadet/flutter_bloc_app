@@ -47,6 +47,7 @@ Error messages used by [NetworkErrorMapper](lib/shared/utils/network_error_mappe
 
 - **HTTP / API:** `errorUnknown`, `errorNetwork`, `errorTimeout`, `errorUnauthorized`, `errorForbidden`, `errorNotFound`, `errorServer`, `errorServiceUnavailable` (503), `errorClient`, `errorTooManyRequests` (429), `errorGeneric`
 - **Auth (Firebase):** `authErrorInvalidEmail`, `authErrorWrongPassword`, `authErrorInvalidCredential`, `authErrorNetworkRequestFailed`, `authErrorTooManyRequests`, `authErrorGeneric`, and others (see `app_en.arb`)
+- **Session invalidation (Firebase UX):** `sessionExpiredMessage` — snackbar when `AppAuthCubit` enters `sessionExpired` ([`authentication.md`](authentication.md) App auth UX)
 
 Use these via `context.l10n` in the UI layer; repository/cubit code can pass `l10n: null` for English fallbacks.
 

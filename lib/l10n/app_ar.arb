@@ -665,6 +665,7 @@
   "profileNoCachedProfile": "لا يوجد ملف تعريف مخبأ",
   "profileCachedProfileDetailsUnavailable": "الملف الشخصي المخبأ (التفاصيل غير متوفرة)",
   "loggedOutPhotoLabel": "صورة",
+  "sessionExpiredMessage": "انتهت جلستك. يُرجى تسجيل الدخول مرة أخرى.",
   "supabaseAuthTitle": "مصادقة سوباباس",
   "supabaseAuthSignIn": "تسجيل الدخول",
   "supabaseAuthSignUp": "اشتراك",
@@ -2816,6 +2817,9 @@
   },
   "@loggedOutPhotoLabel": {
     "description": "Label for photo in logged-out header"
+  },
+  "@sessionExpiredMessage": {
+    "description": "Snackbar shown when Firebase session is invalidated after token refresh failure"
   },
   "@supabaseAuthTitle": {
     "description": "Title for the Supabase authentication page"

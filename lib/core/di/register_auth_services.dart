@@ -4,12 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
+
+part 'register_auth_services.guest_repos.part.dart';
 
 /// Registers auth-related services.
 ///
@@ -17,6 +21,15 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 /// instance (e.g. Firebase UI) can obtain it from DI. [AuthRepository]
 /// provides a Flutter-agnostic abstraction for routing and business logic.
 void registerAuthServices() {
+  registerLazySingletonIfAbsent<SessionLifecycleCoordinator>(
+    SessionLifecycleCoordinatorImpl.new,
+    dispose: (final coordinator) async {
+      if (coordinator is SessionLifecycleCoordinatorImpl) {
+        await coordinator.dispose();
+      }
+    },
+  );
+
   FirebaseAuth? firebaseAuth = getIt.isRegistered<FirebaseAuth>()
       ? getIt<FirebaseAuth>()
       : null;
@@ -36,27 +49,23 @@ void registerAuthServices() {
 
   registerLazySingletonIfAbsent<AuthRepository>(
     () {
-      if (firebaseAuth == null) {
-        final bool allowWebLocalGuestAuth =
-            getIt.isRegistered<BackendAvailability>() &&
-            getIt<BackendAvailability>().allowWebLocalGuestAuth;
-        if (allowWebLocalGuestAuth) {
-          return _LocalGuestOnlyAuthRepository(
-            localGuestIdOverride: 'web-local-guest',
-          );
-        }
-        if (FirebaseBootstrapService.supportsDebugLocalGuestAuth) {
-          return _LocalGuestOnlyAuthRepository();
-        }
-        return const _UnavailableAuthRepository();
-      }
-      if (_shouldUseDebugKeychainGuestFallback) {
-        return _DebugKeychainGuestAuthRepository(firebaseAuth: firebaseAuth);
-      }
-      return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
+      final AuthRepository inner = _createInnerAuthRepository(
+        firebaseAuth: firebaseAuth,
+      );
+      final SessionLifecycleCoordinator coordinator =
+          getIt<SessionLifecycleCoordinator>();
+      final SignOutAwareAuthRepository decorated = SignOutAwareAuthRepository(
+        delegate: inner,
+        coordinator: coordinator,
+      );
+      coordinator.attachAuthRepository(decorated);
+      return decorated;
     },
     dispose: (final repository) async {
-      switch (repository) {
+      final AuthRepository inner = repository is SignOutAwareAuthRepository
+          ? repository.delegate
+          : repository;
+      switch (inner) {
         case final _DebugKeychainGuestAuthRepository fallback:
           await fallback.dispose();
         case final _LocalGuestOnlyAuthRepository localOnly:
@@ -71,153 +80,25 @@ void registerAuthServices() {
   );
 }
 
-bool get _shouldUseDebugKeychainGuestFallback {
-  if (kIsWeb || kReleaseMode) {
-    return false;
-  }
-  if (defaultTargetPlatform == TargetPlatform.macOS) {
-    return true;
-  }
-  return defaultTargetPlatform == TargetPlatform.iOS &&
-      FirebaseBootstrapService.isIosSimulatorInDebug;
-}
-
-class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
-  _DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
-    _firebaseSubscription = super.authStateChanges.listen((final user) {
-      if (user != null) {
-        _localGuest = null;
-      }
-      _authStateController.add(currentUser);
-    });
-  }
-
-  final StreamController<AuthUser?> _authStateController =
-      StreamController<AuthUser?>.broadcast();
-  StreamSubscription<AuthUser?>? _firebaseSubscription;
-  AuthUser? _localGuest;
-
-  String get _localGuestId => defaultTargetPlatform == TargetPlatform.macOS
-      ? 'macos-debug-local-guest'
-      : 'ios-simulator-debug-local-guest';
-
-  @override
-  AuthUser? get currentUser => super.currentUser ?? _localGuest;
-
-  @override
-  Stream<AuthUser?> get authStateChanges async* {
-    yield currentUser;
-    yield* _authStateController.stream;
-  }
-
-  @override
-  Future<void> signInAnonymously() async {
-    try {
-      await super.signInAnonymously();
-    } on Exception catch (error) {
-      if (!_looksLikeKeychainEntitlementError(error)) {
-        rethrow;
-      }
-      _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
-      _authStateController.add(_localGuest);
+AuthRepository _createInnerAuthRepository({
+  required final FirebaseAuth? firebaseAuth,
+}) {
+  if (firebaseAuth == null) {
+    final bool allowWebLocalGuestAuth =
+        getIt.isRegistered<BackendAvailability>() &&
+        getIt<BackendAvailability>().allowWebLocalGuestAuth;
+    if (allowWebLocalGuestAuth) {
+      return _LocalGuestOnlyAuthRepository(
+        localGuestIdOverride: 'web-local-guest',
+      );
     }
-  }
-
-  @override
-  Future<void> signOut() async {
-    _localGuest = null;
-    _authStateController.add(null);
-    try {
-      await super.signOut();
-    } on Exception catch (error) {
-      if (!_looksLikeKeychainEntitlementError(error)) {
-        rethrow;
-      }
+    if (FirebaseBootstrapService.supportsDebugLocalGuestAuth) {
+      return _LocalGuestOnlyAuthRepository();
     }
+    return const _UnavailableAuthRepository();
   }
-
-  Future<void> dispose() async {
-    await _firebaseSubscription?.cancel();
-    await _authStateController.close();
+  if (_shouldUseDebugKeychainGuestFallback) {
+    return _DebugKeychainGuestAuthRepository(firebaseAuth: firebaseAuth);
   }
-}
-
-/// Local-only guest session when Firebase Auth is unavailable.
-///
-/// Web: enabled via [BackendAvailability.allowWebLocalGuestAuth] (including release).
-/// Non-web: enabled via existing debug/simulator policy gates.
-class _LocalGuestOnlyAuthRepository implements AuthRepository {
-  _LocalGuestOnlyAuthRepository({this.localGuestIdOverride});
-
-  final String? localGuestIdOverride;
-
-  final StreamController<AuthUser?> _authStateController =
-      StreamController<AuthUser?>.broadcast();
-  AuthUser? _localGuest;
-
-  String get _localGuestId {
-    final String? override = localGuestIdOverride;
-    if (override != null) {
-      return override;
-    }
-    if (kIsWeb) {
-      return 'web-local-guest';
-    }
-    return defaultTargetPlatform == TargetPlatform.macOS
-        ? 'macos-debug-local-guest'
-        : 'ios-simulator-debug-local-guest';
-  }
-
-  @override
-  AuthUser? get currentUser => _localGuest;
-
-  @override
-  Stream<AuthUser?> get authStateChanges async* {
-    yield currentUser;
-    yield* _authStateController.stream;
-  }
-
-  @override
-  Future<void> signInAnonymously() async {
-    _localGuest = AuthUser(id: _localGuestId, isAnonymous: true);
-    _authStateController.add(_localGuest);
-  }
-
-  @override
-  Future<void> signOut() async {
-    _localGuest = null;
-    _authStateController.add(null);
-  }
-
-  Future<void> dispose() async {
-    await _authStateController.close();
-  }
-}
-
-class _UnavailableAuthRepository implements AuthRepository {
-  const _UnavailableAuthRepository();
-
-  @override
-  AuthUser? get currentUser => null;
-
-  @override
-  Stream<AuthUser?> get authStateChanges => const Stream<AuthUser?>.empty();
-
-  @override
-  Future<void> signInAnonymously() async {}
-
-  @override
-  Future<void> signOut() async {}
-}
-
-bool _looksLikeKeychainEntitlementError(final Object error) {
-  if (error is FirebaseAuthException && error.code == 'keychain-error') {
-    return true;
-  }
-  final String message = error.toString().toLowerCase();
-  return message.contains('-34018') ||
-      message.contains('secitemadd') ||
-      message.contains('keychain') ||
-      message.contains('nslocalizedfailurereasonerrorkey') ||
-      message.contains('required entitlement');
+  return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
 }

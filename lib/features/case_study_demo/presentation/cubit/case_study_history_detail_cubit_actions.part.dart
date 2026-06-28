@@ -130,13 +130,6 @@ mixin _CaseStudyHistoryDetailCubitActions
       emit(state.copyWith(isDeleting: false));
       return true;
     } on Object catch (error) {
-      if (error is HttpRequestFailure && error.statusCode == 401) {
-        try {
-          await _remoteAuth.signOut();
-        } on Object {
-          // Best-effort only; still surface the error to the UI.
-        }
-      }
       if (isClosed) return false;
       emit(
         state.copyWith(

@@ -2402,6 +2402,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loggedOutPhotoLabel => 'photo';
 
   @override
+  String get sessionExpiredMessage => 'Session expired. Please sign in again.';
+
+  @override
   String get supabaseAuthTitle => 'Supabase Auth';
 
   @override

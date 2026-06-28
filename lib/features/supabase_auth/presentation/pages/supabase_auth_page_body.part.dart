@@ -60,6 +60,18 @@ class _SupabaseAuthBody extends StatelessWidget {
             colors: colors,
             l10n: l10n,
           ),
+          sessionExpired: (_) => _SupabaseAuthCredentialsSection(
+            emailController: emailController,
+            passwordController: passwordController,
+            displayNameController: displayNameController,
+            canSubmit: canSubmit,
+            onFieldsChanged: onFieldsChanged,
+            onSignIn: onSignIn,
+            onSignUp: onSignUp,
+            theme: theme,
+            colors: colors,
+            l10n: l10n,
+          ),
           error: (final message) => _SupabaseAuthCredentialsSection(
             errorMessage: message,
             onDismissError: context.cubit<SupabaseAuthCubit>().clearError,

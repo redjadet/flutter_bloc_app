@@ -2,11 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
+import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_state.dart';
+import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
+import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
@@ -33,6 +38,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   SupabaseConfigCoordinator? _supabaseConfigCoordinator;
   late final AppMemoryService _memoryService;
   late final TimerService _timerService;
+  late final AppAuthCubit _appAuthCubit;
   TimerDisposable? _resumeDebounceHandle;
   TimerDisposable? _backgroundTrimHandle;
 
@@ -47,7 +53,12 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     }
     _memoryService = getIt<AppMemoryService>();
     _timerService = getIt<TimerService>();
+    _appAuthCubit = AppAuthCubit(
+      authRepository: getIt<AuthRepository>(),
+      sessionCoordinator: getIt<SessionLifecycleCoordinator>(),
+    );
     WidgetsBinding.instance.addObserver(this);
+    unawaited(_appAuthCubit.start());
     final coordinator = _supabaseConfigCoordinator;
     if (coordinator != null) {
       unawaited(coordinator.start());
@@ -93,6 +104,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
     _resumeDebounceHandle = null;
     _backgroundTrimHandle?.dispose();
     _backgroundTrimHandle = null;
+    unawaited(_appAuthCubit.close());
     super.dispose();
   }
 
@@ -116,30 +128,70 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
       BlocProvider(
         create: (_) => getIt<RemoteConfigCubit>(),
       ),
+      BlocProvider.value(value: _appAuthCubit),
     ],
-    child: DeepLinkListener(
+    child: _AppAuthSessionListener(
       router: widget.router,
-      service: getIt<DeepLinkService>(),
-      parser: getIt<DeepLinkParser>(),
-      child: ResponsiveScope(
-        child: TypeSafeBlocBuilder<LocaleCubit, Locale?>(
-          builder: (final context, final locale) =>
-              TypeSafeBlocBuilder<ThemeCubit, ThemeMode>(
-                builder: (final context, final themeMode) =>
-                    AppConfig.createMaterialApp(
-                      themeMode: themeMode,
-                      router: widget.router,
-                      locale: locale,
-                      appOverlayBuilder: (final context, final child) =>
-                          RetrySnackBarListener(
-                            notifications:
-                                getIt<RetryNotificationService>().notifications,
-                            child: child ?? const SizedBox.shrink(),
-                          ),
-                    ),
-              ),
+      child: DeepLinkListener(
+        router: widget.router,
+        service: getIt<DeepLinkService>(),
+        parser: getIt<DeepLinkParser>(),
+        child: ResponsiveScope(
+          child: TypeSafeBlocBuilder<LocaleCubit, Locale?>(
+            builder: (final context, final locale) =>
+                TypeSafeBlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (final context, final themeMode) =>
+                      AppConfig.createMaterialApp(
+                        themeMode: themeMode,
+                        router: widget.router,
+                        locale: locale,
+                        appOverlayBuilder: (final context, final child) =>
+                            RetrySnackBarListener(
+                              notifications: getIt<RetryNotificationService>()
+                                  .notifications,
+                              child: child ?? const SizedBox.shrink(),
+                            ),
+                      ),
+                ),
+          ),
         ),
       ),
     ),
   );
+}
+
+class _AppAuthSessionListener extends StatelessWidget {
+  const _AppAuthSessionListener({
+    required this.router,
+    required this.child,
+  });
+
+  final GoRouter router;
+  final Widget child;
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocListener<AppAuthCubit, AppAuthState>(
+      listenWhen: (previous, current) => current.maybeMap(
+        sessionExpired: (_) => true,
+        orElse: () => false,
+      ),
+      listener: (context, state) {
+        state.maybeMap(
+          sessionExpired: (_) {
+            final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+              context,
+            );
+            messenger?.showSnackBar(
+              SnackBar(content: Text(context.l10n.sessionExpiredMessage)),
+            );
+            context.read<AppAuthCubit>().acknowledgeSessionExpired();
+            router.go(AppRoutes.authPath);
+          },
+          orElse: () {},
+        );
+      },
+      child: child,
+    );
+  }
 }

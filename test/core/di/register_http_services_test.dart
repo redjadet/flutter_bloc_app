@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
+import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -69,6 +71,22 @@ void main() {
       expect(dio.options.headers['Accept'], 'application/json, */*');
       expect(dio.options.headers['Accept-Encoding'], 'gzip');
     });
+
+    test(
+      'registers AuthTokenManager singleton and binds coordinator',
+      () async {
+        final _TestNetworkStatusService networkStatusService =
+            _TestNetworkStatusService(NetworkStatus.online);
+        getIt.registerSingleton<NetworkStatusService>(networkStatusService);
+        registerAuthServices();
+
+        registerHttpServices();
+
+        expect(getIt<AuthTokenManager>(), same(getIt<AuthTokenManager>()));
+        final Dio dio = getIt<Dio>();
+        expect(dio.options.headers['User-Agent'], isNotEmpty);
+      },
+    );
 
     test('allows repositories to handle non-success HTTP statuses', () async {
       final _TestNetworkStatusService networkStatusService =
