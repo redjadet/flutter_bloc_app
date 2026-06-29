@@ -67,6 +67,7 @@ ALL_TESTS=(
   "test/shared/widgets/row_overflow_regression_test.dart"
   "test/shared/widgets/action_bar_layout_regression_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
+  "test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
   "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
   "test/features/realtime_market/data/simulated_market_feed_test.dart"
   "test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart"
@@ -208,6 +209,7 @@ select_regression_guard_tests() {
         ;;
       lib/features/iot_demo/*|\
       test/features/iot_demo/*)
+        add_test_once out_ref "test/features/iot_demo/data/offline_first_iot_demo_repository_test.dart"
         add_test_once out_ref "test/features/iot_demo/presentation/pages/iot_demo_page_test.dart"
         ;;
       lib/features/realtime_market/*|\
