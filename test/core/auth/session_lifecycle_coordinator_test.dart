@@ -3,14 +3,18 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
+
+class _MockRemoteBackendAuthPort extends Mock implements RemoteBackendAuthPort {}
 
 class _MockUser extends Mock implements User {}
 
@@ -127,5 +131,69 @@ void main() {
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
     });
+
+    test(
+      'invalidateSession for different providers runs concurrently',
+      () async {
+        final Completer<void> firebaseSignOutStarted = Completer<void>();
+        final Completer<void> releaseFirebaseSignOut = Completer<void>();
+        final _MockAuthRepository authRepository = _MockAuthRepository();
+        final _MockRemoteBackendAuthPort remoteAuthPort =
+            _MockRemoteBackendAuthPort();
+
+        when(() => authRepository.signOut()).thenAnswer((_) async {
+          if (!firebaseSignOutStarted.isCompleted) {
+            firebaseSignOutStarted.complete();
+          }
+          await releaseFirebaseSignOut.future;
+        });
+        when(() => remoteAuthPort.signOut()).thenAnswer((_) async {});
+
+        await getIt.reset();
+        getIt.registerSingleton<AuthRepository>(authRepository);
+        getIt.registerSingleton<RemoteBackendAuthPort>(remoteAuthPort);
+
+        final SessionLifecycleCoordinatorImpl concurrentCoordinator =
+            SessionLifecycleCoordinatorImpl();
+        final List<SessionInvalidationEvent> events =
+            <SessionInvalidationEvent>[];
+        final StreamSubscription<SessionInvalidationEvent> sub =
+            concurrentCoordinator.invalidationEvents.listen(events.add);
+
+        final Future<void> firebaseInvalidation = concurrentCoordinator
+            .invalidateSession(
+              provider: AuthProviderKind.firebase,
+              reason: SessionInvalidationReason.remoteRejected,
+            );
+        await firebaseSignOutStarted.future;
+
+        final Future<void> supabaseInvalidation = concurrentCoordinator
+            .invalidateSession(
+              provider: AuthProviderKind.supabase,
+              reason: SessionInvalidationReason.supabaseSessionInvalid,
+            );
+
+        releaseFirebaseSignOut.complete();
+        await Future.wait(<Future<void>>[
+          firebaseInvalidation,
+          supabaseInvalidation,
+        ]);
+
+        expect(events, hasLength(2));
+        expect(
+          events.map((final SessionInvalidationEvent e) => e.provider).toSet(),
+          <AuthProviderKind>{
+            AuthProviderKind.firebase,
+            AuthProviderKind.supabase,
+          },
+        );
+        verify(() => authRepository.signOut()).called(1);
+        verify(() => remoteAuthPort.signOut()).called(1);
+
+        await sub.cancel();
+        await concurrentCoordinator.dispose();
+        await getIt.reset();
+      },
+    );
   });
 }
