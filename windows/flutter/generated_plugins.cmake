@@ -18,7 +18,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_tts
   geolocator_windows
   local_auth_windows
-  passkeys_windows
   permission_handler_windows
   screen_retriever_windows
   url_launcher_windows
