@@ -11,9 +11,12 @@ on:
         required: false
         default: ""
 
+# Do not cancel in-flight deploy workflows: cancelling after deploy-pages submits
+# leaves orphaned GitHub Pages deployments stuck in deployment_queued, which then
+# blocks later runs until the 10-minute deploy-pages poll timeout.
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -107,9 +110,24 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v6
 
       - id: deployment
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Wait before retrying queued Pages deployment
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 120
+
+      - id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+
+      - name: Fail deploy job when Pages deploy did not succeed
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: |
+          echo "GitHub Pages deploy failed after initial attempt and one retry." >&2
+          exit 1

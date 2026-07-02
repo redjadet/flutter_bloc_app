@@ -153,3 +153,4 @@ analysis/agent_scorecard/archive/*
 docs/Spot_Bad_AI_Generated_Code.pdf
 tool/firebase_secret_history_replacements.txt
 .gstack/
+.worktrees/
