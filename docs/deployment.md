@@ -211,8 +211,11 @@ You can still run it manually:
 
 The workflow uses `cancel-in-progress: false` so a newer `main` push does not
 cancel an in-flight Pages deployment. Cancelling after `deploy-pages` submits
-can orphan a deployment in `deployment_queued` and block later runs until the
-action's 10-minute poll timeout.
+can orphan a deployment in `deployment_queued` and block later runs.
+
+`deploy-pages` polls for up to 20 minutes per attempt (three attempts with
+5-minute waits) because queued deployments can take longer than the action's
+default 10-minute timeout after backlog from cancelled workflows.
 
 #### `base_href` input
 

@@ -110,24 +110,43 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry_2.outputs.page_url || steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v6
 
       - id: deployment
         uses: actions/deploy-pages@v5
         continue-on-error: true
+        with:
+          # Orphaned Pages deployments can sit in deployment_queued for 15+ minutes.
+          timeout: 1200000
 
       - name: Wait before retrying queued Pages deployment
         if: steps.deployment.outcome == 'failure'
-        run: sleep 120
+        run: sleep 300
 
       - id: deployment_retry
         if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+        with:
+          timeout: 1200000
+
+      - name: Wait before second Pages deploy retry
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: sleep 300
+
+      - id: deployment_retry_2
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 1200000
 
       - name: Fail deploy job when Pages deploy did not succeed
-        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        if: >-
+          steps.deployment.outcome == 'failure' &&
+          steps.deployment_retry.outcome == 'failure' &&
+          steps.deployment_retry_2.outcome == 'failure'
         run: |
-          echo "GitHub Pages deploy failed after initial attempt and one retry." >&2
+          echo "GitHub Pages deploy failed after three attempts." >&2
           exit 1
