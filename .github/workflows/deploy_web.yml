@@ -112,95 +112,31 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v6
 
-      - name: Cancel stale queued GitHub Pages deployments
+      - name: Drain stale GitHub Pages deployments
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          api_version="2026-03-10"
-          auth_header="Authorization: Bearer ${GITHUB_TOKEN}"
-          accept_header="Accept: application/vnd.github+json"
-
-          deployments_json="${RUNNER_TEMP}/pages-deployments.json"
-          curl -sS \
-            -H "${accept_header}" \
-            -H "${auth_header}" \
-            -H "X-GitHub-Api-Version: ${api_version}" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/deployments?environment=github-pages&per_page=10" \
-            > "${deployments_json}"
-
-          python3 - "${deployments_json}" "${GITHUB_REPOSITORY}" "${api_version}" <<'PY'
-          import json
-          import os
-          import subprocess
-          import sys
-          from pathlib import Path
-
-          deployments_path, repository, api_version = sys.argv[1:4]
-          token = os.environ["GITHUB_TOKEN"]
-          deployments = json.loads(Path(deployments_path).read_text())
-          current_sha = os.environ.get("GITHUB_SHA", "")
-          blocking_statuses = {
-              "deployment_queued",
-              "deployment_in_progress",
-              "syncing_files",
-              "finished_file_sync",
-              "updating_pages",
-              "purging_cdn",
-          }
-
-          for deployment in deployments:
-              sha = deployment.get("sha")
-              if not sha or sha == current_sha:
-                  continue
-              status_proc = subprocess.run(
-                  [
-                      "curl",
-                      "-sS",
-                      "-H",
-                      "Accept: application/vnd.github+json",
-                      "-H",
-                      f"Authorization: Bearer {token}",
-                      "-H",
-                      f"X-GitHub-Api-Version: {api_version}",
-                      f"https://api.github.com/repos/{repository}/pages/deployments/{sha}",
-                  ],
-                  capture_output=True,
-                  text=True,
-                  check=False,
-              )
-              if status_proc.returncode != 0:
-                  continue
-              status = json.loads(status_proc.stdout or "{}").get("status", "")
-              if status not in blocking_statuses:
-                  continue
-              print(f"Cancelling stale Pages deployment for {sha[:7]} (status={status!r})")
-              subprocess.run(
-                  [
-                      "curl",
-                      "-sS",
-                      "-o",
-                      "/dev/null",
-                      "-w",
-                      "%{http_code}",
-                      "-X",
-                      "POST",
-                      "-H",
-                      "Accept: application/vnd.github+json",
-                      "-H",
-                      f"Authorization: Bearer {token}",
-                      "-H",
-                      f"X-GitHub-Api-Version: {api_version}",
-                      f"https://api.github.com/repos/{repository}/pages/deployments/{sha}/cancel",
-                  ],
-                  check=False,
-              )
-          PY
+        run: python3 tool/drain_stale_github_pages_deployments.py
 
       - id: deployment
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Drain stale GitHub Pages deployments (retry)
+        if: steps.deployment.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tool/drain_stale_github_pages_deployments.py --poll-timeout-seconds 180
+
+      - id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+
+      - name: Fail when Pages deploy did not succeed
+        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: |
+          echo "GitHub Pages deploy failed after queue drain and one retry." >&2
+          exit 1
