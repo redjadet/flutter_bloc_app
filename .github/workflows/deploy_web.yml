@@ -112,7 +112,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/configure-pages@v6
 
@@ -139,13 +139,14 @@ jobs:
           import os
           import subprocess
           import sys
+          import time
           from pathlib import Path
 
           deployments_path, repository, api_version = sys.argv[1:4]
           token = os.environ["GITHUB_TOKEN"]
           deployments = json.loads(Path(deployments_path).read_text())
           current_sha = os.environ.get("GITHUB_SHA", "")
-          blocking_statuses = {
+          active_statuses = {
               "deployment_queued",
               "deployment_in_progress",
               "syncing_files",
@@ -154,11 +155,8 @@ jobs:
               "purging_cdn",
           }
 
-          for deployment in deployments:
-              sha = deployment.get("sha")
-              if not sha or sha == current_sha:
-                  continue
-              status_proc = subprocess.run(
+          def pages_status(sha: str) -> str:
+              proc = subprocess.run(
                   [
                       "curl",
                       "-sS",
@@ -174,12 +172,11 @@ jobs:
                   text=True,
                   check=False,
               )
-              if status_proc.returncode != 0:
-                  continue
-              status = json.loads(status_proc.stdout or "{}").get("status", "")
-              if status not in blocking_statuses:
-                  continue
-              print(f"Cancelling stale Pages deployment for {sha[:7]} (status={status!r})")
+              if proc.returncode != 0:
+                  return ""
+              return json.loads(proc.stdout or "{}").get("status", "")
+
+          def cancel_pages_deployment(sha: str) -> None:
               subprocess.run(
                   [
                       "curl",
@@ -200,7 +197,170 @@ jobs:
                   ],
                   check=False,
               )
+
+          def recent_shas() -> list[str]:
+              shas: list[str] = []
+              for deployment in deployments:
+                  sha = deployment.get("sha")
+                  if sha and sha != current_sha and sha not in shas:
+                      shas.append(sha)
+              return shas
+
+          def should_cancel(status: str) -> bool:
+              return status in active_statuses or status == ""
+
+          for sha in recent_shas():
+              status = pages_status(sha)
+              if not should_cancel(status):
+                  continue
+              print(f"Cancelling stale Pages deployment for {sha[:7]} (status={status!r})")
+              cancel_pages_deployment(sha)
+
+          deadline = time.time() + 120
+          while time.time() < deadline:
+              blocking = []
+              for sha in recent_shas():
+                  status = pages_status(sha)
+                  if status in active_statuses:
+                      blocking.append((sha, status))
+              if not blocking:
+                  break
+              for sha, status in blocking:
+                  print(f"Waiting for Pages deployment {sha[:7]} to clear (status={status!r})")
+                  cancel_pages_deployment(sha)
+              time.sleep(5)
+          else:
+              pending = [
+                  f"{sha[:7]}={status!r}"
+                  for sha in recent_shas()
+                  if (status := pages_status(sha)) in active_statuses
+              ]
+              if pending:
+                  print(
+                      "Timed out waiting for stale Pages deployments to clear: "
+                      + ", ".join(pending)
+                  )
           PY
 
       - id: deployment
         uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Clear blocking Pages deployment and retry
+        if: steps.deployment.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          api_version="2026-03-10"
+
+          python3 - "${GITHUB_REPOSITORY}" "${api_version}" <<'PY'
+          import json
+          import os
+          import subprocess
+          import sys
+          import time
+
+          repository, api_version = sys.argv[1:3]
+          token = os.environ["GITHUB_TOKEN"]
+          active_statuses = {
+              "deployment_queued",
+              "deployment_in_progress",
+              "syncing_files",
+              "finished_file_sync",
+              "updating_pages",
+              "purging_cdn",
+          }
+
+          def pages_status(sha: str) -> str:
+              proc = subprocess.run(
+                  [
+                      "curl",
+                      "-sS",
+                      "-H",
+                      "Accept: application/vnd.github+json",
+                      "-H",
+                      f"Authorization: Bearer {token}",
+                      "-H",
+                      f"X-GitHub-Api-Version: {api_version}",
+                      f"https://api.github.com/repos/{repository}/pages/deployments/{sha}",
+                  ],
+                  capture_output=True,
+                  text=True,
+                  check=False,
+              )
+              if proc.returncode != 0:
+                  return ""
+              return json.loads(proc.stdout or "{}").get("status", "")
+
+          def cancel_pages_deployment(sha: str) -> None:
+              subprocess.run(
+                  [
+                      "curl",
+                      "-sS",
+                      "-o",
+                      "/dev/null",
+                      "-X",
+                      "POST",
+                      "-H",
+                      "Accept: application/vnd.github+json",
+                      "-H",
+                      f"Authorization: Bearer {token}",
+                      "-H",
+                      f"X-GitHub-Api-Version: {api_version}",
+                      f"https://api.github.com/repos/{repository}/pages/deployments/{sha}/cancel",
+                  ],
+                  check=False,
+              )
+
+          current_sha = os.environ.get("GITHUB_SHA", "")
+          deployments_json = subprocess.run(
+              [
+                  "curl",
+                  "-sS",
+                  "-H",
+                  "Accept: application/vnd.github+json",
+                  "-H",
+                  f"Authorization: Bearer {token}",
+                  "-H",
+                  f"X-GitHub-Api-Version: {api_version}",
+                  f"https://api.github.com/repos/{repository}/deployments?environment=github-pages&per_page=10",
+              ],
+              capture_output=True,
+              text=True,
+              check=True,
+          ).stdout
+          shas = []
+          for deployment in json.loads(deployments_json):
+              sha = deployment.get("sha")
+              if sha and sha != current_sha and sha not in shas:
+                  shas.append(sha)
+
+          for sha in shas:
+              status = pages_status(sha)
+              if status in active_statuses or status == "":
+                  print(f"Retry prep: cancelling Pages deployment {sha[:7]} (status={status!r})")
+                  cancel_pages_deployment(sha)
+
+          deadline = time.time() + 120
+          while time.time() < deadline:
+              blocking = [sha for sha in shas if pages_status(sha) in active_statuses]
+              if not blocking:
+                  break
+              for sha in blocking:
+                  cancel_pages_deployment(sha)
+              time.sleep(5)
+          PY
+
+      - id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+
+      - name: Fail deploy job when Pages deploy did not succeed
+        if: >-
+          steps.deployment.outcome == 'failure' &&
+          steps.deployment_retry.outcome == 'failure'
+        run: |
+          echo "GitHub Pages deploy failed after initial attempt and one retry." >&2
+          exit 1
