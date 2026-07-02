@@ -144,8 +144,8 @@ jobs:
           deployments_path, repository, api_version = sys.argv[1:4]
           token = os.environ["GITHUB_TOKEN"]
           deployments = json.loads(Path(deployments_path).read_text())
+          current_sha = os.environ.get("GITHUB_SHA", "")
           blocking_statuses = {
-              "",
               "deployment_queued",
               "deployment_in_progress",
               "syncing_files",
@@ -156,7 +156,7 @@ jobs:
 
           for deployment in deployments:
               sha = deployment.get("sha")
-              if not sha:
+              if not sha or sha == current_sha:
                   continue
               status_proc = subprocess.run(
                   [
