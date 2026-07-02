@@ -49,6 +49,8 @@ ALL_TESTS=(
   "test/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit_test.dart"
   "test/features/profile/data/offline_first_profile_repository_test.dart"
   "test/features/supabase_auth/presentation/cubit/supabase_auth_cubit_test.dart"
+  "test/app/presentation/cubit/app_auth_cubit_test.dart"
+  "test/core/auth/session_lifecycle_coordinator_test.dart"
   "test/features/websocket/data/echo_websocket_repository_test.dart"
   "test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart"
   "test/features/todo_list/data/offline_first_todo_repository_test.dart"
@@ -160,6 +162,14 @@ select_regression_guard_tests() {
       test/chat_cubit_test.dart)
         add_test_once out_ref "test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart"
         add_test_once out_ref "test/chat_cubit_test.dart"
+        ;;
+      lib/app/presentation/cubit/app_auth_cubit.dart|\
+      lib/app/presentation/cubit/app_auth_state.dart|\
+      lib/core/auth/*|\
+      test/app/presentation/cubit/app_auth_cubit_test.dart|\
+      test/core/auth/*)
+        add_test_once out_ref "test/app/presentation/cubit/app_auth_cubit_test.dart"
+        add_test_once out_ref "test/core/auth/session_lifecycle_coordinator_test.dart"
         ;;
       lib/shared/*|\
       test/shared/*|\

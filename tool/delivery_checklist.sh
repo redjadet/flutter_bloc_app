@@ -1017,6 +1017,11 @@ should_run_regression_guards_before_coverage() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/shared/utils/request_id_guard.dart|\
+      lib/app/presentation/cubit/app_auth_cubit.dart|\
+      lib/app/presentation/cubit/app_auth_state.dart|\
+      lib/core/auth/*|\
+      test/app/presentation/cubit/app_auth_cubit_test.dart|\
+      test/core/auth/*|\
       lib/features/chat/*|\
       test/features/chat/*|\
       lib/features/online_therapy_demo/*|\

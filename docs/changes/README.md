@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-02_auth-session-lifecycle-regression-guards.md`](2026-07-02_auth-session-lifecycle-regression-guards.md): Auth session lifecycle focused guard routing for session-expired UX races and cross-provider invalidation drops.
 - [`2026-06-28_auth-security-hardening-pr-c.md`](2026-06-28_auth-security-hardening-pr-c.md): Auth security PR C — `AppAuthCubit` session-expired UX, l10n, full [`authentication.md`](../authentication.md) pass. Deferred items: [`plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md).
 - [`2026-06-28_auth-security-hardening-pr-b.md`](2026-06-28_auth-security-hardening-pr-b.md): Auth security PR B — `SupabaseSessionManager`, `JwtClaimsReader`, Supabase repo consolidation, `sessionExpired` on Supabase cubit.
 - [`2026-06-28_auth-security-hardening-pr-a.md`](2026-06-28_auth-security-hardening-pr-a.md): Auth security PR A — `SessionLifecycleCoordinator`, decorated `AuthRepository`, DI singleton `AuthTokenManager`, classified interceptor invalidation, logging redaction.

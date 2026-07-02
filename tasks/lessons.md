@@ -21,6 +21,28 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-02 - Auth session lifecycle races need focused guard routing
+
+- What went wrong:
+  Cursor auth PRs fixed real session lifecycle races, but one regression test
+  did not prove concurrent Firebase and Supabase sign-out behavior and failed
+  only in the broad CI build.
+- How it was fixed:
+  Strengthened `SessionLifecycleCoordinator` coverage with registered slow
+  Firebase sign-out plus immediate Supabase sign-out, and routed auth session
+  lifecycle paths through focused regression guards before coverage.
+- Pattern:
+  Session invalidation ordering and per-provider in-flight gates are async
+  behavior contracts, not just implementation details.
+- Preventive rule:
+  Changes under `lib/core/auth/*` or `AppAuthCubit` must run the auth session
+  lifecycle focused tests via `tool/check_regression_guards.sh` before broad
+  coverage.
+- Evidence or affected files:
+  `test/app/presentation/cubit/app_auth_cubit_test.dart`
+  `test/core/auth/session_lifecycle_coordinator_test.dart`
+  `tool/check_regression_guards.sh`
+
 ### 2026-04-02 - Isolate.run from video tile captured non-sendable Flutter state
 
 - Correction:
