@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/shared/http/supabase_session_refresh_classifier.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -11,18 +12,29 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseSessionManager {
   SupabaseSessionManager({
     this._sessionCoordinator,
+    final TokenRepository? tokenRepository,
     Future<AuthResponse> Function()? refreshSession,
+    String? Function()? readPersistentAccessToken,
     String? Function()? readAccessToken,
   }) : _refreshSession = refreshSession ?? _defaultRefreshSession,
-       _readAccessToken = readAccessToken ?? _defaultReadAccessToken;
+       _readPersistentAccessToken =
+           readPersistentAccessToken ??
+           readAccessToken ??
+           _defaultReadPersistentAccessToken,
+       _tokenRepository = tokenRepository ?? InMemoryTokenRepository();
 
   final SessionLifecycleCoordinator? _sessionCoordinator;
+  final TokenRepository _tokenRepository;
   final Future<AuthResponse> Function() _refreshSession;
-  final String? Function() _readAccessToken;
+  final String? Function() _readPersistentAccessToken;
 
   Completer<bool>? _refreshCompleter;
 
-  String? getAccessToken() => _readAccessToken();
+  String? getAccessToken() => _tokenRepository.getSupabaseAccessToken();
+
+  void hydrateFromPersistentSession() {
+    _tokenRepository.cacheSupabaseAccessToken(_readPersistentAccessToken());
+  }
 
   /// Serialized refresh; returns whether a non-empty access token is available.
   Future<bool> refreshSessionSerialized() async {
@@ -33,8 +45,10 @@ class SupabaseSessionManager {
     final Completer<bool> completer = Completer<bool>();
     _refreshCompleter = completer;
     try {
-      await _refreshSession();
-      final String? token = _readAccessToken();
+      final String? token = await _tokenRepository.refreshSupabaseAccessToken(
+        refreshSession: _refreshSession,
+        readPersistentAccessToken: _readPersistentAccessToken,
+      );
       final bool success = token != null && token.isNotEmpty;
       completer.complete(success);
       return success;
@@ -79,5 +93,10 @@ class SupabaseSessionManager {
 Future<AuthResponse> _defaultRefreshSession() =>
     Supabase.instance.client.auth.refreshSession();
 
-String? _defaultReadAccessToken() =>
-    Supabase.instance.client.auth.currentSession?.accessToken;
+String? _defaultReadPersistentAccessToken() {
+  try {
+    return Supabase.instance.client.auth.currentSession?.accessToken;
+  } on Object {
+    return null;
+  }
+}

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/data/supabase_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
@@ -336,5 +337,44 @@ void main() {
         expect(signOutCalls, 1);
       },
     );
+
+    test('successful sign in caches Supabase token in repository', () async {
+      final InMemoryTokenRepository tokenRepository = InMemoryTokenRepository();
+      var signInCalls = 0;
+      final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
+        isConfiguredOverride: () => true,
+        tokenRepository: tokenRepository,
+        readCurrentAccessToken: () => 'session-token',
+        signInWithPasswordImpl:
+            ({
+              required final String email,
+              required final String password,
+            }) async {
+              signInCalls += 1;
+            },
+      );
+
+      await repository.signInWithPassword(
+        email: 'user@example.com',
+        password: 'secret',
+      );
+
+      expect(signInCalls, 1);
+      expect(tokenRepository.getSupabaseAccessToken(), 'session-token');
+    });
+
+    test('signOut clears cached Supabase token', () async {
+      final InMemoryTokenRepository tokenRepository = InMemoryTokenRepository()
+        ..cacheSupabaseAccessToken('session-token');
+      final SupabaseAuthRepositoryImpl repository = SupabaseAuthRepositoryImpl(
+        isConfiguredOverride: () => true,
+        tokenRepository: tokenRepository,
+        signOutImpl: () async {},
+      );
+
+      await repository.signOut();
+
+      expect(tokenRepository.getSupabaseAccessToken(), isNull);
+    });
   });
 }

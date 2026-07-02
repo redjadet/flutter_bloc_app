@@ -44,7 +44,6 @@ import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'register_chat_services_render.part.dart';
 
@@ -101,8 +100,7 @@ void registerChatServices() {
         if (!SupabaseBootstrapService.isSupabaseInitialized) {
           return false;
         }
-        final String? token =
-            Supabase.instance.client.auth.currentSession?.accessToken;
+        final String? token = getIt<SupabaseSessionManager>().getAccessToken();
         return token != null && token.isNotEmpty;
       },
       isDirectPolicyAllowed: () => hfConfigured,
@@ -134,9 +132,7 @@ void registerChatServices() {
       localConversationUpdater: getIt<ChatLocalConversationUpdater>(),
     ),
   );
-  registerLazySingletonIfAbsent<ChatListRepository>(
-    MockChatListRepository.new,
-  );
+  registerLazySingletonIfAbsent<ChatListRepository>(MockChatListRepository.new);
   registerLazySingletonIfAbsent<ChatRenderOrchestrationDiagnosticsPort>(
     () => const ChatRenderOrchestrationDiagnosticsAdapter(),
   );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -28,6 +29,10 @@ void registerAuthServices() {
         await coordinator.dispose();
       }
     },
+  );
+  registerLazySingletonIfAbsent<TokenRepository>(InMemoryTokenRepository.new);
+  getIt<SessionLifecycleCoordinator>().bindTokenRepository(
+    getIt<TokenRepository>(),
   );
 
   FirebaseAuth? firebaseAuth = getIt.isRegistered<FirebaseAuth>()

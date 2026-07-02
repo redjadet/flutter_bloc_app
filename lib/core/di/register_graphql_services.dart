@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/data/supabase_graphql_dem
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 
 void registerGraphqlServices() {
@@ -25,7 +26,10 @@ void registerGraphqlServices() {
   registerLazySingletonIfAbsent<GraphqlDemoRepository>(
     () => OfflineFirstGraphqlDemoRepository(
       remoteRepository: AuthAwareGraphqlRemoteRepository(
-        supabaseRemote: SupabaseGraphqlDemoRepository(),
+        supabaseRemote: SupabaseGraphqlDemoRepository(
+          readAccessToken: () =>
+              getIt<SupabaseSessionManager>().getAccessToken(),
+        ),
         directRemote: CountriesGraphqlRepository(client: getIt<Dio>()),
         isSupabaseSignedIn: () =>
             SupabaseBootstrapService.isSupabaseInitialized &&

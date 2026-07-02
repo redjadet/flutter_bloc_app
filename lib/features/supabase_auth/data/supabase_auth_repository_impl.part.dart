@@ -117,6 +117,9 @@ SupabaseAuthErrorCode? _mapErrorCode(final AuthException error) {
 
 User? _defaultReadCurrentUser() => Supabase.instance.client.auth.currentUser;
 
+String? _defaultReadCurrentAccessToken() =>
+    Supabase.instance.client.auth.currentSession?.accessToken;
+
 Stream<AuthState> _defaultAuthStateChangesStream() =>
     Supabase.instance.client.auth.onAuthStateChange;
 

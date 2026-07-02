@@ -30,7 +30,7 @@ void main() {
           await Future<void>.delayed(const Duration(milliseconds: 20));
           return AuthResponse();
         },
-        readAccessToken: () => refreshCalls > 0 ? 'token-a' : null,
+        readPersistentAccessToken: () => refreshCalls > 0 ? 'token-a' : null,
       );
 
       final List<bool> results = await Future.wait(<Future<bool>>[
@@ -49,7 +49,7 @@ void main() {
         refreshSession: () async {
           throw AuthException('invalid refresh token', statusCode: '401');
         },
-        readAccessToken: () => null,
+        readPersistentAccessToken: () => null,
       );
 
       final bool refreshed = await manager.refreshSessionSerialized();
