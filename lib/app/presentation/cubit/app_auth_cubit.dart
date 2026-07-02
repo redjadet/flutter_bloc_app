@@ -59,11 +59,6 @@ class AppAuthCubit extends Cubit<AppAuthState>
   void acknowledgeSessionExpired() {
     if (isClosed) return;
     _stickyExpiredReason = null;
-    final AuthUser? user = _authRepository.currentUser;
-    if (user != null) {
-      emit(AppAuthState.authenticated(user));
-      return;
-    }
     emit(const AppAuthState.unauthenticated());
   }
 

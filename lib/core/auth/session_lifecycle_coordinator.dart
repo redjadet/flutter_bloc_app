@@ -128,13 +128,6 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
     }
     _invalidationInFlight = true;
     try {
-      _invalidationController.add(
-        SessionInvalidationEvent(
-          provider: provider,
-          reason: reason,
-          occurredAt: DateTime.now().toUtc(),
-        ),
-      );
       switch (provider) {
         case AuthProviderKind.firebase:
           if (getIt.isRegistered<AuthRepository>()) {
@@ -149,6 +142,15 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
             );
           }
       }
+      // Emit after sign-out so session-expired UX does not race a still-valid
+      // AuthRepository.currentUser (which would bounce users off /auth).
+      _invalidationController.add(
+        SessionInvalidationEvent(
+          provider: provider,
+          reason: reason,
+          occurredAt: DateTime.now().toUtc(),
+        ),
+      );
     } finally {
       _invalidationInFlight = false;
     }

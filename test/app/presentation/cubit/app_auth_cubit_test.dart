@@ -87,5 +87,27 @@ void main() {
 
       expect(cubit.state, AppAuthState.authenticated(user));
     });
+
+    test(
+      'acknowledgeSessionExpired does not re-authenticate before sign-out completes',
+      () async {
+        const AuthUser user = AuthUser(id: 'u1', isAnonymous: false);
+        when(() => authRepository.currentUser).thenReturn(user);
+
+        await cubit.start();
+        authController.add(user);
+        await Future<void>.delayed(Duration.zero);
+
+        await sessionCoordinator.invalidateSession(
+          provider: AuthProviderKind.firebase,
+          reason: SessionInvalidationReason.remoteRejected,
+        );
+        await Future<void>.delayed(Duration.zero);
+
+        cubit.acknowledgeSessionExpired();
+
+        expect(cubit.state, const AppAuthState.unauthenticated());
+      },
+    );
   });
 }
