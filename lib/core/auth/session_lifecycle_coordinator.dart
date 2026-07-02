@@ -54,7 +54,7 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   RenderOrchestrationHfTokenProvider? _hfTokenProvider;
   StreamSubscription<AuthUser?>? _authSubscription;
   AuthUser? _previousUser;
-  bool _invalidationInFlight = false;
+  final Set<AuthProviderKind> _invalidationInFlight = <AuthProviderKind>{};
   bool _authRepositoryAttached = false;
 
   @override
@@ -123,10 +123,10 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
     required final AuthProviderKind provider,
     required final SessionInvalidationReason reason,
   }) async {
-    if (_invalidationInFlight) {
+    if (_invalidationInFlight.contains(provider)) {
       return;
     }
-    _invalidationInFlight = true;
+    _invalidationInFlight.add(provider);
     try {
       switch (provider) {
         case AuthProviderKind.firebase:
@@ -152,7 +152,7 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
         ),
       );
     } finally {
-      _invalidationInFlight = false;
+      _invalidationInFlight.remove(provider);
     }
   }
 

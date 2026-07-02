@@ -123,6 +123,38 @@ void main() {
       await sub.cancel();
     });
 
+    test(
+      'invalidateSession for different providers runs concurrently',
+      () async {
+        final List<SessionInvalidationEvent> events =
+            <SessionInvalidationEvent>[];
+        final StreamSubscription<SessionInvalidationEvent> sub = coordinator
+            .invalidationEvents
+            .listen(events.add);
+
+        await Future.wait<void>(<Future<void>>[
+          coordinator.invalidateSession(
+            provider: AuthProviderKind.firebase,
+            reason: SessionInvalidationReason.remoteRejected,
+          ),
+          coordinator.invalidateSession(
+            provider: AuthProviderKind.supabase,
+            reason: SessionInvalidationReason.supabaseSessionInvalid,
+          ),
+        ]);
+
+        expect(events, hasLength(2));
+        expect(
+          events.map((final SessionInvalidationEvent e) => e.provider).toSet(),
+          <AuthProviderKind>{
+            AuthProviderKind.firebase,
+            AuthProviderKind.supabase,
+          },
+        );
+        await sub.cancel();
+      },
+    );
+
     test('onSignOutCompleted is idempotent', () async {
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
