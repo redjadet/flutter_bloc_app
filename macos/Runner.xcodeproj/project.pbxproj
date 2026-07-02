@@ -31,6 +31,7 @@
 		8D849889FB4AB66F89D5162E /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26D39AFD1BB834C8E35AB3EA /* Pods_Runner.framework */; };
 		E72A13BA8C6D753FD04BC9A1 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 393DD7705E50F0619BE04FAE /* Pods_RunnerTests.framework */; };
 		C3D4E5F60718293A4B5E063 /* NativeShowcaseBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F60718293A4B5E064 /* NativeShowcaseBridge.swift */; };
+		E4F5A60718293A4B5E0651 /* NativeShowcaseTelemetryStreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5A60718293A4B5E0652 /* NativeShowcaseTelemetryStreamHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		DE3395E5DEDB80356838CC9B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		C3D4E5F60718293A4B5E062 /* native_showcase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = native_showcase.c; path = ../../native/native_showcase/native_showcase.c; sourceTree = "<group>"; };
 		C3D4E5F60718293A4B5E064 /* NativeShowcaseBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseBridge.swift; sourceTree = "<group>"; };
+		E4F5A60718293A4B5E0652 /* NativeShowcaseTelemetryStreamHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseTelemetryStreamHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 			children = (
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				C3D4E5F60718293A4B5E064 /* NativeShowcaseBridge.swift */,
+				E4F5A60718293A4B5E0652 /* NativeShowcaseTelemetryStreamHandler.swift */,
 				C3D4E5F60718293A4B5E062 /* native_showcase.c */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
 				33E51913231747F40026EE4D /* DebugProfile.entitlements */,
@@ -474,6 +477,7 @@
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				C3D4E5F60718293A4B5E063 /* NativeShowcaseBridge.swift in Sources */,
+				E4F5A60718293A4B5E0651 /* NativeShowcaseTelemetryStreamHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

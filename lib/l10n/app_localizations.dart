@@ -2269,6 +2269,72 @@ abstract class AppLocalizations {
   /// **'Try again'**
   String get nativePlatformShowcaseRetry;
 
+  /// Title for the EventChannel telemetry demo section
+  ///
+  /// In en, this message translates to:
+  /// **'Native telemetry stream'**
+  String get nativePlatformShowcaseTelemetryTitle;
+
+  /// Subtitle explaining the telemetry EventChannel demo
+  ///
+  /// In en, this message translates to:
+  /// **'High-frequency native samples are aggregated off the main thread and delivered as bounded EventChannel events.'**
+  String get nativePlatformShowcaseTelemetrySubtitle;
+
+  /// Shown before the first telemetry snapshot arrives
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for native telemetry…'**
+  String get nativePlatformShowcaseTelemetryWaiting;
+
+  /// Shown when EventChannel telemetry is not supported
+  ///
+  /// In en, this message translates to:
+  /// **'Native telemetry stream unavailable on this platform.'**
+  String get nativePlatformShowcaseTelemetryUnavailable;
+
+  /// Fallback error when telemetry stream fails without a message
+  ///
+  /// In en, this message translates to:
+  /// **'Native telemetry stream failed.'**
+  String get nativePlatformShowcaseTelemetryFailed;
+
+  /// Label for native source sample rate
+  ///
+  /// In en, this message translates to:
+  /// **'Source rate'**
+  String get nativePlatformShowcaseTelemetrySourceRateLabel;
+
+  /// Label for Flutter delivery rate
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered rate'**
+  String get nativePlatformShowcaseTelemetryDeliveredRateLabel;
+
+  /// Label for aggregated sample count
+  ///
+  /// In en, this message translates to:
+  /// **'Samples per event'**
+  String get nativePlatformShowcaseTelemetrySampleCountLabel;
+
+  /// Label for filtered/dropped sample count
+  ///
+  /// In en, this message translates to:
+  /// **'Dropped samples'**
+  String get nativePlatformShowcaseTelemetryDroppedCountLabel;
+
+  /// Label for latest aggregate average value
+  ///
+  /// In en, this message translates to:
+  /// **'Latest average'**
+  String get nativePlatformShowcaseTelemetryAverageValueLabel;
+
+  /// Formats a telemetry rate in hertz
+  ///
+  /// In en, this message translates to:
+  /// **'{rate} Hz'**
+  String nativePlatformShowcaseTelemetryRateValue(int rate);
+
   /// Title for the Event Bus pattern interactive demo
   ///
   /// In en, this message translates to:

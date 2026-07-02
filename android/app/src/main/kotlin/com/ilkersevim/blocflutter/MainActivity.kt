@@ -7,14 +7,19 @@ import android.content.pm.PackageManager
 import android.os.Build
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
   private val channelName = "com.example.flutter_bloc_app/native"
   private val showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
+  private val telemetryChannelName =
+    "com.example.flutter_bloc_app/native_showcase/telemetry"
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
+    EventChannel(flutterEngine.dartExecutor.binaryMessenger, telemetryChannelName)
+      .setStreamHandler(NativeShowcaseTelemetryStreamHandler())
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, showcaseChannelName)
       .setMethodCallHandler { call, result ->
         when (call.method) {

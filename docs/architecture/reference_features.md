@@ -15,7 +15,7 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 | `remote_config` | Full stack, offline-first, sealed Freezed state | G | G | G | Y | `lib/features/remote_config/` |
 | `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `lib/features/profile/presentation/cubit/` |
 | `todo_list` | DTO sync boundary, domain merge policy, AppError | G | Y | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
-| `native_platform_showcase` | Platform ports; cubit → use case only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart` |
+| `native_platform_showcase` | Platform ports; command `MethodChannel`, streaming `EventChannel`, FFI; cubit → use cases only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart` |
 | `deeplink` | Sealed deep-link state | G | G | G | G | `presentation/cubit/deep_link_state.dart` |
 | `calculator` | Pure domain payment rules | G | G | G | G | `domain/payment_calculator.dart` |
 | `counter` | Offline-first + `CounterError` | Y | Y | G | G | `presentation/cubit/`, `domain/counter_error.dart` |

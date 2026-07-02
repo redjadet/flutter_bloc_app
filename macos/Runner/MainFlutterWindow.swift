@@ -23,6 +23,12 @@ class MainFlutterWindow: NSWindow {
       }
     }
 
+    let telemetryChannel = FlutterEventChannel(
+      name: "com.example.flutter_bloc_app/native_showcase/telemetry",
+      binaryMessenger: flutterViewController.engine.binaryMessenger
+    )
+    telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
+
     super.awakeFromNib()
   }
 }

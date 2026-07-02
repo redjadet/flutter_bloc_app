@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_interop_section.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_lesson_cards.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_platform_summary_card.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_telemetry_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
@@ -28,7 +29,7 @@ class NativePlatformShowcasePage extends StatelessWidget {
             builder: (context, state) => state.when(
               initial: () => const Center(child: CircularProgressIndicator()),
               loading: () => const Center(child: CircularProgressIndicator()),
-              loaded: (data) => ListView(
+          loaded: (final data, final telemetry) => ListView(
                 padding: context.pagePadding,
                 children: <Widget>[
                   Text(
@@ -40,6 +41,8 @@ class NativePlatformShowcasePage extends StatelessWidget {
                     platform: data.platform,
                   ),
                   SizedBox(height: context.responsiveGapM),
+              const NativePlatformShowcaseTelemetrySection(),
+              SizedBox(height: context.responsiveGapM),
                   NativePlatformShowcaseInteropSection(
                     results: data.interopResults,
                   ),

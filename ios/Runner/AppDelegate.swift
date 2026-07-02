@@ -18,6 +18,8 @@ import FirebaseAppCheck
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private let channelName = "com.example.flutter_bloc_app/native"
   private let showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
+  private let telemetryChannelName =
+    "com.example.flutter_bloc_app/native_showcase/telemetry"
   private var hasConfiguredFirebase = false
   private let firebaseConfigQueue = DispatchQueue(label: "com.example.flutter_bloc_app.firebaseConfigQueue")
 
@@ -89,6 +91,12 @@ import FirebaseAppCheck
         result(FlutterMethodNotImplemented)
       }
     }
+
+    let telemetryChannel = FlutterEventChannel(
+      name: telemetryChannelName,
+      binaryMessenger: engineBridge.applicationRegistrar.messenger()
+    )
+    telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
 
     channel.setMethodCallHandler { [weak self] call, result in
       guard self != nil else {

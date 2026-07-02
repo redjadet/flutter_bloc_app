@@ -72,6 +72,7 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
       BlocProviderHelpers.withAsyncInit<NativePlatformShowcaseCubit>(
         create: () => NativePlatformShowcaseCubit(
           loadShowcase: getIt<LoadNativePlatformShowcaseUseCase>(),
+          watchTelemetry: getIt<WatchNativeShowcaseTelemetryUseCase>(),
         ),
         init: (final cubit) => cubit.load(),
         child: const NativePlatformShowcasePage(),
