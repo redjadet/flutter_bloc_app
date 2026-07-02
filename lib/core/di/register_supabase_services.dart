@@ -18,8 +18,7 @@ void registerSupabaseServices() {
           ? getIt<SessionLifecycleCoordinator>()
           : null,
       tokenRepository: getIt<TokenRepository>(),
-    );
-    manager.hydrateFromPersistentSession();
+    )..hydrateFromPersistentSession();
     return manager;
   });
 
