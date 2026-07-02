@@ -212,8 +212,10 @@ You can still run it manually:
 The workflow uses `cancel-in-progress: false` so a newer `main` push does not
 cancel an in-flight Pages deployment. Cancelling after `deploy-pages` submits
 can orphan a deployment in `deployment_queued` and block later runs until the
-action's 10-minute poll timeout. Before each deploy, the workflow also cancels
-recent stale `github-pages` deployments that are still queued or in progress.
+action's 10-minute poll timeout. Before each deploy, the workflow runs
+`tool/drain_stale_github_pages_deployments.py` to cancel recent non-terminal
+Pages deployments (including blank-status queue blockers), then retries once
+after another drain if the first deploy attempt fails.
 
 #### `base_href` input
 
