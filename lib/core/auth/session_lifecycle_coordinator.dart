@@ -54,7 +54,7 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   RenderOrchestrationHfTokenProvider? _hfTokenProvider;
   StreamSubscription<AuthUser?>? _authSubscription;
   AuthUser? _previousUser;
-  bool _invalidationInFlight = false;
+  final Set<AuthProviderKind> _invalidationInFlight = <AuthProviderKind>{};
   bool _authRepositoryAttached = false;
 
   @override
@@ -123,18 +123,11 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
     required final AuthProviderKind provider,
     required final SessionInvalidationReason reason,
   }) async {
-    if (_invalidationInFlight) {
+    if (_invalidationInFlight.contains(provider)) {
       return;
     }
-    _invalidationInFlight = true;
+    _invalidationInFlight.add(provider);
     try {
-      _invalidationController.add(
-        SessionInvalidationEvent(
-          provider: provider,
-          reason: reason,
-          occurredAt: DateTime.now().toUtc(),
-        ),
-      );
       switch (provider) {
         case AuthProviderKind.firebase:
           if (getIt.isRegistered<AuthRepository>()) {
@@ -149,8 +142,17 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
             );
           }
       }
+      // Emit after sign-out so session-expired UX does not race a still-valid
+      // AuthRepository.currentUser (which would bounce users off /auth).
+      _invalidationController.add(
+        SessionInvalidationEvent(
+          provider: provider,
+          reason: reason,
+          occurredAt: DateTime.now().toUtc(),
+        ),
+      );
     } finally {
-      _invalidationInFlight = false;
+      _invalidationInFlight.remove(provider);
     }
   }
 
