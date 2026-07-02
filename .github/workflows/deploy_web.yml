@@ -13,7 +13,9 @@ on:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  # Do not cancel in-progress deploys: actions/deploy-pages can leave the
+  # Pages Deployment API wedged in deployment_queued when a run is cancelled.
+  cancel-in-progress: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
