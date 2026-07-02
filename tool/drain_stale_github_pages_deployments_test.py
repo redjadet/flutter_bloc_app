@@ -52,9 +52,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             ["abc1234", "def5678"],
         )
 
-    def test_collect_stale_deployments_includes_current_sha_when_non_terminal(
-        self,
-    ):
+    def test_collect_stale_deployments_excludes_current_sha(self):
         class FakeClient:
             def list_environment_deployments(self, *, environment, per_page):
                 return [{"sha": "current1234567890"}, {"sha": "other1234567890"}]
@@ -69,10 +67,29 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             FakeClient(),
             environment="github-pages",
             max_deployments=10,
+            exclude_sha="current1234567890",
+        )
+        self.assertEqual(len(stale), 1)
+        self.assertEqual(stale[0].sha, "other1234567890")
+
+    def test_collect_stale_deployments_includes_current_sha_without_exclude(self):
+        class FakeClient:
+            def list_environment_deployments(self, *, environment, per_page):
+                return [{"sha": "current1234567890"}, {"sha": "other1234567890"}]
+
+            def pages_status(self, sha):
+                return {
+                    "current1234567890": "",
+                    "other1234567890": "deployment_queued",
+                }[sha]
+
+        stale = self.module.collect_stale_deployments(
+            FakeClient(),
+            environment="github-pages",
+            max_deployments=10,
+            exclude_sha=None,
         )
         self.assertEqual(len(stale), 2)
-        self.assertEqual(stale[0].sha, "current1234567890")
-        self.assertEqual(stale[1].sha, "other1234567890")
 
 
 if __name__ == "__main__":

@@ -138,6 +138,7 @@ def collect_stale_deployments(
     *,
     environment: str,
     max_deployments: int,
+    exclude_sha: str | None = None,
 ) -> list[PagesDeployment]:
     deployments = client.list_environment_deployments(
         environment=environment,
@@ -145,10 +146,51 @@ def collect_stale_deployments(
     )
     stale: list[PagesDeployment] = []
     for sha in unique_shas(deployments):
+        if exclude_sha and sha == exclude_sha:
+            continue
         status = client.pages_status(sha)
         if is_stale_pages_status(status):
             stale.append(PagesDeployment(sha=sha, status=status))
     return stale
+
+
+def ensure_pages_deployment_terminal(
+    client: GitHubPagesDrainClient,
+    sha: str,
+    *,
+    poll_timeout_seconds: int = 180,
+    poll_interval_seconds: int = 5,
+    wait_after_cancel_seconds: int = 10,
+    post_terminal_wait_seconds: int = 30,
+) -> None:
+    """Cancel a SHA if needed and wait until its Pages status is terminal."""
+    deadline = time.monotonic() + poll_timeout_seconds
+    while True:
+        status = client.pages_status(sha)
+        if not is_stale_pages_status(status):
+            if post_terminal_wait_seconds > 0:
+                print(
+                    "Pages deployment for "
+                    f"{sha[:7]} is terminal ({status!r}); "
+                    f"waiting {post_terminal_wait_seconds}s before redeploy."
+                )
+                time.sleep(post_terminal_wait_seconds)
+            return
+
+        if time.monotonic() >= deadline:
+            raise RuntimeError(
+                "Timed out waiting for Pages deployment "
+                f"{sha[:7]} to reach a terminal status (last={status!r})."
+            )
+
+        print(
+            "Cancelling in-flight Pages deployment for "
+            f"{sha[:7]} (status={status!r})"
+        )
+        client.cancel_pages_deployment(sha)
+        if wait_after_cancel_seconds > 0:
+            time.sleep(wait_after_cancel_seconds)
+        time.sleep(poll_interval_seconds)
 
 
 def drain_stale_pages_deployments(
@@ -156,6 +198,7 @@ def drain_stale_pages_deployments(
     *,
     environment: str = DEFAULT_ENVIRONMENT,
     max_deployments: int = 10,
+    exclude_sha: str | None = None,
     wait_after_cancel_seconds: int = 5,
     poll_timeout_seconds: int = 120,
     poll_interval_seconds: int = 5,
@@ -168,6 +211,7 @@ def drain_stale_pages_deployments(
             client,
             environment=environment,
             max_deployments=max_deployments,
+            exclude_sha=exclude_sha,
         )
         if not stale:
             return cancelled
@@ -209,9 +253,23 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="GitHub token (defaults to GITHUB_TOKEN)",
     )
     parser.add_argument(
-        "--current-sha",
+        "--exclude-sha",
         default=os.environ.get("GITHUB_SHA"),
-        help="Current workflow commit SHA (defaults to GITHUB_SHA)",
+        help="Deployment SHA to leave untouched (defaults to GITHUB_SHA)",
+    )
+    parser.add_argument(
+        "--ensure-current-sha-terminal",
+        action="store_true",
+        help=(
+            "After draining other SHAs, cancel/wait until --exclude-sha "
+            "(or GITHUB_SHA) reaches a terminal Pages status"
+        ),
+    )
+    parser.add_argument(
+        "--post-terminal-wait-seconds",
+        type=int,
+        default=30,
+        help="Extra wait after current SHA becomes terminal (retry redeploys)",
     )
     parser.add_argument(
         "--environment",
@@ -254,9 +312,17 @@ def main(argv: list[str] | None = None) -> int:
         client,
         environment=args.environment,
         max_deployments=args.max_deployments,
+        exclude_sha=args.exclude_sha,
         wait_after_cancel_seconds=args.wait_after_cancel_seconds,
         poll_timeout_seconds=args.poll_timeout_seconds,
     )
+    if args.ensure_current_sha_terminal and args.exclude_sha:
+        ensure_pages_deployment_terminal(
+            client,
+            args.exclude_sha,
+            poll_timeout_seconds=args.poll_timeout_seconds,
+            post_terminal_wait_seconds=args.post_terminal_wait_seconds,
+        )
     if cancelled:
         print(f"Drained {len(cancelled)} stale Pages deployment(s).")
     else:
