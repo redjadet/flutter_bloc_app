@@ -116,12 +116,12 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/configure-pages@v6
-
       - name: Drain stale GitHub Pages deployments
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 tool/drain_stale_github_pages_deployments.py
+
+      - uses: actions/configure-pages@v6
 
       - id: deployment
         uses: actions/deploy-pages@v5

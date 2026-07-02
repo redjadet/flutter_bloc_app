@@ -138,6 +138,7 @@ def collect_stale_deployments(
     *,
     environment: str,
     max_deployments: int,
+    current_sha: str | None = None,
 ) -> list[PagesDeployment]:
     deployments = client.list_environment_deployments(
         environment=environment,
@@ -145,6 +146,8 @@ def collect_stale_deployments(
     )
     stale: list[PagesDeployment] = []
     for sha in unique_shas(deployments):
+        if current_sha and sha == current_sha:
+            continue
         status = client.pages_status(sha)
         if is_stale_pages_status(status):
             stale.append(PagesDeployment(sha=sha, status=status))
@@ -156,6 +159,7 @@ def drain_stale_pages_deployments(
     *,
     environment: str = DEFAULT_ENVIRONMENT,
     max_deployments: int = 10,
+    current_sha: str | None = None,
     wait_after_cancel_seconds: int = 5,
     poll_timeout_seconds: int = 120,
     poll_interval_seconds: int = 5,
@@ -168,6 +172,7 @@ def drain_stale_pages_deployments(
             client,
             environment=environment,
             max_deployments=max_deployments,
+            current_sha=current_sha,
         )
         if not stale:
             return cancelled
@@ -254,6 +259,7 @@ def main(argv: list[str] | None = None) -> int:
         client,
         environment=args.environment,
         max_deployments=args.max_deployments,
+        current_sha=args.current_sha,
         wait_after_cancel_seconds=args.wait_after_cancel_seconds,
         poll_timeout_seconds=args.poll_timeout_seconds,
     )

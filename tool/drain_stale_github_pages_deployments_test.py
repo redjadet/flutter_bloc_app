@@ -52,7 +52,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             ["abc1234", "def5678"],
         )
 
-    def test_collect_stale_deployments_includes_current_sha_when_non_terminal(
+    def test_collect_stale_deployments_excludes_current_sha_when_non_terminal(
         self,
     ):
         class FakeClient:
@@ -69,10 +69,10 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             FakeClient(),
             environment="github-pages",
             max_deployments=10,
+            current_sha="current1234567890",
         )
-        self.assertEqual(len(stale), 2)
-        self.assertEqual(stale[0].sha, "current1234567890")
-        self.assertEqual(stale[1].sha, "other1234567890")
+        self.assertEqual(len(stale), 1)
+        self.assertEqual(stale[0].sha, "other1234567890")
 
 
 if __name__ == "__main__":
