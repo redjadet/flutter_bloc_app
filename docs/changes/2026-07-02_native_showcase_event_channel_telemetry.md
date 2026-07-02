@@ -45,4 +45,13 @@ flutter build macos --debug
 
 All commands above passed on 2026-07-02 in worktree `codex/native-communication-plan`.
 
+## Follow-up (Codex review, 2026-07-03)
+
+- Apple handlers: worker-queue serialization + `sessionGeneration` guard on sink delivery.
+- Android handler: `stopSession()` before re-listen; generation token on emissions.
+- Dart mapper: integer fields require `int` (reject fractional `num` truncation).
+
+Re-validated after hardening: `flutter test test/features/native_platform_showcase/` (31 passed),
+`tool/analyze.sh`, `flutter build macos --debug`, `flutter build apk --debug`.
+
 Native registration changes require full rebuild (not hot reload).
