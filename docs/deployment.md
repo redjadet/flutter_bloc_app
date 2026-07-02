@@ -214,8 +214,11 @@ cancel an in-flight Pages deployment. Cancelling after `deploy-pages` submits
 can orphan a deployment in `deployment_queued` and block later runs until the
 action's 10-minute poll timeout. Before each deploy, the workflow runs
 `tool/drain_stale_github_pages_deployments.py` to cancel recent non-terminal
-Pages deployments (including blank-status queue blockers), then retries once
-after another drain if the first deploy attempt fails.
+Pages deployments for **other** SHAs (including blank-status queue blockers).
+It skips the current commit SHA so a pre-deploy cancel does not block an
+immediate redeploy of the same commit. On retry after a failed deploy, the
+script drains other SHAs again and waits for the current SHA to reach a
+terminal Pages status before the second `deploy-pages` attempt.
 
 #### `base_href` input
 

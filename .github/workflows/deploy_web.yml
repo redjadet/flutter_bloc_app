@@ -131,7 +131,10 @@ jobs:
         if: steps.deployment.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 tool/drain_stale_github_pages_deployments.py --poll-timeout-seconds 180
+        run: |
+          python3 tool/drain_stale_github_pages_deployments.py \
+            --poll-timeout-seconds 180 \
+            --ensure-current-sha-terminal
 
       - id: deployment_retry
         if: steps.deployment.outcome == 'failure'
