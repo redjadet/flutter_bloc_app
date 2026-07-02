@@ -1220,6 +1220,47 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nativePlatformShowcaseRetry => 'Tekrar dene';
 
   @override
+  String get nativePlatformShowcaseTelemetryTitle => 'Yerel telemetri akışı';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySubtitle =>
+      'Yüksek frekanslı yerel örnekler ana iş parçacığı dışında toplanır ve sınırlı EventChannel olayları olarak iletilir.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryWaiting =>
+      'Yerel telemetri bekleniyor…';
+
+  @override
+  String get nativePlatformShowcaseTelemetryUnavailable =>
+      'Yerel telemetri akışı bu platformda kullanılamıyor.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryFailed =>
+      'Yerel telemetri akışı başarısız oldu.';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceRateLabel => 'Kaynak hızı';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDeliveredRateLabel => 'İletim hızı';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySampleCountLabel =>
+      'Olay başına örnek';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDroppedCountLabel =>
+      'Atılan örnekler';
+
+  @override
+  String get nativePlatformShowcaseTelemetryAverageValueLabel => 'Son ortalama';
+
+  @override
+  String nativePlatformShowcaseTelemetryRateValue(int rate) {
+    return '$rate Hz';
+  }
+
+  @override
   String get eventBusDemoTitle => 'Event Bus demosu';
 
   @override

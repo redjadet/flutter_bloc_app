@@ -842,6 +842,17 @@
   "nativePlatformShowcaseLesson4Body": "Yerel birlikte çalışma soyutlamaların arkasında kalmalı; uygulama test edilebilir olmalı.",
   "nativePlatformShowcaseLoadError": "Platform vitrin verisi yüklenemedi.",
   "nativePlatformShowcaseRetry": "Tekrar dene",
+  "nativePlatformShowcaseTelemetryTitle": "Yerel telemetri akışı",
+  "nativePlatformShowcaseTelemetrySubtitle": "Yüksek frekanslı yerel örnekler ana iş parçacığı dışında toplanır ve sınırlı EventChannel olayları olarak iletilir.",
+  "nativePlatformShowcaseTelemetryWaiting": "Yerel telemetri bekleniyor…",
+  "nativePlatformShowcaseTelemetryUnavailable": "Yerel telemetri akışı bu platformda kullanılamıyor.",
+  "nativePlatformShowcaseTelemetryFailed": "Yerel telemetri akışı başarısız oldu.",
+  "nativePlatformShowcaseTelemetrySourceRateLabel": "Kaynak hızı",
+  "nativePlatformShowcaseTelemetryDeliveredRateLabel": "İletim hızı",
+  "nativePlatformShowcaseTelemetrySampleCountLabel": "Olay başına örnek",
+  "nativePlatformShowcaseTelemetryDroppedCountLabel": "Atılan örnekler",
+  "nativePlatformShowcaseTelemetryAverageValueLabel": "Son ortalama",
+  "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
   "eventBusDemoTitle": "Event Bus demosu",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

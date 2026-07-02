@@ -1237,6 +1237,49 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nativePlatformShowcaseRetry => 'Erneut versuchen';
 
   @override
+  String get nativePlatformShowcaseTelemetryTitle =>
+      'Nativer Telemetrie-Stream';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySubtitle =>
+      'Hochfrequente native Samples werden außerhalb des Hauptthreads aggregiert und als begrenzte EventChannel-Ereignisse geliefert.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryWaiting =>
+      'Warte auf native Telemetrie…';
+
+  @override
+  String get nativePlatformShowcaseTelemetryUnavailable =>
+      'Nativer Telemetrie-Stream auf dieser Plattform nicht verfügbar.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryFailed =>
+      'Nativer Telemetrie-Stream fehlgeschlagen.';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceRateLabel => 'Quellrate';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDeliveredRateLabel => 'Lieferrate';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySampleCountLabel =>
+      'Samples pro Ereignis';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDroppedCountLabel =>
+      'Verworfene Samples';
+
+  @override
+  String get nativePlatformShowcaseTelemetryAverageValueLabel =>
+      'Neuester Durchschnitt';
+
+  @override
+  String nativePlatformShowcaseTelemetryRateValue(int rate) {
+    return '$rate Hz';
+  }
+
+  @override
   String get eventBusDemoTitle => 'Event-Bus-Demo';
 
   @override

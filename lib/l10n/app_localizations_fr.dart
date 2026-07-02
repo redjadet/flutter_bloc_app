@@ -1238,6 +1238,51 @@ class AppLocalizationsFr extends AppLocalizations {
   String get nativePlatformShowcaseRetry => 'Réessayer';
 
   @override
+  String get nativePlatformShowcaseTelemetryTitle =>
+      'Flux de télémétrie native';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySubtitle =>
+      'Les échantillons natifs haute fréquence sont agrégés hors du thread principal et livrés sous forme d\'événements EventChannel limités.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryWaiting =>
+      'En attente de la télémétrie native…';
+
+  @override
+  String get nativePlatformShowcaseTelemetryUnavailable =>
+      'Le flux de télémétrie native n\'est pas disponible sur cette plateforme.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryFailed =>
+      'Échec du flux de télémétrie native.';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceRateLabel =>
+      'Fréquence source';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDeliveredRateLabel =>
+      'Fréquence de livraison';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySampleCountLabel =>
+      'Échantillons par événement';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDroppedCountLabel =>
+      'Échantillons ignorés';
+
+  @override
+  String get nativePlatformShowcaseTelemetryAverageValueLabel =>
+      'Moyenne la plus récente';
+
+  @override
+  String nativePlatformShowcaseTelemetryRateValue(int rate) {
+    return '$rate Hz';
+  }
+
+  @override
   String get eventBusDemoTitle => 'Démo Event Bus';
 
   @override

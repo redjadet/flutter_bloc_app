@@ -841,6 +841,17 @@
   "nativePlatformShowcaseLesson4Body": "La interop nativa debe ir detrás de abstracciones para mantener la app testeable.",
   "nativePlatformShowcaseLoadError": "No se pudieron cargar los datos de la vitrina.",
   "nativePlatformShowcaseRetry": "Reintentar",
+  "nativePlatformShowcaseTelemetryTitle": "Flujo de telemetría nativa",
+  "nativePlatformShowcaseTelemetrySubtitle": "Las muestras nativas de alta frecuencia se agregan fuera del hilo principal y se entregan como eventos EventChannel limitados.",
+  "nativePlatformShowcaseTelemetryWaiting": "Esperando telemetría nativa…",
+  "nativePlatformShowcaseTelemetryUnavailable": "El flujo de telemetría nativa no está disponible en esta plataforma.",
+  "nativePlatformShowcaseTelemetryFailed": "El flujo de telemetría nativa falló.",
+  "nativePlatformShowcaseTelemetrySourceRateLabel": "Frecuencia de origen",
+  "nativePlatformShowcaseTelemetryDeliveredRateLabel": "Frecuencia de entrega",
+  "nativePlatformShowcaseTelemetrySampleCountLabel": "Muestras por evento",
+  "nativePlatformShowcaseTelemetryDroppedCountLabel": "Muestras descartadas",
+  "nativePlatformShowcaseTelemetryAverageValueLabel": "Promedio más reciente",
+  "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
   "eventBusDemoTitle": "Demo de Event Bus",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

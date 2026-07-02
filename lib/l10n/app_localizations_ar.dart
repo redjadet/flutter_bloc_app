@@ -1213,6 +1213,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nativePlatformShowcaseRetry => 'حاول مجدداً';
 
   @override
+  String get nativePlatformShowcaseTelemetryTitle =>
+      'تدفق القياس عن بُعد الأصلي';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySubtitle =>
+      'يتم تجميع عينات النظام الأصلي عالية التردد خارج الخيط الرئيسي وتسليمها كأحداث EventChannel محدودة.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryWaiting =>
+      'في انتظار القياس عن بُعد الأصلي…';
+
+  @override
+  String get nativePlatformShowcaseTelemetryUnavailable =>
+      'تدفق القياس عن بُعد الأصلي غير متاح على هذه المنصة.';
+
+  @override
+  String get nativePlatformShowcaseTelemetryFailed =>
+      'فشل تدفق القياس عن بُعد الأصلي.';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySourceRateLabel => 'معدل المصدر';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDeliveredRateLabel =>
+      'معدل التسليم';
+
+  @override
+  String get nativePlatformShowcaseTelemetrySampleCountLabel => 'عينات لكل حدث';
+
+  @override
+  String get nativePlatformShowcaseTelemetryDroppedCountLabel =>
+      'العينات المتجاهلة';
+
+  @override
+  String get nativePlatformShowcaseTelemetryAverageValueLabel => 'أحدث متوسط';
+
+  @override
+  String nativePlatformShowcaseTelemetryRateValue(int rate) {
+    return '$rate هرتز';
+  }
+
+  @override
   String get eventBusDemoTitle => 'عرض Event Bus';
 
   @override

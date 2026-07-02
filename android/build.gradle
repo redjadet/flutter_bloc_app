@@ -32,13 +32,13 @@ subprojects { subproject ->
                 if (namespace == null || namespace.isEmpty()) {
                     namespace = (subproject.group ?: "unknown").toString() + ".android"
                 }
+                // Vendored/plugin modules often pin an older compileSdk; align with the app
+                // so androidx AAR metadata checks (e.g. reactive_ble_mobile) pass on AGP 8+.
+                compileSdk 36
+                compileSdkVersion 36
                 // wallet_connect_v2: AGP 8+ rejects package in AndroidManifest; set namespace in build.gradle to match.
                 if (subproject.name == "wallet_connect_v2") {
                     namespace = "com.avacus.wallet_connect_v2"
-                    // wallet_connect_v2 is pinned to compileSdk 31; force 36 to satisfy transitive AndroidX requirements.
-                    if (hasProperty("compileSdkVersion")) {
-                        compileSdkVersion 36
-                    }
                 }
             }
         }

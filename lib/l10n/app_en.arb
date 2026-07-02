@@ -1475,6 +1475,55 @@
   "@nativePlatformShowcaseRetry": {
     "description": "Retry button on native platform showcase error state"
   },
+  "nativePlatformShowcaseTelemetryTitle": "Native telemetry stream",
+  "@nativePlatformShowcaseTelemetryTitle": {
+    "description": "Title for the EventChannel telemetry demo section"
+  },
+  "nativePlatformShowcaseTelemetrySubtitle": "High-frequency native samples are aggregated off the main thread and delivered as bounded EventChannel events.",
+  "@nativePlatformShowcaseTelemetrySubtitle": {
+    "description": "Subtitle explaining the telemetry EventChannel demo"
+  },
+  "nativePlatformShowcaseTelemetryWaiting": "Waiting for native telemetry…",
+  "@nativePlatformShowcaseTelemetryWaiting": {
+    "description": "Shown before the first telemetry snapshot arrives"
+  },
+  "nativePlatformShowcaseTelemetryUnavailable": "Native telemetry stream unavailable on this platform.",
+  "@nativePlatformShowcaseTelemetryUnavailable": {
+    "description": "Shown when EventChannel telemetry is not supported"
+  },
+  "nativePlatformShowcaseTelemetryFailed": "Native telemetry stream failed.",
+  "@nativePlatformShowcaseTelemetryFailed": {
+    "description": "Fallback error when telemetry stream fails without a message"
+  },
+  "nativePlatformShowcaseTelemetrySourceRateLabel": "Source rate",
+  "@nativePlatformShowcaseTelemetrySourceRateLabel": {
+    "description": "Label for native source sample rate"
+  },
+  "nativePlatformShowcaseTelemetryDeliveredRateLabel": "Delivered rate",
+  "@nativePlatformShowcaseTelemetryDeliveredRateLabel": {
+    "description": "Label for Flutter delivery rate"
+  },
+  "nativePlatformShowcaseTelemetrySampleCountLabel": "Samples per event",
+  "@nativePlatformShowcaseTelemetrySampleCountLabel": {
+    "description": "Label for aggregated sample count"
+  },
+  "nativePlatformShowcaseTelemetryDroppedCountLabel": "Dropped samples",
+  "@nativePlatformShowcaseTelemetryDroppedCountLabel": {
+    "description": "Label for filtered/dropped sample count"
+  },
+  "nativePlatformShowcaseTelemetryAverageValueLabel": "Latest average",
+  "@nativePlatformShowcaseTelemetryAverageValueLabel": {
+    "description": "Label for latest aggregate average value"
+  },
+  "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
+  "@nativePlatformShowcaseTelemetryRateValue": {
+    "description": "Formats a telemetry rate in hertz",
+    "placeholders": {
+      "rate": {
+        "type": "int"
+      }
+    }
+  },
   "eventBusDemoTitle": "Event Bus demo",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

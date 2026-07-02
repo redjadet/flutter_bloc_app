@@ -7,6 +7,7 @@ Educational demo that explains how Flutter apps integrate with each host platfor
 | Dart → Swift | `MethodChannel` `com.example.flutter_bloc_app/native_showcase` | `ios/Runner/NativeShowcaseBridge.swift`, `macos/Runner/NativeShowcaseBridge.swift` |
 | Dart → Kotlin | Same channel | `android/.../MainActivity.kt` |
 | Dart → C/C++ | `dart:ffi` | `native/native_showcase/native_showcase.c` |
+| Native telemetry stream | `EventChannel` `com.example.flutter_bloc_app/native_showcase/telemetry` | `NativeShowcaseTelemetryStreamHandler` on Android / iOS / macOS |
 
 On web, host bridges report **unavailable**; FFI uses a stub. Desktop Linux/Windows link `native_showcase.c` in CMake. **iOS and macOS** expose FFI via Swift `@_cdecl` in `NativeShowcaseBridge.swift` only (the shared `.c` file is a project reference, not compiled—avoid duplicate `native_showcase_*` symbols). macOS registers the MethodChannel in `MainFlutterWindow.swift`.
 
@@ -24,13 +25,14 @@ Native access stays out of UI and Cubit. Presentation and domain depend on **por
 ```text
 Presentation (Page, Cubit)
         ↓  LoadNativePlatformShowcaseUseCase
+        ↓  WatchNativeShowcaseTelemetryUseCase
 Repository (NativePlatformInfoRepository)
         ↓  loadShowcase() → catalog + interopResults
 Platform service ports (domain)
         ↓
 Data adapters
         ↓
-MethodChannel / dart:ffi / host native code
+MethodChannel / EventChannel / dart:ffi / host native code
 ```
 
 ### Folder layout
@@ -41,10 +43,12 @@ lib/features/native_platform_showcase/
 │   ├── native_platform_info_repository.dart
 │   ├── native_showcase_host_language_service.dart   # Swift / Kotlin port
 │   ├── native_showcase_native_code_service.dart     # C/C++ port
+│   ├── native_showcase_telemetry_service.dart       # EventChannel port
 │   ├── use_cases/load_native_platform_showcase_use_case.dart
-│   └── … models (PlatformShowcaseData, NativeInteropCallResult, …)
+│   └── use_cases/watch_native_showcase_telemetry_use_case.dart
 ├── data/
 │   ├── method_channel_native_showcase_host_language_service.dart
+│   ├── event_channel_native_showcase_telemetry_service.dart
 │   ├── ffi_native_showcase_native_code_service.dart
 │   ├── native_showcase_ffi_{io,stub,bindings}.dart
 │   ├── native_platform_info_repository_impl.dart
@@ -66,10 +70,19 @@ lib/features/native_platform_showcase/
 
 ### Load flow
 
-1. Route (`createNativePlatformShowcaseRoute` in `lib/app/router/routes_demos.part.dart`) builds `NativePlatformShowcaseCubit(loadShowcase: getIt<LoadNativePlatformShowcaseUseCase>())` and calls `load()`.
+1. Route (`createNativePlatformShowcaseRoute` in `lib/app/router/routes_demos.part.dart`) builds `NativePlatformShowcaseCubit` with `LoadNativePlatformShowcaseUseCase` and `WatchNativeShowcaseTelemetryUseCase`, then calls `load()`.
 2. `LoadNativePlatformShowcaseUseCase` → `NativePlatformInfoRepository.loadShowcase()`.
 3. `NativePlatformInfoRepositoryImpl` resolves `AppPlatformKind` via `RuntimePlatformProbe`, maps static catalog, then awaits host-language calls and invokes native-code service.
 4. Cubit emits `loaded(PlatformShowcaseData)` including `interopResults` for the interop section.
+5. After successful load, Cubit subscribes once to `WatchNativeShowcaseTelemetryUseCase` and updates only the `telemetry` field on the loaded state.
+
+### Telemetry stream (EventChannel)
+
+Channel: `com.example.flutter_bloc_app/native_showcase/telemetry`
+
+Native side samples at 60 Hz on a background worker, aggregates into compact maps every 250 ms (4 Hz), and emits via `EventChannel`. Dart maps payloads in `EventChannelNativeShowcaseTelemetryService`. Unsupported platforms receive one `unavailable` snapshot. UI uses `NativePlatformShowcaseTelemetrySection` with `TypeSafeBlocSelector` so telemetry ticks do not rebuild static showcase content.
+
+**Full rebuild required** after changing Swift/Kotlin stream handlers (same as MethodChannel / FFI).
 
 ### DI (`registerNativePlatformShowcaseServices`)
 
@@ -81,6 +94,8 @@ Registered from `lib/core/di/groups/register_demo_services.dart`:
 | `NativeShowcaseNativeCodeService` | `FfiNativeShowcaseNativeCodeService` |
 | `NativePlatformInfoRepository` | `NativePlatformInfoRepositoryImpl` (injects both services + probe) |
 | `LoadNativePlatformShowcaseUseCase` | wraps repository |
+| `NativeShowcaseTelemetryService` | `EventChannelNativeShowcaseTelemetryService` |
+| `WatchNativeShowcaseTelemetryUseCase` | wraps telemetry service |
 
 Cubit is **not** in GetIt; only the use case is injected at the route.
 
@@ -113,6 +128,7 @@ Maps Flutter runtime signals to `AppPlatformKind`:
 
 - `CommonPageLayout` shell
 - Platform summary card (`native-platform-showcase-summary`)
+- **Telemetry stream section** (`native-platform-showcase-telemetry`, selector-isolated)
 - **Live interop section** (`native-platform-showcase-interop-<kind>`)
 - Four lesson cards (`native-platform-showcase-lesson-0` … `3`)
 - Five capability tiles (`native-platform-showcase-capability-<kind>`) in `showcaseCapabilityOrder`
@@ -123,7 +139,7 @@ Error state uses `CommonErrorView` with `retryButtonKey: native-platform-showcas
 
 ## Native rebuild note
 
-Changing Swift, Kotlin, or C/C++ requires a **full rebuild** (not hot reload). FFI and MethodChannel handlers are registered at app startup.
+Changing Swift, Kotlin, or C/C++ requires a **full rebuild** (not hot reload). FFI, MethodChannel, and EventChannel handlers are registered at app startup.
 
 ## Tests
 

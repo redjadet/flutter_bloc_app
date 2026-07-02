@@ -47,6 +47,12 @@ android {
             googleMapsAndroidApiKey ?: "YOUR_ANDROID_GOOGLE_MAPS_API_KEY"
     }
 
+    packaging {
+        resources {
+            pickFirsts += ["META-INF/NOTICE.md", "META-INF/LICENSE.md"]
+        }
+    }
+
     signingConfigs {
         release {
             if (keystorePropertiesFile.exists()) {
@@ -69,7 +75,17 @@ android {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             } else {
-                throw new GradleException("Release signing requires android/key.properties and a valid keystore.")
+                project.gradle.taskGraph.whenReady { taskGraph ->
+                    final boolean isReleaseBuild = taskGraph.allTasks.any { task ->
+                        final String name = task.name.toLowerCase()
+                        name.contains("release") && !name.contains("debug")
+                    }
+                    if (isReleaseBuild) {
+                        throw new GradleException(
+                            "Release signing requires android/key.properties and a valid keystore."
+                        )
+                    }
+                }
             }
         }
     }

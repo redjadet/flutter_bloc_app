@@ -841,6 +841,17 @@
   "nativePlatformShowcaseLesson4Body": "Native Interop gehört hinter Abstraktionen, damit die App testbar bleibt.",
   "nativePlatformShowcaseLoadError": "Showcase-Daten konnten nicht geladen werden.",
   "nativePlatformShowcaseRetry": "Erneut versuchen",
+  "nativePlatformShowcaseTelemetryTitle": "Nativer Telemetrie-Stream",
+  "nativePlatformShowcaseTelemetrySubtitle": "Hochfrequente native Samples werden außerhalb des Hauptthreads aggregiert und als begrenzte EventChannel-Ereignisse geliefert.",
+  "nativePlatformShowcaseTelemetryWaiting": "Warte auf native Telemetrie…",
+  "nativePlatformShowcaseTelemetryUnavailable": "Nativer Telemetrie-Stream auf dieser Plattform nicht verfügbar.",
+  "nativePlatformShowcaseTelemetryFailed": "Nativer Telemetrie-Stream fehlgeschlagen.",
+  "nativePlatformShowcaseTelemetrySourceRateLabel": "Quellrate",
+  "nativePlatformShowcaseTelemetryDeliveredRateLabel": "Lieferrate",
+  "nativePlatformShowcaseTelemetrySampleCountLabel": "Samples pro Ereignis",
+  "nativePlatformShowcaseTelemetryDroppedCountLabel": "Verworfene Samples",
+  "nativePlatformShowcaseTelemetryAverageValueLabel": "Neuester Durchschnitt",
+  "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
   "eventBusDemoTitle": "Event-Bus-Demo",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

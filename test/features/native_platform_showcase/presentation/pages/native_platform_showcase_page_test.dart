@@ -8,7 +8,10 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_platform_info_repository.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/pages/native_platform_showcase_page.dart';
@@ -19,12 +22,18 @@ import 'package:mocktail/mocktail.dart';
 import '../../../../test_helpers.dart';
 
 class _TestNativePlatformShowcaseCubit extends NativePlatformShowcaseCubit {
-  _TestNativePlatformShowcaseCubit()
+  _TestNativePlatformShowcaseCubit({final WatchNativeShowcaseTelemetryUseCase? watchTelemetry})
     : super(
         loadShowcase: LoadNativePlatformShowcaseUseCase(_ThrowingRepository()),
+        watchTelemetry: watchTelemetry ?? _EmptyWatchNativeShowcaseTelemetryUseCase(),
       );
 
   void setState(final NativePlatformShowcaseState value) => emit(value);
+}
+
+class _EmptyWatchNativeShowcaseTelemetryUseCase implements WatchNativeShowcaseTelemetryUseCase {
+  @override
+  Stream<NativeShowcaseTelemetrySnapshot> call() => const Stream.empty();
 }
 
 class _ThrowingRepository implements NativePlatformInfoRepository {
@@ -199,6 +208,7 @@ void main() {
             child: BlocProvider(
               create: (_) => NativePlatformShowcaseCubit(
                 loadShowcase: LoadNativePlatformShowcaseUseCase(repository),
+                watchTelemetry: _EmptyWatchNativeShowcaseTelemetryUseCase(),
               )..load(),
               child: const NativePlatformShowcasePage(),
             ),
@@ -217,5 +227,167 @@ void main() {
       expect(attempts, 2);
       expect(find.text(l10n.nativePlatformShowcaseIntro), findsOneWidget);
     });
+
+    testWidgets('shows telemetry section when loaded', (final tester) async {
+      final l10n = lookupAppLocalizations(const Locale('en'));
+      final cubit = _TestNativePlatformShowcaseCubit()
+        ..setState(NativePlatformShowcaseState.loaded(loadedData));
+
+      await tester.pumpWidget(
+        wrapWithProviders(
+          child: BlocProvider<NativePlatformShowcaseCubit>.value(
+            value: cubit,
+            child: const NativePlatformShowcasePage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-telemetry')),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.nativePlatformShowcaseTelemetryTitle), findsOneWidget);
+    });
+
+    testWidgets('renders streaming telemetry labels', (final tester) async {
+      final l10n = lookupAppLocalizations(const Locale('en'));
+      tester.view.physicalSize = const Size(390, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final cubit = _TestNativePlatformShowcaseCubit()
+        ..setState(
+          NativePlatformShowcaseState.loaded(
+            loadedData,
+            telemetry: NativeShowcaseTelemetrySnapshot(
+              status: NativeShowcaseTelemetryStatus.streaming,
+              sequence: 1,
+              sampleCount: 12,
+              averageValue: 42.5,
+              sourceRateHz: 60,
+              deliveredRateHz: 4,
+              droppedCount: 3,
+              emittedAt: _epoch,
+            ),
+          ),
+        );
+
+      await tester.pumpWidget(
+        wrapWithProviders(
+          child: BlocProvider<NativePlatformShowcaseCubit>.value(
+            value: cubit,
+            child: const NativePlatformShowcasePage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.nativePlatformShowcaseTelemetrySourceRateLabel), findsOneWidget);
+      expect(find.text(l10n.nativePlatformShowcaseTelemetryDeliveredRateLabel), findsOneWidget);
+      expect(find.text('42.50'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-summary')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-interop-swift')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('unavailable telemetry keeps summary and interop sections visible', (
+      final tester,
+    ) async {
+      final l10n = lookupAppLocalizations(const Locale('en'));
+      tester.view.physicalSize = const Size(390, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final cubit = _TestNativePlatformShowcaseCubit()
+        ..setState(
+          NativePlatformShowcaseState.loaded(
+            loadedData,
+            telemetry: NativeShowcaseTelemetrySnapshot(
+              status: NativeShowcaseTelemetryStatus.unavailable,
+              sequence: 0,
+              sampleCount: 0,
+              averageValue: 0,
+              sourceRateHz: 0,
+              deliveredRateHz: 0,
+              droppedCount: 0,
+              emittedAt: _epoch,
+            ),
+          ),
+        );
+
+      await tester.pumpWidget(
+        wrapWithProviders(
+          child: BlocProvider<NativePlatformShowcaseCubit>.value(
+            value: cubit,
+            child: const NativePlatformShowcasePage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.nativePlatformShowcaseTelemetryUnavailable), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-summary')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-interop-swift')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('failed telemetry keeps summary and interop sections visible', (
+      final tester,
+    ) async {
+      tester.view.physicalSize = const Size(390, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final cubit = _TestNativePlatformShowcaseCubit()
+        ..setState(
+          NativePlatformShowcaseState.loaded(
+            loadedData,
+            telemetry: NativeShowcaseTelemetrySnapshot(
+              status: NativeShowcaseTelemetryStatus.failed,
+              sequence: 1,
+              sampleCount: 0,
+              averageValue: 0,
+              sourceRateHz: 60,
+              deliveredRateHz: 4,
+              droppedCount: 0,
+              emittedAt: _epoch,
+              message: 'Telemetry stream failed',
+            ),
+          ),
+        );
+
+      await tester.pumpWidget(
+        wrapWithProviders(
+          child: BlocProvider<NativePlatformShowcaseCubit>.value(
+            value: cubit,
+            child: const NativePlatformShowcasePage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Telemetry stream failed'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-summary')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-interop-swift')),
+        findsOneWidget,
+      );
+    });
   });
 }
+
+final DateTime _epoch = DateTime.fromMillisecondsSinceEpoch(0);
