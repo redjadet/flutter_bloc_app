@@ -162,5 +162,10 @@
   "deno.enablePaths": [
     "supabase/functions"
   ],
-  "cmake.sourceDirectory": "/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/windows/runner"
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "C_Cpp.files.exclude": {
+    "**/windows/flutter/**": true,
+    "**/linux/flutter/**": true
+  },
+  "cmake.sourceDirectory": "${workspaceFolder}/windows/runner"
 }

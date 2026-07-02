@@ -1,0 +1,7 @@
+# Flutter-managed registrants are generated and need platform engine headers
+# that are often absent on non-target hosts (e.g. Windows glue on macOS).
+---
+If:
+  PathMatch: .*/(windows|linux)/flutter/generated_plugin_registrant\.(cc|h)$
+Diagnostics:
+  Suppress: '*'
