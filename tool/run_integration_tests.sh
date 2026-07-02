@@ -1051,14 +1051,29 @@ select_device_id() {
     fi
   done
 
-  for index in "${!supported_device_ids[@]}"; do
-    device_line="${supported_device_lines[$index]}"
-    device_line_lower="$(printf '%s' "$device_line" | tr '[:upper:]' '[:lower:]')"
-    if [[ "$device_line_lower" == *"ios"* ]]; then
-      echo "${supported_device_ids[$index]}"
-      return
+  # Integration proof lane targets iPhone simulators — never auto-pick a tethered
+  # physical iPhone when a simulator can be booted instead.
+  if [ -z "$requested_device" ] && [ "$(uname -s)" = "Darwin" ]; then
+    if boot_preferred_ios_simulator; then
+      sleep 5
+      supported_device_ids=()
+      supported_device_lines=()
+      while IFS=$'\t' read -r device_id device_line; do
+        [ -z "$device_id" ] && continue
+        supported_device_ids+=("$device_id")
+        supported_device_lines+=("$device_line")
+      done < <(list_supported_devices)
+
+      for index in "${!supported_device_ids[@]}"; do
+        device_line="${supported_device_lines[$index]}"
+        device_line_lower="$(printf '%s' "$device_line" | tr '[:upper:]' '[:lower:]')"
+        if [[ "$device_line_lower" == *"ios"* ]] && [[ "$device_line_lower" == *"simulator"* ]]; then
+          echo "${supported_device_ids[$index]}"
+          return
+        fi
+      done
     fi
-  done
+  fi
 
   preferred_device="$(host_desktop_device_id)"
   if [ "${ALLOW_DESKTOP_INTEGRATION_DEVICE:-0}" -eq 1 ] && [ -n "$preferred_device" ]; then
@@ -1077,7 +1092,8 @@ select_device_id() {
 
   log '❌ No iPhone simulator or iPhone device was selected for integration tests.'
   log "Available supported device ids: ${supported_device_ids[*]}"
-  log 'Boot an iPhone simulator, connect an iPhone, or set CHECKLIST_INTEGRATION_DEVICE=<deviceId>.'
+  log 'Boot an iPhone simulator or set CHECKLIST_INTEGRATION_DEVICE=<simulator-udid>.'
+  log 'Physical iPhones are not auto-selected; pin CHECKLIST_INTEGRATION_DEVICE to run on device.'
   log 'If you intentionally want the desktop target, rerun with ALLOW_DESKTOP_INTEGRATION_DEVICE=1.'
   exit 1
 }

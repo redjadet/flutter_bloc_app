@@ -306,6 +306,64 @@ class RunIntegrationTestsDeviceTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, msg=result.stderr)
             self.assertIn("adb-visible", result.stderr)
 
+    def test_select_device_prefers_simulator_over_physical_iphone(self) -> None:
+        sim_udid = "CCCCCCCC-DDDD-EEEE-FFFF-000000000001"
+        physical_udid = "00008120-001144943C83C01E"
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            project_root = Path(tmp_dir)
+            script = _device_shell_script(
+                project_root,
+                f"""
+                uname() {{
+                  if [ "${{1:-}}" = "-s" ]; then
+                    printf '%s\\n' Darwin
+                    return 0
+                  fi
+                  command uname "$@"
+                }}
+                export -f uname
+                xcrun() {{
+                  if [ "$1" = "simctl" ] && [ "$2" = "list" ] && [ "$3" = "devices" ]; then
+                    case "${{4:-}}" in
+                      booted)
+                        printf '%s\\n' '{{"devices":{{}}}}'
+                        return 0
+                        ;;
+                      available)
+                        printf '%s\\n' '{{"devices":{{"com.apple.CoreSimulator.SimRuntime.iOS-26-5":[{{"state":"Shutdown","udid":"{sim_udid}","isAvailable":true,"name":"iPhone 17 Pro"}}]}}}}'
+                        return 0
+                        ;;
+                    esac
+                  fi
+                  echo "unexpected xcrun call: $*" >&2
+                  exit 98
+                }}
+                export -f xcrun
+                flutter() {{
+                  if [ "${{1:-}}" = "devices" ]; then
+                    printf '%s\\n' "İlker iPhone Pro • {physical_udid} • ios • iOS 26.5.2"
+                    printf '%s\\n' "iPhone 17 Pro • {sim_udid} • com.apple.CoreSimulator.SimRuntime.iOS-26-5 • iOS 26.5 (simulator)"
+                    return 0
+                  fi
+                  echo "unexpected flutter call: $*" >&2
+                  exit 97
+                }}
+                export -f flutter
+                DEVICE_ID="$(select_device_id)"
+                [ "$DEVICE_ID" = "{sim_udid}" ]
+                """,
+            )
+
+            result = subprocess.run(
+                ["bash", "-c", script],
+                cwd=PROJECT_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, msg=result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
