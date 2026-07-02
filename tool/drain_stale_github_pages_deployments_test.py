@@ -76,12 +76,14 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         )
 
     def test_collect_stale_deployments_excludes_current_sha(self):
+        module = self.module
+
         class FakeClient:
             def list_environment_deployments(self, *, environment, max_deployments):
                 return [{"sha": "current1234567890"}, {"sha": "other1234567890"}]
 
             def pages_status(self, sha):
-                return self.module.PagesStatusLookup(
+                return module.PagesStatusLookup(
                     found=True,
                     status={
                         "current1234567890": "",
@@ -90,8 +92,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
                 )
 
         fake = FakeClient()
-        fake.module = self.module
-        stale = self.module.collect_stale_deployments(
+        stale = module.collect_stale_deployments(
             fake,
             environment="github-pages",
             max_deployments=10,
@@ -101,21 +102,22 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         self.assertEqual(stale[0].sha, "other1234567890")
 
     def test_collect_stale_deployments_skips_missing_pages_records(self):
+        module = self.module
+
         class FakeClient:
             def list_environment_deployments(self, *, environment, max_deployments):
                 return [{"sha": "missing123456789"}, {"sha": "other1234567890"}]
 
             def pages_status(self, sha):
                 if sha == "missing123456789":
-                    return self.module.PagesStatusLookup(found=False)
-                return self.module.PagesStatusLookup(
+                    return module.PagesStatusLookup(found=False)
+                return module.PagesStatusLookup(
                     found=True,
                     status="deployment_queued",
                 )
 
         fake = FakeClient()
-        fake.module = self.module
-        stale = self.module.collect_stale_deployments(
+        stale = module.collect_stale_deployments(
             fake,
             environment="github-pages",
             max_deployments=10,
@@ -124,13 +126,15 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         self.assertEqual(stale[0].sha, "other1234567890")
 
     def test_ensure_pages_deployment_terminal_accepts_cancelled_status(self):
+        module = self.module
+
         class FakeClient:
             def __init__(self):
                 self.calls = 0
 
             def pages_status(self, sha):
                 self.calls += 1
-                return self.module.PagesStatusLookup(
+                return module.PagesStatusLookup(
                     found=True,
                     status="deployment_cancelled",
                 )
@@ -139,8 +143,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
                 raise AssertionError("should not cancel terminal deployment")
 
         fake = FakeClient()
-        fake.module = self.module
-        self.module.ensure_pages_deployment_terminal(
+        module.ensure_pages_deployment_terminal(
             fake,
             "current1234567890",
             post_terminal_wait_seconds=0,
