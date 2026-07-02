@@ -218,8 +218,11 @@ Pages deployments for **other** SHAs (including blank-status queue blockers).
 It skips the current commit SHA so a pre-deploy cancel does not block an
 immediate redeploy of the same commit. The drain cancels every other recent
 Pages deployment that is not `succeed` (including `deployment_cancelled`
-entries that still block the queue). On retry after a failed deploy, the
-script runs the same drain again before the second `deploy-pages` attempt.
+entries that still block the queue), paginates through recent environment
+deployments, and nudges each blocker once. On retry after a failed deploy, the
+script includes the current SHA, waits for a terminal Pages status, then
+retries `deploy-pages`. Push deploys also skip when the workflow commit is no
+longer the branch tip, so stale queued runs do not fight newer `main` pushes.
 
 #### `base_href` input
 

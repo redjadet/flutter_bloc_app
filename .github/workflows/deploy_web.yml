@@ -118,27 +118,54 @@ jobs:
 
       - uses: actions/configure-pages@v6
 
+      - name: Skip deploy when commit is no longer branch tip
+        id: branch_tip
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_sha="$(
+            curl -sS \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_REF_NAME}" \
+              | python3 -c 'import json, sys; print(json.load(sys.stdin)["sha"])'
+          )"
+          if [[ "${remote_sha}" != "${GITHUB_SHA}" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Commit ${GITHUB_SHA} is no longer tip of ${GITHUB_REF_NAME}; skipping deploy."
+          fi
+
       - name: Drain stale GitHub Pages deployments
+        if: steps.branch_tip.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python3 tool/drain_stale_github_pages_deployments.py
 
       - id: deployment
+        if: steps.branch_tip.outputs.skip != 'true'
         uses: actions/deploy-pages@v5
         continue-on-error: true
 
       - name: Drain stale GitHub Pages deployments (retry)
-        if: steps.deployment.outcome == 'failure'
+        if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 tool/drain_stale_github_pages_deployments.py --poll-timeout-seconds 180
+        run: |
+          python3 tool/drain_stale_github_pages_deployments.py \
+            --poll-timeout-seconds 180 \
+            --exclude-sha="" \
+            --ensure-current-sha-terminal
 
       - id: deployment_retry
-        if: steps.deployment.outcome == 'failure'
+        if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v5
 
       - name: Fail when Pages deploy did not succeed
-        if: steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
         run: |
           echo "GitHub Pages deploy failed after queue drain and one retry." >&2
           exit 1
