@@ -11,7 +11,6 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from typing import Callable
 
 
 API_VERSION = "2026-03-10"
@@ -60,12 +59,10 @@ class GitHubPagesDrainClient:
         token: str,
         *,
         api_version: str = API_VERSION,
-        opener: Callable[..., object] | None = None,
     ) -> None:
         self.repository = repository
         self.token = token
         self.api_version = api_version
-        self._opener = opener or urllib.request.urlopen
 
     def _request(
         self,
@@ -85,8 +82,8 @@ class GitHubPagesDrainClient:
             },
         )
         try:
-            with self._opener(request, timeout=30) as response:
-                status = getattr(response, "status", 200)
+            with urllib.request.urlopen(request, timeout=30) as response:
+                status = response.status
                 body = response.read().decode("utf-8")
         except urllib.error.HTTPError as error:
             status = error.code
@@ -141,9 +138,7 @@ def collect_stale_deployments(
     *,
     environment: str,
     max_deployments: int,
-    current_sha: str | None,
 ) -> list[PagesDeployment]:
-    del current_sha  # Kept for CLI compatibility; current SHA is drained too.
     deployments = client.list_environment_deployments(
         environment=environment,
         per_page=max_deployments,
@@ -161,7 +156,6 @@ def drain_stale_pages_deployments(
     *,
     environment: str = DEFAULT_ENVIRONMENT,
     max_deployments: int = 10,
-    current_sha: str | None = None,
     wait_after_cancel_seconds: int = 5,
     poll_timeout_seconds: int = 120,
     poll_interval_seconds: int = 5,
@@ -174,7 +168,6 @@ def drain_stale_pages_deployments(
             client,
             environment=environment,
             max_deployments=max_deployments,
-            current_sha=current_sha,
         )
         if not stale:
             return cancelled
@@ -261,7 +254,6 @@ def main(argv: list[str] | None = None) -> int:
         client,
         environment=args.environment,
         max_deployments=args.max_deployments,
-        current_sha=args.current_sha,
         wait_after_cancel_seconds=args.wait_after_cancel_seconds,
         poll_timeout_seconds=args.poll_timeout_seconds,
     )

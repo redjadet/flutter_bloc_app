@@ -69,7 +69,6 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             FakeClient(),
             environment="github-pages",
             max_deployments=10,
-            current_sha="current1234567890",
         )
         self.assertEqual(len(stale), 2)
         self.assertEqual(stale[0].sha, "current1234567890")
