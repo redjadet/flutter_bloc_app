@@ -55,11 +55,12 @@ class _TelemetryBody extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    if (telemetry == null) {
+    final NativeShowcaseTelemetrySnapshot? snapshot = telemetry;
+    if (snapshot == null) {
       return Text(l10n.nativePlatformShowcaseTelemetryWaiting, style: theme.textTheme.bodyMedium);
     }
 
-    return switch (telemetry!.status) {
+    return switch (snapshot.status) {
       NativeShowcaseTelemetryStatus.unavailable => Text(
         l10n.nativePlatformShowcaseTelemetryUnavailable,
         style: theme.textTheme.bodyMedium,
@@ -69,28 +70,28 @@ class _TelemetryBody extends StatelessWidget {
         children: <Widget>[
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetrySourceRateLabel,
-            value: l10n.nativePlatformShowcaseTelemetryRateValue(telemetry!.sourceRateHz),
+            value: l10n.nativePlatformShowcaseTelemetryRateValue(snapshot.sourceRateHz),
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetryDeliveredRateLabel,
-            value: l10n.nativePlatformShowcaseTelemetryRateValue(telemetry!.deliveredRateHz),
+            value: l10n.nativePlatformShowcaseTelemetryRateValue(snapshot.deliveredRateHz),
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetrySampleCountLabel,
-            value: '${telemetry!.sampleCount}',
+            value: '${snapshot.sampleCount}',
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetryDroppedCountLabel,
-            value: '${telemetry!.droppedCount}',
+            value: '${snapshot.droppedCount}',
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetryAverageValueLabel,
-            value: telemetry!.averageValue.toStringAsFixed(2),
+            value: snapshot.averageValue.toStringAsFixed(2),
           ),
         ],
       ),
       NativeShowcaseTelemetryStatus.failed => Text(
-        telemetry!.message ?? l10n.nativePlatformShowcaseTelemetryFailed,
+        snapshot.message ?? l10n.nativePlatformShowcaseTelemetryFailed,
         style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
       ),
     };
