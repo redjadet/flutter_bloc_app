@@ -209,6 +209,11 @@ You can still run it manually:
 
 - GitHub → **Actions** → **Deploy web (GitHub Pages)** → **Run workflow**
 
+The workflow uses `cancel-in-progress: false` so a newer `main` push does not
+cancel an in-flight Pages deployment. Cancelling after `deploy-pages` submits
+can orphan a deployment in `deployment_queued` and block later runs until the
+action's 10-minute poll timeout.
+
 #### `base_href` input
 
 - Leave `base_href` empty for project-site deploys (script derives `/${REPO_NAME}/`).
