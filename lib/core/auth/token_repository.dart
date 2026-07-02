@@ -59,8 +59,7 @@ class InMemoryTokenRepository implements TokenRepository {
 
   @override
   Future<String?> refreshFirebaseAccessToken(final User user) async {
-    await user.getIdToken(true);
-    return _readFirebaseTokenResult(user, forceRefresh: false);
+    return _readFirebaseTokenResult(user, forceRefresh: true);
   }
 
   @override

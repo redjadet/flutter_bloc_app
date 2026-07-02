@@ -130,18 +130,11 @@ void main() {
         User? currentUser = user1;
         when(() => auth.currentUser).thenAnswer((_) => currentUser);
 
-        int user1TokenResultCalls = 0;
-        when(() => user1.getIdTokenResult()).thenAnswer((_) async {
-          user1TokenResultCalls += 1;
-          return user1TokenResultCalls == 1
-              ? user1InitialResult
-              : user1RefreshedResult;
-        });
-        when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+        when(() => user1.getIdTokenResult(false)).thenAnswer((_) async => user1InitialResult);
+        when(() => user1.getIdTokenResult(true)).thenAnswer((_) async => user1RefreshedResult);
         when(
           () => user2.getIdTokenResult(),
         ).thenAnswer((_) async => user2TokenResult);
-        when(() => user2.getIdToken(true)).thenAnswer((_) async => 'forced-2');
 
         final List<String?> seenAuthorizationHeaders = <String?>[];
         int requestCount = 0;
@@ -185,8 +178,8 @@ void main() {
           'Bearer token-user-1-refreshed',
         ]);
         expect(networkStatusService.statusChecks, 2);
-        verify(() => user1.getIdToken(true)).called(1);
-        verifyNever(() => user2.getIdToken(true));
+        verify(() => user1.getIdTokenResult(true)).called(1);
+        verifyNever(() => user2.getIdTokenResult(true));
       },
     );
 
@@ -195,9 +188,11 @@ void main() {
       () async {
         when(() => auth.currentUser).thenReturn(user1);
         when(
-          () => user1.getIdTokenResult(),
+          () => user1.getIdTokenResult(false),
         ).thenAnswer((_) async => user1InitialResult);
-        when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+        when(
+          () => user1.getIdTokenResult(true),
+        ).thenAnswer((_) async => user1RefreshedResult);
 
         int requestCount = 0;
         dio = buildDio();
@@ -229,16 +224,18 @@ void main() {
         expect(response.statusCode, 401);
         expect(requestCount, 1);
         expect(networkStatusService.statusChecks, 1);
-        verifyNever(() => user1.getIdToken(true));
+        verifyNever(() => user1.getIdTokenResult(true));
       },
     );
 
     test('does not auth-retry non-idempotent methods by default', () async {
       when(() => auth.currentUser).thenReturn(user1);
       when(
-        () => user1.getIdTokenResult(),
+        () => user1.getIdTokenResult(false),
       ).thenAnswer((_) async => user1InitialResult);
-      when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+      when(
+        () => user1.getIdTokenResult(true),
+      ).thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
@@ -265,15 +262,17 @@ void main() {
 
       expect(response.statusCode, 401);
       expect(requestCount, 1);
-      verifyNever(() => user1.getIdToken(true));
+      verifyNever(() => user1.getIdTokenResult(true));
     });
 
     test('auth-retries idempotent delete methods by default', () async {
       when(() => auth.currentUser).thenReturn(user1);
       when(
-        () => user1.getIdTokenResult(),
+        () => user1.getIdTokenResult(false),
       ).thenAnswer((_) async => user1InitialResult);
-      when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+      when(
+        () => user1.getIdTokenResult(true),
+      ).thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
@@ -308,7 +307,7 @@ void main() {
 
       expect(response.statusCode, 200);
       expect(requestCount, 2);
-      verify(() => user1.getIdToken(true)).called(1);
+      verify(() => user1.getIdTokenResult(true)).called(1);
     });
 
     test(
@@ -316,14 +315,8 @@ void main() {
       () async {
         when(() => auth.currentUser).thenReturn(user1);
 
-        int user1TokenResultCalls = 0;
-        when(() => user1.getIdTokenResult()).thenAnswer((_) async {
-          user1TokenResultCalls += 1;
-          return user1TokenResultCalls == 1
-              ? user1InitialResult
-              : user1RefreshedResult;
-        });
-        when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+        when(() => user1.getIdTokenResult(false)).thenAnswer((_) async => user1InitialResult);
+        when(() => user1.getIdTokenResult(true)).thenAnswer((_) async => user1RefreshedResult);
 
         int requestCount = 0;
         dio = buildDio();
@@ -362,7 +355,7 @@ void main() {
 
         expect(requestCount, 2);
         expect(networkStatusService.statusChecks, 2);
-        verify(() => user1.getIdToken(true)).called(1);
+        verify(() => user1.getIdTokenResult(true)).called(1);
       },
     );
 
@@ -371,14 +364,8 @@ void main() {
       () async {
         when(() => auth.currentUser).thenReturn(user1);
 
-        int user1TokenResultCalls = 0;
-        when(() => user1.getIdTokenResult()).thenAnswer((_) async {
-          user1TokenResultCalls += 1;
-          return user1TokenResultCalls == 1
-              ? user1InitialResult
-              : user1RefreshedResult;
-        });
-        when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+        when(() => user1.getIdTokenResult(false)).thenAnswer((_) async => user1InitialResult);
+        when(() => user1.getIdTokenResult(true)).thenAnswer((_) async => user1RefreshedResult);
 
         int telemetryEventCount = 0;
         final List<String?> seenAuthorizationHeaders = <String?>[];
@@ -456,7 +443,7 @@ void main() {
           true,
           reason: 'Replay must mark the request as already retried.',
         );
-        verify(() => user1.getIdToken(true)).called(1);
+        verify(() => user1.getIdTokenResult(true)).called(1);
       },
     );
 
@@ -466,14 +453,8 @@ void main() {
       );
       when(() => auth.currentUser).thenReturn(user1);
 
-      int user1TokenResultCalls = 0;
-      when(() => user1.getIdTokenResult()).thenAnswer((_) async {
-        user1TokenResultCalls += 1;
-        return user1TokenResultCalls == 1
-            ? user1InitialResult
-            : user1RefreshedResult;
-      });
-      when(() => user1.getIdToken(true)).thenAnswer((_) async => 'forced-1');
+      when(() => user1.getIdTokenResult(false)).thenAnswer((_) async => user1InitialResult);
+      when(() => user1.getIdTokenResult(true)).thenAnswer((_) async => user1RefreshedResult);
 
       int requestCount = 0;
       dio = buildDio();
@@ -506,7 +487,7 @@ void main() {
 
       expect(requestCount, 1);
       expect(networkStatusService.statusChecks, 2);
-      verify(() => user1.getIdToken(true)).called(1);
+      verify(() => user1.getIdTokenResult(true)).called(1);
     });
   });
 }

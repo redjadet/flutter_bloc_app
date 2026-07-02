@@ -102,7 +102,7 @@ void main() {
     }
 
     test('auth-classified refresh failure invalidates session', () async {
-      when(() => user.getIdToken(true)).thenThrow(
+      when(() => user.getIdTokenResult(true)).thenThrow(
         FirebaseAuthException(code: 'user-token-expired', message: 'expired'),
       );
 
@@ -120,7 +120,7 @@ void main() {
     });
 
     test('network refresh failure does not invalidate session', () async {
-      when(() => user.getIdToken(true)).thenThrow(
+      when(() => user.getIdTokenResult(true)).thenThrow(
         FirebaseAuthException(
           code: 'network-request-failed',
           message: 'offline',
@@ -138,8 +138,9 @@ void main() {
     });
 
     test('post-retry 401 invalidates session as remoteRejected', () async {
-      when(() => user.getIdToken(true)).thenAnswer((_) async => 'forced-token');
-      when(() => user.getIdTokenResult()).thenAnswer((_) async => tokenResult);
+      when(
+        () => user.getIdTokenResult(true),
+      ).thenAnswer((_) async => tokenResult);
 
       final Dio dio = buildDio(_SequenceAdapter(<int>[401, 401]));
 

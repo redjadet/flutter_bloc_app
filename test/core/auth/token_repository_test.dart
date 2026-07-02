@@ -38,13 +38,12 @@ void main() {
       final _MockIdTokenResult tokenResult = _MockIdTokenResult();
 
       when(() => user.uid).thenReturn('firebase-user');
-      when(() => user.getIdToken(true)).thenAnswer((_) async => 'forced');
       when(() => tokenResult.token).thenReturn('fresh-firebase-token');
       when(
         () => tokenResult.expirationTime,
       ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
       when(
-        () => user.getIdTokenResult(false),
+        () => user.getIdTokenResult(true),
       ).thenAnswer((_) async => tokenResult);
 
       final InMemoryTokenRepository repository = InMemoryTokenRepository();
@@ -56,8 +55,8 @@ void main() {
 
       expect(refreshed, 'fresh-firebase-token');
       expect(cached, 'fresh-firebase-token');
-      verify(() => user.getIdToken(true)).called(1);
-      verify(() => user.getIdTokenResult(false)).called(1);
+      verify(() => user.getIdTokenResult(true)).called(1);
+      verifyNever(() => user.getIdToken(any()));
     });
 
     test('reads Supabase token from memory until refresh updates it', () async {
