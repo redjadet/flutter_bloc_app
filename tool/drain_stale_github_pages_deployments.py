@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 API_VERSION = "2026-03-10"
 DEFAULT_ENVIRONMENT = "github-pages"
+DEPLOYMENTS_PAGE_SIZE = 100
 
 TERMINAL_STATUSES = frozenset(
     {
@@ -33,15 +34,24 @@ class PagesDeployment:
     status: str | None
 
 
-def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
-    """Return True when a Pages deployment should be cancelled before a new deploy."""
-    if is_clear_pages_status(status):
-        return False
-    if status in {None, "", "deployment_queued", "deployment_in_progress"}:
+@dataclass(frozen=True)
+class PagesStatusLookup:
+    found: bool
+    status: str | None = None
+
+
+class PagesStatusError(RuntimeError):
+    """Raised when the Pages status API returns a non-recoverable error."""
+
+
+def is_active_queue_status(status: str | None) -> bool:
+    if status in {None, ""}:
         return True
-    if nudged:
-        return False
-    return True
+    return status in {"deployment_queued", "deployment_in_progress"}
+
+
+def is_terminal_pages_status(status: str | None) -> bool:
+    return status in TERMINAL_STATUSES
 
 
 def is_clear_pages_status(status: str | None) -> bool:
@@ -49,11 +59,24 @@ def is_clear_pages_status(status: str | None) -> bool:
     return status == "succeed"
 
 
-def needs_post_cancel_wait(status: str | None) -> bool:
-    """Only active queue states need a pause before the next API poll."""
-    if status in {None, ""}:
+def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
+    """Return True when a Pages deployment should be cancelled before a new deploy."""
+    if is_clear_pages_status(status):
+        return False
+    if is_active_queue_status(status):
         return True
-    return status in {"deployment_queued", "deployment_in_progress"}
+    if nudged:
+        return False
+    return True
+
+
+def needs_post_cancel_wait(status: str | None) -> bool:
+    """Return True when a pause helps GitHub release queue capacity."""
+    if is_active_queue_status(status):
+        return True
+    if status in TERMINAL_STATUSES and status != "succeed":
+        return True
+    return False
 
 
 def unique_shas(deployments: list[dict[str, object]]) -> list[str]:
@@ -114,32 +137,54 @@ class GitHubPagesDrainClient:
         self,
         *,
         environment: str,
-        per_page: int,
+        max_deployments: int,
     ) -> list[dict[str, object]]:
-        _, body = self._request(
-            "GET",
-            f"/repos/{self.repository}/deployments"
-            f"?environment={environment}&per_page={per_page}",
-        )
-        payload = json.loads(body)
-        if not isinstance(payload, list):
-            raise RuntimeError("Expected deployment list from GitHub API")
-        return payload
+        collected: list[dict[str, object]] = []
+        page = 1
+        while len(collected) < max_deployments:
+            per_page = min(DEPLOYMENTS_PAGE_SIZE, max_deployments - len(collected))
+            _, body = self._request(
+                "GET",
+                f"/repos/{self.repository}/deployments"
+                f"?environment={environment}&per_page={per_page}&page={page}",
+            )
+            payload = json.loads(body)
+            if not isinstance(payload, list):
+                raise RuntimeError("Expected deployment list from GitHub API")
+            if not payload:
+                break
+            collected.extend(payload)
+            if len(payload) < per_page:
+                break
+            page += 1
+        return collected[:max_deployments]
 
-    def pages_status(self, sha: str) -> str | None:
+    def pages_status(self, sha: str) -> PagesStatusLookup:
         try:
             _, body = self._request(
                 "GET",
                 f"/repos/{self.repository}/pages/deployments/{sha}",
                 accept_statuses=frozenset({200}),
             )
-        except RuntimeError:
-            return None
+        except RuntimeError as error:
+            message = str(error)
+            if "HTTP 404" in message:
+                return PagesStatusLookup(found=False)
+            if any(code in message for code in ("HTTP 401", "HTTP 403", "HTTP 429")):
+                raise PagesStatusError(message) from error
+            if "HTTP 5" in message:
+                raise PagesStatusError(message) from error
+            raise PagesStatusError(message) from error
         payload = json.loads(body)
         if not isinstance(payload, dict):
-            return None
+            raise PagesStatusError(
+                f"Unexpected Pages status payload for {sha[:7]}: {payload!r}"
+            )
         status = payload.get("status")
-        return status if isinstance(status, str) else ""
+        return PagesStatusLookup(
+            found=True,
+            status=status if isinstance(status, str) else "",
+        )
 
     def cancel_pages_deployment(self, sha: str) -> None:
         self._request(
@@ -160,15 +205,17 @@ def collect_stale_deployments(
     nudged = nudged_shas or set()
     deployments = client.list_environment_deployments(
         environment=environment,
-        per_page=max_deployments,
+        max_deployments=max_deployments,
     )
     stale: list[PagesDeployment] = []
     for sha in unique_shas(deployments):
         if exclude_sha and sha == exclude_sha:
             continue
-        status = client.pages_status(sha)
-        if is_stale_pages_status(status, nudged=sha in nudged):
-            stale.append(PagesDeployment(sha=sha, status=status))
+        lookup = client.pages_status(sha)
+        if not lookup.found:
+            continue
+        if is_stale_pages_status(lookup.status, nudged=sha in nudged):
+            stale.append(PagesDeployment(sha=sha, status=lookup.status))
     return stale
 
 
@@ -184,8 +231,11 @@ def ensure_pages_deployment_terminal(
     """Cancel a SHA if needed and wait until its Pages status is terminal."""
     deadline = time.monotonic() + poll_timeout_seconds
     while True:
-        status = client.pages_status(sha)
-        if not is_stale_pages_status(status):
+        lookup = client.pages_status(sha)
+        if not lookup.found:
+            return
+        status = lookup.status
+        if is_terminal_pages_status(status):
             if post_terminal_wait_seconds > 0:
                 print(
                     "Pages deployment for "
@@ -279,7 +329,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--exclude-sha",
         default=os.environ.get("GITHUB_SHA"),
-        help="Deployment SHA to leave untouched (defaults to GITHUB_SHA)",
+        help=(
+            "Deployment SHA to leave untouched (defaults to GITHUB_SHA; "
+            "pass empty string to include current SHA)"
+        ),
     )
     parser.add_argument(
         "--ensure-current-sha-terminal",
@@ -304,7 +357,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--max-deployments",
         type=int,
         default=30,
-        help="Recent deployments to inspect",
+        help="Recent deployments to inspect (paginated)",
     )
     parser.add_argument(
         "--wait-after-cancel-seconds",
@@ -321,12 +374,21 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def resolve_exclude_sha(raw: str | None) -> str | None:
+    if raw is None or raw == "":
+        return None
+    return raw
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
     if not args.repository:
         raise SystemExit("Missing --repository or GITHUB_REPOSITORY")
     if not args.token:
         raise SystemExit("Missing --token or GITHUB_TOKEN")
+
+    exclude_sha = resolve_exclude_sha(args.exclude_sha)
+    current_sha = exclude_sha or os.environ.get("GITHUB_SHA")
 
     client = GitHubPagesDrainClient(
         repository=args.repository,
@@ -336,14 +398,14 @@ def main(argv: list[str] | None = None) -> int:
         client,
         environment=args.environment,
         max_deployments=args.max_deployments,
-        exclude_sha=args.exclude_sha,
+        exclude_sha=exclude_sha,
         wait_after_cancel_seconds=args.wait_after_cancel_seconds,
         poll_timeout_seconds=args.poll_timeout_seconds,
     )
-    if args.ensure_current_sha_terminal and args.exclude_sha:
+    if args.ensure_current_sha_terminal and current_sha:
         ensure_pages_deployment_terminal(
             client,
-            args.exclude_sha,
+            current_sha,
             poll_timeout_seconds=args.poll_timeout_seconds,
             post_terminal_wait_seconds=args.post_terminal_wait_seconds,
         )
