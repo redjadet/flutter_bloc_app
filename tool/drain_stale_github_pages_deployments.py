@@ -33,11 +33,27 @@ class PagesDeployment:
     status: str | None
 
 
-def is_stale_pages_status(status: str | None) -> bool:
+def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
     """Return True when a Pages deployment should be cancelled before a new deploy."""
-    if status in TERMINAL_STATUSES:
+    if is_clear_pages_status(status):
+        return False
+    if status in {None, "", "deployment_queued", "deployment_in_progress"}:
+        return True
+    if nudged:
         return False
     return True
+
+
+def is_clear_pages_status(status: str | None) -> bool:
+    """Return True when a Pages deployment no longer holds queue capacity."""
+    return status == "succeed"
+
+
+def needs_post_cancel_wait(status: str | None) -> bool:
+    """Only active queue states need a pause before the next API poll."""
+    if status in {None, ""}:
+        return True
+    return status in {"deployment_queued", "deployment_in_progress"}
 
 
 def unique_shas(deployments: list[dict[str, object]]) -> list[str]:
@@ -139,7 +155,9 @@ def collect_stale_deployments(
     environment: str,
     max_deployments: int,
     exclude_sha: str | None = None,
+    nudged_shas: set[str] | None = None,
 ) -> list[PagesDeployment]:
+    nudged = nudged_shas or set()
     deployments = client.list_environment_deployments(
         environment=environment,
         per_page=max_deployments,
@@ -149,7 +167,7 @@ def collect_stale_deployments(
         if exclude_sha and sha == exclude_sha:
             continue
         status = client.pages_status(sha)
-        if is_stale_pages_status(status):
+        if is_stale_pages_status(status, nudged=sha in nudged):
             stale.append(PagesDeployment(sha=sha, status=status))
     return stale
 
@@ -197,13 +215,14 @@ def drain_stale_pages_deployments(
     client: GitHubPagesDrainClient,
     *,
     environment: str = DEFAULT_ENVIRONMENT,
-    max_deployments: int = 10,
+    max_deployments: int = 30,
     exclude_sha: str | None = None,
     wait_after_cancel_seconds: int = 5,
     poll_timeout_seconds: int = 120,
     poll_interval_seconds: int = 5,
 ) -> list[PagesDeployment]:
     cancelled: list[PagesDeployment] = []
+    nudged_shas: set[str] = set()
     deadline = time.monotonic() + poll_timeout_seconds
 
     while True:
@@ -212,6 +231,7 @@ def drain_stale_pages_deployments(
             environment=environment,
             max_deployments=max_deployments,
             exclude_sha=exclude_sha,
+            nudged_shas=nudged_shas,
         )
         if not stale:
             return cancelled
@@ -232,7 +252,11 @@ def drain_stale_pages_deployments(
             )
             client.cancel_pages_deployment(deployment.sha)
             cancelled.append(deployment)
-            if wait_after_cancel_seconds > 0:
+            nudged_shas.add(deployment.sha)
+            if (
+                wait_after_cancel_seconds > 0
+                and needs_post_cancel_wait(deployment.status)
+            ):
                 time.sleep(wait_after_cancel_seconds)
 
         time.sleep(poll_interval_seconds)
@@ -279,7 +303,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--max-deployments",
         type=int,
-        default=10,
+        default=30,
         help="Recent deployments to inspect",
     )
     parser.add_argument(

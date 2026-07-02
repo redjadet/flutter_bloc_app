@@ -216,9 +216,10 @@ action's 10-minute poll timeout. Before each deploy, the workflow runs
 `tool/drain_stale_github_pages_deployments.py` to cancel recent non-terminal
 Pages deployments for **other** SHAs (including blank-status queue blockers).
 It skips the current commit SHA so a pre-deploy cancel does not block an
-immediate redeploy of the same commit. On retry after a failed deploy, the
-script drains other SHAs again and waits for the current SHA to reach a
-terminal Pages status before the second `deploy-pages` attempt.
+immediate redeploy of the same commit. The drain cancels every other recent
+Pages deployment that is not `succeed` (including `deployment_cancelled`
+entries that still block the queue). On retry after a failed deploy, the
+script runs the same drain again before the second `deploy-pages` attempt.
 
 #### `base_href` input
 

@@ -28,9 +28,13 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         self.assertTrue(self.module.is_stale_pages_status(""))
         self.assertTrue(self.module.is_stale_pages_status(None))
 
-    def test_is_stale_pages_status_ignores_terminal_states(self):
+    def test_is_stale_pages_status_treats_non_succeed_as_stale(self):
         self.assertFalse(self.module.is_stale_pages_status("succeed"))
-        self.assertFalse(self.module.is_stale_pages_status("deployment_cancelled"))
+        self.assertTrue(self.module.is_stale_pages_status("deployment_cancelled"))
+        self.assertFalse(
+            self.module.is_stale_pages_status("deployment_cancelled", nudged=True),
+        )
+        self.assertTrue(self.module.is_stale_pages_status("deployment_failed"))
 
     def test_is_stale_pages_status_flags_in_progress_states(self):
         self.assertTrue(
