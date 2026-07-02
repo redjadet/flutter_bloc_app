@@ -98,9 +98,6 @@ class EventChannelNativeShowcaseTelemetryService implements NativeShowcaseTeleme
     if (value is int) {
       return value;
     }
-    if (value is num) {
-      return value.toInt();
-    }
     return null;
   }
 

@@ -6,6 +6,7 @@ final class NativeShowcaseTelemetryStreamHandler: NSObject, FlutterStreamHandler
   private var emitTimer: DispatchSourceTimer?
   private var sampleTimer: DispatchSourceTimer?
   private var eventSink: FlutterEventSink?
+  private var sessionGeneration: UInt64 = 0
 
   private var sequence = 0
   private var sourceTick = 0
@@ -20,26 +21,42 @@ final class NativeShowcaseTelemetryStreamHandler: NSObject, FlutterStreamHandler
   private let sampleEpsilon = 0.01
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-    eventSink = events
-    startWorkers()
+    workerQueue.async { [weak self] in
+      guard let self else { return }
+      self.tearDownSessionOnWorkerQueue()
+      self.sessionGeneration &+= 1
+      let generation = self.sessionGeneration
+      self.resetAggregation()
+      DispatchQueue.main.async { [weak self] in
+        self?.eventSink = events
+      }
+      self.startWorkers(generation: generation)
+    }
     return nil
   }
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
-    stopWorkers()
-    eventSink = nil
-    resetAggregation()
+    workerQueue.async { [weak self] in
+      guard let self else { return }
+      self.sessionGeneration &+= 1
+      self.tearDownSessionOnWorkerQueue()
+      DispatchQueue.main.async { [weak self] in
+        self?.eventSink = nil
+      }
+      self.resetAggregation()
+    }
     return nil
   }
 
-  private func startWorkers() {
+  private func startWorkers(generation: UInt64) {
     let sampleInterval = DispatchTimeInterval.nanoseconds(Int(1_000_000_000 / sourceRateHz))
     let emitInterval = DispatchTimeInterval.milliseconds(deliveryWindowMs)
 
     let sampleTimer = DispatchSource.makeTimerSource(queue: workerQueue)
     sampleTimer.schedule(deadline: .now(), repeating: sampleInterval)
     sampleTimer.setEventHandler { [weak self] in
-      self?.collectSample()
+      guard let self, generation == self.sessionGeneration else { return }
+      self.collectSample()
     }
     sampleTimer.resume()
     self.sampleTimer = sampleTimer
@@ -47,13 +64,14 @@ final class NativeShowcaseTelemetryStreamHandler: NSObject, FlutterStreamHandler
     let emitTimer = DispatchSource.makeTimerSource(queue: workerQueue)
     emitTimer.schedule(deadline: .now() + emitInterval, repeating: emitInterval)
     emitTimer.setEventHandler { [weak self] in
-      self?.emitAggregate()
+      guard let self, generation == self.sessionGeneration else { return }
+      self.emitAggregate(generation: generation)
     }
     emitTimer.resume()
     self.emitTimer = emitTimer
   }
 
-  private func stopWorkers() {
+  private func tearDownSessionOnWorkerQueue() {
     sampleTimer?.cancel()
     sampleTimer = nil
     emitTimer?.cancel()
@@ -73,7 +91,8 @@ final class NativeShowcaseTelemetryStreamHandler: NSObject, FlutterStreamHandler
     }
   }
 
-  private func emitAggregate() {
+  private func emitAggregate(generation: UInt64) {
+    guard generation == sessionGeneration else { return }
     guard windowSampleCount > 0 else {
       windowDroppedCount = 0
       return
@@ -91,13 +110,14 @@ final class NativeShowcaseTelemetryStreamHandler: NSObject, FlutterStreamHandler
       "emittedAtMillis": Int(Date().timeIntervalSince1970 * 1000),
     ]
 
-    DispatchQueue.main.async { [weak self] in
-      self?.eventSink?(payload)
-    }
-
     windowSampleCount = 0
     windowSampleSum = 0
     windowDroppedCount = 0
+
+    DispatchQueue.main.async { [weak self] in
+      guard let self, generation == self.sessionGeneration else { return }
+      self.eventSink?(payload)
+    }
   }
 
   private func resetAggregation() {

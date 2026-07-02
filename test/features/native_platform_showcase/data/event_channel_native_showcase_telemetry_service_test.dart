@@ -96,6 +96,39 @@ void main() {
       expect(snapshots.single.sequence, 3);
     });
 
+    test('ignores fractional integer fields in payload', () async {
+      final StreamController<Object?> controller = StreamController<Object?>();
+      final service = EventChannelNativeShowcaseTelemetryService(events: () => controller.stream);
+
+      final Future<List<NativeShowcaseTelemetrySnapshot>> values = service
+          .watchTelemetry()
+          .toList();
+      controller
+        ..add(<String, Object>{
+          'sequence': 1.9,
+          'sampleCount': 1,
+          'averageValue': 1.0,
+          'sourceRateHz': 60,
+          'deliveredRateHz': 4,
+          'droppedCount': 0,
+          'emittedAtMillis': 1,
+        })
+        ..add(<String, Object>{
+          'sequence': 2,
+          'sampleCount': 1,
+          'averageValue': 2.0,
+          'sourceRateHz': 60,
+          'deliveredRateHz': 4,
+          'droppedCount': 0,
+          'emittedAtMillis': 2,
+        });
+      await controller.close();
+
+      final snapshots = await values;
+      expect(snapshots, hasLength(1));
+      expect(snapshots.single.sequence, 2);
+    });
+
     test(
       'emits unavailable snapshot when injected event stream throws MissingPluginException',
       () async {

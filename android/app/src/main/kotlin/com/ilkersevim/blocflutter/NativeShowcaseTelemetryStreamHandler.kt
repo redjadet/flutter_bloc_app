@@ -13,6 +13,7 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
   private var eventSink: EventChannel.EventSink? = null
   private var sampleRunnable: Runnable? = null
   private var emitRunnable: Runnable? = null
+  private var sessionGeneration = 0L
 
   private var sequence = 0
   private var sourceTick = 0
@@ -22,6 +23,9 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
   private var lastSampleValue = Double.NaN
 
   override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+    stopSession()
+    sessionGeneration += 1
+    val generation = sessionGeneration
     eventSink = events
     mainHandler = Handler(Looper.getMainLooper())
     workerThread = HandlerThread("NativeShowcaseTelemetry").also { it.start() }
@@ -32,6 +36,10 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
 
     sampleRunnable = object : Runnable {
       override fun run() {
+        if (generation != sessionGeneration) {
+          return
+        }
+
         val sampleValue = demoSampleValue(sourceTick)
         sourceTick += 1
 
@@ -51,6 +59,10 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
 
     emitRunnable = object : Runnable {
       override fun run() {
+        if (generation != sessionGeneration) {
+          return
+        }
+
         if (windowSampleCount > 0) {
           sequence += 1
           val averageValue = windowSampleSum / windowSampleCount
@@ -64,7 +76,9 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
             "emittedAtMillis" to System.currentTimeMillis(),
           )
           mainHandler?.post {
-            eventSink?.success(payload)
+            if (generation == sessionGeneration) {
+              eventSink?.success(payload)
+            }
           }
         }
 
@@ -81,6 +95,11 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
   }
 
   override fun onCancel(arguments: Any?) {
+    stopSession()
+  }
+
+  private fun stopSession() {
+    sessionGeneration += 1
     sampleRunnable?.let { workerHandler?.removeCallbacks(it) }
     emitRunnable?.let { workerHandler?.removeCallbacks(it) }
     sampleRunnable = null
