@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
 import 'package:flutter_bloc_app/core/di/register_http_services.dart';
@@ -83,6 +84,7 @@ void main() {
         registerHttpServices();
 
         expect(getIt<AuthTokenManager>(), same(getIt<AuthTokenManager>()));
+        expect(getIt<TokenRepository>(), same(getIt<TokenRepository>()));
         final Dio dio = getIt<Dio>();
         expect(dio.options.headers['User-Agent'], isNotEmpty);
       },

@@ -77,14 +77,10 @@ void main() {
     when(
       () => refreshed.expirationTime,
     ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
-    var tokenResultCalls = 0;
-    when(() => user.getIdTokenResult()).thenAnswer((_) async {
-      tokenResultCalls += 1;
-      return tokenResultCalls == 1 ? initial : refreshed;
-    });
-    when(() => user.getIdToken(true)).thenAnswer((_) async {
+    when(() => user.getIdTokenResult(false)).thenAnswer((_) async => initial);
+    when(() => user.getIdTokenResult(true)).thenAnswer((_) async {
       adapter.markRefreshCalled();
-      return 'forced';
+      return refreshed;
     });
 
     final Dio dio = createAppDio(

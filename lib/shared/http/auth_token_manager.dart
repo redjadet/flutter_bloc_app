@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 
 /// Manages Firebase authentication tokens with caching and refresh capabilities.
 ///
@@ -9,50 +11,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// (avoids race where each 401 triggers its own refresh and invalidates prior
 /// tokens).
 class AuthTokenManager {
-  AuthTokenManager({
-    this._firebaseAuth,
-  });
+  AuthTokenManager({this._firebaseAuth, final TokenRepository? tokenRepository})
+    : _tokenRepository = tokenRepository ?? InMemoryTokenRepository();
 
   final FirebaseAuth? _firebaseAuth;
-
-  /// Current auth token, cached to avoid repeated Firebase calls
-  String? _cachedAuthToken;
-
-  /// When the cached auth token expires
-  DateTime? _tokenExpiry;
-
-  /// User ID associated with the cached token
-  String? _cachedUserId;
+  final TokenRepository _tokenRepository;
 
   /// Serializes token refresh so concurrent 401s share a single refresh.
   Completer<bool>? _refreshCompleter;
 
+  Future<void> hydrateFromPersistentSession() =>
+      _tokenRepository.hydrateFirebaseSession(_firebaseAuth?.currentUser);
+
   /// Get a valid auth token, refreshing if necessary
   Future<String?> getValidAuthToken(final User user) async {
-    final DateTime now = DateTime.now().toUtc();
-
-    // Use cached token if still valid and belongs to the same user
-    final DateTime? expiry = _tokenExpiry;
-    if (_cachedAuthToken != null &&
-        expiry != null &&
-        _cachedUserId == user.uid &&
-        now.isBefore(expiry.subtract(const Duration(minutes: 5)))) {
-      return _cachedAuthToken;
-    }
-
-    try {
-      final IdTokenResult tokenResult = await user.getIdTokenResult();
-      _cachedAuthToken = tokenResult.token;
-      _tokenExpiry = tokenResult.expirationTime?.toUtc();
-      _cachedUserId = user.uid;
-      return _cachedAuthToken;
-    } catch (error, stackTrace) {
-      // Clear cache on error
-      _cachedAuthToken = null;
-      _tokenExpiry = null;
-      _cachedUserId = null;
-      Error.throwWithStackTrace(error, stackTrace);
-    }
+    return _tokenRepository.getFirebaseAccessToken(user);
   }
 
   /// Runs a single token refresh; concurrent callers await the same future.
@@ -70,16 +43,12 @@ class AuthTokenManager {
         completer.complete(false);
         return future;
       }
-      await user.getIdToken(true); // Force refresh
-      final IdTokenResult tokenResult = await user.getIdTokenResult();
-      _cachedAuthToken = tokenResult.token;
-      _tokenExpiry = tokenResult.expirationTime?.toUtc();
-      _cachedUserId = user.uid;
-      completer.complete(_cachedAuthToken != null);
+      final String? token = await _tokenRepository.refreshFirebaseAccessToken(
+        user,
+      );
+      completer.complete(token != null);
     } catch (error, stackTrace) {
-      _cachedAuthToken = null;
-      _tokenExpiry = null;
-      _cachedUserId = null;
+      _tokenRepository.clearProvider(AuthProviderKind.firebase);
       completer.completeError(error, stackTrace);
     } finally {
       _refreshCompleter = null;
@@ -105,8 +74,6 @@ class AuthTokenManager {
 
   /// Clear cached token
   void clearCache() {
-    _cachedAuthToken = null;
-    _tokenExpiry = null;
-    _cachedUserId = null;
+    _tokenRepository.clearProvider(AuthProviderKind.firebase);
   }
 }

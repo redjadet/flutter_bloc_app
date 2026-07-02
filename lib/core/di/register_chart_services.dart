@@ -13,12 +13,11 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_cache_repository.da
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 
 void registerChartServices() {
-  registerLazySingletonIfAbsent<CoingeckoApi>(
-    () => CoingeckoApi(getIt<Dio>()),
-  );
+  registerLazySingletonIfAbsent<CoingeckoApi>(() => CoingeckoApi(getIt<Dio>()));
   registerLazySingletonIfAbsent<ChartCacheRepository>(
     () => ChartDemoCacheRepository(hiveService: getIt<HiveService>()),
   );
@@ -34,7 +33,10 @@ void registerChartServices() {
     instanceName: 'directChartRemote',
   );
   registerLazySingletonIfAbsent<SupabaseChartRepository>(
-    () => SupabaseChartRepository(liveDirectFallback: directChartRemote),
+    () => SupabaseChartRepository(
+      liveDirectFallback: directChartRemote,
+      readAccessToken: () => getIt<SupabaseSessionManager>().getAccessToken(),
+    ),
   );
   registerLazySingletonIfAbsent<FirebaseChartRepository>(
     () => FirebaseChartRepository(liveDirectFallback: directChartRemote),

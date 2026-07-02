@@ -100,11 +100,11 @@ void main() {
 
     test('refreshTokenAndGet clears user-specific cache', () async {
       when(
-        () => user1.getIdTokenResult(),
+        () => user1.getIdTokenResult(false),
       ).thenAnswer((_) async => mockTokenResult);
       when(
-        () => user1.getIdToken(true),
-      ).thenAnswer((_) async => 'refreshed-token');
+        () => user1.getIdTokenResult(true),
+      ).thenAnswer((_) async => mockTokenResult);
 
       // Get initial token
       await tokenManager.getValidAuthToken(user1);
@@ -115,8 +115,9 @@ void main() {
       // Get token again - should fetch since cache was cleared
       await tokenManager.getValidAuthToken(user1);
 
-      // Verify getIdTokenResult was called twice (once for initial, once after refresh)
-      verify(() => user1.getIdTokenResult()).called(2);
+      verify(() => user1.getIdTokenResult(false)).called(1);
+      verify(() => user1.getIdTokenResult(true)).called(1);
+      verifyNever(() => user1.getIdToken(any()));
     });
   });
 }

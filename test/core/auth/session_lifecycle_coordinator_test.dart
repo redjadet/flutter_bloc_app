@@ -6,6 +6,7 @@ import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
@@ -64,6 +65,16 @@ void main() {
       await authTokenManager.getValidAuthToken(user);
 
       verify(() => user.getIdTokenResult()).called(1);
+    });
+
+    test('onSignOutCompleted clears bound token repository provider state', () async {
+      final InMemoryTokenRepository tokenRepository = InMemoryTokenRepository();
+      coordinator.bindTokenRepository(tokenRepository);
+      tokenRepository.cacheSupabaseAccessToken('supabase-token');
+
+      await coordinator.onSignOutCompleted(provider: AuthProviderKind.supabase);
+
+      expect(tokenRepository.getSupabaseAccessToken(), isNull);
     });
 
     test(

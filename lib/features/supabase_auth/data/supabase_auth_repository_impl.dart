@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart' as app_auth;
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
@@ -12,7 +14,9 @@ part 'supabase_auth_repository_impl.part.dart';
 class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   SupabaseAuthRepositoryImpl({
     this._isConfiguredOverride,
+    this.tokenRepository,
     final User? Function()? readCurrentUser,
+    final String? Function()? readCurrentAccessToken,
     final Stream<AuthState> Function()? authStateChangesStream,
     final Future<void> Function({
       required String email,
@@ -27,6 +31,8 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     signUpImpl,
     final Future<void> Function()? signOutImpl,
   }) : _readCurrentUser = readCurrentUser ?? _defaultReadCurrentUser,
+       _readCurrentAccessToken =
+           readCurrentAccessToken ?? _defaultReadCurrentAccessToken,
        _authStateChangesStream =
            authStateChangesStream ?? _defaultAuthStateChangesStream,
        _signInWithPasswordImpl =
@@ -35,7 +41,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
        _signOutImpl = signOutImpl ?? _defaultSignOut;
 
   final bool Function()? _isConfiguredOverride;
+  final TokenRepository? tokenRepository;
   final User? Function() _readCurrentUser;
+  final String? Function() _readCurrentAccessToken;
   final Stream<AuthState> Function() _authStateChangesStream;
   final Future<void> Function({required String email, required String password})
   _signInWithPasswordImpl;
@@ -91,6 +99,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     _validateCredentialInputs(email: email, password: password);
     try {
       await _signInWithPasswordImpl(email: email.trim(), password: password);
+      tokenRepository?.cacheSupabaseAccessToken(_readCurrentAccessToken());
       if (kDebugMode) AppLogger.debug('Supabase sign-in complete.');
     } on AuthException catch (e) {
       throw _authExceptionFromSupabase(e);
@@ -118,6 +127,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
         password: password,
         data: _signUpUserData(displayName),
       );
+      tokenRepository?.cacheSupabaseAccessToken(_readCurrentAccessToken());
     } on AuthException catch (e) {
       throw _authExceptionFromSupabase(e);
     } on Object catch (error, stackTrace) {
@@ -131,6 +141,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     if (!_canAccessSupabase) return;
     try {
       await _signOutImpl();
+      tokenRepository?.clearProvider(AuthProviderKind.supabase);
     } on Object catch (error, stackTrace) {
       AppLogger.error('SupabaseAuthRepositoryImpl.signOut', error, stackTrace);
       rethrow;

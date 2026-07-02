@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
@@ -29,6 +30,8 @@ abstract interface class SessionLifecycleCoordinator {
 
   void bindAuthTokenManager(AuthTokenManager manager);
 
+  void bindTokenRepository(TokenRepository repository);
+
   void bindHfTokenProvider(RenderOrchestrationHfTokenProvider? provider);
 
   /// Idempotent cache cleanup after any sign-out (explicit or SDK-driven).
@@ -51,6 +54,7 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
       StreamController<SessionInvalidationEvent>.broadcast();
 
   AuthTokenManager? _authTokenManager;
+  TokenRepository? _tokenRepository;
   RenderOrchestrationHfTokenProvider? _hfTokenProvider;
   StreamSubscription<AuthUser?>? _authSubscription;
   AuthUser? _previousUser;
@@ -64,6 +68,11 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   @override
   void bindAuthTokenManager(final AuthTokenManager manager) {
     _authTokenManager = manager;
+  }
+
+  @override
+  void bindTokenRepository(final TokenRepository repository) {
+    _tokenRepository = repository;
   }
 
   @override
@@ -104,6 +113,7 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
     if (provider == AuthProviderKind.firebase) {
       _authTokenManager?.clearCache();
     }
+    _tokenRepository?.clearProvider(provider);
     final RenderOrchestrationHfTokenProvider? hfProvider = _hfTokenProvider;
     if (hfProvider != null) {
       try {

@@ -53,20 +53,18 @@ void main() {
       );
       when(() => auth.currentUser).thenReturn(user);
       when(() => user.uid).thenReturn('user-id');
-      when(
-        () => user.getIdToken(true),
-      ).thenAnswer((final invocation) async => 'token');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
       when(
-        () => user.getIdTokenResult(),
+        () => user.getIdTokenResult(true),
       ).thenAnswer((final invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
       final bool result = await manager.refreshToken();
 
       expect(result, isTrue);
-      verify(() => user.getIdToken(true)).called(1);
+      verify(() => user.getIdTokenResult(true)).called(1);
+      verifyNever(() => user.getIdToken(any()));
     });
 
     test('refreshTokenAndGet forces refresh then returns token', () async {
@@ -77,21 +75,18 @@ void main() {
       );
 
       when(() => user.uid).thenReturn('user-id');
-      when(
-        () => user.getIdToken(true),
-      ).thenAnswer((final invocation) async => 'token');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
       when(
-        () => user.getIdTokenResult(),
+        () => user.getIdTokenResult(true),
       ).thenAnswer((final invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager();
       final String? token = await manager.refreshTokenAndGet(user);
 
       expect(token, 'token');
-      verify(() => user.getIdToken(true)).called(1);
-      verify(() => user.getIdTokenResult()).called(1);
+      verify(() => user.getIdTokenResult(true)).called(1);
+      verifyNever(() => user.getIdToken(any()));
     });
 
     test('concurrent refreshToken calls run only one refresh', () async {
@@ -103,13 +98,10 @@ void main() {
       );
       when(() => auth.currentUser).thenReturn(user);
       when(() => user.uid).thenReturn('user-id');
-      when(
-        () => user.getIdToken(true),
-      ).thenAnswer((final invocation) async => 'token');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
       when(
-        () => user.getIdTokenResult(),
+        () => user.getIdTokenResult(true),
       ).thenAnswer((final invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager(firebaseAuth: auth);
@@ -120,7 +112,8 @@ void main() {
       final List<bool> values = await Future.wait(results);
 
       expect(values, everyElement(isTrue));
-      verify(() => user.getIdToken(true)).called(1);
+      verify(() => user.getIdTokenResult(true)).called(1);
+      verifyNever(() => user.getIdToken(any()));
     });
 
     test('concurrent refreshTokenAndGet calls run only one refresh', () async {
@@ -131,13 +124,10 @@ void main() {
       );
 
       when(() => user.uid).thenReturn('user-id');
-      when(
-        () => user.getIdToken(true),
-      ).thenAnswer((final invocation) async => 'token');
       when(() => tokenResult.token).thenReturn('token');
       when(() => tokenResult.expirationTime).thenReturn(expiry);
       when(
-        () => user.getIdTokenResult(),
+        () => user.getIdTokenResult(true),
       ).thenAnswer((final invocation) async => tokenResult);
 
       final AuthTokenManager manager = AuthTokenManager();
@@ -148,8 +138,8 @@ void main() {
       final List<String?> values = await Future.wait(results);
 
       expect(values, everyElement('token'));
-      verify(() => user.getIdToken(true)).called(1);
-      verify(() => user.getIdTokenResult()).called(1);
+      verify(() => user.getIdTokenResult(true)).called(1);
+      verifyNever(() => user.getIdToken(any()));
     });
   });
 }

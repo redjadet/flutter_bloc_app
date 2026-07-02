@@ -100,6 +100,10 @@ Protected examples:
 ## Token Handling (Non-Firebase HTTP)
 
 - The shared **Dio** client injects Firebase ID tokens via `AuthTokenInterceptor` when a `FirebaseAuth` instance is provided (`lib/shared/http/interceptors/auth_token_interceptor.dart`).
+- App code reads authentication tokens through the dedicated `TokenRepository`
+  (`lib/core/auth/token_repository.dart`), not directly from secure storage.
+  Provider SDKs remain the persistence owners; the repository keeps the app's
+  API-call path on in-memory state.
 - Tokens are retrieved and cached by `AuthTokenManager`, which:
   - Tracks cached token expiration and refresh window (5 minutes before expiry).
   - Caches per user ID to avoid cross-user token reuse.
@@ -107,6 +111,14 @@ Protected examples:
   - Hydrates cache from the refreshed token result so waiters reuse one fresh value.
   - Clears cached token/user on refresh errors or explicit `clearCache()` calls.
   (`lib/shared/http/auth_token_manager.dart`)
+- Firebase token state is hydrated into `TokenRepository` at HTTP service
+  startup and after forced refresh. Normal request injection reads memory when
+  the token is still valid.
+- Supabase token state is hydrated into `TokenRepository` at Supabase service
+  startup and after Supabase sign-in/sign-up. Supabase-backed chat, chart, and
+  GraphQL repositories receive the memory token reader through DI. On 401,
+  `SupabaseSessionManager` performs a single SDK refresh, then writes the new
+  access token into memory for retry and later API calls.
 - On 401 responses, `AuthTokenInterceptor` performs one refresh flow and retries with
   the refreshed bearer token, avoiding chained forced-refresh calls.
 - If Firebase Auth is not configured, the interceptor will skip token injection and proceed with standard headers only.
@@ -126,6 +138,9 @@ Protected examples:
 - Refresh paths (`refreshToken()` and `refreshTokenAndGet()`) are single-flight and
   cache the refreshed token atomically for all waiters.
 - Refresh failures clear cache state and propagate errors to all refresh waiters.
+- Secure storage / provider SDK persistence is touched only on startup
+  hydration, login/session hydration, explicit token refresh, or logout cleanup.
+  Regular API calls use in-memory authentication state via `TokenRepository`.
 
 ## Notable Gaps / Risks
 
@@ -169,6 +184,9 @@ Until that decision exists, keep route policy to `public | authenticated`, and g
 
 - Access tokens short-lived (Firebase ID ~1h; Supabase per project settings)
 - Refresh tokens only in SDK secure storage (never app SharedPreferences/Hive)
+- Access tokens exposed to app API callers only through `TokenRepository`
+  memory state; do not read secure storage directly from repositories,
+  interceptors, or presentation code.
 - Central HTTP injection: Firebase via `AuthTokenInterceptor`; Supabase via `SupabaseSessionManager`
 - Single-flight refresh: `AuthTokenManager` + `SupabaseSessionManager`
 - One 401 retry max (`auth_401_retried`)
