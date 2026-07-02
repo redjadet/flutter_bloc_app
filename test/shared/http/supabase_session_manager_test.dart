@@ -22,6 +22,16 @@ class _SpyCoordinator extends SessionLifecycleCoordinatorImpl {
 
 void main() {
   group('SupabaseSessionManager', () {
+    test('hydrateFromPersistentSession caches persistent token before reads', () {
+      final SupabaseSessionManager manager = SupabaseSessionManager(
+        readPersistentAccessToken: () => 'startup-token',
+      );
+
+      manager.hydrateFromPersistentSession();
+
+      expect(manager.getAccessToken(), 'startup-token');
+    });
+
     test('single-flight refresh shares one refresh call', () async {
       var refreshCalls = 0;
       final SupabaseSessionManager manager = SupabaseSessionManager(
