@@ -212,7 +212,8 @@ You can still run it manually:
 The workflow uses `cancel-in-progress: false` so a newer `main` push does not
 cancel an in-flight Pages deployment. Cancelling after `deploy-pages` submits
 can orphan a deployment in `deployment_queued` and block later runs until the
-action's 10-minute poll timeout.
+action's 10-minute poll timeout. Before each deploy, the workflow also cancels
+recent stale `github-pages` deployments that are still queued or in progress.
 
 #### `base_href` input
 
