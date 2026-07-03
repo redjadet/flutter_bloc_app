@@ -41,6 +41,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.14.13"
+  analyzer_testing:
+    dependency: transitive
+    description:
+      name: analyzer_testing
+      sha256: cd5fda071b5efdfc199e0371897ffb9318c06f3cc1b550c6c660f2a1948e8d6e
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3"
+  ansi_styles:
+    dependency: transitive
+    description:
+      name: ansi_styles
+      sha256: "9c656cc12b3c27b17dd982b2cc5c0cfdfbdabd7bc8f3ae5e8542d9867b47ce8a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2+1"
   app_links:
     dependency: "direct main"
     description:
@@ -209,6 +225,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb0f1107cac15a5ea6ef0a6ef71a807b9e4267c713bb93e00e92d737cc8dbd8a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -225,6 +249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  cli_launcher:
+    dependency: transitive
+    description:
+      name: cli_launcher
+      sha256: "35cf15a3ffaeb9c11849eaa0afba761bb76dceb42d050532bfd3e1299c9748cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+1"
   cli_util:
     dependency: transitive
     description:
@@ -337,6 +369,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  conventional_commit:
+    dependency: transitive
+    description:
+      name: conventional_commit
+      sha256: c40b1b449ce2a63fa2ce852f35e3890b1e182f5951819934c0e4a66254bc0dc3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.1+1"
   convert:
     dependency: transitive
     description:
@@ -385,6 +425,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
+  dart_code_metrics_presets:
+    dependency: transitive
+    description:
+      name: dart_code_metrics_presets
+      sha256: c2b890695e732329c79085194c6fc815a20acf44e553fad6c72f75bf3ae203cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.32.0"
   dart_jsonwebtoken:
     dependency: transitive
     description:
@@ -529,13 +577,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  file_length_lint:
-    dependency: "direct dev"
-    description:
-      path: "custom_lints/file_length_lint"
-      relative: true
-    source: path
-    version: "0.2.0"
   file_selector_linux:
     dependency: transitive
     description:
@@ -1723,6 +1764,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
+  melos:
+    dependency: "direct dev"
+    description:
+      name: melos
+      sha256: b40731f34d3aacb199641a9b4955e52a866b0b0bc93ffc5c8ff21bffc6593134
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.8.1"
   meta:
     dependency: "direct main"
     description:
@@ -1755,13 +1804,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  mix_lint:
-    dependency: "direct dev"
-    description:
-      path: "custom_lints/mix_lint"
-      relative: true
-    source: path
-    version: "2.0.0"
   mock_exceptions:
     dependency: "direct dev"
     description:
@@ -1778,6 +1820,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  mustache_template:
+    dependency: transitive
+    description:
+      name: mustache_template
+      sha256: c689b4d59176f8c7a2860aab765d205916aa5b06cfafff7613bfcc42fa996143
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   nested:
     dependency: transitive
     description:
@@ -2050,6 +2100,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.5"
+  prompts:
+    dependency: transitive
+    description:
+      name: prompts
+      sha256: "3773b845e85a849f01e793c4fc18a45d52d7783b4cb6c0569fad19f9d0a774a1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   protobuf:
     dependency: transitive
     description:
@@ -2074,6 +2132,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  pub_updater:
+    dependency: transitive
+    description:
+      name: pub_updater
+      sha256: "739a0161d73a6974c0675b864fb0cf5147305f7b077b7f03a58fa7a9ab3e7e7d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -2511,6 +2577,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.17"
+  test_reflective_loader:
+    dependency: transitive
+    description:
+      name: test_reflective_loader
+      sha256: d828d5ca15179aaac2aaf8f510cf0a52ec28e0031681b044ec5e581a4b8002e7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   typed_data:
     dependency: transitive
     description:

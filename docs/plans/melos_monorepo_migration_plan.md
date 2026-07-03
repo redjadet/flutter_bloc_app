@@ -874,84 +874,81 @@ Current Melos configuration belongs under the `melos:` section in the root
 `usePubspecOverrides`; current Melos removed that option. Use Pub workspaces so
 the repository has one shared resolution.
 
-PR-A root `pubspec.yaml` target:
+PR-A root `pubspec.yaml` target (proven 2026-07-03):
 
 ```yaml
-name: flutter_bloc_app_workspace
+name: flutter_bloc_app
 publish_to: none
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
 
-dev_dependencies:
-  melos: ^7.0.0
-
 workspace:
-  # PR-A bridge: root app remains the app package.
-  - .
   - custom_lints/file_length_lint
   - custom_lints/mix_lint
 
+dev_dependencies:
+  # ... existing app dev_dependencies ...
+  melos: ^7.0.0  # alphabetical among dev_dependencies
+
 melos:
-  name: flutter_bloc_app
+  useRootAsPackage: true
   sdkPath: auto
-  packages:
-    - .
-    - custom_lints/*
   scripts:
-    bootstrap:
-      run: melos bootstrap
-      description: Link local packages and run pub get.
     analyze:
-      run: melos exec --fail-fast -- "dart analyze ."
-      description: Analyze every Dart package.
+      run: dart run melos exec --fail-fast -- "dart analyze ."
     analyze:flutter:
-      run: melos exec --flutter --fail-fast -- "flutter analyze"
-      description: Analyze Flutter packages.
-    format:
-      run: dart format --set-exit-if-changed .
-      description: Check formatting from workspace root.
-    format:write:
-      run: dart format .
-      description: Format workspace.
-    test:
-      run: melos exec --dir-exists=test --fail-fast -- "dart test"
-      description: Run Dart package tests.
-    test:flutter:
-      run: melos exec --flutter --dir-exists=test --fail-fast -- "flutter test"
-      description: Run Flutter package tests.
-    coverage:
-      run: melos exec --scope=mobile -- "flutter test --coverage"
-      description: Run mobile app coverage gate.
-    build_runner:
-      run: >
-        melos exec --depends-on=build_runner --fail-fast --
-        "dart run build_runner build --delete-conflicting-outputs"
-      description: Generate code in packages that use build_runner.
-    clean:
-      run: melos exec --flutter -- "flutter clean"
-      description: Clean package build outputs.
+      run: dart run melos exec --flutter --fail-fast -- "flutter analyze"
+    # ... other scripts use `dart run melos exec`, not bare `melos exec`
     checklist:
       run: ./bin/checklist
-      description: Existing full repo delivery gate.
     checklist:fast:
       run: ./bin/checklist-fast
-      description: Existing fast docs/tooling gate.
+```
+
+PR-A implementation notes (do not skip):
+
+- Keep `name: flutter_bloc_app` on root through PR-A; rename to
+  `flutter_bloc_app_workspace` only in PR-B.
+- Do **not** list `.` in `workspace:`; the root is implicit. Use
+  `melos.useRootAsPackage: true` so Melos 7 discovers the root Flutter app.
+- Do **not** add a `melos.scripts.bootstrap` entry; it recurses infinitely.
+  Run `dart run melos bootstrap` directly (built-in command).
+- Melos 7 replaces `melos.packages` with Pub `workspace:`; remove `packages:` from
+  `melos:` config.
+- Pin `custom_lints/*/pubspec.yaml` `test: ^1.31.0` (not `^1.31.2`) so workspace
+  resolution stays compatible with `flutter_test`'s `test_api` pin.
+- Add `resolution: workspace` to each `custom_lints/*/pubspec.yaml`.
+- Script bodies must use `dart run melos exec` because `melos` is not on `PATH`
+  when Melos spawns script shells.
+
+PR-A proof commands:
+
+```bash
+dart pub get
+dart run melos bootstrap
+dart run melos list --long          # expect flutter_bloc_app + 2 custom_lints
+dart run melos run analyze:flutter
+./bin/checklist
 ```
 
 PR-B root workspace update after app relocation:
 
 ```yaml
+name: flutter_bloc_app_workspace
+publish_to: none
+
 workspace:
   - apps/mobile
   - custom_lints/file_length_lint
   - custom_lints/mix_lint
 
 melos:
-  packages:
-    - apps/*
-    - custom_lints/*
+  useRootAsPackage: false
+  sdkPath: auto
 ```
+
+Remove `useRootAsPackage` (or set false) once the app leaves root.
 
 PR-C+ workspace update as packages are created:
 

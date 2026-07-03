@@ -20,6 +20,10 @@ version: 1.0.0+20
 environment:
   sdk: ">=3.12.0 <4.0.0"
 
+workspace:
+  - custom_lints/file_length_lint
+  - custom_lints/mix_lint
+
 # Major bumps still blocked by the live graph (see dependency_overrides):
 # - app_links 7: firebase_ui_auth 3.0.1 requires app_links ^6.4.
 # - device_info_plus 13 + package_info_plus 10: geolocator_linux caps package_info_plus ^9; win32 major split vs device_info_plus 13.
@@ -139,6 +143,7 @@ dev_dependencies:
   json_serializable: ^6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
+  melos: ^7.0.0
   mix_lint:
     path: custom_lints/mix_lint
   mock_exceptions: ^0.8.2
@@ -259,3 +264,43 @@ flutter_launcher_icons:
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: assets/icons/app_icon_foreground.png
   adaptive_icon_foreground_inset: 8
+
+melos:
+  useRootAsPackage: true
+  sdkPath: auto
+  scripts:
+    analyze:
+      run: dart run melos exec --fail-fast -- "dart analyze ."
+      description: Analyze every Dart package.
+    analyze:flutter:
+      run: dart run melos exec --flutter --fail-fast -- "flutter analyze"
+      description: Analyze Flutter packages.
+    format:
+      run: dart format --set-exit-if-changed .
+      description: Check formatting from workspace root.
+    format:write:
+      run: dart format .
+      description: Format workspace.
+    test:
+      run: dart run melos exec --dir-exists=test --fail-fast -- "dart test"
+      description: Run Dart package tests.
+    test:flutter:
+      run: dart run melos exec --flutter --dir-exists=test --fail-fast -- "flutter test"
+      description: Run Flutter package tests.
+    coverage:
+      run: dart run melos exec --scope=flutter_bloc_app -- "flutter test --coverage"
+      description: Run mobile app coverage gate.
+    build_runner:
+      run: >
+        dart run melos exec --depends-on=build_runner --fail-fast --
+        "dart run build_runner build --delete-conflicting-outputs"
+      description: Generate code in packages that use build_runner.
+    clean:
+      run: dart run melos exec --flutter -- "flutter clean"
+      description: Clean package build outputs.
+    checklist:
+      run: ./bin/checklist
+      description: Existing full repo delivery gate.
+    checklist:fast:
+      run: ./bin/checklist-fast
+      description: Existing fast docs/tooling gate.
