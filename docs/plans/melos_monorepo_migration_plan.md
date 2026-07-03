@@ -15,7 +15,8 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked 
 | PR-C wave 1 | `bd68b06c` | `packages/utilities` (3 pure-Dart utils), app-hosted tests, `#437` CI |
 | PR-D | `8ec663f5` | `packages/core` (`failure`, `result`, `timer_service`), 88 import rewrites, app barrel re-exports `package:core`, `./bin/checklist` (~2618 tests, ~80.9% cov) |
 | PR-C wave 2 + DAG | `d9388410` | `disposable_bag` → `utilities`, `utilities` → `core`, `check_package_dependency_dag.sh`, `./bin/checklist` |
-| PR-E wave 1 | `20f0ba89` | `packages/design_system` scaffold; 3 widgets/theme files; package + account_section canaries; `./bin/checklist` |
+| PR-E wave 1 | `44d8d9f7` | `packages/design_system` scaffold; 3 widgets/theme files; package + account_section canaries; `./bin/checklist` |
+| PR-E wave 2a | `44f014b5` | `UI`, `ResponsiveConfig`, responsive extensions + `LayoutBreakpoints`; app compatibility barrels; `./bin/checklist` |
 
 **PR-C learnings (record before next extraction):**
 
@@ -36,8 +37,16 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked 
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** PR-E wave 2a — `ui_constants` + responsive extensions
-(then Mix theme / `common_*` widgets). Documentation Updates checklist still open.
+**Next implementation step:** PR-E wave 2b — Mix theme (`mix_app_theme`), `app_styles`,
+`common_card` / `common_status_view`. Documentation Updates checklist still open.
+
+**PR-E wave 2a learnings:**
+
+- App compatibility barrels (`shared/extensions/responsive.dart`, `shared/ui/ui_constants.dart`,
+  `shared/responsive/responsive_config.dart`) avoid ~120 import rewrites.
+- Breakpoints live in `LayoutBreakpoints` inside design_system; app `AppConstants`
+  keeps duplicate values until a later consolidation pass.
+- Secondary entry `package:design_system/responsive.dart` for responsive-only imports.
 
 **PR-E wave 1 learnings:**
 
@@ -259,7 +268,7 @@ Use this as the implementation checklist.
 - [x] PR-D follow-up: `tool/check_package_dependency_dag.sh` in checklist.
 - [x] PR-E wave 1: scaffold `packages/design_system` (`ConfettiTheme`,
   `responsive_action_bar`, `SkeletonBase`); package + account_section canaries.
-- [ ] PR-E wave 2a: `ui_constants` + responsive extensions → design_system.
+- [x] PR-E wave 2a: `ui_constants` + responsive extensions → design_system.
 - [ ] PR-E wave 2b: Mix theme + `app_styles` + `common_card` / `common_status_view`.
 - [ ] PR-E wave 2c: remaining `common_*` / skeletons (after l10n/routing decouple).
 - [ ] PR-E (full): mark complete when wave 2c lands or plan defers widgets.

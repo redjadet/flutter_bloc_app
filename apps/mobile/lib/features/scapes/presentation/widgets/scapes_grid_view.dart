@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 /// Shared grid metrics (delegate + mainAxisExtent) for [ScapesGridView] and
 /// [ScapesGridSliver] so layout is identical.

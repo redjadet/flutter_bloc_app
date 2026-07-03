@@ -12,6 +12,8 @@ dependencies:
     path: ../core
   flutter:
     sdk: flutter
+  flutter_screenutil: ^5.9.3
+  responsive_framework: ^1.5.1
   skeletonizer: ^2.1.3
   utilities:
     path: ../utilities

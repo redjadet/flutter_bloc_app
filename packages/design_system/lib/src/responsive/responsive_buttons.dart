@@ -1,20 +1,12 @@
-part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+part of 'responsive.dart';
 
 /// Button sizing and styling helpers for responsive design.
 extension ResponsiveButtonsContext on BuildContext {
-  double get responsiveButtonHeight => _scaledHeight(
-    this,
-    mobile: 48,
-    tablet: 56,
-    desktop: 56,
-  );
+  double get responsiveButtonHeight =>
+      _scaledHeight(this, mobile: 48, tablet: 56, desktop: 56);
 
-  double get responsiveButtonPadding => _scaledWidth(
-    this,
-    mobile: 16,
-    tablet: 24,
-    desktop: 24,
-  );
+  double get responsiveButtonPadding =>
+      _scaledWidth(this, mobile: 16, tablet: 24, desktop: 24);
 
   /// Returns responsive button style with consistent padding and sizing
   ButtonStyle get responsiveButtonStyle => ButtonStyle(
@@ -24,12 +16,8 @@ extension ResponsiveButtonsContext on BuildContext {
         vertical: responsiveGapM,
       ),
     ),
-    minimumSize: WidgetStateProperty.all(
-      Size(0, responsiveButtonHeight),
-    ),
-    textStyle: WidgetStateProperty.all(
-      TextStyle(fontSize: responsiveBodySize),
-    ),
+    minimumSize: WidgetStateProperty.all(Size(0, responsiveButtonHeight)),
+    textStyle: WidgetStateProperty.all(TextStyle(fontSize: responsiveBodySize)),
   );
 
   /// Returns responsive elevated button style

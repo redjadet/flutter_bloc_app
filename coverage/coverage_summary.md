@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.90%** (19988/24707 lines)
+*Total line coverage*: **80.82%** (19763/24454 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -216,7 +216,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/iot/presentation/widgets/iot_ble_services_explorer.dart` | 70.00% | 14/20 |
 | `lib/shared/firebase/run_with_auth_user.dart` | 70.00% | 14/20 |
 | `lib/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart` | 70.11% | 61/87 |
-| `lib/shared/responsive/responsive_config.dart` | 70.37% | 19/27 |
 | `lib/core/bootstrap/bootstrap_coordinator.dart` | 70.59% | 36/51 |
 | `lib/features/counter/data/hive_counter_repository_helpers.dart` | 70.59% | 12/17 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_content_page.dart` | 70.59% | 24/34 |
@@ -289,7 +288,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/utils/date_time_formatting.dart` | 80.00% | 8/10 |
 | `lib/core/di/register_chat_services.dart` | 80.33% | 49/61 |
 | `lib/shared/services/network_status_service.dart` | 80.41% | 78/97 |
-| `lib/shared/ui/ui_constants.dart` | 80.49% | 33/41 |
 | `lib/features/calculator/presentation/widgets/calculator_summary_card.dart` | 80.73% | 88/109 |
 | `lib/features/online_therapy_demo/data/fake/online_therapy_fake_api_calls_admin.dart` | 80.88% | 55/68 |
 | `lib/features/graphql_demo/data/auth_aware_graphql_remote_repository.dart` | 81.25% | 13/16 |
@@ -364,10 +362,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/chat/presentation/widgets/chat_model_selector.dart` | 87.50% | 28/32 |
 | `lib/features/iot/presentation/mappers/iot_ble_error_message_mapper.dart` | 87.50% | 14/16 |
 | `lib/features/profile/presentation/widgets/profile_sync_banner.dart` | 87.50% | 35/40 |
-| `lib/shared/extensions/responsive/responsive_typography.dart` | 87.50% | 7/8 |
 | `lib/shared/utils/cubit_async_operations.dart` | 87.50% | 28/32 |
-| `lib/shared/extensions/responsive/responsive_metrics.dart` | 87.88% | 29/33 |
-| `lib/shared/extensions/responsive/responsive_layout.dart` | 87.93% | 51/58 |
 | `lib/shared/sync/pending_sync_repository_migration.dart` | 87.93% | 51/58 |
 | `lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart` | 87.95% | 73/83 |
 | `lib/shared/utils/failure_to_app_error.dart` | 88.00% | 22/25 |
@@ -783,10 +778,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/main_bootstrap.dart` | 100.00% | 10/10 |
 | `lib/shared/diagnostics/integration_log_messages.dart` | 100.00% | 2/2 |
 | `lib/shared/extensions/build_context_l10n.dart` | 100.00% | 3/3 |
-| `lib/shared/extensions/responsive/helpers.dart` | 100.00% | 28/28 |
-| `lib/shared/extensions/responsive/responsive_buttons.dart` | 100.00% | 29/29 |
-| `lib/shared/extensions/responsive/responsive_grid.dart` | 100.00% | 21/21 |
-| `lib/shared/extensions/responsive/responsive_spacing.dart` | 100.00% | 8/8 |
 | `lib/shared/extensions/type_safe_bloc_access.dart` | 100.00% | 26/26 |
 | `lib/shared/firebase/auth_helpers.dart` | 100.00% | 10/10 |
 | `lib/shared/firebase/realtime_database_guard.dart` | 100.00% | 7/7 |

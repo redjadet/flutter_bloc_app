@@ -1,4 +1,4 @@
-part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+part of 'responsive.dart';
 
 /// Responsive grid layout calculations and helpers
 extension ResponsiveGridContext on BuildContext {

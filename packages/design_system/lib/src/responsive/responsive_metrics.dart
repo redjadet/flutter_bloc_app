@@ -1,4 +1,4 @@
-part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+part of 'responsive.dart';
 
 /// Core responsive metrics and breakpoint-aware helpers.
 extension ResponsiveContextMetrics on BuildContext {
@@ -14,17 +14,18 @@ extension ResponsiveContextMetrics on BuildContext {
     if (data != null) {
       return data.isMobile || data.isPhone;
     }
-    return screenWidth < AppConstants.mobileBreakpoint;
+    return screenWidth < LayoutBreakpoints.mobileBreakpoint;
   }
 
-  bool get isMediumWidth => screenWidth >= AppConstants.mediumWidthBreakpoint;
+  bool get isMediumWidth =>
+      screenWidth >= LayoutBreakpoints.mediumWidthBreakpoint;
 
   bool get isTabletOrLarger {
     final data = _breakpointsData;
     if (data != null) {
       return data.isTablet || data.isDesktop || data.largerOrEqualTo(TABLET);
     }
-    return screenWidth >= AppConstants.mobileBreakpoint;
+    return screenWidth >= LayoutBreakpoints.mobileBreakpoint;
   }
 
   bool get isDesktop {
@@ -32,12 +33,13 @@ extension ResponsiveContextMetrics on BuildContext {
     if (data != null) {
       return data.isDesktop || data.largerOrEqualTo(DESKTOP);
     }
-    return screenWidth >= AppConstants.tabletBreakpoint;
+    return screenWidth >= LayoutBreakpoints.tabletBreakpoint;
   }
 
-  bool get isCompactWidth => screenWidth < AppConstants.compactWidthBreakpoint;
+  bool get isCompactWidth =>
+      screenWidth < LayoutBreakpoints.compactWidthBreakpoint;
   bool get isCompactHeight =>
-      screenHeight < AppConstants.compactHeightBreakpoint;
+      screenHeight < LayoutBreakpoints.compactHeightBreakpoint;
   bool get isPortrait => _responsiveOrientation(this) == Orientation.portrait;
   bool get isLandscape => _responsiveOrientation(this) == Orientation.landscape;
 

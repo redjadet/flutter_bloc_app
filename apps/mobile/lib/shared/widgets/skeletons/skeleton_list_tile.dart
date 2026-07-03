@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:mix/mix.dart';
 
 /// A reusable skeleton list tile for list-based UIs.

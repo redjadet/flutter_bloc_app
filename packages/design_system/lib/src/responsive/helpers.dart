@@ -1,4 +1,4 @@
-part of 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+part of 'responsive.dart';
 
 double _responsiveWidth(final BuildContext context) =>
     ResponsiveConfig.screenWidth(context);
@@ -90,11 +90,7 @@ T _responsiveValue<T>(
   final breakpointsData = ResponsiveConfig.maybeDataOf(context);
   if (breakpointsData != null) {
     final conditions = <Condition<T>>[
-      if (tablet != null)
-        Condition.largerThan(
-          name: MOBILE,
-          value: tablet,
-        ),
+      if (tablet != null) Condition.largerThan(name: MOBILE, value: tablet),
       if (desktop != null)
         Condition.largerThan(
           name: tablet != null ? TABLET : MOBILE,
@@ -112,12 +108,12 @@ T _responsiveValue<T>(
 
   final double width =
       breakpointsData?.screenWidth ?? _responsiveWidth(context);
-  if (desktop != null && width >= AppConstants.tabletBreakpoint) {
+  if (desktop != null && width >= LayoutBreakpoints.tabletBreakpoint) {
     return desktop;
   }
   final bool hasTabletValue = tablet != null;
   final T? tabletOrDesktop = hasTabletValue ? tablet : desktop;
-  if (tabletOrDesktop != null && width >= AppConstants.mobileBreakpoint) {
+  if (tabletOrDesktop != null && width >= LayoutBreakpoints.mobileBreakpoint) {
     return tabletOrDesktop;
   }
   return mobile;
