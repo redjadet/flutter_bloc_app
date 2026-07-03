@@ -22,6 +22,7 @@ are done or explicitly deferred. Operator next step: merge PR #437 to `main`.
 | PR-H | `backend/firebase/` layout |
 | PR-I | `packages/auth`, `packages/feature_flags` domain contracts |
 | CI | `tool/workspace_pub_get.sh` — workspace + Flutter codegen (`1da531ab`) |
+| Harness | `check_clean_architecture_imports` workspace path resolve (post-closeout) |
 
 ## Accepted deferrals (not blocking merge)
 

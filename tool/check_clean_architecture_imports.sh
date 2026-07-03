@@ -16,7 +16,8 @@ usage() {
   cat <<'EOF'
 Usage: tool/check_clean_architecture_imports.sh [--paths PATH...]
 
-Default scope: lib/features and lib/shared. --paths supports fixture/focused runs.
+Default scope: apps/mobile/lib/features and lib/shared (via APP_ROOT). --paths
+supports fixture/focused runs (workspace-root paths like tool/fixtures/... resolve).
 Rules:
   domain: no Flutter/SDK/DI/app/data/presentation imports
   presentation: no data-layer imports
@@ -41,6 +42,12 @@ elif [[ "$#" -gt 0 ]]; then
   usage >&2
   exit 2
 fi
+
+declare -a RESOLVED_SCAN_PATHS=()
+for scan_path in "${SCAN_PATHS[@]}"; do
+  RESOLVED_SCAN_PATHS+=("$(resolve_scan_root "$scan_path")")
+done
+SCAN_PATHS=("${RESOLVED_SCAN_PATHS[@]}")
 
 normalize_import_path() {
   local base_dir="$1"
@@ -100,7 +107,7 @@ while IFS= read -r file; do
     */domain/*) layer="domain" ;;
     */data/*) layer="data" ;;
     */presentation/*) layer="presentation" ;;
-    lib/shared/*|tool/fixtures/clean_architecture_imports/shared/*) layer="shared" ;;
+    lib/shared/*|*/lib/shared/*|*/clean_architecture_imports/shared/*) layer="shared" ;;
   esac
 
   [[ -n "$layer" ]] || continue

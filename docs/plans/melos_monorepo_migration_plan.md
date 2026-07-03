@@ -23,6 +23,7 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-H | `fee3db6b` | Firebase assets → `backend/firebase/`; `firebase.json.example` + deploy tooling |
 | PR-I | `fee3db6b` | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
 | CI pub get | `1da531ab` | `tool/workspace_pub_get.sh`; integration Firebase plist paths; analyzer exclude globs |
+| Closeout | `741a3ea8` | Plan/docs closeout; staff_app_demo paths; migration complete |
 
 **Status:** Scoped migration **complete** (PR-A–I + CI hardening). Merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) to `main` is the remaining operator step. Deferred extractions documented below — not blocking merge.
 
@@ -62,6 +63,12 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 
 - Update `commit_push_pr_deploy.py` + tests; do not replace `supabase/functions/` paths.
 - Cross-ref docs: [`walletconnect_auth_status.md`](../walletconnect_auth_status.md), [`agents_appendix.md`](../agents_appendix.md), validation guides.
+
+**Post-closeout harness learnings:**
+
+- `check_helpers.sh` `cd "$APP_ROOT"` breaks workspace-root fixture paths; use
+  `resolve_scan_root` for `--paths` scans (`check_clean_architecture_imports`,
+  `check_feature_folder_contract`).
 
 **PR-I learnings:**
 
@@ -161,7 +168,7 @@ cd ../flutter_bloc_app_melos_build
 3. PR-A/B/C landed on build branch — see **Implementation status** above; merge
    [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) before splitting
    follow-on PRs if review size matters.
-4. Track progress in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../../tasks/codex/todo.md) using the
+4. Track progress in `tasks/cursor/todo.md` or `tasks/codex/todo.md` using the
    Build Todo checkboxes below.
 
 **Authoritative gates (unchanged until explicitly migrated):**

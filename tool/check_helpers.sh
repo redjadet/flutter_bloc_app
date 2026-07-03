@@ -6,6 +6,25 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
 PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
+# Resolve scan paths after check_helpers cd's into APP_ROOT (apps/mobile).
+# Workspace-root paths (tool/fixtures/...) still resolve for harness fixtures.
+resolve_scan_root() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then
+    printf '%s\n' "$p"
+    return
+  fi
+  if [[ -e "$WORKSPACE_ROOT/$p" ]]; then
+    printf '%s\n' "$WORKSPACE_ROOT/$p"
+    return
+  fi
+  if [[ -e "$PROJECT_ROOT/$p" ]]; then
+    printf '%s\n' "$PROJECT_ROOT/$p"
+    return
+  fi
+  printf '%s\n' "$p"
+}
+
 filter_ignored() {
   local input="$1"
   local output=""

@@ -9,7 +9,7 @@ cd "$PROJECT_ROOT"
 
 source "$PROJECT_ROOT/tool/check_helpers.sh"
 
-LEGACY_ALLOWLIST_FILE="$PROJECT_ROOT/tool/config/legacy_feature_folder_allowlist.txt"
+LEGACY_ALLOWLIST_FILE="$WORKSPACE_ROOT/tool/config/legacy_feature_folder_allowlist.txt"
 
 is_allowlisted_legacy_path() {
   local path="$1"
@@ -93,6 +93,12 @@ if [[ "$FOCUSED" -eq 1 && "${#SCAN_PATHS[@]}" -eq 0 ]]; then
   echo "❌ --paths requires at least one path" >&2
   exit 2
 fi
+
+declare -a RESOLVED_SCAN_PATHS=()
+for scan_path in "${SCAN_PATHS[@]}"; do
+  RESOLVED_SCAN_PATHS+=("$(resolve_scan_root "$scan_path")")
+done
+SCAN_PATHS=("${RESOLVED_SCAN_PATHS[@]}")
 
 collect_cubit_state_files() {
   local root
