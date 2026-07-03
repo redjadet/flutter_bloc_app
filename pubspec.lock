@@ -1751,10 +1751,10 @@ packages:
     dependency: transitive
     description:
       name: mix_annotations
-      sha256: fe52ce2e53efc5af2539882cadbe601688021701cb6e4c425d6c1df4687e2ac7
+      sha256: "926c11dbc6d0df9f7b5eeb22491bb76500d4427bd6a639776216abd5ac71a9d0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   mix_lint:
     dependency: "direct dev"
     description:
@@ -1838,10 +1838,10 @@ packages:
     dependency: transitive
     description:
       name: passkeys_platform_interface
-      sha256: "56dd98bbe45d79de87e8683d25741b2f61743542a39a85207b0a5b4bccff600e"
+      sha256: "9610bd136b3382500390912ddd8517ee99505228b1af7b507b9c907f7e99a47d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
+    version: "2.8.0"
   path:
     dependency: "direct main"
     description:
