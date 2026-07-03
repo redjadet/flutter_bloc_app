@@ -30,7 +30,23 @@ class SupabaseSessionManager {
 
   Completer<bool>? _refreshCompleter;
 
-  String? getAccessToken() => _tokenRepository.getSupabaseAccessToken();
+  /// Returns the in-memory access token, lazily re-hydrating from the SDK when
+  /// memory is empty (e.g. [hydrateFromPersistentSession] ran before Supabase
+  /// init or before a persisted session was restored).
+  String? getAccessToken() {
+    final String? cached = _tokenRepository.getSupabaseAccessToken();
+    if (cached != null && cached.isNotEmpty) {
+      return cached;
+    }
+
+    final String? persistent = _readPersistentAccessToken();
+    if (persistent == null || persistent.isEmpty) {
+      return null;
+    }
+
+    _tokenRepository.cacheSupabaseAccessToken(persistent);
+    return persistent;
+  }
 
   void hydrateFromPersistentSession() {
     _tokenRepository.cacheSupabaseAccessToken(_readPersistentAccessToken());
