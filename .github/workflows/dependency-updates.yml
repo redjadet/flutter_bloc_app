@@ -57,7 +57,7 @@ jobs:
           sudo apt-get install -y lcov
 
       - name: Flutter analyze
-        run: cd apps/mobile && flutter analyze
+        run: bash tool/analyze.sh --no-pub
 
       - name: Flutter tests (with coverage)
         run: tool/test_coverage.sh

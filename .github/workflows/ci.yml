@@ -174,7 +174,7 @@ jobs:
           github.event_name == 'workflow_dispatch' &&
           github.event.inputs.run_analyze != 'false' &&
           github.event.inputs.run_tests == 'false'
-        run: cd apps/mobile && flutter analyze
+        run: bash tool/analyze.sh --no-pub
 
       - name: Flutter tests (with coverage)
         if: >-
