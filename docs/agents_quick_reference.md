@@ -109,7 +109,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
-| Flutter app analyze / test | `cd apps/mobile && flutter analyze` / `flutter test …` |
+| Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
 | Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
 | Firebase backend | `backend/firebase/` (functions, rules, indexes) |
 | Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |

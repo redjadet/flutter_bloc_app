@@ -58,7 +58,7 @@ Local fast sanity shortcut:
 During the Melos monorepo migration ([#437](https://github.com/redjadet/flutter_bloc_app/pull/437)):
 
 - **Authoritative full gate** remains `./bin/checklist` / `./tool/delivery_checklist.sh` from **repo root**. Scripts resolve `apps/mobile` via `tool/workspace_paths.sh`.
-- **Scoped app work** — `cd apps/mobile && flutter test <paths>` or `flutter analyze` for narrow UI/package-consumer proof; escalate to `./bin/checklist` when shared packages, DI, routing, or workspace scripts change.
+- **Scoped app work** — `./tool/analyze.sh` or `cd apps/mobile && flutter test <paths>` for narrow UI/package-consumer proof; escalate to `./bin/checklist` when shared packages, DI, routing, or workspace scripts change.
 - **Package-only edits** under `packages/*` — app-hosted widget tests in `apps/mobile/test/` remain the honest proof lane until isolated `dart test` in packages is stable (see migration plan PR-C learnings).
 - **Melos** — `dart run melos bootstrap` from repo root after `pubspec.yaml` / workspace member changes.
 

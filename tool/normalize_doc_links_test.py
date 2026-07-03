@@ -143,6 +143,35 @@ class NormalizeDocLinksTest(unittest.TestCase):
             "See [`ai_code_review_protocol.md`](../ai_code_review_protocol.md#special-cases).\n",
         )
 
+    def test_rewrites_optional_task_trackers_without_on_disk_file(self):
+        path = self.write_file(
+            "docs/agents_quick_reference.md",
+            "Track work in `tasks/cursor/todo.md` and `tasks/codex/todo.md`.\n",
+        )
+
+        change = self.module.normalize_file(path, self.repo_root)
+
+        self.assertIsNotNone(change)
+        self.assertEqual(
+            path.read_text(encoding="utf-8"),
+            "Track work in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) and "
+            "[`tasks/codex/todo.md`](../tasks/codex/todo.md).\n",
+        )
+
+    def test_preserves_existing_optional_task_tracker_links(self):
+        path = self.write_file(
+            "docs/agent_environment_setup.md",
+            "Tier 2: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).\n",
+        )
+
+        change = self.module.normalize_file(path, self.repo_root)
+
+        self.assertIsNone(change)
+        self.assertEqual(
+            path.read_text(encoding="utf-8"),
+            "Tier 2: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md).\n",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
