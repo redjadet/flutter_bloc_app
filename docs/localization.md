@@ -47,7 +47,7 @@ Error messages used by [NetworkErrorMapper](lib/shared/utils/network_error_mappe
 
 - **HTTP / API:** `errorUnknown`, `errorNetwork`, `errorTimeout`, `errorUnauthorized`, `errorForbidden`, `errorNotFound`, `errorServer`, `errorServiceUnavailable` (503), `errorClient`, `errorTooManyRequests` (429), `errorGeneric`
 - **Auth (Firebase):** `authErrorInvalidEmail`, `authErrorWrongPassword`, `authErrorInvalidCredential`, `authErrorNetworkRequestFailed`, `authErrorTooManyRequests`, `authErrorGeneric`, and others (see `app_en.arb`)
-- **Session invalidation (Firebase UX):** `sessionExpiredMessage` — snackbar when `AppAuthCubit` enters `sessionExpired` ([`authentication.md`](authentication.md) App auth UX)
+- **Session invalidation (Firebase UX):** `sessionExpiredMessage` — snackbar when `AppAuthCubit` enters `sessionExpired` ([`authentication.md`](authentication.md) App auth UX). Every supported locale needs distinct copy in `app_*.arb` **and** locale-specific generated Dart getters (not English fallback strings); guard with focused l10n tests such as [`test/l10n/session_expired_message_localization_test.dart`](../test/l10n/session_expired_message_localization_test.dart).
 
 Use these via `context.l10n` in the UI layer; repository/cubit code can pass `l10n: null` for English fallbacks.
 
