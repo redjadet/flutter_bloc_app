@@ -37,8 +37,12 @@ resolution: workspace
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  ai:
+    path: ../../packages/ai
   app_links: ^6.4.1
   apple_maps_flutter: ^1.4.0
+  auth:
+    path: ../../packages/auth
   cached_network_image: ^3.4.1
   cloud_firestore: ^6.6.0
   cloud_functions: ^6.3.3
@@ -56,6 +60,8 @@ dependencies:
   equatable: ^2.0.8
   event_bus: ^2.0.1
   fancy_shimmer_image: ^2.0.3
+  feature_flags:
+    path: ../../packages/feature_flags
   ffi: ^2.2.0
   firebase_analytics: ^12.4.3
   firebase_app_check: ^0.4.5
@@ -106,6 +112,8 @@ dependencies:
   markdown: ^7.3.1
   meta: ^1.16.0
   mix: ^2.1.0
+  networking:
+    path: ../../packages/networking
   package_info_plus: ^10.2.0
   path: ^1.9.1
   path_provider: ^2.1.6
@@ -117,6 +125,8 @@ dependencies:
   shared_preferences: ^2.5.5
   signature: ^6.3.0
   skeletonizer: ^2.1.3
+  storage:
+    path: ../../packages/storage
   supabase_flutter: ^2.15.4
   utilities:
     path: ../../packages/utilities

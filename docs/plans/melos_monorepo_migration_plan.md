@@ -18,6 +18,10 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-E wave 2a | `44f014b5` | `UI`, `ResponsiveConfig`, responsive extensions + `LayoutBreakpoints`; app compatibility barrels; `./bin/checklist` |
 | PR-E wave 2b | `add8a62b` | Mix theme, `app_styles`, `common_card` / `common_status_view` → `design_system`; `mix` dep; barrels; `./bin/checklist` (~2618 tests, ~80.7% cov) |
 | PR-E wave 2c | `e60b4e3d` | `common_max_width`, input helpers, `CommonFormField`, skeletons; `CommonSearchField` stays app-local; docs batch; `./bin/checklist` (~2618 tests, ~80.6% cov) |
+| PR-F wave 1 | (this commit) | `networking` + `storage` primitives; compatibility barrels; `packages/storage` unit test; `./bin/checklist` (~2618 tests, ~80.6% cov) |
+| PR-G | (this commit) | `packages/ai` contracts scaffold + unit test; no app migration |
+| PR-H | (this commit) | Firebase assets → `backend/firebase/`; `firebase.json.example` + deploy tooling |
+| PR-I | (this commit) | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
 
 **PR-C learnings (record before next extraction):**
 
@@ -38,9 +42,29 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** PR-F — `packages/networking` then `packages/storage`.
-PR-E deferred widgets (`common_app_bar`, `common_page_layout`, error/empty/loading,
-dropdown) stay in app until l10n/routing decouple.
+**Next implementation step:** Migration plan complete for scoped PRs A–I. Optional
+follow-ups: PR-F wave 2 (full Hive/HTTP stack), PR-C deferred utils, extra apps
+when product split is real.
+
+**PR-F wave 1 learnings:**
+
+- Strip `AppLogger` from `circuit_breaker` when moving to pure `networking` package.
+- `hive_recoverable_errors` is safe isolated `dart test` in `packages/storage`.
+- Keep `app_dio`, interceptors, token managers in app until auth seam is stable.
+
+**PR-G learnings:**
+
+- Contract-only `packages/ai` — no provider SDKs; one constructibility unit test suffices.
+
+**PR-H learnings:**
+
+- Update `commit_push_pr_deploy.py` + tests; do not replace `supabase/functions/` paths.
+- Cross-ref docs: `walletconnect_auth_status.md`, `agents_appendix.md`, validation guides.
+
+**PR-I learnings:**
+
+- Same compatibility-barrel pattern as PR-D/E for `core/auth` and `remote_config/domain`.
+- `session_invalidation_reason` must not import app `SessionLifecycleCoordinator`.
 
 **PR-E wave 2c learnings:**
 
@@ -291,11 +315,12 @@ Use this as the implementation checklist.
 - [x] PR-E wave 2c: package-safe `common_*` / skeletons + `CommonFormField`; deferred
   l10n/routing widgets stay in app.
 - [x] PR-E (full): design_system foundation complete; deferred widgets listed in change note.
-- [ ] PR-F: extract `packages/networking` then `packages/storage`.
-- [ ] PR-G: add provider-neutral `packages/ai` contracts.
-- [ ] PR-H: move Firebase backend assets after app workspace stabilizes.
-- [ ] PR-I (optional): extract `packages/auth`, `packages/feature_flags`, sync split.
-- [ ] Defer extra apps until product split is real.
+- [x] PR-F wave 1: `packages/networking` + `packages/storage` primitives; app barrels.
+- [ ] PR-F deferred: `app_dio`, Hive service/migrations, interceptors (app/auth coupling).
+- [x] PR-G: provider-neutral `packages/ai` contracts.
+- [x] PR-H: Firebase backend assets under `backend/firebase/`.
+- [x] PR-I: `packages/auth` + `packages/feature_flags` domain contracts (SDK impls in app).
+- [x] Defer extra apps until product split is real (policy — no action).
 
 ## Documentation Updates
 
@@ -312,9 +337,10 @@ Update these docs in the same PR as the relevant code change:
   extraction.
 - [x] [`design_system.md`](../design_system.md): design system package ownership (partial — wave 2b
   locations table).
-- [ ] [`firebase_setup.md`](../firebase_setup.md): backend paths after PR-H only.
-- [ ] [`deployment.md`](../deployment.md): app/backend CI command changes.
+- [x] [`firebase_setup.md`](../firebase_setup.md): backend paths after PR-H.
+- [x] [`deployment.md`](../deployment.md): Melos workspace + backend CI paths.
 - [x] `docs/changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`: PR-E wave 2c closeout note.
+- [x] `docs/changes/2026-07-03_melos-monorepo-pr-f-through-i.md`: PR-F–I closeout note.
 
 ## Review Basis
 

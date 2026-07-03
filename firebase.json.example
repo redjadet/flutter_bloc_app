@@ -1,10 +1,10 @@
 {
   "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "backend/firebase/firestore_rules/firestore.rules",
+    "indexes": "backend/firebase/indexes/firestore.indexes.json"
   },
   "storage": {
-    "rules": "storage.rules"
+    "rules": "backend/firebase/storage_rules/storage.rules"
   },
   "flutter": {
     "platforms": {
@@ -45,7 +45,7 @@
   },
   "functions": [
     {
-      "source": "functions",
+      "source": "backend/firebase/functions",
       "codebase": "default",
       "disallowLegacyRuntimeConfig": true,
       "ignore": [

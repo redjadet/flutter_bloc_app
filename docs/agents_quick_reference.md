@@ -58,7 +58,7 @@ Fastlane: prefer `./tool/fastlane.sh`.
 
 | Trigger | Cursor | Codex |
 | --- | --- | --- |
-| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Non-trivial existing-code work | Context ladder; plan + verification in `tasks/cursor/todo.md` | Same, but `tasks/codex/todo.md` |
 | Broad/high-risk work | Use [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation helps and is allowed |
 | API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |
 | External/live state | Use owning tool/MCP/connector/browser; summarize evidence | Same |
@@ -109,7 +109,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Flutter app analyze / test | `cd apps/mobile && flutter analyze` / `flutter test …` |
-| Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system` |
+| Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
 | Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
 | Path helper | `source tool/workspace_paths.sh` |
 | Melos bootstrap | `dart run melos bootstrap` from repo root |

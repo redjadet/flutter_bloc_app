@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.61%** (19428/24102 lines)
+*Total line coverage*: **80.61%** (19362/24018 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -196,7 +196,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/native_platform_showcase/data/runtime_platform_probe.dart` | 66.67% | 8/12 |
 | `lib/features/online_therapy_demo/presentation/cubit/client_booking_state.dart` | 66.67% | 10/15 |
 | `lib/features/todo_list/presentation/helpers/todo_list_delete_dialogs.dart` | 66.67% | 58/87 |
-| `lib/shared/http/circuit_breaker.dart` | 66.67% | 36/54 |
 | `lib/shared/sync/presentation/sync_status_state.dart` | 66.67% | 2/3 |
 | `lib/shared/utils/network_error_mapper_classification.dart` | 66.67% | 52/78 |
 | `lib/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart` | 66.99% | 69/103 |
@@ -542,7 +541,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/app/router/app_navigator_keys.dart` | 100.00% | 1/1 |
 | `lib/app/router/auth_redirect.dart` | 100.00% | 12/12 |
 | `lib/app/router/routes.dart` | 100.00% | 5/5 |
-| `lib/core/auth/auth_user.dart` | 100.00% | 1/1 |
 | `lib/core/auth/token_repository.dart` | 100.00% | 38/38 |
 | `lib/core/config/backend_availability.dart` | 100.00% | 5/5 |
 | `lib/core/config/iot_ble_runtime_config.dart` | 100.00% | 3/3 |
@@ -779,11 +777,9 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/http/auth_token_manager.dart` | 100.00% | 26/26 |
 | `lib/shared/http/auth_token_refresh_classifier.dart` | 100.00% | 3/3 |
 | `lib/shared/http/interceptors/telemetry_interceptor.dart` | 100.00% | 22/22 |
-| `lib/shared/http/retrofit_response_utils.dart` | 100.00% | 22/22 |
 | `lib/shared/http/supabase_session_refresh_classifier.dart` | 100.00% | 9/9 |
 | `lib/shared/media/media_pick_result.dart` | 100.00% | 1/1 |
 | `lib/shared/responsive/responsive_scope.dart` | 100.00% | 13/13 |
-| `lib/shared/storage/hive_recoverable_errors.dart` | 100.00% | 7/7 |
 | `lib/shared/storage/hive_repository_base.dart` | 100.00% | 17/17 |
 | `lib/shared/sync/background_sync_runner.dart` | 100.00% | 36/36 |
 | `lib/shared/sync/fcm_sync_trigger_contract.dart` | 100.00% | 22/22 |

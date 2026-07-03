@@ -7,8 +7,13 @@ environment:
 
 workspace:
   - apps/mobile
+  - packages/ai
+  - packages/auth
   - packages/core
   - packages/design_system
+  - packages/feature_flags
+  - packages/networking
+  - packages/storage
   - packages/utilities
   - custom_lints/file_length_lint
   - custom_lints/mix_lint

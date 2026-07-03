@@ -36,6 +36,21 @@ Use these tracked templates only when you want Firebase-backed features locally:
 Do not commit copied local files after replacing placeholders with real project
 values. Keep real values in the gitignored paths above.
 
+### Backend assets (Melos workspace)
+
+Firebase backend sources live under `backend/firebase/`:
+
+| Asset | Path |
+| --- | --- |
+| Cloud Functions | `backend/firebase/functions/` |
+| Firestore rules | `backend/firebase/firestore_rules/firestore.rules` |
+| Firestore indexes | `backend/firebase/indexes/firestore.indexes.json` |
+| Storage rules | `backend/firebase/storage_rules/storage.rules` |
+
+[`firebase.json.example`](../firebase.json.example) points at these paths. After
+copying to gitignored `firebase.json`, deploy with `firebase deploy` from the
+repo root. Functions tests: `cd backend/firebase/functions && npm ci && npm test`.
+
 ---
 
 ## Option A: FlutterFire CLI (recommended)

@@ -32,10 +32,10 @@ User prefs:
 - Shell exposes `StaffDemoSitesCubit` from `staffDemoSites`; pages pick from
   list, no free-text IDs.
 - Parsing must match seed/admin docs:
-  `lib/features/staff_app_demo/data/staff_demo_site_firestore_map.dart`,
-  `functions/tool/seed_staff_demo.js`,
-  `test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart`,
-  `test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart`.
+  `apps/mobile/lib/features/staff_app_demo/data/staff_demo_site_firestore_map.dart`,
+  `backend/firebase/functions/tool/seed_staff_demo.js`,
+  `apps/mobile/test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart`,
+  `apps/mobile/test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart`.
   Focused guards: `tool/check_regression_guards.sh`.
 
 ## Checks / Platform
@@ -80,7 +80,7 @@ User prefs:
 - Integration tests fail on warning/error logs unless narrowly allowlisted in
   `integration_test/test_harness.dart`.
 - Markdownlint ignores (`.markdownlintignore`, `.markdownlint-cli2.yaml`): task
-  trackers, `AGENTS.md`/`GEMINI.md`, `.agents/`, `vendor/`, platform trees,
+  trackers, [`AGENTS.md`](../AGENTS.md)/`GEMINI.md`, `.agents/`, `vendor/`, platform trees,
   `fastlane/` (generated README), `third_party/`, build artifacts.
 - `tool/check_dialog_text_controller_lifecycle.sh` / `.py` runs in checklist;
   flags local `TextEditingController(` inside async blocks in dialog files.

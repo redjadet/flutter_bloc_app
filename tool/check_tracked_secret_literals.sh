@@ -25,7 +25,7 @@ is_scannable_path() {
     *.dart|*.ts|*.tsx|*.js|*.jsx|*.py|*.sh|*.yml|*.yaml|*.json|*.plist|*.toml|*.env|*.example|*.sample|*.xml)
       return 0
       ;;
-    .env.*|.firebaserc|Gemfile|Gemfile.lock|pubspec.yaml|pubspec.lock|firebase.json|firestore.rules|storage.rules)
+    .env.*|.firebaserc|Gemfile|Gemfile.lock|pubspec.yaml|pubspec.lock|firebase.json|backend/firebase/**/firestore.rules|backend/firebase/**/storage.rules)
       return 0
       ;;
     *)

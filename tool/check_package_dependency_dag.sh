@@ -23,8 +23,13 @@ packages_dir = workspace_root / "packages"
 
 # Allowed path dependency targets per package name (workspace libraries only).
 ALLOWED: dict[str, frozenset[str]] = {
+    "ai": frozenset({"core", "utilities"}),
+    "auth": frozenset({"core", "utilities"}),
     "core": frozenset(),
     "design_system": frozenset({"core", "utilities"}),
+    "feature_flags": frozenset({"core", "utilities"}),
+    "networking": frozenset({"core", "utilities"}),
+    "storage": frozenset({"core", "utilities"}),
     "utilities": frozenset({"core"}),
 }
 

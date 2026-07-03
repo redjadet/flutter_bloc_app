@@ -1,21 +1,4 @@
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+/// Compatibility barrel — implementation lives in `package:auth`.
+library;
 
-/// Read-only Supabase (or similar remote backend) auth surface for cross-feature use.
-///
-/// Feature modules depend on this core port instead of a concrete Supabase auth repository type.
-abstract class RemoteBackendAuthPort {
-  /// Whether the remote backend was initialized (URL and credentials configured).
-  bool get isConfigured;
-
-  /// Current remote-backend user, or null if not signed in.
-  AuthUser? get currentUser;
-
-  /// Stream of remote-backend auth state changes.
-  Stream<AuthUser?> get authStateChanges;
-
-  /// Signs out the current remote-backend user.
-  ///
-  /// Intended for presentation layers (e.g. history delete on 401), not cubit
-  /// session flows.
-  Future<void> signOut();
-}
+export 'package:auth/auth.dart' show RemoteBackendAuthPort;
