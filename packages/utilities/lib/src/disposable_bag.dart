@@ -38,11 +38,9 @@ class DisposableBag {
     final Object token = Object();
     if (_isDisposed) {
       unawaited(
-        dispose().catchError(
-          (final Object error, final StackTrace stackTrace) {
-            _reportDisposeError(error, stackTrace);
-          },
-        ),
+        dispose().catchError((final Object error, final StackTrace stackTrace) {
+          _reportDisposeError(error, stackTrace);
+        }),
       );
       return token;
     }

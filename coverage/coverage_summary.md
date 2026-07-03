@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.87%** (20053/24796 lines)
+*Total line coverage*: **80.92%** (20028/24750 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -147,7 +147,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/di/register_realtime_market_services.dart` | 53.85% | 7/13 |
 | `lib/features/remote_config/data/offline_first_remote_config_repository.dart` | 53.85% | 21/39 |
 | `lib/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart` | 54.05% | 40/74 |
-| `lib/shared/utils/disposable_bag.dart` | 54.35% | 25/46 |
 | `lib/features/auth/presentation/widgets/register_terms_dialog.dart` | 55.56% | 15/27 |
 | `lib/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart` | 55.77% | 29/52 |
 | `lib/core/di/register_online_therapy_demo_services.dart` | 56.25% | 9/16 |

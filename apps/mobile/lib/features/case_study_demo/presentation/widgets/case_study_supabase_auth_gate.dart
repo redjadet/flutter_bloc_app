@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
-import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
+import 'package:utilities/utilities.dart';
 
 /// Gate that shows [child] when either Supabase is not configured (local-only
 /// mode) or Supabase is initialized and [getCurrentUser] returns a non-null

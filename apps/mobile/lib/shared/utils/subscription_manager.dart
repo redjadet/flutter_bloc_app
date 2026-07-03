@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
+import 'package:utilities/utilities.dart';
 
 /// Centralized holder for [StreamSubscription]s with a single [dispose] that
 /// cancels all and marks the manager disposed.
