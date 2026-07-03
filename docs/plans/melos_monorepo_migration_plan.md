@@ -18,10 +18,10 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-E wave 2a | `44f014b5` | `UI`, `ResponsiveConfig`, responsive extensions + `LayoutBreakpoints`; app compatibility barrels; `./bin/checklist` |
 | PR-E wave 2b | `add8a62b` | Mix theme, `app_styles`, `common_card` / `common_status_view` → `design_system`; `mix` dep; barrels; `./bin/checklist` (~2618 tests, ~80.7% cov) |
 | PR-E wave 2c | `e60b4e3d` | `common_max_width`, input helpers, `CommonFormField`, skeletons; `CommonSearchField` stays app-local; docs batch; `./bin/checklist` (~2618 tests, ~80.6% cov) |
-| PR-F wave 1 | (this commit) | `networking` + `storage` primitives; compatibility barrels; `packages/storage` unit test; `./bin/checklist` (~2618 tests, ~80.6% cov) |
-| PR-G | (this commit) | `packages/ai` contracts scaffold + unit test; no app migration |
-| PR-H | (this commit) | Firebase assets → `backend/firebase/`; `firebase.json.example` + deploy tooling |
-| PR-I | (this commit) | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
+| PR-F wave 1 | `fee3db6b` | `networking` + `storage` primitives; compatibility barrels; `packages/storage` unit test; `./bin/checklist` (~2618 tests, ~80.6% cov) |
+| PR-G | `fee3db6b` | `packages/ai` contracts scaffold + unit test; no app migration |
+| PR-H | `fee3db6b` | Firebase assets → `backend/firebase/`; `firebase.json.example` + deploy tooling |
+| PR-I | `fee3db6b` | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
 
 **PR-C learnings (record before next extraction):**
 
