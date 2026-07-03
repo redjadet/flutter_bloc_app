@@ -148,6 +148,48 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         )
         self.assertEqual(fake.calls, 1)
 
+    def test_drain_stale_pages_deployments_waits_to_settle(self):
+        module = self.module
+
+        class FakeClient:
+            def __init__(self):
+                self.stale = True
+
+            def list_environment_deployments(self, *, environment, max_deployments):
+                if self.stale:
+                    return [{"sha": "stale1234567890"}]
+                return []
+
+            def pages_status(self, sha):
+                return module.PagesStatusLookup(
+                    found=True,
+                    status="deployment_queued",
+                )
+
+            def cancel_pages_deployment(self, sha):
+                self.stale = False
+
+        sleeps: list[float] = []
+        original_sleep = module.time.sleep
+
+        def record_sleep(seconds):
+            sleeps.append(seconds)
+
+        module.time.sleep = record_sleep
+        try:
+            cancelled = module.drain_stale_pages_deployments(
+                FakeClient(),
+                poll_timeout_seconds=5,
+                poll_interval_seconds=0,
+                wait_after_cancel_seconds=0,
+                settle_seconds=45,
+            )
+        finally:
+            module.time.sleep = original_sleep
+
+        self.assertEqual(len(cancelled), 1)
+        self.assertIn(45, sleeps)
+
 
 if __name__ == "__main__":
     unittest.main()

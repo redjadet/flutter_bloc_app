@@ -270,6 +270,7 @@ def drain_stale_pages_deployments(
     wait_after_cancel_seconds: int = 5,
     poll_timeout_seconds: int = 120,
     poll_interval_seconds: int = 5,
+    settle_seconds: int = 0,
 ) -> list[PagesDeployment]:
     cancelled: list[PagesDeployment] = []
     nudged_shas: set[str] = set()
@@ -284,6 +285,13 @@ def drain_stale_pages_deployments(
             nudged_shas=nudged_shas,
         )
         if not stale:
+            if cancelled and settle_seconds > 0:
+                print(
+                    "Waiting "
+                    f"{settle_seconds}s for GitHub Pages queue to settle "
+                    f"after draining {len(cancelled)} deployment(s)."
+                )
+                time.sleep(settle_seconds)
             return cancelled
 
         if time.monotonic() >= deadline:
@@ -371,6 +379,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=120,
         help="Max time to wait for queue to drain",
     )
+    parser.add_argument(
+        "--settle-seconds",
+        type=int,
+        default=0,
+        help="Extra wait after draining when cancellations occurred",
+    )
     return parser.parse_args(argv)
 
 
@@ -401,6 +415,7 @@ def main(argv: list[str] | None = None) -> int:
         exclude_sha=exclude_sha,
         wait_after_cancel_seconds=args.wait_after_cancel_seconds,
         poll_timeout_seconds=args.poll_timeout_seconds,
+        settle_seconds=args.settle_seconds,
     )
     if args.ensure_current_sha_terminal and current_sha:
         ensure_pages_deployment_terminal(
