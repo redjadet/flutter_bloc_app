@@ -106,13 +106,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: read
       deployments: write
       pages: write
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
 
@@ -143,7 +144,10 @@ jobs:
         if: steps.branch_tip.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        run: python3 tool/drain_stale_github_pages_deployments.py
+        run: |
+          python3 tool/drain_stale_github_pages_deployments.py \
+            --max-deployments 50 \
+            --settle-seconds 45
 
       - id: deployment
         if: steps.branch_tip.outputs.skip != 'true'
@@ -156,16 +160,36 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           python3 tool/drain_stale_github_pages_deployments.py \
+            --max-deployments 50 \
             --poll-timeout-seconds 180 \
+            --post-terminal-wait-seconds 90 \
             --exclude-sha="" \
             --ensure-current-sha-terminal
 
-      - id: deployment_retry
+      - name: Re-dispatch Deploy web workflow after Pages failure
+        id: redispatch
         if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
-        uses: actions/deploy-pages@v5
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const workflowFile = 'deploy_web.yml';
+            const ref = context.ref.replace('refs/heads/', '');
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflowFile,
+              ref,
+            });
+            core.info(
+              `Dispatched ${workflowFile} on ${ref} after Pages deploy failure.`,
+            );
 
-      - name: Fail when Pages deploy did not succeed
-        if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+      - name: Fail after handing off failed Pages deploy
+        if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
         run: |
-          echo "GitHub Pages deploy failed after queue drain and one retry." >&2
+          if [[ "${{ steps.redispatch.outcome }}" == "success" ]]; then
+            echo "GitHub Pages deploy failed; dispatched a fresh workflow for this commit." >&2
+          else
+            echo "GitHub Pages deploy failed and could not dispatch a fresh workflow." >&2
+          fi
           exit 1
