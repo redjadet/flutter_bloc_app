@@ -3,7 +3,7 @@
 Date: 2026-07-03
 Plan branch: `codex/melos-monorepo-plan` · worktree `../flutter_bloc_app_melos_plan`
 Implementation branch: `codex/melos-monorepo-build` · worktree `../flutter_bloc_app_melos_build`
-Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked PR-A–D + utilities wave 2 on build branch)
+Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked monorepo migration on build branch)
 
 ## Implementation status (2026-07-03)
 
@@ -14,7 +14,8 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked 
 | PR-B | `d793a0e9` | `apps/mobile/`, `tool/workspace_paths.sh`, CI/checklist paths, `melos analyze:flutter`, `./bin/checklist` (~2618 tests, ~80.9% cov) |
 | PR-C wave 1 | `bd68b06c` | `packages/utilities` (3 pure-Dart utils), app-hosted tests, `#437` CI |
 | PR-D | `8ec663f5` | `packages/core` (`failure`, `result`, `timer_service`), 88 import rewrites, app barrel re-exports `package:core`, `./bin/checklist` (~2618 tests, ~80.9% cov) |
-| PR-C wave 2 + DAG | `435d31ec` | `disposable_bag` → `utilities`, `utilities` → `core`, `check_package_dependency_dag.sh`, `./bin/checklist` |
+| PR-C wave 2 + DAG | `d9388410` | `disposable_bag` → `utilities`, `utilities` → `core`, `check_package_dependency_dag.sh`, `./bin/checklist` |
+| PR-E wave 1 | `20f0ba89` | `packages/design_system` scaffold; 3 widgets/theme files; package + account_section canaries; `./bin/checklist` |
 
 **PR-C learnings (record before next extraction):**
 
@@ -35,8 +36,17 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked 
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** PR-E — `packages/design_system` foundation (theme
-tokens, common widgets). Documentation Updates checklist still open.
+**Next implementation step:** PR-E wave 2a — `ui_constants` + responsive extensions
+(then Mix theme / `common_*` widgets). Documentation Updates checklist still open.
+
+**PR-E wave 1 learnings:**
+
+- Flutter package needs `flutter: uses-material-design: true` when depending on
+  `skeletonizer`.
+- App barrels (`core/theme/theme.dart`, `shared/widgets/widgets.dart`,
+  `skeletons.dart`) re-export `package:design_system` symbols to limit churn.
+- Package widget test: assert `SkeletonBase` + child; do not rely on
+  `Skeletonizer` type in tests (implementation detail).
 
 **PR-C wave 2 learnings:**
 
@@ -220,6 +230,7 @@ packages/auth → packages/core, utilities
 packages/ai → packages/core, utilities
 packages/feature_flags → packages/core, utilities
 packages/shared_blocs → packages/core, design_system (only if truly shared UI state)
+packages/design_system → packages/core, utilities
 packages/utilities → packages/core
 packages/core → (none)
 custom_lints/* → (none; workspace members only)
@@ -246,7 +257,12 @@ Use this as the implementation checklist.
 - [x] PR-D: extract pure `packages/core` (`failure`, `result`, `timer_service`).
 - [x] PR-D: prove router auth gate canary + `./bin/checklist`.
 - [x] PR-D follow-up: `tool/check_package_dependency_dag.sh` in checklist.
-- [ ] PR-E: extract `packages/design_system` foundation.
+- [x] PR-E wave 1: scaffold `packages/design_system` (`ConfettiTheme`,
+  `responsive_action_bar`, `SkeletonBase`); package + account_section canaries.
+- [ ] PR-E wave 2a: `ui_constants` + responsive extensions → design_system.
+- [ ] PR-E wave 2b: Mix theme + `app_styles` + `common_card` / `common_status_view`.
+- [ ] PR-E wave 2c: remaining `common_*` / skeletons (after l10n/routing decouple).
+- [ ] PR-E (full): mark complete when wave 2c lands or plan defers widgets.
 - [ ] PR-F: extract `packages/networking` then `packages/storage`.
 - [ ] PR-G: add provider-neutral `packages/ai` contracts.
 - [ ] PR-H: move Firebase backend assets after app workspace stabilizes.
@@ -1453,7 +1469,11 @@ Objective: prove first package extraction with pure Dart, low-coupling code.
 **Wave 2 (2026-07-03):** `disposable_bag.dart` → `packages/utilities` with
 `utilities` → `core` path dependency.
 
+**Wave 1 (2026-07-03, PR-E):** `packages/design_system` with zero app-dep sources:
+`theme_extensions.dart`, `responsive_action_bar.dart`, `skeleton_base.dart`.
+
 **Deferred (stop criteria — do not block wave 1):**
+
 - `safe_parse_utils.dart` — depends on app `AppLogger`
 - `date_time_formatting.dart` — depends on Flutter `MaterialLocalizations`
 
