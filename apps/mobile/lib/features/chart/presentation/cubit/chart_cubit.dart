@@ -6,8 +6,8 @@ import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
-import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'chart_cubit.freezed.dart';
 part 'chart_state.dart';

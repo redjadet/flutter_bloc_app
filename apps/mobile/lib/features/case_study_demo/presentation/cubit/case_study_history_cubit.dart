@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_state.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
+import 'package:utilities/utilities.dart';
 
 export 'case_study_history_state.dart';
 

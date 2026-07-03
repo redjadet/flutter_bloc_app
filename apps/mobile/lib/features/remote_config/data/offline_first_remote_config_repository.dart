@@ -11,8 +11,8 @@ import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
 import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/shared/utils/in_flight_coalescer.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:utilities/utilities.dart';
 
 part 'offline_first_remote_config_repository_sync.part.dart';
 

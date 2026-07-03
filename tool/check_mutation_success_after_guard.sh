@@ -45,6 +45,7 @@ staged_triggers_full_lib_scan() {
     [ -z "$file" ] && continue
     case "$file" in
       lib/shared/utils/request_id_guard.dart|\
+      packages/utilities/lib/src/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh|\
       tool/fixtures/mutation_success_after_guard/*)
         return 0
@@ -61,6 +62,7 @@ staged_has_relevant_changes() {
     case "$file" in
       lib/*.dart|\
       lib/shared/utils/request_id_guard.dart|\
+      packages/utilities/lib/src/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh|\
       tool/fixtures/mutation_success_after_guard/*)
         return 0

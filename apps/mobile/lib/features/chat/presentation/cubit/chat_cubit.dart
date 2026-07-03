@@ -15,7 +15,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dar
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
+import 'package:utilities/utilities.dart';
 
 part 'chat_cubit_helpers.dart';
 part 'chat_cubit_history_actions.dart';

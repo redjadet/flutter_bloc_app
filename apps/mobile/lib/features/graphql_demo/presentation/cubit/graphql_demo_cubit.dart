@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
+import 'package:utilities/utilities.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {
   GraphqlDemoCubit({required this._repository})

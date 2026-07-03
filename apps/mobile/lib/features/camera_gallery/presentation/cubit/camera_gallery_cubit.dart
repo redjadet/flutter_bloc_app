@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/came
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/request_id_guard.dart';
+import 'package:utilities/utilities.dart';
 
 /// Cubit for the Camera & Gallery demo: pick from camera/gallery and show preview.
 class CameraGalleryCubit extends Cubit<CameraGalleryState> {

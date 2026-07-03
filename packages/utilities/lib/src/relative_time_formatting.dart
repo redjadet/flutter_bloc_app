@@ -1,8 +1,5 @@
 /// Short relative-time labels for chat-style timestamps (e.g. `3d`, `2h`).
-String formatRelativeTimeShort(
-  final DateTime time, {
-  final DateTime? now,
-}) {
+String formatRelativeTimeShort(final DateTime time, {final DateTime? now}) {
   final DateTime reference = now ?? DateTime.now();
   final Duration difference = reference.difference(time);
 

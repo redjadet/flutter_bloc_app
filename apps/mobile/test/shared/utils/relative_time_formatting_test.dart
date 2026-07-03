@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/utils/relative_time_formatting.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

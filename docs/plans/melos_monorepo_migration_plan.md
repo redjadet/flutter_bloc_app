@@ -191,14 +191,19 @@ Until then, verify with `dart pub deps` per new package before merging.
 
 Use this as the implementation checklist.
 
-- [ ] Create implementation worktree `../flutter_bloc_app_melos_build`.
-- [ ] Run Phase 0 baseline commands and save dependency baseline.
-- [ ] PR-A: add Melos/Pub workspace shell with root app still in place.
-- [ ] PR-A: prove `dart run melos bootstrap` and `./bin/checklist`.
-- [ ] PR-B: move app to `apps/mobile` with package name still
+- [x] Create implementation worktree `../flutter_bloc_app_melos_build`.
+- [x] Run Phase 0 baseline commands and save dependency baseline.
+- [x] PR-A: add Melos/Pub workspace shell with root app still in place.
+- [x] PR-A: prove `dart run melos bootstrap` and `./bin/checklist`.
+- [x] PR-B: move app to `apps/mobile` with package name still
   `flutter_bloc_app`.
-- [ ] PR-B: update scripts/CI paths and prove app route/counter canaries.
-- [ ] PR-C: extract pure `packages/utilities`.
+- [x] PR-B: update scripts/CI paths and prove app route/counter canaries.
+- [x] PR-C wave 1: extract `packages/utilities` (`in_flight_coalescer`,
+  `request_id_guard`, `relative_time_formatting`); app-hosted tests; deferred
+  trio documented below.
+- [ ] PR-C deferred until PR-D/app logging: `disposable_bag` (needs
+  `core/time/timer_service`), `safe_parse_utils` (needs `AppLogger`),
+  `date_time_formatting` (needs Flutter `MaterialLocalizations`).
 - [ ] PR-D: extract pure `packages/core`.
 - [ ] PR-E: extract `packages/design_system` foundation.
 - [ ] PR-F: extract `packages/networking` then `packages/storage`.
@@ -1398,7 +1403,19 @@ Rollback:
 
 Objective: prove first package extraction with pure Dart, low-coupling code.
 
-Allowed source candidates:
+**Wave 1 (2026-07-03, `codex/melos-monorepo-build`):** move only Dart-only helpers:
+
+- `in_flight_coalescer.dart`
+- `request_id_guard.dart`
+- `relative_time_formatting.dart`
+
+**Deferred (stop criteria — do not block wave 1):**
+
+- `disposable_bag.dart` — depends on `core/time/timer_service` (PR-D)
+- `safe_parse_utils.dart` — depends on app `AppLogger`
+- `date_time_formatting.dart` — depends on Flutter `MaterialLocalizations`
+
+Allowed source candidates (full list; wave 1 subset above):
 
 - `apps/mobile/lib/shared/utils/disposable_bag.dart`
 - `apps/mobile/lib/shared/utils/safe_parse_utils.dart`
@@ -1427,7 +1444,9 @@ dart run melos exec --scope=flutter_bloc_app -- flutter test \
 Acceptance:
 
 - `packages/utilities` has no Flutter dependency unless proven necessary
-- every moved file has package tests or retained app tests
+- every moved file has package tests or retained app tests (wave 1: app-hosted
+  tests under `apps/mobile/test/shared/utils/` because Pub workspace + Flutter app
+  breaks isolated `dart test` in `packages/utilities`)
 - app imports only moved utilities from `package:utilities/...`
 
 Stop criteria:
