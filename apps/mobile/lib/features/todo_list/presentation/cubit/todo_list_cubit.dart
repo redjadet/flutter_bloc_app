@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';

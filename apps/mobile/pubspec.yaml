@@ -45,6 +45,8 @@ dependencies:
   collection: ^1.19.1
   confetti: ^0.8.0
   connectivity_plus: ^7.2.0
+  core:
+    path: ../../packages/core
   cross_file: ^0.3.5+2
   cupertino_icons: ^1.0.9
   device_info_plus: ^13.2.0

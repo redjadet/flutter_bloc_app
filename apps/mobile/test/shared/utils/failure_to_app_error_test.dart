@@ -1,7 +1,7 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:flutter_bloc_app/shared/utils/failure_to_app_error.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 void main() {
   group('appErrorFromFailure', () {

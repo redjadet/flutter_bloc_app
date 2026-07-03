@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_stats.dart';

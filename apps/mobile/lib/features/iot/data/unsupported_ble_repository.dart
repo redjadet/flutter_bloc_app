@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/result.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/data/mappers/ble_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/ble_adapter_status.dart';

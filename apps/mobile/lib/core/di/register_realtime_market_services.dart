@@ -1,8 +1,8 @@
 import 'dart:math';
+import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/security/certificate_pinning_policy.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/security/market_feed_remote_port.dart';

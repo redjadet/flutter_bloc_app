@@ -1,7 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';

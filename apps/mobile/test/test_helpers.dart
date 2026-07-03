@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:core/core.dart';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';

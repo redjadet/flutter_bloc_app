@@ -1,8 +1,8 @@
 // check-ignore: nonbuilder_lists - ScapesGridView is a custom widget, not GridView constructor
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';

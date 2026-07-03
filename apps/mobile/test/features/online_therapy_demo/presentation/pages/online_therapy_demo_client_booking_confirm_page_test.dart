@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:core/core.dart';
 
 void main() {
   testWidgets('shows error card when booking state has errorMessage', (

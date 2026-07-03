@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 
 /// Centralized holder for [TimerDisposable] handles with a single [dispose] that

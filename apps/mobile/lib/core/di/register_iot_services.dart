@@ -1,7 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/core/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_permission_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';

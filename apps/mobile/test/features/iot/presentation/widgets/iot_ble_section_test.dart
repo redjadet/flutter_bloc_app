@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/core/config/iot_ble_runtime_config.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_secti
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 class _ImmediateTimerService implements TimerService {
   @override

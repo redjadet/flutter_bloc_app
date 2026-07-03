@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'failure.dart';
 
 sealed class Result<T> {
   const Result();

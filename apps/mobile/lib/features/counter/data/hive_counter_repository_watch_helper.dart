@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_state.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 

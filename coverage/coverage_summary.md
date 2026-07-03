@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.90%** (20115/24864 lines)
+*Total line coverage*: **80.87%** (20053/24796 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -182,7 +182,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/walletconnect_auth/presentation/widgets/connect_wallet_button.dart` | 63.64% | 7/11 |
 | `lib/shared/storage/hive_settings_repository.dart` | 63.83% | 30/47 |
 | `lib/features/playlearn/presentation/pages/vocabulary_list_page.dart` | 64.29% | 18/28 |
-| `lib/core/domain/result.dart` | 64.71% | 11/17 |
 | `lib/features/chat/data/chat_render_orchestration_diagnostics.dart` | 64.71% | 11/17 |
 | `lib/features/deeplink/presentation/deep_link_listener.dart` | 64.71% | 11/17 |
 | `lib/features/iot/presentation/widgets/iot_ble_read_write_panel.dart` | 65.00% | 39/60 |
@@ -573,13 +572,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/core/diagnostics/diagnostics_sync_timestamp.dart` | 100.00% | 4/4 |
 | `lib/core/diagnostics/profile_cache_controls_port.dart` | 100.00% | 1/1 |
 | `lib/core/diagnostics/remote_config_diagnostics_view_data.dart` | 100.00% | 5/5 |
-| `lib/core/domain/failure.dart` | 100.00% | 7/7 |
 | `lib/core/flavor.dart` | 100.00% | 29/29 |
 | `lib/core/platform_init.dart` | 100.00% | 2/2 |
 | `lib/core/platform_init_impl.dart` | 100.00% | 2/2 |
 | `lib/core/platform_init_impl_io.dart` | 100.00% | 8/8 |
 | `lib/core/supabase/edge_then_tables.dart` | 100.00% | 16/16 |
-| `lib/core/time/timer_service.dart` | 100.00% | 9/9 |
 | `lib/features/ai_decision_demo/domain/ai_decision_models.dart` | 100.00% | 3/3 |
 | `lib/features/ai_decision_demo/presentation/cubit/ai_decision_state.dart` | 100.00% | 12/12 |
 | `lib/features/auth/data/firebase_auth_repository.dart` | 100.00% | 16/16 |
@@ -815,14 +812,11 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/sync/syncable_repository_registry.dart` | 100.00% | 14/14 |
 | `lib/shared/ui/view_status.dart` | 100.00% | 4/4 |
 | `lib/shared/utils/app_error.dart` | 100.00% | 29/29 |
-| `lib/shared/utils/in_flight_coalescer.dart` | 100.00% | 22/22 |
 | `lib/shared/utils/isolate_json.dart` | 100.00% | 50/50 |
 | `lib/shared/utils/markdown_table_renderer.dart` | 100.00% | 53/53 |
 | `lib/shared/utils/platform_environment.dart` | 100.00% | 1/1 |
 | `lib/shared/utils/platform_environment_io.dart` | 100.00% | 1/1 |
-| `lib/shared/utils/relative_time_formatting.dart` | 100.00% | 9/9 |
 | `lib/shared/utils/repository_initial_load_helper.dart` | 100.00% | 21/21 |
-| `lib/shared/utils/request_id_guard.dart` | 100.00% | 4/4 |
 | `lib/shared/utils/retry_policy.dart` | 100.00% | 32/32 |
 | `lib/shared/utils/safe_parse_utils.dart` | 100.00% | 40/40 |
 | `lib/shared/utils/sealed_state_helpers.dart` | 100.00% | 21/21 |

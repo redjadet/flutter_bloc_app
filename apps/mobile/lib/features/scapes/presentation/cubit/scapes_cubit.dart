@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';

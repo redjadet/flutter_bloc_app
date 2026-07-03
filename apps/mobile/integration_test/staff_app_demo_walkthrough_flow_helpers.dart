@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:core/core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_cubit.dart';

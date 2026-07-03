@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/result.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
 import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart
 import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:core/core.dart';
 
 import '../test_helpers.dart' as test_helpers;
 

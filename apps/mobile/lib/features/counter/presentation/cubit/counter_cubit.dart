@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/helpers/counter_snapshot_utils.dart';

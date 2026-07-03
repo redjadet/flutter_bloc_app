@@ -1,6 +1,6 @@
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 void main() {
   group('TimerHandleManager', () {

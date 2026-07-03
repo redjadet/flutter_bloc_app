@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
 import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';

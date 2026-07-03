@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/shared/widgets/responsive_action_bar.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 import '../../../../helpers/layout_overflow_expectations.dart';
 

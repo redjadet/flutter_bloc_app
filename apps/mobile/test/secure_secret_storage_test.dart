@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

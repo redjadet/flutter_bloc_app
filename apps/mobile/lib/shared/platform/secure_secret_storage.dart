@@ -1,7 +1,6 @@
+import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

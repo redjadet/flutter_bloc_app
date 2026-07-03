@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';

@@ -1,9 +1,7 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart' hide Result;
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';
 import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';

@@ -1,8 +1,8 @@
 import 'dart:math' as math;
+import 'package:core/core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';

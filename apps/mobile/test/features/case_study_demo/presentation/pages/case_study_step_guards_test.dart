@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/auth_user.dart';
 import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';

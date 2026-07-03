@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_pending_set_value.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_sync_operation_applier.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_sync_payloads.dart';

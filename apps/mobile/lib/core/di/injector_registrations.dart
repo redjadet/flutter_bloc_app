@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
@@ -35,7 +36,6 @@ import 'package:flutter_bloc_app/core/di/register_staff_app_demo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_supabase_services.dart';
 import 'package:flutter_bloc_app/core/di/register_todo_services.dart';
 import 'package:flutter_bloc_app/core/di/register_walletconnect_auth_services.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/data/image_picker_camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';

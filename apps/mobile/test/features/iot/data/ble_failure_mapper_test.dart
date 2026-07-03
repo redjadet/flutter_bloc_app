@@ -1,7 +1,7 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_failure_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 void main() {
   group('mapFailureToIotBleErrorCode', () {

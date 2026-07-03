@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 

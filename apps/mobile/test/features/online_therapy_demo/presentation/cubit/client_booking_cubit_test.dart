@@ -1,9 +1,9 @@
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
 
 void main() {
   group('ClientBookingCubit success paths', () {

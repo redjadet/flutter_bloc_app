@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';

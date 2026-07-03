@@ -1,8 +1,41 @@
 # Melos Monorepo Migration Plan
 
-Date: 2026-07-03
-Branch: `codex/melos-monorepo-plan`
-Worktree: `../flutter_bloc_app_melos_plan`
+Date: 2026-07-03  
+Plan branch: `codex/melos-monorepo-plan` · worktree `../flutter_bloc_app_melos_plan`  
+Implementation branch: `codex/melos-monorepo-build` · worktree `../flutter_bloc_app_melos_build`  
+Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (stacked PR-A/B/C on build branch)
+
+## Implementation status (2026-07-03)
+
+| Phase | Commit (build branch) | Proof |
+| --- | --- | --- |
+| Phase 0 | (baseline artifacts) | `docs/plans/melos_dependency_baseline.txt`, `docs/plans/melos_path_dependent_files.txt` (108 files) |
+| PR-A | `1b075edd` | `melos bootstrap` (3 pkgs), `./bin/checklist` |
+| PR-B | `d793a0e9` | `apps/mobile/`, `tool/workspace_paths.sh`, CI/checklist paths, `melos analyze:flutter`, `./bin/checklist` (~2618 tests, ~80.9% cov) |
+| PR-C wave 1 | `bd68b06c` | `packages/utilities` (3 pure-Dart utils), app-hosted tests, `#437` CI |
+| PR-D | `588b0983` | `packages/core` (`failure`, `result`, `timer_service`), 88 import rewrites, app barrel re-exports `package:core`, `./bin/checklist` (~2618 tests, ~80.9% cov) |
+
+**PR-C learnings (record before next extraction):**
+
+- Pure packages: use `package:lints/recommended.yaml` — do not include root
+  `analysis_options.yaml` (analyzer plugins hang / mis-resolve).
+- Isolated `dart test` in `packages/*` fails under Pub workspace + Flutter app
+  (VM compile crash) — keep tests in `apps/mobile` until isolated test path exists.
+- After adding `package:utilities` imports, run `dart fix --apply --code=directives_ordering`
+  (`utilities` sorts before `freezed_*`).
+- `check_tracked_secret_literals.sh`: exclude `*/assets/*` (not only root `assets/*`).
+
+**PR-D learnings:**
+
+- Re-export `package:core/core.dart` from `apps/mobile/lib/core/core.dart` so
+  routes/widgets that import `package:flutter_bloc_app/core/core.dart` keep
+  `TimerService` without a second migration pass.
+- `packages/core` has no workspace dependencies (DAG: `core` leaf today; future
+  `core → utilities` only if a primitive needs a util).
+- Same app-hosted test policy as utilities PR-C wave 1.
+
+**Next implementation step:** PR-C wave 2 — move `disposable_bag` to
+`packages/utilities` (now unblocked: `TimerService` lives in `core`).
 
 ## Goal
 
@@ -54,9 +87,10 @@ cd ../flutter_bloc_app_melos_build
 ```
 
 1. Run Phase 0 baseline commands (record outputs under `docs/plans/`).
-2. Open PR-A only. Scope = workspace shell; zero `lib/**` moves.
-3. Merge PR-A before starting PR-B. PR-B is the highest-risk PR — budget a
-   dedicated review for path-root refactors.
+2. Implementation continues on `codex/melos-monorepo-build` (not the plan-only branch).
+3. PR-A/B/C landed on build branch — see **Implementation status** above; merge
+   [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) before splitting
+   follow-on PRs if review size matters.
 4. Track progress in `tasks/cursor/todo.md` or `tasks/codex/todo.md` using the
    Build Todo checkboxes below.
 
@@ -184,8 +218,9 @@ packages/utilities → (none)
 custom_lints/* → (none; workspace members only)
 ```
 
-Add `tool/check_package_dependency_dag.sh` in PR-C if manual review becomes error-prone.
-Until then, verify with `dart pub deps` per new package before merging.
+Add `tool/check_package_dependency_dag.sh` in PR-D (utilities path proven; DAG
+now has two packages). Until then, verify with `dart pub deps` per new package
+before merging.
 
 ## Build Todo
 
@@ -199,12 +234,15 @@ Use this as the implementation checklist.
   `flutter_bloc_app`.
 - [x] PR-B: update scripts/CI paths and prove app route/counter canaries.
 - [x] PR-C wave 1: extract `packages/utilities` (`in_flight_coalescer`,
-  `request_id_guard`, `relative_time_formatting`); app-hosted tests; deferred
-  trio documented below.
-- [ ] PR-C deferred until PR-D/app logging: `disposable_bag` (needs
-  `core/time/timer_service`), `safe_parse_utils` (needs `AppLogger`),
-  `date_time_formatting` (needs Flutter `MaterialLocalizations`).
-- [ ] PR-D: extract pure `packages/core`.
+  `request_id_guard`, `relative_time_formatting`); app-hosted tests (`bd68b06c`).
+- [ ] PR-C wave 2 (after PR-D): `disposable_bag` → `utilities` (needs
+  `package:core` `TimerService`).
+- [ ] PR-C deferred: `safe_parse_utils` (needs `AppLogger`), `date_time_formatting`
+  (Flutter `MaterialLocalizations` — likely PR-E or stay in app).
+- [x] PR-D: extract pure `packages/core` (`failure`, `result`, `timer_service`).
+- [x] PR-D: prove router auth gate canary + `./bin/checklist`.
+- [ ] PR-D follow-up: `tool/check_package_dependency_dag.sh` (optional gate; verify
+  with `dart pub deps` until script lands).
 - [ ] PR-E: extract `packages/design_system` foundation.
 - [ ] PR-F: extract `packages/networking` then `packages/storage`.
 - [ ] PR-G: add provider-neutral `packages/ai` contracts.

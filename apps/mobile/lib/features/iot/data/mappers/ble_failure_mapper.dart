@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:core/core.dart';
 
 Failure unsupportedPlatformFailure() =>
     const PlatformFailure(PlatformFailureReason.unavailable);

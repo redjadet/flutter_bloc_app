@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/failure.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 
 /// Maps domain [Failure] to presentation [AppError].

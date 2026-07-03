@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/shared/utils/disposable_bag.dart';
 import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 

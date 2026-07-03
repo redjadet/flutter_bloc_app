@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:core/core.dart';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/shared_preferences_counter_repository.dart';

@@ -7,12 +7,7 @@ sealed class Failure {
   final Object? cause;
 }
 
-enum PermissionFailureReason {
-  denied,
-  permanentlyDenied,
-  restricted,
-  limited,
-}
+enum PermissionFailureReason { denied, permanentlyDenied, restricted, limited }
 
 final class PermissionFailure extends Failure {
   const PermissionFailure(this.reason, {super.cause});
@@ -31,11 +26,7 @@ final class PlatformFailure extends Failure {
 enum StorageFailureKind { read, write, delete }
 
 final class StorageFailure extends Failure {
-  const StorageFailure({
-    required this.kind,
-    this.key,
-    super.cause,
-  });
+  const StorageFailure({required this.kind, this.key, super.cause});
 
   final StorageFailureKind kind;
   final String? key;

@@ -1,8 +1,7 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:core/core.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.dart';

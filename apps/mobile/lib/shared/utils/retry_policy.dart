@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:core/core.dart';
 
 part 'retry_policy_execute.part.dart';
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
-
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:core/core.dart';
 
 /// Minimal, centralized lifecycle helper for managing cancellable/closable
 /// resources (subscriptions, controllers, timers).

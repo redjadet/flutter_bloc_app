@@ -1,7 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';

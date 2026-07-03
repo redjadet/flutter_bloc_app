@@ -1,7 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:geolocator/geolocator.dart';
 
 class StaffDemoCapturedLocation {

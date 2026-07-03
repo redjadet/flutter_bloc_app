@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';

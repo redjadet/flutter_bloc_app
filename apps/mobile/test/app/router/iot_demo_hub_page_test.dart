@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_bloc_app/app/router/pages/iot_demo_hub_page.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/di/register_iot_services.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';

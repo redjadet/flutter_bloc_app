@@ -1,7 +1,6 @@
 import 'dart:async';
+import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/core/domain/failure.dart';
-import 'package:flutter_bloc_app/core/domain/result.dart';
 import 'package:flutter_bloc_app/features/iot/domain/classic_bluetooth_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/classic_bt_device.dart';
 

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/domain/result.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/ble_adapter_status.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/ble_connection_phase.dart';
 import 'package:flutter_bloc_app/features/iot/domain/entities/ble_discovered_device.dart';

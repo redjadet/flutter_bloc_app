@@ -1,6 +1,6 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/core/time/timer_service.dart';
+import 'package:core/core.dart';
 
 import '../../test_helpers.dart';
 
