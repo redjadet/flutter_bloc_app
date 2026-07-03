@@ -8,6 +8,7 @@ environment:
 workspace:
   - apps/mobile
   - packages/core
+  - packages/design_system
   - packages/utilities
   - custom_lints/file_length_lint
   - custom_lints/mix_lint

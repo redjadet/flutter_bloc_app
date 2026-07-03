@@ -1,6 +1,12 @@
 /// Shared widgets for consistent UI across the app
 library;
 
+export 'package:design_system/design_system.dart'
+    show
+        ResponsiveActionOverflowBar,
+        ResponsiveDualCtaRow,
+        kResponsiveActionBarSpacing;
+
 export 'app_message.dart';
 export 'cached_network_image_widget.dart';
 export 'common_app_bar.dart';
@@ -20,7 +26,6 @@ export 'flavor_badge.dart';
 export 'icon_label_row.dart';
 export 'message_bubble.dart';
 export 'resilient_svg_asset_image.dart';
-export 'responsive_action_bar.dart';
 export 'retry_snackbar_listener.dart';
 export 'root_aware_back_button.dart';
 export 'settings_section.dart';

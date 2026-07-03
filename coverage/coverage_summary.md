@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.92%** (20028/24750 lines)
+*Total line coverage*: **80.90%** (19988/24707 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -74,7 +74,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/genui_demo/presentation/pages/genui_demo_page.dart` | 20.00% | 1/5 |
 | `lib/features/iot_demo/presentation/pages/iot_demo_page_helpers.dart` | 20.00% | 4/20 |
 | `lib/features/scapes/domain/scape.dart` | 20.00% | 1/5 |
-| `lib/core/theme/theme_extensions.dart` | 25.00% | 1/4 |
 | `lib/features/chart/presentation/cubit/chart_state.dart` | 25.00% | 1/4 |
 | `lib/features/chat/data/render_caller_auth_header_provider.dart` | 25.00% | 1/4 |
 | `lib/features/example/presentation/pages/whiteboard_page.dart` | 25.00% | 1/4 |
@@ -833,7 +832,5 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/widgets/diagnostics/settings_diagnostics_widgets.dart` | 100.00% | 10/10 |
 | `lib/shared/widgets/icon_label_row.dart` | 100.00% | 16/16 |
 | `lib/shared/widgets/image_from_path.dart` | 100.00% | 2/2 |
-| `lib/shared/widgets/responsive_action_bar.dart` | 100.00% | 27/27 |
 | `lib/shared/widgets/settings_section.dart` | 100.00% | 10/10 |
-| `lib/shared/widgets/skeletons/skeleton_base.dart` | 100.00% | 12/12 |
 | `lib/shared/widgets/type_safe_bloc_selector.dart` | 100.00% | 12/12 |

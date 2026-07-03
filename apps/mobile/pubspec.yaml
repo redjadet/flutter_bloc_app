@@ -49,6 +49,8 @@ dependencies:
     path: ../../packages/core
   cross_file: ^0.3.5+2
   cupertino_icons: ^1.0.9
+  design_system:
+    path: ../../packages/design_system
   device_info_plus: ^13.2.0
   dio: ^5.10.0
   equatable: ^2.0.8

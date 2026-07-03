@@ -1,6 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/constants/constants.dart';
-import 'package:flutter_bloc_app/core/theme/theme_extensions.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Named decorative colors for confetti/particle effects; not UI theme colors.

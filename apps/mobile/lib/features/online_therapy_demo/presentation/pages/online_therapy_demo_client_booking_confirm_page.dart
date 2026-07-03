@@ -1,3 +1,4 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/shared/widgets/responsive_action_bar.dart';
 import 'package:go_router/go_router.dart';
 
 class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
