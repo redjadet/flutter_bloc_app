@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-03 - Firebase forced refresh needs one getIdTokenResult(true)
+
+- What went wrong:
+  `TokenRepository.refreshFirebaseAccessToken` called `getIdToken(true)` then
+  `_readFirebaseTokenResult(..., forceRefresh: false)`, so the second read could
+  return a stale cached token and defeat the forced refresh.
+- How it was fixed:
+  Use a single `_readFirebaseTokenResult(user, forceRefresh: true)` (backed by
+  `getIdTokenResult(true)`) and update auth tests/mocks to match.
+- Pattern:
+  Forced Firebase refresh must read token + expiry in one forced SDK call; do
+  not pair `getIdToken(true)` with `getIdTokenResult(false)`.
+- Preventive rule:
+  On `TokenRepository` / auth refresh edits, grep for that pair and run
+  `tool/check_auth_refresh_single_flight.sh` plus focused auth HTTP tests.
+- Evidence or affected files:
+  `lib/core/auth/token_repository.dart`
+  `test/core/auth/token_repository_test.dart`
+  `tool/check_auth_refresh_single_flight.sh`
+
 ### 2026-07-02 - Auth session lifecycle races need focused guard routing
 
 - What went wrong:
