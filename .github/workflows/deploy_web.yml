@@ -80,7 +80,7 @@ jobs:
           esac
 
       - name: Pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Build web (Pages)
         env:
@@ -100,7 +100,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: build/web
+          path: apps/mobile/build/web
 
   deploy:
     needs: build

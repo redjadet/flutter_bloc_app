@@ -201,7 +201,13 @@ def iter_dart_files(root: Path) -> list[Path]:
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parent.parent / "lib"
+    workspace_root = Path(__file__).resolve().parent.parent
+    app_root = (
+        workspace_root / "apps" / "mobile"
+        if (workspace_root / "apps" / "mobile" / "pubspec.yaml").is_file()
+        else workspace_root
+    )
+    root = app_root / "lib"
     if not root.is_dir():
         print("check_dialog_text_controller_lifecycle: lib/ not found", file=sys.stderr)
         return 1

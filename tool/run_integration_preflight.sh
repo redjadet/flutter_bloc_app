@@ -10,11 +10,12 @@
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]:-$0}"
-PROJECT_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
-cd "$PROJECT_ROOT"
+WORKSPACE_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
 
 # shellcheck disable=SC1091
-source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+source "$WORKSPACE_ROOT/tool/resolve_flutter_dart.sh"
 
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
@@ -25,7 +26,7 @@ if ! FLUTTER_BIN="$(resolve_flutter_sdk_flutter)"; then
   exit 1
 fi
 
-PATCH_SCRIPT="$PROJECT_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
+PATCH_SCRIPT="$WORKSPACE_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
 WEB_DEVICE_REQUESTED="${INTEGRATION_PREFLIGHT_WEB_DEVICE:-chrome}"
 
 log "Syntax-checking SwiftPM patch script..."
@@ -46,9 +47,9 @@ case "$patch_output" in
 esac
 
 log "Running integration log-filter regression test..."
-"$FLUTTER_BIN" test \
+(cd "$APP_ROOT" && "$FLUTTER_BIN" test \
   --no-pub \
-  test/integration_preflight/test_harness_log_filtering_test.dart
+  test/integration_preflight/test_harness_log_filtering_test.dart)
 
 if [ -z "$WEB_DEVICE_REQUESTED" ]; then
   log "Skipping web bootstrap smoke test because INTEGRATION_PREFLIGHT_WEB_DEVICE is empty."
@@ -90,7 +91,7 @@ if [ -z "$web_device_id" ]; then
 fi
 
 log "Running web bootstrap smoke test on $web_device_id..."
-"$FLUTTER_BIN" test \
+(cd "$APP_ROOT" && "$FLUTTER_BIN" test \
   --no-pub \
   -d "$web_device_id" \
-  test/integration_preflight/web_bootstrap_smoke_test.dart
+  test/integration_preflight/web_bootstrap_smoke_test.dart)

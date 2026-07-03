@@ -5,6 +5,9 @@
 set -e
 
 SCRIPT_DIR="$(dirname "$0")"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/workspace_paths.sh"
+cd "$APP_ROOT"
 analyze_failed=0
 
 echo "Running flutter analyze..."

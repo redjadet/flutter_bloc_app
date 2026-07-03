@@ -16,10 +16,10 @@ fi
 
 is_scannable_path() {
   case "$1" in
-    assets/config/*)
+    assets/config/*|*/assets/config/*)
       return 0
       ;;
-    assets/*|tool/fixtures/*)
+    assets/*|*/assets/*|tool/fixtures/*)
       return 1
       ;;
     *.dart|*.ts|*.tsx|*.js|*.jsx|*.py|*.sh|*.yml|*.yaml|*.json|*.plist|*.toml|*.env|*.example|*.sample|*.xml)

@@ -11,8 +11,13 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-ANALYSIS_OPTIONS = ROOT / "analysis_options.yaml"
+WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
+APP_ROOT = (
+    WORKSPACE_ROOT / "apps" / "mobile"
+    if (WORKSPACE_ROOT / "apps" / "mobile" / "pubspec.yaml").is_file()
+    else WORKSPACE_ROOT
+)
+ANALYSIS_OPTIONS = WORKSPACE_ROOT / "analysis_options.yaml"
 
 # Must match analysis_options.yaml file_length_lint.max_lines (parse fallback).
 DEFAULT_MAX_LINES = 225
@@ -114,14 +119,14 @@ def _physical_line_count(path: Path) -> int:
 
 def main() -> int:
     max_lines, exclude_patterns = _load_file_length_config()
-    lib_dir = ROOT / "lib"
+    lib_dir = APP_ROOT / "lib"
     if not lib_dir.is_dir():
         print("✅ file_length_lint passed (no lib/ directory).")
         return 0
 
     violations: list[tuple[str, int]] = []
     for dart_file in sorted(lib_dir.rglob("*.dart")):
-        relative = dart_file.relative_to(ROOT).as_posix()
+        relative = dart_file.relative_to(APP_ROOT).as_posix()
         if _matches_any(relative, exclude_patterns):
             continue
         count = _physical_line_count(dart_file)

@@ -4,11 +4,13 @@
 # Run from project root: ./tool/run_mix_lint.sh
 # See docs/mix_design_system_plan.md (mix_lint section).
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+ROOT="$APP_ROOT"
 cd "$ROOT"
 
 # shellcheck disable=SC1091
-source "$ROOT/tool/analyzer_plugin_lint_common.sh"
+source "$WORKSPACE_ROOT/tool/analyzer_plugin_lint_common.sh"
 
 if [ "${SKIP_MIX_LINT:-0}" = "1" ] || [ "${CHECKLIST_RUN_MIX_LINT:-1}" = "0" ]; then
   echo "Skipping mix_lint (SKIP_MIX_LINT/CHECKLIST_RUN_MIX_LINT)."

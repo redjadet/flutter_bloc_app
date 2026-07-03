@@ -145,7 +145,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Install ripgrep and lcov
         shell: bash
@@ -174,7 +174,7 @@ jobs:
           github.event_name == 'workflow_dispatch' &&
           github.event.inputs.run_analyze != 'false' &&
           github.event.inputs.run_tests == 'false'
-        run: flutter analyze
+        run: cd apps/mobile && flutter analyze
 
       - name: Flutter tests (with coverage)
         if: >-
@@ -213,7 +213,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Run integration preflight
         id: run_preflight
@@ -268,7 +268,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Install Firebase iOS/macOS config for CI
         run: |

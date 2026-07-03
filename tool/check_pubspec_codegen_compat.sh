@@ -9,8 +9,9 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PUBSPEC="$PROJECT_ROOT/pubspec.yaml"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+PUBSPEC="$APP_ROOT/pubspec.yaml"
 
 if [ ! -f "$PUBSPEC" ]; then
   echo "pubspec-compat|skip|missing pubspec.yaml"

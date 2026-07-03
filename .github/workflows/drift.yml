@@ -47,7 +47,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Install ripgrep (rg)
         run: |
@@ -75,7 +75,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: dart pub get
 
       - name: Install ripgrep (rg)
         run: |

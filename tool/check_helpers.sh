@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # Shared helpers for validation scripts.
 
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
+cd "$PROJECT_ROOT"
+
 filter_ignored() {
   local input="$1"
   local output=""

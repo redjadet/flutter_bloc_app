@@ -12,7 +12,7 @@
         "default": {
           "projectId": "your-project-id",
           "appId": "1:000000000000:android:placeholder",
-          "fileOutput": "android/app/google-services.json"
+          "fileOutput": "apps/mobile/android/app/google-services.json"
         }
       },
       "ios": {
@@ -20,7 +20,7 @@
           "projectId": "your-project-id",
           "appId": "1:000000000000:ios:placeholder",
           "uploadDebugSymbols": true,
-          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+          "fileOutput": "apps/mobile/ios/Runner/GoogleService-Info.plist"
         }
       },
       "macos": {
@@ -28,11 +28,11 @@
           "projectId": "your-project-id",
           "appId": "1:000000000000:ios:placeholder",
           "uploadDebugSymbols": true,
-          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+          "fileOutput": "apps/mobile/macos/Runner/GoogleService-Info.plist"
         }
       },
       "dart": {
-        "lib/firebase_options.dart": {
+        "apps/mobile/lib/firebase_options.dart": {
           "projectId": "your-project-id",
           "configurations": {
             "android": "1:000000000000:android:placeholder",
