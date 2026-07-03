@@ -63,6 +63,8 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
     """Return True when a Pages deployment should be cancelled before a new deploy."""
     if is_clear_pages_status(status):
         return False
+    if is_terminal_pages_status(status):
+        return False
     if is_active_queue_status(status):
         return True
     if nudged:
@@ -72,11 +74,7 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
 
 def needs_post_cancel_wait(status: str | None) -> bool:
     """Return True when a pause helps GitHub release queue capacity."""
-    if is_active_queue_status(status):
-        return True
-    if status in TERMINAL_STATUSES and status != "succeed":
-        return True
-    return False
+    return is_active_queue_status(status)
 
 
 def unique_shas(deployments: list[dict[str, object]]) -> list[str]:

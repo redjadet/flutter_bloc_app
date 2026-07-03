@@ -28,24 +28,31 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         self.assertTrue(self.module.is_stale_pages_status(""))
         self.assertTrue(self.module.is_stale_pages_status(None))
 
-    def test_is_stale_pages_status_treats_non_succeed_as_stale(self):
+    def test_is_stale_pages_status_treats_terminal_non_succeed_as_not_stale(self):
         self.assertFalse(self.module.is_stale_pages_status("succeed"))
-        self.assertTrue(self.module.is_stale_pages_status("deployment_cancelled"))
+        self.assertFalse(self.module.is_stale_pages_status("deployment_cancelled"))
         self.assertFalse(
             self.module.is_stale_pages_status("deployment_cancelled", nudged=True),
         )
-        self.assertTrue(self.module.is_stale_pages_status("deployment_failed"))
+        self.assertFalse(self.module.is_stale_pages_status("deployment_failed"))
 
     def test_is_terminal_pages_status_accepts_cancelled_and_failed(self):
         self.assertTrue(self.module.is_terminal_pages_status("deployment_cancelled"))
         self.assertTrue(self.module.is_terminal_pages_status("deployment_failed"))
         self.assertFalse(self.module.is_terminal_pages_status("deployment_queued"))
 
-    def test_needs_post_cancel_wait_for_nudged_terminal_blockers(self):
-        self.assertTrue(
+    def test_needs_post_cancel_wait_only_for_active_queue_statuses(self):
+        self.assertFalse(
             self.module.needs_post_cancel_wait("deployment_cancelled"),
         )
+        self.assertFalse(self.module.needs_post_cancel_wait("deployment_failed"))
         self.assertFalse(self.module.needs_post_cancel_wait("succeed"))
+        self.assertTrue(
+            self.module.needs_post_cancel_wait("deployment_queued"),
+        )
+        self.assertTrue(
+            self.module.needs_post_cancel_wait("deployment_in_progress"),
+        )
 
     def test_is_stale_pages_status_flags_in_progress_states(self):
         self.assertTrue(

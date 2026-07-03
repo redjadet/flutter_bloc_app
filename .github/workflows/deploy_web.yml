@@ -184,12 +184,12 @@ jobs:
               `Dispatched ${workflowFile} on ${ref} after Pages deploy failure.`,
             );
 
-      - name: Fail after handing off failed Pages deploy
+      - name: Complete after handing off failed Pages deploy
         if: steps.branch_tip.outputs.skip != 'true' && steps.deployment.outcome == 'failure'
         run: |
           if [[ "${{ steps.redispatch.outcome }}" == "success" ]]; then
-            echo "GitHub Pages deploy failed; dispatched a fresh workflow for this commit." >&2
-          else
-            echo "GitHub Pages deploy failed and could not dispatch a fresh workflow." >&2
+            echo "GitHub Pages deploy failed in this run; dispatched a fresh workflow for this commit."
+            exit 0
           fi
+          echo "GitHub Pages deploy failed and could not dispatch a fresh workflow." >&2
           exit 1
