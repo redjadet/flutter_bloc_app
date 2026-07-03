@@ -331,13 +331,13 @@ validate_integration_runner_configuration() {
     fi
   done
 
-  if ! /usr/bin/python3 - "$WORKSPACE_ROOT/tool/integration_selective_map.json" <<'PY'
+  if ! /usr/bin/python3 - "$WORKSPACE_ROOT/tool/integration_selective_map.json" "$APP_ROOT" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 map_path = Path(sys.argv[1])
-repo_root = map_path.parent.parent
+app_root = Path(sys.argv[2])
 raw = json.loads(map_path.read_text(encoding="utf-8"))
 rules = raw.get("rules", [])
 if not isinstance(rules, list):
@@ -358,7 +358,7 @@ for index, rule in enumerate(rules):
     seen_ids.add(rule_id)
     if not isinstance(target, str) or not target.startswith("integration_test/"):
         raise SystemExit(f"rules[{index}].target must be an integration_test/*.dart path")
-    if not (repo_root / target).is_file():
+    if not (app_root / target).is_file():
         raise SystemExit(f"missing target file for rule {rule_id}: {target}")
     seen_targets.add(target)
     if not isinstance(prefixes, list) or not prefixes or not all(isinstance(p, str) and p for p in prefixes):
@@ -672,6 +672,32 @@ run_ios_cocoapods_install() {
   )
 }
 
+ensure_ios_firebase_plist_for_simulator() {
+  local runner_plist="$APP_ROOT/ios/Runner/GoogleService-Info.plist"
+  local ci_plist="$APP_ROOT/ios/ci/GoogleService-Info.plist"
+
+  if [ -f "$runner_plist" ]; then
+    if grep -q 'YOUR_IOS_API_KEY' "$runner_plist" 2>/dev/null; then
+      log "Removing placeholder Firebase plist before simulator integration: $runner_plist"
+      rm -f "$runner_plist"
+    fi
+    return 0
+  fi
+
+  if [ ! -f "$ci_plist" ]; then
+    log "No Firebase plist at $runner_plist (CI template missing); native Firebase configure will be skipped."
+    return 0
+  fi
+
+  if grep -q 'YOUR_IOS_API_KEY' "$ci_plist" 2>/dev/null; then
+    log "CI Firebase plist uses placeholder API_KEY; skipping copy for simulator integration."
+    return 0
+  fi
+
+  log "Copying CI Firebase plist for simulator integration: $ci_plist -> $runner_plist"
+  cp "$ci_plist" "$runner_plist"
+}
+
 prepare_ios_simulator_build() {
   local device_id="$1"
 
@@ -680,6 +706,7 @@ prepare_ios_simulator_build() {
   [ "${INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP:-0}" = "1" ] && return 0
   [ -d "$APP_ROOT/ios/Runner.xcworkspace" ] || return 0
 
+  ensure_ios_firebase_plist_for_simulator
   log "Preparing iOS simulator build (CocoaPods + SwiftPM)..."
   maybe_enable_pod_shim_if_needed
   run_ios_cocoapods_install
@@ -1121,7 +1148,8 @@ run_with_timeout() {
 
   local command_pid
   local heartbeat_pid
-  local start_time=$SECONDS
+  local start_epoch
+  start_epoch="$(date +%s)"
   local exit_code=0
 
   log "Starting $label (timeout ${timeout_seconds}s)."
@@ -1130,7 +1158,7 @@ run_with_timeout() {
   heartbeat_pid="$(start_heartbeat "$label" "$PROGRESS_HEARTBEAT_SECONDS" "$command_pid")"
 
   while kill -0 "$command_pid" 2>/dev/null; do
-    if [ $((SECONDS - start_time)) -ge "$timeout_seconds" ]; then
+    if [ $(($(date +%s) - start_epoch)) -ge "$timeout_seconds" ]; then
       log "$label exceeded timeout after ${timeout_seconds}s. Sending TERM..."
       kill -TERM "$command_pid" 2>/dev/null || true
       sleep 10
@@ -1149,7 +1177,7 @@ run_with_timeout() {
   wait "$command_pid" || exit_code=$?
   kill "$heartbeat_pid" 2>/dev/null || true
   wait "$heartbeat_pid" 2>/dev/null || true
-  log "$label finished with exit code $exit_code after $((SECONDS - start_time))s."
+  log "$label finished with exit code $exit_code after $(($(date +%s) - start_epoch))s."
   return "$exit_code"
 }
 
@@ -1284,8 +1312,8 @@ if ! [[ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" =~ ^(0|1)$ ]]; then
   INTEGRATION_TESTS_ENABLE_SELECTIVE=0
 fi
 
-BASE_COVERAGE_PATH="coverage/lcov.base.info"
-FINAL_COVERAGE_PATH="coverage/lcov.info"
+BASE_COVERAGE_PATH="$WORKSPACE_ROOT/coverage/lcov.base.info"
+FINAL_COVERAGE_PATH="$WORKSPACE_ROOT/coverage/lcov.info"
 FULL_SUITE_TARGET="integration_test/all_flows_test.dart"
 SMOKE_SUITE_TARGET="integration_test/smoke_flows_test.dart"
 STANDARD_SUITE_TARGET="integration_test/standard_flows_test.dart"

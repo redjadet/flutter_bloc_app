@@ -22,7 +22,18 @@ import sys
 from pathlib import Path
 
 
+def _normalize_repo_path(path: str) -> str:
+    """Strip monorepo app prefix so map rules stay lib/... and integration_test/... relative."""
+    normalized = path.replace("\\", "/")
+    marker = "apps/mobile/"
+    idx = normalized.find(marker)
+    if idx != -1:
+        return normalized[idx + len(marker) :]
+    return normalized
+
+
 def _matches_prefix(path: str, prefix: str) -> bool:
+    path = _normalize_repo_path(path)
     p = prefix.replace("\\", "/").rstrip("/")
     if not p:
         return False
@@ -119,7 +130,9 @@ def main() -> None:
         print(f"invalid map schema in {map_path}: {exc}", file=sys.stderr)
         sys.exit(2)
 
-    changed = [ln.strip().replace("\\", "/") for ln in sys.stdin if ln.strip()]
+    changed = [
+        _normalize_repo_path(ln.strip()) for ln in sys.stdin if ln.strip()
+    ]
 
     target, reason = resolve_paths(changed, force_prefixes=force_prefixes, rules=rules)
 

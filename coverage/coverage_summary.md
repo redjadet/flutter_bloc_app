@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.61%** (19362/24018 lines)
+*Total line coverage*: **80.61%** (19363/24020 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -83,7 +83,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/shared/sync/sync_operation_deferred_exception.dart` | 25.00% | 1/4 |
 | `lib/features/ai_decision_demo/data/ai_decision_dto.dart` | 27.12% | 16/59 |
 | `lib/features/scapes/presentation/widgets/scapes_grid_content.dart` | 27.27% | 12/44 |
-| `lib/core/di/injector_factories.dart` | 29.55% | 13/44 |
+| `lib/core/di/injector_factories.dart` | 30.43% | 14/46 |
 | `lib/core/di/register_staff_app_demo_services.dart` | 30.56% | 22/72 |
 | `lib/core/bootstrap/firebase_bootstrap_service.dart` | 32.81% | 21/64 |
 | `lib/core/di/register_in_app_purchase_demo_services.dart` | 33.33% | 4/12 |

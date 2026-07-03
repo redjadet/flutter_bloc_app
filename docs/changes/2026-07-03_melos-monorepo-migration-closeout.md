@@ -22,7 +22,28 @@ are done or explicitly deferred. Operator next step: merge PR #437 to `main`.
 | PR-H | `backend/firebase/` layout |
 | PR-I | `packages/auth`, `packages/feature_flags` domain contracts |
 | CI | `tool/workspace_pub_get.sh` — workspace + Flutter codegen (`1da531ab`) |
+| CI | `tool/analyze.sh` in workflows — monorepo cwd + plugin lints (`a1ded483`) |
+| Docs/tooling | Agent analyze guidance + gitignored task-tracker link stability (`599d7e34`) |
 | Harness | `check_clean_architecture_imports` workspace path resolve (post-closeout) |
+| iOS tooling | `check_ios_pod_framework_embed`, `ios_entitlements`, Firebase upload/patch scripts use `APP_ROOT` |
+| Integration | iOS smoke + Chrome preflight green after Firebase delegate reset, placeholder plist guard, Remote Config fake when no app (`2026-07-03`) |
+
+## Integration hardening (2026-07-03)
+
+Smoke suite mixed `realFirebaseAuth` (guest sign-in) with mock-auth flows in one
+file. After guest sign-in, `firebase_core` cached `MethodChannelFirebase` via
+`Firebase.delegatePackingProperty`, so later mock-platform installs were ignored.
+
+Fixes:
+
+- Reset `Firebase.delegatePackingProperty` in integration tearDown; force mock
+  platform install when mock auth is selected.
+- Skip `FirebaseApp.configure()` on iOS when `GoogleService-Info.plist` is
+  missing or uses placeholder `YOUR_IOS_API_KEY`.
+- Return `FakeRemoteConfigRemoteDataSource` when `Firebase.apps.isEmpty` or
+  integration harness omits Firebase remote repos.
+- Runner: skip/copy guard for placeholder Firebase plist; resolve selective map
+  against `APP_ROOT`; epoch-based integration timeout.
 
 ## Accepted deferrals (not blocking merge)
 
@@ -34,7 +55,10 @@ are done or explicitly deferred. Operator next step: merge PR #437 to `main`.
 
 ## Proof
 
-- `./bin/checklist` from repo root (~2618 tests, ~80.6% coverage)
+- `./bin/checklist` from repo root (2618 tests, 80.61% coverage, 2026-07-03)
+- `./bin/integration_preflight` (Chrome web bootstrap, 2026-07-03)
+- `INTEGRATION_TESTS_TIER=smoke ./bin/integration_tests` on iPhone simulator
+  (18/18, 2026-07-03)
 - `bash tool/check_package_dependency_dag.sh`
 - `python3 -m unittest tool.commit_push_pr_deploy_test`
 

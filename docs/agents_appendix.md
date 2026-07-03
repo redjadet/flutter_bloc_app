@@ -79,6 +79,9 @@ User prefs:
   `./bin/checklist-fast` (auto-runs when env var set).
 - Integration tests fail on warning/error logs unless narrowly allowlisted in
   `integration_test/test_harness.dart`.
+- Mixed mock/real Firebase auth in one integration file requires resetting
+  `Firebase.delegatePackingProperty` between flows (see
+  `test/test_helpers.dart` + integration tearDown).
 - Markdownlint ignores (`.markdownlintignore`, `.markdownlint-cli2.yaml`): task
   trackers, [`AGENTS.md`](../AGENTS.md)/`GEMINI.md`, `.agents/`, `vendor/`, platform trees,
   `fastlane/` (generated README), `third_party/`, build artifacts.

@@ -94,11 +94,12 @@ TodoRepository? _createRemoteTodoRepositoryOrNull() =>
 /// Tries to create a Firebase-backed repository if Firebase is available,
 /// otherwise creates a fake implementation for testing.
 RemoteConfigRemoteDataSource createRemoteConfigRemoteDataSource() {
+  if (Firebase.apps.isEmpty || integrationTestOmitFirebaseRemoteRepositories) {
+    return FakeRemoteConfigRemoteDataSource();
+  }
   try {
-    // Try to create with Firebase if available
     return RemoteConfigRepository(FirebaseRemoteConfig.instance);
   } on Object {
-    // If Firebase is not available (e.g., in tests), create a fake implementation
     return FakeRemoteConfigRemoteDataSource();
   }
 }

@@ -206,6 +206,7 @@ Future<void> configureIntegrationTestDependencies({
 Future<void> tearDownIntegrationTestDependencies() async {
   await test_helpers.tearDownTestDependencies();
   integrationTestOmitFirebaseRemoteRepositories = false;
+  test_helpers.resetFirebaseTestDelegate();
 }
 
 Future<void> launchTestApp(

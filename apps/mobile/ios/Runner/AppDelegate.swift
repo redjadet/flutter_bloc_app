@@ -133,9 +133,28 @@ import FirebaseAppCheck
     }
   }
 
+  private func hasValidGoogleServiceInfoPlist() -> Bool {
+    guard let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+          let plist = NSDictionary(contentsOfFile: path) as? [String: Any],
+          let apiKey = plist["API_KEY"] as? String
+    else {
+      return false
+    }
+    let trimmedKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+    return !trimmedKey.isEmpty && trimmedKey != "YOUR_IOS_API_KEY"
+  }
+
   private func configureFirebaseIfNeeded() {
     firebaseConfigQueue.sync {
       if hasConfiguredFirebase {
+        return
+      }
+      guard hasValidGoogleServiceInfoPlist() else {
+        NSLog(
+          "Skipping FirebaseApp.configure(): GoogleService-Info.plist is missing or uses placeholder API_KEY. " +
+          "Dart bootstrap or integration mocks will handle Firebase when needed."
+        )
+        hasConfiguredFirebase = true
         return
       }
       if FirebaseApp.app() == nil {

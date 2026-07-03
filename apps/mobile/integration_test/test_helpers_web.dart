@@ -37,7 +37,9 @@ const FirebaseOptions _fakeFirebaseOptions = FirebaseOptions(
 Future<void> ensureFirebaseInitializedForTests() async {
   final String platformType = FirebasePlatform.instance.runtimeType.toString();
   if (platformType.contains('MethodChannelFirebase')) {
-    FirebasePlatform.instance = _MockFirebasePlatform();
+    final _MockFirebasePlatform mockPlatform = _MockFirebasePlatform();
+    FirebasePlatform.instance = mockPlatform;
+    Firebase.delegatePackingProperty = mockPlatform;
   }
 
   if (Firebase.apps.isNotEmpty) {
@@ -45,6 +47,10 @@ Future<void> ensureFirebaseInitializedForTests() async {
   }
 
   await Firebase.initializeApp(options: _fakeFirebaseOptions);
+}
+
+void resetFirebaseTestDelegate() {
+  Firebase.delegatePackingProperty = null;
 }
 
 class _MockFirebasePlatform extends FirebasePlatform {

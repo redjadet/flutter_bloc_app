@@ -44,14 +44,28 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> ensureFirebaseInitializedForTests() async {
+void installMockFirebasePlatformForTests() {
+  final _MockFirebasePlatform mockPlatform = _MockFirebasePlatform();
+  FirebasePlatform.instance = mockPlatform;
+  // firebase_core caches the first delegate forever unless reset explicitly.
+  Firebase.delegatePackingProperty = mockPlatform;
+}
+
+void resetFirebaseTestDelegate() {
+  Firebase.delegatePackingProperty = null;
+}
+
+Future<void> ensureFirebaseInitializedForTests({
+  bool forceMockPlatform = false,
+}) async {
   // Some widget/golden tests pump app widgets that resolve Firebase singletons
   // via DI. When tests don't explicitly initialize Firebase, FlutterFire throws
   // [core/no-app]. We keep this helper conservative and only install a mock
-  // platform if the default method-channel implementation is still in place.
+  // platform if the default method-channel implementation is still in place,
+  // unless [forceMockPlatform] (integration tests with mock auth).
   final String platformType = FirebasePlatform.instance.runtimeType.toString();
-  if (platformType.contains('MethodChannelFirebase')) {
-    FirebasePlatform.instance = _MockFirebasePlatform();
+  if (forceMockPlatform || platformType.contains('MethodChannelFirebase')) {
+    installMockFirebasePlatformForTests();
   }
 
   try {
@@ -543,7 +557,7 @@ Future<void> setupTestDependencies([
     options.initialSharedPreferencesValues ?? <String, Object>{},
   );
   if (options.useMockFirebasePlatform) {
-    await ensureFirebaseInitializedForTests();
+    await ensureFirebaseInitializedForTests(forceMockPlatform: true);
   }
   if (options.setFlavorToProd) {
     FlavorManager.current = Flavor.prod;

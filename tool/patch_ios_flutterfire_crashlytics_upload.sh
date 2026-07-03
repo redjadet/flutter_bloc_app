@@ -9,9 +9,11 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 0
 fi
 
-project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$project_root/workspace_paths.sh"
 
-python3 - "$project_root" <<'PY'
+python3 - "$APP_ROOT" <<'PY'
 import sys
 from pathlib import Path
 
