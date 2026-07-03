@@ -21,6 +21,33 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-03 - Integration smoke needs Firebase delegate reset after real auth
+
+- What went wrong:
+  `smoke_flows_test.dart` runs guest sign-in with `realFirebaseAuth` then
+  mock-auth flows. After real auth, `firebase_core` cached
+  `MethodChannelFirebase` in `Firebase.delegatePackingProperty`, so later
+  `FirebasePlatform.instance = mock` installs were ignored and mock tests failed
+  with `[core/not-initialized]`.
+- How it was fixed:
+  Set `Firebase.delegatePackingProperty` when installing the mock platform;
+  call `resetFirebaseTestDelegate()` in integration tearDown; skip native
+  `FirebaseApp.configure()` for placeholder `GoogleService-Info.plist`; use fake
+  Remote Config when `Firebase.apps.isEmpty`.
+- Pattern:
+  `firebase_core` lazily caches the first platform delegate — swapping
+  `FirebasePlatform.instance` alone is not enough after real Firebase touched
+  the cache.
+- Preventive rule:
+  Any integration file mixing `IntegrationAuthMode.realFirebaseAuth` with mock
+  auth must reset the delegate in tearDown; run smoke tier on iOS simulator
+  before claiming integration green.
+- Evidence or affected files:
+  `apps/mobile/test/test_helpers.dart`
+  `apps/mobile/integration_test/test_harness.dart`
+  `apps/mobile/ios/Runner/AppDelegate.swift`
+  `tool/run_integration_tests.sh`
+
 ### 2026-07-03 - Firebase forced refresh needs one getIdTokenResult(true)
 
 - What went wrong:

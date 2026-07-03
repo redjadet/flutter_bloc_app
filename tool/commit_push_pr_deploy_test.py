@@ -114,15 +114,15 @@ class CommitPushPrDeployTest(unittest.TestCase):
             return_value="fp-1",
         ):
             plan = commit_push_pr_deploy.build_plan(
-                staged=["functions/src/index.ts"],
-                unstaged=["firestore.rules"],
+                staged=["backend/firebase/functions/src/index.ts"],
+                unstaged=["backend/firebase/firestore_rules/firestore.rules"],
                 untracked=[],
                 branch="feature/test",
             )
 
         self.assertEqual(len(plan), 1)
         self.assertEqual(plan[0].platform, "firebase")
-        self.assertEqual(plan[0].blocking_files, ("firestore.rules",))
+        self.assertEqual(plan[0].blocking_files, ("backend/firebase/firestore_rules/firestore.rules",))
 
     def test_firebase_rules_and_indexes_include_preflight_then_separate_deploys(self) -> None:
         with mock.patch.object(
@@ -131,7 +131,7 @@ class CommitPushPrDeployTest(unittest.TestCase):
             return_value="fp-1",
         ):
             plan = commit_push_pr_deploy.build_plan(
-                staged=["firestore.rules", "firestore.indexes.json"],
+                staged=["backend/firebase/firestore_rules/firestore.rules", "backend/firebase/indexes/firestore.indexes.json"],
                 unstaged=[],
                 untracked=[],
                 branch="feature/test",
@@ -174,7 +174,7 @@ class CommitPushPrDeployTest(unittest.TestCase):
             return_value="fp-1",
         ):
             plan = commit_push_pr_deploy.build_plan(
-                staged=["functions/test/index.test.js"],
+                staged=["backend/firebase/functions/test/index.test.js"],
                 unstaged=[],
                 untracked=[],
                 branch="feature/test",
@@ -194,7 +194,7 @@ class CommitPushPrDeployTest(unittest.TestCase):
                 return_value="fp-1",
             ):
                 plan = commit_push_pr_deploy.build_plan(
-                    staged=["functions/src/index.ts"],
+                    staged=["backend/firebase/functions/src/index.ts"],
                     unstaged=[],
                     untracked=[],
                     branch="feature/test",
@@ -221,14 +221,14 @@ class CommitPushPrDeployTest(unittest.TestCase):
             side_effect=fake_fingerprint,
         ):
             plan = commit_push_pr_deploy.build_plan(
-                staged=["functions/src/index.ts", "README.md"],
+                staged=["backend/firebase/functions/src/index.ts", "README.md"],
                 unstaged=[],
                 untracked=[],
                 branch="feature/test",
             )
 
         self.assertEqual(len(plan), 1)
-        self.assertEqual(captured, [["functions/src/index.ts"]])
+        self.assertEqual(captured, [["backend/firebase/functions/src/index.ts"]])
 
     def test_post_merge_runs_helper_script(self) -> None:
         with mock.patch("subprocess.run", return_value=mock.Mock(returncode=0)) as run:

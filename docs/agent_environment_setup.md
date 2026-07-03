@@ -149,6 +149,20 @@ Print the canon + validation pointers:
 bash tool/agent_session_bootstrap.sh
 ```
 
+## Melos Pub workspace
+
+The repo is a Melos-managed Pub workspace ([#437](https://github.com/redjadet/flutter_bloc_app/pull/437) pending merge to `main`):
+
+- **Workspace root** — repo root (`pubspec.yaml` hosts `melos:` scripts; no standalone `melos.yaml`).
+- **Flutter app** — `apps/mobile/` (`package:flutter_bloc_app`).
+- **Shared packages** — `packages/*` (see [`agents_quick_reference.md`](agents_quick_reference.md) Melos table), `custom_lints/*`.
+- **Firebase backend** — `backend/firebase/`.
+- **Pub get** — from repo root: `bash tool/workspace_pub_get.sh` (workspace `dart pub get` + app `flutter pub get` for `generate: true` / l10n).
+- **Analyze / test the app** — `./tool/analyze.sh` / `bash tool/test_coverage.sh` from repo root (`workspace_paths.sh` resolves `apps/mobile`); narrow tests may use `cd apps/mobile && flutter test …`.
+- **Authoritative gate** — `./bin/checklist` from **repo root** (unchanged).
+
+Plan and phase status: [`docs/plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
+
 ## Verification Pipelines
 
 Use the narrowest honest lane:

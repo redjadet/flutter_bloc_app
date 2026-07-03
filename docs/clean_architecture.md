@@ -78,6 +78,22 @@ Use this model when placing code:
 - **Core/shared** hold reusable infrastructure and utilities that should not be
   owned by a single feature.
 
+## Workspace packages (Melos migration)
+
+Extracted packages live under `packages/` and must not import the app or
+features. Current direction (see [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md)):
+
+| Package | Owns | May depend on |
+| --- | --- | --- |
+| `packages/core` | `Failure`, `Result`, `TimerService`, pure domain primitives | — (leaf) |
+| `packages/utilities` | Pure Dart helpers (`disposable_bag`, etc.) | `core` |
+| `packages/design_system` | Theme tokens, Mix styles, responsive helpers, generic widgets | `core`, `utilities` |
+
+**Dependency rule (packages):** `design_system → utilities → core`. Enforced by
+`tool/check_package_dependency_dag.sh` in `./bin/checklist`. Presentation and
+features consume packages; packages never import `package:flutter_bloc_app` or
+feature folders. App keeps DI, routes, l10n defaults, and feature widgets.
+
 ## Layer Responsibilities
 
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `lib/features/counter/domain/counter_repository.dart`, `lib/features/remote_config/domain/remote_config_service.dart`, `lib/features/deeplink/domain/deep_link_parser.dart`.

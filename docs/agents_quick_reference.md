@@ -100,3 +100,21 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`,
 ## Task Doc Routing
 
 Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI engineering index: [`PLAN.md`](../PLAN.md).
+
+## Melos workspace
+
+Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). The Flutter app lives at `apps/mobile/`. Scoped migration (PR-A–I) is complete on [#437](https://github.com/redjadet/flutter_bloc_app/pull/437); merge to `main` pending.
+
+| Need | Command / path |
+| --- | --- |
+| Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
+| Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
+| Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
+| Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
+| Firebase backend | `backend/firebase/` (functions, rules, indexes) |
+| Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
+| Path helper | `source tool/workspace_paths.sh` |
+| Melos bootstrap | `dart run melos bootstrap` from repo root (optional after pub get) |
+| Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`); app keeps compatibility barrels under old `lib/` paths during migration |
+
+Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).

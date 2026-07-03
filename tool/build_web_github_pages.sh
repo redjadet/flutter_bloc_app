@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
+cd "$APP_ROOT"
+
 # Deterministic Flutter web build for GitHub Pages project sites.
 #
 # Usage:
@@ -39,7 +43,7 @@ if [[ "$REPO_NAME" == *".github.io"* && "$BASE_HREF" != "/" ]]; then
 fi
 
 # shellcheck disable=SC2046
-DEFINE_ARGS=( $(bash tool/flutter_dart_defines_from_env.sh) )
+DEFINE_ARGS=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
 
 CMD=(
   flutter build web

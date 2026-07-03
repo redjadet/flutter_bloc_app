@@ -10,13 +10,18 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+APP_ROOT = (
+    ROOT / "apps" / "mobile"
+    if (ROOT / "apps" / "mobile" / "pubspec.yaml").is_file()
+    else ROOT
+)
 SCRIPT = ROOT / "tool" / "run_file_length_lint.sh"
 MAX_LINES = 225
 PROBE_LINES = MAX_LINES + 3
 
-LONG_PROBE = ROOT / "lib" / "_file_length_lint_regression_probe.dart"
-COMMENT_PROBE = ROOT / "lib" / "_file_length_lint_comment_probe.dart"
-EXCLUDE_PROBE = ROOT / "lib" / "_file_length_lint_exclude_probe.g.dart"
+LONG_PROBE = APP_ROOT / "lib" / "_file_length_lint_regression_probe.dart"
+COMMENT_PROBE = APP_ROOT / "lib" / "_file_length_lint_comment_probe.dart"
+EXCLUDE_PROBE = APP_ROOT / "lib" / "_file_length_lint_exclude_probe.g.dart"
 
 
 def _load_physical_checker():

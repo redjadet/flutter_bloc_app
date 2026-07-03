@@ -174,6 +174,8 @@ for file_path in targets:
             continue
         if token.endswith(".original.md"):
             continue
+        if re.match(r"tasks/(?:cursor|codex)/todo\.md$", token):
+            continue
         if token.startswith(("./", "../")):
             continue
         if "PATH/TO" in token or "path/to" in token:

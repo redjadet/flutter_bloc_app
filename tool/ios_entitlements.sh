@@ -10,8 +10,9 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-ENTITLEMENTS_DIR="$PROJECT_ROOT/ios/Runner"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/workspace_paths.sh"
+ENTITLEMENTS_DIR="$APP_ROOT/ios/Runner"
 ENTITLEMENTS="$ENTITLEMENTS_DIR/Runner.entitlements"
 DEV_ENTITLEMENTS="$ENTITLEMENTS_DIR/Runner.entitlements.development"
 DIST_ENTITLEMENTS="$ENTITLEMENTS_DIR/Runner.entitlements.distribution"

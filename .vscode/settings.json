@@ -62,7 +62,7 @@
     "**/*.freezed.dart",
     "**/*.gen.dart",
     "**/*.mocks.dart",
-    "lib/l10n/app_localizations*.dart",
+    "apps/mobile/lib/l10n/app_localizations*.dart",
     "**/build/**",
     "analysis_options.yaml",
     ".vscode/settings.json",
@@ -82,18 +82,18 @@
     "../../../flutter/**"
   ],
   "cSpell.checkPaths": [
-    "lib/**",
-    "test/**",
+    "apps/mobile/lib/**",
+    "apps/mobile/test/**",
     "!README.md",
     "!analysis_options.yaml",
     "!pubspec.yaml",
     "!.vscode/*.json",
     "!AGENTS.md",
-    "!lib/**/*.g.dart",
-    "!lib/**/*.freezed.dart",
-    "!lib/**/*.gen.dart",
-    "!lib/**/*.mocks.dart",
-    "!lib/l10n/app_localizations*.dart"
+    "!apps/mobile/lib/**/*.g.dart",
+    "!apps/mobile/lib/**/*.freezed.dart",
+    "!apps/mobile/lib/**/*.gen.dart",
+    "!apps/mobile/lib/**/*.mocks.dart",
+    "!apps/mobile/lib/l10n/app_localizations*.dart"
   ],
   "[dart]": {
     "editor.formatOnSave": true,

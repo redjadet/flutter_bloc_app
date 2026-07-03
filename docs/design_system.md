@@ -15,18 +15,22 @@ subsections (so the linter doesn’t treat it as a new section).
 
 ## Locations
 
+During the Melos migration, shared theme/Mix/widgets also live in `packages/design_system/`.
+The app keeps **compatibility barrels** at the paths below so existing imports keep working.
+
 | Area | Path | Purpose |
 | ---- | ---- | ------- |
 | Visual brief | [`DESIGN.md`](../DESIGN.md) | Agent-readable design memory using Google's DesignMD alpha format. |
 | Theme | `lib/core/theme/` | `ThemeData`, light/dark themes, `TextTheme`. Use `AppTheme.lightTheme()` / `AppTheme.darkTheme()`. |
-| Mix theme | `lib/core/theme/mix_app_theme.dart` | Mix token names and runtime values. Use `buildAppMixScope(context, child: ...)`; app is wrapped with `MixScope` in `AppConfig`. |
-| Mix styles | `lib/shared/design_system/app_styles.dart` | Shared [Style] definitions (card, profileOutlinedButton, etc.) using Mix tokens. |
+| Design system package | `packages/design_system/` | `package:design_system` — Mix tokens, `AppStyles`, responsive helpers, `CommonCard`, `CommonStatusView`, skeletons. **No** feature or l10n imports. |
+| Mix theme | `lib/core/theme/mix_app_theme.dart` | Barrel → `package:design_system`. Mix token names; `buildAppMixScope(context, child: …)`; wrapped in `AppConfig`. |
+| Mix styles | `lib/shared/design_system/app_styles.dart` | Barrel → `package:design_system` shared Mix `[Style]` definitions. |
 | Constants | `lib/core/constants/` | App-wide `AppConstants`: colors, breakpoints, window sizes, durations. |
 | Core extensions | `lib/core/extensions/` | Core-level `BuildContext` (or similar) extensions. |
 | Typography | `lib/shared/ui/typography.dart` | `AppTypography` helpers using `Theme.of(context).textTheme`. |
-| UI constants | `lib/shared/ui/ui_constants.dart` | Layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
+| UI constants | `lib/shared/ui/ui_constants.dart` | Barrel → `package:design_system` layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
 | Components | `lib/shared/components/` | Design system primitives (buttons, inputs, chips). |
-| Widgets | `lib/shared/widgets/` | App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`). |
+| Widgets | `lib/shared/widgets/` | App composites; shared widgets from `design_system` use compatibility barrels. `CommonSearchField` stays app-local (l10n). |
 
 ### Page shell (`CommonPageLayout`)
 

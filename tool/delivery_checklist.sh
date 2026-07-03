@@ -9,11 +9,13 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
+cd "$WORKSPACE_ROOT"
 
 # shellcheck disable=SC1091
-source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+source "$WORKSPACE_ROOT/tool/resolve_flutter_dart.sh"
 
 usage() {
   cat <<'EOF'
@@ -57,7 +59,7 @@ PY
   fi
 )"
 CHECKLIST_TMP_DIR=""
-CHECKLIST_CACHE_DIR="$PROJECT_ROOT/.dart_tool/checklist"
+CHECKLIST_CACHE_DIR="$WORKSPACE_ROOT/.dart_tool/checklist"
 CHECKLIST_CONFIG_CACHE_FILE="$CHECKLIST_CACHE_DIR/config_validation.sha256"
 CHECKLIST_EMIT_SCORECARD=1
 
@@ -84,7 +86,7 @@ PY
   )"
   workspace_fingerprint="$(
     if command -v python3 >/dev/null 2>&1; then
-      python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true
+      python3 "$WORKSPACE_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true
     else
       echo ""
     fi
@@ -95,7 +97,7 @@ PY
     checklist_pass="1"
   fi
 
-  "$PROJECT_ROOT/tool/emit_agent_scorecard_event.sh" \
+  "$WORKSPACE_ROOT/tool/emit_agent_scorecard_event.sh" \
     --command checklist \
     --status "$checklist_status" \
     --started-at "$CHECKLIST_STARTED_AT" \
@@ -162,7 +164,7 @@ detect_cpu_count() {
 }
 
 compute_validation_cache_key() {
-  python3 - "$PROJECT_ROOT" "$@" <<'PY'
+  python3 - "$WORKSPACE_ROOT" "$@" <<'PY'
 from __future__ import annotations
 
 import hashlib
@@ -268,7 +270,7 @@ should_attempt_checklist_reuse() {
     return 1
   fi
 
-  if [ ! -f "$PROJECT_ROOT/tool/validation_reuse.py" ]; then
+  if [ ! -f "$WORKSPACE_ROOT/tool/validation_reuse.py" ]; then
     return 1
   fi
 
@@ -295,7 +297,7 @@ reuse_checklist_if_available() {
     return 1
   fi
 
-  if python3 "$PROJECT_ROOT/tool/validation_reuse.py" find --command checklist >/dev/null 2>&1; then
+  if python3 "$WORKSPACE_ROOT/tool/validation_reuse.py" find --command checklist >/dev/null 2>&1; then
     echo "♻️  Reusing previous successful checklist run for the exact current worktree fingerprint"
     echo "    Set CHECKLIST_ALLOW_REUSE=0 to force a full rerun."
     echo ""
@@ -374,7 +376,7 @@ validate_checklist_configuration() {
   fi
 
   for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
-    if [ ! -f "$PROJECT_ROOT/$script" ]; then
+    if [ ! -f "$WORKSPACE_ROOT/$script" ]; then
       echo "❌ Missing checklist dependency: $script"
       failed=1
     fi
@@ -385,10 +387,10 @@ validate_checklist_configuration() {
   fi
 
   validation_doc_cache_inputs=( "docs/validation_scripts.md" )
-  if [ -d "$PROJECT_ROOT/docs/validation_scripts" ]; then
+  if [ -d "$WORKSPACE_ROOT/docs/validation_scripts" ]; then
     while IFS= read -r shard; do
-      validation_doc_cache_inputs+=( "${shard#"$PROJECT_ROOT/"}" )
-    done < <(find "$PROJECT_ROOT/docs/validation_scripts" -maxdepth 1 -name '*.md' -print | LC_ALL=C sort)
+      validation_doc_cache_inputs+=( "${shard#"$WORKSPACE_ROOT/"}" )
+    done < <(find "$WORKSPACE_ROOT/docs/validation_scripts" -maxdepth 1 -name '*.md' -print | LC_ALL=C sort)
   fi
 
   cache_key="$(compute_validation_cache_key \
@@ -403,12 +405,12 @@ validate_checklist_configuration() {
   for script in "${CHECK_SCRIPTS[@]}" "${extra_scripts[@]}"; do
     case "$script" in
       *.sh|bin/*)
-        if ! bash -n "$PROJECT_ROOT/$script"; then
+        if ! bash -n "$WORKSPACE_ROOT/$script"; then
           syntax_exit=1
         fi
         ;;
       *.dart)
-        dart_analyze_files+=("$PROJECT_ROOT/$script")
+        dart_analyze_files+=("$WORKSPACE_ROOT/$script")
         ;;
     esac
   done
@@ -424,7 +426,7 @@ validate_checklist_configuration() {
     return 1
   fi
 
-  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     return 1
   fi
@@ -448,12 +450,12 @@ validate_docs_only_dependencies() {
   )
 
   for script in "${docs_only_scripts[@]}"; do
-    if [ ! -f "$PROJECT_ROOT/$script" ]; then
+    if [ ! -f "$WORKSPACE_ROOT/$script" ]; then
       echo "❌ Missing docs-only checklist dependency: $script"
       failed=1
       continue
     fi
-    if ! bash -n "$PROJECT_ROOT/$script"; then
+    if ! bash -n "$WORKSPACE_ROOT/$script"; then
       failed=1
     fi
   done
@@ -473,25 +475,25 @@ validate_tooling_only_dependencies() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       *.sh|bin/*)
-        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+        if [ ! -f "$WORKSPACE_ROOT/$file" ]; then
           echo "❌ Missing tooling file: $file"
           failed=1
           continue
         fi
-        if ! bash -n "$PROJECT_ROOT/$file"; then
+        if ! bash -n "$WORKSPACE_ROOT/$file"; then
           failed=1
         fi
         ;;
       *.dart)
-        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+        if [ ! -f "$WORKSPACE_ROOT/$file" ]; then
           echo "❌ Missing tooling file: $file"
           failed=1
           continue
         fi
-        dart_analyze_files+=("$PROJECT_ROOT/$file")
+        dart_analyze_files+=("$WORKSPACE_ROOT/$file")
         ;;
       tool/*_test.py)
-        if [ ! -f "$PROJECT_ROOT/$file" ]; then
+        if [ ! -f "$WORKSPACE_ROOT/$file" ]; then
           echo "❌ Missing tooling test file: $file"
           failed=1
           continue
@@ -680,7 +682,7 @@ run_pubspec_codegen_compat_preflight_if_needed() {
   fi
 
   echo "🧩 Checking pubspec codegen/analyzer compatibility before dependency resolution"
-  if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/check_pubspec_codegen_compat.sh"; then
     echo "❌ Pubspec codegen/analyzer compatibility failed; fix pubspec before running flutter pub get."
     return 1
   fi
@@ -814,7 +816,7 @@ should_run_router_feature_validate_auto() {
   if [ "${#changed_files[@]}" -eq 0 ]; then
     return 1
   fi
-  local rule_file="$PROJECT_ROOT/.cursor/rules/router-feature-validation.mdc"
+  local rule_file="$WORKSPACE_ROOT/.cursor/rules/router-feature-validation.mdc"
   if [ ! -f "$rule_file" ] || ! command -v python3 >/dev/null 2>&1; then
     return 1
   fi
@@ -1190,7 +1192,7 @@ if reuse_checklist_if_available; then
 fi
 
 normalize_doc_links() {
-  local script="$PROJECT_ROOT/tool/normalize_doc_links.py"
+  local script="$WORKSPACE_ROOT/tool/normalize_doc_links.py"
   local -a doc_files=()
   local file
 
@@ -1251,28 +1253,28 @@ run_harness_docs_checks() {
   done < <(collect_changed_doc_files || true)
 
   if [ "${#doc_files[@]}" -gt 0 ]; then
-    if ! bash "$PROJECT_ROOT/tool/check_docs_gardening.sh" --paths "${doc_files[@]}"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_docs_gardening.sh" --paths "${doc_files[@]}"; then
       echo "❌ Doc gardening checks failed; fix broken doc references or validation doc drift."
       return 1
     fi
   else
-    if ! bash "$PROJECT_ROOT/tool/check_docs_gardening.sh"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_docs_gardening.sh"; then
       echo "❌ Doc gardening checks failed; fix broken doc references or validation doc drift."
       return 1
     fi
   fi
 
-  if ! bash "$PROJECT_ROOT/tool/validate_task_trackers.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/validate_task_trackers.sh"; then
     echo "❌ Task tracker contract failed; update tasks/*/todo.md to match the canonical template."
     return 1
   fi
 
-  if ! bash "$PROJECT_ROOT/tool/run_harness_fixtures.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/run_harness_fixtures.sh"; then
     echo "❌ Harness fixture tests failed; fix harness scripts or fixtures."
     return 1
   fi
 
-  if ! bash "$PROJECT_ROOT/tool/check_harness_scorecard_gate.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/check_harness_scorecard_gate.sh"; then
     echo "❌ Harness scorecard gate failed; keep Cursor/Codex max-score docs and proof gates in sync."
     return 1
   fi
@@ -1325,11 +1327,11 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   if ! normalize_doc_links; then
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/check_agent_knowledge_base.sh"; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
     exit 1
   fi
@@ -1338,7 +1340,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
-    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_agent_asset_drift.sh"; then
       echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
@@ -1347,7 +1349,7 @@ if [ "$CHECKLIST_MODE" = "fast" ]; then
   if [ "${#changed_dart_files[@]}" -gt 0 ]; then
     echo ""
     echo "🧩 Widget identity drift check (changed Dart files present)"
-    if ! bash "$PROJECT_ROOT/tool/check_widget_identity.sh"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_widget_identity.sh"; then
       exit 1
     fi
   fi
@@ -1370,11 +1372,11 @@ if is_docs_only_change_set; then
   if ! normalize_doc_links; then
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/check_agent_knowledge_base.sh"; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
     exit 1
   fi
@@ -1383,7 +1385,7 @@ if is_docs_only_change_set; then
   fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
-    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_agent_asset_drift.sh"; then
       echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
@@ -1403,11 +1405,11 @@ if is_tooling_only_change_set; then
   if ! normalize_doc_links; then
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/validate_validation_docs.sh"; then
     echo "❌ validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts; update shards or run tool/validate_validation_docs.sh for details."
     exit 1
   fi
-  if ! bash "$PROJECT_ROOT/tool/check_agent_knowledge_base.sh"; then
+  if ! bash "$WORKSPACE_ROOT/tool/check_agent_knowledge_base.sh"; then
     echo "❌ Agent knowledge base map is out of sync; update AGENTS/docs indexes or source-of-truth links."
     exit 1
   fi
@@ -1416,7 +1418,7 @@ if is_tooling_only_change_set; then
   fi
   if should_run_agent_asset_drift_check; then
     echo "🤖 Verifying managed AI agent asset drift for policy/template docs..."
-    if ! bash "$PROJECT_ROOT/tool/check_agent_asset_drift.sh"; then
+    if ! bash "$WORKSPACE_ROOT/tool/check_agent_asset_drift.sh"; then
       echo "❌ Managed AI agent assets are out of sync; inspect with ./tool/sync_agent_assets.sh --dry-run, then reconcile with ./bin/agent-maintain sync --apply."
       exit 1
     fi
@@ -1436,30 +1438,31 @@ fi
 
 # Step 1: Fetch dependencies (only if needed)
 echo "📦 Step 1/5: Checking dependency state"
-PACKAGE_CONFIG=".dart_tool/package_config.json"
+PACKAGE_CONFIG="$WORKSPACE_ROOT/.dart_tool/package_config.json"
+APP_PUBSPEC="$APP_ROOT/pubspec.yaml"
 SHOULD_RUN_PUB_GET=0
 if [ ! -f "$PACKAGE_CONFIG" ]; then
   SHOULD_RUN_PUB_GET=1
-elif [ "pubspec.yaml" -nt "$PACKAGE_CONFIG" ] || \
-  { [ -f "pubspec.lock" ] && [ "pubspec.lock" -nt "$PACKAGE_CONFIG" ]; }; then
+elif [ "$APP_PUBSPEC" -nt "$PACKAGE_CONFIG" ] || \
+  { [ -f "$WORKSPACE_ROOT/pubspec.lock" ] && [ "$WORKSPACE_ROOT/pubspec.lock" -nt "$PACKAGE_CONFIG" ]; }; then
   SHOULD_RUN_PUB_GET=1
 fi
 
 if [ "$SHOULD_RUN_PUB_GET" -eq 1 ]; then
-  echo "  Dependency metadata changed, running 'flutter pub get'"
+  echo "  Dependency metadata changed, running workspace pub get"
   pub_get_log="$(mktemp)"
-  if ! flutter pub get >"$pub_get_log" 2>&1; then
+  if ! bash "$WORKSPACE_ROOT/tool/workspace_pub_get.sh" >"$pub_get_log" 2>&1; then
     cat "$pub_get_log" >&2
     rm -f "$pub_get_log"
     exit 1
   fi
   rm -f "$pub_get_log"
 else
-  echo "  Dependencies already up-to-date, skipping 'flutter pub get'"
+  echo "  Dependencies already up-to-date, skipping pub get"
 fi
 
 # Patch known broken SwiftPM platform mins in pub cache (Darwin only).
-bash "$PROJECT_ROOT/tool/patch_flutter_secure_storage_darwin_swiftpm.sh" || true
+bash "$WORKSPACE_ROOT/tool/patch_flutter_secure_storage_darwin_swiftpm.sh" || true
 echo "✅ Dependencies ready"
 echo ""
 
@@ -1467,7 +1470,7 @@ echo ""
 echo "📝 Step 2/5: Formatting changed Dart files"
 if [ "${#changed_dart_files[@]}" -gt 0 ]; then
   echo "  Found ${#changed_dart_files[@]} changed Dart file(s)"
-  bash "$PROJECT_ROOT/bin/format" --changed
+  bash "$WORKSPACE_ROOT/bin/format" --changed
 else
   echo "  No changed Dart files, skipping format"
 fi
@@ -1504,6 +1507,7 @@ CHECK_MESSAGES=(
   "Checking for missing isClosed checks before emit() in cubits..."
   "Checking for missing const constructors in StatelessWidget..."
   "Checking pubspec codegen/analyzer compatibility..."
+  "Checking workspace package dependency DAG..."
   "Checking for data-layer imports in presentation (SOLID DIP)..."
   "Checking for presentation imports in data layer (SOLID layering)..."
   "Checking for shrinkWrap: true in presentation lists (perf)..."
@@ -1581,6 +1585,7 @@ CHECK_SCRIPTS=(
   "tool/check_cubit_isclosed.sh"
   "tool/check_missing_const.sh"
   "tool/check_pubspec_codegen_compat.sh"
+  "tool/check_package_dependency_dag.sh"
   "tool/check_solid_presentation_data_imports.sh"
   "tool/check_solid_data_presentation_imports.sh"
   "tool/check_perf_shrinkwrap_lists.sh"
@@ -1657,6 +1662,7 @@ CHECK_SCRIPT_THEMES=(
   "state-mgmt"
   "perf"
   "tooling"
+  "architecture"
   "architecture"
   "architecture"
   "widget-trees"
@@ -1765,7 +1771,7 @@ elif [ "$RUN_ANALYZE" = "auto" ]; then
 fi
 
 if [ "$should_run_analyze" -eq 1 ]; then
-  if ! flutter analyze --no-pub; then
+  if ! (cd "$APP_ROOT" && flutter analyze --no-pub); then
     ANALYZE_FAILED=1
   fi
 else
@@ -1789,7 +1795,7 @@ echo "✅ Code analysis complete"
 echo ""
 if should_run_router_feature_validate_auto; then
   echo "  Running router feature validation (path-triggered)..."
-  if ! bash "$PROJECT_ROOT/bin/router_feature_validate"; then
+  if ! bash "$WORKSPACE_ROOT/bin/router_feature_validate"; then
     VALIDATION_FAILED=1
   fi
   echo ""

@@ -29,6 +29,17 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+OPTIONAL_TASK_TRACKER_RE = re.compile(r"^tasks/(?:cursor|codex)/todo\.md$")
+
+
+def _is_optional_task_tracker(token: str) -> bool:
+    return bool(OPTIONAL_TASK_TRACKER_RE.match(token.strip()))
+
+
+def _optional_task_tracker_link_target(token: str, *, file_path: Path, repo_root: Path) -> str:
+    return os.path.relpath((repo_root / token).resolve(), start=file_path.parent.resolve())
+
+
 MD_TOKEN_RE = re.compile(r"`(?P<token>[^`\n]+?\.md)`")
 MD_LINK_RE = re.compile(r"\[`(?P<label>[^`\n]+?\.md)`]\((?P<target>[^)\n]+)\)")
 REPO_ROOT_PREFERRED_PREFIXES = (
@@ -190,6 +201,13 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
             out_parts.append(m.group(0))
             continue
 
+        if _is_optional_task_tracker(token):
+            label = _normalize_token(token, path)
+            target = _optional_task_tracker_link_target(token, file_path=path, repo_root=repo_root)
+            out_parts.append(f"[`{label}`]({target})")
+            replacements += 1
+            continue
+
         target = _link_target_for_token(token, file_path=path, repo_root=repo_root)
         if target is None:
             out_parts.append(m.group(0))
@@ -228,6 +246,8 @@ def normalize_file(path: Path, repo_root: Path) -> Change | None:
 
         desired = _link_target_for_token(label, file_path=path, repo_root=repo_root)
         if desired is None:
+            if _is_optional_task_tracker(label):
+                return m.group(0)
             replacements += 1
             return f"`{label}`"
 

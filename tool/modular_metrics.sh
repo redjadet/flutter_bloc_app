@@ -4,7 +4,9 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
 CROSS_FEATURE_ONLY=false
@@ -21,7 +23,7 @@ run_rg() {
 }
 
 echo "=== Modular metrics ($(date -u +%Y-%m-%dT%H:%M:%SZ)) ==="
-echo "repo: $PROJECT_ROOT"
+echo "repo: $APP_ROOT"
 echo
 
 if [[ "$CROSS_FEATURE_ONLY" == true ]]; then

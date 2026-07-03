@@ -60,6 +60,8 @@ detect_cpu_count() {
 
 TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+# shellcheck disable=SC1091
 source "$TOOL_DIR/resolve_flutter_dart.sh"
 
 DART_BIN="$(resolve_flutter_dart)"
@@ -82,29 +84,29 @@ FINAL_COVERAGE_PATH="coverage/lcov.info"
 
 echo "Running flutter test with coverage (concurrency=$COVERAGE_JOBS)..."
 if [ "$#" -eq 0 ]; then
-  flutter test \
+  (cd "$APP_ROOT" && flutter test \
     --no-pub \
     --coverage \
-    --coverage-path="$BASE_COVERAGE_PATH" \
+    --coverage-path="$WORKSPACE_ROOT/$BASE_COVERAGE_PATH" \
     --concurrency="$COVERAGE_JOBS" \
-    --exclude-tags "skip-checklist${golden_exclude_for_linux}"
-  cp "$BASE_COVERAGE_PATH" "$FINAL_COVERAGE_PATH"
+    --exclude-tags "skip-checklist${golden_exclude_for_linux}")
+  cp "$WORKSPACE_ROOT/$BASE_COVERAGE_PATH" "$WORKSPACE_ROOT/$FINAL_COVERAGE_PATH"
 else
-  flutter test \
+  (cd "$APP_ROOT" && flutter test \
     --no-pub \
     --coverage \
-    --coverage-path="$FINAL_COVERAGE_PATH" \
+    --coverage-path="$WORKSPACE_ROOT/$FINAL_COVERAGE_PATH" \
     --concurrency="$COVERAGE_JOBS" \
-    "$@"
+    "$@")
 fi
 
 echo ""
 echo "Updating coverage summary..."
-"$DART_BIN" run tool/update_coverage_summary.dart
+(cd "$WORKSPACE_ROOT" && "$DART_BIN" run tool/update_coverage_summary.dart)
 
 echo ""
 echo "Enforcing coverage threshold..."
-"$DART_BIN" run tool/update_coverage_summary.dart --enforce-threshold
+(cd "$WORKSPACE_ROOT" && "$DART_BIN" run tool/update_coverage_summary.dart --enforce-threshold)
 
 echo ""
 echo "✅ Test coverage complete! Reports updated in coverage/"

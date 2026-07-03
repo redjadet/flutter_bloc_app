@@ -1,14 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
 echo "Checking widget identity fixtures..."
-dart tool/check_widget_identity.dart \
-  tool/fixtures/widget_identity/good_dynamic_children_local_state.dart
-if dart tool/check_widget_identity.dart \
-  tool/fixtures/widget_identity/bad_dynamic_children_local_state.dart \
+dart "$WORKSPACE_ROOT/tool/check_widget_identity.dart" \
+  "$WORKSPACE_ROOT/tool/fixtures/widget_identity/good_dynamic_children_local_state.dart"
+if dart "$WORKSPACE_ROOT/tool/check_widget_identity.dart" \
+  "$WORKSPACE_ROOT/tool/fixtures/widget_identity/bad_dynamic_children_local_state.dart" \
   >/tmp/check_widget_identity_bad_fixture.out \
   2>/tmp/check_widget_identity_bad_fixture.err; then
   echo "❌ widget identity fixture failed: bad dynamic children case passed"
@@ -22,4 +24,4 @@ if ! grep -q "FixtureSearchRow.*without a stable key" \
 fi
 
 echo "Checking for widget identity drift (keys, builders, switchers)..."
-dart tool/check_widget_identity.dart
+dart "$WORKSPACE_ROOT/tool/check_widget_identity.dart"

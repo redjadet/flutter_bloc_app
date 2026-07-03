@@ -41,11 +41,13 @@
 set -euo pipefail
 
 SCRIPT_PATH="${BASH_SOURCE[0]:-$0}"
-PROJECT_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
-cd "$PROJECT_ROOT"
+WORKSPACE_ROOT="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
+cd "$WORKSPACE_ROOT"
 
 # shellcheck disable=SC1091
-source "$PROJECT_ROOT/tool/resolve_flutter_dart.sh"
+source "$WORKSPACE_ROOT/tool/resolve_flutter_dart.sh"
 
 INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
@@ -160,7 +162,7 @@ start_ms = int(sys.argv[1])
 print(max(0, int(time.time() * 1000) - start_ms))
 PY
 )"
-  workspace_fingerprint="$(python3 "$PROJECT_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true)"
+  workspace_fingerprint="$(python3 "$WORKSPACE_ROOT/tool/validation_reuse.py" fingerprint 2>/dev/null || true)"
 
   if [ "${INTEGRATION_SCORECARD_SKIPPED:-0}" = "1" ]; then
     event_status="cancelled"
@@ -170,7 +172,7 @@ PY
     integration_pass="1"
   fi
 
-  "$PROJECT_ROOT/tool/emit_agent_scorecard_event.sh" \
+  "$WORKSPACE_ROOT/tool/emit_agent_scorecard_event.sh" \
     --command integration_tests \
     --status "$event_status" \
     --started-at "$INTEGRATION_STARTED_AT" \
@@ -282,8 +284,8 @@ acquire_integration_lock() {
     command_text="$command_text $*"
   fi
 
-  mkdir -p "$PROJECT_ROOT/.dart_tool"
-  INTEGRATION_LOCK_DIR="$PROJECT_ROOT/.dart_tool/integration_test_lock"
+  mkdir -p "$WORKSPACE_ROOT/.dart_tool"
+  INTEGRATION_LOCK_DIR="$WORKSPACE_ROOT/.dart_tool/integration_test_lock"
 
   if mkdir "$INTEGRATION_LOCK_DIR" 2>/dev/null; then
     write_integration_lock_details "$command_text"
@@ -312,7 +314,7 @@ validate_integration_target_path() {
   if [[ ! "$candidate" =~ ^integration_test/[a-zA-Z0-9_./-]+\.dart$ ]]; then
     return 1
   fi
-  [ -f "$PROJECT_ROOT/$candidate" ]
+  [ -f "$APP_ROOT/$candidate" ]
 }
 
 validate_integration_runner_configuration() {
@@ -329,13 +331,13 @@ validate_integration_runner_configuration() {
     fi
   done
 
-  if ! /usr/bin/python3 - "$PROJECT_ROOT/tool/integration_selective_map.json" <<'PY'
+  if ! /usr/bin/python3 - "$WORKSPACE_ROOT/tool/integration_selective_map.json" "$APP_ROOT" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 map_path = Path(sys.argv[1])
-repo_root = map_path.parent.parent
+app_root = Path(sys.argv[2])
 raw = json.loads(map_path.read_text(encoding="utf-8"))
 rules = raw.get("rules", [])
 if not isinstance(rules, list):
@@ -356,7 +358,7 @@ for index, rule in enumerate(rules):
     seen_ids.add(rule_id)
     if not isinstance(target, str) or not target.startswith("integration_test/"):
         raise SystemExit(f"rules[{index}].target must be an integration_test/*.dart path")
-    if not (repo_root / target).is_file():
+    if not (app_root / target).is_file():
         raise SystemExit(f"missing target file for rule {rule_id}: {target}")
     seen_targets.add(target)
     if not isinstance(prefixes, list) or not prefixes or not all(isinstance(p, str) and p for p in prefixes):
@@ -426,14 +428,14 @@ preferred_ios_simulator_selection() {
   [ "$(uname -s)" = "Darwin" ] || return 1
   command -v xcrun >/dev/null 2>&1 || return 1
 
-  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" || return 1
+  xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$WORKSPACE_ROOT/tool/ios_simulator_pick.py" || return 1
 }
 
 booted_ios_simulator_selection() {
   [ "$(uname -s)" = "Darwin" ] || return 1
   command -v xcrun >/dev/null 2>&1 || return 1
 
-  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" --booted || return 1
+  xcrun simctl list devices booted -j 2>/dev/null | /usr/bin/python3 "$WORKSPACE_ROOT/tool/ios_simulator_pick.py" --booted || return 1
 }
 
 is_ios_simulator_device() {
@@ -596,7 +598,7 @@ run_logged_command() {
   local log_path="$1"
   shift
 
-  "$@" 2>&1 | tee "$log_path"
+  (cd "$APP_ROOT" && "$@") 2>&1 | tee "$log_path"
 }
 
 is_known_xcode_simulator_build_failure() {
@@ -615,13 +617,13 @@ is_known_xcode_simulator_build_failure() {
 }
 
 maybe_enable_pod_shim_if_needed() {
-  local pod_shim_dir="$PROJECT_ROOT/tool/pod_shim"
+  local pod_shim_dir="$WORKSPACE_ROOT/tool/pod_shim"
 
   [ "${INTEGRATION_TESTS_ALLOW_POD_SHIM:-1}" = "1" ] || return 0
   [ -x "$pod_shim_dir/pod" ] || return 0
-  [ -f "$PROJECT_ROOT/ios/Podfile.lock" ] || return 0
-  [ -f "$PROJECT_ROOT/ios/Pods/Manifest.lock" ] || return 0
-  diff -q "$PROJECT_ROOT/ios/Podfile.lock" "$PROJECT_ROOT/ios/Pods/Manifest.lock" >/dev/null 2>&1 || return 0
+  [ -f "$APP_ROOT/ios/Podfile.lock" ] || return 0
+  [ -f "$APP_ROOT/ios/Pods/Manifest.lock" ] || return 0
+  diff -q "$APP_ROOT/ios/Podfile.lock" "$APP_ROOT/ios/Pods/Manifest.lock" >/dev/null 2>&1 || return 0
 
   if command -v pod >/dev/null 2>&1; then
     local pod_check_rc=0
@@ -634,19 +636,19 @@ maybe_enable_pod_shim_if_needed() {
 
   export PATH="$pod_shim_dir:$PATH"
   export INTEGRATION_TESTS_ALLOW_POD_SHIM=1
-  export INTEGRATION_TESTS_PODFILE_LOCK="$PROJECT_ROOT/ios/Podfile.lock"
-  export INTEGRATION_TESTS_PODS_MANIFEST="$PROJECT_ROOT/ios/Pods/Manifest.lock"
+  export INTEGRATION_TESTS_PODFILE_LOCK="$APP_ROOT/ios/Podfile.lock"
+  export INTEGRATION_TESTS_PODS_MANIFEST="$APP_ROOT/ios/Pods/Manifest.lock"
   log "CocoaPods CLI unavailable; Pods/Manifest.lock in sync — using tool/pod_shim for flutter iOS builds."
 }
 
 resolve_ios_swift_package_dependencies() {
-  local workspace="$PROJECT_ROOT/ios/Runner.xcworkspace"
+  local workspace="$APP_ROOT/ios/Runner.xcworkspace"
 
   [ -d "$workspace" ] || return 0
 
   log "Resolving Xcode Swift package dependencies..."
   (
-    cd "$PROJECT_ROOT/ios"
+    cd "$APP_ROOT/ios"
     xcodebuild -resolvePackageDependencies \
       -workspace Runner.xcworkspace \
       -scheme Runner
@@ -654,7 +656,7 @@ resolve_ios_swift_package_dependencies() {
 }
 
 run_ios_cocoapods_install() {
-  local ios_dir="$PROJECT_ROOT/ios"
+  local ios_dir="$APP_ROOT/ios"
 
   [ -f "$ios_dir/Podfile" ] || return 0
 
@@ -670,14 +672,41 @@ run_ios_cocoapods_install() {
   )
 }
 
+ensure_ios_firebase_plist_for_simulator() {
+  local runner_plist="$APP_ROOT/ios/Runner/GoogleService-Info.plist"
+  local ci_plist="$APP_ROOT/ios/ci/GoogleService-Info.plist"
+
+  if [ -f "$runner_plist" ]; then
+    if grep -q 'YOUR_IOS_API_KEY' "$runner_plist" 2>/dev/null; then
+      log "Removing placeholder Firebase plist before simulator integration: $runner_plist"
+      rm -f "$runner_plist"
+    fi
+    return 0
+  fi
+
+  if [ ! -f "$ci_plist" ]; then
+    log "No Firebase plist at $runner_plist (CI template missing); native Firebase configure will be skipped."
+    return 0
+  fi
+
+  if grep -q 'YOUR_IOS_API_KEY' "$ci_plist" 2>/dev/null; then
+    log "CI Firebase plist uses placeholder API_KEY; skipping copy for simulator integration."
+    return 0
+  fi
+
+  log "Copying CI Firebase plist for simulator integration: $ci_plist -> $runner_plist"
+  cp "$ci_plist" "$runner_plist"
+}
+
 prepare_ios_simulator_build() {
   local device_id="$1"
 
   [ "$(uname -s)" = "Darwin" ] || return 0
   is_ios_simulator_device "$device_id" || return 0
   [ "${INTEGRATION_TESTS_SKIP_IOS_BUILD_PREP:-0}" = "1" ] && return 0
-  [ -d "$PROJECT_ROOT/ios/Runner.xcworkspace" ] || return 0
+  [ -d "$APP_ROOT/ios/Runner.xcworkspace" ] || return 0
 
+  ensure_ios_firebase_plist_for_simulator
   log "Preparing iOS simulator build (CocoaPods + SwiftPM)..."
   maybe_enable_pod_shim_if_needed
   run_ios_cocoapods_install
@@ -708,7 +737,7 @@ validate_integration_selective_target_path() {
   if [[ ! "$candidate" =~ ^integration_test/[a-zA-Z0-9_]+\.dart$ ]]; then
     return 1
   fi
-  [ -f "$PROJECT_ROOT/$candidate" ]
+  [ -f "$APP_ROOT/$candidate" ]
 }
 
 infer_flutter_failure_category_from_log() {
@@ -867,9 +896,9 @@ cleanup_project_xcodebuilds() {
 
   local pattern
   local patterns=(
-    "$PROJECT_ROOT/build/ios"
-    "$PROJECT_ROOT/ios/Runner.xcworkspace"
-    "$PROJECT_ROOT/ios/Pods"
+    "$APP_ROOT/build/ios"
+    "$APP_ROOT/ios/Runner.xcworkspace"
+    "$APP_ROOT/ios/Pods"
   )
   local deadline=$((SECONDS + 30))
 
@@ -1119,7 +1148,8 @@ run_with_timeout() {
 
   local command_pid
   local heartbeat_pid
-  local start_time=$SECONDS
+  local start_epoch
+  start_epoch="$(date +%s)"
   local exit_code=0
 
   log "Starting $label (timeout ${timeout_seconds}s)."
@@ -1128,7 +1158,7 @@ run_with_timeout() {
   heartbeat_pid="$(start_heartbeat "$label" "$PROGRESS_HEARTBEAT_SECONDS" "$command_pid")"
 
   while kill -0 "$command_pid" 2>/dev/null; do
-    if [ $((SECONDS - start_time)) -ge "$timeout_seconds" ]; then
+    if [ $(($(date +%s) - start_epoch)) -ge "$timeout_seconds" ]; then
       log "$label exceeded timeout after ${timeout_seconds}s. Sending TERM..."
       kill -TERM "$command_pid" 2>/dev/null || true
       sleep 10
@@ -1147,7 +1177,7 @@ run_with_timeout() {
   wait "$command_pid" || exit_code=$?
   kill "$heartbeat_pid" 2>/dev/null || true
   wait "$heartbeat_pid" 2>/dev/null || true
-  log "$label finished with exit code $exit_code after $((SECONDS - start_time))s."
+  log "$label finished with exit code $exit_code after $(($(date +%s) - start_epoch))s."
   return "$exit_code"
 }
 
@@ -1187,10 +1217,10 @@ fi
 RUN_PREFLIGHT_VALUE="$(printf '%s' "${INTEGRATION_TESTS_RUN_PREFLIGHT:-1}" | tr '[:upper:]' '[:lower:]')"
 case "$RUN_PREFLIGHT_VALUE" in
   0|false|no)
-    bash "$PROJECT_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
+    bash "$WORKSPACE_ROOT/tool/patch_ios_generated_plugin_swiftpm_platform.sh"
     ;;
   *)
-    bash "$PROJECT_ROOT/tool/run_integration_preflight.sh"
+    bash "$WORKSPACE_ROOT/tool/run_integration_preflight.sh"
     ;;
 esac
 
@@ -1282,8 +1312,8 @@ if ! [[ "$INTEGRATION_TESTS_ENABLE_SELECTIVE" =~ ^(0|1)$ ]]; then
   INTEGRATION_TESTS_ENABLE_SELECTIVE=0
 fi
 
-BASE_COVERAGE_PATH="coverage/lcov.base.info"
-FINAL_COVERAGE_PATH="coverage/lcov.info"
+BASE_COVERAGE_PATH="$WORKSPACE_ROOT/coverage/lcov.base.info"
+FINAL_COVERAGE_PATH="$WORKSPACE_ROOT/coverage/lcov.info"
 FULL_SUITE_TARGET="integration_test/all_flows_test.dart"
 SMOKE_SUITE_TARGET="integration_test/smoke_flows_test.dart"
 STANDARD_SUITE_TARGET="integration_test/standard_flows_test.dart"
@@ -1341,7 +1371,7 @@ if [ "$#" -eq 0 ]; then
     set +e
     _sel_out="$(
       printf '%s\n' "$INTEGRATION_TESTS_CHANGED_FILES" | tr ',' '\n' |
-        /usr/bin/python3 "$PROJECT_ROOT/tool/integration_selective_resolve.py" --lines
+        /usr/bin/python3 "$WORKSPACE_ROOT/tool/integration_selective_resolve.py" --lines
     )"
     _sel_rc=$?
     set -e
@@ -1447,7 +1477,7 @@ if [ "$#" -eq 0 ]; then
       cleanup_project_xcodebuilds
       sleep 2
       simulator_selection="$(
-        xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$PROJECT_ROOT/tool/ios_simulator_pick.py" || true
+        xcrun simctl list devices available -j 2>/dev/null | /usr/bin/python3 "$WORKSPACE_ROOT/tool/ios_simulator_pick.py" || true
       )"
       if [ -z "${simulator_selection:-}" ]; then
         log "❌ No available iPhone simulator found for retry. (xcrun simctl returned none)"

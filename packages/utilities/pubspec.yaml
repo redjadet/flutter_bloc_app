@@ -1,0 +1,13 @@
+name: utilities
+publish_to: none
+description: Pure Dart utilities shared across workspace packages.
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  core:
+    path: ../core
+
+dev_dependencies:

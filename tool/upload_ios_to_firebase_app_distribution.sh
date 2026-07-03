@@ -5,7 +5,9 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/workspace_paths.sh"
+PROJECT_ROOT="$WORKSPACE_ROOT"
 IOS_APP_ID="${FIREBASE_IOS_APP_ID:-1:473097776453:ios:6962f6ddc4d7ea12bd222c}"
 
 IPA_PATH="$1"
@@ -26,7 +28,7 @@ fi
 bash "$PROJECT_ROOT/tool/firebase_preflight.sh" --require-cli --app-id "$IOS_APP_ID"
 
 if [[ -z "$IPA_PATH" ]]; then
-  IPA_PATH=$(find "$PROJECT_ROOT/build/ios" -name "*.ipa" 2>/dev/null | head -1)
+  IPA_PATH=$(find "$APP_ROOT/build/ios" -name "*.ipa" 2>/dev/null | head -1)
 fi
 
 if [[ -z "$IPA_PATH" || ! -f "$IPA_PATH" ]]; then

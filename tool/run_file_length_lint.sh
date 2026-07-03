@@ -4,7 +4,9 @@
 # Regression: python3 tool/run_file_length_lint_test.py
 # Run from project root: ./tool/run_file_length_lint.sh
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+ROOT="$APP_ROOT"
 cd "$ROOT"
 
 if [ "${SKIP_FILE_LENGTH_LINT:-0}" = "1" ] || [ "${CHECKLIST_RUN_FILE_LENGTH_LINT:-1}" = "0" ]; then
@@ -13,4 +15,4 @@ if [ "${SKIP_FILE_LENGTH_LINT:-0}" = "1" ] || [ "${CHECKLIST_RUN_FILE_LENGTH_LIN
 fi
 
 echo "Running file_length_lint (physical line count via analysis_options.yaml)..."
-exec python3 "$ROOT/tool/check_file_length_physical.py"
+exec python3 "$WORKSPACE_ROOT/tool/check_file_length_physical.py"

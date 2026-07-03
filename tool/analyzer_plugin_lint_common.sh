@@ -4,10 +4,13 @@
 # shellcheck disable=SC2034
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
+ROOT="$APP_ROOT"
+cd "$ROOT"
 
 # shellcheck disable=SC1091
-source "$ROOT/tool/resolve_flutter_dart.sh"
+source "$WORKSPACE_ROOT/tool/resolve_flutter_dart.sh"
 
 ANALYZER_PLUGIN_SCOPE="${ANALYZER_PLUGIN_SCOPE:-lib}"
 ANALYZER_PLUGIN_TIMEOUT_SEC="${ANALYZER_PLUGIN_TIMEOUT_SEC:-600}"

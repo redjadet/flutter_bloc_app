@@ -177,12 +177,17 @@ def _is_supabase_deploy_file(path: str) -> bool:
     )
 
 
+FIREBASE_RULES = "backend/firebase/firestore_rules/firestore.rules"
+FIREBASE_INDEXES = "backend/firebase/indexes/firestore.indexes.json"
+FIREBASE_FUNCTIONS_PREFIX = "backend/firebase/functions/"
+
+
 def _is_firebase_deploy_file(path: str) -> bool:
-    if path in {"firebase.json", "firestore.rules", "firestore.indexes.json"}:
+    if path in {"firebase.json", FIREBASE_RULES, FIREBASE_INDEXES}:
         return True
-    if not path.startswith("functions/"):
+    if not path.startswith(FIREBASE_FUNCTIONS_PREFIX):
         return False
-    relative = path.removeprefix("functions/")
+    relative = path.removeprefix(FIREBASE_FUNCTIONS_PREFIX)
     return not (
         relative == "README.md"
         or relative.startswith("test/")
@@ -234,11 +239,11 @@ def _supabase_commands(staged_files: list[str]) -> tuple[str, ...]:
 def _firebase_commands(staged_files: list[str]) -> tuple[str, ...]:
     commands: list[str] = []
     commands.append("bash tool/firebase_preflight.sh --require-cli")
-    if any(path.startswith("functions/") for path in staged_files):
-        commands.append("npm --prefix functions run deploy")
-    if "firestore.rules" in staged_files:
+    if any(path.startswith(FIREBASE_FUNCTIONS_PREFIX) for path in staged_files):
+        commands.append("npm --prefix backend/firebase/functions run deploy")
+    if FIREBASE_RULES in staged_files:
         commands.append("firebase deploy --only firestore:rules")
-    if "firestore.indexes.json" in staged_files:
+    if FIREBASE_INDEXES in staged_files:
         commands.append("firebase deploy --only firestore:indexes")
     return tuple(commands)
 

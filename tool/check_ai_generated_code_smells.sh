@@ -62,6 +62,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
 cd "$repo_root"
 
 declare -a targets=()
@@ -165,6 +167,14 @@ emit_finding() {
 
 scan_file() {
   local file="$1"
+  if [[ "$file" != /* ]]; then
+    file="$repo_root/$file"
+  fi
+
+  if [[ ! -f "$file" ]]; then
+    echo "usage-error|missing scan target: $file" >&2
+    return 0
+  fi
 
   if [[ "$file" == *.toml ]]; then
     scan_supabase_config_toml "$file"

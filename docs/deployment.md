@@ -37,6 +37,14 @@ Env templates (copy to gitignored files):
 
 Ruby deps: `bundle install` (see root [`Gemfile`](../Gemfile), Fastlane 2.234.0).
 
+## Melos workspace and CI
+
+- **Flutter app** ships from `apps/mobile/` (`package:flutter_bloc_app`).
+- **Authoritative gate** remains `./bin/checklist` from repo root.
+- **Firebase backend** assets are under `backend/firebase/` (see [Firebase Setup](firebase_setup.md)).
+- GitHub Actions and deploy helpers use `tool/workspace_paths.sh` for app root;
+  Firebase deploy routing is in [`tool/commit_push_pr_deploy.py`](../tool/commit_push_pr_deploy.py).
+
 ## Both stores (iOS + Android)
 
 Use this when you want **one scripted flow** for TestFlight and Play internal testing

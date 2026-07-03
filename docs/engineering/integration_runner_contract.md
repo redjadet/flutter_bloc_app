@@ -143,6 +143,9 @@ Default gates:
 Before the first `flutter test` on an iPhone simulator (and again after
 simulator-build recovery retries), the runner:
 
+0. Ensures `GoogleService-Info.plist` is not a placeholder (`YOUR_IOS_API_KEY`);
+   removes or skips copying CI template plists so native `FirebaseApp.configure()`
+   does not crash when real Firebase config is absent locally.
 1. Enables the CocoaPods shim when applicable (see below).
 2. Runs `pod install` in `ios/` when the `pod` CLI is available.
 3. Runs `xcodebuild -resolvePackageDependencies` for `Runner.xcworkspace`.

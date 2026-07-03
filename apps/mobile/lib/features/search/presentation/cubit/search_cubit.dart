@@ -1,0 +1,110 @@
+import 'dart:async';
+import 'package:core/core.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
+import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
+import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:utilities/utilities.dart';
+
+class SearchCubit extends Cubit<SearchState>
+    with CubitSubscriptionMixin<SearchState> {
+  SearchCubit({
+    required this._repository,
+    required this._timerService,
+    this.debounceDuration = const Duration(milliseconds: 500),
+  }) : super(const SearchState());
+
+  final SearchRepository _repository;
+  final TimerService _timerService;
+  final Duration debounceDuration;
+  TimerDisposable? _debounceHandle;
+  final RequestIdGuard _requestIdGuard = RequestIdGuard();
+
+  void search(final String query) {
+    _cancelDebounce();
+    final int requestId = _requestIdGuard.next();
+
+    emit(state.copyWith(query: query, error: null));
+
+    if (query.isEmpty) {
+      emit(const SearchState());
+      return;
+    }
+
+    late final TimerDisposable handle;
+    handle = _timerService.runOnce(debounceDuration, () {
+      unregisterTimer(handle);
+      if (identical(_debounceHandle, handle)) {
+        _debounceHandle = null;
+      }
+      unawaited(_executeSearch(query, requestId));
+    });
+    _debounceHandle = registerTimer(handle);
+  }
+
+  void clearSearch() {
+    _cancelDebounce();
+    _requestIdGuard.invalidate();
+    emit(const SearchState());
+  }
+
+  Future<void> _executeSearch(
+    final String query,
+    final int requestId,
+  ) async {
+    if (!_isRequestActive(requestId, query)) return;
+    emit(
+      state.copyWith(
+        status: ViewStatus.loading,
+        query: query,
+        error: null,
+      ),
+    );
+
+    await CubitExceptionHandler.executeAsync(
+      operation: () => _repository.search(query),
+      isAlive: () => !isClosed,
+      onSuccess: (final results) {
+        if (!_isRequestActive(requestId, query)) return;
+        emit(
+          state.copyWith(
+            status: ViewStatus.success,
+            query: query,
+            results: List<SearchResult>.unmodifiable(results),
+            error: null,
+          ),
+        );
+      },
+      onError: (final errorMessage) {
+        if (!_isRequestActive(requestId, query)) return;
+        emit(
+          state.copyWith(
+            status: ViewStatus.error,
+            query: query,
+            error: Exception(errorMessage),
+          ),
+        );
+      },
+      logContext: 'SearchCubit._executeSearch',
+    );
+  }
+
+  void _cancelDebounce() {
+    _debounceHandle?.dispose();
+    unregisterTimer(_debounceHandle);
+    _debounceHandle = null;
+  }
+
+  bool _isRequestActive(final int requestId, final String query) =>
+      !isClosed && _requestIdGuard.isCurrent(requestId) && state.query == query;
+
+  @override
+  Future<void> close() {
+    _cancelDebounce();
+    return super.close();
+  }
+}

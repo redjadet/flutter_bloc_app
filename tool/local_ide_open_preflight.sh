@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
+cd "$WORKSPACE_ROOT"
 
 echo "ide-preflight|start"
 
@@ -18,31 +20,31 @@ else
   echo "ide-preflight|direnv|missing-or-no-envrc"
 fi
 
-package_config=".dart_tool/package_config.json"
+package_config="$WORKSPACE_ROOT/.dart_tool/package_config.json"
 needs_pub_get=0
 if [ ! -f "$package_config" ]; then
   needs_pub_get=1
-elif [ "pubspec.yaml" -nt "$package_config" ] || [ "pubspec.lock" -nt "$package_config" ]; then
+elif [ "$APP_ROOT/pubspec.yaml" -nt "$package_config" ] || [ "$WORKSPACE_ROOT/pubspec.lock" -nt "$package_config" ]; then
   needs_pub_get=1
 fi
 
 if [ "$needs_pub_get" -eq 1 ]; then
-  echo "ide-preflight|flutter-pub-get|run"
-  flutter pub get
+  echo "ide-preflight|dart-pub-get|run"
+  (cd "$WORKSPACE_ROOT" && bash "$WORKSPACE_ROOT/tool/workspace_pub_get.sh")
 else
-  echo "ide-preflight|flutter-pub-get|skip|up-to-date"
+  echo "ide-preflight|dart-pub-get|skip|up-to-date"
 fi
 
 echo "ide-preflight|dart-defines|begin"
-"$PROJECT_ROOT/tool/flutter_dart_defines_from_env.sh" |
+"$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh" |
   tr ' ' '\n' |
   sed -n 's/^--dart-define=\([^=]*\)=.*/ide-preflight|dart-define|\1/p'
 echo "ide-preflight|dart-defines|end"
 
-"$PROJECT_ROOT/tool/check_tracked_secret_literals.sh"
+"$WORKSPACE_ROOT/tool/check_tracked_secret_literals.sh"
 
-if [ "$(uname -s)" = "Darwin" ] && [ -f "ios/Podfile" ] && [ ! -d "ios/Pods" ]; then
-  echo "ide-preflight|ios-pods|missing|run: cd ios && pod install"
+if [ "$(uname -s)" = "Darwin" ] && [ -f "$APP_ROOT/ios/Podfile" ] && [ ! -d "$APP_ROOT/ios/Pods" ]; then
+  echo "ide-preflight|ios-pods|missing|run: cd apps/mobile/ios && pod install"
 fi
 
 echo "ide-preflight|ok"

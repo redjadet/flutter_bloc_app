@@ -49,14 +49,14 @@ This repo is already pointed at:
 
 - Firebase project: `flutter-bloc-app-697e8`
 
-The local project alias is already configured in [.firebaserc](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/.firebaserc).
+The local project alias is already configured in [.firebaserc](../.firebaserc).
 
 ### Required local files
 
 These should already exist locally for the app to boot against Firebase:
 
-- [android/app/google-services.json](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/android/app/google-services.json)
-- [ios/Runner/GoogleService-Info.plist](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/ios/Runner/GoogleService-Info.plist)
+- [apps/mobile/android/app/google-services.json](../apps/mobile/android/app/google-services.json)
+- [apps/mobile/ios/Runner/GoogleService-Info.plist](../apps/mobile/ios/Runner/GoogleService-Info.plist)
 
 ### Seed + content setup
 
@@ -67,22 +67,22 @@ set -euo pipefail
 STAFF_DEMO_PROJECT_ID=flutter-bloc-app-697e8 \
 STAFF_DEMO_SERVICE_ACCOUNT_JSON=fastlane/keys/staff-demo-seeder.json \
 STAFF_DEMO_STORAGE_BUCKET=flutter-bloc-app-697e8.firebasestorage.app \
-npm --prefix functions run seed:staff-demo
+npm --prefix backend/firebase/functions run seed:staff-demo
 ```
 
 The seed script is here:
 
-- [functions/tool/seed_staff_demo.js](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/functions/tool/seed_staff_demo.js)
+- [backend/firebase/functions/tool/seed_staff_demo.js](../backend/firebase/functions/tool/seed_staff_demo.js)
 
 Keep Firestore field names in sync with the Dart mappers; the repo includes a
 **contract test** that fails early if the seed and parsers drift. Canonical
 payload literals live in one Dart file (update together with the seed script):
 
-- [test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart)
-- [test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart)
+- [staff_demo_seed_document_fixtures.dart](../apps/mobile/test/features/staff_app_demo/data/staff_demo_seed_document_fixtures.dart)
+- [staff_demo_seed_firestore_contract_test.dart](../apps/mobile/test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart)
 
 ```bash
-flutter test test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart
+cd apps/mobile && flutter test test/features/staff_app_demo/data/staff_demo_seed_firestore_contract_test.dart
 ```
 
 It seeds:
@@ -104,7 +104,7 @@ firebase deploy --only firestore:indexes
 
 The index config is:
 
-- [firestore.indexes.json](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/firestore.indexes.json)
+- [firestore.indexes.json](../backend/firebase/indexes/firestore.indexes.json)
 
 Staff demo queries that require composite indexes:
 
@@ -118,7 +118,7 @@ parse every doc shape you use (flat coords, nested `geofenceCenter`, or
 
 There is also a smoke test for these exact queries:
 
-- [integration_test/staff_app_demo_firestore_query_smoke_test.dart](/Users/ilkersevim/Flutter_SDK/projects/bloc_test_app/flutter_bloc_app/integration_test/staff_app_demo_firestore_query_smoke_test.dart)
+- [staff_app_demo_firestore_query_smoke_test.dart](../apps/mobile/integration_test/staff_app_demo_firestore_query_smoke_test.dart)
 
 ## Optional External Integrations
 
@@ -489,9 +489,9 @@ If you only want one efficient pass, do it in this order:
 Useful commands around this feature:
 
 ```bash
-flutter analyze
-flutter test test/features/staff_app_demo/presentation/pages/staff_app_demo_happy_path_widget_test.dart
-flutter test integration_test/staff_app_demo_firestore_query_smoke_test.dart
+cd apps/mobile && flutter analyze
+cd apps/mobile && flutter test test/features/staff_app_demo/presentation/pages/staff_app_demo_happy_path_widget_test.dart
+cd apps/mobile && flutter test integration_test/staff_app_demo_firestore_query_smoke_test.dart
 firebase deploy --only firestore:indexes
 ```
 

@@ -43,7 +43,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: flutter pub get
+        run: bash tool/workspace_pub_get.sh
 
       - name: Install lcov
         shell: bash
@@ -57,7 +57,7 @@ jobs:
           sudo apt-get install -y lcov
 
       - name: Flutter analyze
-        run: flutter analyze
+        run: bash tool/analyze.sh --no-pub
 
       - name: Flutter tests (with coverage)
         run: tool/test_coverage.sh

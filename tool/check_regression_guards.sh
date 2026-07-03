@@ -10,7 +10,9 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
 REGRESSION_GUARDS_MODE="${CHECK_REGRESSION_GUARDS_MODE:-always}"
@@ -152,6 +154,7 @@ select_regression_guard_tests() {
       lib/features/online_therapy_demo/*|\
       test/features/online_therapy_demo/*|\
       lib/shared/utils/request_id_guard.dart|\
+      packages/utilities/lib/src/request_id_guard.dart|\
       tool/check_mutation_success_after_guard.sh)
         add_test_once out_ref "test/features/online_therapy_demo/edge_cases_test.dart::reports success when superseded"
         add_test_once out_ref "test/features/online_therapy_demo/presentation/cubit/call_cubit_test.dart"

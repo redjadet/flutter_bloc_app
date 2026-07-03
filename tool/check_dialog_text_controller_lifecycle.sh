@@ -5,7 +5,9 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
-exec python3 "$PROJECT_ROOT/tool/check_dialog_text_controller_lifecycle.py"
+exec python3 "$WORKSPACE_ROOT/tool/check_dialog_text_controller_lifecycle.py"

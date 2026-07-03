@@ -36,6 +36,21 @@ Use these tracked templates only when you want Firebase-backed features locally:
 Do not commit copied local files after replacing placeholders with real project
 values. Keep real values in the gitignored paths above.
 
+### Backend assets (Melos workspace)
+
+Firebase backend sources live under `backend/firebase/`:
+
+| Asset | Path |
+| --- | --- |
+| Cloud Functions | `backend/firebase/functions/` |
+| Firestore rules | `backend/firebase/firestore_rules/firestore.rules` |
+| Firestore indexes | `backend/firebase/indexes/firestore.indexes.json` |
+| Storage rules | `backend/firebase/storage_rules/storage.rules` |
+
+[`firebase.json.example`](../firebase.json.example) points at these paths. After
+copying to gitignored `firebase.json`, deploy with `firebase deploy` from the
+repo root. Functions tests: `cd backend/firebase/functions && npm ci && npm test`.
+
 ---
 
 ## Option A: FlutterFire CLI (recommended)
@@ -287,7 +302,7 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 | **Firebase not initializing** | The app skips Firebase init when required `FIREBASE_*` values are missing or still placeholders (e.g. `your-project-id`). Add real values to `.envrc`, run `direnv allow`, and ensure gitignored platform files exist (`flutterfire configure` — then [step 3b](#3b-after-flutterfire-configure-do-not-commit-generated-dart)). |
 | **`flutterfire configure` fails** (e.g. "Failed to write Dart configuration file", "UnsupportedError not found in macOS", or **"FormatException: Unexpected character (at character 1)"**) | See [Workaround when FlutterFire CLI fails on macOS](#workaround-when-flutterfire-cli-fails-on-macos) below. The FormatException often means the CLI got non-JSON output from a Firebase command (e.g. login prompt or proxy/network issue). |
 | **Missing google-services.json** | Fresh-checkout debug builds should still work. For Firebase-backed Android features, copy `android/app/google-services.json.sample` to `android/app/google-services.json` and replace placeholders, or run `flutterfire configure`. |
-| **Missing GoogleService-Info.plist** | Fresh-checkout iOS/macOS builds should still work. For Firebase-backed Apple features, copy the matching `.sample` plist and replace placeholders, or run `flutterfire configure`. On iOS, the project copies `ios/Runner/GoogleService-Info.plist` into `Runner.app` only when that local file exists; if `FirebaseApp.configure()` crashes with “Could not locate configuration file,” confirm the source plist exists and rebuild from Xcode/Flutter so the copy phase runs. |
+| **Missing GoogleService-Info.plist** | Fresh-checkout iOS/macOS builds should still work. For Firebase-backed Apple features, copy the matching `.sample` plist and replace placeholders, or run `flutterfire configure`. On iOS, the project copies `ios/Runner/GoogleService-Info.plist` into `Runner.app` only when that local file exists; if `FirebaseApp.configure()` crashes with “Could not locate configuration file,” confirm the source plist exists and rebuild from Xcode/Flutter so the copy phase runs. **Integration:** `./bin/integration_tests` skips or removes placeholder plists (`YOUR_IOS_API_KEY`) before simulator runs; `AppDelegate` skips native configure when the plist is missing or still a placeholder. |
 | **iOS build errors after Firebase changes** | See [Common Troubleshooting](new_developer_guide.md#common-troubleshooting) (“Firebase upgrades break iOS build”) for clean steps (e.g. `flutter clean`, reinstall pods). |
 | **Todo list / Counter sync permission denied** | Deploy [Realtime Database rules](todo_list_firebase_security_rules.md) and ensure the user is signed in. |
 | **Charts show `UNAUTHENTICATED` but a Firebase user exists** | Check Cloud Run IAM for the Gen2 callable (see “Gen2 (Node 22) IAM note” above). |
