@@ -30,7 +30,7 @@ The app keeps **compatibility barrels** at the paths below so existing imports k
 | Typography | `lib/shared/ui/typography.dart` | `AppTypography` helpers using `Theme.of(context).textTheme`. |
 | UI constants | `lib/shared/ui/ui_constants.dart` | Barrel → `package:design_system` layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
 | Components | `lib/shared/components/` | Design system primitives (buttons, inputs, chips). |
-| Widgets | `lib/shared/widgets/` | App-level composite widgets; `common_card.dart` / `common_status_view.dart` barrel shared widgets from `design_system`. |
+| Widgets | `lib/shared/widgets/` | App composites; shared widgets from `design_system` use compatibility barrels. `CommonSearchField` stays app-local (l10n). |
 
 ### Page shell (`CommonPageLayout`)
 

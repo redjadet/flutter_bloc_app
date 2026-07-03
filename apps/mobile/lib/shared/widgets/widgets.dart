@@ -19,6 +19,7 @@ export 'common_input_decoration_helpers.dart';
 export 'common_loading_widget.dart';
 export 'common_max_width.dart';
 export 'common_page_layout.dart';
+export 'common_search_field.dart';
 export 'common_status_view.dart';
 export 'deferred_page.dart';
 export 'diagnostics/diagnostics.dart';

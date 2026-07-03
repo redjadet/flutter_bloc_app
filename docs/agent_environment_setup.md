@@ -149,6 +149,19 @@ Print the canon + validation pointers:
 bash tool/agent_session_bootstrap.sh
 ```
 
+## Melos Pub workspace (migration)
+
+The repo is migrating to a Melos-managed Pub workspace. Until [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) lands on `main`:
+
+- **Workspace root** — repo root (`pubspec.yaml` hosts `melos:` scripts; no standalone `melos.yaml`).
+- **Flutter app** — `apps/mobile/` (`package:flutter_bloc_app`).
+- **Shared packages** — `packages/core`, `packages/utilities`, `packages/design_system`, `custom_lints/*`.
+- **Bootstrap** — from repo root: `dart pub get` then `dart run melos bootstrap` (or `dart pub get` at root, which resolves workspace members).
+- **Analyze / test the app** — `cd apps/mobile && flutter analyze` / `flutter test …`.
+- **Authoritative gate** — `./bin/checklist` from **repo root** (unchanged).
+
+Plan and phase status: [`docs/plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
+
 ## Verification Pipelines
 
 Use the narrowest honest lane:
@@ -164,7 +177,7 @@ Use the narrowest honest lane:
 Where durable facts belong:
 
 - Tier 1, current context: current diff, errors, acceptance proof.
-- Tier 2, session memory: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) / [`tasks/codex/todo.md`](../tasks/codex/todo.md).
+- Tier 2, session memory: `tasks/cursor/todo.md` / `tasks/codex/todo.md`.
 - Tier 3, project memory: `docs/changes/`, `docs/plans/`, ADRs, tests, tool scripts.
 - Tier 4, index: code-review-graph + targeted search, then raw reads before edits.
 

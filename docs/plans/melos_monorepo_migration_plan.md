@@ -16,7 +16,8 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-C wave 2 + DAG | `d9388410` | `disposable_bag` → `utilities`, `utilities` → `core`, `check_package_dependency_dag.sh`, `./bin/checklist` |
 | PR-E wave 1 | `44d8d9f7` | `packages/design_system` scaffold; 3 widgets/theme files; package + account_section canaries; `./bin/checklist` |
 | PR-E wave 2a | `44f014b5` | `UI`, `ResponsiveConfig`, responsive extensions + `LayoutBreakpoints`; app compatibility barrels; `./bin/checklist` |
-| PR-E wave 2b | `add8a62b` | Mix theme, `app_styles`, `common_card` / `common_status_view` → `design_system`; `mix` dep; `LayoutBreakpoints` in `buildAppMixScope`; barrels; `./bin/checklist` (~2618 tests, ~80.7% cov) |
+| PR-E wave 2b | `add8a62b` | Mix theme, `app_styles`, `common_card` / `common_status_view` → `design_system`; `mix` dep; barrels; `./bin/checklist` (~2618 tests, ~80.7% cov) |
+| PR-E wave 2c | (pending commit) | `common_max_width`, input helpers, `CommonFormField`, skeletons; `CommonSearchField` stays app-local; docs batch; `./bin/checklist` (~2618 tests, ~80.6% cov) |
 
 **PR-C learnings (record before next extraction):**
 
@@ -37,8 +38,16 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** PR-E wave 2c — remaining `common_*` / skeletons (after l10n/routing
-decouple). Partial doc updates: `agents_quick_reference.md`, `design_system.md` (wave 2b).
+**Next implementation step:** PR-F — `packages/networking` then `packages/storage`.
+PR-E deferred widgets (`common_app_bar`, `common_page_layout`, error/empty/loading,
+dropdown) stay in app until l10n/routing decouple.
+
+**PR-E wave 2c learnings:**
+
+- Move package-safe skeletons + `CommonFormField`; split `CommonSearchField` to app
+  (`common_search_field.dart`) for default l10n hint.
+- `skeletons.dart` can re-export all skeleton types from `package:design_system`.
+- Deferred widgets documented in `docs/changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`.
 
 **PR-E wave 2b learnings:**
 
@@ -279,8 +288,9 @@ Use this as the implementation checklist.
   `responsive_action_bar`, `SkeletonBase`); package + account_section canaries.
 - [x] PR-E wave 2a: `ui_constants` + responsive extensions → design_system.
 - [x] PR-E wave 2b: Mix theme + `app_styles` + `common_card` / `common_status_view`.
-- [ ] PR-E wave 2c: remaining `common_*` / skeletons (after l10n/routing decouple).
-- [ ] PR-E (full): mark complete when wave 2c lands or plan defers widgets.
+- [x] PR-E wave 2c: package-safe `common_*` / skeletons + `CommonFormField`; deferred
+  l10n/routing widgets stay in app.
+- [x] PR-E (full): design_system foundation complete; deferred widgets listed in change note.
 - [ ] PR-F: extract `packages/networking` then `packages/storage`.
 - [ ] PR-G: add provider-neutral `packages/ai` contracts.
 - [ ] PR-H: move Firebase backend assets after app workspace stabilizes.
@@ -291,20 +301,20 @@ Use this as the implementation checklist.
 
 Update these docs in the same PR as the relevant code change:
 
-- [ ] [`engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md): Melos command
+- [x] [`engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md): Melos command
   routing and which gate remains authoritative.
 - [x] [`agents_quick_reference.md`](../agents_quick_reference.md): workspace root vs app root commands.
-- [ ] [`agent_environment_setup.md`](../agent_environment_setup.md): Melos bootstrap and Pub workspace
+- [x] [`agent_environment_setup.md`](../agent_environment_setup.md): Melos bootstrap and Pub workspace
   setup.
-- [ ] [`feature_implementation_guide.md`](../feature_implementation_guide.md): feature location remains
+- [x] [`feature_implementation_guide.md`](../feature_implementation_guide.md): feature location remains
   `apps/mobile/lib/features` until explicit extraction.
-- [ ] [`clean_architecture.md`](../clean_architecture.md): package dependency direction after
+- [x] [`clean_architecture.md`](../clean_architecture.md): package dependency direction after
   extraction.
 - [x] [`design_system.md`](../design_system.md): design system package ownership (partial — wave 2b
   locations table).
 - [ ] [`firebase_setup.md`](../firebase_setup.md): backend paths after PR-H only.
 - [ ] [`deployment.md`](../deployment.md): app/backend CI command changes.
-- [ ] `docs/changes/<date>_melos_monorepo_migration.md`: phase closeout note.
+- [x] `docs/changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`: PR-E wave 2c closeout note.
 
 ## Review Basis
 

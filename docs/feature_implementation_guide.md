@@ -5,6 +5,10 @@ repeating the implementation detail already covered elsewhere. Use it as a
 routing document: it tells you where to build, what to update, and which docs
 own each concern.
 
+**Melos migration:** feature code stays under `apps/mobile/lib/features/` until
+an explicit extraction PR. Paths below use `lib/` shorthand; prefix with
+`apps/mobile/` on the migration branch.
+
 Non-trivial features should start from the Feature Brief and AI alignment
 checklist in [`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md).
 `./bin/checklist` runs `tool/check_feature_brief_linked.sh`, which fails by
