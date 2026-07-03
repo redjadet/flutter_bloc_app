@@ -17,7 +17,7 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-E wave 1 | `44d8d9f7` | `packages/design_system` scaffold; 3 widgets/theme files; package + account_section canaries; `./bin/checklist` |
 | PR-E wave 2a | `44f014b5` | `UI`, `ResponsiveConfig`, responsive extensions + `LayoutBreakpoints`; app compatibility barrels; `./bin/checklist` |
 | PR-E wave 2b | `add8a62b` | Mix theme, `app_styles`, `common_card` / `common_status_view` → `design_system`; `mix` dep; barrels; `./bin/checklist` (~2618 tests, ~80.7% cov) |
-| PR-E wave 2c | (pending commit) | `common_max_width`, input helpers, `CommonFormField`, skeletons; `CommonSearchField` stays app-local; docs batch; `./bin/checklist` (~2618 tests, ~80.6% cov) |
+| PR-E wave 2c | `e60b4e3d` | `common_max_width`, input helpers, `CommonFormField`, skeletons; `CommonSearchField` stays app-local; docs batch; `./bin/checklist` (~2618 tests, ~80.6% cov) |
 
 **PR-C learnings (record before next extraction):**
 
