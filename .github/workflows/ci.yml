@@ -145,7 +145,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: dart pub get
+        run: bash tool/workspace_pub_get.sh
 
       - name: Install ripgrep and lcov
         shell: bash
@@ -213,7 +213,7 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: dart pub get
+        run: bash tool/workspace_pub_get.sh
 
       - name: Run integration preflight
         id: run_preflight
@@ -268,14 +268,14 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        run: dart pub get
+        run: bash tool/workspace_pub_get.sh
 
       - name: Install Firebase iOS/macOS config for CI
         run: |
           set -euo pipefail
           # Real files stay gitignored under Runner/; Xcode still references them for builds.
-          cp ios/ci/GoogleService-Info.plist ios/Runner/GoogleService-Info.plist
-          cp macos/ci/GoogleService-Info.plist macos/Runner/GoogleService-Info.plist
+          cp apps/mobile/ios/ci/GoogleService-Info.plist apps/mobile/ios/Runner/GoogleService-Info.plist
+          cp apps/mobile/macos/ci/GoogleService-Info.plist apps/mobile/macos/Runner/GoogleService-Info.plist
 
       - name: Ensure iOS Simulator is booted
         id: simulator

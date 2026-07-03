@@ -965,7 +965,7 @@ wc -l docs/plans/melos_path_dependent_files.txt
 | Integration | `tool/run_integration_tests.sh`, `tool/run_integration_preflight.sh`, `bin/integration_tests` | Resolve targets relative to `APP_ROOT` |
 | Metrics / guards | `tool/modular_metrics.sh`, `tool/check_*.sh` that scan `lib/**` | Use `"$APP_ROOT/lib"` or `--app-root` flag |
 | Router validate | `bin/router_feature_validate` | Point analyze/format paths at `APP_ROOT` |
-| CI | `.github/workflows/ci.yml`, `deploy_web.yml`, `drift.yml`, `dependency-updates.yml` | `dart pub get` at workspace root; `flutter pub get` / tests from `APP_ROOT` or via Melos scope |
+| CI | `.github/workflows/ci.yml`, `deploy_web.yml`, `drift.yml`, `dependency-updates.yml` | `bash tool/workspace_pub_get.sh` (workspace `dart pub get` + app `flutter pub get`); analyze/tests from `APP_ROOT` |
 | IDE | `.vscode/settings.json` coverage/search excludes | `lib/**` -> `apps/mobile/lib/**` |
 | Firebase template | `firebase.json.example` | `android/app/...` -> `apps/mobile/android/app/...`; `lib/firebase_options.dart` -> `apps/mobile/lib/firebase_options.dart` |
 | Launcher / icons | `flutter_launcher_icons` config in app `pubspec.yaml` | Verify asset paths after move |

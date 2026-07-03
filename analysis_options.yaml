@@ -68,8 +68,8 @@ analyzer:
     unrelated_type_equality_checks: error
     void_checks: error
   exclude:
-    - '**/build/**'
-    - '**/.dart_tool/**'
+    - build/**
+    - .dart_tool/**
     - '**/.pub-cache/**'
     - ios/Pods/**
     - android/.gradle/**

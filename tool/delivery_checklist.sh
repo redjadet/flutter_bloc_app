@@ -1449,16 +1449,16 @@ elif [ "$APP_PUBSPEC" -nt "$PACKAGE_CONFIG" ] || \
 fi
 
 if [ "$SHOULD_RUN_PUB_GET" -eq 1 ]; then
-  echo "  Dependency metadata changed, running 'dart pub get' (workspace)"
+  echo "  Dependency metadata changed, running workspace pub get"
   pub_get_log="$(mktemp)"
-  if ! (cd "$WORKSPACE_ROOT" && dart pub get) >"$pub_get_log" 2>&1; then
+  if ! bash "$WORKSPACE_ROOT/tool/workspace_pub_get.sh" >"$pub_get_log" 2>&1; then
     cat "$pub_get_log" >&2
     rm -f "$pub_get_log"
     exit 1
   fi
   rm -f "$pub_get_log"
 else
-  echo "  Dependencies already up-to-date, skipping 'dart pub get'"
+  echo "  Dependencies already up-to-date, skipping pub get"
 fi
 
 # Patch known broken SwiftPM platform mins in pub cache (Darwin only).

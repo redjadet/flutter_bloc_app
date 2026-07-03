@@ -1,2 +1,2 @@
-# App package analyzer config — canonical rules live at workspace root.
+# App package analyzer config — canonical rules live at workspace root (../../ = repo root).
 include: ../../analysis_options.yaml

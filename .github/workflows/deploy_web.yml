@@ -80,7 +80,7 @@ jobs:
           esac
 
       - name: Pub get
-        run: dart pub get
+        run: bash tool/workspace_pub_get.sh
 
       - name: Build web (Pages)
         env:

@@ -30,7 +30,7 @@ fi
 
 if [ "$needs_pub_get" -eq 1 ]; then
   echo "ide-preflight|dart-pub-get|run"
-  (cd "$WORKSPACE_ROOT" && dart pub get)
+  (cd "$WORKSPACE_ROOT" && bash "$WORKSPACE_ROOT/tool/workspace_pub_get.sh")
 else
   echo "ide-preflight|dart-pub-get|skip|up-to-date"
 fi
