@@ -149,14 +149,15 @@ Print the canon + validation pointers:
 bash tool/agent_session_bootstrap.sh
 ```
 
-## Melos Pub workspace (migration)
+## Melos Pub workspace
 
-The repo is migrating to a Melos-managed Pub workspace. Until [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) lands on `main`:
+The repo is a Melos-managed Pub workspace ([#437](https://github.com/redjadet/flutter_bloc_app/pull/437) pending merge to `main`):
 
 - **Workspace root** — repo root (`pubspec.yaml` hosts `melos:` scripts; no standalone `melos.yaml`).
 - **Flutter app** — `apps/mobile/` (`package:flutter_bloc_app`).
-- **Shared packages** — `packages/core`, `packages/utilities`, `packages/design_system`, `custom_lints/*`.
-- **Bootstrap** — from repo root: `dart pub get` then `dart run melos bootstrap` (or `dart pub get` at root, which resolves workspace members).
+- **Shared packages** — `packages/*` (see [`agents_quick_reference.md`](agents_quick_reference.md) Melos table), `custom_lints/*`.
+- **Firebase backend** — `backend/firebase/`.
+- **Pub get** — from repo root: `bash tool/workspace_pub_get.sh` (workspace `dart pub get` + app `flutter pub get` for `generate: true` / l10n).
 - **Analyze / test the app** — `cd apps/mobile && flutter analyze` / `flutter test …`.
 - **Authoritative gate** — `./bin/checklist` from **repo root** (unchanged).
 
@@ -177,7 +178,7 @@ Use the narrowest honest lane:
 Where durable facts belong:
 
 - Tier 1, current context: current diff, errors, acceptance proof.
-- Tier 2, session memory: `tasks/cursor/todo.md` / `tasks/codex/todo.md`.
+- Tier 2, session memory: [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) / [`tasks/codex/todo.md`](../tasks/codex/todo.md).
 - Tier 3, project memory: `docs/changes/`, `docs/plans/`, ADRs, tests, tool scripts.
 - Tier 4, index: code-review-graph + targeted search, then raw reads before edits.
 

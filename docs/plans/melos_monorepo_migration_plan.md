@@ -22,6 +22,9 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-G | `fee3db6b` | `packages/ai` contracts scaffold + unit test; no app migration |
 | PR-H | `fee3db6b` | Firebase assets → `backend/firebase/`; `firebase.json.example` + deploy tooling |
 | PR-I | `fee3db6b` | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
+| CI pub get | `1da531ab` | `tool/workspace_pub_get.sh`; integration Firebase plist paths; analyzer exclude globs |
+
+**Status:** Scoped migration **complete** (PR-A–I + CI hardening). Merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) to `main` is the remaining operator step. Deferred extractions documented below — not blocking merge.
 
 **PR-C learnings (record before next extraction):**
 
@@ -42,9 +45,8 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** Migration plan complete for scoped PRs A–I. Optional
-follow-ups: PR-F wave 2 (full Hive/HTTP stack), PR-C deferred utils, extra apps
-when product split is real.
+**Next implementation step:** None for scoped plan. Post-merge optional: PR-F wave 2
+(full Hive/HTTP), PR-C deferred utils, extra apps when product split is real.
 
 **PR-F wave 1 learnings:**
 
@@ -59,7 +61,7 @@ when product split is real.
 **PR-H learnings:**
 
 - Update `commit_push_pr_deploy.py` + tests; do not replace `supabase/functions/` paths.
-- Cross-ref docs: `walletconnect_auth_status.md`, `agents_appendix.md`, validation guides.
+- Cross-ref docs: [`walletconnect_auth_status.md`](../walletconnect_auth_status.md), [`agents_appendix.md`](../agents_appendix.md), validation guides.
 
 **PR-I learnings:**
 
@@ -71,7 +73,7 @@ when product split is real.
 - Move package-safe skeletons + `CommonFormField`; split `CommonSearchField` to app
   (`common_search_field.dart`) for default l10n hint.
 - `skeletons.dart` can re-export all skeleton types from `package:design_system`.
-- Deferred widgets documented in `docs/changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`.
+- Deferred widgets documented in [`changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`](../changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md).
 
 **PR-E wave 2b learnings:**
 
@@ -159,7 +161,7 @@ cd ../flutter_bloc_app_melos_build
 3. PR-A/B/C landed on build branch — see **Implementation status** above; merge
    [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) before splitting
    follow-on PRs if review size matters.
-4. Track progress in `tasks/cursor/todo.md` or `tasks/codex/todo.md` using the
+4. Track progress in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../../tasks/codex/todo.md) using the
    Build Todo checkboxes below.
 
 **Authoritative gates (unchanged until explicitly migrated):**
@@ -303,8 +305,9 @@ Use this as the implementation checklist.
 - [x] PR-C wave 1: extract `packages/utilities` (`in_flight_coalescer`,
   `request_id_guard`, `relative_time_formatting`); app-hosted tests (`bd68b06c`).
 - [x] PR-C wave 2: `disposable_bag` → `utilities` (`utilities` → `core` dep).
-- [ ] PR-C deferred: `safe_parse_utils` (needs `AppLogger`), `date_time_formatting`
-  (Flutter `MaterialLocalizations` — likely PR-E or stay in app).
+- [x] PR-C deferred (accepted): `safe_parse_utils` (needs `AppLogger`),
+  `date_time_formatting` (Flutter `MaterialLocalizations`) — stay in app; see
+  [migration closeout](../changes/2026-07-03_melos-monorepo-migration-closeout.md).
 - [x] PR-D: extract pure `packages/core` (`failure`, `result`, `timer_service`).
 - [x] PR-D: prove router auth gate canary + `./bin/checklist`.
 - [x] PR-D follow-up: `tool/check_package_dependency_dag.sh` in checklist.
@@ -316,7 +319,8 @@ Use this as the implementation checklist.
   l10n/routing widgets stay in app.
 - [x] PR-E (full): design_system foundation complete; deferred widgets listed in change note.
 - [x] PR-F wave 1: `packages/networking` + `packages/storage` primitives; app barrels.
-- [ ] PR-F deferred: `app_dio`, Hive service/migrations, interceptors (app/auth coupling).
+- [x] PR-F deferred (accepted): `app_dio`, Hive service/migrations, interceptors —
+  app/auth coupling; wave 1 primitives shipped; see closeout note.
 - [x] PR-G: provider-neutral `packages/ai` contracts.
 - [x] PR-H: Firebase backend assets under `backend/firebase/`.
 - [x] PR-I: `packages/auth` + `packages/feature_flags` domain contracts (SDK impls in app).
@@ -339,10 +343,21 @@ Update these docs in the same PR as the relevant code change:
   locations table).
 - [x] [`firebase_setup.md`](../firebase_setup.md): backend paths after PR-H.
 - [x] [`deployment.md`](../deployment.md): Melos workspace + backend CI paths.
-- [x] `docs/changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`: PR-E wave 2c closeout note.
-- [x] `docs/changes/2026-07-03_melos-monorepo-pr-f-through-i.md`: PR-F–I closeout note.
+- [x] [`changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`](../changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md): PR-E wave 2c closeout note.
+- [x] [`changes/2026-07-03_melos-monorepo-pr-f-through-i.md`](../changes/2026-07-03_melos-monorepo-pr-f-through-i.md): PR-F–I closeout note.
+- [x] [`changes/2026-07-03_melos-monorepo-migration-closeout.md`](../changes/2026-07-03_melos-monorepo-migration-closeout.md): scoped migration complete.
 
-## Review Basis
+## Migration closeout (2026-07-03)
+
+All Build Todo items for PR-A–I are done or explicitly deferred. `./bin/checklist`
+green on `codex/melos-monorepo-build` (~2618 tests, ~80.6% coverage). Operator
+action: review and merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437).
+
+Post-merge backlog (not in scoped plan):
+
+- PR-F wave 2 — full Hive/HTTP extraction when auth seams stabilize.
+- PR-C deferred utils — only if `AppLogger` / l10n decouple from app.
+- Extra apps (`apps/web`, `apps/admin`) — product-driven only.
 
 This plan reviewed the live repository shape:
 
@@ -1967,11 +1982,11 @@ Avoid immediate `apps/web`, `apps/desktop`, `apps/admin`, and feature packages.
 Those splits add value only after product surfaces diverge or feature code has
 confirmed second use.
 
-## Open Questions (resolve before PR-F)
+## Open Questions (resolved at PR-F wave 1 closeout)
 
-| Question | Default if unresolved | Owner |
-| --- | --- | --- |
-| Do Supabase session managers live in `networking` or `auth`? | Stay in app until PR-I | implementer |
-| Is sync Cubit app-owned or `shared_blocs`? | App-owned through PR-F | implementer |
-| Single `packages/storage` vs split `offline_sync`? | Single package in PR-F | implementer |
-| Promote Melos analyze/test to blocking in CI? | After PR-B checklist parity | CI maintainer |
+| Question | Resolution |
+| --- | --- |
+| Do Supabase session managers live in `networking` or `auth`? | Stay in app (SDK-coupled); domain ports in `packages/auth`. |
+| Is sync Cubit app-owned or `shared_blocs`? | App-owned; no `shared_blocs` package in scoped migration. |
+| Single `packages/storage` vs split `offline_sync`? | Single `packages/storage`; wave 1 primitives only. |
+| Promote Melos analyze/test to blocking in CI? | `./bin/checklist` remains authoritative gate; `workspace_pub_get.sh` in CI (`1da531ab`). |
