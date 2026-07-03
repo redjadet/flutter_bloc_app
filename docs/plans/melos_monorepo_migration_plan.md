@@ -24,6 +24,7 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | PR-I | `fee3db6b` | `packages/auth` + `packages/feature_flags` domain contracts; SDK-coupled auth stays in app |
 | CI pub get | `1da531ab` | `tool/workspace_pub_get.sh`; integration Firebase plist paths; analyzer exclude globs |
 | Closeout | `741a3ea8` | Plan/docs closeout; staff_app_demo paths; migration complete |
+| Harness paths | `70c0d6d5` | `resolve_scan_root` in validation scripts; harness fixtures green |
 
 **Status:** Scoped migration **complete** (PR-A–I + CI hardening). Merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) to `main` is the remaining operator step. Deferred extractions documented below — not blocking merge.
 
@@ -168,7 +169,7 @@ cd ../flutter_bloc_app_melos_build
 3. PR-A/B/C landed on build branch — see **Implementation status** above; merge
    [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) before splitting
    follow-on PRs if review size matters.
-4. Track progress in `tasks/cursor/todo.md` or `tasks/codex/todo.md` using the
+4. Track progress in the host task trackers ([cursor](../../tasks/cursor/todo.md) / [codex](../../tasks/codex/todo.md)) using the
    Build Todo checkboxes below.
 
 **Authoritative gates (unchanged until explicitly migrated):**
