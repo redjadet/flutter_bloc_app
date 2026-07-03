@@ -100,3 +100,19 @@ Repo-managed Cursor commands: `/local-agents-quick-reference`,
 ## Task Doc Routing
 
 Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI engineering index: [`PLAN.md`](../PLAN.md).
+
+## Melos workspace (in migration)
+
+Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). The Flutter app lives at `apps/mobile/`.
+
+| Need | Command / path |
+| --- | --- |
+| Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
+| Flutter app analyze / test | `cd apps/mobile && flutter analyze` / `flutter test …` |
+| Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system` |
+| Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
+| Path helper | `source tool/workspace_paths.sh` |
+| Melos bootstrap | `dart run melos bootstrap` from repo root |
+| Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`); app keeps compatibility barrels under old `lib/` paths during migration |
+
+Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).

@@ -1,0 +1,94 @@
+import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
+
+import '../responsive/responsive.dart';
+import '../styles/app_styles.dart';
+
+/// A shared layout for empty/error/status views with optional icon, title,
+/// and action content.
+class CommonStatusView extends StatelessWidget {
+  const CommonStatusView({
+    required this.message,
+    super.key,
+    this.title,
+    this.icon,
+    this.iconSize,
+    this.iconColor,
+    this.messageStyle,
+    this.titleStyle,
+    this.action,
+    this.semanticsLabel,
+    this.padding,
+  });
+
+  final String message;
+  final String? title;
+  final IconData? icon;
+  final double? iconSize;
+  final Color? iconColor;
+  final TextStyle? messageStyle;
+  final TextStyle? titleStyle;
+  final Widget? action;
+  final String? semanticsLabel;
+  final EdgeInsetsGeometry? padding;
+
+  @override
+  Widget build(final BuildContext context) {
+    final theme = Theme.of(context);
+    final bool hasMixTheme = MixScope.maybeOf(context) != null;
+    final Widget column = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon case final iconData?) ...[
+          Icon(iconData, size: iconSize, color: iconColor),
+          SizedBox(height: context.responsiveGapL),
+        ],
+        if (title case final t?) ...[
+          Text(
+            t,
+            style: titleStyle ?? theme.textTheme.titleLarge,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: context.responsiveGapM),
+        ],
+        Text(
+          message,
+          style: messageStyle ?? theme.textTheme.bodyLarge,
+          textAlign: TextAlign.center,
+          softWrap: true,
+          overflow: TextOverflow.visible,
+        ),
+        if (action case final a?) ...[
+          SizedBox(height: context.responsiveGapL * 1.5),
+          a,
+        ],
+      ],
+    );
+    final EdgeInsetsGeometry? resolvedPadding =
+        padding ?? (hasMixTheme ? null : context.responsiveStatePadding);
+    final Widget container = resolvedPadding != null
+        ? Padding(padding: resolvedPadding, child: column)
+        : Box(style: AppStyles.emptyState, child: column);
+    final Widget content = LayoutBuilder(
+      builder: (final context, final constraints) {
+        final double maxHeight = constraints.maxHeight;
+        if (maxHeight.isInfinite) {
+          return Center(child: container);
+        }
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: maxHeight),
+            child: Center(child: container),
+          ),
+        );
+      },
+    );
+
+    if (semanticsLabel == null) {
+      return content;
+    }
+
+    return Semantics(label: semanticsLabel, child: content);
+  }
+}
