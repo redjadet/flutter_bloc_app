@@ -160,8 +160,8 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             def pages_status(self, sha):
                 return module.PagesStatusLookup(found=True, status="succeed")
 
-        original_client = module.GitHubPagesDrainClient
-        module.GitHubPagesDrainClient = lambda **kwargs: FakeClient()
+        original_client = getattr(module, "GitHubPagesDrainClient")
+        setattr(module, "GitHubPagesDrainClient", lambda **kwargs: FakeClient())
         try:
             exit_code = module.main(
                 [
@@ -174,7 +174,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
                 ]
             )
         finally:
-            module.GitHubPagesDrainClient = original_client
+            setattr(module, "GitHubPagesDrainClient", original_client)
         self.assertEqual(exit_code, 0)
 
     def test_check_published_for_sha_exits_one_when_not_published(self):
@@ -184,8 +184,8 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             def pages_status(self, sha):
                 return module.PagesStatusLookup(found=True, status="deployment_queued")
 
-        original_client = module.GitHubPagesDrainClient
-        module.GitHubPagesDrainClient = lambda **kwargs: FakeClient()
+        original_client = getattr(module, "GitHubPagesDrainClient")
+        setattr(module, "GitHubPagesDrainClient", lambda **kwargs: FakeClient())
         try:
             exit_code = module.main(
                 [
@@ -198,7 +198,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
                 ]
             )
         finally:
-            module.GitHubPagesDrainClient = original_client
+            setattr(module, "GitHubPagesDrainClient", original_client)
         self.assertEqual(exit_code, 1)
 
     def test_drain_stale_pages_deployments_waits_to_settle(self):
