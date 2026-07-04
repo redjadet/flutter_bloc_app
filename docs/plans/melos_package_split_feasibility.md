@@ -2,15 +2,15 @@
 
 ## Recommendation
 
-**Stay single-package** for this app until a concrete second consumer (second app or published SDK) appears. Enforce boundaries with scripts (`tool/check_feature_modularity_leaks.sh`, `tool/modular_metrics.sh`) and composition discipline in `lib/app/` instead.
+**Stay single-package** for this app until a concrete second consumer (second app or published SDK) appears. Enforce boundaries with scripts (`tool/check_feature_modularity_leaks.sh`, `tool/modular_metrics.sh`) and composition discipline in `apps/mobile/lib/app/` instead.
 
 ## Candidate package map (if splitting later)
 
 | Package | Contents | Notes |
 | ------- | -------- | ----- |
-| `app_core` | `lib/core/`, `lib/shared/` | Shared infra, ports, design system utilities |
+| `app_core` | `apps/mobile/lib/core/`, `apps/mobile/lib/shared/` | Shared infra, ports, design system utilities |
 | `app_features_*` | Selected stable features (`counter`, `todo_list`, `settings`, `auth`) | One package per feature or grouped “product” slice |
-| `app` | `lib/app/`, `main*.dart`, routers, l10n entry, integration | Composes packages; owns `pubspec` assets |
+| `app` | `apps/mobile/lib/app/`, `main*.dart`, routers, l10n entry, integration | Composes packages; owns `pubspec` assets |
 
 Demos (`*_demo`) stay in `app` or a separate `app_demos` package to avoid blocking core releases.
 

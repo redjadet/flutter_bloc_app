@@ -42,14 +42,14 @@ Use feature-based Clean Architecture with three feature layers:
 
 Use these supporting areas around the feature layers:
 
-- `lib/app/` for the app shell, router, and app-scope composition.
-- `lib/core/` for bootstrap, DI, constants, theme, app-wide contracts, and
+- `apps/mobile/lib/app/` for the app shell, router, and app-scope composition.
+- `apps/mobile/lib/core/` for bootstrap, DI, constants, theme, app-wide contracts, and
   platform-level helpers.
-- `lib/shared/` for reusable storage, sync, widgets, design tokens, and
+- `apps/mobile/lib/shared/` for reusable storage, sync, widgets, design tokens, and
   utilities used by multiple features.
 
 Use `flutter_bloc` Cubits/BLoCs for state management and `get_it` for
-dependency injection. Register feature dependencies through `lib/core/di/`
+dependency injection. Register feature dependencies through `apps/mobile/lib/core/di/`
 using feature-specific factories or registration helpers.
 
 The governing rule is dependency direction, not folder count. Small features

@@ -8,7 +8,7 @@ This document revalidates the offline-first requirements after another pass over
 
 - ⚙️ **Immediate focus:** Observability polish (telemetry exports/history UI) and optional chat UX retries; core Remote Config and GraphQL offline-first work are complete.
 
-- ✅ **Foundational services wired:** Added `ConnectivityNetworkStatusService`, `PendingSyncRepository`, and `BackgroundSyncCoordinator` with new DI registrations so every feature can subscribe to sync/connection state (see `lib/shared/services/network_status_service.dart` and `lib/shared/sync/*`).
+- ✅ **Foundational services wired:** Added `ConnectivityNetworkStatusService`, `PendingSyncRepository`, and `BackgroundSyncCoordinator` with new DI registrations so every feature can subscribe to sync/connection state (see `apps/mobile/lib/shared/services/network_status_service.dart` and `apps/mobile/lib/shared/sync/*`).
 - ✅ **Sync operation primitives:** Defined the `SyncOperation` Freezed model + Hive-backed storage, plus unit tests (`test/shared/sync/pending_sync_repository_test.dart`) ensuring queue behavior.
 - ✅ **Coordinator hooks + status surface:** Introduced `SyncableRepository` + registry, taught `BackgroundSyncCoordinator` to pull/process operations per entity, autostarted it from `AppScope`, and added `SyncStatusCubit` so widgets can consume live network/sync state.
 - ✅ **Counter UX wiring:** Counter page now shows `CounterSyncBanner` state (offline/syncing/pending) and dev-only sync inspector, backed by new l10n strings across locales.
@@ -54,7 +54,7 @@ This document revalidates the offline-first requirements after another pass over
 - ✅ **Profile manual refresh:** `ProfileSyncBanner` now exposes a “Sync now” action wired to `SyncStatusCubit.flush()`, enabling manual refresh even when coming back from offline.
 - ✅ **Remote Config offline-first adoption:** Added `RemoteConfigCacheRepository` + `OfflineFirstRemoteConfigRepository`, wired DI to serve cached config values when offline, surfaced `SyncStatusCubit` inside `RemoteConfigDiagnosticsSection`, and documented contracts/tests under [`offline_first/remote_config.md`](remote_config.md).
 - ✅ **Remote Config metadata surfaced:** `RemoteConfigSnapshot` now tracks `dataSource` and `lastSyncedAt`, persisted via the cache repository; diagnostics display the source when loaded.
-- ✅ **Profile cache controls:** Dev/QA `ProfileCacheControlsSection` is composed from the router into Settings; the widget lives under `lib/shared/widgets/diagnostics/` and uses `ProfileCacheControlsPort` from core (see [Modularity](../modularity.md)). Tests: `test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart`.
+- ✅ **Profile cache controls:** Dev/QA `ProfileCacheControlsSection` is composed from the router into Settings; the widget lives under `apps/mobile/lib/shared/widgets/diagnostics/` and uses `ProfileCacheControlsPort` from core (see [Modularity](../modularity.md)). Tests: `test/features/settings/presentation/widgets/profile_cache_controls_section_test.dart`.
 - ✅ **Remote Config cache reset:** Settings → Remote Config diagnostics now include a clear-cache control that wipes the Hive snapshot and refetches values via the offline-first repository; covered by widget + cubit tests.
 - ✅ **Sync telemetry hooks:** BackgroundSyncCoordinator and Remote Config offline-first repo now emit lightweight telemetry events (durations, counts, sources) for future analytics/observability.
 - ✅ **Sync diagnostics UI:** Added a dev-only Sync Diagnostics section in Settings that surfaces the latest sync cycle summary (duration, per-entity queue depth, pending counts) from `SyncStatusCubit`.
@@ -98,7 +98,7 @@ This document revalidates the offline-first requirements after another pass over
 
 ## 1. Current State & Observations
 
-- **Architecture:** Features follow the clean Domain → Data → Presentation split enforced through cubits/blocs (see `lib/features/**`) and DI via GetIt (`lib/core/di/injector_registrations.dart`). Storage primitives are centralized in `lib/shared/storage` with `HiveService` + `HiveRepositoryBase` handling encrypted boxes and error guards.
+- **Architecture:** Features follow the clean Domain → Data → Presentation split enforced through cubits/blocs (see `apps/mobile/lib/features/**`) and DI via GetIt (`apps/mobile/lib/core/di/injector_registrations.dart`). Storage primitives are centralized in `apps/mobile/lib/shared/storage` with `HiveService` + `HiveRepositoryBase` handling encrypted boxes and error guards.
 - **Local persistence today:** Core repositories persist data locally (`HiveCounterRepository`, `HiveLocaleRepository`, `HiveThemeRepository`, `ChatLocalDataSource`, `SearchCacheRepository`, `ProfileCacheRepository`, `GraphqlDemoCacheRepository`). Counter, Chat, Search, Profile, Remote Config, and GraphQL hydrate from disk before calling their APIs.
 - **Conflict signals:** `CounterSnapshot` already tracks `lastChanged`; other domain models now carry sync metadata (e.g., chat, profile snapshots, remote config, graphql cache staleness) but still avoid heavy conflict UIs—future work could add per-entity resolution prompts where needed.
 - **Background work:** Shared sync stack is in place (`BackgroundSyncCoordinator`, `NetworkStatusService`, `SyncStatusCubit`, `PendingSyncRepository`); remaining gaps are observability polish and optional UX niceties (per-message retries, cache clear UX where relevant).
@@ -115,7 +115,7 @@ This document revalidates the offline-first requirements after another pass over
 
 ### 3.1 Local data persistence layer
 
-- **Introduce feature-specific local data sources**: For every remote repository, add a Hive-backed counterpart (e.g., `ChatLocalDataSource`, `ProfileLocalDataSource`, `GraphqlCountriesCache`, `SearchHistoryRepository`) that extends `HiveRepositoryBase` and follows the `StorageGuard` pattern established in `lib/features/counter/data/hive_counter_repository.dart`.
+- **Introduce feature-specific local data sources**: For every remote repository, add a Hive-backed counterpart (e.g., `ChatLocalDataSource`, `ProfileLocalDataSource`, `GraphqlCountriesCache`, `SearchHistoryRepository`) that extends `HiveRepositoryBase` and follows the `StorageGuard` pattern established in `apps/mobile/lib/features/counter/data/hive_counter_repository.dart`.
 - **Schema planning**: Create one encrypted box per bounded context (`chat_conversations`, `chat_pending_messages`, `profile`, `remote_config_cache`, etc.) and document keys. Keep payloads serialized via existing domain models (Freezed/JSON) to avoid double maintenance and stay under the `file_length_lint` limit by breaking helpers into dedicated files when needed.
 - **Migrations**: Update `SharedPreferencesMigrationService` (or add a dedicated `OfflineDataMigrationService`) to copy legacy SharedPreferences data into new boxes on upgrade and to seed defaults for fresh installs. Use `InitializationGuard.executeSafely` so failed migrations never brick startup.
 - **DI wiring**: Register the new local data sources in `_registerStorageServices`/feature-specific sections, and expose them through repositories so cubits consume a single `OfflineFirst*Repository` instead of juggling multiple sources manually. Remember to register dispose callbacks for queue/controllers so `getIt.reset()` in tests remains deterministic.
@@ -209,7 +209,7 @@ This document revalidates the offline-first requirements after another pass over
 - **Background execution**: For long-running sync (esp. iOS/Android), consider integrating platform-specific background fetch/WorkManager after the initial in-app coordinator lands, honoring platform battery constraints.
 - **Push notification contracts**: If we rely on Firebase Cloud Messaging to trigger sync, define payload schemas, authentication requirements, and fallbacks when push delivery fails.
   - Canonical payload contract keys (FCM `data`): `sync_feature`, `sync_resource_type`, `sync_resource_id`
-  - Contract helper: `lib/shared/sync/fcm_sync_trigger_contract.dart`
+  - Contract helper: `apps/mobile/lib/shared/sync/fcm_sync_trigger_contract.dart`
 - **Differential sync**: Implement differential sync for large datasets (e.g., only sync changed fields, use etags/version numbers) to reduce network overhead and improve sync speed.
 - **Conflict resolution UI**: Add user-facing conflict resolution dialogs for features that support concurrent edits (e.g., "Server has newer version, keep local or server?").
 - **Sync scheduling**: Implement intelligent sync scheduling based on user behavior patterns (e.g., sync more frequently during active hours, less during idle periods).

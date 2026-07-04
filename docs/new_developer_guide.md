@@ -37,7 +37,7 @@ Before running the app, review:
 
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t lib/main_dev.dart
+cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart
 ```
 
 Other entrypoints:
@@ -73,8 +73,8 @@ Run these checks before starting a local debug session:
    CocoaPods or `ios/Podfile.lock`/`macos/Podfile.lock` changes, also run
    `pod install` in the affected platform directory.
 7. Start debug with the intended entrypoint, usually
-   `cd apps/mobile && flutter run -t lib/main_dev.dart` or root
-   `flutter run -t lib/main_dev.dart` when the direnv wrapper is active.
+   `cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart` or root
+   `flutter run -t apps/mobile/lib/main_dev.dart` when the direnv wrapper is active.
 
 ### Run the local quality gate
 

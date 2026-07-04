@@ -265,15 +265,15 @@ Use:
 
 - `SupabaseBootstrapService.isSupabaseInitialized`
 - `ensureSupabaseConfigured()` from
-  [`lib/core/supabase/edge_then_tables.dart`](../../lib/core/supabase/edge_then_tables.dart)
+  [`apps/mobile/lib/core/supabase/edge_then_tables.dart`](../../apps/mobile/lib/core/supabase/edge_then_tables.dart)
 
 ### Supabase auth-gated routing pattern
 
 Reuse the IoT pattern instead of inventing a custom one:
 
-- [`lib/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart`](../../lib/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart)
+- [`apps/mobile/lib/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart`](../../apps/mobile/lib/features/iot_demo/presentation/widgets/iot_demo_auth_gate.dart)
 - existing `/supabase-auth?redirect=...` behavior in
-  [`lib/features/supabase_auth/presentation/pages/supabase_auth_page.dart`](../../lib/features/supabase_auth/presentation/pages/supabase_auth_page.dart)
+  [`apps/mobile/lib/features/supabase_auth/presentation/pages/supabase_auth_page.dart`](../../apps/mobile/lib/features/supabase_auth/presentation/pages/supabase_auth_page.dart)
 
 Recommended implementation:
 
@@ -290,8 +290,8 @@ Recommended implementation:
 
 Reuse chart badge structure:
 
-- [`lib/features/chart/domain/chart_data_source.dart`](../../lib/features/chart/domain/chart_data_source.dart)
-- [`lib/features/chart/presentation/widgets/chart_data_source_badge.dart`](../../lib/features/chart/presentation/widgets/chart_data_source_badge.dart)
+- [`apps/mobile/lib/features/chart/domain/chart_data_source.dart`](../../apps/mobile/lib/features/chart/domain/chart_data_source.dart)
+- [`apps/mobile/lib/features/chart/presentation/widgets/chart_data_source_badge.dart`](../../apps/mobile/lib/features/chart/presentation/widgets/chart_data_source_badge.dart)
 
 Do not copy chart labels verbatim. Create a case-study specific enum and badge.
 
@@ -300,7 +300,7 @@ Do not copy chart labels verbatim. Create a case-study specific enum and badge.
 Prefer the IoT demo style of “local-only when Supabase is absent, remote
 enabled when configured”:
 
-- [`lib/core/di/register_iot_demo_services.dart`](../../lib/core/di/register_iot_demo_services.dart)
+- [`apps/mobile/lib/core/di/register_iot_demo_services.dart`](../../apps/mobile/lib/core/di/register_iot_demo_services.dart)
 
 For case study, keep the existing local services registered, then compose remote
 services on top when Supabase is configured.
@@ -433,7 +433,7 @@ Do not add extra Edge functions unless they solve a real v1 requirement.
 
 ### Step 5. Add domain ports
 
-Add ports under `lib/features/case_study_demo/domain/` for:
+Add ports under `apps/mobile/lib/features/case_study_demo/domain/` for:
 
 - remote metadata CRUD for submitted-history use
 - clip upload
@@ -457,7 +457,7 @@ Recommended contracts:
 ### Step 6. Add Supabase data implementations
 
 Create Supabase-backed implementations under
-`lib/features/case_study_demo/data/`.
+`apps/mobile/lib/features/case_study_demo/data/`.
 
 Use repo patterns:
 
@@ -469,7 +469,7 @@ Use repo patterns:
 
 Update:
 
-- [`lib/core/di/register_case_study_demo_services.dart`](../../lib/core/di/register_case_study_demo_services.dart)
+- [`apps/mobile/lib/core/di/register_case_study_demo_services.dart`](../../apps/mobile/lib/core/di/register_case_study_demo_services.dart)
 
 Rules:
 
@@ -503,7 +503,7 @@ Do not overload it with transient network failure state in v1.
 
 Current session flow is in:
 
-- [`lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart`](../../lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart)
+- [`apps/mobile/lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart`](../../apps/mobile/lib/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart)
 
 Required behavior in Supabase mode:
 

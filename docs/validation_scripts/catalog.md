@@ -35,7 +35,7 @@ below.
 - **`check_feature_folder_contract.sh`**: Enforces feature folder shape:
   cubit/state under `presentation/cubit/` (or legacy `cubits/`); bans
   `application/`, `infrastructure/`, `viewmodels/`, `providers/` top-level
-  layers. Legacy drift under `lib/features` warns; `--strict` fails. Supports
+  layers. Legacy drift under `apps/mobile/lib/features` warns; `--strict` fails. Supports
   `--paths` fixture runs. Included in `./bin/checklist`.
 - **`check_direct_getit.sh`**: Prevents direct `GetIt` access in presentation widgets (should inject via constructors/cubits). Note: demo-only feature folders (`*_demo`) are excluded.
 - **`check_no_hive_openbox.sh`**: Prevents direct `Hive.openBox` usage (should use `HiveService`/`HiveRepositoryBase`)
@@ -43,27 +43,27 @@ below.
 - **`check_auth_refresh_single_flight.sh`**: Detects auth retry anti-patterns that can cause 401 refresh races (e.g. `refreshToken()` followed by retry `forceRefresh: true`) and ensures serialized refresh gate exists in `AuthTokenManager`
 - **`check_solid_presentation_data_imports.sh`**: Prevents presentation importing data-layer types (DIP)
 - **`check_solid_data_presentation_imports.sh`**: Prevents data layer importing presentation (layering)
-- **`check_feature_brief_linked.sh`**: When `lib/features/**/*.dart` changes vs a git base,
+- **`check_feature_brief_linked.sh`**: When `apps/mobile/lib/features/**/*.dart` changes vs a git base,
   requires a matching `docs/changes/*.md` note (Feature Brief / change log). Fails
   by default; `FEATURE_BRIEF_CHECK_STRICT=0` warns; `SKIP_FEATURE_BRIEF=1`
   skips. Included in `./bin/checklist`. See [`docs/plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
 - **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
   (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
-  `remote_config` / `settings`). **Universal failures:** `lib/shared/**` must not
-  import `package:flutter_bloc_app/features/`; `lib/features/*/domain/**` must not
+  `remote_config` / `settings`). **Universal failures:** `apps/mobile/lib/shared/**` must not
+  import `package:flutter_bloc_app/features/`; `apps/mobile/lib/features/*/domain/**` must not
   `import` Flutter, `get_it`, Hive, Supabase, Dio, Retrofit, `app/`, `core/di/`, or
   other features’ `presentation/` / `data/` paths (generated `*.g.dart` /
   `*.freezed.dart` / `*.gr.dart` excluded). Without `rg`, domain pattern checks are
   skipped (install ripgrep for full coverage). See [modularity.md](../modularity.md).
   Included in `./bin/checklist`.
 - **`check_domain_wire_leaks.sh`**: Warn-only scan for `fromJson`/`toJson` in
-  `lib/features/*/domain` (AP-11). Always exit 0; use during DTO/boundary PRs.
+  `apps/mobile/lib/features/*/domain` (AP-11). Always exit 0; use during DTO/boundary PRs.
   See [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
   Not in `./bin/checklist`.
   shared→feature probe, domain→app/di probe, fan-in heuristics, cross-feature import
   report). Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
 - **`check_feature_barrel_exports.sh`**: **Report-only** (always exit 0). Summarizes
-  `lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
+  `apps/mobile/lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
   (barrel migration backlog). Not in `./bin/checklist` by default.
 - **`check_macos_debug_web_guard.sh`**: Ensures macOS debug-only fallbacks that check `defaultTargetPlatform == TargetPlatform.macOS` also include `!kIsWeb`, so Safari/Chrome on macOS do not inherit desktop-only debug behavior. Uses `rg` when available, falls back to `grep`.
 - **`check_apple_debug_hive_storage.sh`**: Guards Apple-platform debug Hive +
@@ -128,12 +128,12 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | Memory / lifecycle | memory scripts, lifecycle error handling | **fail** `check_lifecycle_observer_dispose.sh` |
 | Background / startup | background sync coordinator test, perf scripts | regression test added; startup gate deferred |
 
-- **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `lib/features/**/{domain,data}/**` and `lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
+- **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `apps/mobile/lib/features/**/{domain,data}/**` and `apps/mobile/lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
 - **`check_sync_io_in_presentation.sh`**: Blocking `dart:io` `*Sync` in `lib/**/presentation/**` only (not data-layer `existsSync`). Fixtures under `tool/fixtures/sync_io_in_presentation/presentation/`.
 - **`check_remote_image_cache_hints.sh`**: Flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_lifecycle_observer_dispose.sh`**: Fail-by-default `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=warn` to soften locally. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
-- **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `lib/app/router/route_groups.dart` / `lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
+- **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `apps/mobile/lib/app/router/route_groups.dart` / `apps/mobile/lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
 - **`run_file_length_lint.sh`**: Fail when `tool/check_file_length_physical.py` reports `FILE_TOO_LONG` under `lib/` (max 225 **physical** lines from `file_length_lint:` in `analysis_options.yaml`; same policy as the native plugin without whole-repo `dart analyze`). Skipped with `SKIP_FILE_LENGTH_LINT=1` or `CHECKLIST_RUN_FILE_LENGTH_LINT=0`. Plugin diagnostics may still appear in `flutter analyze` when enabled.
 - **`run_mix_lint.sh`**: Fail when `dart analyze --format machine lib` reports `mix_*` diagnostics (native `mix_lint` plugin). Scoped to `lib/`, 600s timeout, heartbeat logs; hard-fails plugin/crash output. Skipped with `SKIP_MIX_LINT=1` or `CHECKLIST_RUN_MIX_LINT=0`.
 - **`run_file_length_lint_test.py`**: Regression harness for file-length wiring (`python3 tool/run_file_length_lint_test.py`). Probes must use physical newlines (`wc -l` ≥ 226), not many `//` tokens on one line. Checklist auto-runs when `custom_lints/file_length_lint/**`, `analysis_options.yaml`, or the lint scripts change (`CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=auto|0|1`).
@@ -215,7 +215,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_raw_json_decode.sh`**: Prevents raw `jsonDecode()`/`jsonEncode()` usage - should use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for large payloads (>8KB)
 - **`check_compute_domain_layer.sh`**: Prevents `compute()` usage in domain layer (domain should be Flutter-agnostic)
 - **`check_compute_lifecycle.sh`**: Heuristic check for `compute()` usage in lifecycle methods (`build()`, `performLayout()`) - warns but doesn't fail
-- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `lib/shared/utils/isolate_json.dart`). Suppress with `check-ignore` on same or previous line only for rare, reviewed cases.
+- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `apps/mobile/lib/shared/utils/isolate_json.dart`). Suppress with `check-ignore` on same or previous line only for rare, reviewed cases.
 
 ### Timing & Services
 
@@ -228,7 +228,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_side_effects_build.sh`**: Heuristic check for side effects in `build()` method (warns but doesn't fail)
 - **`check_dialog_controller_dispose.sh`**: Heuristic check for `TextEditingController` with `showDialog`/`showAdaptiveDialog` and dispose in `finally` (can cause "used after being disposed")
 - **`check_dialog_text_controller_lifecycle.sh`**: Flags `final`/`var` locals assigned `TextEditingController(` inside `async` blocks when same file uses dialog APIs (prefer Stateful dialog + `initState`/`dispose`)
-- **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `lib/app/app_scope.dart` so automatic memory trimming is coordinated through app shell
+- **`check_memory_pressure_centralized.sh`**: Ensures `didHaveMemoryPressure()` handling stays centralized in `apps/mobile/lib/app/app_scope.dart` so automatic memory trimming is coordinated through app shell
 - **`check_pyright_python.sh`**: Runs **Pyright** via `npx pyright` on `demos/render_chat_api` and repo `tool/` Python. Bootstraps `demos/render_chat_api/.venv` from `requirements.txt` when missing (so CI and fresh clones stay reproducible). Fails if `pyrightconfig.json` nests `venvPath` / `venv` under `executionEnvironments` (invalid; use top-level keys). Keep repo-root `exclude` including `**/.venv` so site-packages are not type-checked. Standalone runs always execute; inside `./bin/checklist`, script auto-skips on local non-Python change sets, but still runs in CI or when Python-related files changed. See [`demos/render_chat_api/README.md`](../../demos/render_chat_api/README.md) for editor setup.
 - **`check_inherited_widget_in_create.sh`**: Prevents `context.l10n`/`Theme.of(context)` inside BlocProvider/Provider `create` (see Context & Async Safety below)
 - **`check_inherited_widget_in_initstate.sh`**: Prevents InheritedWidget reads (e.g. `context.l10n`, `Theme.of(context)`) in `initState()`; read in `build()` or `didChangeDependencies()` instead.

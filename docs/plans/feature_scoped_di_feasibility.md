@@ -7,7 +7,7 @@ Dispose demo-heavy registrations (`case_study_demo`, `iot_demo`, `walletconnect_
 ## API sketch
 
 - `GetIt.pushNewScope()` / `popScope()` around `GoRouter` route observers or shell routes.
-- `AppScope` helper in `lib/app/` owns scope push/pop tied to specific `GlobalKey<NavigatorState>` subtrees **or** explicit `registerScopeForRoute` in router builders.
+- `AppScope` helper in `apps/mobile/lib/app/` owns scope push/pop tied to specific `GlobalKey<NavigatorState>` subtrees **or** explicit `registerScopeForRoute` in router builders.
 
 ## Risks
 

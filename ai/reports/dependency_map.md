@@ -56,7 +56,7 @@ Regenerate:
 bash tool/modular_metrics.sh --cross-feature-only
 ```
 
-**Guidance:** Prefer shared domain types in `lib/shared/` or explicit ports in `lib/core/` when features need another backend’s session—see [`docs/modularity.md`](../../docs/modularity.md) and [`docs/flutter-anti-patterns.md`](../../docs/flutter-anti-patterns.md) (AP-01).
+**Guidance:** Prefer shared domain types in `apps/mobile/lib/shared/` or explicit ports in `apps/mobile/lib/core/` when features need another backend’s session—see [`docs/modularity.md`](../../docs/modularity.md) and [`docs/flutter-anti-patterns.md`](../../docs/flutter-anti-patterns.md) (AP-01).
 
 ## Shared → feature imports
 

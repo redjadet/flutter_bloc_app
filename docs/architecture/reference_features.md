@@ -12,8 +12,8 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 
 | Feature | Why copy it | P3 | P4 | P5 | P6 | Key paths |
 | --- | --- | --- | --- | --- | --- | --- |
-| `remote_config` | Full stack, offline-first, sealed Freezed state | G | G | G | Y | `lib/features/remote_config/` |
-| `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `lib/features/profile/presentation/cubit/` |
+| `remote_config` | Full stack, offline-first, sealed Freezed state | G | G | G | Y | `apps/mobile/lib/features/remote_config/` |
+| `profile` | Sealed lifecycle + typed `ProfileFailure` | G | G | G | G | `apps/mobile/lib/features/profile/presentation/cubit/` |
 | `todo_list` | DTO sync boundary, domain merge policy, AppError | G | Y | G | G | `data/todo_item_dto.dart`, `domain/todo_merge_policy.dart` |
 | `native_platform_showcase` | Platform ports; command `MethodChannel`, streaming `EventChannel`, FFI; cubit → use cases only | G | G | G | G | `domain/use_cases/`, `data/*_service.dart` |
 | `deeplink` | Sealed deep-link state | G | G | G | G | `presentation/cubit/deep_link_state.dart` |
@@ -21,7 +21,7 @@ Pattern guide: [`reduce_surprise_patterns.md`](reduce_surprise_patterns.md).
 | `counter` | Offline-first + `CounterError` | Y | Y | G | G | `presentation/cubit/`, `domain/counter_error.dart` |
 | `case_study_demo` | Smaller standard cubit folder | G | Y | G | G | `presentation/cubit/` |
 | `iot_demo` | Cubit + domain/data split | G | Y | G | G | `presentation/cubit/` |
-| `iot` | BLE mappers + phased connection state | G | Y | G | G | `lib/features/iot/` |
+| `iot` | BLE mappers + phased connection state | G | Y | G | G | `apps/mobile/lib/features/iot/` |
 
 Scaffold output (no runtime code) matches the same shape:
 [`feature_brief_scaffold_example.md`](feature_brief_scaffold_example.md).
@@ -38,7 +38,7 @@ Scaffold output (no runtime code) matches the same shape:
 Default scan warns but does not fail CI until legacy features migrate.
 Known legacy paths are listed in
 [`tool/config/legacy_feature_folder_allowlist.txt`](../../tool/config/legacy_feature_folder_allowlist.txt);
-the default `lib/features` scan suppresses those entries. New drift fails the gate.
+the default `apps/mobile/lib/features` scan suppresses those entries. New drift fails the gate.
 
 ```bash
 bash tool/check_feature_folder_contract.sh

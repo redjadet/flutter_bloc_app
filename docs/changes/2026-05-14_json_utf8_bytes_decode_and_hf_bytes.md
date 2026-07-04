@@ -9,17 +9,17 @@ External write-ups (for example Medium pieces citing Dart VM JSON work and exper
 
 ## What shipped
 
-- **`lib/shared/utils/isolate_json.dart`**
+- **`apps/mobile/lib/shared/utils/isolate_json.dart`**
   - Added **`decodeJsonMapFromBytes`** / **`decodeJsonListFromBytes`**.
   - Implementation uses **`utf8.decoder.fuse(json.decoder)`** so bytes decode to a JSON object in one fused converter path (documented `dart:convert` pattern). The public **`JsonUtf8Decoder`** type referenced in some articles is **not** available as a stable public API in the SDK version pinned here; the fused converter is the supported equivalent for “bytes in, parsed object out.”
   - Same **`_kIsolateDecodeThreshold`** (8KB) as the string APIs: smaller payloads parse synchronously on the current isolate; larger ones use **`compute()`** with a **`Uint8List`** argument.
-- **`lib/features/chat/data/huggingface_api_client.dart`**
+- **`apps/mobile/lib/features/chat/data/huggingface_api_client.dart`**
   - Success path uses **`ResponseType.bytes`** and **`decodeJsonMapFromBytes`** so large HF JSON is not first copied into a single **`String`** for parsing.
   - **`formatError`** accepts **`Response<dynamic>`** and reads **`String` or `List<int>`** error bodies (HTTP failure responses may still be bytes).
 - **Tests:** `test/shared/utils/isolate_json_test.dart` (bytes APIs), Hugging Face client tests updated for byte responses.
 - **Chart (CoinGecko / Retrofit):** `coingecko_api` uses **`ResponseType.bytes`**; `DirectChartRemoteRepository` and `HttpChartRepository` call **`decodeJsonMapFromBytes`**. Payloads are small (~7 points); main win is skipping Dio’s intermediate body **`String`**, not isolate offload.
 - **GraphQL countries (raw HTTP):** `countries_graphql_api` returns **`HttpResponse<List<int>>`**; `CountriesGraphqlRepository` uses **`bytesResponseFromHttpResponse`** + **`decodeJsonMapFromBytes`**. AllCountries JSON is large enough to hit the 8KB isolate threshold in tests — **high-value** site.
-- **`lib/shared/http/retrofit_response_utils.dart`:** **`bytesResponseFromHttpResponse`** for byte Retrofit responses.
+- **`apps/mobile/lib/shared/http/retrofit_response_utils.dart`:** **`bytesResponseFromHttpResponse`** for byte Retrofit responses.
 - **Skipped:** `SupabaseGraphqlDemoRepository` — Supabase client returns parsed objects, not a raw JSON string.
 - **Codegen pins (2026-05-15):** `json_serializable: 6.11.3`, `json_annotation: ^4.9.0`, `dependency_overrides: analyzer: 8.4.1` so **`dart run build_runner build`** and **`dart run custom_lint`** both resolve (6.12+ needs analyzer ≥9; 6.13+ needs ≥10).
 

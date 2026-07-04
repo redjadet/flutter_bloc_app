@@ -15,7 +15,7 @@ This repo does not require a use-case class for every repository method.
 | Workflow is presentation-only, such as sorting visible tabs | Keep in Cubit or presentation helper |
 | Data concern, such as DTO parsing, HTTP status mapping, cache merge | Keep in data repository/service |
 
-Use cases live under `lib/features/<feature>/domain/use_cases/` only when they
+Use cases live under `apps/mobile/lib/features/<feature>/domain/use_cases/` only when they
 remove orchestration from Cubit without pulling data concerns into domain.
 
 ## Repository Contracts

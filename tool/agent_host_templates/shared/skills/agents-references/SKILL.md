@@ -14,7 +14,7 @@ Topic table: [`docs/agent_project_context.md`](../../../../../docs/agent_project
 ## Find code
 
 - Prefer `rg` / structural graph (`./tool/refresh_code_review_graph.sh --status-only`) over loading this skill.
-- Theme/DI/sync/HTTP: see project context + `lib/core/`, `lib/shared/`.
+- Theme/DI/sync/HTTP: see project context + `apps/mobile/lib/core/`, `apps/mobile/lib/shared/`.
 
 ## External links (stable)
 

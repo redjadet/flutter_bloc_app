@@ -13,7 +13,7 @@
 ## Verification
 
 ```bash
-dart analyze lib/features/settings lib/features/chat/presentation lib/app/router/routes_core.part.dart lib/app/router/routes_demos.dart lib/app/router/routes_demos.part.dart test/account_section_test.dart test/chat_cubit_test.dart
+dart analyze apps/mobile/lib/features/settings apps/mobile/lib/features/chat/presentation apps/mobile/lib/app/router/routes_core.part.dart apps/mobile/lib/app/router/routes_demos.dart apps/mobile/lib/app/router/routes_demos.part.dart test/account_section_test.dart test/chat_cubit_test.dart
 flutter test test/account_section_test.dart test/settings_page_test.dart test/chat_cubit_test.dart
 ./bin/checklist
 CHECKLIST_INTEGRATION_DEVICE=77ECE67D-12D9-4605-889C-A715DE7F9F13 INTEGRATION_TESTS_RUN_COVERAGE=false ./bin/integration_tests integration_test/settings_flow_test.dart integration_test/chat_list_flow_test.dart

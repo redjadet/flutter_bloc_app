@@ -24,10 +24,7 @@ final List<Glob> defaultExcludeGlobs = List<Glob>.unmodifiable(
 );
 
 class FileLengthConfig {
-  const FileLengthConfig({
-    required this.maxLines,
-    required List<Glob> excludeGlobs,
-  }) : _excludeGlobs = excludeGlobs;
+  const FileLengthConfig({required this.maxLines, required this.excludeGlobs});
 
   factory FileLengthConfig.defaults() => FileLengthConfig(
     maxLines: defaultMaxLines,
@@ -35,10 +32,10 @@ class FileLengthConfig {
   );
 
   final int maxLines;
-  final List<Glob> _excludeGlobs;
+  final List<Glob> excludeGlobs;
 
   bool isExcluded(String path) {
-    for (final Glob glob in _excludeGlobs) {
+    for (final Glob glob in excludeGlobs) {
       if (glob.matches(path)) {
         return true;
       }

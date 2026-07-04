@@ -11,14 +11,14 @@ Date: 2026-05-21. Folder-first scan for horizontal action-row overflow risk.
 | Class A staff signature | `ResponsiveActionOverflowBar` |
 | Class B auth / booking | `ResponsiveDualCtaRow` (360dp available-width stack) |
 | Cupertino pickers (all-scope) | `ResponsiveActionOverflowBar` in date picker + platform sheets |
-| Shared helper | `lib/shared/widgets/responsive_action_bar.dart` |
+| Shared helper | `apps/mobile/lib/shared/widgets/responsive_action_bar.dart` |
 
 ## Two-layer guard (dual CTA)
 
 | Layer | What it checks |
 | ----- | -------------- |
 | **Call site** (`logged_out_action_buttons.dart`, booking confirm, …) | No raw `Row(` + 2 buttons; use `ResponsiveDualCtaRow` or `ResponsiveActionOverflowBar`. Script ignores `ResponsiveDualCtaRow(` as a `Row(` match. |
-| **Canonical impl** (`lib/shared/widgets/responsive_action_bar.dart`) | In PRIMARY_SCOPE: the real `Row(` + `Expanded` + dual children must keep `Expanded`. |
+| **Canonical impl** (`apps/mobile/lib/shared/widgets/responsive_action_bar.dart`) | In PRIMARY_SCOPE: the real `Row(` + `Expanded` + dual children must keep `Expanded`. |
 | **Repo-wide** (`scope=all`) | Any new raw multi-button `Row(` elsewhere in `lib/`. |
 | **Runtime** | `responsive_dual_cta_row_layout_test.dart` + `logged_out_action_buttons_test.dart` at 320dp. |
 
@@ -50,9 +50,9 @@ Supabase feature paths: no `Row(` + dual Material/Cupertino action buttons flagg
 
 ## Class C — dialog `actions`
 
-Dialog-related files under `lib/features/` mostly use `AlertDialog.actions`
+Dialog-related files under `apps/mobile/lib/features/` mostly use `AlertDialog.actions`
 (framework overflow). No manual action `Row` required. Refresh count with
-`rg --files -g '*dialog*.dart' lib/features | wc -l`.
+`rg --files -g '*dialog*.dart' apps/mobile/lib/features | wc -l`.
 
 ## Class D/E/F — high-signal (no change)
 
@@ -72,12 +72,12 @@ Sample lines with `Row(` in presentation/widgets and profile/settings
 the full inventory.
 
 ```text
-lib/features/staff_app_demo/.../staff_demo_proof_signature_section.dart:82  (title row, not actions)
-lib/features/auth/.../register_country_picker.dart:108
-lib/features/auth/.../register_phone_field.dart:33
-lib/features/profile/.../profile_gallery.dart:29
-lib/features/chat/.../chat_input_bar.dart:36
-lib/features/example/.../whiteboard_toolbar.dart:103
+apps/mobile/lib/features/staff_app_demo/.../staff_demo_proof_signature_section.dart:82  (title row, not actions)
+apps/mobile/lib/features/auth/.../register_country_picker.dart:108
+apps/mobile/lib/features/auth/.../register_phone_field.dart:33
+apps/mobile/lib/features/profile/.../profile_gallery.dart:29
+apps/mobile/lib/features/chat/.../chat_input_bar.dart:36
+apps/mobile/lib/features/example/.../whiteboard_toolbar.dart:103
 … (see rg output in repo)
 ```
 

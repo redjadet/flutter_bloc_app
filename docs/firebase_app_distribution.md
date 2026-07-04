@@ -66,7 +66,7 @@ Before distributing an Android pre-release via Firebase App Distribution, confir
 | ------ | ------ |
 | **Firebase project** | Project is set up; Android app is registered. See [firebase.json.example](../firebase.json.example) (local `firebase.json` is gitignored) and [Firebase Console](https://console.firebase.google.com/). |
 | **google-services.json** | File exists at `android/app/google-services.json` (gitignored; generate via [FlutterFire CLI](https://firebase.flutter.dev/docs/overview#1-install-the-flutterfire-cli): `flutterfire configure`). |
-| **firebase_options.dart** | Committed placeholder at `lib/firebase_options.dart`; local `FIREBASE_*` in `.envrc` (see [Firebase setup](firebase_setup.md)). Run `flutterfire configure` for platform files, then restore the placeholder Dart file (step 3b). |
+| **firebase_options.dart** | Committed placeholder at `apps/mobile/lib/firebase_options.dart`; local `FIREBASE_*` in `.envrc` (see [Firebase setup](firebase_setup.md)). Run `flutterfire configure` for platform files, then restore the placeholder Dart file (step 3b). |
 | **Firebase CLI** | Installed and signed in: `firebase login`; `firebase projects:list` shows your project. |
 | **Release build succeeds** | Run `flutter build apk --release` (or `appbundle`). Fix any build errors (e.g. [Namespace not specified](#namespace-not-specified-android) below) before distributing. |
 | **Android App ID** | Use the App ID from Firebase Console (e.g. `1:473097776453:android:80db6a1c2b04bfc0bd222c`) in `--app` when distributing. |
@@ -111,9 +111,9 @@ Output: `build/app/outputs/bundle/release/app-release.aab`
 This project supports multiple entry points ([deployment](deployment.md)). For a staging pre-release you might use:
 
 ```bash
-flutter build apk --release -t lib/main_staging.dart
+flutter build apk --release -t apps/mobile/lib/main_staging.dart
 # or
-flutter build apk --release -t lib/main_dev.dart
+flutter build apk --release -t apps/mobile/lib/main_dev.dart
 ```
 
 ### 3. Distribute via Firebase CLI
@@ -194,7 +194,7 @@ flutter build ipa
 This produces an IPA in `build/ios/ipa/` (exact path may vary; check the command output). You can specify the entry point:
 
 ```bash
-flutter build ipa -t lib/main_staging.dart
+flutter build ipa -t apps/mobile/lib/main_staging.dart
 ```
 
 **Option B – Xcode:**
@@ -258,7 +258,7 @@ This doc stays focused on **Firebase App Distribution**. Shared build concepts
 
 | Item | Notes |
 | ------ | ------ |
-| **Firebase config** | Platform files (`google-services.json`, `GoogleService-Info.plist`) are gitignored — generate via `flutterfire configure`. Dart uses committed `lib/firebase_options.dart` placeholders plus local `FIREBASE_*` in `.envrc`. CI template: `ios/ci/GoogleService-Info.plist` (placeholder API keys only). See [Firebase setup](firebase_setup.md). |
+| **Firebase config** | Platform files (`google-services.json`, `GoogleService-Info.plist`) are gitignored — generate via `flutterfire configure`. Dart uses committed `apps/mobile/lib/firebase_options.dart` placeholders plus local `FIREBASE_*` in `.envrc`. CI template: `ios/ci/GoogleService-Info.plist` (placeholder API keys only). See [Firebase setup](firebase_setup.md). |
 | **Build output paths** | Android: `build/app/outputs/flutter-apk/app-release.apk` or `build/app/outputs/bundle/release/app-release.aab`. iOS: use the path printed by `flutter build ipa` or your Xcode export. |
 | **iOS upload + project guard** | `tool/upload_ios_to_firebase_app_distribution.sh` runs `firebase_preflight.sh` so the active Firebase CLI project matches `.firebaserc` and the `--app` id belongs to that project. |
 

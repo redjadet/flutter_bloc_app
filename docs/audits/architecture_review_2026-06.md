@@ -34,11 +34,11 @@ this program.
 
 | Check | Before | After |
 | --- | --- | --- |
-| `getIt` in `lib/features/**/presentation/pages/**` | `EventBusDemoPage`, `CaseStudyDemoHomePage` | **Zero** (route factories inject deps) |
+| `getIt` in `apps/mobile/lib/features/**/presentation/pages/**` | `EventBusDemoPage`, `CaseStudyDemoHomePage` | **Zero** (route factories inject deps) |
 | `CounterCubit` timer fallback | `DefaultTimerService()` in constructor | **Required** `TimerService` from DI / tests |
 | Route-owned cubits | Mostly correct | Unchanged; counter route passes `getIt<TimerService>()` |
 
-**Verify:** `rg 'getIt<' lib/features --glob '**/presentation/pages/**'` → no matches.
+**Verify:** `rg 'getIt<' apps/mobile/lib/features --glob '**/presentation/pages/**'` → no matches.
 
 ---
 
@@ -181,9 +181,9 @@ await CubitExceptionHandler.executeAsync(
 
 ### Folder layout — counter
 
-**Before:** `lib/features/counter/presentation/counter_cubit.dart`
+**Before:** `apps/mobile/lib/features/counter/presentation/counter_cubit.dart`
 
-**After:** `lib/features/counter/presentation/cubit/counter_cubit.dart` (+ parts/state)
+**After:** `apps/mobile/lib/features/counter/presentation/cubit/counter_cubit.dart` (+ parts/state)
 
 ---
 
@@ -207,5 +207,5 @@ await CubitExceptionHandler.executeAsync(
 flutter analyze
 flutter test test/counter_cubit_test.dart test/features/deeplink test/features/event_bus_demo test/features/auth/data/firebase_auth_repository_test.dart test/features/online_therapy_demo
 bash tool/check_feature_folder_contract.sh
-rg 'getIt<' lib/features --glob '**/presentation/pages/**'
+rg 'getIt<' apps/mobile/lib/features --glob '**/presentation/pages/**'
 ```

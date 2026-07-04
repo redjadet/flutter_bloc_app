@@ -123,6 +123,6 @@ test('dispose closes WebSocket connection', () async {
 ## Summary
 
 - **Most repositories don't need dispose** - only those with subscriptions, connections, or controllers
-- **Register dispose callbacks** in `lib/core/di/injector_registrations.dart` for repositories that need cleanup (called from `configureDependencies()`)
+- **Register dispose callbacks** in `apps/mobile/lib/core/di/injector_registrations.dart` for repositories that need cleanup (called from `configureDependencies()`)
 - **Always reset GetIt in tests** to ensure proper cleanup
 - **Make dispose methods idempotent** and handle errors gracefully

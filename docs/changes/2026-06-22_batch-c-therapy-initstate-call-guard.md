@@ -15,6 +15,6 @@
 ```bash
 bash tool/check_inherited_widget_in_initstate.sh
 flutter test test/features/online_therapy_demo/
-CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart
+CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths apps/mobile/lib/features/online_therapy_demo/presentation/cubit/call_cubit.dart
 ./bin/router_feature_validate
 ```

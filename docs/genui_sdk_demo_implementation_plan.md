@@ -26,7 +26,7 @@ Logic (per the GenUI docs).
 ## Architecture
 
 ```text
-lib/features/genui_demo/
+apps/mobile/lib/features/genui_demo/
 ├── genui_demo.dart
 ├── domain/
 │   ├── genui_demo_agent.dart
@@ -77,8 +77,8 @@ have frequent updates.
 
 **Files**:
 
-- `lib/core/config/secret_config.dart`
-- `lib/core/config/secret_config_sources.dart`
+- `apps/mobile/lib/core/config/secret_config.dart`
+- `apps/mobile/lib/core/config/secret_config_sources.dart`
 - `assets/config/secrets.sample.json` (reference keys only; not bundled as a runtime secrets file)
 
 **Changes**:
@@ -319,7 +319,7 @@ implementation, as the API may have changed.
 
 **Files**:
 
-- `lib/core/di/injector_registrations.dart` (or create
+- `apps/mobile/lib/core/di/injector_registrations.dart` (or create
   `register_genui_services.dart` following the pattern of
   `register_chat_services.dart`)
 
@@ -690,14 +690,14 @@ class _GenUiInputRow extends StatelessWidget {
 
 ### 7) Routing and Feature Exports
 
-#### Route Constants (`lib/core/router/app_routes.dart`)
+#### Route Constants (`apps/mobile/lib/core/router/app_routes.dart`)
 
 ```dart
 static const genuiDemo = 'genui-demo';
 static const genuiDemoPath = '/genui-demo';
 ```
 
-#### Route Definition (`lib/app/router/routes_demos.dart`)
+#### Route Definition (`apps/mobile/lib/app/router/routes_demos.dart`)
 
 ```dart
 GoRoute(
@@ -724,11 +724,11 @@ GoRoute(
 
 **Note**: Add imports for `CommonPageLayout`, `CommonErrorView`,
 `BlocProviderHelpers`, `GenUiDemoCubit`, and `GenUiDemoAgent` as needed in
-`lib/app/router/routes_demos.dart`.
+`apps/mobile/lib/app/router/routes_demos.dart`.
 
 #### Feature Exports
 
-**File**: `lib/features/genui_demo/genui_demo.dart`
+**File**: `apps/mobile/lib/features/genui_demo/genui_demo.dart`
 
 ```dart
 /// GenUI Demo feature barrel file
@@ -748,13 +748,13 @@ export 'presentation/pages/genui_demo_page.dart';
 export 'presentation/widgets/genui_demo_content.dart';
 ```
 
-**File**: `lib/features/features.dart`
+**File**: `apps/mobile/lib/features/features.dart`
 
 Add: `export 'genui_demo/genui_demo.dart';`
 
 ### 8) Localization
 
-**File**: `lib/l10n/app_en.arb`
+**File**: `apps/mobile/lib/l10n/app_en.arb`
 
 Add strings:
 
@@ -925,29 +925,29 @@ available catalog widgets, as per GenUI documentation.
 
 ### New Files
 
-- `lib/features/genui_demo/genui_demo.dart`
-- `lib/features/genui_demo/domain/genui_demo_agent.dart`
-- `lib/features/genui_demo/domain/genui_demo_events.dart`
-- `lib/features/genui_demo/data/genui_demo_agent_impl.dart`
-- `lib/features/genui_demo/presentation/cubit/genui_demo_cubit.dart`
-- `lib/features/genui_demo/presentation/cubit/genui_demo_state.dart`
-- `lib/features/genui_demo/presentation/pages/genui_demo_page.dart`
-- `lib/features/genui_demo/presentation/widgets/genui_demo_content.dart`
+- `apps/mobile/lib/features/genui_demo/genui_demo.dart`
+- `apps/mobile/lib/features/genui_demo/domain/genui_demo_agent.dart`
+- `apps/mobile/lib/features/genui_demo/domain/genui_demo_events.dart`
+- `apps/mobile/lib/features/genui_demo/data/genui_demo_agent_impl.dart`
+- `apps/mobile/lib/features/genui_demo/presentation/cubit/genui_demo_cubit.dart`
+- `apps/mobile/lib/features/genui_demo/presentation/cubit/genui_demo_state.dart`
+- `apps/mobile/lib/features/genui_demo/presentation/pages/genui_demo_page.dart`
+- `apps/mobile/lib/features/genui_demo/presentation/widgets/genui_demo_content.dart`
 - `test/features/genui_demo/presentation/cubit/genui_demo_cubit_test.dart`
 - `test/features/genui_demo/presentation/pages/genui_demo_page_test.dart`
 
 ### Modified Files
 
 - `pubspec.yaml`
-- `lib/core/config/secret_config.dart`
-- `lib/core/config/secret_config_sources.dart`
+- `apps/mobile/lib/core/config/secret_config.dart`
+- `apps/mobile/lib/core/config/secret_config_sources.dart`
 - `assets/config/secrets.sample.json`
-- `lib/core/di/injector_registrations.dart` (or new
+- `apps/mobile/lib/core/di/injector_registrations.dart` (or new
   `register_genui_services.dart`)
-- `lib/core/router/app_routes.dart`
-- `lib/app/router/routes_demos.dart`
-- `lib/l10n/app_en.arb`
-- `lib/features/features.dart`
+- `apps/mobile/lib/core/router/app_routes.dart`
+- `apps/mobile/lib/app/router/routes_demos.dart`
+- `apps/mobile/lib/l10n/app_en.arb`
+- `apps/mobile/lib/features/features.dart`
 - `ios/Runner/Runner.entitlements` (if exists, or create)
 - `macos/Runner/Runner.entitlements` (if exists, or create)
 
@@ -1069,8 +1069,8 @@ available catalog widgets, as per GenUI documentation.
 - [GenUI SDK Documentation](https://docs.flutter.dev/ai/genui/get-started)
 - [Google Generative AI API](https://ai.google.dev/)
 - Existing feature patterns:
-  - `lib/features/websocket/` - Stream-based domain interface pattern
-  - `lib/features/chat/` - Complex state management with async operations
-  - `lib/features/counter/` - Cubit with subscription mixin
+  - `apps/mobile/lib/features/websocket/` - Stream-based domain interface pattern
+  - `apps/mobile/lib/features/chat/` - Complex state management with async operations
+  - `apps/mobile/lib/features/counter/` - Cubit with subscription mixin
 - [Clean architecture](clean_architecture.md)
 - [Testing overview](testing_overview.md)

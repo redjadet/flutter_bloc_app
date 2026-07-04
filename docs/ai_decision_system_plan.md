@@ -445,7 +445,7 @@ Port is **8008** (avoids collision with `demos/render_chat_api` on 8000).
 ### Flutter
 
 ```text
-lib/features/ai_decision_demo/
+apps/mobile/lib/features/ai_decision_demo/
 ├── ai_decision_demo.dart
 ├── data/
 │   ├── ai_decision_api_client.dart
@@ -471,18 +471,18 @@ lib/features/ai_decision_demo/
 
 Cursor/Codex agents should expect this write set:
 
-- `lib/core/router/app_routes.dart`
+- `apps/mobile/lib/core/router/app_routes.dart`
   - Add `aiDecisionDemo` and `aiDecisionDemoPath = '/ai-decision-demo'`.
-- `lib/app/router/routes_demos.dart`
+- `apps/mobile/lib/app/router/routes_demos.dart`
   - Register `GoRoute` for `AiDecisionDemoPage`.
-- `lib/core/di/injector_registrations.dart`
+- `apps/mobile/lib/core/di/injector_registrations.dart`
   - Register the repository/client directly or call a new
     `registerAiDecisionDemoServices()`.
-- `lib/features/features.dart`
+- `apps/mobile/lib/features/features.dart`
   - Export the new feature barrel if the local pattern needs it.
-- `lib/features/example/presentation/pages/example_page.dart`
+- `apps/mobile/lib/features/example/presentation/pages/example_page.dart`
   - Add navigation callback to open the demo.
-- `lib/features/example/presentation/widgets/example_page_body.dart`
+- `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart`
   - Add a visible tile/button for the AI Decision Workbench.
 - `tool/flutter_dart_defines_from_env.sh`
   - Add `AI_DECISION_API_BASE_URL` so the repo wrapper forwards it from
@@ -800,7 +800,7 @@ Goal: the end-to-end workflow is visible and usable in Flutter.
 
 Build:
 
-1. Add `lib/features/ai_decision_demo`.
+1. Add `apps/mobile/lib/features/ai_decision_demo`.
 2. Add hand-written Dart models for case summary, case detail, decision result,
    action, and API errors.
 3. Add API client and repository.

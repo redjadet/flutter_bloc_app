@@ -82,7 +82,7 @@ For lists, run the same idea per item: **do not overwrite a local item with a re
 - If `localItem` exists and `!localItem.synchronized` → only apply remote when it’s the same change (e.g. same `changeId`) or when `remoteItem.updatedAt.isAfter(localItem.updatedAt)`.
 - Otherwise apply remote and mark synced.
 
-See `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` (`_shouldMergeRemoteItem` and `_mergeRemoteIntoLocal`) in this repo for a full example.
+See `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` (`_shouldMergeRemoteItem` and `_mergeRemoteIntoLocal`) in this repo for a full example.
 
 ### TOCTOU: re-read before each local mutation
 
@@ -153,8 +153,8 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 
 ## References in this repo
 
-- **Counter (single-entity):** `lib/features/counter/data/offline_first_counter_repository_helpers.dart` — `shouldApplyRemote`; `offline_first_counter_repository.dart` — `watch()` / `pullRemote()` merge.
-- **Todo (list-entity):** `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldMergeRemoteItem`, `_mergeRemoteIntoLocal`; policy in `TodoMergePolicy.shouldApplyRemote`.
+- **Counter (single-entity):** `apps/mobile/lib/features/counter/data/offline_first_counter_repository_helpers.dart` — `shouldApplyRemote`; `offline_first_counter_repository.dart` — `watch()` / `pullRemote()` merge.
+- **Todo (list-entity):** `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldMergeRemoteItem`, `_mergeRemoteIntoLocal`; policy in `TodoMergePolicy.shouldApplyRemote`.
 - **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`; `pullRemote re-checks local before save when local advances`; `remote watch re-checks local before save when local advances`; `processOperation does not push stale pending over newer remote`. `test/features/todo_list/data/offline_first_todo_repository_test.dart` — `pullRemote re-checks local before save when local advances`; `pullRemote re-checks local before deleting a missing remote item`; `remote watch re-checks local before save when local advances`; `remote watch re-checks local before deleting a missing remote item`; `remote watch does not overwrite newer synchronized local item`; `remote watch does not overwrite newer unsynced local item`; `processOperation does not push stale pending over newer remote`.
 - **Validation script:** `tool/check_offline_first_remote_merge.sh` (run via `./bin/checklist` or directly).
 - **Docs:** [`validation_scripts.md`](../validation_scripts.md) § “check_offline_first_remote_merge.sh”.
@@ -201,7 +201,7 @@ Use these steps to adopt the don't-overwrite rule in a different codebase.
 ### 2. Implement `_shouldApplyRemote` when merging remote watch into local
 
 - **Single-entity (e.g. one counter/settings blob):** Before applying a remote snapshot over local, call a predicate. First reject when both timestamps exist and local is strictly newer. If local is not synchronized, return true only when remote is strictly newer. If local is synchronized, apply your policy (e.g. accept when remote differs or is equal/newer). Use the "Single-entity" code sketch in this guide.
-- **List-entity (e.g. todos/items):** In your merge loop, for each remote item skip when `localItem.updatedAt.isAfter(remoteItem.updatedAt)`. When local item is unsynced, apply remote only if same `changeId` or `remoteItem.updatedAt.isAfter(localItem.updatedAt)`. Re-read local before each `save` and before each delete of rows missing from remote; re-run the same checks on the fresh row. Use the "List-entity" bullets and, for a full example, the Todo helpers in this repo (`lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`).
+- **List-entity (e.g. todos/items):** In your merge loop, for each remote item skip when `localItem.updatedAt.isAfter(remoteItem.updatedAt)`. When local item is unsynced, apply remote only if same `changeId` or `remoteItem.updatedAt.isAfter(localItem.updatedAt)`. Re-read local before each `save` and before each delete of rows missing from remote; re-run the same checks on the fresh row. Use the "List-entity" bullets and, for a full example, the Todo helpers in this repo (`apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`).
 
 ### 3. Add the regression test
 

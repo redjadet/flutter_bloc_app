@@ -4,12 +4,12 @@ Curated ubiquitous language for this app. Findings inventory: [`docs/audits/ai_d
 
 | Term | Definition | Bounded context |
 | --- | --- | --- |
-| Feature module | Vertical slice under `lib/features/<name>/` | Engineering |
+| Feature module | Vertical slice under `apps/mobile/lib/features/<name>/` | Engineering |
 | Presentation layer | Pages, widgets, Cubits | Clean Architecture |
 | Domain layer | Contracts, models; pure Dart | Clean Architecture |
 | Data layer | Repository implementations, DTOs | Clean Architecture |
 | Offline-first repository | Writes locally; enqueues remote sync | Sync |
-| Pending sync | Outbound mutation queue | `lib/shared/sync/` |
+| Pending sync | Outbound mutation queue | `apps/mobile/lib/shared/sync/` |
 | Counter | Home persisted count feature | `counter` |
 | Feature Brief | Pre-work doc from [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) | Process |
 | ARCH-### | Ranked architecture issue | Audits |

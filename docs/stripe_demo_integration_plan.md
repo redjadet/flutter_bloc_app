@@ -40,7 +40,7 @@ After these are done, you can start implementing the app (SecretConfig + Flutter
 ## What exists today (repo context)
 
 - **No Stripe SDK** currently in `pubspec.yaml`.
-- DI is centralized via GetIt in [lib/core/di/injector.dart](../lib/core/di/injector.dart) and registrations in [lib/core/di/injector_registrations.dart](../lib/core/di/injector_registrations.dart).
+- DI is centralized via GetIt in [apps/mobile/lib/core/di/injector.dart](../apps/mobile/lib/core/di/injector.dart) and registrations in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
 - Secrets are handled via `SecretConfig` and documented in [security_and_secrets.md](security_and_secrets.md). The app already depends on `cloud_functions`, so Firebase callable functions are a good fit.
 
 ## Recommended integration approach (demo-friendly)
@@ -64,26 +64,26 @@ After these are done, you can start implementing the app (SecretConfig + Flutter
 Create a new feature module `payments`.
 
 - **Domain** (Flutter-agnostic):
-  - [lib/features/payments/domain/payment_method_repository.dart](../lib/features/payments/domain/payment_method_repository.dart) (interface)
+  - [apps/mobile/lib/features/payments/domain/payment_method_repository.dart](../apps/mobile/lib/features/payments/domain/payment_method_repository.dart) (interface)
   - Entities / failures (e.g. `SetupIntentParams`, `PaymentMethodId`, `PaymentsFailure`)
 - **Data**:
-  - [lib/features/payments/data/stripe_payment_method_repository.dart](../lib/features/payments/data/stripe_payment_method_repository.dart)
-  - [lib/features/payments/data/payments_functions_api.dart](../lib/features/payments/data/payments_functions_api.dart) (wrap `cloud_functions` call)
+  - [apps/mobile/lib/features/payments/data/stripe_payment_method_repository.dart](../apps/mobile/lib/features/payments/data/stripe_payment_method_repository.dart)
+  - [apps/mobile/lib/features/payments/data/payments_functions_api.dart](../apps/mobile/lib/features/payments/data/payments_functions_api.dart) (wrap `cloud_functions` call)
 - **Presentation**:
-  - [lib/features/payments/presentation/cubit/payments_cubit.dart](../lib/features/payments/presentation/cubit/payments_cubit.dart)
-  - [lib/features/payments/presentation/cubit/payments_state.dart](../lib/features/payments/presentation/cubit/payments_state.dart) (prefer `freezed`)
-  - [lib/features/payments/presentation/pages/payments_demo_page.dart](../lib/features/payments/presentation/pages/payments_demo_page.dart)
+  - [apps/mobile/lib/features/payments/presentation/cubit/payments_cubit.dart](../apps/mobile/lib/features/payments/presentation/cubit/payments_cubit.dart)
+  - [apps/mobile/lib/features/payments/presentation/cubit/payments_state.dart](../apps/mobile/lib/features/payments/presentation/cubit/payments_state.dart) (prefer `freezed`)
+  - [apps/mobile/lib/features/payments/presentation/pages/payments_demo_page.dart](../apps/mobile/lib/features/payments/presentation/pages/payments_demo_page.dart)
 
 ## Dependency injection
 
-- Add [lib/core/di/register_payments_services.dart](../lib/core/di/register_payments_services.dart) and call it from `registerAllDependencies()` in [lib/core/di/injector_registrations.dart](../lib/core/di/injector_registrations.dart).
+- Add [apps/mobile/lib/core/di/register_payments_services.dart](../apps/mobile/lib/core/di/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
 - Follow existing pattern: `registerXServices()` per feature; presentation does not reference GetIt directly.
 
 ## Routing / navigation
 
-- Add a new route constant in [lib/core/router/app_routes.dart](../lib/core/router/app_routes.dart) (e.g. `payments` / `paymentsPath`).
+- Add a new route constant in [apps/mobile/lib/core/router/app_routes.dart](../apps/mobile/lib/core/router/app_routes.dart) (e.g. `payments` / `paymentsPath`).
 - Wire in GoRouter through the appropriate split route file under
-  [`lib/app/router/`](../lib/app/router/) similarly to the calculator feature's
+  [`apps/mobile/lib/app/router/`](../apps/mobile/lib/app/router/) similarly to the calculator feature's
   pattern: create `PaymentsCubit` in the route builder and inject the domain
   repository.
 
@@ -91,11 +91,11 @@ Create a new feature module `payments`.
 
 Make the Stripe demo **easily accessible from the central demo (Example) page** so users can open it in one tap:
 
-- **Example page** = [lib/features/example/presentation/pages/example_page.dart](../lib/features/example/presentation/pages/example_page.dart) (route `/example`); it uses `ExamplePageBody` which lists demo buttons (WebSocket, Chat, Todo, Library, Scapes, WalletConnect, etc.).
+- **Example page** = [apps/mobile/lib/features/example/presentation/pages/example_page.dart](../apps/mobile/lib/features/example/presentation/pages/example_page.dart) (route `/example`); it uses `ExamplePageBody` which lists demo buttons (WebSocket, Chat, Todo, Library, Scapes, WalletConnect, etc.).
 - Add a **Stripe/Payments demo button** on that page:
   - In `ExamplePageBody`: add callback `onOpenPaymentsDemo` and a new `_buildIconButton` that calls it, with label from l10n (e.g. `examplePaymentsDemoButton`), icon e.g. `Icons.credit_card` or `Icons.payment`.
   - In `ExamplePage`: pass `onOpenPaymentsDemo: () => context.pushNamed(AppRoutes.payments)` into `ExamplePageBody`.
-- Add l10n key in [lib/l10n/app_en.arb](../lib/l10n/app_en.arb) (and other locales), e.g. `"examplePaymentsDemoButton": "Stripe Save Card Demo"`.
+- Add l10n key in [apps/mobile/lib/l10n/app_en.arb](../apps/mobile/lib/l10n/app_en.arb) (and other locales), e.g. `"examplePaymentsDemoButton": "Stripe Save Card Demo"`.
 - Place the button among the other demo buttons (e.g. after WalletConnect Auth or after Library Demo).
 
 ## Secrets and configuration
@@ -131,7 +131,7 @@ If you prefer not to add backend code into this repo, the plan will instead defi
 - Add a simple `PaymentsDemoPage` with:
   - primary CTA: `context.l10n.paymentsSaveCard`
   - loading + error states driven by cubit
-- Add l10n keys to `lib/l10n/app_*.arb` (no hardcoded strings).
+- Add l10n keys to `apps/mobile/lib/l10n/app_*.arb` (no hardcoded strings).
 - Use theme colors/typography only (no hardcoded colors).
 
 ## Testing strategy (repo-aligned)
@@ -159,7 +159,7 @@ If you prefer not to add backend code into this repo, the plan will instead defi
 - [ ] Confirm where to store Stripe publishable key via SecretConfig and where bootstrap loads it; identify best place to initialize Stripe in app startup.
 - [ ] Add new payments feature module (domain/data/presentation) with repository interface, cubit/state, and demo page using l10n + theming.
 - [ ] Register payments services in GetIt; add payments route constants in
-  `app_routes.dart` and route wiring under `lib/app/router/`; add Stripe demo
+  `app_routes.dart` and route wiring under `apps/mobile/lib/app/router/`; add Stripe demo
   button and `onOpenPaymentsDemo` on Example page (`ExamplePageBody` +
   `ExamplePage`) and l10n key so the demo is easily accessible from the demo
   page.

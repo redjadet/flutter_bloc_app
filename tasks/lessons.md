@@ -64,7 +64,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   On `TokenRepository` / auth refresh edits, grep for that pair and run
   `tool/check_auth_refresh_single_flight.sh` plus focused auth HTTP tests.
 - Evidence or affected files:
-  `lib/core/auth/token_repository.dart`
+  `apps/mobile/lib/core/auth/token_repository.dart`
   `test/core/auth/token_repository_test.dart`
   `tool/check_auth_refresh_single_flight.sh`
 
@@ -82,7 +82,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   Session invalidation ordering and per-provider in-flight gates are async
   behavior contracts, not just implementation details.
 - Preventive rule:
-  Changes under `lib/core/auth/*` or `AppAuthCubit` must run the auth session
+  Changes under `apps/mobile/lib/core/auth/*` or `AppAuthCubit` must run the auth session
   lifecycle focused tests via `tool/check_regression_guards.sh` before broad
   coverage.
 - Evidence or affected files:
@@ -103,7 +103,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   In presentation code, use `compute` + top-level/static callback only; repo
   checklist includes `tool/check_no_isolate_run_in_presentation.sh`.
 - Evidence or affected files:
-  `lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart`
+  `apps/mobile/lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart`
   `.cursor/rules/flutter-isolate-presentation.mdc`
   `tool/check_no_isolate_run_in_presentation.sh`
 
@@ -124,7 +124,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   Never `return false` only because `!_isRequestStillActive`; run
   `tool/check_mutation_success_after_guard.sh` on cubit edits that touch guards.
 - Evidence or affected files:
-  `lib/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart`
+  `apps/mobile/lib/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart`
   `tool/check_mutation_success_after_guard.sh`
   `docs/changes/2026-06-15_mutation-success-guard.md`
 
@@ -170,7 +170,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   For Mix + `showModalBottomSheet` / `showCountryPicker`, use `MaterialApp.builder` (or an equivalent root scope) before tapping open actions.
 - Evidence or affected files:
   `test/features/auth/presentation/widgets/register_country_picker_test.dart`
-  `lib/core/theme/mix_app_theme.dart`
+  `apps/mobile/lib/core/theme/mix_app_theme.dart`
 
 ### 2026-06-22 - initState guard missed context.cubit generic form
 
@@ -197,7 +197,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
   Any reset/clear path that mutates stored history should mirror `clearHistory` ordering and have a regression test for save failure.
 - Evidence or affected files:
-  `lib/features/chat/presentation/cubit/chat_cubit_history_actions.dart`
+  `apps/mobile/lib/features/chat/presentation/cubit/chat_cubit_history_actions.dart`
   `test/chat_cubit_test.dart`
 
 ### 2026-06-22 - GraphQL pull-to-refresh did not await cubit
@@ -211,7 +211,7 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
   For `RefreshIndicator`, pass `() => cubit.refresh()` or an explicit `async` handler that awaits — not void `safeExecute`.
 - Evidence or affected files:
-  `lib/features/graphql_demo/presentation/pages/graphql_demo_page.dart`
+  `apps/mobile/lib/features/graphql_demo/presentation/pages/graphql_demo_page.dart`
 
 ### 2026-04-17 - Caveman-lite is the default when suitable
 

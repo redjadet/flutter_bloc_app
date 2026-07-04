@@ -61,18 +61,18 @@ Isar Database (Encrypted Storage)
 
 ### Components
 
-1. **Isar Models** (`lib/shared/storage/isar_models.dart`)
+1. **Isar Models** (`apps/mobile/lib/shared/storage/isar_models.dart`)
    - `CounterSnapshotModel`: Stores counter state
    - `LocalePreferenceModel`: Stores locale preference
    - `ThemePreferenceModel`: Stores theme preference
    - `MigrationStatusModel`: Tracks migration completion
 
-2. **IsarKeyManager** (`lib/shared/storage/isar_key_manager.dart`)
+2. **IsarKeyManager** (`apps/mobile/lib/shared/storage/isar_key_manager.dart`)
    - Generates 256-bit encryption keys
    - Stores keys in `flutter_secure_storage`
    - Retrieves keys for database initialization
 
-3. **IsarService** (`lib/shared/storage/isar_service.dart`)
+3. **IsarService** (`apps/mobile/lib/shared/storage/isar_service.dart`)
    - Singleton service for Isar database instance
    - Handles initialization with encryption
    - Manages database lifecycle
@@ -82,7 +82,7 @@ Isar Database (Encrypted Storage)
    - `IsarLocaleRepository`: Locale preference storage
    - `IsarThemeRepository`: Theme preference storage
 
-5. **Migration Service** (`lib/shared/storage/shared_preferences_migration_service.dart`)
+5. **Migration Service** (`apps/mobile/lib/shared/storage/shared_preferences_migration_service.dart`)
    - Detects if migration is needed
    - Migrates data from SharedPreferences to Isar
    - Marks migration as complete
@@ -145,7 +145,7 @@ await getIt<SharedPreferencesMigrationService>().migrateIfNeeded();
 
 ### 4. Update Dependency Injection
 
-All repositories are registered in the dependency injection system (`lib/core/di/injector_registrations.dart`, called from `lib/core/di/injector.dart`):
+All repositories are registered in the dependency injection system (`apps/mobile/lib/core/di/injector_registrations.dart`, called from `apps/mobile/lib/core/di/injector.dart`):
 
 - `IsarKeyManager` → `IsarService` → Repositories
 - Migration service runs on app startup

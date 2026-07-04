@@ -26,7 +26,7 @@ The codebase demonstrates strong adherence to lifecycle guards and race-conditio
 `SearchCubit` correctly handles stale search results with a request-id pattern:
 
 ```dart
-// lib/features/search/presentation/search_cubit.dart
+// apps/mobile/lib/features/search/presentation/search_cubit.dart
 bool _isRequestActive(final int requestId, final String query) =>
     !isClosed && requestId == _searchRequestId && state.query == query;
 ```
@@ -58,13 +58,13 @@ Callbacks check `_isRequestActive()` before emitting, preventing older responses
 
 ### 2.1 OfflineFirstTodoRepository – No Explicit Dispose ✓
 
-**Location:** `lib/features/todo_list/data/offline_first_todo_repository.dart`
+**Location:** `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart`
 
 **Status:** Fixed. Added `dispose()` that cancels `_remoteWatchSubscription`. Wired into DI via `registerTodoServices` dispose callback.
 
 ### 2.2 RetrySnackBarListener – Subscription Cancel in dispose()
 
-**Location:** `lib/shared/widgets/retry_snackbar_listener.dart`
+**Location:** `apps/mobile/lib/shared/widgets/retry_snackbar_listener.dart`
 
 ```dart
 @override
@@ -78,7 +78,7 @@ void dispose() {
 
 ### 2.3 HiveCounterRepositoryWatchHelper – Defensive Cancel
 
-**Location:** `lib/features/counter/data/hive_counter_repository_watch_helper.dart` (lines 97–98)
+**Location:** `apps/mobile/lib/features/counter/data/hive_counter_repository_watch_helper.dart` (lines 97–98)
 
 ```dart
 // Cancel any existing subscription (defensive check)
@@ -89,7 +89,7 @@ At that point, `_boxSubscription` is still `null` (we just passed the double-che
 
 ### 2.4 RemoteConfigRepository – Async Listener Callback
 
-**Location:** `lib/features/remote_config/data/repositories/remote_config_repository.dart`
+**Location:** `apps/mobile/lib/features/remote_config/data/repositories/remote_config_repository.dart`
 
 The `onConfigUpdated` listener uses an `async` callback:
 
@@ -111,7 +111,7 @@ Errors are caught and logged. The listener does not emit to a Cubit directly; it
 
 ### 3.1 PlaylearnCubit – isClosed on Success Path
 
-**Location:** `lib/features/playlearn/presentation/playlearn_cubit.dart`
+**Location:** `apps/mobile/lib/features/playlearn/presentation/playlearn_cubit.dart`
 
 ```dart
 Future<void> speakWord(final String text) async {
@@ -128,7 +128,7 @@ On the success path, there is no emit, so no `isClosed` check is required. On th
 
 ### 3.2 applyRestorationOutcome – Used with unawaited
 
-**Location:** `lib/features/counter/presentation/cubit/counter_cubit_base.dart`
+**Location:** `apps/mobile/lib/features/counter/presentation/cubit/counter_cubit_base.dart`
 
 `applyRestorationOutcome` is called via `unawaited(applyRestorationOutcome(...))` from a stream callback. The mixin checks `isClosed` before emitting. The async part (persistence) runs after the emit; if the cubit closes during that time, the emit has already occurred. This is acceptable. The `StateRestorationMixin` correctly guards the emit.
 

@@ -332,12 +332,12 @@ Riverpod. The table below summarizes what is in place and what remains optional.
 | --------- | ------ | --------- |
 | Freezed for immutable states | Done | States use `@freezed`; run `build_runner` to regenerate |
 | Sealed classes for state hierarchies | Done | `DeepLinkState` and others use `sealed class` |
-| Type-safe cubit access extensions | Done | `lib/shared/extensions/type_safe_bloc_access.dart` |
-| Type-safe BLoC widgets | Done | `lib/shared/widgets/type_safe_bloc_selector.dart` |
-| Type-safe BlocProvider helpers | Done | `lib/shared/utils/bloc_provider_helpers.dart` |
-| State transition validators | Done | `lib/shared/utils/state_transition_validator.dart` |
-| Sealed-state helpers | Done | `lib/shared/utils/sealed_state_helpers.dart` |
-| Runtime BLoC lint helpers | Done | `lib/shared/utils/bloc_lint_helpers.dart` |
+| Type-safe cubit access extensions | Done | `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart` |
+| Type-safe BLoC widgets | Done | `apps/mobile/lib/shared/widgets/type_safe_bloc_selector.dart` |
+| Type-safe BlocProvider helpers | Done | `apps/mobile/lib/shared/utils/bloc_provider_helpers.dart` |
+| State transition validators | Done | `apps/mobile/lib/shared/utils/state_transition_validator.dart` |
+| Sealed-state helpers | Done | `apps/mobile/lib/shared/utils/sealed_state_helpers.dart` |
+| Runtime BLoC lint helpers | Done | `apps/mobile/lib/shared/utils/bloc_lint_helpers.dart` |
 | Migration guide | Done | [migration_to_type_safe_bloc.md](migration_to_type_safe_bloc.md) |
 | Code generation guide | Done | [code_generation_guide.md](code_generation_guide.md) |
 | Custom lint rules guide | Done | [custom_lint_rules_guide.md](custom_lint_rules_guide.md) |
@@ -405,9 +405,9 @@ BLoC/Cubit integrates with clean architecture by sitting in the presentation
 layer while the app shell composes routes and providers from above:
 
 ```text
-lib/app/
+apps/mobile/lib/app/
 ├── app.dart / app_scope.dart / router/ (app shell + composition)
-lib/features/counter/
+apps/mobile/lib/features/counter/
 ├── domain/
 │   ├── counter_repository.dart (interface)
 │   └── counter.dart (domain model)

@@ -149,8 +149,8 @@ Already implemented for:
 - **Charts** - Data visualization libraries
 
 **Implementation:** Features are loaded via `DeferredPage` + `deferred as`
-imports in the split route files under `lib/app/router/`. Each deferred feature
-has a library file in `lib/app/router/deferred_pages/` with a `library;`
+imports in the split route files under `apps/mobile/lib/app/router/`. Each deferred feature
+has a library file in `apps/mobile/lib/app/router/deferred_pages/` with a `library;`
 declaration.
 
 **Impact:** Reduces initial bundle size by excluding heavy dependencies until needed. Estimated 9-17 MB saved from initial bundle, resulting in faster startup time.

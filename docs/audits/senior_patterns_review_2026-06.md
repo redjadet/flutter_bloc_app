@@ -37,8 +37,8 @@ Commands used at program start:
 
 ```bash
 bash tool/check_clean_architecture_imports.sh
-rg -n "fromJson|toJson" lib/features/*/domain -g '*.dart'
-rg -n "ViewStatus|Object\\? error|e\\.toString\\(" lib/features -g '*.dart'
+rg -n "fromJson|toJson" apps/mobile/lib/features/*/domain -g '*.dart'
+rg -n "ViewStatus|Object\\? error|e\\.toString\\(" apps/mobile/lib/features -g '*.dart'
 ```
 
 Findings driving PR backlog:

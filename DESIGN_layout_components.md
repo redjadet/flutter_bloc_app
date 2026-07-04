@@ -49,10 +49,10 @@ Do not introduce larger rounded cards unless the shared token scale changes.
 - **Lists:** Prefer Material `ListTile` for standard rows. Use
   `AppStyles.listTile` only for custom row shells that cannot be expressed with
   `ListTile`.
-- **Page shell:** Prefer [`CommonPageLayout`](../lib/shared/widgets/common_page_layout.dart)
+- **Page shell:** Prefer [`CommonPageLayout`](../apps/mobile/lib/shared/widgets/common_page_layout.dart)
   for feature screens instead of ad-hoc `Scaffold` roots.
   - **Default bar:** Pass non-empty `title` (and optional `actions`, theme params);
-    shell builds [`CommonAppBar`](../lib/shared/widgets/common_app_bar.dart).
+    shell builds [`CommonAppBar`](../apps/mobile/lib/shared/widgets/common_app_bar.dart).
   - **Custom bar:** Pass `appBar:` (`PreferredSizeWidget`); `title` and default
     app-bar params are ignored. Require non-empty `title` **or** `appBar` (debug
     assert).

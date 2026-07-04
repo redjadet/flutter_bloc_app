@@ -285,3 +285,13 @@ if errors:
 
 print("✅ pubspec-compat|ok")
 PY
+
+# Custom analyzer plugins pin analyzer 10 APIs; `pub upgrade` must not float these.
+for custom_lint_pkg in file_length_lint mix_lint; do
+  custom_pubspec="$WORKSPACE_ROOT/custom_lints/$custom_lint_pkg/pubspec.yaml"
+  [ -f "$custom_pubspec" ] || continue
+  if grep -Eq 'analysis_server_plugin: \^|analyzer_plugin: \^|analyzer_testing: \^' "$custom_pubspec"; then
+    echo "❌ pubspec-compat|fail|custom_lints/$custom_lint_pkg must pin analysis_server_plugin, analyzer_plugin, and analyzer_testing for analyzer 10.0.2"
+    exit 1
+  fi
+done

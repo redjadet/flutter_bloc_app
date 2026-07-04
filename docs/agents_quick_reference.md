@@ -109,8 +109,10 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
-| Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
+| Flutter app run | `cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
 | Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
+| Workspace package analyze | `dart run melos run analyze` from repo root; delegates to `tool/analyze_workspace_packages.sh` so package roots do not scan workspace `.dart_tool` metadata |
+| Workspace Dart package tests | `dart run melos run test` from repo root; non-Flutter package tests only. Use `dart run melos run test:flutter` or `cd packages/design_system && flutter test` for Flutter packages |
 | Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
 | Firebase backend | `backend/firebase/` (functions, rules, indexes) |
 | Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |

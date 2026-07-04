@@ -17,7 +17,7 @@
 
 ## Avoid loading early
 
-- Entire `lib/features/<large>/` trees before `CONTEXT_MAP`
+- Entire `apps/mobile/lib/features/<large>/` trees before `CONTEXT_MAP`
 - Duplicate testing prose: use [`docs/testing/testing_strategy.md`](../testing/testing_strategy.md), then [`testing_overview.md`](../testing_overview.md)
 - Cursor plan files outside `docs/plans/` unless updating the plan
 

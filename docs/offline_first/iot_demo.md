@@ -64,4 +64,4 @@ This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts
 - Supabase: migration SQL in `docs/offline_first/supabase_iot_demo_user_id_migration.sql` (user_id, RLS, index).
 - DI and sync registry wiring in `register_iot_demo_services.dart` and `injector_registrations.dart`.
 - Sync runs in background; no sync banner on page. Sync diagnostics in Settings (dev/qa only).
-- Device filters: All, On only, Off only (`lib/features/iot_demo/domain/iot_demo_device_filter.dart`). Filtering is applied in `IotDemoCubit` on top of the local stream so Supabase-triggered refreshes keep the current filter. Sync operation applier: `lib/features/iot_demo/data/iot_demo_sync_operation_applier.dart`.
+- Device filters: All, On only, Off only (`apps/mobile/lib/features/iot_demo/domain/iot_demo_device_filter.dart`). Filtering is applied in `IotDemoCubit` on top of the local stream so Supabase-triggered refreshes keep the current filter. Sync operation applier: `apps/mobile/lib/features/iot_demo/data/iot_demo_sync_operation_applier.dart`.

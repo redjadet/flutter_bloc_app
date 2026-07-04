@@ -90,13 +90,13 @@ Run from repo root on touched feature paths:
 
 ```bash
 # Domain wire leaks
-rg -n "fromJson|toJson" lib/features/<feature>/domain -g '*.dart'
+rg -n "fromJson|toJson" apps/mobile/lib/features/<feature>/domain -g '*.dart'
 
 # Raw errors in cubit state
-rg -n "e\\.toString\\(|Object\\? error" lib/features/<feature>/presentation -g '*.dart'
+rg -n "e\\.toString\\(|Object\\? error" apps/mobile/lib/features/<feature>/presentation -g '*.dart'
 
 # Invalid state combos
-rg -n "ViewStatus" lib/features/<feature>/presentation/cubit -g '*.dart'
+rg -n "ViewStatus" apps/mobile/lib/features/<feature>/presentation/cubit -g '*.dart'
 
 # Architecture gates
 bash tool/check_clean_architecture_imports.sh

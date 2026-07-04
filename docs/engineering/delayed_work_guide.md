@@ -4,7 +4,7 @@ This guide describes how to schedule delayed work in production code so it stays
 
 ## Preferred: TimerService
 
-Use `TimerService` (from `lib/core/time/timer_service.dart`) for any delayed work where:
+Use `TimerService` (from `apps/mobile/lib/core/time/timer_service.dart`) for any delayed work where:
 
 - delay should be **cancelable** (e.g. on dispose, sign-out, or navigation).
 - Tests need **deterministic time** (e.g. `FakeTimerService` with `elapse()` or `tick()`).
@@ -16,7 +16,7 @@ Use `TimerService` (from `lib/core/time/timer_service.dart`) for any delayed wor
 
 ### Wiring via DI
 
-`TimerService` is registered in `lib/core/di/injector_registrations.dart` as lazy singleton. Inject it into repositories, coordinators, or services that need delayed work:
+`TimerService` is registered in `apps/mobile/lib/core/di/injector_registrations.dart` as lazy singleton. Inject it into repositories, coordinators, or services that need delayed work:
 
 ```dart
 class MyRepository {
@@ -42,7 +42,7 @@ class MyRepository {
 ### Centralize timer disposal
 
 - **Cubits**: If cubit already uses `CubitSubscriptionMixin`, register timer handles with `registerTimer(...)` and unregister when replaced (`unregisterTimer(...)`). This prevents late-async timer leaks and keeps timer cleanup consistent with subscription cleanup.
-- **Repositories/services**: Prefer `TimerHandleManager` (`lib/shared/utils/timer_handle_manager.dart`) to keep timer handles bounded and to ensure delayed restarts don’t outlive `dispose()`.
+- **Repositories/services**: Prefer `TimerHandleManager` (`apps/mobile/lib/shared/utils/timer_handle_manager.dart`) to keep timer handles bounded and to ensure delayed restarts don’t outlive `dispose()`.
 
 ### Tests
 

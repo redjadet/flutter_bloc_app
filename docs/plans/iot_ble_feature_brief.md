@@ -8,7 +8,7 @@ Add local BLE showcase under existing `/iot-demo` via Cloud | BLE tabs. Mock sim
 
 ## Scope
 
-- **In:** `lib/features/iot/` (domain/data/presentation), app-layer `IotDemoHubPage`, cloud tab extract, tests, docs.
+- **In:** `apps/mobile/lib/features/iot/` (domain/data/presentation), app-layer `IotDemoHubPage`, cloud tab extract, tests, docs.
 - **Out:** New top-level route, `iot_demo` → `iot` imports, real Bluetooth Classic RFCOMM v1, `?tab=ble` deep link (deferred).
 
 ## Architecture

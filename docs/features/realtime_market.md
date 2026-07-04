@@ -13,7 +13,7 @@ Simulated high-frequency order book + trades for **UI and state patterns only**
 - **Presentation**: `RealtimeMarketCubit` (cache-first bootstrap, stream
   listen via `CubitSubscriptionMixin`), `RealtimeMarketPage` (deferred route,
   `RefreshIndicator`, skeletonizer). Widgets under
-  `lib/features/realtime_market/presentation/widgets/` — header + disclaimer,
+  `apps/mobile/lib/features/realtime_market/presentation/widgets/` — header + disclaimer,
   connection pill, segmented buy/sell focus, order book with column headers and
   per-row depth tint, recent trades (empty state), stats card, `fl_chart` line
   chart with grid + touch tooltip + area fill. Buy/sell accents use app success
@@ -38,7 +38,7 @@ Simulated high-frequency order book + trades for **UI and state patterns only**
 
 ## Localization
 
-Strings live in `lib/l10n/app_*.arb` under the `realtimeMarket*` prefix. Besides
+Strings live in `apps/mobile/lib/l10n/app_*.arb` under the `realtimeMarket*` prefix. Besides
 title, connection labels, and section titles, the UI adds: disclaimer
 (`realtimeMarketDisclaimer`), order book column headers
 (`realtimeMarketOrderBookColumnPrice` / `realtimeMarketOrderBookColumnAmount`), empty trades

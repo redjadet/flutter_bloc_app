@@ -23,7 +23,7 @@ Sealed classes (Dart 3.0+) provide:
 #### Step 1: Current State (Abstract Class)
 
 ```dart
-// lib/features/remote_config/presentation/cubit/remote_config_state.dart
+// apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart
 part of 'remote_config_cubit.dart';
 
 abstract class RemoteConfigState extends Equatable {
@@ -76,7 +76,7 @@ class RemoteConfigError extends RemoteConfigState {
 #### Step 2: Convert Events to Sealed Class
 
 ```dart
-// lib/features/remote_config/presentation/cubit/remote_config_state.dart
+// apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart
 part of 'remote_config_cubit.dart';
 
 sealed class RemoteConfigState extends Equatable {

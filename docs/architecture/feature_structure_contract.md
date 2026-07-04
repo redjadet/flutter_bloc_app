@@ -39,7 +39,7 @@ the expected folders and feature brief. Add `--apply` only after the feature
 name is final.
 
 ```text
-lib/features/<feature>/
+apps/mobile/lib/features/<feature>/
   domain/
     <feature>_repository.dart
     <domain_model>.dart
@@ -116,7 +116,7 @@ Shared widgets must work on **mobile, tablet, web, and desktop (macOS)** — see
 - Data models/DTOs never escape into presentation state.
 - Presentation view data stays in `presentation/` or `core/diagnostics` when
   app composition needs it.
-- App-level composition lives in `lib/app/` or `lib/core/di/`.
+- App-level composition lives in `apps/mobile/lib/app/` or `apps/mobile/lib/core/di/`.
 - Shared utilities accept narrow capabilities, not feature cubits/repos.
 - Cross-feature imports require an explicit exception in
   [Modularity](../modularity.md) or a core/shared port.

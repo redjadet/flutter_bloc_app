@@ -58,15 +58,15 @@ This section compares the two “backend-accelerated” chart paths as implement
 ### Client-side code paths
 
 - **Supabase path**
-  - **Selector**: `lib/features/chart/data/auth_aware_chart_remote_repository.dart` chooses Supabase when Supabase is initialized and `SupabaseAuthRepository.currentUser != null`.
-  - **Remote repo**: `lib/features/chart/data/supabase_chart_repository.dart`
+  - **Selector**: `apps/mobile/lib/features/chart/data/auth_aware_chart_remote_repository.dart` chooses Supabase when Supabase is initialized and `SupabaseAuthRepository.currentUser != null`.
+  - **Remote repo**: `apps/mobile/lib/features/chart/data/supabase_chart_repository.dart`
     - Calls Supabase Edge first (`sync-chart-trending`)
     - Falls back to reading Postgres table `chart_trending_points`
   - **Auth**: uses Supabase access token (Bearer) when invoking the edge function; table reads rely on Supabase auth/RLS.
 
 - **Firebase path**
-  - **Selector**: `lib/features/chart/data/auth_aware_chart_remote_repository.dart` chooses Firebase when `FirebaseAuth.currentUser != null` (via `FirebaseChartRepository.hasSignedInUser`).
-  - **Remote repo**: `lib/features/chart/data/firebase_chart_repository.dart`
+  - **Selector**: `apps/mobile/lib/features/chart/data/auth_aware_chart_remote_repository.dart` chooses Firebase when `FirebaseAuth.currentUser != null` (via `FirebaseChartRepository.hasSignedInUser`).
+  - **Remote repo**: `apps/mobile/lib/features/chart/data/firebase_chart_repository.dart`
     - Calls callable Cloud Function `syncChartTrending` (Cloud Functions Gen2)
     - Falls back to Firestore doc `chart_trending/bitcoin_7d`
   - **Auth**: requires Firebase Auth; the client forces an ID token refresh before calling the function to avoid “signed-in but token not attached yet” races.
@@ -91,7 +91,7 @@ This section compares the two “backend-accelerated” chart paths as implement
 - Both server paths return/contain the same shape so parsing can be shared:
   - `{ points: [{ date_utc: string, value: number }] }`
 - The app uses a shared resilient parser:
-  - `lib/features/chart/data/chart_points_parser.dart`
+  - `apps/mobile/lib/features/chart/data/chart_points_parser.dart`
 
 ### Practical tradeoffs in this repo
 

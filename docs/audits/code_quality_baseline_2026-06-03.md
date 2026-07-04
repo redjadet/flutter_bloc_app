@@ -62,10 +62,10 @@ Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (ge
 | Layer | Coverage | vs 85% target | Note |
 | --- | ---: | --- | --- |
 | **Total** | 71.49% | Below | Demo/integration carve-outs documented in summary |
-| `lib/shared/` (aggregate) | 80.08% | Near | Primary shared contract surface |
-| `lib/core/` (aggregate) | 65.10% | Below | DI/bootstrap paths; P2 unless slice touches |
-| `lib/features/counter/` | 86.81% | Met | Representative offline-first feature |
-| `lib/features/todo_list/` | 72.97% | Below | Sync banner + offline-first tests exist |
+| `apps/mobile/lib/shared/` (aggregate) | 80.08% | Near | Primary shared contract surface |
+| `apps/mobile/lib/core/` (aggregate) | 65.10% | Below | DI/bootstrap paths; P2 unless slice touches |
+| `apps/mobile/lib/features/counter/` | 86.81% | Met | Representative offline-first feature |
+| `apps/mobile/lib/features/todo_list/` | 72.97% | Below | Sync banner + offline-first tests exist |
 
 **Stop rule:** Contract tests on fragile seams (future plan Phase 5) trump global % for this program.
 
@@ -102,7 +102,7 @@ Source: [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) (ge
 
 **Shipped (PR #292):** MapSample `AppError` + retry (Chart-aligned).
 
-**Recommended next (cadence 3+):** **Todo list** — offline-first feature with `errorMessage` only (`TodoListState`); aligns with future-arch Phase 4 “one additional high-value cubit” and baseline coverage gap on `lib/features/todo_list/`.
+**Recommended next (cadence 3+):** **Todo list** — offline-first feature with `errorMessage` only (`TodoListState`); aligns with future-arch Phase 4 “one additional high-value cubit” and baseline coverage gap on `apps/mobile/lib/features/todo_list/`.
 
 Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/future_architecture_code_quality_improvement_plan.md) § Current Recommended Next Step):
 
@@ -117,7 +117,7 @@ Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/f
 | B-03 | P1 | ~~QG-D05 promotion~~ **done** | PR #290 warn-first; PR #292 **fail** default; allowlist OK | Monitor new `deferred as` import sites |
 | B-04 | P1 | ~~Graphql `AppError`~~ **done** | PR #290 + presentation tests | — |
 | B-04b | P1 | ~~MapSample `AppError`~~ **done** | PR #292 + `map_sample_cubit_test` | Next: Todo list (see above) |
-| B-05 | P2 | `lib/core/` coverage below 85% | coverage table | [`CODE_QUALITY.md`](../CODE_QUALITY.md) |
+| B-05 | P2 | `apps/mobile/lib/core/` coverage below 85% | coverage table | [`CODE_QUALITY.md`](../CODE_QUALITY.md) |
 | B-06 | P2 | D03/D04/D01/D02 gate spikes | Phase 0b spikes doc | deferred gates doc |
 
 ## Next action
@@ -128,4 +128,4 @@ Owner quote ([`future_architecture_code_quality_improvement_plan.md`](../plans/f
 
 1. Spike/promote **QG-D03** / **QG-D04** / **QG-D08** when scripts/fixtures exist — see [spikes doc](code_quality_baseline_spikes_2026-06-03.md) (no promotion in Phase 2 wave).
 2. **Todo list** `AppError` adoption (recommended next arch slice).
-3. `lib/core/` coverage uplift (B-05) only when a slice touches core/DI.
+3. `apps/mobile/lib/core/` coverage uplift (B-05) only when a slice touches core/DI.

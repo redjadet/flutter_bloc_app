@@ -43,8 +43,8 @@ flutter test test/features/online_therapy_demo/presentation/cubit/ test/features
 # 240 passed (includes spine golden)
 
 # Static analysis (touched paths)
-flutter analyze --fatal-infos lib/features/chat lib/features/graphql_demo lib/core/auth \
-  lib/features/supabase_auth/domain/supabase_auth_repository.dart \
+flutter analyze --fatal-infos apps/mobile/lib/features/chat apps/mobile/lib/features/graphql_demo apps/mobile/lib/core/auth \
+  apps/mobile/lib/features/supabase_auth/domain/supabase_auth_repository.dart \
   test/features/online_therapy_demo/presentation/cubit test/features/chat \
   test/features/graphql_demo test/counter_page_golden_test.dart
 # No issues found

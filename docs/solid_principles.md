@@ -43,7 +43,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 - Depend on abstractions, not concrete implementations.
 
-- All services are wired through `getIt` (feature-specific registration files in `lib/core/di/`), depending on interfaces (e.g., `NetworkStatusService`, `TimerService`, repositories) rather than concrete classes.
+- All services are wired through `getIt` (feature-specific registration files in `apps/mobile/lib/core/di/`), depending on interfaces (e.g., `NetworkStatusService`, `TimerService`, repositories) rather than concrete classes.
 - DI registrations are organized by feature (`register_chat_services.dart`, `register_profile_services.dart`, etc.) to improve SRP and maintainability.
 - UI layers receive dependencies via constructors (e.g., `ProfileCacheControlsSection`, page providers) or DI factory functions, keeping Flutter widgets free of new allocations of data sources.
 - App-shell composition points (`BootstrapCoordinator`, router, `AppScope`) can
@@ -77,8 +77,8 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 - **Presentation → data-layer imports:** Periodically verify no new data-layer
   imports creep into presentation code:
-  `rg "features/.*/data" lib/features -g"*presentation*.dart"`
-- **App shell overreach:** Keep `lib/app/` and bootstrap code focused on
+  `rg "features/.*/data" apps/mobile/lib/features -g"*presentation*.dart"`
+- **App shell overreach:** Keep `apps/mobile/lib/app/` and bootstrap code focused on
   composition. If route files or `AppScope` start accumulating feature business
   rules, SOLID boundaries are slipping.
 - **Offline-first repository growth:** When a new offline-first repository gains
@@ -86,7 +86,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 ## Practical patterns to keep
 
-- Keep domain types Flutter-agnostic; platform/UI utilities stay under `lib/shared/`.
+- Keep domain types Flutter-agnostic; platform/UI utilities stay under `apps/mobile/lib/shared/`.
 - Prefer constructor injection (or DI factories) for widgets/cubits; avoid calling `getIt` inside widgets except at composition boundaries.
 - When adding services that schedule work or touch hardware, create an interface + fake and register via `getIt` to preserve DIP and testability.
 - New features should expose small, focused contracts and inject collaborators rather than passing global state.
@@ -95,7 +95,7 @@ This app follows Clean Architecture (Domain → Data → Presentation) and uses 
 
 - Constructors accept abstractions (interfaces) rather than concrete types.
 - New data sources implement the domain repository interface instead of expanding existing classes.
-- DI registrations bind interfaces to implementations in feature-specific files under `lib/core/di/` (e.g., `register_chat_services.dart`, `register_profile_services.dart`).
+- DI registrations bind interfaces to implementations in feature-specific files under `apps/mobile/lib/core/di/` (e.g., `register_chat_services.dart`, `register_profile_services.dart`).
 - UI widgets avoid `getIt` lookups except at composition boundaries.
 - Avoid adding optional methods to existing interfaces; create new interfaces if needed.
 - Use generic factory helpers (`createRemoteRepositoryOrNull`) for consistent error handling when creating remote repositories.

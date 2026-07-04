@@ -22,11 +22,11 @@ show the proof trail.
 | Concern | Path |
 | --- | --- |
 | Flutter route | `/ai-decision-demo` |
-| Example hub entry | `lib/features/example/presentation/widgets/example_page_body.dart` |
-| Flutter feature | `lib/features/ai_decision_demo/` |
-| DI registration | `lib/core/di/register_ai_decision_demo_services.dart` |
-| Route constants | `lib/core/router/app_routes.dart` |
-| Route composition | `lib/app/router/routes_demos.dart` |
+| Example hub entry | `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` |
+| Flutter feature | `apps/mobile/lib/features/ai_decision_demo/` |
+| DI registration | `apps/mobile/lib/core/di/register_ai_decision_demo_services.dart` |
+| Route constants | `apps/mobile/lib/core/router/app_routes.dart` |
+| Route composition | `apps/mobile/lib/app/router/routes_demos.dart` |
 | Backend API | `demos/ai_decision_api/` |
 | Local DB | `demos/ai_decision_api/.data/ai_decision_demo.sqlite3` |
 
@@ -239,11 +239,11 @@ Flutter:
 flutter test test/features/ai_decision_demo
 flutter test test/features/example/presentation/widgets/example_page_body_test.dart
 flutter analyze \
-  lib/features/ai_decision_demo \
-  lib/core/di/register_ai_decision_demo_services.dart \
-  lib/app/router/routes_demos.dart \
-  lib/core/router/app_routes.dart \
-  lib/features/example/presentation/widgets/example_page_body.dart \
+  apps/mobile/lib/features/ai_decision_demo \
+  apps/mobile/lib/core/di/register_ai_decision_demo_services.dart \
+  apps/mobile/lib/app/router/routes_demos.dart \
+  apps/mobile/lib/core/router/app_routes.dart \
+  apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart \
   test/features/ai_decision_demo \
   test/features/example/presentation/widgets/example_page_body_test.dart
 ./bin/router_feature_validate

@@ -2,12 +2,12 @@
 
 ## Overview
 
-The `lib/shared/` directory contains reusable utilities, widgets, and services used across multiple features. This document describes the purpose and organization of each category.
+The `apps/mobile/lib/shared/` directory contains reusable utilities, widgets, and services used across multiple features. This document describes the purpose and organization of each category.
 
 ## Directory Structure
 
 ```text
-lib/shared/
+apps/mobile/lib/shared/
 ├── extensions/          # BuildContext extensions and responsive utilities
 ├── platform/           # Platform-specific implementations
 ├── responsive/         # Responsive design configuration
@@ -20,7 +20,7 @@ lib/shared/
 
 ## Categories
 
-### 1. Extensions (`lib/shared/extensions/`)
+### 1. Extensions (`apps/mobile/lib/shared/extensions/`)
 
 **Purpose:** BuildContext extensions and responsive design utilities.
 
@@ -50,7 +50,7 @@ Text('Title', style: TextStyle(fontSize: context.responsiveHeadlineSize))
 PlatformAdaptive.filledButton(context: context, onPressed: handle, child: Text('Action'))
 ```
 
-### 2. Platform (`lib/shared/platform/`)
+### 2. Platform (`apps/mobile/lib/shared/platform/`)
 
 **Purpose:** Platform-specific implementations and abstractions.
 
@@ -62,10 +62,10 @@ PlatformAdaptive.filledButton(context: context, onPressed: handle, child: Text('
 
 **Not shared:** the **Native Platform Showcase** feature uses its own channel
 (`com.example.flutter_bloc_app/native_showcase`) and FFI surface under
-`lib/features/native_platform_showcase/` with domain ports
+`apps/mobile/lib/features/native_platform_showcase/` with domain ports
 (`NativeShowcaseHostLanguageService`, `NativeShowcaseNativeCodeService`). Do not
 route showcase interop through `NativePlatformService`; see
-[`lib/features/native_platform_showcase/README.md`](../lib/features/native_platform_showcase/README.md).
+[`apps/mobile/lib/features/native_platform_showcase/README.md`](../apps/mobile/lib/features/native_platform_showcase/README.md).
 
 **Usage Example:**
 
@@ -77,7 +77,7 @@ if (isAvailable) {
 }
 ```
 
-### 3. Responsive (`lib/shared/responsive/`)
+### 3. Responsive (`apps/mobile/lib/shared/responsive/`)
 
 **Purpose:** Responsive design configuration and scope management.
 
@@ -96,7 +96,7 @@ ResponsiveScope(
 )
 ```
 
-### 4. Services (`lib/shared/services/`)
+### 4. Services (`apps/mobile/lib/shared/services/`)
 
 **Purpose:** Cross-cutting services used throughout the app.
 
@@ -111,7 +111,7 @@ final errorService = getIt<ErrorNotificationService>();
 errorService.showError('Something went wrong');
 ```
 
-### 5. Storage (`lib/shared/storage/`)
+### 5. Storage (`apps/mobile/lib/shared/storage/`)
 
 **Purpose:** Storage abstractions and implementations for local data persistence.
 
@@ -138,7 +138,7 @@ class MyRepository extends HiveRepositoryBase implements MyRepositoryInterface {
 }
 ```
 
-### 6. UI (`lib/shared/ui/`)
+### 6. UI (`apps/mobile/lib/shared/ui/`)
 
 **Purpose:** UI constants and view status definitions.
 
@@ -158,7 +158,7 @@ const kDefaultPadding = EdgeInsets.all(16.0);
 const kAnimationDuration = Duration(milliseconds: 300);
 ```
 
-### 7. Utils (`lib/shared/utils/`)
+### 7. Utils (`apps/mobile/lib/shared/utils/`)
 
 **Purpose:** Utility functions and helpers for common operations.
 
@@ -173,7 +173,7 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `initialization_guard.dart` - Safe initialization wrapper for critical operations
 - `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB); **bytes path** (`decodeJsonMapFromBytes` / `decodeJsonListFromBytes`) uses `utf8.decoder` fused with `json.decoder` so Dio can supply raw UTF-8 without building a full response `String` before parse (see `HuggingFaceApiClient`)
 - `isolate_samples.dart` - Examples of isolate usage for heavy computations
-- [`logger.dart`](../lib/shared/utils/logger.dart) - App-wide logging utility;
+- [`logger.dart`](../apps/mobile/lib/shared/utils/logger.dart) - App-wide logging utility;
   use with [`logging.md`](logging.md) conventions.
 - `navigation.dart` - Navigation helper functions
 - `network_guard.dart` - Network connectivity checking utilities
@@ -183,22 +183,22 @@ const kAnimationDuration = Duration(milliseconds: 300);
 - `websocket_guard.dart` - WebSocket connectivity checking utilities
 - `retry_policy.dart` - Standardized retry with backoff and cancellation for non-HTTP async work
 
-**Sync banner helpers** (`lib/shared/sync/sync_banner_helpers.dart`): `shouldShowSyncBanner()`, `syncBannerTitleAndMessage()`, and `SyncBannerContent` widget for consistent offline/syncing/pending sync status UI across features (Todo, Chat, Search, Profile, IoT). Use these so banner visibility and copy stay in one place.
+**Sync banner helpers** (`apps/mobile/lib/shared/sync/sync_banner_helpers.dart`): `shouldShowSyncBanner()`, `syncBannerTitleAndMessage()`, and `SyncBannerContent` widget for consistent offline/syncing/pending sync status UI across features (Todo, Chat, Search, Profile, IoT). Use these so banner visibility and copy stay in one place.
 
 ### Reliability and retries
 
-- **Dio** (shared app instance from `createAppDio()` in `lib/shared/http/app_dio.dart`): Use for
+- **Dio** (shared app instance from `createAppDio()` in `apps/mobile/lib/shared/http/app_dio.dart`): Use for
   **HTTP** requests. It is configured with interceptors for network check, auth token injection,
   telemetry, and retries. 401 refreshes are coordinated via `AuthTokenManager` and
   `AuthTokenInterceptor` (single-flight) so concurrent 401s await one refresh and retry with
   a refreshed bearer token. Repositories use `getIt<Dio>()` or typed Retrofit clients built from it.
-  Use [NetworkGuard.executeDio](../lib/shared/utils/network_guard.dart) where you need centralized
-  timeout, status checks, and error mapping; [NetworkErrorMapper](../lib/shared/utils/network_error_mapper.dart)
+  Use [NetworkGuard.executeDio](../apps/mobile/lib/shared/utils/network_guard.dart) where you need centralized
+  timeout, status checks, and error mapping; [NetworkErrorMapper](../apps/mobile/lib/shared/utils/network_error_mapper.dart)
   maps status codes and `DioException` to user-facing messages and
-  [AppErrorCode](../lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
-- **Retrofit** (optional): For stable REST APIs, define interfaces under `lib/features/<feature>/data/api/`
+  [AppErrorCode](../apps/mobile/lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
+- **Retrofit** (optional): For stable REST APIs, define interfaces under `apps/mobile/lib/features/<feature>/data/api/`
   and use generated clients; see [`plans/dio_retrofit_integration_plan.md`](plans/dio_retrofit_integration_plan.md). Chart uses `CoingeckoApi`.
-- **RetryPolicy** (`lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
+- **RetryPolicy** (`apps/mobile/lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
 - HTTP retry/replay defaults to idempotent `GET`/`HEAD`. Non-idempotent
   methods must opt in at the call site and justify idempotency.
 
@@ -212,7 +212,7 @@ When to use which:
 
 **Timeouts:** Use explicit timeouts for all HTTP calls. Dio is created with 30s connect/receive timeouts in `createAppDio()`; use `NetworkGuard.executeDio` with a `timeout` parameter where you wrap requests. Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints.
 
-**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](../lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
+**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](../apps/mobile/lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
 
 Example: cubit that retries a one-off load and cancels on close:
 
@@ -301,7 +301,7 @@ final Map<String, dynamic> fromBytes =
 final String encoded = await encodeJsonIsolate(object); // For size estimation
 ```
 
-### 8. Widgets (`lib/shared/widgets/`)
+### 8. Widgets (`apps/mobile/lib/shared/widgets/`)
 
 **Purpose:** Reusable widgets used across multiple features.
 
@@ -361,7 +361,7 @@ ResilientSvgAssetImage(
 
 ### When to Add to Shared
 
-Add utilities to `lib/shared/` when:
+Add utilities to `apps/mobile/lib/shared/` when:
 
 1. **Used by multiple features** - Not specific to a single feature
 2. **Reusable across contexts** - Can be used in different scenarios
@@ -370,7 +370,7 @@ Add utilities to `lib/shared/` when:
 
 ### When NOT to Add to Shared
 
-Don't add to `lib/shared/` when:
+Don't add to `apps/mobile/lib/shared/` when:
 
 1. **Feature-specific** - Only used by one feature (keep in feature directory)
 2. **Tightly coupled** - Strongly coupled to specific feature logic

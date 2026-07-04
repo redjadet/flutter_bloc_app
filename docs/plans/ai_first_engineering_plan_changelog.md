@@ -48,5 +48,5 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 
 - `bash tool/modular_metrics.sh` → per-feature LOC, barrels, fan-in.
 - `bash tool/modular_metrics.sh --cross-feature-only` → 11 cross-feature import edges (sample).
-- Hotspot `wc` → largest part files under `lib/features/`.
+- Hotspot `wc` → largest part files under `apps/mobile/lib/features/`.
 - Term frequency `rg` → Cubit/Repository/State naming histogram.

@@ -17,7 +17,7 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 ### 1.1 FixedExtentScrollController in PlatformAdaptiveSheets (Cupertino Picker) ✓
 
-**Location:** `lib/shared/utils/platform_adaptive_sheets.dart`
+**Location:** `apps/mobile/lib/shared/utils/platform_adaptive_sheets.dart`
 
 **Status:** Fixed. Replaced `StatefulBuilder` with `_CupertinoPickerSheetContent` StatefulWidget that creates the controller in `initState`, passes it to `CupertinoPicker`, and disposes it in `dispose()`.
 
@@ -27,7 +27,7 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 ### 2.1 OfflineFirstTodoRepository – Remote Watch Subscription ✓
 
-**Location:** `lib/features/todo_list/data/offline_first_todo_repository.dart`
+**Location:** `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart`
 
 **Status:** Fixed. Added `dispose()` that cancels `_remoteWatchSubscription`. Wired into DI via `registerTodoServices` dispose callback. **Restart-after-dispose:** When the remote stream emits `onError` or `onDone`, the repo schedules `_restartRemoteWatch()` after 2 seconds. If the repository was disposed in the meantime, that would have created a new subscription that was never cancelled. Fixed by adding a `_disposed` flag set in `dispose()` and checked in `_startRemoteWatch()` and `_restartRemoteWatch()` so no new subscription is created after disposal.
 
@@ -38,13 +38,13 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 ### 2.2 AppLinksDeepLinkService – StreamController ✓
 
-**Location:** `lib/features/deeplink/data/app_links_deep_link_service.dart` (`linkStream()`)
+**Location:** `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` (`linkStream()`)
 
 **Status:** Fixed. `onCancelHandler` now closes the controller after cancelling the upstream subscription. For broadcast streams, `onCancel` runs when the last listener unsubscribes.
 
 ### 2.3 RetrySnackBarListener – centralized widget-owned subscription cleanup ✓
 
-**Location:** `lib/shared/widgets/retry_snackbar_listener.dart`
+**Location:** `apps/mobile/lib/shared/widgets/retry_snackbar_listener.dart`
 
 **Status:** Improved. Widget-owned subscriptions such as `RetrySnackBarListener`,
 `IotDemoAuthGate`, `AppRouteAuthGate`, and `CounterSyncBanner` now centralize

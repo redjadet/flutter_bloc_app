@@ -27,10 +27,10 @@ files drift.
 - Manifest: `tool/hive_schema_manifest.json`
 - Generator: `tool/generate_hive_schema_fingerprints.dart`
 - Wrapper check: `tool/check_hive_schema_fingerprints.sh`
-- Generated output: `lib/shared/storage/hive_schema_fingerprints.g.dart`
-- Runtime coordinator: `lib/shared/storage/hive_schema_migration.dart`
-- Repository hook: `lib/shared/storage/hive_repository_base.dart`
-- Per-box locking/open coordination: `lib/shared/storage/hive_service.dart`
+- Generated output: `apps/mobile/lib/shared/storage/hive_schema_fingerprints.g.dart`
+- Runtime coordinator: `apps/mobile/lib/shared/storage/hive_schema_migration.dart`
+- Repository hook: `apps/mobile/lib/shared/storage/hive_repository_base.dart`
+- Per-box locking/open coordination: `apps/mobile/lib/shared/storage/hive_service.dart`
 
 Runtime metadata is stored inside each Hive box at
 `__meta__schema_fingerprints` as `{namespace: fingerprint}`. Fingerprints are
@@ -69,7 +69,7 @@ Implemented as cleanup-only migration.
 
 Files:
 
-- `lib/features/search/data/hive_search_cache_repository.dart`
+- `apps/mobile/lib/features/search/data/hive_search_cache_repository.dart`
 - `test/features/search/data/search_cache_repository_test.dart`
 
 ### Settings: `settings:preferred_locale_code`, `settings:theme_mode`
@@ -82,7 +82,7 @@ Implemented as narrow validation cleanup.
 
 Files:
 
-- `lib/shared/storage/hive_settings_repository.dart`
+- `apps/mobile/lib/shared/storage/hive_settings_repository.dart`
 - `test/hive_locale_repository_test.dart`
 - `test/hive_theme_repository_test.dart`
 
@@ -103,8 +103,8 @@ Implemented as full migrate with two-phase write.
 
 Files:
 
-- `lib/features/todo_list/data/hive_todo_repository.dart`
-- `lib/features/todo_list/data/hive_todo_repository_migration.dart`
+- `apps/mobile/lib/features/todo_list/data/hive_todo_repository.dart`
+- `apps/mobile/lib/features/todo_list/data/hive_todo_repository_migration.dart`
 - `test/features/todo_list/data/hive_todo_repository_test.dart`
 
 Covered tests:
@@ -133,9 +133,9 @@ Implemented as full migrate.
 
 Files:
 
-- `lib/features/counter/data/hive_counter_repository.dart`
-- `lib/features/counter/data/hive_counter_repository_migration.dart`
-- `lib/features/counter/data/hive_counter_repository_watch_helper.dart`
+- `apps/mobile/lib/features/counter/data/hive_counter_repository.dart`
+- `apps/mobile/lib/features/counter/data/hive_counter_repository_migration.dart`
+- `apps/mobile/lib/features/counter/data/hive_counter_repository_watch_helper.dart`
 - `test/hive_counter_repository_test.dart`
 
 Covered tests:
@@ -157,7 +157,7 @@ Ignored keys:
 
 Files:
 
-- `lib/shared/sync/pending_sync_repository_codec.dart`
+- `apps/mobile/lib/shared/sync/pending_sync_repository_codec.dart`
 - `test/shared/sync/pending_sync_repository_test.dart`
 
 Covered tests:
@@ -200,7 +200,7 @@ Open requirements:
 Latest verified commands for this slice:
 
 ```sh
-dart analyze lib/features/counter/data/hive_counter_repository.dart lib/features/counter/data/hive_counter_repository_migration.dart lib/features/todo_list/data/hive_todo_repository.dart lib/features/todo_list/data/hive_todo_repository_migration.dart lib/shared/sync/pending_sync_repository_codec.dart test/features/todo_list/data/hive_todo_repository_test.dart test/hive_counter_repository_test.dart test/shared/sync/pending_sync_repository_test.dart
+dart analyze apps/mobile/lib/features/counter/data/hive_counter_repository.dart apps/mobile/lib/features/counter/data/hive_counter_repository_migration.dart apps/mobile/lib/features/todo_list/data/hive_todo_repository.dart apps/mobile/lib/features/todo_list/data/hive_todo_repository_migration.dart apps/mobile/lib/shared/sync/pending_sync_repository_codec.dart test/features/todo_list/data/hive_todo_repository_test.dart test/hive_counter_repository_test.dart test/shared/sync/pending_sync_repository_test.dart
 flutter test test/features/todo_list/data/hive_todo_repository_test.dart test/hive_counter_repository_test.dart test/shared/sync/pending_sync_repository_test.dart
 dart run tool/generate_hive_schema_fingerprints.dart --check-generated
 bash tool/check_hive_schema_fingerprints.sh

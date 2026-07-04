@@ -10,8 +10,8 @@ Close audit items ARCH-001 and ARCH-002 for `case_study_demo` without changing u
 
 ## ARCH-001
 
-- Move media pick types to `lib/shared/media/`.
-- Introduce `RemoteBackendAuthPort` in `lib/core/auth/`; wire `SupabaseAuthRepository` + DI.
+- Move media pick types to `apps/mobile/lib/shared/media/`.
+- Introduce `RemoteBackendAuthPort` in `apps/mobile/lib/core/auth/`; wire `SupabaseAuthRepository` + DI.
 - Remove cross-feature domain imports from `case_study_demo`.
 
 ## ARCH-002
@@ -24,7 +24,7 @@ Close audit items ARCH-001 and ARCH-002 for `case_study_demo` without changing u
 ```bash
 flutter test test/features/case_study_demo test/features/camera_gallery
 bash tool/modular_metrics.sh --cross-feature-only
-dart analyze lib/features/case_study_demo/presentation/cubit/
+dart analyze apps/mobile/lib/features/case_study_demo/presentation/cubit/
 ```
 
 Report: [`ai/reports/FINAL_OPTIMIZATION_REPORT.md`](../../ai/reports/FINAL_OPTIMIZATION_REPORT.md).

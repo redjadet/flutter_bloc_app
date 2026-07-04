@@ -142,7 +142,7 @@ This design has already been implemented as the `library_demo` feature. The impl
 ### Existing Implementation Structure
 
 ```text
-lib/features/library_demo/
+apps/mobile/lib/features/library_demo/
 ├── presentation/
 │   ├── pages/
 │   │   └── library_demo_page.dart
@@ -166,7 +166,7 @@ lib/features/library_demo/
 ```
 
 Note: the EPOCH design tokens are now owned by
-`lib/shared/design_system/epoch_theme_extension.dart`. `library_demo_theme.dart`
+`apps/mobile/lib/shared/design_system/epoch_theme_extension.dart`. `library_demo_theme.dart`
 is kept as a compatibility re-export.
 
 ### Implementation Details
@@ -358,7 +358,7 @@ The implementation should be tested with:
 
 ## Related Documentation
 
-- [Library Demo README](../lib/features/library_demo/README.md) - Detailed feature documentation
+- [Library Demo README](../apps/mobile/lib/features/library_demo/README.md) - Detailed feature documentation
 - [Design System Documentation](../docs/flutter_best_practices_review.md) - UI/UX guidelines
 - [Architecture Details](../docs/architecture_details.md) - Architecture patterns
 - [Shared Utilities](../docs/SHARED_UTILITIES.md) - Reusable components

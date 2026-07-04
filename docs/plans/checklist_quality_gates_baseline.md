@@ -15,8 +15,8 @@ wiring (clean-tree counts).
 
 **Pre-wire fixes (presentation):**
 
-- `lib/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart` — `existsSync()` → async `File.exists()`; `isClosed` after awaits; `_submitInFlight` duplicate-submit guard; parallel photo existence checks; `avoid_slow_async_io` ignores
-- `lib/features/case_study_demo/presentation/utils/case_study_local_video_exists.dart` — `check-ignore` on compute-worker `existsSync()` (same line as violation)
+- `apps/mobile/lib/features/staff_app_demo/presentation/proof/staff_demo_proof_cubit.dart` — `existsSync()` → async `File.exists()`; `isClosed` after awaits; `_submitInFlight` duplicate-submit guard; parallel photo existence checks; `avoid_slow_async_io` ignores
+- `apps/mobile/lib/features/case_study_demo/presentation/utils/case_study_local_video_exists.dart` — `check-ignore` on compute-worker `existsSync()` (same line as violation)
 
 ## Fixture matrix (M2 fail + M3 warn)
 
@@ -40,15 +40,15 @@ Deferred imports / `DeferredPage` builders:
 
 | Library | Deferred page |
 | --- | --- |
-| `lib/app/router/route_groups.dart` | `google_maps_page`, `realtime_market_page`, `websocket_page` |
-| `lib/app/router/routes_core.dart` | `chart_page`, `markdown_editor_page` |
+| `apps/mobile/lib/app/router/route_groups.dart` | `google_maps_page`, `realtime_market_page`, `websocket_page` |
+| `apps/mobile/lib/app/router/routes_core.dart` | `chart_page`, `markdown_editor_page` |
 
 Heuristic `check_deferred_heavy_routes` remains **deferred** until allowlist strategy exists.
 
 ## Regression guard
 
 - `test/shared/sync/background_sync_coordinator_test.dart` in `tool/check_regression_guards.sh` `ALL_TESTS`
-- Path-auto: `lib/shared/sync/**`, `test/shared/sync/**` (and related shared/test paths)
+- Path-auto: `apps/mobile/lib/shared/sync/**`, `test/shared/sync/**` (and related shared/test paths)
 
 ## Checklist metadata
 

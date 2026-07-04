@@ -369,11 +369,11 @@ Post-merge backlog (not in scoped plan):
 This plan reviewed the live repository shape:
 
 - Single root Flutter app package in `pubspec.yaml`.
-- 34 feature folders under `lib/features`.
+- 34 feature folders under `apps/mobile/lib/features`.
 - 1366 Dart files under `lib`.
 - 473 unit/widget test files and 30 integration test files.
-- Existing app shell in `lib/app`.
-- Existing reusable support code in `lib/core` and `lib/shared`.
+- Existing app shell in `apps/mobile/lib/app`.
+- Existing reusable support code in `apps/mobile/lib/core` and `apps/mobile/lib/shared`.
 - Existing Firebase Functions under `functions`.
 - Existing Firebase rules at root: `firestore.rules`, `storage.rules`,
   `firestore.indexes.json`.
@@ -413,7 +413,7 @@ android/, ios/, macos/, linux/, windows/, web/
 ```
 
 This is already feature-first. Existing docs define `Presentation -> Domain <-
-Data`, Cubit/BLoC as presentation ViewModel, and `lib/app` as composition shell.
+Data`, Cubit/BLoC as presentation ViewModel, and `apps/mobile/lib/app` as composition shell.
 The monorepo should preserve those rules.
 
 ### Dependencies
@@ -444,8 +444,8 @@ iOS simulator path-provider workaround.
 ### State Management
 
 State management is consistently Cubit/BLoC in presentation. App-scope state is
-in `lib/app/presentation/cubit`. Feature state is mostly in
-`lib/features/<feature>/presentation/cubit`.
+in `apps/mobile/lib/app/presentation/cubit`. Feature state is mostly in
+`apps/mobile/lib/features/<feature>/presentation/cubit`.
 
 Migration risk: package extraction can accidentally move Cubits into reusable
 packages before their dependencies are clean. Keep feature Cubits app-owned
@@ -453,7 +453,7 @@ unless the feature is intentionally packaged and has stable public APIs.
 
 ### Routing
 
-GoRouter is centralized in `lib/app/router`, with route groups and auth gate
+GoRouter is centralized in `apps/mobile/lib/app/router`, with route groups and auth gate
 logic. This should stay in `apps/mobile` first because routing composes product
 features, auth policy, app shell, and platform behavior.
 
@@ -462,7 +462,7 @@ metadata or page builders only when a second app actually needs them.
 
 ### Dependency Injection
 
-`get_it` is centralized in `lib/core/di`. Registration files bind app,
+`get_it` is centralized in `apps/mobile/lib/core/di`. Registration files bind app,
 feature, Firebase, Supabase, HTTP, storage, and demo services.
 
 Migration risk: moving packages before DI seams exist creates circular package
@@ -471,7 +471,7 @@ after the package public API is stable.
 
 ### Networking
 
-Reusable HTTP infrastructure already exists under `lib/shared/http`, including
+Reusable HTTP infrastructure already exists under `apps/mobile/lib/shared/http`, including
 `AppDio`, auth token management, retry, telemetry, network check, Supabase
 session manager, and Retrofit helpers. This is a strong candidate for
 `packages/networking`.
@@ -483,10 +483,10 @@ their contracts are stable.
 
 Auth spans:
 
-- `lib/core/auth`: app-wide auth contracts, token repository, session lifecycle.
-- `lib/features/auth`: Firebase UI/user-facing auth.
-- `lib/features/supabase_auth`: Supabase sign-in demo.
-- `lib/features/walletconnect_auth`: WalletConnect auth.
+- `apps/mobile/lib/core/auth`: app-wide auth contracts, token repository, session lifecycle.
+- `apps/mobile/lib/features/auth`: Firebase UI/user-facing auth.
+- `apps/mobile/lib/features/supabase_auth`: Supabase sign-in demo.
+- `apps/mobile/lib/features/walletconnect_auth`: WalletConnect auth.
 - shared HTTP token/session integration.
 
 Recommended boundary: create `packages/auth` only after consolidating duplicate
@@ -496,8 +496,8 @@ management move first.
 
 ### Storage
 
-Storage and sync infrastructure is mature under `lib/shared/storage` and
-`lib/shared/sync`: Hive service, schema registry, migrations, pending sync,
+Storage and sync infrastructure is mature under `apps/mobile/lib/shared/storage` and
+`apps/mobile/lib/shared/sync`: Hive service, schema registry, migrations, pending sync,
 sync operation models, sync Cubit, and background coordinator.
 
 Recommended boundary: extract `packages/storage` and optionally
@@ -509,9 +509,9 @@ package because sync is tightly coupled to Hive and feature repositories.
 Localization is root-app scoped:
 
 - `l10n.yaml`
-- `lib/l10n/*.arb`
+- `apps/mobile/lib/l10n/*.arb`
 - generated `app_localizations*.dart`
-- `BuildContext` l10n helpers in `lib/shared/extensions`.
+- `BuildContext` l10n helpers in `apps/mobile/lib/shared/extensions`.
 
 Keep l10n in the first app package during the initial move. Extracting package
 l10n only makes sense after design system or feature packages need standalone
@@ -521,12 +521,12 @@ localized widgets.
 
 Reusable UI exists in:
 
-- `lib/core/theme`
-- `lib/shared/design_system`
-- `lib/shared/ui`
-- `lib/shared/widgets`
-- responsive extensions under `lib/shared/extensions/responsive`
-- feature-local reusable widgets under `lib/features/*/presentation/widgets`
+- `apps/mobile/lib/core/theme`
+- `apps/mobile/lib/shared/design_system`
+- `apps/mobile/lib/shared/ui`
+- `apps/mobile/lib/shared/widgets`
+- responsive extensions under `apps/mobile/lib/shared/extensions/responsive`
+- feature-local reusable widgets under `apps/mobile/lib/features/*/presentation/widgets`
 
 Recommended boundary: `packages/design_system` should start with app theme,
 tokens, shared widgets, responsive primitives, skeletons, adaptive controls, and
@@ -571,7 +571,7 @@ be updated in the same phase.
   coupling.
 - `core` and `shared` contain several future package seams but no package-level
   visibility boundaries yet.
-- Auth types exist in both `lib/core/auth` and `lib/features/auth/domain`.
+- Auth types exist in both `apps/mobile/lib/core/auth` and `apps/mobile/lib/features/auth/domain`.
 - App DI imports many feature data implementations directly.
 - Firebase, Supabase, networking, storage, AI, and presentation dependencies are
   all present in one compile graph.
@@ -659,11 +659,11 @@ No Flutter widgets. Avoid Firebase, Supabase, Hive, Dio, and GoRouter imports.
 
 Initial candidates:
 
-- `lib/core/domain`
-- `lib/core/config` provider-agnostic contracts
-- `lib/core/time`
-- selected `lib/shared/utils` primitives
-- selected `lib/shared/platform/platform_environment*`
+- `apps/mobile/lib/core/domain`
+- `apps/mobile/lib/core/config` provider-agnostic contracts
+- `apps/mobile/lib/core/time`
+- selected `apps/mobile/lib/shared/utils` primitives
+- selected `apps/mobile/lib/shared/platform/platform_environment*`
 
 ### `packages/utilities`
 
@@ -678,13 +678,13 @@ Owns pure helpers with no business logic:
 
 Initial candidates:
 
-- `lib/shared/utils/disposable_bag.dart`
-- `lib/shared/utils/safe_parse_utils.dart`
-- `lib/shared/utils/date_time_formatting.dart`
-- `lib/shared/utils/relative_time_formatting.dart`
-- `lib/shared/utils/in_flight_coalescer.dart`
-- `lib/shared/utils/request_id_guard.dart`
-- `lib/shared/utils/retry_policy.dart`
+- `apps/mobile/lib/shared/utils/disposable_bag.dart`
+- `apps/mobile/lib/shared/utils/safe_parse_utils.dart`
+- `apps/mobile/lib/shared/utils/date_time_formatting.dart`
+- `apps/mobile/lib/shared/utils/relative_time_formatting.dart`
+- `apps/mobile/lib/shared/utils/in_flight_coalescer.dart`
+- `apps/mobile/lib/shared/utils/request_id_guard.dart`
+- `apps/mobile/lib/shared/utils/retry_policy.dart`
 
 ### `packages/design_system`
 
@@ -702,13 +702,13 @@ feature decisions.
 
 Initial candidates:
 
-- `lib/core/theme`
-- `lib/shared/design_system`
-- `lib/shared/ui`
-- `lib/shared/widgets/common_*`
-- `lib/shared/widgets/skeletons`
-- `lib/shared/widgets/responsive_action_bar.dart`
-- `lib/shared/extensions/responsive`
+- `apps/mobile/lib/core/theme`
+- `apps/mobile/lib/shared/design_system`
+- `apps/mobile/lib/shared/ui`
+- `apps/mobile/lib/shared/widgets/common_*`
+- `apps/mobile/lib/shared/widgets/skeletons`
+- `apps/mobile/lib/shared/widgets/responsive_action_bar.dart`
+- `apps/mobile/lib/shared/extensions/responsive`
 - [`DESIGN.md`](../../DESIGN.md) package-facing subset
 
 ### `packages/networking`
@@ -724,10 +724,10 @@ Owns provider-agnostic HTTP infrastructure:
 
 Initial candidates:
 
-- `lib/shared/http`
-- `lib/shared/services/network_status_service.dart`
-- `lib/shared/utils/network_error_mapper*`
-- `lib/shared/utils/http_request_failure.dart`
+- `apps/mobile/lib/shared/http`
+- `apps/mobile/lib/shared/services/network_status_service.dart`
+- `apps/mobile/lib/shared/utils/network_error_mapper*`
+- `apps/mobile/lib/shared/utils/http_request_failure.dart`
 
 Keep Firebase/Supabase-specific session managers behind optional adapters or
 move them to `auth` if they need auth provider types.
@@ -746,9 +746,9 @@ Owns local persistence infrastructure:
 
 Initial candidates:
 
-- `lib/shared/storage`
-- `lib/shared/platform/secure_secret_storage.dart`
-- `lib/shared/sync` infrastructure after separating presentation Cubit
+- `apps/mobile/lib/shared/storage`
+- `apps/mobile/lib/shared/platform/secure_secret_storage.dart`
+- `apps/mobile/lib/shared/sync` infrastructure after separating presentation Cubit
 
 ### `packages/auth`
 
@@ -770,8 +770,8 @@ Provider adapters:
 
 Initial candidates:
 
-- `lib/core/auth`
-- provider-neutral pieces from `lib/shared/http/auth_token_*`
+- `apps/mobile/lib/core/auth`
+- provider-neutral pieces from `apps/mobile/lib/shared/http/auth_token_*`
 
 Do not move Firebase UI pages in the first auth extraction.
 
@@ -989,7 +989,7 @@ wc -l docs/plans/melos_path_dependent_files.txt
 | Router validate | `bin/router_feature_validate` | Point analyze/format paths at `APP_ROOT` |
 | CI | `.github/workflows/ci.yml`, `deploy_web.yml`, `drift.yml`, `dependency-updates.yml` | `bash tool/workspace_pub_get.sh` (workspace `dart pub get` + app `flutter pub get`); analyze/tests from `APP_ROOT` |
 | IDE | `.vscode/settings.json` coverage/search excludes | `lib/**` -> `apps/mobile/lib/**` |
-| Firebase template | `firebase.json.example` | `android/app/...` -> `apps/mobile/android/app/...`; `lib/firebase_options.dart` -> `apps/mobile/lib/firebase_options.dart` |
+| Firebase template | `firebase.json.example` | `android/app/...` -> `apps/mobile/android/app/...`; `apps/mobile/lib/firebase_options.dart` -> `apps/mobile/lib/firebase_options.dart` |
 | Launcher / icons | `flutter_launcher_icons` config in app `pubspec.yaml` | Verify asset paths after move |
 | Agent bootstrap | `tool/setup_cursor_agent_environment.sh`, `tool/local_ide_open_preflight.sh` | Resolve app `pubspec.yaml` via `APP_ROOT` |
 
@@ -1034,9 +1034,11 @@ melos:
   sdkPath: auto
   scripts:
     analyze:
-      run: dart run melos exec --fail-fast -- "dart analyze ."
+      run: bash tool/analyze_workspace_packages.sh
     analyze:flutter:
-      run: dart run melos exec --flutter --fail-fast -- "flutter analyze"
+      run: dart run melos exec --flutter --concurrency=1 --fail-fast -- "flutter analyze lib test"
+    test:
+      run: bash tool/test_workspace_dart_packages.sh
     # ... other scripts use `dart run melos exec`, not bare `melos exec`
     checklist:
       run: ./bin/checklist
@@ -1204,7 +1206,7 @@ workspace-adjacent Node project with its own `npm` scripts and CI job.
 
 Update `firebase.json.example` (and document gitignored `firebase.json` path
 changes) in the same PR as backend moves. Paths in the example today assume root
-app layout (`android/app/...`, `lib/firebase_options.dart`); after PR-B those
+app layout (`android/app/...`, `apps/mobile/lib/firebase_options.dart`); after PR-B those
 point at `apps/mobile/...`.
 
 Evaluate:
@@ -1609,8 +1611,8 @@ Allowed source candidates:
 
 Do not move:
 
-- `lib/core/di`
-- `lib/core/bootstrap`
+- `apps/mobile/lib/core/di`
+- `apps/mobile/lib/core/bootstrap`
 - Firebase/Supabase config providers
 - router constants
 - theme
@@ -1789,7 +1791,7 @@ Write-set:
 
 Do not move in PR-I:
 
-- `lib/features/auth/presentation/**` (Firebase UI)
+- `apps/mobile/lib/features/auth/presentation/**` (Firebase UI)
 - WalletConnect / Supabase demo auth UIs
 - settings diagnostics
 
@@ -1902,7 +1904,7 @@ flutter_bloc_app/
       pubspec.yaml
   packages/
     core/
-      lib/core.dart
+      apps/mobile/lib/core.dart
       test/
       pubspec.yaml
     utilities/
@@ -1938,7 +1940,7 @@ flutter_bloc_app/
       test/
       pubspec.yaml
     shared_blocs/
-      lib/shared_blocs.dart
+      apps/mobile/lib/shared_blocs.dart
       test/
       pubspec.yaml
   backend/

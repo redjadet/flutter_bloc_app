@@ -138,12 +138,12 @@ They are anchors, not a complete file list.
 
 | Phase | Primary paths to inspect first |
 | ----- | ------------------------------ |
-| Phase 1 | `lib/app/router/`, `lib/core/di/`, `lib/shared/http/`, [`authentication.md`](../authentication.md), [`security_and_secrets.md`](../security_and_secrets.md) |
-| Phase 2 | `lib/shared/sync/`, `docs/offline_first/`, [`fcm_demo_integration.md`](../fcm_demo_integration.md), representative offline-first repositories |
-| Phase 3 | `lib/core/di/`, [`code_generation_guide.md`](../code_generation_guide.md), [`compile_time_safety.md`](../compile_time_safety.md), one isolated feature registration path |
-| Phase 4 | `lib/shared/utils/`, key cubits/services consuming request failures, [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md) |
+| Phase 1 | `apps/mobile/lib/app/router/`, `apps/mobile/lib/core/di/`, `apps/mobile/lib/shared/http/`, [`authentication.md`](../authentication.md), [`security_and_secrets.md`](../security_and_secrets.md) |
+| Phase 2 | `apps/mobile/lib/shared/sync/`, `docs/offline_first/`, [`fcm_demo_integration.md`](../fcm_demo_integration.md), representative offline-first repositories |
+| Phase 3 | `apps/mobile/lib/core/di/`, [`code_generation_guide.md`](../code_generation_guide.md), [`compile_time_safety.md`](../compile_time_safety.md), one isolated feature registration path |
+| Phase 4 | `apps/mobile/lib/shared/utils/`, key cubits/services consuming request failures, [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md) |
 | Phase 5 | target files listed in this plan, related tests under `test/`, `tool/check_regression_guards.sh`, [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) |
-| Phase 6 | `tool/` validation scripts, [`custom_lint_rules_guide.md`](../custom_lint_rules_guide.md), `lib/shared/utils/bloc_lint_helpers.dart`, `lib/shared/utils/state_transition_validator.dart` |
+| Phase 6 | `tool/` validation scripts, [`custom_lint_rules_guide.md`](../custom_lint_rules_guide.md), `apps/mobile/lib/shared/utils/bloc_lint_helpers.dart`, `apps/mobile/lib/shared/utils/state_transition_validator.dart` |
 
 ## Phase Dependencies & Decision Gates
 
@@ -162,12 +162,12 @@ Phase 4 has now completed its initial design slice, pilot consumer slice, and
 one additional shared error UI slice. Phase 1's minimal protected-route slice
 is also already present:
 
-- `lib/shared/utils/app_error.dart` now defines the shared sealed error types.
-- `lib/shared/utils/http_request_failure.dart` and
-  `lib/shared/utils/network_error_mapper.dart` now project into `AppError`.
+- `apps/mobile/lib/shared/utils/app_error.dart` now defines the shared sealed error types.
+- `apps/mobile/lib/shared/utils/http_request_failure.dart` and
+  `apps/mobile/lib/shared/utils/network_error_mapper.dart` now project into `AppError`.
 - `ChartCubit` / `ChartPage` act as the pilot consumer, carrying `AppError`
   state and using `isRetryable` to gate a retry action in the error UI.
-- `lib/shared/utils/error_handling.dart` now accepts `AppError` while
+- `apps/mobile/lib/shared/utils/error_handling.dart` now accepts `AppError` while
   preserving existing string/exception-driven snackbar behavior.
 - `CounterPage` is now a second representative consumer path, routing its error
   handling through `AppError` without changing the current user-visible
@@ -214,7 +214,7 @@ attachment outside the shared Dio path.
    as `user`, `admin`, and `betaTester`.
 2. Decide whether those roles live in Supabase/Firebase claims, app-local
    profile fields, or a hybrid model.
-3. Extend router configuration in `lib/app/router/` and related auth redirect
+3. Extend router configuration in `apps/mobile/lib/app/router/` and related auth redirect
    flows so routes declare:
    - public vs authenticated vs role-restricted access
    - optional biometric requirements for sensitive screens
@@ -278,7 +278,7 @@ and documentation.
    - payload contract keys (`sync_feature`, `sync_resource_type`, `sync_resource_id`)
    - how hints flow into `BackgroundSyncCoordinator.triggerFromFcm(hint: ...)` telemetry
 2. Extend `BackgroundSyncCoordinator` and related shared sync types in
-   `lib/shared/sync/` so they:
+   `apps/mobile/lib/shared/sync/` so they:
    - accept explicit triggers from FCM events
    - coalesce near-simultaneous triggers into a single sync run
 3. Document the current eventual-consistency and last-write-wins model in:
@@ -370,7 +370,7 @@ mapped consistently across transport, storage, auth, and UI layers.
    - `StorageError`: read/write, migration, corruption
    - `AuthError`: unauthorized, tokenExpired, forbidden
    - `UnknownError`: safe fallback
-2. Extend or refactor shared utilities in `lib/shared/utils/`, including
+2. Extend or refactor shared utilities in `apps/mobile/lib/shared/utils/`, including
    `network_error_mapper.dart` and `http_request_failure.dart`, so they produce
    structured errors rather than ad-hoc messages.
 3. Update key cubits and services to interpret typed errors directly.
@@ -443,18 +443,18 @@ before.
 The main small-slice coverage targets in this phase already have focused
 contract tests in place:
 
-- `lib/core/bootstrap/bootstrap_coordinator.dart`
+- `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`
   via `test/core/bootstrap/bootstrap_coordinator_test.dart` and
   `test/core/bootstrap/bootstrap_coordinator_additional_test.dart`
-- `lib/features/chart/data/supabase_chart_repository.dart`
+- `apps/mobile/lib/features/chart/data/supabase_chart_repository.dart`
   via `test/features/chart/data/supabase_chart_repository_test.dart`
-- `lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
+- `apps/mobile/lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
   via `test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart`
-- `lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
+- `apps/mobile/lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
   via `test/features/iot_demo/data/supabase_iot_demo_repository_test.dart`
-- `lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
+- `apps/mobile/lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
   via `test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart`
-- `lib/shared/utils/http_request_failure.dart`
+- `apps/mobile/lib/shared/utils/http_request_failure.dart`
   via `test/shared/utils/http_request_failure_test.dart`
 
 Implication:
@@ -466,12 +466,12 @@ Implication:
 
 ### Phase 5 Target Files
 
-- `lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
-- `lib/features/chart/data/supabase_chart_repository.dart`
-- `lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
-- `lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
-- `lib/shared/utils/http_request_failure.dart`
-- `lib/core/bootstrap/bootstrap_coordinator.dart`
+- `apps/mobile/lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
+- `apps/mobile/lib/features/chart/data/supabase_chart_repository.dart`
+- `apps/mobile/lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
+- `apps/mobile/lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
+- `apps/mobile/lib/shared/utils/http_request_failure.dart`
+- `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`
 
 ### Phase 5 Work Items
 

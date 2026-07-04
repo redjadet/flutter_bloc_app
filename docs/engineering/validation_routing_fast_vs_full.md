@@ -18,8 +18,8 @@ Use for narrow low-risk edits where routing/auth/gates unchanged.
 
 Use `./bin/router_feature_validate` when changes touch:
 
-- `lib/app/router/**`
-- `lib/core/router/**`
+- `apps/mobile/lib/app/router/**`
+- `apps/mobile/lib/core/router/**`
 - feature presentation gate/auth/sign-in/login/register pages or widgets
 
 Command:
@@ -59,8 +59,11 @@ During the Melos monorepo migration ([#437](https://github.com/redjadet/flutter_
 
 - **Authoritative full gate** remains `./bin/checklist` / `./tool/delivery_checklist.sh` from **repo root**. Scripts resolve `apps/mobile` via `tool/workspace_paths.sh`.
 - **Scoped app work** — `./tool/analyze.sh` or `cd apps/mobile && flutter test <paths>` for narrow UI/package-consumer proof; escalate to `./bin/checklist` when shared packages, DI, routing, or workspace scripts change.
-- **Package-only edits** under `packages/*` — app-hosted widget tests in `apps/mobile/test/` remain the honest proof lane until isolated `dart test` in packages is stable (see migration plan PR-C learnings).
-- **Melos** — `dart run melos bootstrap` from repo root after `pubspec.yaml` / workspace member changes.
+- **Package-only edits** under `packages/*` — run `dart run melos run analyze` for
+  workspace package source/test analysis. Run `dart run melos run test` for
+  non-Flutter package tests; use `dart run melos run test:flutter` or direct
+  `flutter test` inside a Flutter package such as `packages/design_system`.
+- **Melos** — `dart run melos bootstrap` from repo root after `pubspec.yaml` / workspace member changes. Melos `analyze` delegates to `tool/analyze_workspace_packages.sh` to avoid scanning package-root `.dart_tool` metadata; Melos `test` delegates to `tool/test_workspace_dart_packages.sh` and skips Flutter packages.
 
 Routing matrix paths below still use `lib/**` shorthand; during migration the app tree is `apps/mobile/lib/**`.
 
@@ -90,15 +93,15 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 | Trigger (changed files) | Required lane(s) (minimum) |
 | --- | --- |
 | Docs/tooling only (e.g. `docs/**`, `llms.txt`, `tool/*.sh`, `bin/*`, `.cursor/**`) | `./bin/checklist-fast` + `bash tool/check_agent_knowledge_base.sh`; agents: `./bin/agent-maintain closeout` before claiming done |
-| Feature code under `lib/features/**` (non-trivial / cross-layer) | `bash tool/check_feature_brief_linked.sh` (fails by default; `FEATURE_BRIEF_CHECK_STRICT=0` to warn) + `bash tool/check_feature_folder_contract.sh` (use `--strict` for new features) + focused `flutter test`; `./tool/run_file_length_lint.sh` when touching large `lib/` files; `./bin/checklist` if wide |
-| UI/design brief or design-system code ([`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md), `lib/core/theme/**`, `lib/shared/design_system/**`) | `./tool/check_design_md.sh` when [`DESIGN.md`](../../DESIGN.md) changed; `./tool/run_mix_lint.sh` when Mix tokens/styles changed; focused widget/app-visible proof when runtime UI changed |
+| Feature code under `apps/mobile/lib/features/**` (non-trivial / cross-layer) | `bash tool/check_feature_brief_linked.sh` (fails by default; `FEATURE_BRIEF_CHECK_STRICT=0` to warn) + `bash tool/check_feature_folder_contract.sh` (use `--strict` for new features) + focused `flutter test`; `./tool/run_file_length_lint.sh` when touching large `lib/` files; `./bin/checklist` if wide |
+| UI/design brief or design-system code ([`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md), `apps/mobile/lib/core/theme/**`, `apps/mobile/lib/shared/design_system/**`) | `./tool/check_design_md.sh` when [`DESIGN.md`](../../DESIGN.md) changed; `./tool/run_mix_lint.sh` when Mix tokens/styles changed; focused widget/app-visible proof when runtime UI changed |
 | Routing/auth gates (e.g. `lib/**/router/**`, `AppRoutes`, route guard code, auth UI) | `./bin/router_feature_validate` (+ `./bin/checklist` if wide diff). Full checklist also runs `./bin/router_feature_validate` when changed files match `.cursor/rules/router-feature-validation.mdc` globs (`CHECKLIST_SKIP_ROUTER_VALIDATE=1` to skip). |
 | Presentation navigation in domain/data, presentation `dart:io` *Sync, image cache hints, cubit subscription hygiene | `./bin/checklist` (fail: `check_navigation_outside_presentation.sh`, `check_sync_io_in_presentation.sh`, `check_remote_image_cache_hints.sh`, `check_cubit_subscription_cancel.sh`). Theme map: `CHECKLIST_EXPLAIN_THEMES=1`. Deferred gates: [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md). |
-| Offline-first/sync/lifecycle (e.g. `lib/shared/sync/**`, debounce/flush, pending-sync queues, retry/replay behavior) | `./bin/checklist` |
+| Offline-first/sync/lifecycle (e.g. `apps/mobile/lib/shared/sync/**`, debounce/flush, pending-sync queues, retry/replay behavior) | `./bin/checklist` |
 | DI / transport config (e.g. `get_it` wiring, Dio/interceptors, auth headers, retry policies, base URL parsing) | `./bin/checklist` |
 | l10n / codegen surfaces (ARB files, generated localization, build_runner outputs) | `./bin/checklist` + run the repo’s documented generation/update step (see [`localization.md`](../localization.md)) |
 | iOS native / CocoaPods embed / simulator build (`ios/**`, `Podfile`, pod frameworks, launch-time dyld errors) | `flutter build ios --simulator --debug` + `tool/check_ios_pod_framework_embed.sh --require-built-app`; `./bin/checklist` also runs the guard opportunistically when a simulator app is already built |
-| Apple debug Hive / secure storage (`lib/shared/platform/secure_secret_storage.dart`, `lib/shared/storage/hive_*.dart`, simulator Keychain -34018, `Recovering corrupted box.`) | `bash tool/check_apple_debug_hive_storage.sh` + `flutter test test/secure_secret_storage_test.dart test/shared/storage/hive_key_manager_test.dart`; triage: [`apple_debug_hive_storage.md`](apple_debug_hive_storage.md); `./bin/checklist` includes the guard |
+| Apple debug Hive / secure storage (`apps/mobile/lib/shared/platform/secure_secret_storage.dart`, `apps/mobile/lib/shared/storage/hive_*.dart`, simulator Keychain -34018, `Recovering corrupted box.`) | `bash tool/check_apple_debug_hive_storage.sh` + `flutter test test/secure_secret_storage_test.dart test/shared/storage/hive_key_manager_test.dart`; triage: [`apple_debug_hive_storage.md`](apple_debug_hive_storage.md); `./bin/checklist` includes the guard |
 | Integration journeys / end-to-end flows | `./bin/integration_tests` (plus the narrowest supporting lane) |
 | Backend-adjacent demos/scripts (e.g. `demos/**`, `demos/render_chat_api/**`, Python lanes, `supabase/**`) | `./bin/checklist` |
 

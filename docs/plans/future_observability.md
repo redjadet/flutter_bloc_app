@@ -28,7 +28,7 @@
 
 ## Mixpanel (if adopted)
 
-- Flutter SDK behind a thin `AnalyticsPort` in `lib/core/` (interface only until second consumer)
+- Flutter SDK behind a thin `AnalyticsPort` in `apps/mobile/lib/core/` (interface only until second consumer)
 - Identify users only after explicit consent; no email in super properties by default
 
 ## Sentry (if adopted)

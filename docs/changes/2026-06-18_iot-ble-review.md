@@ -10,8 +10,8 @@ Interview/portfolio app needed a bounded BLE demo: Clean Architecture, mock simu
 
 ### Architecture
 
-- Feature module `lib/features/iot/` (domain / data / presentation).
-- Hub composition in `lib/app/router/pages/iot_demo_hub_page.dart` — Cloud | BLE tabs; BLE cubit lazy on BLE tab.
+- Feature module `apps/mobile/lib/features/iot/` (domain / data / presentation).
+- Hub composition in `apps/mobile/lib/app/router/pages/iot_demo_hub_page.dart` — Cloud | BLE tabs; BLE cubit lazy on BLE tab.
 - `BleSessionCoordinator`, `Result<T>` + `IotBleErrorCode`, mock catalog (ESP32, HRM, thermometer, smart lock).
 - `ReactiveBleRepository` + `BleRadioClient` test seam; `UnsupportedBleRepository` for off-mobile real mode.
 
@@ -37,7 +37,7 @@ Interview/portfolio app needed a bounded BLE demo: Clean Architecture, mock simu
 
 ```bash
 # Modularity
-rg "features/iot/" lib/features/iot_demo
+rg "features/iot/" apps/mobile/lib/features/iot_demo
 # expect 0 hits
 
 bash tool/check_clean_architecture_imports.sh

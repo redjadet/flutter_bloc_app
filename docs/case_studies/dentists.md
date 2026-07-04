@@ -12,7 +12,7 @@ We are looking for developers who have strong experience building mobile applica
 
 ## Implementation in this repository
 
-The **Case Study Demo** feature (`lib/features/case_study_demo/`) implements this brief as a reference flow: Firebase-auth–gated wizard, per-question video capture, local persistence (Hive), review/submit, and history with playback. When Supabase is configured, submissions can use private storage and per-user remote records (see plans below).
+The **Case Study Demo** feature (`apps/mobile/lib/features/case_study_demo/`) implements this brief as a reference flow: Firebase-auth–gated wizard, per-question video capture, local persistence (Hive), review/submit, and history with playback. When Supabase is configured, submissions can use private storage and per-user remote records (see plans below).
 
 - **Routes:** `/case-study-demo` (home, new case, record, review, history, detail) — see [Feature overview](../feature_overview.md).
 - **Plans:** [Dentist demo implementation plan](../changes/2026-04-01_dentist_case_study_demo_plan.md), [Supabase private storage extension](../changes/2026-04-02_case_study_supabase_private_storage_plan.md).

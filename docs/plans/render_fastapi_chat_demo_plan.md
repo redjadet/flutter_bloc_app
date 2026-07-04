@@ -41,9 +41,9 @@ plan_status: final
 | FastAPI | [`demos/render_chat_api/`](../../demos/render_chat_api/) — `main.py`, `orchestration/`, `tests/`, `Dockerfile`, `render.yaml`; ops deploy helper [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) (`RENDER_API_KEY`) |
 | Shared fixtures | [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/) (Dart + pytest) |
 | Firebase Callable | [`functions/src/index.ts`](../../functions/src/index.ts) — `issueRenderChatDemoHfReadToken`, secret `RENDER_CHAT_DEMO_HF_READ_TOKEN` |
-| Flutter remote | [`render_fastapi_chat_repository.dart`](../../lib/features/chat/data/render_fastapi_chat_repository.dart), [`demo_first_chat_repository.dart`](../../lib/features/chat/data/demo_first_chat_repository.dart), [`render_chat_failure_mapper.dart`](../../lib/features/chat/data/render_chat_failure_mapper.dart), [`render_chat_dio_factory.dart`](../../lib/features/chat/data/render_chat_dio_factory.dart), [`render_caller_auth_header_provider.dart`](../../lib/features/chat/data/render_caller_auth_header_provider.dart), [`render_orchestration_hf_token_provider.dart`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) |
-| DI / config | [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart), [`secret_config.dart`](../../lib/core/config/secret_config.dart) (`CHAT_RENDER_*`) |
-| UI / l10n | `ChatInferenceTransport.renderOrchestration`, [`chat_model_selector.dart`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart), [`chat_transport_badge.dart`](../../lib/features/chat/presentation/widgets/chat_transport_badge.dart), `lib/l10n/app_*.arb` (STOP #10 keys) |
+| Flutter remote | [`render_fastapi_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart), [`demo_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/demo_first_chat_repository.dart), [`render_chat_failure_mapper.dart`](../../apps/mobile/lib/features/chat/data/render_chat_failure_mapper.dart), [`render_chat_dio_factory.dart`](../../apps/mobile/lib/features/chat/data/render_chat_dio_factory.dart), [`render_caller_auth_header_provider.dart`](../../apps/mobile/lib/features/chat/data/render_caller_auth_header_provider.dart), [`render_orchestration_hf_token_provider.dart`](../../apps/mobile/lib/features/chat/data/render_orchestration_hf_token_provider.dart) |
+| DI / config | [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`secret_config.dart`](../../apps/mobile/lib/core/config/secret_config.dart) (`CHAT_RENDER_*`) |
+| UI / l10n | `ChatInferenceTransport.renderOrchestration`, [`chat_model_selector.dart`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart), [`chat_transport_badge.dart`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_transport_badge.dart), `apps/mobile/lib/l10n/app_*.arb` (STOP #10 keys) |
 | Automated tests (non-exhaustive) | [`demo_first_chat_repository_test.dart`](../../test/features/chat/data/demo_first_chat_repository_test.dart), [`render_chat_failure_mapper_test.dart`](../../test/features/chat/data/render_chat_failure_mapper_test.dart); offline + cubit coverage for terminal `auth_required`; [`demos/render_chat_api/tests/`](../../demos/render_chat_api/tests/) pytest |
 
 **Incremental follow-ups (optional quality, not v1 blockers):** Logged manual pass for Flutter **web** + Render cold-start vs Dio timeout (section **Manual / web / Render** below); broader widget coverage for every ARB string in **Flutter (unit / widget / cubit as appropriate)**; **`stream_response()`**, Redis-backed cache, and **multi-worker** deploys remain explicitly deferred per **Primary purpose** / scope gate unless product reopens them.
@@ -55,7 +55,7 @@ Cursor agents should start from this protocol without adding a second planning l
 1. Update [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) with the chosen slice, exact write set, open questions, and validation commands.
 2. Read the **STOP** table and [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) before touching code; treat those defaults as authoritative unless the user explicitly overrides them in the same PR.
 3. Follow **[Build order — step-by-step](#build-order--step-by-step-cursor-agents-follow-in-order)** in order; do not start Flutter repository/UI work before the FastAPI contract and caller-auth policy are frozen.
-4. Treat `demos/render_chat_api/`, [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart), [`chat_repository.dart`](../../lib/features/chat/domain/chat_repository.dart), and the main chat page / cubit files as **single-owner** files during one implementation pass.
+4. Treat `demos/render_chat_api/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart), and the main chat page / cubit files as **single-owner** files during one implementation pass.
 5. Do not implement phase-B items (streaming, Redis durability, advanced memory/tool loops, moderation providers) unless the user explicitly expands scope.
 
 ## STOP — Frozen defaults Cursor agents must implement
@@ -73,7 +73,7 @@ Cursor agents should start from this protocol without adding a second planning l
 | 7 | **Complexity scorer thresholds** | “Simple vs complex” has no numbers in this plan. | **Frozen v1 heuristic:** treat the request as **complex** when **any** of these are true: latest user message length **> 400 chars**; total normalized message chars **> 1200**; message count **> 8**; latest user message contains a fenced code block / triple backticks; or the latest user message contains **2 or more** of these markers: newline bullet/numbered list items, `compare`, `analyze`, `design`, `architecture`, `refactor`, `debug`, `step-by-step`. Otherwise treat it as **simple**. FastAPI tests must lock these thresholds and examples. |
 | 8 | **Offline replay on permanent `auth_required`** | [Replay and token lifecycle](#replay-and-token-lifecycle) lists options (a)(b)(c) without a single default. | **Default (build-ready):** After **one** dequeue attempt, permanent `auth_required` / non-retryable auth → **stop auto-retry** for that pending item (**dead-letter** semantics: leave a terminal failed state user-visible, **no** infinite dequeue). Cubit/UI shows **`chatAuthRefreshRequired`** (or frozen ARB) and user must recover session; details in [Queue terminal failure behavior](#queue-terminal-failure-behavior) and integrations doc. |
 | 9 | **Unparseable 200 body** | Failure table leaves `retryable` as implementer choice. | **Default:** **`invalid_request`**, `retryable: false` (avoid retry storms). |
-| 10 | **New `ChatInferenceTransport` enum value name** | Badge and grep-exhaustive switches need the exact identifier. | **Frozen:** extend [`ChatInferenceTransport`](../../lib/features/chat/domain/chat_repository.dart) with **`renderOrchestration`** (camelCase Dart identifier). **ARB (freeze in same PR, adjust only via integrations doc):** `chatModelAuto`, `chatTransportRenderOrchestration` (badge label), `chatRenderStrictMode`, `chatAuthRefreshRequired`, `chatSessionEnded`, `chatSwitchAccount`, `chatTokenMissing`, optional `chatOrchestrationTooltip`—**analytics / event payloads** reuse these string keys or the enum `.name` consistently (pick one in implementation, document once). |
+| 10 | **New `ChatInferenceTransport` enum value name** | Badge and grep-exhaustive switches need the exact identifier. | **Frozen:** extend [`ChatInferenceTransport`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) with **`renderOrchestration`** (camelCase Dart identifier). **ARB (freeze in same PR, adjust only via integrations doc):** `chatModelAuto`, `chatTransportRenderOrchestration` (badge label), `chatRenderStrictMode`, `chatAuthRefreshRequired`, `chatSessionEnded`, `chatSwitchAccount`, `chatTokenMissing`, optional `chatOrchestrationTooltip`—**analytics / event payloads** reuse these string keys or the enum `.name` consistently (pick one in implementation, document once). |
 | 11 | **Uvicorn / worker count for v1** | In-memory cache + per-process semaphore are **invalid** across multiple workers or Gunicorn forks—behavior changes instantly. | **Default:** **`uvicorn` with a single worker** (or equivalent: **one process**, no `--workers` > 1) for any deploy that uses in-process cache/semaphore without Redis. Document in `render.yaml` / Dockerfile. **Before** claiming multi-instance correctness, add Redis (or disable cache). |
 | 12 | **Canonical contract fixtures directory** | “Shared fixtures” without one path invites duplicate JSON drift. | **Frozen owner:** repo-relative **`test/fixtures/render_chat_contract/`** — JSON files for success + each error `code`. Dart tests and **`demos/render_chat_api/` pytest** both load from this directory (pathlib / `File` from repo root); **no** second copy under `demos/` unless symlinked or generated from the same source—state rule in integrations doc. |
 
@@ -84,7 +84,7 @@ The mirrored freeze table in **[`integrations/render_fastapi_chat_demo.md`](../i
 - **Repo canon:** [`AGENTS.md`](../../AGENTS.md) at the repository root is authoritative for delivery, validation routing, and review gates—read it before implementation.
 - **Workspace root:** Repository checkout (Flutter / Dart versions per [`AGENTS.md`](../../AGENTS.md) **Repo Snapshot**).
 - **Plan review:** From a checkout, run `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.md` for a Codex delegate pass; diff-based review remains `./tool/request_codex_feedback.sh`.
-- **Implementation:** Prefer existing chat seams under `lib/features/chat/` and DI in [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart); do not fork a second chat screen.
+- **Implementation:** Prefer existing chat seams under `apps/mobile/lib/features/chat/` and DI in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart); do not fork a second chat screen.
 
 ### Agent reading order (cross-host)
 
@@ -123,13 +123,13 @@ The **point of adding FastAPI** to the current AI chat flow is **not** merely to
 
 - **AI orchestration (product definition):** On the AI Chat screen the user can pick **`Auto`**. FastAPI then runs the **orchestration pipeline** in [FastAPI orchestration scope](#fastapi-orchestration-scope-what-to-build): **simple → mini model** (`openai/gpt-oss-20b`), **complex → full model** (`openai/gpt-oss-120b`); optional gates for **needs_context → memory** (how much conversation is sent / summarized), **sensitive → filter output** (post-generation safety pass), **repeated → cache** (reuse prior completion for same idempotency key + payload hash); **`log_usage()`** after each handled request; **`stream_response()`** when the client contract supports streaming (otherwise non-streaming JSON only). Fixed model picks in the UI send explicit Hub ids; only **`Auto`** delegates model choice to the server.
 - **Hugging Face token path:** Upstream calls use a **Hugging Face read token** (`HF_TOKEN` / `hf_*`) delivered per [Security decision](#security-decision-caller-auth-and-hf-token-delivery)—**not** treated as authenticating the caller to Render by itself. The app persists it in **`SecretStorage`** and sends it **per request**; FastAPI uses it only for HF outbound calls (no server persistence, no logs). See **Remote Config vs Callable** rules in that section.
-- **Flutter + Render** are the **delivery shell**: same chat page ([`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart)), same [`HuggingFacePayloadBuilder`](../../lib/features/chat/data/huggingface_payload_builder.dart) / [`HuggingFaceResponseParser`](../../lib/features/chat/data/huggingface_response_parser.dart) contract, first-hop to your deployed API when the demo is enabled.
+- **Flutter + Render** are the **delivery shell**: same chat page ([`ChatModelSelector`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart)), same [`HuggingFacePayloadBuilder`](../../apps/mobile/lib/features/chat/data/huggingface_payload_builder.dart) / [`HuggingFaceResponseParser`](../../apps/mobile/lib/features/chat/data/huggingface_response_parser.dart) contract, first-hop to your deployed API when the demo is enabled.
 - **FastAPI** is the **star of the demo**: dependency injection, explicit **orchestration** pipeline (model routing, memory policy, cache, output filter, `log_usage`, future `stream_response`), async `httpx` to `api-inference.huggingface.co`, clear extension points (tools, richer moderation).
 
 ## Secondary goals
 
 - End-to-end **Flutter app → HTTPS on Render → FastAPI orchestration** without a second chat screen.
-- Preserve the **OpenAI-style chat-completions JSON** wire contract so [`HuggingFaceResponseParser.buildChatCompletionsResult`](../../lib/features/chat/data/huggingface_response_parser.dart) stays the single parse path on the client.
+- Preserve the **OpenAI-style chat-completions JSON** wire contract so [`HuggingFaceResponseParser.buildChatCompletionsResult`](../../apps/mobile/lib/features/chat/data/huggingface_response_parser.dart) stays the single parse path on the client.
 - Ship **`Auto`** in the chat model picker with **Firebase-backed HF token** storage and **documented** orchestration: **simple → mini / complex → full**, **needs_context → memory**, **sensitive → filter**, **repeated → cache**, **`log_usage()`**; **`stream_response()`** when streaming is in scope.
 
 ## Security decision (caller auth and HF token delivery)
@@ -208,9 +208,9 @@ Run: `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.m
 
 ## Current architecture (baseline)
 
-- [`OfflineFirstChatRepository`](../../lib/features/chat/data/offline_first_chat_repository.dart) wraps whatever is registered as **`ChatRepository` remote** and maps failures to the offline queue using [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repository.dart) (`retryable` flag).
-- Today that remote is [`CompositeChatRepository`](../../lib/features/chat/data/composite_chat_repository.dart): **Supabase** `chat-complete` when Supabase is initialized and the session has a JWT, else **direct Hugging Face** when a client HF key exists ([`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart)).
-- Payloads: [`HuggingFacePayloadBuilder.buildChatCompletionsPayload`](../../lib/features/chat/data/huggingface_payload_builder.dart). Model UI: [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) (today fixed Hub ids such as `openai/gpt-oss-20b` / `openai/gpt-oss-120b`). Transport chip: [`ChatInferenceTransport`](../../lib/features/chat/domain/chat_repository.dart) (`supabase` | `direct`) in [`ChatTransportBadge`](../../lib/features/chat/presentation/widgets/chat_transport_badge.dart).
+- [`OfflineFirstChatRepository`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart) wraps whatever is registered as **`ChatRepository` remote** and maps failures to the offline queue using [`ChatRemoteFailureException`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) (`retryable` flag).
+- Today that remote is [`CompositeChatRepository`](../../apps/mobile/lib/features/chat/data/composite_chat_repository.dart): **Supabase** `chat-complete` when Supabase is initialized and the session has a JWT, else **direct Hugging Face** when a client HF key exists ([`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart)).
+- Payloads: [`HuggingFacePayloadBuilder.buildChatCompletionsPayload`](../../apps/mobile/lib/features/chat/data/huggingface_payload_builder.dart). Model UI: [`ChatModelSelector`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart) (today fixed Hub ids such as `openai/gpt-oss-20b` / `openai/gpt-oss-120b`). Transport chip: [`ChatInferenceTransport`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) (`supabase` | `direct`) in [`ChatTransportBadge`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_transport_badge.dart).
 
 ```mermaid
 flowchart TD
@@ -267,7 +267,7 @@ flowchart TD
 
 Solid path: each send tries `R` then Render orchestration. Dashed path: **one** fallthrough to `C` when policy allows (see Fallthrough matrix).
 
-This preserves offline-first and sync semantics without editing [`OfflineFirstChatRepository`](../../lib/features/chat/data/offline_first_chat_repository.dart) internals.
+This preserves offline-first and sync semantics without editing [`OfflineFirstChatRepository`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart) internals.
 
 ## FastAPI orchestration scope (what to build)
 
@@ -305,7 +305,7 @@ log_usage(request_id, resolved_model, latency_ms, cache_hit, approx_tokens_in_ou
 - **`if repeated: use cache`:** Key = **`Idempotency-Key`** (or agreed header) **plus** stable hash of the normalized request body (messages + model + generation params that affect output) **plus a caller scope** (see [Cache scope and deployment mode](#cache-scope-and-deployment-mode)). Store **only** the serialized OpenAI-shaped completion JSON (or assistant text + metadata), **TTL** bounded (e.g. minutes–hours, env-driven), **no** HF token in cache entries. On hit, skip HF and still call **`log_usage()`** with **`cache_hit=true`** and structured fields that make **billable / upstream invocation** explicit: **`upstream_invocation: false`** on cache hits (or equivalent) so observability counters **do not** treat cache hits as HF-billed traffic; upstream-served completions set **`upstream_invocation: true`**. If product adds internal “usage credits,” document whether cache hits increment a **separate** lightweight counter only.
 - **`if needs_context: add memory`:** v1 = **deterministic windowing** (last *N* messages, max chars/tokens estimate) and optional **system primer** string from env; document caps. Phase B+ = summarization service or server-side thread store (Redis) if product requires long threads.
 - **`if sensitive: filter output`:** v1 = **server-side post-filter** on assistant text (PII patterns, profanity list, empty-after-filter → safe fallback string + non-retryable or retryable policy—freeze in tests). Optional hook for external moderation; **never** log raw filtered material at info level.
-- **`stream_response()`:** **Not** required for v1 Flutter ([`HuggingFaceResponseParser`](../../lib/features/chat/data/huggingface_response_parser.dart) expects a **complete** JSON body). Add **`stream_response()`** as a separate route or `Accept` / query flag once Flutter defines SSE/chunk consumption and parser updates; keep **`log_usage()`** on stream end or abort.
+- **`stream_response()`:** **Not** required for v1 Flutter ([`HuggingFaceResponseParser`](../../apps/mobile/lib/features/chat/data/huggingface_response_parser.dart) expects a **complete** JSON body). Add **`stream_response()`** as a separate route or `Accept` / query flag once Flutter defines SSE/chunk consumption and parser updates; keep **`log_usage()`** on stream end or abort.
 - **`log_usage()`:** After every exit path (success, cache hit, validation error after ingress, upstream failure), emit **structured** log/metric fields: `request_id`, idempotency key **hash** (not raw key if sensitive), `resolved_model`, `cache_hit`, wall time, upstream HTTP status, **approximate** token counts if derivable—**no** user message text, **no** HF token, **no** full assistant content at info (sample/truncate at debug only behind a flag).
 
 ### Minimum viable orchestration (v1 checklist)
@@ -350,7 +350,7 @@ ML-based complexity scoring; **summarized memory** or Redis thread state; **true
 
 - **Single key per logical user send:** One **`Idempotency-Key`** (or frozen header) is created when the user submits a message and is **stable** across: initial Render attempt, **client retry** of the same send, **offline dequeue replay**, and **one** composite fallthrough for that same logical message (same `clientMessageId` / sync id if that is your SSOT—freeze binding in code).
 - **Forbidden unless product explicitly approves:** generating a **new** idempotency key during offline dequeue (that would double-bill HF and break server cache dedupe story).
-- **Where created:** freeze in [`RenderFastApiChatRepository`](../../lib/features/chat/data/) or cubit layer—document; server and Flutter tests assert the same key on replay path.
+- **Where created:** freeze in [`RenderFastApiChatRepository`](../../apps/mobile/lib/features/chat/data/) or cubit layer—document; server and Flutter tests assert the same key on replay path.
 
 ## Routing decision (locked)
 
@@ -366,11 +366,11 @@ ML-based complexity scoring; **summarized memory** or Redis thread state; **true
 | Success | Return result; `transportUsed` = new transport enum (orchestration / render demo) |
 | `ChatRemoteFailureException` with `retryable: true` | If not strict → fall through to composite once. If strict → rethrow. |
 | `ChatRemoteFailureException` with `retryable: false` | **Rethrow** |
-| `ChatException` / unexpected | Map per [`mapDirectChatException`](../../lib/features/chat/data/chat_direct_failure_mapper.dart) or shared helper |
+| `ChatException` / unexpected | Map per [`mapDirectChatException`](../../apps/mobile/lib/features/chat/data/chat_direct_failure_mapper.dart) or shared helper |
 
 ## Failure mapping and offline semantics (Dio / HTTP → client)
 
-Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repository.dart) (`code`, `retryable`, `isEdge: false` for this path). Align codes with existing chat queue expectations ([`mapDirectChatException`](../../lib/features/chat/data/chat_direct_failure_mapper.dart) families).
+Map into [`ChatRemoteFailureException`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) (`code`, `retryable`, `isEdge: false` for this path). Align codes with existing chat queue expectations ([`mapDirectChatException`](../../apps/mobile/lib/features/chat/data/chat_direct_failure_mapper.dart) families).
 
 | Condition | Suggested `code` | `retryable` | Fallthrough (default non-strict) | Offline enqueue when thrown out of `DemoFirstChatRepository` |
 | --- | --- | --- | --- | --- |
@@ -395,17 +395,17 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 - **`ChatResult.transportUsed`:** Single source of truth for **which backend produced the assistant text** for this completion. After successful fallthrough, value is **`supabase` or `direct`**, not the Render orchestration enum.
 - **`chatRemoteTransportHint`:** May still reflect **“orchestration path configured and tried first”** (e.g. `renderOrchestration`) when demo URL is enabled—used for badge **pre-send** “likely path” only if product chooses that UX; document in ARB/tooltip.
-- **`ChatState.lastCompletionTransport`:** Set from `result.transportUsed` on success ([`chat_cubit_message_actions`](../../lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart)); drives **post-send** chip for “what actually answered.”
+- **`ChatState.lastCompletionTransport`:** Set from `result.transportUsed` on success ([`chat_cubit_message_actions`](../../apps/mobile/lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart)); drives **post-send** chip for “what actually answered.”
 - **Tests:** Assert badge/state after (a) orchestration success, (b) retryable orchestration failure + composite success, (c) non-retryable orchestration failure (no fallback).
 
 ## Security and auth contract
 
 - **Caller → Render:** See [Security decision](#security-decision-caller-auth-and-hf-token-delivery). The HF token header alone is **not** sufficient to prevent arbitrary internet clients from consuming Render resources.
 - **No long-lived shared secrets in Flutter web release builds.** If `DEMO_SHARED_SECRET` exists, restrict to **non-web** flavors, CI-injected defines, or **short-lived** dev-only flows; browser bundles must not embed durable demo secrets.
-- **Hugging Face read token (primary path):** Issued or distributed via **Firebase** per [Security decision](#security-decision-caller-auth-and-hf-token-delivery) (Remote Config **demo-only** vs Callable / short-lived for production). After fetch, persist in **`SecretStorage`** ([`SupabaseConfigProvider`](../../lib/core/config/supabase_config_provider.dart) / [`SecretConfig`](../../lib/core/config/secret_config.dart) patterns). **Each** Render orchestration request sends the token in a **single dedicated header** (e.g. `X-HF-Authorization: Bearer <hf_read_token>`—exact name frozen in implementation) so it does not collide with optional demo gate or Firebase `Authorization`. FastAPI uses it only to call `api-inference.huggingface.co`, **must not** log token material, **must not** write it to disk or cache beyond the request handler, and **must** strip it from any outbound error payloads. **Do not** forward arbitrary client `Authorization` values to HF—only the dedicated HF header contents.
+- **Hugging Face read token (primary path):** Issued or distributed via **Firebase** per [Security decision](#security-decision-caller-auth-and-hf-token-delivery) (Remote Config **demo-only** vs Callable / short-lived for production). After fetch, persist in **`SecretStorage`** ([`SupabaseConfigProvider`](../../apps/mobile/lib/core/config/supabase_config_provider.dart) / [`SecretConfig`](../../apps/mobile/lib/core/config/secret_config.dart) patterns). **Each** Render orchestration request sends the token in a **single dedicated header** (e.g. `X-HF-Authorization: Bearer <hf_read_token>`—exact name frozen in implementation) so it does not collide with optional demo gate or Firebase `Authorization`. FastAPI uses it only to call `api-inference.huggingface.co`, **must not** log token material, **must not** write it to disk or cache beyond the request handler, and **must** strip it from any outbound error payloads. **Do not** forward arbitrary client `Authorization` values to HF—only the dedicated HF header contents.
 - **Web:** `flutter_secure_storage` on web uses a weaker backing store; treat **HF token on web** as higher risk—prefer **short TTL** from Firebase, **session-only memory** fallback, or **disable** orchestration on web production until explicitly approved.
 - **Optional Render `HF_TOKEN`:** Allowed only for **non-app** smoke tests (CI, `curl`); not the primary credential for end-user traffic when Firebase→client is in use.
-- **Header contract (optional demo gate):** If `DEMO_SHARED_SECRET` is used, use a header **distinct** from the HF token header (e.g. `X-Render-Demo-Secret`); document in `docs/integrations/` and align with [`SecretConfig`](../../lib/core/config/secret_config.dart).
+- **Header contract (optional demo gate):** If `DEMO_SHARED_SECRET` is used, use a header **distinct** from the HF token header (e.g. `X-Render-Demo-Secret`); document in `docs/integrations/` and align with [`SecretConfig`](../../apps/mobile/lib/core/config/secret_config.dart).
 - **Render:** Demo secret only in Render env if used; rotation = update Firebase/Render + client refetch as documented, never commit secrets to git.
 - **CORS:** Explicit **allowlist** of origins; do **not** use `*` with credentialed requests. **`Access-Control-Allow-Headers`** must explicitly list: `Content-Type`, `Idempotency-Key` (or frozen name), HF token header name, optional demo-secret header, plus `Authorization` if Firebase ID tokens are sent—plus **max header size** validation on the server.
 - **Upstream:** Server-side allowlist for **resolved** model ids (`openai/gpt-oss-20b`, `openai/gpt-oss-120b` only for HF outbound in v1); client must not supply arbitrary URLs, Host headers, or proxy targets.
@@ -456,7 +456,7 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 ### Success response contract (frozen minimum)
 
 - `Content-Type: application/json; charset=utf-8`
-- JSON suitable for [`HuggingFaceResponseParser`](../../lib/features/chat/data/huggingface_response_parser.dart).
+- JSON suitable for [`HuggingFaceResponseParser`](../../apps/mobile/lib/features/chat/data/huggingface_response_parser.dart).
 
 ### Hardening checklist
 
@@ -493,22 +493,22 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 - **Demo base URL** + optional demo gate secret per repo patterns; **release** requires `https`; flavor rules per **Security and auth**.
 - **Callable (staging/prod HF read token):** This repo implements Firebase Functions v2 HTTPS Callable **`issueRenderChatDemoHfReadToken`** in [`functions/src/index.ts`](../../functions/src/index.ts) (secret **`RENDER_CHAT_DEMO_HF_READ_TOKEN`**, default region **`us-central1`**). Flutter uses compile-time **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE`** / **`CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION`**. Ops, payload shape, and emulator env are in [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) and [`docs/envrc.example`](../envrc.example).
-- **Firebase → secure storage (shipped):** [`LayeredRenderOrchestrationHfTokenProvider`](../../lib/features/chat/data/render_orchestration_hf_token_provider.dart) — **dev** Remote Config + **non-dev** Callable / compile-time HF key, single-flight reads, secure-storage cache keys; `RenderFastApiChatRepository` reads at send time; missing token → non-retryable path before Render when orchestration is enabled.
+- **Firebase → secure storage (shipped):** [`LayeredRenderOrchestrationHfTokenProvider`](../../apps/mobile/lib/features/chat/data/render_orchestration_hf_token_provider.dart) — **dev** Remote Config + **non-dev** Callable / compile-time HF key, single-flight reads, secure-storage cache keys; `RenderFastApiChatRepository` reads at send time; missing token → non-retryable path before Render when orchestration is enabled.
 - **Refresh (shipped + ops):** Remote Config version / Callable / sign-out semantics documented in [`integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) and [`docs/envrc.example`](../envrc.example); `ChatCubit` clears orchestration token cache on Firebase sign-out when the layered provider is registered.
 
 ### Caller auth implementation contract (DI)
 
 *Distinct from the HF read-token provider—do not conflate in one class.*
 
-- **Shipped:** [`RenderCallerAuthHeaderProvider`](../../lib/features/chat/data/render_caller_auth_header_provider.dart) / **`DefaultRenderCallerAuthHeaderProvider`** registered in `get_it` beside the HF token provider: each Render `sendMessage` supplies the **Firebase ID token** via `FirebaseAuth` `getIdToken()` / `getIdToken(true)`—**never** reuse Supabase `AuthTokenInterceptor` on the Render Dio.
+- **Shipped:** [`RenderCallerAuthHeaderProvider`](../../apps/mobile/lib/features/chat/data/render_caller_auth_header_provider.dart) / **`DefaultRenderCallerAuthHeaderProvider`** registered in `get_it` beside the HF token provider: each Render `sendMessage` supplies the **Firebase ID token** via `FirebaseAuth` `getIdToken()` / `getIdToken(true)`—**never** reuse Supabase `AuthTokenInterceptor` on the Render Dio.
 - **Lifecycle:** refresh on **account switch**, **logout** (return null / throw mapped non-retryable), and **token expiry** callbacks; **cancel** in-flight `getIdToken` futures when cubit disposes if applicable.
 - **Injection:** `RenderFastApiChatRepository` accepts this provider + HF provider; **unit tests** register fakes for both independently; **`get_it.reset()`** clears **both** in-memory caches between tests.
 
 ### Dedicated Dio configuration (checklist)
 
-- **New Dio instance** (or factory) registered only for Render demo base URL—**do not** attach shared [`RetryInterceptor`](../../lib/shared/http/interceptors/retry_interceptor.dart) / [`AuthTokenInterceptor`](../../lib/shared/http/interceptors/auth_token_interceptor.dart) if they would retry **POST** chat, replay **401**s, or inject **Supabase/app tokens** to the Render host.
+- **New Dio instance** (or factory) registered only for Render demo base URL—**do not** attach shared [`RetryInterceptor`](../../apps/mobile/lib/shared/http/interceptors/retry_interceptor.dart) / [`AuthTokenInterceptor`](../../apps/mobile/lib/shared/http/interceptors/auth_token_interceptor.dart) if they would retry **POST** chat, replay **401**s, or inject **Supabase/app tokens** to the Render host.
 - **`get_it` ownership:** Register the Render Dio + token provider with explicit **lifecycle** (dispose on environment reset if applicable); document **test overrides** (e.g. `registerSingleton` / `unregister` in `tearDown`) so widget/cubit tests do not leak real HTTP. **`get_it` reset** between tests must also clear **token provider in-memory cache** / `_inFlight` futures so suites do not cross-contaminate (Codex).
-- **Token provider:** Firebase fetch path must be **single-flight** (same pattern as [`SupabaseConfigProvider`](../../lib/core/config/supabase_config_provider.dart) `_inFlight`); document race between resume and send.
+- **Token provider:** Firebase fetch path must be **single-flight** (same pattern as [`SupabaseConfigProvider`](../../apps/mobile/lib/core/config/supabase_config_provider.dart) `_inFlight`); document race between resume and send.
 - **BaseUrl:** Normalized demo origin; **timeouts:** connect + receive explicitly set; **maxRedirects:** 0 or document follow limit; **validateStatus:** map to `ChatRemoteFailureException` per table.
 - **Headers:** `Content-Type: application/json`, idempotency, **HF read token header** (value from secure storage), optional **demo** gate header, **Firebase ID token** (or chosen caller-auth header) when required—**never** blindly forward arbitrary client auth headers to HF; **never** attach shared Supabase interceptors to this Dio.
 - **CancelToken** tied to cubit/request lifecycle where applicable.
@@ -516,16 +516,16 @@ Map into [`ChatRemoteFailureException`](../../lib/features/chat/domain/chat_repo
 
 ### Model `Auto` in the AI Chat UI
 
-- **Shipped:** **`Auto`** in the chat model list ([`ChatCubit`](../../lib/features/chat/presentation/cubit/chat_cubit.dart) `models` + [`ChatModelSelector`](../../lib/features/chat/presentation/widgets/chat_model_selector.dart) label via ARB `chatModelAuto`).
-- **Shipped:** When **Auto** is selected, [`HuggingFacePayloadBuilder`](../../lib/features/chat/data/huggingface_payload_builder.dart) sends `model: "auto"` on the **Render** path so FastAPI runs **AI orchestration** (complexity → 20B vs 120B). Fixed Hub selections keep sending their explicit ids.
+- **Shipped:** **`Auto`** in the chat model list ([`ChatCubit`](../../apps/mobile/lib/features/chat/presentation/cubit/chat_cubit.dart) `models` + [`ChatModelSelector`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart) label via ARB `chatModelAuto`).
+- **Shipped:** When **Auto** is selected, [`HuggingFacePayloadBuilder`](../../apps/mobile/lib/features/chat/data/huggingface_payload_builder.dart) sends `model: "auto"` on the **Render** path so FastAPI runs **AI orchestration** (complexity → 20B vs 120B). Fixed Hub selections keep sending their explicit ids.
 
 ### Repositories
 
-`RenderFastApiChatRepository`, `DemoFirstChatRepository`, [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart) registration order unchanged in intent (composite → render repo → demo-first wrapping composite → offline-first).
+`RenderFastApiChatRepository`, `DemoFirstChatRepository`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart) registration order unchanged in intent (composite → render repo → demo-first wrapping composite → offline-first).
 
 ### Transport / l10n
 
-**Frozen identifiers (shipped):** [STOP #10](#stop--frozen-defaults-cursor-agents-must-implement) — `ChatInferenceTransport.renderOrchestration` + ARB keys + badge wiring in [`chat_transport_badge.dart`](../../lib/features/chat/presentation/widgets/chat_transport_badge.dart). See **Transport state contract**. After future ARB edits: **`flutter gen-l10n`** then **`dart analyze`** on touched `lib/` (or the repo’s scoped analyze entrypoint from [`docs/engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)).
+**Frozen identifiers (shipped):** [STOP #10](#stop--frozen-defaults-cursor-agents-must-implement) — `ChatInferenceTransport.renderOrchestration` + ARB keys + badge wiring in [`chat_transport_badge.dart`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_transport_badge.dart). See **Transport state contract**. After future ARB edits: **`flutter gen-l10n`** then **`dart analyze`** on touched `lib/` (or the repo’s scoped analyze entrypoint from [`docs/engineering/validation_routing_fast_vs_full.md`](../engineering/validation_routing_fast_vs_full.md)).
 
 ## Implementation slices and file ownership
 
@@ -534,16 +534,16 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 | Slice | Owns | Notes |
 | --- | --- | --- |
 | FastAPI / contract | `demos/render_chat_api/**`, shared response fixtures, integrations doc contract tables | Must freeze headers, auth mode, error JSON, and `503`/`429` semantics before Flutter wiring. |
-| Flutter remote / DI | `lib/features/chat/data/**`, [`register_chat_services.dart`](../../lib/core/di/register_chat_services.dart), provider wiring | Owns Render Dio, caller-auth provider, HF token provider, fallthrough/idempotency logic. |
-| UI / l10n | chat presentation files, `lib/l10n/app_*.arb`, generated l10n outputs | Must not rename frozen enum/ARB identifiers without updating the integrations doc in the same change. |
+| Flutter remote / DI | `apps/mobile/lib/features/chat/data/**`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), provider wiring | Owns Render Dio, caller-auth provider, HF token provider, fallthrough/idempotency logic. |
+| UI / l10n | chat presentation files, `apps/mobile/lib/l10n/app_*.arb`, generated l10n outputs | Must not rename frozen enum/ARB identifiers without updating the integrations doc in the same change. |
 | Docs / validation | [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md), plan, setup/security docs | Keeps STOP resolutions, contract freezes, validation commands, and operational notes aligned with shipped behavior. |
 
 ### File map (expected; update this plan if names diverge)
 
 - FastAPI: `demos/render_chat_api/main.py`, `demos/render_chat_api/orchestration/**`, `demos/render_chat_api/tests/**` or equivalent package layout.
-- Flutter remote: `lib/features/chat/data/render_fastapi_chat_repository.dart`, `lib/features/chat/data/demo_first_chat_repository.dart`, provider/helper files under `lib/features/chat/data/` or `lib/core/config/`.
-- DI: [`lib/core/di/register_chat_services.dart`](../../lib/core/di/register_chat_services.dart).
-- Domain / UI: [`lib/features/chat/domain/chat_repository.dart`](../../lib/features/chat/domain/chat_repository.dart), chat cubit/actions, transport badge/model selector widgets, `lib/l10n/app_*.arb`.
+- Flutter remote: `apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart`, `apps/mobile/lib/features/chat/data/demo_first_chat_repository.dart`, provider/helper files under `apps/mobile/lib/features/chat/data/` or `apps/mobile/lib/core/config/`.
+- DI: [`apps/mobile/lib/core/di/register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart).
+- Domain / UI: [`apps/mobile/lib/features/chat/domain/chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart), chat cubit/actions, transport badge/model selector widgets, `apps/mobile/lib/l10n/app_*.arb`.
 - Shared fixtures: `test/fixtures/render_chat_contract/` only.
 
 ### First implementation slices (smallest reversible order)
@@ -563,7 +563,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 - **User switch:** after logout + login as different user, assert **no** stale HF header and correct **idempotency** scope per [Session and user-switch hygiene](#session-and-user-switch-hygiene-flutter).
 - **Idempotency:** assert same key across fallthrough path per [Idempotency key lifecycle](#idempotency-key-lifecycle-one-logical-message).
 - Kill-switch skips Render; strict disables fallthrough; retryable triggers **one** composite call; non-retryable does not.
-- **Offline:** enqueue only when `retryable: true` per existing [`OfflineFirstChatRepository`](../../lib/features/chat/data/offline_first_chat_repository.dart) behavior after failed remote.
+- **Offline:** enqueue only when `retryable: true` per existing [`OfflineFirstChatRepository`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart) behavior after failed remote.
 - **State:** `lastCompletionTransport` and badge after orchestration success vs after fallback success.
 - **Shared contract fixtures:** Use canonical directory [STOP #12](#stop--frozen-defaults-cursor-agents-must-implement) — `test/fixtures/render_chat_contract/`; Dart and pytest load **only** these files (repo-root-relative paths). **Same PR rule:** any change to response/error JSON **envelope** fields updates **both** Dart and Python fixture readers in one PR to prevent drift.
 - **Auth / session copy:** widget or cubit tests assert **surfaced** strings for `chatAuthRefreshRequired`, `chatSessionEnded`, `chatTokenMissing`, and strict-mode messaging (match generated l10n, not hard-coded English).
@@ -579,7 +579,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 
 ### Codegen / l10n proof
 
-- After ARB edits: `flutter gen-l10n`, confirm generated `lib/l10n/` outputs updated, then **`dart analyze`** on touched `lib/` (planned ARB keys are listed under **Transport / l10n** in [Flutter implementation notes](#3-flutter-implementation-notes)).
+- After ARB edits: `flutter gen-l10n`, confirm generated `apps/mobile/lib/l10n/` outputs updated, then **`dart analyze`** on touched `lib/` (planned ARB keys are listed under **Transport / l10n** in [Flutter implementation notes](#3-flutter-implementation-notes)).
 
 ### Review gate
 

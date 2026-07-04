@@ -14,5 +14,5 @@
 ```bash
 flutter test test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart
 bash tool/check_mutation_success_after_guard.sh
-CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart
+CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths apps/mobile/lib/features/chat/presentation/cubit/chat_cubit_message_actions.dart
 ```

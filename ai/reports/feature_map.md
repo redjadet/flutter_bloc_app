@@ -16,7 +16,7 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | Routes | `/` |
 | LOC | 3983 |
 | Layers | `domain/`, `data/` (Hive, REST), `presentation/cubit/counter_cubit*` |
-| Key paths | `lib/features/counter/counter.dart`, `presentation/pages/counter_page.dart` |
+| Key paths | `apps/mobile/lib/features/counter/counter.dart`, `presentation/pages/counter_page.dart` |
 | Tests | `test/features/counter/` |
 | Docs | [`docs/feature_overview.md`](../../docs/feature_overview.md) |
 | minimal_context | `counter.dart`, `counter_cubit_base.dart`, `counter_page.dart`, `domain/*repository*.dart`, `data/hive_counter_repository*.dart` |
@@ -179,10 +179,10 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | Routes | `/native-platform-showcase` (Example hub entry) |
 | LOC | 2345 |
 | Layers | `domain/` (ports + use case), `data/` (MethodChannel, FFI, mapper), `presentation/cubit/` |
-| Key paths | `lib/features/native_platform_showcase/native_platform_showcase.dart`, `presentation/pages/native_platform_showcase_page.dart` |
+| Key paths | `apps/mobile/lib/features/native_platform_showcase/native_platform_showcase.dart`, `presentation/pages/native_platform_showcase_page.dart` |
 | Native | `ios/Runner/NativeShowcaseBridge.swift`, `macos/Runner/NativeShowcaseBridge.swift`, `android/.../MainActivity.kt`, `native/native_showcase/` |
 | Tests | `test/features/native_platform_showcase/`, `integration_test/native_platform_showcase_flow_test.dart`, web smoke in `test/integration_preflight/web_bootstrap_smoke_test.dart` |
-| Docs | [`lib/features/native_platform_showcase/README.md`](../../lib/features/native_platform_showcase/README.md), brief [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md) |
+| Docs | [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md), brief [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md) |
 | minimal_context | `native_platform_showcase.dart`, `load_native_platform_showcase_use_case.dart`, `native_platform_info_repository_impl.dart`, method channel + FFI services, `native_platform_showcase_cubit.dart`, showcase page |
 
 ---

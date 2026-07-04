@@ -16,10 +16,10 @@ green.
 
 ### Core / shared
 
-- `lib/core/domain/failure.dart`, `result.dart` — shared failure/result types for
+- `apps/mobile/lib/core/domain/failure.dart`, `result.dart` — shared failure/result types for
   plugin seams (not a full domain rewrite).
-- `lib/shared/utils/failure_to_app_error.dart` — maps `Failure` → `AppError` for UI.
-- `lib/shared/platform/secure_secret_storage.dart` — `readResult()` on `SecretStorage`.
+- `apps/mobile/lib/shared/utils/failure_to_app_error.dart` — maps `Failure` → `AppError` for UI.
+- `apps/mobile/lib/shared/platform/secure_secret_storage.dart` — `readResult()` on `SecretStorage`.
 
 ### Staff demo
 
@@ -34,7 +34,7 @@ green.
 
 ### Camera gallery
 
-- `camera_gallery_failure_mapper.dart` moved to `lib/features/camera_gallery/domain/`
+- `camera_gallery_failure_mapper.dart` moved to `apps/mobile/lib/features/camera_gallery/domain/`
   (out of `shared/`).
 
 ### Tests
@@ -57,8 +57,8 @@ green.
 ```bash
 bash tool/check_feature_brief_linked.sh
 flutter analyze --fatal-infos \
-  lib/features/staff_app_demo lib/features/camera_gallery lib/core/domain \
-  lib/shared/utils/failure_to_app_error.dart
+  apps/mobile/lib/features/staff_app_demo apps/mobile/lib/features/camera_gallery apps/mobile/lib/core/domain \
+  apps/mobile/lib/shared/utils/failure_to_app_error.dart
 flutter test \
   test/features/staff_app_demo/data/staff_demo_location_result_unwrap_test.dart \
   test/features/staff_app_demo/data/staff_demo_proof_photo_picker_test.dart \

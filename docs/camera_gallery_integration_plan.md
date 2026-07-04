@@ -33,7 +33,7 @@ Target platforms: **iOS + Android**.
 ## Key Technical Decisions
 
 1. Use `image_picker` (Flutter-maintained plugin) instead of custom native code.
-2. Implement as a **separate feature module** (`lib/features/camera_gallery/`),
+2. Implement as a **separate feature module** (`apps/mobile/lib/features/camera_gallery/`),
    not inside `features/example`, so Example page remains a launcher only.
 3. Keep domain Flutter-agnostic and return typed results (success/cancel/error),
    not raw string-only flow.
@@ -61,7 +61,7 @@ current app baseline, explicitly decide one path before coding:
 ### New feature module
 
 ```text
-lib/features/camera_gallery/
+apps/mobile/lib/features/camera_gallery/
 ├── camera_gallery.dart
 ├── domain/
 │   ├── camera_gallery_repository.dart
@@ -79,15 +79,15 @@ lib/features/camera_gallery/
 ### Existing files to update
 
 - `pubspec.yaml` (add `image_picker`).
-- `lib/core/router/app_routes.dart` (add route name/path constants).
-- `lib/app/router/routes_core.dart` or `lib/app/router/routes_demos.dart`
+- `apps/mobile/lib/core/router/app_routes.dart` (add route name/path constants).
+- `apps/mobile/lib/app/router/routes_core.dart` or `apps/mobile/lib/app/router/routes_demos.dart`
   (register new `GoRoute` + cubit provider, depending on feature category).
-- `lib/core/di/injector_registrations.dart` (register repository binding).
-- `lib/features/example/presentation/pages/example_page.dart` (new navigation
+- `apps/mobile/lib/core/di/injector_registrations.dart` (register repository binding).
+- `apps/mobile/lib/features/example/presentation/pages/example_page.dart` (new navigation
   callback).
-- `lib/features/example/presentation/widgets/example_page_body.dart` (new demo
+- `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` (new demo
   button).
-- `lib/l10n/app_*.arb` (all locales).
+- `apps/mobile/lib/l10n/app_*.arb` (all locales).
 - `ios/Runner/Info.plist` (camera + photo library usage descriptions).
 
 ## Domain/Data Contract
@@ -153,7 +153,7 @@ Safety requirements:
    - `AppRoutes.cameraGallery`
    - `AppRoutes.cameraGalleryPath` (e.g. `'/camera-gallery'`)
 2. Register `GoRoute` in the appropriate split route file under
-   `lib/app/router/` with cubit creation from DI
+   `apps/mobile/lib/app/router/` with cubit creation from DI
    (`getIt<CameraGalleryRepository>()`).
 3. Add button in Example page body and wire
    `context.pushNamed(AppRoutes.cameraGallery)`.
@@ -179,7 +179,7 @@ Use clear user-facing purpose text.
 
 ## Localization
 
-Add keys in all ARB files under `lib/l10n/` (names can follow):
+Add keys in all ARB files under `apps/mobile/lib/l10n/` (names can follow):
 
 - `cameraGalleryPageTitle`
 - `cameraGalleryTakePhoto`

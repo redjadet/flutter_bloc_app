@@ -24,7 +24,7 @@ This document defines how the chat feature uses the shared offline-first stack. 
   - A **`ChatRepository`** implementation for remote inference (the composite: Edge-first, optional direct HF fallback when online and policy allows).
   - `ChatLocalDataSource` / `ChatHistoryRepository` for persistence.
   - `PendingSyncRepository` for enqueueing outgoing messages as `SyncOperation`s.
-- DI: register local history and wire the offline-first repository into the sync registry (`lib/core/di/register_chat_services.dart`).
+- DI: register local history and wire the offline-first repository into the sync registry (`apps/mobile/lib/core/di/register_chat_services.dart`).
   - Sync payload: include `conversationId`, `prompt`, `pastUserInputs`, `generatedResponses`, `model`, `clientMessageId`, `createdAt`. Processing should call remote, then persist reply + update conversation metadata (`lastSyncedAt`, `synchronized`, `changeId`).
 - Implement `SyncableRepository`:
   - `entityType`: `chat_message`.
@@ -51,7 +51,7 @@ This document defines how the chat feature uses the shared offline-first stack. 
 - GoRouter entries **`/chat`** and **`/chat-list`** wrap the chat UI in the same Supabase session gate as other Supabase-backed demos: if Supabase is configured (`SupabaseAuthRepository.isConfigured`) and there is no Supabase user, the app sends the user to **`/supabase-auth`** first with a safe redirect back to the requested path after sign-in. If Supabase is not configured, chat routes behave as before (no Supabase session required at the route layer).
 - Hydrate chat cubit from local store first, then trigger `pullRemote`.
 - Show pending-send indicator per message (`synchronized == false`) and an offline/sync banner driven by `SyncStatusCubit`.
-- The reusable `ChatSyncBanner` widget (`lib/features/chat/presentation/widgets/`) displays offline/sync/pending copy, queued counts, and wires `syncStatusSyncNowButton` to `SyncStatusCubit.flush()` for manual retry.
+- The reusable `ChatSyncBanner` widget (`apps/mobile/lib/features/chat/presentation/widgets/`) displays offline/sync/pending copy, queued counts, and wires `syncStatusSyncNowButton` to `SyncStatusCubit.flush()` for manual retry.
 - `ChatCubit` must clear any previous errors when it catches `ChatOfflineEnqueuedException`, leave the conversation in a pending state, and allow the coordinator/manual flush to flip messages to synced later on.
 
 ## Testing checklist

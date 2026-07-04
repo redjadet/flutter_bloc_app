@@ -69,7 +69,7 @@ Use `@freezed` for immutability and `copyWith`. Keep adapters in data layer.
 **Example:**
 
 ```dart
-// lib/features/todo_list/domain/todo_item.dart
+// apps/mobile/lib/features/todo_list/domain/todo_item.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo_item.freezed.dart';
@@ -104,7 +104,7 @@ abstract class TodoItem with _$TodoItem {
 
 ## Architecture Blueprint
 
-### Domain Layer (`lib/features/todo_list/domain/`)
+### Domain Layer (`apps/mobile/lib/features/todo_list/domain/`)
 
 - `todo_item.dart` (Freezed model, Dart-only)
 - `todo_repository.dart` (abstract contract)
@@ -112,7 +112,7 @@ abstract class TodoItem with _$TodoItem {
 **Repository Contract:**
 
 ```dart
-// lib/features/todo_list/domain/todo_repository.dart
+// apps/mobile/lib/features/todo_list/domain/todo_repository.dart
 abstract class TodoRepository {
   /// Watch all todos as a stream
   Stream<List<TodoItem>> watchAll();
@@ -138,7 +138,7 @@ abstract class TodoRepository {
 - Uses `Stream` for reactive updates
 - All methods are async for consistency
 
-### Data Layer (`lib/features/todo_list/data/`)
+### Data Layer (`apps/mobile/lib/features/todo_list/data/`)
 
 Implement a Hive-backed repository using `HiveRepositoryBase`:
 
@@ -155,7 +155,7 @@ Implement a Hive-backed repository using `HiveRepositoryBase`:
 **Example Structure:**
 
 ```dart
-// lib/features/todo_list/data/todo_item_dto.dart
+// apps/mobile/lib/features/todo_list/data/todo_item_dto.dart
 @HiveType(typeId: TodoItemDto.typeId)
 class TodoItemDto {
   static const int typeId = 42; // Unique type ID
@@ -176,7 +176,7 @@ class TodoItemDto {
   // ... to/from domain mapping methods
 }
 
-// lib/features/todo_list/data/hive_todo_repository.dart
+// apps/mobile/lib/features/todo_list/data/hive_todo_repository.dart
 class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   HiveTodoRepository({
     required final HiveService hiveService,
@@ -192,7 +192,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
 }
 ```
 
-### Presentation Layer (`lib/features/todo_list/presentation/`)
+### Presentation Layer (`apps/mobile/lib/features/todo_list/presentation/`)
 
 - `cubit/todo_list_cubit.dart` (main cubit, ~180 lines)
 - `cubit/todo_list_cubit_helpers.dart` (static helper methods)
@@ -211,7 +211,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
 **State Definition (Freezed):**
 
 ```dart
-// lib/features/todo_list/presentation/cubit/todo_list_state.dart
+// apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_state.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/shared/ui/view_status.dart';
@@ -334,7 +334,7 @@ enum TodoSortOrder {
 The cubit is split into multiple files to keep the main file under 250 lines:
 
 ```dart
-// lib/features/todo_list/presentation/cubit/todo_list_cubit.dart
+// apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit.dart
 part 'todo_list_cubit_helpers.dart';
 part 'todo_list_cubit_logging.dart';
 part 'todo_list_cubit_methods.dart';
@@ -488,7 +488,7 @@ class TodoListCubit extends Cubit<TodoListState>
 ### Page Structure
 
 ```dart
-// lib/features/todo_list/presentation/pages/todo_list_page.dart
+// apps/mobile/lib/features/todo_list/presentation/pages/todo_list_page.dart
 class TodoListPage extends StatelessWidget {
   const TodoListPage({super.key});
 
@@ -564,7 +564,7 @@ TypeSafeBlocBuilder<TodoListCubit, TodoListState>(
 **Swipe Gesture Implementation:**
 
 ```dart
-// lib/features/todo_list/presentation/widgets/todo_list_item.dart
+// apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_item.dart
 if (!isMobile) {
   return cardContent; // No swipe on desktop
 }
@@ -608,9 +608,9 @@ return Dismissible(
 
 ### 1) Create Feature Shell
 
-- Add `lib/features/todo_list/` with `domain/`, `data/`, `presentation/`.
-- Add export barrel `lib/features/todo_list/todo_list.dart`.
-- Update `lib/features/features.dart` to export the new feature.
+- Add `apps/mobile/lib/features/todo_list/` with `domain/`, `data/`, `presentation/`.
+- Add export barrel `apps/mobile/lib/features/todo_list/todo_list.dart`.
+- Update `apps/mobile/lib/features/features.dart` to export the new feature.
 
 ### 2) Domain Layer
 
@@ -631,7 +631,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 DI updates:
 
-- `lib/core/di/injector_registrations.dart` for `registerLazySingletonIfAbsent<TodoRepository>(...)`.
+- `apps/mobile/lib/core/di/injector_registrations.dart` for `registerLazySingletonIfAbsent<TodoRepository>(...)`.
 - Ensure Hive adapter is registered during app startup (follow existing Hive setup patterns).
 
 ### 4) Presentation Layer
@@ -724,14 +724,14 @@ Future<void> _showAddTodoDialog(BuildContext context) async {
 
 ### 5) Routing
 
-- Add `AppRoutes.todoList` / `AppRoutes.todoListPath` in `lib/core/router/app_routes.dart`.
+- Add `AppRoutes.todoList` / `AppRoutes.todoListPath` in `apps/mobile/lib/core/router/app_routes.dart`.
 - Register a `GoRoute` in the appropriate split route file under
-  `lib/app/router/` (currently `routes_demos.dart` for the Todo List demo).
+  `apps/mobile/lib/app/router/` (currently `routes_demos.dart` for the Todo List demo).
 - Decide on deferred loading. For MVP, avoid deferred loading unless the feature grows heavy.
 
 ### 6) Localization
 
-- Add strings to `lib/l10n/app_*.arb` for titles, actions, error messages.
+- Add strings to `apps/mobile/lib/l10n/app_*.arb` for titles, actions, error messages.
 - Run `flutter gen-l10n` after updates.
 
 ### 7) Tests
@@ -845,7 +845,7 @@ testWidgets('swipe right on active item completes it', (
 ## Suggested File Map
 
 ```text
-lib/features/todo_list/
+apps/mobile/lib/features/todo_list/
   todo_list.dart
   domain/
     todo_item.dart
