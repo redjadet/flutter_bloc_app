@@ -113,7 +113,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
 
@@ -171,6 +171,7 @@ jobs:
         continue-on-error: true
 
       - name: Drain stale GitHub Pages deployments (retry)
+        id: drain_retry
         if: >-
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
@@ -185,13 +186,23 @@ jobs:
             --exclude-sha="" \
             --ensure-current-sha-terminal
 
+      - id: deployment_retry
+        if: >-
+          steps.branch_tip.outputs.skip != 'true' &&
+          steps.pages_already_live.outputs.skip != 'true' &&
+          steps.deployment.outcome == 'failure' &&
+          steps.drain_retry.outcome == 'success'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
       - name: Re-dispatch Deploy web workflow after Pages failure
         id: redispatch
         if: >-
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           github.event_name == 'push' &&
-          steps.deployment.outcome == 'failure'
+          steps.deployment.outcome == 'failure' &&
+          (steps.deployment_retry.outcome == 'failure' || steps.deployment_retry.outcome == 'skipped')
         uses: actions/github-script@v9
         with:
           script: |
@@ -207,11 +218,30 @@ jobs:
               `Dispatched ${workflowFile} on ${ref} after Pages deploy failure.`,
             );
 
+      - name: Verify Pages publish status before failing
+        id: pages_publish_recheck
+        if: >-
+          steps.branch_tip.outputs.skip != 'true' &&
+          steps.pages_already_live.outputs.skip != 'true' &&
+          steps.deployment.outcome == 'failure' &&
+          (steps.deployment_retry.outcome == 'failure' || steps.deployment_retry.outcome == 'skipped')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if python3 tool/drain_stale_github_pages_deployments.py \
+            --check-published-for-sha "${GITHUB_SHA}"; then
+            echo "skip_fail=true" >> "$GITHUB_OUTPUT"
+            echo "Pages deployment for ${GITHUB_SHA} is live; skipping failure."
+          fi
+
       - name: Fail when Pages deploy did not succeed
         if: >-
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure' &&
+          (steps.deployment_retry.outcome == 'failure' || steps.deployment_retry.outcome == 'skipped') &&
+          steps.pages_publish_recheck.outputs.skip_fail != 'true' &&
           (github.event_name != 'push' || steps.redispatch.outcome != 'success')
         run: |
           echo "GitHub Pages deploy failed." >&2
