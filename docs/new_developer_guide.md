@@ -29,21 +29,21 @@ Before running the app, review:
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
-**Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `flutter run $(./tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` then passes the same `--dart-define` values to iOS and Android. Only variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat orchestration keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, the same keys can live in gitignored `.env.android.release` and/or `.env.ios.release` (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
+**Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `cd apps/mobile && flutter run $(../../tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` from the repo root is routed to `apps/mobile` and passes the same `--dart-define` values to iOS and Android. Only variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat orchestration keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, the same keys can live in gitignored `.env.android.release` and/or `.env.ios.release` (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
 
 **Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](code_review_graph.md).
 
 ### Install dependencies and run
 
 ```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
+bash tool/workspace_pub_get.sh
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 Other entrypoints:
 
-- `lib/main_staging.dart`
-- `lib/main_prod.dart`
+- `apps/mobile/lib/main_staging.dart`
+- `apps/mobile/lib/main_prod.dart`
 
 ### Before local debug
 
@@ -57,7 +57,7 @@ allowed.
 
 Run these checks before starting a local debug session:
 
-1. Refresh packages: `flutter pub get`.
+1. Refresh packages: `bash tool/workspace_pub_get.sh`.
 2. Load local environment: `direnv allow` from repo root, then open a new
    terminal or run `direnv reload`.
 3. Confirm injected keys are present without printing values:
@@ -73,7 +73,8 @@ Run these checks before starting a local debug session:
    CocoaPods or `ios/Podfile.lock`/`macos/Podfile.lock` changes, also run
    `pod install` in the affected platform directory.
 7. Start debug with the intended entrypoint, usually
-   `flutter run -t lib/main_dev.dart`.
+   `cd apps/mobile && flutter run -t lib/main_dev.dart` or root
+   `flutter run -t lib/main_dev.dart` when the direnv wrapper is active.
 
 ### Run the local quality gate
 
@@ -95,8 +96,9 @@ dart run build_runner build --delete-conflicting-outputs
 ## 1. Mental model
 
 - The repo follows `Presentation -> Domain <- Data` (Clean Architecture).
-- Features live under `lib/features/<feature>/`.
-- App-wide composition lives in `lib/app/`, `lib/core/`, and `lib/shared/`.
+- Features live under `apps/mobile/lib/features/<feature>/`.
+- App-wide composition lives in `apps/mobile/lib/app/`,
+  `apps/mobile/lib/core/`, and `apps/mobile/lib/shared/`.
 - `flutter_bloc` drives state transitions.
 - `get_it` is the composition root and dependency container.
 - Firebase powers core app integrations; Supabase is used where a feature is
@@ -115,16 +117,16 @@ For deeper rationale, see:
 
 | Path | Purpose |
 | --- | --- |
-| `lib/app.dart` | Top-level app widget and router creation. |
-| `lib/main_*.dart` | Flavor-specific entrypoints. |
-| `lib/main_bootstrap.dart` | Shared flavor bootstrap path. |
-| `lib/app/` | App shell, router composition, and app scope. |
-| `lib/core/` | DI, bootstrap, config, theme, routing constants, and core services. |
-| `lib/features/<feature>/` | Feature modules with domain, data, and presentation layers. |
-| `lib/shared/` | Cross-cutting widgets, services, sync, HTTP, storage, and utilities. |
-| `lib/l10n/` | Localization ARB files and generated localizations. |
-| `test/` | Unit, bloc, widget, and golden tests. |
-| `integration_test/` | End-to-end and flow-based integration coverage. |
+| `apps/mobile/lib/app.dart` | Top-level app widget and router creation. |
+| `apps/mobile/lib/main_*.dart` | Flavor-specific entrypoints. |
+| `apps/mobile/lib/main_bootstrap.dart` | Shared flavor bootstrap path. |
+| `apps/mobile/lib/app/` | App shell, router composition, and app scope. |
+| `apps/mobile/lib/core/` | DI, bootstrap, config, theme, routing constants, and core services. |
+| `apps/mobile/lib/features/<feature>/` | Feature modules with domain, data, and presentation layers. |
+| `apps/mobile/lib/shared/` | Cross-cutting widgets, services, sync, HTTP, storage, and utilities. |
+| `apps/mobile/lib/l10n/` | Localization ARB files and generated localizations. |
+| `apps/mobile/test/` | Unit, bloc, widget, and golden tests. |
+| `apps/mobile/integration_test/` | End-to-end and flow-based integration coverage. |
 | `tool/` and `bin/` | Repo automation, validation, release, and maintenance scripts. |
 
 For feature-by-feature entry points, see [Feature Overview](feature_overview.md).
@@ -133,18 +135,20 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
 
 ## 3. Application flow
 
-1. `lib/main_dev.dart`, `lib/main_staging.dart`, or `lib/main_prod.dart`
-   selects a `Flavor` and calls `runAppWithFlavor()`.
-2. `lib/main_bootstrap.dart` initializes Flutter bindings, registers the FCM
-   background handler, and delegates startup to `BootstrapCoordinator`.
-3. `lib/app.dart` creates `MyApp`, configures `GoRouter`, and attaches auth
-   refresh behavior through `GoRouterRefreshStream` when Firebase Auth is
-   available.
-4. `lib/app/app_scope.dart` wires app-wide cubits and listeners such as locale,
-   theme, deep links, retry notifications, and sync status.
-5. `lib/core/app_config.dart` builds `MaterialApp.router`, theme, localization,
-   and app overlays.
-6. Route files under `lib/app/router/` compose the app route tree:
+1. `apps/mobile/lib/main_dev.dart`, `apps/mobile/lib/main_staging.dart`, or
+   `apps/mobile/lib/main_prod.dart` selects a `Flavor` and calls
+   `runAppWithFlavor()`.
+2. `apps/mobile/lib/main_bootstrap.dart` initializes Flutter bindings,
+   registers the FCM background handler, and delegates startup to
+   `BootstrapCoordinator`.
+3. `apps/mobile/lib/app.dart` creates `MyApp`, configures `GoRouter`, and
+   attaches auth refresh behavior through `GoRouterRefreshStream` when Firebase
+   Auth is available.
+4. `apps/mobile/lib/app/app_scope.dart` wires app-wide cubits and listeners
+   such as locale, theme, deep links, retry notifications, and sync status.
+5. `apps/mobile/lib/core/app_config.dart` builds `MaterialApp.router`, theme,
+   localization, and app overlays.
+6. Route files under `apps/mobile/lib/app/router/` compose the app route tree:
    `routes_core.dart`, `routes_demos.dart`, and `route_groups.dart`.
 7. Most feature cubits are created at route scope, and heavy screens such as
    charts, maps, markdown editor, and WebSocket are deferred-loaded.
@@ -153,14 +157,15 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
 
 When adding or changing a feature:
 
-1. Reuse existing patterns in `lib/shared/`, `lib/core/`, and adjacent
-   features before creating new abstractions.
+1. Reuse existing patterns in `apps/mobile/lib/shared/`,
+   `apps/mobile/lib/core/`, and adjacent features before creating new
+   abstractions.
 2. Keep logic in the proper layer:
    domain contracts and models in `domain/`, implementations in `data/`,
    cubits/pages/widgets in `presentation/`.
-3. Register dependencies under `lib/core/di/`.
-4. Wire navigation through `lib/core/router/app_routes.dart` and
-   `lib/app/router/`.
+3. Register dependencies under `apps/mobile/lib/core/di/`.
+4. Wire navigation through `apps/mobile/lib/core/router/app_routes.dart` and
+   `apps/mobile/lib/app/router/`.
 5. Update localization, code generation, docs, and tests when the change
    affects them.
 
@@ -216,7 +221,7 @@ Testing detail lives in:
 | Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
 | iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |
 | Integration tests choose the wrong device | Set `CHECKLIST_INTEGRATION_DEVICE=<deviceId>` before running `./bin/integration_tests`. |
-| Routes or auth behavior changed unexpectedly | Verify `lib/app.dart`, `lib/app/router/auth_redirect.dart`, and the route groups under `lib/app/router/`. |
+| Routes or auth behavior changed unexpectedly | Verify `apps/mobile/lib/app.dart`, `apps/mobile/lib/app/router/auth_redirect.dart`, and the route groups under `apps/mobile/lib/app/router/`. |
 
 ## What to read next
 

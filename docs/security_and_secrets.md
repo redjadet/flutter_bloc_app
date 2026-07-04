@@ -59,7 +59,7 @@ scripts that you may want to run without exporting env vars. The repo only ships
 ### Option A: one-off `--dart-define` flags
 
 ```bash
-flutter run -t lib/main_dev.dart \
+cd apps/mobile && flutter run -t lib/main_dev.dart \
   --dart-define=SUPABASE_URL=... \
   --dart-define=SUPABASE_ANON_KEY=... \
   --dart-define=HUGGINGFACE_API_KEY=...
@@ -73,10 +73,10 @@ flutter run -t lib/main_dev.dart \
 
 ```bash
 direnv allow
-flutter run -t lib/main_dev.dart $(./tool/flutter_dart_defines_from_env.sh)
+cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
 ```
 
-When `.envrc` follows [`docs/envrc.example`](envrc.example) and prepends `tool/direnv/bin` to `PATH`, plain `flutter run` / `flutter build` still receive the same flags: the wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh), which emits `--dart-define=...` only for **named** environment variables (for example `HUGGINGFACE_API_KEY`, `SUPABASE_*`, and optional orchestration demo keys `CHAT_FASTAPICLOUD_*` (preferred) / legacy `CHAT_RENDER_*`). **New** compile-time keys must be added to that script or they will not reach the app even if exported in `.envrc`. Orchestration demo wiring is summarized in [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). **`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render REST, Cursor MCP, or [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never as a Flutter `dart-define` or Remote Config parameter.
+When `.envrc` follows [`docs/envrc.example`](envrc.example) and prepends `tool/direnv/bin` to `PATH`, plain `flutter run` / `flutter build` from the repo root is routed to `apps/mobile` and still receives the same flags: the wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh), which emits `--dart-define=...` only for **named** environment variables (for example `HUGGINGFACE_API_KEY`, `SUPABASE_*`, and optional orchestration demo keys `CHAT_FASTAPICLOUD_*` (preferred) / legacy `CHAT_RENDER_*`). **New** compile-time keys must be added to that script or they will not reach the app even if exported in `.envrc`. Orchestration demo wiring is summarized in [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). **`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render REST, Cursor MCP, or [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never as a Flutter `dart-define` or Remote Config parameter.
 
 If you want iOS builds to use the same values without re-typing flags:
 

@@ -27,7 +27,7 @@ Toolchain: Flutter 3.44.4 / Dart 3.12.2
 | Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
-| Non-trivial `lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
+| Non-trivial `apps/mobile/lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
 | New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` preview; add `--apply` only when final |
 | Feature folder / use-case / DTO / test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md), [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
 | Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades |
@@ -109,6 +109,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
+| Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
 | Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
 | Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
 | Firebase backend | `backend/firebase/` (functions, rules, indexes) |

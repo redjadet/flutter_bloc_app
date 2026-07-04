@@ -66,9 +66,12 @@ Engineering practices
 ## Quick start
 
 ```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
+bash tool/workspace_pub_get.sh
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
+
+With `.envrc` / `tool/direnv/bin` first in `PATH`, `flutter run` also works
+from the repo root and is routed to `apps/mobile`.
 
 Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.md). Full setup, flavors, and credentials: [docs/new_developer_guide.md](docs/new_developer_guide.md).
 

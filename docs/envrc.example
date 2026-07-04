@@ -6,7 +6,9 @@ Copy the following into **repo root** as `.envrc`, fill in values, then run:
 direnv allow
 ```
 
-Then you can run `flutter run` without typing `--dart-define` flags manually.
+Then you can run `flutter run` from the repo root without typing
+`--dart-define` flags manually; the wrapper routes app commands to
+`apps/mobile`.
 
 ```sh
 # Local direnv config (copy to repo root as `.envrc`)

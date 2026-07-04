@@ -125,8 +125,8 @@ Native builds use the gitignored plist/json files; Dart uses `--dart-define` fro
 ### 4. Run the app
 
 ```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
+bash tool/workspace_pub_get.sh
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 ---
@@ -159,8 +159,8 @@ If you prefer not to use the CLI:
 6. **Run the app**
 
    ```bash
-   flutter pub get
-   flutter run -t lib/main_dev.dart
+   bash tool/workspace_pub_get.sh
+   cd apps/mobile && flutter run -t lib/main_dev.dart
    ```
 
 ---
@@ -196,9 +196,10 @@ Once config is in place:
    config change.
 6. If iOS/macOS native config changed, run `flutter clean`, `flutter pub get`,
    and `cd ios && pod install && cd ..` before debug.
-7. Start with `flutter run -t lib/main_dev.dart`. If Firebase still does not
-   initialize, read the log line listing missing field names and add only those
-   `FIREBASE_*` values to `.envrc`.
+7. Start with `cd apps/mobile && flutter run -t lib/main_dev.dart`, or root
+   `flutter run -t lib/main_dev.dart` when the direnv wrapper is active. If
+   Firebase still does not initialize, read the log line listing missing field
+   names and add only those `FIREBASE_*` values to `.envrc`.
 
 ---
 

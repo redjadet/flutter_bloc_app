@@ -8,6 +8,10 @@ set -euo pipefail
 # variables (which direnv loads from `.envrc`).
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+APP_DIR="$ROOT_DIR"
+if [ -f "$ROOT_DIR/apps/mobile/pubspec.yaml" ]; then
+  APP_DIR="$ROOT_DIR/apps/mobile"
+fi
 
 WRAPPER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -40,6 +44,7 @@ fi
 DART_DEFINES=( $("$ROOT_DIR/tool/flutter_dart_defines_from_env.sh") )
 
 subcommand="${1:-}"
+CURRENT_DIR="$(pwd)"
 
 if [ "$subcommand" = "doctor" ]; then
   echo "flutter_resolution|path_flutter|$WRAPPER_DIR/flutter"
@@ -55,6 +60,9 @@ fi
 case "$subcommand" in
   run|build|test|drive|attach)
     shift || true
+    if [ "$CURRENT_DIR" = "$ROOT_DIR" ] && [ "$APP_DIR" != "$ROOT_DIR" ]; then
+      cd "$APP_DIR"
+    fi
     exec env PATH="$REAL_PATH" "$REAL_FLUTTER" "$subcommand" "${DART_DEFINES[@]}" "$@"
     ;;
   *)

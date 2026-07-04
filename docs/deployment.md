@@ -296,9 +296,9 @@ dart run tool/prepare_release.dart
 
 ## Entry points
 
-- Development: `lib/main_dev.dart`
-- Staging: `lib/main_staging.dart`
-- Production: `lib/main_prod.dart`
+- Development: `apps/mobile/lib/main_dev.dart`
+- Staging: `apps/mobile/lib/main_staging.dart`
+- Production: `apps/mobile/lib/main_prod.dart`
 
 ## Related docs
 

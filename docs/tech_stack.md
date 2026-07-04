@@ -15,9 +15,10 @@ not a replacement for `pubspec.yaml`.
 | --- | --- |
 | Flutter | `3.44.4` |
 | Dart | `3.12.2` |
-| App entrypoints | `lib/main_dev.dart`, `lib/main_staging.dart`, `lib/main_prod.dart` |
-| Shared bootstrap | `lib/main_bootstrap.dart` |
-| App shell | `lib/app.dart`, `lib/app/app_scope.dart`, `lib/core/app_config.dart` |
+| App root | `apps/mobile/` (`package:flutter_bloc_app`) |
+| App entrypoints | `apps/mobile/lib/main_dev.dart`, `apps/mobile/lib/main_staging.dart`, `apps/mobile/lib/main_prod.dart` |
+| Shared bootstrap | `apps/mobile/lib/main_bootstrap.dart` |
+| App shell | `apps/mobile/lib/app.dart`, `apps/mobile/lib/app/app_scope.dart`, `apps/mobile/lib/core/app_config.dart` |
 | Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
 ## Supported platforms
@@ -59,7 +60,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Local persistence | `hive` `^2.2.0`, `hive_flutter` `^1.1.0` |
 | Secure storage | `flutter_secure_storage` `^10.0.0` |
 | Legacy migration support | `shared_preferences` `^2.5.3` |
-| Sync infrastructure | Pending sync queue and background sync under `lib/shared/sync/` |
+| Sync infrastructure | Pending sync queue and background sync under `apps/mobile/lib/shared/sync/` |
 | Offline-first docs | [Offline-First Adoption Guide](offline_first/adoption_guide.md) |
 
 ## Networking and backend integrations
@@ -73,7 +74,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Firebase UI | `firebase_ui_auth` `^3.0.1`, `firebase_ui_localizations` `^2.0.0`, `firebase_ui_oauth_google` `^2.0.0` |
 | Supabase | `supabase_flutter` `^2.8.0` |
 | Deep links | `app_links` `^6.4.1` |
-| Backend auth retry and token injection | Shared Dio interceptors under `lib/shared/http/` |
+| Backend auth retry and token injection | Shared Dio interceptors under `apps/mobile/lib/shared/http/` |
 
 ## UI, design, and feature packages
 

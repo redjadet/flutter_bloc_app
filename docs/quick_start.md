@@ -9,9 +9,12 @@ Pinned versions: [tech_stack.md](tech_stack.md) (Flutter 3.44.4 / Dart 3.12.2).
 ## Bootstrap
 
 ```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
+bash tool/workspace_pub_get.sh
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
+
+If `.envrc` has prepended `tool/direnv/bin` to `PATH`, plain `flutter run`
+from the repo root is routed to `apps/mobile`.
 
 Agent host sync (optional, once per machine): [agent_environment_setup.md](agent_environment_setup.md).
 
@@ -24,7 +27,7 @@ Agent host sync (optional, once per machine): [agent_environment_setup.md](agent
 | Feature modularity | `bash tool/check_feature_modularity_leaks.sh` |
 | Folder contract (legacy allowlisted on full scan) | `bash tool/check_feature_folder_contract.sh` |
 | Analyze changed Dart | `./tool/analyze.sh` |
-| Feature cubit tests | `flutter test test/features/<feature>` |
+| Feature cubit tests | `cd apps/mobile && flutter test test/features/<feature>` |
 
 Full gate before ship: `./bin/checklist` — routing in [engineering/validation_routing_fast_vs_full.md](engineering/validation_routing_fast_vs_full.md).
 

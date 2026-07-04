@@ -28,12 +28,12 @@ This is a reference Flutter application that demonstrates clean architecture, of
 Start with these entry points:
 
 - [`clean_architecture.md`](clean_architecture.md) and [`architecture_details.md`](architecture_details.md)
-- `lib/main_bootstrap.dart` and `lib/main_dev.dart`
-- `lib/app.dart` and `lib/app/`
-- `lib/core/di/` (dependency injection)
-- `lib/app/router/` (navigation)
-- `lib/features/counter/` (core example feature)
-- `lib/shared/` (cross-cutting utilities)
+- `apps/mobile/lib/main_bootstrap.dart` and `apps/mobile/lib/main_dev.dart`
+- `apps/mobile/lib/app.dart` and `apps/mobile/lib/app/`
+- `apps/mobile/lib/core/di/` (dependency injection)
+- `apps/mobile/lib/app/router/` (navigation)
+- `apps/mobile/lib/features/counter/` (core example feature)
+- `apps/mobile/lib/shared/` (cross-cutting utilities)
 
 ## 🧭 Why BLoC/Cubit over Riverpod or Provider?
 
@@ -44,8 +44,8 @@ See [State Management Choice](state_management_choice.md) for the full rationale
 ## 🚀 How do I run the app?
 
 ```bash
-flutter pub get
-flutter run -t lib/main_dev.dart
+bash tool/workspace_pub_get.sh
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 For platform setup and configuration, see [Developer Guide](new_developer_guide.md) and [Security & Secrets](security_and_secrets.md).
