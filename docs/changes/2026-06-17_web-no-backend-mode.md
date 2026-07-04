@@ -15,11 +15,11 @@
 
 | Area | Paths |
 | --- | --- |
-| Policy | `lib/core/config/backend_availability.dart`, `lib/core/bootstrap/bootstrap_coordinator.dart` |
-| DI | `lib/core/di/groups/register_core_services.dart`, `register_auth_services.dart`, `register_chat_services.dart` |
-| Routes | `lib/app/router/routes_demos.part.dart` |
-| Features | `lib/features/chat/data/composite_chat_repository.dart`, chat/IoT pages |
-| Shared UI | `lib/shared/widgets/backend_disabled_banner.dart`, `lib/l10n/app_*.arb` |
+| Policy | `apps/mobile/lib/core/config/backend_availability.dart`, `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart` |
+| DI | `apps/mobile/lib/core/di/groups/register_core_services.dart`, `register_auth_services.dart`, `register_chat_services.dart` |
+| Routes | `apps/mobile/lib/app/router/routes_demos.part.dart` |
+| Features | `apps/mobile/lib/features/chat/data/composite_chat_repository.dart`, chat/IoT pages |
+| Shared UI | `apps/mobile/lib/shared/widgets/backend_disabled_banner.dart`, `apps/mobile/lib/l10n/app_*.arb` |
 | Tooling | `tool/patch_ios_flutterfire_crashlytics_upload.sh`, iOS/macOS `project.pbxproj` |
 
 ## Verification

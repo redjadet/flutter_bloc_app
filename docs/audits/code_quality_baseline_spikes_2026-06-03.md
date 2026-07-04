@@ -7,7 +7,7 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 
 - **Script:** `tool/check_lifecycle_observer_dispose.sh` (authored in PR2)
 - **Dry-run:** violation_count **0** on `main` (3 `WidgetsBindingObserver` sites, all call `removeObserver` in `dispose`)
-- **Inventory:** `lib/app/app_scope.dart`, `lib/features/counter/presentation/pages/counter_page.dart`, `lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart`
+- **Inventory:** `apps/mobile/lib/app/app_scope.dart`, `apps/mobile/lib/features/counter/presentation/pages/counter_page.dart`, `apps/mobile/lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart`
 - **Fixtures:** `tool/fixtures/lifecycle_observer_dispose/presentation/{good,bad,suppressed}.dart`
 - **FP risk:** low
 - **Label:** **ready**
@@ -19,12 +19,12 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 
 - **Script:** `tool/check_deferred_heavy_routes.sh` (authored in PR2)
 - **Dry-run:** violation_count **0** — all `deferred as` imports live in allowlisted router files only
-- **Allowlist:** `lib/app/router/route_groups.dart`, `lib/app/router/routes_core.dart` (per baseline appendix)
+- **Allowlist:** `apps/mobile/lib/app/router/route_groups.dart`, `apps/mobile/lib/app/router/routes_core.dart` (per baseline appendix)
 - **Fixtures:** router fixture paths under `tool/fixtures/deferred_heavy_routes/`
 - **FP risk:** low
 - **Label:** **ready**
 - **Severity (PR2):** warn-first (`CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn`)
-- **Severity (PR #292):** default **fail** — 0 violations on `lib/app/router`
+- **Severity (PR #292):** default **fail** — 0 violations on `apps/mobile/lib/app/router`
 - **Rollback:** remove CHECK_SCRIPTS row; restore deferred doc row
 
 ## Spike: QG-D08 — CHECK_THEME filter

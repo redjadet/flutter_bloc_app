@@ -6,12 +6,12 @@ Interview-grade BLE showcase on `/iot-demo` (**BLE** tab): scan, connect, GATT r
 
 ## Hub route
 
-`/iot-demo` → `IotDemoHubPage` (`lib/app/router/pages/iot_demo_hub_page.dart`):
+`/iot-demo` → `IotDemoHubPage` (`apps/mobile/lib/app/router/pages/iot_demo_hub_page.dart`):
 
 | Tab | Module | Notes |
 | --- | --- | --- |
-| Cloud | `lib/features/iot_demo/` | Supabase-backed device list when configured |
-| BLE | `lib/features/iot/` | Local BLE showcase; cubit created lazily on BLE tab |
+| Cloud | `apps/mobile/lib/features/iot_demo/` | Supabase-backed device list when configured |
+| BLE | `apps/mobile/lib/features/iot/` | Local BLE showcase; cubit created lazily on BLE tab |
 
 Modularity: `iot_demo` must not import `features/iot/` — composition stays in app router layer.
 
@@ -41,7 +41,7 @@ Classic Bluetooth section uses `MockClassicBluetoothRepository` (paired devices 
 - **Domain:** `BleRepository`, `BleSessionCoordinator`, `BlePermissionGateway`, entities, `IotBleErrorCode`
 - **Data:** `MockBleRepository`, `ReactiveBleRepository`, `BleRadioClient` (FRB seam), mappers
 - **Presentation:** `IotBleCubit` (part files under `presentation/cubit/`), `IotBleSection` widgets
-- **DI:** `lib/core/di/register_iot_services.dart` (from `register_demo_services.dart`)
+- **DI:** `apps/mobile/lib/core/di/register_iot_services.dart` (from `register_demo_services.dart`)
 
 Errors: `Result<T>` in repositories; `IotBleErrorCode` + l10n in UI.
 
@@ -63,5 +63,5 @@ Integration (extended tier): `integration_test/iot_demo_ble_tab_flow_test.dart` 
 
 ## Related docs
 
-- Feature README: [`lib/features/iot/README.md`](../../lib/features/iot/README.md)
+- Feature README: [`apps/mobile/lib/features/iot/README.md`](../../apps/mobile/lib/features/iot/README.md)
 - Plan / change log: [`plans/iot_ble_feature_brief.md`](../plans/iot_ble_feature_brief.md), [`changes/2026-06-18_iot-ble-feature.md`](../changes/2026-06-18_iot-ble-feature.md)

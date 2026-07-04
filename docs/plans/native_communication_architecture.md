@@ -127,7 +127,7 @@ Cubit behavior:
 ## Data Adapter
 
 Add `EventChannelNativeShowcaseTelemetryService` in
-`lib/features/native_platform_showcase/data/`.
+`apps/mobile/lib/features/native_platform_showcase/data/`.
 
 Channel name:
 
@@ -286,7 +286,7 @@ Check each item in this file as implementation completes.
   editing. (`docs/plans/native_communication_architecture.md` was untracked at start.)
 - [x] Add `NativeShowcaseTelemetryStatus` and
   `NativeShowcaseTelemetrySnapshot` under
-  `lib/features/native_platform_showcase/domain/`.
+  `apps/mobile/lib/features/native_platform_showcase/domain/`.
 - [x] Add `NativeShowcaseTelemetryService` domain port.
 - [x] Add `WatchNativeShowcaseTelemetryUseCase`.
 - [x] Add `EventChannelNativeShowcaseTelemetryService` with injectable event
@@ -319,7 +319,7 @@ Check each item in this file as implementation completes.
 
 Update these docs in the implementation PR:
 
-- [x] [`lib/features/native_platform_showcase/README.md`](../../lib/features/native_platform_showcase/README.md) — add EventChannel
+- [x] [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md) — add EventChannel
   telemetry flow, channel name, native rebuild note, and test commands.
 - [x] `docs/changes/<yyyy-mm-dd>_native_showcase_event_channel_telemetry.md`
   — add feature brief/change note for the Dart/native implementation.

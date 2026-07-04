@@ -39,7 +39,7 @@
   - Include bullets: `Edge/API slice`, `Flutter remote/composite slice`, `Offline-first/error-classification slice`, `UI/l10n slice`, `Docs/security slice`, `Validation slice`.
   - Add: `Only one agent owns each slice at a time; shared files require explicit handoff notes.`
 - Expand `## Code touchpoints` with a `### File map` subsection.
-  - List likely files to add/update, not just directories, for example: `lib/features/chat/data/...`, `lib/features/chat/domain/...`, `lib/core/di/register_chat_services.dart`, `lib/features/chat/presentation/pages/chat_page.dart`, `lib/features/chat/presentation/widgets/...`, `supabase/functions/<name>/index.ts`, `supabase/config.toml`, [`supabase/README.md`](../../supabase/README.md).
+  - List likely files to add/update, not just directories, for example: `apps/mobile/lib/features/chat/data/...`, `apps/mobile/lib/features/chat/domain/...`, `apps/mobile/lib/core/di/register_chat_services.dart`, `apps/mobile/lib/features/chat/presentation/pages/chat_page.dart`, `apps/mobile/lib/features/chat/presentation/widgets/...`, `supabase/functions/<name>/index.ts`, `supabase/config.toml`, [`supabase/README.md`](../../supabase/README.md).
   - Add: `If implementation chooses different filenames, update this plan before coding to keep handoffs deterministic.`
 - Add a new section `## Edge API contract` under `## Approach (short)`.
   - Include concrete bullets: `Request fields`, `Response fields`, `Error body shape`, `schemaVersion`, `idempotency key`, `auth header source`, `model field policy`, `timeout budget`, `retryability field semantics`.

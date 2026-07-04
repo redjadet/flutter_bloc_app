@@ -38,10 +38,10 @@ behavior — not global Firebase sign-out.
 
 **Current seams:**
 
-- `lib/core/di/register_chat_services.dart` — `RenderOrchestrationHfTokenProvider`,
+- `apps/mobile/lib/core/di/register_chat_services.dart` — `RenderOrchestrationHfTokenProvider`,
   Render-named `Dio`
-- `lib/features/chat/data/render_fast_api_chat_repository.dart`
-- `lib/core/auth/session_lifecycle_coordinator.dart`
+- `apps/mobile/lib/features/chat/data/render_fast_api_chat_repository.dart`
+- `apps/mobile/lib/core/auth/session_lifecycle_coordinator.dart`
 - Plan: [`render_fastapi_chat_demo_plan.md`](render_fastapi_chat_demo_plan.md)
 
 **Unblock criteria:**
@@ -72,8 +72,8 @@ confirmation dialog only).
 
 **Current seams:**
 
-- `lib/features/auth/presentation/pages/register_page.dart`
-- `lib/features/auth/presentation/cubit/register/`
+- `apps/mobile/lib/features/auth/presentation/pages/register_page.dart`
+- `apps/mobile/lib/features/auth/presentation/cubit/register/`
 - Doc: [`authentication.md`](../authentication.md) — “Registration Flow (UI-Only)”
 
 **Unblock criteria:** Product asks for a dedicated registration flow separate
@@ -94,7 +94,7 @@ claims ADR” in the secure session checklist.
 
 **Current seams:**
 
-- `lib/app/router/route_auth_policy.dart`, `app_route_auth_gate.dart`
+- `apps/mobile/lib/app/router/route_auth_policy.dart`, `app_route_auth_gate.dart`
 - [`authentication.md`](../authentication.md) — “Roles/claims (design note)”
 - Broader roadmap: [`future_architecture_code_quality_improvement_plan.md`](future_architecture_code_quality_improvement_plan.md) Phase 1
 
@@ -121,9 +121,9 @@ proactive injection failure from absent `FirebaseAuth` user without reading logs
 
 **Current seams:**
 
-- `lib/shared/http/interceptors/auth_token_interceptor.dart` — existing extras:
+- `apps/mobile/lib/shared/http/interceptors/auth_token_interceptor.dart` — existing extras:
   `auth_401_retried`, `managed_auth_user`, `skip_auth_handling`
-- `lib/shared/http/auth_token_manager.dart`
+- `apps/mobile/lib/shared/http/auth_token_manager.dart`
 
 **Unblock criteria:**
 

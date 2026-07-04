@@ -11,7 +11,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
 ## Step-by-Step
 
 1. **Define local store**
-   - Create a Hive-backed repository/data source under `lib/features/<feature>/data/` extending `HiveRepositoryBase`.
+   - Create a Hive-backed repository/data source under `apps/mobile/lib/features/<feature>/data/` extending `HiveRepositoryBase`.
    - Add sync metadata fields (e.g., `changeId`, `lastSyncedAt`, `synchronized`) to the domain model and regen code with `dart run build_runner build --delete-conflicting-outputs`.
    - If the Hive stored DTO/map/json shape changes, update the manifest-driven
      schema migration contract; see [`hive_schema_migrations.md`](hive_schema_migrations.md).
@@ -35,7 +35,7 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - App resume sync stays debounced and flushes must not overlap; use
      `BackgroundSyncCoordinator.flush()` instead of starting parallel sync work.
 3. **Register in DI + registry**
-   - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `lib/core/di/injector_registrations.dart`.
+   - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `apps/mobile/lib/core/di/injector_registrations.dart`.
 4. **Expose status (logs + Settings)**
    - Sync status is logged via `BackgroundSyncCoordinator` telemetry. Feature pages do not show sync banners.
    - For observability, the Sync Diagnostics section in Settings (dev/qa mode only) surfaces `SyncCycleSummary` history so engineering/QA can validate sync health.

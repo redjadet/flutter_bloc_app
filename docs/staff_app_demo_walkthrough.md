@@ -165,7 +165,7 @@ This is not required for the in-app walkthrough.
 If you already have the simulator/device ready, run:
 
 ```bash
-flutter run -d "iPhone 17e" -t lib/main_dev.dart
+flutter run -d "iPhone 17e" -t apps/mobile/lib/main_dev.dart
 ```
 
 Then either:

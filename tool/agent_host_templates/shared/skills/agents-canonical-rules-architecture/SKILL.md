@@ -7,7 +7,7 @@ description: Canonical rules — feature layers, domain purity, cubit vs widget 
 
 Slice of **`agents-canonical-rules`**. Detail: `docs/clean_architecture.md`, `docs/feature_implementation_guide.md`, `docs/architecture/feature_structure_contract.md`, `docs/architecture/reference_features.md`, `docs/architecture/use_case_dto_policy.md`, `docs/bloc_standards.md`.
 
-- No `package:flutter` under `lib/features/*/domain/`.
+- No `package:flutter` under `apps/mobile/lib/features/*/domain/`.
 - **Clean Architecture skeleton** for every feature:
   `Presentation -> Domain <- Data`. **MVVM only in presentation** — View =
   `pages/`/`widgets/`; ViewModel = `presentation/cubit/` (Cubit/BLoC =
@@ -19,6 +19,6 @@ Slice of **`agents-canonical-rules`**. Detail: `docs/clean_architecture.md`, `do
   `bash tool/check_feature_folder_contract.sh` before broad feature finish.
 - Repositories implement domain interfaces; domain/use cases own business rules;
   Cubit/BLoC owns presentation state and flow orchestration.
-- DI in `lib/core/di/injector*.dart`.
+- DI in `apps/mobile/lib/core/di/injector*.dart`.
 - Prefer Freezed for new state/domain models; `build_runner` after `@freezed`.
 - For Cubit/Bloc decisions, invoke `agents-bloc-standards`.

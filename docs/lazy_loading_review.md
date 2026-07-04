@@ -9,24 +9,24 @@ This document reviews lazy-loading patterns and `late` keyword usage across the 
 ### Dependency Injection
 
 - `get_it` registrations use lazy singletons via `registerLazySingletonIfAbsent`.
-- Key files: `lib/core/di/injector.dart`, `lib/core/di/injector_registrations.dart`, `lib/core/di/injector_helpers.dart`.
+- Key files: `apps/mobile/lib/core/di/injector.dart`, `apps/mobile/lib/core/di/injector_registrations.dart`, `apps/mobile/lib/core/di/injector_helpers.dart`.
 - Outcome: services are created only when first requested.
 
 ### Repository Watch Streams
 
 - Repository streams are lazy and start work only when listeners attach.
 - Pattern uses `StreamController` with `onListen`/`onCancel` callbacks.
-- Example files: `lib/shared/utils/repository_watch_helper.dart`, `lib/features/counter/data/hive_counter_repository_watch_helper.dart`.
+- Example files: `apps/mobile/lib/shared/utils/repository_watch_helper.dart`, `apps/mobile/lib/features/counter/data/hive_counter_repository_watch_helper.dart`.
 
 ### Repository Initial Load Guarding
 
 - `RepositoryInitialLoadHelper` prevents duplicate initial loads.
-- File: `lib/shared/utils/repository_initial_load_helper.dart`.
+- File: `apps/mobile/lib/shared/utils/repository_initial_load_helper.dart`.
 
 ### Network Status Monitoring
 
 - `NetworkStatusService` starts connectivity subscriptions on first listener.
-- File: `lib/shared/services/network_status_service.dart`.
+- File: `apps/mobile/lib/shared/services/network_status_service.dart`.
 
 ### UI List Rendering
 

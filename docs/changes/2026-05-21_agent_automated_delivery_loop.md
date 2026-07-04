@@ -9,7 +9,7 @@
 | Step | Command / tool | Notes |
 | --- | --- | --- |
 | 1 | `bash tool/commit_push_pr_rebase_on_main.sh` | Clean worktree first; rebase topic branch on `origin/main` |
-| 2 | Commit + push | Feature scope only; **omit** local `coverage/coverage_summary.md` and README badge churn from `./bin/checklist` unless intentionally shipping coverage |
+| 2 | Commit + push | Feature scope only; **omit** local [`coverage/coverage_summary.md`](../../coverage/coverage_summary.md) and README badge churn from `./bin/checklist` unless intentionally shipping coverage |
 | 3 | `gh pr create` or `python3 tool/commit_push_pr_deploy.py` | No AI/Cursor wording in commits or PR body |
 | 4 | `bash tool/commit_push_pr_watch_merge_cleanup.sh <pr>` | `gh pr checks --watch` → squash merge + delete branch → post-merge |
 | 5 | Post-merge local sync | If `git pull --ff-only` on `main` fails after squash merge, use `git fetch --prune origin && git reset --hard origin/main` (worktree must be clean) |
@@ -28,7 +28,7 @@ bash tool/check_feature_brief_linked.sh --base origin/main
 
 ## Feature-brief guard (Phase 5)
 
-When `lib/features/**/*.dart` changes, run:
+When `apps/mobile/lib/features/**/*.dart` changes, run:
 
 ```bash
 bash tool/check_feature_brief_linked.sh

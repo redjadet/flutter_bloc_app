@@ -135,7 +135,7 @@ require class state or complex behavior.
 
 ### Before Creating New Code
 
-1. **Search existing codebase**: Check `lib/shared/` for existing
+1. **Search existing codebase**: Check `apps/mobile/lib/shared/` for existing
    utilities before implementing new logic
 2. **Identify patterns**: Look for similar code in the same feature or
    across features
@@ -179,7 +179,7 @@ require class state or complex behavior.
 Quick check:
 
 ```bash
-rg "Hive\\.openBox" lib/features lib/core lib/shared | rg -v "lib/shared/storage"
+rg "Hive\\.openBox" apps/mobile/lib/features apps/mobile/lib/core apps/mobile/lib/shared | rg -v "apps/mobile/lib/shared/storage"
 ```
 
 ## Validation After DRY Refactoring

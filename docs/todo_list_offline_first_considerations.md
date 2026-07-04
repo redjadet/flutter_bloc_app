@@ -504,13 +504,13 @@ class OfflineFirstTodoRepository
 
 ### Step 1: Update Domain Model
 
-1. Add sync metadata fields to `lib/features/todo_list/domain/todo_item.dart`
+1. Add sync metadata fields to `apps/mobile/lib/features/todo_list/domain/todo_item.dart`
 2. Run `dart run build_runner build --delete-conflicting-outputs`
 3. Update all `TodoItem.create()` calls (if needed, add sync metadata parameters)
 
 ### Step 2: Update DTO
 
-1. Add sync metadata fields to `lib/features/todo_list/data/todo_item_dto.dart`
+1. Add sync metadata fields to `apps/mobile/lib/features/todo_list/data/todo_item_dto.dart`
 2. Update `fromMap()` and `toMap()` methods
 3. Update `fromDomain()` and `toDomain()` methods
 
@@ -521,7 +521,7 @@ class OfflineFirstTodoRepository
 
 ### Step 4: Create Offline-First Repository
 
-1. Create `lib/features/todo_list/data/offline_first_todo_repository.dart`
+1. Create `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart`
 2. Follow the pattern from `OfflineFirstCounterRepository`
 3. Implement `SyncableRepository` interface
 4. Handle sync operations for todos (create, update, delete)
@@ -582,9 +582,9 @@ When adding sync metadata to existing `TodoItem` instances:
 
 The counter feature provides a complete reference implementation:
 
-- **Domain Model**: `lib/features/counter/domain/counter_snapshot.dart`
-- **Offline-First Repository**: `lib/features/counter/data/offline_first_counter_repository.dart`
-- **Sync Status UI**: `lib/features/counter/presentation/widgets/counter_sync_banner.dart`
+- **Domain Model**: `apps/mobile/lib/features/counter/domain/counter_snapshot.dart`
+- **Offline-First Repository**: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
+- **Sync Status UI**: `apps/mobile/lib/features/counter/presentation/widgets/counter_sync_banner.dart`
 - **Documentation**: [`offline_first/counter.md`](offline_first/counter.md)
 
 ## When to Implement

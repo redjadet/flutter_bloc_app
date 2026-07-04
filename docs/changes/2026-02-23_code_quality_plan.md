@@ -54,12 +54,12 @@ Current baseline:
 
 Focus on files that are both low-coverage and architecturally meaningful:
 
-- `lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
-- `lib/features/chart/data/supabase_chart_repository.dart`
-- `lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
-- `lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
-- `lib/shared/utils/http_request_failure.dart`
-- `lib/core/bootstrap/bootstrap_coordinator.dart`
+- `apps/mobile/lib/features/graphql_demo/data/supabase_graphql_demo_repository.dart`
+- `apps/mobile/lib/features/chart/data/supabase_chart_repository.dart`
+- `apps/mobile/lib/features/iot_demo/data/supabase_iot_demo_repository.dart`
+- `apps/mobile/lib/features/graphql_demo/data/graphql_demo_exception_mapper.dart`
+- `apps/mobile/lib/shared/utils/http_request_failure.dart`
+- `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`
 
 ### Required outcome
 

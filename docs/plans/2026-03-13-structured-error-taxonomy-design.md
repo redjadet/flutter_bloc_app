@@ -31,7 +31,7 @@ and [`CODE_QUALITY.md`](../CODE_QUALITY.md)).
 
 ### Location
 
-- New file: `lib/shared/utils/app_error.dart`
+- New file: `apps/mobile/lib/shared/utils/app_error.dart`
   - Shared, Flutter‑agnostic (no `BuildContext`), reusable by data and presentation layers.
 
 ### Core types
@@ -114,8 +114,8 @@ and [`CODE_QUALITY.md`](../CODE_QUALITY.md)).
 Per the plan, the first implementation slice should touch one shared seam and one representative consumer.
 
 - **Shared seam (mapper path):**
-  - `lib/shared/utils/http_request_failure.dart`
-  - `lib/shared/utils/network_error_mapper.dart`
+  - `apps/mobile/lib/shared/utils/http_request_failure.dart`
+  - `apps/mobile/lib/shared/utils/network_error_mapper.dart`
 
 - **Representative consumer (cubit + UI):**
   - choose one feature that already uses `NetworkErrorMapper` for user‑visible messages, for example:

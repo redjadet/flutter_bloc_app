@@ -32,7 +32,7 @@ Per [future_observability.md](../plans/future_observability.md) (not shipped tod
 
 ## Proof in repo
 
-- Code: [`lib/features/counter/`](../../lib/features/counter/)
+- Code: [`apps/mobile/lib/features/counter/`](../../apps/mobile/lib/features/counter/)
 - Integration: `registerCounterPersistenceIntegrationFlow()` in PR smoke
 - Manual: Settings → Sync diagnostics after offline edits
 - Architecture: [ADR 0002](../adr/0002-offline-first-data.md), [offline_first/adoption_guide.md](../offline_first/adoption_guide.md)

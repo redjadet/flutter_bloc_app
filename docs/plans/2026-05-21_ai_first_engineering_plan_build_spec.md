@@ -283,7 +283,7 @@ git diff --check
 
 **17 features — stub** (`status: stub` + purpose one-liner only):
 
-All other `lib/features/*` dirs.
+All other `apps/mobile/lib/features/*` dirs.
 
 | File |
 | --- |

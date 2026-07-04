@@ -32,10 +32,10 @@ Subjective 1–5 for interview/portfolio readiness; not a CI gate.
 | # | Item | Status | Evidence |
 | --- | --- | --- | --- |
 | R1 | Therapy cubit success tests | Done | `test/features/online_therapy_demo/presentation/cubit/*_cubit_test.dart` |
-| R2 | Chat mapper barrel re-export (AP-04) | Done | `lib/features/chat/data/chat_remote_failure_mapper.dart` (re-exports transport mappers) |
+| R2 | Chat mapper barrel re-export (AP-04) | Done | `apps/mobile/lib/features/chat/data/chat_remote_failure_mapper.dart` (re-exports transport mappers) |
 | R3 | GraphQL cubit placement (AP-03) | Done | `presentation/cubit/graphql_demo_cubit.dart` |
 | R4 | Auth repository clarity | Done | [`authentication.md`](../authentication.md) roles table |
-| R5 | Route auth audit | Done (no code change) | [`route_auth_policy.dart`](../../lib/app/router/route_auth_policy.dart); router tests |
+| R5 | Route auth audit | Done (no code change) | [`route_auth_policy.dart`](../../apps/mobile/lib/app/router/route_auth_policy.dart); router tests |
 | R6 | AP-01 edge removal | Done | `RemoteBackendAuthPort`; empty cross-feature metrics |
 | R7 | Spine golden | Done | `test/goldens/spine_counter_reference.phone.png` |
 

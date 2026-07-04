@@ -16,5 +16,5 @@
 
 ```bash
 flutter test test/features/chat/presentation/cubit/chat_cubit_send_supersession_test.dart test/chat_cubit_test.dart
-flutter analyze lib/features/chat/presentation/cubit/
+flutter analyze apps/mobile/lib/features/chat/presentation/cubit/
 ```

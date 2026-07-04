@@ -34,7 +34,7 @@ This repository uses:
 - BLoC/Cubit for presentation state
 - `get_it` for DI
 - Hive for encrypted local persistence
-- Shared sync infrastructure in `lib/shared/sync/`
+- Shared sync infrastructure in `apps/mobile/lib/shared/sync/`
 
 offline-first pattern is used across multiple features with different
 shapes:
@@ -78,15 +78,15 @@ At high level:
 ### 1. Local-first repositories
 
 Each adopting feature has Hive-backed local repository or cache under
-`lib/features/<feature>/data/`. Local repositories are source of immediate
+`apps/mobile/lib/features/<feature>/data/`. Local repositories are source of immediate
 read performance and persistence layer for optimistic state.
 
 Examples:
 
-- `lib/features/counter/data/hive_counter_repository.dart`
-- `lib/features/todo_list/data/hive_todo_repository.dart`
-- `lib/features/search/data/hive_search_cache_repository.dart`
-- `lib/features/profile/data/profile_cache_repository.dart`
+- `apps/mobile/lib/features/counter/data/hive_counter_repository.dart`
+- `apps/mobile/lib/features/todo_list/data/hive_todo_repository.dart`
+- `apps/mobile/lib/features/search/data/hive_search_cache_repository.dart`
+- `apps/mobile/lib/features/profile/data/profile_cache_repository.dart`
 
 ### 2. Offline-first wrappers
 
@@ -96,10 +96,10 @@ presentation.
 
 Examples:
 
-- `lib/features/counter/data/offline_first_counter_repository.dart`
-- `lib/features/chat/data/offline_first_chat_repository.dart`
-- `lib/features/todo_list/data/offline_first_todo_repository.dart`
-- `lib/features/remote_config/data/offline_first_remote_config_repository.dart`
+- `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
+- `apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart`
+- `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart`
+- `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart`
 
 These repositories are responsible for:
 
@@ -112,8 +112,8 @@ These repositories are responsible for:
 ### 3. Persistent pending-operation queue
 
 Queued work is stored in
-`lib/shared/sync/pending_sync_repository.dart` using Hive-backed
-`SyncOperation` records from `lib/shared/sync/sync_operation.dart`.
+`apps/mobile/lib/shared/sync/pending_sync_repository.dart` using Hive-backed
+`SyncOperation` records from `apps/mobile/lib/shared/sync/sync_operation.dart`.
 
 Each operation contains:
 
@@ -132,7 +132,7 @@ This design makes queued operations:
 
 ### 4. Shared background coordinator
 
-`lib/shared/sync/background_sync_coordinator.dart` orchestrates replay.
+`apps/mobile/lib/shared/sync/background_sync_coordinator.dart` orchestrates replay.
 
 It listens to:
 
@@ -161,7 +161,7 @@ write path is intentionally simple:
 4. Return control to caller immediately.
 
 Counter is clearest example. In
-`lib/features/counter/data/offline_first_counter_repository.dart`,
+`apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`,
 `save()` writes normalized snapshot to Hive, generates `changeId`, and
 stores queued operation keyed by that change identifier.
 
@@ -209,9 +209,9 @@ eventual-consistency lag, and slow retries.
 rule is documented in
 [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) and implemented concretely in:
 
-- `lib/features/counter/data/offline_first_counter_repository.dart`
-- `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
-- `lib/features/todo_list/data/todo_merge_policy.dart`
+- `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
+- `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
+- `apps/mobile/lib/features/todo_list/data/todo_merge_policy.dart`
 
 This avoids classic flicker bug where UI shows:
 
@@ -248,7 +248,7 @@ coordinator processes pending operations first and only then calls
 `pullRemote()`.
 
 That ordering is visible in `runSyncCycle()` in
-`lib/shared/sync/background_sync_runner.dart`.
+`apps/mobile/lib/shared/sync/background_sync_runner.dart`.
 
 Without this, app could fetch stale server state and overwrite local
 optimistic data before queued mutation had chance to land remotely.
@@ -406,10 +406,10 @@ For this app, that is right trade.
 - [`offline_first/adoption_guide.md`](../offline_first/adoption_guide.md)
 - [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md)
 - [`offline_first/counter.md`](../offline_first/counter.md)
-- `lib/shared/sync/pending_sync_repository.dart`
-- `lib/shared/sync/background_sync_coordinator.dart`
-- `lib/shared/sync/background_sync_runner.dart`
-- `lib/features/counter/data/offline_first_counter_repository.dart`
-- `lib/features/todo_list/data/todo_merge_policy.dart`
-- `lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
-- `lib/features/chat/data/offline_first_chat_repository.dart`
+- `apps/mobile/lib/shared/sync/pending_sync_repository.dart`
+- `apps/mobile/lib/shared/sync/background_sync_coordinator.dart`
+- `apps/mobile/lib/shared/sync/background_sync_runner.dart`
+- `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
+- `apps/mobile/lib/features/todo_list/data/todo_merge_policy.dart`
+- `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`
+- `apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart`

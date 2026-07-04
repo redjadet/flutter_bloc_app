@@ -26,8 +26,8 @@ Closure report for **post-merge** architecture refactors shipped on `main` via
 
 **Changes:**
 
-- `lib/shared/media/media_pick_result.dart` + `media_pick_error_keys.dart` — shared pick result model.
-- `lib/core/auth/remote_backend_auth_port.dart` — auth port (`isConfigured`, `currentUser`, `authStateChanges`, `signOut`).
+- `apps/mobile/lib/shared/media/media_pick_result.dart` + `media_pick_error_keys.dart` — shared pick result model.
+- `apps/mobile/lib/core/auth/remote_backend_auth_port.dart` — auth port (`isConfigured`, `currentUser`, `authStateChanges`, `signOut`).
 - `SupabaseAuthRepository` implements `RemoteBackendAuthPort`; registered in DI.
 - `camera_gallery` keeps typedef/shim aliases for backward compatibility.
 - `case_study_demo` cubit uses `RemoteBackendAuthPort` and `MediaPickResult` only.
@@ -56,7 +56,7 @@ Closure report for **post-merge** architecture refactors shipped on `main` via
 
 ## Phase 5 — mechanical Feature Brief gate
 
-**Added:** `tool/check_feature_brief_linked.sh` — warns when `lib/features/**/*.dart` changes without `docs/changes/*.md` in the same diff; `SKIP_FEATURE_BRIEF=1` or `FEATURE_BRIEF_CHECK_STRICT=1` documented in [`docs/validation_scripts.md`](../../docs/validation_scripts.md).
+**Added:** `tool/check_feature_brief_linked.sh` — warns when `apps/mobile/lib/features/**/*.dart` changes without `docs/changes/*.md` in the same diff; `SKIP_FEATURE_BRIEF=1` or `FEATURE_BRIEF_CHECK_STRICT=1` documented in [`docs/validation_scripts.md`](../../docs/validation_scripts.md).
 
 Not wired into `./bin/checklist` by default (avoid false positives on small fixes); run manually on feature PRs.
 

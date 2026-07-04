@@ -18,10 +18,10 @@ Most repositories in this app follow a simple lifecycle:
 
 All repositories are registered as **lazy singletons** in the dependency injection system:
 
-- **Main file:** `lib/core/di/injector.dart` - Contains `configureDependencies()` and public API
-- **Registrations:** `lib/core/di/injector_registrations.dart` - Contains all dependency registrations organized by category
-- **Factories:** `lib/core/di/injector_factories.dart` - Contains factory functions for creating repositories
-- **Helpers:** `lib/core/di/injector_helpers.dart` - Contains helper functions for registration
+- **Main file:** `apps/mobile/lib/core/di/injector.dart` - Contains `configureDependencies()` and public API
+- **Registrations:** `apps/mobile/lib/core/di/injector_registrations.dart` - Contains all dependency registrations organized by category
+- **Factories:** `apps/mobile/lib/core/di/injector_factories.dart` - Contains factory functions for creating repositories
+- **Helpers:** `apps/mobile/lib/core/di/injector_helpers.dart` - Contains helper functions for registration
 
 - **Single instance:** Only one instance exists throughout the app lifecycle
 - **Lazy initialization:** Instance is created only when first requested

@@ -10,7 +10,7 @@ CounterPage → CounterCubit → CounterRepository (contract)
   → Hive box + optional remote sync
 ```
 
-**Docs:** feature module `lib/features/counter/`, remote config flags in `remote_config`.
+**Docs:** feature module `apps/mobile/lib/features/counter/`, remote config flags in `remote_config`.
 
 ## Path 2 — Todo list (offline-first + Realtime DB)
 
@@ -20,7 +20,7 @@ TodoListPage → TodoCubit → OfflineFirstTodoRepository
   → PendingSyncRepository / BackgroundSyncCoordinator
 ```
 
-**Docs:** [`docs/offline_first/adoption_guide.md`](../../docs/offline_first/adoption_guide.md), `lib/shared/sync/`.
+**Docs:** [`docs/offline_first/adoption_guide.md`](../../docs/offline_first/adoption_guide.md), `apps/mobile/lib/shared/sync/`.
 
 ## Path 3 — Chat (multi-backend orchestration)
 
@@ -41,7 +41,7 @@ Chat UI → ChatCubit → ChatRepository implementations
 | `BackgroundSyncCoordinator` | Flush on resume / schedule |
 | `NetworkStatusService` | Gate remote calls |
 
-Location: `lib/shared/sync/`, wired in bootstrap / `AppScope`.
+Location: `apps/mobile/lib/shared/sync/`, wired in bootstrap / `AppScope`.
 
 ## Configuration gates
 
@@ -49,12 +49,12 @@ Location: `lib/shared/sync/`, wired in bootstrap / `AppScope`.
 | --- | --- |
 | Firebase | [`docs/firebase_setup.md`](../../docs/firebase_setup.md) |
 | Supabase | `SUPABASE_URL`, `SUPABASE_ANON_KEY` |
-| HTTP / Dio | `lib/shared/http/`, `register_http_services.dart` |
+| HTTP / Dio | `apps/mobile/lib/shared/http/`, `register_http_services.dart` |
 
 ## Agent checklist (data change)
 
 1. Identify contract in `domain/`.
 2. Decide offline-first vs remote-only.
-3. Register implementation in `lib/core/di/`.
+3. Register implementation in `apps/mobile/lib/core/di/`.
 4. Add regression test at repository or cubit level.
 5. Update owning doc in `docs/` (not a second copy in `ai/`).

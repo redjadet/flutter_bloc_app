@@ -33,7 +33,7 @@ likely to accumulate hidden coupling.
 ### 1. Layer Boundaries
 
 - **Domain** defines contracts and models only. Example: feature repositories
-  under `lib/features/*/domain/` expose the API that cubits depend on, without
+  under `apps/mobile/lib/features/*/domain/` expose the API that cubits depend on, without
   importing Flutter or concrete SDKs.
 - **Data** implements those contracts and hides storage, HTTP, Firebase,
   Supabase, Hive, and sync details behind repository abstractions.
@@ -49,13 +49,13 @@ This is enforced both by convention and by validation scripts such as
   from above. They decide which providers, listeners, and feature pages are in
   play, but they should not absorb feature business rules.
 - Feature modules own their own contracts, repositories, cubits, and widgets
-  under `lib/features/<feature>/`.
+  under `apps/mobile/lib/features/<feature>/`.
 - This distinction matters because app-shell code is allowed to know about many
   features at once, while feature code should remain scoped and replaceable.
 
 ### 3. Orchestration vs Infrastructure
 
-- `BackgroundSyncCoordinator` in `lib/shared/sync/background_sync_coordinator.dart`
+- `BackgroundSyncCoordinator` in `apps/mobile/lib/shared/sync/background_sync_coordinator.dart`
   coordinates sync cycles, but delegates timing to `TimerService`,
   connectivity to `NetworkStatusService`, queued work to
   `PendingSyncRepository`, and repository participation to
@@ -66,7 +66,7 @@ This is enforced both by convention and by validation scripts such as
 ### 4. Repository Delegation
 
 - `OfflineFirstChatRepository` in
-  `lib/features/chat/data/offline_first_chat_repository.dart` handles
+  `apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart` handles
   orchestration for chat sync, but delegates payload construction to
   `ChatSyncOperationFactory` and local persistence/merge behavior to
   `ChatLocalConversationUpdater`.
@@ -77,7 +77,7 @@ This is enforced both by convention and by validation scripts such as
 ### 5. DI as a Composition Boundary
 
 - Feature registrations are split into focused files such as
-  `lib/core/di/register_chat_services.dart` instead of one monolithic
+  `apps/mobile/lib/core/di/register_chat_services.dart` instead of one monolithic
   registration file.
 - `get_it` wiring is treated as the composition boundary where concrete data
   implementations are attached to abstract interfaces.
@@ -86,10 +86,10 @@ This is enforced both by convention and by validation scripts such as
 
 ### 6. UI Access Patterns
 
-- `lib/shared/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
+- `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
   state access, keeping widget code focused on rendering instead of provider
   lookup mechanics.
-- `lib/shared/utils/bloc_provider_helpers.dart` centralizes common
+- `apps/mobile/lib/shared/utils/bloc_provider_helpers.dart` centralizes common
   `BlocProvider` creation and async initialization patterns so route/page code
   does not repeatedly re-implement setup behavior.
 

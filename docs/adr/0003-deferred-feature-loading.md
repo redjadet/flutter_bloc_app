@@ -73,8 +73,8 @@ feature cleanup.
 
 ## Implementation Notes
 
-- Keep deferred route wrappers in `lib/app/router/`.
-- Keep deferred page entrypoints in `lib/app/router/deferred_pages/`.
+- Keep deferred route wrappers in `apps/mobile/lib/app/router/`.
+- Keep deferred page entrypoints in `apps/mobile/lib/app/router/deferred_pages/`.
 - Use `DeferredPage` rather than ad hoc `FutureBuilder` wrappers for route
   loading.
 - Register services lazily where possible; deferred imports and lazy DI solve

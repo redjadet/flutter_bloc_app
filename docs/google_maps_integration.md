@@ -6,11 +6,11 @@ configure required platform keys, and where to extend the feature.
 
 ## Scope in This Project
 
-- Feature path: `lib/features/google_maps/`
+- Feature path: `apps/mobile/lib/features/google_maps/`
 - Route: `AppRoutes.googleMapsPath` (`/google-maps`)
-- Route registration: `lib/app/router/route_groups.dart`
-- Deferred page entry: `lib/app/router/deferred_pages/google_maps_page.dart`
-- DI registration: `lib/core/di/injector_registrations.dart`
+- Route registration: `apps/mobile/lib/app/router/route_groups.dart`
+- Deferred page entry: `apps/mobile/lib/app/router/deferred_pages/google_maps_page.dart`
+- DI registration: `apps/mobile/lib/core/di/injector_registrations.dart`
 
 The map feature is implemented as a clean-architecture feature module:
 
@@ -27,7 +27,7 @@ The app intentionally uses different map providers by platform:
 - Web/Desktop: map sample page is shown as unsupported
 
 Selection logic is in
-`lib/features/google_maps/presentation/pages/google_maps_sample_page.dart`.
+`apps/mobile/lib/features/google_maps/presentation/pages/google_maps_sample_page.dart`.
 
 ## Dependencies
 
@@ -48,9 +48,9 @@ while the app remains hybrid SwiftPM + CocoaPods for unsupported plugins.
 Google Maps is lazy-loaded with deferred imports to reduce startup bundle size:
 
 - Deferred import and route:
-  `lib/app/router/route_groups.dart`
+  `apps/mobile/lib/app/router/route_groups.dart`
 - Deferred page builder:
-  `lib/app/router/deferred_pages/google_maps_page.dart`
+  `apps/mobile/lib/app/router/deferred_pages/google_maps_page.dart`
 
 The deferred builder creates `MapSampleCubit` with DI and runs
 `loadLocations()` via `BlocProviderHelpers.withAsyncInit(...)`.
@@ -58,7 +58,7 @@ The deferred builder creates `MapSampleCubit` with DI and runs
 ## Dependency Injection
 
 `MapLocationRepository` is registered in
-`lib/core/di/injector_registrations.dart`:
+`apps/mobile/lib/core/di/injector_registrations.dart`:
 
 - `MapLocationRepository -> SampleMapLocationRepository`
 
@@ -147,7 +147,7 @@ not block the page in current behavior.
 
 The map page checks key availability at runtime for non-iOS-map mode:
 
-- Dart service: `lib/shared/platform/native_platform_service.dart`
+- Dart service: `apps/mobile/lib/shared/platform/native_platform_service.dart`
 - Android channel check:
   `android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt`
 - iOS channel check: `ios/Runner/AppDelegate.swift`
@@ -176,7 +176,7 @@ Current implementation status:
 How to implement real location tracking with this architecture:
 
 1. Add a domain contract (for example, `LocationTrackingRepository` or
-   `LocationTrackingService`) in `lib/features/google_maps/domain/`.
+   `LocationTrackingService`) in `apps/mobile/lib/features/google_maps/domain/`.
 2. Implement platform data source in data layer (permission + location stream).
 3. Register implementation in DI (`injector_registrations.dart`).
 4. Extend `MapSampleCubit` state to include current user location and tracking
@@ -189,17 +189,17 @@ should only render state emitted by the cubit.
 
 Key files:
 
-- Page: `lib/features/google_maps/presentation/pages/google_maps_sample_page.dart`
-- Cubit: `lib/features/google_maps/presentation/cubit/map_sample_cubit.dart`
-- State: `lib/features/google_maps/presentation/cubit/map_sample_state.dart`
+- Page: `apps/mobile/lib/features/google_maps/presentation/pages/google_maps_sample_page.dart`
+- Cubit: `apps/mobile/lib/features/google_maps/presentation/cubit/map_sample_cubit.dart`
+- State: `apps/mobile/lib/features/google_maps/presentation/cubit/map_sample_state.dart`
 - Shared map view shell:
-  `lib/features/google_maps/presentation/widgets/map_sample_map_view.dart`
+  `apps/mobile/lib/features/google_maps/presentation/widgets/map_sample_map_view.dart`
 - Google map widget:
-  `lib/features/google_maps/presentation/widgets/google_maps_view.dart`
+  `apps/mobile/lib/features/google_maps/presentation/widgets/google_maps_view.dart`
 - Apple map widget:
-  `lib/features/google_maps/presentation/widgets/apple_maps_view.dart`
+  `apps/mobile/lib/features/google_maps/presentation/widgets/apple_maps_view.dart`
 - Camera abstraction:
-  `lib/features/google_maps/presentation/widgets/map_camera_controller.dart`
+  `apps/mobile/lib/features/google_maps/presentation/widgets/map_camera_controller.dart`
 
 ## Architecture Notes for Future Changes
 

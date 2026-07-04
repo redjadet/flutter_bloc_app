@@ -23,8 +23,8 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - Presentation imports domain/core/shared contracts, not data-layer
   implementations.
 - Data imports domain/core/shared infrastructure, not presentation.
-- `lib/shared/` does not import `lib/features/`.
-- Cross-feature needs use app composition, `lib/core/` ports, or shared DTOs.
+- `apps/mobile/lib/shared/` does not import `apps/mobile/lib/features/`.
+- Cross-feature needs use app composition, `apps/mobile/lib/core/` ports, or shared DTOs.
 
 ## Feature Shape
 
@@ -33,7 +33,7 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - New cubit/state files live under `presentation/cubit/` (see
   [`reference_features.md`](../architecture/reference_features.md)); not at
   `presentation/` root, `presentation/cubits/`, or flow subfolders.
-- DI registration lives in `lib/core/di/` and uses existing idempotent helpers.
+- DI registration lives in `apps/mobile/lib/core/di/` and uses existing idempotent helpers.
 - Route constants and route groups are updated together.
 - Generated code, l10n, Hive schema fingerprints, or migrations are updated
   when their annotations or stored shapes change.

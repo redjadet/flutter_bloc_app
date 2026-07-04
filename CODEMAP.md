@@ -5,14 +5,14 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Task | Start here |
 | --- | --- |
 | Onboard / loop | [`AGENTS.md`](AGENTS.md), [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) |
-| Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `lib/features/<feature>/` |
-| Routes / deep links | [`lib/core/router/app_routes.dart`](lib/core/router/app_routes.dart), [`lib/app/router/`](lib/app/router/) |
-| DI registration | [`lib/core/di/`](lib/core/di/), `register_*_services.dart` |
-| UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`lib/shared/`](lib/shared/) |
-| Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`lib/shared/sync/`](lib/shared/sync/) |
-| HTTP / retries | [`lib/shared/http/`](lib/shared/http/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
-| Native interop (MethodChannel / EventChannel / FFI) | [`lib/features/native_platform_showcase/`](lib/features/native_platform_showcase/), [`README`](lib/features/native_platform_showcase/README.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`native_platform_showcase` row) |
-| Tests | [`docs/testing_overview.md`](docs/testing_overview.md), [`test/`](test/) |
+| Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `apps/mobile/lib/features/<feature>/` |
+| Routes / deep links | [`apps/mobile/lib/core/router/app_routes.dart`](apps/mobile/lib/core/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |
+| DI registration | [`apps/mobile/lib/core/di/`](apps/mobile/lib/core/di/), `register_*_services.dart` |
+| UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`apps/mobile/lib/shared/`](apps/mobile/lib/shared/) |
+| Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`apps/mobile/lib/shared/sync/`](apps/mobile/lib/shared/sync/) |
+| HTTP / retries | [`apps/mobile/lib/shared/http/`](apps/mobile/lib/shared/http/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
+| Native interop (MethodChannel / EventChannel / FFI) | [`apps/mobile/lib/features/native_platform_showcase/`](apps/mobile/lib/features/native_platform_showcase/), [`README`](apps/mobile/lib/features/native_platform_showcase/README.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`native_platform_showcase` row) |
+| Tests | [`docs/testing_overview.md`](docs/testing_overview.md), [`apps/mobile/test/`](apps/mobile/test/) |
 | Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |
 | Feature catalog | [`docs/feature_overview.md`](docs/feature_overview.md) |
 | Architecture | [`docs/architecture_details.md`](docs/architecture_details.md), [`ai/reports/architecture_overview.md`](ai/reports/architecture_overview.md) |
@@ -25,7 +25,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 
 ## Feature modules
 
-`lib/features/<name>/` — see [`ai/reports/feature_map.md`](ai/reports/feature_map.md) for per-feature paths and minimal context sets.
+`apps/mobile/lib/features/<name>/` — see [`ai/reports/feature_map.md`](ai/reports/feature_map.md) for per-feature paths and minimal context sets.
 
 Standard shape: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md). New Cubits go in `presentation/cubit/` only.
 

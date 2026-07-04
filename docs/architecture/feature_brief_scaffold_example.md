@@ -1,7 +1,7 @@
 # Feature Brief Scaffold Example
 
 Shows the output of `bash tool/scaffold_feature_contract.sh`. Use as a filled
-reference — do not create `lib/features/audit_demo/` in the repo for this
+reference — do not create `apps/mobile/lib/features/audit_demo/` in the repo for this
 example.
 
 ## Command
@@ -14,11 +14,11 @@ bash tool/scaffold_feature_contract.sh --name audit_demo --apply  # creates dirs
 Dry-run plans:
 
 ```text
-lib/features/audit_demo/domain
-lib/features/audit_demo/data
-lib/features/audit_demo/presentation/cubit
-lib/features/audit_demo/presentation/pages
-lib/features/audit_demo/presentation/widgets
+apps/mobile/lib/features/audit_demo/domain
+apps/mobile/lib/features/audit_demo/data
+apps/mobile/lib/features/audit_demo/presentation/cubit
+apps/mobile/lib/features/audit_demo/presentation/pages
+apps/mobile/lib/features/audit_demo/presentation/widgets
 test/features/audit_demo/domain
 test/features/audit_demo/data
 test/features/audit_demo/presentation

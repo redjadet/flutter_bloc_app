@@ -28,7 +28,7 @@ Format: **Symptom → Cause → Fix → Proof**
 
 **Symptom:** `modular_metrics --cross-feature-only` showed chat importing `supabase_auth/domain`.
 **Cause:** `ChatAuthSessionPortAdapter` depended on concrete `SupabaseAuthRepository`.
-**Fix:** `RemoteBackendAuthPort` in `lib/core/auth/`; adapter depends on port; DI binds Supabase repo as port.
+**Fix:** `RemoteBackendAuthPort` in `apps/mobile/lib/core/auth/`; adapter depends on port; DI binds Supabase repo as port.
 **Proof:** Empty cross-feature report; `check_feature_modularity_leaks.sh` pass
 
 ---
@@ -74,7 +74,7 @@ Format: **Symptom → Cause → Fix → Proof**
 **Symptom:** [`authentication.md`](authentication.md) claimed settings behind `AppRouteAuthGate`.
 **Cause:** Policy intentionally `publicRoute`; page uses biometric gate.
 **Fix:** Doc aligned with `AppRoutePolicies.settings`; audit recorded no router code change.
-**Proof:** `test/app/router/app_route_auth_gate_test.dart`; [`route_auth_policy.dart`](../lib/app/router/route_auth_policy.dart)
+**Proof:** `test/app/router/app_route_auth_gate_test.dart`; [`route_auth_policy.dart`](../apps/mobile/lib/app/router/route_auth_policy.dart)
 
 ---
 

@@ -80,7 +80,7 @@ flutter run --profile --trace-startup --device-id=<device-id> > startup_$(date +
 
 **Best for:** Custom measurements and specific optimization tracking
 
-Add timing markers in `lib/core/bootstrap/bootstrap_coordinator.dart`:
+Add timing markers in `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`:
 
 ```dart
 class BootstrapCoordinator {
@@ -128,7 +128,7 @@ class BootstrapCoordinator {
 
 The codebase already includes `PerformanceProfiler` for runtime performance tracking.
 
-**Location:** `lib/shared/utils/performance_profiler.dart`
+**Location:** `apps/mobile/lib/shared/utils/performance_profiler.dart`
 
 **Usage:**
 
@@ -247,5 +247,5 @@ To protect startup targets in CI (e.g. for enterprise or high-traffic builds), a
 
 - **Flutter DevTools:** `flutter pub global activate devtools && flutter pub global run devtools`
 - **Startup Trace:** `flutter run --profile --trace-startup`
-- **Performance Profiler:** `lib/shared/utils/performance_profiler.dart`
+- **Performance Profiler:** `apps/mobile/lib/shared/utils/performance_profiler.dart`
 - **Bundle Size Check:** `tool/check_bundle_size.sh`

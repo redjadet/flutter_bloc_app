@@ -111,14 +111,14 @@ The rendering layer (CustomPainter/RenderObject) sits at the **Presentation** le
 Here's how data flows from domain to rendering:
 
 ```dart
-// 1. Domain Contract (lib/features/counter/domain/counter_repository.dart)
+// 1. Domain Contract (apps/mobile/lib/features/counter/domain/counter_repository.dart)
 abstract class CounterRepository {
   Future<CounterSnapshot> load();
   Future<void> save(CounterSnapshot snapshot);
   Stream<CounterSnapshot> watch();
 }
 
-// 2. Data Implementation (lib/features/counter/data/hive_counter_repository.dart)
+// 2. Data Implementation (apps/mobile/lib/features/counter/data/hive_counter_repository.dart)
 class HiveCounterRepository implements CounterRepository {
   @override
   Future<CounterSnapshot> load() async {
@@ -129,7 +129,7 @@ class HiveCounterRepository implements CounterRepository {
   // ... other methods
 }
 
-// 3. Dependency Injection (lib/core/di/injector.dart)
+// 3. Dependency Injection (apps/mobile/lib/core/di/injector.dart)
 void configureDependencies() {
   getIt.registerLazySingleton<CounterRepository>(
     () => HiveCounterRepository(),
@@ -139,7 +139,7 @@ void configureDependencies() {
   );
 }
 
-// 4. Presentation - Cubit (lib/features/counter/presentation/cubit/counter_cubit.dart)
+// 4. Presentation - Cubit (apps/mobile/lib/features/counter/presentation/cubit/counter_cubit.dart)
 class CounterCubit extends Cubit<CounterState> {
   CounterCubit({required CounterRepository repository})
       : _repository = repository,
@@ -1192,8 +1192,8 @@ Custom painters and render objects should support accessibility:
 
 The codebase includes production examples:
 
-- **`WhiteboardPainter`** (`lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart`): CustomPainter for stroke rendering with smooth bezier curves
-- **`MarkdownRenderObject`** (`lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart`): RenderObject for custom text layout with markdown syntax highlighting
+- **`WhiteboardPainter`** (`apps/mobile/lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart`): CustomPainter for stroke rendering with smooth bezier curves
+- **`MarkdownRenderObject`** (`apps/mobile/lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart`): RenderObject for custom text layout with markdown syntax highlighting
 
 Study these examples for patterns on:
 

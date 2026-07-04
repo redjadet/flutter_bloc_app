@@ -6,7 +6,7 @@ Static gates and review checklists reference these IDs. Status reflects the **20
 
 | ID | Pattern | Why it hurts | Preferred fix | Status (2026-06-15) |
 | --- | --- | --- | --- | --- |
-| AP-01 | Feature `data` imports another feature's `domain` | Hidden coupling; breaks modular monolith | Narrow port in `lib/core/` (or owning feature `domain` port); wire in DI | **Fixed (chat)** — `RemoteBackendAuthPort`; `modular_metrics --cross-feature-only` empty. Case study still uses port via same seam |
+| AP-01 | Feature `data` imports another feature's `domain` | Hidden coupling; breaks modular monolith | Narrow port in `apps/mobile/lib/core/` (or owning feature `domain` port); wire in DI | **Fixed (chat)** — `RemoteBackendAuthPort`; `modular_metrics --cross-feature-only` empty. Case study still uses port via same seam |
 | AP-02 | Presentation imports another feature's `data` | UI layer reaches across persistence | Repository interface in `domain`; DI only in `core/di` | Open — audit per PR |
 | AP-03 | Cubit outside `presentation/cubit/` | Inconsistent feature contract | Move cubit + fix barrel/router/tests | **Fixed (graphql_demo)** |
 | AP-04 | Parallel failure mappers per transport | Drift in user-facing errors | Single public seam re-exporting transport mappers | **Fixed (chat)** — `chat_remote_failure_mapper.dart` |

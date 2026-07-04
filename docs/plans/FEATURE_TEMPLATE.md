@@ -1,6 +1,6 @@
 # Feature template — brief + AI alignment
 
-Use before non-trivial feature work or cross-layer refactors. Run `bash tool/check_feature_brief_linked.sh` when `lib/features/` changes; add a `docs/changes/*.md` note or set `SKIP_FEATURE_BRIEF=1` for trivial fixes.
+Use before non-trivial feature work or cross-layer refactors. Run `bash tool/check_feature_brief_linked.sh` when `apps/mobile/lib/features/` changes; add a `docs/changes/*.md` note or set `SKIP_FEATURE_BRIEF=1` for trivial fixes.
 
 ## Feature Brief (copy per feature)
 

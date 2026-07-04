@@ -24,7 +24,7 @@ A practical script that generates exhaustive switch helpers for sealed state cla
 Usage:
 
 ```bash
-dart run tool/generate_sealed_switch.dart lib/features/remote_config/presentation/cubit/remote_config_state.dart
+dart run tool/generate_sealed_switch.dart apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart
 ```
 
 This generates a `.switch_helper.dart` file with exhaustive pattern matching helpers.
@@ -34,7 +34,7 @@ This generates a `.switch_helper.dart` file with exhaustive pattern matching hel
 ##### Step 1: Run the generator
 
 ```bash
-dart run tool/generate_sealed_switch.dart lib/features/remote_config/presentation/cubit/remote_config_state.dart
+dart run tool/generate_sealed_switch.dart apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart
 ```
 
 ##### Step 2: Generated file
@@ -109,7 +109,7 @@ Widget buildStateWidget(RemoteConfigState state) {
 
 ### Annotations
 
-Location: `lib/shared/annotations/bloc_annotations.dart`
+Location: `apps/mobile/lib/shared/annotations/bloc_annotations.dart`
 
 Annotations are available for future use with build_runner:
 
@@ -189,7 +189,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../../../../lib/shared/annotations/bloc_annotations.dart';
+import '../../../../apps/mobile/lib/shared/annotations/bloc_annotations.dart';
 
 class SealedStateSwitchGenerator
     extends GeneratorForAnnotation<GenerateSwitchHelper> {
@@ -269,7 +269,7 @@ class CounterStateTransitionValidator extends StateTransitionValidator<CounterSt
 
 ```bash
 # Generate switch helper for a sealed state
-dart run tool/generate_sealed_switch.dart lib/features/remote_config/presentation/cubit/remote_config_state.dart
+dart run tool/generate_sealed_switch.dart apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart
 ```
 
 ### Build Runner (Future Implementation)

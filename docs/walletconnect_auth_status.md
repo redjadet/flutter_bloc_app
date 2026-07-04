@@ -10,7 +10,7 @@ The WalletConnect Auth feature provides a demo implementation for wallet-based a
 
 - Go to **Example page** (counter app bar or bottom nav → Example).
 - Tap **“WalletConnect Auth (Demo)”**.
-- Route: `/walletconnect-auth` (code: `lib/features/walletconnect_auth/`).
+- Route: `/walletconnect-auth` (code: `apps/mobile/lib/features/walletconnect_auth/`).
 
 ## Auth gate (deep-link safe)
 
@@ -104,7 +104,7 @@ Out of scope for the demo: deep link handoff, multi‑chain support, session per
 
 #### Phase 1: Affected files
 
-- `lib/features/walletconnect_auth/data/walletconnect_service.dart`
+- `apps/mobile/lib/features/walletconnect_auth/data/walletconnect_service.dart`
 
 #### Phase 1: Tasks
 
@@ -121,8 +121,8 @@ Out of scope for the demo: deep link handoff, multi‑chain support, session per
 
 #### Phase 2: Affected files
 
-- `lib/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart`
-- `lib/features/walletconnect_auth/presentation/widgets/qr_code_display.dart` (new)
+- `apps/mobile/lib/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart`
+- `apps/mobile/lib/features/walletconnect_auth/presentation/widgets/qr_code_display.dart` (new)
 
 #### Phase 2: Tasks
 
@@ -139,8 +139,8 @@ Out of scope for the demo: deep link handoff, multi‑chain support, session per
 
 #### Phase 3: Affected files
 
-- `lib/features/walletconnect_auth/data/walletconnect_service.dart`
-- `lib/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart`
+- `apps/mobile/lib/features/walletconnect_auth/data/walletconnect_service.dart`
+- `apps/mobile/lib/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart`
 
 #### Phase 3: Tasks
 
@@ -155,8 +155,8 @@ Out of scope for the demo: deep link handoff, multi‑chain support, session per
 
 #### Phase 4: Affected files
 
-- `lib/features/walletconnect_auth/data/walletconnect_service.dart`
-- `lib/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart`
+- `apps/mobile/lib/features/walletconnect_auth/data/walletconnect_service.dart`
+- `apps/mobile/lib/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart`
 
 #### Phase 4: Tasks
 
@@ -280,7 +280,7 @@ For a dApp demo with QR + connect + address display, the most direct path is `re
 
 ### 1. Integrate Real WalletConnect SDK
 
-**File**: `lib/features/walletconnect_auth/data/walletconnect_service.dart`
+**File**: `apps/mobile/lib/features/walletconnect_auth/data/walletconnect_service.dart`
 
 **Current State**: Uses placeholder `_client = <String, dynamic>{}`
 
@@ -318,7 +318,7 @@ For a dApp demo with QR + connect + address display, the most direct path is `re
 
 ### 2. QR Code Display
 
-**New Component Needed**: `lib/features/walletconnect_auth/presentation/widgets/qr_code_display.dart`
+**New Component Needed**: `apps/mobile/lib/features/walletconnect_auth/presentation/widgets/qr_code_display.dart`
 
 **Requirements**:
 
@@ -344,8 +344,8 @@ For a dApp demo with QR + connect + address display, the most direct path is `re
 
 **Files to Modify**:
 
-- `lib/app/router/deep_link_*.dart` - Add WalletConnect deep link handling
-- `lib/features/walletconnect_auth/data/walletconnect_service.dart` - Handle deep link URIs
+- `apps/mobile/lib/app/router/deep_link_*.dart` - Add WalletConnect deep link handling
+- `apps/mobile/lib/features/walletconnect_auth/data/walletconnect_service.dart` - Handle deep link URIs
 
 ### 4. Configuration
 
@@ -583,10 +583,10 @@ After enabling Anonymous auth and deploying Firestore rules, “Link to Account�
 
 ## Related Files
 
-- `lib/features/walletconnect_auth/` - Feature implementation
-- `lib/features/example/presentation/widgets/example_page_body.dart` - Entry-point button (“WalletConnect Auth (Demo)”)
-- `lib/core/di/register_walletconnect_auth_services.dart` - DI setup
-- `lib/app/router/route_groups.dart` - Route definition
+- `apps/mobile/lib/features/walletconnect_auth/` - Feature implementation
+- `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` - Entry-point button (“WalletConnect Auth (Demo)”)
+- `apps/mobile/lib/core/di/register_walletconnect_auth_services.dart` - DI setup
+- `apps/mobile/lib/app/router/route_groups.dart` - Route definition
 - `test/features/walletconnect_auth/` - Tests
 
 ## See also

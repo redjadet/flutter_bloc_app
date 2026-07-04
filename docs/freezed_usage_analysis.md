@@ -31,40 +31,40 @@ The project already uses Freezed in many places:
 
 | Location | Type | Notes |
 | --------- | ------ | -------- |
-| `lib/features/chat/presentation/chat_state.dart` | State | Single state class with many fields |
-| `lib/features/search/presentation/search_state.dart` | State | |
-| `lib/features/counter/presentation/cubit/counter_state.dart` | State | |
-| `lib/features/counter/domain/counter_snapshot.dart` | Domain | |
-| `lib/features/counter/domain/counter_error.dart` | Domain (sealed union) | `CounterError` – sealed with `.when()` |
-| `lib/features/genui_demo/presentation/cubit/genui_demo_state.dart` | State | Union-style (GenuiDemoState) |
-| `lib/features/profile/presentation/cubit/profile_state.dart` | State | |
-| `lib/features/scapes/presentation/scapes_state.dart` | State | |
-| `lib/features/chart/presentation/cubit/chart_state.dart` | State | (part of chart_cubit) |
-| `lib/features/graphql_demo/presentation/graphql_demo_state.dart` | State | |
-| `lib/features/graphql_demo/domain/graphql_country.dart` | Domain | GraphqlCountry + GraphqlContinent |
-| `lib/features/websocket/presentation/cubit/websocket_state.dart` | State | |
-| `lib/features/search/domain/search_result.dart` | Domain | |
-| `lib/features/todo_list/domain/todo_item.dart` | Domain | TodoItem (freezed) |
-| `lib/shared/sync/sync_operation.dart` | Shared | SyncOperation |
-| `lib/shared/sync/presentation/sync_status_state.dart` | State | SyncStatusState (sync status cubit) |
-| `lib/features/remote_config/presentation/cubit/remote_config_state.dart` | State (union) | RemoteConfigState |
-| `lib/features/chat/presentation/chat_list_state.dart` | State (union) | ChatListState |
-| `lib/features/deeplink/presentation/cubit/deep_link_state.dart` | State (union) | DeepLinkState |
-| `lib/features/auth/presentation/cubit/register/register_state.dart` | State | RegisterState + RegisterFieldState |
-| `lib/features/chat/domain/chat_contact.dart` | Domain | ChatContact |
-| `lib/features/profile/domain/profile_user.dart` | Domain | ProfileUser + ProfileImage |
-| `lib/features/google_maps/domain/map_location.dart` | Domain | MapLocation |
-| `lib/features/google_maps/domain/map_coordinate.dart` | Domain | MapCoordinate |
-| `lib/features/websocket/domain/websocket_message.dart` | Domain | WebsocketMessage |
-| `lib/features/websocket/domain/websocket_connection_state.dart` | Domain (union) | WebsocketConnectionState |
-| `lib/features/settings/domain/app_info.dart` | Domain | AppInfo |
-| `lib/features/settings/domain/app_locale.dart` | Domain | AppLocale |
-| `lib/features/remote_config/domain/remote_config_snapshot.dart` | Domain | RemoteConfigSnapshot |
-| `lib/features/walletconnect_auth/domain/wallet_user_profile.dart` | Domain | WalletUserProfile |
-| `lib/features/walletconnect_auth/domain/wallet_address.dart` | Domain | WalletAddress |
-| `lib/features/walletconnect_auth/domain/nft_metadata.dart` | Domain | NftMetadata |
-| `lib/features/auth/presentation/cubit/register/register_country_option.dart` | Presentation | CountryOption |
-| `lib/shared/sync/sync_cycle_summary.dart` | Shared | SyncCycleSummary |
+| `apps/mobile/lib/features/chat/presentation/chat_state.dart` | State | Single state class with many fields |
+| `apps/mobile/lib/features/search/presentation/search_state.dart` | State | |
+| `apps/mobile/lib/features/counter/presentation/cubit/counter_state.dart` | State | |
+| `apps/mobile/lib/features/counter/domain/counter_snapshot.dart` | Domain | |
+| `apps/mobile/lib/features/counter/domain/counter_error.dart` | Domain (sealed union) | `CounterError` – sealed with `.when()` |
+| `apps/mobile/lib/features/genui_demo/presentation/cubit/genui_demo_state.dart` | State | Union-style (GenuiDemoState) |
+| `apps/mobile/lib/features/profile/presentation/cubit/profile_state.dart` | State | |
+| `apps/mobile/lib/features/scapes/presentation/scapes_state.dart` | State | |
+| `apps/mobile/lib/features/chart/presentation/cubit/chart_state.dart` | State | (part of chart_cubit) |
+| `apps/mobile/lib/features/graphql_demo/presentation/graphql_demo_state.dart` | State | |
+| `apps/mobile/lib/features/graphql_demo/domain/graphql_country.dart` | Domain | GraphqlCountry + GraphqlContinent |
+| `apps/mobile/lib/features/websocket/presentation/cubit/websocket_state.dart` | State | |
+| `apps/mobile/lib/features/search/domain/search_result.dart` | Domain | |
+| `apps/mobile/lib/features/todo_list/domain/todo_item.dart` | Domain | TodoItem (freezed) |
+| `apps/mobile/lib/shared/sync/sync_operation.dart` | Shared | SyncOperation |
+| `apps/mobile/lib/shared/sync/presentation/sync_status_state.dart` | State | SyncStatusState (sync status cubit) |
+| `apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart` | State (union) | RemoteConfigState |
+| `apps/mobile/lib/features/chat/presentation/chat_list_state.dart` | State (union) | ChatListState |
+| `apps/mobile/lib/features/deeplink/presentation/cubit/deep_link_state.dart` | State (union) | DeepLinkState |
+| `apps/mobile/lib/features/auth/presentation/cubit/register/register_state.dart` | State | RegisterState + RegisterFieldState |
+| `apps/mobile/lib/features/chat/domain/chat_contact.dart` | Domain | ChatContact |
+| `apps/mobile/lib/features/profile/domain/profile_user.dart` | Domain | ProfileUser + ProfileImage |
+| `apps/mobile/lib/features/google_maps/domain/map_location.dart` | Domain | MapLocation |
+| `apps/mobile/lib/features/google_maps/domain/map_coordinate.dart` | Domain | MapCoordinate |
+| `apps/mobile/lib/features/websocket/domain/websocket_message.dart` | Domain | WebsocketMessage |
+| `apps/mobile/lib/features/websocket/domain/websocket_connection_state.dart` | Domain (union) | WebsocketConnectionState |
+| `apps/mobile/lib/features/settings/domain/app_info.dart` | Domain | AppInfo |
+| `apps/mobile/lib/features/settings/domain/app_locale.dart` | Domain | AppLocale |
+| `apps/mobile/lib/features/remote_config/domain/remote_config_snapshot.dart` | Domain | RemoteConfigSnapshot |
+| `apps/mobile/lib/features/walletconnect_auth/domain/wallet_user_profile.dart` | Domain | WalletUserProfile |
+| `apps/mobile/lib/features/walletconnect_auth/domain/wallet_address.dart` | Domain | WalletAddress |
+| `apps/mobile/lib/features/walletconnect_auth/domain/nft_metadata.dart` | Domain | NftMetadata |
+| `apps/mobile/lib/features/auth/presentation/cubit/register/register_country_option.dart` | Presentation | CountryOption |
+| `apps/mobile/lib/shared/sync/sync_cycle_summary.dart` | Shared | SyncCycleSummary |
 
 Build and tooling already account for Freezed (e.g. `**/*.freezed.dart` in scripts and `analysis_options.yaml`). Conversion guide: [equatable_to_freezed_conversion.md](equatable_to_freezed_conversion.md).
 
@@ -78,13 +78,13 @@ These are **sealed state hierarchies** or **large state classes** that benefit m
 
 | File | Current | Recommendation |
 | ------ | --------- | ----------------- |
-| `lib/features/remote_config/presentation/cubit/remote_config_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `RemoteConfigState.initial()`, `.loading()`, `.loaded(...)`, `.error(message)`. |
-| `lib/features/chat/presentation/chat_list_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `ChatListState.initial()`, `.loading()`, `.loaded(contacts)`, `.error(message)`. |
-| `lib/features/deeplink/presentation/cubit/deep_link_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `DeepLinkState.idle()`, `.loading()`, `.navigate(target, origin)`, `.error(message)`. |
-| `lib/features/auth/presentation/cubit/register/register_state.dart` | ~~RegisterState + RegisterFieldState (Equatable)~~ | **Done.** Both converted to Freezed; validation getters in private constructor. |
-| `lib/shared/sync/presentation/sync_status_cubit.dart` | ~~`SyncStatusState` (Equatable, `copyWith`, getters)~~ | **Done.** State moved to `sync_status_state.dart` with Freezed; `isOnline` / `isSyncing` in private constructor. |
+| `apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `RemoteConfigState.initial()`, `.loading()`, `.loaded(...)`, `.error(message)`. |
+| `apps/mobile/lib/features/chat/presentation/chat_list_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `ChatListState.initial()`, `.loading()`, `.loaded(contacts)`, `.error(message)`. |
+| `apps/mobile/lib/features/deeplink/presentation/cubit/deep_link_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `DeepLinkState.idle()`, `.loading()`, `.navigate(target, origin)`, `.error(message)`. |
+| `apps/mobile/lib/features/auth/presentation/cubit/register/register_state.dart` | ~~RegisterState + RegisterFieldState (Equatable)~~ | **Done.** Both converted to Freezed; validation getters in private constructor. |
+| `apps/mobile/lib/shared/sync/presentation/sync_status_cubit.dart` | ~~`SyncStatusState` (Equatable, `copyWith`, getters)~~ | **Done.** State moved to `sync_status_state.dart` with Freezed; `isOnline` / `isSyncing` in private constructor. |
 
-**Note:** `lib/shared/utils/sealed_state_helpers.dart` extends `Equatable`. Freezed-generated union types do not extend Equatable (they implement `==`/`hashCode`). After migrating sealed states to Freezed, either:
+**Note:** `apps/mobile/lib/shared/utils/sealed_state_helpers.dart` extends `Equatable`. Freezed-generated union types do not extend Equatable (they implement `==`/`hashCode`). After migrating sealed states to Freezed, either:
 
 - Use Freezed’s generated `.when()` / `.map()` and Dart 3 `switch` on the union, and stop using `SealedStateHelpers` for those states, or
 - Generalize the extension (e.g. `extension SealedStateHelpers<T> on T`) if you still need a shared helper for non-Freezed sealed types.
@@ -97,20 +97,20 @@ Use Freezed for **immutable domain/shared types** that have (or would benefit fr
 
 | File | Current | Recommendation |
 | ------ | --------- | ----------------- |
-| `lib/features/chat/domain/chat_contact.dart` | ~~Equatable + manual `copyWith`~~ | **Done.** Freezed. |
-| `lib/features/profile/domain/profile_user.dart` | ~~ProfileUser + ProfileImage (Equatable)~~ | **Done.** Freezed for both. |
-| `lib/features/google_maps/domain/map_location.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/google_maps/domain/map_coordinate.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/websocket/domain/websocket_message.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/websocket/domain/websocket_connection_state.dart` | ~~Equatable~~ | **Done.** Freezed union with `.disconnected()`, `.connecting()`, `.connected()`, `.error(message)` and `status` / `errorMessage` getters. |
-| `lib/features/settings/domain/app_info.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/settings/domain/app_locale.dart` | ~~Equatable~~ | **Done.** Freezed; `tag` and `fromTag` in private constructor. |
-| `lib/features/remote_config/domain/remote_config_snapshot.dart` | ~~Equatable~~ | **Done.** Freezed; `hasValues` and `getValue` in private constructor. |
-| `lib/features/walletconnect_auth/domain/wallet_user_profile.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/walletconnect_auth/domain/wallet_address.dart` | ~~Equatable~~ | **Done.** Freezed; `isValid`, `truncated`, `toString` in private constructor. |
-| `lib/features/walletconnect_auth/domain/nft_metadata.dart` | ~~Equatable~~ | **Done.** Freezed. |
-| `lib/features/auth/presentation/cubit/register/register_country_option.dart` | ~~CountryOption (Equatable)~~ | **Done.** Freezed; `flagEmoji` and `defaultCountry` preserved. |
-| `lib/shared/sync/sync_cycle_summary.dart` | ~~Equatable + long manual `copyWith`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/chat/domain/chat_contact.dart` | ~~Equatable + manual `copyWith`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/profile/domain/profile_user.dart` | ~~ProfileUser + ProfileImage (Equatable)~~ | **Done.** Freezed for both. |
+| `apps/mobile/lib/features/google_maps/domain/map_location.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/google_maps/domain/map_coordinate.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/websocket/domain/websocket_message.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/websocket/domain/websocket_connection_state.dart` | ~~Equatable~~ | **Done.** Freezed union with `.disconnected()`, `.connecting()`, `.connected()`, `.error(message)` and `status` / `errorMessage` getters. |
+| `apps/mobile/lib/features/settings/domain/app_info.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/settings/domain/app_locale.dart` | ~~Equatable~~ | **Done.** Freezed; `tag` and `fromTag` in private constructor. |
+| `apps/mobile/lib/features/remote_config/domain/remote_config_snapshot.dart` | ~~Equatable~~ | **Done.** Freezed; `hasValues` and `getValue` in private constructor. |
+| `apps/mobile/lib/features/walletconnect_auth/domain/wallet_user_profile.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/walletconnect_auth/domain/wallet_address.dart` | ~~Equatable~~ | **Done.** Freezed; `isValid`, `truncated`, `toString` in private constructor. |
+| `apps/mobile/lib/features/walletconnect_auth/domain/nft_metadata.dart` | ~~Equatable~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/auth/presentation/cubit/register/register_country_option.dart` | ~~CountryOption (Equatable)~~ | **Done.** Freezed; `flagEmoji` and `defaultCountry` preserved. |
+| `apps/mobile/lib/shared/sync/sync_cycle_summary.dart` | ~~Equatable + long manual `copyWith`~~ | **Done.** Freezed. |
 
 ---
 
@@ -120,17 +120,17 @@ These are **private or feature-local** Equatable classes used for BlocSelector/v
 
 | File | Class | Note |
 | ------ | -------- | ------ |
-| `lib/features/calculator/presentation/pages/calculator_page.dart` | ~~`_DisplayData`~~ | **Done.** Freezed. |
-| `lib/features/chart/presentation/pages/chart_page.dart` | ~~`_ChartViewData`~~ | **Done.** Freezed. |
-| `lib/features/google_maps/presentation/pages/google_maps_sample_page.dart` | ~~`_MapBodyData`~~ | **Done.** Freezed. |
-| `lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | ~~`_ControlsViewModel`, `_LocationListViewModel`~~ | **Done.** Freezed (in main page file). |
-| `lib/features/graphql_demo/presentation/graphql_demo_view_models.dart` | ~~`GraphqlFilterBarData`, `GraphqlBodyData`~~ | **Done.** Freezed. |
-| `lib/features/remote_config/presentation/widgets/awesome_feature_widget.dart` | ~~`_FeatureEnabledData`~~ | **Done.** Freezed. |
-| `lib/core/diagnostics/remote_config_diagnostics_view_data.dart` | `_RemoteConfigDiagnosticsViewData` | **Done.** Freezed DTO in core; `mapRemoteConfigStateToDiagnosticsViewData` in `lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart` maps cubit state. |
-| `lib/features/settings/presentation/widgets/app_info_section.dart` | ~~`_AppInfoViewData`~~ | **Done.** Freezed. |
-| `lib/features/chat/presentation/widgets/chat_input_bar.dart` | ~~`_SendButtonData`~~ | **Done.** Freezed. |
-| `lib/features/chat/presentation/widgets/chat_history_sheet.dart` | ~~`_HistorySheetData`~~ | **Done.** Freezed. |
-| `lib/features/websocket/presentation/pages/websocket_demo_page.dart` | ~~`_WebsocketViewData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart` | ~~`_DisplayData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/chart/presentation/pages/chart_page.dart` | ~~`_ChartViewData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/google_maps/presentation/pages/google_maps_sample_page.dart` | ~~`_MapBodyData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | ~~`_ControlsViewModel`, `_LocationListViewModel`~~ | **Done.** Freezed (in main page file). |
+| `apps/mobile/lib/features/graphql_demo/presentation/graphql_demo_view_models.dart` | ~~`GraphqlFilterBarData`, `GraphqlBodyData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/remote_config/presentation/widgets/awesome_feature_widget.dart` | ~~`_FeatureEnabledData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart` | `_RemoteConfigDiagnosticsViewData` | **Done.** Freezed DTO in core; `mapRemoteConfigStateToDiagnosticsViewData` in `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart` maps cubit state. |
+| `apps/mobile/lib/features/settings/presentation/widgets/app_info_section.dart` | ~~`_AppInfoViewData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/chat/presentation/widgets/chat_input_bar.dart` | ~~`_SendButtonData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/chat/presentation/widgets/chat_history_sheet.dart` | ~~`_HistorySheetData`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/websocket/presentation/pages/websocket_demo_page.dart` | ~~`_WebsocketViewData`~~ | **Done.** Freezed. |
 
 ---
 
@@ -140,15 +140,15 @@ These are **plain immutable data classes** (no Equatable) that could use Freezed
 
 | File | Class | Note |
 | ------ | -------- | ------ |
-| `lib/features/scapes/domain/scape.dart` | ~~`Scape`~~ | **Done.** Freezed; `formattedDuration` in private constructor. |
-| `lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart` | ~~`WhiteboardStroke`~~ | **Done.** Freezed; public `WhiteboardStroke()` enforces unmodifiable points, internal `WhiteboardStroke.raw()` for implementation. |
-| `lib/features/chat/data/chat_sync_payload.dart` | ~~`ChatSyncPayload`~~ | **Done.** Freezed; `userMessage()` in private constructor. |
-| `lib/features/chat/data/chat_local_conversation_updater.dart` | ~~`ChatLocalConversationState`~~ | **Done.** Freezed. |
-| `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | ~~`_DatePickerResult`~~ | **Done.** Freezed union (`.confirmed(date)`, `.cleared()`); `date` and `didConfirm` getters in private constructor. |
+| `apps/mobile/lib/features/scapes/domain/scape.dart` | ~~`Scape`~~ | **Done.** Freezed; `formattedDuration` in private constructor. |
+| `apps/mobile/lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart` | ~~`WhiteboardStroke`~~ | **Done.** Freezed; public `WhiteboardStroke()` enforces unmodifiable points, internal `WhiteboardStroke.raw()` for implementation. |
+| `apps/mobile/lib/features/chat/data/chat_sync_payload.dart` | ~~`ChatSyncPayload`~~ | **Done.** Freezed; `userMessage()` in private constructor. |
+| `apps/mobile/lib/features/chat/data/chat_local_conversation_updater.dart` | ~~`ChatLocalConversationState`~~ | **Done.** Freezed. |
+| `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | ~~`_DatePickerResult`~~ | **Done.** Freezed union (`.confirmed(date)`, `.cleared()`); `date` and `didConfirm` getters in private constructor. |
 
 **Not recommended for Freezed (or low priority):**
 
-- **ChatContactTileConfig** (`lib/features/chat/presentation/widgets/chat_contact_tile_config.dart`) — Uses `late final` styles derived in constructor and `fromContext(BuildContext)`; Flutter-heavy and not a simple data bag. Keeping as-is is fine.
+- **ChatContactTileConfig** (`apps/mobile/lib/features/chat/presentation/widgets/chat_contact_tile_config.dart`) — Uses `late final` styles derived in constructor and `fromContext(BuildContext)`; Flutter-heavy and not a simple data bag. Keeping as-is is fine.
 
 ---
 

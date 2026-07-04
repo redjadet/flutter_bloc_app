@@ -8,7 +8,7 @@ This document analyzes the uncommitted code quality improvements made to the tod
 
 ### Files Modified
 
-1. `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` (+40 lines)
+1. `apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart` (+40 lines)
 2. `test/features/todo_list/presentation/cubit/todo_list_cubit_test.dart` (+55 lines)
 
 **Total**: 95 lines added
@@ -36,7 +36,7 @@ When items are deleted or new items are added while in manual sort mode, the `ma
 
 ### 1. New Method: `_normalizeManualOrder`
 
-**Location**: `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:33-61`
+**Location**: `apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:33-61`
 
 **Purpose**: Normalizes the manual order map to match the current items list.
 
@@ -57,7 +57,7 @@ When items are deleted or new items are added while in manual sort mode, the `ma
 
 ### 2. Updated `emitOptimisticUpdate`
 
-**Location**: `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:63-79`
+**Location**: `apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:63-79`
 
 **Changes**:
 
@@ -69,7 +69,7 @@ When items are deleted or new items are added while in manual sort mode, the `ma
 
 ### 3. Updated `onItemsUpdated`
 
-**Location**: `lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:81-97`
+**Location**: `apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit_methods.dart:81-97`
 
 **Changes**:
 

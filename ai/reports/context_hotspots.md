@@ -1,6 +1,6 @@
 # Context hotspots
 
-Largest non-generated Dart files under `lib/features/` (2026-05-21). Use to scope Phase 4 refactors and agent context budgets.
+Largest non-generated Dart files under `apps/mobile/lib/features/` (2026-05-21). Use to scope Phase 4 refactors and agent context budgets.
 
 | Rank | LOC | File | Feature | Phase 4 candidate |
 | ---: | ---: | --- | --- | --- |
@@ -25,11 +25,11 @@ Largest non-generated Dart files under `lib/features/` (2026-05-21). Use to scop
 | 19 | 288 | `online_therapy_demo/.../online_therapy_demo_shell_page.dart` | online_therapy_demo | yes |
 | 20 | 282 | `counter/.../counter_page_app_bar.dart` | counter | low |
 
-**Total feature Dart (non-generated):** ~61,848 LOC across `lib/features/`.
+**Total feature Dart (non-generated):** ~61,848 LOC across `apps/mobile/lib/features/`.
 
 **Regenerate:**
 
 ```bash
-find lib/features -name '*.dart' ! -name '*.freezed.dart' ! -name '*.g.dart' \
+find apps/mobile/lib/features -name '*.dart' ! -name '*.freezed.dart' ! -name '*.g.dart' \
   -exec wc -l {} + | sort -nr | head -25
 ```

@@ -24,7 +24,7 @@
 **Implementation (Option A)**:
 
 - In the split route file that owns the IoT demo route (currently
-  `lib/app/router/routes_demos.dart`), do not render `IotDemoPage` directly.
+  `apps/mobile/lib/app/router/routes_demos.dart`), do not render `IotDemoPage` directly.
   Instead, use a wrapper that:
   - Reads `SupabaseAuthRepository` (from DI or context).
   - If `!SupabaseBootstrapService.isSupabaseInitialized` → redirect to a safe route (e.g. counter) and optionally show a message (same as “Supabase not configured”).

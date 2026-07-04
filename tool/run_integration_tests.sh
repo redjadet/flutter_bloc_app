@@ -598,6 +598,14 @@ run_logged_command() {
   local log_path="$1"
   shift
 
+  if printf '%s\n' "$@" | grep -Fq -- '--merge-coverage'; then
+    local workspace_baseline="${BASE_COVERAGE_PATH:-$WORKSPACE_ROOT/coverage/lcov.base.info}"
+    if [ -s "$workspace_baseline" ]; then
+      mkdir -p "$APP_ROOT/coverage"
+      cp "$workspace_baseline" "$APP_ROOT/coverage/lcov.base.info"
+    fi
+  fi
+
   (cd "$APP_ROOT" && "$@") 2>&1 | tee "$log_path"
 }
 

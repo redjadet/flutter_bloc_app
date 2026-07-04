@@ -21,7 +21,7 @@ widgets and helpers; kept l10n- and routing-coupled widgets in the app.
 - `common_error_view`, `common_empty_state`, `common_loading_widget`, `common_dropdown_field`
 - `common_app_bar`, `common_page_layout` — GoRouter / l10n
 
-App compatibility barrels remain at prior `lib/shared/widgets/**` paths.
+App compatibility barrels remain at prior `apps/mobile/lib/shared/widgets/**` paths.
 
 ## Docs
 

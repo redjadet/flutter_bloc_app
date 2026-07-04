@@ -9,7 +9,7 @@
   - `snapshot.templateVersion` – optional string for backend rollout/versioning
   - `snapshot.dataSource` – human-readable source for the current values (e.g., `remote`, `cache`)
   - `snapshot.lastSyncedAt` – ISO8601 timestamp tracking when values last synced successfully
-- Repository: `RemoteConfigCacheRepository` (`lib/features/remote_config/data/remote_config_cache_repository.dart`)
+- Repository: `RemoteConfigCacheRepository` (`apps/mobile/lib/features/remote_config/data/remote_config_cache_repository.dart`)
   - Uses `StorageGuard` to shield Hive errors
   - Provides `loadSnapshot()`, `saveSnapshot()`, and `clear()`
 

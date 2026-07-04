@@ -113,7 +113,7 @@ For larger sealed states, you can generate a `when<T>()` helper:
 
 ```bash
 dart run tool/generate_sealed_switch.dart \
-  lib/features/<feature>/presentation/cubit/<state_file>.dart
+  apps/mobile/lib/features/<feature>/presentation/cubit/<state_file>.dart
 ```
 
 Add the generated part:
@@ -126,9 +126,9 @@ part '<state_file>.switch_helper.dart';
 
 Key files that provide the compile-time safety layer:
 
-- `lib/shared/extensions/type_safe_bloc_access.dart` (context extensions)
-- `lib/shared/widgets/type_safe_bloc_selector.dart` (type-safe widgets)
-- `lib/shared/utils/bloc_provider_helpers.dart` (provider helpers)
+- `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart` (context extensions)
+- `apps/mobile/lib/shared/widgets/type_safe_bloc_selector.dart` (type-safe widgets)
+- `apps/mobile/lib/shared/utils/bloc_provider_helpers.dart` (provider helpers)
 - `tool/generate_sealed_switch.dart` (sealed state switch helper generator)
 
 ## Migration Notes

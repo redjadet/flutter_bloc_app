@@ -25,9 +25,9 @@ User prefs:
 ## Workspace
 
 - Case studies: `docs/case_studies/`, start [`case_studies/README.md`](case_studies/README.md).
-- Dentists demo: `lib/features/case_study_demo/`, route `/case-study-demo`.
-- Staff app demo: `lib/features/staff_app_demo/`, routes `/staff-app-demo`;
-  router `lib/core/router/app_routes.dart`; walkthrough
+- Dentists demo: `apps/mobile/lib/features/case_study_demo/`, route `/case-study-demo`.
+- Staff app demo: `apps/mobile/lib/features/staff_app_demo/`, routes `/staff-app-demo`;
+  router `apps/mobile/lib/core/router/app_routes.dart`; walkthrough
   [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md).
 - Shell exposes `StaffDemoSitesCubit` from `staffDemoSites`; pages pick from
   list, no free-text IDs.

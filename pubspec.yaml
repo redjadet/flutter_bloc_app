@@ -34,11 +34,11 @@ melos:
   sdkPath: auto
   scripts:
     analyze:
-      run: dart run melos exec --fail-fast -- "dart analyze ."
-      description: Analyze every Dart package.
+      run: bash tool/analyze_workspace_packages.sh
+      description: Analyze workspace library and custom lint packages.
     analyze:flutter:
-      run: dart run melos exec --flutter --fail-fast -- "flutter analyze"
-      description: Analyze Flutter packages.
+      run: dart run melos exec --flutter --concurrency=1 --fail-fast -- "flutter analyze lib test"
+      description: Analyze Flutter packages (serial; bounded to lib/test).
     format:
       run: dart format --set-exit-if-changed .
       description: Check formatting from workspace root.
@@ -46,8 +46,8 @@ melos:
       run: dart format .
       description: Format workspace.
     test:
-      run: dart run melos exec --dir-exists=test --fail-fast -- "dart test"
-      description: Run Dart package tests.
+      run: bash tool/test_workspace_dart_packages.sh
+      description: Run non-Flutter workspace package tests.
     test:flutter:
       run: dart run melos exec --flutter --dir-exists=test --fail-fast -- "flutter test"
       description: Run Flutter package tests.

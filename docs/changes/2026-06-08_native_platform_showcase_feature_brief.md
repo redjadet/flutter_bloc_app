@@ -11,7 +11,7 @@ Interviewers and learners need a concise, cross-platform explanation of how Flut
 ## Scope
 
 - In: Capability catalog, four lesson cards, **live interop** (Swift/Kotlin MethodChannel + C/C++ FFI), platform-adaptive UI, Example page entry, route + deep link, l10n, tests, feature README, smoke integration flow, web preflight smoke
-- Out: Replacing `lib/shared/platform/native_platform_service.dart` (separate channel for runtime platform info)
+- Out: Replacing `apps/mobile/lib/shared/platform/native_platform_service.dart` (separate channel for runtime platform info)
 
 ## Layers Touched
 
@@ -38,14 +38,14 @@ NativeShowcaseNativeCodeService    →  FfiNativeShowcaseNativeCodeService      
 
 | Concern | Owner |
 | --- | --- |
-| Route + cubit wiring | `lib/app/router/routes_demos.part.dart` (`createNativePlatformShowcaseRoute`) |
-| DI | `lib/core/di/register_native_platform_showcase_services.dart` |
+| Route + cubit wiring | `apps/mobile/lib/app/router/routes_demos.part.dart` (`createNativePlatformShowcaseRoute`) |
+| DI | `apps/mobile/lib/core/di/register_native_platform_showcase_services.dart` |
 | Live interop merge | `NativePlatformInfoRepositoryImpl` (catalog via `mapShowcase` + three interop calls) |
 | Runtime platform label | `RuntimePlatformProbe` in data layer (not shared `NativePlatformService`) |
 
-**Out of scope:** `lib/shared/platform/native_platform_service.dart` — separate channel for app-wide platform info; showcase uses its own channel for demo interop only.
+**Out of scope:** `apps/mobile/lib/shared/platform/native_platform_service.dart` — separate channel for app-wide platform info; showcase uses its own channel for demo interop only.
 
-Canonical detail: [`lib/features/native_platform_showcase/README.md`](../../lib/features/native_platform_showcase/README.md).
+Canonical detail: [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md).
 
 ## Contracts
 
@@ -98,7 +98,7 @@ flutter build web
 
 ## Links
 
-- README: [`lib/features/native_platform_showcase/README.md`](../../lib/features/native_platform_showcase/README.md)
+- README: [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md)
 - Integration map: [`docs/engineering/integration_journey_map.md`](../engineering/integration_journey_map.md) (J6)
 - Selective integration: [`tool/integration_selective_map.json`](../../tool/integration_selective_map.json) (`native_platform_showcase`)
 - Testing matrix: [`docs/testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) (Example demo showcase)

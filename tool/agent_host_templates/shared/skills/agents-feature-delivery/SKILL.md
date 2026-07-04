@@ -5,7 +5,7 @@ description: Cursor/Codex feature delivery contract for folder shape, use cases,
 
 # Feature delivery
 
-Use before adding or changing `lib/features/**`.
+Use before adding or changing `apps/mobile/lib/features/**`.
 
 Read:
 

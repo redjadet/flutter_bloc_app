@@ -10,7 +10,7 @@ Pinned versions: [tech_stack.md](tech_stack.md) (Flutter 3.44.4 / Dart 3.12.2).
 
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t lib/main_dev.dart
+cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart
 ```
 
 If `.envrc` has prepended `tool/direnv/bin` to `PATH`, plain `flutter run`

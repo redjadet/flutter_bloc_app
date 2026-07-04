@@ -4,8 +4,8 @@ This repo includes a **Store In‑App Purchase demo** for **iOS (App Store)** an
 
 ## Current status (what exists today)
 
-- **Feature module**: `lib/features/in_app_purchase_demo/` (Domain → Data → Presentation)
-- **Route**: `AppRoutes.iapDemoPath` (`/iap-demo`) wired in `lib/app/router/routes_demos.dart`
+- **Feature module**: `apps/mobile/lib/features/in_app_purchase_demo/` (Domain → Data → Presentation)
+- **Route**: `AppRoutes.iapDemoPath` (`/iap-demo`) wired in `apps/mobile/lib/app/router/routes_demos.dart`
 - **Entry point**: “In-app purchases (IAP) demo” button on the Example page
 - **IAP types demoed**:
   - **Consumable**: adds 100 “credits”
@@ -26,7 +26,7 @@ This repo includes a **Store In‑App Purchase demo** for **iOS (App Store)** an
 ### 1) Store console setup (required)
 
 - **iOS (App Store Connect)**
-  - Create In‑App Purchase products matching the demo IDs (see `IapDemoProductIds` in `lib/features/in_app_purchase_demo/domain/iap_product.dart`).
+  - Create In‑App Purchase products matching the demo IDs (see `IapDemoProductIds` in `apps/mobile/lib/features/in_app_purchase_demo/domain/iap_product.dart`).
   - Complete agreements/tax/banking, and create a sandbox tester.
   - Ensure the iOS build has the In‑App Purchase capability enabled.
 

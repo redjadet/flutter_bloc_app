@@ -19,7 +19,7 @@ Counter and chat surfaces show offline/pending-sync banners; the todo list **int
 
 | Asset | Status |
 | --- | --- |
-| `lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` | Kept — uses shared `sync_banner_helpers` |
+| `apps/mobile/lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` | Kept — uses shared `sync_banner_helpers` |
 | `test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart` | Kept — widget contract tests |
 | `todo_list_page_body.dart` comment | Documents product decision at mount site |
 
@@ -33,5 +33,5 @@ Counter and chat surfaces show offline/pending-sync banners; the todo list **int
 
 ```bash
 flutter test test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart
-grep -n 'Sync banner disabled' lib/features/todo_list/presentation/pages/todo_list_page_body.dart
+grep -n 'Sync banner disabled' apps/mobile/lib/features/todo_list/presentation/pages/todo_list_page_body.dart
 ```

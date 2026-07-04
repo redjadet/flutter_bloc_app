@@ -3,17 +3,17 @@
 ## Context
 
 GitHub secret scanning flagged Google API keys that had been committed in
-`lib/firebase_options.dart` and CI plist paths. `main` was later fixed to use
+`apps/mobile/lib/firebase_options.dart` and CI plist paths. `main` was later fixed to use
 placeholders plus `.envrc` / `--dart-define`, but old commits still contained
 literal `AIzaSy…` keys.
 
 ## What changed
 
-- **Current tree:** `lib/firebase_options.dart` stays a committed
+- **Current tree:** `apps/mobile/lib/firebase_options.dart` stays a committed
   `String.fromEnvironment('FIREBASE_*', …)` placeholder; real keys live in
   gitignored `.envrc` and platform files.
 - **Local regen:** `flutterfire configure` → copy values to `.envrc` →
-  `git checkout HEAD -- lib/firebase_options.dart` (documented in
+  `git checkout HEAD -- apps/mobile/lib/firebase_options.dart` (documented in
   [`docs/firebase_setup.md`](../firebase_setup.md)).
 - **History scrub:** `git filter-repo --replace-text tool/firebase_secret_history_replacements.txt`
   rewrites all refs (`AIzaSy…` → `REDACTED_GOOGLE_API_KEY`). Requires coordinated

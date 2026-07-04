@@ -71,7 +71,7 @@ Each todo item stored as:
 
 #### 1.1 Create `RealtimeDatabaseTodoRepository`
 
-**File**: `lib/features/todo_list/data/realtime_database_todo_repository.dart`
+**File**: `apps/mobile/lib/features/todo_list/data/realtime_database_todo_repository.dart`
 
 **Implementation Details:**
 
@@ -141,11 +141,11 @@ Each todo item stored as:
 **Extract shared utilities**:
 
 - `waitForAuthUser()` currently lives in the counter repo file; extract to
-  `lib/shared/firebase/auth_helpers.dart` and update counter/todo to import it.
+  `apps/mobile/lib/shared/firebase/auth_helpers.dart` and update counter/todo to import it.
 
 #### 1.4 Implementation Sketch (Repository Outline)
 
-**File**: `lib/features/todo_list/data/realtime_database_todo_repository.dart`
+**File**: `apps/mobile/lib/features/todo_list/data/realtime_database_todo_repository.dart`
 
 ```dart
 class RealtimeDatabaseTodoRepository implements TodoRepository {
@@ -210,7 +210,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
 
 #### 2.1 Update `injector_factories.dart`
 
-**File**: `lib/core/di/injector_factories.dart`
+**File**: `apps/mobile/lib/core/di/injector_factories.dart`
 
 Add factory function:
 
@@ -263,7 +263,7 @@ TodoRepository? _createRemoteTodoRepositoryOrNull() {
 
 #### 2.2 Update `injector_registrations.dart`
 
-**File**: `lib/core/di/injector_registrations.dart`
+**File**: `apps/mobile/lib/core/di/injector_registrations.dart`
 
 Update `_registerTodoListServices()`:
 
@@ -279,7 +279,7 @@ void _registerTodoListServices() {
 
 #### 3.1 Create `OfflineFirstTodoRepository`
 
-**File**: `lib/features/todo_list/data/offline_first_todo_repository.dart`
+**File**: `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart`
 
 **Pattern**: Follow `OfflineFirstCounterRepository` exactly:
 
@@ -409,7 +409,7 @@ Add to Firebase Console:
 - [x] Implement `clearCompleted()` method
 - [x] Add data mapping helpers (`_itemsFromValue`, `_todoToMap`)
 - [x] Add error handling and logging
-- [x] Extract/share `waitForAuthUser()` to `lib/shared/firebase/auth_helpers.dart`
+- [x] Extract/share `waitForAuthUser()` to `apps/mobile/lib/shared/firebase/auth_helpers.dart`
 - [x] Write unit tests
 - [x] Update DI registration
 
@@ -443,32 +443,32 @@ Add to Firebase Console:
 
 ## Files Created
 
-1. ✅ `lib/features/todo_list/data/realtime_database_todo_repository.dart`
+1. ✅ `apps/mobile/lib/features/todo_list/data/realtime_database_todo_repository.dart`
 2. ✅ `test/features/todo_list/data/realtime_database_todo_repository_test.dart`
-3. ✅ `lib/shared/firebase/auth_helpers.dart` (shared utilities extracted)
+3. ✅ `apps/mobile/lib/shared/firebase/auth_helpers.dart` (shared utilities extracted)
 4. ✅ [`todo_list_firebase_security_rules.md`](todo_list_firebase_security_rules.md) (security rules documentation)
 5. ✅ [`todo_list_offline_first_considerations.md`](todo_list_offline_first_considerations.md) (Phase 3 guide)
-6. ✅ `lib/features/todo_list/data/offline_first_todo_repository.dart` (Phase 3 implementation)
+6. ✅ `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository.dart` (Phase 3 implementation)
 7. ✅ `test/features/todo_list/data/offline_first_todo_repository_test.dart` (Phase 3 unit tests - 13 tests, all passing)
-8. ✅ `lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` (sync status UI)
+8. ✅ `apps/mobile/lib/features/todo_list/presentation/widgets/todo_sync_banner.dart` (sync status UI)
 
 ## Files Modified
 
-1. ✅ `lib/core/di/injector_factories.dart` - Added `createTodoRepository()` factory (updated to use OfflineFirstTodoRepository)
-2. ✅ `lib/core/di/injector_registrations.dart` - Updated `_registerTodoListServices()`
-3. ✅ `lib/features/counter/data/realtime_database_counter_repository.dart` - Updated to use shared `waitForAuthUser`
+1. ✅ `apps/mobile/lib/core/di/injector_factories.dart` - Added `createTodoRepository()` factory (updated to use OfflineFirstTodoRepository)
+2. ✅ `apps/mobile/lib/core/di/injector_registrations.dart` - Updated `_registerTodoListServices()`
+3. ✅ `apps/mobile/lib/features/counter/data/realtime_database_counter_repository.dart` - Updated to use shared `waitForAuthUser`
 4. ✅ `test/realtime_database_auth_guard_test.dart` - Updated import
 5. ✅ `test/realtime_database_counter_repository_test.dart` - Updated import
-6. ✅ `lib/features/todo_list/domain/todo_item.dart` - Added sync metadata fields (changeId, lastSyncedAt, synchronized) and JSON serialization
-7. ✅ `lib/features/todo_list/data/todo_item_dto.dart` - Updated to handle sync metadata
+6. ✅ `apps/mobile/lib/features/todo_list/domain/todo_item.dart` - Added sync metadata fields (changeId, lastSyncedAt, synchronized) and JSON serialization
+7. ✅ `apps/mobile/lib/features/todo_list/data/todo_item_dto.dart` - Updated to handle sync metadata
 
 ## Reference Files
 
-- `lib/features/counter/data/realtime_database_counter_repository.dart` - Reference implementation
-- `lib/features/counter/data/offline_first_counter_repository.dart` - Offline-first pattern
-- `lib/features/todo_list/data/hive_todo_repository.dart` - Local repository pattern
-- `lib/features/todo_list/data/todo_item_dto.dart` - Data mapping patterns
-- `lib/core/di/injector_factories.dart` - DI factory patterns
+- `apps/mobile/lib/features/counter/data/realtime_database_counter_repository.dart` - Reference implementation
+- `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` - Offline-first pattern
+- `apps/mobile/lib/features/todo_list/data/hive_todo_repository.dart` - Local repository pattern
+- `apps/mobile/lib/features/todo_list/data/todo_item_dto.dart` - Data mapping patterns
+- `apps/mobile/lib/core/di/injector_factories.dart` - DI factory patterns
 
 ## Related Documentation
 

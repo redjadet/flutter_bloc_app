@@ -52,12 +52,12 @@ users only). Source: `supabase/functions/sync-graphql-countries/`.
 
 ✅ **Complete**: All components implemented and tested:
 
-- `GraphqlDemoCacheRepository` with Hive-backed caching and staleness support (`lib/features/graphql_demo/data/graphql_demo_cache_repository.dart`)
-- `OfflineFirstGraphqlDemoRepository` implementing cache-first strategy (`lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart`)
+- `GraphqlDemoCacheRepository` with Hive-backed caching and staleness support (`apps/mobile/lib/features/graphql_demo/data/graphql_demo_cache_repository.dart`)
+- `OfflineFirstGraphqlDemoRepository` implementing cache-first strategy (`apps/mobile/lib/features/graphql_demo/data/offline_first_graphql_demo_repository.dart`)
 - Staleness metadata (24h expiry) to avoid serving stale cache
 - Dev/QA cache clear control in Settings (`GraphqlCacheControlsSection`)
 - UI badge showing data source (Cache / Supabase Edge / Supabase Tables / Remote) in GraphQL demo page
-- Full DI wiring in `lib/core/di/injector_registrations.dart`
+- Full DI wiring in `apps/mobile/lib/core/di/injector_registrations.dart`
 - Comprehensive test coverage:
   - Cache tests: `test/features/graphql_demo/data/graphql_demo_cache_repository_test.dart`
   - Repository tests: `test/features/graphql_demo/data/offline_first_graphql_demo_repository_test.dart`

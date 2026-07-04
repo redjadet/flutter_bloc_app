@@ -7,6 +7,6 @@ description: Dependency direction and feature composition. Use for shared/core c
 
 **Canon:** [`docs/modularity.md`](../../../../../docs/modularity.md). Paths: `agents-references`.
 
-**Rules (summary):** `lib/shared/` never imports features; no feature→feature imports (compose in app/router); core contracts for cross-cutting; capabilities not concrete cubits; no vague `Utils`/`Helper` buckets.
+**Rules (summary):** `apps/mobile/lib/shared/` never imports features; no feature→feature imports (compose in app/router); core contracts for cross-cutting; capabilities not concrete cubits; no vague `Utils`/`Helper` buckets.
 
-**Checks:** `grep -r "import.*features/" lib/shared` empty; route/DI → `./bin/router_feature_validate`.
+**Checks:** `grep -r "import.*features/" apps/mobile/lib/shared` empty; route/DI → `./bin/router_feature_validate`.

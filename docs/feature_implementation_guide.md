@@ -5,9 +5,9 @@ repeating the implementation detail already covered elsewhere. Use it as a
 routing document: it tells you where to build, what to update, and which docs
 own each concern.
 
-**Melos migration:** feature code stays under `apps/mobile/lib/features/` until
-an explicit extraction PR. Paths below use `lib/` shorthand; prefix with
-`apps/mobile/` on the migration branch.
+**App package layout:** feature code lives under `apps/mobile/lib/features/`
+until an explicit extraction PR. Validation scripts still use APP_ROOT-relative
+`lib/**` shorthand (resolved via `tool/workspace_paths.sh` → `apps/mobile`).
 
 Non-trivial features should start from the Feature Brief and AI alignment
 checklist in [`docs/plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md).
@@ -19,11 +19,11 @@ default for feature Dart changes without a `docs/changes/` note. Use
 
 A new or materially changed feature should usually include:
 
-1. Domain contracts and models under `lib/features/<feature>/domain/`.
-2. Data implementations under `lib/features/<feature>/data/`.
-3. Cubit, pages, and widgets under `lib/features/<feature>/presentation/`.
-4. DI registration under `lib/core/di/`.
-5. Route wiring in `lib/core/router/app_routes.dart` and `lib/app/router/`.
+1. Domain contracts and models under `apps/mobile/lib/features/<feature>/domain/`.
+2. Data implementations under `apps/mobile/lib/features/<feature>/data/`.
+3. Cubit, pages, and widgets under `apps/mobile/lib/features/<feature>/presentation/`.
+4. DI registration under `apps/mobile/lib/core/di/`.
+5. Route wiring in `apps/mobile/lib/core/router/app_routes.dart` and `apps/mobile/lib/app/router/`.
 6. Tests from the Feature Brief **Tests** contract (RED with implementation, not a follow-up-only PR).
 7. Relevant docs refreshed when behavior, setup, or workflows changed.
 8. Validation run through the repo commands, typically `./bin/checklist`.
@@ -33,7 +33,7 @@ A new or materially changed feature should usually include:
 | Step | What to do |
 | --- | --- |
 | Brief + contract | Copy [`FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md); fill **Tests** (behaviour, state, unit, integration as needed). |
-| Reuse first | Check `lib/shared/`, `lib/core/`, and adjacent features before adding new abstractions. |
+| Reuse first | Check `apps/mobile/lib/shared/`, `apps/mobile/lib/core/`, and adjacent features before adding new abstractions. |
 | Place files | Follow [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md); copy live layout from [`architecture/reference_features.md`](architecture/reference_features.md). |
 | Keep boundaries clean | Stay within `Presentation -> Domain <- Data`. |
 | Use cases / DTOs | Apply [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md). |
@@ -50,27 +50,27 @@ A new or materially changed feature should usually include:
 
 | Concern | Current state | Primary docs | Primary code paths |
 | --- | --- | --- | --- |
-| App architecture | Implemented | [Clean Architecture](clean_architecture.md), [Architecture Details](architecture_details.md) | `lib/app/`, `lib/core/`, `lib/features/`, `lib/shared/` |
-| Feature catalog | Implemented | [Feature Overview](feature_overview.md) | `lib/features/`, `lib/core/router/app_routes.dart` |
-| API and HTTP integrations | Implemented | [Authentication](authentication.md), [Tech Stack](tech_stack.md), [Security and Secrets](security_and_secrets.md) | `lib/shared/http/`, `lib/core/di/register_http_services.dart` |
-| Firebase setup and usage | Implemented | [Firebase Setup](firebase_setup.md), [Authentication](authentication.md) | `lib/core/bootstrap/`, `lib/features/auth/`, `functions/` |
-| Supabase-backed flows | Implemented where configured | [Authentication](authentication.md), [Security and Secrets](security_and_secrets.md) | `lib/features/supabase_auth/`, `lib/features/iot_demo/`, `lib/core/di/register_supabase_services.dart` |
-| Offline-first patterns | Implemented | [Offline-First Adoption Guide](offline_first/adoption_guide.md) | `lib/shared/sync/`, feature repositories with `OfflineFirst*` implementations |
+| App architecture | Implemented | [Clean Architecture](clean_architecture.md), [Architecture Details](architecture_details.md) | `apps/mobile/lib/app/`, `apps/mobile/lib/core/`, `apps/mobile/lib/features/`, `apps/mobile/lib/shared/` |
+| Feature catalog | Implemented | [Feature Overview](feature_overview.md) | `apps/mobile/lib/features/`, `apps/mobile/lib/core/router/app_routes.dart` |
+| API and HTTP integrations | Implemented | [Authentication](authentication.md), [Tech Stack](tech_stack.md), [Security and Secrets](security_and_secrets.md) | `apps/mobile/lib/shared/http/`, `apps/mobile/lib/core/di/register_http_services.dart` |
+| Firebase setup and usage | Implemented | [Firebase Setup](firebase_setup.md), [Authentication](authentication.md) | `apps/mobile/lib/core/bootstrap/`, `apps/mobile/lib/features/auth/`, `functions/` |
+| Supabase-backed flows | Implemented where configured | [Authentication](authentication.md), [Security and Secrets](security_and_secrets.md) | `apps/mobile/lib/features/supabase_auth/`, `apps/mobile/lib/features/iot_demo/`, `apps/mobile/lib/core/di/register_supabase_services.dart` |
+| Offline-first patterns | Implemented | [Offline-First Adoption Guide](offline_first/adoption_guide.md) | `apps/mobile/lib/shared/sync/`, feature repositories with `OfflineFirst*` implementations |
 | Testing and validation | Implemented | [Testing Overview](testing_overview.md), [Validation Scripts](validation_scripts.md) | `test/`, `integration_test/`, `tool/`, `bin/` |
 | Deployment and release | Implemented | [Deployment](deployment.md), [Firebase App Distribution](firebase_app_distribution.md), [Android Play Store Release SOP](android_play_store_release_sop.md) | `fastlane/Fastfile`, `tool/fastlane.sh`, `tool/release_both_stores.sh`, `tool/release_android_play.sh` |
-| FCM demo and notification-triggered sync | Implemented | [FCM Demo Integration](fcm_demo_integration.md) | `lib/features/fcm_demo/`, `lib/shared/sync/` |
-| Maps | Implemented | [Google Maps Integration](google_maps_integration.md) | `lib/features/google_maps/`, deferred route files |
-| AI and GenUI demos | Implemented | [AI Integration](ai_integration.md), [GenUI Demo User Guide](genui_demo_user_guide.md) | `lib/features/chat/`, `lib/features/genui_demo/` |
-| Payments | Partially implemented | [Stripe Demo Integration Plan](stripe_demo_integration_plan.md) | `lib/features/in_app_purchase_demo/` |
+| FCM demo and notification-triggered sync | Implemented | [FCM Demo Integration](fcm_demo_integration.md) | `apps/mobile/lib/features/fcm_demo/`, `apps/mobile/lib/shared/sync/` |
+| Maps | Implemented | [Google Maps Integration](google_maps_integration.md) | `apps/mobile/lib/features/google_maps/`, deferred route files |
+| AI and GenUI demos | Implemented | [AI Integration](ai_integration.md), [GenUI Demo User Guide](genui_demo_user_guide.md) | `apps/mobile/lib/features/chat/`, `apps/mobile/lib/features/genui_demo/` |
+| Payments | Partially implemented | [Stripe Demo Integration Plan](stripe_demo_integration_plan.md) | `apps/mobile/lib/features/in_app_purchase_demo/` |
 
 ## Adding a new feature
 
-1. Create `lib/features/<feature>/domain/` for contracts and models.
+1. Create `apps/mobile/lib/features/<feature>/domain/` for contracts and models.
 2. Implement the repositories or services in `data/`.
 3. Add cubits and UI in `presentation/`.
-4. Register dependencies in `lib/core/di/`.
-5. Add or update route constants in `lib/core/router/app_routes.dart`.
-6. Wire the page in the correct route group under `lib/app/router/`.
+4. Register dependencies in `apps/mobile/lib/core/di/`.
+5. Add or update route constants in `apps/mobile/lib/core/router/app_routes.dart`.
+6. Wire the page in the correct route group under `apps/mobile/lib/app/router/`.
 7. Add or extend tests per the brief **Tests** section (same change series as implementation).
 8. Update the feature catalog if the feature is user-visible.
 

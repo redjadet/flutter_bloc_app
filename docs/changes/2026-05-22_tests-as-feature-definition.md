@@ -40,6 +40,6 @@ Adopted the practice that **tests define done** for feature work—not optional 
 
 ## For agents
 
-1. Start from [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) for non-trivial `lib/features/` work.
+1. Start from [`FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md) for non-trivial `apps/mobile/lib/features/` work.
 2. RED tests in the **same change series** as implementation.
 3. Widget patterns: [`testing/widget_test_playbook.md`](../testing/widget_test_playbook.md).

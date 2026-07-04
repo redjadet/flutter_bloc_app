@@ -1,17 +1,17 @@
 # Anchor features
 
-- Anchor A: `settings` (path: `lib/features/settings/`)
-- Anchor B: `todo_list` (path: `lib/features/todo_list/`)
+- Anchor A: `settings` (path: `apps/mobile/lib/features/settings/`)
+- Anchor B: `todo_list` (path: `apps/mobile/lib/features/todo_list/`)
 
 ## settings — architecture map
 
-- Entry page: `lib/features/settings/presentation/pages/settings_page.dart`
+- Entry page: `apps/mobile/lib/features/settings/presentation/pages/settings_page.dart`
 - State class(es):
-  - `ThemeCubit` (`lib/features/settings/presentation/cubit/theme_cubit.dart`)
-  - `LocaleCubit` (`lib/features/settings/presentation/cubit/locale_cubit.dart`)
-  - `AppInfoCubit` (`lib/features/settings/presentation/cubit/app_info_cubit.dart`)
+  - `ThemeCubit` (`apps/mobile/lib/features/settings/presentation/cubit/theme_cubit.dart`)
+  - `LocaleCubit` (`apps/mobile/lib/features/settings/presentation/cubit/locale_cubit.dart`)
+  - `AppInfoCubit` (`apps/mobile/lib/features/settings/presentation/cubit/app_info_cubit.dart`)
 - Use cases/services: `AppInfoRepository`, `ThemeRepository`, `LocaleRepository`
-- Repositories: implemented in `lib/features/settings/data/**` (Hive/SharedPreferences/package_info based)
+- Repositories: implemented in `apps/mobile/lib/features/settings/data/**` (Hive/SharedPreferences/package_info based)
 - Data sources/clients: local storage (Hive, SharedPreferences), package info APIs
 - DI registrations: _TBD (list concrete `core/di/...` files/lines)_
 
@@ -38,18 +38,18 @@
 
 ## todo_list — architecture map
 
-- Entry page: `lib/features/todo_list/presentation/pages/todo_list_page.dart`
+- Entry page: `apps/mobile/lib/features/todo_list/presentation/pages/todo_list_page.dart`
 - State class(es):
-  - `TodoListState` (`lib/features/todo_list/presentation/cubit/todo_list_state.dart`)
-- Use cases/services: `TodoRepository` (contract in `lib/features/todo_list/domain/todo_repository.dart`)
-- Repositories: implementations in `lib/features/todo_list/data/**` (Hive/Realtime/offline-first repositories)
+  - `TodoListState` (`apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_state.dart`)
+- Use cases/services: `TodoRepository` (contract in `apps/mobile/lib/features/todo_list/domain/todo_repository.dart`)
+- Repositories: implementations in `apps/mobile/lib/features/todo_list/data/**` (Hive/Realtime/offline-first repositories)
 - Data sources/clients: Hive, realtime database/client wrappers (see `data/` implementations)
 - DI registrations: _TBD (list concrete `core/di/...` files/lines)_
 
 ## todo_list — state & UI
 
 - Cubits/Blocs:
-  - `TodoListCubit` (`lib/features/todo_list/presentation/cubit/todo_list_cubit.dart`) with mixins for CRUD, helpers, logging
+  - `TodoListCubit` (`apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_cubit.dart`) with mixins for CRUD, helpers, logging
   - State: `TodoListState` (fields: `status`, `items`, `filter`, `searchQuery`, `sortOrder`, `manualOrder`, `selectedItemIds`, `errorMessage`)
 - BLoC access patterns:
   - `TodoListPage` uses `TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoAppBarData>` to derive app bar state

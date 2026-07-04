@@ -41,7 +41,7 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 
 ## Scope
 
-**In:** Feature module `lib/features/case_study_demo/` (domain / data / presentation), home → new case → 10-question video wizard → mock upload → history, [AuthRepository](../../lib/core/auth/auth_repository.dart) gate ([AppRouteAuthGate](../../lib/app/router/app_route_auth_gate.dart)), Example launcher, l10n, permissions, tests.
+**In:** Feature module `apps/mobile/lib/features/case_study_demo/` (domain / data / presentation), home → new case → 10-question video wizard → mock upload → history, [AuthRepository](../../apps/mobile/lib/core/auth/auth_repository.dart) gate ([AppRouteAuthGate](../../apps/mobile/lib/app/router/app_route_auth_gate.dart)), Example launcher, l10n, permissions, tests.
 
 **Out:** Real backend upload, HIPAA product, `camera` package UI.
 
@@ -50,11 +50,11 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 - **Persistence authoritative** — rehydrate session on `record` / `review` entry and app resume.
 - **Keys:** `questionId` `q1`…`q10` only; answers as `Map<questionId, localPath>` (typed in domain).
 - **Session cubit** vs **history** read path separated (history must not depend on transient wizard-only state).
-- **Repositories:** video pick, Hive persistence, mock upload — mirror [CameraGalleryResult](../../lib/features/camera_gallery/domain/camera_gallery_result.dart) patterns for pick errors.
+- **Repositories:** video pick, Hive persistence, mock upload — mirror [CameraGalleryResult](../../apps/mobile/lib/features/camera_gallery/domain/camera_gallery_result.dart) patterns for pick errors.
 
 ## DI / registration
 
-- Add `lib/core/di/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../lib/core/di/injector_registrations.dart) alongside other feature registers.
+- Add `apps/mobile/lib/core/di/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../apps/mobile/lib/core/di/injector_registrations.dart) alongside other feature registers.
 
 ## Routes
 
@@ -71,10 +71,10 @@ Full paths (nested):
 
 Implementation notes:
 
-- Prefer **`ShellRoute`** so one [AppRouteAuthGate](../../lib/app/router/app_route_auth_gate.dart) and one session `BlocProvider` wrap nested routes. Route composition now lives in [routes_case_study_demo.dart](../../lib/app/router/routes_case_study_demo.dart) and is joined through [routes.dart](../../lib/app/router/routes.dart) before the `GoRouter(routes: …)` call in [app.dart](../../lib/app.dart).
-- Add **`AppRoutePolicies.caseStudyDemo`** in [route_auth_policy.dart](../../lib/app/router/route_auth_policy.dart).
+- Prefer **`ShellRoute`** so one [AppRouteAuthGate](../../apps/mobile/lib/app/router/app_route_auth_gate.dart) and one session `BlocProvider` wrap nested routes. Route composition now lives in [routes_case_study_demo.dart](../../apps/mobile/lib/app/router/routes_case_study_demo.dart) and is joined through [routes.dart](../../apps/mobile/lib/app/router/routes.dart) before the `GoRouter(routes: …)` call in [app.dart](../../apps/mobile/lib/app.dart).
+- Add **`AppRoutePolicies.caseStudyDemo`** in [route_auth_policy.dart](../../apps/mobile/lib/app/router/route_auth_policy.dart).
 - **Async redirect** on `record` / `review` when draft is invalid; keep a light **in-page guard** as backup.
-- Add `AppRoutes` constants + route **names** in [app_routes.dart](../../lib/core/router/app_routes.dart).
+- Add `AppRoutes` constants + route **names** in [app_routes.dart](../../apps/mobile/lib/core/router/app_routes.dart).
 
 ## Platform permissions
 
@@ -101,7 +101,7 @@ Implementation notes:
 - **Copy failures** — `File.copy` can fail (disk full, permission). Do not advance the wizard index until persistence succeeds; show `CameraGalleryResult`-style error handling.
 - **Missing files at playback** — History/detail must handle `!File(path).existsSync()` (show inline error / placeholder, don’t crash `video_player`).
 - **`video_player` lifecycle** — Dispose controllers when the preview widget is disposed; pause on `AppLifecycleState.inactive/paused` to reduce GPU/audio leaks and background crashes (align with repo lifecycle docs).
-- **Request coalescing / race** — Use a **request-id guard** (same pattern as [camera gallery cubit](../../lib/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart)) so an older async pick result cannot commit after the user cancelled or moved to another question.
+- **Request coalescing / race** — Use a **request-id guard** (same pattern as [camera gallery cubit](../../apps/mobile/lib/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart)) so an older async pick result cannot commit after the user cancelled or moved to another question.
 - **Redirect vs loading** — Async redirects must not flash infinite loops: if draft is still loading, avoid redirecting **away** from `record` based on a null draft until the first load completes (or use a dedicated “unknown” state). Prefer: redirect only after `ensureReady()` + explicit load returns.
 - **`AppRoutePolicies` path** — The policy `path` must match the **authenticated subtree** you wrap (typically `/case-study-demo`). Mismatch breaks expectations in [app_route_auth_gate_test](../../test/app/router/app_route_auth_gate_test.dart) and mental model for “which routes are protected”.
 - **`retrieveLostData` (video)** — If the plugin returns image-only recovery, document and return null for video; don’t assume parity with `pickImage`.
@@ -115,8 +115,8 @@ Implementation notes:
 
 ## References
 
-- [routes_demos.dart](../../lib/app/router/routes_demos.dart) — nested routes
-- [routes_core.dart](../../lib/app/router/routes_core.dart) — auth gate patterns
-- [lib/features/camera_gallery/](../../lib/features/camera_gallery/)
+- [routes_demos.dart](../../apps/mobile/lib/app/router/routes_demos.dart) — nested routes
+- [routes_core.dart](../../apps/mobile/lib/app/router/routes_core.dart) — auth gate patterns
+- [apps/mobile/lib/features/camera_gallery/](../../apps/mobile/lib/features/camera_gallery/)
 - [docs/camera_gallery_integration_plan.md](../camera_gallery_integration_plan.md)
 - [AGENTS.md](../../AGENTS.md)

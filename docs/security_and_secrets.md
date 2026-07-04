@@ -59,7 +59,7 @@ scripts that you may want to run without exporting env vars. The repo only ships
 ### Option A: one-off `--dart-define` flags
 
 ```bash
-cd apps/mobile && flutter run -t lib/main_dev.dart \
+cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart \
   --dart-define=SUPABASE_URL=... \
   --dart-define=SUPABASE_ANON_KEY=... \
   --dart-define=HUGGINGFACE_API_KEY=...
@@ -73,7 +73,7 @@ cd apps/mobile && flutter run -t lib/main_dev.dart \
 
 ```bash
 direnv allow
-cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
+cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
 ```
 
 When `.envrc` follows [`docs/envrc.example`](envrc.example) and prepends `tool/direnv/bin` to `PATH`, plain `flutter run` / `flutter build` from the repo root is routed to `apps/mobile` and still receives the same flags: the wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh), which emits `--dart-define=...` only for **named** environment variables (for example `HUGGINGFACE_API_KEY`, `SUPABASE_*`, and optional orchestration demo keys `CHAT_FASTAPICLOUD_*` (preferred) / legacy `CHAT_RENDER_*`). **New** compile-time keys must be added to that script or they will not reach the app even if exported in `.envrc`. Orchestration demo wiring is summarized in [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). **`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render REST, Cursor MCP, or [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never as a Flutter `dart-define` or Remote Config parameter.
@@ -140,11 +140,11 @@ Firebase config is split between **gitignored platform files** and a
 
 | Artifact | In git | Template | Real values |
 | --- | --- | --- | --- |
-| `android/app/google-services.json` | gitignored | [`android/app/google-services.json.sample`](../android/app/google-services.json.sample) | Local / CI secret injection |
-| `ios/Runner/GoogleService-Info.plist` | gitignored | [`ios/Runner/GoogleService-Info.plist.sample`](../ios/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
-| `macos/Runner/GoogleService-Info.plist` | gitignored | [`macos/Runner/GoogleService-Info.plist.sample`](../macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
+| `apps/mobile/android/app/google-services.json` | gitignored | [`android/app/google-services.json.sample`](../apps/mobile/android/app/google-services.json.sample) | Local / CI secret injection |
+| `apps/mobile/ios/Runner/GoogleService-Info.plist` | gitignored | [`ios/Runner/GoogleService-Info.plist.sample`](../apps/mobile/ios/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
+| `apps/mobile/macos/Runner/GoogleService-Info.plist` | gitignored | [`macos/Runner/GoogleService-Info.plist.sample`](../apps/mobile/macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
 | `firebase.json` | gitignored | [`firebase.json.example`](../firebase.json.example) | Local / CI project selection |
-| [`lib/firebase_options.dart`](../lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
+| [`apps/mobile/lib/firebase_options.dart`](../apps/mobile/lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
 | `.envrc` | gitignored | [`docs/envrc.example`](envrc.example) | Maintainer machine only |
 | `assets/config/secrets.json` | gitignored | [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json) | Optional local asset fallback |
 
@@ -158,7 +158,7 @@ platform build starts requiring one of those local files, either make that build
 step optional or add a tracked placeholder template before relying on the local
 file.
 
-Tracked placeholder files such as [`lib/firebase_options.dart`](../lib/firebase_options.dart)
+Tracked placeholder files such as [`apps/mobile/lib/firebase_options.dart`](../apps/mobile/lib/firebase_options.dart)
 and `ios/ci` / `macos/ci` plist files must not contain real API keys. CI uses
 them only as build placeholders; maintainer machines and deployment pipelines
 should supply real Firebase config through gitignored platform files or
@@ -169,7 +169,7 @@ When those values are missing or still placeholders, Firebase initialization
 skips safely and logs only field names, not secret values.
 
 After `flutterfire configure`, restore the committed Dart placeholder (`git
-checkout HEAD -- lib/firebase_options.dart`) and copy keys into `.envrc` — do
+checkout HEAD -- apps/mobile/lib/firebase_options.dart`) and copy keys into `.envrc` — do
 not commit hardcoded API keys from the CLI output.
 
 ### Git history and secret scanning

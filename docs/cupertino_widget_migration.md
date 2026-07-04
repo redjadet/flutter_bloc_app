@@ -32,7 +32,7 @@ The codebase already had platform-adaptive implementations for:
 
 ### Phase 1: Platform-Adaptive Helper Methods
 
-Added new helper methods to `lib/shared/utils/platform_adaptive.dart`:
+Added new helper methods to `apps/mobile/lib/shared/utils/platform_adaptive.dart`:
 
 #### 1. TextField Helper
 
@@ -129,23 +129,23 @@ PlatformAdaptive.showPickerModal<T>({
 
 Updated the following files to use `PlatformAdaptive.textField()`:
 
-1. **lib/features/search/presentation/widgets/search_text_field.dart**
+1. **apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart**
    - Custom Container styling preserved on both platforms
    - Uses platform-adaptive text field internally
 
-2. **lib/features/chat/presentation/widgets/chat_input_bar.dart**
+2. **apps/mobile/lib/features/chat/presentation/widgets/chat_input_bar.dart**
    - Simple text field with outline decoration
    - Direct migration to platform-adaptive helper
 
-3. **lib/features/websocket/presentation/pages/websocket_demo_page.dart**
+3. **apps/mobile/lib/features/websocket/presentation/pages/websocket_demo_page.dart**
    - Message input field
    - Uses platform-adaptive text field
 
-4. **lib/features/library_demo/presentation/widgets/library_demo_search_row.dart**
+4. **apps/mobile/lib/features/library_demo/presentation/widgets/library_demo_search_row.dart**
    - Search field with custom styling
    - Platform-adaptive implementation
 
-5. **lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart**
+5. **apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart**
    - `buildTodoTextField()` refactored to use platform-adaptive helper
    - Previously had manual CupertinoTextField implementation
 
@@ -158,7 +158,7 @@ Updated the following files to use `PlatformAdaptive.textField()`:
 
 #### Priority Selector
 
-Updated `buildTodoPrioritySelector()` in `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`:
+Updated `buildTodoPrioritySelector()` in `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`:
 
 - **iOS/macOS**: Shows a tappable container that opens `CupertinoPicker` modal via `PlatformAdaptive.showPickerModal()`
 - **Android**: Continues using `DropdownButtonFormField`
@@ -167,7 +167,7 @@ The iOS implementation provides a native picker experience with Cancel/Done butt
 
 #### GraphQL Filter Bar
 
-Updated `GraphqlFilterBar` in `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`:
+Updated `GraphqlFilterBar` in `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart`:
 
 - Now uses `CommonDropdownField<String?>` for both platforms
 - **iOS/macOS**: Uses `CommonDropdownField` which shows a tappable container that opens `CupertinoPicker` modal for continent selection
@@ -176,7 +176,7 @@ Updated `GraphqlFilterBar` in `lib/features/graphql_demo/presentation/widgets/gr
 
 #### Chat Model Selector
 
-Updated `ChatModelSelector` in `lib/features/chat/presentation/widgets/chat_model_selector.dart`:
+Updated `ChatModelSelector` in `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart`:
 
 - Now uses `CommonDropdownField<String>` for both platforms
 - **iOS/macOS**: Uses `CommonDropdownField` with `labelPosition: DropdownLabelPosition.left` to show label on left in a Row layout
@@ -194,19 +194,19 @@ Verified that `Checkbox.adaptive` already provides platform adaptation:
 
 Updated the following files to use `PlatformAdaptive.listTile()`:
 
-1. **lib/features/settings/presentation/widgets/settings_card.dart**
+1. **apps/mobile/lib/features/settings/presentation/widgets/settings_card.dart**
    - `_SettingsTile` widget
    - Selection state handling works on both platforms
 
-2. **lib/features/google_maps/presentation/widgets/google_maps_location_list.dart**
+2. **apps/mobile/lib/features/google_maps/presentation/widgets/google_maps_location_list.dart**
    - Location list items
    - Title, subtitle, trailing widgets preserved
 
-3. **lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart**
+3. **apps/mobile/lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart**
    - Sync operation list items
    - Simple title/subtitle layout
 
-4. **lib/features/chat/presentation/widgets/chat_history_conversation_tile.dart**
+4. **apps/mobile/lib/features/chat/presentation/widgets/chat_history_conversation_tile.dart**
    - Complex list tile with custom subtitle (Column widget)
    - Selected state with custom colors
    - Note: `shape` property not supported by CupertinoListTile, but `selectedTileColor` works
@@ -215,11 +215,11 @@ Updated the following files to use `PlatformAdaptive.listTile()`:
 
 Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBottomSheet()`:
 
-1. **lib/features/chat/presentation/pages/chat_page.dart**
+1. **apps/mobile/lib/features/chat/presentation/pages/chat_page.dart**
    - `_showHistorySheet()` method
    - Complex scrollable sheet - Cupertino implementation uses `showCupertinoModalPopup`
 
-2. **lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart**
+2. **apps/mobile/lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart**
    - Sync queue inspector sheet
    - Simple list-based sheet
 
@@ -227,38 +227,38 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 
 ### Core Utilities
 
-- `lib/shared/utils/platform_adaptive.dart` - Added new helper methods
+- `apps/mobile/lib/shared/utils/platform_adaptive.dart` - Added new helper methods
 
 ### TextFields
 
-- `lib/features/search/presentation/widgets/search_text_field.dart`
-- `lib/features/chat/presentation/widgets/chat_input_bar.dart`
-- `lib/features/websocket/presentation/pages/websocket_demo_page.dart`
-- `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`
-- `lib/features/library_demo/presentation/widgets/library_demo_search_row.dart`
+- `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart`
+- `apps/mobile/lib/features/chat/presentation/widgets/chat_input_bar.dart`
+- `apps/mobile/lib/features/websocket/presentation/pages/websocket_demo_page.dart`
+- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`
+- `apps/mobile/lib/features/library_demo/presentation/widgets/library_demo_search_row.dart`
 
 ### Dropdowns
 
-- `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
-- `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Uses `CommonDropdownField` with nullable type support
-- `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Uses `CommonDropdownField` with left label position
-- `lib/shared/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
+- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
+- `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Uses `CommonDropdownField` with nullable type support
+- `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart` - Uses `CommonDropdownField` with left label position
+- `apps/mobile/lib/shared/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
 
 ### Date Pickers
 
-- `lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` - Updated to use `showCupertinoModalPopup` instead of `CupertinoAlertDialog` to fix clipping issues on iOS
+- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` - Updated to use `showCupertinoModalPopup` instead of `CupertinoAlertDialog` to fix clipping issues on iOS
 
 ### List Tiles
 
-- `lib/features/settings/presentation/widgets/settings_card.dart`
-- `lib/features/google_maps/presentation/widgets/google_maps_location_list.dart`
-- `lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart`
-- `lib/features/chat/presentation/widgets/chat_history_conversation_tile.dart`
+- `apps/mobile/lib/features/settings/presentation/widgets/settings_card.dart`
+- `apps/mobile/lib/features/google_maps/presentation/widgets/google_maps_location_list.dart`
+- `apps/mobile/lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart`
+- `apps/mobile/lib/features/chat/presentation/widgets/chat_history_conversation_tile.dart`
 
 ### Modal Bottom Sheets
 
-- `lib/features/chat/presentation/pages/chat_page.dart`
-- `lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart`
+- `apps/mobile/lib/features/chat/presentation/pages/chat_page.dart`
+- `apps/mobile/lib/features/counter/presentation/widgets/counter_sync_queue_inspector_button.dart`
 
 ## File Organization Note
 
@@ -279,9 +279,9 @@ Refresh indicators require significant refactoring:
 
 **Files affected:**
 
-- `lib/features/todo_list/presentation/widgets/todo_list_content.dart`
-- `lib/features/graphql_demo/presentation/pages/graphql_demo_page.dart`
-- `lib/features/chart/presentation/pages/chart_page.dart`
+- `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_content.dart`
+- `apps/mobile/lib/features/graphql_demo/presentation/pages/graphql_demo_page.dart`
+- `apps/mobile/lib/features/chart/presentation/pages/chart_page.dart`
 
 **Approach**: This would require converting list structures to use `CustomScrollView` with `SliverList`, which is a significant refactoring. Consider handling this case-by-case or creating wrapper widgets that handle the complexity.
 
@@ -299,14 +299,14 @@ Scaffold migration to `CupertinoPageScaffold` is complex due to:
 
 All dropdowns now use the unified `CommonDropdownField` widget which is platform-adaptive:
 
-- ✅ `lib/shared/widgets/common_dropdown_field.dart` (CommonDropdownField) - Reusable platform-adaptive dropdown widget with support for:
+- ✅ `apps/mobile/lib/shared/widgets/common_dropdown_field.dart` (CommonDropdownField) - Reusable platform-adaptive dropdown widget with support for:
   - Nullable types with custom picker items (`customPickerItems` parameter)
   - Custom label functions (`customItemLabel` parameter)
   - Flexible label positioning (`DropdownLabelPosition` enum: `top` or `left`)
   - Uses `PlatformAdaptive.showPickerModal()` on iOS/macOS, `DropdownButtonFormField` on Android
-- ✅ `lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Now uses `CommonDropdownField<String?>` with nullable type support
-- ✅ `lib/features/chat/presentation/widgets/chat_model_selector.dart` - Now uses `CommonDropdownField<String>` with `labelPosition: DropdownLabelPosition.left`
-- ✅ `lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField<TodoPriority>`
+- ✅ `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Now uses `CommonDropdownField<String?>` with nullable type support
+- ✅ `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart` - Now uses `CommonDropdownField<String>` with `labelPosition: DropdownLabelPosition.left`
+- ✅ `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField<TodoPriority>`
 
 All custom iOS implementations have been removed in favor of the unified `CommonDropdownField` widget.
 
@@ -355,4 +355,4 @@ When implementing platform-adaptive widgets:
 
 - Flutter Cupertino Widgets: <https://docs.flutter.dev/development/ui/widgets/cupertino>
 - Platform-Adaptive Widgets: <https://docs.flutter.dev/development/ui/widgets/cupertino#adapting-to-platforms>
-- Existing Platform-Adaptive Utilities: `lib/shared/utils/platform_adaptive.dart`
+- Existing Platform-Adaptive Utilities: `apps/mobile/lib/shared/utils/platform_adaptive.dart`

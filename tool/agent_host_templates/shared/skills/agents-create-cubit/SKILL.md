@@ -16,10 +16,10 @@ Read in order:
 Rules:
 
 - Default `Cubit`; do not add `Bloc` unless event-queue complexity is documented.
-- New code uses `lib/features/<feature>/presentation/cubit/` (singular).
+- New code uses `apps/mobile/lib/features/<feature>/presentation/cubit/` (singular).
 - State uses Freezed; domain models only — no DTOs in state.
 - Cubit depends on domain contracts, not data implementations.
-- Register in `lib/core/di/` with existing idempotent helpers.
+- Register in `apps/mobile/lib/core/di/` with existing idempotent helpers.
 - Add cubit tests: initial, loading, success, error, stale-async guard.
 
 Proof: `flutter test test/features/<feature>/presentation/` + `./tool/analyze.sh`.
