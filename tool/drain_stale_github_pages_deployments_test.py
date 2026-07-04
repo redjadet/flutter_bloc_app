@@ -148,6 +148,59 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         )
         self.assertEqual(fake.calls, 1)
 
+    def test_is_pages_deployment_published_matches_succeed(self):
+        self.assertTrue(self.module.is_pages_deployment_published("succeed"))
+        self.assertFalse(self.module.is_pages_deployment_published("deployment_queued"))
+        self.assertFalse(self.module.is_pages_deployment_published(None))
+
+    def test_check_published_for_sha_exits_zero_when_succeed(self):
+        module = self.module
+
+        class FakeClient:
+            def pages_status(self, sha):
+                return module.PagesStatusLookup(found=True, status="succeed")
+
+        original_client = module.GitHubPagesDrainClient
+        module.GitHubPagesDrainClient = lambda **kwargs: FakeClient()
+        try:
+            exit_code = module.main(
+                [
+                    "--repository",
+                    "owner/repo",
+                    "--token",
+                    "token",
+                    "--check-published-for-sha",
+                    "abc1234567890",
+                ]
+            )
+        finally:
+            module.GitHubPagesDrainClient = original_client
+        self.assertEqual(exit_code, 0)
+
+    def test_check_published_for_sha_exits_one_when_not_published(self):
+        module = self.module
+
+        class FakeClient:
+            def pages_status(self, sha):
+                return module.PagesStatusLookup(found=True, status="deployment_queued")
+
+        original_client = module.GitHubPagesDrainClient
+        module.GitHubPagesDrainClient = lambda **kwargs: FakeClient()
+        try:
+            exit_code = module.main(
+                [
+                    "--repository",
+                    "owner/repo",
+                    "--token",
+                    "token",
+                    "--check-published-for-sha",
+                    "abc1234567890",
+                ]
+            )
+        finally:
+            module.GitHubPagesDrainClient = original_client
+        self.assertEqual(exit_code, 1)
+
     def test_drain_stale_pages_deployments_waits_to_settle(self):
         module = self.module
 

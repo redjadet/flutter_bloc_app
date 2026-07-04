@@ -231,6 +231,9 @@ deployments, and nudges each blocker once. On retry after a failed deploy, the
 script includes the current SHA, waits for a terminal Pages status, then
 retries `deploy-pages`. Push deploys also skip when the workflow commit is no
 longer the branch tip, so stale queued runs do not fight newer `main` pushes.
+Redispatched `workflow_dispatch` recovery runs also skip when the commit's
+Pages deployment already succeeded (for example after a concurrent push deploy),
+so a late retry cannot fail the commit check.
 
 #### `base_href` input
 

@@ -59,6 +59,11 @@ def is_clear_pages_status(status: str | None) -> bool:
     return status == "succeed"
 
 
+def is_pages_deployment_published(status: str | None) -> bool:
+    """Return True when a commit's Pages deployment is already live."""
+    return is_clear_pages_status(status)
+
+
 def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
     """Return True when a Pages deployment should be cancelled before a new deploy."""
     if is_clear_pages_status(status):
@@ -385,6 +390,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=0,
         help="Extra wait after draining when cancellations occurred",
     )
+    parser.add_argument(
+        "--check-published-for-sha",
+        metavar="SHA",
+        help=(
+            "Exit 0 when the SHA's Pages deployment status is succeed; "
+            "exit 1 otherwise (for workflow skip checks)"
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -400,6 +413,25 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit("Missing --repository or GITHUB_REPOSITORY")
     if not args.token:
         raise SystemExit("Missing --token or GITHUB_TOKEN")
+
+    if args.check_published_for_sha:
+        client = GitHubPagesDrainClient(
+            repository=args.repository,
+            token=args.token,
+        )
+        lookup = client.pages_status(args.check_published_for_sha)
+        if lookup.found and is_pages_deployment_published(lookup.status):
+            print(
+                "Pages deployment for "
+                f"{args.check_published_for_sha[:7]} already succeeded."
+            )
+            return 0
+        status_repr = "not found" if not lookup.found else repr(lookup.status)
+        print(
+            "Pages deployment for "
+            f"{args.check_published_for_sha[:7]} is not published ({status_repr})."
+        )
+        return 1
 
     exclude_sha = resolve_exclude_sha(args.exclude_sha)
     current_sha = exclude_sha or os.environ.get("GITHUB_SHA")
