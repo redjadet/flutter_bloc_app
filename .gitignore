@@ -72,9 +72,9 @@ app.*.map.json
 # Node deps (keep local, never commit)
 **/node_modules/
 
-# Local secrets (app package after Melos migration)
-assets/config/secrets.json
-apps/mobile/assets/config/secrets.json
+# Local secrets — never commit; copy from the tracked *.sample.json templates.
+/assets/config/secrets.json
+/apps/mobile/assets/config/secrets.json
 apps/mobile/android/app/google-services.json
 apps/mobile/ios/Runner/GoogleService-Info.plist
 apps/mobile/macos/Runner/GoogleService-Info.plist
