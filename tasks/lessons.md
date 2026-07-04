@@ -48,6 +48,29 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `apps/mobile/ios/Runner/AppDelegate.swift`
   `tool/run_integration_tests.sh`
 
+### 2026-07-04 - Keep coverage artifacts in commits
+
+- What went wrong:
+  Before merge, agent removed `apps/mobile/coverage/lcov.base.info` from the
+  commit and added `apps/mobile/coverage/` to `.gitignore`, treating the
+  integration baseline as accidental churn.
+- How it was fixed:
+  Operator preference: keep coverage artifacts in commits. Revert gitignore
+  exclusion; restore tracked `apps/mobile/coverage/lcov.base.info`; document in
+  [`operator_preferences_durable.md`](../docs/agent_kb/operator_preferences_durable.md).
+- Pattern:
+  Integration merge staging copies workspace `coverage/lcov.base.info` into
+  `apps/mobile/coverage/` — that file is intentional repo state, not ephemeral
+  build output to strip pre-push.
+- Preventive rule:
+  Do not remove coverage baseline/summary artifacts from commits or gitignore
+  them without explicit operator request. See operator prefs § `/commit-push-pr`.
+- Evidence or affected files:
+  `apps/mobile/coverage/lcov.base.info`
+  `.gitignore`
+  `tool/run_integration_tests.sh`
+  `docs/agent_kb/operator_preferences_durable.md`
+
 ### 2026-07-03 - Firebase forced refresh needs one getIdTokenResult(true)
 
 - What went wrong:

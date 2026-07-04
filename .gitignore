@@ -42,7 +42,6 @@ GEMINI.md
 .pub/
 /build/
 /coverage/lcov.info
-apps/mobile/coverage/
 
 # Integration test runner output (per-run summaries)
 /artifacts/
