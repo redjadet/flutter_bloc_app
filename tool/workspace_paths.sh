@@ -16,10 +16,9 @@ else
   _expected_app_root="$_expected_workspace_root"
 fi
 
-if [[ -n "${WORKSPACE_PATHS_LOADED:-}" && "${WORKSPACE_ROOT:-}" == "$_expected_workspace_root" ]]; then
-  WORKSPACE_ROOT="$_expected_workspace_root"
-  APP_ROOT="$_expected_app_root"
-  export WORKSPACE_ROOT APP_ROOT WORKSPACE_PATHS_LOADED
+if [[ -n "${WORKSPACE_PATHS_LOADED:-}" \
+  && "${WORKSPACE_ROOT:-}" == "$_expected_workspace_root" \
+  && "${APP_ROOT:-}" == "$_expected_app_root" ]]; then
   return 0 2>/dev/null || exit 0
 fi
 
