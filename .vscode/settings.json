@@ -167,5 +167,11 @@
     "**/windows/flutter/**": true,
     "**/linux/flutter/**": true
   },
-  "cmake.sourceDirectory": "${workspaceFolder}/windows/runner"
+  "cmake.sourceDirectory": "${workspaceFolder}/apps/mobile/windows/runner",
+  "dart.analysisExcludedFolders": [
+    "${workspaceFolder}/backend",
+    "${workspaceFolder}/demos",
+    "${workspaceFolder}/third_party",
+    "${workspaceFolder}/.worktrees"
+  ]
 }
