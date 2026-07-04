@@ -192,7 +192,7 @@ jobs:
           steps.pages_already_live.outputs.skip != 'true' &&
           github.event_name == 'push' &&
           steps.deployment.outcome == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const workflowFile = 'deploy_web.yml';
