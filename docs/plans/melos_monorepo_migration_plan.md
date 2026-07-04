@@ -2,7 +2,7 @@
 
 Date: 2026-07-03
 Branch: `codex/melos-monorepo-build` · worktree `../flutter_bloc_app_melos_build`
-Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo migration)
+Merged PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo migration)
 
 ## Implementation status (2026-07-03)
 
@@ -26,7 +26,8 @@ Open PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monorepo
 | Closeout | `741a3ea8` | Plan/docs closeout; staff_app_demo paths; migration complete |
 | Harness paths | `70c0d6d5` | `resolve_scan_root` in validation scripts; harness fixtures green |
 
-**Status:** Scoped migration **complete** (PR-A–I + CI hardening). Merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) to `main` is the remaining operator step. Deferred extractions documented below — not blocking merge.
+**Status:** Scoped migration **complete** on `main` (PR-A–I + CI hardening).
+Deferred extractions documented below are follow-up work, not merge blockers.
 
 **PR-C learnings (record before next extraction):**
 
@@ -177,7 +178,6 @@ cd ../flutter_bloc_app_melos_build
 | Gate | When | Command |
 | --- | --- | --- |
 | Full delivery | Every implementation PR | `./bin/checklist` |
-| Fast docs/tooling | Plan-only or tooling edits | `./bin/checklist-fast --no-reuse` |
 | Melos parity (non-blocking until PR-A lands) | After PR-A | `dart run melos bootstrap` then `dart run melos run analyze:flutter` |
 
 **Melos 7 note:** Configuration lives in the root `pubspec.yaml` `melos:` section.
@@ -291,7 +291,6 @@ packages/auth → packages/core, utilities
 packages/ai → packages/core, utilities
 packages/feature_flags → packages/core, utilities
 packages/shared_blocs → packages/core, design_system (only if truly shared UI state)
-packages/design_system → packages/core, utilities
 packages/utilities → packages/core
 packages/core → (none)
 custom_lints/* → (none; workspace members only)

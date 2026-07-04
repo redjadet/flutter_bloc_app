@@ -103,7 +103,8 @@ Use this pre-debug checklist when a feature depends on local secrets:
    [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
    and [`envrc.example`](envrc.example) before relying on `.envrc`.
 4. Run [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh)
-   before committing or pushing.
+   before committing or pushing. It checks that local `secrets.json` paths stay
+   gitignored and scans tracked files for secret-looking literals.
 5. Never paste real values into issue comments, logs, screenshots, or docs;
    refer to env var names only.
 

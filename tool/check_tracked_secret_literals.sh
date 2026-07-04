@@ -19,6 +19,10 @@ finding_count=0
 for secrets_path in \
   assets/config/secrets.json \
   apps/mobile/assets/config/secrets.json; do
+  if ! git check-ignore -q --no-index "$secrets_path" 2>/dev/null; then
+    finding_count=$((finding_count + 1))
+    printf 'violation|%s:0:secrets_file_not_gitignored:secrets.json path must stay covered by .gitignore\n' "$secrets_path"
+  fi
   if git ls-files --error-unmatch "$secrets_path" >/dev/null 2>&1; then
     finding_count=$((finding_count + 1))
     printf 'violation|%s:0:tracked_secrets_file:secrets.json must stay gitignored\n' "$secrets_path"
