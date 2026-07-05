@@ -10,6 +10,14 @@ on:
         description: "Flutter --base-href (use '/<repo>/' for project sites, '/' for root/custom domain)"
         required: false
         default: ""
+      recovery:
+        description: "Internal: set by redispatch step (do not set manually)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
 
 # Do not cancel in-flight deploy workflows: cancelling after deploy-pages submits
 # leaves orphaned GitHub Pages deployments stuck in deployment_queued, which then
@@ -203,6 +211,9 @@ jobs:
               repo: context.repo.repo,
               workflow_id: workflowFile,
               ref,
+              inputs: {
+                recovery: 'true',
+              },
             });
             core.info(
               `Dispatched ${workflowFile} on ${ref} after Pages deploy failure.`,
@@ -213,7 +224,10 @@ jobs:
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure' &&
-          (github.event_name != 'push' || steps.redispatch.outcome != 'success')
+          (
+            (github.event_name == 'push' && steps.redispatch.outcome != 'success') ||
+            (github.event_name == 'workflow_dispatch' && github.event.inputs.recovery != 'true')
+          )
         run: |
           echo "GitHub Pages deploy failed." >&2
           exit 1
