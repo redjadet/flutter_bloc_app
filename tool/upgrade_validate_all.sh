@@ -190,17 +190,19 @@ if parse_bool_env "SKIP_PUB_UPGRADE" "$SKIP_PUB_UPGRADE_MODE"; then
 else
   echo "==> Step 2/6: Upgrade packages (major versions when possible)"
   "$FLUTTER_BIN" pub upgrade --major-versions
+
+  # `pub upgrade --major-versions` rewrites custom analyzer plugin pins to caret
+  # ranges; restore pinned analyzer 10 stack before compat checks.
+  for custom_pkg in file_length_lint mix_lint; do
+    custom_pubspec="custom_lints/$custom_pkg/pubspec.yaml"
+    if [ -f "$custom_pubspec" ] && ! git diff --quiet -- "$custom_pubspec"; then
+      git checkout -- "$custom_pubspec"
+    fi
+  done
+
   echo "==> Step 2b/6: Verify pubspec codegen/analyzer compatibility"
   if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
     echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring pinned analyzer/codegen stack."
-
-    # `pub upgrade --major-versions` floats custom analyzer plugin pins; restore from HEAD.
-    for custom_pkg in file_length_lint mix_lint; do
-      custom_pubspec="custom_lints/$custom_pkg/pubspec.yaml"
-      if [ -f "$custom_pubspec" ] && ! git diff --quiet -- "$custom_pubspec"; then
-        git checkout -- "$custom_pubspec"
-      fi
-    done
 
     python3 - <<'PY'
 from __future__ import annotations
