@@ -50,6 +50,18 @@ class DeployWebWorkflowTest(unittest.TestCase):
 
         self.assertIn("steps.final_skip.outputs.skip != 'true'", block)
 
+    def test_redispatch_marks_recovery_workflow_dispatch(self):
+        block = self._step_block("Re-dispatch Deploy web workflow after Pages failure")
+
+        self.assertIn("recovery: 'true'", block)
+
+    def test_recovery_workflow_dispatch_does_not_fail_commit_check(self):
+        block = self._step_block("Fail when Pages deploy did not succeed")
+
+        self.assertIn("github.event.inputs.recovery != 'true'", block)
+        self.assertIn("github.event_name == 'push'", block)
+        self.assertNotIn("github.event_name != 'push'", block)
+
     def _step_block(self, marker: str) -> str:
         pattern = re.compile(
             rf"(?ms)^      (?=- (?:name: {re.escape(marker)}|id: {re.escape(marker.removeprefix('- id: '))}))"
