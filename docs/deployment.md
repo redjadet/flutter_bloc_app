@@ -236,7 +236,9 @@ Redispatched recovery runs also skip when the commit's Pages deployment already
 succeeded (for example after a concurrent push deploy), so a late retry cannot
 fail the commit check. Recovery dispatches pass `recovery=true`; when that
 retry still cannot publish, the workflow exits without failing the commit check
-(the push run already redispatched once).
+(the push run already redispatched once). Before any hard failure, the workflow
+re-checks branch tip and published status so a long-lived `workflow_dispatch`
+cannot fail `main` after newer commits land.
 
 #### `base_href` input
 

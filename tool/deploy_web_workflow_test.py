@@ -27,6 +27,7 @@ class DeployWebWorkflowTest(unittest.TestCase):
             "- id: deployment",
             "Drain stale GitHub Pages deployments (retry)",
             "Re-dispatch Deploy web workflow after Pages failure",
+            "Re-check deploy guards before failing",
             "Fail when Pages deploy did not succeed",
         ]
 
@@ -34,6 +35,20 @@ class DeployWebWorkflowTest(unittest.TestCase):
             with self.subTest(step=step_name):
                 block = self._step_block(step_name)
                 self.assertIn("steps.branch_tip.outputs.skip != 'true'", block)
+
+    def test_final_skip_guard_runs_for_branch_refs_after_failed_deploy(self):
+        block = self._step_block("Re-check deploy guards before failing")
+
+        self.assertIn("id: final_skip", block)
+        self.assertIn("steps.deployment.outcome == 'failure'", block)
+        self.assertIn("startsWith(github.ref, 'refs/heads/')", block)
+        self.assertIn("commits/${GITHUB_REF_NAME}", block)
+        self.assertIn("--check-published-for-sha", block)
+
+    def test_fail_step_respects_final_skip_guard(self):
+        block = self._step_block("Fail when Pages deploy did not succeed")
+
+        self.assertIn("steps.final_skip.outputs.skip != 'true'", block)
 
     def test_redispatch_marks_recovery_workflow_dispatch(self):
         block = self._step_block("Re-dispatch Deploy web workflow after Pages failure")

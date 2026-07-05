@@ -219,11 +219,43 @@ jobs:
               `Dispatched ${workflowFile} on ${ref} after Pages deploy failure.`,
             );
 
+      - name: Re-check deploy guards before failing
+        id: final_skip
+        if: >-
+          steps.branch_tip.outputs.skip != 'true' &&
+          steps.pages_already_live.outputs.skip != 'true' &&
+          steps.deployment.outcome == 'failure' &&
+          startsWith(github.ref, 'refs/heads/')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_sha="$(
+            curl -sS \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_REF_NAME}" \
+              | python3 -c 'import json, sys; print(json.load(sys.stdin)["sha"])'
+          )"
+          if [[ "${remote_sha}" != "${GITHUB_SHA}" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Commit ${GITHUB_SHA} is no longer tip of ${GITHUB_REF_NAME}; not failing deploy."
+            exit 0
+          fi
+          if python3 tool/drain_stale_github_pages_deployments.py \
+            --check-published-for-sha "${GITHUB_SHA}"; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Pages deployment for ${GITHUB_SHA} is now live; not failing deploy."
+          fi
+
       - name: Fail when Pages deploy did not succeed
         if: >-
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure' &&
+          steps.final_skip.outputs.skip != 'true' &&
           (
             (github.event_name == 'push' && steps.redispatch.outcome != 'success') ||
             (github.event_name == 'workflow_dispatch' && github.event.inputs.recovery != 'true')
