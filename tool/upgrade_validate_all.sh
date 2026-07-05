@@ -192,46 +192,82 @@ else
   "$FLUTTER_BIN" pub upgrade --major-versions
   echo "==> Step 2b/6: Verify pubspec codegen/analyzer compatibility"
   if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
-    echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring json_serializable 6.14 stack."
+    echo "⚠️  pub upgrade introduced incompatible codegen constraints; restoring pinned analyzer/codegen stack."
+
+    # `pub upgrade --major-versions` floats custom analyzer plugin pins; restore from HEAD.
+    for custom_pkg in file_length_lint mix_lint; do
+      custom_pubspec="custom_lints/$custom_pkg/pubspec.yaml"
+      if [ -f "$custom_pubspec" ] && ! git diff --quiet -- "$custom_pubspec"; then
+        git checkout -- "$custom_pubspec"
+      fi
+    done
+
     python3 - <<'PY'
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-pubspec = Path("pubspec.yaml")
-text = pubspec.read_text(encoding="utf-8")
+ROOT = Path("pubspec.yaml")
+MOBILE = Path("apps/mobile/pubspec.yaml")
 
-def sub_one(pattern: str, repl: str, label: str) -> None:
-    global text
+
+def sub_one(text: str, pattern: str, repl: str, label: str, pubspec: Path) -> str:
     text, count = re.subn(pattern, repl, text, count=1, flags=re.MULTILINE)
     if count != 1:
-        raise SystemExit(f"could not restore {label} in pubspec.yaml")
+        raise SystemExit(f"could not restore {label} in {pubspec}")
+    return text
 
-sub_one(r"^  json_serializable:.*$", "  json_serializable: ^6.14.0", "json_serializable")
-sub_one(r"^  json_annotation:.*$", "  json_annotation: ^4.12.0", "json_annotation")
 
-for key, value in (("analyzer", "10.0.2"), ("dart_style", "3.1.4")):
-    line = f"  {key}: {value}"
-    if re.search(rf"^  {key}:.*$", text, flags=re.MULTILINE):
-        text, _ = re.subn(rf"^  {key}:.*$", line, text, count=1, flags=re.MULTILINE)
-    elif "dependency_overrides:" in text:
-        text = text.replace(
-            "dependency_overrides:\n",
-            f"dependency_overrides:\n{line}\n",
-            1,
-        )
-    else:
-        raise SystemExit(f"missing dependency_overrides block for {key}")
+def restore_mobile_codegen() -> None:
+    if not MOBILE.is_file():
+        return
+    text = MOBILE.read_text(encoding="utf-8")
+    text = sub_one(
+        text,
+        r"^  json_serializable:.*$",
+        "  json_serializable: ^6.14.0",
+        "json_serializable",
+        MOBILE,
+    )
+    text = sub_one(
+        text,
+        r"^  json_annotation:.*$",
+        "  json_annotation: ^4.12.0",
+        "json_annotation",
+        MOBILE,
+    )
+    MOBILE.write_text(text, encoding="utf-8")
 
-pubspec.write_text(text, encoding="utf-8")
+
+def restore_root_analyzer_overrides() -> None:
+    if not ROOT.is_file():
+        return
+    text = ROOT.read_text(encoding="utf-8")
+    for key, value in (("analyzer", "10.0.2"), ("dart_style", "3.1.4")):
+        line = f"  {key}: {value}"
+        if re.search(rf"^  {key}:.*$", text, flags=re.MULTILINE):
+            text, _ = re.subn(rf"^  {key}:.*$", line, text, count=1, flags=re.MULTILINE)
+        elif "dependency_overrides:" in text:
+            text = text.replace(
+                "dependency_overrides:\n",
+                f"dependency_overrides:\n{line}\n",
+                1,
+            )
+        else:
+            raise SystemExit(f"missing dependency_overrides block for {key} in {ROOT}")
+    ROOT.write_text(text, encoding="utf-8")
+
+
+restore_mobile_codegen()
+restore_root_analyzer_overrides()
 PY
     "$FLUTTER_BIN" pub get
     if ! bash "$PROJECT_ROOT/tool/check_pubspec_codegen_compat.sh"; then
       echo "❌ pubspec codegen/analyzer compatibility still failing after restore." >&2
       exit 1
     fi
-    echo "✅ Restored json_serializable ^6.14.0 + analyzer 10 overrides; remaining upgrades kept."
+    echo "✅ Restored custom_lint analyzer pins + json_serializable ^6.14.0 stack; remaining upgrades kept."
   fi
 fi
 
