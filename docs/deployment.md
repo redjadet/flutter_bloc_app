@@ -234,7 +234,9 @@ retries `deploy-pages`. Branch deploys, including redispatched
 longer the branch tip, so stale queued runs do not fight newer `main` pushes.
 Redispatched recovery runs also skip when the commit's Pages deployment already
 succeeded (for example after a concurrent push deploy), so a late retry cannot
-fail the commit check.
+fail the commit check. Before failing a redispatched recovery run, the workflow
+re-checks branch tip and published status so a long-lived `workflow_dispatch`
+cannot fail `main` after newer commits land.
 
 #### `base_href` input
 
