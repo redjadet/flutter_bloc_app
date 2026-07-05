@@ -121,7 +121,7 @@ jobs:
 
       - name: Skip deploy when commit is no longer branch tip
         id: branch_tip
-        if: github.event_name == 'push'
+        if: startsWith(github.ref, 'refs/heads/')
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -142,6 +142,7 @@ jobs:
 
       - name: Skip deploy when Pages already published for commit
         id: pages_already_live
+        if: steps.branch_tip.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
