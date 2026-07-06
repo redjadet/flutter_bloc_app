@@ -24,7 +24,7 @@ show the proof trail.
 | Flutter route | `/ai-decision-demo` |
 | Example hub entry | `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` |
 | Flutter feature | `apps/mobile/lib/features/ai_decision_demo/` |
-| DI registration | `apps/mobile/lib/core/di/register_ai_decision_demo_services.dart` |
+| DI registration | `apps/mobile/lib/core/di/features/register_ai_decision_demo_services.dart` |
 | Route constants | `apps/mobile/lib/core/router/app_routes.dart` |
 | Route composition | `apps/mobile/lib/app/router/routes_demos.dart` |
 | Backend API | `demos/ai_decision_api/` |
@@ -240,7 +240,7 @@ flutter test test/features/ai_decision_demo
 flutter test test/features/example/presentation/widgets/example_page_body_test.dart
 flutter analyze \
   apps/mobile/lib/features/ai_decision_demo \
-  apps/mobile/lib/core/di/register_ai_decision_demo_services.dart \
+  apps/mobile/lib/core/di/features/register_ai_decision_demo_services.dart \
   apps/mobile/lib/app/router/routes_demos.dart \
   apps/mobile/lib/core/router/app_routes.dart \
   apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart \

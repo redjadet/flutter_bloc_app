@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_card.dart';
-import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_grid_item.dart';
-import 'package:flutter_bloc_app/shared/widgets/skeletons/skeleton_list_tile.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/pump_with_mix_theme.dart';

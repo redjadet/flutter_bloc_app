@@ -43,7 +43,7 @@ Text(context.l10n.helloWorld)
 
 ## Error and auth message keys
 
-Error messages used by [NetworkErrorMapper](apps/mobile/lib/shared/utils/network_error_mapper.dart) and [auth_error_message](apps/mobile/lib/features/auth/presentation/helpers/auth_error_message.dart) are localized. Notable keys:
+Error messages used by [NetworkErrorMapper](apps/mobile/lib/shared/utils/network_error_mapper.dart) and [auth_error_message](apps/mobile/lib/features/auth/presentation/widgets/auth_error_message.dart) are localized. Notable keys:
 
 - **HTTP / API:** `errorUnknown`, `errorNetwork`, `errorTimeout`, `errorUnauthorized`, `errorForbidden`, `errorNotFound`, `errorServer`, `errorServiceUnavailable` (503), `errorClient`, `errorTooManyRequests` (429), `errorGeneric`
 - **Auth (Firebase):** `authErrorInvalidEmail`, `authErrorWrongPassword`, `authErrorInvalidCredential`, `authErrorNetworkRequestFailed`, `authErrorTooManyRequests`, `authErrorGeneric`, and others (see `app_en.arb`)

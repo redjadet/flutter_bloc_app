@@ -46,7 +46,7 @@ Decisions:
 Current state in the repo:
 
 - Shared `Dio` is already registered in
-  `apps/mobile/lib/core/di/register_http_services.dart`.
+  `apps/mobile/lib/core/di/features/register_http_services.dart`.
 - Chart currently uses `HttpChartRepository`, with
   `DelayedChartRepository` adding only dev-delay behavior.
 - GraphQL and chat have more custom transport concerns:
@@ -162,7 +162,7 @@ Do not change:
 1. Add a Retrofit interface under
    `apps/mobile/lib/features/chart/data/api/`.
 2. Register that client in
-   `apps/mobile/lib/core/di/register_chart_services.dart`.
+   `apps/mobile/lib/core/di/features/register_chart_services.dart`.
 3. Update `HttpChartRepository` to depend on the Retrofit interface instead of
    raw `Dio`.
 4. Keep JSON validation and `ChartPoint` mapping in the repository.

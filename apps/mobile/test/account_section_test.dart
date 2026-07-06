@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/account_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:auth/auth.dart' as core_auth;
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_auth_session_port_adapter.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_conversation_updater.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_local_data_source.dart';

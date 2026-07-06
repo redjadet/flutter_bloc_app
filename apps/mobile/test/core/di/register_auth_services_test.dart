@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core_auth;
+import 'package:auth/auth.dart' as core_auth;
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_auth_services.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'

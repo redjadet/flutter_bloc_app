@@ -1,7 +1,7 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
 

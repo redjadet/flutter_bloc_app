@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_input_decoration_helpers.dart';
 
 class RegisterPasswordField extends StatefulWidget {
   const RegisterPasswordField({

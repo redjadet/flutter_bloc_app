@@ -1,10 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/widgets/listen_button.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Card showing a vocabulary word with tap-to-hear (kid-friendly).

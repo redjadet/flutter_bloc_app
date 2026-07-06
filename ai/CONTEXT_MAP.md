@@ -11,7 +11,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 3. `lib/features/counter/data/hive_counter_repository.dart`
 4. `lib/features/counter/presentation/cubit/counter_cubit_base.dart`
 5. `lib/features/counter/presentation/pages/counter_page.dart`
-6. `lib/core/di/register_counter_services.dart` (if exists) or `injector_registrations.dart`
+6. `lib/core/di/features/` (feature registrar) or `injector_registrations.dart`
 7. `test/features/counter/` (nearest test)
 8. `docs/feature_overview.md` (counter row)
 
@@ -59,7 +59,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 | Situation | Also load |
 | --- | --- |
 | New route | `lib/core/router/app_routes.dart`, owning `lib/app/router/routes_*.dart` |
-| DI change | `lib/core/di/injector.dart`, feature `register_*` |
+| DI change | `lib/core/di/injector.dart`, `lib/core/di/features/register_*` |
 | UI shared widget | `lib/shared/widgets/`, `docs/design_system.md` |
 | Architecture refactor | `docs/audits/ai_architecture_audit.md`, Feature Brief |
 

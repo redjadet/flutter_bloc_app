@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/classic_bt_device.dart';
+import 'package:flutter_bloc_app/features/iot/domain/classic_bt_device.dart';
 
 /// Bluetooth Classic demo port (mock-only in v1).
 abstract class ClassicBluetoothRepository {

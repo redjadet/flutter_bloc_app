@@ -1,9 +1,9 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Optimized list view for todo items.
 /// Uses ListView.builder for 100+ items, ListView.separated for smaller lists.

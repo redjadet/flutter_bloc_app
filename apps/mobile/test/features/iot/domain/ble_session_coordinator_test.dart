@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dar
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_device_catalog.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_session_coordinator.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:core/core.dart';
 

@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../test_utils/fake_google_maps_flutter_platform.dart';
+import '../../helpers/fake_google_maps_flutter_platform.dart';
 
 class _MockMapSampleCubit extends MockCubit<MapSampleState>
     implements MapSampleCubit {}

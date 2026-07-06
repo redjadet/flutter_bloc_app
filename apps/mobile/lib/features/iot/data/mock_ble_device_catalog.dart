@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_discovered_device.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_discovered_device.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Static GATT profiles for the mock BLE simulator.
 class MockBleDeviceProfile {

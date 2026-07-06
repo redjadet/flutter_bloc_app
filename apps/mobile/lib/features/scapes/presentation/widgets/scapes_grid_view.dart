@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid_item.dart';
 import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// Shared grid metrics (delegate + mainAxisExtent) for [ScapesGridView] and
 /// [ScapesGridSliver] so layout is identical.

@@ -10,6 +10,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_flutter_domain_imports.sh`
 - `check_clean_architecture_imports.sh`
 - `check_feature_folder_contract.sh`
+- `check_features_barrel.sh`
 - `check_offline_first_remote_merge.sh`
 - `check_remote_fetch_failure_fallback.sh`
 - `check_material_buttons.sh`

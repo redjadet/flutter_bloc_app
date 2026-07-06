@@ -1,6 +1,6 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class PlatformAdaptiveButtons {

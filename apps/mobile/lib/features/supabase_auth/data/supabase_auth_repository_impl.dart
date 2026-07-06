@@ -1,6 +1,6 @@
+import 'package:auth/auth.dart' as app_auth;
+import 'package:auth/auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart' as app_auth;
 import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/di/register_auth_services.dart';
-import 'package:flutter_bloc_app/core/di/register_http_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_auth_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_http_services.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_bloc_app/shared/services/network_status_service.dart';

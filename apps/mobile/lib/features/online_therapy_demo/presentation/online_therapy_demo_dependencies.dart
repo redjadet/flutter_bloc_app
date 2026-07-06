@@ -1,11 +1,11 @@
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/audit_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/online_therapy_network_mode_controller.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/audit_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapist_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_admin_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_auth_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_messaging_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapist_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_admin_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_auth_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_call_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_messaging_repository.dart';
 
 /// Composition-root dependencies for the Online Therapy demo subtree.
 class OnlineTherapyDemoDependencies {

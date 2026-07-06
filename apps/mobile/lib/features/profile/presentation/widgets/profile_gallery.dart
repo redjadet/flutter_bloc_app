@@ -1,7 +1,7 @@
+import 'package:design_system/responsive.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class ProfileGallery extends StatelessWidget {
   const ProfileGallery({required this.images, super.key});

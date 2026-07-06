@@ -41,7 +41,7 @@ Classic Bluetooth section uses `MockClassicBluetoothRepository` (paired devices 
 - **Domain:** `BleRepository`, `BleSessionCoordinator`, `BlePermissionGateway`, entities, `IotBleErrorCode`
 - **Data:** `MockBleRepository`, `ReactiveBleRepository`, `BleRadioClient` (FRB seam), mappers
 - **Presentation:** `IotBleCubit` (part files under `presentation/cubit/`), `IotBleSection` widgets
-- **DI:** `apps/mobile/lib/core/di/register_iot_services.dart` (from `register_demo_services.dart`)
+- **DI:** `apps/mobile/lib/core/di/features/register_iot_services.dart` (from `register_demo_services.dart`)
 
 Errors: `Result<T>` in repositories; `IotBleErrorCode` + l10n in UI.
 

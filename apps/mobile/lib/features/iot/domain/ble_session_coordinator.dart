@@ -1,7 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Orchestrates connect → discover without presentation imports.
 class BleSessionCoordinator {

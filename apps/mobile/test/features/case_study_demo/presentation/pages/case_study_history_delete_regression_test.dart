@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';

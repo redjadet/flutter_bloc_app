@@ -1,9 +1,9 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/connection_status_pill.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class MarketHeader extends StatelessWidget {
   const MarketHeader({

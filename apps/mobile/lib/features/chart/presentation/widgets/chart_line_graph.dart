@@ -1,7 +1,7 @@
+import 'package:design_system/responsive.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:intl/intl.dart';
 
 part 'chart_line_graph_chart_data.part.dart';

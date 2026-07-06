@@ -1,2 +1,7 @@
-// Re-export core contract so existing feature imports still resolve.
-export 'package:flutter_bloc_app/core/auth/auth_user.dart';
+// Re-export package auth types (not AuthRepository — use auth_repository.dart).
+export 'package:auth/auth.dart'
+    show
+        AuthProviderKind,
+        AuthUser,
+        RemoteBackendAuthPort,
+        SessionInvalidationReason;

@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:auth/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
 import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 
 /// Manages Firebase authentication tokens with caching and refresh capabilities.

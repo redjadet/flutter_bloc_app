@@ -13,7 +13,7 @@ import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_l
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/repositories/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';

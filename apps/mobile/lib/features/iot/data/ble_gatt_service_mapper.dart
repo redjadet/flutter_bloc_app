@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 List<BleService> mapGattSnapshotsToBleServices(
   final List<BleGattServiceSnapshot> services,

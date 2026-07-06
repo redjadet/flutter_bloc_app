@@ -1,6 +1,6 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CounterStatusChip extends StatelessWidget {

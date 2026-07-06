@@ -1,9 +1,9 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
-import 'package:flutter_bloc_app/features/todo_list/presentation/helpers/todo_list_dialogs.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialogs.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Bar of batch actions (complete, uncomplete, delete) for selected todo items.

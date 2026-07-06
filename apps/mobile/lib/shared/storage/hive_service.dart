@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_initializer.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_recoverable_errors.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 part 'hive_service_boxes.part.dart';
 

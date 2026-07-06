@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/appointment_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_call_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_call_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 

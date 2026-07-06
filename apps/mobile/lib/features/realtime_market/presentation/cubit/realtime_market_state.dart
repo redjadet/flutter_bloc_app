@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'realtime_market_state.freezed.dart';

@@ -6,8 +6,8 @@ import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';
 import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_permission_gateway.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_connection_phase.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeBlePermissionGateway implements BlePermissionGateway {

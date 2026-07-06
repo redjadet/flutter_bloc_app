@@ -1,9 +1,9 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_adaptive.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_showcase_l10n_extensions.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class NativePlatformShowcaseCapabilityList extends StatelessWidget {
   const NativePlatformShowcaseCapabilityList({

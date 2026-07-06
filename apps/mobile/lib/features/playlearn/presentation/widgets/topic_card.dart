@@ -1,7 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/topic_item.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// Large tappable card for a vocabulary topic (kid-friendly, min 44x48).
 /// Uses [CommonCard] with primaryContainer; padding and radius from tokens.

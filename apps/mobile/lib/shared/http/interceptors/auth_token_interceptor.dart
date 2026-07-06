@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:auth/auth.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
-import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
 import 'package:flutter_bloc_app/shared/http/auth_token_refresh_classifier.dart';

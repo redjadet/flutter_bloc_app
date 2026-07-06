@@ -41,7 +41,7 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 
 ## Scope
 
-**In:** Feature module `apps/mobile/lib/features/case_study_demo/` (domain / data / presentation), home → new case → 10-question video wizard → mock upload → history, [AuthRepository](../../apps/mobile/lib/core/auth/auth_repository.dart) gate ([AppRouteAuthGate](../../apps/mobile/lib/app/router/app_route_auth_gate.dart)), Example launcher, l10n, permissions, tests.
+**In:** Feature module `apps/mobile/lib/features/case_study_demo/` (domain / data / presentation), home → new case → 10-question video wizard → mock upload → history, [AuthRepository](../../apps/mobile/lib/features/auth/domain/auth_repository.dart) gate ([AppRouteAuthGate](../../apps/mobile/lib/app/router/app_route_auth_gate.dart)), Example launcher, l10n, permissions, tests.
 
 **Out:** Real backend upload, HIPAA product, `camera` package UI.
 
@@ -54,7 +54,7 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 
 ## DI / registration
 
-- Add `apps/mobile/lib/core/di/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../apps/mobile/lib/core/di/injector_registrations.dart) alongside other feature registers.
+- Add `apps/mobile/lib/core/di/features/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../apps/mobile/lib/core/di/injector_registrations.dart) alongside other feature registers.
 
 ## Routes
 

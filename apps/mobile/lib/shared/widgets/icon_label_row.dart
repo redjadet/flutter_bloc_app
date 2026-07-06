@@ -1,5 +1,5 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 /// A compact row of an optional icon, gap, and a single-line ellipsed label.
 /// Use for buttons and toolbar items to avoid RenderFlex overflow on narrow

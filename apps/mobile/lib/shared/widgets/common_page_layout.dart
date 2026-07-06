@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
 
 /// A reusable page layout widget that provides consistent structure

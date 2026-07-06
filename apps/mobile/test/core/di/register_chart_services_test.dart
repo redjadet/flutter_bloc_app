@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/di/register_chart_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_chart_services.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/auth_aware_chart_remote_repository.dart';

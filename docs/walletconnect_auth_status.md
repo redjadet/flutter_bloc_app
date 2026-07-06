@@ -585,7 +585,7 @@ After enabling Anonymous auth and deploying Firestore rules, “Link to Account�
 
 - `apps/mobile/lib/features/walletconnect_auth/` - Feature implementation
 - `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` - Entry-point button (“WalletConnect Auth (Demo)”)
-- `apps/mobile/lib/core/di/register_walletconnect_auth_services.dart` - DI setup
+- `apps/mobile/lib/core/di/features/register_walletconnect_auth_services.dart` - DI setup
 - `apps/mobile/lib/app/router/route_groups.dart` - Route definition
 - `test/features/walletconnect_auth/` - Tests
 

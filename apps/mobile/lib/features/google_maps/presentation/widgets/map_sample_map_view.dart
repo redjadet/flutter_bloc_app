@@ -1,6 +1,7 @@
 // coverage:ignore-file
 import 'dart:async';
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
@@ -10,7 +11,6 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/googl
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_camera_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_state_manager.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 
 class MapSampleMapView extends StatefulWidget {

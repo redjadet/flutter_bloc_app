@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/order_book_level.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/order_book_panel.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';

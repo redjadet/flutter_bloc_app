@@ -144,7 +144,7 @@ These are **plain immutable data classes** (no Equatable) that could use Freezed
 | `apps/mobile/lib/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart` | ~~`WhiteboardStroke`~~ | **Done.** Freezed; public `WhiteboardStroke()` enforces unmodifiable points, internal `WhiteboardStroke.raw()` for implementation. |
 | `apps/mobile/lib/features/chat/data/chat_sync_payload.dart` | ~~`ChatSyncPayload`~~ | **Done.** Freezed; `userMessage()` in private constructor. |
 | `apps/mobile/lib/features/chat/data/chat_local_conversation_updater.dart` | ~~`ChatLocalConversationState`~~ | **Done.** Freezed. |
-| `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` | ~~`_DatePickerResult`~~ | **Done.** Freezed union (`.confirmed(date)`, `.cleared()`); `date` and `didConfirm` getters in private constructor. |
+| `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_date_picker.dart` | ~~`_DatePickerResult`~~ | **Done.** Freezed union (`.confirmed(date)`, `.cleared()`); `date` and `didConfirm` getters in private constructor. |
 
 **Not recommended for Freezed (or low priority):**
 

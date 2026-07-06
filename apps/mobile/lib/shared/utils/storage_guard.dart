@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/storage/hive_recoverable_errors.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:storage/storage.dart';
 
 /// Small helper to standardise repository error handling for local storage
 /// operations (e.g. SharedPreferences).

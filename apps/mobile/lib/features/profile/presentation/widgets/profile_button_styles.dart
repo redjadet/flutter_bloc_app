@@ -1,7 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
-import 'package:flutter_bloc_app/shared/design_system/app_styles.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 import 'package:mix/mix.dart';
 
 /// Builds [ButtonStyle] for profile outlined buttons using Mix design tokens.

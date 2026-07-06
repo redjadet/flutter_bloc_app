@@ -16,7 +16,7 @@ Cursor agents should start from this protocol without adding a parallel planning
 
 1. Update [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) with the chosen slice, exact file write set, open questions, and validation commands.
 2. Use the slice order in **[Recommended implementation order](#recommended-implementation-order)** unless the user explicitly changes it.
-3. Treat `supabase/functions/chat-complete/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`offline_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart), and [`chat_page.dart`](../../apps/mobile/lib/features/chat/presentation/pages/chat_page.dart) as single-owner files during any one implementation pass.
+3. Treat `supabase/functions/chat-complete/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart), [`offline_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart), and [`chat_page.dart`](../../apps/mobile/lib/features/chat/presentation/pages/chat_page.dart) as single-owner files during any one implementation pass.
 4. Do not implement items under **[Deferred product decisions](#deferred-product-decisions)** unless the user explicitly asks for them; ship the binding defaults first.
 
 ## Terminology
@@ -41,7 +41,7 @@ Execute **one step at a time** in the numbered sequence below. At any step marke
 | **5** | **Freeze Edge API contract** — With **Edge slice owner**: request/response/errors, auth header, idempotency, timeouts, model rules. Record in **[Edge API contract](#edge-api-contract-freeze-before-flutter-integration)** + [`supabase/README.md`](../../supabase/README.md). | Flutter integrators have a single frozen spec; contract section/README updated. |
 | **6** | **Phase 1 — Edge function** — Implement `supabase/functions/chat-complete/`, secrets, local invoke; **`curl`** with real JWT + negative JWT per **[Validation gates by phase](#validation-gates-by-phase)**. | Phase 1 gate satisfied; secrets and README documented. |
 | **7** | **STOP before broad Flutter** — Confirm Phase 1 gate and frozen contract; assign **Flutter remote** slice owner ([Implementation slices](#implementation-slices-and-ownership)). | No parallel drift: contract owner ack’d. |
-| **8** | **Phase 2a — Flutter remote** — Composite `ChatRepository` (Edge first, direct fallback per policy **when online** only), typed errors/`code` mapping, DI in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart); **do not** break `OfflineFirstChatRepository` contract. | Composite matches matrix + queue table; offline path still single fail → enqueue. |
+| **8** | **Phase 2a — Flutter remote** — Composite `ChatRepository` (Edge first, direct fallback per policy **when online** only), typed errors/`code` mapping, DI in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart); **do not** break `OfflineFirstChatRepository` contract. | Composite matches matrix + queue table; offline path still single fail → enqueue. |
 | **9** | **Phase 2b — Errors & sync** — Terminal vs retryable for `sendMessage` and replay (`processOperation`); align with [`chat.md`](../offline_first/chat.md) and `PendingSyncRepository` (no infinite 401 loops). | Error classification matches **Queue / error classification**; owner signed off if shared sync files change. |
 | **10** | **Phase 2c — UI & l10n** — Offline chip + transport chip on chat page ([**UI**](#ui-connectivity-and-transport-badges)); ARB keys; run `flutter gen-l10n` if ARB touched. | Chips match the binding badge semantics in **Phase 0**; strings localized. |
 | **11** | **Phase 2d — Tests** — Add tests from **[Testing](#testing-in-addition-to-verify-checklist)** (composite, queue, **401/403 replay**, restart/stickiness if in scope, widget/goldens as needed). | New tests pass locally; regressions covered per plan. |
@@ -83,7 +83,7 @@ Agents must not invent behavior for combinations that are not explicitly covered
 
 ### When Supabase is not configured or cannot be used (fallback)
 
-- **Keep today’s direct Hugging Face behavior** — If the project has **no usable Supabase setup** (not configured, init failed, or product flavor without Supabase), remote chat **continues to work** by calling Hugging Face **directly from the app**, the same as now (`HuggingfaceChatRepository` registered in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart) and composed inside `OfflineFirstChatRepository`). No regression for local/dev/offline-first demos that rely on HF without Supabase.
+- **Keep today’s direct Hugging Face behavior** — If the project has **no usable Supabase setup** (not configured, init failed, or product flavor without Supabase), remote chat **continues to work** by calling Hugging Face **directly from the app**, the same as now (`HuggingfaceChatRepository` registered in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart) and composed inside `OfflineFirstChatRepository`). No regression for local/dev/offline-first demos that rely on HF without Supabase.
 
 ### When there is no internet connectivity (offline-first invariant)
 
@@ -172,7 +172,7 @@ Use **[Implementation defaults](#implementation-defaults-change-only-with-explic
 | --- | --- |
 | Remote | New Edge-backed `ChatRepository` (or client) + **keep** [`HuggingfaceChatRepository`](../../apps/mobile/lib/features/chat/data/huggingface_chat_repository.dart); **composite** tries Edge then direct on configurable failures |
 | Composition | [`OfflineFirstChatRepository`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart) should continue to depend on **`ChatRepository`** only; inject the composite as the inner remote implementation |
-| DI | [`apps/mobile/lib/core/di/register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart) — register composite; expose **active transport** (stream/value) for UI if cubit does not derive it from repository callbacks |
+| DI | [`apps/mobile/lib/core/di/features/register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart) — register composite; expose **active transport** (stream/value) for UI if cubit does not derive it from repository callbacks |
 | UI | `apps/mobile/lib/features/chat/presentation/` — **offline connectivity chip** (`TypeSafeBlocSelector` on `SyncStatusCubit` / `NetworkStatus`); **transport chip** when online; placement aligned with chart/graphql/case-study badge patterns |
 | l10n | `apps/mobile/lib/l10n/app_*.arb` — offline label + transport labels + a11y |
 | Edge | `supabase/functions/chat-complete/`; document in [`supabase/README.md`](../../supabase/README.md) |
@@ -180,7 +180,7 @@ Use **[Implementation defaults](#implementation-defaults-change-only-with-explic
 
 ### File map (expected; update plan if names diverge)
 
-- Flutter: `apps/mobile/lib/features/chat/data/` (composite + Edge client), `apps/mobile/lib/features/chat/domain/chat_repository.dart` (types if extended), [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`offline_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart), `apps/mobile/lib/features/chat/presentation/pages/chat_page.dart`, `apps/mobile/lib/features/chat/presentation/widgets/` (chips, banner wiring), `apps/mobile/lib/l10n/app_*.arb`.
+- Flutter: `apps/mobile/lib/features/chat/data/` (composite + Edge client), `apps/mobile/lib/features/chat/domain/chat_repository.dart` (types if extended), [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart), [`offline_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart), `apps/mobile/lib/features/chat/presentation/pages/chat_page.dart`, `apps/mobile/lib/features/chat/presentation/widgets/` (chips, banner wiring), `apps/mobile/lib/l10n/app_*.arb`.
 - Supabase: `supabase/functions/chat-complete/index.ts`, optional `supabase/functions/chat-complete/_shared/*`, [`supabase/config.toml`](../../supabase/config.toml), [`supabase/README.md`](../../supabase/README.md).
 - If implementation chooses **different filenames or function names**, update **this plan** and **File map** in the same change set so handoffs stay deterministic.
 - Only **one agent** should own edits to a given file at a time; note handoffs in [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../../tasks/codex/todo.md) per **[`AGENTS.md`](../../AGENTS.md)**.
@@ -272,7 +272,7 @@ and this section in the same change set.
 
 **Owner:** Flutter remote slice
 **Starts after:** Slice A contract is frozen
-**Primary write set:** `apps/mobile/lib/features/chat/data/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart)
+**Primary write set:** `apps/mobile/lib/features/chat/data/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart)
 
 | File | Task |
 | --- | --- |
@@ -281,7 +281,7 @@ and this section in the same change set.
 | `apps/mobile/lib/features/chat/data/huggingface_chat_repository.dart` | Keep current direct HF behavior; limit changes to integrating with the composite contract or transport metadata. Do not regress the direct-only path. |
 | `apps/mobile/lib/features/chat/data/huggingface_api_client.dart` | Touch only if the direct path needs richer status/error metadata for the composite decision logic. |
 | [`apps/mobile/lib/features/chat/domain/chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) | Extend the domain contract only when required for typed errors or transport metadata. Keep the interface minimal. |
-| [`apps/mobile/lib/core/di/register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart) | Register the new Supabase and composite repositories; keep `OfflineFirstChatRepository` depending on a single `ChatRepository`. |
+| [`apps/mobile/lib/core/di/features/register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart) | Register the new Supabase and composite repositories; keep `OfflineFirstChatRepository` depending on a single `ChatRepository`. |
 
 #### Flutter remote acceptance tasks
 

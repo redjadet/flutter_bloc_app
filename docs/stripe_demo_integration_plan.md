@@ -76,7 +76,7 @@ Create a new feature module `payments`.
 
 ## Dependency injection
 
-- Add [apps/mobile/lib/core/di/register_payments_services.dart](../apps/mobile/lib/core/di/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
+- Add [apps/mobile/lib/core/di/features/register_payments_services.dart](../apps/mobile/lib/core/di/features/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
 - Follow existing pattern: `registerXServices()` per feature; presentation does not reference GetIt directly.
 
 ## Routing / navigation

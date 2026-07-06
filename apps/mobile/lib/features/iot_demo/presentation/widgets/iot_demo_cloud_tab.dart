@@ -1,3 +1,4 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/config/backend_availability.dart';
 import 'package:flutter_bloc_app/core/di/injector.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_s
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_error_messages.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_body.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/shared/widgets/backend_disabled_banner.dart';

@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
-import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/auth/token_repository.dart';
 import 'package:flutter_bloc_app/shared/http/supabase_session_refresh_classifier.dart';

@@ -300,7 +300,7 @@ Do not copy chart labels verbatim. Create a case-study specific enum and badge.
 Prefer the IoT demo style of “local-only when Supabase is absent, remote
 enabled when configured”:
 
-- [`apps/mobile/lib/core/di/register_iot_demo_services.dart`](../../apps/mobile/lib/core/di/register_iot_demo_services.dart)
+- [`apps/mobile/lib/core/di/features/register_iot_demo_services.dart`](../../apps/mobile/lib/core/di/features/register_iot_demo_services.dart)
 
 For case study, keep the existing local services registered, then compose remote
 services on top when Supabase is configured.
@@ -469,7 +469,7 @@ Use repo patterns:
 
 Update:
 
-- [`apps/mobile/lib/core/di/register_case_study_demo_services.dart`](../../apps/mobile/lib/core/di/register_case_study_demo_services.dart)
+- [`apps/mobile/lib/core/di/features/register_case_study_demo_services.dart`](../../apps/mobile/lib/core/di/features/register_case_study_demo_services.dart)
 
 Rules:
 
