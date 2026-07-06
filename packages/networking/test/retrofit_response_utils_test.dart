@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:networking/networking.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('bytesResponseFromHttpResponse', () {

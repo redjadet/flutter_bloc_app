@@ -3,5 +3,6 @@ library;
 
 export 'src/disposable_bag.dart';
 export 'src/in_flight_coalescer.dart';
+export 'src/offline_change_id.dart';
 export 'src/relative_time_formatting.dart';
 export 'src/request_id_guard.dart';
