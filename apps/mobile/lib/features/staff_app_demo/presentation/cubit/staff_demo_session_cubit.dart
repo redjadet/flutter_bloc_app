@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';

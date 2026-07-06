@@ -1,18 +1,18 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_service_mapper.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_exceptions.dart';
 import 'package:flutter_bloc_app/features/iot/data/mappers/ble_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/iot/data/noop_ble_permission_gateway.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_adapter_status.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_discovered_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_permission_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_adapter_status.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_connection_phase.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_discovered_device.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart' hide Result;
 

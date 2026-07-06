@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart' as core;
+import 'package:auth/auth.dart' as core;
 
 /// Abstraction over authentication state and operations (extends core contract).
 ///

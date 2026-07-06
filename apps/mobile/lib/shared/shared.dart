@@ -1,6 +1,8 @@
 /// Shared utilities and widgets for the Flutter BLoC app
 library;
 
+export 'package:design_system/responsive.dart' show UI;
+
 // Extensions
 export 'extensions/build_context_l10n.dart';
 export 'extensions/type_safe_bloc_access.dart';
@@ -16,8 +18,6 @@ export 'responsive/responsive.dart';
 export 'services/error_notification_service.dart';
 // UI typography helpers
 export 'ui/typography.dart';
-// UI constants
-export 'ui/ui_constants.dart';
 // UI status helpers
 export 'ui/view_status.dart';
 export 'utils/bloc_lint_helpers.dart';
@@ -33,7 +33,6 @@ export 'utils/utils.dart';
 // Widgets
 export 'widgets/app_message.dart';
 export 'widgets/common_app_bar.dart';
-export 'widgets/common_form_field.dart';
 export 'widgets/common_loading_widget.dart';
 export 'widgets/common_page_layout.dart';
 export 'widgets/flavor_badge.dart';

@@ -1,8 +1,8 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_priority_badge.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 Widget buildTodoItemContent({
   required final BuildContext context,

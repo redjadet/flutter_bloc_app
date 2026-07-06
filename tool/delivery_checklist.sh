@@ -907,7 +907,7 @@ should_run_action_bar_layout_tests_auto() {
       lib/features/profile/presentation/*|\
       lib/features/settings/presentation/*|\
       lib/features/*/presentation/widgets/*|\
-      lib/features/*/presentation/helpers/*dialog*|\
+      lib/features/*/presentation/widgets/*dialog*|\
       lib/features/*/*dialog*.dart|\
       lib/features/*/presentation/forms/*|\
       lib/features/*/*actions_bar*.dart|\
@@ -1482,6 +1482,7 @@ CHECK_MESSAGES=(
   "Checking for Flutter imports in domain layer..."
   "Checking Clean Architecture import boundaries..."
   "Checking feature folder contract..."
+  "Checking features.dart barrel completeness..."
   "Checking offline-first stale-sync guard (do not overwrite newer state)..."
   "Checking remote fetch failure fallbacks (no empty snapshot on read errors)..."
   "Checking for raw Material buttons..."
@@ -1560,6 +1561,7 @@ CHECK_SCRIPTS=(
   "tool/check_flutter_domain_imports.sh"
   "tool/check_clean_architecture_imports.sh"
   "tool/check_feature_folder_contract.sh"
+  "tool/check_features_barrel.sh"
   "tool/check_offline_first_remote_merge.sh"
   "tool/check_remote_fetch_failure_fallback.sh"
   "tool/check_material_buttons.sh"
@@ -1634,6 +1636,7 @@ CHECK_SCRIPTS=(
   "tool/check_flutter_layout_overflows.sh"
 )
 CHECK_SCRIPT_THEMES=(
+  "architecture"
   "architecture"
   "architecture"
   "architecture"

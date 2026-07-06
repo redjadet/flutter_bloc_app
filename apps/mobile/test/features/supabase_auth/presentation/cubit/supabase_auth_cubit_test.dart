@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
-import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';

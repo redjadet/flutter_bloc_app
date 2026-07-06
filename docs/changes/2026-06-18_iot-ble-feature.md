@@ -9,7 +9,7 @@ Local BLE showcase tab on `/iot-demo`: mock GATT simulator (ESP32, HRM, thermome
 - `apps/mobile/lib/features/iot/**` — domain / data / presentation (part splits for file-length lint)
 - `apps/mobile/lib/app/router/pages/iot_demo_hub_page.dart` — Cloud | BLE tabs
 - `apps/mobile/lib/features/iot_demo/presentation/widgets/iot_demo_cloud_tab.dart` — extracted cloud UI
-- `apps/mobile/lib/core/di/register_iot_services.dart`, `apps/mobile/lib/core/config/iot_ble_runtime_config.dart`
+- `apps/mobile/lib/core/di/features/register_iot_services.dart`, `apps/mobile/lib/core/config/iot_ble_runtime_config.dart`
 - `pubspec.yaml` — `flutter_reactive_ble`, `permission_handler`
 - Platform: `android/app/src/main/AndroidManifest.xml`, `ios/Runner/Info.plist`
 - `docs/features/iot_ble*.md`, [`plans/iot_ble_feature_brief.md`](../plans/iot_ble_feature_brief.md)

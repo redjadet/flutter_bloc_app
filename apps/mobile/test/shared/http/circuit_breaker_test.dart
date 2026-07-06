@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/http/circuit_breaker.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

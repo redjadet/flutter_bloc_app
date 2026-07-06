@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/repositories.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_booking_confirm_page.dart';

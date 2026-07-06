@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/repositories.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories.dart';
 
 class FakeTherapyAuthRepository implements TherapyAuthRepository {
   FakeTherapyAuthRepository({required this._api});

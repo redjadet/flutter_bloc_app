@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.d
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:go_router/go_router.dart';

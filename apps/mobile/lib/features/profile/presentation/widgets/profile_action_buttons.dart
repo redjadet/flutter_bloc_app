@@ -1,8 +1,7 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class ProfileActionButtons extends StatelessWidget {
   const ProfileActionButtons({super.key});

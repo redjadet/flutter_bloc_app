@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_page_body.dart';

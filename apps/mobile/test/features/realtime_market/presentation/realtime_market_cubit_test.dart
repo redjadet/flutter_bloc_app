@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_stats.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/order_book_level.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/recent_trade.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';

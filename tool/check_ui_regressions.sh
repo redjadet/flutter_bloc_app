@@ -57,7 +57,7 @@ if [ "$MODE" = "auto" ]; then
         lib/features/profile/presentation/*|\
         lib/features/settings/presentation/*|\
         lib/features/*/presentation/widgets/*|\
-        lib/features/*/presentation/helpers/*dialog*|\
+        lib/features/*/presentation/widgets/*dialog*|\
         lib/features/*/*dialog*.dart|\
         lib/features/*/presentation/forms/*|\
         lib/features/*/*actions_bar*.dart|\

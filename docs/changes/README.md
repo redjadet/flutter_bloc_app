@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-06_folder-structure-codex-followups.md`](2026-07-06_folder-structure-codex-followups.md): Codex folder-structure follow-ups — `core/di/features/`, `package:auth`, shared shim removal, feature layout drift fixes, `check_features_barrel.sh`.
 - [`2026-07-02_token-repository-memory-auth-state.md`](2026-07-02_token-repository-memory-auth-state.md): Dedicated `TokenRepository` for in-memory auth token reads; secure storage / SDK persistence limited to startup, login/session hydration, refresh, and logout cleanup.
 - [`2026-07-02_auth-session-lifecycle-regression-guards.md`](2026-07-02_auth-session-lifecycle-regression-guards.md): Auth session lifecycle focused guard routing for session-expired UX races and cross-provider invalidation drops.
 - [`2026-06-28_auth-security-hardening-pr-c.md`](2026-06-28_auth-security-hardening-pr-c.md): Auth security PR C — `AppAuthCubit` session-expired UX, l10n, full [`authentication.md`](../authentication.md) pass. Deferred items: [`plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md).

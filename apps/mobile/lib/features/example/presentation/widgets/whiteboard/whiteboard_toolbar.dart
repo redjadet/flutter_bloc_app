@@ -1,7 +1,7 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Size and radius for the stroke-width preview box in the toolbar.

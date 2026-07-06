@@ -1,5 +1,4 @@
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
+import 'package:auth/auth.dart';
 
 /// Abstraction over Supabase authentication state and operations.
 ///

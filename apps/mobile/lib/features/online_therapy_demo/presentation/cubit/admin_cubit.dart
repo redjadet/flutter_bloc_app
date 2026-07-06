@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/audit_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/audit_repository.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories/therapy_admin_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_admin_repository.dart';
 import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class AdminState {

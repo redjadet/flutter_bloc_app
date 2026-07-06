@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_priority_badge.dart';
 import 'package:flutter_bloc_app/shared/responsive/responsive_scope.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

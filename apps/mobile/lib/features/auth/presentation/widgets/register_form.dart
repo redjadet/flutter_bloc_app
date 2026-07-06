@@ -1,3 +1,4 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_cubit.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_pho
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_dialog.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_terms_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';

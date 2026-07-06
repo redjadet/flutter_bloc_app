@@ -13,8 +13,8 @@ export 'domain/counter_repository.dart';
 export 'domain/counter_snapshot.dart';
 // Presentation exports
 export 'presentation/cubit/counter_cubit.dart';
+export 'presentation/cubit/counter_error_localizer.dart';
+export 'presentation/cubit/counter_snapshot_utils.dart';
 export 'presentation/cubit/counter_state.dart';
-export 'presentation/helpers/counter_error_localizer.dart';
-export 'presentation/helpers/counter_snapshot_utils.dart';
 export 'presentation/pages/counter_page.dart';
 export 'presentation/widgets/widgets.dart';

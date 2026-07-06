@@ -1,6 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// Builds the swipe background widget for dismissible todo items.
 Widget buildTodoSwipeBackground({

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_connection_phase.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'iot_ble_connection_lifecycle.freezed.dart';

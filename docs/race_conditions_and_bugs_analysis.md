@@ -89,7 +89,7 @@ At that point, `_boxSubscription` is still `null` (we just passed the double-che
 
 ### 2.4 RemoteConfigRepository – Async Listener Callback
 
-**Location:** `apps/mobile/lib/features/remote_config/data/repositories/remote_config_repository.dart`
+**Location:** `apps/mobile/lib/features/remote_config/data/remote_config_repository.dart`
 
 The `onConfigUpdated` listener uses an `async` callback:
 

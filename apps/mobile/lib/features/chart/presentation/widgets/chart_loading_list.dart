@@ -1,7 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ChartLoadingList extends StatelessWidget {

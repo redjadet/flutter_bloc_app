@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_adapter_status.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_adapter_status.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';

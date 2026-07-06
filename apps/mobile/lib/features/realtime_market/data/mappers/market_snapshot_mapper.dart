@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/realtime_market/data/dto/market_snapshot_dto.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 
 /// Maps Hive payloads and domain entities for the realtime market cache.
 abstract final class MarketSnapshotMapper {

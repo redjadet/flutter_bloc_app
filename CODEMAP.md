@@ -7,7 +7,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Onboard / loop | [`AGENTS.md`](AGENTS.md), [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) |
 | Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `apps/mobile/lib/features/<feature>/` |
 | Routes / deep links | [`apps/mobile/lib/core/router/app_routes.dart`](apps/mobile/lib/core/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |
-| DI registration | [`apps/mobile/lib/core/di/`](apps/mobile/lib/core/di/), `register_*_services.dart` |
+| DI registration | [`apps/mobile/lib/core/di/`](apps/mobile/lib/core/di/) (`injector.dart`, `groups/`), feature registrars in [`apps/mobile/lib/core/di/features/`](apps/mobile/lib/core/di/features/) |
 | UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`apps/mobile/lib/shared/`](apps/mobile/lib/shared/) |
 | Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`apps/mobile/lib/shared/sync/`](apps/mobile/lib/shared/sync/) |
 | HTTP / retries | [`apps/mobile/lib/shared/http/`](apps/mobile/lib/shared/http/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
@@ -29,7 +29,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 
 Standard shape: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md). New Cubits go in `presentation/cubit/` only.
 
-**Legacy — do not copy:** `counter` keeps Cubit at `presentation/` root and predates the folder contract. Gold layouts: [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`remote_config`, `profile`, `todo_list`) or scaffold output.
+**Legacy — do not copy:** Prefer `presentation/cubit/` for cubit-adjacent helpers (see `counter/presentation/cubit/`). Gold layouts: [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`remote_config`, `profile`, `todo_list`) or scaffold output.
 
 ## Do not
 

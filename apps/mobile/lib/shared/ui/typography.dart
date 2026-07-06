@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// or weights.
 ///
 /// For new code, prefer Mix text tokens and
-/// [AppStyles](package:flutter_bloc_app/shared/design_system/app_styles.dart)
+/// [AppStyles](package:design_system/design_system.dart)
 /// text styles (headingStyle, bodyStyle, captionStyle, etc.) where applicable;
 /// they use the same theme text and integrate with Mix layout and variants.
 /// This API remains supported for existing call sites.

@@ -145,7 +145,7 @@ Updated the following files to use `PlatformAdaptive.textField()`:
    - Search field with custom styling
    - Platform-adaptive implementation
 
-5. **apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart**
+5. **apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart**
    - `buildTodoTextField()` refactored to use platform-adaptive helper
    - Previously had manual CupertinoTextField implementation
 
@@ -158,7 +158,7 @@ Updated the following files to use `PlatformAdaptive.textField()`:
 
 #### Priority Selector
 
-Updated `buildTodoPrioritySelector()` in `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`:
+Updated `buildTodoPrioritySelector()` in `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart`:
 
 - **iOS/macOS**: Shows a tappable container that opens `CupertinoPicker` modal via `PlatformAdaptive.showPickerModal()`
 - **Android**: Continues using `DropdownButtonFormField`
@@ -234,19 +234,19 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 - `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart`
 - `apps/mobile/lib/features/chat/presentation/widgets/chat_input_bar.dart`
 - `apps/mobile/lib/features/websocket/presentation/pages/websocket_demo_page.dart`
-- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart`
+- `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart`
 - `apps/mobile/lib/features/library_demo/presentation/widgets/library_demo_search_row.dart`
 
 ### Dropdowns
 
-- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
+- `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
 - `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Uses `CommonDropdownField` with nullable type support
 - `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart` - Uses `CommonDropdownField` with left label position
 - `apps/mobile/lib/shared/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
 
 ### Date Pickers
 
-- `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_date_picker.dart` - Updated to use `showCupertinoModalPopup` instead of `CupertinoAlertDialog` to fix clipping issues on iOS
+- `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_date_picker.dart` - Updated to use `showCupertinoModalPopup` instead of `CupertinoAlertDialog` to fix clipping issues on iOS
 
 ### List Tiles
 
@@ -306,7 +306,7 @@ All dropdowns now use the unified `CommonDropdownField` widget which is platform
   - Uses `PlatformAdaptive.showPickerModal()` on iOS/macOS, `DropdownButtonFormField` on Android
 - ✅ `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Now uses `CommonDropdownField<String?>` with nullable type support
 - ✅ `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart` - Now uses `CommonDropdownField<String>` with `labelPosition: DropdownLabelPosition.left`
-- ✅ `apps/mobile/lib/features/todo_list/presentation/helpers/todo_list_dialog_fields.dart` - Uses `CommonDropdownField<TodoPriority>`
+- ✅ `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart` - Uses `CommonDropdownField<TodoPriority>`
 
 All custom iOS implementations have been removed in favor of the unified `CommonDropdownField` widget.
 

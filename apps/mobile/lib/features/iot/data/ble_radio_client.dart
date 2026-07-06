@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_exceptions.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 /// Test seam over [FlutterReactiveBle].

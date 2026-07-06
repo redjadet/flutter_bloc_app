@@ -1,10 +1,10 @@
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/data/mappers/ble_failure_mapper.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_adapter_status.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_discovered_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_adapter_status.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_connection_phase.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_discovered_device.dart';
-import 'package:flutter_bloc_app/features/iot/domain/entities/ble_service.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Phase 1 stub when real BLE selected off-mobile.
 class UnsupportedBleRepository implements BleRepository {

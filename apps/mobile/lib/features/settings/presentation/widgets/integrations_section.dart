@@ -1,7 +1,7 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 import 'package:go_router/go_router.dart';
 

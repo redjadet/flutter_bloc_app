@@ -42,7 +42,7 @@ plan_status: final
 | Shared fixtures | [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/) (Dart + pytest) |
 | Firebase Callable | [`functions/src/index.ts`](../../functions/src/index.ts) — `issueRenderChatDemoHfReadToken`, secret `RENDER_CHAT_DEMO_HF_READ_TOKEN` |
 | Flutter remote | [`render_fastapi_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart), [`demo_first_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/demo_first_chat_repository.dart), [`render_chat_failure_mapper.dart`](../../apps/mobile/lib/features/chat/data/render_chat_failure_mapper.dart), [`render_chat_dio_factory.dart`](../../apps/mobile/lib/features/chat/data/render_chat_dio_factory.dart), [`render_caller_auth_header_provider.dart`](../../apps/mobile/lib/features/chat/data/render_caller_auth_header_provider.dart), [`render_orchestration_hf_token_provider.dart`](../../apps/mobile/lib/features/chat/data/render_orchestration_hf_token_provider.dart) |
-| DI / config | [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`secret_config.dart`](../../apps/mobile/lib/core/config/secret_config.dart) (`CHAT_RENDER_*`) |
+| DI / config | [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart), [`secret_config.dart`](../../apps/mobile/lib/core/config/secret_config.dart) (`CHAT_RENDER_*`) |
 | UI / l10n | `ChatInferenceTransport.renderOrchestration`, [`chat_model_selector.dart`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart), [`chat_transport_badge.dart`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_transport_badge.dart), `apps/mobile/lib/l10n/app_*.arb` (STOP #10 keys) |
 | Automated tests (non-exhaustive) | [`demo_first_chat_repository_test.dart`](../../test/features/chat/data/demo_first_chat_repository_test.dart), [`render_chat_failure_mapper_test.dart`](../../test/features/chat/data/render_chat_failure_mapper_test.dart); offline + cubit coverage for terminal `auth_required`; [`demos/render_chat_api/tests/`](../../demos/render_chat_api/tests/) pytest |
 
@@ -55,7 +55,7 @@ Cursor agents should start from this protocol without adding a second planning l
 1. Update [`tasks/cursor/todo.md`](../../tasks/cursor/todo.md) with the chosen slice, exact write set, open questions, and validation commands.
 2. Read the **STOP** table and [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md) before touching code; treat those defaults as authoritative unless the user explicitly overrides them in the same PR.
 3. Follow **[Build order — step-by-step](#build-order--step-by-step-cursor-agents-follow-in-order)** in order; do not start Flutter repository/UI work before the FastAPI contract and caller-auth policy are frozen.
-4. Treat `demos/render_chat_api/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), [`chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart), and the main chat page / cubit files as **single-owner** files during one implementation pass.
+4. Treat `demos/render_chat_api/`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart), [`chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart), and the main chat page / cubit files as **single-owner** files during one implementation pass.
 5. Do not implement phase-B items (streaming, Redis durability, advanced memory/tool loops, moderation providers) unless the user explicitly expands scope.
 
 ## STOP — Frozen defaults Cursor agents must implement
@@ -84,7 +84,7 @@ The mirrored freeze table in **[`integrations/render_fastapi_chat_demo.md`](../i
 - **Repo canon:** [`AGENTS.md`](../../AGENTS.md) at the repository root is authoritative for delivery, validation routing, and review gates—read it before implementation.
 - **Workspace root:** Repository checkout (Flutter / Dart versions per [`AGENTS.md`](../../AGENTS.md) **Repo Snapshot**).
 - **Plan review:** From a checkout, run `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.md` for a Codex delegate pass; diff-based review remains `./tool/request_codex_feedback.sh`.
-- **Implementation:** Prefer existing chat seams under `apps/mobile/lib/features/chat/` and DI in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart); do not fork a second chat screen.
+- **Implementation:** Prefer existing chat seams under `apps/mobile/lib/features/chat/` and DI in [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart); do not fork a second chat screen.
 
 ### Agent reading order (cross-host)
 
@@ -209,7 +209,7 @@ Run: `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.m
 ## Current architecture (baseline)
 
 - [`OfflineFirstChatRepository`](../../apps/mobile/lib/features/chat/data/offline_first_chat_repository.dart) wraps whatever is registered as **`ChatRepository` remote** and maps failures to the offline queue using [`ChatRemoteFailureException`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) (`retryable` flag).
-- Today that remote is [`CompositeChatRepository`](../../apps/mobile/lib/features/chat/data/composite_chat_repository.dart): **Supabase** `chat-complete` when Supabase is initialized and the session has a JWT, else **direct Hugging Face** when a client HF key exists ([`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart)).
+- Today that remote is [`CompositeChatRepository`](../../apps/mobile/lib/features/chat/data/composite_chat_repository.dart): **Supabase** `chat-complete` when Supabase is initialized and the session has a JWT, else **direct Hugging Face** when a client HF key exists ([`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart)).
 - Payloads: [`HuggingFacePayloadBuilder.buildChatCompletionsPayload`](../../apps/mobile/lib/features/chat/data/huggingface_payload_builder.dart). Model UI: [`ChatModelSelector`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart) (today fixed Hub ids such as `openai/gpt-oss-20b` / `openai/gpt-oss-120b`). Transport chip: [`ChatInferenceTransport`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart) (`supabase` | `direct`) in [`ChatTransportBadge`](../../apps/mobile/lib/features/chat/presentation/widgets/chat_transport_badge.dart).
 
 ```mermaid
@@ -521,7 +521,7 @@ Map into [`ChatRemoteFailureException`](../../apps/mobile/lib/features/chat/doma
 
 ### Repositories
 
-`RenderFastApiChatRepository`, `DemoFirstChatRepository`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart) registration order unchanged in intent (composite → render repo → demo-first wrapping composite → offline-first).
+`RenderFastApiChatRepository`, `DemoFirstChatRepository`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart) registration order unchanged in intent (composite → render repo → demo-first wrapping composite → offline-first).
 
 ### Transport / l10n
 
@@ -534,7 +534,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 | Slice | Owns | Notes |
 | --- | --- | --- |
 | FastAPI / contract | `demos/render_chat_api/**`, shared response fixtures, integrations doc contract tables | Must freeze headers, auth mode, error JSON, and `503`/`429` semantics before Flutter wiring. |
-| Flutter remote / DI | `apps/mobile/lib/features/chat/data/**`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart), provider wiring | Owns Render Dio, caller-auth provider, HF token provider, fallthrough/idempotency logic. |
+| Flutter remote / DI | `apps/mobile/lib/features/chat/data/**`, [`register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart), provider wiring | Owns Render Dio, caller-auth provider, HF token provider, fallthrough/idempotency logic. |
 | UI / l10n | chat presentation files, `apps/mobile/lib/l10n/app_*.arb`, generated l10n outputs | Must not rename frozen enum/ARB identifiers without updating the integrations doc in the same change. |
 | Docs / validation | [`docs/integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md), plan, setup/security docs | Keeps STOP resolutions, contract freezes, validation commands, and operational notes aligned with shipped behavior. |
 
@@ -542,7 +542,7 @@ Use one owner per slice. Do not parallel-edit the same files without an explicit
 
 - FastAPI: `demos/render_chat_api/main.py`, `demos/render_chat_api/orchestration/**`, `demos/render_chat_api/tests/**` or equivalent package layout.
 - Flutter remote: `apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart`, `apps/mobile/lib/features/chat/data/demo_first_chat_repository.dart`, provider/helper files under `apps/mobile/lib/features/chat/data/` or `apps/mobile/lib/core/config/`.
-- DI: [`apps/mobile/lib/core/di/register_chat_services.dart`](../../apps/mobile/lib/core/di/register_chat_services.dart).
+- DI: [`apps/mobile/lib/core/di/features/register_chat_services.dart`](../../apps/mobile/lib/core/di/features/register_chat_services.dart).
 - Domain / UI: [`apps/mobile/lib/features/chat/domain/chat_repository.dart`](../../apps/mobile/lib/features/chat/domain/chat_repository.dart), chat cubit/actions, transport badge/model selector widgets, `apps/mobile/lib/l10n/app_*.arb`.
 - Shared fixtures: `test/fixtures/render_chat_contract/` only.
 

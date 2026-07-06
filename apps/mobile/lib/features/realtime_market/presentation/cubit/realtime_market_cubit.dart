@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/load_cached_market_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/reconnect_realtime_market.dart';

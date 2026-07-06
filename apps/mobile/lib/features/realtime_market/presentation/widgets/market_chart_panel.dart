@@ -1,7 +1,7 @@
+import 'package:design_system/responsive.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class MarketChartPanel extends StatelessWidget {
   const MarketChartPanel({

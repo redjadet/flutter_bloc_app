@@ -1,6 +1,6 @@
+import 'package:auth/auth.dart' show AuthUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 
 /// Firebase Auth implementation of [AuthRepository].
 class FirebaseAuthRepository implements AuthRepository {

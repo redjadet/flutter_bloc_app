@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/shared/http/retrofit_response_utils.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:retrofit/retrofit.dart';
 

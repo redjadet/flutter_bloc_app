@@ -39,7 +39,7 @@ NativeShowcaseNativeCodeService    →  FfiNativeShowcaseNativeCodeService      
 | Concern | Owner |
 | --- | --- |
 | Route + cubit wiring | `apps/mobile/lib/app/router/routes_demos.part.dart` (`createNativePlatformShowcaseRoute`) |
-| DI | `apps/mobile/lib/core/di/register_native_platform_showcase_services.dart` |
+| DI | `apps/mobile/lib/core/di/features/register_native_platform_showcase_services.dart` |
 | Live interop merge | `NativePlatformInfoRepositoryImpl` (catalog via `mapShowcase` + three interop calls) |
 | Runtime platform label | `RuntimePlatformProbe` in data layer (not shared `NativePlatformService`) |
 

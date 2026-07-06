@@ -1,3 +1,4 @@
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
@@ -6,12 +7,10 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
-    as feature_auth;
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
@@ -39,7 +38,6 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.da
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
@@ -57,7 +55,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
     path: AppRoutes.authPath,
     name: AppRoutes.auth,
     builder: (final context, final state) => SignInPage(
-      authRepository: getIt<feature_auth.AuthRepository>(),
+      authRepository: getIt<AuthRepository>(),
       redirectAfterLogin: state.uri.queryParameters['redirect'],
     ),
   ),

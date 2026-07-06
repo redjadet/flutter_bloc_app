@@ -16,7 +16,7 @@ Large files use `part` splits (`mock_ble_repository_*`, `reactive_ble_repository
 
 ## DI
 
-`registerIotServices()` in `lib/core/di/register_iot_services.dart` (called from demo DI group).
+`registerIotServices()` in `lib/core/di/features/register_iot_services.dart` (called from demo DI group).
 
 ## Dart define
 

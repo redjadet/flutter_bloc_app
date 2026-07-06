@@ -1,3 +1,4 @@
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
     deferred as google_maps_page;
@@ -6,7 +7,6 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/realtime_market_page.
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';

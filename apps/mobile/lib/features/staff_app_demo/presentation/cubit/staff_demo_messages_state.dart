@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/messages/staff_demo_inbox_item.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_inbox_item.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'staff_demo_messages_state.freezed.dart';

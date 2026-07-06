@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
-import 'package:flutter_bloc_app/shared/ui/ui_constants.dart';
 
 part 'slot_machine_spinner_reel.part.dart';
 

@@ -1,10 +1,9 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
 import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_bloc_app/shared/widgets/diagnostics/settings_diagnostics_widgets.dart';
 import 'package:flutter_bloc_app/shared/widgets/settings_section.dart';
 

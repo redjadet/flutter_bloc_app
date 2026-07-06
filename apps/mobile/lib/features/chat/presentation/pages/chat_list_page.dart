@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class ChatListPage extends StatefulWidget {

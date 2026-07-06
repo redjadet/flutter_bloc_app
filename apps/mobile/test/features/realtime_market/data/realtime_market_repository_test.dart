@@ -5,11 +5,11 @@ import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_repository_impl.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_connection_status.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_stats.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/order_book_level.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/recent_trade.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 

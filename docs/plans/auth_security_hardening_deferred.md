@@ -38,7 +38,7 @@ behavior — not global Firebase sign-out.
 
 **Current seams:**
 
-- `apps/mobile/lib/core/di/register_chat_services.dart` — `RenderOrchestrationHfTokenProvider`,
+- `apps/mobile/lib/core/di/features/register_chat_services.dart` — `RenderOrchestrationHfTokenProvider`,
   Render-named `Dio`
 - `apps/mobile/lib/features/chat/data/render_fast_api_chat_repository.dart`
 - `apps/mobile/lib/core/auth/session_lifecycle_coordinator.dart`

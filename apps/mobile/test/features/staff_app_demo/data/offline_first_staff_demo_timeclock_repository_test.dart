@@ -3,8 +3,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';

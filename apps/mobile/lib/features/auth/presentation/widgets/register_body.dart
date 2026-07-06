@@ -1,6 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_form.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_max_width.dart';
 
 class ResponsiveRegisterBody extends StatelessWidget {
   const ResponsiveRegisterBody({super.key});

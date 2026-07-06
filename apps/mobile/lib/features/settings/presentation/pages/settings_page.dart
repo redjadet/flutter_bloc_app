@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/core/flavor.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';

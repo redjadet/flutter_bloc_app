@@ -1,8 +1,8 @@
 // coverage:ignore-file
 // Simple layout wrapper widget, tested indirectly via google_maps_sample_page tests
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 
 class GoogleMapsContentLayout extends StatelessWidget {
   const GoogleMapsContentLayout({

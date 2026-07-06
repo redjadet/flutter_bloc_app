@@ -1,5 +1,5 @@
+import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc_app/core/auth/auth_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
 
 class FirestoreStaffDemoMessagingRepository

@@ -22,7 +22,7 @@ collect_primary_scope_files() {
     find lib/features/profile/presentation -name '*.dart' 2>/dev/null || true
     find lib/features/settings/presentation -name '*.dart' 2>/dev/null || true
     find lib/features -path '*/presentation/widgets/*.dart' 2>/dev/null || true
-    find lib/features -path '*/presentation/helpers/*dialog*.dart' 2>/dev/null || true
+    find lib/features -path '*/presentation/widgets/*dialog*.dart' 2>/dev/null || true
     find lib/features -name '*dialog*.dart' 2>/dev/null || true
     find lib/features -path '*/presentation/forms/*.dart' 2>/dev/null || true
     find lib/features -name '*actions_bar*.dart' 2>/dev/null || true

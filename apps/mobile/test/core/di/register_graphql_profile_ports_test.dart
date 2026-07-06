@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/di/register_graphql_services.dart';
-import 'package:flutter_bloc_app/core/di/register_profile_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_graphql_services.dart';
+import 'package:flutter_bloc_app/core/di/features/register_profile_services.dart';
 import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_cache_clear_port_adapter.dart';

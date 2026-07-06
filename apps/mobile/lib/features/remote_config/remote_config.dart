@@ -2,7 +2,7 @@
 library;
 
 /// Data exports
-export 'data/repositories/remote_config_repository.dart';
+export 'data/remote_config_repository.dart';
 
 /// Domain exports
 export 'domain/remote_config_keys.dart';

@@ -1,11 +1,10 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_bridge_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_adaptive.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 class NativePlatformShowcaseInteropSection extends StatelessWidget {
   const NativePlatformShowcaseInteropSection({

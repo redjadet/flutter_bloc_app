@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
 import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_state.dart';
-import 'package:flutter_bloc_app/core/auth/auth_provider_kind.dart';
-import 'package:flutter_bloc_app/core/auth/auth_user.dart';
-import 'package:flutter_bloc_app/core/auth/session_invalidation_reason.dart';
+import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';

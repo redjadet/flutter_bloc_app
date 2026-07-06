@@ -50,12 +50,11 @@ the smallest capability the caller needs:
 
 ## Core and shared contracts
 
-### Auth (`apps/mobile/lib/core/auth/`)
+### Auth (`packages/auth` + `apps/mobile/lib/core/auth/`)
 
-- **`AuthUser`** – App-level model for “current user” (id, email, displayName, isAnonymous). Used by router, auth gates, and any code that needs “who is logged in” without depending on a specific auth implementation.
-- **`AuthRepository`** – Read-only contract: `currentUser` and `authStateChanges`. Implementations (e.g. Firebase auth feature, Supabase auth feature) are registered in DI; app and router depend only on this core type.
-
-The auth **feature** (`apps/mobile/lib/features/auth/`) extends the core contract (e.g. adds `signInAnonymously`, `signOut`) and re-exports `AuthUser` for backward compatibility. Router, redirect logic, and other features (e.g. supabase_auth, iot_demo) use `core/auth` only.
+- **`package:auth`** — Pure-Dart contracts: `AuthUser`, base `AuthRepository` (`currentUser`, `authStateChanges`), `AuthProviderKind`, `SessionInvalidationReason`, `RemoteBackendAuthPort`. Router, gates, and cross-feature code import these types from `package:auth/auth.dart`.
+- **`apps/mobile/lib/core/auth/`** — App session infrastructure only: `SessionLifecycleCoordinator`, `TokenRepository`, `JwtClaimsReader` (not re-export shims).
+- **`apps/mobile/lib/features/auth/domain/`** — Feature `AuthRepository` extends the package contract with `signInAnonymously` / `signOut`; Firebase/Supabase implementations live under `features/auth/data/`. DI registers the feature repository and aliases `core_auth.AuthRepository` to the same singleton (`core/di/features/register_auth_services.dart`).
 
 ### Theme and design tokens (`apps/mobile/lib/shared/design_system/`)
 
@@ -68,19 +67,19 @@ The auth **feature** (`apps/mobile/lib/features/auth/`) extends the core contrac
 ### Settings-style section layout (`apps/mobile/lib/shared/widgets/`)
 
 - **`SettingsSection`** – Title + spacing + child column used on the settings screen and on **remote_config** diagnostics. Living in `apps/mobile/lib/shared/widgets/settings_section.dart` keeps **`remote_config` from importing the `settings` feature** while preserving consistent layout.
-- **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `apps/mobile/lib/shared/widgets/diagnostics/` and depend only on **`apps/mobile/lib/core/diagnostics/`** ports (`GraphqlCacheClearPort`, `ProfileCacheControlsPort`). The **router** wires `getIt` implementations so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports. Feature adapters (e.g. `GraphqlCacheClearPortAdapter` in `apps/mobile/lib/features/graphql_demo/data/`) implement core ports and are registered in `register_graphql_services.dart` — same pattern as HF token and GenUI host-handle ports.
+- **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `apps/mobile/lib/shared/widgets/diagnostics/` and depend only on **`apps/mobile/lib/core/diagnostics/`** ports (`GraphqlCacheClearPort`, `ProfileCacheControlsPort`). The **router** wires `getIt` implementations so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports. Feature adapters (e.g. `GraphqlCacheClearPortAdapter` in `apps/mobile/lib/features/graphql_demo/data/`) implement core ports and are registered in `core/di/features/register_graphql_services.dart` — same pattern as HF token and GenUI host-handle ports.
 - **Remote config diagnostics DTO** – `RemoteConfigDiagnosticsViewData` + `RemoteConfigDiagnosticsStatus` live in `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart`. The **remote_config** feature maps `RemoteConfigState` via `mapRemoteConfigStateToDiagnosticsViewData` (`apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`) so the cubit state type does not leak into core.
 
 ### Render orchestration HF token (`apps/mobile/lib/core/chat/`)
 
-- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `apps/mobile/lib/core/chat/render_orchestration_remote_token_port.dart` exposing `readDevToken()` + `forceRefresh()`. The chat `LayeredRenderOrchestrationHfTokenProvider` depends only on this port, so **`chat` no longer imports `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in `apps/mobile/lib/core/di/register_remote_config_services.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
+- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `apps/mobile/lib/core/chat/render_orchestration_remote_token_port.dart` exposing `readDevToken()` + `forceRefresh()`. The chat `LayeredRenderOrchestrationHfTokenProvider` depends only on this port, so **`chat` no longer imports `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in `apps/mobile/lib/core/di/features/register_remote_config_services.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 ### Settings diagnostics decoupling (plan todos — **all complete**)
 
 Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](plans/settings_diagnostics_decouple_plan.md).
 
-- [x] GraphQL cache clear port — `apps/mobile/lib/core/diagnostics/graphql_cache_clear_port.dart`; DI in `register_graphql_services.dart`
-- [x] Profile cache diagnostics port — `apps/mobile/lib/core/diagnostics/profile_cache_controls_port.dart`; DI in `register_profile_services.dart`
+- [x] GraphQL cache clear port — `apps/mobile/lib/core/diagnostics/graphql_cache_clear_port.dart`; DI in `core/di/features/register_graphql_services.dart`
+- [x] Profile cache diagnostics port — `apps/mobile/lib/core/diagnostics/profile_cache_controls_port.dart`; DI in `core/di/features/register_profile_services.dart`
 - [x] Cache section widgets (no `graphql_demo` / `profile` imports) — `apps/mobile/lib/shared/widgets/diagnostics/`
 - [x] Remote config diagnostics DTO in core — `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart`
 - [x] Mapper in remote_config — `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`
@@ -93,12 +92,12 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
   and `apps/mobile/lib/app/app_scope.dart` own startup, DI bootstrapping, router creation,
   and app-scope providers/listeners.
 - **Counter + Remote Config** – The counter feature does not import remote_config. `CounterPageBody` always composes `CounterSyncBanner` for offline-first UX. The page also exposes an optional **banner slot** (`Widget? optionalBanner`) for app-level widgets; the **router** (`apps/mobile/lib/app/router/routes_core.dart`) passes `AwesomeFeatureWidget()` there. Counter stays agnostic; remote-config composition stays in the app.
-- **Auth gates** – `AppRouteAuthGate` and feature-level gates (e.g. `IotDemoAuthGate`) take `getCurrentUser` and `authStateChanges` (or an auth repository) as parameters. The router supplies these from DI. Gates depend on the core `AuthUser` type only.
+- **Auth gates** – `AppRouteAuthGate` and feature-level gates (e.g. `IotDemoAuthGate`) take `getCurrentUser` and `authStateChanges` (or an auth repository) as parameters. The router supplies these from DI. Gates depend on `package:auth` `AuthUser` only.
 
 ## Feature barrel (`apps/mobile/lib/features/features.dart`)
 
 - A single barrel file re-exports public entry points for features that are used by the app or other composition points.
-- It includes: auth, calculator, camera_gallery, chart, chat, counter, deeplink, example, fcm_demo, genui_demo, google_maps, graphql_demo, iot_demo, library_demo (page), playlearn, profile, remote_config, scapes, settings, supabase_auth, todo_list, websocket.
+- It re-exports every feature barrel under `apps/mobile/lib/features/<name>/` (alphabetical in `features.dart`), including demos such as `ai_decision_demo`, `case_study_demo`, `igaming_demo`, `in_app_purchase_demo`, `online_therapy_demo`, `staff_app_demo`, and `walletconnect_auth`. `library_demo` still exports its page entry directly.
 - Use this for a quick import of a feature’s public API when you are in app/router or tests; within a feature, prefer direct imports to the files you need.
 
 ## Validation

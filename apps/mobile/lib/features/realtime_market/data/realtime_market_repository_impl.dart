@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_local_data_source.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 
 /// Caps list sizes before persistence and downstream UI.

@@ -1,6 +1,6 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
+import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/auth/remote_backend_auth_port.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';

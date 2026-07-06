@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/example/presentation/helpers/example_platform_dialogs.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
+import 'package:flutter_bloc_app/features/example/presentation/widgets/example_platform_dialogs.dart';
 import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 

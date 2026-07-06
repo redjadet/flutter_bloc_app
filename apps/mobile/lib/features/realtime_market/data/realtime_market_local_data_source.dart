@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/realtime_market/data/mappers/market_snapshot_mapper.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/entities/market_feed_snapshot.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

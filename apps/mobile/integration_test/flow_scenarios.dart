@@ -1,3 +1,4 @@
+import 'package:design_system/design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
@@ -7,7 +8,6 @@ import 'package:flutter_bloc_app/core/di/injector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_harness.dart';

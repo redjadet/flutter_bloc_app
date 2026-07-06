@@ -1,9 +1,8 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability_kind.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
 import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_card.dart';
 
 /// Presentation-only platform chrome for the native platform showcase.
 class NativePlatformShowcaseAdaptive {
