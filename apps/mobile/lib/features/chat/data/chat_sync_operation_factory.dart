@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_payload.dart';
 import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
 import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 class ChatSyncOperationFactory {
   ChatSyncOperationFactory({required this._entityType});
@@ -12,9 +11,7 @@ class ChatSyncOperationFactory {
   String generateConversationId() =>
       'conversation_${DateTime.now().microsecondsSinceEpoch}';
 
-  String generateChangeId() =>
-      DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
-      Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
+  String generateChangeId() => generateOfflineChangeId();
 
   SyncOperation createOperation({
     required final List<String> pastUserInputs,

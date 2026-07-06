@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart'
     show OfflineFirstCounterRepository;
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:utilities/utilities.dart';
 
 /// Snapshot merge and normalization helpers for [OfflineFirstCounterRepository].
 class OfflineFirstCounterRepositoryHelpers {
@@ -63,7 +62,5 @@ class OfflineFirstCounterRepositoryHelpers {
     return remote.isAfter(local);
   }
 
-  static String generateChangeId() =>
-      DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
-      Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
+  static String generateChangeId() => generateOfflineChangeId();
 }

@@ -110,6 +110,4 @@ TodoItem _normalizeItem(
   );
 }
 
-String _generateChangeId() =>
-    DateTime.now().microsecondsSinceEpoch.toRadixString(16) +
-    Random().nextInt(0xFFFFFF).toRadixString(16).padLeft(6, '0');
+String _generateChangeId() => generateOfflineChangeId();
