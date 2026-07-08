@@ -39,7 +39,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.44.4
+          flutter-version: 3.44.5
           channel: stable
           cache: true
 
