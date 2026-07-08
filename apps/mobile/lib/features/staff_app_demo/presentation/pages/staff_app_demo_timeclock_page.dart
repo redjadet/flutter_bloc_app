@@ -1,12 +1,12 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_timeclock_state.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 class StaffAppDemoTimeclockPage extends StatelessWidget {
   const StaffAppDemoTimeclockPage({super.key});

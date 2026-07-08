@@ -3,35 +3,38 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+cd "$APP_ROOT"
 
 echo "🔍 Checking for raw Timer usage..."
 
 IGNORED=""
 
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$WORKSPACE_ROOT/tool/check_helpers.sh"
+
+TIMER_IMPL_RELPATH="../../packages/core/lib/src/time/timer_service.dart"
 
 # Use ripgrep if available, otherwise grep.
 # Match raw `Timer(` (word boundary) but exclude "TimerService", test files, and
 # the TimerService implementation itself. We intentionally avoid matching helper
 # names like `registerTimer(`.
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "\bTimer\(" lib/features lib/core lib/shared lib/app 2>/dev/null \
+  VIOLATIONS=$(rg -n "\bTimer\(" lib/features lib/shared lib/app 2>/dev/null \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
     | rg -v "TimerService" \
-    | rg -v "lib/core/time/timer_service.dart" \
+    | rg -v "$TIMER_IMPL_RELPATH" \
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
   # grep does not support \b; emulate a word boundary by requiring a non-word
   # character (or start-of-line) before Timer(.
-  VIOLATIONS=$(grep -rnE "(^|[^[:alnum:]_])Timer\\(" lib/features lib/core lib/shared lib/app 2>/dev/null \
+  VIOLATIONS=$(grep -rnE "(^|[^[:alnum:]_])Timer\\(" lib/features lib/shared lib/app 2>/dev/null \
     | grep -v "TimerService" \
-    | grep -v "lib/core/time/timer_service.dart" \
+    | grep -v "$TIMER_IMPL_RELPATH" \
     | grep -v "/test/" \
     | grep -v "^[[:space:]]*//" \
     || true)

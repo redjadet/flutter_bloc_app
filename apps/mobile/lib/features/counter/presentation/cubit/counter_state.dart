@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'counter_state.freezed.dart';

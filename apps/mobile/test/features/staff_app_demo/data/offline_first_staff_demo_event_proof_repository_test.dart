@@ -10,10 +10,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_p
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

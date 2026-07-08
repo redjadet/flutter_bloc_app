@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/diagnostics/diagnostics_sync_timestamp.dart';
+import 'package:flutter_bloc_app/app/diagnostics/diagnostics_sync_timestamp.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

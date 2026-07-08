@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Service wrapper for WalletConnect SDK.
 ///

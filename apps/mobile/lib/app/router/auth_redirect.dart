@@ -1,5 +1,5 @@
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
 
 /// Creates an authentication redirect function for GoRouter.

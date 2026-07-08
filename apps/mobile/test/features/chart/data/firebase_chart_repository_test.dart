@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/chart/data/firebase_chart_repository.d
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

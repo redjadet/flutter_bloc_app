@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

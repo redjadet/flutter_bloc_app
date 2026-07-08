@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_widget.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Page showcasing the whiteboard widget with CustomPainter.
 class WhiteboardPage extends StatelessWidget {

@@ -13,7 +13,7 @@
       "spec": "settings:v1{preferred_locale_code:string(tag)}",
       "inputs": [
         "lib/features/settings/data/hive_locale_repository.dart",
-        "lib/shared/storage/hive_settings_repository.dart"
+        "packages/storage/lib/src/hive/hive_settings_repository.dart"
       ]
     },
     {
@@ -21,7 +21,7 @@
       "spec": "settings:v1{theme_mode:enum(light|dark|system)}",
       "inputs": [
         "lib/features/settings/data/hive_theme_repository.dart",
-        "lib/shared/storage/hive_settings_repository.dart"
+        "packages/storage/lib/src/hive/hive_settings_repository.dart"
       ]
     },
     {
@@ -47,10 +47,10 @@
       "name": "pending_sync_operations:v1",
       "spec": "pending_sync_operations:v2{<op_id>:sync_operation_json; quarantine:dead_letter:<originalKey>(dead_letter:v1)}",
       "inputs": [
-        "lib/shared/sync/pending_sync_repository.dart",
-        "lib/shared/sync/pending_sync_repository_codec.dart",
-        "lib/shared/sync/pending_sync_repository_migration.dart",
-        "lib/shared/sync/sync_operation.dart"
+        "packages/storage/lib/src/sync/pending_sync_repository.dart",
+        "packages/storage/lib/src/sync/pending_sync_repository_codec.dart",
+        "packages/storage/lib/src/sync/pending_sync_repository_migration.dart",
+        "packages/storage/lib/src/sync/sync_operation.dart"
       ]
     }
   ]

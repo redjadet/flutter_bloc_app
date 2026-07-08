@@ -1,9 +1,8 @@
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 class GraphqlDemoCacheRepository extends HiveRepositoryBase
     implements GraphqlCacheRepository {

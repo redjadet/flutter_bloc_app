@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_settings_repository.dart';
+import 'package:storage/storage.dart';
 
 /// Hive-backed implementation of [ThemeRepository].
 class HiveThemeRepository extends HiveSettingsRepository<ThemePreference>

@@ -40,6 +40,8 @@ dependencies:
   ai:
     path: ../../packages/ai
   app_links: ^6.4.1
+  app_shared_flutter:
+    path: ../../packages/app_shared_flutter
   apple_maps_flutter: ^1.4.0
   auth:
     path: ../../packages/auth

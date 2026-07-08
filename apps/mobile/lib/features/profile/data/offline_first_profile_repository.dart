@@ -1,13 +1,11 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 
 /// Offline-first implementation of [ProfileRepository].

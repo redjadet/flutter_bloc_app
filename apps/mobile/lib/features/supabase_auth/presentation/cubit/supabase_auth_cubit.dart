@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 part 'supabase_auth_cubit_handlers.part.dart';
 

@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
   AuthAwareGraphqlRemoteRepository({

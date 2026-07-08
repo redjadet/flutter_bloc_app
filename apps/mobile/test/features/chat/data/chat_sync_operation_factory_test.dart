@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_operation_factory.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

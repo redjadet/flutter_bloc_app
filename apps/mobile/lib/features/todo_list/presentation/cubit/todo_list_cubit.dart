@@ -1,17 +1,16 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:collection/collection.dart';
 import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
 import 'package:utilities/utilities.dart';
 
 part 'todo_list_cubit_crud.dart';

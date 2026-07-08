@@ -1,6 +1,9 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/app/utils/context_utils.dart';
+import 'package:flutter_bloc_app/app/utils/navigation.dart';
 
 Future<void> showExamplePlatformInfoDialog({
   required final BuildContext context,

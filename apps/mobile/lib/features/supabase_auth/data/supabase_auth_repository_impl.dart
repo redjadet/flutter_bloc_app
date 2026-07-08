@@ -1,12 +1,10 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart' as app_auth;
-import 'package:auth/auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/auth/token_repository.dart';
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
+import 'package:utilities/utilities.dart';
 
 part 'supabase_auth_repository_impl.part.dart';
 
@@ -41,7 +39,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
        _signOutImpl = signOutImpl ?? _defaultSignOut;
 
   final bool Function()? _isConfiguredOverride;
-  final TokenRepository? tokenRepository;
+  final app_auth.TokenRepository? tokenRepository;
   final User? Function() _readCurrentUser;
   final String? Function() _readCurrentAccessToken;
   final Stream<AuthState> Function() _authStateChangesStream;
@@ -141,7 +139,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     if (!_canAccessSupabase) return;
     try {
       await _signOutImpl();
-      tokenRepository?.clearProvider(AuthProviderKind.supabase);
+      tokenRepository?.clearProvider(app_auth.AuthProviderKind.supabase);
     } on Object catch (error, stackTrace) {
       AppLogger.error('SupabaseAuthRepositoryImpl.signOut', error, stackTrace);
       rethrow;

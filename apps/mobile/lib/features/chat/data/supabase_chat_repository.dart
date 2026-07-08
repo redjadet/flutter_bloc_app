@@ -1,10 +1,10 @@
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'supabase_chat_repository_edge.part.dart';

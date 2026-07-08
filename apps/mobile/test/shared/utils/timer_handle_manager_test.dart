@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:core/core.dart';
 

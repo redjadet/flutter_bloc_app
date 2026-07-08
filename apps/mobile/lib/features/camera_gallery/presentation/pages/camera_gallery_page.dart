@@ -1,13 +1,16 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/image_from_path.dart';
 
 part 'camera_gallery_page.part.dart';
 

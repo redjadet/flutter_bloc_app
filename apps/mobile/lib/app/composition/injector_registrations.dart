@@ -1,0 +1,78 @@
+import 'dart:async';
+
+import 'package:core/core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_ai_decision_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_calculator_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_case_study_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_chart_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_chat_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_event_bus_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_fcm_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_genui_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_graphql_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_http_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_igaming_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_in_app_purchase_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_iot_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_native_platform_showcase_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_online_therapy_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_playlearn_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_profile_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_realtime_market_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_remote_config_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_search_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_staff_app_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_supabase_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_todo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_walletconnect_auth_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector_factories.dart';
+import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
+import 'package:flutter_bloc_app/app/config/supabase_config_coordinator.dart';
+import 'package:flutter_bloc_app/app/config/supabase_config_provider.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_picker_camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/deeplink/data/app_links_deep_link_service.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
+import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
+import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
+import 'package:flutter_bloc_app/features/google_maps/domain/map_location_repository.dart';
+import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
+import 'package:flutter_bloc_app/features/scapes/data/mock_scapes_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/hive_locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
+import 'package:flutter_bloc_app/features/settings/data/package_info_app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
+import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/data/echo_websocket_repository.dart';
+import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
+
+part 'groups/register_core_services.dart';
+part 'groups/register_demo_services.dart';
+part 'groups/register_feature_services.dart';
+
+const bool _isFlutterTestProcess = bool.fromEnvironment('FLUTTER_TEST');
+
+Future<void> registerAllDependencies() async {
+  await registerCoreServices();
+  await registerFeatureServices();
+  await registerDemoServices();
+}

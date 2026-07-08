@@ -11,11 +11,9 @@ import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_es.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_fr.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_tr.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+import 'package:networking/networking.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/config/iot_ble_runtime_config.dart';
+import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';

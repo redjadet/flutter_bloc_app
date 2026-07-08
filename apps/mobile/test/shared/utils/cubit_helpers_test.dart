@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Mock Cubit for testing

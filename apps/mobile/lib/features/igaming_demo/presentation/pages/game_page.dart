@@ -1,6 +1,10 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_cubit.dart';
@@ -8,10 +12,6 @@ import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_s
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_machine_spinner.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:go_router/go_router.dart';
 
 part 'game_page_legend.part.dart';

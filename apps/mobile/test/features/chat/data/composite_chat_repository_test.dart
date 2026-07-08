@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.da
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubEdgeRepo implements ChatRepository {

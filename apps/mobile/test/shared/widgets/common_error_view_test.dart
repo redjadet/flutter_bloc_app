@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

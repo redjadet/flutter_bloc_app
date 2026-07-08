@@ -28,7 +28,7 @@
           "projectId": "your-project-id",
           "appId": "1:000000000000:ios:placeholder",
           "uploadDebugSymbols": true,
-          "fileOutput": "apps/mobile/macos/Runner/GoogleService-Info.plist"
+          "fileOutput": "apps/other_platforms/macos/Runner/GoogleService-Info.plist"
         }
       },
       "dart": {

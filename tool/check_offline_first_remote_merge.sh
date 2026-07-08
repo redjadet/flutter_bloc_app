@@ -57,14 +57,22 @@ should_run_remote_merge_guard_auto() {
 
   for file in "${changed_files[@]}"; do
     case "$file" in
-      lib/shared/sync/*|\
+      lib/app/sync/*|\
+      apps/mobile/lib/app/sync/*|\
       lib/features/counter/data/*|\
+      apps/mobile/lib/features/counter/data/*|\
       lib/features/todo_list/data/*|\
+      apps/mobile/lib/features/todo_list/data/*|\
       lib/features/todo_list/domain/todo_merge_policy.dart|\
+      apps/mobile/lib/features/todo_list/domain/todo_merge_policy.dart|\
       lib/features/iot_demo/data/*|\
+      apps/mobile/lib/features/iot_demo/data/*|\
       test/features/counter/data/*|\
+      apps/mobile/test/features/counter/data/*|\
       test/features/todo_list/data/*|\
+      apps/mobile/test/features/todo_list/data/*|\
       test/features/iot_demo/data/*|\
+      apps/mobile/test/features/iot_demo/data/*|\
       tool/check_offline_first_remote_merge.sh|\
       docs/offline_first/*|\
       docs/engineering/offline_first_flutter_architecture_with_conflict_resolution.md|\

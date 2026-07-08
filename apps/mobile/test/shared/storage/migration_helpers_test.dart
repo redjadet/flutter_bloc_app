@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/storage/migration_helpers.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   group('MigrationHelpers', () {

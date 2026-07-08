@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_offline_badge.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';

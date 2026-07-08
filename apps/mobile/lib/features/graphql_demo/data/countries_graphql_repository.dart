@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/api/countries_graphql_api.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
@@ -8,11 +10,8 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_sourc
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:networking/networking.dart';
+import 'package:utilities/utilities.dart';
 
 part 'countries_graphql_repository_queries.part.dart';
 

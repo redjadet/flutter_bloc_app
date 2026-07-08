@@ -1,7 +1,13 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
@@ -12,10 +18,9 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/googl
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:utilities/utilities.dart';
 
 part 'google_maps_sample_page.freezed.dart';
 part 'google_maps_sample_sections.dart';

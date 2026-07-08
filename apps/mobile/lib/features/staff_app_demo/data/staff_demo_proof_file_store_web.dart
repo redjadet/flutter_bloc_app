@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 /// Hive-backed proof bytes keyed by stable virtual paths for web demos.
 class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {

@@ -1,13 +1,13 @@
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_page_body.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RealtimeMarketPage extends StatelessWidget {

@@ -613,8 +613,9 @@ should_run_mix_lint_auto() {
 
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
-      lib/shared/design_system/app_styles.dart|\
-      lib/core/theme/mix_app_theme.dart|\
+      packages/design_system/lib/src/styles/app_styles.dart|\
+      packages/design_system/lib/src/theme/mix_app_theme.dart|\
+      lib/app/theme/*|\
       custom_lints/*|\
       analysis_options.yaml|\
       pubspec.yaml|\
@@ -876,14 +877,15 @@ should_run_todo_layout_tests_auto() {
     case "$file" in
       lib/features/todo_list/*|\
       test/features/todo_list/*|\
-      lib/shared/extensions/responsive.dart|\
-      lib/shared/widgets/*|\
-      lib/shared/ui/*|\
-      lib/shared/design_system/*|\
-      lib/core/theme/*|\
-      lib/shared/utils/platform_adaptive*|\
-      lib/shared/extensions/build_context_l10n.dart|\
-      lib/shared/extensions/type_safe_bloc_access.dart)
+      packages/design_system/lib/src/responsive/*|\
+      packages/design_system/lib/src/widgets/*|\
+      packages/design_system/lib/src/ui/*|\
+      packages/design_system/lib/src/theme/*|\
+      lib/app/theme/*|\
+      lib/app/widgets/*|\
+      packages/design_system/lib/src/platform_adaptive/*|\
+      lib/app/extensions/build_context_l10n.dart|\
+      lib/app/extensions/type_safe_bloc_access.dart)
         return 0
         ;;
     esac
@@ -912,9 +914,9 @@ should_run_action_bar_layout_tests_auto() {
       lib/features/*/presentation/forms/*|\
       lib/features/*/*actions_bar*.dart|\
       lib/features/*/*action_bar*.dart|\
-      lib/shared/widgets/common_form_field.dart|\
-      lib/shared/utils/platform_adaptive*|\
-      lib/shared/extensions/responsive.dart|\
+      packages/design_system/lib/src/widgets/common_form_field.dart|\
+      packages/design_system/lib/src/platform_adaptive/*|\
+      packages/design_system/lib/src/responsive/*|\
       test/features/staff_app_demo/presentation/widgets/*|\
       test/shared/widgets/action_bar_layout_regression_test.dart|\
       tool/check_row_action_overflow.sh|\
@@ -1019,11 +1021,13 @@ should_run_regression_guards_before_coverage() {
   for file in "${changed_files[@]+"${changed_files[@]}"}"; do
     case "$file" in
       lib/shared/utils/request_id_guard.dart|\
+      packages/utilities/lib/src/request_id_guard.dart|\
       lib/app/presentation/cubit/app_auth_cubit.dart|\
       lib/app/presentation/cubit/app_auth_state.dart|\
-      lib/core/auth/*|\
+      lib/app/auth/*|\
+      lib/app/composition/features/register_auth_services.dart|\
       test/app/presentation/cubit/app_auth_cubit_test.dart|\
-      test/core/auth/*|\
+      test/app/auth/*|\
       lib/features/chat/*|\
       test/features/chat/*|\
       lib/features/online_therapy_demo/*|\

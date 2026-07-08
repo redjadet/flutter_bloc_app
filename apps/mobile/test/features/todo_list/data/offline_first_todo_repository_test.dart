@@ -5,12 +5,8 @@ import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.da
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 

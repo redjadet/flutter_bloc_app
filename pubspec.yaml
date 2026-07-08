@@ -9,6 +9,7 @@ workspace:
   - apps/mobile
   - packages/ai
   - packages/auth
+  - packages/app_shared_flutter
   - packages/core
   - packages/design_system
   - packages/feature_flags

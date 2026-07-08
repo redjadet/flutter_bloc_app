@@ -1,9 +1,9 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 
 class FirebaseFunctionsTestPage extends StatefulWidget {
   const FirebaseFunctionsTestPage({super.key});

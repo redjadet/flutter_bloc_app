@@ -2,10 +2,8 @@ import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountSection extends StatelessWidget {

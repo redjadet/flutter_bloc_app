@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 const String _manifestPath = 'tool/hive_schema_manifest.json';
-const String _outPath = 'lib/shared/storage/hive_schema_fingerprints.g.dart';
+const String _outPath =
+    'packages/storage/lib/src/hive/hive_schema_fingerprints.g.dart';
 
 String _fnv1a64Bytes(final List<int> bytes) {
   final BigInt mask = (BigInt.one << 64) - BigInt.one;
@@ -20,8 +21,18 @@ String _fnv1a64Hex(final String s) {
 }
 
 String _readText(final String path) {
-  final String text = File(path).readAsStringSync();
+  final String text = File(_resolveInputPath(path)).readAsStringSync();
   return text.replaceAll('\r\n', '\n');
+}
+
+String _resolveInputPath(final String path) {
+  if (path.startsWith('packages/')) {
+    return path;
+  }
+  if (path.startsWith('lib/')) {
+    return 'apps/mobile/$path';
+  }
+  return path;
 }
 
 String _renderGenerated({

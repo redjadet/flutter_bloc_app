@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter_bloc_app/core/diagnostics/diagnostics_sync_timestamp.dart';
+import 'package:flutter_bloc_app/app/diagnostics/diagnostics_sync_timestamp.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 /// Hive-backed cache for profile data so the profile page can hydrate offline.
 class HiveProfileCacheRepository extends HiveRepositoryBase

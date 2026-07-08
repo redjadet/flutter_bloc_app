@@ -6,9 +6,8 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 

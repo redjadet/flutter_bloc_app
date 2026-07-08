@@ -1,7 +1,6 @@
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 

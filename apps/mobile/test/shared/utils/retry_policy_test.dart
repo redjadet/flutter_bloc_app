@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers.dart' show FakeTimerService;

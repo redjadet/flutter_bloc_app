@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn_cubit.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/cubit/playlearn_state.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/widgets/word_card.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Vocabulary list page (tap-to-hear words) for a topic.
 class VocabularyListPage extends StatelessWidget {

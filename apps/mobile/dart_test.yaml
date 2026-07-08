@@ -1,3 +1,9 @@
 tags:
+  web:
+    # Web-only smoke tests (e.g. chrome platform lane).
+    # Explicit tag declaration prevents warnings.
+    # No configuration needed; declaration only.
+    skip: false
+
   golden:
     description: Golden toolkit visual snapshot tests

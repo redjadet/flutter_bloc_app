@@ -1,7 +1,8 @@
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/core.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/audit_repository.dart';

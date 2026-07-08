@@ -1,16 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/data/api/counter_api.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
-import 'package:flutter_bloc_app/shared/utils/repository_initial_load_helper.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:networking/networking.dart';
+import 'package:utilities/utilities.dart';
 
 part 'rest_counter_repository_internal.dart';
 part 'rest_counter_repository_watch.dart';
@@ -27,7 +25,7 @@ part 'rest_counter_repository_watch.dart';
 /// 2. Add authentication headers/tokens
 /// 3. Implement proper error handling for your API
 /// 4. Add request/response models as needed
-/// 5. Register in `lib/core/di/injector.dart` if needed
+/// 5. Register in `lib/app/composition/injector.dart` if needed
 class RestCounterRepository
     with CounterRepositoryNoPendingSync
     implements CounterRepository {

@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_samples.dart';
+import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_platform_dialogs.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:go_router/go_router.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation

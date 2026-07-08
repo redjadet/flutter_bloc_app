@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -9,12 +8,10 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dar
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
-import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:networking/networking.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,11 +1,10 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:storage/storage.dart';
 
 class ChatSyncStatusState {
   const ChatSyncStatusState({this.pendingCount = 0});

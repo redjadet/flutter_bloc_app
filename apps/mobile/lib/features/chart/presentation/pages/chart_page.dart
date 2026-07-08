@@ -1,7 +1,14 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -9,10 +16,9 @@ import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.d
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_content_list.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_data_source_badge.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loading_list.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+import 'package:utilities/utilities.dart';
 
 part 'chart_page.freezed.dart';
 

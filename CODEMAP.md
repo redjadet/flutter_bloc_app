@@ -6,11 +6,11 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | --- | --- |
 | Onboard / loop | [`AGENTS.md`](AGENTS.md), [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) |
 | Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `apps/mobile/lib/features/<feature>/` |
-| Routes / deep links | [`apps/mobile/lib/core/router/app_routes.dart`](apps/mobile/lib/core/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |
-| DI registration | [`apps/mobile/lib/core/di/`](apps/mobile/lib/core/di/) (`injector.dart`, `groups/`), feature registrars in [`apps/mobile/lib/core/di/features/`](apps/mobile/lib/core/di/features/) |
-| UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`apps/mobile/lib/shared/`](apps/mobile/lib/shared/) |
-| Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`apps/mobile/lib/shared/sync/`](apps/mobile/lib/shared/sync/) |
-| HTTP / retries | [`apps/mobile/lib/shared/http/`](apps/mobile/lib/shared/http/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
+| Routes / deep links | [`apps/mobile/lib/app/router/app_routes.dart`](apps/mobile/lib/app/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |
+| DI registration | [`apps/mobile/lib/app/composition/`](apps/mobile/lib/app/composition/) (`injector.dart`, `groups/`), feature registrars in [`apps/mobile/lib/app/composition/features/`](apps/mobile/lib/app/composition/features/) |
+| UI / theme / Mix | [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md), [`packages/design_system/`](packages/design_system/), [`apps/mobile/lib/app/`](apps/mobile/lib/app/) |
+| Offline-first / sync | [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`apps/mobile/lib/app/sync/`](apps/mobile/lib/app/sync/), [`packages/storage/`](packages/storage/) |
+| HTTP / retries | [`apps/mobile/lib/app/http/`](apps/mobile/lib/app/http/), [`packages/networking/`](packages/networking/), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md) |
 | Native interop (MethodChannel / EventChannel / FFI) | [`apps/mobile/lib/features/native_platform_showcase/`](apps/mobile/lib/features/native_platform_showcase/), [`README`](apps/mobile/lib/features/native_platform_showcase/README.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md) (`native_platform_showcase` row) |
 | Tests | [`docs/testing_overview.md`](docs/testing_overview.md), [`apps/mobile/test/`](apps/mobile/test/) |
 | Validation commands | [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md), `./bin/checklist` |

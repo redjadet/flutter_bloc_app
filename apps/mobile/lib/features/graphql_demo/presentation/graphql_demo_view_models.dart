@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'graphql_demo_view_models.freezed.dart';
 

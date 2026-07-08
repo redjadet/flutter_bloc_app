@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
   FirestoreStaffDemoInboxRepository({

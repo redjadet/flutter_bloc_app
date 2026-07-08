@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Toolbar for the markdown editor with preview toggle and markdown shortcuts.
 class MarkdownToolbar extends StatelessWidget {

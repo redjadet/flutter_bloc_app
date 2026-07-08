@@ -3,27 +3,28 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
 echo "🔍 Checking for direct Hive.openBox usage..."
 
 IGNORED=""
 
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$TOOL_DIR/check_helpers.sh"
 
 # Use ripgrep if available, otherwise grep
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "Hive\.openBox" lib/features lib/core lib/shared 2>/dev/null \
+  VIOLATIONS=$(rg -n "Hive\.openBox" lib/features lib/shared lib/app 2>/dev/null \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    | rg -v "lib/shared/storage" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
-  VIOLATIONS=$(grep -rn "Hive\.openBox" lib/features lib/core lib/shared 2>/dev/null \
-    | grep -v "lib/shared/storage" \
+  VIOLATIONS=$(grep -rn "Hive\.openBox" lib/features lib/shared lib/app 2>/dev/null \
     | grep -v "^[[:space:]]*//" \
     || true)
 fi

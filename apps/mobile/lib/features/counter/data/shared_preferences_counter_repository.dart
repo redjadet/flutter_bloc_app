@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 /// SharedPreferences-backed implementation of [CounterRepository].
 class SharedPreferencesCounterRepository

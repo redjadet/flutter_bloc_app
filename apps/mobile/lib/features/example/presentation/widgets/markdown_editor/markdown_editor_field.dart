@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Text field component for editing markdown content.
 class MarkdownEditorField extends StatelessWidget {

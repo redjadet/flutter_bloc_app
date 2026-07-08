@@ -1,7 +1,5 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
-import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 /// Grid view icon for scapes page, matching Figma design
 class ScapeGridViewIcon extends StatelessWidget {

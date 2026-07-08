@@ -1,9 +1,11 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
-import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
     as feature_auth;
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
@@ -16,8 +18,6 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';

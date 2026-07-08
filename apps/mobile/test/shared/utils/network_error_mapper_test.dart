@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/shared/utils/error_codes.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
-import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
-import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
+import 'package:utilities/utilities.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

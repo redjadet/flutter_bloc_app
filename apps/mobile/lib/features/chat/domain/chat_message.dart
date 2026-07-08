@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 enum ChatAuthor { user, assistant, system }
 

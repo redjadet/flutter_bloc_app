@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/delayed_chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';

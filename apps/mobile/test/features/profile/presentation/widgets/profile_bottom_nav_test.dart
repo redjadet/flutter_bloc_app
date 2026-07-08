@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_bottom_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';

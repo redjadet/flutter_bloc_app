@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:go_router/go_router.dart';
 import 'package:utilities/utilities.dart';
 

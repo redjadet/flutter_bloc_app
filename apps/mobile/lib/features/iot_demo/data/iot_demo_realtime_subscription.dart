@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Subscribes to Supabase Realtime postgres_changes for table `iot_devices`.

@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Top-level background message handler for FCM.
 ///

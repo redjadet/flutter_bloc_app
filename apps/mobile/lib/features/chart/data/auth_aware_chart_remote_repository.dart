@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Selects Supabase, Firebase, or direct remote based on sign-in state.
 ///

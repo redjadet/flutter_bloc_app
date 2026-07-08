@@ -1,11 +1,10 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
+import 'package:storage/storage.dart';
 
 /// Stores chat history in encrypted platform storage.
 class SecureChatHistoryRepository implements ChatHistoryRepository {

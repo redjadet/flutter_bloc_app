@@ -1,11 +1,11 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_delete_repository.dart';
-import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
-import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:utilities/utilities.dart';
 
 class SupabaseCaseStudyRemoteDeleteRepository
     implements CaseStudyRemoteDeleteRepository {

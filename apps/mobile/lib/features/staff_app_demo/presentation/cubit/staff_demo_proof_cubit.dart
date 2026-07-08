@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
@@ -9,10 +11,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_submit_eligibility.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_state.dart';
-import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 part 'staff_demo_proof_cubit_submit.part.dart';
 

@@ -5,7 +5,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../../../../lib/shared/annotations/bloc_annotations.dart';
+import '../../../../lib/app/annotations/bloc_annotations.dart';
 
 /// Generates exhaustive switch helpers for sealed state classes
 class SealedStateSwitchGenerator

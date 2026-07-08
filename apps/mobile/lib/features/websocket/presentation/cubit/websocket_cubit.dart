@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class WebsocketCubit extends Cubit<WebsocketState>
     with CubitSubscriptionMixin<WebsocketState> {

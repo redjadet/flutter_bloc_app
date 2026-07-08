@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 import 'package:mix/mix.dart';
 
 /// Badge widget that displays the chart data source (Cache, Supabase, or Remote).

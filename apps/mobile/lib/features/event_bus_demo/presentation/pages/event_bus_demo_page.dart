@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:design_system/responsive.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/domain/event_bus_demo_events.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_listener_card.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_login_panel.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Interactive demo of the Event Bus pattern (login → home + notification).
 ///

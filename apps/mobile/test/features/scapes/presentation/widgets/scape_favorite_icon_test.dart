@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_favorite_icon.dart';
-import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

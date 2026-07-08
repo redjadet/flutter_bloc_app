@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Dio createMockDio(

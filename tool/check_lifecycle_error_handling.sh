@@ -6,11 +6,12 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+cd "$APP_ROOT"
 
 LIB_DIRS="lib/features lib/shared lib/app"
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$WORKSPACE_ROOT/tool/check_helpers.sh"
 
 FAILED=0
 

@@ -3,14 +3,15 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+# shellcheck disable=SC1091
+source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
+cd "$APP_ROOT"
 
 echo "🔍 Checking for raw jsonDecode/jsonEncode usage..."
 
 IGNORED=""
 
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$WORKSPACE_ROOT/tool/check_helpers.sh"
 
 # Use ripgrep if available, otherwise grep
 # Match "jsonDecode" or "jsonEncode" but exclude:
@@ -19,17 +20,17 @@ source "$PROJECT_ROOT/tool/check_helpers.sh"
 # - Generated files (*.g.dart, *.freezed.dart)
 # - Comments
 if command -v rg &> /dev/null; then
-  VIOLATIONS=$(rg -n "\\b(jsonDecode|jsonEncode)\\(" lib/features lib/core lib/app 2>/dev/null \
+  VIOLATIONS=$(rg -n "\\b(jsonDecode|jsonEncode)\\(" lib/features lib/app 2>/dev/null \
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    --glob "!lib/shared/utils/isolate_json.dart" \
+    --glob "!lib/app/utils/isolate_json.dart" \
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
-  VIOLATIONS=$(grep -rn "\\bjsonDecode(\\|\\bjsonEncode(" lib/features lib/core lib/app 2>/dev/null \
-    | grep -v "lib/shared/utils/isolate_json.dart" \
+  VIOLATIONS=$(grep -rn "\\bjsonDecode(\\|\\bjsonEncode(" lib/features lib/app 2>/dev/null \
+    | grep -v "lib/app/utils/isolate_json.dart" \
     | grep -v "/test/" \
     | grep -v "^[[:space:]]*//" \
     || true)
@@ -53,7 +54,7 @@ if [ -n "$VIOLATIONS" ]; then
   echo ""
   echo "For small payloads (<8KB), you may add: // check-ignore: small payload (<8KB)"
   echo "Examples of small payloads: request bodies, config files, error responses"
-  echo "See: lib/shared/utils/isolate_json.dart and docs/compute_isolate_review.md"
+  echo "See: lib/app/utils/isolate_json.dart and docs/compute_isolate_review.md"
   exit 1
 else
   echo "✅ No raw jsonDecode/jsonEncode usage found"

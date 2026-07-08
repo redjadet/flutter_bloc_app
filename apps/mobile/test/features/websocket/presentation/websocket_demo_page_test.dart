@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/shared/widgets/message_bubble.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

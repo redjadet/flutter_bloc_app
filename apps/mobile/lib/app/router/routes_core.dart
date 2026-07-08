@@ -1,15 +1,25 @@
+import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
+import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/chart_page.dart'
     deferred as chart_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/markdown_editor_page.dart'
     deferred as markdown_editor_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/core.dart';
-import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
-import 'package:flutter_bloc_app/core/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/deferred_page.dart';
+import 'package:flutter_bloc_app/app/widgets/diagnostics/graphql_cache_controls_section.dart';
+import 'package:flutter_bloc_app/app/widgets/diagnostics/profile_cache_controls_section.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/logged_out_page.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/profile_page.dart';
@@ -37,15 +47,8 @@ import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_gri
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
-import 'package:flutter_bloc_app/shared/widgets/diagnostics/graphql_cache_controls_section.dart';
-import 'package:flutter_bloc_app/shared/widgets/diagnostics/profile_cache_controls_section.dart';
 import 'package:go_router/go_router.dart';
+import 'package:storage/storage.dart';
 
 part 'routes_core.part.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/app_theme.dart';
+import 'package:flutter_bloc_app/app/theme/app_theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_details.dart';

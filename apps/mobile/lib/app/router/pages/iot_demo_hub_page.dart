@@ -1,7 +1,10 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/config/iot_ble_runtime_config.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';
@@ -11,9 +14,6 @@ import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.d
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_section.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_helpers.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_cloud_tab.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
 enum IotDemoHubTab { cloud, ble }
 

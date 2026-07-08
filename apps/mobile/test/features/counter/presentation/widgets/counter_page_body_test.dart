@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/constants/constants.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/responsive/responsive_scope.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

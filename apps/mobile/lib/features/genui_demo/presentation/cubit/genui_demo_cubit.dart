@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:genui/genui.dart' as genui;
 
 part 'genui_demo_cubit_handlers.part.dart';

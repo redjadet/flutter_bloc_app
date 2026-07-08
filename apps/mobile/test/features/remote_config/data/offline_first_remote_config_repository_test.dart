@@ -6,11 +6,9 @@ import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';

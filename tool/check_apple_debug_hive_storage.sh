@@ -7,14 +7,13 @@ set -euo pipefail
 
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"
-PROJECT_ROOT="$APP_ROOT"
-cd "$PROJECT_ROOT"
 
-SECRET_STORAGE="lib/shared/platform/secure_secret_storage.dart"
-HIVE_INIT="lib/shared/storage/hive_initializer_io.dart"
-HIVE_KEYS="lib/shared/storage/hive_key_manager.dart"
-SECRET_TEST="test/secure_secret_storage_test.dart"
-KEY_TEST="test/shared/storage/hive_key_manager_test.dart"
+SECRET_STORAGE="$WORKSPACE_ROOT/packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart"
+HIVE_INIT="$WORKSPACE_ROOT/packages/storage/lib/src/hive/hive_initializer_io.dart"
+HIVE_KEYS="$WORKSPACE_ROOT/packages/storage/lib/src/hive/hive_key_manager.dart"
+HIVE_INIT_WEB="$WORKSPACE_ROOT/packages/storage/lib/src/hive/hive_initializer_web.dart"
+SECRET_TEST="$APP_ROOT/test/secure_secret_storage_test.dart"
+KEY_TEST="$APP_ROOT/test/shared/storage/hive_key_manager_test.dart"
 
 fail() {
   echo "❌ $1"
@@ -32,7 +31,7 @@ require_pattern() {
 
 echo "🔍 Checking Apple debug Hive + secret-storage guards..."
 
-for f in "$SECRET_STORAGE" "$HIVE_INIT" "$HIVE_KEYS" "$SECRET_TEST" "$KEY_TEST"; do
+for f in "$SECRET_STORAGE" "$HIVE_INIT" "$HIVE_KEYS" "$SECRET_TEST" "$KEY_TEST" "$HIVE_INIT_WEB"; do
   [ -f "$f" ] || fail "Expected file missing: $f"
 done
 
@@ -67,8 +66,6 @@ require_pattern "$SECRET_STORAGE" 'useUnencryptedHiveBoxesInDebug' \
 require_pattern "$SECRET_STORAGE" 'useInMemoryHiveBoxesInDebug' \
   'useInMemoryHiveBoxesInDebug() web debug helper'
 
-HIVE_INIT_WEB="lib/shared/storage/hive_initializer_web.dart"
-[ -f "$HIVE_INIT_WEB" ] || fail "Expected file missing: $HIVE_INIT_WEB"
 require_pattern "$HIVE_INIT_WEB" 'hive_web_debug_v4' \
   'hive_web_debug_v4 IndexedDB namespace'
 

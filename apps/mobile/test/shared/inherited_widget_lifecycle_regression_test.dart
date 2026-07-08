@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/topic_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';

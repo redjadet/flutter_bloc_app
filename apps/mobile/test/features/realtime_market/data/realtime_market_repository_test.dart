@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_sna
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_helpers.dart' as test_helpers;

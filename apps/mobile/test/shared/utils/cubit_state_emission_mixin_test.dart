@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_state_emission_mixin.dart';
+import 'package:design_system/design_system.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/state_helpers.dart';
 
 void main() {
   group('StateHelpers', () {

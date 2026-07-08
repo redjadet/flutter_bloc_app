@@ -1,28 +1,29 @@
 import 'dart:async';
 
+import 'package:core/core.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/app_config.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/supabase_config_coordinator.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
 import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_state.dart';
-import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
-import 'package:flutter_bloc_app/core/config/supabase_config_coordinator.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/retry_snackbar_listener.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/responsive/responsive.dart';
-import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
-import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
-import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/retry_snackbar_listener.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:go_router/go_router.dart';
+import 'package:networking/networking.dart';
+import 'package:utilities/utilities.dart';
 
 class AppScope extends StatefulWidget {
   const AppScope({required this.router, super.key});

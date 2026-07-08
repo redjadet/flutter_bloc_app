@@ -1,4 +1,5 @@
 @Tags(['golden'])
+@TestOn('vm')
 library;
 
 import 'package:flutter/material.dart';

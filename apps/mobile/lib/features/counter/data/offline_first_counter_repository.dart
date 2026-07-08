@@ -1,15 +1,12 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository_registry.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:storage/storage.dart';
 
 class OfflineFirstCounterRepository
     implements CounterRepository, SyncableRepository {

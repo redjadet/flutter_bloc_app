@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_state.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
-import 'package:flutter_bloc_app/shared/utils/timer_handle_manager.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:utilities/utilities.dart';
 
 /// Helper class for managing Hive box watch subscriptions and stream emissions.
 ///

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_test/flutter_test.dart';

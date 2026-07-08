@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/auth/token_repository.dart';
-import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
+import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/data/supabase_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';

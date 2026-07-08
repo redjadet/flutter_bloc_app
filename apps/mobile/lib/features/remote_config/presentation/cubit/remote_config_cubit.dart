@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 export 'remote_config_state.dart';
 

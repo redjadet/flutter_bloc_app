@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/utils/state_transition_validator.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/state_transition_validator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

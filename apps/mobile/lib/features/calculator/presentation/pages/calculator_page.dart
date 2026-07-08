@@ -2,14 +2,14 @@ import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/constants/constants.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_cubit.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculator_state.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'calculator_page.freezed.dart';

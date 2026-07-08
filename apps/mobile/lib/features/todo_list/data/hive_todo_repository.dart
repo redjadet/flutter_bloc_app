@@ -1,15 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 part 'hive_todo_repository_migration.dart';
 

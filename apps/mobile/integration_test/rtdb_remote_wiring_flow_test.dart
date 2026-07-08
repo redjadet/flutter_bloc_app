@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';

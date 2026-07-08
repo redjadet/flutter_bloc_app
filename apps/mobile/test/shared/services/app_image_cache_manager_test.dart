@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

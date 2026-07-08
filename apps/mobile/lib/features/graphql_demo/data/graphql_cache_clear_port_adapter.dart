@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/diagnostics/graphql_cache_clear_port.dart';
+import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 
 class GraphqlCacheClearPortAdapter implements GraphqlCacheClearPort {

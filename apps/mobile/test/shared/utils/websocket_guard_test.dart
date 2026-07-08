@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/utils/websocket_guard.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

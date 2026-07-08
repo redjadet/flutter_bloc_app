@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_lint_helpers.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_lint_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

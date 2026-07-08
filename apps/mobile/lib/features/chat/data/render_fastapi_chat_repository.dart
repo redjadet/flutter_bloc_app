@@ -1,8 +1,9 @@
 import 'dart:math';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
@@ -11,8 +12,7 @@ import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_pr
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 part 'render_fastapi_chat_repository_send.part.dart';
 

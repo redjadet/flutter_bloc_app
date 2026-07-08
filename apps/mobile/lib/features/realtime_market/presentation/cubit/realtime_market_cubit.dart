@@ -1,14 +1,14 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/load_cached_market_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/reconnect_realtime_market.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/use_cases/watch_realtime_market.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class RealtimeMarketCubit extends Cubit<RealtimeMarketState>
     with CubitSubscriptionMixin<RealtimeMarketState> {

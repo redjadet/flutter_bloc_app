@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_transport_badge.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';

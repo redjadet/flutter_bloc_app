@@ -1,7 +1,7 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Builds a platform-adaptive text field for the todo editor dialog.
 Widget buildTodoTextField({

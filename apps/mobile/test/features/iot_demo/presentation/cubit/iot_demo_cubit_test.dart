@@ -8,8 +8,7 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/sync/syncable_repository.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const List<IotDevice> _fakeDevices = [

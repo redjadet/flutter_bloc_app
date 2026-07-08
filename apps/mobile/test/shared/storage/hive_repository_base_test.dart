@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:storage/storage.dart';
 import '../../test_helpers.dart' as test_helpers;
 
 void main() {

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 
 enum RouteAuthRequirement {
   publicRoute,

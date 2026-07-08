@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';

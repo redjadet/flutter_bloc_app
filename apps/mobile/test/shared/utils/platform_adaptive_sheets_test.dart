@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive_sheets.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
+import 'package:flutter_bloc_app/app/utils/platform_adaptive_sheets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

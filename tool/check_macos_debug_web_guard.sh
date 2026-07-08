@@ -3,8 +3,10 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+cd "$APP_ROOT"
 
 echo "🔍 Checking macOS debug fallback web guards..."
 

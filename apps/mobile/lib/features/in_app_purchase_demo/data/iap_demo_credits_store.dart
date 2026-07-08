@@ -1,6 +1,5 @@
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 abstract interface class IapDemoCreditsStore {
   Future<int> loadCredits();

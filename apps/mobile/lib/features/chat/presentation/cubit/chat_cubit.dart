@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -12,9 +15,6 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:utilities/utilities.dart';
 
 part 'chat_cubit_helpers.dart';

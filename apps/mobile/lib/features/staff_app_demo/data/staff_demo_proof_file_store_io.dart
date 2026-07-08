@@ -1,10 +1,10 @@
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:storage/storage.dart';
 
 class LocalStaffDemoProofFileStore implements StaffDemoProofFileStore {
   // ignore: avoid_unused_constructor_parameters - keeps DI parity with web.

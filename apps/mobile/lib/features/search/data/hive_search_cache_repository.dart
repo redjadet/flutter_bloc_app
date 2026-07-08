@@ -1,11 +1,8 @@
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 /// Hive-backed implementation of [SearchCacheRepository].
 ///

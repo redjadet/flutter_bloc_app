@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_video_mime.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'supabase_case_study_remote_repository_queries.part.dart';

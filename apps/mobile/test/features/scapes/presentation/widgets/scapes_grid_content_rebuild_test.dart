@@ -8,8 +8,8 @@ import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+import 'package:utilities/utilities.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

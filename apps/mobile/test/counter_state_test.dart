@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

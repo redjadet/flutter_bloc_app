@@ -77,7 +77,7 @@ app.*.map.json
 /apps/mobile/assets/config/secrets.json
 apps/mobile/android/app/google-services.json
 apps/mobile/ios/Runner/GoogleService-Info.plist
-apps/mobile/macos/Runner/GoogleService-Info.plist
+apps/other_platforms/macos/Runner/GoogleService-Info.plist
 # Legacy root paths (ignore accidental copies outside apps/mobile/)
 /android/
 /ios/

@@ -1,8 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
-import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class FirestoreStaffDemoPushTokenRepository
     implements StaffDemoPushTokenRepository {

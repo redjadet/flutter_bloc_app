@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 /// Cubit managing WalletConnect authentication state.
 class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {

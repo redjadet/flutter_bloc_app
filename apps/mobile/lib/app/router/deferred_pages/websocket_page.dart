@@ -7,7 +7,7 @@ library;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_cubit.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/pages/websocket_demo_page.dart';

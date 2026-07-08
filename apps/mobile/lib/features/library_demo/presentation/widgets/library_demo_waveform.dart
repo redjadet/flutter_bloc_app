@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 /// Waveform visualization for audio assets matching EPOCH design
 class LibraryWaveform extends StatelessWidget {

@@ -1,0 +1,38 @@
+import 'package:flutter_bloc_app/app/chat/render_orchestration_remote_token_port.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector_factories.dart';
+import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/offline_first_remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/render_orchestration_remote_token_adapter.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
+import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
+import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
+
+void registerRemoteConfigServices() {
+  registerLazySingletonIfAbsent<RemoteConfigRemoteDataSource>(
+    createRemoteConfigRemoteDataSource,
+    dispose: (final repository) => repository.dispose(),
+  );
+  registerLazySingletonIfAbsent<RemoteConfigCacheRepository>(
+    () => RemoteConfigCacheRepository(hiveService: getIt<HiveService>()),
+  );
+  registerLazySingletonIfAbsent<RemoteConfigService>(
+    () => OfflineFirstRemoteConfigRepository(
+      remoteRepository: getIt<RemoteConfigRemoteDataSource>(),
+      cacheRepository: getIt<RemoteConfigCacheRepository>(),
+      networkStatusService: getIt<NetworkStatusService>(),
+      registry: getIt<SyncableRepositoryRegistry>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<RemoteConfigCubit>(
+    () => RemoteConfigCubit(getIt<RemoteConfigService>()),
+  );
+  registerLazySingletonIfAbsent<RenderOrchestrationRemoteTokenPort>(
+    () => RemoteConfigRenderOrchestrationTokenAdapter(
+      remoteConfig: getIt<RemoteConfigService>(),
+    ),
+  );
+}

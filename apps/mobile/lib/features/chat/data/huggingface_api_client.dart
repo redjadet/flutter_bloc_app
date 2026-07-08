@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/network_guard.dart';
+import 'package:networking/networking.dart';
 
 typedef JsonMap = Map<String, dynamic>;
 

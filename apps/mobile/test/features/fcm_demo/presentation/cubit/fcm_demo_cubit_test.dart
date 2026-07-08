@@ -6,8 +6,7 @@ import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.d
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_status.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeFcmMessagingService implements FcmMessagingService {

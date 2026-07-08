@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Regression: Row+Icon+Text must use [IconLabelRow] (or Flexible/Expanded)

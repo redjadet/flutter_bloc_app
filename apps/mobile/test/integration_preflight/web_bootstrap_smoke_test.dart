@@ -1,7 +1,10 @@
+@TestOn('vm')
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../integration_test/test_harness.dart';

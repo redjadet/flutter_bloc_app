@@ -1,8 +1,7 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
 
 double _todoSortLabelFontSize(final BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 18.0);

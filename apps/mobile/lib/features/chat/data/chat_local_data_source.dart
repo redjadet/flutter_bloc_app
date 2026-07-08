@@ -1,9 +1,8 @@
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 /// Hive-backed implementation of [ChatHistoryRepository].
 ///

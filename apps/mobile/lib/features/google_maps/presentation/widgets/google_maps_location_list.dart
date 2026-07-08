@@ -1,7 +1,7 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
   const GoogleMapsLocationList({

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/shared/utils/navigation.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 

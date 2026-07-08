@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
-import 'package:flutter_bloc_app/shared/widgets/cached_network_image_widget.dart';
 import 'package:mix/mix.dart';
 
 String? _flagImageUrl(final String countryCode) {

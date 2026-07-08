@@ -6,9 +6,9 @@
 library;
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/features/google_maps/google_maps.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
 
 /// Builds the Google Maps sample page with lazy-loaded cubit initialization.
 ///

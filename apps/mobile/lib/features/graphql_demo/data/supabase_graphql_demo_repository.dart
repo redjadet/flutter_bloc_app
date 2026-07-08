@@ -1,16 +1,16 @@
-import 'package:flutter_bloc_app/core/auth/jwt_claims_reader.dart';
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_demo_exception_mapper.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/supabase_graphql_demo_parsers.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:utilities/utilities.dart';
 
 part 'supabase_graphql_demo_repository_impl.part.dart';
 

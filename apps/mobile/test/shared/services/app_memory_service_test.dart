@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/shared/services/app_memory_service.dart';
-import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
+import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

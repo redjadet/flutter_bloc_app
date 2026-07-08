@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_country_option.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_country_picker.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';

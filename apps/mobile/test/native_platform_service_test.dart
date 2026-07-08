@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 
 typedef MethodCallHandler = Future<dynamic> Function(MethodCall call);
 

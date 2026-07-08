@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_cubi
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_list_view.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -28,7 +28,7 @@ append_block() {
 }
 
 # --- Declarative known rules: PATH_PREFIX|PATTERN|HUMAN_LABEL ---
-KNOWN_RULES=$'lib/features/library_demo|package:flutter_bloc_app/features/scapes/|library_demo must not import scapes\nlib/features/settings|package:flutter_bloc_app/features/(graphql_demo|profile|remote_config)/|settings must not import graphql_demo, profile, or remote_config\nlib/features/remote_config|package:flutter_bloc_app/features/settings/|remote_config must not import settings (use lib/shared/widgets/)'
+KNOWN_RULES=$'lib/features/library_demo|package:flutter_bloc_app/features/scapes/|library_demo must not import scapes\nlib/features/settings|package:flutter_bloc_app/features/(graphql_demo|profile|remote_config)/|settings must not import graphql_demo, profile, or remote_config\nlib/features/remote_config|package:flutter_bloc_app/features/settings/|remote_config must not import settings (use design_system / app widgets)'
 
 if command -v rg &>/dev/null; then
   while IFS='|' read -r dir pattern label; do
@@ -48,7 +48,7 @@ if command -v rg &>/dev/null; then
     "^import ['\\\"]package:dio/"
     "^import ['\\\"]package:retrofit/"
     "^import ['\\\"]package:flutter_bloc_app/app/"
-    "^import ['\\\"]package:flutter_bloc_app/core/di/"
+    "^import ['\\\"]package:flutter_bloc_app/app/composition/"
     "^import ['\\\"]package:flutter_bloc_app/features/[^'\\\"]+/(presentation|data)/"
   )
   domain_msgs=(
@@ -104,7 +104,7 @@ else
       "package:dio/"
       "package:retrofit/"
       "package:flutter_bloc_app/app/"
-      "package:flutter_bloc_app/core/di/"
+      "package:flutter_bloc_app/app/composition/"
     )
     domain_msgs_grep=(
       "Domain: Flutter imports (use pure Dart in domain)"

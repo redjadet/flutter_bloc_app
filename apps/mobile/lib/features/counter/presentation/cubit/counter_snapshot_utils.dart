@@ -1,6 +1,6 @@
+import 'package:flutter_bloc_app/app/utils/bloc/state_restoration_mixin.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
-import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
 
 typedef RestorationResult = StateRestorationOutcome<CounterState>;
 

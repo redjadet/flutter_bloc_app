@@ -1,8 +1,8 @@
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 /// Hive-backed drafts and records for the case-study demo (dedicated box).
 class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
