@@ -10,6 +10,7 @@ Platform & toolchain
 [![style: very good analysis](https://img.shields.io/badge/Lint-very__good__analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 [![Custom lint](https://img.shields.io/badge/Lint-custom__lint%20%7C%20mix__lint-64748B.svg)](docs/CODE_QUALITY.md)
 [![License](https://img.shields.io/badge/License-Custom-lightgrey.svg)](LICENSE)
+[![melos](https://img.shields.io/badge/maintained%20with-melos-f700ff.svg?style=flat-square)](https://github.com/invertase/melos)
 
 CI, quality & supply chain
 
