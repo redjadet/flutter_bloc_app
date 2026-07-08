@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_local_video_exists.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_video_blob_lifecycle.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/case_study_video_controller_factory.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:video_player/video_player.dart';
 
 /// Inline video preview with lifecycle-safe controller ownership.

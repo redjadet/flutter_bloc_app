@@ -5,7 +5,6 @@ import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// Staff demo proof photo picking via [ImagePicker], isolated from presentation.
 class ImagePickerStaffDemoProofPhotoPicker
     implements StaffDemoProofPhotoPicker {
   ImagePickerStaffDemoProofPhotoPicker({final ImagePicker? picker})

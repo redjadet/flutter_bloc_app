@@ -4,7 +4,10 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
 
 SCOPE="${CHECK_ROW_ACTION_OVERFLOW_SCOPE:-primary}"
@@ -15,7 +18,7 @@ echo "🔍 Checking for Row+multi-button action overflow risk (OverflowBar, Wrap
 
 IGNORED=""
 
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$TOOL_DIR/check_helpers.sh"
 
 collect_primary_scope_files() {
   {
@@ -27,8 +30,8 @@ collect_primary_scope_files() {
     find lib/features -path '*/presentation/forms/*.dart' 2>/dev/null || true
     find lib/features -name '*actions_bar*.dart' 2>/dev/null || true
     find lib/features -name '*action_bar*.dart' 2>/dev/null || true
-    printf '%s\n' lib/shared/widgets/common_form_field.dart
-    printf '%s\n' lib/shared/widgets/responsive_action_bar.dart
+    printf '%s\n' "$WORKSPACE_ROOT/packages/design_system/lib/src/widgets/common_form_field.dart"
+    printf '%s\n' "$WORKSPACE_ROOT/packages/design_system/lib/src/widgets/responsive_action_bar.dart"
     printf '%s\n' lib/features/staff_app_demo/presentation/pages/staff_app_demo_forms_page.dart
   } | grep -vE '\.(g|freezed|gr)\.dart$' | sort -u
 }
@@ -184,8 +187,8 @@ if [ "$ALSO_ALL" = "1" ]; then
   fi
 fi
 
-if [ -f "$PROJECT_ROOT/tool/check_row_action_overflow_fixtures.sh" ]; then
-  bash "$PROJECT_ROOT/tool/check_row_action_overflow_fixtures.sh"
+if [ -f "$TOOL_DIR/check_row_action_overflow_fixtures.sh" ]; then
+  bash "$TOOL_DIR/check_row_action_overflow_fixtures.sh"
 fi
 
 exit 0

@@ -1,16 +1,15 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_bloc_app/app/firebase/realtime_database_guard.dart';
+import 'package:flutter_bloc_app/app/firebase/run_with_auth_user.dart';
+import 'package:flutter_bloc_app/app/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
-import 'package:flutter_bloc_app/shared/firebase/realtime_database_guard.dart';
-import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
-import 'package:flutter_bloc_app/shared/firebase/stream_with_auth_user.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 /// Firebase Realtime Database backed implementation of [TodoRepository].
 class RealtimeDatabaseTodoRepository

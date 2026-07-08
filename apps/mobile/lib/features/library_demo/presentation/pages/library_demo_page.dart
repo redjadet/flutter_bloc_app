@@ -1,8 +1,9 @@
 import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
-import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 class LibraryDemoPage extends StatefulWidget {
   const LibraryDemoPage({

@@ -1,8 +1,8 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_profile_firestore_map.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class FirestoreStaffDemoProfileRepository
     implements StaffDemoProfileRepository {

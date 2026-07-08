@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/shared/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:local_auth/local_auth.dart';
 
 void main() {

@@ -4,7 +4,7 @@
 # Usage:
 #   tool/check_regression_guards.sh
 #   CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh
-#   CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths lib/shared/utils/request_id_guard.dart
+#   CHECK_REGRESSION_GUARDS_MODE=auto tool/check_regression_guards.sh --paths packages/utilities/lib/src/request_id_guard.dart
 #
 # --paths overrides git-derived changed files in auto mode (fixture / local repro).
 
@@ -44,7 +44,7 @@ done
 
 ALL_TESTS=(
   "test/account_section_test.dart"
-  "test/core/bootstrap/bootstrap_coordinator_additional_test.dart"
+  "test/app/bootstrap/bootstrap_coordinator_additional_test.dart"
   "test/features/counter/presentation/pages/counter_page_snackbar_timeout_test.dart"
   "test/features/graphql_demo/data/graphql_demo_exception_mapper_test.dart"
   "test/features/graphql_demo/data/supabase_graphql_demo_repository_test.dart"
@@ -52,7 +52,7 @@ ALL_TESTS=(
   "test/features/profile/data/offline_first_profile_repository_test.dart"
   "test/features/supabase_auth/presentation/cubit/supabase_auth_cubit_test.dart"
   "test/app/presentation/cubit/app_auth_cubit_test.dart"
-  "test/core/auth/session_lifecycle_coordinator_test.dart"
+  "test/app/auth/session_lifecycle_coordinator_test.dart"
   "test/features/websocket/data/echo_websocket_repository_test.dart"
   "test/features/todo_list/presentation/widgets/todo_sync_banner_test.dart"
   "test/features/todo_list/data/offline_first_todo_repository_test.dart"
@@ -63,11 +63,11 @@ ALL_TESTS=(
   "test/shared/http/auth_token_manager_test.dart"
   "test/shared/http/retry_interceptor_test.dart"
   "test/shared/http/telemetry_interceptor_test.dart"
-  "test/core/di/register_http_services_test.dart"
+  "test/app/composition/register_http_services_test.dart"
   "test/core/supabase/edge_then_tables_test.dart"
   "test/shared/inherited_widget_lifecycle_regression_test.dart"
   "test/shared/widgets/sync_status_banner_test.dart"
-  "test/shared/sync/background_sync_coordinator_test.dart"
+  "../../packages/networking/test/sync/background_sync_coordinator_test.dart"
   "test/shared/widgets/row_overflow_regression_test.dart"
   "test/shared/widgets/action_bar_layout_regression_test.dart"
   "test/features/counter/data/offline_first_counter_repository_test.dart"
@@ -168,17 +168,23 @@ select_regression_guard_tests() {
         ;;
       lib/app/presentation/cubit/app_auth_cubit.dart|\
       lib/app/presentation/cubit/app_auth_state.dart|\
-      lib/core/auth/*|\
+      lib/app/auth/*|\
+      lib/app/composition/features/register_auth_services.dart|\
       test/app/presentation/cubit/app_auth_cubit_test.dart|\
-      test/core/auth/*)
+      test/app/auth/*)
         add_test_once out_ref "test/app/presentation/cubit/app_auth_cubit_test.dart"
-        add_test_once out_ref "test/core/auth/session_lifecycle_coordinator_test.dart"
+        add_test_once out_ref "test/app/auth/session_lifecycle_coordinator_test.dart"
         ;;
       lib/shared/*|\
+      lib/shared/media/*|\
       test/shared/*|\
-      lib/shared/sync/*|\
-      test/shared/sync/*|\
-      lib/core/*|\
+      lib/app/sync/*|\
+      test/app/sync/*|\
+      packages/networking/*|\
+      packages/storage/*|\
+      packages/design_system/*|\
+      lib/app/*|\
+      test/app/*|\
       test/core/*)
         out_ref=("${ALL_TESTS[@]}")
         return 0

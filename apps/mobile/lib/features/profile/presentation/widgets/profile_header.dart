@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({required this.user, super.key});

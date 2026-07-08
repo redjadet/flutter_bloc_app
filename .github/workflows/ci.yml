@@ -275,7 +275,7 @@ jobs:
           set -euo pipefail
           # Real files stay gitignored under Runner/; Xcode still references them for builds.
           cp apps/mobile/ios/ci/GoogleService-Info.plist apps/mobile/ios/Runner/GoogleService-Info.plist
-          cp apps/mobile/macos/ci/GoogleService-Info.plist apps/mobile/macos/Runner/GoogleService-Info.plist
+          cp apps/other_platforms/macos/ci/GoogleService-Info.plist apps/other_platforms/macos/Runner/GoogleService-Info.plist
 
       - name: Ensure iOS Simulator is booted
         id: simulator

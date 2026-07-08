@@ -90,7 +90,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $IotBleConnectionLifecycleCopyWith<$Res> get connectionLifecycle {
-
+  
   return $IotBleConnectionLifecycleCopyWith<$Res>(_self.connectionLifecycle, (value) {
     return _then(_self.copyWith(connectionLifecycle: value));
   });
@@ -233,7 +233,7 @@ return $default(_that.status,_that.useMockBle,_that.canToggleRealBle,_that.isSca
 
 class _IotBleState extends IotBleState {
   const _IotBleState({this.status = IotBleStatus.initial, this.useMockBle = true, this.canToggleRealBle = false, this.isScanning = false, this.scanTimeout = const Duration(seconds: 30), this.adapterStatus, final  List<BleDiscoveredDevice> devices = const <BleDiscoveredDevice>[], this.connectionLifecycle = const IotBleConnectionLifecycle.idle(), final  List<BleService> services = const <BleService>[], this.selectedCharacteristic, final  List<int>? lastReadValue, this.isSubscribed = false, final  List<BleLogEntry> logs = const <BleLogEntry>[], final  List<ClassicBtDevice> classicDevices = const <ClassicBtDevice>[], this.selectedClassicDeviceId, final  List<ClassicBtMessage> classicMessages = const <ClassicBtMessage>[], this.errorCode, this.errorDetail}): _devices = devices,_services = services,_lastReadValue = lastReadValue,_logs = logs,_classicDevices = classicDevices,_classicMessages = classicMessages,super._();
-
+  
 
 @override@JsonKey() final  IotBleStatus status;
 @override@JsonKey() final  bool useMockBle;
@@ -368,7 +368,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $IotBleConnectionLifecycleCopyWith<$Res> get connectionLifecycle {
-
+  
   return $IotBleConnectionLifecycleCopyWith<$Res>(_self.connectionLifecycle, (value) {
     return _then(_self.copyWith(connectionLifecycle: value));
   });

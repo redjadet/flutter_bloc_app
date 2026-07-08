@@ -1,18 +1,19 @@
+import 'package:design_system/design_system.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/config/backend_availability.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_error_messages.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_body.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/widgets/backend_disabled_banner.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
 
 /// Cloud IoT tab content extracted for the IoT demo hub (no BLE imports).
 class IotDemoCloudTab extends StatefulWidget {

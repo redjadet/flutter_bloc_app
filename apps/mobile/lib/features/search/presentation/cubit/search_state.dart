@@ -1,5 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'search_state.freezed.dart';

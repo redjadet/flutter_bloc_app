@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 class SharedPreferencesLocaleRepository implements LocaleRepository {
   SharedPreferencesLocaleRepository([final SharedPreferences? instance])

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_failure.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 import 'package:utilities/utilities.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {

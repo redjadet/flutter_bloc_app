@@ -1,11 +1,10 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/utils/context_utils.dart';
+import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_formatters.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/context_utils.dart';
-import 'package:flutter_bloc_app/shared/utils/navigation.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 import 'package:intl/intl.dart';
 
 part 'calculator_rate_selector_dialog.dart';

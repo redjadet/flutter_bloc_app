@@ -6,7 +6,7 @@
 library;
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/pages/chart_page.dart';
 

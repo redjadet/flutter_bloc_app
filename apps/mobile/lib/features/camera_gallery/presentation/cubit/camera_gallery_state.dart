@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'camera_gallery_state.freezed.dart';

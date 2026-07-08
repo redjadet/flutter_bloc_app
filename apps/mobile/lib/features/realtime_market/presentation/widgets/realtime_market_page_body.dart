@@ -1,5 +1,6 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
@@ -11,8 +12,6 @@ import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/m
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/order_book_panel.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/recent_trades_panel.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 part 'realtime_market_page_body.part.dart';
 

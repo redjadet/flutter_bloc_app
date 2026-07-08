@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:meta/meta.dart';
 
 /// Deep link service backed by the `app_links` plugin.

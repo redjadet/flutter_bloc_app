@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/theme/mix_app_theme.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
-import 'package:flutter_bloc_app/shared/responsive/responsive_scope.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

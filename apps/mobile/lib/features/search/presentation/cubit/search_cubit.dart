@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 import 'package:utilities/utilities.dart';
 
 class SearchCubit extends Cubit<SearchState>

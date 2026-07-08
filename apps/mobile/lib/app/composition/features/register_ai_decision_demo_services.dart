@@ -1,0 +1,15 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_api_client.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_repository.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
+
+void registerAiDecisionDemoServices() {
+  registerLazySingletonIfAbsent<AiDecisionApiClient>(
+    () => AiDecisionApiClient(dio: getIt<Dio>()),
+  );
+  registerLazySingletonIfAbsent<AiDecisionRepository>(
+    () => AiDecisionRepositoryImpl(api: getIt<AiDecisionApiClient>()),
+  );
+}

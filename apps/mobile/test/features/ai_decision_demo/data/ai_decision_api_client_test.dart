@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_api_client.dart';
-import 'package:flutter_bloc_app/shared/utils/http_request_failure.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Dio _mockDio({

@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

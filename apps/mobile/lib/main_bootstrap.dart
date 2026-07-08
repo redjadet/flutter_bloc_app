@@ -1,8 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/core/bootstrap/app_version_service.dart';
-import 'package:flutter_bloc_app/core/bootstrap/bootstrap_coordinator.dart';
-import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/app/bootstrap/app_version_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/bootstrap_coordinator.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_background_handler.dart';
 
 void Function() ensureBootstrapBindingInitialized =

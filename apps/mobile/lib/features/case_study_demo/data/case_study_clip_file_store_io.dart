@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:storage/storage.dart';
 
 /// Persists picked videos under app documents for stable paths across restarts.
 class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {

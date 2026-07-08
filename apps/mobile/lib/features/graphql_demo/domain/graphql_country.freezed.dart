@@ -208,7 +208,7 @@ return $default(_that.code,_that.name);case _:
 
 class _GraphqlContinent implements GraphqlContinent {
   const _GraphqlContinent({required this.code, required this.name});
-
+  
 
 @override final  String code;
 @override final  String name;
@@ -338,7 +338,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $GraphqlContinentCopyWith<$Res> get continent {
-
+  
   return $GraphqlContinentCopyWith<$Res>(_self.continent, (value) {
     return _then(_self.copyWith(continent: value));
   });
@@ -481,7 +481,7 @@ return $default(_that.code,_that.name,_that.continent,_that.capital,_that.curren
 
 class _GraphqlCountry implements GraphqlCountry {
   const _GraphqlCountry({required this.code, required this.name, required this.continent, this.capital, this.currency, this.emoji});
-
+  
 
 @override final  String code;
 @override final  String name;
@@ -554,7 +554,7 @@ as String?,
 @override
 @pragma('vm:prefer-inline')
 $GraphqlContinentCopyWith<$Res> get continent {
-
+  
   return $GraphqlContinentCopyWith<$Res>(_self.continent, (value) {
     return _then(_self.copyWith(continent: value));
   });

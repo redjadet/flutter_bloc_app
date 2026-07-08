@@ -1,13 +1,20 @@
+import 'package:core/core.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_online_therapy_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_staff_app_demo.dart';
-import 'package:flutter_bloc_app/core/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/config/backend_availability.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/ai_decision_demo.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_repository.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/presentation/cubit/ai_decision_cubit.dart';
@@ -45,14 +52,9 @@ import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/shared/sync/background_sync_coordinator.dart';
-import 'package:flutter_bloc_app/shared/sync/pending_sync_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 import 'package:go_router/go_router.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 part 'routes_demos.part.dart';
 

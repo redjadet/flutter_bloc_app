@@ -15,16 +15,14 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staf
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_state.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../../../../integration_test/test_helpers_bridge.dart'
-    as test_helpers;
+import '../../../../support/hive_test_helpers.dart' as test_helpers;
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 

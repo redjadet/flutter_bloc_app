@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';

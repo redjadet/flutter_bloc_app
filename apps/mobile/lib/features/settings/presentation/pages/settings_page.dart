@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:auth/auth.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 /// Optional QA/dev-only sections (cache diagnostics, remote config, etc.).
 /// Built in [lib/app/router/routes_core.dart] so settings stays decoupled from

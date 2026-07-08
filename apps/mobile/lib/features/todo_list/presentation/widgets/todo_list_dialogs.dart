@@ -1,11 +1,10 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialog_content.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/utils/navigation.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 export 'todo_list_delete_dialogs.dart';
 

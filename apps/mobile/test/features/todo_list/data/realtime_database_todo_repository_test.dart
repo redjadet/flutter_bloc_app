@@ -5,7 +5,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/realtime_database_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

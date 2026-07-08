@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_content_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class StaffDemoContentCubit extends Cubit<StaffDemoContentState> {
   StaffDemoContentCubit({required this._repository})

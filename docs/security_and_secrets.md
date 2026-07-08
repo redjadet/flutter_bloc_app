@@ -142,7 +142,7 @@ Firebase config is split between **gitignored platform files** and a
 | --- | --- | --- | --- |
 | `apps/mobile/android/app/google-services.json` | gitignored | [`android/app/google-services.json.sample`](../apps/mobile/android/app/google-services.json.sample) | Local / CI secret injection |
 | `apps/mobile/ios/Runner/GoogleService-Info.plist` | gitignored | [`ios/Runner/GoogleService-Info.plist.sample`](../apps/mobile/ios/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
-| `apps/mobile/macos/Runner/GoogleService-Info.plist` | gitignored | [`macos/Runner/GoogleService-Info.plist.sample`](../apps/mobile/macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
+| `apps/other_platforms/macos/Runner/GoogleService-Info.plist` | gitignored | [`apps/other_platforms/macos/Runner/GoogleService-Info.plist.sample`](../apps/other_platforms/macos/Runner/GoogleService-Info.plist.sample) | Local / CI secret injection |
 | `firebase.json` | gitignored | [`firebase.json.example`](../firebase.json.example) | Local / CI project selection |
 | [`apps/mobile/lib/firebase_options.dart`](../apps/mobile/lib/firebase_options.dart) | committed placeholder | n/a | `FIREBASE_*` via `--dart-define` (`.envrc` + direnv) |
 | `.envrc` | gitignored | [`docs/envrc.example`](envrc.example) | Maintainer machine only |

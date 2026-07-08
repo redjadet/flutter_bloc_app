@@ -1,9 +1,9 @@
-import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
-import 'package:flutter_bloc_app/core/config/app_runtime_config.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/core/flavor.dart';
+import 'package:flutter_bloc_app/app/chat/render_orchestration_remote_token_port.dart';
+import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,14 +1,13 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// [CameraGalleryRepository] implementation using the image_picker plugin.
 class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
   ImagePickerCameraGalleryRepository({
     final ImagePicker? picker,

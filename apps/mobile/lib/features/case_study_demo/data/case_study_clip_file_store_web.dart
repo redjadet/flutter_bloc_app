@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_bytes_memory.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 /// Web implementation storing clip bytes in memory and Hive with virtual paths.
 class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {

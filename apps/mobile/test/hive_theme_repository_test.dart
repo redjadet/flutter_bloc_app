@@ -1,7 +1,6 @@
 import 'package:flutter_bloc_app/features/settings/data/hive_theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

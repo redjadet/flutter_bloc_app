@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_app_bar.dart';
-import 'package:flutter_bloc_app/shared/widgets/root_aware_back_button.dart';
+import 'package:flutter_bloc_app/app/widgets/common_app_bar.dart';
+import 'package:flutter_bloc_app/app/widgets/root_aware_back_button.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

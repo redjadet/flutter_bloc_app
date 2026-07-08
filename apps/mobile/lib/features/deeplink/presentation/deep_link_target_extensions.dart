@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
 
 extension DeepLinkTargetLocationX on DeepLinkTarget {

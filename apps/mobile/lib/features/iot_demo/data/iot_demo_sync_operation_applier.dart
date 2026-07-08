@@ -1,11 +1,11 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/offline_first_iot_demo_repository.dart'
     show OfflineFirstIotDemoRepository;
 import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 /// Applies a single IoT demo sync operation payload to the remote repository.
 ///

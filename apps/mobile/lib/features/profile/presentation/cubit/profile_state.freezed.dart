@@ -188,7 +188,7 @@ return error(_that.failure);case _:
 
 class ProfileInitial extends ProfileState {
   const ProfileInitial(): super._();
-
+  
 
 
 
@@ -220,7 +220,7 @@ String toString() {
 
 class ProfileLoading extends ProfileState {
   const ProfileLoading(): super._();
-
+  
 
 
 
@@ -252,7 +252,7 @@ String toString() {
 
 class ProfileReady extends ProfileState {
   const ProfileReady(this.user): super._();
-
+  
 
  final  ProfileUser user;
 
@@ -315,7 +315,7 @@ as ProfileUser,
 @override
 @pragma('vm:prefer-inline')
 $ProfileUserCopyWith<$Res> get user {
-
+  
   return $ProfileUserCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
   });
@@ -327,7 +327,7 @@ $ProfileUserCopyWith<$Res> get user {
 
 class ProfileError extends ProfileState {
   const ProfileError(this.failure): super._();
-
+  
 
  final  ProfileFailure failure;
 
@@ -390,7 +390,7 @@ as ProfileFailure,
 @override
 @pragma('vm:prefer-inline')
 $ProfileFailureCopyWith<$Res> get failure {
-
+  
   return $ProfileFailureCopyWith<$Res>(_self.failure, (value) {
     return _then(_self.copyWith(failure: value));
   });

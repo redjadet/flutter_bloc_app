@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/core/diagnostics/remote_config_diagnostics_view_data.dart';
+import 'package:flutter_bloc_app/app/diagnostics/remote_config_diagnostics_view_data.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_state.dart';
 
 /// Maps feature [RemoteConfigState] to core diagnostics view data for shared UI.

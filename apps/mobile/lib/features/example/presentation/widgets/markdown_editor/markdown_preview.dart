@@ -1,6 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 /// Preview component that renders markdown using a custom RenderObject.
 class MarkdownPreview extends StatelessWidget {

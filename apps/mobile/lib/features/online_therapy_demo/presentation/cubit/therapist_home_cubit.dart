@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 class TherapistHomeState {
   const TherapistHomeState({

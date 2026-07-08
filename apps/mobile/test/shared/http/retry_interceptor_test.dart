@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_bloc_app/shared/http/interceptors/retry_interceptor.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _SequenceAdapter implements HttpClientAdapter {

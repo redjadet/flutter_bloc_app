@@ -13,8 +13,8 @@ namespace. Migrations run **on box open**, not on a timer or background job.
 ### Trigger path
 
 1. Repository extends `HiveRepositoryBase` and overrides `schema` with a
-   non-null [`HiveBoxSchema`](../../apps/mobile/lib/shared/storage/hive_schema_migration.dart)
-   (fingerprint from `apps/mobile/lib/shared/storage/hive_schema_fingerprints.g.dart`).
+   non-null [`HiveBoxSchema`](../../packages/storage/lib/src/hive/hive_schema_migration.dart)
+   (fingerprint from `packages/storage/lib/src/hive/hive_schema_fingerprints.g.dart`).
 2. Any normal read/write path calls `getBox()` → `HiveService.openBoxAndRun`
    (per-box lock) → `HiveSchemaMigratorService.ensureSchema` on that open.
 
@@ -116,7 +116,7 @@ Each entry needs:
   including repository files, DTO/domain files, and migration part files.
 
 Generated fingerprints live in
-`apps/mobile/lib/shared/storage/hive_schema_fingerprints.g.dart`.
+`packages/storage/lib/src/hive/hive_schema_fingerprints.g.dart`.
 
 Regenerate:
 

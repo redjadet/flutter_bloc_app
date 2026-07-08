@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/data/wallet_user_pr
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_auth_repository_impl.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_service.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

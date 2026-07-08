@@ -1,9 +1,9 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Fetches chart trending data directly from CoinGecko (used when Supabase
 /// is not configured or user is not signed in).

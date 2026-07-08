@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_target.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_cubit.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_state.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

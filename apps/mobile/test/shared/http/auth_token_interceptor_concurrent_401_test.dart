@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc_app/shared/http/app_dio.dart';
-import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:flutter_bloc_app/app/http/app_dio.dart';
+import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
+import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

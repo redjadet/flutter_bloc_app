@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/logged_out_action_buttons.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:design_system/design_system.dart';

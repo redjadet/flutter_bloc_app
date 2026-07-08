@@ -1,7 +1,6 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
-import 'package:flutter_bloc_app/shared/widgets/cached_network_image_widget.dart';
-import 'package:flutter_bloc_app/shared/widgets/resilient_svg_asset_image.dart';
 
 class ChatContactAvatar extends StatelessWidget {
   const ChatContactAvatar({

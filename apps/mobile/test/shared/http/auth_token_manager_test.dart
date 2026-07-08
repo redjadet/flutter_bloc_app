@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc_app/shared/http/auth_token_manager.dart';
+import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/chart/data/auth_aware_chart_remote_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Tries [fallback] (e.g. CoinGecko) when Edge / Cloud Function did not return
 /// usable points.

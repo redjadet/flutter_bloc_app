@@ -1,8 +1,11 @@
-import 'package:flutter_bloc_app/core/bootstrap/supabase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+@TestOn('vm')
+library;
+
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

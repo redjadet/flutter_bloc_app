@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 /// Maps Render/FastAPI + Dio failures to [ChatRemoteFailureException] (`isEdge: false`).
 ChatRemoteFailureException mapRenderChatFailure(final Object error) {

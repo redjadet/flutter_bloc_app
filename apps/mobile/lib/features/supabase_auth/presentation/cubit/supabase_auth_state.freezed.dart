@@ -212,7 +212,7 @@ return notConfigured();case _:
 
 class _Initial implements SupabaseAuthState {
   const _Initial();
-
+  
 
 
 
@@ -374,7 +374,7 @@ String toString() {
 
 class _SessionExpired implements SupabaseAuthState {
   const _SessionExpired(this.reason);
-
+  
 
  final  SessionInvalidationReason reason;
 

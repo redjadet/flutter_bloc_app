@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
 
 /// Cubit for the iGaming demo lobby: loads and displays virtual balance.
 class LobbyCubit extends Cubit<LobbyState> {

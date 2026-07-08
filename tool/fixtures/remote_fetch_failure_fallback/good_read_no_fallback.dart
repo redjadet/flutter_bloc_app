@@ -1,4 +1,4 @@
-import 'package:flutter_bloc_app/shared/firebase/run_with_auth_user.dart';
+import 'package:flutter_bloc_app/app/firebase/run_with_auth_user.dart';
 
 class _GoodRemoteTodoRepository {
   Future<List<String>> fetchAll() async => _executeForUser<List<String>>(

@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.d
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/services/network_status_service.dart';
+import 'package:networking/networking.dart';
 
 bool _defaultAllowLocalFallback() => false;
 

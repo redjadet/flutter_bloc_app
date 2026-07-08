@@ -1,14 +1,20 @@
 // check-ignore: nonbuilder_lists - ScapesGridView is a custom widget, not GridView constructor
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
-import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
 
 class ScapesPage extends StatelessWidget {
   const ScapesPage({

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:genui/genui.dart' as genui;
 import 'package:genui_google_generative_ai/genui_google_generative_ai.dart';
 

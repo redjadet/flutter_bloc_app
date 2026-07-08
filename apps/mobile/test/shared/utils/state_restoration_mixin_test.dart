@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/shared/utils/state_restoration_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/state_restoration_mixin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

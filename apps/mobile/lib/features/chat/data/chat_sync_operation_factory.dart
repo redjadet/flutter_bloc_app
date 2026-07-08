@@ -1,6 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_payload.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 
 class ChatSyncOperationFactory {

@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_bloc_app/core/constants/constants.dart';
-import 'package:flutter_bloc_app/core/platform_init.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
+import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:window_manager/window_manager.dart';
 

@@ -1,9 +1,9 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
-import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 
 /// Dev-only diagnostics for why Render/FastAPI orchestration may be skipped.
 void logChatRenderOrchestrationIfDebug(final String tag) {

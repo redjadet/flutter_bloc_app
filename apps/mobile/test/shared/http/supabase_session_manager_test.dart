@@ -1,6 +1,6 @@
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
-import 'package:flutter_bloc_app/shared/http/supabase_session_manager.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 

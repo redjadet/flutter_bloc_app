@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphq
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/pages/graphql_demo_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubGraphqlDemoRepository implements GraphqlDemoRepository {

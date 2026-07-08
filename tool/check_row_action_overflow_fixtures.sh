@@ -3,10 +3,9 @@
 
 set -euo pipefail
 
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_ROOT"
-
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_ROOT="$(cd "$TOOL_DIR/.." && pwd)"
+cd "$WORKSPACE_ROOT"
 
 scan_file() {
   local file="$1"
@@ -58,9 +57,9 @@ scan_file() {
   ' "$file"
 }
 
-BAD_FILE="tool/fixtures/action_row/bad_row_two_buttons.dart"
-GOOD_FILE="tool/fixtures/action_row/good_overflow_bar.dart"
-GOOD_DUAL_FILE="tool/fixtures/action_row/good_dual_cta_responsive.dart"
+BAD_FILE="$WORKSPACE_ROOT/tool/fixtures/action_row/bad_row_two_buttons.dart"
+GOOD_FILE="$WORKSPACE_ROOT/tool/fixtures/action_row/good_overflow_bar.dart"
+GOOD_DUAL_FILE="$WORKSPACE_ROOT/tool/fixtures/action_row/good_dual_cta_responsive.dart"
 
 bad_out=$(scan_file "$BAD_FILE" || true)
 if [ -z "$bad_out" ]; then

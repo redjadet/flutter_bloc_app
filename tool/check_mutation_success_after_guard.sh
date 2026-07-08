@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Fail: after a successful mutation, return false when RequestIdGuard is inactive.
 set -euo pipefail
-PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+TOOL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$TOOL_DIR/workspace_paths.sh"
+PROJECT_ROOT="$APP_ROOT"
 cd "$PROJECT_ROOT"
-source "$PROJECT_ROOT/tool/check_helpers.sh"
+source "$TOOL_DIR/check_helpers.sh"
 
 echo "🔍 Checking mutation success after request-id guard supersession..."
 

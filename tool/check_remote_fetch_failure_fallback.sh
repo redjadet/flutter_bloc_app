@@ -56,8 +56,11 @@ should_run_auto() {
   for file in "${changed_files[@]}"; do
     case "$file" in
       lib/features/*/data/*|\
-      lib/shared/firebase/*|\
+      apps/mobile/lib/features/*/data/*|\
+      lib/app/firebase/*|\
+      apps/mobile/lib/app/firebase/*|\
       test/features/*/data/*offline_first*|\
+      apps/mobile/test/features/*/data/*offline_first*|\
       test/features/*/data/realtime_*|\
       tool/check_remote_fetch_failure_fallback.*|\
       docs/offline_first/*|\
@@ -70,7 +73,7 @@ should_run_auto() {
   return 1
 }
 
-scan_paths=("lib")
+scan_paths=("apps/mobile/lib/features" "apps/mobile/lib/app/firebase")
 explicit_paths=0
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then

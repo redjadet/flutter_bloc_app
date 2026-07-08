@@ -1,5 +1,7 @@
-import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
+@TestOn('vm')
+library;
+
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../integration_test/test_harness_log_filtering.dart'
@@ -53,7 +55,7 @@ void main() {
     });
 
     test('ignores Apple debug Remote Config Keychain noise', () {
-      final AppLogEntry keychainWarning = AppLogEntry(
+      const AppLogEntry keychainWarning = AppLogEntry(
         level: AppLogLevel.warning,
         message:
             '${IntegrationLogMessages.remoteConfigForceFetchDisabledPrefix}. '

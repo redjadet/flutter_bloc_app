@@ -8,8 +8,8 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:auth/auth.dart' hide AuthRepository;
-import 'package:flutter_bloc_app/core/di/injector.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';

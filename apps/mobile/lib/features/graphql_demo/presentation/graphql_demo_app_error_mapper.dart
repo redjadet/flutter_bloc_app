@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
+import 'package:utilities/utilities.dart';
 
 AppError graphqlDemoAppErrorFromException(
   final GraphqlDemoException exception,

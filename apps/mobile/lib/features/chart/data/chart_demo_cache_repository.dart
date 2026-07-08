@@ -1,9 +1,8 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_cache_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:storage/storage.dart';
 
 class ChartDemoCacheRepository extends HiveRepositoryBase
     implements ChartCacheRepository {

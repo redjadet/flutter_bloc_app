@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/game_round_result.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/game_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
 
 /// Duration of the spin animation before the round result is resolved.
 const Duration kSpinAnimationDuration = Duration(milliseconds: 2500);

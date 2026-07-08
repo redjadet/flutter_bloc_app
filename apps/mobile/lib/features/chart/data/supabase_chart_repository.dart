@@ -1,13 +1,13 @@
-import 'package:flutter_bloc_app/core/supabase/edge_then_tables.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/supabase/edge_then_tables.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_live_direct_fallback.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_points_parser.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:utilities/utilities.dart';
 
 class SupabaseChartRepository implements ChartRemoteRepository {
   SupabaseChartRepository({

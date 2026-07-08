@@ -1,16 +1,28 @@
 import 'dart:async';
 
 import 'package:confetti/confetti.dart';
+import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
+import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
+import 'package:flutter_bloc_app/app/theme/theme.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
+import 'package:flutter_bloc_app/app/utils/context_utils.dart';
+import 'package:flutter_bloc_app/app/utils/error_handling.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
-import 'package:flutter_bloc_app/shared/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_context_extensions.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:go_router/go_router.dart';
+import 'package:utilities/utilities.dart';
 
 part 'counter_page_content.dart';
 part 'counter_page_listeners.part.dart';

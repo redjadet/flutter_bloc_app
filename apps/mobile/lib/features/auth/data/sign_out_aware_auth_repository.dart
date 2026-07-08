@@ -1,5 +1,5 @@
 import 'package:auth/auth.dart' hide AuthRepository;
-import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 
 /// Decorator that runs session cleanup after explicit [signOut].

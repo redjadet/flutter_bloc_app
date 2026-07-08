@@ -2,6 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/utils/date_time_formatting.dart';
+import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
@@ -11,16 +15,12 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/therapist_home_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_dependencies.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_scope.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/date_time_formatting.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_page_layout.dart';
 
+part 'online_therapy_demo_shell_admin.part.dart';
 part 'online_therapy_demo_shell_client_details.part.dart';
 part 'online_therapy_demo_shell_client_part.dart';
 part 'online_therapy_demo_shell_controls.part.dart';
 part 'online_therapy_demo_shell_messaging_call.part.dart';
-part 'online_therapy_demo_shell_admin.part.dart';
 part 'online_therapy_demo_shell_therapist_admin_part.dart';
 
 /// Sidebar width for wide online-therapy demo split layouts.

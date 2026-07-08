@@ -1,6 +1,5 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class RegisterTermsSection extends StatelessWidget {
   const RegisterTermsSection({

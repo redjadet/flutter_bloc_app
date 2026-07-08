@@ -1,7 +1,6 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
-import 'package:flutter_bloc_app/shared/widgets/app_message.dart';
 
 class ChartMessageList extends StatelessWidget {
   const ChartMessageList({required this.message, super.key});

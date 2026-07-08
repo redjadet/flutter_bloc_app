@@ -1,8 +1,8 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 
 /// An interactive whiteboard widget using CustomPainter for low-level rendering.
 ///

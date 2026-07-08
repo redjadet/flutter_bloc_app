@@ -1,0 +1,86 @@
+import 'dart:async';
+
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:get_it/get_it.dart';
+
+/// When true, [createRemoteRepositoryOrNull] returns null so Realtime DB
+/// remotes are not wired. The integration harness sets this: plugin-backed
+/// `FirebaseAuth.instanceFor(app)` does not use GetIt-registered mock auth, so
+/// RTDB watch streams time out and fail the integration log gate.
+bool integrationTestOmitFirebaseRemoteRepositories = false;
+
+/// Helper function to register a lazy singleton if it's not already registered.
+///
+/// This prevents duplicate registrations and allows safe re-registration
+/// during testing or hot reload scenarios.
+void registerLazySingletonIfAbsent<T extends Object>(
+  final T Function() factory, {
+  final FutureOr<void> Function(T instance)? dispose,
+}) {
+  final GetIt getIt = GetIt.instance;
+  if (!getIt.isRegistered<T>()) {
+    getIt.registerLazySingleton<T>(factory, dispose: dispose);
+  }
+}
+
+/// Creates a remote repository with Firebase error handling.
+///
+/// Returns null if Firebase is not available or if creation fails.
+/// Logs errors appropriately for debugging.
+///
+/// **Usage:**
+/// ```dart
+/// final remoteRepo = createRemoteRepositoryOrNull(
+///   context: 'CounterRepository',
+///   factory: () {
+///     final app = Firebase.app();
+///     final database = FirebaseDatabase.instanceFor(app: app);
+///     final auth = FirebaseAuth.instanceFor(app: app);
+///     return RealtimeDatabaseCounterRepository(database: database, auth: auth);
+///   },
+/// );
+/// ```
+T? createRemoteRepositoryOrNull<T>({
+  required final String context,
+  required final T Function() factory,
+}) {
+  if (shouldSkipFirebaseRemoteRepositories) {
+    return null;
+  }
+  // coverage:ignore-start
+  try {
+    if (Firebase.apps.isEmpty) {
+      return null;
+    }
+    return factory();
+  } on Object catch (error, stackTrace) {
+    AppLogger.error(
+      'Creating remote $context failed',
+      error,
+      stackTrace,
+    );
+    return null;
+  }
+  // coverage:ignore-end
+}
+
+@visibleForTesting
+bool get shouldSkipFirebaseRemoteRepositories =>
+    _shouldSkipFirebaseRemoteRepositoriesInDebug ||
+    integrationTestOmitFirebaseRemoteRepositories;
+
+/// Omits RTDB remotes on macOS debug (Keychain) and iOS simulator debug when
+/// the app uses a local-only guest without a Firebase Auth session.
+bool get _shouldSkipFirebaseRemoteRepositoriesInDebug {
+  if (kIsWeb || kReleaseMode) {
+    return false;
+  }
+  if (defaultTargetPlatform == TargetPlatform.macOS) {
+    return true;
+  }
+  return defaultTargetPlatform == TargetPlatform.iOS &&
+      FirebaseBootstrapService.isIosSimulatorInDebug;
+}

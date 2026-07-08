@@ -1,10 +1,10 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
-import 'package:flutter_bloc_app/shared/services/app_memory_trim_level.dart';
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 import 'package:meta/meta.dart';
+import 'package:utilities/utilities.dart';
 
 class HttpChartRepository extends ChartRepository {
   HttpChartRepository({

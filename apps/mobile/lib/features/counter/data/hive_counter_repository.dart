@@ -4,13 +4,10 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_h
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_helper.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_fingerprints.g.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_schema_migration.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
+import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 part 'hive_counter_repository_migration.dart';
 

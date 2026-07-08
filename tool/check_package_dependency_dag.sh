@@ -24,12 +24,13 @@ packages_dir = workspace_root / "packages"
 # Allowed path dependency targets per package name (workspace libraries only).
 ALLOWED: dict[str, frozenset[str]] = {
     "ai": frozenset({"core", "utilities"}),
+    "app_shared_flutter": frozenset({"core"}),
     "auth": frozenset({"core", "utilities"}),
     "core": frozenset(),
-    "design_system": frozenset({"core", "utilities"}),
+    "design_system": frozenset({"app_shared_flutter", "core", "utilities"}),
     "feature_flags": frozenset({"core", "utilities"}),
-    "networking": frozenset({"core", "utilities"}),
-    "storage": frozenset({"core", "utilities"}),
+    "networking": frozenset({"app_shared_flutter", "core", "storage", "utilities"}),
+    "storage": frozenset({"app_shared_flutter", "core", "utilities"}),
     "utilities": frozenset({"core"}),
 }
 

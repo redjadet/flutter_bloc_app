@@ -1,7 +1,7 @@
-import 'package:flutter_bloc_app/core/chat/render_orchestration_remote_token_port.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/app/chat/render_orchestration_remote_token_port.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Adapts [RemoteConfigService] to the chat-scoped
 /// [RenderOrchestrationRemoteTokenPort] so `lib/features/chat/` does not import

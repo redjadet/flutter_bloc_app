@@ -1,8 +1,7 @@
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_repository_base.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 /// Hive-backed cache for Remote Config values and metadata.
 class RemoteConfigCacheRepository extends HiveRepositoryBase {

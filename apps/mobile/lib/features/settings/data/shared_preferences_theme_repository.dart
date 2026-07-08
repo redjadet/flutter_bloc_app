@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/storage_guard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 class SharedPreferencesThemeRepository implements ThemeRepository {
   SharedPreferencesThemeRepository([final SharedPreferences? instance])

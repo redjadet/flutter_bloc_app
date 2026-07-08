@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:utilities/utilities.dart';
 
 part 'map_sample_state.freezed.dart';
 

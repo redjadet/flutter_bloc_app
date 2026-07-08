@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/iap_demo_credits_store.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_product.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_helpers.dart' as test_helpers;

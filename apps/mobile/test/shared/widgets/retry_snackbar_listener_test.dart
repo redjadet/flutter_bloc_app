@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/services/retry_notification_service.dart';
-import 'package:flutter_bloc_app/shared/widgets/retry_snackbar_listener.dart';
+import 'package:networking/networking.dart';
+import 'package:flutter_bloc_app/app/widgets/retry_snackbar_listener.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,12 +1,10 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
-import 'package:flutter_bloc_app/shared/diagnostics/integration_log_messages.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/subscription_manager.dart';
+import 'package:utilities/utilities.dart';
 
 class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
   RemoteConfigRepository(

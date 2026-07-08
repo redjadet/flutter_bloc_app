@@ -1,7 +1,7 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'todo_list_state.freezed.dart';
 

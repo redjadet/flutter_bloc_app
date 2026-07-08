@@ -1,10 +1,10 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Tries the orchestration repository first, then falls back to the composite
 /// repository when orchestration can't be used or fails (unless strict).

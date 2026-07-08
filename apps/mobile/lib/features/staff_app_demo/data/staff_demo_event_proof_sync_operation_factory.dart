@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_constants.dart';
-import 'package:flutter_bloc_app/shared/sync/sync_operation.dart';
+import 'package:storage/storage.dart';
 
 class StaffDemoEventProofSyncOperationFactory {
   SyncOperation createSubmitOperation({

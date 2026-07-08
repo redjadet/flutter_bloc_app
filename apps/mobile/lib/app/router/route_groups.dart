@@ -1,5 +1,10 @@
 import 'package:auth/auth.dart';
+import 'package:core/core.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/deferred_pages/google_maps_page.dart'
     deferred as google_maps_page;
 import 'package:flutter_bloc_app/app/router/deferred_pages/realtime_market_page.dart'
@@ -7,8 +12,8 @@ import 'package:flutter_bloc_app/app/router/deferred_pages/realtime_market_page.
 import 'package:flutter_bloc_app/app/router/deferred_pages/websocket_page.dart'
     deferred as websocket_page;
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
-import 'package:flutter_bloc_app/core/auth/session_lifecycle_coordinator.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/widgets/deferred_page.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
@@ -18,9 +23,6 @@ import 'package:flutter_bloc_app/features/todo_list/todo_list.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/cubit/walletconnect_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/presentation/pages/walletconnect_auth_page.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
-import 'package:flutter_bloc_app/shared/widgets/deferred_page.dart';
 import 'package:go_router/go_router.dart';
 
 List<RouteBase> createAuxiliaryRoutes() => <RouteBase>[

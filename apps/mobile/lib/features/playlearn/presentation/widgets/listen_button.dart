@@ -1,8 +1,6 @@
-import 'package:design_system/responsive.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/icon_label_row.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 
 /// Large tap-to-hear button (min 48x48 for accessibility).
 class ListenButton extends StatelessWidget {

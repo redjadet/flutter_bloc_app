@@ -1,6 +1,6 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'chat_conversation.freezed.dart';
 

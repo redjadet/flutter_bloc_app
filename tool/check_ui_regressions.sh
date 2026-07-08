@@ -51,21 +51,40 @@ if [ "$MODE" = "auto" ]; then
       [ -z "$file" ] && continue
       case "$file" in
         lib/shared/ui/*|\
+        apps/mobile/lib/shared/ui/*|\
         lib/shared/extensions/responsive/*|\
+        apps/mobile/lib/shared/extensions/responsive/*|\
         lib/shared/extensions/responsive.dart|\
+        apps/mobile/lib/shared/extensions/responsive.dart|\
         lib/shared/widgets/*|\
+        apps/mobile/lib/shared/widgets/*|\
+        packages/design_system/lib/src/widgets/*|\
+        packages/design_system/lib/src/extensions/responsive/*|\
+        lib/app/widgets/*|\
+        apps/mobile/lib/app/widgets/*|\
         lib/features/profile/presentation/*|\
+        apps/mobile/lib/features/profile/presentation/*|\
         lib/features/settings/presentation/*|\
+        apps/mobile/lib/features/settings/presentation/*|\
         lib/features/*/presentation/widgets/*|\
+        apps/mobile/lib/features/*/presentation/widgets/*|\
         lib/features/*/presentation/widgets/*dialog*|\
+        apps/mobile/lib/features/*/presentation/widgets/*dialog*|\
         lib/features/*/*dialog*.dart|\
+        apps/mobile/lib/features/*/*dialog*.dart|\
         lib/features/*/presentation/forms/*|\
+        apps/mobile/lib/features/*/presentation/forms/*|\
         lib/features/*/*actions_bar*.dart|\
+        apps/mobile/lib/features/*/*actions_bar*.dart|\
         lib/features/*/*action_bar*.dart|\
-        lib/shared/widgets/common_form_field.dart|\
+        apps/mobile/lib/features/*/*action_bar*.dart|\
+        packages/design_system/lib/src/widgets/common_form_field.dart|\
         test/features/settings/presentation/widgets/*|\
+        apps/mobile/test/features/settings/presentation/widgets/*|\
         test/shared/widgets/action_bar_layout_regression_test.dart|\
+        apps/mobile/test/shared/widgets/action_bar_layout_regression_test.dart|\
         test/features/staff_app_demo/presentation/widgets/*|\
+        apps/mobile/test/features/staff_app_demo/presentation/widgets/*|\
         tool/check_row_action_overflow.sh|\
         tool/check_action_bar_layout.sh)
           should_run=1

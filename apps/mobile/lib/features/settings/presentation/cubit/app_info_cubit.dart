@@ -1,11 +1,11 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/network_error_mapper.dart';
-import 'package:flutter_bloc_app/shared/utils/retry_policy.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'app_info_cubit.freezed.dart';
 

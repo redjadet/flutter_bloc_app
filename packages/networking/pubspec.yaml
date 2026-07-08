@@ -5,15 +5,27 @@ resolution: workspace
 
 environment:
   sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.38.0"
 
 dependencies:
+  app_shared_flutter:
+    path: ../app_shared_flutter
+  connectivity_plus: ^7.2.0
   core:
     path: ../core
   dio: ^5.10.0
+  flutter:
+    sdk: flutter
+  freezed_annotation: ^3.1.0
   retrofit: ^4.9.2
+  storage:
+    path: ../storage
   utilities:
     path: ../utilities
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
-  lints: ^6.0.0
-  test: ^1.31.0
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4

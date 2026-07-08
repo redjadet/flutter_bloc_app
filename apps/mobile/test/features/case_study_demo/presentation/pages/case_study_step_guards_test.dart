@@ -4,9 +4,9 @@ import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -161,7 +161,7 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
         localRepository: _StubLocalRepository(),
         videoRepository: _StubVideoRepository(),
         uploadRepository: _StubUploadRepository(),
-        clipStore: CaseStudyClipFileStoreImpl(),
+        clipStore: _StubClipStore(),
         remoteDeleteRepository: _StubRemoteDeleteRepository(),
         remoteBackendAuth: _StubRemoteBackendAuth(),
         remoteRepository: _StubRemoteRepository(),
@@ -169,6 +169,41 @@ class _TestCaseStudySessionCubit extends CaseStudySessionCubit {
       );
 
   void emitState(final CaseStudySessionState state) => emit(state);
+}
+
+class _StubClipStore implements CaseStudyClipFileStore {
+  @override
+  Future<String> persistClipToStaging({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+    required final int commitToken,
+  }) async => sourcePath;
+
+  @override
+  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+
+  @override
+  String promoteStagingToFinalSync({
+    required final String stagingPath,
+    required final String finalPath,
+  }) => finalPath;
+
+  @override
+  Future<String> persistClip({
+    required final String sourcePath,
+    required final String caseId,
+    required final String questionId,
+  }) async => sourcePath;
+
+  @override
+  Future<void> deleteFileIfExists(final String? path) async {}
+
+  @override
+  Future<void> deleteCaseFolder(final String caseId) async {}
+
+  @override
+  Future<List<int>> readClipBytes(final String path) async => <int>[];
 }
 
 Widget _buildApp({

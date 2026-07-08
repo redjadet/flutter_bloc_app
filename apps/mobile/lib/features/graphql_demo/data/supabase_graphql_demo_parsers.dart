@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_country_dto.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
-import 'package:flutter_bloc_app/shared/utils/safe_parse_utils.dart';
+import 'package:utilities/utilities.dart';
 
 /// Parses raw Supabase response into continents; skips invalid items and logs.
 List<GraphqlContinent> parseGraphqlContinentsFromRaw(final Object? raw) {

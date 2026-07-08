@@ -16,7 +16,7 @@ This feature demonstrates a library management interface with:
 
 ### Colors
 
-The EPOCH design system uses a shared palette defined in `lib/shared/design_system/epoch_theme_extension.dart`.
+The EPOCH design system uses a shared palette defined in `packages/design_system/lib/src/theme/epoch_theme_extension.dart`.
 `presentation/widgets/library_demo_theme.dart` remains as a compatibility re-export for older imports.
 
 | Color Name | Hex | Usage |
@@ -84,7 +84,7 @@ lib/features/library_demo/
 │       └── library_demo_wordmark.dart      # EPOCH wordmark/logo
 └── README.md                               # This file
 
-lib/shared/design_system/
+packages/design_system/lib/src/theme/
 └── epoch_theme_extension.dart              # EPOCH colors, typography, spacing, theme extension
 ```
 
@@ -185,7 +185,7 @@ and `TimerService`. In production code, navigate to the route rather than
 instantiating the page directly:
 
 ```dart
-import 'package:flutter_bloc_app/core/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 
 context.go(AppRoutes.libraryDemoPath);
 ```

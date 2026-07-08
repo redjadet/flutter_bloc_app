@@ -1,6 +1,5 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/design_system/epoch_theme_extension.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
 
 class LibraryDemoIconButton extends StatelessWidget {
   const LibraryDemoIconButton({

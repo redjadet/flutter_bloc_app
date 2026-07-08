@@ -1,6 +1,6 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
-import 'package:flutter_bloc_app/shared/utils/logger.dart';
 
 /// Logs location capture failures and returns nullable location for clock flows.
 StaffDemoCapturedLocation? unwrapStaffDemoLocationResult(

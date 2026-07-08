@@ -1,12 +1,11 @@
 import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_clip_file_store_web.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_bytes_memory.dart';
-import 'package:flutter_bloc_app/shared/platform/secure_secret_storage.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_key_manager.dart';
-import 'package:flutter_bloc_app/shared/storage/hive_service.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../../integration_test/test_helpers_bridge.dart' as test_helpers;
+import '../../../support/hive_test_helpers.dart' as test_helpers;
 
 Future<HiveService> _createHiveService() async {
   final hiveService = HiveService(

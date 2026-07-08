@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialogs.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_swipe.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
 
 /// Wraps a todo item widget with dismissible functionality for mobile devices.
 Widget buildTodoItemDismissible({

@@ -5,8 +5,8 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sam
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/pages/google_maps_sample_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/platform/native_platform_service.dart';
-import 'package:flutter_bloc_app/shared/utils/app_error.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:mocktail/mocktail.dart';
