@@ -109,6 +109,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
+| Melos tool install | Root `dart pub get` installs the repo-pinned Melos dev dependency; use `dart run melos ...` (global `melos` binary not required) |
 | Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
 | Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
 | Workspace package analyze | `dart run melos run analyze` from repo root; delegates to `tool/analyze_workspace_packages.sh` so package roots do not scan workspace `.dart_tool` metadata |
@@ -117,7 +118,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | Firebase backend | `backend/firebase/` (functions, rules, indexes) |
 | Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
 | Path helper | `source tool/workspace_paths.sh` |
-| Melos bootstrap | `dart run melos bootstrap` from repo root (optional after pub get) |
+| Melos bootstrap | `dart run melos bootstrap` from repo root after dependency or workspace-member changes |
 | Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`) |
 
 Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).

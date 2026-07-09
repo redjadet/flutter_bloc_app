@@ -10,11 +10,15 @@ Pinned versions: [tech_stack.md](tech_stack.md) (Flutter 3.44.5 / Dart 3.12.2).
 
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart
+dart run melos bootstrap
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 If `.envrc` has prepended `tool/direnv/bin` to `PATH`, plain `flutter run`
 from the repo root is routed to `apps/mobile`.
+
+Melos is repo-pinned in the root `pubspec.yaml`; use `dart run melos ...`
+after bootstrap. A global `melos` binary is not required.
 
 Agent host sync (optional, once per machine): [agent_environment_setup.md](agent_environment_setup.md).
 

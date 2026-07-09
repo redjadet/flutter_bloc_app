@@ -63,7 +63,7 @@ During the Melos monorepo migration ([#437](https://github.com/redjadet/flutter_
   workspace package source/test analysis. Run `dart run melos run test` for
   non-Flutter package tests; use `dart run melos run test:flutter` or direct
   `flutter test` inside a Flutter package such as `packages/design_system`.
-- **Melos** — `dart run melos bootstrap` from repo root after `pubspec.yaml` / workspace member changes. Melos `analyze` delegates to `tool/analyze_workspace_packages.sh` to avoid scanning package-root `.dart_tool` metadata; Melos `test` delegates to `tool/test_workspace_dart_packages.sh` and skips Flutter packages.
+- **Melos** — root `dart pub get` installs the repo-pinned Melos dev dependency; use `dart run melos ...` (global `melos` binary not required). Run `dart run melos bootstrap` from repo root after `pubspec.yaml` / workspace member changes. Melos `analyze` delegates to `tool/analyze_workspace_packages.sh` to avoid scanning package-root `.dart_tool` metadata; Melos `test` delegates to `tool/test_workspace_dart_packages.sh` and skips Flutter packages.
 
 Routing matrix paths below still use `lib/**` shorthand; during migration the app tree is `apps/mobile/lib/**`.
 

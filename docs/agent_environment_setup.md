@@ -157,9 +157,10 @@ The repo is a Melos-managed Pub workspace ([#437](https://github.com/redjadet/fl
 - **Flutter app** — `apps/mobile/` (`package:flutter_bloc_app`).
 - **Shared packages** — `packages/*` (see [`agents_quick_reference.md`](agents_quick_reference.md) Melos table), `custom_lints/*`.
 - **Firebase backend** — `backend/firebase/`.
-- **Pub get** — from repo root: `bash tool/workspace_pub_get.sh` (workspace `dart pub get` + app `flutter pub get` for `generate: true` / l10n).
-- **Run the app** — `cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` works when `.envrc` puts `tool/direnv/bin` first in `PATH`.
+- **Pub get / Melos install** — from repo root: `bash tool/workspace_pub_get.sh` (workspace `dart pub get` installs the repo-pinned Melos dev dependency; app `flutter pub get` supports `generate: true` / l10n). Use `dart run melos ...`; global `melos` is not required.
+- **Run the app** — `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` works when `.envrc` puts `tool/direnv/bin` first in `PATH`.
 - **Analyze / test the app** — `./tool/analyze.sh` / `bash tool/test_coverage.sh` from repo root (`workspace_paths.sh` resolves `apps/mobile`); narrow tests may use `cd apps/mobile && flutter test …`.
+- **Melos bootstrap** — `dart run melos bootstrap` from repo root after dependency or workspace-member changes.
 - **Authoritative gate** — `./bin/checklist` from **repo root** (unchanged).
 
 Plan and phase status: [`docs/plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
