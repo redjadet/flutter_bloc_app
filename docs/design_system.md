@@ -15,26 +15,27 @@ subsections (so the linter doesn’t treat it as a new section).
 
 ## Locations
 
-During the Melos migration, shared theme/Mix/widgets also live in `packages/design_system/`.
-The app keeps **compatibility barrels** at the paths below so existing imports keep working.
+Shared theme tokens, Mix styles, responsive helpers, and reusable widgets live
+in `packages/design_system/`. App-specific theme assembly and app-flow widgets
+stay under `apps/mobile/lib/app/`.
 
 | Area | Path | Purpose |
 | ---- | ---- | ------- |
 | Visual brief | [`DESIGN.md`](../DESIGN.md) | Agent-readable design memory using Google's DesignMD alpha format. |
-| Theme | `apps/mobile/lib/core/theme/` | `ThemeData`, light/dark themes, `TextTheme`. Use `AppTheme.lightTheme()` / `AppTheme.darkTheme()`. |
+| Theme | `apps/mobile/lib/app/theme/` | `ThemeData`, light/dark themes, `TextTheme`. Use `AppTheme.lightTheme()` / `AppTheme.darkTheme()`. |
 | Design system package | `packages/design_system/` | `package:design_system` — Mix tokens, `AppStyles`, responsive helpers, `CommonCard`, `CommonStatusView`, skeletons. **No** feature or l10n imports. |
-| Mix theme | `apps/mobile/lib/core/theme/mix_app_theme.dart` | Barrel → `package:design_system`. Mix token names; `buildAppMixScope(context, child: …)`; wrapped in `AppConfig`. |
-| Mix styles | `apps/mobile/lib/shared/design_system/app_styles.dart` | Barrel → `package:design_system` shared Mix `[Style]` definitions. |
-| Constants | `apps/mobile/lib/core/constants/` | App-wide `AppConstants`: colors, breakpoints, window sizes, durations. |
-| Core extensions | `apps/mobile/lib/core/extensions/` | Core-level `BuildContext` (or similar) extensions. |
-| Typography | `apps/mobile/lib/shared/ui/typography.dart` | `AppTypography` helpers using `Theme.of(context).textTheme`. |
-| UI constants | `apps/mobile/lib/shared/ui/ui_constants.dart` | Barrel → `package:design_system` layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
-| Components | `apps/mobile/lib/shared/components/` | Design system primitives (buttons, inputs, chips). |
-| Widgets | `apps/mobile/lib/shared/widgets/` | App composites; shared widgets from `design_system` use compatibility barrels. `CommonSearchField` stays app-local (l10n). |
+| Mix theme | `packages/design_system/lib/src/theme/mix_app_theme.dart` | Barrel → `package:design_system`. Mix token names; `buildAppMixScope(context, child: …)`; wrapped in `AppConfig`. |
+| Mix styles | `packages/design_system/lib/src/styles/app_styles.dart` | Barrel → `package:design_system` shared Mix `[Style]` definitions. |
+| Constants | `apps/mobile/lib/app/config/` | App-wide `AppConstants`: colors, breakpoints, window sizes, durations. |
+| App extensions | `apps/mobile/lib/app/extensions/` | App-level `BuildContext`, l10n, and typed BLoC access extensions. |
+| Typography | `packages/design_system/lib/src/ui/typography.dart` | `AppTypography` helpers using `Theme.of(context).textTheme`. |
+| UI constants | `packages/design_system/lib/src/ui/ui_constants.dart` | Barrel → `package:design_system` layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
+| Components | `packages/design_system/` | Design system primitives (buttons, inputs, chips). |
+| Widgets | `apps/mobile/lib/app/widgets/` | App composites; shared widgets from `design_system` use compatibility barrels. `CommonSearchField` stays app-local (l10n). |
 
 ### Page shell (`CommonPageLayout`)
 
-Default wrapper for feature screens (`apps/mobile/lib/shared/widgets/common_page_layout.dart`).
+Default wrapper for feature screens (`apps/mobile/lib/app/widgets/common_page_layout.dart`).
 
 | Need | API |
 | ---- | --- |
@@ -78,7 +79,7 @@ without rewiring whole pages.
 | **Design tokens** — `AppStyles`, `UI`, `Theme.of(context)`, responsive helpers; no magic numbers | Hot reload + iteration stay on-brand |
 | **`ValueKey` on tappable controls** | Stable widget tests ([widget test playbook](testing/widget_test_playbook.md)) |
 | **One visual concern per file** when practical — target ≤ ~225 LOC per widget file ([`CODE_QUALITY.md`](CODE_QUALITY.md)) | Smaller diffs, faster preview reload |
-| **Placement** — feature `presentation/widgets/` first; `apps/mobile/lib/shared/widgets/` only after a second real consumer ([feature structure contract](architecture/feature_structure_contract.md)) | Avoid premature shared abstractions |
+| **Placement** — feature `presentation/widgets/` first; `apps/mobile/lib/app/widgets/` only after a second real consumer ([feature structure contract](architecture/feature_structure_contract.md)) | Avoid premature shared abstractions |
 
 Pages and route shells **compose** widgets; they are not the only place layout
 lives. When a screen section has distinct states (loading / empty / error /
@@ -135,7 +136,7 @@ width/height when constraints can change.
 | --- | --- |
 | Spacing, padding, gaps | `context.responsiveGap*`, `context.pagePadding`, `UI.gap*` |
 | Typography scale | `context.responsiveHeadlineSize` / `TitleSize` / `BodySize`, theme `textTheme` |
-| Breakpoints (mobile / tablet / desktop) | `context.responsiveValue`, `context.isTabletOrLarger`, `ResponsiveFramework` via [`responsive.dart`](../apps/mobile/lib/shared/extensions/responsive.dart) |
+| Breakpoints (mobile / tablet / desktop) | `context.responsiveValue`, `context.isTabletOrLarger`, `ResponsiveFramework` via [`responsive.dart`](../packages/design_system/lib/responsive.dart) |
 | Max content width | `context.contentMaxWidth`, `CommonPageLayout` + `useResponsiveBody` |
 | Dual CTAs / action rows | [`ResponsiveDualCtaRow`](../packages/design_system/lib/src/widgets/responsive_action_bar.dart), [`ResponsiveActionOverflowBar`](../packages/design_system/lib/src/widgets/responsive_action_bar.dart) |
 | Platform chrome | `PlatformAdaptive.*`, `SafeArea`, keyboard via `MediaQuery.viewInsetsOf(context)` |
@@ -153,7 +154,7 @@ the whole screen):
 
 Examples: [`word_card.dart`](../apps/mobile/lib/features/playlearn/presentation/widgets/word_card.dart),
 [`calculator_keypad.dart`](../apps/mobile/lib/features/calculator/presentation/widgets/calculator_keypad.dart),
-[`common_page_layout.dart`](../apps/mobile/lib/shared/widgets/common_page_layout.dart).
+[`common_page_layout.dart`](../apps/mobile/lib/app/widgets/common_page_layout.dart).
 
 Pattern:
 
@@ -218,7 +219,7 @@ layout or interaction that only works on the device under debug.
 | **Web** | Any viewport in browser | Web-safe imports (`kIsWeb`); URL/deep-link routes; pointer hover/focus; scroll without mobile-only assumptions; run web preflight when bootstrap/routing touched |
 | **Desktop (macOS)** | Often ≥ 1200 px; also **narrow windows** | Keyboard traversal and focus rings; mouse affordances; resizable window — prove compact width, not only full screen |
 
-Breakpoints: [`responsive_config.dart`](../apps/mobile/lib/shared/responsive/responsive_config.dart)
+Breakpoints: [`responsive_config.dart`](../packages/design_system/lib/src/responsive/responsive_config.dart)
 (mobile &lt; 800, tablet 800–1199, desktop ≥ 1200).
 
 ### One widget tree, adaptive behavior
@@ -247,7 +248,7 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 ## Rules
 
 - Read root [`DESIGN.md`](../DESIGN.md) before adding new shared visual roles or UI patterns.
-- Define fonts and theme in `apps/mobile/lib/core/theme/`; wire in `AppConfig`.
+- Define fonts and theme in `apps/mobile/lib/app/theme/`; wire in `AppConfig`.
 - Use `Theme.of(context).colorScheme` and theme-derived text styles; avoid hardcoded colors and per-widget `GoogleFonts.*`.
 - For new styling, prefer Mix `Style` and tokens from `app_styles.dart` / `mix_app_theme.dart` where practical.
 - Use `context.responsiveHeadlineSize` / `TitleSize` / `BodySize` and `PlatformAdaptive.*` for UI.
@@ -264,7 +265,7 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 
 | Pattern | Widget | When |
 | ------- | ------ | ---- |
-| Icon + label in a row | [`IconLabelRow`](../apps/mobile/lib/shared/widgets/icon_label_row.dart) | Any `Row` with `Icon` + `Text` (enforced by `tool/check_row_text_overflow.sh`) |
+| Icon + label in a row | [`IconLabelRow`](../packages/design_system/lib/src/widgets/icon_label_row.dart) | Any `Row` with `Icon` + `Text` (enforced by `tool/check_row_text_overflow.sh`) |
 | 2+ intrinsic-width actions | `ResponsiveActionOverflowBar` (wraps `OverflowBar`, spacing 12) | Clear/Save, Cancel/Confirm; Cupertino picker sheets |
 | Many chips / batch tools | `Wrap` with spacing | Todo batch bar, filter chips |
 | Equal dual CTA (Sign in / Register, Cancel/Confirm) | `ResponsiveDualCtaRow` (`Row`+`Expanded` wide; column below 360dp screen width) | Auth landing, booking confirm |
@@ -281,9 +282,9 @@ Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Wi
 - Lint (wrapped by `./tool/check_design_md.sh`): npx @google/design.md lint DESIGN.md
 - Diff (useful in reviews): npx @google/design.md diff DESIGN.md DESIGN.before.md
 - Prefer barrel imports for consistency:
-  - `package:flutter_bloc_app/core/constants/constants.dart`
-  - `package:flutter_bloc_app/core/theme/theme.dart`
-  - `package:flutter_bloc_app/shared/components/components.dart`
+  - `package:flutter_bloc_app/app/config/constants.dart`
+  - `package:flutter_bloc_app/app/theme/theme.dart`
+  - `package:design_system/design_system.dart`
 
 ## Related docs
 

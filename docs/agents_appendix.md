@@ -27,7 +27,7 @@ User prefs:
 - Case studies: `docs/case_studies/`, start [`case_studies/README.md`](case_studies/README.md).
 - Dentists demo: `apps/mobile/lib/features/case_study_demo/`, route `/case-study-demo`.
 - Staff app demo: `apps/mobile/lib/features/staff_app_demo/`, routes `/staff-app-demo`;
-  router `apps/mobile/lib/core/router/app_routes.dart`; walkthrough
+  router `apps/mobile/lib/app/router/app_routes.dart`; walkthrough
   [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md).
 - Shell exposes `StaffDemoSitesCubit` from `staffDemoSites`; pages pick from
   list, no free-text IDs.
@@ -83,7 +83,7 @@ User prefs:
   `Firebase.delegatePackingProperty` between flows (see
   `test/test_helpers.dart` + integration tearDown).
 - Markdownlint ignores (`.markdownlintignore`, `.markdownlint-cli2.yaml`): task
-  trackers, [`AGENTS.md`](../AGENTS.md)/`GEMINI.md`, `.agents/`, `vendor/`, platform trees,
+  trackers, [`AGENTS.md`](../AGENTS.md)/[`GEMINI.md`](../GEMINI.md), `.agents/`, `vendor/`, platform trees,
   `fastlane/` (generated README), `third_party/`, build artifacts.
 - `tool/check_dialog_text_controller_lifecycle.sh` / `.py` runs in checklist;
   flags local `TextEditingController(` inside async blocks in dialog files.

@@ -28,10 +28,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 ```dart
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:design_system/design_system.dart';
 // Or import specific files:
-// import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-// import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
+// import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+// import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 ```
 
 ### Step 2: Migrate Context Access
@@ -229,7 +229,7 @@ class CounterCubit extends Cubit<CounterState> {
 **After:**
 
 ```dart
-import 'package:flutter_bloc_app/shared/utils/state_transition_validator.dart';
+import 'package:flutter_bloc_app/app/utils/bloc/state_transition_validator.dart';
 
 class CounterStateValidator extends StateTransitionValidator<CounterState> {
   @override

@@ -17,7 +17,7 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 ### 1.1 FixedExtentScrollController in PlatformAdaptiveSheets (Cupertino Picker) ✓
 
-**Location:** `apps/mobile/lib/shared/utils/platform_adaptive_sheets.dart`
+**Location:** `apps/mobile/lib/app/utils/platform_adaptive_sheets.dart`
 
 **Status:** Fixed. Replaced `StatefulBuilder` with `_CupertinoPickerSheetContent` StatefulWidget that creates the controller in `initState`, passes it to `CupertinoPicker`, and disposes it in `dispose()`.
 
@@ -44,7 +44,7 @@ The codebase handles most resource lifecycle correctly. Previously identified is
 
 ### 2.3 RetrySnackBarListener – centralized widget-owned subscription cleanup ✓
 
-**Location:** `apps/mobile/lib/shared/widgets/retry_snackbar_listener.dart`
+**Location:** `apps/mobile/lib/app/widgets/retry_snackbar_listener.dart`
 
 **Status:** Improved. Widget-owned subscriptions such as `RetrySnackBarListener`,
 `IotDemoAuthGate`, `AppRouteAuthGate`, and `CounterSyncBanner` now centralize

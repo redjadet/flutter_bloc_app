@@ -79,10 +79,10 @@ apps/mobile/lib/features/camera_gallery/
 ### Existing files to update
 
 - `pubspec.yaml` (add `image_picker`).
-- `apps/mobile/lib/core/router/app_routes.dart` (add route name/path constants).
+- `apps/mobile/lib/app/router/app_routes.dart` (add route name/path constants).
 - `apps/mobile/lib/app/router/routes_core.dart` or `apps/mobile/lib/app/router/routes_demos.dart`
   (register new `GoRoute` + cubit provider, depending on feature category).
-- `apps/mobile/lib/core/di/injector_registrations.dart` (register repository binding).
+- `apps/mobile/lib/app/composition/injector_registrations.dart` (register repository binding).
 - `apps/mobile/lib/features/example/presentation/pages/example_page.dart` (new navigation
   callback).
 - `apps/mobile/lib/features/example/presentation/widgets/example_page_body.dart` (new demo

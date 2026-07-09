@@ -18,7 +18,7 @@ Non-negotiable for new or touched UI:
    card, keypad, grid inside a pane).
 3. **`MediaQuery`** when layout depends on **screen/viewport** (keyboard insets,
    text scale, safe area, or breakpoint when parent width ≠ screen width).
-4. **Prefer** `apps/mobile/lib/shared/extensions/responsive.dart` and shared widgets
+4. **Prefer** `packages/design_system/lib/responsive.dart` and shared widgets
    (`CommonPageLayout`, `ResponsiveDualCtaRow`) before bespoke breakpoints.
 5. **Prove** compact width + large text scale where layout is contractually
    sensitive ([`widget_test_playbook.md`](testing/widget_test_playbook.md)).
@@ -44,11 +44,11 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
 
 ## Strengths Observed
 
-- **Responsive System:** Centralized spacing, layout, typography, and grid helpers provide consistent responsive behavior. See `apps/mobile/lib/shared/extensions/responsive.dart` and `apps/mobile/lib/shared/extensions/responsive/`.
-- **Shared Layout Components:** Common page shell and app bar promote consistent navigation and structure. `CommonPageLayout` supports default `CommonAppBar` (via `title`) or a custom `appBar`, optional scaffold `backgroundColor`, and `useResponsiveBody` for shared safe-area/keyboard/max-width padding. See `apps/mobile/lib/shared/widgets/common_page_layout.dart` and `apps/mobile/lib/shared/widgets/common_app_bar.dart`; agent API table in [`docs/design_system.md`](design_system.md) § Page shell.
-- **Platform Adaptation:** Platform-aware buttons and dialog actions exist and are used in multiple features. See `apps/mobile/lib/shared/utils/platform_adaptive.dart` and `apps/mobile/lib/shared/widgets/common_empty_state.dart`.
+- **Responsive System:** Centralized spacing, layout, typography, and grid helpers provide consistent responsive behavior. See `packages/design_system/lib/responsive.dart` and `packages/design_system/lib/src/responsive/`.
+- **Shared Layout Components:** Common page shell and app bar promote consistent navigation and structure. `CommonPageLayout` supports default `CommonAppBar` (via `title`) or a custom `appBar`, optional scaffold `backgroundColor`, and `useResponsiveBody` for shared safe-area/keyboard/max-width padding. See `apps/mobile/lib/app/widgets/common_page_layout.dart` and `apps/mobile/lib/app/widgets/common_app_bar.dart`; agent API table in [`docs/design_system.md`](design_system.md) § Page shell.
+- **Platform Adaptation:** Platform-aware buttons and dialog actions exist and are used in multiple features. See `packages/design_system/lib/src/platform_adaptive/platform_adaptive.dart` and `apps/mobile/lib/app/widgets/common_empty_state.dart`.
 - **Good Patterns:** Several screens demonstrate proper safe-area handling and scroll behavior (e.g., `calculator_page.dart` uses `SafeArea` with keyboard insets). See `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart`.
-- **Platform-Aware Loading:** `CommonLoadingButton` correctly uses `CupertinoActivityIndicator` on iOS and `CircularProgressIndicator` on Android. See `apps/mobile/lib/shared/widgets/common_loading_widget.dart`.
+- **Platform-Aware Loading:** `CommonLoadingButton` correctly uses `CupertinoActivityIndicator` on iOS and `CircularProgressIndicator` on Android. See `packages/design_system/lib/src/widgets/common_loading_widget.dart`.
 
 ## Findings (Mobile UI/UX + Responsive/Adaptive)
 
@@ -56,8 +56,8 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
 
 1. **Safe-area padding is not applied in the common page shell.** ✅ *Resolved*
    ~~`CommonPageLayout` wraps the body in fixed horizontal/vertical padding, but does not include safe-area insets or keyboard insets. On modern iOS/Android devices with gesture bars and cutouts, this can cause content to sit under system UI and reduce tap reliability. The responsive helper `pagePadding` already includes `bottomInset` and is unused.~~
-   - `apps/mobile/lib/shared/widgets/common_page_layout.dart` - *Now uses safe-area and keyboard insets*
-   - `apps/mobile/lib/shared/extensions/responsive/responsive_layout.dart`
+   - `apps/mobile/lib/app/widgets/common_page_layout.dart` - *Now uses safe-area and keyboard insets*
+   - `packages/design_system/lib/src/responsive/responsive_layout.dart`
    - **Status:** ✅ Implemented - `_ResponsiveBody` now applies `context.bottomInset` and `MediaQuery.viewInsetsOf(context).bottom` for keyboard-aware padding.
 
 2. **Absolute-positioned logged-out layout risks overflow on text scale and short heights.** ✅ *Resolved*
@@ -73,7 +73,7 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
    - `apps/mobile/lib/features/profile/presentation/pages/profile_page.dart` (Colors.white, Colors.black)
    - `apps/mobile/lib/features/profile/presentation/widgets/profile_header.dart` (Colors.grey[300], Colors.black)
    - `apps/mobile/lib/features/profile/presentation/widgets/profile_action_buttons.dart` (Colors.black, Colors.white)
-   - `apps/mobile/lib/shared/widgets/common_error_view.dart` (Colors.black54, Colors.black)
+   - `apps/mobile/lib/app/widgets/common_error_view.dart` (Colors.black54, Colors.black)
    - `apps/mobile/lib/features/search/presentation/widgets/search_results_grid.dart` (Colors.grey[300], Colors.black54)
    - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_*.dart` (multiple hard-coded colors)
    - `apps/mobile/lib/features/chat/presentation/widgets/chat_*.dart` (Colors.white, Colors.grey)
@@ -82,11 +82,11 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
 2. **Hard-coded UI strings bypass localization.**
    Multiple screens and shared widgets include English-only strings, which weakens UX for non-default locales and consistency with the rest of the app's localization strategy.
    - `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart` ("Search...")
-   - `apps/mobile/lib/shared/widgets/common_form_field.dart` ("Search..." in `CommonSearchField`)
-   - `apps/mobile/lib/shared/widgets/common_error_view.dart` ("TRY AGAIN" in `CommonRetryButton`)
+   - `apps/mobile/lib/app/widgets/common_form_field.dart` ("Search..." in `CommonSearchField`)
+   - `apps/mobile/lib/app/widgets/common_error_view.dart` ("TRY AGAIN" in `CommonRetryButton`)
    - `apps/mobile/lib/features/profile/presentation/pages/profile_page.dart` (various strings)
    - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_action_buttons.dart` (button labels)
-   - `apps/mobile/lib/shared/widgets/sync_status_banner.dart` ("Retry")
+   - `apps/mobile/lib/app/widgets/sync_status_banner.dart` ("Retry")
    - **Impact:** Poor UX for users in TR, DE, FR, ES locales; inconsistent with app's localization.
 
 3. **Fixed typography metrics can strain layouts at large text scales.**
@@ -98,12 +98,12 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
 
 1. **Custom retry button bypasses adaptive button patterns.**
    `CommonRetryButton` uses a custom `InkWell` instead of the platform-adaptive button helpers, which can lead to inconsistent platform styling and accessibility semantics on iOS/Android.
-   - `apps/mobile/lib/shared/widgets/common_error_view.dart`
+   - `apps/mobile/lib/app/widgets/common_error_view.dart`
    - **Impact:** Inconsistent button styling, potential accessibility issues, doesn't match platform conventions.
 
 2. **Loading indicator is Material-only in standalone widget.**
    `CommonLoadingWidget` always uses `CircularProgressIndicator`, which does not match iOS conventions. However, `CommonLoadingButton` correctly uses platform-adaptive indicators. This inconsistency can make loading states feel non-native on iOS.
-   - `apps/mobile/lib/shared/widgets/common_loading_widget.dart` (uses `CircularProgressIndicator` only)
+   - `packages/design_system/lib/src/widgets/common_loading_widget.dart` (uses `CircularProgressIndicator` only)
    - **Impact:** Non-native feel on iOS, inconsistent with `CommonLoadingButton` pattern.
 
 ## Action Checklist
@@ -115,7 +115,7 @@ Canon detail: [`design_system.md`](design_system.md) § Cross-platform form fact
 **Owner:** Mobile UI
 **Effort:** S (0.5-1 day)
 **Status:** ✅
-**Files:** `apps/mobile/lib/shared/widgets/common_page_layout.dart`, `apps/mobile/lib/shared/extensions/responsive/responsive_layout.dart`
+**Files:** `apps/mobile/lib/app/widgets/common_page_layout.dart`, `packages/design_system/lib/src/responsive/responsive_layout.dart`
 
 **Problem:** Shared layout padding ignores safe-area and keyboard insets, so content can be obscured by iOS/Android gesture bars and device cutouts.
 
@@ -272,9 +272,9 @@ flutter test test/features/search/presentation/pages/search_page_test.dart
 **Files to Update:**
 
 - `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart` → add new localized hint key (e.g., `searchHint`).
-- `apps/mobile/lib/shared/widgets/common_form_field.dart` → reuse the same localized hint key.
-- `apps/mobile/lib/shared/widgets/common_error_view.dart` → use existing `appInfoRetryButtonLabel` or add new `retryButton` key.
-- `apps/mobile/lib/shared/widgets/sync_status_banner.dart` → reuse localized retry label key.
+- `apps/mobile/lib/app/widgets/common_form_field.dart` → reuse the same localized hint key.
+- `apps/mobile/lib/app/widgets/common_error_view.dart` → use existing `appInfoRetryButtonLabel` or add new `retryButton` key.
+- `apps/mobile/lib/app/widgets/sync_status_banner.dart` → reuse localized retry label key.
 - Profile/auth widgets → add missing labels to ARB files (en, tr, de, fr, es).
 
 **Current Implementation:**
@@ -351,7 +351,7 @@ flutter test test/shared/widgets/text_scaling_smoke_test.dart
 **Owner:** Component Library
 **Effort:** S (0.5-1 day)
 **Status:** ✅
-**Files:** `apps/mobile/lib/shared/widgets/common_error_view.dart`
+**Files:** `apps/mobile/lib/app/widgets/common_error_view.dart`
 
 **Problem:** Custom `InkWell` button doesn't match platform conventions or use adaptive helpers.
 
@@ -391,7 +391,7 @@ flutter test test/shared/widgets/common_error_view_test.dart
 **Owner:** Component Library
 **Effort:** S (0.5-1 day)
 **Status:** ✅
-**Files:** `apps/mobile/lib/shared/widgets/common_loading_widget.dart`
+**Files:** `packages/design_system/lib/src/widgets/common_loading_widget.dart`
 
 **Problem:** `CommonLoadingWidget` always uses `CircularProgressIndicator`, inconsistent with iOS conventions and `CommonLoadingButton`.
 
@@ -472,9 +472,9 @@ flutter test test/shared/widgets/common_loading_widget_test.dart
 ### Good Patterns to Reference
 
 - **Safe Area:** `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart` (uses `SafeArea` with keyboard insets)
-- **Platform-Adaptive Loading:** `apps/mobile/lib/shared/widgets/common_loading_widget.dart` (`CommonLoadingButton` shows correct pattern)
-- **Theme Colors:** `apps/mobile/lib/shared/widgets/message_bubble.dart` (uses `colorScheme` correctly)
-- **Text Scaling:** `apps/mobile/lib/shared/widgets/message_bubble.dart` (uses `MediaQuery.textScalerOf(context)`)
+- **Platform-Adaptive Loading:** `packages/design_system/lib/src/widgets/common_loading_widget.dart` (`CommonLoadingButton` shows correct pattern)
+- **Theme Colors:** `packages/design_system/lib/src/widgets/message_bubble.dart` (uses `colorScheme` correctly)
+- **Text Scaling:** `packages/design_system/lib/src/widgets/message_bubble.dart` (uses `MediaQuery.textScalerOf(context)`)
 
 ### Verification Commands
 

@@ -34,7 +34,7 @@ This repository uses:
 - BLoC/Cubit for presentation state
 - `get_it` for DI
 - Hive for encrypted local persistence
-- Shared sync infrastructure in `apps/mobile/lib/shared/sync/`
+- Shared sync infrastructure in `packages/storage/lib/src/sync/`
 
 offline-first pattern is used across multiple features with different
 shapes:
@@ -112,8 +112,8 @@ These repositories are responsible for:
 ### 3. Persistent pending-operation queue
 
 Queued work is stored in
-`apps/mobile/lib/shared/sync/pending_sync_repository.dart` using Hive-backed
-`SyncOperation` records from `apps/mobile/lib/shared/sync/sync_operation.dart`.
+`packages/storage/lib/src/sync/pending_sync_repository.dart` using Hive-backed
+`SyncOperation` records from `packages/storage/lib/src/sync/sync_operation.dart`.
 
 Each operation contains:
 
@@ -132,7 +132,7 @@ This design makes queued operations:
 
 ### 4. Shared background coordinator
 
-`apps/mobile/lib/shared/sync/background_sync_coordinator.dart` orchestrates replay.
+`packages/networking/lib/src/sync/background_sync_coordinator.dart` orchestrates replay.
 
 It listens to:
 
@@ -248,7 +248,7 @@ coordinator processes pending operations first and only then calls
 `pullRemote()`.
 
 That ordering is visible in `runSyncCycle()` in
-`apps/mobile/lib/shared/sync/background_sync_runner.dart`.
+`packages/networking/lib/src/sync/background_sync_runner.dart`.
 
 Without this, app could fetch stale server state and overwrite local
 optimistic data before queued mutation had chance to land remotely.
@@ -406,9 +406,9 @@ For this app, that is right trade.
 - [`offline_first/adoption_guide.md`](../offline_first/adoption_guide.md)
 - [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md)
 - [`offline_first/counter.md`](../offline_first/counter.md)
-- `apps/mobile/lib/shared/sync/pending_sync_repository.dart`
-- `apps/mobile/lib/shared/sync/background_sync_coordinator.dart`
-- `apps/mobile/lib/shared/sync/background_sync_runner.dart`
+- `packages/storage/lib/src/sync/pending_sync_repository.dart`
+- `packages/networking/lib/src/sync/background_sync_coordinator.dart`
+- `packages/networking/lib/src/sync/background_sync_runner.dart`
 - `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart`
 - `apps/mobile/lib/features/todo_list/data/todo_merge_policy.dart`
 - `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart`

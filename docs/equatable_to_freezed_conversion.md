@@ -35,7 +35,7 @@ This guide walks through converting an Equatable-based state to Freezed step by 
 // apps/mobile/lib/features/search/presentation/search_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 
 class SearchState extends Equatable {
   const SearchState({
@@ -79,7 +79,7 @@ class SearchState extends Equatable {
 // apps/mobile/lib/features/search/presentation/search_state.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 
 part 'search_state.freezed.dart';
 

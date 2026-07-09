@@ -97,8 +97,8 @@ dart run build_runner build --delete-conflicting-outputs
 
 - The repo follows `Presentation -> Domain <- Data` (Clean Architecture).
 - Features live under `apps/mobile/lib/features/<feature>/`.
-- App-wide composition lives in `apps/mobile/lib/app/`,
-  `apps/mobile/lib/core/`, and `apps/mobile/lib/shared/`.
+- App-wide composition lives in `apps/mobile/lib/app/`; reusable shared code
+  lives in focused `packages/*` packages.
 - `flutter_bloc` drives state transitions.
 - `get_it` is the composition root and dependency container.
 - Firebase powers core app integrations; Supabase is used where a feature is
@@ -120,10 +120,9 @@ For deeper rationale, see:
 | `apps/mobile/lib/app.dart` | Top-level app widget and router creation. |
 | `apps/mobile/lib/main_*.dart` | Flavor-specific entrypoints. |
 | `apps/mobile/lib/main_bootstrap.dart` | Shared flavor bootstrap path. |
-| `apps/mobile/lib/app/` | App shell, router composition, and app scope. |
-| `apps/mobile/lib/core/` | DI, bootstrap, config, theme, routing constants, and core services. |
+| `apps/mobile/lib/app/` | App shell, DI composition, bootstrap, config, theme, routing, app widgets, and app-owned adapters. |
 | `apps/mobile/lib/features/<feature>/` | Feature modules with domain, data, and presentation layers. |
-| `apps/mobile/lib/shared/` | Cross-cutting widgets, services, sync, HTTP, storage, and utilities. |
+| `packages/*/` | Reusable utilities, storage, networking, auth, feature flags, design-system UI, and app shared Flutter infra. |
 | `apps/mobile/lib/l10n/` | Localization ARB files and generated localizations. |
 | `apps/mobile/test/` | Unit, bloc, widget, and golden tests. |
 | `apps/mobile/integration_test/` | End-to-end and flow-based integration coverage. |
@@ -146,7 +145,7 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
    Auth is available.
 4. `apps/mobile/lib/app/app_scope.dart` wires app-wide cubits and listeners
    such as locale, theme, deep links, retry notifications, and sync status.
-5. `apps/mobile/lib/core/app_config.dart` builds `MaterialApp.router`, theme,
+5. `apps/mobile/lib/app/app_config.dart` builds `MaterialApp.router`, theme,
    localization, and app overlays.
 6. Route files under `apps/mobile/lib/app/router/` compose the app route tree:
    `routes_core.dart`, `routes_demos.dart`, and `route_groups.dart`.
@@ -157,14 +156,14 @@ For feature-by-feature entry points, see [Feature Overview](feature_overview.md)
 
 When adding or changing a feature:
 
-1. Reuse existing patterns in `apps/mobile/lib/shared/`,
-   `apps/mobile/lib/core/`, and adjacent features before creating new
+1. Reuse existing patterns in `packages/*/`, `apps/mobile/lib/app/`, and
+   adjacent features before creating new
    abstractions.
 2. Keep logic in the proper layer:
    domain contracts and models in `domain/`, implementations in `data/`,
    cubits/pages/widgets in `presentation/`.
-3. Register dependencies under `apps/mobile/lib/core/di/`.
-4. Wire navigation through `apps/mobile/lib/core/router/app_routes.dart` and
+3. Register dependencies under `apps/mobile/lib/app/composition/`.
+4. Wire navigation through `apps/mobile/lib/app/router/app_routes.dart` and
    `apps/mobile/lib/app/router/`.
 5. Update localization, code generation, docs, and tests when the change
    affects them.

@@ -49,7 +49,7 @@ below.
   skips. Included in `./bin/checklist`. See [`docs/plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
 - **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
   (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
-  `remote_config` / `settings`). **Universal failures:** `apps/mobile/lib/shared/**` must not
+  `remote_config` / `settings`). **Universal failures:** `apps/mobile/lib/app/**` must not
   import `package:flutter_bloc_app/features/`; `apps/mobile/lib/features/*/domain/**` must not
   `import` Flutter, `get_it`, Hive, Supabase, Dio, Retrofit, `app/`, `core/di/`, or
   other features’ `presentation/` / `data/` paths (generated `*.g.dart` /
@@ -60,7 +60,7 @@ below.
   `apps/mobile/lib/features/*/domain` (AP-11). Always exit 0; use during DTO/boundary PRs.
   See [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
   Not in `./bin/checklist`.
-  shared→feature probe, domain→app/di probe, fan-in heuristics, cross-feature import
+  shared→feature probe, domain→app-composition probe, fan-in heuristics, cross-feature import
   report). Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
 - **`check_feature_barrel_exports.sh`**: **Report-only** (always exit 0). Summarizes
   `apps/mobile/lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
@@ -128,7 +128,7 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | Memory / lifecycle | memory scripts, lifecycle error handling | **fail** `check_lifecycle_observer_dispose.sh` |
 | Background / startup | background sync coordinator test, perf scripts | regression test added; startup gate deferred |
 
-- **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `apps/mobile/lib/features/**/{domain,data}/**` and `apps/mobile/lib/shared/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
+- **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `apps/mobile/lib/features/**/{domain,data}/**` and `apps/mobile/lib/app/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
 - **`check_sync_io_in_presentation.sh`**: Blocking `dart:io` `*Sync` in `lib/**/presentation/**` only (not data-layer `existsSync`). Fixtures under `tool/fixtures/sync_io_in_presentation/presentation/`.
 - **`check_remote_image_cache_hints.sh`**: Flags `CachedNetworkImageWidget` with explicit `width`/`height` but no `memCacheWidth`/`memCacheHeight`. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
@@ -215,7 +215,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_raw_json_decode.sh`**: Prevents raw `jsonDecode()`/`jsonEncode()` usage - should use `decodeJsonMap()`/`decodeJsonList()`/`encodeJsonIsolate()` for large payloads (>8KB)
 - **`check_compute_domain_layer.sh`**: Prevents `compute()` usage in domain layer (domain should be Flutter-agnostic)
 - **`check_compute_lifecycle.sh`**: Heuristic check for `compute()` usage in lifecycle methods (`build()`, `performLayout()`) - warns but doesn't fail
-- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `apps/mobile/lib/shared/utils/isolate_json.dart`). Suppress with `check-ignore` on same or previous line only for rare, reviewed cases.
+- **`check_no_isolate_run_in_presentation.sh`**: Prevents `Isolate.run` under `lib/**/presentation/**`. Closures from `State`/widgets often capture non-sendable Flutter objects and crash with *illegal argument in isolate message*; use `compute(topLevelOrStaticCallback, message)` from `package:flutter/foundation.dart` instead (see `apps/mobile/lib/app/utils/isolate_json.dart`). Suppress with `check-ignore` on same or previous line only for rare, reviewed cases.
 
 ### Timing & Services
 

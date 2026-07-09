@@ -109,7 +109,7 @@ Widget buildStateWidget(RemoteConfigState state) {
 
 ### Annotations
 
-Location: `apps/mobile/lib/shared/annotations/bloc_annotations.dart`
+Location: `apps/mobile/lib/app/annotations/bloc_annotations.dart`
 
 Annotations are available for future use with build_runner:
 
@@ -164,7 +164,7 @@ targets:
 1. Use annotations:
 
 ```dart
-import 'package:flutter_bloc_app/shared/annotations/bloc_annotations.dart';
+import 'package:flutter_bloc_app/app/annotations/bloc_annotations.dart';
 
 @GenerateSwitchHelper()
 sealed class RemoteConfigState extends Equatable {
@@ -189,7 +189,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../../../../apps/mobile/lib/shared/annotations/bloc_annotations.dart';
+import '../../../../apps/mobile/lib/app/annotations/bloc_annotations.dart';
 
 class SealedStateSwitchGenerator
     extends GeneratorForAnnotation<GenerateSwitchHelper> {
@@ -235,7 +235,7 @@ Builder stateValidatorBuilder(BuilderOptions options) =>
 ### Annotation
 
 ```dart
-import 'package:flutter_bloc_app/shared/annotations/bloc_annotations.dart';
+import 'package:flutter_bloc_app/app/annotations/bloc_annotations.dart';
 
 @GenerateStateValidator(
   transitions: [

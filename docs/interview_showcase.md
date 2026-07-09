@@ -32,7 +32,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 | Flutter / Dart / Cubit | Production-style feature modules, typed state | Spine #1–3 | Run app; open `counter/presentation/cubit/counter_cubit.dart`, `todo_list_cubit.dart`, `chat_cubit.dart` |
 | Modular architecture | Feature boundaries + leak checks | [modularity.md](modularity.md), `tool/check_feature_modularity_leaks.sh` | `bash tool/check_feature_modularity_leaks.sh` |
 | Automated testing | Unit/widget + integration tiers | [testing_overview.md](testing_overview.md) | `./bin/checklist-fast`; PR smoke below |
-| API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](ai_integration.md), `apps/mobile/lib/shared/http/` | Spine #3; badges on chat |
+| API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](ai_integration.md), `packages/networking/lib/src/` | Spine #3; badges on chat |
 | Validate / instrument | Structured errors, sync telemetry, Crashlytics when Firebase on | [observability.md](observability.md), [counter_outcome_brief.md](features/counter_outcome_brief.md) | Spine #4 sync diagnostics |
 | AI-enabled delivery | Agent loop + review protocol | [ai_code_review_protocol.md](ai_code_review_protocol.md), [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md) | Spine #5 |
 | Ownership | Counter vertical narrative | [features/counter_outcome_brief.md](features/counter_outcome_brief.md) | Read brief; tie to sync + persistence test |
@@ -86,8 +86,8 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 
 - Policy: [modularity.md](modularity.md)
 - Enforcement: `bash tool/check_feature_modularity_leaks.sh`, `tool/modular_metrics.sh`
-- Ports/adapters in `apps/mobile/lib/core/` and shared sync under
-  `apps/mobile/lib/shared/sync/`
+- Ports/adapters in `apps/mobile/lib/app/` or packages, and shared sync under
+  `packages/storage/lib/src/sync/`
 - Implementation notes: [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md)
 
 ## 8. Cross-stack
@@ -95,7 +95,7 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 - **Chat:** FastAPI / Render orchestration, Supabase paths — [integrations/render_fastapi_chat_demo.md](integrations/render_fastapi_chat_demo.md)
 - **Supabase:** [supabase/README.md](../supabase/README.md)
 - **GraphQL demo:** feature module + shared HTTP
-- Resilience: [reliability_error_handling_performance.md](reliability_error_handling_performance.md), `apps/mobile/lib/shared/http/`
+- Resilience: [reliability_error_handling_performance.md](reliability_error_handling_performance.md), `packages/networking/lib/src/`
 
 ## 9. AI delivery
 
@@ -113,7 +113,7 @@ Review: [ai_code_review_protocol.md](ai_code_review_protocol.md).
 
 ## 11. Observability (current)
 
-- **Crashlytics:** registered when Firebase initializes ([`firebase_bootstrap_service.dart`](../apps/mobile/lib/core/bootstrap/firebase_bootstrap_service.dart))
+- **Crashlytics:** registered when Firebase initializes ([`firebase_bootstrap_service.dart`](../apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart))
 - **Structured errors:** `AppErrorCode`, `NetworkErrorMapper`, localized user messaging
 - **Sync telemetry:** diagnostics UI + pending queue inspection on counter
 - **Product analytics SDK:** not configured (no Mixpanel/Sentry in `pubspec.yaml`)

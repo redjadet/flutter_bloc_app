@@ -4,9 +4,9 @@
 
 ## 🔍 What Was Reviewed
 
-- App bootstrap and DI wiring (`apps/mobile/lib/core/`, `apps/mobile/lib/app/`)
+- App bootstrap and DI wiring (`apps/mobile/lib/app/`)
 - Navigation and route setup (`apps/mobile/lib/app/router/`)
-- Shared UI utilities and responsive helpers (`apps/mobile/lib/shared/`)
+- Shared UI utilities and responsive helpers (`apps/mobile/lib/app/`)
 - Representative features (`apps/mobile/lib/features/counter/`, `apps/mobile/lib/features/settings/`, `apps/mobile/lib/features/chat/`)
 
 ## 💪 Strengths Observed
@@ -21,7 +21,7 @@
 ## ⚠️ Risks and Follow-Ups
 
 - `AppScope.build` triggers DI configuration and sync startup. Side effects in `build()` can repeat during rebuilds or hot reload. Consider moving to `initState` or making the calls explicitly idempotent. See `apps/mobile/lib/app/app_scope.dart`.
-- ~~Typography customization appears in a few widgets. If the theme is the single source of truth, consider moving ad-hoc font usage into `apps/mobile/lib/core/app_config.dart` to avoid drift.~~ **RESOLVED**: Created `AppTypography` helper class in `apps/mobile/lib/shared/ui/typography.dart` that uses theme as single source of truth.
+- ~~Typography customization appears in a few widgets. If the theme is the single source of truth, consider moving ad-hoc font usage into `apps/mobile/lib/app/app_config.dart` to avoid drift.~~ **RESOLVED**: Created `AppTypography` helper class in `packages/design_system/lib/src/ui/typography.dart` that uses theme as single source of truth.
 - A small number of presentation widgets call into concrete repos for diagnostics. This is acceptable for tooling, but keep it contained to avoid architecture drift.
 
 ## ✅ Recent Improvements

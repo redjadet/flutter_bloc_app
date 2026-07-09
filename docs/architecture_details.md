@@ -126,14 +126,14 @@ How to read the diagram:
 
 Theme, constants, and shared UI are organized as follows:
 
-- **`apps/mobile/lib/core/theme/`** – ThemeData, light/dark ColorScheme, and TextTheme (e.g. `AppTheme.lightTheme()`). Used by `AppConfig` when building `MaterialApp`.
-- **`apps/mobile/lib/core/constants/`** – App-wide constants (colors, breakpoints, window sizes, durations). Use `AppConstants` from the barrel.
-- **`apps/mobile/lib/core/extensions/`** – Core-level extensions (e.g. BuildContext helpers for theme/router/config). Responsive, bloc, and l10n extensions remain in `apps/mobile/lib/shared/extensions/`.
-- **`apps/mobile/lib/core/supabase/edge_then_tables.dart`** – Shared “try Edge function then fall back to tables” helper: `runSupabaseEdgeThenTables()` and `ensureSupabaseConfigured()`. Repositories pass `genericFailureMessage` so UI/tests see repository-specific error text (e.g. “Failed to load chart data from Supabase”).
-- **`apps/mobile/lib/shared/components/`** – Design system primitives (buttons, form fields, chips, icons). Add new reusable design building blocks here.
-- **`apps/mobile/lib/shared/widgets/`** – App-level composite widgets (e.g. `CommonPageLayout`, `CommonStatusView`, `CommonLoadingWidget`, skeletons). Use for composed screens and status UI.
+- **`apps/mobile/lib/app/theme/`** – App `ThemeData` assembly using design-system tokens.
+- **`apps/mobile/lib/app/config/`** – App-wide runtime config, flavor, constants, backend availability, and secret config.
+- **`apps/mobile/lib/app/extensions/`** – App-level `BuildContext`, l10n, and type-safe BLoC access helpers.
+- **`apps/mobile/lib/app/supabase/edge_then_tables.dart`** – App-owned "try Edge function then fall back to tables" helper: `runSupabaseEdgeThenTables()` and `ensureSupabaseConfigured()`.
+- **`packages/design_system`** – Reusable Flutter UI primitives, responsive helpers, platform-adaptive controls, markdown rendering, typography, view status, skeletons, image widgets, and common form/status widgets.
+- **`apps/mobile/lib/app/widgets/`** – App-level composite widgets tied to app state or app flow.
 
-Typography helpers live in `apps/mobile/lib/shared/ui/typography.dart`; layout/spacing tokens in `apps/mobile/lib/shared/ui/ui_constants.dart`. See [Design System](design_system.md) for a quick reference.
+See [Design System](design_system.md) and [Shared Utilities And Package Ownership](SHARED_UTILITIES.md) for current ownership rules.
 
 ## State Management Rationale (Why BLoC)
 

@@ -10,7 +10,7 @@ configure required platform keys, and where to extend the feature.
 - Route: `AppRoutes.googleMapsPath` (`/google-maps`)
 - Route registration: `apps/mobile/lib/app/router/route_groups.dart`
 - Deferred page entry: `apps/mobile/lib/app/router/deferred_pages/google_maps_page.dart`
-- DI registration: `apps/mobile/lib/core/di/injector_registrations.dart`
+- DI registration: `apps/mobile/lib/app/composition/injector_registrations.dart`
 
 The map feature is implemented as a clean-architecture feature module:
 
@@ -58,7 +58,7 @@ The deferred builder creates `MapSampleCubit` with DI and runs
 ## Dependency Injection
 
 `MapLocationRepository` is registered in
-`apps/mobile/lib/core/di/injector_registrations.dart`:
+`apps/mobile/lib/app/composition/injector_registrations.dart`:
 
 - `MapLocationRepository -> SampleMapLocationRepository`
 
@@ -147,7 +147,7 @@ not block the page in current behavior.
 
 The map page checks key availability at runtime for non-iOS-map mode:
 
-- Dart service: `apps/mobile/lib/shared/platform/native_platform_service.dart`
+- Dart service: `apps/mobile/lib/app/platform/native_platform_service.dart`
 - Android channel check:
   `android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt`
 - iOS channel check: `ios/Runner/AppDelegate.swift`

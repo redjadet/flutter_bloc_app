@@ -40,7 +40,7 @@ Source of truth for gates and guardrails:
 
 - Clean Architecture boundaries: Presentation depends on Domain, Domain depends on nothing, Data implements Domain contracts.
 - Domain layer stays Flutter-agnostic (no `package:flutter` imports).
-- Dependency injection is centralized in `apps/mobile/lib/core/di/` with interface registrations and lazy singletons.
+- Dependency injection is centralized in `apps/mobile/lib/app/composition/` with interface registrations and lazy singletons.
 - Business logic is handled by cubits; widgets focus on layout, navigation, and theming.
 
 ## SOLID and DRY Summary
@@ -53,16 +53,16 @@ Source of truth for gates and guardrails:
 
 - Search race condition: request-id guard prevents stale results in `apps/mobile/lib/features/search/presentation/search_cubit.dart` (tests added).
 - Multipart retry safety: retries for multipart requests are handled in Dio interceptors; multipart cloning is not used (Dio handles retries per interceptor policy).
-- Auth token cache safety: cache is keyed by user id in `apps/mobile/lib/shared/http/auth_token_manager.dart` (tests added).
+- Auth token cache safety: cache is keyed by user id in `apps/mobile/lib/app/http/auth/auth_token_manager.dart` (tests added).
 - Auth refresh race safety: concurrent 401 refreshes are single-flight in
-  `apps/mobile/lib/shared/http/auth_token_manager.dart` and `apps/mobile/lib/shared/http/interceptors/auth_token_interceptor.dart`;
+  `apps/mobile/lib/app/http/auth/auth_token_manager.dart` and `apps/mobile/lib/app/http/auth/interceptors/auth_token_interceptor.dart`;
   retry flow avoids double forced-refresh (tests added).
-- Completer type safety: non-nullable completion guard in `apps/mobile/lib/shared/utils/completer_helper.dart` (tests added).
+- Completer type safety: non-nullable completion guard in `packages/utilities/lib/src/async/completer_helper.dart` (tests added).
 - JSON decode error handling: try/catch and error mapping in `apps/mobile/lib/features/chat/data/huggingface_api_client.dart` (tests added).
 
 ## Notable Structural Improvements
 
-- Bootstrap refactor: `main_bootstrap.dart` split into focused services under `apps/mobile/lib/core/bootstrap/` for clearer responsibilities and better testability.
+- Bootstrap refactor: `main_bootstrap.dart` split into focused services under `apps/mobile/lib/app/bootstrap/` for clearer responsibilities and better testability.
 - Runtime resilience: resilient HTTP client, centralized error mapping, sync diagnostics in Settings (dev/qa), and consistent loading/skeleton widgets.
 
 ## Quality Metrics and Gates

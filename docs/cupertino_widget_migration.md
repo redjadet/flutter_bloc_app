@@ -32,7 +32,7 @@ The codebase already had platform-adaptive implementations for:
 
 ### Phase 1: Platform-Adaptive Helper Methods
 
-Added new helper methods to `apps/mobile/lib/shared/utils/platform_adaptive.dart`:
+Added new helper methods to `packages/design_system/lib/src/platform_adaptive/platform_adaptive.dart`:
 
 #### 1. TextField Helper
 
@@ -227,7 +227,7 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 
 ### Core Utilities
 
-- `apps/mobile/lib/shared/utils/platform_adaptive.dart` - Added new helper methods
+- `packages/design_system/lib/src/platform_adaptive/platform_adaptive.dart` - Added new helper methods
 
 ### TextFields
 
@@ -242,7 +242,7 @@ Updated modal bottom sheet calls to use `PlatformAdaptive.showAdaptiveModalBotto
 - `apps/mobile/lib/features/todo_list/presentation/widgets/todo_list_dialog_fields.dart` - Uses `CommonDropdownField`
 - `apps/mobile/lib/features/graphql_demo/presentation/widgets/graphql_filter_bar.dart` - Uses `CommonDropdownField` with nullable type support
 - `apps/mobile/lib/features/chat/presentation/widgets/chat_model_selector.dart` - Uses `CommonDropdownField` with left label position
-- `apps/mobile/lib/shared/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
+- `apps/mobile/lib/app/widgets/common_dropdown_field.dart` - Platform-adaptive dropdown widget with `DropdownLabelPosition` enum
 
 ### Date Pickers
 
@@ -299,7 +299,7 @@ Scaffold migration to `CupertinoPageScaffold` is complex due to:
 
 All dropdowns now use the unified `CommonDropdownField` widget which is platform-adaptive:
 
-- ✅ `apps/mobile/lib/shared/widgets/common_dropdown_field.dart` (CommonDropdownField) - Reusable platform-adaptive dropdown widget with support for:
+- ✅ `apps/mobile/lib/app/widgets/common_dropdown_field.dart` (CommonDropdownField) - Reusable platform-adaptive dropdown widget with support for:
   - Nullable types with custom picker items (`customPickerItems` parameter)
   - Custom label functions (`customItemLabel` parameter)
   - Flexible label positioning (`DropdownLabelPosition` enum: `top` or `left`)
@@ -355,4 +355,4 @@ When implementing platform-adaptive widgets:
 
 - Flutter Cupertino Widgets: <https://docs.flutter.dev/development/ui/widgets/cupertino>
 - Platform-Adaptive Widgets: <https://docs.flutter.dev/development/ui/widgets/cupertino#adapting-to-platforms>
-- Existing Platform-Adaptive Utilities: `apps/mobile/lib/shared/utils/platform_adaptive.dart`
+- Existing Platform-Adaptive Utilities: `packages/design_system/lib/src/platform_adaptive/platform_adaptive.dart`

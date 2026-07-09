@@ -1,418 +1,96 @@
-# Shared Utilities Documentation
+# Shared Utilities And Package Ownership
 
 ## Overview
 
-The `apps/mobile/lib/shared/` directory contains reusable utilities, widgets, and services used across multiple features. This document describes the purpose and organization of each category.
+The old `apps/mobile/lib/shared/` tree has been drained. Shared code now lives
+in focused packages when it is reusable across apps/packages, or under
+`apps/mobile/lib/app/` when it is app-shell glue.
 
-## Directory Structure
+Do not recreate `apps/mobile/lib/shared/` or `apps/mobile/lib/core/` for new
+cross-cutting code. Pick an existing owner first.
 
-```text
-apps/mobile/lib/shared/
-├── extensions/          # BuildContext extensions and responsive utilities
-├── platform/           # Platform-specific implementations
-├── responsive/         # Responsive design configuration
-├── services/           # Cross-cutting services
-├── storage/            # Storage abstractions and implementations
-├── ui/                 # UI constants and view status
-├── utils/              # Utility functions and helpers
-└── widgets/            # Reusable widgets
-```
+## Current Owners
 
-## Categories
+| Need | Owner |
+| --- | --- |
+| Pure Dart primitives, errors, retry, request guards, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
+| Hive, local storage, migrations, pending sync repositories | `packages/storage` |
+| Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
+| Auth contracts, token repository, auth user/session value types | `packages/auth` |
+| Feature flag and remote config contracts | `packages/feature_flags` |
+| AI/rendering contracts reusable outside the app shell | `packages/ai` |
+| Reusable Flutter UI, responsive helpers, platform-adaptive widgets, markdown rendering, image widgets, view status | `packages/design_system` |
+| Flutter shared infra that is not design-system UI: logger, platform environment, secure secret storage, media pick result keys, integration log messages | `packages/app_shared_flutter` |
+| App startup, DI, routing, app config, app theme, Firebase/Supabase bootstrap, app-owned diagnostics, app-owned widgets, feature adapters | `apps/mobile/lib/app` |
+| Feature-specific UI, data adapters, repositories, cubits, and domain logic | `apps/mobile/lib/features/<feature>` |
 
-### 1. Extensions (`apps/mobile/lib/shared/extensions/`)
+## App Shell
 
-**Purpose:** BuildContext extensions and responsive design utilities.
+`apps/mobile/lib/app/` is the composition boundary. It can depend on packages
+and features to wire the running application, but packages must not depend back
+on `package:flutter_bloc_app/app/` or `package:flutter_bloc_app/features/`.
 
-**Contents:**
+Common app-shell areas:
 
-- `build_context_l10n.dart` - Localization extensions for `BuildContext`
-- `responsive.dart` - Responsive design extensions (spacing, typography, layout)
-- `responsive/` - Detailed responsive utilities:
-  - `helpers.dart` - Helper functions for responsive calculations
-  - `responsive_buttons.dart` - Platform-adaptive button extensions
-  - `responsive_grid.dart` - Grid layout utilities
-  - `responsive_layout.dart` - Layout helpers (max width, padding)
-  - `responsive_metrics.dart` - Screen metrics and breakpoints
-  - `responsive_spacing.dart` - Spacing utilities (gaps, padding)
-  - `responsive_typography.dart` - Typography scaling utilities
+- `app/bootstrap/` - platform, Firebase, Supabase, and startup coordination
+- `app/composition/` - `get_it` registrations and feature adapter factories
+- `app/config/` - runtime config, flavor, constants, backend availability, secret config
+- `app/router/` - route tables, auth gates, route policies
+- `app/http/` - app-specific Dio assembly and auth/header glue
+- `app/sync/` - app-visible sync banner/context helpers
+- `app/theme/` - app `ThemeData` assembly using design-system tokens
+- `app/widgets/` - app-level composite widgets that are not package-level UI
+- `app/diagnostics/` - app-owned diagnostics views, reports, and ports
 
-**Usage Example:**
+## Package Entry Points
 
-```dart
-// Responsive spacing
-SizedBox(height: context.responsiveGapL)
-
-// Responsive typography
-Text('Title', style: TextStyle(fontSize: context.responsiveHeadlineSize))
-
-// Platform-adaptive buttons
-PlatformAdaptive.filledButton(context: context, onPressed: handle, child: Text('Action'))
-```
-
-### 2. Platform (`apps/mobile/lib/shared/platform/`)
-
-**Purpose:** Platform-specific implementations and abstractions.
-
-**Contents:**
-
-- `biometric_authenticator.dart` - Biometric authentication (Face ID, Touch ID, fingerprint)
-- `native_platform_service.dart` - App-wide platform information via MethodChannel (`com.example.flutter_bloc_app/native`)
-- `secure_secret_storage.dart` - Secure storage for secrets (API keys, tokens)
-
-**Not shared:** the **Native Platform Showcase** feature uses its own channel
-(`com.example.flutter_bloc_app/native_showcase`) and FFI surface under
-`apps/mobile/lib/features/native_platform_showcase/` with domain ports
-(`NativeShowcaseHostLanguageService`, `NativeShowcaseNativeCodeService`). Do not
-route showcase interop through `NativePlatformService`; see
-[`apps/mobile/lib/features/native_platform_showcase/README.md`](../apps/mobile/lib/features/native_platform_showcase/README.md).
-
-**Usage Example:**
+Prefer package barrels instead of deep imports unless package docs require a
+specific private path:
 
 ```dart
-final authenticator = getIt<BiometricAuthenticator>();
-final isAvailable = await authenticator.isAvailable();
-if (isAvailable) {
-  final success = await authenticator.authenticate(reason: 'Authenticate to continue');
-}
+import 'package:utilities/utilities.dart';
+import 'package:storage/storage.dart';
+import 'package:networking/networking.dart';
+import 'package:auth/auth.dart';
+import 'package:feature_flags/feature_flags.dart';
+import 'package:design_system/design_system.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 ```
 
-### 3. Responsive (`apps/mobile/lib/shared/responsive/`)
-
-**Purpose:** Responsive design configuration and scope management.
-
-**Contents:**
-
-- `responsive_config.dart` - Responsive configuration (breakpoints, scaling factors)
-- `responsive_scope.dart` - InheritedWidget for responsive configuration
-- `responsive.dart` - Main responsive utilities export
-
-**Usage Example:**
+Use app imports only from the app or app tests:
 
 ```dart
-ResponsiveScope(
-  config: ResponsiveConfig.defaultConfig,
-  child: MyApp(),
-)
+import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 ```
 
-### 4. Services (`apps/mobile/lib/shared/services/`)
+## Placement Rules
 
-**Purpose:** Cross-cutting services used throughout the app.
+Add code to an existing package when it is reusable, has no dependency on the
+mobile app shell, and can be validated through package analysis/tests.
 
-**Contents:**
+Keep code in `apps/mobile/lib/app/` when it coordinates startup, routes, DI,
+app configuration, app-owned diagnostics, or concrete platform/service adapters.
 
-- `error_notification_service.dart` - Service for displaying error notifications (snackbars, dialogs)
+Keep code inside a feature when it is only used by that feature or represents a
+feature-specific data/domain/presentation concern.
 
-**Usage Example:**
+Move reusable Flutter widgets to `packages/design_system` only when they are
+generic UI building blocks. Keep app-flow widgets such as banners tied to app
+state in `apps/mobile/lib/app/widgets/` or `apps/mobile/lib/app/sync/`.
 
-```dart
-final errorService = getIt<ErrorNotificationService>();
-errorService.showError('Something went wrong');
-```
+## Validation
 
-### 5. Storage (`apps/mobile/lib/shared/storage/`)
+Run the narrowest honest proof for the changed owner:
 
-**Purpose:** Storage abstractions and implementations for local data persistence.
+- Package-only edits: `dart run melos run analyze`, plus focused package tests.
+- App-shell, DI, routing, sync, auth, or cross-package changes: `./bin/checklist`.
+- Router/auth changes: `./bin/router_feature_validate` plus full checklist when wide.
+- Architecture boundary checks:
+  - `bash tool/check_package_dependency_dag.sh`
+  - `bash tool/check_clean_architecture_imports.sh`
+  - `bash tool/check_feature_modularity_leaks.sh`
 
-**Contents:**
-
-- `hive_key_manager.dart` - Manages encryption keys for Hive boxes
-- `hive_repository_base.dart` - Base class for Hive-backed repositories
-- `hive_service.dart` - Service for opening and managing Hive boxes
-- `migration_helpers.dart` - Utilities for data migration and normalization
-- `shared_preferences_migration_service.dart` - Migrates data from SharedPreferences to Hive
-
-**Usage Example:**
-
-```dart
-// Extend HiveRepositoryBase for Hive-backed repositories
-class MyRepository extends HiveRepositoryBase implements MyRepositoryInterface {
-  @override
-  String get boxName => 'my_box';
-
-  Future<void> saveData(String data) async {
-    final box = await getBox();
-    await box.put('key', data);
-  }
-}
-```
-
-### 6. UI (`apps/mobile/lib/shared/ui/`)
-
-**Purpose:** UI constants and view status definitions.
-
-**Contents:**
-
-- `ui_constants.dart` - App-wide UI constants (colors, sizes, durations)
-- `view_status.dart` - View status enum (loading, success, error, empty)
-
-**Usage Example:**
-
-```dart
-// View status for state management
-enum ViewStatus { loading, success, error, empty }
-
-// UI constants
-const kDefaultPadding = EdgeInsets.all(16.0);
-const kAnimationDuration = Duration(milliseconds: 300);
-```
-
-### 7. Utils (`apps/mobile/lib/shared/utils/`)
-
-**Purpose:** Utility functions and helpers for common operations.
-
-**Contents:**
-
-- `bloc_provider_helpers.dart` - Helpers for accessing BLoC/Cubit from context
-- `cubit_async_operations.dart` - Utilities for async operations in Cubits
-- `cubit_helpers.dart` - General Cubit helper functions
-- `cubit_state_emission_mixin.dart` - Mixin for safe state emission in Cubits
-- `error_handling.dart` - Error handling utilities and domain failures
-- `http_request_failure.dart` - HTTP failure exception with statusCode (and optional retryAfter) so callers can differentiate 401 vs 503, etc.
-- `initialization_guard.dart` - Safe initialization wrapper for critical operations
-- `isolate_json.dart` - JSON decoding/encoding with automatic isolate offloading for large payloads (>8KB); **bytes path** (`decodeJsonMapFromBytes` / `decodeJsonListFromBytes`) uses `utf8.decoder` fused with `json.decoder` so Dio can supply raw UTF-8 without building a full response `String` before parse (see `HuggingFaceApiClient`)
-- `isolate_samples.dart` - Examples of isolate usage for heavy computations
-- [`logger.dart`](../apps/mobile/lib/shared/utils/logger.dart) - App-wide logging utility;
-  use with [`logging.md`](logging.md) conventions.
-- `navigation.dart` - Navigation helper functions
-- `network_guard.dart` - Network connectivity checking utilities
-- `platform_adaptive.dart` - Platform-adaptive widget utilities
-- `safe_parse_utils.dart` - Safe parsing from dynamic/JSON-like values (`mapFromDynamic`, `listFromDynamic`, `parseMapOfMaps` for map-of-maps with per-item callback and log-on-failure; used by Realtime DB and Supabase repos)
-- `storage_guard.dart` - Storage availability checking utilities
-- `websocket_guard.dart` - WebSocket connectivity checking utilities
-- `retry_policy.dart` - Standardized retry with backoff and cancellation for non-HTTP async work
-
-**Sync banner helpers** (`apps/mobile/lib/shared/sync/sync_banner_helpers.dart`): `shouldShowSyncBanner()`, `syncBannerTitleAndMessage()`, and `SyncBannerContent` widget for consistent offline/syncing/pending sync status UI across features (Todo, Chat, Search, Profile, IoT). Use these so banner visibility and copy stay in one place.
-
-### Reliability and retries
-
-- **Dio** (shared app instance from `createAppDio()` in `apps/mobile/lib/shared/http/app_dio.dart`): Use for
-  **HTTP** requests. It is configured with interceptors for network check, auth token injection,
-  telemetry, and retries. 401 refreshes are coordinated via `AuthTokenManager` and
-  `AuthTokenInterceptor` (single-flight) so concurrent 401s await one refresh and retry with
-  a refreshed bearer token. Repositories use `getIt<Dio>()` or typed Retrofit clients built from it.
-  Use [NetworkGuard.executeDio](../apps/mobile/lib/shared/utils/network_guard.dart) where you need centralized
-  timeout, status checks, and error mapping; [NetworkErrorMapper](../apps/mobile/lib/shared/utils/network_error_mapper.dart)
-  maps status codes and `DioException` to user-facing messages and
-  [AppErrorCode](../apps/mobile/lib/shared/utils/error_codes.dart) (e.g. `serviceUnavailable` for 503).
-- **Retrofit** (optional): For stable REST APIs, define interfaces under `apps/mobile/lib/features/<feature>/data/api/`
-  and use generated clients; see [`plans/dio_retrofit_integration_plan.md`](plans/dio_retrofit_integration_plan.md). Chart uses `CoingeckoApi`.
-- **RetryPolicy** (`apps/mobile/lib/shared/utils/retry_policy.dart`): Use for **non-HTTP** retriable work (e.g. repository load, sync steps, external SDK calls). It supports exponential/linear/fixed backoff, jitter, and `CancelToken` so cubits can cancel in-flight retries in `close()`.
-- HTTP retry/replay defaults to idempotent `GET`/`HEAD`. Non-idempotent
-  methods must opt in at the call site and justify idempotency.
-
-When to use which:
-
-| Use case | Use |
-| ---------- | ----- |
-| HTTP GET/POST (API, REST) | Dio (or Retrofit client built from Dio) + NetworkGuard where needed |
-| Single async repository call that may fail transiently | RetryPolicy.executeWithRetry with CancelToken from cubit |
-| Stream or watch | No RetryPolicy; handle errors in listener and optionally restart |
-
-**Timeouts:** Use explicit timeouts for all HTTP calls. Dio is created with 30s connect/receive timeouts in `createAppDio()`; use `NetworkGuard.executeDio` with a `timeout` parameter where you wrap requests. Recommended: 15–30s for typical API calls, longer for uploads or slow endpoints.
-
-**Circuit breaker (optional):** For high-traffic or enterprise builds, use [CircuitBreaker](../apps/mobile/lib/shared/http/circuit_breaker.dart) to fail fast when an endpoint is repeatedly failing. Wrap repository or HTTP calls with `CircuitBreaker(key: 'endpoint-name').execute(() => ...)`. Enable via feature-flag or build config. Use when protecting the backend from thundering herd is important.
-
-Example: cubit that retries a one-off load and cancels on close:
-
-```dart
-class MyCubit extends Cubit<MyState> {
-  MyCubit({required MyRepository repo}) : _repo = repo, super(MyState.initial());
-  final MyRepository _repo;
-  CancelToken? _loadToken;
-
-  Future<void> load() async {
-    _loadToken?.cancel();
-    _loadToken = CancelToken();
-    await CubitExceptionHandler.executeAsync(
-      operation: () => RetryPolicy.transientErrors.executeWithRetry(
-        action: _repo.load,
-        cancelToken: _loadToken,
-        shouldRetry: (e) => e is TimeoutException || NetworkErrorMapper.isNetworkError(e),
-      ),
-      isAlive: () => !isClosed,
-      onSuccess: (data) { if (!isClosed) emit(state.copyWith(data: data)); },
-      onError: (msg) { if (!isClosed) emit(state.copyWith(error: msg)); },
-      logContext: 'MyCubit.load',
-    );
-  }
-
-  @override
-  Future<void> close() {
-    _loadToken?.cancel();
-    return super.close();
-  }
-}
-```
-
-**Usage Example:**
-
-```dart
-// Safe Cubit state emission
-class MyCubit extends Cubit<MyState> with CubitStateEmissionMixin {
-  void updateState() {
-    emitSafely(MyState.updated()); // ✅ Safe emission
-  }
-}
-
-// Standardized async error handling
-await CubitExceptionHandler.executeAsync(
-  operation: _repository.load,
-  onSuccess: (data) {
-    if (isClosed) return;
-    emit(state.copyWith(data: data));
-  },
-  onError: (message) {
-    if (isClosed) return;
-    emit(state.copyWith(errorMessage: message));
-  },
-  logContext: 'MyCubit.load',
-);
-
-// Error handling
-try {
-  await riskyOperation();
-} on DomainFailure catch (failure) {
-  handleDomainFailure(failure);
-} catch (error, stackTrace) {
-  handleUnexpectedError(error, stackTrace);
-}
-
-// Safe initialization
-await InitializationGuard.executeSafely(
-  () => criticalOperation(),
-  context: 'MyFeature',
-  failureMessage: 'Failed to initialize feature',
-);
-
-// JSON decoding/encoding with isolate offloading (for payloads >8KB)
-import 'package:flutter_bloc_app/shared/utils/isolate_json.dart';
-
-// When you already have a String (e.g. Retrofit plain text body):
-final Map<String, dynamic> decoded = await decodeJsonMap(response.body);
-final List<dynamic> list = await decodeJsonList(storedJson);
-
-// When you have UTF-8 bytes (e.g. Dio ResponseType.bytes — avoids a large
-// intermediate String for the JSON text):
-final Map<String, dynamic> fromBytes =
-    await decodeJsonMapFromBytes(responseBodyBytes);
-
-final String encoded = await encodeJsonIsolate(object); // For size estimation
-```
-
-### 8. Widgets (`apps/mobile/lib/shared/widgets/`)
-
-**Purpose:** Reusable widgets used across multiple features.
-
-**Contents:**
-
-- `app_message.dart` - App-wide message display widget
-- `common_app_bar.dart` - Common app bar implementation
-- `common_error_view.dart` - Standardized error display widget
-- `common_form_field.dart` - Reusable form field widgets (`CommonFormField`, `CommonSearchField`)
-- `common_dropdown_field.dart` - Platform-adaptive dropdown widget (`CommonDropdownField`, `DropdownLabelPosition`)
-- `common_input_decoration_helpers.dart` - Input decoration helper functions (`buildCommonInputDecoration`, `buildFilledInputDecoration`)
-- `common_loading_widget.dart` - Standardized loading indicator
-- `common_page_layout.dart` - Common page layout wrapper
-- `flavor_badge.dart` - Flavor indicator badge (dev, staging, prod)
-- `cached_network_image_widget.dart` - Cached network image widget with automatic caching and error handling
-- `message_bubble.dart` - Chat message bubble widget
-- `resilient_svg_asset_image.dart` - SVG image widget with fallback support
-- `root_aware_back_button.dart` - Back button that respects root navigation
-
-**Usage Example:**
-
-```dart
-// Common error view
-CommonErrorView(
-  message: 'Failed to load data',
-  onRetry: () => loadData(),
-)
-
-// Optional custom retry label / test key (e.g. native platform showcase)
-CommonErrorView(
-  message: 'Failed to load showcase',
-  onRetry: () => cubit.load(),
-  retryLabel: l10n.nativePlatformShowcaseRetry,
-  retryButtonKey: const ValueKey('native-platform-showcase-retry'),
-)
-
-// Common loading widget
-CommonLoadingWidget(message: 'Loading...')
-
-// Cached network image
-CachedNetworkImageWidget(
-  imageUrl: 'https://example.com/image.jpg',
-  fit: BoxFit.cover,
-  width: 100,
-  height: 100,
-)
-
-// Resilient SVG image
-ResilientSvgAssetImage(
-  assetPath: 'assets/images/icon.svg',
-  width: 100,
-  height: 100,
-)
-```
-
-## Best Practices
-
-### When to Add to Shared
-
-Add utilities to `apps/mobile/lib/shared/` when:
-
-1. **Used by multiple features** - Not specific to a single feature
-2. **Reusable across contexts** - Can be used in different scenarios
-3. **Cross-cutting concerns** - Logging, error handling, navigation, etc.
-4. **Platform abstractions** - Platform-specific implementations
-
-### When NOT to Add to Shared
-
-Don't add to `apps/mobile/lib/shared/` when:
-
-1. **Feature-specific** - Only used by one feature (keep in feature directory)
-2. **Tightly coupled** - Strongly coupled to specific feature logic
-3. **Experimental** - Still being developed/tested (keep in feature first)
-
-### Organization Guidelines
-
-1. **Group related utilities** - Keep related functions/classes together
-2. **Use barrel files** - Export related utilities from single files (e.g., `utils.dart`, `widgets.dart`)
-3. **Document complex utilities** - Add "why" comments and usage examples
-4. **Keep it lean** - Don't add utilities "just in case" - wait until actually needed
-
-## Import Patterns
-
-### Recommended Imports
-
-```dart
-// Import entire shared module
-import 'package:flutter_bloc_app/shared/shared.dart';
-
-// Or import specific categories
-import 'package:flutter_bloc_app/shared/utils/utils.dart';
-import 'package:flutter_bloc_app/shared/widgets/widgets.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-```
-
-### Feature-Specific Imports
-
-```dart
-// Import only what you need
-import 'package:flutter_bloc_app/shared/utils/error_handling.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
-```
-
-## Summary
-
-- **Extensions:** BuildContext extensions and responsive utilities
-- **Platform:** Platform-specific implementations (biometric, native services)
-- **Services:** Cross-cutting services (error notifications)
-- **Storage:** Storage abstractions (Hive, migration utilities)
-- **UI:** UI constants and view status definitions
-- **Utils:** Utility functions (error handling, navigation, guards)
-- **Widgets:** Reusable widgets (error views, loading indicators, form fields)
-
-Each category serves a specific purpose and follows clear organization principles to maintain code clarity and reusability.
+Expected result: no `package:flutter_bloc_app/app/` or
+`package:flutter_bloc_app/features/` imports from `packages/**`, and no new
+`apps/mobile/lib/core/` or `apps/mobile/lib/shared/` trees.

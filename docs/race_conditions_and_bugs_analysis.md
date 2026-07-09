@@ -64,7 +64,7 @@ Callbacks check `_isRequestActive()` before emitting, preventing older responses
 
 ### 2.2 RetrySnackBarListener – Subscription Cancel in dispose()
 
-**Location:** `apps/mobile/lib/shared/widgets/retry_snackbar_listener.dart`
+**Location:** `apps/mobile/lib/app/widgets/retry_snackbar_listener.dart`
 
 ```dart
 @override

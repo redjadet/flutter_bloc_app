@@ -40,7 +40,7 @@ After these are done, you can start implementing the app (SecretConfig + Flutter
 ## What exists today (repo context)
 
 - **No Stripe SDK** currently in `pubspec.yaml`.
-- DI is centralized via GetIt in [apps/mobile/lib/core/di/injector.dart](../apps/mobile/lib/core/di/injector.dart) and registrations in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
+- DI is centralized via GetIt in [apps/mobile/lib/app/composition/injector.dart](../apps/mobile/lib/app/composition/injector.dart) and registrations in [apps/mobile/lib/app/composition/injector_registrations.dart](../apps/mobile/lib/app/composition/injector_registrations.dart).
 - Secrets are handled via `SecretConfig` and documented in [security_and_secrets.md](security_and_secrets.md). The app already depends on `cloud_functions`, so Firebase callable functions are a good fit.
 
 ## Recommended integration approach (demo-friendly)
@@ -76,12 +76,12 @@ Create a new feature module `payments`.
 
 ## Dependency injection
 
-- Add [apps/mobile/lib/core/di/features/register_payments_services.dart](../apps/mobile/lib/core/di/features/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/core/di/injector_registrations.dart](../apps/mobile/lib/core/di/injector_registrations.dart).
+- Add [apps/mobile/lib/app/composition/features/register_payments_services.dart](../apps/mobile/lib/app/composition/features/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/app/composition/injector_registrations.dart](../apps/mobile/lib/app/composition/injector_registrations.dart).
 - Follow existing pattern: `registerXServices()` per feature; presentation does not reference GetIt directly.
 
 ## Routing / navigation
 
-- Add a new route constant in [apps/mobile/lib/core/router/app_routes.dart](../apps/mobile/lib/core/router/app_routes.dart) (e.g. `payments` / `paymentsPath`).
+- Add a new route constant in [apps/mobile/lib/app/router/app_routes.dart](../apps/mobile/lib/app/router/app_routes.dart) (e.g. `payments` / `paymentsPath`).
 - Wire in GoRouter through the appropriate split route file under
   [`apps/mobile/lib/app/router/`](../apps/mobile/lib/app/router/) similarly to the calculator feature's
   pattern: create `PaymentsCubit` in the route builder and inject the domain

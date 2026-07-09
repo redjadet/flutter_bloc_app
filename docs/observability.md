@@ -2,7 +2,7 @@
 
 ## Structured error codes
 
-Use [AppErrorCode](../apps/mobile/lib/shared/utils/error_codes.dart) when emitting error state or logging so analytics and crash tools can aggregate by type:
+Use [AppErrorCode](../packages/utilities/lib/src/errors/error_codes.dart) when emitting error state or logging so analytics and crash tools can aggregate by type:
 
 - **network** – connectivity or DNS failure
 - **timeout** – request/operation timed out
@@ -15,9 +15,9 @@ Use [AppErrorCode](../apps/mobile/lib/shared/utils/error_codes.dart) when emitti
 
 Attach the code to freezed error state or pass to `AppLogger` / crash reporting.
 Map from exceptions or HTTP status using
-[NetworkErrorMapper](../apps/mobile/lib/shared/utils/network_error_mapper.dart):
+[NetworkErrorMapper](../apps/mobile/lib/app/utils/network_error_mapper.dart):
 `getErrorCode(error)` for any error, including
-[HttpRequestFailure](../apps/mobile/lib/shared/utils/http_request_failure.dart),
+[HttpRequestFailure](../packages/utilities/lib/src/errors/http_request_failure.dart),
 `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing
 `isNetworkError` / `isTimeoutError` helpers.
 
@@ -31,7 +31,7 @@ Map from exceptions or HTTP status using
 
 When Firebase initializes successfully, the app registers Flutter and zone error handlers that forward fatals to **Firebase Crashlytics**:
 
-- Implementation: [`apps/mobile/lib/core/bootstrap/firebase_bootstrap_service.dart`](../apps/mobile/lib/core/bootstrap/firebase_bootstrap_service.dart) (`registerCrashlyticsHandlers`)
+- Implementation: [`apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart`](../apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart) (`registerCrashlyticsHandlers`)
 - **Sensitive data:** Do not attach PII, tokens, or full request/response bodies to crash reports. Use `AppErrorCode` and short context strings only.
 - Configuration and secrets: [security_and_secrets.md](security_and_secrets.md), [firebase_setup.md](firebase_setup.md)
 
@@ -91,13 +91,13 @@ Mitigations and rollout steps live in [plans/future_observability.md](plans/futu
 
 ## Product analytics (not configured)
 
-There is **no** Mixpanel, Sentry product SDK, or custom `AnalyticsPort` implementation in `pubspec.yaml` today. Operational diagnostics UI data lives under [`apps/mobile/lib/core/diagnostics/`](../apps/mobile/lib/core/diagnostics/) (Remote Config view models, cache controls) — not product funnel analytics.
+There is **no** Mixpanel, Sentry product SDK, or custom `AnalyticsPort` implementation in `pubspec.yaml` today. Operational diagnostics UI data lives under [`apps/mobile/lib/app/diagnostics/`](../apps/mobile/lib/app/diagnostics/) (Remote Config view models, cache controls) — not product funnel analytics.
 
 - Interview/portfolio scope: [ADR 0005](adr/0005-interview-showcase-scope.md)
 - Planned seams and event taxonomy: [plans/future_observability.md](plans/future_observability.md)
 - Portfolio walk: [interview_showcase.md](interview_showcase.md) §11–12
 
-Sync and settings surfaces expose **operational** telemetry (queue depth, flush status) via [`apps/mobile/lib/shared/sync/`](../apps/mobile/lib/shared/sync/) and Settings sync diagnostics — not product funnel analytics.
+Sync and settings surfaces expose **operational** telemetry (queue depth, flush status) via [`packages/storage/lib/src/sync/`](../packages/storage/lib/src/sync/) and Settings sync diagnostics — not product funnel analytics.
 
 ## Related docs
 

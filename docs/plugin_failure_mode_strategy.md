@@ -21,9 +21,9 @@ Canonical guidance for wrapping Flutter plugins behind data-layer services and s
 
 Core types live in:
 
-- `apps/mobile/lib/core/domain/result.dart`
-- `apps/mobile/lib/core/domain/failure.dart`
-- `apps/mobile/lib/shared/utils/failure_to_app_error.dart`
+- `packages/core/lib/src/domain/result.dart`
+- `packages/core/lib/src/domain/failure.dart`
+- `packages/utilities/lib/src/errors/failure_to_app_error.dart`
 
 ## Wrapper pattern
 

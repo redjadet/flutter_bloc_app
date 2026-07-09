@@ -22,9 +22,9 @@ Use this as a checklist for implementation, verification, and follow-up.
 ### Implementation (pilot)
 
 - [x] Add `mix: ^1.7.0` (and `mix_annotations` if required) to `pubspec.yaml`.
-- [x] Create mix theme module: `apps/mobile/lib/core/theme/mix_app_theme.dart` with tokens and `buildAppMixScope(context, child: ...)`.
+- [x] Create mix theme module: `apps/mobile/lib/app/theme/mix_app_theme.dart` with tokens and `buildAppMixScope(context, child: ...)`.
 - [x] Wrap app with `MixScope` in `AppConfig.createMaterialApp` builder.
-- [x] Create `apps/mobile/lib/shared/design_system/app_styles.dart` with card and profile-outlined-button styles (tokens only).
+- [x] Create `packages/design_system/lib/src/styles/app_styles.dart` with card and profile-outlined-button styles (tokens only).
 - [x] Refactor `CommonCard` to use mix tokens (padding, radius, color fallbacks from `MixScope` / `UI`); keep same API.
 - [x] Refactor profile button styles to use mix tokens / `AppStyles.profileOutlinedButton`.
 - [x] Update tests that need `MixScope` (e.g. profile button styles tests, CommonCard test).
@@ -96,10 +96,10 @@ Use this as a checklist for implementation, verification, and follow-up.
 
 ## Current state (summary)
 
-- **Theme:** [apps/mobile/lib/core/theme/app_theme.dart](apps/mobile/lib/core/theme/app_theme.dart) — `ThemeData`, `ColorScheme`, `TextTheme` (Google Fonts Roboto/Comfortaa), `ThemeExtension` (ConfettiTheme). Wired in [apps/mobile/lib/core/app_config.dart](apps/mobile/lib/core/app_config.dart) as `theme` / `darkTheme`.
-- **Typography:** [apps/mobile/lib/shared/ui/typography.dart](apps/mobile/lib/shared/ui/typography.dart) — `AppTypography` static helpers (`buttonText`, `bodyText`, `titleText`, etc.) that take `BuildContext` and optional overrides; all derive from `Theme.of(context).textTheme`.
-- **Spacing/sizing:** [apps/mobile/lib/shared/ui/ui_constants.dart](apps/mobile/lib/shared/ui/ui_constants.dart) — `UI` class with ScreenUtil-based scaling (`gapXS/S/M/L`, `radiusM`, `cardPadH/V`, etc.).
-- **Responsive:** [apps/mobile/lib/shared/responsive/responsive_config.dart](apps/mobile/lib/shared/responsive/responsive_config.dart) — breakpoints (mobile <800, tablet 800–1199, desktop 1200+); [packages/design_system/lib/src/responsive/responsive_layout.dart](packages/design_system/lib/src/responsive/responsive_layout.dart) — context extensions (`pagePadding`, `responsiveCardPadding`, `gridColumns`, `isMobile`/`isTablet`/`isDesktop`).
+- **Theme:** [apps/mobile/lib/app/theme/app_theme.dart](apps/mobile/lib/app/theme/app_theme.dart) — `ThemeData`, `ColorScheme`, `TextTheme` (Google Fonts Roboto/Comfortaa), `ThemeExtension` (ConfettiTheme). Wired in [apps/mobile/lib/app/app_config.dart](apps/mobile/lib/app/app_config.dart) as `theme` / `darkTheme`.
+- **Typography:** [packages/design_system/lib/src/ui/typography.dart](packages/design_system/lib/src/ui/typography.dart) — `AppTypography` static helpers (`buttonText`, `bodyText`, `titleText`, etc.) that take `BuildContext` and optional overrides; all derive from `Theme.of(context).textTheme`.
+- **Spacing/sizing:** [packages/design_system/lib/src/ui/ui_constants.dart](packages/design_system/lib/src/ui/ui_constants.dart) — `UI` class with ScreenUtil-based scaling (`gapXS/S/M/L`, `radiusM`, `cardPadH/V`, etc.).
+- **Responsive:** [packages/design_system/lib/src/responsive/responsive_config.dart](packages/design_system/lib/src/responsive/responsive_config.dart) — breakpoints (mobile <800, tablet 800–1199, desktop 1200+); [packages/design_system/lib/src/responsive/responsive_layout.dart](packages/design_system/lib/src/responsive/responsive_layout.dart) — context extensions (`pagePadding`, `responsiveCardPadding`, `gridColumns`, `isMobile`/`isTablet`/`isDesktop`).
 - **Design system doc:** [docs/design_system.md](design_system.md) — points to theme, constants, typography, UI constants, components.
 
 Roughly **100+ files** reference `TextStyle`/`BoxDecoration`/`EdgeInsets`/`BorderRadius`; many use `Theme.of(context)` and `AppTypography`; [docs/ui_ux_responsive_review.md](ui_ux_responsive_review.md) still flags hardcoded colors and fixed typography in several areas. This app requires: theme colors (no `Colors.black`/white), typography from theme, centralize styling, use `ThemeExtension` for custom tokens, responsive extensions.
@@ -150,7 +150,7 @@ flowchart LR
 ### 1. Add dependency and minimal MixScope wiring
 
 - Add `mix: ^1.7.0` (and `mix_annotations` if required by mix’s API) to [pubspec.yaml](../pubspec.yaml).
-- Create a **mix theme module** (e.g. under `apps/mobile/lib/core/theme/` or `apps/mobile/lib/shared/design_system/`) that:
+- Create a **mix theme module** (e.g. under `apps/mobile/lib/app/theme/` or `packages/design_system/`) that:
   - Builds `MixScope` token values from:
     - **Colors:** Map from `ThemeData.colorScheme` (primary, surface, onSurface, error, etc.) into mix color tokens so light/dark are consistent with Material.
     - **Text styles:** Map `ThemeData.textTheme` (e.g. `labelLarge`, `bodyMedium`, `headlineMedium`) to mix `textStyle` tokens so mix styles stay aligned with `AppTypography` and existing theme.
@@ -166,7 +166,7 @@ flowchart LR
 
 ### 2. Define a small set of shared Style definitions and variants
 
-- Add a **central style module** (e.g. `apps/mobile/lib/shared/design_system/app_styles.dart` or under `apps/mobile/lib/core/theme/mix/`) that defines:
+- Add a **central style module** (e.g. `packages/design_system/lib/src/styles/app_styles.dart` or under `apps/mobile/lib/app/theme/mix/`) that defines:
   - **Semantic styles** using mix utilities and tokens only (no hardcoded numbers):
     - Card: padding from space tokens, radius from radius tokens, background from color token (e.g. surface), optional border.
     - Buttons: primary, secondary, outlined — using color and radius tokens; use **variants** (e.g. `variantOutlined`) so one base style can be applied with `applyVariant` for outlined.
@@ -181,7 +181,7 @@ This gives you a single source of truth for “card style”, “primary button 
 
 ### 3. Pilot: use mix in one shared component and one feature
 
-- **Shared component:** Refactor [apps/mobile/lib/shared/widgets/common_card.dart](../apps/mobile/lib/shared/widgets/common_card.dart) to use a mix `Style` (e.g. `AppStyles.card`) for padding, shape, and color (from tokens). Keep the same API (`CommonCard(child: ..., padding: ...)`) so call sites don’t change; internally replace `Card` + `Padding` + manual `context.responsiveCardPaddingInsets` with a mix-driven layout (e.g. `Box` or equivalent with the card style). If mix does not provide a drop-in for `Card`, keep `Card` but pass it decoration/padding from the resolved Style so the *values* still come from mix.
+- **Shared component:** Refactor [apps/mobile/lib/app/widgets/common_card.dart](../apps/mobile/lib/app/widgets/common_card.dart) to use a mix `Style` (e.g. `AppStyles.card`) for padding, shape, and color (from tokens). Keep the same API (`CommonCard(child: ..., padding: ...)`) so call sites don’t change; internally replace `Card` + `Padding` + manual `context.responsiveCardPaddingInsets` with a mix-driven layout (e.g. `Box` or equivalent with the card style). If mix does not provide a drop-in for `Card`, keep `Card` but pass it decoration/padding from the resolved Style so the *values* still come from mix.
 - **Feature-level style:** Replace the ad-hoc `profileOutlinedButtonStyle` / `profileButtonTextStyle` in [apps/mobile/lib/features/profile/presentation/widgets/profile_button_styles.dart](../apps/mobile/lib/features/profile/presentation/widgets/profile_button_styles.dart) with a mix-based style (e.g. `AppStyles.profileOutlinedButton`) that uses tokens and a named variant, so padding, radius, and text style are consistent with the design system and theme-aware.
 
 Validate: run the app, toggle dark mode, resize to tablet/desktop, and run `./bin/checklist` and relevant widget tests. Fix any regressions (e.g. tests that assume specific padding/colors).
@@ -214,7 +214,7 @@ No need to change existing “no hardcoded values” or “theme colors” rules
 | Risk | Mitigation |
 | ------ | ------------- |
 | Mix token build needs context but is built at root | Build `MixScope` inside the `builder` of `MaterialApp` where `context` is valid; use `Theme.of(context)` and, if needed, `MediaQuery`/layout to build tokens. |
-| ScreenUtil not initialized when MixScope is built | Build `MixScope` below `ScreenUtilInit` (or wherever `UI.markScreenUtilReady()` is called), or build tokens lazily on first use with a fallback when ScreenUtil isn’t ready (similar to [apps/mobile/lib/shared/ui/ui_constants.dart](../apps/mobile/lib/shared/ui/ui_constants.dart)). |
+| ScreenUtil not initialized when MixScope is built | Build `MixScope` below `ScreenUtilInit` (or wherever `UI.markScreenUtilReady()` is called), or build tokens lazily on first use with a fallback when ScreenUtil isn’t ready (similar to [packages/design_system/lib/src/ui/ui_constants.dart](../packages/design_system/lib/src/ui/ui_constants.dart)). |
 | Tests assume Theme but not MixScope | In test helpers or `pumpApp`-style setup, wrap the widget under test with `buildAppMixScope(context, child: ...)` and a minimal `Theme`/`MaterialApp` if needed. |
 | mix API or docs change | Pin mix to a stable minor (e.g. `^1.7.0`); check changelog when upgrading. Prefer confining mix usage to a small layer (theme + style modules) so API changes touch few files. |
 

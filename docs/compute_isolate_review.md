@@ -8,7 +8,7 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 
 ## Overview
 
-**Current Status:** `compute()` is used in production via `apps/mobile/lib/shared/utils/isolate_json.dart` for JSON decoding/encoding above size thresholds. **UTF-8 byte inputs** are supported via `decodeJsonMapFromBytes()` / `decodeJsonListFromBytes()` (fused `utf8` + `json` converter) so large HTTP bodies need not become a Dart `String` before parsing when Dio returns bytes.
+**Current Status:** `compute()` is used in production via `apps/mobile/lib/app/utils/isolate_json.dart` for JSON decoding/encoding above size thresholds. **UTF-8 byte inputs** are supported via `decodeJsonMapFromBytes()` / `decodeJsonListFromBytes()` (fused `utf8` + `json` converter) so large HTTP bodies need not become a Dart `String` before parsing when Dio returns bytes.
 
 **Purpose:** Identify CPU-intensive operations that block the UI thread and recommend isolate-based solutions to improve responsiveness.
 
@@ -29,11 +29,11 @@ This document analyzes potential opportunities to use `compute()` and isolates t
 
 ## Current Usage
 
-- **Production code**: `apps/mobile/lib/shared/utils/isolate_json.dart` provides `decodeJsonMap()` / `decodeJsonList()` for **string** payloads, **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** for **UTF-8 `List<int>`** payloads (same 8KB isolate threshold), and `encodeJsonIsolate()` for JSON encoding, using `compute()` above those thresholds (`_kIsolateDecodeThreshold`, `_kIsolateEncodeSmallCollectionMax`).
+- **Production code**: `apps/mobile/lib/app/utils/isolate_json.dart` provides `decodeJsonMap()` / `decodeJsonList()` for **string** payloads, **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** for **UTF-8 `List<int>`** payloads (same 8KB isolate threshold), and `encodeJsonIsolate()` for JSON encoding, using `compute()` above those thresholds (`_kIsolateDecodeThreshold`, `_kIsolateEncodeSmallCollectionMax`).
 - **Network repositories**: Chart and GraphQL-style paths decode JSON via `decodeJsonMap()` on **string** bodies. **Hugging Face** chat client uses **`ResponseType.bytes`** and **`decodeJsonMapFromBytes()`** on the success path.
 - **Local storage**: Chat history and search cache parsing decode JSON via `decodeJsonList()` on stored strings.
 - **Size estimation**: Profile cache size estimation encodes JSON via `encodeJsonIsolate()`
-- **Demo/Testing**: Isolate samples in `apps/mobile/lib/shared/utils/isolate_samples.dart` demonstrating Fibonacci calculations and parallel processing
+- **Demo/Testing**: Isolate samples in `apps/mobile/lib/app/utils/isolate_samples.dart` demonstrating Fibonacci calculations and parallel processing
 - **Tests**:
   - `test/isolate_samples_test.dart` validates isolate behavior
   - `test/shared/utils/isolate_json_test.dart` validates string and bytes JSON decode/encode with isolate offloading
@@ -77,7 +77,7 @@ final Map<String, dynamic> decoded = await decodeJsonMap(body);
 
 **Implementation:**
 
-- Uses `decodeJsonMap()` from `apps/mobile/lib/shared/utils/isolate_json.dart`
+- Uses `decodeJsonMap()` from `apps/mobile/lib/app/utils/isolate_json.dart`
 - Automatically uses `compute()` for payloads >8KB (configurable threshold)
 - JSON decoding happens in isolate, domain model creation on UI isolate
 
@@ -213,7 +213,7 @@ Future<int?> _estimateSizeBytes(final dynamic raw) async {
 
 **Location:**
 
-- `apps/mobile/lib/shared/utils/markdown_parser.dart`
+- `packages/design_system/lib/src/markdown/markdown_parser.dart`
 - `apps/mobile/lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart`
 
 **Current Implementation:**
@@ -269,7 +269,7 @@ class MarkdownRenderObject {
 ### Architecture Considerations
 
 - **Domain models are not sendable** - Custom classes (e.g., `ChartPoint`, `GraphqlCountry`, `ChatConversation`) must be constructed on UI isolate
-- **Shared helpers** - If needed, create pure Dart isolate helpers in `apps/mobile/lib/shared/utils/` using `dart:isolate`
+- **Shared helpers** - If needed, create pure Dart isolate helpers in `apps/mobile/lib/app/utils/` using `dart:isolate`
 - **Avoid in lifecycle methods** - Never start isolates in `build()`, `performLayout()`, or synchronous callbacks
 - **Schedule from repositories/cubits** - Trigger isolate work from async operations in repositories or cubit methods
 
@@ -316,7 +316,7 @@ class MarkdownRenderObject {
 **For JSON decoding (recommended approach):**
 
 - [ ] Prefer **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** when the HTTP layer gives UTF-8 **`List<int>`** (e.g. Dio **`ResponseType.bytes`**).
-- [ ] Otherwise use **`decodeJsonMap()`** or **`decodeJsonList()`** from `apps/mobile/lib/shared/utils/isolate_json.dart` for **string** bodies.
+- [ ] Otherwise use **`decodeJsonMap()`** or **`decodeJsonList()`** from `apps/mobile/lib/app/utils/isolate_json.dart` for **string** bodies.
 - [ ] Automatically uses `compute()` for payloads >8KB (byte length or string length per API).
 - [ ] Map to domain models on UI isolate (domain models aren't sendable)
 - [ ] Wrap in try-catch for error handling
@@ -379,7 +379,7 @@ class MarkdownRenderObject {
 3. Use `decodeJsonMap()` / `decodeJsonList()` / **`decodeJsonMapFromBytes()`** / **`decodeJsonListFromBytes()`** / `encodeJsonIsolate()` for any new large JSON operations—**prefer bytes APIs** when Dio (or another client) already exposes UTF-8 bytes.
 4. **Optional backlog:** Migrate other large JSON call sites from string bodies to bytes + `decodeJsonMapFromBytes` when Retrofit/Dio surfaces allow; evaluate FFI/SIMD JSON only with profiling and dependency review (see **Future work: JSON parsing** above).
 
-**Enterprise / high-traffic:** For low-end devices or high-traffic scenarios, consider making the isolate threshold configurable (e.g. lower than 8KB) so more decoding is offloaded; the default remains 8KB in `apps/mobile/lib/shared/utils/isolate_json.dart`.
+**Enterprise / high-traffic:** For low-end devices or high-traffic scenarios, consider making the isolate threshold configurable (e.g. lower than 8KB) so more decoding is offloaded; the default remains 8KB in `apps/mobile/lib/app/utils/isolate_json.dart`.
 
 **Validation Scripts:**
 

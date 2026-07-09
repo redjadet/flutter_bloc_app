@@ -6,7 +6,7 @@ and the next document to read.
 
 ## Source of truth
 
-- Route names and paths: `apps/mobile/lib/core/router/app_routes.dart`
+- Route names and paths: `apps/mobile/lib/app/router/app_routes.dart`
 - Route composition: `apps/mobile/lib/app/router/routes_core.dart`,
   `apps/mobile/lib/app/router/routes_demos.dart`, `apps/mobile/lib/app/router/route_groups.dart`,
   `apps/mobile/lib/app/router/routes_staff_app_demo.dart`,
@@ -86,12 +86,12 @@ See [Architecture Details](architecture_details.md) and
 
 ## Cross-cutting modules
 
-- Dependency injection: `apps/mobile/lib/core/di/`
+- Dependency injection: `apps/mobile/lib/app/composition/`
 - Routing: `apps/mobile/lib/app/router/`
-- Shared sync infrastructure: `apps/mobile/lib/shared/sync/`
-- Shared HTTP and auth retry behavior: `apps/mobile/lib/shared/http/`
-- Shared widgets and design primitives: `apps/mobile/lib/shared/widgets/`,
-  `apps/mobile/lib/shared/components/`, `apps/mobile/lib/shared/design_system/`
+- Shared sync infrastructure: `packages/storage/lib/src/sync/`
+- Shared HTTP and auth retry behavior: `packages/networking/lib/src/`
+- Shared widgets and design primitives: `apps/mobile/lib/app/widgets/`,
+  `packages/design_system/`, `packages/design_system/`
 
 ## Configuration notes
 

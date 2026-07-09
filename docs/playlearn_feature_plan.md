@@ -32,8 +32,8 @@ Her feature/oyun farklı sayfada; tek sayfada tek iş.
 - **Data:** Sabit/asset kelime-tema verisi, `VocabularyRepository` impl, TTS ile `AudioPlaybackService` impl; DI'da kayıt.
 - **Presentation:** Cubit sadece tema listesi + seçili tema + kelime listesi (quiz yok). İki ayrı sayfa: tema seçimi, kelime listesi; her sayfa kendi route'unda.
 - **Dosya boyutu:** Tüm dosyalar **max 500 satır**. Sayfa/cubit büyürse parçala (sayfa body ayrı widget dosyasına taşı).
-- **DI:** `apps/mobile/lib/core/di/injector_registrations.dart` içinde `VocabularyRepository` ve `AudioPlaybackService` kaydı; `registerLazySingletonIfAbsent` kullan.
-- **Routing:** `apps/mobile/lib/core/router/app_routes.dart`,
+- **DI:** `apps/mobile/lib/app/composition/injector_registrations.dart` içinde `VocabularyRepository` ve `AudioPlaybackService` kaydı; `registerLazySingletonIfAbsent` kullan.
+- **Routing:** `apps/mobile/lib/app/router/app_routes.dart`,
   `apps/mobile/lib/app/router/routes_demos.dart`; app bar veya overflow'a "Playlearn" linki.
 - **Type-safe erişim:** UI'da `context.cubit<T>()`, `context.state<T, S>()`, `TypeSafeBlocSelector<T, S, R>` kullan; raw `context.read` yok.
 - **State modeli:** Basit state için Freezed; async emit'lerde `if (isClosed) return;` guard.

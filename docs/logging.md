@@ -13,7 +13,7 @@ data or creating noisy, unstable output.
 
 ## Logger API
 
-Use [`AppLogger`](../apps/mobile/lib/shared/utils/logger.dart) for app code:
+Use [`AppLogger`](../packages/app_shared_flutter/lib/src/utils/logger.dart) for app code:
 
 ```dart
 AppLogger.info('sync.flush completed operation=profile reason=manual');
@@ -49,7 +49,7 @@ Use these fields when they apply:
 - `request_id`: in-flight/request guard id when diagnosing stale async results.
 - `sync_id` or `operation_id`: background sync or queued work id.
 - `status_code`: HTTP status when the error came from a remote call.
-- `error_code`: [`AppErrorCode`](../apps/mobile/lib/shared/utils/error_codes.dart) or a
+- `error_code`: [`AppErrorCode`](../packages/utilities/lib/src/errors/error_codes.dart) or a
   stable domain error code.
 - `reason`: short machine-readable cause, such as `offline`, `timeout`,
   `unauthorized`, `validation_failed`, or `storage_unavailable`.

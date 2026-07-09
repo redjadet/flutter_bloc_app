@@ -214,7 +214,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
 // apps/mobile/lib/features/todo_list/presentation/cubit/todo_list_state.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:flutter_bloc_app/shared/ui/view_status.dart';
+import 'package:design_system/design_system.dart';
 
 part 'todo_list_state.freezed.dart';
 
@@ -631,7 +631,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 DI updates:
 
-- `apps/mobile/lib/core/di/injector_registrations.dart` for `registerLazySingletonIfAbsent<TodoRepository>(...)`.
+- `apps/mobile/lib/app/composition/injector_registrations.dart` for `registerLazySingletonIfAbsent<TodoRepository>(...)`.
 - Ensure Hive adapter is registered during app startup (follow existing Hive setup patterns).
 
 ### 4) Presentation Layer
@@ -724,7 +724,7 @@ Future<void> _showAddTodoDialog(BuildContext context) async {
 
 ### 5) Routing
 
-- Add `AppRoutes.todoList` / `AppRoutes.todoListPath` in `apps/mobile/lib/core/router/app_routes.dart`.
+- Add `AppRoutes.todoList` / `AppRoutes.todoListPath` in `apps/mobile/lib/app/router/app_routes.dart`.
 - Register a `GoRoute` in the appropriate split route file under
   `apps/mobile/lib/app/router/` (currently `routes_demos.dart` for the Todo List demo).
 - Decide on deferred loading. For MVP, avoid deferred loading unless the feature grows heavy.

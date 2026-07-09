@@ -81,7 +81,7 @@ This document defines how the search feature adopts the shared offline-first sta
 - `SearchCacheRepository` with Hive-backed caching (`apps/mobile/lib/features/search/data/search_cache_repository.dart`)
 - `OfflineFirstSearchRepository` implementing `SyncableRepository` (`apps/mobile/lib/features/search/data/offline_first_search_repository.dart`)
 - `SearchSyncBanner` widget exists but is not displayed; sync diagnostics in Settings (dev/qa only)
-- Full DI wiring in `apps/mobile/lib/core/di/injector_registrations.dart` and registry registration
+- Full DI wiring in `apps/mobile/lib/app/composition/injector_registrations.dart` and registry registration
 - Comprehensive test coverage:
   - Unit tests: `test/features/search/data/search_cache_repository_test.dart`
   - Repository tests: `test/features/search/data/offline_first_search_repository_test.dart`

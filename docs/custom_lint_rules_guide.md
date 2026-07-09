@@ -228,5 +228,5 @@ For many use cases, runtime validation (like `StateTransitionValidator`) is more
 ## Related Documentation
 
 - [Code Generation Guide](code_generation_guide.md) - Alternative approach using code generation
-- [State Transition Validator](../apps/mobile/lib/shared/utils/state_transition_validator.dart) - Runtime validation approach
+- [State Transition Validator](../apps/mobile/lib/app/utils/bloc/state_transition_validator.dart) - Runtime validation approach
 - [Validation Scripts](validation_scripts.md) - Existing validation patterns

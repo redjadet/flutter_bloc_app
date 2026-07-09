@@ -55,7 +55,7 @@ This is enforced both by convention and by validation scripts such as
 
 ### 3. Orchestration vs Infrastructure
 
-- `BackgroundSyncCoordinator` in `apps/mobile/lib/shared/sync/background_sync_coordinator.dart`
+- `BackgroundSyncCoordinator` in `packages/networking/lib/src/sync/background_sync_coordinator.dart`
   coordinates sync cycles, but delegates timing to `TimerService`,
   connectivity to `NetworkStatusService`, queued work to
   `PendingSyncRepository`, and repository participation to
@@ -77,7 +77,7 @@ This is enforced both by convention and by validation scripts such as
 ### 5. DI as a Composition Boundary
 
 - Feature registrations are split into focused files such as
-  `apps/mobile/lib/core/di/features/register_chat_services.dart` instead of one monolithic
+  `apps/mobile/lib/app/composition/features/register_chat_services.dart` instead of one monolithic
   registration file.
 - `get_it` wiring is treated as the composition boundary where concrete data
   implementations are attached to abstract interfaces.
@@ -86,10 +86,10 @@ This is enforced both by convention and by validation scripts such as
 
 ### 6. UI Access Patterns
 
-- `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
+- `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
   state access, keeping widget code focused on rendering instead of provider
   lookup mechanics.
-- `apps/mobile/lib/shared/utils/bloc_provider_helpers.dart` centralizes common
+- `apps/mobile/lib/app/utils/bloc_provider_helpers.dart` centralizes common
   `BlocProvider` creation and async initialization patterns so route/page code
   does not repeatedly re-implement setup behavior.
 

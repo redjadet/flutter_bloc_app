@@ -28,7 +28,7 @@ Format: **Symptom → Cause → Fix → Proof**
 
 **Symptom:** `modular_metrics --cross-feature-only` showed chat importing `supabase_auth/domain`.
 **Cause:** `ChatAuthSessionPortAdapter` depended on concrete `SupabaseAuthRepository`.
-**Fix:** `RemoteBackendAuthPort` in `apps/mobile/lib/core/auth/`; adapter depends on port; DI binds Supabase repo as port.
+**Fix:** `RemoteBackendAuthPort` in `packages/auth/lib/src/`; adapter depends on port; DI binds Supabase repo as port.
 **Proof:** Empty cross-feature report; `check_feature_modularity_leaks.sh` pass
 
 ---

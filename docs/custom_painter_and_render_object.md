@@ -129,7 +129,7 @@ class HiveCounterRepository implements CounterRepository {
   // ... other methods
 }
 
-// 3. Dependency Injection (apps/mobile/lib/core/di/injector.dart)
+// 3. Dependency Injection (apps/mobile/lib/app/composition/injector.dart)
 void configureDependencies() {
   getIt.registerLazySingleton<CounterRepository>(
     () => HiveCounterRepository(),
@@ -295,7 +295,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:design_system/responsive.dart';
 
 /// Widget that displays a circular progress ring based on counter state.
 ///
@@ -424,7 +424,7 @@ This example demonstrates a complete RenderObject implementation that follows Cl
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:design_system/responsive.dart';
 
 /// Widget that displays a horizontal segmented bar.
 ///
@@ -688,7 +688,7 @@ Here's a complete example showing both CustomPainter and RenderObject working to
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
+import 'package:design_system/responsive.dart';
 
 /// Example page showcasing CustomPainter and RenderObject usage
 /// with proper Clean Architecture and BLoC integration.

@@ -24,7 +24,7 @@ This document defines how the chat feature uses the shared offline-first stack. 
   - A **`ChatRepository`** implementation for remote inference (the composite: Edge-first, optional direct HF fallback when online and policy allows).
   - `ChatLocalDataSource` / `ChatHistoryRepository` for persistence.
   - `PendingSyncRepository` for enqueueing outgoing messages as `SyncOperation`s.
-- DI: register local history and wire the offline-first repository into the sync registry (`apps/mobile/lib/core/di/features/register_chat_services.dart`).
+- DI: register local history and wire the offline-first repository into the sync registry (`apps/mobile/lib/app/composition/features/register_chat_services.dart`).
   - Sync payload: include `conversationId`, `prompt`, `pastUserInputs`, `generatedResponses`, `model`, `clientMessageId`, `createdAt`. Processing should call remote, then persist reply + update conversation metadata (`lastSyncedAt`, `synchronized`, `changeId`).
 - Implement `SyncableRepository`:
   - `entityType`: `chat_message`.

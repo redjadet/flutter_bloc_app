@@ -112,7 +112,7 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
   callbacks from `apps/mobile/lib/app/composition/**` (see `AppMemoryService.onChartMemoryTrim`).
 - **Domain purity (imports):** same script fails on `^import` lines in
   `apps/mobile/lib/features/*/domain/**` that pull in Flutter, `get_it`, Hive, Supabase client
-  libs, Dio, Retrofit, `package:flutter_bloc_app/app/`, `package:flutter_bloc_app/core/di/`,
+  libs, Dio, Retrofit, `package:flutter_bloc_app/app/`, `package:flutter_bloc_app/app/composition/`,
   or another feature’s `presentation/` / `data/` paths. Domain remains pure Dart;
   Flutter-only domain checks also run via `tool/check_flutter_domain_imports.sh`.
 - **Known pairwise feature boundaries:** declarative rules in

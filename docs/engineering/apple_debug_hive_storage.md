@@ -22,15 +22,15 @@ Expected **benign** dev logs (not bugs): missing Firebase/Supabase secrets,
 
 ## Design (three guards)
 
-1. **Secrets** — `apps/mobile/lib/shared/platform/secure_secret_storage.dart`
+1. **Secrets** — `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`
    `useInMemorySecretStorageInDebug()` → `InMemorySecretStorage` on **iOS and
    macOS** when `!kReleaseMode && !kIsWeb`. Avoids Keychain on simulator.
 
-2. **Encryption key** — `apps/mobile/lib/shared/storage/hive_key_manager.dart`
+2. **Encryption key** — `packages/storage/lib/src/hive/hive_key_manager.dart`
    Same helper → deterministic `_appleDebugFallbackKey` (32 bytes) so encrypted
    boxes stay readable across debug restarts.
 
-3. **Hive directory** — `apps/mobile/lib/shared/storage/hive_initializer_io.dart`
+3. **Hive directory** — `packages/storage/lib/src/hive/hive_initializer_io.dart`
    - iOS debug → `Application Support/hive_ios_debug`  
    - macOS debug → `Application Support/hive_macos_debug` (existing)  
    Isolates debug data from release paths and from pre-fix corrupted files.
@@ -47,10 +47,10 @@ validate real secure-storage behavior before shipping.
 
 | File | Role |
 | --- | --- |
-| `apps/mobile/lib/shared/platform/secure_secret_storage.dart` | Platform secret backend |
-| `apps/mobile/lib/shared/storage/hive_key_manager.dart` | AES key source |
-| `apps/mobile/lib/shared/storage/hive_initializer_io.dart` | Hive root path |
-| `apps/mobile/lib/shared/storage/hive_service.dart` | Encrypted box open/close |
+| `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart` | Platform secret backend |
+| `packages/storage/lib/src/hive/hive_key_manager.dart` | AES key source |
+| `packages/storage/lib/src/hive/hive_initializer_io.dart` | Hive root path |
+| `packages/storage/lib/src/hive/hive_service.dart` | Encrypted box open/close |
 | `test/secure_secret_storage_test.dart` | iOS/macOS debug storage tests |
 | `test/shared/storage/hive_key_manager_test.dart` | Stable debug key tests |
 
@@ -94,5 +94,5 @@ Bundle ID: `com.example.flutterBlocApp` (see `ios/Runner` / Xcode).
 
 | Changed paths | Minimum proof |
 | --- | --- |
-| `apps/mobile/lib/shared/platform/secure_secret_storage.dart`, `apps/mobile/lib/shared/storage/hive_*.dart` | `bash tool/check_apple_debug_hive_storage.sh` + focused storage tests + simulator smoke if behavior changed |
+| `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`, `packages/storage/lib/src/hive/hive_*.dart` | `bash tool/check_apple_debug_hive_storage.sh` + focused storage tests + simulator smoke if behavior changed |
 | `docs/**` only | `bash tool/check_apple_debug_hive_storage.sh` if guard script or anchors changed |

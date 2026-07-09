@@ -471,11 +471,11 @@ apps/mobile/lib/features/ai_decision_demo/
 
 Cursor/Codex agents should expect this write set:
 
-- `apps/mobile/lib/core/router/app_routes.dart`
+- `apps/mobile/lib/app/router/app_routes.dart`
   - Add `aiDecisionDemo` and `aiDecisionDemoPath = '/ai-decision-demo'`.
 - `apps/mobile/lib/app/router/routes_demos.dart`
   - Register `GoRoute` for `AiDecisionDemoPage`.
-- `apps/mobile/lib/core/di/injector_registrations.dart`
+- `apps/mobile/lib/app/composition/injector_registrations.dart`
   - Register the repository/client directly or call a new
     `registerAiDecisionDemoServices()`.
 - `apps/mobile/lib/features/features.dart`

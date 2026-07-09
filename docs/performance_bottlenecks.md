@@ -19,7 +19,7 @@
 
 ### CommonLoadingButton Transition Cost
 
-- File: `apps/mobile/lib/shared/widgets/common_loading_widget.dart`
+- File: `packages/design_system/lib/src/widgets/common_loading_widget.dart`
 - Issue: Swapping entire button subtree when `isLoading` toggled caused extra layout churn.
 - Resolution: Use `AnimatedSwitcher` and keyed children for smoother transitions.
 

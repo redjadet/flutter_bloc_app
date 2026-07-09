@@ -77,8 +77,8 @@ have frequent updates.
 
 **Files**:
 
-- `apps/mobile/lib/core/config/secret_config.dart`
-- `apps/mobile/lib/core/config/secret_config_sources.dart`
+- `apps/mobile/lib/app/config/secret_config.dart`
+- `apps/mobile/lib/app/config/secret_config_sources.dart`
 - `assets/config/secrets.sample.json` (reference keys only; not bundled as a runtime secrets file)
 
 **Changes**:
@@ -210,7 +210,7 @@ import 'dart:async';
 
 import 'package:genui/genui.dart';
 import 'package:genui_google_generative_ai/genui_google_generative_ai.dart';
-import 'package:flutter_bloc_app/core/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
 
@@ -319,14 +319,14 @@ implementation, as the API may have changed.
 
 **Files**:
 
-- `apps/mobile/lib/core/di/injector_registrations.dart` (or create
+- `apps/mobile/lib/app/composition/injector_registrations.dart` (or create
   `register_genui_services.dart` following the pattern of
   `register_chat_services.dart`)
 
 **Registration**:
 
 ```dart
-import 'package:flutter_bloc_app/core/di/injector_helpers.dart';
+import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/genui_demo/data/genui_demo_agent_impl.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 
@@ -386,8 +386,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_events.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/shared/utils/cubit_subscription_mixin.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
+import 'package:flutter_bloc_app/app/utils/cubit_subscription_mixin.dart';
 
 class GenUiDemoCubit extends Cubit<GenUiDemoState>
     with CubitSubscriptionMixin<GenUiDemoState> {
@@ -543,9 +543,9 @@ state file.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/core/core.dart';
+import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/widgets/genui_demo_content.dart';
-import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:design_system/design_system.dart';
 
 class GenUiDemoPage extends StatelessWidget {
   const GenUiDemoPage({super.key});
@@ -568,12 +568,12 @@ import 'package:flutter/material.dart';
 import 'package:genui/genui.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
-import 'package:flutter_bloc_app/shared/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/shared/extensions/responsive.dart';
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/utils/platform_adaptive.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_error_view.dart';
-import 'package:flutter_bloc_app/shared/widgets/common_loading_widget.dart';
+import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:design_system/responsive.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/utils/platform_adaptive.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
+import 'package:design_system/design_system.dart';
 
 class GenUiDemoContent extends StatefulWidget {
   const GenUiDemoContent({super.key});
@@ -690,7 +690,7 @@ class _GenUiInputRow extends StatelessWidget {
 
 ### 7) Routing and Feature Exports
 
-#### Route Constants (`apps/mobile/lib/core/router/app_routes.dart`)
+#### Route Constants (`apps/mobile/lib/app/router/app_routes.dart`)
 
 ```dart
 static const genuiDemo = 'genui-demo';
@@ -939,12 +939,12 @@ available catalog widgets, as per GenUI documentation.
 ### Modified Files
 
 - `pubspec.yaml`
-- `apps/mobile/lib/core/config/secret_config.dart`
-- `apps/mobile/lib/core/config/secret_config_sources.dart`
+- `apps/mobile/lib/app/config/secret_config.dart`
+- `apps/mobile/lib/app/config/secret_config_sources.dart`
 - `assets/config/secrets.sample.json`
-- `apps/mobile/lib/core/di/injector_registrations.dart` (or new
+- `apps/mobile/lib/app/composition/injector_registrations.dart` (or new
   `register_genui_services.dart`)
-- `apps/mobile/lib/core/router/app_routes.dart`
+- `apps/mobile/lib/app/router/app_routes.dart`
 - `apps/mobile/lib/app/router/routes_demos.dart`
 - `apps/mobile/lib/l10n/app_en.arb`
 - `apps/mobile/lib/features/features.dart`

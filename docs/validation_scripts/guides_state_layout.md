@@ -80,7 +80,7 @@ stream.listen((data) {
 **What it checks**:
 
 - In `lib/`, any `Row(` block (55-line window) that contains both `Icon(` and `Text(` but does **not** contain `Flexible(`, `Expanded(`, or `IconLabelRow(`
-- Skips `apps/mobile/lib/shared/widgets/icon_label_row.dart` (canonical fix)
+- Skips `packages/design_system/lib/src/widgets/icon_label_row.dart` (canonical fix)
 
 **Why it matters**:
 
@@ -104,7 +104,7 @@ stream.listen((data) {
 - `CHECK_ROW_ACTION_OVERFLOW_SCOPE=primary|all` overrides the first pass only (legacy single-pass mode)
 - Within 80 lines after each standalone `Row(` (not `ResponsiveDualCtaRow`, `IconLabelRow`, etc.), counts action buttons
 - Passes when `OverflowBar`, `ResponsiveActionOverflowBar`, `ResponsiveDualCtaRow`, `Wrap`, or `Expanded`/`Flexible` appears in the same window
-- `apps/mobile/lib/shared/widgets/responsive_action_bar.dart` is always in primary scope (canonical `Row`+`Expanded` for dual CTAs lives there when call sites use `ResponsiveDualCtaRow`)
+- `packages/design_system/lib/src/widgets/responsive_action_bar.dart` is always in primary scope (canonical `Row`+`Expanded` for dual CTAs lives there when call sites use `ResponsiveDualCtaRow`)
 - Self-test: `tool/check_row_action_overflow_fixtures.sh` via `tool/fixtures/action_row/`
 
 **Why it matters**:
@@ -134,7 +134,7 @@ stream.listen((data) {
 
 **What it checks**:
 
-1. **Snackbar / ScaffoldMessenger**: Direct use of `.hideCurrentSnackBar()` or `.clearSnackBars()` instead of `ErrorHandling.hideCurrentSnackBar(context)` / `ErrorHandling.clearSnackBars(context)`. (Excludes `apps/mobile/lib/shared/utils/error_handling.dart`, which implements these.)
+1. **Snackbar / ScaffoldMessenger**: Direct use of `.hideCurrentSnackBar()` or `.clearSnackBars()` instead of `ErrorHandling.hideCurrentSnackBar(context)` / `ErrorHandling.clearSnackBars(context)`. (Excludes `apps/mobile/lib/app/utils/error_handling.dart`, which implements these.)
 2. **stream.listen() without onError**: Any `.listen(` invocation that doesn't include `onError:` in same call block (heuristic: next 25 lines). Ensures stream subscriptions handle errors and avoid unhandled zone errors. (Excludes doc-only examples in `cubit_subscription_mixin.dart` and `subscription_manager.dart`.)
 3. **After await show\*Dialog**: Use of `cubit.`, `context.cubit`, or `onClose()` after `await show*Dialog` / `await showAdaptiveDialog` without prior `context.mounted` check in same block.
 

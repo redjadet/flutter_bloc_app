@@ -7,11 +7,11 @@ This guide consolidates the quick reference, usage patterns, and verification st
 ### Imports
 
 ```dart
-import 'package:flutter_bloc_app/shared/shared.dart';
+import 'package:design_system/design_system.dart';
 // Or import specific files:
-import 'package:flutter_bloc_app/shared/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/shared/widgets/type_safe_bloc_selector.dart';
-import 'package:flutter_bloc_app/shared/utils/bloc_provider_helpers.dart';
+import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 ```
 
 ### Context Extensions
@@ -126,9 +126,9 @@ part '<state_file>.switch_helper.dart';
 
 Key files that provide the compile-time safety layer:
 
-- `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart` (context extensions)
-- `apps/mobile/lib/shared/widgets/type_safe_bloc_selector.dart` (type-safe widgets)
-- `apps/mobile/lib/shared/utils/bloc_provider_helpers.dart` (provider helpers)
+- `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart` (context extensions)
+- `apps/mobile/lib/app/widgets/type_safe_bloc_selector.dart` (type-safe widgets)
+- `apps/mobile/lib/app/utils/bloc_provider_helpers.dart` (provider helpers)
 - `tool/generate_sealed_switch.dart` (sealed state switch helper generator)
 
 ## Migration Notes

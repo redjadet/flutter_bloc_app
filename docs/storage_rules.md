@@ -9,7 +9,7 @@ Where persistent data lives and how plugin-backed storage failures are handled.
 | Data | Mechanism | Location / notes |
 |------|-----------|----------------|
 | Non-sensitive preferences | `SharedPreferences` via app prefs abstractions | Theme, flags, lightweight settings |
-| Secrets (tokens, API keys) | `flutter_secure_storage` via `FlutterSecureSecretStorage` | `apps/mobile/lib/shared/platform/secure_secret_storage.dart` |
+| Secrets (tokens, API keys) | `flutter_secure_storage` via `FlutterSecureSecretStorage` | `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart` |
 | Structured offline / feature cache | Hive boxes with registered adapters | Feature-specific repositories; see offline-first guides |
 | Staff demo proof artifacts | Local files via `StaffDemoProofFileStore` | Photos/signatures copied into app sandbox before upload |
 | Remote authoritative state | Supabase / HTTP APIs | Repositories; network errors use `AppError` / `NetworkError` |

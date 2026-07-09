@@ -45,8 +45,8 @@ The project already uses Freezed in many places:
 | `apps/mobile/lib/features/websocket/presentation/cubit/websocket_state.dart` | State | |
 | `apps/mobile/lib/features/search/domain/search_result.dart` | Domain | |
 | `apps/mobile/lib/features/todo_list/domain/todo_item.dart` | Domain | TodoItem (freezed) |
-| `apps/mobile/lib/shared/sync/sync_operation.dart` | Shared | SyncOperation |
-| `apps/mobile/lib/shared/sync/presentation/sync_status_state.dart` | State | SyncStatusState (sync status cubit) |
+| `packages/storage/lib/src/sync/sync_operation.dart` | Shared | SyncOperation |
+| `apps/mobile/lib/app/sync/presentation/sync_status_state.dart` | State | SyncStatusState (sync status cubit) |
 | `apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_state.dart` | State (union) | RemoteConfigState |
 | `apps/mobile/lib/features/chat/presentation/chat_list_state.dart` | State (union) | ChatListState |
 | `apps/mobile/lib/features/deeplink/presentation/cubit/deep_link_state.dart` | State (union) | DeepLinkState |
@@ -64,7 +64,7 @@ The project already uses Freezed in many places:
 | `apps/mobile/lib/features/walletconnect_auth/domain/wallet_address.dart` | Domain | WalletAddress |
 | `apps/mobile/lib/features/walletconnect_auth/domain/nft_metadata.dart` | Domain | NftMetadata |
 | `apps/mobile/lib/features/auth/presentation/cubit/register/register_country_option.dart` | Presentation | CountryOption |
-| `apps/mobile/lib/shared/sync/sync_cycle_summary.dart` | Shared | SyncCycleSummary |
+| `packages/networking/lib/src/sync/sync_cycle_summary.dart` | Shared | SyncCycleSummary |
 
 Build and tooling already account for Freezed (e.g. `**/*.freezed.dart` in scripts and `analysis_options.yaml`). Conversion guide: [equatable_to_freezed_conversion.md](equatable_to_freezed_conversion.md).
 
@@ -82,9 +82,9 @@ These are **sealed state hierarchies** or **large state classes** that benefit m
 | `apps/mobile/lib/features/chat/presentation/chat_list_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `ChatListState.initial()`, `.loading()`, `.loaded(contacts)`, `.error(message)`. |
 | `apps/mobile/lib/features/deeplink/presentation/cubit/deep_link_state.dart` | ~~sealed + 4 subclasses~~ | **Done.** Freezed union: `DeepLinkState.idle()`, `.loading()`, `.navigate(target, origin)`, `.error(message)`. |
 | `apps/mobile/lib/features/auth/presentation/cubit/register/register_state.dart` | ~~RegisterState + RegisterFieldState (Equatable)~~ | **Done.** Both converted to Freezed; validation getters in private constructor. |
-| `apps/mobile/lib/shared/sync/presentation/sync_status_cubit.dart` | ~~`SyncStatusState` (Equatable, `copyWith`, getters)~~ | **Done.** State moved to `sync_status_state.dart` with Freezed; `isOnline` / `isSyncing` in private constructor. |
+| `apps/mobile/lib/app/sync/presentation/sync_status_cubit.dart` | ~~`SyncStatusState` (Equatable, `copyWith`, getters)~~ | **Done.** State moved to `sync_status_state.dart` with Freezed; `isOnline` / `isSyncing` in private constructor. |
 
-**Note:** `apps/mobile/lib/shared/utils/sealed_state_helpers.dart` extends `Equatable`. Freezed-generated union types do not extend Equatable (they implement `==`/`hashCode`). After migrating sealed states to Freezed, either:
+**Note:** `packages/utilities/lib/src/state/sealed_state_helpers.dart` extends `Equatable`. Freezed-generated union types do not extend Equatable (they implement `==`/`hashCode`). After migrating sealed states to Freezed, either:
 
 - Use Freezed’s generated `.when()` / `.map()` and Dart 3 `switch` on the union, and stop using `SealedStateHelpers` for those states, or
 - Generalize the extension (e.g. `extension SealedStateHelpers<T> on T`) if you still need a shared helper for non-Freezed sealed types.
@@ -110,7 +110,7 @@ Use Freezed for **immutable domain/shared types** that have (or would benefit fr
 | `apps/mobile/lib/features/walletconnect_auth/domain/wallet_address.dart` | ~~Equatable~~ | **Done.** Freezed; `isValid`, `truncated`, `toString` in private constructor. |
 | `apps/mobile/lib/features/walletconnect_auth/domain/nft_metadata.dart` | ~~Equatable~~ | **Done.** Freezed. |
 | `apps/mobile/lib/features/auth/presentation/cubit/register/register_country_option.dart` | ~~CountryOption (Equatable)~~ | **Done.** Freezed; `flagEmoji` and `defaultCountry` preserved. |
-| `apps/mobile/lib/shared/sync/sync_cycle_summary.dart` | ~~Equatable + long manual `copyWith`~~ | **Done.** Freezed. |
+| `packages/networking/lib/src/sync/sync_cycle_summary.dart` | ~~Equatable + long manual `copyWith`~~ | **Done.** Freezed. |
 
 ---
 
@@ -126,7 +126,7 @@ These are **private or feature-local** Equatable classes used for BlocSelector/v
 | `apps/mobile/lib/features/google_maps/presentation/pages/google_maps_sample_sections.dart` | ~~`_ControlsViewModel`, `_LocationListViewModel`~~ | **Done.** Freezed (in main page file). |
 | `apps/mobile/lib/features/graphql_demo/presentation/graphql_demo_view_models.dart` | ~~`GraphqlFilterBarData`, `GraphqlBodyData`~~ | **Done.** Freezed. |
 | `apps/mobile/lib/features/remote_config/presentation/widgets/awesome_feature_widget.dart` | ~~`_FeatureEnabledData`~~ | **Done.** Freezed. |
-| `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart` | `_RemoteConfigDiagnosticsViewData` | **Done.** Freezed DTO in core; `mapRemoteConfigStateToDiagnosticsViewData` in `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart` maps cubit state. |
+| `apps/mobile/lib/app/diagnostics/remote_config_diagnostics_view_data.dart` | `_RemoteConfigDiagnosticsViewData` | **Done.** Freezed DTO in core; `mapRemoteConfigStateToDiagnosticsViewData` in `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart` maps cubit state. |
 | `apps/mobile/lib/features/settings/presentation/widgets/app_info_section.dart` | ~~`_AppInfoViewData`~~ | **Done.** Freezed. |
 | `apps/mobile/lib/features/chat/presentation/widgets/chat_input_bar.dart` | ~~`_SendButtonData`~~ | **Done.** Freezed. |
 | `apps/mobile/lib/features/chat/presentation/widgets/chat_history_sheet.dart` | ~~`_HistorySheetData`~~ | **Done.** Freezed. |

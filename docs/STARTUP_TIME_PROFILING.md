@@ -69,7 +69,7 @@ Startup time profiling helps measure the impact of performance optimizations lik
 
 **Automation Script:**
 
-Create `tool/profile_startup.sh`:
+Optional future helper: create a local `profile_startup` shell script:
 
 ```bash
 #!/usr/bin/env bash
@@ -80,7 +80,7 @@ flutter run --profile --trace-startup --device-id=<device-id> > startup_$(date +
 
 **Best for:** Custom measurements and specific optimization tracking
 
-Add timing markers in `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`:
+Add timing markers in `apps/mobile/lib/app/bootstrap/bootstrap_coordinator.dart`:
 
 ```dart
 class BootstrapCoordinator {
@@ -128,7 +128,7 @@ class BootstrapCoordinator {
 
 The codebase already includes `PerformanceProfiler` for runtime performance tracking.
 
-**Location:** `apps/mobile/lib/shared/utils/performance_profiler.dart`
+**Location:** `apps/mobile/lib/app/diagnostics/performance_profiler.dart`
 
 **Usage:**
 
@@ -161,7 +161,7 @@ Before making optimizations, establish a baseline:
 - [ ] Measure bundle size (see `tool/check_bundle_size.sh`)
 - [ ] Document device/OS version
 - [ ] Document Flutter version
-- [ ] Record measurements in `analysis/startup_metrics.md`
+- [ ] Record measurements in a local startup metrics note or checked-in analysis file.
 
 ### Target Metrics
 
@@ -178,7 +178,7 @@ After implementing lazy loading optimizations:
 
 1. **Re-measure** using the same method
 2. **Compare** to baseline
-3. **Document** improvements in `analysis/startup_metrics.md`
+3. **Document** improvements in the startup metrics note
 4. **Track** over time to prevent regressions
 
 ## CI/CD Integration
@@ -196,7 +196,7 @@ After implementing lazy loading optimizations:
 
 ### Automated Regression Detection
 
-Create `tool/check_startup_performance.sh` that:
+Optional future helper: create a local `check_startup_performance` shell script that:
 
 1. Runs startup trace
 2. Extracts key metrics
@@ -247,5 +247,5 @@ To protect startup targets in CI (e.g. for enterprise or high-traffic builds), a
 
 - **Flutter DevTools:** `flutter pub global activate devtools && flutter pub global run devtools`
 - **Startup Trace:** `flutter run --profile --trace-startup`
-- **Performance Profiler:** `apps/mobile/lib/shared/utils/performance_profiler.dart`
+- **Performance Profiler:** `apps/mobile/lib/app/diagnostics/performance_profiler.dart`
 - **Bundle Size Check:** `tool/check_bundle_size.sh`
