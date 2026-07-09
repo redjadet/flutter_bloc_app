@@ -55,7 +55,7 @@ the smallest capability the caller needs:
 
 - **`package:auth`** — Pure-Dart contracts: `AuthUser`, base `AuthRepository` (`currentUser`, `authStateChanges`), `AuthProviderKind`, `SessionInvalidationReason`, `RemoteBackendAuthPort`. Router, gates, and cross-feature code import these types from `package:auth/auth.dart`.
 - **App shell** — App session infrastructure and SDK glue: `apps/mobile/lib/app/auth/**` and DI wiring under `apps/mobile/lib/app/composition/**`.
-- **`apps/mobile/lib/features/auth/domain/`** — Feature `AuthRepository` extends the package contract with `signInAnonymously` / `signOut`; Firebase/Supabase implementations live under `features/auth/data/`. DI registers the feature repository and aliases `core_auth.AuthRepository` to the same singleton (`core/di/features/register_auth_services.dart`).
+- **`apps/mobile/lib/features/auth/domain/`** — Feature `AuthRepository` extends the package contract with `signInAnonymously` / `signOut`; Firebase/Supabase implementations live under `features/auth/data/`. DI registers the feature repository and aliases `core_auth.AuthRepository` to the same singleton (`apps/mobile/lib/app/composition/features/register_auth_services.dart`).
 
 ### Theme and design tokens (`packages/design_system`)
 
@@ -130,12 +130,11 @@ Cross-feature `package:` imports are **reported** via `modular_metrics.sh`, not
 failed by default, until each hit is classified (move to `apps/mobile/lib/app/`, a package-owned port,
 or an explicit time-boxed exception documented in this file).
 
-**Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change):
+**Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change). Current status: no reported cross-feature imports.
 
 | From → To | Representative files | Classification | Owner | Expiry / removal |
 | --- | --- | --- | --- | --- |
-| `case_study_demo` → `camera_gallery` | `case_study_image_picker_video_repository.dart`, `case_study_video_repository.dart`, `case_study_l10n_helpers.dart`, `case_study_session_cubit.dart` | Temporary — camera result/error types now live in `packages/app_shared_flutter` and are re-exported by camera_gallery; remove remaining cross-feature imports when case study depends only on the shared DTOs | Maintainers | Remove when case study imports only `package:app_shared_flutter` types (no `camera_gallery` domain imports) |
-| `case_study_demo` → `supabase_auth` | `case_study_session_cubit.dart`, `case_study_demo_home_page.dart`, `case_study_history_*.dart`, `case_study_data_mode_badge.dart` | Temporary — presentation pulls `SupabaseAuthRepository`; prefer app/DI passing an interface or core auth read model | Maintainers | Remove when cubit/pages receive auth via constructor/DI without importing `supabase_auth` |
+| None | `bash tool/modular_metrics.sh --cross-feature-only` reports no rows | Clean | Maintainers | Recheck after feature import changes |
 
 ## Phase 3 follow-ups (stronger seams)
 
@@ -148,5 +147,5 @@ or an explicit time-boxed exception documented in this file).
 
 ## Out of scope (by design)
 
-- **Multiple packages** – The app remains a single package with clear boundaries; splitting into multiple packages is not required for modularity.
+- **More package splitting** – The workspace already uses focused packages for shared ownership. Further package splits are optional and should be justified by a concrete reuse, validation, or dependency-boundary need.
 - **Feature-scoped DI (get_it_modular)** – Scoped dependency injection (e.g. per-route modules) is not in use; the current `get_it` setup is global. If a future package (e.g. get_it_modular) becomes compatible with the project’s get_it version, feature-scoped registration could be adopted for features that should dispose when the user leaves the flow.

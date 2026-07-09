@@ -19,7 +19,7 @@ Use for narrow low-risk edits where routing/auth/gates unchanged.
 Use `./bin/router_feature_validate` when changes touch:
 
 - `apps/mobile/lib/app/router/**`
-- `apps/mobile/lib/app/router/**`
+- `apps/mobile/lib/app.dart` router refresh/auth wiring
 - feature presentation gate/auth/sign-in/login/register pages or widgets
 
 Command:
@@ -101,7 +101,7 @@ Routing source of truth. If host prompt/helper script disagrees, this doc wins.
 | DI / transport config (e.g. `get_it` wiring, Dio/interceptors, auth headers, retry policies, base URL parsing) | `./bin/checklist` |
 | l10n / codegen surfaces (ARB files, generated localization, build_runner outputs) | `./bin/checklist` + run the repo’s documented generation/update step (see [`localization.md`](../localization.md)) |
 | iOS native / CocoaPods embed / simulator build (`ios/**`, `Podfile`, pod frameworks, launch-time dyld errors) | `flutter build ios --simulator --debug` + `tool/check_ios_pod_framework_embed.sh --require-built-app`; `./bin/checklist` also runs the guard opportunistically when a simulator app is already built |
-| Apple debug Hive / secure storage (`packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`, `packages/storage/lib/src/hive/hive_*.dart`, simulator Keychain -34018, `Recovering corrupted box.`) | `bash tool/check_apple_debug_hive_storage.sh` + `flutter test test/secure_secret_storage_test.dart test/shared/storage/hive_key_manager_test.dart`; triage: [`apple_debug_hive_storage.md`](apple_debug_hive_storage.md); `./bin/checklist` includes the guard |
+| Apple debug Hive / secure storage (`packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`, `packages/storage/lib/src/hive/hive_*.dart`, simulator Keychain -34018, `Recovering corrupted box.`) | `bash tool/check_apple_debug_hive_storage.sh` + `cd apps/mobile && flutter test test/secure_secret_storage_test.dart test/shared/storage/hive_key_manager_test.dart`; triage: [`apple_debug_hive_storage.md`](apple_debug_hive_storage.md); `./bin/checklist` includes the guard |
 | Integration journeys / end-to-end flows | `./bin/integration_tests` (plus the narrowest supporting lane) |
 | Backend-adjacent demos/scripts (e.g. `demos/**`, `demos/render_chat_api/**`, Python lanes, `supabase/**`) | `./bin/checklist` |
 

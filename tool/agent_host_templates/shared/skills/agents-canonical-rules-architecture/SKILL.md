@@ -19,6 +19,6 @@ Slice of **`agents-canonical-rules`**. Detail: `docs/clean_architecture.md`, `do
   `bash tool/check_feature_folder_contract.sh` before broad feature finish.
 - Repositories implement domain interfaces; domain/use cases own business rules;
   Cubit/BLoC owns presentation state and flow orchestration.
-- DI in `apps/mobile/lib/core/di/injector*.dart`.
+- DI in `apps/mobile/lib/app/composition/**`.
 - Prefer Freezed for new state/domain models; `build_runner` after `@freezed`.
 - For Cubit/Bloc decisions, invoke `agents-bloc-standards`.

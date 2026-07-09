@@ -103,21 +103,21 @@ Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI en
 
 ## Melos workspace
 
-Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). The Flutter app lives at `apps/mobile/`. Scoped migration (PR-A–I) is complete on [#437](https://github.com/redjadet/flutter_bloc_app/pull/437); merge to `main` pending.
+Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). The Flutter app lives at `apps/mobile/`. Scoped migration PR-A-I is merged; current app paths use `apps/mobile/**`.
 
 | Need | Command / path |
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
-| Flutter app run | `cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
+| Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
 | Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
 | Workspace package analyze | `dart run melos run analyze` from repo root; delegates to `tool/analyze_workspace_packages.sh` so package roots do not scan workspace `.dart_tool` metadata |
 | Workspace Dart package tests | `dart run melos run test` from repo root; non-Flutter package tests only. Use `dart run melos run test:flutter` or `cd packages/design_system && flutter test` for Flutter packages |
-| Workspace packages | `packages/core`, `packages/utilities`, `packages/design_system`, `packages/networking`, `packages/storage`, `packages/auth`, `packages/feature_flags`, `packages/ai` |
+| Workspace packages | `packages/ai`, `packages/app_shared_flutter`, `packages/auth`, `packages/core`, `packages/design_system`, `packages/feature_flags`, `packages/networking`, `packages/storage`, `packages/utilities` |
 | Firebase backend | `backend/firebase/` (functions, rules, indexes) |
 | Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
 | Path helper | `source tool/workspace_paths.sh` |
 | Melos bootstrap | `dart run melos bootstrap` from repo root (optional after pub get) |
-| Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`); app keeps compatibility barrels under old `lib/` paths during migration |
+| Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`) |
 
 Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
