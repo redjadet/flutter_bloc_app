@@ -3,6 +3,7 @@ set -euo pipefail
 
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/workspace_paths.sh"
+bash "$WORKSPACE_ROOT/tool/ensure_app_platform_links.sh"
 cd "$APP_ROOT"
 
 # Deterministic Flutter web build for GitHub Pages project sites.
