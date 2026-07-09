@@ -43,7 +43,7 @@ Text(context.l10n.helloWorld)
 
 ## Error and auth message keys
 
-Error messages used by [NetworkErrorMapper](apps/mobile/lib/shared/utils/network_error_mapper.dart) and [auth_error_message](apps/mobile/lib/features/auth/presentation/widgets/auth_error_message.dart) are localized. Notable keys:
+Error messages used by `NetworkErrorMapper` (package-owned utilities) and [auth_error_message](apps/mobile/lib/features/auth/presentation/widgets/auth_error_message.dart) are localized. Notable keys:
 
 - **HTTP / API:** `errorUnknown`, `errorNetwork`, `errorTimeout`, `errorUnauthorized`, `errorForbidden`, `errorNotFound`, `errorServer`, `errorServiceUnavailable` (503), `errorClient`, `errorTooManyRequests` (429), `errorGeneric`
 - **Auth (Firebase):** `authErrorInvalidEmail`, `authErrorWrongPassword`, `authErrorInvalidCredential`, `authErrorNetworkRequestFailed`, `authErrorTooManyRequests`, `authErrorGeneric`, and others (see `app_en.arb`)
@@ -65,7 +65,7 @@ Localization strings are defined in `apps/mobile/lib/l10n/app_*.arb` files:
 ## Arabic + RTL notes
 
 - Arabic is an RTL locale. Flutter will automatically use `TextDirection.rtl` for `Locale('ar')`.
-- Typography for Arabic uses the **bundled** Cairo font family (see `pubspec.yaml` and `apps/mobile/lib/core/theme/app_theme.dart`).
+- Typography for Arabic uses the **bundled** Cairo font family (see `pubspec.yaml` and app theme under `apps/mobile/lib/app/theme/`).
   - The bundled `assets/fonts/Cairo.ttf` is a variable font (weight axis), so typical `FontWeight` usage maps cleanly without runtime fetching.
 - Prefer directional layout primitives in presentation code:
   - `AlignmentDirectional`, `EdgeInsetsDirectional`, `BorderRadiusDirectional`, `TextAlign.start/end`, `PositionedDirectional`.

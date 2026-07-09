@@ -25,8 +25,9 @@ Merged PR: [#437](https://github.com/redjadet/flutter_bloc_app/pull/437) (monore
 | CI pub get | `1da531ab` | `tool/workspace_pub_get.sh`; integration Firebase plist paths; analyzer exclude globs |
 | Closeout | `741a3ea8` | Plan/docs closeout; staff_app_demo paths; migration complete |
 | Harness paths | `70c0d6d5` | `resolve_scan_root` in validation scripts; harness fixtures green |
+| PR-J (Phase 5) | `57bc68ac` | Delete `apps/mobile/lib/core/`; move runtime from `shared/` → `app/**` + packages; keep `shared/media/` debt only; guard scripts + hive manifest; integration preflight; [#458](https://github.com/redjadet/flutter_bloc_app/pull/458); `./bin/checklist` (~2522 tests, ~80.25% cov) |
 
-**Status:** Scoped migration **complete** on `main` (PR-A–I + CI hardening).
+**Status:** Scoped migration **complete** on `main` (PR-A–I + CI hardening). **Phase 5** (`core`/`shared` extraction) **complete** via PR-J ([#458](https://github.com/redjadet/flutter_bloc_app/pull/458)); see [`changes/2026-07-08_extract_core_shared_plan_note.md`](../changes/2026-07-08_extract_core_shared_plan_note.md).
 Deferred extractions documented below are follow-up work, not merge blockers.
 
 **PR-C learnings (record before next extraction):**
@@ -41,15 +42,14 @@ Deferred extractions documented below are follow-up work, not merge blockers.
 
 **PR-D learnings:**
 
-- Re-export `package:core/core.dart` from `apps/mobile/lib/core/core.dart` so
-  routes/widgets that import `package:flutter_bloc_app/core/core.dart` keep
-  `TimerService` without a second migration pass.
+- Re-export `package:core/core.dart` from an app compatibility barrel (Phase 5) so
+  legacy imports can be migrated without a second pass (see current app shell under
+  `apps/mobile/lib/app/`).
 - `packages/core` has no workspace dependencies (DAG: `core` leaf today; future
   `core → utilities` only if a primitive needs a util).
 - Same app-hosted test policy as utilities PR-C wave 1.
 
-**Next implementation step:** None for scoped plan. Post-merge optional: PR-F wave 2
-(full Hive/HTTP), PR-C deferred utils, extra apps when product split is real.
+**Next implementation step:** None for scoped plan + Phase 5 (including `shared/media` extract). Post-merge optional: PR-F wave 2, PR-C deferred utils, extra apps when product split is real.
 
 **PR-F wave 1 learnings:**
 
@@ -332,6 +332,10 @@ Use this as the implementation checklist.
 - [x] PR-H: Firebase backend assets under `backend/firebase/`.
 - [x] PR-I: `packages/auth` + `packages/feature_flags` domain contracts (SDK impls in app).
 - [x] Defer extra apps until product split is real (policy — no action).
+- [x] PR-J (Phase 5): move `apps/mobile/lib/core/**` + `shared/**` runtime into `app/**` and workspace packages; bulk import rewrites.
+- [x] PR-J: delete `apps/mobile/lib/core/`; delete `shared/` except `shared/media/**` (clean-arch debt).
+- [x] PR-J: fix guard scripts + hive schema manifest for monorepo `APP_ROOT` / `WORKSPACE_ROOT`.
+- [x] PR-J: restore integration preflight (browser + iOS smoke); prove `./bin/checklist` + [#458](https://github.com/redjadet/flutter_bloc_app/pull/458).
 
 ## Documentation Updates
 
@@ -353,14 +357,19 @@ Update these docs in the same PR as the relevant code change:
 - [x] [`changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md`](../changes/2026-07-03_melos-monorepo-pr-e-wave-2c.md): PR-E wave 2c closeout note.
 - [x] [`changes/2026-07-03_melos-monorepo-pr-f-through-i.md`](../changes/2026-07-03_melos-monorepo-pr-f-through-i.md): PR-F–I closeout note.
 - [x] [`changes/2026-07-03_melos-monorepo-migration-closeout.md`](../changes/2026-07-03_melos-monorepo-migration-closeout.md): scoped migration complete.
+- [x] [`changes/2026-07-08_extract_core_shared_plan_note.md`](../changes/2026-07-08_extract_core_shared_plan_note.md): Phase 5 `core`/`shared` extraction complete ([#458](https://github.com/redjadet/flutter_bloc_app/pull/458)).
 
 ## Migration closeout (2026-07-03)
 
 All Build Todo items for PR-A–I are done or explicitly deferred. `./bin/checklist`
-green on `codex/melos-monorepo-build` (~2618 tests, ~80.6% coverage). Operator
-action: review and merge [#437](https://github.com/redjadet/flutter_bloc_app/pull/437).
+green on `codex/melos-monorepo-build` (~2618 tests, ~80.6% coverage). Merged
+[#437](https://github.com/redjadet/flutter_bloc_app/pull/437).
 
-Post-merge backlog (not in scoped plan):
+## Phase 5 closeout (2026-07-09)
+
+PR-J landed on `main` ([#458](https://github.com/redjadet/flutter_bloc_app/pull/458), `57bc68ac`).
+`apps/mobile/lib/core/` removed; `apps/mobile/lib/shared/` removed. Media pick types live in `packages/app_shared_flutter`.
+`./bin/checklist` and integration preflight green. Optional backlog:
 
 - PR-F wave 2 — full Hive/HTTP extraction when auth seams stabilize.
 - PR-C deferred utils — only if `AppLogger` / l10n decouple from app.
@@ -462,8 +471,8 @@ metadata or page builders only when a second app actually needs them.
 
 ### Dependency Injection
 
-`get_it` is centralized in `apps/mobile/lib/core/di`. Registration files bind app,
-feature, Firebase, Supabase, HTTP, storage, and demo services.
+`get_it` is centralized in `apps/mobile/lib/app/composition/**`. Registration files
+bind app shell, features, Firebase, Supabase, HTTP, storage, and demo services.
 
 Migration risk: moving packages before DI seams exist creates circular package
 dependencies. Convert registration into package-owned registration modules only
@@ -471,7 +480,7 @@ after the package public API is stable.
 
 ### Networking
 
-Reusable HTTP infrastructure already exists under `apps/mobile/lib/shared/http`, including
+Reusable HTTP infrastructure lives under `apps/mobile/lib/app/http/**` and `packages/networking`, including
 `AppDio`, auth token management, retry, telemetry, network check, Supabase
 session manager, and Retrofit helpers. This is a strong candidate for
 `packages/networking`.
@@ -483,11 +492,12 @@ their contracts are stable.
 
 Auth spans:
 
-- `apps/mobile/lib/core/auth`: app-wide auth contracts, token repository, session lifecycle.
+- `packages/auth`: provider-agnostic auth contracts, token helpers.
+- `apps/mobile/lib/app/auth/**`: app session lifecycle + SDK glue.
 - `apps/mobile/lib/features/auth`: Firebase UI/user-facing auth.
 - `apps/mobile/lib/features/supabase_auth`: Supabase sign-in demo.
 - `apps/mobile/lib/features/walletconnect_auth`: WalletConnect auth.
-- shared HTTP token/session integration.
+- app HTTP token/session integration under `apps/mobile/lib/app/http/**`.
 
 Recommended boundary: create `packages/auth` only after consolidating duplicate
 core/feature auth models and deciding provider ownership. Firebase UI pages can
@@ -496,9 +506,11 @@ management move first.
 
 ### Storage
 
-Storage and sync infrastructure is mature under `apps/mobile/lib/shared/storage` and
-`apps/mobile/lib/shared/sync`: Hive service, schema registry, migrations, pending sync,
-sync operation models, sync Cubit, and background coordinator.
+Storage and sync infrastructure is package-owned:
+
+- `packages/storage`: Hive service/schema/migrations, pending sync queue, sync operation models.
+- `packages/networking`: background sync coordinator + policies.
+- App presentation adapters (e.g. sync status cubit/banner) live under `apps/mobile/lib/app/**`.
 
 Recommended boundary: extract `packages/storage` and optionally
 `packages/offline_sync` later. For first migration wave, use one `storage`
@@ -511,7 +523,7 @@ Localization is root-app scoped:
 - `l10n.yaml`
 - `apps/mobile/lib/l10n/*.arb`
 - generated `app_localizations*.dart`
-- `BuildContext` l10n helpers in `apps/mobile/lib/shared/extensions`.
+- App-local `BuildContext` l10n adapters live under `apps/mobile/lib/app/l10n_adapters/**`.
 
 Keep l10n in the first app package during the initial move. Extracting package
 l10n only makes sense after design system or feature packages need standalone
@@ -521,11 +533,8 @@ localized widgets.
 
 Reusable UI exists in:
 
-- `apps/mobile/lib/core/theme`
-- `apps/mobile/lib/shared/design_system`
-- `apps/mobile/lib/shared/ui`
-- `apps/mobile/lib/shared/widgets`
-- responsive extensions under `apps/mobile/lib/shared/extensions/responsive`
+- `packages/design_system`
+- app-local widgets under `apps/mobile/lib/app/widgets/**`
 - feature-local reusable widgets under `apps/mobile/lib/features/*/presentation/widgets`
 
 Recommended boundary: `packages/design_system` should start with app theme,
@@ -569,9 +578,7 @@ be updated in the same phase.
 
 - Root package owns too many dependency categories, increasing solve time and
   coupling.
-- `core` and `shared` contain several future package seams but no package-level
-  visibility boundaries yet.
-- Auth types exist in both `apps/mobile/lib/core/auth` and `apps/mobile/lib/features/auth/domain`.
+- Pre-migration seams (app `core/` + `shared/`) have been extracted into workspace packages; see **Implementation status** and Phase 5 note.
 - App DI imports many feature data implementations directly.
 - Firebase, Supabase, networking, storage, AI, and presentation dependencies are
   all present in one compile graph.
@@ -657,13 +664,8 @@ Owns provider-agnostic app foundations:
 
 No Flutter widgets. Avoid Firebase, Supabase, Hive, Dio, and GoRouter imports.
 
-Initial candidates:
-
-- `apps/mobile/lib/core/domain`
-- `apps/mobile/lib/core/config` provider-agnostic contracts
-- `apps/mobile/lib/core/time`
-- selected `apps/mobile/lib/shared/utils` primitives
-- selected `apps/mobile/lib/shared/platform/platform_environment*`
+Initial candidates (historical): **already shipped**. See `packages/core` and
+`packages/utilities` in `packages/`.
 
 ### `packages/utilities`
 
@@ -676,15 +678,7 @@ Owns pure helpers with no business logic:
 - markdown utilities only if reused outside app
 - retry policy primitives without Dio
 
-Initial candidates:
-
-- `apps/mobile/lib/shared/utils/disposable_bag.dart`
-- `apps/mobile/lib/shared/utils/safe_parse_utils.dart`
-- `apps/mobile/lib/shared/utils/date_time_formatting.dart`
-- `apps/mobile/lib/shared/utils/relative_time_formatting.dart`
-- `apps/mobile/lib/shared/utils/in_flight_coalescer.dart`
-- `apps/mobile/lib/shared/utils/request_id_guard.dart`
-- `apps/mobile/lib/shared/utils/retry_policy.dart`
+Initial candidates (historical): **already shipped**. See `packages/utilities`.
 
 ### `packages/design_system`
 
@@ -700,14 +694,8 @@ Owns reusable UI only:
 No repositories, Cubits with business state, Firebase, Supabase, routing, or
 feature decisions.
 
-Initial candidates:
+Initial candidates (historical): **already shipped**. See `packages/design_system`.
 
-- `apps/mobile/lib/core/theme`
-- `apps/mobile/lib/shared/design_system`
-- `apps/mobile/lib/shared/ui`
-- `apps/mobile/lib/shared/widgets/common_*`
-- `apps/mobile/lib/shared/widgets/skeletons`
-- `apps/mobile/lib/shared/widgets/responsive_action_bar.dart`
 - `apps/mobile/lib/shared/extensions/responsive`
 - [`DESIGN.md`](../../DESIGN.md) package-facing subset
 

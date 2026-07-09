@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart' show AppLogger;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';

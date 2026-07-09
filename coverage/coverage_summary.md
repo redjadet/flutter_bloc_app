@@ -1,6 +1,6 @@
 # Test Coverage Summary
 
-*Total line coverage*: **80.25%** (17543/21861 lines)
+*Total line coverage*: **80.25%** (17542/21860 lines)
 
 This total is computed from `coverage/lcov.info`, which can include merged unit, widget, bloc, and integration coverage when the integration suite is run after baseline coverage is generated.
 
@@ -27,6 +27,7 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | --- | ---: | ---: |
 | `lib/app/config/app_constants.dart` | 0.00% | 0/1 |
 | `lib/app/config/secret_config_chat_orchestration.dart` | 0.00% | 0/1 |
+| `lib/app/l10n_adapters/media_pick_error_messages.dart` | 0.00% | 0/10 |
 | `lib/features/ai_decision_demo/data/ai_decision_repository.dart` | 0.00% | 0/9 |
 | `lib/features/case_study_demo/presentation/platform/case_study_video_controller_factory_io.dart` | 0.00% | 0/5 |
 | `lib/features/chat/data/render_orchestration_hf_token_provider.dart` | 0.00% | 0/5 |
@@ -49,7 +50,6 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart` | 0.00% | 0/1 |
 | `lib/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart` | 0.00% | 0/8 |
 | `lib/features/todo_list/presentation/cubit/todo_list_cubit_logging.dart` | 0.00% | 0/3 |
-| `lib/shared/media/media_pick_error_messages.dart` | 0.00% | 0/10 |
 | `lib/features/staff_app_demo/presentation/pages/staff_app_demo_timeclock_page.dart` | 2.27% | 1/44 |
 | `lib/features/case_study_demo/data/supabase_case_study_remote_repository.dart` | 3.13% | 1/32 |
 | `lib/features/igaming_demo/presentation/pages/game_page.dart` | 4.17% | 1/24 |
@@ -741,4 +741,3 @@ Full per-file breakdown for `lib/`, sorted by ascending coverage percentage.
 | `lib/features/websocket/presentation/pages/websocket_demo_page.dart` | 100.00% | 32/32 |
 | `lib/features/websocket/presentation/widgets/websocket_message_list.dart` | 100.00% | 23/23 |
 | `lib/main_bootstrap.dart` | 100.00% | 10/10 |
-| `lib/shared/media/media_pick_result.dart` | 100.00% | 1/1 |

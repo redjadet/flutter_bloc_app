@@ -1,5 +1,5 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
 
 /// Localized user-facing message for a [MediaPickErrorKeys] value.
 String cameraGalleryErrorMessage(

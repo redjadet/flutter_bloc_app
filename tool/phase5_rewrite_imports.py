@@ -197,9 +197,12 @@ SHARED_PATH_REWRITES: dict[str, str] = {
     "shared/firebase/run_with_auth_user.dart": "app/firebase/run_with_auth_user.dart",
     "shared/firebase/stream_with_auth_user.dart": "app/firebase/stream_with_auth_user.dart",
     "shared/firebase/realtime_database_guard.dart": "app/firebase/realtime_database_guard.dart",
-    "shared/media/media_pick_result.dart": "app/media/media_pick_result.dart",
-    "shared/media/media_pick_error_keys.dart": "app/media/media_pick_error_keys.dart",
-    "shared/media/media_pick_error_messages.dart": "app/media/media_pick_error_messages.dart",
+    "shared/media/media_pick_result.dart":
+        "package:app_shared_flutter/app_shared_flutter.dart",
+    "shared/media/media_pick_error_keys.dart":
+        "package:app_shared_flutter/app_shared_flutter.dart",
+    "shared/media/media_pick_error_messages.dart":
+        "app/l10n_adapters/media_pick_error_messages.dart",
     "shared/design_system/epoch_theme_extension.dart": "package:design_system/design_system.dart",
     "shared/annotations/bloc_annotations.dart": "app/annotations/bloc_annotations.dart",
 }

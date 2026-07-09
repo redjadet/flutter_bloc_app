@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
-export 'package:flutter_bloc_app/shared/media/media_pick_error_messages.dart'
+export 'package:flutter_bloc_app/app/l10n_adapters/media_pick_error_messages.dart'
     show cameraGalleryErrorMessage;
 
 String caseStudyCaseTypeTitle(

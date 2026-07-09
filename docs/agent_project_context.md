@@ -60,6 +60,16 @@ the answer.
 - **Supported platforms:** iOS, Android, Web, Desktop (macOS). Shared
   presentation, plugins, routing, and bootstrap changes must account for all
   four — not only the host under debug (`flutter-cross-platform-modern`).
+- **Melos app shell (Phase 5):** `apps/mobile/lib/` is a thin shell
+  (`app/**`, `features/**`, `l10n/**`, `main*.dart`) — no `core/` or `shared/`
+  trees. DI/router/bootstrap live under `apps/mobile/lib/app/composition/**`,
+  `app/router/**`, `app/bootstrap/**`. Detail:
+  [`changes/2026-07-08_extract_core_shared_plan_note.md`](changes/2026-07-08_extract_core_shared_plan_note.md).
+- **Non-mobile platform folders:** canonical trees live under
+  `apps/other_platforms/{web,macos,linux,windows}/`. `apps/mobile/` keeps
+  symlinks with those names so `flutter run` / `flutter devices` discover
+  macOS, web, Linux, and Windows (Flutter only looks beside the app
+  `pubspec.yaml`).
 - Domain layer stays pure Dart; no `package:flutter` imports.
 - Feature skeleton is Clean Architecture (`presentation/` → `domain/` ← `data/`);
   MVVM naming applies in presentation only (Cubit/BLoC = ViewModel and

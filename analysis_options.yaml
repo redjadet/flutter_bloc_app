@@ -69,6 +69,7 @@ analyzer:
     void_checks: error
   exclude:
     - build/**
+    - '**/build/**'
     - .dart_tool/**
     - '**/.pub-cache/**'
     - ios/Pods/**

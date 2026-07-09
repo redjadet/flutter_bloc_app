@@ -1,6 +1,7 @@
-import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart'
+    show MediaPickErrorKeys;
 
-export 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart'
+export 'package:app_shared_flutter/app_shared_flutter.dart'
     show MediaPickErrorKeys;
 
 /// Back-compat shim for [MediaPickErrorKeys] used by the camera_gallery feature.

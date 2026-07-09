@@ -5,9 +5,10 @@ center**, **data implementations behind those contracts**, and **presentation
 code depending on abstractions rather than concrete repositories**.
 
 The app also has an **app shell** above the feature layers (`BootstrapCoordinator`,
-`MyApp`, `AppScope`, router) and **shared/core infrastructure** beside them
-(`apps/mobile/lib/core/`, `apps/mobile/lib/shared/`). This document explains how those parts fit
-together without blurring layer responsibilities.
+`MyApp`, `AppScope`, router) and workspace packages beside them (`packages/*`).
+Post Phase 5, `apps/mobile/lib/` is a thin shell (`app/**`, `features/**`, `l10n/**`, `main*.dart`)
+with no `core/` or `shared/` trees. This document explains how those parts fit together
+without blurring layer responsibilities.
 
 > **Related Documentation:**
 >
@@ -75,8 +76,8 @@ Use this model when placing code:
 - **Domain** owns repository/service contracts and pure models.
 - **Data** implements domain contracts and owns storage, HTTP/SDKs, sync, and
   merge policies.
-- **Core/shared** hold reusable infrastructure and utilities that should not be
-  owned by a single feature.
+- **Workspace packages** hold reusable infrastructure and utilities that should not be
+  owned by a single feature (`packages/*`).
 
 ## Workspace packages (Melos migration)
 
@@ -87,7 +88,11 @@ features. Current direction (see [`plans/melos_monorepo_migration_plan.md`](plan
 | --- | --- | --- |
 | `packages/core` | `Failure`, `Result`, `TimerService`, pure domain primitives | — (leaf) |
 | `packages/utilities` | Pure Dart helpers (`disposable_bag`, etc.) | `core` |
-| `packages/design_system` | Theme tokens, Mix styles, responsive helpers, generic widgets | `core`, `utilities` |
+| `packages/app_shared_flutter` | Flutter-dependent shared infra (logger, platform env, secret storage, media DTOs) | `core` |
+| `packages/design_system` | Theme tokens, Mix styles, responsive helpers, generic widgets | `app_shared_flutter`, `core`, `utilities` |
+| `packages/storage` | Hive/schema/migrations + storage primitives + sync queue contracts | `app_shared_flutter`, `core`, `utilities` |
+| `packages/networking` | Interceptors, retry/network guards + background sync coordinator | `app_shared_flutter`, `core`, `storage`, `utilities` |
+| `packages/auth` | Auth contracts (`AuthUser`, `AuthRepository`, etc.), token helpers | `core`, `utilities` |
 
 **Dependency rule (packages):** `design_system → utilities → core`. Enforced by
 `tool/check_package_dependency_dag.sh` in `./bin/checklist`. Presentation and
@@ -99,8 +104,8 @@ feature folders. App keeps DI, routes, l10n defaults, and feature widgets.
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `apps/mobile/lib/features/counter/domain/counter_repository.dart`, `apps/mobile/lib/features/remote_config/domain/remote_config_service.dart`, `apps/mobile/lib/features/deeplink/domain/deep_link_parser.dart`.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `apps/mobile/lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
 - **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`, `counter/presentation/cubit/counter_cubit.dart`). Remaining legacy root-level cubits are listed in [`architecture/reference_features.md`](architecture/reference_features.md).
-- **Shared cross-cutting** — Reusable utilities that stay Flutter-agnostic when possible (`apps/mobile/lib/shared/sync/`, `apps/mobile/lib/shared/storage/`, `apps/mobile/lib/shared/utils/`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of all shared utilities.
-- **Dependency injection** — `apps/mobile/lib/core/di/injector.dart` bootstraps everything via `registerAllDependencies()` in `apps/mobile/lib/core/di/injector_registrations.dart`. Feature-specific registrars live under `apps/mobile/lib/core/di/features/`; composition groups stay in `apps/mobile/lib/core/di/groups/`.
+- **Shared cross-cutting** — Reusable infrastructure lives in packages (`packages/storage`, `packages/networking`, `packages/design_system`, `packages/utilities`, `packages/app_shared_flutter`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of shared utilities.
+- **Dependency injection** — The app shell bootstraps DI via `apps/mobile/lib/app/composition/injector_registrations.dart` and feature registrars under `apps/mobile/lib/app/composition/features/`.
 
 ## How Dependencies Flow
 
@@ -136,10 +141,7 @@ These directories are intentionally outside the per-feature `domain/data/present
 split:
 
 - **`apps/mobile/lib/app/`** — app shell, router, app-scope composition, route groups
-- **`apps/mobile/lib/core/`** — app-wide contracts, DI, bootstrap, constants, theme,
-  diagnostics, and platform-wide helpers
-- **`apps/mobile/lib/shared/`** — reusable infrastructure, storage, sync, widgets, design
-  tokens, and utilities used by multiple features
+- **`packages/*`** — reusable infrastructure (storage/networking/design_system/utilities/auth/app_shared_flutter)
 
 These folders are not "extra layers" between domain and data. They are support
 and composition code around the feature layers.
@@ -216,12 +218,12 @@ Use these as review questions before accepting generated feature/refactor code:
 - Domain files use pure Dart only (no `package:flutter` imports).
 - Data layer implements domain contracts and stays free of presentation imports.
 - Presentation depends on abstractions and does not construct repositories.
-- App shell code (`apps/mobile/lib/app/`, `apps/mobile/lib/core/bootstrap/`, router) is used for
+- App shell code (`apps/mobile/lib/app/`, router, bootstrap under `apps/mobile/lib/app/bootstrap/**`) is used for
   composition, not for embedding feature business logic.
-- Feature wiring happens in `apps/mobile/lib/core/di/` via `registerLazySingletonIfAbsent`.
+- Feature wiring happens in `apps/mobile/lib/app/composition/**` via `registerLazySingletonIfAbsent`.
 - Use constructor injection for cubits/repositories to keep dependencies explicit.
 - New Hive repositories extend `HiveRepositoryBase` or `HiveSettingsRepository<T>`.
-- Do not call `Hive.openBox` outside `apps/mobile/lib/shared/storage/`.
+- Do not call `Hive.openBox` outside `packages/storage` (via `HiveService`).
 - `setState` is reserved for UI-only toggles; business state lives in cubits.
 - New user-visible features need an app entrypoint unless the owning doc says
   route-only.

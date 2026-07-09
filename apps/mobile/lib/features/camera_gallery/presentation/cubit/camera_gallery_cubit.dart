@@ -1,4 +1,4 @@
-import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart' show AppLogger;
 import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
