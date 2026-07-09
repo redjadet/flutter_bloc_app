@@ -13,8 +13,6 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_state.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';

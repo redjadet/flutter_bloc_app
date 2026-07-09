@@ -1,4 +1,5 @@
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart'
+    show MediaPickResult;
 
 /// Video pick contract (camera / gallery / lost data), mirroring image flow.
 abstract class CaseStudyVideoRepository {

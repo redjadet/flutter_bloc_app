@@ -15,8 +15,8 @@
 
 - **Firebase Auth + FirebaseUI** for primary sign-in, backed by GoRouter guards. Providers are built via `buildAuthProviders()` to ensure email/password is always available and to append Google auth when configured (`apps/mobile/lib/features/auth/presentation/widgets/provider_builder.dart`, `widgets/google_provider_helper.dart`).
 - **Anonymous sessions** supported from the sign-in screen and treated as authenticated for routing; anonymous users can upgrade accounts without being redirected away (`apps/mobile/lib/features/auth/presentation/pages/sign_in_page.dart`).
-- **Biometric gate** wraps sensitive navigation (e.g., Settings) through `BiometricAuthenticator` with a `local_auth` implementation that allows bypass when biometrics are unsupported or not enrolled (`apps/mobile/lib/shared/platform/biometric_authenticator.dart`, `apps/mobile/lib/features/counter/presentation/pages/counter_page.dart`).
-- **Auth-scoped data** in the counter feature uses Firebase Realtime Database keyed by `user.uid`, waiting up to 5s for a signed-in user before failing (`apps/mobile/lib/features/counter/data/realtime_database_counter_repository.dart`, `apps/mobile/lib/core/di/injector_factories.dart`).
+- **Biometric gate** wraps sensitive navigation (e.g., Settings) through `BiometricAuthenticator` with a `local_auth` implementation that allows bypass when biometrics are unsupported or not enrolled (`apps/mobile/lib/app/platform/biometric_authenticator.dart`, `apps/mobile/lib/features/counter/presentation/pages/counter_page.dart`).
+- **Auth-scoped data** in the counter feature uses Firebase Realtime Database keyed by `user.uid`, waiting up to 5s for a signed-in user before failing (`apps/mobile/lib/features/counter/data/realtime_database_counter_repository.dart`, `apps/mobile/lib/app/composition/injector_factories.dart`).
 
 ## Routing & Access Control
 
@@ -50,7 +50,7 @@ Protected examples:
   - Registers FirebaseUI actions to navigate to `/counter` on sign-in/user-created/credential-linked, and surfaces `FirebaseAuthException` messages through localized snackbars (`auth_error_message.dart` + `l10n` strings).
   - Anonymous sign-in triggers navigation to the counter page on success; failures show localized errors.
 - **Account management**:
-  - Settings `AccountSection` receives injected `AuthRepository` (wired from `SettingsPage` via `routes_core.part.dart`) and streams `authStateChanges` with `currentUser` as initial data to show signed-in, guest, or signed-out views; routes to `/auth` for upgrades or `/manage-account` for profile management. Sign-out UI still uses FirebaseUI `SignOutButton` (`apps/mobile/lib/features/settings/presentation/widgets/account_section.dart`, `apps/mobile/lib/features/auth/domain/auth_repository.dart`, `apps/mobile/lib/core/di/features/register_auth_services.dart`).
+  - Settings `AccountSection` receives injected `AuthRepository` (wired from `SettingsPage` via `routes_core.part.dart`) and streams `authStateChanges` with `currentUser` as initial data to show signed-in, guest, or signed-out views; routes to `/auth` for upgrades or `/manage-account` for profile management. Sign-out UI still uses FirebaseUI `SignOutButton` (`apps/mobile/lib/features/settings/presentation/widgets/account_section.dart`, `apps/mobile/lib/features/auth/domain/auth_repository.dart`, `apps/mobile/lib/app/composition/features/register_auth_services.dart`).
   - `/manage-account` hosts FirebaseUI `ProfileScreen` with sign-out redirecting to `/auth` (`apps/mobile/lib/features/auth/presentation/pages/profile_page.dart`).
 
 ## Registration Flow (UI-Only)
@@ -67,9 +67,9 @@ Protected examples:
 
 - **Supabase authentication** is an optional flow on a dedicated page, separate from the main Firebase-based app auth. It does not replace Firebase for app-wide redirect or routing.
 - **Route:** `/supabase-auth` (see `AppRoutes.supabaseAuthPath`). Entry point: Settings → Integrations → Supabase Auth.
-- **Configuration:** Supabase is initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are present in `SecretConfig` (from `--dart-define`, secure storage, or environment injected via `direnv`/wrapper scripts—see [Security & Secrets](security_and_secrets.md)). The same Supabase client is also used by Supabase-backed features (e.g. the IoT demo backend when configured). When Supabase is not configured, the IoT demo page is still accessible in local-only mode. See [Security & Secrets](security_and_secrets.md) and [Supabase migrations](../supabase/README.md). Key paths: `apps/mobile/lib/core/config/secret_config.dart`, `apps/mobile/lib/core/bootstrap/supabase_bootstrap_service.dart`, `apps/mobile/lib/core/bootstrap/bootstrap_coordinator.dart`.
+- **Configuration:** Supabase is initialized at bootstrap when `SUPABASE_URL` and `SUPABASE_ANON_KEY` are present in `SecretConfig` (from `--dart-define`, secure storage, or environment injected via `direnv`/wrapper scripts—see [Security & Secrets](security_and_secrets.md)). The same Supabase client is also used by Supabase-backed features (e.g. the IoT demo backend when configured). When Supabase is not configured, the IoT demo page is still accessible in local-only mode. See [Security & Secrets](security_and_secrets.md) and [Supabase migrations](../supabase/README.md). Key paths: `apps/mobile/lib/app/config/secret_config.dart`, `apps/mobile/lib/app/bootstrap/supabase_bootstrap_service.dart`, `apps/mobile/lib/app/bootstrap/bootstrap_coordinator.dart`.
 - **Behavior:** When Supabase URL and anon key are configured (e.g. in secrets or environment), the page allows sign-in, sign-up, and sign-out via email/password. When not configured, the page shows a “not configured” message and no forms.
-- **Implementation:** `apps/mobile/lib/features/supabase_auth/` (domain `SupabaseAuthRepository`, data `SupabaseAuthRepositoryImpl`, presentation `SupabaseAuthCubit` and `SupabaseAuthPage`). Reuses the app’s `AuthUser` domain model for the current Supabase user. Supabase is initialized at bootstrap when credentials are present (`SupabaseBootstrapService`). DI: `apps/mobile/lib/core/di/features/register_supabase_services.dart`; route: `apps/mobile/lib/app/router/route_groups.dart`.
+- **Implementation:** `apps/mobile/lib/features/supabase_auth/` (domain `SupabaseAuthRepository`, data `SupabaseAuthRepositoryImpl`, presentation `SupabaseAuthCubit` and `SupabaseAuthPage`). Reuses the app’s `AuthUser` domain model for the current Supabase user. Supabase is initialized at bootstrap when credentials are present (`SupabaseBootstrapService`). DI: `apps/mobile/lib/app/composition/features/register_supabase_services.dart`; route: `apps/mobile/lib/app/router/route_groups.dart`.
 - **Credential handling:** The page uses email/password autofill hints and disables autocorrect/suggestions for credential fields. The repository trims email, rejects malformed email and too-short passwords before calling Supabase, and maps unexpected transport failures to a stable generic auth error while preserving the cause for logs/tests. Debug logs must not include token values, token lengths, decoded token claims, passwords, or raw auth response payloads.
 - **Error handling:** Auth failures are mapped to `SupabaseAuthErrorCode` (invalidCredentials, invalidEmail, network, userAlreadyExists, weakPassword) and shown via localized strings (`app_*.arb`). Expected user errors (e.g. wrong password, weak password, invalid email, user already exists) are logged at debug to reduce console noise.
 - **Accessing the signed-in Supabase user from other code:** `SupabaseAuthRepository` is registered as a singleton in DI. Resolve it via the app injector (e.g. `getIt<SupabaseAuthRepository>()`) and use **`currentUser`** (`AuthUser?`) for one-off checks or **`authStateChanges`** (`Stream<AuthUser?>`) to react to sign-in/sign-out. The same instance is used app-wide, so the signed-in user is visible from any feature that resolves the repository.
@@ -77,7 +77,7 @@ Protected examples:
 
 ## Session lifecycle coordinator (PR A)
 
-- `SessionLifecycleCoordinator` (`apps/mobile/lib/core/auth/session_lifecycle_coordinator.dart`) is the central cleanup and invalidation seam for Firebase-primary auth.
+- `SessionLifecycleCoordinator` (`apps/mobile/lib/app/auth/session_lifecycle_coordinator.dart`) is the central cleanup and invalidation seam for Firebase-primary auth.
 - All `AuthRepository` DI registrations are wrapped with `SignOutAwareAuthRepository` so explicit `signOut()` clears `AuthTokenManager` and optional Render HF token cache.
 - An auth-stream listener also runs cleanup when Firebase SDK sign-out occurs (e.g. FirebaseUI `SignOutButton` bypassing the repository).
 - `AuthTokenManager` is a DI singleton; `register_http_services.dart` binds it to the coordinator after `Dio` creation.
@@ -85,9 +85,9 @@ Protected examples:
 
 ## Supabase session manager (PR B)
 
-- `SupabaseSessionManager` (`apps/mobile/lib/shared/http/supabase_session_manager.dart`) single-flights `refreshSession()` for chat, case-study delete, and GraphQL edge calls.
+- `SupabaseSessionManager` (`apps/mobile/lib/app/http/supabase/supabase_session_manager.dart`) single-flights `refreshSession()` for chat, case-study delete, and GraphQL edge calls.
 - Auth-classified refresh failures call `SessionLifecycleCoordinator.invalidateSession(supabase, …)`.
-- `JwtClaimsReader` (`apps/mobile/lib/core/auth/jwt_claims_reader.dart`) decodes JWT payload for diagnostics only (no signature verification, not for authorization).
+- `JwtClaimsReader` (in `packages/auth`) decodes JWT payload for diagnostics only (no signature verification, not for authorization).
 - `SupabaseAuthCubit` exposes `sessionExpired` when the coordinator invalidates the Supabase stack.
 
 ## App auth UX (PR C)
@@ -99,9 +99,9 @@ Protected examples:
 
 ## Token Handling (Non-Firebase HTTP)
 
-- The shared **Dio** client injects Firebase ID tokens via `AuthTokenInterceptor` when a `FirebaseAuth` instance is provided (`apps/mobile/lib/shared/http/interceptors/auth_token_interceptor.dart`).
+- The app **Dio** client injects Firebase ID tokens via `AuthTokenInterceptor` when a `FirebaseAuth` instance is provided (`apps/mobile/lib/app/http/auth/interceptors/auth_token_interceptor.dart`).
 - App code reads authentication tokens through the dedicated `TokenRepository`
-  (`apps/mobile/lib/core/auth/token_repository.dart`), not directly from secure storage.
+  (`packages/auth`), not directly from secure storage.
   Provider SDKs remain the persistence owners; the repository keeps the app's
   API-call path on in-memory state.
 - Tokens are retrieved and cached by `AuthTokenManager`, which:
@@ -110,7 +110,7 @@ Protected examples:
   - Uses a serialized refresh gate so concurrent 401 failures share one refresh.
   - Hydrates cache from the refreshed token result so waiters reuse one fresh value.
   - Clears cached token/user on refresh errors or explicit `clearCache()` calls.
-  (`apps/mobile/lib/shared/http/auth_token_manager.dart`)
+  (`apps/mobile/lib/app/http/auth/auth_token_manager.dart`)
 - Firebase token state is hydrated into `TokenRepository` at HTTP service
   startup and after forced refresh. Normal request injection reads memory when
   the token is still valid.
@@ -126,9 +126,9 @@ Protected examples:
 
 ## Debug & Simulator Auth Behavior
 
-- **iOS simulator (debug):** Firebase App Check activation is skipped so anonymous sign-in can reach Firebase Auth without registering a debug token (`apps/mobile/lib/core/bootstrap/firebase_bootstrap_service_helpers.dart`, [Firebase setup](firebase_setup.md#troubleshooting)). Firebase Auth still uses the Keychain on the simulator; when that fails (`keychain-error` / entitlement errors), DI falls back to a **local-only** guest session (`ios-simulator-debug-local-guest`) so the demo UI and router guards remain usable (`apps/mobile/lib/core/di/features/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (same as macOS debug) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists. Physical iOS devices use real Firebase Auth and wired RTDB remotes.
+- **iOS simulator (debug):** Firebase App Check activation is skipped so anonymous sign-in can reach Firebase Auth without registering a debug token (`apps/mobile/lib/app/bootstrap/firebase_bootstrap_service_helpers.dart`, [Firebase setup](firebase_setup.md#troubleshooting)). Firebase Auth still uses the Keychain on the simulator; when that fails (`keychain-error` / entitlement errors), DI falls back to a **local-only** guest session (`ios-simulator-debug-local-guest`) so the demo UI and router guards remain usable (`apps/mobile/lib/app/composition/features/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (same as macOS debug) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists. Physical iOS devices use real Firebase Auth and wired RTDB remotes.
 - **iOS device (debug):** Uses Firebase Auth normally. App Check runs with the debug provider; register the token from logs in Firebase Console → App Check → Manage debug tokens if Auth calls fail with App Check errors.
-- **macOS (debug):** When Firebase Auth hits Keychain entitlement errors (`SecItemAdd (-34018)` and similar), DI may fall back to a **local-only** guest session (`macos-debug-local-guest`) so the demo UI remains usable (`apps/mobile/lib/core/di/features/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (`apps/mobile/lib/core/di/injector_helpers.dart`) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists.
+- **macOS (debug):** When Firebase Auth hits Keychain entitlement errors (`SecItemAdd (-34018)` and similar), DI may fall back to a **local-only** guest session (`macos-debug-local-guest`) so the demo UI remains usable (`apps/mobile/lib/app/composition/features/register_auth_services.dart`). That session is **not** a Firebase user—Realtime Database remotes are omitted (`apps/mobile/lib/app/composition/injector_helpers.dart`) so sync does not block on `waitForAuthUser`; counter/todo stay local-only until a real Firebase user exists.
 - **Router:** Fresh anonymous sign-in navigates to `/counter`. Anonymous users stay on `/auth` only with `?upgrade=true` (Settings upgrade flow).
 - **Regression gates:** `./bin/router_feature_validate` runs `auth_redirect`, `register_auth_services`, `injector_helpers`, and `sign_in_page` tests; device proof lives in `integration_test/guest_sign_in_flow_test.dart` (`pr_smoke` / `smoke` tiers — see [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) J1).
 
@@ -205,8 +205,8 @@ Until that decision exists, keep route policy to `public | authenticated`, and g
   automatically. For non-Firebase HTTP calls, the shared **Dio** client uses
   `AuthTokenInterceptor` and `AuthTokenManager`, which cache per user and apply
   serialized single-flight refresh for concurrent 401s
-  (`apps/mobile/lib/shared/http/auth_token_manager.dart`,
-  `apps/mobile/lib/shared/http/interceptors/auth_token_interceptor.dart`).
+  (`apps/mobile/lib/app/http/auth/auth_token_manager.dart`,
+  `apps/mobile/lib/app/http/auth/interceptors/auth_token_interceptor.dart`).
 - **User session persistence**: Yes — Relies on Firebase Auth’s built-in persisted sessions; navigation listens to `authStateChanges()` to react to sign-in/sign-out (`apps/mobile/lib/app/router/go_router_refresh_stream.dart`).
 - **Role-based access (e.g., student/teacher)**: No — No role/claims parsing or role-aware route guards; only authenticated vs unauthenticated (with anonymous upgrade exception).
 - **Authentication: OAuth, token management**: OAuth: Yes (Google provider added when available via `helpers/google_provider_helper.dart`); token management: Partial (custom token injection for non-Firebase HTTP clients with per-user caching; lifecycle still relies on Firebase defaults).

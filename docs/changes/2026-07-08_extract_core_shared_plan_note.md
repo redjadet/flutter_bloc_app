@@ -2,9 +2,18 @@
 
 Move `apps/mobile/lib/core/**` and `apps/mobile/lib/shared/**` into existing workspace packages by responsibility.
 
-Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `features/**` + `l10n/**` + `main*.dart`). No `core/` or `shared/` folders remain under app `lib/`.
+Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `features/**` + `l10n/**` + `main*.dart`). No `core/` or `shared/` folders under app `lib/`.
 
-## Status (2026-07-08)
+## Status (2026-07-09)
+
+**Phase 5 complete** — merged [#458](https://github.com/redjadet/flutter_bloc_app/pull/458) (`57bc68ac` on `main`).
+
+| Gate | Result |
+| --- | --- |
+| `./bin/checklist` | PASS (~2522 tests, ~80.25% coverage) |
+| `./bin/integration_preflight` | PASS (log filter + Chrome web bootstrap) |
+| iOS integration smoke | PASS (18/18 on iPhone simulator) |
+| PR #458 CI | PASS |
 
 ### Done
 
@@ -18,54 +27,45 @@ Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `featu
 - `core/di/**` → `apps/mobile/lib/app/composition/**`
 - `core/router/**` → `apps/mobile/lib/app/router/**`
 - `core/bootstrap/**` → `apps/mobile/lib/app/bootstrap/**`
-- Temporary shims under old `core/**` and `shared/**` paths until Phase 5 deletion
-
-### Done (sync slice)
-
 - `shared/sync/**` classified and moved:
   - **storage**: `SyncOperation`, `PendingSyncRepository`, `SyncableRepository`, registry, deferred exception
   - **networking**: coordinator, runner, job runner, schedule policy, status, cycle summary, FCM trigger contract
   - **app**: `sync_banner_helpers`, `sync_context_extensions`, `SyncStatusCubit` + state
 - Tests moved to `packages/storage/test/sync/` and `packages/networking/test/sync/`
 - Hive fingerprint manifest paths updated; generator resolves `apps/mobile/lib/` inputs
-
-### Done (auth + config slice)
-
 - `core/auth/jwt_claims_reader.dart`, `token_repository.dart` → `packages/auth`
 - `core/auth/session_lifecycle_coordinator.dart` → `apps/mobile/lib/app/auth/`
 - `core/config/**` → `apps/mobile/lib/app/config/`
 - Tests: `packages/auth/test/`, `apps/mobile/test/app/auth/`, `apps/mobile/test/app/config/`
 - `register_auth_services.dart` import clash fixed (`core_auth` prefix + `show AuthUser`)
-
-### Done (flavor / theme / constants slice)
-
 - `core/flavor.dart` → `apps/mobile/lib/app/config/flavor.dart`
 - `core/constants/app_constants.dart` → `apps/mobile/lib/app/config/`
 - `core/theme/app_theme.dart` → `apps/mobile/lib/app/theme/` (Mix tokens remain `design_system` re-export)
-- Shims remain under `core/flavor`, `core/constants`, `core/theme`
+- Remaining `shared/utils/**`, `shared/http/**` auth glue, `core/**` (platform_init, diagnostics, supabase, app_config, extensions, chat port) → `app/**` or workspace packages
+- **Phase 4:** codegen, barrel cleanup, bulk import rewrites (`tool/phase5_rewrite_imports.py`, `tool/phase5_add_missing_imports.py`, `tool/fix_self_and_duplicate_imports.py`)
+- **Phase 5:** deleted `apps/mobile/lib/core/` and `apps/mobile/lib/shared/` entirely
+- **Phase 5 follow-up:** `shared/media/**` → `packages/app_shared_flutter/lib/src/media/`; l10n adapter → `apps/mobile/lib/app/l10n_adapters/media_pick_error_messages.dart`
+- **Phase 6:** CODEMAP/docs path sweep, guard scripts fixed for `APP_ROOT` / `WORKSPACE_ROOT`, integration preflight restored, DI dedupe (`TokenRepository` owned by auth registration)
 
-### In progress
+### Optional backlog (not merge blockers)
 
-- Remaining `shared/utils/**` (cubit helpers, error handling, navigation, etc.)
-- Remaining `shared/http/**` auth/supabase session glue
-- Remaining `core/**` (platform_init, diagnostics, supabase, app_config, extensions, chat port)
+- [x] Extract `apps/mobile/lib/shared/media/**` into `packages/app_shared_flutter` (l10n adapter stays in `app/l10n_adapters/`)
+- [ ] Doc sweep for stale `lib/core/` / `lib/shared/` references in historical plan prose (melos plan § inventory)
+- [x] `check_regression_guards.sh` auto-triggers: normalize `apps/mobile/` paths before matching
+- [ ] Exhaustive iOS integration (`all_flows_test.dart`) — smoke + preflight proven locally/CI only
+- [ ] Melos plan post-merge: PR-F wave 2, PR-C deferred utils, extra apps (see [`melos_monorepo_migration_plan.md`](../plans/melos_monorepo_migration_plan.md))
 
-### Next
-
-- Phase 4: codegen, barrel cleanup, import scans
-- Phase 5: delete `apps/mobile/lib/core` and `apps/mobile/lib/shared`
-- Phase 6: docs + full validation lane
-
-## Ownership map (draft)
+## Ownership map (final)
 
 ### `apps/mobile/lib/shared/**`
 
-- `shared/storage/**` → `packages/storage`
-- `shared/http/**` → `packages/networking` (+ app adapters for auth glue)
-- `shared/ui/**`, `shared/responsive/**`, reusable `shared/widgets/**` → `packages/design_system`
-- `shared/utils/**`: pure Dart → `packages/utilities`; UI → `packages/design_system`
-- `shared/extensions/**` (l10n) → `apps/mobile/lib/app/l10n_adapters/**`
-- `shared/sync/**` → `packages/storage` / `packages/networking` + app adapters
+- `shared/storage/**` → `packages/storage` ✅
+- `shared/http/**` → `packages/networking` (+ app adapters for auth glue) ✅
+- `shared/ui/**`, `shared/responsive/**`, reusable `shared/widgets/**` → `packages/design_system` ✅
+- `shared/utils/**`: pure Dart → `packages/utilities`; UI → `packages/design_system` ✅
+- `shared/extensions/**` (l10n) → `apps/mobile/lib/app/l10n_adapters/**` ✅
+- `shared/sync/**` → `packages/storage` / `packages/networking` + app adapters ✅
+- `shared/media/**` → `packages/app_shared_flutter/lib/src/media/` ✅
 
 ### `apps/mobile/lib/core/**`
 
@@ -75,10 +75,10 @@ Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `featu
 - `core/auth/**` → `packages/auth` + `apps/mobile/lib/app/auth/` ✅
 - `core/config/**` → `apps/mobile/lib/app/config/` ✅
 - `core/flavor.dart`, `core/constants/**`, `core/theme/app_theme.dart` → `apps/mobile/lib/app/config/` + `app/theme/` ✅
-- `core/theme/mix_app_theme.dart` → shim to `packages/design_system`
-- Remaining `core/theme/**` → mostly shims; Mix tokens in `design_system`
+- Remaining `core/**` → `app/**` or workspace packages; **tree deleted** ✅
 
 ## Notes
 
 - `packages/core` and `packages/utilities` remain **pure Dart** (no Flutter deps).
 - Prefer app adapters in `apps/mobile/lib/app/**` over leaking app imports into packages.
+- Parent plan: [`melos_monorepo_migration_plan.md`](../plans/melos_monorepo_migration_plan.md) — PR-J / Phase 5 row.

@@ -142,6 +142,9 @@ select_regression_guard_tests() {
 
   for file in "${changed_files[@]}"; do
     case "$file" in
+      apps/mobile/*) file="${file#apps/mobile/}" ;;
+    esac
+    case "$file" in
       tool/check_regression_guards.sh|\
       docs/validation_scripts.md|\
       AGENTS.md|\
@@ -175,9 +178,8 @@ select_regression_guard_tests() {
         add_test_once out_ref "test/app/presentation/cubit/app_auth_cubit_test.dart"
         add_test_once out_ref "test/app/auth/session_lifecycle_coordinator_test.dart"
         ;;
-      lib/shared/*|\
-      lib/shared/media/*|\
-      test/shared/*|\
+      packages/app_shared_flutter/lib/src/media/*|\
+      lib/app/l10n_adapters/*|\
       lib/app/sync/*|\
       test/app/sync/*|\
       packages/networking/*|\

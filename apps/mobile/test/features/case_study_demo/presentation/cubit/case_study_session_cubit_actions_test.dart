@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:core/core.dart';
 
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';

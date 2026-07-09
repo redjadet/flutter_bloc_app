@@ -1,8 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_error_keys.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerStaffDemoProofPhotoPicker

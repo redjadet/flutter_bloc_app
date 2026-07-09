@@ -21,7 +21,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_record_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_review_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/shared/media/media_pick_result.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 

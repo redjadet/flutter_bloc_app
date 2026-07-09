@@ -13,13 +13,13 @@ This document describes how the codebase stays modular: dependency direction, sh
 
 Use this as the shorthand:
 
-- `apps/mobile/lib/app/` may compose features, core, and shared code
+- `apps/mobile/lib/app/` may compose features and workspace packages (`packages/*`)
 - `apps/mobile/lib/features/*/presentation/` may depend on its own feature `domain/` plus
-  shared/core UI helpers
-- `apps/mobile/lib/features/*/data/` may depend on its own feature `domain/`, shared/core
-  infrastructure, and external SDKs
+  package-owned UI helpers (`packages/design_system`, `packages/app_shared_flutter`)
+- `apps/mobile/lib/features/*/data/` may depend on its own feature `domain/`, package-owned
+  infrastructure (`packages/storage`, `packages/networking`, `packages/auth`), and external SDKs
 - `apps/mobile/lib/features/*/domain/` should remain pure Dart and feature-scoped
-- `apps/mobile/lib/shared/` must not depend on `apps/mobile/lib/features/`
+- Workspace packages must not depend on `apps/mobile` or `package:flutter_bloc_app`
 
 ## Capability boundaries
 
@@ -31,8 +31,9 @@ the smallest capability the caller needs:
 - Keep capability interfaces named for behavior (`AuthTokenReader`,
   `ProfileCacheClearPort`, `NavigationTargetHandler`), not vague containers
   (`Helper`, `Manager`, `Utils`, `BaseThing`).
-- Put a new port in `apps/mobile/lib/core/` only when app/router or multiple features need
-  it; keep it feature-local when reuse is speculative.
+- Put a new port in a workspace package (often `packages/core`, `packages/utilities`, or a
+  domain package like `packages/auth`) only when app/router or multiple features need it;
+  keep it feature-local when reuse is speculative.
 - If repeated behavior appears across cubits/services, extract a focused mixin
   or service only after the shared lifecycle, error contract, and tests are the
   same.
@@ -41,54 +42,54 @@ the smallest capability the caller needs:
 
 ## Dependency direction
 
-- **`apps/mobile/lib/shared/` must never import `apps/mobile/lib/features/`.** Shared code is used by many features; it cannot depend on any single feature. If a helper (e.g. markdown parsing, design tokens) is needed by both shared and a feature, it lives in `apps/mobile/lib/shared/` and the feature imports from there.
+- **Packages must never import `apps/mobile` or `package:flutter_bloc_app`.** Package code is used by many features; it cannot depend on any single app feature. If a helper (e.g. markdown parsing, design tokens) is needed by both multiple features, it lives in a package (often `packages/design_system` or `packages/utilities`) and features import from there.
 - **Feature-to-feature imports are avoided.** Features do not depend on other features’ domain or presentation. When one screen needs another feature’s widget or data, composition is done in the **app layer** (router, app scope, or a page that receives dependencies via parameters).
-- **`apps/mobile/lib/core/`** holds app-wide infrastructure. It may depend on feature types only at composition points (e.g. router building a feature page). Prefer interfaces in `core/` or `shared/` when multiple features or the app need a contract (e.g. auth, theme).
+- **`apps/mobile/lib/app/`** holds runnable app composition (DI/router/bootstrap). It may depend on feature types only at composition points (e.g. router building a feature page). Prefer interfaces in packages when multiple features or the app need a contract (e.g. auth, theme, diagnostics ports).
 - **`apps/mobile/lib/app/` is the explicit composition layer.** It is allowed to import
   multiple features because that is where routes, auth redirects, app-scope
   providers, and screen composition are assembled.
 
 ## Core and shared contracts
 
-### Auth (`packages/auth` + `apps/mobile/lib/core/auth/`)
+### Auth (`packages/auth` + app shell adapters)
 
 - **`package:auth`** — Pure-Dart contracts: `AuthUser`, base `AuthRepository` (`currentUser`, `authStateChanges`), `AuthProviderKind`, `SessionInvalidationReason`, `RemoteBackendAuthPort`. Router, gates, and cross-feature code import these types from `package:auth/auth.dart`.
-- **`apps/mobile/lib/core/auth/`** — App session infrastructure only: `SessionLifecycleCoordinator`, `TokenRepository`, `JwtClaimsReader` (not re-export shims).
+- **App shell** — App session infrastructure and SDK glue: `apps/mobile/lib/app/auth/**` and DI wiring under `apps/mobile/lib/app/composition/**`.
 - **`apps/mobile/lib/features/auth/domain/`** — Feature `AuthRepository` extends the package contract with `signInAnonymously` / `signOut`; Firebase/Supabase implementations live under `features/auth/data/`. DI registers the feature repository and aliases `core_auth.AuthRepository` to the same singleton (`core/di/features/register_auth_services.dart`).
 
-### Theme and design tokens (`apps/mobile/lib/shared/design_system/`)
+### Theme and design tokens (`packages/design_system`)
 
-- **EPOCH** – `EpochThemeExtension`, `EpochColors`, `EpochTextStyles`, and `EpochSpacing` live in `apps/mobile/lib/shared/design_system/epoch_theme_extension.dart`. Both library_demo and scapes import from shared; no feature owns the design system. The old `library_demo_theme.dart` re-exports from shared for compatibility.
+- **EPOCH** – `EpochThemeExtension`, `EpochColors`, `EpochTextStyles`, and `EpochSpacing` live in `packages/design_system`. Features import from `package:design_system/design_system.dart`.
 
-### Shared utilities (`apps/mobile/lib/shared/utils/`)
+### Shared utilities (`packages/utilities` + `packages/app_shared_flutter`)
 
-- **Markdown parsing** – `MarkdownParser` and `MarkdownTableRenderer` live in `apps/mobile/lib/shared/utils/`. They are used by the markdown editor render object and by shared widgets such as `MessageBubble`. This avoids `shared/` depending on the example feature for generic markdown behavior.
+- **Markdown parsing** – `MarkdownParser` and `MarkdownTableRenderer` live in `packages/design_system`. This avoids feature-to-feature coupling for generic markdown behavior.
 
-### Settings-style section layout (`apps/mobile/lib/shared/widgets/`)
+### Settings-style section layout (`packages/design_system`)
 
-- **`SettingsSection`** – Title + spacing + child column used on the settings screen and on **remote_config** diagnostics. Living in `apps/mobile/lib/shared/widgets/settings_section.dart` keeps **`remote_config` from importing the `settings` feature** while preserving consistent layout.
-- **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `apps/mobile/lib/shared/widgets/diagnostics/` and depend only on **`apps/mobile/lib/core/diagnostics/`** ports (`GraphqlCacheClearPort`, `ProfileCacheControlsPort`). The **router** wires `getIt` implementations so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports. Feature adapters (e.g. `GraphqlCacheClearPortAdapter` in `apps/mobile/lib/features/graphql_demo/data/`) implement core ports and are registered in `core/di/features/register_graphql_services.dart` — same pattern as HF token and GenUI host-handle ports.
-- **Remote config diagnostics DTO** – `RemoteConfigDiagnosticsViewData` + `RemoteConfigDiagnosticsStatus` live in `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart`. The **remote_config** feature maps `RemoteConfigState` via `mapRemoteConfigStateToDiagnosticsViewData` (`apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`) so the cubit state type does not leak into core.
+- **`SettingsSection`** – Title + spacing + child column used on the settings screen and on **remote_config** diagnostics. Living in `packages/design_system` keeps **`remote_config` from importing the `settings` feature** while preserving consistent layout.
+- **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `apps/mobile/lib/app/widgets/diagnostics/**` (app-wired) and depend on diagnostics ports in packages (see `packages/utilities` ports and app adapters) so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports.
+- **Remote config diagnostics DTO** – `RemoteConfigDiagnosticsViewData` + `RemoteConfigDiagnosticsStatus` live in a package-owned diagnostics port module (see `packages/utilities` ports). The **remote_config** feature maps `RemoteConfigState` via `mapRemoteConfigStateToDiagnosticsViewData` (`apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`) so the cubit state type does not leak into app composition.
 
-### Render orchestration HF token (`apps/mobile/lib/core/chat/`)
+### Render orchestration HF token (`packages/utilities` ports)
 
-- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `apps/mobile/lib/core/chat/render_orchestration_remote_token_port.dart` exposing `readDevToken()` + `forceRefresh()`. The chat `LayeredRenderOrchestrationHfTokenProvider` depends only on this port, so **`chat` no longer imports `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in `apps/mobile/lib/core/di/features/register_remote_config_services.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
+- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `packages/utilities` exposing `readDevToken()` + `forceRefresh()`. The chat token provider depends only on this port, so **`chat` does not import `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in app composition. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 ### Settings diagnostics decoupling (plan todos — **all complete**)
 
 Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](plans/settings_diagnostics_decouple_plan.md).
 
-- [x] GraphQL cache clear port — `apps/mobile/lib/core/diagnostics/graphql_cache_clear_port.dart`; DI in `core/di/features/register_graphql_services.dart`
-- [x] Profile cache diagnostics port — `apps/mobile/lib/core/diagnostics/profile_cache_controls_port.dart`; DI in `core/di/features/register_profile_services.dart`
-- [x] Cache section widgets (no `graphql_demo` / `profile` imports) — `apps/mobile/lib/shared/widgets/diagnostics/`
-- [x] Remote config diagnostics DTO in core — `apps/mobile/lib/core/diagnostics/remote_config_diagnostics_view_data.dart`
+- [x] GraphQL cache clear port — package-owned diagnostics port + app adapter; DI in `apps/mobile/lib/app/composition/features/register_graphql_services.dart`
+- [x] Profile cache diagnostics port — package-owned diagnostics port + app adapter; DI in `apps/mobile/lib/app/composition/features/register_profile_services.dart`
+- [x] Cache section widgets (no `graphql_demo` / `profile` imports) — app-owned diagnostics widgets under `apps/mobile/lib/app/widgets/diagnostics/`
+- [x] Remote config diagnostics DTO — package-owned, mapped from feature state
 - [x] Mapper in remote_config — `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`
 - [x] App composition — `apps/mobile/lib/app/router/routes_core.dart` → `SettingsPage.buildQaExtras`
 - [x] Settings feature: zero imports of `graphql_demo` / `profile` / `remote_config` — `tool/check_feature_modularity_leaks.sh` + `rg` on `apps/mobile/lib/features/settings`
 
 ## Composition in the app layer
 
-- **App shell** – `apps/mobile/lib/main_bootstrap.dart`, `apps/mobile/lib/core/bootstrap/`, `apps/mobile/lib/app.dart`,
+- **App shell** – `apps/mobile/lib/main_bootstrap.dart`, `apps/mobile/lib/app/bootstrap/**`, `apps/mobile/lib/app.dart`,
   and `apps/mobile/lib/app/app_scope.dart` own startup, DI bootstrapping, router creation,
   and app-scope providers/listeners.
 - **Counter + Remote Config** – The counter feature does not import remote_config. `CounterPageBody` always composes `CounterSyncBanner` for offline-first UX. The page also exposes an optional **banner slot** (`Widget? optionalBanner`) for app-level widgets; the **router** (`apps/mobile/lib/app/router/routes_core.dart`) passes `AwesomeFeatureWidget()` there. Counter stays agnostic; remote-config composition stays in the app.
@@ -106,10 +107,9 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
   `bash tool/modular_metrics.sh --cross-feature-only` for a classified list of
   `apps/mobile/lib/features/<A>/` files importing `package:flutter_bloc_app/features/<B>/`
   (Phase 1B inventory before any default-deny CI gate).
-- **No shared → feature imports:** enforced by `tool/check_feature_modularity_leaks.sh`
-  (fails on `package:flutter_bloc_app/features/` under `apps/mobile/lib/shared/`). Composition
-  must inject feature behavior via DI callbacks from `apps/mobile/lib/core/di/` (see
-  `AppMemoryService.onChartMemoryTrim`).
+- **No package → app imports:** enforced by `tool/check_feature_modularity_leaks.sh` and
+  `tool/check_package_dependency_dag.sh`. Composition must inject feature behavior via DI
+  callbacks from `apps/mobile/lib/app/composition/**` (see `AppMemoryService.onChartMemoryTrim`).
 - **Domain purity (imports):** same script fails on `^import` lines in
   `apps/mobile/lib/features/*/domain/**` that pull in Flutter, `get_it`, Hive, Supabase client
   libs, Dio, Retrofit, `package:flutter_bloc_app/app/`, `package:flutter_bloc_app/core/di/`,
@@ -122,19 +122,19 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
 - **Full sweep:** `./bin/checklist` runs `tool/check_feature_modularity_leaks.sh`
   (see [validation_scripts.md](validation_scripts.md)).
 - **Router/feature tests:** Run `./bin/router_feature_validate` after changing routes or DI.
-- When adding a new cross-cutting concept (e.g. “current user”), consider a **core** or **shared** contract so that app and features depend on the contract, not on a single feature’s implementation.
+- When adding a new cross-cutting concept (e.g. “current user”), consider a **package-owned** contract so that app and features depend on the contract, not on a single feature’s implementation.
 
 ### Phase 1B — feature-to-feature imports
 
 Cross-feature `package:` imports are **reported** via `modular_metrics.sh`, not
-failed by default, until each hit is classified (move to `apps/mobile/lib/app/`, `apps/mobile/lib/shared/`,
-`apps/mobile/lib/core/` port, or an explicit time-boxed exception documented in this file).
+failed by default, until each hit is classified (move to `apps/mobile/lib/app/`, a package-owned port,
+or an explicit time-boxed exception documented in this file).
 
 **Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change):
 
 | From → To | Representative files | Classification | Owner | Expiry / removal |
 | --- | --- | --- | --- | --- |
-| `case_study_demo` → `camera_gallery` | `case_study_image_picker_video_repository.dart`, `case_study_video_repository.dart`, `case_study_l10n_helpers.dart`, `case_study_session_cubit.dart` | Temporary — shared camera result/error types should move to `apps/mobile/lib/shared/` or a thin `core/` contract so the demo does not depend on another feature’s domain | Maintainers | Remove when camera gallery exports are replaced by a shared or core type, or case study owns equivalent DTOs |
+| `case_study_demo` → `camera_gallery` | `case_study_image_picker_video_repository.dart`, `case_study_video_repository.dart`, `case_study_l10n_helpers.dart`, `case_study_session_cubit.dart` | Temporary — camera result/error types now live in `packages/app_shared_flutter` and are re-exported by camera_gallery; remove remaining cross-feature imports when case study depends only on the shared DTOs | Maintainers | Remove when case study imports only `package:app_shared_flutter` types (no `camera_gallery` domain imports) |
 | `case_study_demo` → `supabase_auth` | `case_study_session_cubit.dart`, `case_study_demo_home_page.dart`, `case_study_history_*.dart`, `case_study_data_mode_badge.dart` | Temporary — presentation pulls `SupabaseAuthRepository`; prefer app/DI passing an interface or core auth read model | Maintainers | Remove when cubit/pages receive auth via constructor/DI without importing `supabase_auth` |
 
 ## Phase 3 follow-ups (stronger seams)

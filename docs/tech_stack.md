@@ -18,7 +18,9 @@ not a replacement for `pubspec.yaml`.
 | App root | `apps/mobile/` (`package:flutter_bloc_app`) |
 | App entrypoints | `apps/mobile/lib/main_dev.dart`, `apps/mobile/lib/main_staging.dart`, `apps/mobile/lib/main_prod.dart` |
 | Shared bootstrap | `apps/mobile/lib/main_bootstrap.dart` |
-| App shell | `apps/mobile/lib/app.dart`, `apps/mobile/lib/app/app_scope.dart`, `apps/mobile/lib/core/app_config.dart` |
+| App shell | `apps/mobile/lib/app.dart`, `apps/mobile/lib/app/app_scope.dart`, `apps/mobile/lib/app/config/`, `apps/mobile/lib/app/bootstrap/` |
+| Monorepo workspace | Melos; shared packages under `packages/` (e.g. `design_system`, `networking`, `storage`, `app_shared_flutter`) |
+| Non-mobile platforms | Canonical: `apps/other_platforms/{web,macos,linux,windows}/`; `apps/mobile/{web,macos,linux,windows}` are symlinks so Flutter discovers those targets |
 | Apple native dependencies | Swift Package Manager enabled (`flutter config --enable-swift-package-manager`); CocoaPods retained for Podfiles and unsupported plugin fallback |
 
 ## Supported platforms
@@ -60,7 +62,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Local persistence | `hive` `^2.2.0`, `hive_flutter` `^1.1.0` |
 | Secure storage | `flutter_secure_storage` `^10.0.0` |
 | Legacy migration support | `shared_preferences` `^2.5.3` |
-| Sync infrastructure | Pending sync queue and background sync under `apps/mobile/lib/shared/sync/` |
+| Sync infrastructure | `packages/storage` (queue/pending) + `packages/networking` (coordinator/runner); app adapters in `apps/mobile/lib/app/**` |
 | Offline-first docs | [Offline-First Adoption Guide](offline_first/adoption_guide.md) |
 
 ## Networking and backend integrations
@@ -74,7 +76,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Firebase UI | `firebase_ui_auth` `^3.0.1`, `firebase_ui_localizations` `^2.0.0`, `firebase_ui_oauth_google` `^2.0.0` |
 | Supabase | `supabase_flutter` `^2.8.0` |
 | Deep links | `app_links` `^6.4.1` |
-| Backend auth retry and token injection | Shared Dio interceptors under `apps/mobile/lib/shared/http/` |
+| Backend auth retry and token injection | Dio interceptors in `packages/networking`; app auth glue in `apps/mobile/lib/app/**` |
 
 ## UI, design, and feature packages
 
@@ -109,7 +111,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | `google_maps_flutter` | Requires platform API key configuration where Google Maps is used. iOS native SDK is pinned through the SwiftPM-compatible `google_maps_flutter_ios_sdk10` package. |
 | `window_manager` | Desktop-only window management support. |
 | `local_auth` | Uses platform biometric APIs on iOS and Android. |
-| Firebase config files | `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, and `macos/Runner/GoogleService-Info.plist` when applicable. |
+| Firebase config files | `apps/mobile/android/app/google-services.json`, `apps/mobile/ios/Runner/GoogleService-Info.plist`, and `apps/other_platforms/macos/Runner/GoogleService-Info.plist` when applicable. |
 
 Platform-specific setup details belong in:
 
