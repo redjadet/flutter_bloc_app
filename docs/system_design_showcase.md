@@ -1,17 +1,17 @@
 # System design showcase
 
-This is a showcase of architecture decisions, production operations,
-security, and system design. It is a map from claims to live code, docs, and
-commands. Do not present planned integrations as shipped.
+This doc maps engineering claims to live code, docs, and commands. Use it for
+architecture review, technical discussion, or interview follow-up. Do not
+present planned integrations as shipped.
 
 ## Talk track
 
-| Skill signal | What to say | Proof |
+| Skill signal | Positioning | Proof |
 | --- | --- | --- |
-| Architecture decisions | Modular monolith, feature Clean Architecture, Cubit-first presentation, DI composition, offline-first data layer. | [`adr/README.md`](adr/README.md), [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md) |
+| Architecture decisions | Modular monolith, feature Clean Architecture, Cubit-first presentation, app-level DI composition, offline-first data layer. | [`adr/README.md`](adr/README.md), [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md) |
 | System design | App shell composes route-scoped features; domain contracts hide storage, HTTP, Firebase, Supabase, platform channels, and sync queues. | [`apps/mobile/lib/app/bootstrap/bootstrap_coordinator.dart`](../apps/mobile/lib/app/bootstrap/bootstrap_coordinator.dart), [`apps/mobile/lib/app/composition/injector_registrations.dart`](../apps/mobile/lib/app/composition/injector_registrations.dart), [`apps/mobile/lib/app/router/routes.dart`](../apps/mobile/lib/app/router/routes.dart) |
-| Production operations | Scripted release, CI delivery gate, drift checks, integration tiers, Crashlytics when Firebase is enabled. | [`deployment.md`](deployment.md), [`.github/workflows/ci.yml`](../.github/workflows/ci.yml), [`observability.md`](observability.md) |
-| Security | Runtime secret injection, secure storage abstraction, auth route policy, denial checks, tracked-secret scanner. | [`security_and_secrets.md`](security_and_secrets.md), [`review/security_checklist.md`](review/security_checklist.md), [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh) |
+| Production operations | Scripted release, CI delivery gate, drift checks, integration tiers, and Crashlytics when Firebase is enabled. | [`deployment.md`](deployment.md), [`.github/workflows/ci.yml`](../.github/workflows/ci.yml), [`observability.md`](observability.md) |
+| Security | Runtime secret injection, secure storage abstraction, auth route policy, denial checks, and tracked-secret scanning. | [`security_and_secrets.md`](security_and_secrets.md), [`review/security_checklist.md`](review/security_checklist.md), [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh) |
 
 ## Architecture decisions
 
@@ -53,7 +53,7 @@ Use these if asked to reason beyond the demo.
 | What fails offline? | Writes persist locally where feature has offline-first support; queue replay is bounded by idempotent operations and conflict policy. Features without offline support must degrade explicitly. |
 | How would you debug a production incident? | Classify by `AppErrorCode`, inspect Crashlytics/log context, check sync queue depth, reproduce with integration tier, patch with focused test plus checklist. |
 | How do you keep secrets safe in mobile/web? | Never treat client-distributed config as a server secret; prefer server-side secrets or short-lived tokens; avoid logging tokens/payloads; scan tracked files. |
-| What would you change before real production traffic? | Finalize backend authz/RLS, analytics taxonomy, SLO dashboards, remote kill switches, alert routing, and release rollback policy. |
+| What would you change before real production traffic? | Finalize backend authorization/RLS, analytics taxonomy, SLO dashboards, remote kill switches, alert routing, and release rollback policy. |
 
 ## Proof commands
 

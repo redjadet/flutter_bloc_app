@@ -1,6 +1,10 @@
 # Flutter BLoC App
 
-Production-style Flutter reference app: Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter, and a broad demo surface for integrations, AI, and release discipline.
+Production-style Flutter reference app for a mobile engineering portfolio:
+feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
+CI-backed validation, and a broad set of integration demos. The repo is
+intentionally proof-oriented: claims in the README link to source, docs, or
+commands instead of relying on generic architecture statements.
 
 Platform & toolchain
 
@@ -68,13 +72,27 @@ Engineering practices
 
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart
+dart run melos bootstrap
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 With `.envrc` / `tool/direnv/bin` first in `PATH`, `flutter run` also works
 from the repo root and is routed to `apps/mobile`.
 
 Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.md). Full setup, flavors, and credentials: [docs/new_developer_guide.md](docs/new_developer_guide.md).
+
+## Portfolio reading path
+
+For a fast technical review, read these first:
+
+1. [Interview showcase](docs/interview_showcase.md) — 30-minute walkthrough with
+   honest shipped-vs-planned boundaries.
+2. [System design showcase](docs/system_design_showcase.md) — architecture,
+   operations, security, and proof paths.
+3. [Architecture](docs/architecture.md) and [Modularity](docs/modularity.md) —
+   boundary rules and enforcement scripts.
+4. [Testing overview](docs/testing_overview.md) and
+   [Validation scripts](docs/validation_scripts.md) — how changes are verified.
 
 ## Documentation
 

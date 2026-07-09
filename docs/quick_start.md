@@ -1,6 +1,8 @@
 # Quick start
 
-Minimal path to run and validate this repo. Full onboarding: [new_developer_guide.md](new_developer_guide.md). Agent map: [../AGENTS.md](../AGENTS.md).
+Minimal path to run and validate this repo. Full onboarding:
+[new_developer_guide.md](new_developer_guide.md). Agent map:
+[../AGENTS.md](../AGENTS.md).
 
 ## Toolchain
 
@@ -21,6 +23,16 @@ Melos is repo-pinned in the root `pubspec.yaml`; use `dart run melos ...`
 after bootstrap. A global `melos` binary is not required.
 
 Agent host sync (optional, once per machine): [agent_environment_setup.md](agent_environment_setup.md).
+
+## Reviewer path
+
+For a quick technical read before cloning deeply:
+
+- [../README.md](../README.md) — public entrypoint, live app links, and proof map.
+- [interview_showcase.md](interview_showcase.md) — curated portfolio walk.
+- [system_design_showcase.md](system_design_showcase.md) — architecture,
+  operations, security, and production-readiness boundaries.
+- [modularity.md](modularity.md) — dependency boundaries and enforcement.
 
 ## Fast validation
 

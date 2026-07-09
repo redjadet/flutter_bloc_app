@@ -1,6 +1,9 @@
 # Modularity
 
-This document describes how the codebase stays modular: dependency direction, shared and core contracts, and where composition happens.
+This document describes how the codebase stays modular: dependency direction,
+shared contracts, and where composition happens. The design goal is not package
+count; it is controlled change. Feature modules stay independent until a real
+reuse, ownership, or validation need justifies extracting shared capability.
 
 > **Related Documentation:**
 >
@@ -98,7 +101,10 @@ Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](
 ## Feature barrel (`apps/mobile/lib/features/features.dart`)
 
 - A single barrel file re-exports public entry points for features that are used by the app or other composition points.
-- It re-exports every feature barrel under `apps/mobile/lib/features/<name>/` (alphabetical in `features.dart`), including demos such as `ai_decision_demo`, `case_study_demo`, `igaming_demo`, `in_app_purchase_demo`, `online_therapy_demo`, `staff_app_demo`, and `walletconnect_auth`. `library_demo` still exports its page entry directly.
+- It re-exports every feature barrel under `apps/mobile/lib/features/<name>/`
+  (alphabetical in `features.dart`), including product, AI, commerce, therapy,
+  identity, and demo modules. `library_demo` still exports its page entry
+  directly.
 - Use this for a quick import of a feature’s public API when you are in app/router or tests; within a feature, prefer direct imports to the files you need.
 
 ## Validation

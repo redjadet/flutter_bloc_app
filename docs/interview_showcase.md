@@ -1,10 +1,15 @@
-# Interview showcase — mobile SaaS portfolio walk
+# Interview showcase - mobile SaaS portfolio walk
 
 ## 1. Purpose
 
-This repo is a **modular monolith** Flutter reference app: Clean Architecture, Cubit-first state, offline-first sync, typed routing, and broad demo surface area. For a **mobile SaaS** interview, use this doc as a **30-minute script** — not a tour of every demo route.
+This repo is a **modular monolith** Flutter reference app: Clean Architecture,
+Cubit-first state, offline-first sync, typed routing, and broad demo surface
+area. For a **mobile SaaS** interview or technical screen, use this doc as a
+**30-minute walkthrough**. It is not a tour of every demo route.
 
-Honest positioning: one codebase with **33+ feature modules** and shared infrastructure; spine features prove delivery depth; everything else is linked as **depth branches**.
+Positioning: one codebase with **33+ feature modules** and shared
+infrastructure. The spine features prove delivery depth; the remaining modules
+are **depth branches** for follow-up questions.
 
 ## 2. Prerequisites
 
@@ -15,7 +20,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 
 ## 3. 30-minute walk (frozen spine)
 
-| Step | Route | Say this | Open in code |
+| Step | Route | Signal | Open in code |
 | --- | --- | --- | --- |
 | 1 | `/` Counter | Offline-first counter: local Hive, sync, Cubit lifecycle. Tap +/-; mention sync banner. Pending-queue UI (counts + inspector) is behind `--dart-define=SHOW_PENDING_SYNC_QUEUE_UI=true` (default off). | [`apps/mobile/lib/features/counter/`](../apps/mobile/lib/features/counter/) |
 | 2 | `/todo-list` | List CRUD with filters, selection, realtime-capable repo; same sync patterns as counter. | [`apps/mobile/lib/features/todo_list/`](../apps/mobile/lib/features/todo_list/) |
@@ -23,7 +28,9 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
-**Depth on request** (not spine): case study, staff app, therapy, charts, GraphQL, iGaming, **native platform showcase** (MethodChannel + FFI layering), etc. → [feature_overview.md](feature_overview.md).
+**Depth on request** (not spine): case study, therapy, charts, GraphQL,
+iGaming, **native platform showcase** (MethodChannel + FFI layering), and other
+modules in [feature_overview.md](feature_overview.md).
 
 ## 4. JD evidence table
 
@@ -36,7 +43,7 @@ Honest positioning: one codebase with **33+ feature modules** and shared infrast
 | Validate / instrument | Structured errors, sync telemetry, Crashlytics when Firebase on | [observability.md](observability.md), [counter_outcome_brief.md](features/counter_outcome_brief.md) | Spine #4 sync diagnostics |
 | AI-enabled delivery | Agent loop + review protocol | [ai_code_review_protocol.md](ai_code_review_protocol.md), [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md) | Spine #5 |
 | Ownership | Counter vertical narrative | [features/counter_outcome_brief.md](features/counter_outcome_brief.md) | Read brief; tie to sync + persistence test |
-| Agile / SaaS | CI + vertical demos as depth | README badges, [feature_overview.md](feature_overview.md) | CI badge; depth table §13 |
+| Delivery ownership | CI, validation routing, release docs, vertical demos as depth | README badges, [feature_overview.md](feature_overview.md), [deployment.md](deployment.md) | CI badge; depth table §13 |
 | Mixpanel / Sentry (nice) | **Not shipped** — documented seams | [plans/future_observability.md](plans/future_observability.md) | Interview appendix script §12 |
 | Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
 | Platform channels / FFI (nice) | Live Swift/Kotlin/C interop behind clean-arch ports; web compiles with unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
@@ -60,7 +67,8 @@ INTEGRATION_TESTS_TIER=smoke ./bin/integration_tests
 
 **Manual proof (spine step 4):** Counter offline change → Settings → Sync diagnostics (pending ops, last sync).
 
-**Linux CI note:** Full iOS integration often runs from GitHub Actions workflow dispatch, not every PR path — see [validation_scripts.md](validation_scripts.md).
+**Linux CI note:** Full iOS integration often runs from GitHub Actions workflow
+dispatch, not every PR path; see [validation_scripts.md](validation_scripts.md).
 
 ### PR smoke flows (after showcase alignment)
 
@@ -99,11 +107,14 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 
 ## 9. AI delivery
 
-Loop: plan once → execute → verify → report proof ([agent_knowledge_base.md](agent_knowledge_base.md)).
+Loop: plan once → execute → verify → report proof
+([agent_knowledge_base.md](agent_knowledge_base.md)).
 
 Review: [ai_code_review_protocol.md](ai_code_review_protocol.md).
 
-**Annotated example (agent session):** [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md) — modular metrics, leak script, DI split, domain surface tests.
+**Annotated example (agent session):**
+[changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md)
+- modular metrics, leak script, DI split, domain surface tests.
 
 ## 10. Release
 
@@ -134,14 +145,15 @@ See [plans/future_observability.md](plans/future_observability.md).
 | --- | --- |
 | Native platform showcase (MethodChannel, FFI, layered ports) | [`apps/mobile/lib/features/native_platform_showcase/README.md`](../apps/mobile/lib/features/native_platform_showcase/README.md), [2026-06-08 brief](changes/2026-06-08_native_platform_showcase_feature_brief.md) |
 | Case studies | [case_studies/README.md](case_studies/README.md) |
-| Staff app demo | [staff_app_demo_walkthrough.md](staff_app_demo_walkthrough.md) |
 | Online therapy | [online_therapy_demo/README.md](online_therapy_demo/README.md) |
 | Realtime market | [features/realtime_market.md](features/realtime_market.md) |
 | Full catalog | [feature_overview.md](feature_overview.md) |
 
-## 14. Last verified
+## 14. Verification snapshot
 
-- **Date:** 2026-05-20
-- **Scoped validation (lib + docs):** `dart analyze` on touched files — PASS; widget tests (counter app bar, todo page, chat contact tile) — PASS (36 tests); `bash tool/check_docs_gardening.sh` — PASS; `bash tool/validate_task_trackers.sh` — PASS
-- **`./bin/checklist`:** PASS — full delivery gate (2221 tests, coverage summary refresh)
-- **PR smoke runtime:** `./bin/integration_tests integration_test/pr_smoke_flows_test.dart` — PASS (7/7 on iPhone 17 Pro sim)
+- **Showcase baseline:** 2026-05-20 full delivery gate passed with
+  `./bin/checklist` (2221 tests, coverage summary refresh) and PR smoke runtime
+  passed on iPhone 17 Pro simulator.
+- **Current edit expectation:** documentation-only changes can use
+  `./bin/checklist-fast --no-reuse`; lib or mixed lib+docs changes require the
+  full gate above.
