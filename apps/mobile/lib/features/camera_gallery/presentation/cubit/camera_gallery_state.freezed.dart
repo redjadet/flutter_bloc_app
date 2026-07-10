@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CameraGalleryState {
 
- ViewStatus get status; String? get imagePath;/// L10n key for user-visible error (e.g. cameraGalleryPermissionDenied).
+ ViewStatus get status; String? get sourceImagePath; String? get imagePath; ImageProcessingFilter get selectedFilter;/// L10n key for user-visible error (e.g. cameraGalleryPermissionDenied).
  String? get errorKey;
 /// Create a copy of CameraGalleryState
 /// with the given fields replaced by the non-null parameter values.
@@ -26,16 +26,16 @@ $CameraGalleryStateCopyWith<CameraGalleryState> get copyWith => _$CameraGalleryS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraGalleryState&&(identical(other.status, status) || other.status == status)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&(identical(other.errorKey, errorKey) || other.errorKey == errorKey));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraGalleryState&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceImagePath, sourceImagePath) || other.sourceImagePath == sourceImagePath)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&(identical(other.selectedFilter, selectedFilter) || other.selectedFilter == selectedFilter)&&(identical(other.errorKey, errorKey) || other.errorKey == errorKey));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,imagePath,errorKey);
+int get hashCode => Object.hash(runtimeType,status,sourceImagePath,imagePath,selectedFilter,errorKey);
 
 @override
 String toString() {
-  return 'CameraGalleryState(status: $status, imagePath: $imagePath, errorKey: $errorKey)';
+  return 'CameraGalleryState(status: $status, sourceImagePath: $sourceImagePath, imagePath: $imagePath, selectedFilter: $selectedFilter, errorKey: $errorKey)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $CameraGalleryStateCopyWith<$Res>  {
   factory $CameraGalleryStateCopyWith(CameraGalleryState value, $Res Function(CameraGalleryState) _then) = _$CameraGalleryStateCopyWithImpl;
 @useResult
 $Res call({
- ViewStatus status, String? imagePath, String? errorKey
+ ViewStatus status, String? sourceImagePath, String? imagePath, ImageProcessingFilter selectedFilter, String? errorKey
 });
 
 
@@ -63,11 +63,13 @@ class _$CameraGalleryStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraGalleryState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? imagePath = freezed,Object? errorKey = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? sourceImagePath = freezed,Object? imagePath = freezed,Object? selectedFilter = null,Object? errorKey = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ViewStatus,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
-as String?,errorKey: freezed == errorKey ? _self.errorKey : errorKey // ignore: cast_nullable_to_non_nullable
+as ViewStatus,sourceImagePath: freezed == sourceImagePath ? _self.sourceImagePath : sourceImagePath // ignore: cast_nullable_to_non_nullable
+as String?,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
+as String?,selectedFilter: null == selectedFilter ? _self.selectedFilter : selectedFilter // ignore: cast_nullable_to_non_nullable
+as ImageProcessingFilter,errorKey: freezed == errorKey ? _self.errorKey : errorKey // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  String? imagePath,  String? errorKey)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ViewStatus status,  String? sourceImagePath,  String? imagePath,  ImageProcessingFilter selectedFilter,  String? errorKey)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CameraGalleryState() when $default != null:
-return $default(_that.status,_that.imagePath,_that.errorKey);case _:
+return $default(_that.status,_that.sourceImagePath,_that.imagePath,_that.selectedFilter,_that.errorKey);case _:
   return orElse();
 
 }
@@ -174,10 +176,10 @@ return $default(_that.status,_that.imagePath,_that.errorKey);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  String? imagePath,  String? errorKey)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ViewStatus status,  String? sourceImagePath,  String? imagePath,  ImageProcessingFilter selectedFilter,  String? errorKey)  $default,) {final _that = this;
 switch (_that) {
 case _CameraGalleryState():
-return $default(_that.status,_that.imagePath,_that.errorKey);case _:
+return $default(_that.status,_that.sourceImagePath,_that.imagePath,_that.selectedFilter,_that.errorKey);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +196,10 @@ return $default(_that.status,_that.imagePath,_that.errorKey);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  String? imagePath,  String? errorKey)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ViewStatus status,  String? sourceImagePath,  String? imagePath,  ImageProcessingFilter selectedFilter,  String? errorKey)?  $default,) {final _that = this;
 switch (_that) {
 case _CameraGalleryState() when $default != null:
-return $default(_that.status,_that.imagePath,_that.errorKey);case _:
+return $default(_that.status,_that.sourceImagePath,_that.imagePath,_that.selectedFilter,_that.errorKey);case _:
   return null;
 
 }
@@ -209,11 +211,13 @@ return $default(_that.status,_that.imagePath,_that.errorKey);case _:
 
 
 class _CameraGalleryState extends CameraGalleryState {
-  const _CameraGalleryState({this.status = ViewStatus.initial, this.imagePath, this.errorKey}): super._();
+  const _CameraGalleryState({this.status = ViewStatus.initial, this.sourceImagePath, this.imagePath, this.selectedFilter = ImageProcessingFilter.original, this.errorKey}): super._();
   
 
 @override@JsonKey() final  ViewStatus status;
+@override final  String? sourceImagePath;
 @override final  String? imagePath;
+@override@JsonKey() final  ImageProcessingFilter selectedFilter;
 /// L10n key for user-visible error (e.g. cameraGalleryPermissionDenied).
 @override final  String? errorKey;
 
@@ -227,16 +231,16 @@ _$CameraGalleryStateCopyWith<_CameraGalleryState> get copyWith => __$CameraGalle
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraGalleryState&&(identical(other.status, status) || other.status == status)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&(identical(other.errorKey, errorKey) || other.errorKey == errorKey));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraGalleryState&&(identical(other.status, status) || other.status == status)&&(identical(other.sourceImagePath, sourceImagePath) || other.sourceImagePath == sourceImagePath)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&(identical(other.selectedFilter, selectedFilter) || other.selectedFilter == selectedFilter)&&(identical(other.errorKey, errorKey) || other.errorKey == errorKey));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,imagePath,errorKey);
+int get hashCode => Object.hash(runtimeType,status,sourceImagePath,imagePath,selectedFilter,errorKey);
 
 @override
 String toString() {
-  return 'CameraGalleryState(status: $status, imagePath: $imagePath, errorKey: $errorKey)';
+  return 'CameraGalleryState(status: $status, sourceImagePath: $sourceImagePath, imagePath: $imagePath, selectedFilter: $selectedFilter, errorKey: $errorKey)';
 }
 
 
@@ -247,7 +251,7 @@ abstract mixin class _$CameraGalleryStateCopyWith<$Res> implements $CameraGaller
   factory _$CameraGalleryStateCopyWith(_CameraGalleryState value, $Res Function(_CameraGalleryState) _then) = __$CameraGalleryStateCopyWithImpl;
 @override @useResult
 $Res call({
- ViewStatus status, String? imagePath, String? errorKey
+ ViewStatus status, String? sourceImagePath, String? imagePath, ImageProcessingFilter selectedFilter, String? errorKey
 });
 
 
@@ -264,11 +268,13 @@ class __$CameraGalleryStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraGalleryState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? imagePath = freezed,Object? errorKey = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? sourceImagePath = freezed,Object? imagePath = freezed,Object? selectedFilter = null,Object? errorKey = freezed,}) {
   return _then(_CameraGalleryState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as ViewStatus,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
-as String?,errorKey: freezed == errorKey ? _self.errorKey : errorKey // ignore: cast_nullable_to_non_nullable
+as ViewStatus,sourceImagePath: freezed == sourceImagePath ? _self.sourceImagePath : sourceImagePath // ignore: cast_nullable_to_non_nullable
+as String?,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
+as String?,selectedFilter: null == selectedFilter ? _self.selectedFilter : selectedFilter // ignore: cast_nullable_to_non_nullable
+as ImageProcessingFilter,errorKey: freezed == errorKey ? _self.errorKey : errorKey // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

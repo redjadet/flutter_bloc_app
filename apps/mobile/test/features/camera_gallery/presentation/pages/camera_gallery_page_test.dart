@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/pages/camera_gallery_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -24,6 +25,12 @@ class _StubRepository implements CameraGalleryRepository {
 
   @override
   Future<CameraGalleryResult?> retrieveLostImage() async => null;
+
+  @override
+  Future<CameraGalleryResult> processImage({
+    required final ImageProcessingFilter filter,
+    required final String sourcePath,
+  }) async => const CameraGalleryResult.cancelled();
 }
 
 void main() {
@@ -46,6 +53,7 @@ void main() {
       expect(find.text('No image selected'), findsOneWidget);
       expect(find.text('Take photo'), findsOneWidget);
       expect(find.text('Pick from gallery'), findsOneWidget);
+      expect(find.text('On-device processing'), findsNothing);
     });
 
     testWidgets('renders preview when state has image path', (
@@ -73,6 +81,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(Image), findsOneWidget);
+      expect(find.text('On-device processing'), findsOneWidget);
+      expect(find.text('Grayscale'), findsOneWidget);
     });
 
     testWidgets('shows camera unavailable message when camera is missing', (

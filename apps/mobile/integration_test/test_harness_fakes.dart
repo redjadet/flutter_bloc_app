@@ -113,3 +113,42 @@ Future<void> _overrideGraphqlRepository({
       : const _FakeGraphqlDemoRepository();
   getIt.registerSingleton<GraphqlDemoRepository>(repo);
 }
+
+/// Deterministic camera/gallery demo for integration: gallery returns a tiny
+/// PNG data URL; processing uses the real on-device service.
+class _FakeCameraGalleryRepository implements CameraGalleryRepository {
+  const _FakeCameraGalleryRepository();
+
+  static const ImageProcessingCameraGalleryService _processingService =
+      ImageProcessingCameraGalleryService();
+
+  /// 1x1 red PNG.
+  static const String sampleImageDataUrl =
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+
+  @override
+  Future<CameraGalleryResult> pickFromCamera() async =>
+      const CameraGalleryResult.success(sampleImageDataUrl);
+
+  @override
+  Future<CameraGalleryResult> pickFromGallery() async =>
+      const CameraGalleryResult.success(sampleImageDataUrl);
+
+  @override
+  Future<CameraGalleryResult?> retrieveLostImage() async => null;
+
+  @override
+  Future<CameraGalleryResult> processImage({
+    required final ImageProcessingFilter filter,
+    required final String sourcePath,
+  }) => _processingService.process(filter: filter, sourcePath: sourcePath);
+}
+
+Future<void> _overrideCameraGalleryRepository() async {
+  if (getIt.isRegistered<CameraGalleryRepository>()) {
+    await getIt.unregister<CameraGalleryRepository>();
+  }
+  getIt.registerSingleton<CameraGalleryRepository>(
+    const _FakeCameraGalleryRepository(),
+  );
+}

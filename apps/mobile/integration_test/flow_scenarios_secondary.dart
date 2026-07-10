@@ -333,3 +333,59 @@ void registerWhiteboardIntegrationFlow() {
     },
   );
 }
+
+void registerCameraGalleryIntegrationFlow() {
+  registerIntegrationFlow(
+    groupName: 'Camera Gallery flow',
+    testName:
+        'opens Camera & Gallery from Example and applies on-device filter',
+    options: const IntegrationDependencyOptions(
+      overrideCameraGalleryRepository: true,
+    ),
+    body: (final tester) async {
+      await launchTestApp(tester);
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder cameraGalleryButton = find.byKey(
+        const ValueKey('example-camera-gallery-button'),
+      );
+      await tester.scrollUntilVisible(
+        cameraGalleryButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, cameraGalleryButton);
+      await pumpUntilFound(tester, find.text('Camera & Gallery'));
+
+      expect(find.text('Camera & Gallery'), findsWidgets);
+      expect(find.text('Take photo'), findsOneWidget);
+      expect(find.text('Pick from gallery'), findsOneWidget);
+
+      await tapAndPump(tester, find.text('Pick from gallery'));
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('camera-gallery-processing-controls')),
+      );
+      expect(find.text('On-device processing'), findsOneWidget);
+      expect(find.text('Grayscale'), findsOneWidget);
+
+      await tapAndPump(
+        tester,
+        find.byKey(const ValueKey('camera-gallery-filter-grayscale')),
+      );
+      await pumpUntilFound(
+        tester,
+        find.byWidgetPredicate(
+          (final widget) =>
+              widget is ChoiceChip &&
+              widget.key == const ValueKey('camera-gallery-filter-grayscale') &&
+              widget.selected,
+        ),
+      );
+      expect(find.byType(Image), findsOneWidget);
+    },
+  );
+}

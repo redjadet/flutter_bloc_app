@@ -1425,6 +1425,11 @@
   "cameraGalleryGenericError": "Etwas ist schiefgelaufen. Bitte erneut versuchen.",
   "cameraGalleryFileTooLarge": "Diese Datei ist zu groß. Wählen Sie ein kleineres Bild.",
   "cameraGalleryCameraUnavailable": "Kamera ist nicht verfügbar. Nutzen Sie ein echtes Gerät oder wählen Sie aus der Galerie.",
+  "cameraGalleryProcessingLabel": "Verarbeitung auf dem Gerät",
+  "cameraGalleryFilterOriginal": "Original",
+  "cameraGalleryFilterGrayscale": "Graustufen",
+  "cameraGalleryFilterSepia": "Sepia",
+  "cameraGalleryFilterInvert": "Invertieren",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

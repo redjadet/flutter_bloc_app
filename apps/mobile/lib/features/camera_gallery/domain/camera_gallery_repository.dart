@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 
 /// Contract for picking an image from camera or gallery.
 ///
@@ -16,4 +17,10 @@ abstract interface class CameraGalleryRepository {
   /// Recovers image picker data if the app was killed after picking (Android).
   /// Returns null if there is no lost data to recover.
   Future<CameraGalleryResult?> retrieveLostImage();
+
+  /// Applies [filter] to the selected source without mutating that source.
+  Future<CameraGalleryResult> processImage({
+    required ImageProcessingFilter filter,
+    required String sourcePath,
+  });
 }

@@ -36,6 +36,7 @@ void registerSmokeIntegrationFlows() {
   registerEventBusDemoIntegrationFlow();
   registerNativePlatformShowcaseIntegrationFlow();
   registerWhiteboardIntegrationFlow();
+  registerCameraGalleryIntegrationFlow();
 }
 
 void registerPrSmokeIntegrationFlows() {

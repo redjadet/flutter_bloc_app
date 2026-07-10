@@ -292,6 +292,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
             onPressed: onOpenCameraGallery,
             icon: Icons.camera_alt_outlined,
             label: l10n.exampleCameraGalleryButton,
+            key: const ValueKey('example-camera-gallery-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

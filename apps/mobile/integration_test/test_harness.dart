@@ -8,6 +8,10 @@ import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
     as feature_auth;
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_processing_camera_gallery_service.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
@@ -41,6 +45,7 @@ class IntegrationDependencyOptions {
     this.overrideCounterRepository = true,
     this.overrideChartRepository = true,
     this.overrideGraphqlRepository = true,
+    this.overrideCameraGalleryRepository = false,
     this.graphqlFailOnceThenSuccess = false,
     this.setFlavorToProd = true,
     this.biometricSuccess = true,
@@ -51,6 +56,7 @@ class IntegrationDependencyOptions {
   final bool overrideCounterRepository;
   final bool overrideChartRepository;
   final bool overrideGraphqlRepository;
+  final bool overrideCameraGalleryRepository;
 
   /// See [GraphqlFailOnceNetworkRepository].
   final bool graphqlFailOnceThenSuccess;
@@ -87,6 +93,8 @@ void registerIntegrationFlow({
         overrideCounterRepository: options.overrideCounterRepository,
         overrideChartRepository: options.overrideChartRepository,
         overrideGraphqlRepository: options.overrideGraphqlRepository,
+        overrideCameraGalleryRepository:
+            options.overrideCameraGalleryRepository,
         graphqlFailOnceThenSuccess: options.graphqlFailOnceThenSuccess,
         setFlavorToProd: options.setFlavorToProd,
         biometricSuccess: options.biometricSuccess,
@@ -150,6 +158,7 @@ Future<void> configureIntegrationTestDependencies({
   final bool overrideCounterRepository = true,
   final bool overrideChartRepository = true,
   final bool overrideGraphqlRepository = true,
+  final bool overrideCameraGalleryRepository = false,
   final bool graphqlFailOnceThenSuccess = false,
   final bool setFlavorToProd = true,
   final bool biometricSuccess = true,
@@ -200,6 +209,9 @@ Future<void> configureIntegrationTestDependencies({
     await _overrideGraphqlRepository(
       failOnceThenSuccess: graphqlFailOnceThenSuccess,
     );
+  }
+  if (overrideCameraGalleryRepository) {
+    await _overrideCameraGalleryRepository();
   }
 }
 

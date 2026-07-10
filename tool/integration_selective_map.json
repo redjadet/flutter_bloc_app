@@ -31,6 +31,14 @@
       "target": "integration_test/native_platform_showcase_flow_test.dart"
     },
     {
+      "id": "camera_gallery",
+      "path_prefixes": [
+        "lib/features/camera_gallery/",
+        "apps/mobile/lib/features/camera_gallery/"
+      ],
+      "target": "integration_test/camera_gallery_flow_test.dart"
+    },
+    {
       "id": "search",
       "path_prefixes": ["lib/features/search/"],
       "target": "integration_test/search_flow_test.dart"

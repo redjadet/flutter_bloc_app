@@ -1783,6 +1783,21 @@ class AppLocalizationsAr extends AppLocalizations {
       'الكاميرا غير متوفرة. استخدم جهازًا حقيقيًا أو اختر من المعرض.';
 
   @override
+  String get cameraGalleryProcessingLabel => 'معالجة على الجهاز';
+
+  @override
+  String get cameraGalleryFilterOriginal => 'الأصلية';
+
+  @override
+  String get cameraGalleryFilterGrayscale => 'تدرج رمادي';
+
+  @override
+  String get cameraGalleryFilterSepia => 'بني داكن';
+
+  @override
+  String get cameraGalleryFilterInvert => 'عكس';
+
+  @override
   String get scapesPageTitle => 'المكتبة / المناظر';
 
   @override
