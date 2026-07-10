@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_failure.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,7 +12,7 @@ sealed class AiDecisionState with _$AiDecisionState {
     final String? selectedCaseId,
     final AiDecisionCaseDetail? caseDetail,
     final AiDecisionDecisionResult? decision,
-    final String? errorMessage,
+    final AiDecisionFailure? failure,
     @Default(false) final bool isRunningDecision,
     @Default(false) final bool isSavingAction,
   }) = _AiDecisionState;

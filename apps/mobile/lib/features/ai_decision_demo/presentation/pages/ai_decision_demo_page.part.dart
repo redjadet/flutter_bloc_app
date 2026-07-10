@@ -28,7 +28,7 @@ Widget _buildBody({
         selector: (final state) => (
           isLoadingQueue: state.isLoadingQueue,
           queue: state.queue,
-          errorMessage: state.errorMessage,
+          errorMessage: state.failure?.displayMessage,
         ),
       );
 
