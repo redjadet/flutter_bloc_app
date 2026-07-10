@@ -1,39 +1,53 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# app_shared_flutter
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Flutter-dependent infrastructure shared across workspace packages and the
+mobile app. This package owns cross-cutting Flutter adapters that do not belong
+to the design system or a product feature.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+`publish_to: none`; intended for this workspace, not pub.dev distribution.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Capabilities
 
-## Features
+- structured application logging through `AppLogger`
+- platform-environment detection with IO and web implementations
+- secure secret storage abstraction backed by `flutter_secure_storage`
+- media-pick result and error-key contracts
+- shared integration-log message constants
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Pure Dart primitives remain in `packages/core` or `packages/utilities`.
+Reusable UI remains in `packages/design_system`.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Add workspace dependency:
 
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  app_shared_flutter:
+    path: ../app_shared_flutter
 ```
 
-## Additional information
+Import public barrel:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+
+final logger = AppLogger.instance;
+logger.info('Application started');
+```
+
+Avoid deep `src/` imports. Add intended public APIs to
+`lib/app_shared_flutter.dart`.
+
+## Validation
+
+From repository root:
+
+```bash
+dart run melos run analyze
+cd packages/app_shared_flutter && flutter test
+```
+
+Package ownership and dependency rules:
+[`docs/SHARED_UTILITIES.md`](../../docs/SHARED_UTILITIES.md) and
+[`docs/modularity.md`](../../docs/modularity.md).

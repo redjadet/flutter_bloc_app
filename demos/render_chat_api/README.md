@@ -1,6 +1,8 @@
 # Render Chat API (FastAPI orchestration demo)
 
-OpenAI-compatible `POST /v1/chat/completions` for the Flutter [`HuggingFaceResponseParser`](../../lib/features/chat/data/huggingface_response_parser.dart) path.
+OpenAI-compatible `POST /v1/chat/completions` for Flutter
+[`HuggingFaceResponseParser`](../../apps/mobile/lib/features/chat/data/huggingface_response_parser.dart)
+integration.
 
 ## FastAPI Cloud (current deployment)
 
@@ -68,7 +70,8 @@ pip install -r requirements.txt
 python -m pytest
 ```
 
-Shared JSON fixtures live at [`../../test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/).
+Shared JSON fixtures live at
+[`../../apps/mobile/test/fixtures/render_chat_contract/`](../../apps/mobile/test/fixtures/render_chat_contract/).
 
 ## Docker / Render
 

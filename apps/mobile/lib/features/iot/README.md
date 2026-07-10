@@ -1,6 +1,7 @@
 # IoT BLE showcase
 
-Local **BLE** tab on `/iot-demo` (Cloud | BLE). Mock simulator works everywhere; real BLE on Android/iOS via `flutter_reactive_ble`.
+Local **BLE** tab on `/iot-demo` (Cloud | BLE). Mock simulator works on every
+supported platform; real BLE uses `flutter_reactive_ble` on Android and iOS.
 
 ## Structure
 
@@ -16,7 +17,9 @@ Large files use `part` splits (`mock_ble_repository_*`, `reactive_ble_repository
 
 ## DI
 
-`registerIotServices()` in `lib/core/di/features/register_iot_services.dart` (called from demo DI group).
+`registerIotServices()` lives in
+`lib/app/composition/features/register_iot_services.dart` and is called from
+`lib/app/composition/groups/register_demo_services.dart`.
 
 ## Dart define
 
@@ -24,6 +27,6 @@ Large files use `part` splits (`mock_ble_repository_*`, `reactive_ble_repository
 
 ## Docs
 
-- [`docs/features/iot_ble.md`](../../../docs/features/iot_ble.md)
-- Permissions: [`docs/features/iot_ble_permissions.md`](../../../docs/features/iot_ble_permissions.md)
-- Manual device QA: [`docs/features/iot_ble_device_test_checklist.md`](../../../docs/features/iot_ble_device_test_checklist.md)
+- [`docs/features/iot_ble.md`](../../../../../docs/features/iot_ble.md)
+- Permissions: [`docs/features/iot_ble_permissions.md`](../../../../../docs/features/iot_ble_permissions.md)
+- Manual device QA: [`docs/features/iot_ble_device_test_checklist.md`](../../../../../docs/features/iot_ble_device_test_checklist.md)

@@ -84,7 +84,7 @@ Use `normal` mode before the main walkthrough. Use `slow`, `offline`,
 | UI/Cubits | `apps/mobile/lib/features/online_therapy_demo/presentation/` | Screens, reusable views, state transitions, error mapping |
 | Domain | `apps/mobile/lib/features/online_therapy_demo/domain/` | Entities and repository interfaces |
 | Fake data | `apps/mobile/lib/features/online_therapy_demo/data/fake/` | Deterministic REST-like fake API and repository adapters |
-| DI | `apps/mobile/lib/core/di/features/register_online_therapy_demo_services.dart` | Registers fake implementations behind domain interfaces |
+| DI | `apps/mobile/lib/app/composition/features/register_online_therapy_demo_services.dart` | Registers fake implementations behind domain interfaces |
 
 Important routing invariant: demo Cubits live in `OnlineTherapyDemoScope`, the
 builder for the demo `ShellRoute`. Child screens must read the shared Cubits
@@ -124,8 +124,10 @@ outside the core demo loop unless it is stable and low-noise. See
 For online therapy changes, run the focused suite first:
 
 ```bash
-flutter analyze apps/mobile/lib/features/online_therapy_demo apps/mobile/lib/app/router/routes_online_therapy_demo.dart apps/mobile/lib/core/di/features/register_online_therapy_demo_services.dart test/features/online_therapy_demo
+cd apps/mobile
+flutter analyze lib/features/online_therapy_demo lib/app/router/routes_online_therapy_demo.dart lib/app/composition/features/register_online_therapy_demo_services.dart test/features/online_therapy_demo
 flutter test test/features/online_therapy_demo
+cd ../..
 npx markdownlint-cli2 docs/online_therapy_demo/README.md docs/online_therapy_demo/video_stack_comparison.md
 ```
 

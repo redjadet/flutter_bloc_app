@@ -15,11 +15,12 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 
 ## Audits (ranked findings)
 
-Tracked under `docs/audits/` (directory is `.gitignore`d—use `git add -f` when committing):
+Curated audit indexes remain tracked under `docs/audits/`; generated snapshots
+may be local-only. See [`docs/audits/README.md`](../../docs/audits/README.md) for
+retention policy.
 
-- [`docs/audits/ai_architecture_audit.md`](../../docs/audits/ai_architecture_audit.md) — `ARCH-###` issues
-- [`docs/audits/ai_domain_language_report_v1.md`](../../docs/audits/ai_domain_language_report_v1.md) — naming v1
 - [`docs/audits/architecture_review_2026-06.md`](../../docs/audits/architecture_review_2026-06.md) — Build Readiness program outcomes (2026-06)
+- [`docs/audits/maintainability_baseline_review_2026-07-10.md`](../../docs/audits/maintainability_baseline_review_2026-07-10.md) — current maintainability baseline and follow-up status
 
 **Generated:** 2026-05-21 via `tool/modular_metrics.sh` and repository scans.
 

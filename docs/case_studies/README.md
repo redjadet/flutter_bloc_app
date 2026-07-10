@@ -12,7 +12,8 @@ routes, and engineering plans live in the linked feature module and
 | [Dentists](dentists.md) — video answers to ten predefined questions | Case Study Demo | `apps/mobile/lib/features/case_study_demo/` |
 
 **Routes:** `/case-study-demo` and nested paths (see [Feature overview](../feature_overview.md)).
-**Entry:** Example hub (`/example`) and `AppRoutes` constants in `apps/mobile/lib/core/router/app_routes.dart`.
+**Entry:** Example hub (`/example`) and `AppRoutes` constants in
+`apps/mobile/lib/app/router/app_routes.dart`.
 
 **Implementation / migration notes:**
 

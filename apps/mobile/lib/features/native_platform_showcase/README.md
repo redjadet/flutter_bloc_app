@@ -100,7 +100,8 @@ Native side samples at 60 Hz on a background worker, aggregates into compact map
 
 ### DI (`registerNativePlatformShowcaseServices`)
 
-Registered from `lib/core/di/groups/register_demo_services.dart`:
+Registered from `lib/app/composition/groups/register_demo_services.dart` via
+`lib/app/composition/features/register_native_platform_showcase_services.dart`:
 
 | Registration | Implementation |
 | --- | --- |
@@ -123,7 +124,8 @@ Cubit is **not** in GetIt; use cases are injected at the route.
 | Kotlin | `…invokeKotlin()` | MethodChannel `invokeKotlin` | `android/.../MainActivity.kt` | JNI / codegen |
 | C/C++ | `NativeShowcaseNativeCodeService.invokeCpp()` | `dart:ffi` via `native_showcase_ffi_io.dart` | `native/native_showcase/native_showcase.c` | Same FFI surface; optional JVM bridge |
 
-Channel name: `com.example.flutter_bloc_app/native_showcase` (showcase-only; not `lib/shared/platform/native_platform_service.dart`).
+Channel name: `com.example.flutter_bloc_app/native_showcase`; this bridge is
+showcase-specific and not a general platform-service abstraction.
 
 ### `RuntimePlatformProbe`
 
@@ -193,6 +195,6 @@ Test `opens native platform showcase from Example on web` asserts title, summary
 
 ## Related docs
 
-- Feature brief: [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md)
-- Integration journey: [`docs/engineering/integration_journey_map.md`](../../../docs/engineering/integration_journey_map.md) (J6)
-- Testing matrix: [`docs/testing/matrix_required_by_change.md`](../../../docs/testing/matrix_required_by_change.md) (Example demo showcase)
+- Feature brief: [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../../../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md)
+- Integration journey: [`docs/engineering/integration_journey_map.md`](../../../../../docs/engineering/integration_journey_map.md) (J6)
+- Testing matrix: [`docs/testing/matrix_required_by_change.md`](../../../../../docs/testing/matrix_required_by_change.md) (Example demo showcase)
