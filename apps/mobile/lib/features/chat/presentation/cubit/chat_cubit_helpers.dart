@@ -3,9 +3,6 @@ part of 'chat_cubit.dart';
 mixin _ChatCubitHelpers on _ChatCubitCore {
   ChatState get _state => currentState;
 
-  int _compareByUpdatedAt(final ChatConversation a, final ChatConversation b) =>
-      b.updatedAt.compareTo(a.updatedAt);
-
   String _resolveModelForConversation(final ChatConversation conversation) {
     final String? model = conversation.model;
     if (model != null && _models.contains(model)) {
@@ -59,49 +56,23 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   List<ChatConversation> _replaceConversation(
     final ChatConversation conversation, {
     final List<ChatConversation>? history,
-  }) {
-    final List<ChatConversation> updated = List<ChatConversation>.from(
-      history ?? _state.history,
-    );
-    final int index = updated.indexWhere(
-      (final c) => c.id == conversation.id,
-    );
-
-    if (index >= 0) {
-      if (conversation.hasContent) {
-        updated[index] = conversation;
-      } else {
-        updated.removeAt(index);
-      }
-    } else if (conversation.hasContent) {
-      updated.add(conversation);
-    }
-
-    return _sortHistory(updated, clone: false);
-  }
+  }) =>
+      replaceChatConversation(
+        conversation,
+        history: history ?? _state.history,
+      );
 
   List<ChatConversation> _sortHistory(
     final List<ChatConversation> conversations, {
     final bool clone = true,
-  }) {
-    final List<ChatConversation> target =
-        (clone ? List<ChatConversation>.from(conversations) : conversations)
-          ..sort(_compareByUpdatedAt);
-    return target;
-  }
+  }) =>
+      sortChatConversationHistory(conversations, clone: clone);
 
   ChatConversation? _conversationById(
     final List<ChatConversation> conversations,
     final String? id,
-  ) {
-    if (id == null) return null;
-    for (final ChatConversation conversation in conversations) {
-      if (conversation.id == id) {
-        return conversation;
-      }
-    }
-    return null;
-  }
+  ) =>
+      chatConversationById(conversations, id);
 
   ChatConversation _currentActiveConversation() {
     final ChatConversation? existing = _conversationById(
