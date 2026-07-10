@@ -16,6 +16,139 @@ class AiDecisionCaseSummary {
   final String? lastDecisionBand;
 }
 
+class AiDecisionApplicant {
+  const AiDecisionApplicant({
+    required this.name,
+    this.id,
+    this.personalCreditScore,
+    this.priorDefaults,
+  });
+
+  final String name;
+  final String? id;
+  final int? personalCreditScore;
+  final int? priorDefaults;
+}
+
+class AiDecisionBusiness {
+  const AiDecisionBusiness({
+    required this.name,
+    this.id,
+    this.industry,
+    this.monthlyRevenue,
+    this.ageMonths,
+  });
+
+  final String name;
+  final String? id;
+  final String? industry;
+  final double? monthlyRevenue;
+  final int? ageMonths;
+}
+
+class AiDecisionLoan {
+  const AiDecisionLoan({
+    required this.amount,
+    required this.purpose,
+  });
+
+  final double amount;
+  final String purpose;
+}
+
+class AiDecisionRiskSignal {
+  const AiDecisionRiskSignal({
+    required this.label,
+    required this.value,
+    required this.severity,
+    this.key,
+  });
+
+  final String label;
+  final String value;
+  final String severity;
+  final String? key;
+}
+
+class AiDecisionActionRecord {
+  const AiDecisionActionRecord({
+    required this.actionType,
+    required this.note,
+  });
+
+  final String actionType;
+  final String note;
+}
+
+class AiDecisionProofRule {
+  const AiDecisionProofRule({
+    required this.id,
+    required this.label,
+    required this.passed,
+    required this.contribution,
+    this.evidence,
+  });
+
+  final String id;
+  final String label;
+  final bool passed;
+  final double contribution;
+  final String? evidence;
+}
+
+class AiDecisionBandThresholds {
+  const AiDecisionBandThresholds({
+    this.low,
+    this.medium,
+    this.high,
+    this.selected,
+  });
+
+  final Object? low;
+  final Object? medium;
+  final Object? high;
+  final Object? selected;
+
+  bool get isEmpty =>
+      low == null && medium == null && high == null && selected == null;
+}
+
+class AiDecisionSimilarCase {
+  const AiDecisionSimilarCase({
+    required this.used,
+    this.caseId,
+    this.label,
+    this.similarity,
+  });
+
+  final bool used;
+  final String? caseId;
+  final String? label;
+  final Object? similarity;
+}
+
+class AiDecisionProof {
+  const AiDecisionProof({
+    this.ruleTrace = const <AiDecisionProofRule>[],
+    this.inputSnapshot = const <String, dynamic>{},
+    this.bandThresholds,
+    this.similarCase,
+    this.confidence = 'unknown',
+    this.finalScore,
+    this.extras = const <String, dynamic>{},
+  });
+
+  final List<AiDecisionProofRule> ruleTrace;
+  final Map<String, dynamic> inputSnapshot;
+  final AiDecisionBandThresholds? bandThresholds;
+  final AiDecisionSimilarCase? similarCase;
+  final String confidence;
+  final double? finalScore;
+
+  /// Wire keys not modeled as first-class fields (e.g. legacy `model`).
+  final Map<String, dynamic> extras;
+}
+
 class AiDecisionCaseDetail {
   AiDecisionCaseDetail({
     required this.caseId,
@@ -32,11 +165,11 @@ class AiDecisionCaseDetail {
   final String caseId;
   final String status;
   final String createdAt;
-  final Map<String, dynamic> applicant;
-  final Map<String, dynamic> business;
-  final Map<String, dynamic> loan;
-  final List<Map<String, dynamic>> riskSignals;
-  final List<Map<String, dynamic>> actions;
+  final AiDecisionApplicant applicant;
+  final AiDecisionBusiness business;
+  final AiDecisionLoan loan;
+  final List<AiDecisionRiskSignal> riskSignals;
+  final List<AiDecisionActionRecord> actions;
   final AiDecisionDecisionResult? latestDecision;
 }
 
@@ -53,5 +186,5 @@ class AiDecisionDecisionResult {
   final String riskBand;
   final String recommendedAction;
   final String rationale;
-  final Map<String, dynamic> proof;
+  final AiDecisionProof proof;
 }

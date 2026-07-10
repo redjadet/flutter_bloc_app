@@ -39,11 +39,11 @@ void main() {
       caseId: '1',
       status: 'open',
       createdAt: 't',
-      applicant: <String, dynamic>{},
-      business: <String, dynamic>{},
-      loan: <String, dynamic>{},
-      riskSignals: <Map<String, dynamic>>[],
-      actions: <Map<String, dynamic>>[],
+      applicant: const AiDecisionApplicant(name: ''),
+      business: const AiDecisionBusiness(name: ''),
+      loan: const AiDecisionLoan(amount: 0, purpose: ''),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
     when(() => api.getCaseDetail('1')).thenAnswer((_) async => detail);
@@ -58,7 +58,7 @@ void main() {
       riskBand: 'low',
       recommendedAction: 'approve',
       rationale: 'ok',
-      proof: <String, dynamic>{},
+      proof: const AiDecisionProof(),
     );
     when(
       () => api.runDecisionSupport(caseId: '1', operatorNote: 'n'),

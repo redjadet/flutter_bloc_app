@@ -1,4 +1,7 @@
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_dto_mappers.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
+
+export 'ai_decision_dto_mappers.dart';
 
 /// Wire DTO for AI Decision API case queue rows.
 class AiDecisionCaseSummaryDto {
@@ -54,7 +57,7 @@ class AiDecisionDecisionResultDto {
     riskBand: json['risk_band'] as String,
     recommendedAction: json['recommended_action'] as String,
     rationale: json['rationale'] as String,
-    proof: json['proof'] as Map<String, dynamic>,
+    proof: json['proof'] as Map<String, dynamic>? ?? const <String, dynamic>{},
   );
 
   final double riskScore;
@@ -68,7 +71,7 @@ class AiDecisionDecisionResultDto {
     riskBand: riskBand,
     recommendedAction: recommendedAction,
     rationale: rationale,
-    proof: proof,
+    proof: mapAiDecisionProof(proof),
   );
 }
 
@@ -91,13 +94,15 @@ class AiDecisionCaseDetailDto {
       caseId: caseJson['id'] as String,
       status: caseJson['status'] as String,
       createdAt: caseJson['created_at'] as String,
-      applicant: json['applicant'] as Map<String, dynamic>,
-      business: json['business'] as Map<String, dynamic>,
-      loan: json['loan'] as Map<String, dynamic>,
-      riskSignals: (json['risk_signals'] as List<dynamic>)
+      applicant: json['applicant'] as Map<String, dynamic>? ??
+          const <String, dynamic>{},
+      business: json['business'] as Map<String, dynamic>? ??
+          const <String, dynamic>{},
+      loan: json['loan'] as Map<String, dynamic>? ?? const <String, dynamic>{},
+      riskSignals: (json['risk_signals'] as List<dynamic>? ?? const <dynamic>[])
           .map((final e) => e as Map<String, dynamic>)
           .toList(growable: false),
-      actions: (json['actions'] as List<dynamic>)
+      actions: (json['actions'] as List<dynamic>? ?? const <dynamic>[])
           .map((final e) => e as Map<String, dynamic>)
           .toList(growable: false),
       latestDecision: json['latest_decision'] == null
@@ -122,11 +127,13 @@ class AiDecisionCaseDetailDto {
     caseId: caseId,
     status: status,
     createdAt: createdAt,
-    applicant: applicant,
-    business: business,
-    loan: loan,
-    riskSignals: riskSignals,
-    actions: actions,
+    applicant: mapAiDecisionApplicant(applicant),
+    business: mapAiDecisionBusiness(business),
+    loan: mapAiDecisionLoan(loan),
+    riskSignals: riskSignals
+        .map(mapAiDecisionRiskSignal)
+        .toList(growable: false),
+    actions: actions.map(mapAiDecisionActionRecord).toList(growable: false),
     latestDecision: latestDecision?.toDomain(),
   );
 }

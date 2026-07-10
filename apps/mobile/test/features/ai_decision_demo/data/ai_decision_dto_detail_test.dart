@@ -18,7 +18,7 @@ void main() {
       expect(domain.riskBand, 'medium');
       expect(domain.recommendedAction, 'review');
       expect(domain.rationale, 'mixed signals');
-      expect(domain.proof['model'], 'v1');
+      expect(domain.proof.extras['model'], 'v1');
     });
   });
 
@@ -54,7 +54,7 @@ void main() {
       expect(domain.caseId, 'c-9');
       expect(domain.status, 'open');
       expect(domain.createdAt, '2026-01-01T00:00:00Z');
-      expect(domain.applicant['name'], 'Ada');
+      expect(domain.applicant.name, 'Ada');
       expect(domain.riskSignals, hasLength(1));
       expect(domain.actions, hasLength(1));
       expect(domain.latestDecision?.riskBand, 'low');

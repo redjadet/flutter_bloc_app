@@ -42,15 +42,19 @@ void main() {
       caseId: 'case_1',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {
-        'name': 'A',
-        'prior_defaults': 0,
-        'personal_credit_score': 700,
-      },
-      business: const {'name': 'B', 'monthly_revenue': 5000, 'age_months': 36},
-      loan: const {'amount': 1000, 'purpose': 'Test'},
-      riskSignals: const [],
-      actions: const [],
+      applicant: const AiDecisionApplicant(
+        name: 'A',
+        priorDefaults: 0,
+        personalCreditScore: 700,
+      ),
+      business: const AiDecisionBusiness(
+        name: 'B',
+        monthlyRevenue: 5000,
+        ageMonths: 36,
+      ),
+      loan: const AiDecisionLoan(amount: 1000, purpose: 'Test'),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 
@@ -58,15 +62,19 @@ void main() {
       caseId: 'case_2',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {
-        'name': 'C',
-        'prior_defaults': 1,
-        'personal_credit_score': 610,
-      },
-      business: const {'name': 'D', 'monthly_revenue': 4000, 'age_months': 18},
-      loan: const {'amount': 2000, 'purpose': 'Test 2'},
-      riskSignals: const [],
-      actions: const [],
+      applicant: const AiDecisionApplicant(
+        name: 'C',
+        priorDefaults: 1,
+        personalCreditScore: 610,
+      ),
+      business: const AiDecisionBusiness(
+        name: 'D',
+        monthlyRevenue: 4000,
+        ageMonths: 18,
+      ),
+      loan: const AiDecisionLoan(amount: 2000, purpose: 'Test 2'),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 
@@ -75,7 +83,7 @@ void main() {
       riskBand: 'high',
       recommendedAction: 'request_docs',
       rationale: 'Because reasons.',
-      proof: const {'rule_trace': []},
+      proof: const AiDecisionProof(),
     );
 
     blocTest<AiDecisionCubit, AiDecisionState>(
