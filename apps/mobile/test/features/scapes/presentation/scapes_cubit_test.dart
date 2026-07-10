@@ -54,36 +54,51 @@ void main() {
       build: buildCubit,
       act: (final cubit) =>
           timerService.elapse(const Duration(milliseconds: 350)),
-      // The constructor calls _loadScapes() which emits loading immediately,
-      // but bloc_test doesn't capture states emitted synchronously during build phase.
-      // We wait for the delayed completion state only.
       expect: () => [
-        isA<ScapesState>()
-            .having((final s) => s.isLoading, 'isLoading', false)
-            .having((final s) => s.scapes.length, 'scapes length', 6),
+        isA<ScapesReady>().having(
+          (final s) => s.scapes.length,
+          'scapes length',
+          6,
+        ),
       ],
     );
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleViewMode switches between grid and list',
       build: buildCubit,
-      seed: () => const ScapesState(viewMode: ScapesViewMode.grid),
+      seed: () => const ScapesState.ready(
+        scapes: <Scape>[],
+        viewMode: ScapesViewMode.grid,
+      ),
       act: (final cubit) => cubit.toggleViewMode(),
-      expect: () => [const ScapesState(viewMode: ScapesViewMode.list)],
+      expect: () => [
+        const ScapesState.ready(
+          scapes: <Scape>[],
+          viewMode: ScapesViewMode.list,
+        ),
+      ],
     );
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleViewMode switches from list to grid',
       build: buildCubit,
-      seed: () => const ScapesState(viewMode: ScapesViewMode.list),
+      seed: () => const ScapesState.ready(
+        scapes: <Scape>[],
+        viewMode: ScapesViewMode.list,
+      ),
       act: (final cubit) => cubit.toggleViewMode(),
-      expect: () => [const ScapesState(viewMode: ScapesViewMode.grid)],
+      expect: () => [
+        const ScapesState.ready(
+          scapes: <Scape>[],
+          viewMode: ScapesViewMode.grid,
+        ),
+      ],
     );
 
     blocTest<ScapesCubit, ScapesState>(
       'toggleFavorite toggles favorite status for specific scape',
       build: buildCubit,
-      seed: () => ScapesState(
+      seed: () => ScapesState.ready(
         scapes: [
           Scape(
             id: 'scape_0',
@@ -91,7 +106,6 @@ void main() {
             imageUrl: 'https://example.com/image.jpg',
             duration: const Duration(minutes: 5),
             assetCount: 10,
-            isFavorite: false,
           ),
           Scape(
             id: 'scape_1',
@@ -99,13 +113,12 @@ void main() {
             imageUrl: 'https://example.com/image2.jpg',
             duration: const Duration(minutes: 3),
             assetCount: 5,
-            isFavorite: false,
           ),
         ],
       ),
       act: (final cubit) => cubit.toggleFavorite('scape_0'),
       expect: () => [
-        isA<ScapesState>().having(
+        isA<ScapesReady>().having(
           (final s) => s.scapes.first.isFavorite,
           'first scape isFavorite',
           true,
@@ -120,7 +133,7 @@ void main() {
     blocTest<ScapesCubit, ScapesState>(
       'toggleFavorite toggles favorite from true to false',
       build: buildCubit,
-      seed: () => ScapesState(
+      seed: () => ScapesState.ready(
         scapes: [
           Scape(
             id: 'scape_0',
@@ -134,7 +147,7 @@ void main() {
       ),
       act: (final cubit) => cubit.toggleFavorite('scape_0'),
       expect: () => [
-        isA<ScapesState>().having(
+        isA<ScapesReady>().having(
           (final s) => s.scapes.first.isFavorite,
           'first scape isFavorite',
           false,
@@ -148,8 +161,6 @@ void main() {
 
       timerService.elapse(const Duration(milliseconds: 350));
 
-      // Set up test state with known scape
-      final initialState = cubit.state;
       final testScapes = [
         Scape(
           id: 'scape_0',
@@ -157,15 +168,12 @@ void main() {
           imageUrl: 'https://example.com/image.jpg',
           duration: const Duration(minutes: 5),
           assetCount: 10,
-          isFavorite: false,
         ),
       ];
-      cubit.emit(initialState.copyWith(scapes: testScapes));
+      cubit.emit(ScapesState.ready(scapes: testScapes));
 
-      // Try to toggle non-existent scape
       cubit.toggleFavorite('non_existent');
 
-      // State should be unchanged (no emission, or emission with same scapes)
       expect(cubit.state.scapes.length, 1);
       expect(cubit.state.scapes.first.isFavorite, isFalse);
     });
@@ -180,7 +188,7 @@ void main() {
       expect(cubit.state.scapes.length, 6);
       expect(cubit.state.isLoading, isFalse);
 
-      cubit.emit(cubit.state.copyWith(scapes: [], isLoading: false));
+      cubit.emit(const ScapesState.ready(scapes: <Scape>[]));
       cubit.reload();
 
       expect(cubit.state.isLoading, isTrue);

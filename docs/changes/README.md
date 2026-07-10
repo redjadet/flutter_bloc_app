@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-10_maintainability_followup_d_scapes_sealed_state.md`](2026-07-10_maintainability_followup_d_scapes_sealed_state.md): Follow-up D — sealed ScapesState (initial/loading/ready/error).
 - [`2026-07-10_maintainability_followup_c_ai_decision_failure.md`](2026-07-10_maintainability_followup_c_ai_decision_failure.md): Follow-up C — `AiDecisionFailure` replaces string errorMessage.
 - [`2026-07-10_maintainability_followup_b_scapes_toggle_favorite.md`](2026-07-10_maintainability_followup_b_scapes_toggle_favorite.md): Follow-up B — extract scapes `toggleFavorite` into domain pure function.
 - [`2026-07-10_maintainability_followup_a_backend_banner_bool.md`](2026-07-10_maintainability_followup_a_backend_banner_bool.md): Follow-up A — replace `BackendAvailability` type params with `bool showBackendDisabledBanner` in chat + IoT demo presentation; router computes visibility via new `BackendAvailability` getters.
