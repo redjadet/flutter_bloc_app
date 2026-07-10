@@ -177,6 +177,7 @@ GoRouter _createRouter(
               title: 'Counter',
               errorNotificationService: getIt<ErrorNotificationService>(),
               biometricAuthenticator: auth,
+              showFlavorBadge: false,
             ),
           );
         },

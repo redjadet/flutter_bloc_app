@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
@@ -32,7 +31,8 @@ class CalculatorPage extends StatelessWidget {
         child: LayoutBuilder(
           builder: (final context, final constraints) {
             final bool compactHeight =
-                constraints.maxHeight < AppConstants.compactHeightBreakpoint;
+                constraints.maxHeight <
+                LayoutBreakpoints.compactHeightBreakpoint;
             final bool shouldScroll = compactHeight || context.isCompactWidth;
             final EdgeInsetsGeometry padding = context
                 .pageHorizontalPaddingWithVertical(

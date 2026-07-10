@@ -9,6 +9,7 @@ export 'domain/ble_session_coordinator.dart';
 export 'domain/classic_bluetooth_repository.dart';
 export 'domain/classic_bt_device.dart';
 export 'domain/iot_ble_error_code.dart';
+export 'domain/iot_ble_runtime_config.dart';
 export 'presentation/cubit/iot_ble_cubit.dart';
 export 'presentation/cubit/iot_ble_state.dart';
 export 'presentation/widgets/iot_ble_section.dart';

@@ -23,7 +23,7 @@ Modularity: `iot_demo` must not import `features/iot/` — composition stays in 
 | Real | Android, iOS | `ReactiveBleRepository` + `flutter_reactive_ble` |
 | Real (blocked) | Desktop, Web | `UnsupportedBleRepository`; mock toggle only |
 
-Dart define: `IOT_BLE_MOCK_DEFAULT` — unset or `true` starts in mock on mobile (`IotBleRuntimeConfig`).
+Dart define: `IOT_BLE_MOCK_DEFAULT` — unset or `true` starts in mock on mobile (`features/iot/domain/iot_ble_runtime_config.dart`).
 
 ## Mock devices
 

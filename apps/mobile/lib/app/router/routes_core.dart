@@ -2,8 +2,10 @@ import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
+import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -96,12 +98,16 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.examplePath,
     name: AppRoutes.example,
-    builder: (final context, final state) => const ExamplePage(),
+    builder: (final context, final state) => ExamplePage(
+      isFirebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,
+    ),
   ),
   GoRoute(
     path: AppRoutes.firebaseFunctionsTestPath,
     name: AppRoutes.firebaseFunctionsTest,
-    builder: (final context, final state) => const FirebaseFunctionsTestPage(),
+    builder: (final context, final state) => FirebaseFunctionsTestPage(
+      isFirebaseReady: FirebaseBootstrapService.isFirebaseInitialized,
+    ),
   ),
   GoRoute(
     path: AppRoutes.whiteboardPath,
@@ -176,6 +182,7 @@ RouteBase createCounterRoute() => GoRoute(
           errorNotificationService: getIt<ErrorNotificationService>(),
           biometricAuthenticator: getIt<BiometricAuthenticator>(),
           timerService: getIt<TimerService>(),
+          showFlavorBadge: FlavorManager.I.flavor != Flavor.prod,
           optionalBanner: const AwesomeFeatureWidget(),
         ),
       ),

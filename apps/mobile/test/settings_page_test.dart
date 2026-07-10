@@ -64,6 +64,7 @@ void main() {
             ],
             child: SettingsPage(
               appInfoRepository: _InMemoryAppInfoRepository(),
+              showQaExtras: false,
             ),
           ),
         ),
@@ -122,6 +123,7 @@ void main() {
             ],
             child: SettingsPage(
               appInfoRepository: _InMemoryAppInfoRepository(),
+              showQaExtras: false,
             ),
           ),
         ),
@@ -164,7 +166,7 @@ void main() {
               BlocProvider<LocaleCubit>.value(value: localeCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: SettingsPage(appInfoRepository: appInfoRepo),
+            child: SettingsPage(appInfoRepository: appInfoRepo, showQaExtras: false),
           ),
         ),
       );

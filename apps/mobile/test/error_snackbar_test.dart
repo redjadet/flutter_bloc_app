@@ -66,6 +66,7 @@ void main() {
               title: 'Test Home',
               errorNotificationService: _FakeErrorNotificationService(),
               biometricAuthenticator: _FakeBiometricAuthenticator(),
+              showFlavorBadge: false,
             ),
           ),
         ),

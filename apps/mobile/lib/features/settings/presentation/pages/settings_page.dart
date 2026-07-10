@@ -4,7 +4,6 @@ import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
@@ -18,6 +17,7 @@ typedef SettingsQaExtrasBuilder = List<Widget> Function(BuildContext context);
 class SettingsPage extends StatefulWidget {
   const SettingsPage({
     required this.appInfoRepository,
+    required this.showQaExtras,
     this.authRepository,
     this.buildQaExtras,
     super.key,
@@ -25,6 +25,9 @@ class SettingsPage extends StatefulWidget {
 
   final AppInfoRepository appInfoRepository;
   final AuthRepository? authRepository;
+
+  /// When true, render [buildQaExtras] (dev/qa flavors; resolved at router).
+  final bool showQaExtras;
   final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
@@ -52,15 +55,21 @@ class _SettingsPageState extends State<SettingsPage> {
     value: _cubit,
     child: _SettingsView(
       authRepository: widget.authRepository,
+      showQaExtras: widget.showQaExtras,
       buildQaExtras: widget.buildQaExtras,
     ),
   );
 }
 
 class _SettingsView extends StatelessWidget {
-  const _SettingsView({this.authRepository, this.buildQaExtras});
+  const _SettingsView({
+    required this.showQaExtras,
+    this.authRepository,
+    this.buildQaExtras,
+  });
 
   final AuthRepository? authRepository;
+  final bool showQaExtras;
   final SettingsQaExtrasBuilder? buildQaExtras;
 
   @override
@@ -91,7 +100,7 @@ class _SettingsView extends StatelessWidget {
         height: context.responsiveGapL,
       ),
       const AppInfoSection(key: ValueKey('settings-app-info')),
-      if (FlavorManager.I.isDev || FlavorManager.I.isQa) ...[
+      if (showQaExtras) ...[
         SizedBox(
           key: const ValueKey('settings-gap-qa'),
           height: context.responsiveGapL,

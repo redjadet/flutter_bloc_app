@@ -39,7 +39,7 @@ void main() {
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: const ExamplePage(),
+          home: ExamplePage(isFirebaseInitialized: false),
         ),
       );
       await tester.pump(const Duration(milliseconds: 100));
@@ -80,7 +80,10 @@ void main() {
               ),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: SettingsPage(appInfoRepository: _FakeAppInfoRepository()),
+            child: SettingsPage(
+              appInfoRepository: _FakeAppInfoRepository(),
+              showQaExtras: false,
+            ),
           ),
         ),
       );

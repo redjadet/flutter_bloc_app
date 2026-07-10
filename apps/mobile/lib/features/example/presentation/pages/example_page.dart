@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -15,7 +14,13 @@ import 'package:go_router/go_router.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation
 class ExamplePage extends StatefulWidget {
-  const ExamplePage({super.key});
+  const ExamplePage({
+    required this.isFirebaseInitialized,
+    super.key,
+  });
+
+  /// Resolved at router from Firebase bootstrap readiness.
+  final bool isFirebaseInitialized;
 
   @override
   State<ExamplePage> createState() => _ExamplePageState();
@@ -155,11 +160,10 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenIgamingDemo: () => context.pushNamed(AppRoutes.igamingDemo),
         onOpenStaffAppDemo: () =>
             context.pushNamed(AppRoutes.staffAppDemoDashboard),
-        onOpenFcmDemo: FirebaseBootstrapService.isFirebaseInitialized
+        onOpenFcmDemo: widget.isFirebaseInitialized
             ? () => context.pushNamed(AppRoutes.fcmDemo)
             : null,
-        onOpenFirebaseFunctionsTest:
-            FirebaseBootstrapService.isFirebaseInitialized
+        onOpenFirebaseFunctionsTest: widget.isFirebaseInitialized
             ? () => context.pushNamed(AppRoutes.firebaseFunctionsTest)
             : null,
         onOpenScapes: () => context.pushNamed(AppRoutes.scapes),
