@@ -6,14 +6,14 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 **Grade key:** G Green · Y Yellow · R Red · — not scored
 
-**Last updated:** 2026-07-09 (portfolio quality wave 4)
+**Last updated:** 2026-07-10 (maintainability follow-up wave A–H closeout)
 
 ## Tier A
 
 | Feature | P3 Boundaries | P4 States | P5 Decisions | P6 Errors | Notes |
 | --- | --- | --- | --- | --- | --- |
 | `remote_config` | G | G | G | Y | Skip code — sealed state reference |
-| `counter` | Y | Y | G | G | Skip — document acceptable |
+| `counter` | Y | G | G | G | Follow-up H — sealed `CounterState` + `CounterViewData`; ViewStatus dual channel removed |
 | `todo_list` | G | Y | G | G | PR-1A sync DTO; PR-3 merge + AppError |
 | `native_platform_showcase` | G | G | G | G | Reference only |
 | `iot` | G | Y | G | G | PR-2C-i connection phase sealed |
@@ -25,11 +25,11 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 | Feature | P3 | P4 | P5 | P6 | Notes |
 | --- | --- | --- | --- | --- | --- |
-| `chat` | G | G | Y | Y | PR-1C domain boundary; PR-2B sealed state |
-| `ai_decision_demo` | G | G | Y | Y | PR-1B DTOs; P4 migrated to `@freezed` state (2026-07-09) |
+| `chat` | G | G | G | G | Follow-up E/F — `ChatFailure` + conversation history domain helpers |
+| `ai_decision_demo` | G | G | G | G | Follow-up C/G — `AiDecisionFailure` + typed domain models (DTO mappers at data boundary) |
 | `graphql_demo` | G | Y | G | G | PR-1B DTOs |
-| `scapes` | G | Y | Y | G | PR-3B typed load failure |
-| `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; Firestore maps deferred |
+| `scapes` | G | G | G | G | Follow-up B/D — `toggleFavorite` domain + sealed `ScapesState` |
+| `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; Firestore maps deferred (separate program) |
 
 ## Heuristic appendix (baseline grep)
 

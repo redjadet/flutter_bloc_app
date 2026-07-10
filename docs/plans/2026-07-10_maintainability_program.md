@@ -4,8 +4,8 @@
 > `superpowers:subagent-driven-development` (recommended) or
 > `superpowers:executing-plans`. Track progress with checkboxes below.
 
-**Status:** Follow-up wave in progress. Slice 3 complete on branch; merge PR to close Rank 3.
-**Branch / worktree:** `codex/maintainability-slice3-config-inject`
+**Status:** Complete (2026-07-10). Soft seams closed through follow-up wave A–H; `staff_app_demo` Firestore maps remain deferred as a separate program.
+**Branch / worktree:** n/a (landed on `main`)
 **Goal:** Improve extension seams without behavior changes or broad mechanical churn.
 **Architecture:** Evidence-led, one seam per PR. Prefer constructor/router injection and narrow ports over GetIt or concrete cross-feature imports in feature presentation. Composition stays in `apps/mobile/lib/app/`.
 **Tech stack:** Flutter Cubit/BLoC, GetIt (composition root only), GoRouter, existing modularity scripts.
@@ -80,9 +80,9 @@ For each candidate, record before coding:
 | 3 | Presentation imports of app bootstrap/config beyond injected values | flavor, `FirebaseBootstrap`, `iot_ble_runtime_config`, calculator constants | Low–med | **Slice 3 — done** ([change note](../changes/2026-07-10_maintainability_slice3_app_config_injection.md)) |
 | 4 | Data-layer GetIt in chat render diagnostics | `chat_render_orchestration_diagnostics.dart` | Low | **Closed** ([follow-ups note](../changes/2026-07-10_maintainability_followups_router_validate_diagnostics.md)) |
 | 5 | `router_feature_validate` stale paths | `bin/router_feature_validate` after core→app move | Low | **Closed** ([follow-ups note](../changes/2026-07-10_maintainability_followups_router_validate_diagnostics.md)) |
-| 6 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
-| 7 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
-| — | `staff_app_demo` Firestore map P3 | Explicit out-of-scorecard | High churn | Deferred |
+| 6 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | **Follow-up B–G — done** (scapes toggle + sealed state; `AiDecisionFailure` + typed maps; `ChatFailure` + conversation history domain) |
+| 7 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | **Follow-up H — done** ([change note](../changes/2026-07-10_maintainability_followup_h_counter_sealed_state.md)) — sealed `CounterState` + `CounterViewData` |
+| — | `staff_app_demo` Firestore map P3 | Explicit out-of-scorecard | High churn | **Deferred** — separate program; not part of this closeout |
 
 ## Phase 0 — Branch hygiene + audit note
 
@@ -340,4 +340,7 @@ EOF
 - Phase 0 complete on rebased branch.
 - ≥2 soft seams closed with tests + change notes (Slices 1–2).
 - Soft-scan `rg` for `getIt` under `features/*/presentation` shows **zero** hits; chat presentation has no `SecretConfig` reads.
-- Plans README status line reflects “in progress” → “slice N done” as PRs merge.
+- Soft-scan for `SecretConfig` / `FlavorManager` / `FirebaseBootstrapService` and `app/(config|bootstrap)` under `features/*/presentation` shows **zero** hits (follow-up A + Slices 1–3).
+- Ranked backlog empty except explicit `staff_app_demo` Firestore deferral.
+- Plans README status line reflects program complete.
+- Senior-patterns audit re-graded for touched features (follow-up wave A–H).
