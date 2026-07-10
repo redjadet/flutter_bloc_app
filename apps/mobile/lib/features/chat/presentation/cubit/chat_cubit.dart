@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
@@ -115,8 +116,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
     if (state.hasError) {
       emit(
         state.copyWith(
-          error: null,
-          remoteFailureL10nCode: null,
+          failure: null,
         ),
       );
     }

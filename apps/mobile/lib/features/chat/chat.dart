@@ -7,6 +7,7 @@ export 'data/secure_chat_history_repository.dart';
 // Domain exports
 export 'domain/chat_contact.dart';
 export 'domain/chat_conversation.dart';
+export 'domain/chat_failure.dart';
 export 'domain/chat_history_repository.dart';
 export 'domain/chat_list_repository.dart';
 export 'domain/chat_message.dart';

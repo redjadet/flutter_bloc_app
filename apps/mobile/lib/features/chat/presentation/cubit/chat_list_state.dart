@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_list_state.freezed.dart';
@@ -15,6 +16,6 @@ sealed class ChatListState with _$ChatListState {
   }) = ChatListLoaded;
 
   const factory ChatListState.error({
-    required final String message,
+    required final ChatFailure failure,
   }) = ChatListError;
 }

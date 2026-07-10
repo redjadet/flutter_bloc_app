@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -10,10 +11,7 @@ abstract class ChatState with _$ChatState {
   const factory ChatState({
     @Default(<ChatMessage>[]) final List<ChatMessage> messages,
     @Default(false) final bool isLoading,
-    final String? error,
-
-    /// When set with [error], snackbars use ARB copy for this remote failure code.
-    final String? remoteFailureL10nCode,
+    final ChatFailure? failure,
     @Default(<String>[]) final List<String> pastUserInputs,
     @Default(<String>[]) final List<String> generatedResponses,
     final String? currentModel,
@@ -28,7 +26,9 @@ abstract class ChatState with _$ChatState {
   factory ChatState.initial({final String? currentModel}) =>
       ChatState(currentModel: currentModel);
 
-  bool get hasError => error != null;
+  bool get hasError => failure != null;
+  String? get error => failure?.message;
+  String? get remoteFailureL10nCode => failure?.l10nCode;
   bool get hasMessages => messages.isNotEmpty;
   bool get hasHistory => history.isNotEmpty;
   bool get canSend => !isLoading;

@@ -125,13 +125,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ChatContact> contacts)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<ChatContact> contacts)?  loaded,TResult Function( ChatFailure failure)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ChatListInitial() when initial != null:
 return initial();case ChatListLoading() when loading != null:
 return loading();case ChatListLoaded() when loaded != null:
 return loaded(_that.contacts);case ChatListError() when error != null:
-return error(_that.message);case _:
+return error(_that.failure);case _:
   return orElse();
 
 }
@@ -149,13 +149,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ChatContact> contacts)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<ChatContact> contacts)  loaded,required TResult Function( ChatFailure failure)  error,}) {final _that = this;
 switch (_that) {
 case ChatListInitial():
 return initial();case ChatListLoading():
 return loading();case ChatListLoaded():
 return loaded(_that.contacts);case ChatListError():
-return error(_that.message);}
+return error(_that.failure);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +169,13 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ChatContact> contacts)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<ChatContact> contacts)?  loaded,TResult? Function( ChatFailure failure)?  error,}) {final _that = this;
 switch (_that) {
 case ChatListInitial() when initial != null:
 return initial();case ChatListLoading() when loading != null:
 return loading();case ChatListLoaded() when loaded != null:
 return loaded(_that.contacts);case ChatListError() when error != null:
-return error(_that.message);case _:
+return error(_that.failure);case _:
   return null;
 
 }
@@ -323,10 +323,10 @@ as List<ChatContact>,
 
 
 class ChatListError implements ChatListState {
-  const ChatListError({required this.message});
+  const ChatListError({required this.failure});
   
 
- final  String message;
+ final  ChatFailure failure;
 
 /// Create a copy of ChatListState
 /// with the given fields replaced by the non-null parameter values.
@@ -338,16 +338,16 @@ $ChatListErrorCopyWith<ChatListError> get copyWith => _$ChatListErrorCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatListError&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ChatListError&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,failure);
 
 @override
 String toString() {
-  return 'ChatListState.error(message: $message)';
+  return 'ChatListState.error(failure: $failure)';
 }
 
 
@@ -358,11 +358,11 @@ abstract mixin class $ChatListErrorCopyWith<$Res> implements $ChatListStateCopyW
   factory $ChatListErrorCopyWith(ChatListError value, $Res Function(ChatListError) _then) = _$ChatListErrorCopyWithImpl;
 @useResult
 $Res call({
- String message
+ ChatFailure failure
 });
 
 
-
+$ChatFailureCopyWith<$Res> get failure;
 
 }
 /// @nodoc
@@ -375,14 +375,23 @@ class _$ChatListErrorCopyWithImpl<$Res>
 
 /// Create a copy of ChatListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? failure = null,}) {
   return _then(ChatListError(
-message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+failure: null == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as ChatFailure,
   ));
 }
 
-
+/// Create a copy of ChatListState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ChatFailureCopyWith<$Res> get failure {
+  
+  return $ChatFailureCopyWith<$Res>(_self.failure, (value) {
+    return _then(_self.copyWith(failure: value));
+  });
+}
 }
 
 // dart format on

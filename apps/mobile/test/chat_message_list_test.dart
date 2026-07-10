@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -61,7 +62,7 @@ void main() {
           ChatMessage(author: ChatAuthor.user, text: 'hi'),
           ChatMessage(author: ChatAuthor.assistant, text: 'hello'),
         ],
-        error: 'boom',
+        failure: ChatFailure(message: 'boom'),
       ),
     );
     await tester.pump();
@@ -118,8 +119,10 @@ void main() {
         messages: <ChatMessage>[
           ChatMessage(author: ChatAuthor.user, text: 'hi'),
         ],
-        error: 'opaque-upstream-detail',
-        remoteFailureL10nCode: 'auth_required',
+        failure: ChatFailure(
+          message: 'opaque-upstream-detail',
+          l10nCode: 'auth_required',
+        ),
       ),
     );
     await tester.pump();

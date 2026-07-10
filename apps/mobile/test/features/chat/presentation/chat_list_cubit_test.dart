@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -76,7 +77,7 @@ void main() {
         act: (cubit) => cubit.loadChatContacts(),
         expect: () => [
           const ChatListState.loading(),
-          const ChatListState.error(message: 'Exception: Network error'),
+          const ChatListState.error(failure: ChatFailure(message: 'Exception: Network error')),
         ],
         verify: (_) {
           verify(() => mockRepository.getChatContacts()).called(1);
@@ -154,7 +155,7 @@ void main() {
         seed: () => ChatListState.loaded(contacts: mockContacts),
         act: (cubit) => cubit.deleteContact('1'),
         expect: () => [
-          const ChatListState.error(message: 'Exception: Delete failed'),
+          const ChatListState.error(failure: ChatFailure(message: 'Exception: Delete failed')),
         ],
         verify: (_) {
           verify(() => mockRepository.deleteChatContact('1')).called(1);
@@ -221,7 +222,7 @@ void main() {
         seed: () => ChatListState.loaded(contacts: mockContacts),
         act: (cubit) => cubit.markAsRead('1'),
         expect: () => [
-          const ChatListState.error(message: 'Exception: Mark as read failed'),
+          const ChatListState.error(failure: ChatFailure(message: 'Exception: Mark as read failed')),
         ],
         verify: (_) {
           verify(() => mockRepository.markAsRead('1')).called(1);

@@ -149,7 +149,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
         final ChatState current = _state;
         emitState(
           current.copyWith(
-            error: current.error ?? message,
+            failure: current.failure ?? ChatFailure(message: message),
           ),
         );
       },

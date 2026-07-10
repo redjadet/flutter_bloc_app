@@ -57,7 +57,7 @@ class ChatListView extends StatelessWidget {
         selector: (final state) => _ChatListSelectorData(
           isLoading: state is ChatListLoading,
           contacts: state is ChatListLoaded ? state.contacts : null,
-          errorMessage: state is ChatListError ? state.message : null,
+          errorMessage: state is ChatListError ? state.failure.message : null,
         ),
         builder: (final context, final data) {
           if (data.isLoading) {
