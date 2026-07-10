@@ -30,10 +30,10 @@ void main() {
     testWidgets('selector rebuilds only when selected tuple changes', (
       final WidgetTester tester,
     ) async {
-      const ScapesState initial = ScapesState(
+      final ScapesReady initial = const ScapesState.ready(
+        scapes: <Scape>[],
         viewMode: ScapesViewMode.grid,
-        isLoading: false,
-      );
+      ) as ScapesReady;
       final StreamController<ScapesState> streamController =
           StreamController<ScapesState>.broadcast();
       addTearDown(streamController.close);
@@ -99,7 +99,7 @@ void main() {
       expect(buildCount, 1);
 
       streamController.add(
-        initial.copyWith(lastError: const UnknownError(message: 'boom')),
+        ScapesState.error(const UnknownError(message: 'boom')),
       );
       await tester.pump();
       expect(buildCount, 2);

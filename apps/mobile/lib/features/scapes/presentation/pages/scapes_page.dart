@@ -10,7 +10,6 @@ import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
@@ -64,30 +63,26 @@ class ScapesPage extends StatelessWidget {
           ),
           useResponsiveBody: false,
           body: CommonMaxWidth(
-            child: ViewStatusSwitcher<ScapesCubit, ScapesState, ScapesState>(
-              selector: (final state) => state,
-              isLoading: (final state) => state.isLoading,
-              isError: (final state) => state.hasError,
-              loadingBuilder: (final _) => const CommonLoadingWidget(),
-              errorBuilder: (final context, final state) => CommonErrorView(
-                message: state.errorMessage ?? l10n.scapesErrorOccurred,
-                onRetry: () => context.cubit<ScapesCubit>().reload(),
-              ),
-              builder: (final context, final state) {
-                if (state.scapes.isEmpty) {
-                  return CommonEmptyState(
+            child: BlocBuilder<ScapesCubit, ScapesState>(
+              builder: (final context, final state) => switch (state) {
+                ScapesInitial() || ScapesLoading() =>
+                  const CommonLoadingWidget(),
+                ScapesError(:final error) => CommonErrorView(
+                  message: error.message,
+                  onRetry: () => context.cubit<ScapesCubit>().reload(),
+                ),
+                ScapesReady(:final scapes) when scapes.isEmpty =>
+                  CommonEmptyState(
                     message: l10n.noScapesAvailable,
-                  );
-                }
-
-                return ScapesGridView(
-                  scapes: state.scapes,
+                  ),
+                ScapesReady(:final scapes) => ScapesGridView(
+                  scapes: scapes,
                   onFavoritePressed: (final id) =>
                       context.cubit<ScapesCubit>().toggleFavorite(id),
                   onMorePressed: (final id) {
                     AppLogger.debug('options menu clicked');
                   },
-                );
+                ),
               },
             ),
           ),

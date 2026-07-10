@@ -15,7 +15,7 @@ class ScapesCubit extends Cubit<ScapesState>
   ScapesCubit({
     required this._repository,
     required this._timerService,
-  }) : super(const ScapesState()) {
+  }) : super(const ScapesState.initial()) {
     _loadScapes();
   }
 
@@ -24,7 +24,7 @@ class ScapesCubit extends Cubit<ScapesState>
   TimerDisposable? _loadDelayHandle;
 
   void _loadScapes() {
-    emit(state.copyWith(isLoading: true, lastError: null));
+    emit(const ScapesState.loading());
 
     _loadDelayHandle?.dispose();
     unregisterTimer(_loadDelayHandle);
@@ -43,12 +43,7 @@ class ScapesCubit extends Cubit<ScapesState>
     try {
       final scapes = await _repository.loadScapes();
       if (isClosed) return;
-      emit(
-        state.copyWith(
-          scapes: scapes,
-          isLoading: false,
-        ),
-      );
+      emit(ScapesState.ready(scapes: scapes));
     } on Object catch (e, stackTrace) {
       AppLogger.error(
         'ScapesCubit._loadScapesFromRepository failed',
@@ -56,26 +51,25 @@ class ScapesCubit extends Cubit<ScapesState>
         stackTrace,
       );
       if (isClosed) return;
-      emit(
-        state.copyWith(
-          isLoading: false,
-          lastError: NetworkErrorMapper.getAppError(e),
-        ),
-      );
+      emit(ScapesState.error(NetworkErrorMapper.getAppError(e)));
     }
   }
 
   void toggleViewMode() {
-    final newMode = state.viewMode == ScapesViewMode.grid
+    final current = state;
+    if (current is! ScapesReady) return;
+    final newMode = current.viewMode == ScapesViewMode.grid
         ? ScapesViewMode.list
         : ScapesViewMode.grid;
-    emit(state.copyWith(viewMode: newMode));
+    emit(current.copyWith(viewMode: newMode));
   }
 
   void toggleFavorite(final String scapeId) {
+    final current = state;
+    if (current is! ScapesReady) return;
     emit(
-      state.copyWith(
-        scapes: toggleScapeFavorite(state.scapes, scapeId),
+      current.copyWith(
+        scapes: toggleScapeFavorite(current.scapes, scapeId),
       ),
     );
   }

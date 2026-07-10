@@ -14,64 +14,30 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ScapesState {
 
- List<Scape> get scapes; ScapesViewMode get viewMode; bool get isLoading; AppError? get lastError;
-/// Create a copy of ScapesState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$ScapesStateCopyWith<ScapesState> get copyWith => _$ScapesStateCopyWithImpl<ScapesState>(this as ScapesState, _$identity);
+
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesState&&const DeepCollectionEquality().equals(other.scapes, scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastError, lastError) || other.lastError == lastError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesState);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(scapes),viewMode,isLoading,lastError);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, lastError: $lastError)';
+  return 'ScapesState()';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $ScapesStateCopyWith<$Res>  {
-  factory $ScapesStateCopyWith(ScapesState value, $Res Function(ScapesState) _then) = _$ScapesStateCopyWithImpl;
-@useResult
-$Res call({
- List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, AppError? lastError
-});
-
-
-
-
-}
-/// @nodoc
-class _$ScapesStateCopyWithImpl<$Res>
-    implements $ScapesStateCopyWith<$Res> {
-  _$ScapesStateCopyWithImpl(this._self, this._then);
-
-  final ScapesState _self;
-  final $Res Function(ScapesState) _then;
-
-/// Create a copy of ScapesState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? lastError = freezed,}) {
-  return _then(_self.copyWith(
-scapes: null == scapes ? _self.scapes : scapes // ignore: cast_nullable_to_non_nullable
-as List<Scape>,viewMode: null == viewMode ? _self.viewMode : viewMode // ignore: cast_nullable_to_non_nullable
-as ScapesViewMode,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
-as AppError?,
-  ));
-}
-
+class $ScapesStateCopyWith<$Res>  {
+$ScapesStateCopyWith(ScapesState _, $Res Function(ScapesState) __);
 }
 
 
@@ -89,11 +55,14 @@ extension ScapesStatePatterns on ScapesState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ScapesState value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ScapesInitial value)?  initial,TResult Function( ScapesLoading value)?  loading,TResult Function( ScapesReady value)?  ready,TResult Function( ScapesError value)?  error,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _ScapesState() when $default != null:
-return $default(_that);case _:
+case ScapesInitial() when initial != null:
+return initial(_that);case ScapesLoading() when loading != null:
+return loading(_that);case ScapesReady() when ready != null:
+return ready(_that);case ScapesError() when error != null:
+return error(_that);case _:
   return orElse();
 
 }
@@ -111,14 +80,14 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ScapesState value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ScapesInitial value)  initial,required TResult Function( ScapesLoading value)  loading,required TResult Function( ScapesReady value)  ready,required TResult Function( ScapesError value)  error,}){
 final _that = this;
 switch (_that) {
-case _ScapesState():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case ScapesInitial():
+return initial(_that);case ScapesLoading():
+return loading(_that);case ScapesReady():
+return ready(_that);case ScapesError():
+return error(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -132,11 +101,14 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ScapesState value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ScapesInitial value)?  initial,TResult? Function( ScapesLoading value)?  loading,TResult? Function( ScapesReady value)?  ready,TResult? Function( ScapesError value)?  error,}){
 final _that = this;
 switch (_that) {
-case _ScapesState() when $default != null:
-return $default(_that);case _:
+case ScapesInitial() when initial != null:
+return initial(_that);case ScapesLoading() when loading != null:
+return loading(_that);case ScapesReady() when ready != null:
+return ready(_that);case ScapesError() when error != null:
+return error(_that);case _:
   return null;
 
 }
@@ -153,10 +125,13 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<Scape> scapes,  ScapesViewMode viewMode)?  ready,TResult Function( AppError error)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _ScapesState() when $default != null:
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
+case ScapesInitial() when initial != null:
+return initial();case ScapesLoading() when loading != null:
+return loading();case ScapesReady() when ready != null:
+return ready(_that.scapes,_that.viewMode);case ScapesError() when error != null:
+return error(_that.error);case _:
   return orElse();
 
 }
@@ -174,13 +149,13 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<Scape> scapes,  ScapesViewMode viewMode)  ready,required TResult Function( AppError error)  error,}) {final _that = this;
 switch (_that) {
-case _ScapesState():
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
-  throw StateError('Unexpected subclass');
-
-}
+case ScapesInitial():
+return initial();case ScapesLoading():
+return loading();case ScapesReady():
+return ready(_that.scapes,_that.viewMode);case ScapesError():
+return error(_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -194,10 +169,13 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Scape> scapes,  ScapesViewMode viewMode,  bool isLoading,  AppError? lastError)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<Scape> scapes,  ScapesViewMode viewMode)?  ready,TResult? Function( AppError error)?  error,}) {final _that = this;
 switch (_that) {
-case _ScapesState() when $default != null:
-return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);case _:
+case ScapesInitial() when initial != null:
+return initial();case ScapesLoading() when loading != null:
+return loading();case ScapesReady() when ready != null:
+return ready(_that.scapes,_that.viewMode);case ScapesError() when error != null:
+return error(_that.error);case _:
   return null;
 
 }
@@ -208,52 +186,114 @@ return $default(_that.scapes,_that.viewMode,_that.isLoading,_that.lastError);cas
 /// @nodoc
 
 
-class _ScapesState extends ScapesState {
-  const _ScapesState({final  List<Scape> scapes = const <Scape>[], this.viewMode = ScapesViewMode.grid, this.isLoading = false, this.lastError}): _scapes = scapes,super._();
+class ScapesInitial extends ScapesState {
+  const ScapesInitial(): super._();
   
 
- final  List<Scape> _scapes;
-@override@JsonKey() List<Scape> get scapes {
-  if (_scapes is EqualUnmodifiableListView) return _scapes;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_scapes);
-}
 
-@override@JsonKey() final  ScapesViewMode viewMode;
-@override@JsonKey() final  bool isLoading;
-@override final  AppError? lastError;
 
-/// Create a copy of ScapesState
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$ScapesStateCopyWith<_ScapesState> get copyWith => __$ScapesStateCopyWithImpl<_ScapesState>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScapesState&&const DeepCollectionEquality().equals(other._scapes, _scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.lastError, lastError) || other.lastError == lastError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesInitial);
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_scapes),viewMode,isLoading,lastError);
+int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'ScapesState(scapes: $scapes, viewMode: $viewMode, isLoading: $isLoading, lastError: $lastError)';
+  return 'ScapesState.initial()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class ScapesLoading extends ScapesState {
+  const ScapesLoading(): super._();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesLoading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'ScapesState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class ScapesReady extends ScapesState {
+  const ScapesReady({required final  List<Scape> scapes, this.viewMode = ScapesViewMode.grid}): _scapes = scapes,super._();
+  
+
+ final  List<Scape> _scapes;
+ List<Scape> get scapes {
+  if (_scapes is EqualUnmodifiableListView) return _scapes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_scapes);
+}
+
+@JsonKey() final  ScapesViewMode viewMode;
+
+/// Create a copy of ScapesState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ScapesReadyCopyWith<ScapesReady> get copyWith => _$ScapesReadyCopyWithImpl<ScapesReady>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesReady&&const DeepCollectionEquality().equals(other._scapes, _scapes)&&(identical(other.viewMode, viewMode) || other.viewMode == viewMode));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_scapes),viewMode);
+
+@override
+String toString() {
+  return 'ScapesState.ready(scapes: $scapes, viewMode: $viewMode)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$ScapesStateCopyWith<$Res> implements $ScapesStateCopyWith<$Res> {
-  factory _$ScapesStateCopyWith(_ScapesState value, $Res Function(_ScapesState) _then) = __$ScapesStateCopyWithImpl;
-@override @useResult
+abstract mixin class $ScapesReadyCopyWith<$Res> implements $ScapesStateCopyWith<$Res> {
+  factory $ScapesReadyCopyWith(ScapesReady value, $Res Function(ScapesReady) _then) = _$ScapesReadyCopyWithImpl;
+@useResult
 $Res call({
- List<Scape> scapes, ScapesViewMode viewMode, bool isLoading, AppError? lastError
+ List<Scape> scapes, ScapesViewMode viewMode
 });
 
 
@@ -261,22 +301,86 @@ $Res call({
 
 }
 /// @nodoc
-class __$ScapesStateCopyWithImpl<$Res>
-    implements _$ScapesStateCopyWith<$Res> {
-  __$ScapesStateCopyWithImpl(this._self, this._then);
+class _$ScapesReadyCopyWithImpl<$Res>
+    implements $ScapesReadyCopyWith<$Res> {
+  _$ScapesReadyCopyWithImpl(this._self, this._then);
 
-  final _ScapesState _self;
-  final $Res Function(_ScapesState) _then;
+  final ScapesReady _self;
+  final $Res Function(ScapesReady) _then;
 
 /// Create a copy of ScapesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? scapes = null,Object? viewMode = null,Object? isLoading = null,Object? lastError = freezed,}) {
-  return _then(_ScapesState(
+@pragma('vm:prefer-inline') $Res call({Object? scapes = null,Object? viewMode = null,}) {
+  return _then(ScapesReady(
 scapes: null == scapes ? _self._scapes : scapes // ignore: cast_nullable_to_non_nullable
 as List<Scape>,viewMode: null == viewMode ? _self.viewMode : viewMode // ignore: cast_nullable_to_non_nullable
-as ScapesViewMode,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,lastError: freezed == lastError ? _self.lastError : lastError // ignore: cast_nullable_to_non_nullable
-as AppError?,
+as ScapesViewMode,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class ScapesError extends ScapesState {
+  const ScapesError(this.error): super._();
+  
+
+ final  AppError error;
+
+/// Create a copy of ScapesState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ScapesErrorCopyWith<ScapesError> get copyWith => _$ScapesErrorCopyWithImpl<ScapesError>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScapesError&&(identical(other.error, error) || other.error == error));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,error);
+
+@override
+String toString() {
+  return 'ScapesState.error(error: $error)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ScapesErrorCopyWith<$Res> implements $ScapesStateCopyWith<$Res> {
+  factory $ScapesErrorCopyWith(ScapesError value, $Res Function(ScapesError) _then) = _$ScapesErrorCopyWithImpl;
+@useResult
+$Res call({
+ AppError error
+});
+
+
+
+
+}
+/// @nodoc
+class _$ScapesErrorCopyWithImpl<$Res>
+    implements $ScapesErrorCopyWith<$Res> {
+  _$ScapesErrorCopyWithImpl(this._self, this._then);
+
+  final ScapesError _self;
+  final $Res Function(ScapesError) _then;
+
+/// Create a copy of ScapesState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? error = null,}) {
+  return _then(ScapesError(
+null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as AppError,
   ));
 }
 
