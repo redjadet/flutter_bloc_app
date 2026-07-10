@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-10_maintainability_followup_b_scapes_toggle_favorite.md`](2026-07-10_maintainability_followup_b_scapes_toggle_favorite.md): Follow-up B — extract scapes `toggleFavorite` into domain pure function.
 - [`2026-07-10_maintainability_followup_a_backend_banner_bool.md`](2026-07-10_maintainability_followup_a_backend_banner_bool.md): Follow-up A — replace `BackendAvailability` type params with `bool showBackendDisabledBanner` in chat + IoT demo presentation; router computes visibility via new `BackendAvailability` getters.
 - [`2026-07-10_maintainability_followups_router_validate_diagnostics.md`](2026-07-10_maintainability_followups_router_validate_diagnostics.md): Follow-ups — fix `router_feature_validate` paths after core→app move; drop GetIt from chat render orchestration diagnostics (composition-only callback).
 - [`2026-07-10_maintainability_slice2_secret_config_injection.md`](2026-07-10_maintainability_slice2_secret_config_injection.md): Slice 2 — inject SecretConfig chat flags into chat presentation; router resolves once.
