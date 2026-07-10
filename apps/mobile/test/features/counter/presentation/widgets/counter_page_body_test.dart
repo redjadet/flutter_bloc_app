@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
