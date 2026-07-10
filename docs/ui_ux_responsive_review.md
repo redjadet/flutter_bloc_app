@@ -1,521 +1,131 @@
-# UI/UX + Responsive/Adaptive Review
+# UI/UX Responsive and Adaptive Review
 
-**Scope:** Mobile-first UI/UX behavior (iOS + Android), **web and desktop (macOS)**,
-responsive layout helpers, platform-adaptive widgets, accessibility (text scaling,
-safe areas), and representative presentation screens.
-
-**Review Focus:** iOS gesture bars, Android cutouts, keyboard handling, text
-scaling, web viewport/deep links, desktop keyboard/focus/window sizing, and
-platform-specific UI patterns.
+Review contract for shared Flutter UI. Runtime APIs and examples live in
+[`design_system.md`](design_system.md); visual intent lives in root
+[`DESIGN.md`](../DESIGN.md).
 
 ## Agent rules (responsive layout)
 
-Non-negotiable for new or touched UI:
+- Support mobile, tablet, web, and desktop/macOS for shared UI.
+- Prefer one responsive widget tree; branch only when interaction policy differs.
+- Use design tokens, theme, l10n, and `PlatformAdaptive` components.
+- Keep widgets presentational; Cubit/state supplies derived view data.
+- Use leaf widgets with constructor data + callbacks for preview and tests.
+- Avoid fixed page/section sizes when content can reflow.
+- Preserve keyboard, pointer, focus, screen-reader, and text-scale usability.
 
-1. **No fixed sizes** for shells, text regions, or multi-control rows that must
-   reflow — use flex, wrap, scroll, and shared responsive helpers.
-2. **`LayoutBuilder`** when layout branches on **parent** `constraints` (compact
-   card, keypad, grid inside a pane).
-3. **`MediaQuery`** when layout depends on **screen/viewport** (keyboard insets,
-   text scale, safe area, or breakpoint when parent width ≠ screen width).
-4. **Prefer** `packages/design_system/lib/responsive.dart` and shared widgets
-   (`CommonPageLayout`, `ResponsiveDualCtaRow`) before bespoke breakpoints.
-5. **Prove** compact width + large text scale where layout is contractually
-   sensitive ([`widget_test_playbook.md`](testing/widget_test_playbook.md)).
+## Layout chooser
 
-Canon detail: [`design_system.md`](design_system.md) § Responsive layout (avoid fixed sizes).
+| Need | Preferred tool |
+| --- | --- |
+| App/page width and standard padding | `CommonPageLayout`, responsive context helpers |
+| Parent-local width branch | `LayoutBuilder` |
+| Viewport, keyboard, text scale, safe area | targeted `MediaQuery.*Of(context)` API |
+| Rows that may overflow | `Wrap`, `ResponsiveDualCtaRow`, `ResponsiveActionOverflowBar` |
+| Flexible text beside controls | `Expanded` / `Flexible` |
+| Bounded readable desktop content | `ConstrainedBox` / repo content-width helper |
+| Platform chrome | `PlatformAdaptive.*` |
+
+Fixed sizes remain valid for icons, borders, tokenized controls, and minimum tap
+targets. Fixed heights remain invalid for dynamic text, full forms, lists, and
+content sections without scroll/reflow fallback.
 
 ## Agent rules (cross-platform form factors)
 
-Non-negotiable for shared widgets and pages:
+Apply same widget contract across supported targets; adapt layout and input
+behavior through repo helpers instead of platform-specific page copies.
 
-1. **All four targets** — mobile (phone), tablet, web, desktop (macOS). See
-   [`tech_stack.md`](tech_stack.md) § Supported platforms.
-2. **Mobile & tablet** — breakpoint-driven layout (&lt;800 / 800–1199 / ≥1200);
-   tablet must not look like a stretched phone when width allows columns or
-   side-by-side content.
-3. **Web** — web-safe imports; routing/URL behavior; pointer and focus; no
-   mobile-only scroll or tap assumptions.
-4. **Desktop** — keyboard traversal, focus visibility, **narrow window** width
-   (not only maximized macOS).
-5. **One tree** — adaptive/responsive shared widgets; platform IO in adapters only.
+## Form-factor matrix
 
-Canon detail: [`design_system.md`](design_system.md) § Cross-platform form factors.
+| Target | Required checks |
+| --- | --- |
+| Mobile | Safe areas, keyboard overlap, touch targets, portrait/landscape, compact width |
+| Tablet | Wide layout, split/multi-column opportunity, no stretched phone-only stack |
+| Web | Web-safe imports, URL/deep-link behavior, pointer/focus, narrow browser width |
+| Desktop/macOS | Resizable window, keyboard traversal, hover/focus, compact and wide widths |
 
-## Strengths Observed
+Repo breakpoints: mobile `<800`, tablet `800–1199`, desktop `>=1200`; source:
+[`responsive_config.dart`](../packages/design_system/lib/src/responsive/responsive_config.dart).
 
-- **Responsive System:** Centralized spacing, layout, typography, and grid helpers provide consistent responsive behavior. See `packages/design_system/lib/responsive.dart` and `packages/design_system/lib/src/responsive/`.
-- **Shared Layout Components:** Common page shell and app bar promote consistent navigation and structure. `CommonPageLayout` supports default `CommonAppBar` (via `title`) or a custom `appBar`, optional scaffold `backgroundColor`, and `useResponsiveBody` for shared safe-area/keyboard/max-width padding. See `apps/mobile/lib/app/widgets/common_page_layout.dart` and `apps/mobile/lib/app/widgets/common_app_bar.dart`; agent API table in [`docs/design_system.md`](design_system.md) § Page shell.
-- **Platform Adaptation:** Platform-aware buttons and dialog actions exist and are used in multiple features. See `packages/design_system/lib/src/platform_adaptive/platform_adaptive.dart` and `apps/mobile/lib/app/widgets/common_empty_state.dart`.
-- **Good Patterns:** Several screens demonstrate proper safe-area handling and scroll behavior (e.g., `calculator_page.dart` uses `SafeArea` with keyboard insets). See `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart`.
-- **Platform-Aware Loading:** `CommonLoadingButton` correctly uses `CupertinoActivityIndicator` on iOS and `CircularProgressIndicator` on Android. See `packages/design_system/lib/src/widgets/common_loading_widget.dart`.
+## Component review
 
-## Findings (Mobile UI/UX + Responsive/Adaptive)
+For each changed screen/widget verify:
 
-### Critical Issues (High Priority)
+- primary action visible at compact width and large text scale
+- no clipped/overlapping text, badges, icons, or controls
+- loading, empty, error, success, disabled, and offline states where applicable
+- tap targets at least 44–48 logical pixels
+- semantic labels for icon-only controls
+- visible keyboard focus and logical traversal
+- color not sole carrier of meaning
+- contrast and theme behavior in light/dark mode
+- scroll ownership clear; no unbounded nested scrollables
+- stable keys/identity for dynamic rows
+- no raw platform-only import on shared/web path
 
-1. **Safe-area padding is not applied in the common page shell.** ✅ *Resolved*
-   ~~`CommonPageLayout` wraps the body in fixed horizontal/vertical padding, but does not include safe-area insets or keyboard insets. On modern iOS/Android devices with gesture bars and cutouts, this can cause content to sit under system UI and reduce tap reliability. The responsive helper `pagePadding` already includes `bottomInset` and is unused.~~
-   - `apps/mobile/lib/app/widgets/common_page_layout.dart` - *Now uses safe-area and keyboard insets*
-   - `packages/design_system/lib/src/responsive/responsive_layout.dart`
-   - **Status:** ✅ Implemented - `_ResponsiveBody` now applies `context.bottomInset` and `MediaQuery.viewInsetsOf(context).bottom` for keyboard-aware padding.
+## Reusable-widget contract
 
-2. **Absolute-positioned logged-out layout risks overflow on text scale and short heights.** ✅ *Resolved*
-   ~~The logged-out screen uses a fixed base size and `Positioned` widgets scaled by width/height. This may not reflow on large text sizes, small height devices, or dynamic type on iOS, and can reduce tap target reliability on Android when the keyboard appears.~~
-   - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_page_body.dart` - *Refactored to use Column layout*
-   - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`
-   - **Status:** ✅ Implemented - Layout now uses reflowing `Column` with scroll fallback, respects text scaling, and handles compact heights gracefully.
+- Feature widget starts in `presentation/widgets/`.
+- Generic second-use component moves to `packages/design_system`.
+- App-flow composite stays in `apps/mobile/lib/app/widgets/`.
+- Leaf widget accepts display-ready data and typed callbacks.
+- Page owns Cubit lookup, navigation, dialogs, and repository-triggering intent.
+- Non-trivial widget gets direct widget test; add `@Preview` when useful.
 
-### Important Issues (Medium Priority)
+Owner: [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+and [`design_system.md`](design_system.md) § Reusable widgets.
 
-1. **Hard-coded colors reduce theme adaptiveness and dark-mode UX.**
-   Several widgets fix text and background colors to black/white/gray, which can be harsh in dark mode and inconsistent with iOS/Android system themes. This is especially noticeable in profile and error surfaces.
-   - `apps/mobile/lib/features/profile/presentation/pages/profile_page.dart` (Colors.white, Colors.black)
-   - `apps/mobile/lib/features/profile/presentation/widgets/profile_header.dart` (Colors.grey[300], Colors.black)
-   - `apps/mobile/lib/features/profile/presentation/widgets/profile_action_buttons.dart` (Colors.black, Colors.white)
-   - `apps/mobile/lib/app/widgets/common_error_view.dart` (Colors.black54, Colors.black)
-   - `apps/mobile/lib/features/search/presentation/widgets/search_results_grid.dart` (Colors.grey[300], Colors.black54)
-   - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_*.dart` (multiple hard-coded colors)
-   - `apps/mobile/lib/features/chat/presentation/widgets/chat_*.dart` (Colors.white, Colors.grey)
-   - **Impact:** Poor dark mode experience, inconsistent with Material 3 color scheme, reduced accessibility contrast.
+## Accessibility checks
 
-2. **Hard-coded UI strings bypass localization.**
-   Multiple screens and shared widgets include English-only strings, which weakens UX for non-default locales and consistency with the rest of the app's localization strategy.
-   - `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart` ("Search...")
-   - `apps/mobile/lib/app/widgets/common_form_field.dart` ("Search..." in `CommonSearchField`)
-   - `apps/mobile/lib/app/widgets/common_error_view.dart` ("TRY AGAIN" in `CommonRetryButton`)
-   - `apps/mobile/lib/features/profile/presentation/pages/profile_page.dart` (various strings)
-   - `apps/mobile/lib/features/auth/presentation/widgets/logged_out_action_buttons.dart` (button labels)
-   - `apps/mobile/lib/app/widgets/sync_status_banner.dart` ("Retry")
-   - **Impact:** Poor UX for users in TR, DE, FR, ES locales; inconsistent with app's localization.
+- Test text scale at least 1.3; use 2.0 for sensitive layouts.
+- Verify semantics labels, button roles, and reading order.
+- Confirm keyboard-only operation on web/desktop.
+- Avoid hard-coded line heights that clip scaled text.
+- Respect reduced-motion/platform accessibility settings where animation exists.
+- Ensure errors are announced and remain understandable without color.
 
-3. **Fixed typography metrics can strain layouts at large text scales.**
-   Several widgets use fixed font sizes, letter spacing, and line heights tuned for a base design size. While Flutter scales text by default, these fixed metrics and tight layouts can still overflow at large accessibility sizes, especially on iOS Dynamic Type.
-   - Example: `apps/mobile/lib/features/profile/presentation/widgets/profile_header.dart` uses fixed `fontSize`, `letterSpacing`, and `height` values
-   - **Impact:** Overflow and clipped text at 1.3+ text scale on iOS/Android.
+## Proof matrix
 
-### Enhancement Opportunities (Low Priority)
+| Change | Minimum proof |
+| --- | --- |
+| Token/theme only | Targeted theme/widget tests + `./tool/check_design_md.sh` when [`DESIGN.md`](../DESIGN.md) changes |
+| Leaf widget | Direct widget test at compact width; interaction assertion |
+| Responsive branch | Compact + wide widget tests; text-scale case |
+| Shared/app page | Mobile + wide host proof; loading/error/empty states |
+| Router/bootstrap web UI | `./bin/integration_preflight` with Chrome lane |
+| Platform plugin UI | Supported-platform smoke; web guard when shared |
 
-1. **Custom retry button bypasses adaptive button patterns.**
-   `CommonRetryButton` uses a custom `InkWell` instead of the platform-adaptive button helpers, which can lead to inconsistent platform styling and accessibility semantics on iOS/Android.
-   - `apps/mobile/lib/app/widgets/common_error_view.dart`
-   - **Impact:** Inconsistent button styling, potential accessibility issues, doesn't match platform conventions.
-
-2. **Loading indicator is Material-only in standalone widget.**
-   `CommonLoadingWidget` always uses `CircularProgressIndicator`, which does not match iOS conventions. However, `CommonLoadingButton` correctly uses platform-adaptive indicators. This inconsistency can make loading states feel non-native on iOS.
-   - `packages/design_system/lib/src/widgets/common_loading_widget.dart` (uses `CircularProgressIndicator` only)
-   - **Impact:** Non-native feel on iOS, inconsistent with `CommonLoadingButton` pattern.
-
-## Action Checklist
-
-### High Priority
-
-#### 1. Shell: Apply Safe-Area-Aware Padding in `CommonPageLayout`
-
-**Owner:** Mobile UI
-**Effort:** S (0.5-1 day)
-**Status:** ✅
-**Files:** `apps/mobile/lib/app/widgets/common_page_layout.dart`, `packages/design_system/lib/src/responsive/responsive_layout.dart`
-
-**Problem:** Shared layout padding ignores safe-area and keyboard insets, so content can be obscured by iOS/Android gesture bars and device cutouts.
-
-**Solution:**
-
-1. Update `_ResponsiveBody` to use `context.pagePadding` or wrap `Padding` with `SafeArea` and include `viewInsets.bottom` where needed.
-2. Ensure the common shell still respects `contentMaxWidth` and existing spacing helpers.
-3. Check any pages using custom `Scaffold` body padding for duplication (avoid double-insets).
-
-**Acceptance Criteria:**
-
-- [x] `CommonPageLayout` content never overlaps system gesture areas on iOS/Android.
-- [x] Keyboard does not cover bottom content on forms using `CommonPageLayout`.
-- [x] Test on iPhone X+ (notch/gesture bar) and Android devices with cutouts.
-- [x] Verify existing pages (settings, GraphQL demo, etc.) still render correctly.
-
-**Current Implementation:**
-
-- `_ResponsiveBody` now applies safe-area and keyboard-aware padding by combining:
-  - `context.bottomInset` (safe-area bottom inset)
-  - `MediaQuery.viewInsetsOf(context).bottom` (keyboard height)
-  - Uses `AnimatedPadding` for smooth transitions when keyboard appears/disappears
-  - Maintains `contentMaxWidth` constraint and existing spacing helpers
-
-**Test Requirements:**
-
-- Widget test: add safe-area inset coverage in `test/shared/widgets/common_page_layout_test.dart` (pending).
-- Manual: iOS simulator + Android emulator with gesture navigation and keyboard visible (verified).
-- Reference: `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart` shows good pattern.
-
-**Verification:**
+Useful commands:
 
 ```bash
-flutter test test/shared/widgets/common_page_layout_test.dart
+./tool/check_design_md.sh
+./tool/run_mix_lint.sh
+./tool/run_file_length_lint.sh
+bash tool/check_flutter_layout_overflows.sh
+./bin/router_feature_validate       # routes/auth gates
+./bin/integration_preflight         # bootstrap/browser seams
 ```
 
----
-
-#### 2. Auth: Refactor Logged-Out Screen for Text Scale and Compact Heights
-
-**Owner:** Mobile UI
-**Effort:** M (1-2 days)
-**Status:** ✅
-**Files:** `apps/mobile/lib/features/auth/presentation/widgets/logged_out_page_body.dart`, `apps/mobile/lib/features/auth/presentation/widgets/logged_out_action_buttons.dart`
-
-**Problem:** Fixed `Positioned` layout doesn't reflow on large text scales or compact devices, reducing accessibility and tap reliability.
-
-**Solution:**
-
-1. Replace fixed `Positioned` layout with a reflowing `Column` and a scroll fallback inside a `Stack` background.
-2. Use `SingleChildScrollView` for overflow protection.
-3. Ensure minimum tap target sizes (44x44 iOS, 48x48 Android) are maintained.
-4. Test with text scale 1.3+ and compact height devices.
-
-**Current Implementation:**
-
-- Layout now uses a `Column` with scaled gaps and a scroll fallback.
-- Background layer remains in a `Stack`, content is reflowing and centered.
-- Logged-out widgets no longer rely on `Positioned` offsets.
-- Vertical gaps are distributed based on available height to avoid overflow.
-- Background image height now ends above the action buttons with a fixed gap.
-
-**Acceptance Criteria:**
-
-- [x] No overflow at text scale 1.3+ on iOS/Android.
-- [x] Content scrolls gracefully on compact height devices.
-- [x] All interactive elements meet minimum tap target sizes.
-- [x] Layout remains visually balanced across device sizes.
-
-**Test Requirements:**
-
-- Widget test: use existing `test/features/auth/presentation/pages/logged_out_page_test.dart` to validate layout (basic coverage exists).
-- Manual: largest text size on iOS/Android, compact height devices, keyboard visible (verified).
-
-**Verification:**
-
-```bash
-flutter test test/features/auth/presentation/pages/logged_out_page_test.dart
-```
-
----
-
-### Medium Priority
-
-#### 3. Theme: Replace Hard-Coded Colors with Theme-Aware Colors
-
-**Owner:** Design Systems
-**Effort:** M (1-2 days)
-**Status:** ✅
-**Files:** Multiple (see Important Issues #1: Hard-coded colors)
-
-**Problem:** Hard-coded black/white/gray colors break dark mode and reduce theme consistency.
-
-**Solution:**
-
-1. Replace `Colors.black`, `Colors.white`, `Colors.grey` with `Theme.of(context).colorScheme` equivalents:
-   - Text: `colorScheme.onSurface`, `colorScheme.onSurfaceVariant`
-   - Backgrounds: `colorScheme.surface`, `colorScheme.surfaceContainerHighest`
-   - Borders: `colorScheme.outline`, `colorScheme.outlineVariant`
-2. Review contrast ratios for accessibility (WCAG AA minimum).
-3. Test in both light and dark themes on iOS/Android.
-
-**Acceptance Criteria:**
-
-- [x] All hard-coded colors replaced with theme colors.
-- [x] Dark mode looks consistent and readable.
-- [x] Contrast ratios meet WCAG AA standards.
-- [x] Colors adapt correctly to Material 3 color scheme.
-
-**Current Implementation:**
-
-- Replaced all hard-coded `Colors.black`, `Colors.white`, `Colors.grey` with `Theme.of(context).colorScheme` equivalents:
-  - Text colors: `colorScheme.onSurface`, `colorScheme.onSurfaceVariant`
-  - Backgrounds: `colorScheme.surface`, `colorScheme.surfaceContainerHighest`
-  - Borders: `colorScheme.outline`
-  - Errors: `colorScheme.error`
-- Updated files: `common_error_view.dart`, `profile_page.dart`, `profile_header.dart`, `profile_action_buttons.dart`, `profile_gallery.dart`
-
-**Test Requirements:**
-
-- Update profile/search widget tests to assert theme-aware colors where feasible (pending).
-- Manual: dark mode on iOS/Android for profile and search screens (verified).
-
-**Verification:**
-
-```bash
-flutter test test/features/profile/presentation/profile_page_test.dart
-flutter test test/features/search/presentation/pages/search_page_test.dart
-```
-
----
-
-#### 4. Localization: Move Hard-Coded Strings to `AppLocalizations`
-
-**Owner:** Localization
-**Effort:** S (0.5-1 day)
-**Status:** ✅
-**Files:** Multiple (see Important Issues #2: Hard-coded UI strings)
-
-**Problem:** English-only strings break localization for TR, DE, FR, ES locales.
-
-**Solution:**
-
-1. Add missing strings to `apps/mobile/lib/l10n/app_*.arb` files (en, tr, de, fr, es).
-2. Update widgets to use `context.l10n.*` instead of hard-coded strings.
-3. Verify all locales have translations.
-
-**Acceptance Criteria:**
-
-- [x] No hard-coded user-facing strings remain.
-- [x] All strings added to ARB files for all supported locales.
-- [x] Test app in each locale (TR, DE, FR, ES) to verify translations.
-
-**Files to Update:**
-
-- `apps/mobile/lib/features/search/presentation/widgets/search_text_field.dart` → add new localized hint key (e.g., `searchHint`).
-- `apps/mobile/lib/app/widgets/common_form_field.dart` → reuse the same localized hint key.
-- `apps/mobile/lib/app/widgets/common_error_view.dart` → use existing `appInfoRetryButtonLabel` or add new `retryButton` key.
-- `apps/mobile/lib/app/widgets/sync_status_banner.dart` → reuse localized retry label key.
-- Profile/auth widgets → add missing labels to ARB files (en, tr, de, fr, es).
-
-**Current Implementation:**
-
-- Added `searchHint` and `retryButtonLabel` to all ARB files (en, tr, de, fr, es).
-- Updated widgets to use localized strings:
-  - `search_text_field.dart` → uses `l10n.searchHint`
-  - `common_form_field.dart` → uses `l10n.searchHint` (default)
-  - `common_error_view.dart` → uses `l10n.retryButtonLabel`
-  - `sync_status_banner.dart` → uses `l10n.appInfoRetryButtonLabel` (existing)
-- Ran `flutter gen-l10n` to regenerate localization files.
-
-**Test Requirements:**
-
-- Run `flutter gen-l10n` after adding ARB entries and update widget tests that assert text (completed).
-- Verify all locales (en, tr, de, fr, es) have translations (completed).
-
-**Verification:**
-
-```bash
-# After adding ARB entries
-flutter gen-l10n
-flutter test test/features/profile/presentation/profile_page_test.dart
-flutter test test/features/search/presentation/pages/search_page_test.dart
-```
-
----
-
-#### 5. Accessibility: Validate Layouts at Large Text Scale
-
-**Owner:** Accessibility
-**Effort:** S (0.5-1 day)
-**Status:** ✅
-**Files:** Text-heavy widgets (especially profile, search, error views)
-
-**Problem:** Fixed typography metrics and tight layouts can overflow at large text scales even though Flutter scales text by default.
-
-**Solution:**
-
-1. Review text-heavy widgets with fixed metrics (font size, height, letter spacing).
-2. Allow vertical reflow and wrap where needed; avoid tight fixed heights.
-3. Test with large text scales (1.3+) on iOS/Android.
-
-**Acceptance Criteria:**
-
-- [x] No overflow at 1.3+ text scale on profile, search, error, and auth screens.
-- [x] Text remains readable and buttons keep minimum tap sizes.
-
-**Current Implementation:**
-
-- Expanded text scaling smoke test to cover `CommonPageLayout` and `CommonErrorView` at 1.3x scale.
-- Flutter's default text scaling handles most cases automatically via `MediaQuery.textScalerOf(context)`.
-- Fixed typography metrics in `profile_header.dart` use relative heights that scale with font size.
-- Layouts use flexible constraints (Column, CustomScrollView) that adapt to text size changes.
-
-**Test Requirements:**
-
-- Manual: iOS Dynamic Type (Largest), Android font size (Largest) (pending manual verification).
-- Automated: smoke test exists at `test/shared/widgets/text_scaling_smoke_test.dart` (covers 1.3x text scale for `CommonPageLayout` and `CommonErrorView`).
-
-**Verification:**
-
-```bash
-flutter test test/shared/widgets/text_scaling_smoke_test.dart
-# Expand coverage to profile, search, error views as needed
-```
-
----
-
-### Low Priority
-
-#### 6. Components: Align Retry Button with Platform-Adaptive Patterns
-
-**Owner:** Component Library
-**Effort:** S (0.5-1 day)
-**Status:** ✅
-**Files:** `apps/mobile/lib/app/widgets/common_error_view.dart`
-
-**Problem:** Custom `InkWell` button doesn't match platform conventions or use adaptive helpers.
-
-**Solution:**
-
-1. Rebuild `CommonRetryButton` using `PlatformAdaptive.filledButton` or `PlatformAdaptive.button`.
-2. Use localized string from `AppLocalizations` (e.g., `appInfoRetryButtonLabel`).
-3. Ensure focus/hover/disabled states follow platform conventions.
-
-**Current Implementation:**
-
-- `CommonRetryButton` now uses `PlatformAdaptive.outlinedButton` for platform-adaptive styling.
-- Uses `CupertinoButton` on iOS/macOS and `OutlinedButton` on Android.
-- Already uses localized string (`l10n.retryButtonLabel`).
-- Maintains border styling with theme-aware colors (`colorScheme.outline`).
-
-**Acceptance Criteria:**
-
-- [x] Retry button uses platform-adaptive styling.
-- [x] Button matches iOS/Android native button appearance.
-- [x] Accessibility semantics are correct.
-
-**Test Requirements:**
-
-- Widget test: validate button renders in `test/shared/widgets/common_error_view_test.dart`.
-
-**Verification:**
-
-```bash
-flutter test test/shared/widgets/common_error_view_test.dart
-```
-
----
-
-#### 7. Components: Make Loading Widget Platform-Adaptive
-
-**Owner:** Component Library
-**Effort:** S (0.5-1 day)
-**Status:** ✅
-**Files:** `packages/design_system/lib/src/widgets/common_loading_widget.dart`
-
-**Problem:** `CommonLoadingWidget` always uses `CircularProgressIndicator`, inconsistent with iOS conventions and `CommonLoadingButton`.
-
-**Solution:**
-
-1. Update `CommonLoadingWidget` to use `PlatformAdaptive.isCupertino(context)` check.
-2. Use `CupertinoActivityIndicator` on iOS, `CircularProgressIndicator` on Android.
-3. Match the pattern used in `CommonLoadingButton`.
-
-**Current Implementation:**
-
-- `CommonLoadingWidget` now uses `PlatformAdaptive.isCupertino(context)` to determine platform.
-- Uses `CupertinoActivityIndicator` on iOS/macOS and `CircularProgressIndicator` on Android.
-- Matches the pattern used in `CommonLoadingButton`.
-- Updated tests to handle platform-adaptive behavior (checks for either indicator type).
-
-**Acceptance Criteria:**
-
-- [x] iOS uses Cupertino indicator; Android uses Material indicator.
-- [x] Consistent with `CommonLoadingButton` pattern.
-- [x] No visual regressions in existing screens.
-
-**Test Requirements:**
-
-- Widget test: `test/shared/widgets/common_loading_widget_test.dart`.
-
-**Verification:**
-
-```bash
-flutter test test/shared/widgets/common_loading_widget_test.dart
-```
-
----
-
-## Testing Strategy
-
-### Platform-Specific Testing
-
-**iOS:**
-
-- Test on iPhone X+ (notch/gesture bar)
-- Test with Dynamic Type (Settings → Display & Brightness → Text Size)
-- Test in dark mode
-- Test with keyboard visible/hidden
-- Verify safe area insets are respected
-
-**Android:**
-
-- Test on devices with cutouts (Pixel 6, etc.)
-- Test with large font sizes (Settings → Accessibility → Font size)
-- Test in dark theme
-- Test with keyboard visible/hidden
-- Verify system UI insets are respected
-
-### Accessibility Testing
-
-- Text scale: 1.3+ (iOS/Android largest settings)
-- Screen readers: VoiceOver (iOS), TalkBack (Android)
-- Contrast: Use accessibility inspector to verify WCAG AA compliance
-- Tap targets: Minimum 44x44 (iOS), 48x48 (Android)
-
-### Device Coverage
-
-- **iOS:** iPhone SE (compact), iPhone 14 Pro (notch), iPad Pro (tablet)
-- **Android:** Pixel 6 (cutout), various screen sizes
-- **Orientation:** Portrait and landscape where applicable
-
----
-
-## Implementation Notes
-
-### Dependencies
-
-- **Item 1** (Safe-area padding) should be done first as it affects all pages using `CommonPageLayout`.
-- **Item 3** (Theme colors) and **Item 4** (Localization) can be done in parallel.
-- **Item 2** (Logged-out screen) is independent but high priority for accessibility.
-
-### Good Patterns to Reference
-
-- **Safe Area:** `apps/mobile/lib/features/calculator/presentation/pages/calculator_page.dart` (uses `SafeArea` with keyboard insets)
-- **Platform-Adaptive Loading:** `packages/design_system/lib/src/widgets/common_loading_widget.dart` (`CommonLoadingButton` shows correct pattern)
-- **Theme Colors:** `packages/design_system/lib/src/widgets/message_bubble.dart` (uses `colorScheme` correctly)
-- **Text Scaling:** `packages/design_system/lib/src/widgets/message_bubble.dart` (uses `MediaQuery.textScalerOf(context)`)
-
-### Verification Commands
-
-After implementing changes:
-
-```bash
-# Run validation checks
-./bin/checklist
-
-# Test on iOS simulator
-flutter run -d ios
-
-# Test on Android device/emulator
-flutter run -d android
-
-# Verify no regressions
-flutter test
-```
-
-## Ready-To-Start Notes
-
-### Constraints to Follow
-
-- Avoid side effects in `build()` methods; use `initState` for setup.
-- Use `PlatformAdaptive` button and dialog helpers; avoid raw Material buttons.
-- Use `context` responsive helpers for spacing and sizing (no ad-hoc constants).
-- Keep UI changes in presentation layer; avoid direct `GetIt` usage in widgets.
-
-### Definition of Done
-
-- All applicable checklist items are ✅ with updated acceptance criteria.
-- Related widget tests updated or added with existing paths.
-- Manual mobile checks completed for safe areas, keyboard, and text scaling.
-
----
-
-## Progress Tracking
-
-Update status emoji (⬜ 🟡 ✅ ⏸️) in this document as items progress:
-
-- ⬜ = Not started
-- 🟡 = In progress
-- ✅ = Completed
-- ⏸️ = Blocked/Paused
+Then run focused Flutter tests and route final proof through
+[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Hot reload active debug/preview session after UI edits; report when unavailable.
+
+## Review stop conditions
+
+Do not approve when any applies:
+
+- compact-width overflow or hidden primary action
+- keyboard blocks required field/action
+- layout supports only debug device width
+- widget contains business/data/navigation policy
+- raw colors, strings, platform APIs, or network images bypass repo abstractions
+- required state branch lacks executable proof
+- shared UI lacks web/desktop-safe behavior
+
+## Related owners
+
+- [`DESIGN.md`](../DESIGN.md) — visual brief
+- [`design_system.md`](design_system.md) — runtime tokens/components/responsive APIs
+- [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — widget proof patterns
+- [`review/performance_checklist.md`](review/performance_checklist.md) — rebuild/layout performance
+- [`tech_stack.md`](tech_stack.md) — supported platforms

@@ -3,6 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Accepted |
+| Date | 2026-01-16 |
 | Scope | Data access and sync |
 | Source docs | [Offline-First Adoption Guide](../offline_first/adoption_guide.md), [Hive Schema Migrations](../offline_first/hive_schema_migrations.md) |
 

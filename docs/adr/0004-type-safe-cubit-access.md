@@ -3,8 +3,9 @@
 | Field | Value |
 | --- | --- |
 | Status | Accepted |
+| Date | 2026-01-16 |
 | Scope | Presentation state access |
-| Source docs | [Compile-Time Safety](../compile_time_safety.md), [Architecture Details](../architecture_details.md#state-management-rationale-why-bloc) |
+| Source docs | [Compile-Time Safety](../compile_time_safety.md), [State Management Choice](../state_management_choice.md) |
 
 ## Context
 
@@ -75,8 +76,8 @@ provide the required Cubits/BLoCs.
 
 ## Implementation Notes
 
-- Extension helpers live in `apps/mobile/lib/shared/extensions/type_safe_bloc_access.dart`.
-- Typed widgets live in `apps/mobile/lib/shared/widgets/type_safe_bloc_selector.dart`.
+- Extension helpers live in `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart`.
+- Typed widgets live in `apps/mobile/lib/app/widgets/type_safe_bloc_selector.dart`.
 - Keep Cubit/BLoC instances route-scoped unless app-wide state is intentional.
 - Do not use type-safe access helpers to bypass constructor injection for
   reusable widgets that should receive dependencies explicitly.
@@ -93,6 +94,6 @@ Revisit this ADR when:
 
 ## Verification
 
-- Helper tests: `flutter test test/shared/extensions/type_safe_bloc_access_test.dart`
-- Widget tests: `flutter test test/shared/widgets/type_safe_bloc_selector_test.dart`
+- Helper tests: `cd apps/mobile && flutter test test/shared/extensions/type_safe_bloc_access_test.dart`
+- Widget tests: `cd apps/mobile && flutter test test/shared/widgets/type_safe_bloc_selector_test.dart`
 - Broader guidance: [Compile-Time Safety](../compile_time_safety.md)

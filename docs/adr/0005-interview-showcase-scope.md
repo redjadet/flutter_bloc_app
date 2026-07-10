@@ -3,6 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Accepted |
+| Date | 2026-05-20 |
 | Scope | Portfolio / interview curation |
 | Source docs | [interview_showcase.md](../interview_showcase.md), [future_observability.md](../plans/future_observability.md) |
 

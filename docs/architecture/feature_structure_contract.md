@@ -71,7 +71,7 @@ layer names such as `application/`, `infrastructure/`, `viewmodels/`, or
 | Mapper | `<feature>_<thing>_mapper.dart` in `data/` unless mapping state to view data |
 | Cubit | `<Feature><Flow>Cubit` in `presentation/cubit/` |
 | Page | `<Feature><Flow>Page` in `presentation/pages/` |
-| Reusable widget | Feature-owned widget first; move to `shared/widgets/` only after reuse is real |
+| Reusable widget | Feature-owned first; move generic UI to `packages/design_system` only after reuse is real |
 | Widget preview | Optional co-located `*_preview.dart` or top-level `@Preview` in `presentation/widgets/` |
 | Widget test (component) | `test/features/<feature>/presentation/widgets/<name>_test.dart` mirrors `presentation/widgets/` |
 
@@ -114,12 +114,13 @@ Shared widgets must work on **mobile, tablet, web, and desktop (macOS)** — see
 
 - Domain models expose business language and remain Flutter/SDK-free.
 - Data models/DTOs never escape into presentation state.
-- Presentation view data stays in `presentation/` or `core/diagnostics` when
-  app composition needs it.
-- App-level composition lives in `apps/mobile/lib/app/` or `apps/mobile/lib/core/di/`.
+- Presentation view data stays in `presentation/`; cross-feature diagnostics
+  use a package-owned port only when app composition needs the contract.
+- App-level composition lives in `apps/mobile/lib/app/`, especially
+  `app/composition/` for DI.
 - Shared utilities accept narrow capabilities, not feature cubits/repos.
 - Cross-feature imports require an explicit exception in
-  [Modularity](../modularity.md) or a core/shared port.
+  [Modularity](../modularity.md) or a package-owned port.
 
 ## Review Questions
 

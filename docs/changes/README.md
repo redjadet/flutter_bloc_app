@@ -7,6 +7,10 @@ that.
 
 ## Index
 
+- [`2026-07-10_adr_quality_hardening.md`](2026-07-10_adr_quality_hardening.md): Current-path ADR repair plus deterministic metadata, consequence, section, and stale-ownership guard with negative fixture.
+- [`2026-07-10_long_agent_docs_compression.md`](2026-07-10_long_agent_docs_compression.md): State-management and responsive-review essays compressed into short decision, review, and proof contracts without removing owner gates.
+- [`2026-07-10_architecture_docs_dedup.md`](2026-07-10_architecture_docs_dedup.md): Architecture canon deduplicated around package ownership, feature references, app composition, and enforceable review owners.
+- [`2026-07-10_agent_context_loading_dedup.md`](2026-07-10_agent_context_loading_dedup.md): Cold-start context reduced to three core docs plus guarded conditional owner routes.
 - [`2026-07-10_maintainability_followup_wave_closeout.md`](2026-07-10_maintainability_followup_wave_closeout.md): Follow-up wave closeout — program complete; soft-scan 0; audit re-grade; `staff_app_demo` deferred.
 - [`2026-07-10_maintainability_followup_h_counter_sealed_state.md`](2026-07-10_maintainability_followup_h_counter_sealed_state.md): Follow-up H — sealed CounterState + CounterViewData.
 - [`2026-07-10_maintainability_followup_g_ai_decision_typed_maps.md`](2026-07-10_maintainability_followup_g_ai_decision_typed_maps.md): Follow-up G — type ai_decision domain Map bags.

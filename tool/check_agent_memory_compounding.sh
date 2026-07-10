@@ -16,6 +16,7 @@ Checks:
 - low-token codebase awareness routes through code-review-graph before broad reads
 - autonomous cron/action guidance requires explicit user approval
 - quick reference and host templates expose the behavior
+- bootstrap keeps exactly three core docs and all conditional owner routes
 
 Exit codes:
   0 pass
@@ -32,6 +33,7 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 
 failures=0
+bootstrap_path="${AGENT_BOOTSTRAP_PATH:-tool/agent_session_bootstrap.sh}"
 
 fail() {
   echo "❌ $*" >&2
@@ -69,9 +71,23 @@ require_contains "AGENTS.md" "context ladder"
 if ! grep -qF "check_agent_memory_compounding.sh" docs/validation_scripts.md docs/validation_scripts/*.md 2>/dev/null; then
   fail "validation_scripts router or shards must reference: check_agent_memory_compounding.sh"
 fi
-require_contains "tool/agent_session_bootstrap.sh" "docs/ai/context_loading.md"
-require_contains "tool/agent_session_bootstrap.sh" "docs/ai/skill_routing.md"
-require_contains "tool/agent_session_bootstrap.sh" "context_ladder|3|structural graph"
+require_contains "$bootstrap_path" 'read_core|AGENTS.md'
+require_contains "$bootstrap_path" 'read_core|docs/ai/context_loading.md'
+require_contains "$bootstrap_path" 'read_core|docs/ai/skill_routing.md'
+require_contains "$bootstrap_path" 'read_if_harness_policy|docs/agent_knowledge_base.md'
+require_contains "$bootstrap_path" 'read_if_review|docs/ai_code_review_protocol.md'
+require_contains "$bootstrap_path" 'read_if_commands_validation|docs/agents_quick_reference.md'
+require_contains "$bootstrap_path" 'read_if_owner_unknown|docs/README.md'
+require_contains "$bootstrap_path" 'read_if_ui_design|DESIGN.md'
+require_contains "$bootstrap_path" 'read_if_ui_design|docs/design_system.md'
+require_contains "$bootstrap_path" 'read_if_validation_detail|docs/engineering/validation_routing_fast_vs_full.md'
+require_contains "$bootstrap_path" 'read_if_l10n|docs/localization.md'
+require_contains "$bootstrap_path" "context_ladder|3|structural graph"
+
+core_count="$(grep -cF 'echo "read_core|' "$bootstrap_path" 2>/dev/null || true)"
+if [[ "$core_count" -ne 3 ]]; then
+  fail "$bootstrap_path must define exactly 3 read_core entries; found $core_count"
+fi
 
 if [[ -d "tool/agent_host_templates" ]]; then
   require_contains "tool/agent_host_templates/shared/skills/agents-quick-reference/SKILL.md" "reusable agent conclusion"

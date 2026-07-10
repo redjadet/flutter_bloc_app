@@ -1,19 +1,28 @@
 # Context loading ladder
 
-**Canonical** minimum load order (other agent docs link here; do not duplicate this list).
+**Canonical** progressive load order. Read core files first; add only task-matched
+owners. Other agent docs link here; do not duplicate this list.
 
 ## Ladder
 
-1. [`AGENTS.md`](../../AGENTS.md)
-2. Non-trivial implementation: [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight; invoke `agents-common-pitfalls`
-2b. Non-trivial coding discipline: [`agent_operating_manual.md`](agent_operating_manual.md) (after Pre-Flight; mission, pre-coding checklist, routing)
-3. [`CODEMAP.md`](../../CODEMAP.md) or [`PLAN.md`](../../PLAN.md) (AI engineering)
-4. [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md)
-5. [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) for the feature/task
-5b. Feature implementation semantics: [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) semantic grades
-6. Canon from [`docs/README.md`](../README.md)
-7. Debt claims only: `ai/reports/`, `docs/audits/` (`git add -f`)
-8. **Skill routing** (before implementation): [`skill_routing.md`](skill_routing.md) — shim `agents-skill-routing`; session list → routing table → `./bin/agent-maintain find QUERY` or `bash tool/find_global_agent_skills.sh QUERY`
+1. [`AGENTS.md`](../../AGENTS.md) — repo map and invariants.
+2. [`skill_routing.md`](skill_routing.md) — use `agents-skill-routing`; select one
+   task skill and its owner docs.
+3. Task evidence — targeted code/tests plus [`CODEMAP.md`](../../CODEMAP.md) or
+   [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) when structure is unclear.
+
+## Conditional owners
+
+| Trigger | Load |
+| --- | --- |
+| Non-trivial work | [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls` |
+| T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
+| Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
+| Commands / validation choice | [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| Harness doctrine / agent policy | [`agent_knowledge_base.md`](../agent_knowledge_base.md) |
+| Topic owner unknown | [`docs/README.md`](../README.md) |
+| AI engineering plan | [`PLAN.md`](../../PLAN.md) |
+| Debt claim only | `ai/reports/`, `docs/audits/` (`git add -f`) |
 
 ## Quality claim rule
 

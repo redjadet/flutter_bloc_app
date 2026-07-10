@@ -3,6 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Accepted |
+| Date | 2026-01-16 |
 | Scope | App-wide architecture |
 | Source docs | [Clean Architecture](../clean_architecture.md), [Architecture Details](../architecture_details.md) |
 
@@ -42,15 +43,14 @@ Use feature-based Clean Architecture with three feature layers:
 
 Use these supporting areas around the feature layers:
 
-- `apps/mobile/lib/app/` for the app shell, router, and app-scope composition.
-- `apps/mobile/lib/core/` for bootstrap, DI, constants, theme, app-wide contracts, and
-  platform-level helpers.
-- `apps/mobile/lib/shared/` for reusable storage, sync, widgets, design tokens, and
-  utilities used by multiple features.
+- `apps/mobile/lib/app/` for app shell, bootstrap, DI, routing, theme assembly,
+  app-scope composition, and concrete adapters.
+- `packages/*` for reusable storage, networking, auth, design-system,
+  utilities, and shared Flutter infrastructure.
 
 Use `flutter_bloc` Cubits/BLoCs for state management and `get_it` for
-dependency injection. Register feature dependencies through `apps/mobile/lib/core/di/`
-using feature-specific factories or registration helpers.
+dependency injection. Register feature dependencies through
+`apps/mobile/lib/app/composition/` using feature-specific registration helpers.
 
 The governing rule is dependency direction, not folder count. Small features
 may stay compact, but code still follows the same ownership boundaries.
@@ -84,7 +84,7 @@ may stay compact, but code still follows the same ownership boundaries.
   larger changes.
 - Missing `get_it` registrations fail at runtime or test time, not compile
   time.
-- Shared/core boundaries need review discipline so reusable helpers do not
+- Package/app-shell boundaries need review discipline so reusable helpers do not
   become feature-specific dumping grounds.
 
 ## Implementation Notes
@@ -111,4 +111,7 @@ Revisit this ADR when:
 - Architecture overview: [Architecture Details](../architecture_details.md)
 - Layer rules and examples: [Clean Architecture](../clean_architecture.md)
 - Quality gates: [Code Quality](../CODE_QUALITY.md)
-- Targeted command for Hive boundary drift: `./tool/check_no_hive_openbox.sh`
+- Ownership map: [Shared Utilities And Package Ownership](../SHARED_UTILITIES.md)
+- Targeted commands: `bash tool/check_clean_architecture_imports.sh`,
+  `bash tool/check_feature_modularity_leaks.sh`,
+  `bash tool/check_package_dependency_dag.sh`

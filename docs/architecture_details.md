@@ -1,7 +1,7 @@
 # Architecture Details
 
-High-level architecture diagram, key principles, and state management rationale
-for this Flutter BLoC app. Lazy loading and the state-management flow diagram:
+High-level architecture diagram and owner map for this Flutter BLoC app. Lazy
+loading and state-management flow:
 [`architecture_lazy_loading_and_flow.md`](architecture_lazy_loading_and_flow.md).
 
 ## Document Map
@@ -122,27 +122,11 @@ How to read the diagram:
   `SubscriptionManager`, `TimerHandleManager`),
   `CubitStateEmissionMixin`, and mounted checks
 
-## Design System
+## Detail owners
 
-Theme, constants, and shared UI are organized as follows:
-
-- **`apps/mobile/lib/app/theme/`** – App `ThemeData` assembly using design-system tokens.
-- **`apps/mobile/lib/app/config/`** – App-wide runtime config, flavor, constants, backend availability, and secret config.
-- **`apps/mobile/lib/app/extensions/`** – App-level `BuildContext`, l10n, and type-safe BLoC access helpers.
-- **`apps/mobile/lib/app/supabase/edge_then_tables.dart`** – App-owned "try Edge function then fall back to tables" helper: `runSupabaseEdgeThenTables()` and `ensureSupabaseConfigured()`.
-- **`packages/design_system`** – Reusable Flutter UI primitives, responsive helpers, platform-adaptive controls, markdown rendering, typography, view status, skeletons, image widgets, and common form/status widgets.
-- **`apps/mobile/lib/app/widgets/`** – App-level composite widgets tied to app state or app flow.
-
-See [Design System](design_system.md) and [Shared Utilities And Package Ownership](SHARED_UTILITIES.md) for current ownership rules.
-
-## State Management Rationale (Why BLoC)
-
-- Predictable, replayable state transitions (events in, state out)
-- Business rules isolated from widgets for unit/bloc testing
-- `BlocSelector` limits rebuild scope for performance
-- Immutable states reduce accidental side effects
-- **Compile-time safety** via type-safe extensions and widgets (see [Compile-Time Safety Guide](compile_time_safety.md))
-
-> **For detailed comparison with Riverpod and comprehensive rationale, see [State Management Choice](state_management_choice.md)**
+- UI ownership: [Design System](design_system.md) and
+  [Shared Utilities And Package Ownership](SHARED_UTILITIES.md).
+- BLoC rationale: [State Management Choice](state_management_choice.md).
+- Type-safe access: [Compile-Time Safety Guide](compile_time_safety.md).
 
 Continued in [`architecture_lazy_loading_and_flow.md`](architecture_lazy_loading_and_flow.md).

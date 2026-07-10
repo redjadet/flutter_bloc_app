@@ -37,7 +37,7 @@ decisions already owned by a narrower feature document.
 
 Use this structure for new records:
 
-1. Metadata table with status, scope, and owner docs.
+1. Metadata table with status, decision date (`YYYY-MM-DD`), scope, and owner docs.
 2. Context and decision drivers.
 3. Decision.
 4. Alternatives considered.
@@ -45,6 +45,10 @@ Use this structure for new records:
 6. Implementation notes.
 7. Review triggers.
 8. Verification links or commands.
+
+Accepted ADRs must describe both benefits and costs, name review triggers, and
+point to executable proof. Never leave current ADRs pointing at removed
+`apps/mobile/lib/core/` or `apps/mobile/lib/shared/` ownership.
 
 ## Status Values
 

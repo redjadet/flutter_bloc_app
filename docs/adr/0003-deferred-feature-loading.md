@@ -3,6 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Accepted |
+| Date | 2026-01-16 |
 | Scope | Routing, startup time, bundle size |
 | Source docs | [Architecture Details](../architecture_details.md), [Lazy Loading Review](../lazy_loading_review.md) |
 

@@ -49,6 +49,21 @@ bash tool/check_docs_gardening.sh --help >/dev/null
 echo "fixtures|check_agent_memory_compounding|help"
 bash tool/check_agent_memory_compounding.sh --help >/dev/null
 
+echo "fixtures|check_agent_memory_compounding|missing_conditional_owner"
+tmp_bootstrap="$(mktemp)"
+grep -vF 'read_if_review|docs/ai_code_review_protocol.md' \
+  tool/agent_session_bootstrap.sh >"$tmp_bootstrap"
+set +e
+AGENT_BOOTSTRAP_PATH="$tmp_bootstrap" \
+  bash tool/check_agent_memory_compounding.sh >/dev/null 2>&1
+memory_guard_status=$?
+set -e
+rm -f "$tmp_bootstrap"
+if [[ "$memory_guard_status" -eq 0 ]]; then
+  echo "❌ fixtures failed: memory guard accepted missing conditional owner" >&2
+  exit 1
+fi
+
 echo "fixtures|check_harness_scorecard_gate|help"
 bash tool/check_harness_scorecard_gate.sh --help >/dev/null
 
@@ -358,6 +373,23 @@ fi
 
 echo "fixtures|check_docs_gardening|spaces"
 env -u HARNESS_SKIP_DOC_GARDENING bash tool/check_docs_gardening.sh --paths "$fixture_space" >/dev/null
+
+echo "fixtures|check_adr_quality|help"
+bash tool/check_adr_quality.sh --help >/dev/null
+
+echo "fixtures|check_adr_quality|negative"
+set +e
+bash tool/check_adr_quality.sh --paths \
+  tool/fixtures/harness/bad_adr_missing_date.md >/dev/null 2>&1
+adr_status=$?
+set -e
+if [[ "$adr_status" -eq 0 ]]; then
+  echo "❌ fixtures failed: ADR quality guard accepted missing date" >&2
+  exit 1
+fi
+
+echo "fixtures|check_adr_quality|current"
+bash tool/check_adr_quality.sh >/dev/null
 
 echo "fixtures|check_ai_generated_code_smells|help"
 bash tool/check_ai_generated_code_smells.sh --help >/dev/null

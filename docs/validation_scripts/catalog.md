@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **98** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **99** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **77** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -102,7 +102,11 @@ below.
   `../DESIGN.md`. Use after visual-brief changes; keep runtime
   values in `AppTheme`, `buildAppMixScope`, `AppStyles`, and `UI` aligned with
   [`design_system.md`](../design_system.md).
-- **`check_agent_memory_compounding.sh`**: Safe deterministic guard for memory-compounding automation; ensures reusable conclusions route to durable repo memory, source/host-template pointers stay aligned, and autonomous cron/action guidance still requires explicit user approval.
+- **`check_adr_quality.sh`**: Validates ADR title/metadata, required decision
+  sections, accepted-decision benefits/costs, and rejects obsolete
+  `apps/mobile/lib/core/` or `apps/mobile/lib/shared/` ownership paths. Runs
+  through doc gardening; negative fixture proves missing-date failure.
+- **`check_agent_memory_compounding.sh`**: Safe deterministic guard for memory-compounding automation; ensures reusable conclusions route to durable repo memory, source/host-template pointers stay aligned, bootstrap retains three core docs plus conditional owners, and autonomous cron/action guidance still requires explicit user approval.
 - **`agent_memory_auto_maintain.sh`**: Safe automatic upkeep — `--verify` (invariants; runs after `sync_agent_assets.sh --apply`), `--if-changed` / `--fix-links` (local-only markdown link normalize on agent-scope paths; invoked from `check_agent_knowledge_base.sh`), and report-only `--codex-memory-health` for `~/.codex/memories` size/automation status. No compress/trim/host-memory writes. Opt-out: `AGENT_MEMORY_AUTO_MAINTAIN=0`; optional local report hook: `AGENT_MEMORY_CODEX_HEALTH=1`.
 - **`check_docs_gardening.sh`**: Cheap doc-rot check for agent-facing markdown; verifies backticked `*.md` references best-effort and keeps [`validation_scripts.md`](../validation_scripts.md) aligned with `tool/delivery_checklist.sh`.
 - **`check_transcript_budgets.sh`**: Report-only transcript inventory + budget signal to prevent conversation/transcript bloat from silently dominating agent context. Requires `CURSOR_AGENT_TRANSCRIPTS_ROOT` (local-only). Writes inventory JSON under `docs/audits/` (gitignored). Also runs from `./bin/checklist-fast` when the env var is set (never fails the checklist).

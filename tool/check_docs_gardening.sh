@@ -10,6 +10,7 @@ Cheap, deterministic doc-rot detector for repo markdown guidance.
 Checks (scoped to changed docs when provided; otherwise checks core docs):
 - backticked `*.md` tokens resolve to real files (best-effort, same rules as normalize_doc_links)
 - `docs/validation_scripts.md` is synced with `tool/delivery_checklist.sh` (via tool/validate_validation_docs.sh)
+- ADR metadata, sections, consequences, and current ownership paths remain valid
 
 Exit codes:
   0 pass
@@ -246,6 +247,10 @@ done
 
 if ! bash "$repo_root/tool/validate_validation_docs.sh"; then
   fail "validation_scripts docs out of sync with tool/check_*.sh inventory or catalog counts"
+fi
+
+if ! bash "$repo_root/tool/check_adr_quality.sh"; then
+  fail "ADR quality contract failed"
 fi
 
 if [[ "$failures" -ne 0 ]]; then

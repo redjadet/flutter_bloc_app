@@ -78,17 +78,10 @@ the smallest capability the caller needs:
 
 - **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `packages/utilities` exposing `readDevToken()` + `forceRefresh()`. The chat token provider depends only on this port, so **`chat` does not import `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in app composition. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
-### Settings diagnostics decoupling (plan todos — **all complete**)
-
-Canonical checklist with `[x]` markers: [settings_diagnostics_decouple_plan.md](plans/settings_diagnostics_decouple_plan.md).
-
-- [x] GraphQL cache clear port — package-owned diagnostics port + app adapter; DI in `apps/mobile/lib/app/composition/features/register_graphql_services.dart`
-- [x] Profile cache diagnostics port — package-owned diagnostics port + app adapter; DI in `apps/mobile/lib/app/composition/features/register_profile_services.dart`
-- [x] Cache section widgets (no `graphql_demo` / `profile` imports) — app-owned diagnostics widgets under `apps/mobile/lib/app/widgets/diagnostics/`
-- [x] Remote config diagnostics DTO — package-owned, mapped from feature state
-- [x] Mapper in remote_config — `apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`
-- [x] App composition — `apps/mobile/lib/app/router/routes_core.dart` → `SettingsPage.buildQaExtras`
-- [x] Settings feature: zero imports of `graphql_demo` / `profile` / `remote_config` — `tool/check_feature_modularity_leaks.sh` + `rg` on `apps/mobile/lib/features/settings`
+Completed settings-diagnostics extraction history lives in
+[`settings_diagnostics_decouple_plan.md`](plans/settings_diagnostics_decouple_plan.md).
+Current invariant: settings has zero imports of `graphql_demo`, `profile`, or
+`remote_config`; `tool/check_feature_modularity_leaks.sh` enforces the boundary.
 
 ## Composition in the app layer
 

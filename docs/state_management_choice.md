@@ -1,506 +1,121 @@
-# State Management Choice: BLoC/Cubit vs Riverpod
+# State Management Choice: BLoC/Cubit
 
-This document explains why **BLoC/Cubit** was selected as the state management solution for this Flutter application and compares it with **Riverpod**, another popular state management solution.
+Decision record for app state management. Implementation rules live in
+[`bloc_standards.md`](bloc_standards.md); architecture boundaries live in
+[`clean_architecture.md`](clean_architecture.md).
 
-## Executive Summary
+## Decision
 
-This application uses **BLoC/Cubit** via `flutter_bloc` for **presentation-layer
-state management** (feature `presentation/cubit/` and app-scope presentation).
-The decision was based on predictability, testability,
-performance, architectural alignment, and team familiarity.
+Use Cubit by default. Use BLoC when explicit events, event transforms, or event
+auditability add value. Do not add Riverpod or another state-management system
+without an accepted ADR.
 
-## Why BLoC/Cubit?
+Reasons:
 
-### 1. Predictable State Transitions
+- explicit immutable state transitions
+- strong `bloc_test` support
+- predictable dependency injection and lifecycle
+- clean presentation/domain boundary
+- scoped rebuilds through `BlocSelector` and `buildWhen`
+- mature Flutter tooling and existing repo investment
 
-BLoC/Cubit follows a unidirectional data flow pattern where:
+This is a consistency decision, not a claim that BLoC is universally superior.
+Riverpod may fit smaller apps, provider-heavy dependency graphs, or teams already
+standardized on it; those conditions do not outweigh migration cost here.
 
-- **Events/Inputs** → **BLoC/Cubit** → **States/Outputs**
-- State changes are explicit and traceable
-- Immutable states with Freezed (or Equatable) ensure predictable state transitions; this project prefers **Freezed** for new state and domain models (see [Freezed Usage Analysis](freezed_usage_analysis.md#why-use-freezed-with-bloc)).
-- Every state change is intentional and can be logged/debugged
+## Placement
 
-**Example from this codebase:**
+| Concern | Owner |
+| --- | --- |
+| Widgets/pages | Render state and send intent; no business rules |
+| Cubit/BLoC | Presentation state, user-flow orchestration, cancellation |
+| Domain | Pure models, invariants, use cases, repository contracts |
+| Data | Repository implementations, DTO mapping, SDK/storage/network access |
+| App shell | DI, routes, app-scope providers/listeners |
 
-```dart
-// CounterCubit - Clear state transitions
-class CounterCubit extends Cubit<CounterState> {
-  void increment() => emit(state.copyWith(count: state.count + 1));
-  void decrement() => emit(state.copyWith(count: state.count - 1));
-}
-```
+Canonical path: `features/<feature>/presentation/cubit/`. Cubit/BLoC never lives
+in `domain/` or `data/`. Presentation depends on domain abstractions, not data
+implementations.
 
-### 2. Superior Testability
+## Cubit vs BLoC
 
-BLoC/Cubit excels in testing because:
+Use Cubit when commands map directly to state transitions:
 
-- **Business logic is isolated** from UI, enabling fast unit/bloc tests without widget pumps
-- `bloc_test` package provides powerful testing utilities
-- Easy to test state transitions, side effects, and error handling
-- Can test complex async flows with `blocTest` helpers
+- load/refresh/save flows
+- settings and form state
+- route-scoped feature state
+- simple async orchestration
 
-**Testing Example:**
+Use BLoC when events themselves matter:
 
-```dart
-blocTest<CounterCubit, CounterState>(
-  'emits [1] when increment is called',
-  build: () => CounterCubit(repository: mockRepository),
-  act: (cubit) => cubit.increment(),
-  expect: () => [CounterState(count: 1)],
-);
-```
+- concurrent event policy (`restartable`, `droppable`, sequential)
+- multiple event sources share one state machine
+- event ordering or replay needs explicit tests
+- debounced/throttled input is central behavior
 
-### 3. Performance Optimization
+Do not choose BLoC only to create ceremony. Do not choose Cubit when hidden
+concurrency policy would make behavior ambiguous.
 
-BLoC/Cubit provides fine-grained rebuild control:
+## Required state properties
 
-- **`BlocSelector`** minimizes rebuilds by selecting only needed state slices
-- Widgets rebuild only when their specific state slice changes
-- Reduces unnecessary widget rebuilds, improving app performance
-- Works seamlessly with `RepaintBoundary` for heavy widgets
+- Immutable, preferably Freezed for new state/models.
+- Exhaustive states or fields that cannot form invalid combinations.
+- Typed failures; no raw SDK exceptions in presentation state.
+- Stable equality for selector output.
+- No allocating list getters used directly by selectors.
+- Request identity or cancellation where stale async results can arrive.
 
-**Performance Example:**
+Compile-time access uses repo extensions such as `context.cubit<T>()`; see
+[`compile_time_safety.md`](compile_time_safety.md). Never use dynamic state,
+string event names, or untyped service lookup to bypass analyzer checks.
 
-```dart
-// Only rebuilds when count changes, not when other state properties change
-BlocSelector<CounterCubit, CounterState, int>(
-  selector: (state) => state.count,
-  builder: (context, count) => Text('Count: $count'),
-)
-```
+## Lifecycle and error contract
 
-### 4. Clean Architecture Alignment
+- Cancel subscriptions/timers in `close()` or use repo lifecycle helpers.
+- Guard emissions after async gaps (`isClosed` / request identity as suitable).
+- Guard `BuildContext` after `await` with `context.mounted`.
+- Map infrastructure errors before state emission.
+- Log through `AppLogger`; expose user-safe messages through typed failures.
+- Keep navigation and UI side effects in presentation listeners, not domain/data.
 
-BLoC/Cubit fits perfectly with Clean Architecture principles:
+Owners: [`bloc_standards.md`](bloc_standards.md),
+[`reliability_error_handling_performance.md`](reliability_error_handling_performance.md),
+and [`review/bloc_checklist.md`](review/bloc_checklist.md).
 
-- **Separation of Concerns**: Business logic in cubits, UI in widgets
-- **Dependency Inversion**: Cubits depend on domain contracts (interfaces), not concrete implementations
-- **Testability**: Domain layer remains Flutter-agnostic, enabling pure Dart tests
-- **Scalability**: Clear boundaries make it easy to add new features
+## Performance contract
 
-**Architecture Example:**
+- Select minimal stable view data.
+- Prefer `BlocSelector` / `buildWhen` for expensive subtrees.
+- Keep state collections immutable.
+- Preserve stable widget keys for dynamic rows.
+- Measure before adding caching or custom equality complexity.
 
-```text
-App shell / Route → Widget → Cubit → Domain contract ← Repository implementation
-      (composition)      (presentation)   (presentation)      (data)
-```
+Performance rules and guards: [`review/performance_checklist.md`](review/performance_checklist.md)
+and [`validation_scripts/catalog.md`](validation_scripts/catalog.md).
 
-### 5. Mature Ecosystem & Tooling
+## Testing and proof
 
-BLoC/Cubit has:
+For behavior changes:
 
-- **Mature package**: `flutter_bloc` is well-maintained and stable
-- **Excellent documentation**: Comprehensive guides and examples
-- **DevTools support**: Built-in debugging with `BlocObserver`
-- **Time-travel debugging**: Can replay state transitions
-- **Large community**: Extensive resources and community support
-
-### 6. Event-Driven Architecture (BLoC)
-
-For complex flows, BLoC provides event-driven architecture:
-
-- **Events** represent user actions or system triggers
-- **BLoC** processes events and emits states
-- Enables handling complex async flows, debouncing, and state machines
-- Better for features requiring multiple event types
-
-**BLoC Example:**
-
-```dart
-// For complex flows with multiple event types
-class CounterBloc extends Bloc<CounterEvent, CounterState> {
-  CounterBloc() : super(CounterInitial()) {
-    on<IncrementEvent>(_onIncrement);
-    on<DecrementEvent>(_onDecrement);
-    on<ResetEvent>(_onReset);
-  }
-}
-```
-
-### 7. Lifecycle Safety
-
-BLoC/Cubit provides built-in lifecycle management:
-
-- `isClosed` checks prevent state emissions after disposal
-- `CubitExceptionHandler` for centralized error handling
-- `CubitSubscriptionMixin` for automatic subscription and timer cleanup
-- Prevents common lifecycle bugs (setState after dispose, memory leaks)
-
-## Comparison with Riverpod
-
-### Riverpod Overview
-
-Riverpod is a reactive state management solution that:
-
-- Provides compile-time safety with code generation
-- Offers dependency injection built into state management
-- Supports providers for various use cases (StateProvider, FutureProvider, etc.)
-- Has a different mental model (providers vs BLoC/Cubit)
-
-### BLoC/Cubit Advantages Over Riverpod
-
-#### 1. **Predictable State Flow**
-
-**BLoC/Cubit:**
-
-- Explicit state transitions: `Event → BLoC → State`
-- Clear data flow direction
-- Easy to trace state changes
-- Immutable states by design
-
-**Riverpod:**
-
-- Providers can be read/watched from anywhere
-- Less explicit about state transitions
-- More flexible but can lead to harder-to-trace state changes
-
-#### 2. **Testing Experience**
-
-**BLoC/Cubit:**
-
-- `bloc_test` provides excellent testing utilities
-- Easy to test state transitions
-- Can mock dependencies easily
-- Fast unit tests without widget tree
-
-**Riverpod:**
-
-- Testing requires provider overrides
-- More setup needed for testing
-- Provider dependencies can be complex to mock
-
-#### 3. **Performance Control**
-
-**BLoC/Cubit:**
-
-- `BlocSelector` provides explicit control over rebuilds
-- Fine-grained rebuild optimization
-- Clear performance characteristics
-
-**Riverpod:**
-
-- `Consumer` and `Selector` provide rebuild control
-- Similar performance characteristics
-- Both are performant, but BLoC's approach is more explicit
-
-#### 4. **Architecture Patterns**
-
-**BLoC/Cubit:**
-
-- Naturally fits Clean Architecture
-- Clear separation: App shell / Widget → Cubit → Domain contract ← Repository
-- Business logic isolated from UI
-- Works well with dependency injection (get_it)
-
-**Riverpod:**
-
-- Combines state management with DI
-- Can blur boundaries between layers
-- Requires discipline to maintain clean architecture
-- Providers can be accessed from anywhere (can be a pro or con)
-
-#### 5. **Learning Curve**
-
-**BLoC/Cubit:**
-
-- Clear mental model: Events/Inputs → BLoC/Cubit → States
-- Easy to understand for developers familiar with reactive programming
-- Well-documented patterns
-
-**Riverpod:**
-
-- Different mental model (providers, refs, etc.)
-- Steeper learning curve
-- More concepts to understand (Provider, StateProvider, FutureProvider, etc.)
-
-#### 6. **Team Familiarity**
-
-**BLoC/Cubit:**
-
-- Widely adopted in Flutter community
-- Many developers already familiar with BLoC pattern
-- Easier to onboard new team members
-- Consistent patterns across the codebase
-
-**Riverpod:**
-
-- Newer solution (though mature)
-- Less widespread adoption
-- Team may need training
-
-#### 7. **Debugging & Observability**
-
-**BLoC/Cubit:**
-
-- `BlocObserver` for centralized logging
-- Time-travel debugging support
-- Clear state transition logs
-- Easy to add analytics/monitoring
-
-**Riverpod:**
-
-- ProviderObserver for logging
-- Good debugging tools
-- Similar observability features
-
-### When Riverpod Might Be Better
-
-Riverpod has advantages in certain scenarios:
-
-1. **Compile-Time Safety**: Riverpod's code generation provides compile-time safety that BLoC doesn't have out of the box
-2. **Built-in DI**: If you want state management and DI in one solution
-3. **Provider Ecosystem**: Rich provider types (FutureProvider, StreamProvider, etc.)
-4. **Smaller Apps**: For simpler apps, Riverpod might be more lightweight
-
-## Compile-Time Safety in BLoC/Cubit
-
-**It is possible to add compile-time safety to BLoC/Cubit similar to Riverpod!** While BLoC/Cubit doesn't have built-in compile-time safety like Riverpod, we can achieve similar levels of type safety through several approaches.
-
-### Current State in This Codebase
-
-This codebase already implements several compile-time safety measures:
-
-1. **Freezed for States**: Using `@freezed` annotation for immutable, type-safe states
-2. **Sealed Classes**: Using `sealed class` (Dart 3.0+) for exhaustive pattern matching
-3. **Type-Safe Extensions**: Custom extensions for type-safe cubit access
-4. **Static Analysis**: Lint rules and analyzer configurations
-
-### Approaches to Compile-Time Safety
-
-#### 1. **Freezed for Immutable States/Events** ✅ (Already Implemented)
-
-Freezed provides compile-time safety through:
-
-- Immutable data classes with generated `copyWith` methods
-- Union types for state variants
-- Exhaustive pattern matching support
-- Compile-time checks for null safety
-
-**Example from this codebase:**
-
-```dart
-@freezed
-abstract class CounterState with _$CounterState {
-  const factory CounterState({
-    required final int count,
-    @Default(ViewStatus.initial) final ViewStatus status,
-  }) = _CounterState;
-}
-```
-
-#### 2. **Sealed Classes for Exhaustive Pattern Matching** ✅ (Partially Implemented)
-
-Sealed classes (Dart 3.0+) provide compile-time exhaustiveness checking:
-
-**Example from this codebase:**
-
-```dart
-sealed class DeepLinkState extends Equatable {
-  const DeepLinkState();
-}
-
-class DeepLinkIdle extends DeepLinkState { const DeepLinkIdle(); }
-class DeepLinkLoading extends DeepLinkState { const DeepLinkLoading(); }
-class DeepLinkNavigate extends DeepLinkState { ... }
-class DeepLinkError extends DeepLinkState { ... }
-```
-
-#### 3. **Custom Code Generation** (Not Yet Implemented)
-
-You can create custom code generators to:
-
-- Generate type-safe cubit accessors
-- Validate state transitions at compile time
-- Generate exhaustive switch statements
-- Create type-safe event handlers
-
-#### 4. **Static Analysis & Lint Rules** ✅ (Partially Implemented)
-
-Enhance compile-time safety through:
-
-- Custom lint rules for BLoC patterns
-- Analyzer plugins for state/event validation
-- Type-safe extensions for context access
-
-## Compile-Time Safety: What's Implemented
-
-The codebase already closes the main type-safety gap between BLoC/Cubit and
-Riverpod. The table below summarizes what is in place and what remains optional.
-
-<!-- markdownlint-disable MD013 -->
-| Technique | Status | Key files |
-| --------- | ------ | --------- |
-| Freezed for immutable states | Done | States use `@freezed`; run `build_runner` to regenerate |
-| Sealed classes for state hierarchies | Done | `DeepLinkState` and others use `sealed class` |
-| Type-safe cubit access extensions | Done | `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart` |
-| Type-safe BLoC widgets | Done | `apps/mobile/lib/app/widgets/type_safe_bloc_selector.dart` |
-| Type-safe BlocProvider helpers | Done | `apps/mobile/lib/app/utils/bloc_provider_helpers.dart` |
-| State transition validators | Done | `apps/mobile/lib/app/utils/bloc/state_transition_validator.dart` |
-| Sealed-state helpers | Done | `packages/utilities/lib/src/state/sealed_state_helpers.dart` |
-| Runtime BLoC lint helpers | Done | `apps/mobile/lib/app/utils/bloc_lint_helpers.dart` |
-| Migration guide | Done | [migration_to_type_safe_bloc.md](migration_to_type_safe_bloc.md) |
-| Code generation guide | Done | [code_generation_guide.md](code_generation_guide.md) |
-| Custom lint rules guide | Done | [custom_lint_rules_guide.md](custom_lint_rules_guide.md) |
-| Full analyzer plugin | Optional | See custom lint rules guide |
-| State machine code generation | Optional | Advanced; not yet needed |
-<!-- markdownlint-enable MD013 -->
-
-### Comparison After Implementation
-
-<!-- markdownlint-disable MD013 -->
-| Capability | Riverpod | BLoC/Cubit (this repo) |
-| ---------- | -------- | ---------------------- |
-| Compile-time type safety | Built-in | Freezed + Sealed Classes |
-| Exhaustive pattern matching | Built-in | Sealed classes (Dart 3.0+) |
-| Type-safe access | Built-in | Extensions (`context.cubit<T>()`) |
-| State transition validation | Runtime | Runtime validators + optional codegen |
-| Null safety | Built-in (Dart) | Built-in (Dart) |
-<!-- markdownlint-enable MD013 -->
-
-## Real-World Implementation in This App
-
-### Cubit Pattern (Simple State Management)
-
-Most features use **Cubit** for straightforward state management:
-
-```dart
-// CounterCubit - Simple state management
-class CounterCubit extends Cubit<CounterState> {
-  final CounterRepository repository;
-  final TimerService timerService;
-
-  CounterCubit({
-    required this.repository,
-    required this.timerService,
-  }) : super(CounterInitial());
-
-  Future<void> loadInitial() async {
-    // Load initial state
-  }
-
-  void increment() {
-    emit(state.copyWith(count: state.count + 1));
-  }
-}
-```
-
-### BLoC Pattern (Complex Event Flows)
-
-For complex features with multiple event types, **BLoC** is used:
-
-```dart
-// Example: Complex authentication flow
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-    on<AuthStatusChanged>(_onAuthStatusChanged);
-  }
-}
-```
-
-### Integration with Clean Architecture
-
-BLoC/Cubit integrates with clean architecture by sitting in the presentation
-layer while the app shell composes routes and providers from above:
-
-```text
-apps/mobile/lib/app/
-├── app.dart / app_scope.dart / router/ (app shell + composition)
-apps/mobile/lib/features/counter/
-├── domain/
-│   ├── counter_repository.dart (interface)
-│   └── counter.dart (domain model)
-├── data/
-│   └── offline_first_counter_repository.dart (implementation)
-└── presentation/
-    ├── cubit/
-    │   └── counter_cubit.dart (business logic)
-    └── widgets/
-        └── counter_display.dart (UI)
-```
-
-## Best Practices in This Codebase
-
-### 1. Immutable States
-
-All states use `freezed` or `Equatable` for immutability:
-
-```dart
-@freezed
-class CounterState with _$CounterState {
-  const factory CounterState({
-    required int count,
-    required ViewStatus status,
-  }) = _CounterState;
-}
-```
-
-### 2. Lifecycle Safety
-
-All cubits guard against lifecycle issues:
-
-```dart
-Future<void> loadData() async {
-  try {
-    emit(state.copyWith(status: ViewStatus.loading));
-    final data = await repository.fetch();
-    if (isClosed) return; // Guard against disposal
-    emit(state.copyWith(data: data, status: ViewStatus.success));
-  } catch (e) {
-    if (isClosed) return;
-    emit(state.copyWith(status: ViewStatus.error));
-  }
-}
-```
-
-### 3. Error Handling
-
-Centralized error handling via `CubitExceptionHandler`:
-
-```dart
-Future<void> performOperation() async {
-  await CubitExceptionHandler.handle(
-    operation: () => repository.doSomething(),
-    onError: (error) => emit(state.copyWith(status: ViewStatus.error)),
-  );
-}
-```
-
-### 4. Performance Optimization
-
-Use `BlocSelector` for fine-grained rebuilds:
-
-```dart
-BlocSelector<CounterCubit, CounterState, int>(
-  selector: (state) => state.count,
-  builder: (context, count) => Text('$count'),
-)
-```
-
-## Conclusion
-
-BLoC/Cubit was chosen for this application because it:
-
-1. ✅ Provides **predictable, testable state management**
-2. ✅ Aligns perfectly with **Clean Architecture** principles
-3. ✅ Offers **excellent performance** with fine-grained rebuild control
-4. ✅ Has a **mature ecosystem** with great tooling and documentation
-5. ✅ Enables **fast, reliable testing** without widget dependencies
-6. ✅ Provides **lifecycle safety** and error handling patterns
-7. ✅ Has a **clear mental model** that scales well
-
-While Riverpod is an excellent state management solution, BLoC/Cubit
-better fits the architectural goals, testing requirements, and team
-expertise for this production-grade Flutter application.
-
-## See Also
-
-- [Compile-Time Safety Guide](compile_time_safety.md) — usage
-  examples and migration patterns
-- [Code Generation Guide](code_generation_guide.md) — custom
-  code generators
-- [Architecture Details](architecture_details.md) — high-level
-  architecture diagrams
-- [Testing Overview](testing_overview.md) — testing strategies
-  with BLoC/Cubit
+1. Unit-test pure domain rules.
+2. Use `bloc_test` for state sequences, failures, cancellation, and stale-result paths.
+3. Use widget tests for rendering, listeners, and interaction wiring.
+4. Run `./tool/analyze.sh` plus focused tests.
+5. Route broad proof through [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+
+Minimum review:
+
+- state represents loading/success/empty/error honestly
+- no repository/SDK construction in presentation
+- no business logic in widgets
+- lifecycle cleanup proven
+- selectors return stable values
+- denial/failure paths tested when applicable
+
+## Related
+
+- [`bloc_standards.md`](bloc_standards.md)
+- [`clean_architecture.md`](clean_architecture.md)
+- [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+- [`compile_time_safety.md`](compile_time_safety.md)
+- [`testing_overview.md`](testing_overview.md)

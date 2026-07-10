@@ -10,17 +10,10 @@ Post Phase 5, `apps/mobile/lib/` is a thin shell (`app/**`, `features/**`, `l10n
 with no `core/` or `shared/` trees. This document explains how those parts fit together
 without blurring layer responsibilities.
 
-> **Related Documentation:**
->
-> - [Architecture Details](architecture_details.md) - Diagrams, principles, BLoC rationale
-> - [Lazy loading & state flow](architecture_lazy_loading_and_flow.md) - Deferred routes and offline-first sequence
-> - [SOLID Principles](solid_principles.md) - How SOLID principles are applied throughout this architecture
-> - [DRY Principles](dry_principles.md) - DRY consolidations and patterns
-> - [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries across layers, DI, and shared services
-> - [Modularity](modularity.md) - Dependency direction, core contracts, and feature composition
-> - [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) - How conflict resolution and background sync fit the data layer
-> - [Code Quality](CODE_QUALITY.md) - Architecture compliance verification and code quality metrics
-> - [Flutter Best Practices Review](flutter_best_practices_review.md) - Architecture review and best practices checklist
+Map: [Architecture Details](architecture_details.md). Folder contract:
+[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md).
+Package boundaries: [Modularity](modularity.md) and
+[Shared Utilities And Package Ownership](SHARED_UTILITIES.md).
 
 ## Architecture skeleton
 
@@ -79,25 +72,13 @@ Use this model when placing code:
 - **Workspace packages** hold reusable infrastructure and utilities that should not be
   owned by a single feature (`packages/*`).
 
-## Workspace packages (Melos migration)
+## Workspace packages
 
-Extracted packages live under `packages/` and must not import the app or
-features. Current direction (see [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md)):
-
-| Package | Owns | May depend on |
-| --- | --- | --- |
-| `packages/core` | `Failure`, `Result`, `TimerService`, pure domain primitives | — (leaf) |
-| `packages/utilities` | Pure Dart helpers (`disposable_bag`, etc.) | `core` |
-| `packages/app_shared_flutter` | Flutter-dependent shared infra (logger, platform env, secret storage, media DTOs) | `core` |
-| `packages/design_system` | Theme tokens, Mix styles, responsive helpers, generic widgets | `app_shared_flutter`, `core`, `utilities` |
-| `packages/storage` | Hive/schema/migrations + storage primitives + sync queue contracts | `app_shared_flutter`, `core`, `utilities` |
-| `packages/networking` | Interceptors, retry/network guards + background sync coordinator | `app_shared_flutter`, `core`, `storage`, `utilities` |
-| `packages/auth` | Auth contracts (`AuthUser`, `AuthRepository`, etc.), token helpers | `core`, `utilities` |
-
-**Dependency rule (packages):** `design_system → utilities → core`. Enforced by
-`tool/check_package_dependency_dag.sh` in `./bin/checklist`. Presentation and
-features consume packages; packages never import `package:flutter_bloc_app` or
-feature folders. App keeps DI, routes, l10n defaults, and feature widgets.
+Packages own reusable capabilities; [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md)
+is the package ownership table. [`modularity.md`](modularity.md) owns allowed
+dependency direction. Packages never import `apps/mobile` or
+`package:flutter_bloc_app`; `bash tool/check_package_dependency_dag.sh` enforces
+the current DAG.
 
 ## Layer Responsibilities
 
@@ -146,27 +127,15 @@ split:
 These folders are not "extra layers" between domain and data. They are support
 and composition code around the feature layers.
 
-## Example: Counter (offline-first, timer-driven)
+## Reference implementations
 
-- **Domain** — `apps/mobile/lib/features/counter/domain/counter_repository.dart` exposes `load/save/watch` over `CounterSnapshot` (pure value object).
-- **Data** — `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` wraps `HiveCounterRepository` for local persistence, optionally forwards writes to a remote `CounterRepository`, and enqueues sync operations via `PendingSyncRepository` + `SyncableRepositoryRegistry`.
-- **Presentation** — `apps/mobile/lib/features/counter/presentation/cubit/counter_cubit.dart` drives auto-decrement timers through `TimerService`, persists state through the domain contract, guards lifecycle (`isClosed` checks, `CubitExceptionHandler`), and updates UI widgets such as `apps/mobile/lib/features/counter/presentation/pages/counter_page.dart` (which uses responsive padding and `PlatformAdaptive.filledButton`).
+| Feature | Boundary worth copying |
+| --- | --- |
+| Counter | Pure repository contract; offline-first data implementation; timer/user flow in Cubit |
+| Remote Config | Firebase and cache hidden behind domain service; presentation receives SDK-free values |
+| Deep Links | URI parsing in domain; platform listener in data; GoRouter mapping in presentation |
 
-Key takeaways: business logic (count rules, sync flow) lives in the cubit + domain; storage and sync concerns stay in the data layer; widgets stay focused on layout.
-
-## Example: Remote Config (read-heavy with cache)
-
-- **Domain** — `apps/mobile/lib/features/remote_config/domain/remote_config_service.dart` defines read/write methods without any Firebase types.
-- **Data** — `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart` implements the contract using a Firebase-backed `RemoteConfigRepository` plus a Hive cache (`RemoteConfigCacheRepository`). It registers with the sync registry so background sync can refresh values, and it tracks telemetry without leaking SDK details upward.
-- **Presentation** — `apps/mobile/lib/features/remote_config/presentation/cubit/remote_config_cubit.dart` exposes `initialize`, `fetchValues`, and `clearCache` commands. The cubit manages loading/error states and reads values only through the domain interface before the widgets render them.
-
-This separation lets the cubit and UI remain testable without Firebase while the data layer swaps caching strategies freely.
-
-## Example: Deep Links (routing stays in presentation)
-
-- **Domain** — `apps/mobile/lib/features/deeplink/domain/deep_link_parser.dart` and `apps/mobile/lib/features/deeplink/domain/deep_link_target.dart` translate URIs into domain-level targets with no router knowledge.
-- **Data** — `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` listens to platform links and hands raw URLs to the parser.
-- **Presentation** — `apps/mobile/lib/features/deeplink/presentation/cubit/deep_link_cubit.dart` consumes the domain service and uses `apps/mobile/lib/features/deeplink/presentation/deep_link_target_extensions.dart` to map domain targets to `GoRouter` locations. Routing decisions remain in presentation, keeping domain free of navigation dependencies.
+Exact gold and legacy status: [`architecture/reference_features.md`](architecture/reference_features.md).
 
 ## Working Within the Architecture
 
@@ -213,32 +182,10 @@ Use these as review questions before accepting generated feature/refactor code:
   public APIs, stable names that explain intent, immutable state, and tests that
   assert behavior contracts rather than implementation shape.
 
-## Review Checklist
+## Review and validation
 
-- Domain files use pure Dart only (no `package:flutter` imports).
-- Data layer implements domain contracts and stays free of presentation imports.
-- Presentation depends on abstractions and does not construct repositories.
-- App shell code (`apps/mobile/lib/app/`, router, bootstrap under `apps/mobile/lib/app/bootstrap/**`) is used for
-  composition, not for embedding feature business logic.
-- Feature wiring happens in `apps/mobile/lib/app/composition/**` via `registerLazySingletonIfAbsent`.
-- Use constructor injection for cubits/repositories to keep dependencies explicit.
-- New Hive repositories extend `HiveRepositoryBase` or `HiveSettingsRepository<T>`.
-- Do not call `Hive.openBox` outside `packages/storage` (via `HiveService`).
-- `setState` is reserved for UI-only toggles; business state lives in cubits.
-- New user-visible features need an app entrypoint unless the owning doc says
-  route-only.
-- Async cubit operations use `CubitExceptionHandler`; clean up timers/streams in
-  `close()`.
-
-Example violation (domain):
-
-```dart
-// ❌ Do not import Flutter in domain
-import 'package:flutter/material.dart';
-```
-
-Quick check:
-
-```bash
-./tool/check_no_hive_openbox.sh
-```
+Use [`review/architecture_checklist.md`](review/architecture_checklist.md) for
+review questions and [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md)
+for folder gates. Run `bash tool/check_clean_architecture_imports.sh`,
+`bash tool/check_feature_modularity_leaks.sh`, and
+`bash tool/check_package_dependency_dag.sh`; `./bin/checklist` owns full proof.
