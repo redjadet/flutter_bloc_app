@@ -68,7 +68,7 @@ class ScapesPage extends StatelessWidget {
                 ScapesInitial() || ScapesLoading() =>
                   const CommonLoadingWidget(),
                 ScapesError(:final error) => CommonErrorView(
-                  message: error.message ?? l10n.scapesErrorOccurred,
+                  message: error.message,
                   onRetry: () => context.cubit<ScapesCubit>().reload(),
                 ),
                 ScapesReady(:final scapes) when scapes.isEmpty =>
