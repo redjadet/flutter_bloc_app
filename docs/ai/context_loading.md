@@ -15,6 +15,13 @@
 7. Debt claims only: `ai/reports/`, `docs/audits/` (`git add -f`)
 8. **Skill routing** (before implementation): [`skill_routing.md`](skill_routing.md) — shim `agents-skill-routing`; session list → routing table → `./bin/agent-maintain find QUERY` or `bash tool/find_global_agent_skills.sh QUERY`
 
+## Quality claim rule
+
+When claiming “top-tier engineering quality”, read:
+
+- Harness: [`harness_scorecard.md`](harness_scorecard.md) (agent tooling)
+- Engineering: [`../engineering/engineering_quality_scorecard.md`](../engineering/engineering_quality_scorecard.md) (app/portfolio proof)
+
 ## Avoid loading early
 
 - Entire `apps/mobile/lib/features/<large>/` trees before `CONTEXT_MAP`

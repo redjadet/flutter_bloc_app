@@ -46,7 +46,7 @@ Future<void> _activateAppCheck() async {
     );
     await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
     _logAppCheckDebugToken(debugToken, debugTokenEnv);
-  } on Exception catch (error, stackTrace) {
+  } on Object catch (error, stackTrace) {
     AppLogger.warning('Firebase App Check activation failed: $error');
     AppLogger.debug('App Check activation stack trace\n$stackTrace');
   }
@@ -64,7 +64,7 @@ Future<void> _markIosSimulatorInDebugIfNeeded() async {
     if (!info.isPhysicalDevice) {
       FirebaseBootstrapService.isIosSimulatorInDebug = true;
     }
-  } on Exception catch (_) {
+  } on Object catch (_) {
     // Best-effort; DI fallbacks remain disabled when detection fails.
   }
 }

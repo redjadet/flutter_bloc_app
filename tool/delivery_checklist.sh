@@ -1282,6 +1282,12 @@ run_harness_docs_checks() {
     echo "❌ Harness scorecard gate failed; keep Cursor/Codex max-score docs and proof gates in sync."
     return 1
   fi
+
+  # Wiring/docs only here; measured Coverage proofs run after Step 5 coverage.
+  if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh" --skip-coverage-proof; then
+    echo "❌ Engineering scorecard gate failed; keep portfolio Engineering score docs and proof gates in sync."
+    return 1
+  fi
 }
 
 print_checklist_fast_incompatibilities() {
@@ -1555,6 +1561,7 @@ CHECK_MESSAGES=(
   "Checking presentation layer for blocking dart:io *Sync calls..."
   "Checking remote image cache hints..."
   "Checking cubit stream subscription hygiene..."
+  "Checking context.read/watch in presentation build()..."
   "Checking WidgetsBindingObserver removeObserver in dispose..."
   "Checking deferred route imports stay on router allowlist..."
   "Running Pyright on Python (Render chat demo + tool/)..."
@@ -1634,6 +1641,7 @@ CHECK_SCRIPTS=(
   "tool/check_sync_io_in_presentation.sh"
   "tool/check_remote_image_cache_hints.sh"
   "tool/check_cubit_subscription_cancel.sh"
+  "tool/check_context_read_watch.sh"
   "tool/check_lifecycle_observer_dispose.sh"
   "tool/check_deferred_heavy_routes.sh"
   "tool/check_pyright_python.sh"
@@ -1712,6 +1720,7 @@ CHECK_SCRIPT_THEMES=(
   "blocking-io"
   "images"
   "state-mgmt"
+  "rebuild"
   "lifecycle"
   "navigation"
   "tooling"
@@ -1800,6 +1809,15 @@ if [ "$ANALYZE_FAILED" -ne 0 ]; then
 fi
 echo "✅ Code analysis complete"
 echo ""
+
+# Wiring/docs only before coverage; measured Coverage proofs run after Step 5.
+echo "  Checking Engineering quality scorecard gate (wiring; coverage proofs after Step 5)..."
+if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh" --skip-coverage-proof; then
+  echo "❌ Engineering scorecard gate failed; keep portfolio Engineering score docs and proof gates in sync."
+  VALIDATION_FAILED=1
+fi
+echo ""
+
 if should_run_router_feature_validate_auto; then
   echo "  Running router feature validation (path-triggered)..."
   if ! bash "$WORKSPACE_ROOT/bin/router_feature_validate"; then
@@ -1940,6 +1958,12 @@ if [ "$should_run_coverage" -eq 1 ]; then
   echo "🧪 Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
   bash tool/test_coverage.sh
   echo "✅ Test coverage complete"
+  echo ""
+  echo "  Re-checking Engineering scorecard with measured coverage proofs..."
+  if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh"; then
+    echo "❌ Engineering scorecard coverage proofs failed after Step 5."
+    exit 1
+  fi
   echo ""
 else
   echo "🧪 Step 5/5: Skipped coverage (override with CHECKLIST_RUN_COVERAGE=1)"

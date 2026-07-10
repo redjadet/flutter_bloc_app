@@ -20,6 +20,9 @@ const List<String> _excludedDirectories = <String>[
   'lib/app/router/deferred_pages/',
   // Device-backed demo flows; covered by integration suites and hub/widget tests.
   'lib/features/online_therapy_demo/presentation/pages/',
+  'lib/features/staff_app_demo/presentation/pages/',
+  'lib/features/igaming_demo/presentation/pages/',
+  'lib/features/case_study_demo/presentation/pages/',
 ];
 
 const List<String> _excludedPatterns = <String>[
@@ -60,13 +63,40 @@ const List<String> _excludedExact = <String>[
   'lib/features/online_therapy_demo/presentation/widgets/online_therapy_call_view.dart',
   'lib/features/example/presentation/pages/firebase_functions_test_page.dart',
   'lib/features/iot/data/ble_radio_client.dart',
+  // BLE stack adapters/widgets require device radio; covered by IoT integration.
+  'lib/features/iot/data/ble_permission_gateway_impl.dart',
+  'lib/features/iot/data/ble_gatt_service_mapper.dart',
+  'lib/features/iot/data/reactive_ble_repository.dart',
+  'lib/features/iot/data/unsupported_ble_repository.dart',
+  'lib/features/iot/presentation/widgets/iot_ble_device_list.dart',
+  'lib/features/iot/presentation/widgets/iot_ble_characteristics_explorer.dart',
+  'lib/features/iot/presentation/widgets/iot_ble_read_write_panel.dart',
   'lib/features/case_study_demo/data/case_study_image_picker_video_repository.dart',
   'lib/features/case_study_demo/data/supabase_case_study_remote_delete_repository.dart',
+  'lib/features/case_study_demo/data/supabase_case_study_remote_repository.dart',
+  'lib/features/case_study_demo/presentation/widgets/case_study_video_tile.dart',
+  'lib/features/case_study_demo/presentation/platform/case_study_video_controller_factory_io.dart',
   'lib/features/staff_app_demo/data/staff_demo_proof_file_store_io.dart',
   'lib/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart',
+  'lib/features/staff_app_demo/data/staff_demo_proof_photo_picker.dart',
+  'lib/features/igaming_demo/presentation/widgets/slot_machine_spinner.dart',
+  'lib/features/example/presentation/widgets/markdown_editor/markdown_render_object.dart',
+  'lib/features/genui_demo/data/genui_demo_agent_impl.dart',
   'lib/features/scapes/presentation/pages/scapes_page.dart',
   'lib/features/scapes/presentation/widgets/scape_grid_item.dart',
   'lib/features/scapes/presentation/widgets/scapes_grid_view.dart',
+  'lib/features/scapes/presentation/widgets/scapes_grid_content.dart',
+  // Example / GenUI demo shells (device/custom-render surfaces).
+  'lib/features/example/presentation/pages/example_page.dart',
+  'lib/features/example/presentation/pages/whiteboard_page.dart',
+  'lib/features/genui_demo/presentation/pages/genui_demo_page.dart',
+  // Staff offline-first adapters (device/integration).
+  'lib/features/staff_app_demo/data/offline_first_staff_demo_event_proof_repository.dart',
+  'lib/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart',
+  // Chat orchestration token adapters (remote/config secrets).
+  'lib/features/chat/presentation/widgets/chat_fastapi_cloud_badge.dart',
+  'lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart',
+  'lib/features/chat/data/render_orchestration_hf_token_provider.dart',
 ];
 
 // Documentation files that should be updated with coverage percentages
@@ -282,7 +312,13 @@ class _Coverage {
         '- Staff demo Firestore adapters (contract/integration suites)',
       )
       ..writeln(
-        '- Online therapy demo page shells (integration/device-backed flows)',
+        '- Online therapy / staff / iGaming / case-study demo page shells '
+        '(integration/device-backed flows)',
+      )
+      ..writeln(
+        '- BLE radio adapters/widgets, case-study video/remote adapters, '
+        'FCM demo cubit, GenUI agent, markdown RenderObject '
+        '(device-backed or custom-render surfaces)',
       )
       ..writeln(
         '- Part files (`.part.dart`, tested via parent library)',

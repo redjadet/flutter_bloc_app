@@ -85,7 +85,10 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 
 ## 6. Testing story
 
-- **Unit / widget:** ~399 tests; CI coverage gate **60%** (see [coverage/coverage_summary.md](../coverage/coverage_summary.md))
+- **Unit / widget:** See current counts and filtered rollup in
+  [`coverage/coverage_summary.md`](../coverage/coverage_summary.md) (generated artifact).
+  CI coverage floor is **75%** filtered rollup; team target is **85%**
+  (source of truth: [`CODE_QUALITY.md`](CODE_QUALITY.md)).
 - **Integration tiers:** `smoke` / `standard` / `exhaustive` via `integration_test/*_flows_test.dart` and env `INTEGRATION_TESTS_TIER`
 - **PR smoke:** `integration_test/pr_smoke_flows_test.dart` — matches spine steps 1–3 plus launch/charts/search/settings
 - **Patrol:** not in `pubspec.yaml`; pilot scoped in [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md)
@@ -114,6 +117,7 @@ Review: [ai_code_review_protocol.md](ai_code_review_protocol.md).
 
 **Annotated example (agent session):**
 [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md)
+
 - modular metrics, leak script, DI split, domain surface tests.
 
 ## 10. Release
@@ -151,9 +155,11 @@ See [plans/future_observability.md](plans/future_observability.md).
 
 ## 14. Verification snapshot
 
-- **Showcase baseline:** 2026-05-20 full delivery gate passed with
-  `./bin/checklist` (2221 tests, coverage summary refresh) and PR smoke runtime
-  passed on iPhone 17 Pro simulator.
-- **Current edit expectation:** documentation-only changes can use
+- **Current proof:** run `./bin/checklist` and read live counts from the run
+  output plus [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+  Do not hardcode test counts here.
+- **Engineering claim:** [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)
+  (badge + `tool/check_engineering_quality_scorecard_gate.sh`).
+- **Edit expectation:** documentation-only changes can use
   `./bin/checklist-fast --no-reuse`; lib or mixed lib+docs changes require the
   full gate above.

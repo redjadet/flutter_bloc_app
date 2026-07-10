@@ -7,6 +7,8 @@ This document consolidates code-quality analysis and improvement notes.
 This file is a **human-readable quality overview**. It is not the enforcement
 layer.
 
+Measured claim gate (portfolio-honest): [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md).
+
 ### Program status (2026-06-03)
 
 **Waves 1–2 closed** on `main` (PR [#290](https://github.com/redjadet/flutter_bloc_app/pull/290), PR [#292](https://github.com/redjadet/flutter_bloc_app/pull/292), closeout [2026-06-03_quality-program-waves-1-2-closeout.md](changes/2026-06-03_quality-program-waves-1-2-closeout.md)).
@@ -14,8 +16,8 @@ layer.
 Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
 Top gaps tracked there (cadence 3+):
 
-1. **Coverage** — CI minimum **75%** filtered rollup; team target **85%** ([coverage summary](../coverage/coverage_summary.md)); integration merge can raise rollup.
-2. **Core layer** — aggregate ~65% coverage; bootstrap/DI paths lag shared/features.
+1. **Coverage** — CI minimum **75%** filtered rollup; Engineering scorecard target **85%** filtered + app-shell (bootstrap/DI/router) **≥75%** ([coverage summary](../coverage/coverage_summary.md), [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)). Measured (2026-07-10): filtered **85.33%**, app-shell **76.04%**.
+2. **App shell** — bootstrap/composition/router aggregate tracked by `tool/check_engineering_core_coverage.sh` (not legacy `lib/core/`).
 3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 
 Promoted checklist gates (**fail** default): **QG-D05** deferred routes, **QG-D07** lifecycle observer dispose — see [validation catalog](validation_scripts/catalog.md) and [deferred gates](plans/checklist_quality_gates_deferred.md). Proof on `main`: 0 violations; env overrides `CHECK_*_MODE=warn` for staged fixes.

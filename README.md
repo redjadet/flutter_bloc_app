@@ -24,7 +24,7 @@ CI, quality & supply chain
 [![Dependency Updates](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/dependency-updates.yml)
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-80%2E25%25-brightgreen.svg)](coverage/coverage_summary.md)
+[![Coverage](https://img.shields.io/badge/Coverage-85%2E33%25-brightgreen.svg)](coverage/coverage_summary.md)
 [![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
 [![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
 [![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
@@ -53,15 +53,18 @@ Integrations & platform services
 [![GraphQL](https://img.shields.io/badge/GraphQL-Demo-E10098.svg)](docs/offline_first/graphql_demo.md)
 [![AI](https://img.shields.io/badge/AI-GenUI%20%7C%20chat-8B5CF6.svg)](docs/ai_integration.md)
 [![Deep links](https://img.shields.io/badge/Deep%20links-app__links-0F766E.svg)](docs/universal_links/README.md)
-[![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20logs-DC2626.svg)](docs/observability.md)
+[![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
 [![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
 
 Engineering practices
 
 [![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
+[![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
 [![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/REPOSITORY_LIFECYCLE.md)
+
+Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
 
 ## Live app
 

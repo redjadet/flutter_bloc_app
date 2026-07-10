@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **95** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **76** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **98** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **77** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -18,11 +18,19 @@ verifies the documented disk/checklist counts. After `CHECK_SCRIPTS` edits:
 `bash tool/fix_validation_docs.sh` then validate.
 
 **Not in `CHECK_SCRIPTS`:** checklist hooks include `check_regression_guards.sh`,
-`check_action_bar_layout.sh`, and `check_docs_gardening.sh`; agent/design lanes
-use `check_design_md.sh`. See [Supplemental scripts](#supplemental-and-adjacent-scripts)
+`check_action_bar_layout.sh`, `check_docs_gardening.sh`, and
+`check_engineering_quality_scorecard_gate.sh` (wiring with `--skip-coverage-proof`
+before Step 5; full measured proofs after coverage); agent/design lanes use
+`check_design_md.sh`. See [Supplemental scripts](#supplemental-and-adjacent-scripts)
 below.
 
 ## Existing Validation Scripts
+
+### Engineering scorecard (portfolio claim)
+
+- **`check_engineering_quality_scorecard_gate.sh`**: Engineering claim gate — wiring/docs needles, badge `--check`, and when Coverage is 10/10 also enforces filtered ≥85% + app-shell ≥75% against `coverage/lcov.info` (use `--skip-coverage-proof` for docs-only).
+- **`update_engineering_quality_badge.sh`**: Derives the README Engineering badge from [`engineering/engineering_quality_scorecard.md`](../engineering/engineering_quality_scorecard.md) (min score in table).
+- **`check_engineering_core_coverage.sh`**: Enforces minimum aggregate coverage for app shell paths `lib/app/bootstrap/`, `lib/app/composition/`, `lib/app/router/` by parsing `coverage/lcov.info`.
 
 ### Architecture & Dependency Injection
 

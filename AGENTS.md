@@ -40,6 +40,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 
 - Doctrine: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
 - Harness scorecard: [`docs/ai/harness_scorecard.md`](docs/ai/harness_scorecard.md)
+- Engineering quality scorecard: [`docs/engineering/engineering_quality_scorecard.md`](docs/engineering/engineering_quality_scorecard.md)
 - Harness auto-maintenance: [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md)
 - AI failure risks: [`docs/ai/ai_failure_risks.md`](docs/ai/ai_failure_risks.md)
 - Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)

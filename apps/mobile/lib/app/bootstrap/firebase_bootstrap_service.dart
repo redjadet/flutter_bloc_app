@@ -26,6 +26,11 @@ class FirebaseBootstrapService {
   /// non-physical iOS device. Used for simulator-only auth keychain fallbacks.
   static bool isIosSimulatorInDebug = false;
 
+  /// Test-only options override so unit tests can exercise configured-init paths
+  /// without depending on generated [DefaultFirebaseOptions] placeholders.
+  @visibleForTesting
+  static FirebaseOptions? debugOptionsOverride;
+
   /// Best-effort iOS simulator detection for debug auth fallbacks when Firebase
   /// bootstrap is skipped (placeholder config, integration tests, hot restart).
   static Future<void> ensureIosSimulatorDebugFlag() async {
@@ -106,18 +111,42 @@ class FirebaseBootstrapService {
 
   /// Enable Firebase Database persistence.
   /// Must be called before any database operations.
-  static void _enableDatabasePersistence() {
-    try {
-      final FirebaseApp app = Firebase.app();
-      FirebaseDatabase.instanceFor(app: app).setPersistenceEnabled(true);
-      AppLogger.debug('Firebase Database persistence enabled');
-    } on Exception catch (error, stackTrace) {
-      // If persistence is already enabled or fails, log but don't fail initialization
-      AppLogger.warning(
-        'Failed to enable Firebase Database persistence: $error',
-      );
-      AppLogger.debug('Persistence setup stack trace\n$stackTrace');
-    }
+  ///
+  /// [FirebaseDatabase.setPersistenceEnabled] is typed `void` but still
+  /// schedules platform work that can fail asynchronously. Zone-guard so
+  /// plugin errors stay best-effort and never fail Firebase init.
+  static Future<void> _enableDatabasePersistence() async {
+    final Completer<void> done = Completer<void>();
+    runZonedGuarded(
+      () {
+        try {
+          final FirebaseApp app = Firebase.app();
+          FirebaseDatabase.instanceFor(app: app).setPersistenceEnabled(true);
+          AppLogger.debug('Firebase Database persistence enabled');
+        } on Object catch (error, stackTrace) {
+          AppLogger.warning(
+            'Failed to enable Firebase Database persistence: $error',
+          );
+          AppLogger.debug('Persistence setup stack trace\n$stackTrace');
+        } finally {
+          scheduleMicrotask(() {
+            if (!done.isCompleted) {
+              done.complete();
+            }
+          });
+        }
+      },
+      (error, stackTrace) {
+        AppLogger.warning(
+          'Failed to enable Firebase Database persistence: $error',
+        );
+        AppLogger.debug('Persistence setup stack trace\n$stackTrace');
+        if (!done.isCompleted) {
+          done.complete();
+        }
+      },
+    );
+    await done.future;
   }
 
   /// Configure Firebase UI Auth providers
@@ -166,18 +195,24 @@ class FirebaseBootstrapService {
     await Firebase.initializeApp(options: options);
     AppLogger.info('Firebase initialized for project: ${options.projectId}');
     await _activateAppCheck();
-    _enableDatabasePersistence();
+    await _enableDatabasePersistence();
     return true;
   }
 
   static Future<void> _prepareReusedFirebaseApp() async {
     await _markIosSimulatorInDebugIfNeeded();
-    _enableDatabasePersistence();
+    await _enableDatabasePersistence();
   }
 
   @visibleForTesting
   static void resetIosSimulatorInDebugForTest() {
     isIosSimulatorInDebug = false;
+  }
+
+  @visibleForTesting
+  static void resetInitializationForTest() {
+    _firebaseInitialization = null;
+    debugOptionsOverride = null;
   }
 
   static void _logFirebaseInitializationFailure(

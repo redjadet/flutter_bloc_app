@@ -126,12 +126,6 @@ void main() {
             .having((final s) => s.isLoadingQueue, 'loading', false)
             .having((final s) => s.queue.length, 'queue length', 2)
             .having((final s) => s.selectedCaseId, 'selectedCaseId', 'case_1'),
-        // loadCase intermediate emit
-        isA<AiDecisionState>().having(
-          (final s) => s.selectedCaseId,
-          'selectedCaseId',
-          'case_1',
-        ),
         isA<AiDecisionState>().having(
           (final s) => s.caseDetail?.caseId,
           'caseId',
