@@ -12,6 +12,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
       child: SettingsPage(
         appInfoRepository: getIt<AppInfoRepository>(),
         authRepository: getIt<AuthRepository>(),
+        showQaExtras: FlavorManager.I.isDev || FlavorManager.I.isQa,
         buildQaExtras: (final ctx) => <Widget>[
           GraphqlCacheControlsSection(
             key: const ValueKey('settings-qa-graphql-cache-controls'),

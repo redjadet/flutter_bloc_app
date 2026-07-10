@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
-import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_permission_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc_app/features/iot/data/unsupported_ble_repository.da
 import 'package:flutter_bloc_app/features/iot/domain/ble_permission_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/classic_bluetooth_repository.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 
 void registerIotServices() {
   registerLazySingletonIfAbsent<IotBleRuntimeConfig>(

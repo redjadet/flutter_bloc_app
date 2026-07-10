@@ -6,7 +6,6 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -32,6 +31,7 @@ class CounterPage extends StatefulWidget {
     required this.title,
     required this.errorNotificationService,
     required this.biometricAuthenticator,
+    required this.showFlavorBadge,
     this.timerService,
     super.key,
     this.optionalBanner,
@@ -40,6 +40,9 @@ class CounterPage extends StatefulWidget {
   final String title;
   final ErrorNotificationService errorNotificationService;
   final BiometricAuthenticator biometricAuthenticator;
+
+  /// When true, show non-prod flavor badge (resolved at router/composition).
+  final bool showFlavorBadge;
 
   /// Used for snackbar hide delay; when null, [DefaultTimerService] is used.
   final TimerService? timerService;
@@ -52,7 +55,6 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
-  late final bool _showFlavorBadge;
   late final ConfettiController _confettiController;
   late final _CounterPageListenerDelegate _listenerDelegate;
   DateTime? _lastFlushTime;
@@ -68,7 +70,6 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    _showFlavorBadge = FlavorManager.I.flavor != Flavor.prod;
     _confettiController = ConfettiController(
       duration: const Duration(milliseconds: 800),
     );
@@ -127,7 +128,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         listeners: _buildListeners(),
         child: _CounterPageContent(
           title: widget.title,
-          showFlavorBadge: _showFlavorBadge,
+          showFlavorBadge: widget.showFlavorBadge,
           optionalBanner: widget.optionalBanner,
           confettiController: _confettiController,
           onOpenSettings: () => _handleOpenSettings(context),
@@ -145,7 +146,7 @@ class _CounterPageState extends State<CounterPage> with WidgetsBindingObserver {
         listeners: _buildListeners(),
         child: _CounterPageContent(
           title: widget.title,
-          showFlavorBadge: _showFlavorBadge,
+          showFlavorBadge: widget.showFlavorBadge,
           optionalBanner: widget.optionalBanner,
           confettiController: _confettiController,
           onOpenSettings: () => _handleOpenSettings(context),

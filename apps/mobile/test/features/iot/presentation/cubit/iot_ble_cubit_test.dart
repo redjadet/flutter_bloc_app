@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_device_catalog.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';

@@ -34,7 +34,7 @@ void main() {
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ExamplePage(),
+        home: ExamplePage(isFirebaseInitialized: false),
       ),
     );
 
@@ -91,7 +91,7 @@ void main() {
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ExamplePage(),
+        home: ExamplePage(isFirebaseInitialized: false),
       ),
     );
 
@@ -122,7 +122,7 @@ void main() {
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ExamplePage(),
+        home: ExamplePage(isFirebaseInitialized: false),
       ),
     );
 
@@ -153,7 +153,7 @@ void main() {
         locale: const Locale('en'),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const ExamplePage(),
+        home: ExamplePage(isFirebaseInitialized: false),
       ),
     );
 

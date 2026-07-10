@@ -1,12 +1,17 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 
 class FirebaseFunctionsTestPage extends StatefulWidget {
-  const FirebaseFunctionsTestPage({super.key});
+  const FirebaseFunctionsTestPage({
+    required this.isFirebaseReady,
+    super.key,
+  });
+
+  /// Resolved at router from Firebase bootstrap readiness.
+  final bool isFirebaseReady;
 
   @override
   State<FirebaseFunctionsTestPage> createState() =>
@@ -20,7 +25,7 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
   String? _errorMessage;
   String? _appCheckTokenPreview;
 
-  bool get _isFirebaseReady => FirebaseBootstrapService.isFirebaseInitialized;
+  bool get _isFirebaseReady => widget.isFirebaseReady;
 
   Future<void> _refreshAppCheckToken() async {
     try {

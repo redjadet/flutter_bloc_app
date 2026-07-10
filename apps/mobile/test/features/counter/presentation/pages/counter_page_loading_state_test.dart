@@ -89,6 +89,7 @@ void main() {
               title: 'Counter',
               errorNotificationService: _FakeErrorNotificationService(),
               biometricAuthenticator: _FakeBiometricAuthenticator(),
+              showFlavorBadge: false,
             ),
           ),
         ),

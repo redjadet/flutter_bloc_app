@@ -190,6 +190,7 @@ void main() {
               title: 'Counter',
               errorNotificationService: errorNotifications,
               biometricAuthenticator: authenticator,
+              showFlavorBadge: false,
             ),
           ),
         ),

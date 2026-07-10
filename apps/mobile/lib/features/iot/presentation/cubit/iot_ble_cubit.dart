@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_adapter_status.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_bloc_app/features/iot/domain/classic_bluetooth_repositor
 import 'package:flutter_bloc_app/features/iot/domain/classic_bt_device.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_failure_mapper.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_connection_lifecycle.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 

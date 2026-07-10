@@ -253,6 +253,7 @@ Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
             title: 'Counter',
             errorNotificationService: _FakeErrorNotificationService(),
             biometricAuthenticator: _FakeBiometricAuthenticator(),
+            showFlavorBadge: false,
           ),
         ),
       ),
