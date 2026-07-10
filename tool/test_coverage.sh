@@ -106,7 +106,15 @@ echo "Updating coverage summary..."
 
 echo ""
 echo "Enforcing coverage threshold..."
+# CI / checklist floor remains 75% unless COVERAGE_THRESHOLD is set.
+# Engineering scorecard Coverage=10/10 separately requires COVERAGE_THRESHOLD=85.
 (cd "$WORKSPACE_ROOT" && "$DART_BIN" run tool/update_coverage_summary.dart --enforce-threshold)
+
+if [ "$#" -eq 0 ]; then
+  echo ""
+  echo "Enforcing Engineering app-shell coverage floor (≥75%)..."
+  (cd "$WORKSPACE_ROOT" && bash tool/check_engineering_core_coverage.sh)
+fi
 
 echo ""
 echo "✅ Test coverage complete! Reports updated in coverage/"

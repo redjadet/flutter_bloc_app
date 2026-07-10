@@ -1282,6 +1282,12 @@ run_harness_docs_checks() {
     echo "❌ Harness scorecard gate failed; keep Cursor/Codex max-score docs and proof gates in sync."
     return 1
   fi
+
+  # Wiring/docs only here; measured Coverage proofs run after Step 5 coverage.
+  if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh" --skip-coverage-proof; then
+    echo "❌ Engineering scorecard gate failed; keep portfolio Engineering score docs and proof gates in sync."
+    return 1
+  fi
 }
 
 print_checklist_fast_incompatibilities() {
@@ -1547,6 +1553,7 @@ CHECK_MESSAGES=(
   "Checking iOS simulator CocoaPods framework embed..."
   "Checking agent knowledge base map..."
   "Checking Cursor/Codex harness scorecard gate..."
+  "Checking Engineering quality scorecard gate..."
   "Checking AI failure risk register..."
   "Checking agent memory compounding..."
   "Checking tracked files for secret-like literals..."
@@ -1555,6 +1562,7 @@ CHECK_MESSAGES=(
   "Checking presentation layer for blocking dart:io *Sync calls..."
   "Checking remote image cache hints..."
   "Checking cubit stream subscription hygiene..."
+  "Checking context.read/watch in presentation build()..."
   "Checking WidgetsBindingObserver removeObserver in dispose..."
   "Checking deferred route imports stay on router allowlist..."
   "Running Pyright on Python (Render chat demo + tool/)..."
@@ -1626,6 +1634,7 @@ CHECK_SCRIPTS=(
   "tool/check_ios_pod_framework_embed.sh"
   "tool/check_agent_knowledge_base.sh"
   "tool/check_harness_scorecard_gate.sh"
+  "tool/check_engineering_quality_scorecard_gate.sh"
   "tool/check_ai_failure_risk_register.sh"
   "tool/check_agent_memory_compounding.sh"
   "tool/check_tracked_secret_literals.sh"
@@ -1634,6 +1643,7 @@ CHECK_SCRIPTS=(
   "tool/check_sync_io_in_presentation.sh"
   "tool/check_remote_image_cache_hints.sh"
   "tool/check_cubit_subscription_cancel.sh"
+  "tool/check_context_read_watch.sh"
   "tool/check_lifecycle_observer_dispose.sh"
   "tool/check_deferred_heavy_routes.sh"
   "tool/check_pyright_python.sh"
@@ -1706,12 +1716,14 @@ CHECK_SCRIPT_THEMES=(
   "meta"
   "meta"
   "meta"
+  "meta"
   "security"
   "meta"
   "navigation"
   "blocking-io"
   "images"
   "state-mgmt"
+  "rebuild"
   "lifecycle"
   "navigation"
   "tooling"
@@ -1940,6 +1952,12 @@ if [ "$should_run_coverage" -eq 1 ]; then
   echo "🧪 Step 5/5: Running test coverage with 'tool/test_coverage.sh'"
   bash tool/test_coverage.sh
   echo "✅ Test coverage complete"
+  echo ""
+  echo "  Re-checking Engineering scorecard with measured coverage proofs..."
+  if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh"; then
+    echo "❌ Engineering scorecard coverage proofs failed after Step 5."
+    exit 1
+  fi
   echo ""
 else
   echo "🧪 Step 5/5: Skipped coverage (override with CHECKLIST_RUN_COVERAGE=1)"

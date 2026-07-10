@@ -18,7 +18,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
   }
 
   Future<void> loadQueue() async {
-    _safeEmit(state.copyWith(isLoadingQueue: true, clearError: true));
+    _safeEmit(state.copyWith(isLoadingQueue: true, errorMessage: null));
     try {
       final queue = await repository.getCases();
       final selected = queue.isNotEmpty ? queue.first.id : null;
@@ -49,9 +49,9 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
     _safeEmit(
       state.copyWith(
         selectedCaseId: caseId,
-        clearCaseDetail: true,
-        clearDecision: !preserveDecision,
-        clearError: true,
+        caseDetail: null,
+        decision: preserveDecision ? state.decision : null,
+        errorMessage: null,
       ),
     );
     try {
@@ -65,7 +65,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
   Future<void> runDecisionSupport({required final String operatorNote}) async {
     final caseId = state.selectedCaseId;
     if (caseId == null) return;
-    _safeEmit(state.copyWith(isRunningDecision: true, clearError: true));
+    _safeEmit(state.copyWith(isRunningDecision: true, errorMessage: null));
     try {
       final result = await repository.runDecisionSupport(
         caseId: caseId,
@@ -89,7 +89,7 @@ class AiDecisionCubit extends Cubit<AiDecisionState> {
   }) async {
     final caseId = state.selectedCaseId;
     if (caseId == null) return;
-    _safeEmit(state.copyWith(isSavingAction: true, clearError: true));
+    _safeEmit(state.copyWith(isSavingAction: true, errorMessage: null));
     try {
       await repository.createAction(
         caseId: caseId,

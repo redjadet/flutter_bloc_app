@@ -40,5 +40,6 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 ## Related Documentation
 
 - [`CODE_QUALITY.md`](CODE_QUALITY.md) - Code quality standards
+- [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md) - Measured “top-tier engineering” claim gate
 - [`agents_quick_reference.md`](agents_quick_reference.md) - Agent command reference
 - [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) - Fast vs full validation routing

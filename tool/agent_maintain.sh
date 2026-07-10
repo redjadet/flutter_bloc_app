@@ -209,6 +209,28 @@ scope_has_harness_edits() {
   return 1
 }
 
+scope_has_engineering_edits() {
+  local path
+  while IFS= read -r path; do
+    case "$path" in
+      AGENTS.md|\
+      README.md|\
+      docs/engineering/engineering_quality_scorecard.md|\
+      docs/ai/context_loading.md|\
+      docs/ai/ai_failure_risks.md|\
+      docs/agents_quick_reference.md|\
+      docs/CODE_QUALITY.md|\
+      tool/check_engineering_quality_scorecard_gate.sh|\
+      tool/update_engineering_quality_badge.sh|\
+      tool/check_engineering_core_coverage.sh|\
+      tool/agent_maintain.sh)
+        return 0
+        ;;
+    esac
+  done < <(collect_changed_paths || true)
+  return 1
+}
+
 scope_has_design_md_edits() {
   local path
   while IFS= read -r path; do
@@ -340,6 +362,17 @@ cmd_harness_maintain() {
 
 cmd_harness() {
   cmd_harness_maintain "$@"
+}
+
+cmd_engineering_maintain() {
+  log "workflow|engineering-maintain"
+  if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
+    log "plan|engineering-badge|bash tool/update_engineering_quality_badge.sh"
+    log "plan|engineering-maintain|bash tool/check_engineering_quality_scorecard_gate.sh"
+    return 0
+  fi
+  run_stage bash "$PROJECT_ROOT/tool/update_engineering_quality_badge.sh"
+  run_stage bash "$PROJECT_ROOT/tool/check_engineering_quality_scorecard_gate.sh"
 }
 
 cmd_memory() {
@@ -536,6 +569,12 @@ cmd_auto() {
   else
     log "scope|harness|no"
   fi
+  if scope_has_engineering_edits; then
+    log "scope|engineering|yes"
+    log "auto_action|engineering-maintain|./bin/agent-maintain engineering-maintain"
+  else
+    log "scope|engineering|no"
+  fi
   log "auto_action|preflight|./bin/agent-maintain preflight"
   log "auto_action|docs-sync|./bin/agent-maintain docs-sync"
 
@@ -550,6 +589,9 @@ cmd_auto() {
 
   if scope_has_harness_edits; then
     cmd_harness_maintain
+  fi
+  if scope_has_engineering_edits; then
+    cmd_engineering_maintain
   fi
 }
 
@@ -616,6 +658,9 @@ case "$command" in
     ;;
   harness | harness-maintain)
     cmd_harness_maintain "$@"
+    ;;
+  engineering | engineering-maintain)
+    cmd_engineering_maintain "$@"
     ;;
   memory)
     cmd_memory "$@"

@@ -1,6 +1,12 @@
 part of 'firebase_bootstrap_service.dart';
 
 FirebaseOptions? _resolveFirebaseOptions() {
+  final FirebaseOptions? override =
+      FirebaseBootstrapService.debugOptionsOverride;
+  if (override != null) {
+    return override;
+  }
+
   if (kIsWeb) {
     AppLogger.warning(
       'Firebase configuration has not been generated for web. Skip initialization.',
@@ -94,7 +100,7 @@ GoogleProvider? _createGoogleProvider() {
     );
     AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
     return null;
-  } on Exception catch (error, stackTrace) {
+  } on Object catch (error, stackTrace) {
     AppLogger.warning('Skipping Google sign-in configuration: $error');
     AppLogger.debug('Google provider configuration stack trace\n$stackTrace');
     return null;

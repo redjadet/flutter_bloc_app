@@ -35,6 +35,7 @@ Toolchain: Flutter 3.44.5 / Dart 3.12.2
 | Agent docs / map drift | `./tool/check_agent_knowledge_base.sh` |
 | AI failure-risk register | `bash tool/check_ai_failure_risk_register.sh` |
 | Harness max-score claim | [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md); `./bin/agent-maintain harness-maintain`; `./bin/agent-maintain closeout` |
+| Engineering max-score claim | [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md); `bash tool/check_engineering_quality_scorecard_gate.sh`; `bash tool/update_engineering_quality_badge.sh --check`; `./bin/agent-maintain closeout` |
 | Agent-memory / memory-compounding drift | `./tool/check_agent_memory_compounding.sh`; `./tool/agent_memory_auto_maintain.sh --if-changed --verify` |
 | Tracker contract | `bash tool/validate_task_trackers.sh` |
 | Host-template drift | `./tool/check_agent_asset_drift.sh` |

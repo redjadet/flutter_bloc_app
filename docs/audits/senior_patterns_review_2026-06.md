@@ -6,7 +6,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 **Grade key:** G Green · Y Yellow · R Red · — not scored
 
-**Last updated:** 2026-06-19 (program implementation)
+**Last updated:** 2026-07-09 (portfolio quality wave 4)
 
 ## Tier A
 
@@ -26,7 +26,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 | Feature | P3 | P4 | P5 | P6 | Notes |
 | --- | --- | --- | --- | --- | --- |
 | `chat` | G | G | Y | Y | PR-1C domain boundary; PR-2B sealed state |
-| `ai_decision_demo` | G | R | Y | Y | PR-1B DTOs; state Equatable legacy |
+| `ai_decision_demo` | G | G | Y | Y | PR-1B DTOs; P4 migrated to `@freezed` state (2026-07-09) |
 | `graphql_demo` | G | Y | G | G | PR-1B DTOs |
 | `scapes` | G | Y | Y | G | PR-3B typed load failure |
 | `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; Firestore maps deferred |
