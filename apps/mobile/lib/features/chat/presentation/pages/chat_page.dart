@@ -2,7 +2,6 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -21,6 +20,7 @@ part 'chat_page_actions.part.dart';
 class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
+    required this.backendAvailability,
 
     /// When non-null, overrides [SecretConfig.chatRenderDemoStrict] for the transport chip strict line (widget tests).
     this.renderTransportDemoStrictOverride,
@@ -28,6 +28,7 @@ class ChatPage extends StatefulWidget {
   });
 
   final ErrorNotificationService errorNotificationService;
+  final BackendAvailability backendAvailability;
 
   final bool? renderTransportDemoStrictOverride;
 
@@ -72,15 +73,9 @@ class _ChatPageState extends State<ChatPage> {
       body: Column(
         children: <Widget>[
           BackendDisabledBanner(
-            visible: () {
-              final BackendAvailability availability =
-                  getIt.isRegistered<BackendAvailability>()
-                  ? getIt<BackendAvailability>()
-                  : BackendAvailability.fromBootstrap();
-              return availability.webNoBackendMode &&
-                  (!availability.firebaseInitialized ||
-                      !availability.supabaseInitialized);
-            }(),
+            visible: widget.backendAvailability.webNoBackendMode &&
+                (!widget.backendAvailability.firebaseInitialized ||
+                    !widget.backendAvailability.supabaseInitialized),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(

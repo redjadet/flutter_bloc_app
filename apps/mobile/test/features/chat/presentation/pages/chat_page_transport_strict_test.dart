@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
@@ -49,6 +50,13 @@ void main() {
             ],
             child: ChatPage(
               errorNotificationService: _FakeErrorNotificationService(),
+              backendAvailability: const BackendAvailability(
+                firebaseInitialized: true,
+                supabaseInitialized: true,
+                webNoBackendMode: false,
+                allowWebLocalGuestAuth: false,
+                allowLocalChatFallback: false,
+              ),
               renderTransportDemoStrictOverride: true,
             ),
           ),

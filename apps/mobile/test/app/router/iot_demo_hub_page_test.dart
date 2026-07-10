@@ -3,6 +3,7 @@ import 'package:core/core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/router/pages/iot_demo_hub_page.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
@@ -118,6 +119,14 @@ class _TrackingClassicRepository extends MockClassicBluetoothRepository {
   }
 }
 
+const BackendAvailability _testBackendAvailability = BackendAvailability(
+  firebaseInitialized: true,
+  supabaseInitialized: true,
+  webNoBackendMode: false,
+  allowWebLocalGuestAuth: false,
+  allowLocalChatFallback: false,
+);
+
 void main() {
   setUp(() {
     if (!getIt.isRegistered<TimerService>()) {
@@ -154,7 +163,9 @@ void main() {
               value: syncCubit,
               child: BlocProvider<IotDemoCubit>.value(
                 value: demoCubit,
-                child: const IotDemoHubPage(),
+                child: IotDemoHubPage(
+                  backendAvailability: _testBackendAvailability,
+                ),
               ),
             ),
           ),
@@ -212,7 +223,9 @@ void main() {
               value: syncCubit,
               child: BlocProvider<IotDemoCubit>.value(
                 value: demoCubit,
-                child: const IotDemoHubPage(),
+                child: IotDemoHubPage(
+                  backendAvailability: _testBackendAvailability,
+                ),
               ),
             ),
           ),

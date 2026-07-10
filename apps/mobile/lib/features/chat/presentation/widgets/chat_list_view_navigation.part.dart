@@ -44,6 +44,7 @@ extension _ChatListViewNavigation on ChatListView {
               providers: providers,
               child: ChatPage(
                 errorNotificationService: errorNotificationService,
+                backendAvailability: backendAvailability,
               ),
             );
           },

@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -18,6 +19,7 @@ class ChatListPage extends StatefulWidget {
     required this.chatRepository,
     required this.historyRepository,
     required this.errorNotificationService,
+    required this.backendAvailability,
     this.renderOrchestrationHfTokenProvider,
     this.authSessionPort,
     this.renderOrchestrationDiagnostics,
@@ -28,6 +30,7 @@ class ChatListPage extends StatefulWidget {
   final ChatRepository chatRepository;
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
+  final BackendAvailability backendAvailability;
   final RenderOrchestrationHfTokenProvider? renderOrchestrationHfTokenProvider;
   final ChatAuthSessionPort? authSessionPort;
   final ChatRenderOrchestrationDiagnosticsPort? renderOrchestrationDiagnostics;
@@ -89,6 +92,7 @@ class _ChatListPageState extends State<ChatListPage> {
               renderOrchestrationDiagnostics:
                   widget.renderOrchestrationDiagnostics,
               errorNotificationService: widget.errorNotificationService,
+              backendAvailability: widget.backendAvailability,
             ),
           ),
         ),

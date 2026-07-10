@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_stat
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_sync_banner.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -161,6 +162,13 @@ void main() {
           ],
           child: ChatPage(
             errorNotificationService: _FakeErrorNotificationService(),
+            backendAvailability: const BackendAvailability(
+              firebaseInitialized: true,
+              supabaseInitialized: true,
+              webNoBackendMode: false,
+              allowWebLocalGuestAuth: false,
+              allowLocalChatFallback: false,
+            ),
           ),
         ),
       ),
@@ -365,6 +373,13 @@ Widget _wrapWithCubit(
       child: ChatPage(
         errorNotificationService:
             errorNotificationService ?? _FakeErrorNotificationService(),
+        backendAvailability: const BackendAvailability(
+          firebaseInitialized: true,
+          supabaseInitialized: true,
+          webNoBackendMode: false,
+          allowWebLocalGuestAuth: false,
+          allowLocalChatFallback: false,
+        ),
       ),
     ),
   );
