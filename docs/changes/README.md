@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-10_maintainability_followup_wave_closeout.md`](2026-07-10_maintainability_followup_wave_closeout.md): Follow-up wave closeout — program complete; soft-scan 0; audit re-grade; `staff_app_demo` deferred.
 - [`2026-07-10_maintainability_followup_h_counter_sealed_state.md`](2026-07-10_maintainability_followup_h_counter_sealed_state.md): Follow-up H — sealed CounterState + CounterViewData.
 - [`2026-07-10_maintainability_followup_g_ai_decision_typed_maps.md`](2026-07-10_maintainability_followup_g_ai_decision_typed_maps.md): Follow-up G — type ai_decision domain Map bags.
 - [`2026-07-10_maintainability_followup_f_chat_conversation_history.md`](2026-07-10_maintainability_followup_f_chat_conversation_history.md): Follow-up F — chat conversation history pure domain helpers.
