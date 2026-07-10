@@ -2,7 +2,6 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 
@@ -16,6 +15,7 @@ class DemoFirstChatRepository implements ChatRepository {
     required final ChatRepository compositeRepository,
     required this._isRenderAttemptedFirst,
     required this._isRenderStrict,
+    this._logOrchestrationDiagnostics,
   }) : _render = renderRepository,
        _composite = compositeRepository;
 
@@ -23,6 +23,7 @@ class DemoFirstChatRepository implements ChatRepository {
   final ChatRepository _composite;
   final bool Function() _isRenderAttemptedFirst;
   final bool Function() _isRenderStrict;
+  final void Function(String tag)? _logOrchestrationDiagnostics;
 
   @override
   ChatRemotePath? get chatRemoteTransportHint {
@@ -61,7 +62,7 @@ class DemoFirstChatRepository implements ChatRepository {
         '${renderFirst ? "render_then_maybe_composite" : "composite_only"}',
       );
       if (!renderFirst) {
-        logChatRenderOrchestrationIfDebug('demo_first_skipped_render');
+        _logOrchestrationDiagnostics?.call('demo_first_skipped_render');
       }
     }
     if (!renderFirst) {

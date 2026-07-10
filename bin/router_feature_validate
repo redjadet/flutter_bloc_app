@@ -10,10 +10,10 @@ source "$WORKSPACE_ROOT/tool/workspace_paths.sh"
 cd "$APP_ROOT"
 
 echo "1/3 Formatting..."
-dart format lib/app/router/ lib/core/router/ lib/features/auth/ lib/features/settings/ lib/features/iot_demo/
+dart format lib/app/router/ lib/features/auth/ lib/features/settings/ lib/features/iot_demo/
 
 echo "2/3 Analyzing..."
-dart analyze lib/app/router/ lib/core/router/ lib/features/
+dart analyze lib/app/router/ lib/features/
 
 echo "3/3 Running router + feature tests..."
 router_feature_stderr="$(mktemp -t router_feature_validate.XXXXXX.stderr)"
@@ -23,9 +23,8 @@ run_router_feature_tests() {
   flutter test \
     test/app/router/ \
     test/features/iot_demo/ \
-    test/core/router/app_routes_test.dart \
-    test/core/di/register_auth_services_test.dart \
-    test/core/di/injector_helpers_test.dart \
+    test/app/composition/register_auth_services_test.dart \
+    test/app/composition/injector_helpers_test.dart \
     test/sign_in_page_test.dart
 }
 

@@ -15,7 +15,7 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
           'Chat: RenderFastApi.sendMessage blocked at isRunnable gate '
           '(DemoFirst may fall through to composite).',
         );
-        logChatRenderOrchestrationIfDebug('render_repo_not_runnable');
+        _logOrchestrationDiagnostics?.call('render_repo_not_runnable');
       }
       throw const ChatRemoteFailureException(
         'Render orchestration is not configured.',

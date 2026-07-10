@@ -1,20 +1,30 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 
 /// Dev-only diagnostics for why Render/FastAPI orchestration may be skipped.
-void logChatRenderOrchestrationIfDebug(final String tag) {
+void logChatRenderOrchestrationIfDebug(
+  final String tag,
+  final bool Function() isFirebaseAuthRegistered, {
+  final bool? chatRenderDemoEnabledOverride,
+  final String? chatRenderDemoBaseUrlOverride,
+}) {
   if (!kDebugMode) {
     return;
   }
-  final bool enabled = SecretConfig.chatRenderDemoEnabled;
-  final String base = SecretConfig.chatRenderDemoBaseUrl.trim();
+  final bool enabled =
+      chatRenderDemoEnabledOverride ?? SecretConfig.chatRenderDemoEnabled;
+  final String base =
+      (chatRenderDemoBaseUrlOverride ?? SecretConfig.chatRenderDemoBaseUrl)
+          .trim();
   final bool isFastApiCloud = base.contains('fastapicloud');
   final bool surface = SecretConfig.isChatRenderDemoSurface;
-  final String? block = _renderOrchestrationNotRunnableReason();
+  final String? block = renderOrchestrationNotRunnableReason(
+    isFirebaseAuthRegistered,
+    chatRenderDemoEnabledOverride: chatRenderDemoEnabledOverride,
+    chatRenderDemoBaseUrlOverride: chatRenderDemoBaseUrlOverride,
+  );
   final bool runnable = block == null;
   AppLogger.info(
     'Chat: Render/FastAPI diag[$tag] '
@@ -26,11 +36,19 @@ void logChatRenderOrchestrationIfDebug(final String tag) {
 }
 
 /// When non-null, Render orchestration would not run (composite path only).
-String? _renderOrchestrationNotRunnableReason() {
-  if (!SecretConfig.chatRenderDemoEnabled) {
+String? renderOrchestrationNotRunnableReason(
+  final bool Function() isFirebaseAuthRegistered, {
+  final bool? chatRenderDemoEnabledOverride,
+  final String? chatRenderDemoBaseUrlOverride,
+}) {
+  final bool enabled =
+      chatRenderDemoEnabledOverride ?? SecretConfig.chatRenderDemoEnabled;
+  if (!enabled) {
     return 'CHAT_RENDER_DEMO_ENABLED=false';
   }
-  final String base = SecretConfig.chatRenderDemoBaseUrl.trim();
+  final String base =
+      (chatRenderDemoBaseUrlOverride ?? SecretConfig.chatRenderDemoBaseUrl)
+          .trim();
   if (base.isEmpty) {
     return 'CHAT_RENDER_DEMO_BASE_URL_empty';
   }
@@ -40,7 +58,7 @@ String? _renderOrchestrationNotRunnableReason() {
       return 'release_requires_https_base_url';
     }
   }
-  if (!getIt.isRegistered<FirebaseAuth>()) {
+  if (!isFirebaseAuthRegistered()) {
     return 'FirebaseAuth_not_registered';
   }
   if (Firebase.apps.isEmpty) {

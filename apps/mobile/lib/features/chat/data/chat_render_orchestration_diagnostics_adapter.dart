@@ -3,8 +3,13 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 
 class ChatRenderOrchestrationDiagnosticsAdapter
     implements ChatRenderOrchestrationDiagnosticsPort {
-  const ChatRenderOrchestrationDiagnosticsAdapter();
+  ChatRenderOrchestrationDiagnosticsAdapter({
+    required this._isFirebaseAuthRegistered,
+  });
+
+  final bool Function() _isFirebaseAuthRegistered;
 
   @override
-  void logIfDebug(final String tag) => logChatRenderOrchestrationIfDebug(tag);
+  void logIfDebug(final String tag) =>
+      logChatRenderOrchestrationIfDebug(tag, _isFirebaseAuthRegistered);
 }

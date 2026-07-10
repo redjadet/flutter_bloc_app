@@ -76,6 +76,8 @@ void _registerChatRenderOrchestrationServices() {
       callerAuth: getIt<RenderCallerAuthHeaderProvider>(),
       hfTokenProvider: getIt<RenderOrchestrationHfTokenProvider>(),
       isRunnable: _chatRenderOrchestrationRunnable,
+      logOrchestrationDiagnostics: (tag) =>
+          getIt<ChatRenderOrchestrationDiagnosticsPort>().logIfDebug(tag),
     ),
   );
   registerLazySingletonIfAbsent<DemoFirstChatRepository>(
@@ -84,6 +86,8 @@ void _registerChatRenderOrchestrationServices() {
       compositeRepository: getIt<CompositeChatRepository>(),
       isRenderAttemptedFirst: _chatRenderOrchestrationRunnable,
       isRenderStrict: () => SecretConfig.chatRenderDemoStrict,
+      logOrchestrationDiagnostics: (tag) =>
+          getIt<ChatRenderOrchestrationDiagnosticsPort>().logIfDebug(tag),
     ),
   );
 }

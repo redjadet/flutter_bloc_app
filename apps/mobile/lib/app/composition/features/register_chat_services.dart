@@ -106,6 +106,11 @@ void registerChatServices() {
           getIt<BackendAvailability>().allowLocalChatFallback,
     ),
   );
+  registerLazySingletonIfAbsent<ChatRenderOrchestrationDiagnosticsPort>(
+    () => ChatRenderOrchestrationDiagnosticsAdapter(
+      isFirebaseAuthRegistered: () => getIt.isRegistered<FirebaseAuth>(),
+    ),
+  );
   _registerChatRenderOrchestrationServices();
   registerLazySingletonIfAbsent<ChatHistoryRepository>(
     () => ChatLocalDataSource(hiveService: getIt<HiveService>()),
@@ -130,9 +135,6 @@ void registerChatServices() {
     ),
   );
   registerLazySingletonIfAbsent<ChatListRepository>(MockChatListRepository.new);
-  registerLazySingletonIfAbsent<ChatRenderOrchestrationDiagnosticsPort>(
-    () => const ChatRenderOrchestrationDiagnosticsAdapter(),
-  );
   registerLazySingletonIfAbsent<ChatAuthSessionPort>(
     () => ChatAuthSessionPortAdapter(
       firebaseAuthRepository: getIt<core_auth.AuthRepository>(),

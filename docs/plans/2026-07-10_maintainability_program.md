@@ -77,9 +77,11 @@ For each candidate, record before coding:
 | --- | --- | --- | --- | --- |
 | 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — done** ([change note](../changes/2026-07-10_maintainability_slice1_backend_availability_injection.md)) |
 | 2 | Presentation `SecretConfig` static reads (chat) | `chat_page.dart`, `chat_list_view_navigation.part.dart` read transport/model config | Low (badge + initial model only) | **Slice 2 — done** ([change note](../changes/2026-07-10_maintainability_slice2_secret_config_injection.md)) |
-| 3 | Presentation imports of app bootstrap/config beyond injected values | Other features may still import app config directly | Low–med | Follow Slice 2 if leftovers |
-| 4 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
-| 5 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
+| 3 | Presentation imports of app bootstrap/config beyond injected values | flavor, `FirebaseBootstrap`, `iot_ble_runtime_config`, calculator constants | Low–med | **Optional leftovers** — not in this PR |
+| 4 | Data-layer GetIt in chat render diagnostics | `chat_render_orchestration_diagnostics.dart` | Low | **Closed** ([follow-ups note](../changes/2026-07-10_maintainability_followups_router_validate_diagnostics.md)) |
+| 5 | `router_feature_validate` stale paths | `bin/router_feature_validate` after core→app move | Low | **Closed** ([follow-ups note](../changes/2026-07-10_maintainability_followups_router_validate_diagnostics.md)) |
+| 6 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
+| 7 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
 | — | `staff_app_demo` Firestore map P3 | Explicit out-of-scorecard | High churn | Deferred |
 
 ## Phase 0 — Branch hygiene + audit note
