@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_remote_failure_mapper.dart';
-import 'package:flutter_bloc_app/features/chat/data/chat_render_orchestration_diagnostics.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
@@ -33,6 +32,7 @@ class RenderFastApiChatRepository implements ChatRepository {
     required this._callerAuth,
     required this._hfTokenProvider,
     required this._isRunnable,
+    this._logOrchestrationDiagnostics,
   });
 
   final Dio _dio;
@@ -41,6 +41,7 @@ class RenderFastApiChatRepository implements ChatRepository {
   final RenderCallerAuthHeaderProvider _callerAuth;
   final RenderOrchestrationHfTokenProvider _hfTokenProvider;
   final bool Function() _isRunnable;
+  final void Function(String tag)? _logOrchestrationDiagnostics;
 
   @override
   ChatRemotePath? get chatRemoteTransportHint =>
