@@ -4,7 +4,7 @@
 > `superpowers:subagent-driven-development` (recommended) or
 > `superpowers:executing-plans`. Track progress with checkboxes below.
 
-**Status:** Slice 3 complete on branch; merge PR to close Rank 3.
+**Status:** Follow-up wave in progress. Slice 3 complete on branch; merge PR to close Rank 3.
 **Branch / worktree:** `codex/maintainability-slice3-config-inject`
 **Goal:** Improve extension seams without behavior changes or broad mechanical churn.
 **Architecture:** Evidence-led, one seam per PR. Prefer constructor/router injection and narrow ports over GetIt or concrete cross-feature imports in feature presentation. Composition stays in `apps/mobile/lib/app/`.
@@ -75,7 +75,7 @@ For each candidate, record before coding:
 
 | Rank | Seam | Evidence | Risk | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — done** ([change note](../changes/2026-07-10_maintainability_slice1_backend_availability_injection.md)) |
+| 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — done** ([change note](../changes/2026-07-10_maintainability_slice1_backend_availability_injection.md)); **Follow-up A — done** ([change note](../changes/2026-07-10_maintainability_followup_a_backend_banner_bool.md)) — presentation now takes `bool showBackendDisabledBanner`, zero `BackendAvailability` type imports remain in `features/*/presentation/**` |
 | 2 | Presentation `SecretConfig` static reads (chat) | `chat_page.dart`, `chat_list_view_navigation.part.dart` read transport/model config | Low (badge + initial model only) | **Slice 2 — done** ([change note](../changes/2026-07-10_maintainability_slice2_secret_config_injection.md)) |
 | 3 | Presentation imports of app bootstrap/config beyond injected values | flavor, `FirebaseBootstrap`, `iot_ble_runtime_config`, calculator constants | Low–med | **Slice 3 — done** ([change note](../changes/2026-07-10_maintainability_slice3_app_config_injection.md)) |
 | 4 | Data-layer GetIt in chat render diagnostics | `chat_render_orchestration_diagnostics.dart` | Low | **Closed** ([follow-ups note](../changes/2026-07-10_maintainability_followups_router_validate_diagnostics.md)) |

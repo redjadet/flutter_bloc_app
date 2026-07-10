@@ -6,11 +6,15 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
       final BackendAvailability availability = getIt<BackendAvailability>();
+      final bool showBackendDisabledBanner =
+          availability.showIotCloudBackendDisabledBanner;
       if (availability.webNoBackendMode) {
         return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
           create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
           init: (final cubit) => cubit.initialize(),
-          child: IotDemoHubPage(backendAvailability: availability),
+          child: IotDemoHubPage(
+            showBackendDisabledBanner: showBackendDisabledBanner,
+          ),
         );
       }
       return IotDemoAuthGate(
@@ -23,7 +27,9 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
         child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
           create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
           init: (final cubit) => cubit.initialize(),
-          child: IotDemoHubPage(backendAvailability: availability),
+          child: IotDemoHubPage(
+            showBackendDisabledBanner: showBackendDisabledBanner,
+          ),
         ),
       );
     },

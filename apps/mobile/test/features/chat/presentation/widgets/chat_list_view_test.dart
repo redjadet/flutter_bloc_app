@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
@@ -71,13 +70,7 @@ void main() {
               chatRepository: chatRepository,
               historyRepository: historyRepository,
               errorNotificationService: errorNotificationService,
-              backendAvailability: const BackendAvailability(
-                firebaseInitialized: true,
-                supabaseInitialized: true,
-                webNoBackendMode: false,
-                allowWebLocalGuestAuth: false,
-                allowLocalChatFallback: false,
-              ),
+              showBackendDisabledBanner: false,
               renderTransportDemoStrict: false,
               chatRenderDemoBaseUrl: '',
               initialHuggingfaceModel: null,
@@ -187,13 +180,7 @@ void main() {
                 chatRepository: chatRepository,
                 historyRepository: historyRepository,
                 errorNotificationService: errorNotificationService,
-                backendAvailability: const BackendAvailability(
-                  firebaseInitialized: true,
-                  supabaseInitialized: true,
-                  webNoBackendMode: false,
-                  allowWebLocalGuestAuth: false,
-                  allowLocalChatFallback: false,
-                ),
+                showBackendDisabledBanner: false,
                 renderTransportDemoStrict: false,
                 chatRenderDemoBaseUrl: '',
                 initialHuggingfaceModel: null,

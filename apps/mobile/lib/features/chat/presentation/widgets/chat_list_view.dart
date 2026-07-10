@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -31,7 +30,7 @@ class ChatListView extends StatelessWidget {
     required this.chatRepository,
     required this.historyRepository,
     required this.errorNotificationService,
-    required this.backendAvailability,
+    required this.showBackendDisabledBanner,
     required this.renderTransportDemoStrict,
     required this.chatRenderDemoBaseUrl,
     required this.initialHuggingfaceModel,
@@ -44,7 +43,7 @@ class ChatListView extends StatelessWidget {
   final ChatRepository chatRepository;
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
-  final BackendAvailability backendAvailability;
+  final bool showBackendDisabledBanner;
   final bool renderTransportDemoStrict;
   final String chatRenderDemoBaseUrl;
   final String? initialHuggingfaceModel;
