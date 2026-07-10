@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
+import 'package:flutter_bloc_app/features/scapes/domain/toggle_scape_favorite.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 
 /// Cubit for scapes list: load, grid/list toggle, and favorite toggle.
@@ -72,14 +73,11 @@ class ScapesCubit extends Cubit<ScapesState>
   }
 
   void toggleFavorite(final String scapeId) {
-    final updatedScapes = state.scapes.map((final scape) {
-      if (scape.id == scapeId) {
-        return scape.copyWith(isFavorite: !scape.isFavorite);
-      }
-      return scape;
-    }).toList();
-
-    emit(state.copyWith(scapes: updatedScapes));
+    emit(
+      state.copyWith(
+        scapes: toggleScapeFavorite(state.scapes, scapeId),
+      ),
+    );
   }
 
   void reload() {
