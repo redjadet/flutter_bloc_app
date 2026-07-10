@@ -4,7 +4,7 @@
 > `superpowers:subagent-driven-development` (recommended) or
 > `superpowers:executing-plans`. Track progress with checkboxes below.
 
-**Status:** Ready to execute after Phase 0 (rebase + audit note).
+**Status:** Slice 1 complete on branch; merge PR to close seam #1.
 **Branch / worktree:** `codex/maintainability-program`
 **Goal:** Improve extension seams without behavior changes or broad mechanical churn.
 **Architecture:** Evidence-led, one seam per PR. Prefer constructor/router injection and narrow ports over GetIt or concrete cross-feature imports in feature presentation. Composition stays in `apps/mobile/lib/app/`.
@@ -75,7 +75,7 @@ For each candidate, record before coding:
 
 | Rank | Seam | Evidence | Risk | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — next** |
+| 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — done** ([change note](../changes/2026-07-10_maintainability_slice1_backend_availability_injection.md)) |
 | 2 | Presentation imports of app bootstrap/config beyond injected values | Same files also import `injector.dart` + `backend_availability.dart` | Low–med | Follow Slice 1 if leftovers |
 | 3 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
 | 4 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
@@ -88,7 +88,7 @@ For each candidate, record before coding:
 - Modify: `docs/plans/2026-07-10_maintainability_program.md` (this file; baseline table)
 - Create/update: [`docs/audits/maintainability_baseline_review_2026-07-10.md`](../audits/maintainability_baseline_review_2026-07-10.md) after rebase if any row changes
 
-- [ ] **Step 0.1: Rebase on latest `origin/main`**
+- [x] **Step 0.1: Rebase on latest `origin/main`**
 
 ```bash
 cd /path/to/flutter_bloc_app-maintainability
@@ -100,7 +100,7 @@ git log --oneline -3
 
 Expected: branch tip includes current `origin/main` (as of plan authoring: `727aac57` or newer). Worktree clean except this plan.
 
-- [ ] **Step 0.2: Re-run baseline after rebase**
+- [x] **Step 0.2: Re-run baseline after rebase**
 
 ```bash
 bash tool/check_clean_architecture_imports.sh
@@ -113,7 +113,7 @@ rg -n "getIt\.|GetIt\." apps/mobile/lib/features --glob '*.dart' -g '!*_test.dar
 
 Expected: architecture scripts pass; `rg` still shows GetIt in chat + iot_demo presentation (Slice 1 targets). Update the evidence table if anything changed.
 
-- [ ] **Step 0.3: Confirm Slice 1 still ranks #1**
+- [x] **Step 0.3: Confirm Slice 1 still ranks #1**
 
 If a new hard cross-feature edge appeared on main, that becomes Slice 1 instead. Otherwise proceed.
 
@@ -153,7 +153,7 @@ derived at the composition root) into the widgets. Keep GetIt only in
 
 ### Task 1.1 — Failing / characterizing tests
 
-- [ ] **Step 1: Locate or add widget tests that cover `BackendDisabledBanner` on chat and IoT cloud**
+- [x] **Step 1: Locate or add widget tests that cover `BackendDisabledBanner` on chat and IoT cloud**
 
 Prefer extending existing page tests. Assert banner visibility from a
 **constructed** `BackendAvailability` (no `getIt` registration required).
@@ -180,7 +180,7 @@ testWidgets('ChatPage hides backend banner when backends available', (tester) as
 });
 ```
 
-- [ ] **Step 2: Run focused tests — expect fail or compile error until constructors exist**
+- [x] **Step 2: Run focused tests — expect fail or compile error until constructors exist**
 
 ```bash
 cd apps/mobile
@@ -189,7 +189,7 @@ flutter test test/features/chat test/features/iot_demo --reporter compact
 
 ### Task 1.2 — Implementation
 
-- [ ] **Step 3: Add required `backendAvailability` to `ChatPage` and replace GetIt block**
+- [x] **Step 3: Add required `backendAvailability` to `ChatPage` and replace GetIt block**
 
 ```dart
 class ChatPage extends StatefulWidget {
@@ -216,7 +216,7 @@ BackendDisabledBanner(
 
 Remove `import '.../injector.dart'` from this file if unused.
 
-- [ ] **Step 4: Same for `IotDemoCloudTab` + thread through `IotDemoHubPage`**
+- [x] **Step 4: Same for `IotDemoCloudTab` + thread through `IotDemoHubPage`**
 
 ```dart
 class IotDemoCloudTab extends StatefulWidget {
@@ -231,7 +231,7 @@ visible: widget.backendAvailability.webNoBackendMode &&
 
 Hub page takes `backendAvailability` and passes it into `IotDemoCloudTab`.
 
-- [ ] **Step 5: Wire router / route builders**
+- [x] **Step 5: Wire router / route builders**
 
 In `routes_demos.dart` / `routes_demos.part.dart` (where `ChatPage` and
 `IotDemoHubPage` are constructed), resolve once:
@@ -247,7 +247,7 @@ child: ChatPage(
 
 Same for hub construction paths that already read `BackendAvailability`.
 
-- [ ] **Step 6: Prove GetIt gone from those presentation files**
+- [x] **Step 6: Prove GetIt gone from those presentation files**
 
 ```bash
 rg -n "getIt\.|GetIt\." \
@@ -259,14 +259,14 @@ Expected: no matches.
 
 ### Task 1.3 — Verify + docs
 
-- [ ] **Step 7: Focused tests + analyze**
+- [x] **Step 7: Focused tests + analyze**
 
 ```bash
 cd apps/mobile && flutter test test/features/chat test/features/iot_demo --reporter compact
 ./tool/analyze.sh
 ```
 
-- [ ] **Step 8: Architecture + modularity + router**
+- [x] **Step 8: Architecture + modularity + router** (router script fails on missing `lib/core/router/`; `flutter test test/app/router/` green)
 
 ```bash
 bash tool/check_clean_architecture_imports.sh
@@ -275,13 +275,13 @@ bash tool/modular_metrics.sh --cross-feature-only
 ./bin/router_feature_validate
 ```
 
-- [ ] **Step 9: Change note**
+- [x] **Step 9: Change note**
 
 Create a short note under `docs/changes/` (date-prefixed), covering: problem,
 files, proof commands, behavior unchanged. Link it from this plan’s Slice 1
 status once the file exists.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add apps/mobile/lib/features/chat/presentation/pages/chat_page.dart \

@@ -10,7 +10,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
         return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
           create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
           init: (final cubit) => cubit.initialize(),
-          child: const IotDemoHubPage(),
+          child: IotDemoHubPage(backendAvailability: availability),
         );
       }
       return IotDemoAuthGate(
@@ -23,7 +23,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
         child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
           create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
           init: (final cubit) => cubit.initialize(),
-          child: const IotDemoHubPage(),
+          child: IotDemoHubPage(backendAvailability: availability),
         ),
       );
     },

@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
@@ -17,7 +16,9 @@ import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_p
 
 /// Cloud IoT tab content extracted for the IoT demo hub (no BLE imports).
 class IotDemoCloudTab extends StatefulWidget {
-  const IotDemoCloudTab({super.key});
+  const IotDemoCloudTab({required this.backendAvailability, super.key});
+
+  final BackendAvailability backendAvailability;
 
   @override
   State<IotDemoCloudTab> createState() => _IotDemoCloudTabState();
@@ -41,14 +42,9 @@ class _IotDemoCloudTabState extends State<IotDemoCloudTab> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         BackendDisabledBanner(
-          visible: () {
-            final BackendAvailability availability =
-                getIt.isRegistered<BackendAvailability>()
-                ? getIt<BackendAvailability>()
-                : BackendAvailability.fromBootstrap();
-            return availability.webNoBackendMode &&
-                !availability.supabaseInitialized;
-          }(),
+          visible:
+              widget.backendAvailability.webNoBackendMode &&
+              !widget.backendAvailability.supabaseInitialized,
         ),
         const _IotDemoFilterSection(),
         const Expanded(child: _IotDemoBodySection()),

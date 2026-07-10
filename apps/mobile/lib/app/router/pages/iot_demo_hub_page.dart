@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
@@ -19,7 +20,9 @@ enum IotDemoHubTab { cloud, ble }
 
 /// App-layer composition: Cloud IoT + local BLE tabs on `/iot-demo`.
 class IotDemoHubPage extends StatefulWidget {
-  const IotDemoHubPage({super.key});
+  const IotDemoHubPage({required this.backendAvailability, super.key});
+
+  final BackendAvailability backendAvailability;
 
   @override
   State<IotDemoHubPage> createState() => _IotDemoHubPageState();
@@ -72,7 +75,9 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
           const SizedBox(height: 8),
           Expanded(
             child: switch (_tab) {
-              IotDemoHubTab.cloud => const IotDemoCloudTab(),
+              IotDemoHubTab.cloud => IotDemoCloudTab(
+                backendAvailability: widget.backendAvailability,
+              ),
               IotDemoHubTab.ble =>
                 BlocProviderHelpers.withAsyncInit<IotBleCubit>(
                   create: () => IotBleCubit(

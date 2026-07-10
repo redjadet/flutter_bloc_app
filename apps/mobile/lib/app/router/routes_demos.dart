@@ -63,48 +63,56 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
-    builder: (final context, final state) => _withChatSupabaseSessionGate(
-      state: state,
-      child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
-        create: () => ChatSyncStatusCubit(
-          pendingRepository: getIt<PendingSyncRepository>(),
-        ),
-        init: (final cubit) => cubit.refresh(),
-        child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
-          create: _createChatCubit,
-          init: (final cubit) => cubit.loadHistory(),
-          child: ChatPage(
-            errorNotificationService: getIt<ErrorNotificationService>(),
+    builder: (final context, final state) {
+      final BackendAvailability availability = getIt<BackendAvailability>();
+      return _withChatSupabaseSessionGate(
+        state: state,
+        child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
+          create: () => ChatSyncStatusCubit(
+            pendingRepository: getIt<PendingSyncRepository>(),
+          ),
+          init: (final cubit) => cubit.refresh(),
+          child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
+            create: _createChatCubit,
+            init: (final cubit) => cubit.loadHistory(),
+            child: ChatPage(
+              errorNotificationService: getIt<ErrorNotificationService>(),
+              backendAvailability: availability,
+            ),
           ),
         ),
-      ),
-    ),
+      );
+    },
   ),
   GoRoute(
     path: AppRoutes.chatListPath,
     name: AppRoutes.chatList,
-    builder: (final context, final state) => _withChatSupabaseSessionGate(
-      state: state,
-      child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
-        create: () => ChatSyncStatusCubit(
-          pendingRepository: getIt<PendingSyncRepository>(),
+    builder: (final context, final state) {
+      final BackendAvailability availability = getIt<BackendAvailability>();
+      return _withChatSupabaseSessionGate(
+        state: state,
+        child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
+          create: () => ChatSyncStatusCubit(
+            pendingRepository: getIt<PendingSyncRepository>(),
+          ),
+          init: (final cubit) => cubit.refresh(),
+          child: ChatListPage(
+            repository: getIt<ChatListRepository>(),
+            chatRepository: getIt<ChatRepository>(),
+            historyRepository: getIt<ChatHistoryRepository>(),
+            renderOrchestrationHfTokenProvider:
+                getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+                ? getIt<RenderOrchestrationHfTokenProvider>()
+                : null,
+            authSessionPort: getIt<ChatAuthSessionPort>(),
+            renderOrchestrationDiagnostics:
+                getIt<ChatRenderOrchestrationDiagnosticsPort>(),
+            errorNotificationService: getIt<ErrorNotificationService>(),
+            backendAvailability: availability,
+          ),
         ),
-        init: (final cubit) => cubit.refresh(),
-        child: ChatListPage(
-          repository: getIt<ChatListRepository>(),
-          chatRepository: getIt<ChatRepository>(),
-          historyRepository: getIt<ChatHistoryRepository>(),
-          renderOrchestrationHfTokenProvider:
-              getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
-              ? getIt<RenderOrchestrationHfTokenProvider>()
-              : null,
-          authSessionPort: getIt<ChatAuthSessionPort>(),
-          renderOrchestrationDiagnostics:
-              getIt<ChatRenderOrchestrationDiagnosticsPort>(),
-          errorNotificationService: getIt<ErrorNotificationService>(),
-        ),
-      ),
-    ),
+      );
+    },
   ),
   GoRoute(
     path: AppRoutes.genuiDemoPath,
