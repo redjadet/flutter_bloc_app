@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 
 typedef AiDecisionPillBuilder =
     Widget Function({
@@ -26,20 +27,16 @@ Widget buildAiDecisionPill({
 
 Widget buildAiDecisionProofPanel({
   required final BuildContext context,
-  required final Map<String, dynamic> proof,
+  required final AiDecisionProof proof,
   required final AiDecisionPillBuilder pill,
 }) {
-  final rows = (proof['rule_trace'] as List<dynamic>? ?? const <dynamic>[])
-      .cast<Map<String, dynamic>>();
-  final inputSnapshot =
-      proof['input_snapshot'] as Map<String, dynamic>? ?? const {};
-  final thresholds =
-      proof['band_thresholds'] as Map<String, dynamic>? ?? const {};
-  final similarCase =
-      proof['similar_case'] as Map<String, dynamic>? ?? const {};
+  final List<AiDecisionProofRule> rows = proof.ruleTrace;
+  final Map<String, dynamic> inputSnapshot = proof.inputSnapshot;
+  final AiDecisionBandThresholds? thresholds = proof.bandThresholds;
+  final AiDecisionSimilarCase? similarCase = proof.similarCase;
   final colors = Theme.of(context).colorScheme;
-  final confidence = (proof['confidence'] as String?) ?? 'unknown';
-  final finalScore = (proof['final_score'] as num?)?.toDouble();
+  final String confidence = proof.confidence;
+  final double? finalScore = proof.finalScore;
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,15 +64,15 @@ Widget buildAiDecisionProofPanel({
           'Inputs: ${inputSnapshot.entries.map((final e) => '${e.key}=${e.value}').join(', ')}',
           style: Theme.of(context).textTheme.bodySmall,
         ),
-      if (thresholds.isNotEmpty)
+      if (thresholds != null && !thresholds.isEmpty)
         Text(
-          'Band thresholds: low ${thresholds['low']}, medium ${thresholds['medium']}, high ${thresholds['high']}; selected ${thresholds['selected']}',
+          'Band thresholds: low ${thresholds.low}, medium ${thresholds.medium}, high ${thresholds.high}; selected ${thresholds.selected}',
           style: Theme.of(context).textTheme.bodySmall,
         ),
-      if (similarCase.isNotEmpty)
+      if (similarCase != null)
         Text(
-          similarCase['used'] == true
-              ? 'Similar case: ${similarCase['case_id']} (${similarCase['label']}, similarity ${similarCase['similarity']})'
+          similarCase.used
+              ? 'Similar case: ${similarCase.caseId} (${similarCase.label}, similarity ${similarCase.similarity})'
               : 'Similar case: not used',
           style: Theme.of(context).textTheme.bodySmall,
         ),
@@ -92,20 +89,18 @@ Widget buildAiDecisionProofPanel({
             final limited = rows.take(8).toList(growable: false);
             return List<DataRow>.generate(limited.length, (final i) {
               final r = limited[i];
-              final passed = r['passed'] == true;
-              final contrib = (r['contribution'] as num?)?.toDouble() ?? 0.0;
               return DataRow.byIndex(
                 index: i,
                 cells: [
                   DataCell(
                     Icon(
-                      passed ? Icons.check_circle : Icons.cancel,
+                      r.passed ? Icons.check_circle : Icons.cancel,
                       size: 18,
-                      color: passed ? colors.tertiary : colors.outline,
+                      color: r.passed ? colors.tertiary : colors.outline,
                     ),
                   ),
-                  DataCell(Text('${r['label']}')),
-                  DataCell(Text(contrib.toStringAsFixed(2))),
+                  DataCell(Text(r.label)),
+                  DataCell(Text(r.contribution.toStringAsFixed(2))),
                 ],
               );
             });
@@ -114,12 +109,11 @@ Widget buildAiDecisionProofPanel({
       ),
       const SizedBox(height: 8),
       ...rows.take(8).map((final r) {
-        final passed = r['passed'] == true;
-        final evidence = (r['evidence'] as String?) ?? '';
+        final evidence = r.evidence ?? '';
         return Padding(
           padding: const EdgeInsets.only(bottom: 6),
           child: Text(
-            '${passed ? '✓' : '✗'} ${r['id']}: $evidence',
+            '${r.passed ? '✓' : '✗'} ${r.id}: $evidence',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         );

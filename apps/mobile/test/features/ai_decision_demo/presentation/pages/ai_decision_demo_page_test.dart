@@ -41,11 +41,11 @@ void main() {
       caseId: 'case_1',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {'name': 'A'},
-      business: const {'name': 'B'},
-      loan: const {'amount': 1000, 'purpose': 'Test'},
-      riskSignals: const [],
-      actions: const [],
+      applicant: const AiDecisionApplicant(name: 'A'),
+      business: const AiDecisionBusiness(name: 'B'),
+      loan: const AiDecisionLoan(amount: 1000, purpose: 'Test'),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 
@@ -100,11 +100,11 @@ void main() {
       caseId: 'case_1',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {'name': 'A'},
-      business: const {'name': 'B'},
-      loan: const {'amount': 1000, 'purpose': 'Test'},
-      riskSignals: const [],
-      actions: const [],
+      applicant: const AiDecisionApplicant(name: 'A'),
+      business: const AiDecisionBusiness(name: 'B'),
+      loan: const AiDecisionLoan(amount: 1000, purpose: 'Test'),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 
@@ -159,29 +159,29 @@ void main() {
       caseId: 'case_1',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {
-        'id': 'app_1',
-        'name': 'A',
-        'personal_credit_score': 610,
-        'prior_defaults': 1,
-      },
-      business: const {
-        'id': 'biz_1',
-        'name': 'B',
-        'industry': 'retail',
-        'monthly_revenue': 4000,
-        'age_months': 18,
-      },
-      loan: const {'amount': 15000, 'purpose': 'Inventory expansion'},
+      applicant: const AiDecisionApplicant(
+        id: 'app_1',
+        name: 'A',
+        personalCreditScore: 610,
+        priorDefaults: 1,
+      ),
+      business: const AiDecisionBusiness(
+        id: 'biz_1',
+        name: 'B',
+        industry: 'retail',
+        monthlyRevenue: 4000,
+        ageMonths: 18,
+      ),
+      loan: const AiDecisionLoan(amount: 15000, purpose: 'Inventory expansion'),
       riskSignals: const [
-        {
-          'key': 'prior_default',
-          'label': 'Prior defaults',
-          'value': '1',
-          'severity': 'high',
-        },
+        AiDecisionRiskSignal(
+          key: 'prior_default',
+          label: 'Prior defaults',
+          value: '1',
+          severity: 'high',
+        ),
       ],
-      actions: const [],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 
@@ -190,17 +190,17 @@ void main() {
       riskBand: 'high',
       recommendedAction: 'request_docs',
       rationale: 'Prior default and amount/revenue ratio drive the score.',
-      proof: const {
-        'rule_trace': [
-          {
-            'id': 'prior_defaults',
-            'label': 'Prior defaults',
-            'passed': true,
-            'contribution': 0.25,
-            'evidence': 'Applicant has 1 prior default',
-          },
+      proof: const AiDecisionProof(
+        ruleTrace: [
+          AiDecisionProofRule(
+            id: 'prior_defaults',
+            label: 'Prior defaults',
+            passed: true,
+            contribution: 0.25,
+            evidence: 'Applicant has 1 prior default',
+          ),
         ],
-      },
+      ),
     );
 
     when(repository.getCases).thenAnswer((_) async => queue);
@@ -257,11 +257,11 @@ void main() {
       caseId: 'case_with_long_name',
       status: 'new',
       createdAt: '2026-04-20T00:00:00Z',
-      applicant: const {'name': 'A'},
-      business: const {'name': 'Very Long Business Name'},
-      loan: const {'amount': 1000, 'purpose': 'Test'},
-      riskSignals: const [],
-      actions: const [],
+      applicant: const AiDecisionApplicant(name: 'A'),
+      business: const AiDecisionBusiness(name: 'Very Long Business Name'),
+      loan: const AiDecisionLoan(amount: 1000, purpose: 'Test'),
+      riskSignals: const <AiDecisionRiskSignal>[],
+      actions: const <AiDecisionActionRecord>[],
       latestDecision: null,
     );
 

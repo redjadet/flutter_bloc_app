@@ -173,12 +173,12 @@ class _AiDecisionCaseDetailSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         // check-ignore: demo copy (not localized yet)
-        Text('Applicant: ${detail.applicant['name']}'),
+        Text('Applicant: ${detail.applicant.name}'),
         // check-ignore: demo copy (not localized yet)
-        Text('Business: ${detail.business['name']}'),
+        Text('Business: ${detail.business.name}'),
         Text(
           // check-ignore: demo copy (not localized yet)
-          'Loan: ${detail.loan['amount']} • ${detail.loan['purpose']}',
+          'Loan: ${detail.loan.amount} • ${detail.loan.purpose}',
         ),
         const SizedBox(height: 8),
         // check-ignore: demo copy (not localized yet)
@@ -188,7 +188,7 @@ class _AiDecisionCaseDetailSection extends StatelessWidget {
             .map(
               (final signal) => Text(
                 // check-ignore: demo copy (not localized yet)
-                '- ${signal['label']}: ${signal['value']} (${signal['severity']})',
+                '- ${signal.label}: ${signal.value} (${signal.severity})',
               ),
             ),
         const SizedBox(height: 16),
@@ -390,7 +390,7 @@ class _AiDecisionActionHistorySection extends StatelessWidget {
             .map(
               (final action) =>
                   // check-ignore: demo copy (not localized yet)
-                  Text('- ${action['action_type']}: ${action['note']}'),
+                  Text('- ${action.actionType}: ${action.note}'),
             ),
       ],
     );
