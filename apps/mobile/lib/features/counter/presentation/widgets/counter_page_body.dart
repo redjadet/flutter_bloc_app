@@ -25,7 +25,7 @@ class CounterPageBody extends StatelessWidget {
   @override
   Widget build(final BuildContext context) =>
       TypeSafeBlocSelector<CounterCubit, CounterState, bool>(
-        selector: (final state) => state.status.isLoading,
+        selector: (final state) => state.isLoading,
         builder: (final context, final isLoading) => Skeletonizer(
           enabled: isLoading,
           effect: ShimmerEffect(

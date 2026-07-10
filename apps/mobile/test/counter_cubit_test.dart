@@ -1,4 +1,3 @@
-import 'package:design_system/design_system.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'dart:async';
 import 'dart:io';
@@ -97,16 +96,13 @@ void main() {
       () async {
         final CounterCubit cubit = createCubit();
         cubit.emit(
-          cubit.state.copyWith(
-            error: const CounterError.cannotGoBelowZero(),
-            status: ViewStatus.error,
-          ),
+          cubit.state.asFailure(const CounterError.cannotGoBelowZero()),
         );
 
         cubit.clearError();
 
         expect(cubit.state.error, isNull);
-        expect(cubit.state.status, ViewStatus.initial);
+        expect(cubit.state.isInitial, isTrue);
       },
     );
 
@@ -206,7 +202,7 @@ void main() {
 
         unawaited(cubit.loadInitial());
         await pumpEventQueue();
-        expect(cubit.state.status, ViewStatus.loading);
+        expect(cubit.state.isLoading, isTrue);
 
         await cubit.increment();
         expect(cubit.state.count, 1);
@@ -216,7 +212,7 @@ void main() {
         await pumpEventQueue();
 
         expect(cubit.state.count, 1);
-        expect(cubit.state.status, ViewStatus.success);
+        expect(cubit.state.isReady, isTrue);
       },
     );
 
@@ -237,7 +233,7 @@ void main() {
 
         unawaited(cubit.loadInitial());
         await pumpEventQueue();
-        expect(cubit.state.status, ViewStatus.loading);
+        expect(cubit.state.isLoading, isTrue);
 
         await cubit.decrement();
         expect(cubit.state.count, 0);
@@ -249,7 +245,7 @@ void main() {
 
         expect(cubit.state.count, 0);
         expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
-        expect(cubit.state.status, ViewStatus.initial);
+        expect(cubit.state.isError, isTrue);
       },
     );
 
@@ -371,7 +367,7 @@ void main() {
         await AppLogger.silenceAsync(() => cubit.increment());
 
         expect(cubit.state.count, 1);
-        expect(cubit.state.status, ViewStatus.error);
+        expect(cubit.state.isError, isTrue);
         expect(cubit.state.error?.type, CounterErrorType.saveError);
       },
     );
@@ -390,7 +386,7 @@ void main() {
       fakeTimer.tick(3);
 
       expect(cubit.state.countdownSeconds, countdownAfterError);
-      expect(cubit.state.status, ViewStatus.error);
+      expect(cubit.state.isError, isTrue);
 
       cubit.clearError();
 
@@ -408,12 +404,12 @@ void main() {
         await AppLogger.silenceAsync(() => cubit.decrement());
 
         expect(cubit.state.error?.type, CounterErrorType.cannotGoBelowZero);
-        expect(cubit.state.status, ViewStatus.initial);
+        expect(cubit.state.isError, isTrue);
 
         await cubit.increment();
 
         expect(cubit.state.error, isNull);
-        expect(cubit.state.status, ViewStatus.success);
+        expect(cubit.state.isReady, isTrue);
 
         final int countdown = cubit.state.countdownSeconds;
         fakeTimer.tick(1);

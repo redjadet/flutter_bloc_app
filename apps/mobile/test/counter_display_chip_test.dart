@@ -5,7 +5,6 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -47,12 +46,7 @@ void main() {
       );
 
       cubit.emit(
-        CounterState(
-          count: 2,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-          status: ViewStatus.success,
-        ),
+        CounterState.ready(data: CounterViewData(count: 2, lastChanged: DateTime.now(), countdownSeconds: 5)),
       );
       await tester.pump();
 
@@ -68,12 +62,7 @@ void main() {
       );
 
       cubit.emit(
-        CounterState(
-          count: 0,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-          status: ViewStatus.success,
-        ),
+        CounterState.ready(data: CounterViewData(count: 0, lastChanged: DateTime.now(), countdownSeconds: 5)),
       );
       await tester.pump();
 

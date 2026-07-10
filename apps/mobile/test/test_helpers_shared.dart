@@ -7,7 +7,6 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
@@ -82,7 +81,7 @@ Future<void> waitForCounterCubitsToLoad(
       sawCounterPage = true;
       final bool allLoaded = elements.every((final element) {
         final CounterCubit cubit = element.read<CounterCubit>();
-        return !cubit.state.status.isLoading;
+        return !cubit.state.isLoading;
       });
       if (allLoaded) {
         return;

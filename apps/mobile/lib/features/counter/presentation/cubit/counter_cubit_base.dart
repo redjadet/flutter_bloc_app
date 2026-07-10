@@ -9,7 +9,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     required this._timerService,
     required this._now,
     required this._initialLoadDelay,
-  }) : super(const CounterState(count: 0));
+  }) : super(const CounterState.initial());
 
   // Default auto-decrement interval used on load and manual interactions.
   static const int _defaultIntervalSeconds =
@@ -37,7 +37,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
 
   /// Starts the 1s countdown ticker if not already running.
   void _ensureCountdownTickerStarted() {
-    if (_isLifecyclePaused || state.count <= 0 || state.status.isError) {
+    if (_isLifecyclePaused || state.count <= 0 || state.isError) {
       return;
     }
     _countdownTicker ??= _timerService.periodic(_countdownTickInterval, () {
@@ -75,7 +75,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     if (_isLifecyclePaused) {
       return;
     }
-    if (nextState.count > 0 && !nextState.status.isError) {
+    if (nextState.count > 0 && !nextState.isError) {
       _ensureCountdownTickerStarted();
     } else {
       _stopCountdownTicker();
@@ -85,7 +85,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   /// Emits state with the provided countdown, preserving other fields.
   void _emitCountdown(final int seconds) {
     if (isClosed) return;
-    emit(state.copyWith(countdownSeconds: seconds));
+    emit(state.copyData(countdownSeconds: seconds));
   }
 
   /// Emits a success state normalizing countdown, timestamp and activation flag.
@@ -102,15 +102,14 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     final bool preserveError =
         existingError != null &&
         existingError.type != CounterErrorType.cannotGoBelowZero;
-    final CounterState next = state.copyWith(
+    final CounterViewData nextData = state.data.copyWith(
       count: count,
       lastChanged: timestamp ?? _now(),
-      lastSyncedAt: state.lastSyncedAt,
-      changeId: state.changeId,
       countdownSeconds: _defaultIntervalSeconds,
-      status: preserveError ? ViewStatus.error : ViewStatus.success,
-      error: preserveError ? existingError : null,
     );
+    final CounterState next = preserveError
+        ? CounterState.failure(data: nextData, error: existingError)
+        : CounterState.ready(data: nextData);
     emit(next);
     _syncTickerForState(next);
     return next;
@@ -132,7 +131,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
   void _resetCountdownAndHold() {
     if (isClosed) return;
     _pauseCountdownForOneTick = true;
-    final CounterState next = state.copyWith(
+    final CounterState next = state.copyData(
       countdownSeconds: _defaultIntervalSeconds,
     );
     emit(next);
@@ -174,7 +173,7 @@ abstract class _CounterCubitBase extends Cubit<CounterState>
     final CounterError counterError = error is CounterError
         ? error
         : errorFactory(originalError: error);
-    emit(state.copyWith(error: counterError, status: ViewStatus.error));
+    emit(state.asFailure(counterError));
     _stopCountdownTicker();
   }
 }

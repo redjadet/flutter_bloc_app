@@ -28,7 +28,7 @@ class _CountdownBarState extends State<CountdownBar> {
     return TypeSafeBlocSelector<CounterCubit, CounterState, _CountdownBarData>(
       selector: (final state) => _CountdownBarData(
         active: state.isAutoDecrementActive,
-        isLoading: state.status.isLoading,
+        isLoading: state.isLoading,
         countdownSeconds: state.countdownSeconds,
       ),
       builder: (final context, final data) {

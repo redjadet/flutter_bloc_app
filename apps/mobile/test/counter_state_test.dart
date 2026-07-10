@@ -1,10 +1,9 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_state.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('CounterState.success sets success status and preserves countdown', () {
+  test('CounterState.success sets ready status and preserves countdown', () {
     final DateTime now = DateTime(2024, 1, 1);
     final CounterState state = CounterState.success(
       count: 3,
@@ -13,14 +12,14 @@ void main() {
     );
 
     expect(state.count, 3);
-    expect(state.status, ViewStatus.success);
+    expect(state.isReady, isTrue);
     expect(state.lastChanged, now);
     expect(state.countdownSeconds, 7);
   });
 
-  test('CounterState exposes error property', () {
-    const CounterState state = CounterState(
-      count: 0,
+  test('CounterState.failure exposes error property', () {
+    const CounterState state = CounterState.failure(
+      data: CounterViewData(),
       error: CounterError.cannotGoBelowZero(),
     );
 
