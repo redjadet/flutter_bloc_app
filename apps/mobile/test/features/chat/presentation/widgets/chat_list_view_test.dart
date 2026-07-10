@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -155,7 +156,7 @@ void main() {
     testWidgets('should show error state when state is error', (tester) async {
       await tester.pumpWidget(
         createWidgetUnderTest(
-          initialState: const ChatListState.error(message: 'Network error'),
+          initialState: const ChatListState.error(failure: ChatFailure(message: 'Network error')),
         ),
       );
 
@@ -266,7 +267,7 @@ void main() {
 
       await tester.pumpWidget(
         createWidgetUnderTest(
-          initialState: const ChatListState.error(message: 'Network error'),
+          initialState: const ChatListState.error(failure: ChatFailure(message: 'Network error')),
         ),
       );
 

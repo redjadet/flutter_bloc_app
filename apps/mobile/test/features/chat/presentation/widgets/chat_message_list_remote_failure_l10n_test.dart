@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
@@ -36,8 +37,10 @@ void main() {
           messages: <ChatMessage>[
             ChatMessage(author: ChatAuthor.user, text: 'hi'),
           ],
-          error: 'opaque-upstream-detail',
-          remoteFailureL10nCode: 'token_missing',
+          failure: ChatFailure(
+            message: 'opaque-upstream-detail',
+            l10nCode: 'token_missing',
+          ),
         ),
       );
       await tester.pump();
@@ -68,8 +71,10 @@ void main() {
           messages: <ChatMessage>[
             ChatMessage(author: ChatAuthor.user, text: 'hi'),
           ],
-          error: 'rate limit detail',
-          remoteFailureL10nCode: 'rate_limited',
+          failure: ChatFailure(
+            message: 'rate limit detail',
+            l10nCode: 'rate_limited',
+          ),
         ),
       );
       await tester.pump();
@@ -100,8 +105,10 @@ void main() {
           messages: <ChatMessage>[
             ChatMessage(author: ChatAuthor.user, text: 'hi'),
           ],
-          error: 'opaque-forbidden-detail',
-          remoteFailureL10nCode: 'forbidden',
+          failure: ChatFailure(
+            message: 'opaque-forbidden-detail',
+            l10nCode: 'forbidden',
+          ),
         ),
       );
       await tester.pump();

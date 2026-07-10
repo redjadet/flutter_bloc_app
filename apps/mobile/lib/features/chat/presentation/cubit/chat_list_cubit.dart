@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
+import 'package:flutter_bloc_app/features/chat/domain/chat_failure.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_state.dart';
 
@@ -25,7 +26,7 @@ class ChatListCubit extends Cubit<ChatListState> {
       },
       onError: (final message) {
         if (isClosed) return;
-        emit(ChatListState.error(message: message));
+        emit(ChatListState.error(failure: ChatFailure(message: message)));
       },
       logContext: 'ChatListCubit.loadChatContacts',
     );
@@ -47,7 +48,7 @@ class ChatListCubit extends Cubit<ChatListState> {
       isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
-        emit(ChatListState.error(message: message));
+        emit(ChatListState.error(failure: ChatFailure(message: message)));
       },
       logContext: 'ChatListCubit.deleteContact',
     );
@@ -74,7 +75,7 @@ class ChatListCubit extends Cubit<ChatListState> {
       isAlive: () => !isClosed,
       onError: (final message) {
         if (isClosed) return;
-        emit(ChatListState.error(message: message));
+        emit(ChatListState.error(failure: ChatFailure(message: message)));
       },
       logContext: 'ChatListCubit.markAsRead',
     );

@@ -143,11 +143,10 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
           return;
         }
         final ChatState current = _state;
-        if (current.error != null) {
+        if (current.failure != null) {
           emitState(
             current.copyWith(
-              error: null,
-              remoteFailureL10nCode: null,
+              failure: null,
             ),
           );
         }
@@ -160,7 +159,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         final ChatState current = _state;
         emitState(
           current.copyWith(
-            error: current.error ?? message,
+            failure: current.failure ?? ChatFailure(message: message),
           ),
         );
       },
@@ -190,13 +189,17 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
     final ChatRemotePath? nextCompletion = clearLastCompletionTransport
         ? null
         : (lastCompletionTransport ?? current.lastCompletionTransport);
-    final String? nextError = clearError ? null : error ?? current.error;
-    final String? nextRemoteCode = clearError
-        ? null
-        : remoteFailureL10nCode ??
-              (error != null && error != current.error
-                  ? null
-                  : current.remoteFailureL10nCode);
+    final ChatFailure? nextFailure;
+    if (clearError) {
+      nextFailure = null;
+    } else if (error != null) {
+      nextFailure = ChatFailure(
+        message: error,
+        l10nCode: remoteFailureL10nCode,
+      );
+    } else {
+      nextFailure = current.failure;
+    }
     emitState(
       current.copyWith(
         history: history,
@@ -205,8 +208,7 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
         pastUserInputs: active.pastUserInputs,
         generatedResponses: active.generatedResponses,
         isLoading: isLoading ?? current.isLoading,
-        error: nextError,
-        remoteFailureL10nCode: nextRemoteCode,
+        failure: nextFailure,
         currentModel: currentModel ?? current.currentModel,
         runnableTransportHint: _repository.chatRemoteTransportHint,
         lastCompletionTransport: nextCompletion,
