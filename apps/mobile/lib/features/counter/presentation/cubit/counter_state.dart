@@ -18,6 +18,8 @@ abstract class CounterViewData with _$CounterViewData {
 
 @freezed
 sealed class CounterState with _$CounterState {
+  const CounterState._();
+
   const factory CounterState.initial({
     @Default(CounterViewData()) final CounterViewData data,
   }) = CounterInitial;
@@ -34,10 +36,6 @@ sealed class CounterState with _$CounterState {
     required final CounterViewData data,
     required final CounterError error,
   }) = CounterFailure;
-
-  const CounterState._();
-
-  static const int defaultCountdownSeconds = 5;
 
   /// Ready snapshot used by restoration / remote watch.
   factory CounterState.success({
@@ -58,7 +56,7 @@ sealed class CounterState with _$CounterState {
     ),
   );
 
-  CounterViewData get viewData => data;
+  static const int defaultCountdownSeconds = 5;
 
   int get count => data.count;
   DateTime? get lastChanged => data.lastChanged;
