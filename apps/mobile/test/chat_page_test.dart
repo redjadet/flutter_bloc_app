@@ -169,6 +169,8 @@ void main() {
               allowWebLocalGuestAuth: false,
               allowLocalChatFallback: false,
             ),
+            renderTransportDemoStrict: false,
+            chatRenderDemoBaseUrl: '',
           ),
         ),
       ),
@@ -380,6 +382,8 @@ Widget _wrapWithCubit(
           allowWebLocalGuestAuth: false,
           allowLocalChatFallback: false,
         ),
+        renderTransportDemoStrict: false,
+        chatRenderDemoBaseUrl: '',
       ),
     ),
   );

@@ -124,6 +124,8 @@ void main() {
             allowWebLocalGuestAuth: false,
             allowLocalChatFallback: false,
           ),
+          renderTransportDemoStrict: false,
+          chatRenderDemoBaseUrl: '',
         ),
       ),
     );

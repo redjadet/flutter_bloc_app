@@ -119,6 +119,8 @@ Future<void> _pumpChatPage(
         child: ChatPage(
           errorNotificationService: _FakeErrorNotificationService(),
           backendAvailability: backendAvailability,
+          renderTransportDemoStrict: false,
+          chatRenderDemoBaseUrl: '',
         ),
       ),
     ),

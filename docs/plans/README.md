@@ -13,7 +13,7 @@ This directory contains design notes and execution plans.
 
 ## Index
 
-- [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_program.md): **Ready to execute** — soft-seam program; Slice 1 injects `BackendAvailability` (chat + IoT cloud) after Phase 0 rebase.
+- [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_program.md): **In progress** — soft-seam program; Slices 1–2 done (BackendAvailability + chat SecretConfig injection); presentation GetIt scan empty.
 - [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md): **Agent runtime** — status, backlog, gates (~45 lines).
 - [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md): Historical build spec (waves 1A–2); load only when auditing.
 - [`ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md): Classification of prior AI/operability ideas vs this repo.
