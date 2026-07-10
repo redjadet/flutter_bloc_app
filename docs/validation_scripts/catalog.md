@@ -18,8 +18,10 @@ verifies the documented disk/checklist counts. After `CHECK_SCRIPTS` edits:
 `bash tool/fix_validation_docs.sh` then validate.
 
 **Not in `CHECK_SCRIPTS`:** checklist hooks include `check_regression_guards.sh`,
-`check_action_bar_layout.sh`, and `check_docs_gardening.sh`; agent/design lanes
-use `check_design_md.sh`. See [Supplemental scripts](#supplemental-and-adjacent-scripts)
+`check_action_bar_layout.sh`, `check_docs_gardening.sh`, and
+`check_engineering_quality_scorecard_gate.sh` (wiring with `--skip-coverage-proof`
+before Step 5; full measured proofs after coverage); agent/design lanes use
+`check_design_md.sh`. See [Supplemental scripts](#supplemental-and-adjacent-scripts)
 below.
 
 ## Existing Validation Scripts
