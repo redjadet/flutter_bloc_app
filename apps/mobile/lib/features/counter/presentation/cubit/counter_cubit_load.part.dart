@@ -83,11 +83,14 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
       return;
     }
     final CounterError? error = state.error;
-    final CounterState next = switch (error) {
-      null => state.asReady(),
-      CounterError.cannotGoBelowZero() => state.asInitial(),
-      final CounterError e => state.asFailure(e),
-    };
+    final CounterState next;
+    if (error == null) {
+      next = state.asReady();
+    } else if (error.type == CounterErrorType.cannotGoBelowZero) {
+      next = state.asInitial();
+    } else {
+      next = state.asFailure(error);
+    }
     emit(next);
     _syncTickerForState(next);
   }
