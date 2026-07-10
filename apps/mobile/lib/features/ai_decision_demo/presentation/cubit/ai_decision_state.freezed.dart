@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AiDecisionState {
 
- bool get isLoadingQueue; List<AiDecisionCaseSummary> get queue; String? get selectedCaseId; AiDecisionCaseDetail? get caseDetail; AiDecisionDecisionResult? get decision; String? get errorMessage; bool get isRunningDecision; bool get isSavingAction;
+ bool get isLoadingQueue; List<AiDecisionCaseSummary> get queue; String? get selectedCaseId; AiDecisionCaseDetail? get caseDetail; AiDecisionDecisionResult? get decision; AiDecisionFailure? get failure; bool get isRunningDecision; bool get isSavingAction;
 /// Create a copy of AiDecisionState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AiDecisionStateCopyWith<AiDecisionState> get copyWith => _$AiDecisionStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiDecisionState&&(identical(other.isLoadingQueue, isLoadingQueue) || other.isLoadingQueue == isLoadingQueue)&&const DeepCollectionEquality().equals(other.queue, queue)&&(identical(other.selectedCaseId, selectedCaseId) || other.selectedCaseId == selectedCaseId)&&(identical(other.caseDetail, caseDetail) || other.caseDetail == caseDetail)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.isRunningDecision, isRunningDecision) || other.isRunningDecision == isRunningDecision)&&(identical(other.isSavingAction, isSavingAction) || other.isSavingAction == isSavingAction));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AiDecisionState&&(identical(other.isLoadingQueue, isLoadingQueue) || other.isLoadingQueue == isLoadingQueue)&&const DeepCollectionEquality().equals(other.queue, queue)&&(identical(other.selectedCaseId, selectedCaseId) || other.selectedCaseId == selectedCaseId)&&(identical(other.caseDetail, caseDetail) || other.caseDetail == caseDetail)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isRunningDecision, isRunningDecision) || other.isRunningDecision == isRunningDecision)&&(identical(other.isSavingAction, isSavingAction) || other.isSavingAction == isSavingAction));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoadingQueue,const DeepCollectionEquality().hash(queue),selectedCaseId,caseDetail,decision,errorMessage,isRunningDecision,isSavingAction);
+int get hashCode => Object.hash(runtimeType,isLoadingQueue,const DeepCollectionEquality().hash(queue),selectedCaseId,caseDetail,decision,failure,isRunningDecision,isSavingAction);
 
 @override
 String toString() {
-  return 'AiDecisionState(isLoadingQueue: $isLoadingQueue, queue: $queue, selectedCaseId: $selectedCaseId, caseDetail: $caseDetail, decision: $decision, errorMessage: $errorMessage, isRunningDecision: $isRunningDecision, isSavingAction: $isSavingAction)';
+  return 'AiDecisionState(isLoadingQueue: $isLoadingQueue, queue: $queue, selectedCaseId: $selectedCaseId, caseDetail: $caseDetail, decision: $decision, failure: $failure, isRunningDecision: $isRunningDecision, isSavingAction: $isSavingAction)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $AiDecisionStateCopyWith<$Res>  {
   factory $AiDecisionStateCopyWith(AiDecisionState value, $Res Function(AiDecisionState) _then) = _$AiDecisionStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoadingQueue, List<AiDecisionCaseSummary> queue, String? selectedCaseId, AiDecisionCaseDetail? caseDetail, AiDecisionDecisionResult? decision, String? errorMessage, bool isRunningDecision, bool isSavingAction
+ bool isLoadingQueue, List<AiDecisionCaseSummary> queue, String? selectedCaseId, AiDecisionCaseDetail? caseDetail, AiDecisionDecisionResult? decision, AiDecisionFailure? failure, bool isRunningDecision, bool isSavingAction
 });
 
 
-
+$AiDecisionFailureCopyWith<$Res>? get failure;
 
 }
 /// @nodoc
@@ -62,20 +62,32 @@ class _$AiDecisionStateCopyWithImpl<$Res>
 
 /// Create a copy of AiDecisionState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoadingQueue = null,Object? queue = null,Object? selectedCaseId = freezed,Object? caseDetail = freezed,Object? decision = freezed,Object? errorMessage = freezed,Object? isRunningDecision = null,Object? isSavingAction = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoadingQueue = null,Object? queue = null,Object? selectedCaseId = freezed,Object? caseDetail = freezed,Object? decision = freezed,Object? failure = freezed,Object? isRunningDecision = null,Object? isSavingAction = null,}) {
   return _then(_self.copyWith(
 isLoadingQueue: null == isLoadingQueue ? _self.isLoadingQueue : isLoadingQueue // ignore: cast_nullable_to_non_nullable
 as bool,queue: null == queue ? _self.queue : queue // ignore: cast_nullable_to_non_nullable
 as List<AiDecisionCaseSummary>,selectedCaseId: freezed == selectedCaseId ? _self.selectedCaseId : selectedCaseId // ignore: cast_nullable_to_non_nullable
 as String?,caseDetail: freezed == caseDetail ? _self.caseDetail : caseDetail // ignore: cast_nullable_to_non_nullable
 as AiDecisionCaseDetail?,decision: freezed == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
-as AiDecisionDecisionResult?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,isRunningDecision: null == isRunningDecision ? _self.isRunningDecision : isRunningDecision // ignore: cast_nullable_to_non_nullable
+as AiDecisionDecisionResult?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as AiDecisionFailure?,isRunningDecision: null == isRunningDecision ? _self.isRunningDecision : isRunningDecision // ignore: cast_nullable_to_non_nullable
 as bool,isSavingAction: null == isSavingAction ? _self.isSavingAction : isSavingAction // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
+/// Create a copy of AiDecisionState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AiDecisionFailureCopyWith<$Res>? get failure {
+    if (_self.failure == null) {
+    return null;
+  }
 
+  return $AiDecisionFailureCopyWith<$Res>(_self.failure!, (value) {
+    return _then(_self.copyWith(failure: value));
+  });
+}
 }
 
 
@@ -154,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  String? errorMessage,  bool isRunningDecision,  bool isSavingAction)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  AiDecisionFailure? failure,  bool isRunningDecision,  bool isSavingAction)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AiDecisionState() when $default != null:
-return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.errorMessage,_that.isRunningDecision,_that.isSavingAction);case _:
+return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.failure,_that.isRunningDecision,_that.isSavingAction);case _:
   return orElse();
 
 }
@@ -175,10 +187,10 @@ return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  String? errorMessage,  bool isRunningDecision,  bool isSavingAction)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  AiDecisionFailure? failure,  bool isRunningDecision,  bool isSavingAction)  $default,) {final _that = this;
 switch (_that) {
 case _AiDecisionState():
-return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.errorMessage,_that.isRunningDecision,_that.isSavingAction);}
+return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.failure,_that.isRunningDecision,_that.isSavingAction);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -192,10 +204,10 @@ return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  String? errorMessage,  bool isRunningDecision,  bool isSavingAction)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoadingQueue,  List<AiDecisionCaseSummary> queue,  String? selectedCaseId,  AiDecisionCaseDetail? caseDetail,  AiDecisionDecisionResult? decision,  AiDecisionFailure? failure,  bool isRunningDecision,  bool isSavingAction)?  $default,) {final _that = this;
 switch (_that) {
 case _AiDecisionState() when $default != null:
-return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.errorMessage,_that.isRunningDecision,_that.isSavingAction);case _:
+return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.caseDetail,_that.decision,_that.failure,_that.isRunningDecision,_that.isSavingAction);case _:
   return null;
 
 }
@@ -207,7 +219,7 @@ return $default(_that.isLoadingQueue,_that.queue,_that.selectedCaseId,_that.case
 
 
 class _AiDecisionState implements AiDecisionState {
-  const _AiDecisionState({this.isLoadingQueue = true, final  List<AiDecisionCaseSummary> queue = const <AiDecisionCaseSummary>[], this.selectedCaseId, this.caseDetail, this.decision, this.errorMessage, this.isRunningDecision = false, this.isSavingAction = false}): _queue = queue;
+  const _AiDecisionState({this.isLoadingQueue = true, final  List<AiDecisionCaseSummary> queue = const <AiDecisionCaseSummary>[], this.selectedCaseId, this.caseDetail, this.decision, this.failure, this.isRunningDecision = false, this.isSavingAction = false}): _queue = queue;
   
 
 @override@JsonKey() final  bool isLoadingQueue;
@@ -221,7 +233,7 @@ class _AiDecisionState implements AiDecisionState {
 @override final  String? selectedCaseId;
 @override final  AiDecisionCaseDetail? caseDetail;
 @override final  AiDecisionDecisionResult? decision;
-@override final  String? errorMessage;
+@override final  AiDecisionFailure? failure;
 @override@JsonKey() final  bool isRunningDecision;
 @override@JsonKey() final  bool isSavingAction;
 
@@ -235,16 +247,16 @@ _$AiDecisionStateCopyWith<_AiDecisionState> get copyWith => __$AiDecisionStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiDecisionState&&(identical(other.isLoadingQueue, isLoadingQueue) || other.isLoadingQueue == isLoadingQueue)&&const DeepCollectionEquality().equals(other._queue, _queue)&&(identical(other.selectedCaseId, selectedCaseId) || other.selectedCaseId == selectedCaseId)&&(identical(other.caseDetail, caseDetail) || other.caseDetail == caseDetail)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.isRunningDecision, isRunningDecision) || other.isRunningDecision == isRunningDecision)&&(identical(other.isSavingAction, isSavingAction) || other.isSavingAction == isSavingAction));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AiDecisionState&&(identical(other.isLoadingQueue, isLoadingQueue) || other.isLoadingQueue == isLoadingQueue)&&const DeepCollectionEquality().equals(other._queue, _queue)&&(identical(other.selectedCaseId, selectedCaseId) || other.selectedCaseId == selectedCaseId)&&(identical(other.caseDetail, caseDetail) || other.caseDetail == caseDetail)&&(identical(other.decision, decision) || other.decision == decision)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isRunningDecision, isRunningDecision) || other.isRunningDecision == isRunningDecision)&&(identical(other.isSavingAction, isSavingAction) || other.isSavingAction == isSavingAction));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoadingQueue,const DeepCollectionEquality().hash(_queue),selectedCaseId,caseDetail,decision,errorMessage,isRunningDecision,isSavingAction);
+int get hashCode => Object.hash(runtimeType,isLoadingQueue,const DeepCollectionEquality().hash(_queue),selectedCaseId,caseDetail,decision,failure,isRunningDecision,isSavingAction);
 
 @override
 String toString() {
-  return 'AiDecisionState(isLoadingQueue: $isLoadingQueue, queue: $queue, selectedCaseId: $selectedCaseId, caseDetail: $caseDetail, decision: $decision, errorMessage: $errorMessage, isRunningDecision: $isRunningDecision, isSavingAction: $isSavingAction)';
+  return 'AiDecisionState(isLoadingQueue: $isLoadingQueue, queue: $queue, selectedCaseId: $selectedCaseId, caseDetail: $caseDetail, decision: $decision, failure: $failure, isRunningDecision: $isRunningDecision, isSavingAction: $isSavingAction)';
 }
 
 
@@ -255,11 +267,11 @@ abstract mixin class _$AiDecisionStateCopyWith<$Res> implements $AiDecisionState
   factory _$AiDecisionStateCopyWith(_AiDecisionState value, $Res Function(_AiDecisionState) _then) = __$AiDecisionStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoadingQueue, List<AiDecisionCaseSummary> queue, String? selectedCaseId, AiDecisionCaseDetail? caseDetail, AiDecisionDecisionResult? decision, String? errorMessage, bool isRunningDecision, bool isSavingAction
+ bool isLoadingQueue, List<AiDecisionCaseSummary> queue, String? selectedCaseId, AiDecisionCaseDetail? caseDetail, AiDecisionDecisionResult? decision, AiDecisionFailure? failure, bool isRunningDecision, bool isSavingAction
 });
 
 
-
+@override $AiDecisionFailureCopyWith<$Res>? get failure;
 
 }
 /// @nodoc
@@ -272,21 +284,33 @@ class __$AiDecisionStateCopyWithImpl<$Res>
 
 /// Create a copy of AiDecisionState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoadingQueue = null,Object? queue = null,Object? selectedCaseId = freezed,Object? caseDetail = freezed,Object? decision = freezed,Object? errorMessage = freezed,Object? isRunningDecision = null,Object? isSavingAction = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoadingQueue = null,Object? queue = null,Object? selectedCaseId = freezed,Object? caseDetail = freezed,Object? decision = freezed,Object? failure = freezed,Object? isRunningDecision = null,Object? isSavingAction = null,}) {
   return _then(_AiDecisionState(
 isLoadingQueue: null == isLoadingQueue ? _self.isLoadingQueue : isLoadingQueue // ignore: cast_nullable_to_non_nullable
 as bool,queue: null == queue ? _self._queue : queue // ignore: cast_nullable_to_non_nullable
 as List<AiDecisionCaseSummary>,selectedCaseId: freezed == selectedCaseId ? _self.selectedCaseId : selectedCaseId // ignore: cast_nullable_to_non_nullable
 as String?,caseDetail: freezed == caseDetail ? _self.caseDetail : caseDetail // ignore: cast_nullable_to_non_nullable
 as AiDecisionCaseDetail?,decision: freezed == decision ? _self.decision : decision // ignore: cast_nullable_to_non_nullable
-as AiDecisionDecisionResult?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,isRunningDecision: null == isRunningDecision ? _self.isRunningDecision : isRunningDecision // ignore: cast_nullable_to_non_nullable
+as AiDecisionDecisionResult?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as AiDecisionFailure?,isRunningDecision: null == isRunningDecision ? _self.isRunningDecision : isRunningDecision // ignore: cast_nullable_to_non_nullable
 as bool,isSavingAction: null == isSavingAction ? _self.isSavingAction : isSavingAction // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
 
+/// Create a copy of AiDecisionState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AiDecisionFailureCopyWith<$Res>? get failure {
+    if (_self.failure == null) {
+    return null;
+  }
 
+  return $AiDecisionFailureCopyWith<$Res>(_self.failure!, (value) {
+    return _then(_self.copyWith(failure: value));
+  });
+}
 }
 
 // dart format on

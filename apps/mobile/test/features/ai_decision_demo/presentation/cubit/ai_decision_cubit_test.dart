@@ -99,8 +99,8 @@ void main() {
         isA<AiDecisionState>()
             .having((final s) => s.isLoadingQueue, 'loading', false)
             .having(
-              (final s) => s.errorMessage,
-              'errorMessage',
+              (final s) => s.failure?.displayMessage,
+              'failure.displayMessage',
               'Network connection error. Please check your internet connection.',
             ),
       ],
