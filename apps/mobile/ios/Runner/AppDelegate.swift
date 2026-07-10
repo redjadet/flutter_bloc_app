@@ -206,17 +206,6 @@ import FirebaseAppCheck
       )
       return
     }
-    if presenter.presentedViewController != nil {
-      result(
-        FlutterError(
-          code: "already_presenting",
-          message: "A view controller is already presenting.",
-          details: nil
-        )
-      )
-      return
-    }
-
     let activity = UIActivityViewController(
       activityItems: [text],
       applicationActivities: nil
