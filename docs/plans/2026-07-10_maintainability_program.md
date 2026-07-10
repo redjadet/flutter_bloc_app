@@ -4,8 +4,8 @@
 > `superpowers:subagent-driven-development` (recommended) or
 > `superpowers:executing-plans`. Track progress with checkboxes below.
 
-**Status:** Slice 1 complete on branch; merge PR to close seam #1.
-**Branch / worktree:** `codex/maintainability-program`
+**Status:** Slice 2 complete on branch; merge PR to close seam #2.
+**Branch / worktree:** `codex/maintainability-slice2-secret-config`
 **Goal:** Improve extension seams without behavior changes or broad mechanical churn.
 **Architecture:** Evidence-led, one seam per PR. Prefer constructor/router injection and narrow ports over GetIt or concrete cross-feature imports in feature presentation. Composition stays in `apps/mobile/lib/app/`.
 **Tech stack:** Flutter Cubit/BLoC, GetIt (composition root only), GoRouter, existing modularity scripts.
@@ -76,9 +76,10 @@ For each candidate, record before coding:
 | Rank | Seam | Evidence | Risk | Status |
 | --- | --- | --- | --- | --- |
 | 1 | Presentation GetIt → `BackendAvailability` | `chat_page.dart`, `iot_demo_cloud_tab.dart` resolve via `getIt` / `fromBootstrap()` | Low (banner visibility only) | **Slice 1 — done** ([change note](../changes/2026-07-10_maintainability_slice1_backend_availability_injection.md)) |
-| 2 | Presentation imports of app bootstrap/config beyond injected values | Same files also import `injector.dart` + `backend_availability.dart` | Low–med | Follow Slice 1 if leftovers |
-| 3 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
-| 4 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
+| 2 | Presentation `SecretConfig` static reads (chat) | `chat_page.dart`, `chat_list_view_navigation.part.dart` read transport/model config | Low (badge + initial model only) | **Slice 2 — done** ([change note](../changes/2026-07-10_maintainability_slice2_secret_config_injection.md)) |
+| 3 | Presentation imports of app bootstrap/config beyond injected values | Other features may still import app config directly | Low–med | Follow Slice 2 if leftovers |
+| 4 | Yellow pattern leftovers (chat / ai_decision P5–P6, scapes P4–P5) | [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Med | Optional later; not scorecard-blocking |
+| 5 | Counter `ViewStatus` dual channel | Documented acceptable skip in senior-patterns | Low | Skip unless product asks |
 | — | `staff_app_demo` Firestore map P3 | Explicit out-of-scorecard | High churn | Deferred |
 
 ## Phase 0 — Branch hygiene + audit note
@@ -309,9 +310,9 @@ EOF
 - Focused tests + analyze + modularity scripts green.
 - One PR, one seam.
 
-## Later slices (do not start until Slice 1 merges)
+## Later slices (do not start until Slice 2 merges)
 
-1. Re-scan soft seams (`rg getIt` under `features/*/presentation`).
+1. Re-scan soft seams (`rg getIt` and `rg SecretConfig` under `features/*/presentation`).
 2. Optionally tackle one yellow pattern leftover with its own plan section + tests.
 3. Stop when soft scan is empty or only deferred/out-of-scope items remain.
 
@@ -335,6 +336,6 @@ EOF
 ## Definition of done (program)
 
 - Phase 0 complete on rebased branch.
-- ≥1 soft seam closed with tests + change note (Slice 1).
-- Soft-scan `rg` for `getIt` under `features/*/presentation` shows no remaining Slice-1-class hits, or remaining hits are listed as deferred with owner + reason.
+- ≥2 soft seams closed with tests + change notes (Slices 1–2).
+- Soft-scan `rg` for `getIt` under `features/*/presentation` shows **zero** hits; chat presentation has no `SecretConfig` reads.
 - Plans README status line reflects “in progress” → “slice N done” as PRs merge.

@@ -33,7 +33,7 @@ extension _ChatListViewNavigation on ChatListView {
                         authSessionPort: authSessionPort,
                         renderOrchestrationDiagnostics:
                             renderOrchestrationDiagnostics,
-                        initialModel: SecretConfig.huggingfaceModel,
+                        initialModel: initialHuggingfaceModel,
                       );
                       unawaited(cubit.loadHistory());
                       return cubit;
@@ -45,6 +45,8 @@ extension _ChatListViewNavigation on ChatListView {
               child: ChatPage(
                 errorNotificationService: errorNotificationService,
                 backendAvailability: backendAvailability,
+                renderTransportDemoStrict: renderTransportDemoStrict,
+                chatRenderDemoBaseUrl: chatRenderDemoBaseUrl,
               ),
             );
           },

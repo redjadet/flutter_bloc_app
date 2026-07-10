@@ -78,6 +78,8 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
             child: ChatPage(
               errorNotificationService: getIt<ErrorNotificationService>(),
               backendAvailability: availability,
+              renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
+              chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
             ),
           ),
         ),
@@ -109,6 +111,9 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
                 getIt<ChatRenderOrchestrationDiagnosticsPort>(),
             errorNotificationService: getIt<ErrorNotificationService>(),
             backendAvailability: availability,
+            renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
+            chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
+            initialHuggingfaceModel: SecretConfig.huggingfaceModel,
           ),
         ),
       );

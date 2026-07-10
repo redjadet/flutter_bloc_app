@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
-import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -21,16 +20,15 @@ class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
     required this.backendAvailability,
-
-    /// When non-null, overrides [SecretConfig.chatRenderDemoStrict] for the transport chip strict line (widget tests).
-    this.renderTransportDemoStrictOverride,
+    required this.renderTransportDemoStrict,
+    required this.chatRenderDemoBaseUrl,
     super.key,
   });
 
   final ErrorNotificationService errorNotificationService;
   final BackendAvailability backendAvailability;
-
-  final bool? renderTransportDemoStrictOverride;
+  final bool renderTransportDemoStrict;
+  final String chatRenderDemoBaseUrl;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -50,9 +48,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    final bool renderDemoStrict =
-        widget.renderTransportDemoStrictOverride ??
-        SecretConfig.chatRenderDemoStrict;
+    final bool renderDemoStrict = widget.renderTransportDemoStrict;
     final bool hasHistory = context.selectState<ChatCubit, ChatState, bool>(
       selector: (final state) => state.hasHistory,
     );
@@ -108,7 +104,7 @@ class _ChatPageState extends State<ChatPage> {
                         }
                         final bool showFastApiCloudBadge =
                             transport == ChatRemotePath.renderOrchestration &&
-                            SecretConfig.chatRenderDemoBaseUrl.contains(
+                            widget.chatRenderDemoBaseUrl.contains(
                               'fastapicloud',
                             );
                         if (!showFastApiCloudBadge) {

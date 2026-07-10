@@ -20,6 +20,9 @@ class ChatListPage extends StatefulWidget {
     required this.historyRepository,
     required this.errorNotificationService,
     required this.backendAvailability,
+    required this.renderTransportDemoStrict,
+    required this.chatRenderDemoBaseUrl,
+    required this.initialHuggingfaceModel,
     this.renderOrchestrationHfTokenProvider,
     this.authSessionPort,
     this.renderOrchestrationDiagnostics,
@@ -31,6 +34,9 @@ class ChatListPage extends StatefulWidget {
   final ChatHistoryRepository historyRepository;
   final ErrorNotificationService errorNotificationService;
   final BackendAvailability backendAvailability;
+  final bool renderTransportDemoStrict;
+  final String chatRenderDemoBaseUrl;
+  final String? initialHuggingfaceModel;
   final RenderOrchestrationHfTokenProvider? renderOrchestrationHfTokenProvider;
   final ChatAuthSessionPort? authSessionPort;
   final ChatRenderOrchestrationDiagnosticsPort? renderOrchestrationDiagnostics;
@@ -93,6 +99,9 @@ class _ChatListPageState extends State<ChatListPage> {
                   widget.renderOrchestrationDiagnostics,
               errorNotificationService: widget.errorNotificationService,
               backendAvailability: widget.backendAvailability,
+              renderTransportDemoStrict: widget.renderTransportDemoStrict,
+              chatRenderDemoBaseUrl: widget.chatRenderDemoBaseUrl,
+              initialHuggingfaceModel: widget.initialHuggingfaceModel,
             ),
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_fastapi_cloud_badge.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -17,7 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets(
-    'ChatPage shows strict line under orchestration when strict override is true',
+    'ChatPage shows strict line under orchestration when strict is true',
     (final WidgetTester tester) async {
       final ChatCubit cubit = ChatCubit(
         repository: _OrchestrationHintRepository(),
@@ -57,7 +58,8 @@ void main() {
                 allowWebLocalGuestAuth: false,
                 allowLocalChatFallback: false,
               ),
-              renderTransportDemoStrictOverride: true,
+              renderTransportDemoStrict: true,
+              chatRenderDemoBaseUrl: '',
             ),
           ),
         ),
@@ -70,6 +72,121 @@ void main() {
       );
       expect(
         find.text(AppLocalizationsEn().chatRenderStrictMode),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'ChatPage shows FastAPI Cloud badge when base URL contains fastapicloud',
+    (final WidgetTester tester) async {
+      final ChatCubit cubit = ChatCubit(
+        repository: _OrchestrationHintRepository(),
+        historyRepository: _StubHistoryRepository(),
+        supportedModels: const <String>['openai/gpt-oss-20b'],
+      );
+      addTearDown(cubit.close);
+      cubit.emit(
+        cubit.state.copyWith(
+          runnableTransportHint: ChatRemotePath.renderOrchestration,
+        ),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (final BuildContext context, final Widget? child) =>
+              buildAppMixScope(
+                context,
+                child: child ?? const SizedBox.shrink(),
+              ),
+          home: MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider<ChatCubit>.value(value: cubit),
+              BlocProvider<SyncStatusCubit>.value(
+                value: _buildSyncStatusCubit(),
+              ),
+            ],
+            child: ChatPage(
+              errorNotificationService: _FakeErrorNotificationService(),
+              backendAvailability: const BackendAvailability(
+                firebaseInitialized: true,
+                supabaseInitialized: true,
+                webNoBackendMode: false,
+                allowWebLocalGuestAuth: false,
+                allowLocalChatFallback: false,
+              ),
+              renderTransportDemoStrict: false,
+              chatRenderDemoBaseUrl:
+                  'https://render-chat-api.fastapicloud.dev',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChatFastApiCloudBadge), findsOneWidget);
+      expect(
+        find.text(AppLocalizationsEn().chatFastApiCloudBadgeLabel),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets(
+    'ChatPage hides FastAPI Cloud badge when base URL lacks fastapicloud',
+    (final WidgetTester tester) async {
+      final ChatCubit cubit = ChatCubit(
+        repository: _OrchestrationHintRepository(),
+        historyRepository: _StubHistoryRepository(),
+        supportedModels: const <String>['openai/gpt-oss-20b'],
+      );
+      addTearDown(cubit.close);
+      cubit.emit(
+        cubit.state.copyWith(
+          runnableTransportHint: ChatRemotePath.renderOrchestration,
+        ),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (final BuildContext context, final Widget? child) =>
+              buildAppMixScope(
+                context,
+                child: child ?? const SizedBox.shrink(),
+              ),
+          home: MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider<ChatCubit>.value(value: cubit),
+              BlocProvider<SyncStatusCubit>.value(
+                value: _buildSyncStatusCubit(),
+              ),
+            ],
+            child: ChatPage(
+              errorNotificationService: _FakeErrorNotificationService(),
+              backendAvailability: const BackendAvailability(
+                firebaseInitialized: true,
+                supabaseInitialized: true,
+                webNoBackendMode: false,
+                allowWebLocalGuestAuth: false,
+                allowLocalChatFallback: false,
+              ),
+              renderTransportDemoStrict: false,
+              chatRenderDemoBaseUrl: 'https://render-chat-api.example.com',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChatFastApiCloudBadge), findsNothing);
+      expect(
+        find.text(AppLocalizationsEn().chatTransportRenderOrchestration),
         findsOneWidget,
       );
     },
