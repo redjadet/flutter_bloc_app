@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
@@ -55,6 +58,8 @@ class _CameraGalleryPageBody extends StatelessWidget {
         children: [
           _PreviewSection(theme: theme, colors: colors),
           SizedBox(height: context.responsiveGapL),
+          const _ProcessingControls(),
+          SizedBox(height: context.responsiveGapS),
           const _ActionButtons(),
           SizedBox(height: context.responsiveGapS),
           _ErrorSection(l10n: context.l10n, colors: colors),

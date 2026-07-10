@@ -3,20 +3,27 @@ import 'dart:convert';
 import 'package:app_shared_flutter/app_shared_flutter.dart' show AppLogger;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_processing_camera_gallery_service.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_processor.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
   ImagePickerCameraGalleryRepository({
     final ImagePicker? picker,
     final bool Function()? isAndroid,
+    final ImageProcessingCameraGalleryService? processingService,
   }) : _picker = picker ?? ImagePicker(),
-       _isAndroid = isAndroid ?? _defaultIsAndroid;
+       _isAndroid = isAndroid ?? _defaultIsAndroid,
+       _processingService =
+           processingService ?? const ImageProcessingCameraGalleryService();
 
   final ImagePicker _picker;
   final bool Function() _isAndroid;
+  final ImageProcessingCameraGalleryService _processingService;
 
   static bool _defaultIsAndroid() =>
       defaultTargetPlatform == TargetPlatform.android;
@@ -34,7 +41,12 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
     required final bool isCamera,
   }) async {
     try {
-      final XFile? file = await _picker.pickImage(source: source);
+      final XFile? file = await _picker.pickImage(
+        source: source,
+        maxWidth: ImageProcessor.maxPreviewWidth.toDouble(),
+        maxHeight: ImageProcessor.maxPreviewHeight.toDouble(),
+        imageQuality: 88,
+      );
       if (file == null) return const CameraGalleryResult.cancelled();
 
       final String path = file.path;
@@ -181,6 +193,12 @@ class ImagePickerCameraGalleryRepository implements CameraGalleryRepository {
       );
     }
   }
+
+  @override
+  Future<CameraGalleryResult> processImage({
+    required final ImageProcessingFilter filter,
+    required final String sourcePath,
+  }) => _processingService.process(filter: filter, sourcePath: sourcePath);
 
   static String? _extractLostPath(final LostDataResponse response) {
     final String directPath = response.file?.path ?? '';

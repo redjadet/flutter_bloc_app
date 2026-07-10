@@ -152,6 +152,54 @@ void main() {
     expect(lessonZero, findsOneWidget);
   });
 
+  testWidgets('opens Camera & Gallery from Example on web', (tester) async {
+    // Reconfigure after setUp so gallery pick is deterministic on web.
+    await configureIntegrationTestDependencies(
+      overrideCameraGalleryRepository: true,
+    );
+    await launchTestApp(tester);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions during launch.',
+    );
+
+    await pumpUntilFound(tester, find.byTooltip('Open example page'));
+    await tapAndPump(tester, find.byTooltip('Open example page'));
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after opening Example.',
+    );
+    await pumpUntilFound(tester, find.text('Example Page'));
+
+    final Finder cameraGalleryButton = find.byKey(
+      const ValueKey('example-camera-gallery-button'),
+    );
+    await tester.scrollUntilVisible(
+      cameraGalleryButton,
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tapAndPump(tester, cameraGalleryButton);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'No layout/runtime exceptions after opening Camera & Gallery.',
+    );
+    await pumpUntilFound(tester, find.text('Camera & Gallery'));
+    expect(find.text('Take photo'), findsOneWidget);
+    expect(find.text('Pick from gallery'), findsOneWidget);
+
+    await tapAndPump(tester, find.text('Pick from gallery'));
+    await pumpUntilFound(
+      tester,
+      find.byKey(const ValueKey('camera-gallery-processing-controls')),
+    );
+    expect(find.text('On-device processing'), findsOneWidget);
+    expect(find.text('Grayscale'), findsOneWidget);
+  });
+
   testWidgets('opens staff app demo shell on web after sign-in', (
     tester,
   ) async {

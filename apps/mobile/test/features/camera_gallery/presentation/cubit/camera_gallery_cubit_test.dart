@@ -2,22 +2,25 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _StubCameraGalleryRepository implements CameraGalleryRepository {
-  _StubCameraGalleryRepository({
+  const _StubCameraGalleryRepository({
     this.pickFromCameraResult,
     this.pickFromGalleryResult,
     this.retrieveLostImageResult,
+    this.processImageResult,
     this.throwOnRetrieveLostImage = false,
   });
 
   final CameraGalleryResult? pickFromCameraResult;
   final CameraGalleryResult? pickFromGalleryResult;
   final CameraGalleryResult? retrieveLostImageResult;
+  final CameraGalleryResult? processImageResult;
   final bool throwOnRetrieveLostImage;
 
   @override
@@ -35,6 +38,12 @@ class _StubCameraGalleryRepository implements CameraGalleryRepository {
     }
     return retrieveLostImageResult;
   }
+
+  @override
+  Future<CameraGalleryResult> processImage({
+    required final ImageProcessingFilter filter,
+    required final String sourcePath,
+  }) async => processImageResult ?? const CameraGalleryResult.cancelled();
 }
 
 void main() {
@@ -51,6 +60,7 @@ void main() {
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
           status: ViewStatus.success,
+          sourceImagePath: '/tmp/photo.jpg',
           imagePath: '/tmp/photo.jpg',
           errorKey: null,
         ),
@@ -69,6 +79,7 @@ void main() {
         const CameraGalleryState(status: ViewStatus.loading, errorKey: null),
         const CameraGalleryState(
           status: ViewStatus.success,
+          sourceImagePath: '/tmp/picked.jpg',
           imagePath: '/tmp/picked.jpg',
           errorKey: null,
         ),
@@ -136,6 +147,7 @@ void main() {
       ),
       seed: () => const CameraGalleryState(
         status: ViewStatus.success,
+        sourceImagePath: '/tmp/photo.jpg',
         imagePath: '/tmp/photo.jpg',
       ),
       act: (final cubit) => cubit.clearSelection(),
@@ -155,6 +167,7 @@ void main() {
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.success,
+          sourceImagePath: '/tmp/recovered.jpg',
           imagePath: '/tmp/recovered.jpg',
           errorKey: null,
         ),
@@ -172,6 +185,96 @@ void main() {
       expect: () => <CameraGalleryState>[
         const CameraGalleryState(
           status: ViewStatus.error,
+          errorKey: CameraGalleryErrorKeys.generic,
+        ),
+      ],
+    );
+
+    blocTest<CameraGalleryCubit, CameraGalleryState>(
+      'applyFilter emits processed image while retaining original source',
+      build: () => CameraGalleryCubit(
+        repository: _StubCameraGalleryRepository(
+          processImageResult: const CameraGalleryResult.success(
+            'data:image/jpeg;base64,processed',
+          ),
+        ),
+      ),
+      seed: () => const CameraGalleryState(
+        status: ViewStatus.success,
+        sourceImagePath: '/tmp/original.jpg',
+        imagePath: '/tmp/original.jpg',
+      ),
+      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
+      expect: () => <CameraGalleryState>[
+        const CameraGalleryState(
+          status: ViewStatus.loading,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: '/tmp/original.jpg',
+        ),
+        const CameraGalleryState(
+          status: ViewStatus.success,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: 'data:image/jpeg;base64,processed',
+          selectedFilter: ImageProcessingFilter.sepia,
+        ),
+      ],
+    );
+
+    blocTest<CameraGalleryCubit, CameraGalleryState>(
+      'applyFilter cancelled keeps source selection',
+      build: () => CameraGalleryCubit(
+        repository: const _StubCameraGalleryRepository(
+          processImageResult: CameraGalleryResult.cancelled(),
+        ),
+      ),
+      seed: () => const CameraGalleryState(
+        status: ViewStatus.success,
+        sourceImagePath: '/tmp/original.jpg',
+        imagePath: '/tmp/original.jpg',
+        selectedFilter: ImageProcessingFilter.grayscale,
+      ),
+      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.invert),
+      expect: () => <CameraGalleryState>[
+        const CameraGalleryState(
+          status: ViewStatus.loading,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: '/tmp/original.jpg',
+          selectedFilter: ImageProcessingFilter.grayscale,
+        ),
+        const CameraGalleryState(
+          status: ViewStatus.success,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: '/tmp/original.jpg',
+          selectedFilter: ImageProcessingFilter.grayscale,
+        ),
+      ],
+    );
+
+    blocTest<CameraGalleryCubit, CameraGalleryState>(
+      'applyFilter failure keeps source and surfaces error',
+      build: () => CameraGalleryCubit(
+        repository: const _StubCameraGalleryRepository(
+          processImageResult: CameraGalleryResult.failure(
+            errorKey: CameraGalleryErrorKeys.generic,
+          ),
+        ),
+      ),
+      seed: () => const CameraGalleryState(
+        status: ViewStatus.success,
+        sourceImagePath: '/tmp/original.jpg',
+        imagePath: '/tmp/original.jpg',
+      ),
+      act: (final cubit) => cubit.applyFilter(ImageProcessingFilter.sepia),
+      expect: () => <CameraGalleryState>[
+        const CameraGalleryState(
+          status: ViewStatus.loading,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: '/tmp/original.jpg',
+        ),
+        const CameraGalleryState(
+          status: ViewStatus.error,
+          sourceImagePath: '/tmp/original.jpg',
+          imagePath: '/tmp/original.jpg',
           errorKey: CameraGalleryErrorKeys.generic,
         ),
       ],

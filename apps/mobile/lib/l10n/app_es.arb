@@ -1425,6 +1425,11 @@
   "cameraGalleryGenericError": "Algo salió mal. Por favor, inténtelo de nuevo.",
   "cameraGalleryFileTooLarge": "Este archivo es demasiado grande. Elija una imagen más pequeña.",
   "cameraGalleryCameraUnavailable": "La cámara no está disponible. Use un dispositivo real o elija de la galería.",
+  "cameraGalleryProcessingLabel": "Procesamiento en el dispositivo",
+  "cameraGalleryFilterOriginal": "Original",
+  "cameraGalleryFilterGrayscale": "Escala de grises",
+  "cameraGalleryFilterSepia": "Sepia",
+  "cameraGalleryFilterInvert": "Invertir",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

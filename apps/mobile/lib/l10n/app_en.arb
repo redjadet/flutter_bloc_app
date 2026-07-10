@@ -2185,6 +2185,11 @@
   "@cameraGalleryCameraUnavailable": {
     "description": "Shown when camera cannot be used (e.g. iOS Simulator has no camera)"
   },
+  "cameraGalleryProcessingLabel": "On-device processing",
+  "cameraGalleryFilterOriginal": "Original",
+  "cameraGalleryFilterGrayscale": "Grayscale",
+  "cameraGalleryFilterSepia": "Sepia",
+  "cameraGalleryFilterInvert": "Invert",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

@@ -1425,6 +1425,11 @@
   "cameraGalleryGenericError": "Une erreur s'est produite. Veuillez réessayer.",
   "cameraGalleryFileTooLarge": "Ce fichier est trop volumineux. Choisissez une image plus petite.",
   "cameraGalleryCameraUnavailable": "La caméra n'est pas disponible. Utilisez un appareil réel ou choisissez dans la galerie.",
+  "cameraGalleryProcessingLabel": "Traitement sur l’appareil",
+  "cameraGalleryFilterOriginal": "Original",
+  "cameraGalleryFilterGrayscale": "Niveaux de gris",
+  "cameraGalleryFilterSepia": "Sépia",
+  "cameraGalleryFilterInvert": "Inverser",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"

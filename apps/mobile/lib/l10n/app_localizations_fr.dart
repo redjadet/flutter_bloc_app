@@ -1798,6 +1798,21 @@ class AppLocalizationsFr extends AppLocalizations {
       'La caméra n\'est pas disponible. Utilisez un appareil réel ou choisissez dans la galerie.';
 
   @override
+  String get cameraGalleryProcessingLabel => 'Traitement sur l’appareil';
+
+  @override
+  String get cameraGalleryFilterOriginal => 'Original';
+
+  @override
+  String get cameraGalleryFilterGrayscale => 'Niveaux de gris';
+
+  @override
+  String get cameraGalleryFilterSepia => 'Sépia';
+
+  @override
+  String get cameraGalleryFilterInvert => 'Inverser';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override

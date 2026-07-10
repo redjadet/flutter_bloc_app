@@ -1772,6 +1772,21 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kamera kullanılamıyor. Gerçek cihaz kullanın veya galeriden seçin.';
 
   @override
+  String get cameraGalleryProcessingLabel => 'Cihaz üzerinde işleme';
+
+  @override
+  String get cameraGalleryFilterOriginal => 'Orijinal';
+
+  @override
+  String get cameraGalleryFilterGrayscale => 'Gri tonlama';
+
+  @override
+  String get cameraGalleryFilterSepia => 'Sepya';
+
+  @override
+  String get cameraGalleryFilterInvert => 'Ters çevir';
+
+  @override
   String get scapesPageTitle => 'Library / Scapes';
 
   @override

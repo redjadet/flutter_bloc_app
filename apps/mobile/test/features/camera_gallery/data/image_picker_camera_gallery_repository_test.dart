@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/data/image_picker_camera_gallery_repository.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/data/image_processor.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _MockImagePicker extends Mock implements ImagePicker {}
+
+Future<XFile?> _pickImageStub({
+  required final ImageSource source,
+  required final _MockImagePicker picker,
+}) => picker.pickImage(
+  source: source,
+  maxWidth: ImageProcessor.maxPreviewWidth.toDouble(),
+  maxHeight: ImageProcessor.maxPreviewHeight.toDouble(),
+  imageQuality: 88,
+);
 
 void main() {
   group('ImagePickerCameraGalleryRepository', () {
@@ -24,7 +35,9 @@ void main() {
     test(
       'maps no available camera to cameraUnavailable for camera pick',
       () async {
-        when(() => picker.pickImage(source: ImageSource.camera)).thenThrow(
+        when(
+          () => _pickImageStub(source: ImageSource.camera, picker: picker),
+        ).thenThrow(
           PlatformException(
             code: 'no_available_camera',
             message: 'No cameras available',
@@ -43,7 +56,9 @@ void main() {
     );
 
     test('maps camera_not_available code to cameraUnavailable', () async {
-      when(() => picker.pickImage(source: ImageSource.camera)).thenThrow(
+      when(
+        () => _pickImageStub(source: ImageSource.camera, picker: picker),
+      ).thenThrow(
         PlatformException(
           code: 'camera_not_available',
           message: 'Camera is not available',
@@ -61,7 +76,9 @@ void main() {
     });
 
     test('maps denied camera permission to permissionDenied key', () async {
-      when(() => picker.pickImage(source: ImageSource.camera)).thenThrow(
+      when(
+        () => _pickImageStub(source: ImageSource.camera, picker: picker),
+      ).thenThrow(
         PlatformException(
           code: 'camera_access_denied',
           message: 'The user did not allow camera access.',
@@ -82,7 +99,7 @@ void main() {
       'maps no-camera generic exception text to cameraUnavailable',
       () async {
         when(
-          () => picker.pickImage(source: ImageSource.camera),
+          () => _pickImageStub(source: ImageSource.camera, picker: picker),
         ).thenThrow(Exception('Camera is not available on this simulator'));
 
         final CameraGalleryResult result = await repository.pickFromCamera();
@@ -98,7 +115,7 @@ void main() {
 
     test('returns cancelled when camera pick returns null', () async {
       when(
-        () => picker.pickImage(source: ImageSource.camera),
+        () => _pickImageStub(source: ImageSource.camera, picker: picker),
       ).thenAnswer((_) async => null);
 
       final CameraGalleryResult result = await repository.pickFromCamera();
@@ -108,7 +125,7 @@ void main() {
 
     test('returns success path when camera pick succeeds', () async {
       when(
-        () => picker.pickImage(source: ImageSource.camera),
+        () => _pickImageStub(source: ImageSource.camera, picker: picker),
       ).thenAnswer((_) async => XFile('/tmp/camera.jpg'));
 
       final CameraGalleryResult result = await repository.pickFromCamera();
@@ -117,7 +134,9 @@ void main() {
     });
 
     test('maps gallery permission denial to permissionDenied key', () async {
-      when(() => picker.pickImage(source: ImageSource.gallery)).thenThrow(
+      when(
+        () => _pickImageStub(source: ImageSource.gallery, picker: picker),
+      ).thenThrow(
         PlatformException(
           code: 'photo_access_denied',
           message: 'The user did not allow photo library access.',
@@ -137,7 +156,9 @@ void main() {
     test(
       'maps gallery generic platform exception to generic failure',
       () async {
-        when(() => picker.pickImage(source: ImageSource.gallery)).thenThrow(
+        when(
+          () => _pickImageStub(source: ImageSource.gallery, picker: picker),
+        ).thenThrow(
           PlatformException(
             code: 'unknown_error',
             message: 'Something went wrong',
@@ -158,7 +179,7 @@ void main() {
 
     test('maps gallery generic exception to generic failure', () async {
       when(
-        () => picker.pickImage(source: ImageSource.gallery),
+        () => _pickImageStub(source: ImageSource.gallery, picker: picker),
       ).thenThrow(Exception('gallery unavailable'));
 
       final CameraGalleryResult result = await repository.pickFromGallery();
@@ -174,7 +195,7 @@ void main() {
 
     test('returns cancelled when gallery pick returns null', () async {
       when(
-        () => picker.pickImage(source: ImageSource.gallery),
+        () => _pickImageStub(source: ImageSource.gallery, picker: picker),
       ).thenAnswer((_) async => null);
 
       final CameraGalleryResult result = await repository.pickFromGallery();

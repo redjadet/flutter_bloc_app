@@ -3199,6 +3199,36 @@ abstract class AppLocalizations {
   /// **'Camera is not available. Use a real device or pick from gallery.'**
   String get cameraGalleryCameraUnavailable;
 
+  /// No description provided for @cameraGalleryProcessingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device processing'**
+  String get cameraGalleryProcessingLabel;
+
+  /// No description provided for @cameraGalleryFilterOriginal.
+  ///
+  /// In en, this message translates to:
+  /// **'Original'**
+  String get cameraGalleryFilterOriginal;
+
+  /// No description provided for @cameraGalleryFilterGrayscale.
+  ///
+  /// In en, this message translates to:
+  /// **'Grayscale'**
+  String get cameraGalleryFilterGrayscale;
+
+  /// No description provided for @cameraGalleryFilterSepia.
+  ///
+  /// In en, this message translates to:
+  /// **'Sepia'**
+  String get cameraGalleryFilterSepia;
+
+  /// No description provided for @cameraGalleryFilterInvert.
+  ///
+  /// In en, this message translates to:
+  /// **'Invert'**
+  String get cameraGalleryFilterInvert;
+
   /// Title for the scapes page
   ///
   /// In en, this message translates to:

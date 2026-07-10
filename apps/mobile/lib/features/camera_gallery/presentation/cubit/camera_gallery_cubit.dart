@@ -5,6 +5,7 @@ import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
+import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:utilities/utilities.dart';
 
@@ -41,12 +42,7 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
 
   void _emitLoading() {
     if (isClosed) return;
-    emit(
-      state.copyWith(
-        status: ViewStatus.loading,
-        errorKey: null,
-      ),
-    );
+    emit(state.copyWith(status: ViewStatus.loading, errorKey: null));
   }
 
   void _applyPickResult(final CameraGalleryResult result) {
@@ -56,26 +52,18 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
         emit(
           state.copyWith(
             status: ViewStatus.success,
+            sourceImagePath: path,
             imagePath: path,
+            selectedFilter: ImageProcessingFilter.original,
             errorKey: null,
           ),
         );
       },
       cancelled: () {
-        emit(
-          state.copyWith(
-            status: ViewStatus.initial,
-            errorKey: null,
-          ),
-        );
+        emit(state.copyWith(status: ViewStatus.initial, errorKey: null));
       },
       failure: (final errorKey, final _) {
-        emit(
-          state.copyWith(
-            status: ViewStatus.error,
-            errorKey: errorKey,
-          ),
-        );
+        emit(state.copyWith(status: ViewStatus.error, errorKey: errorKey));
       },
     );
   }
@@ -110,6 +98,46 @@ class CameraGalleryCubit extends Cubit<CameraGalleryState> {
       _applyPickResult(result);
     } on Object catch (error, stackTrace) {
       AppLogger.error('CameraGalleryCubit.pickFromGallery', error, stackTrace);
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
+      emit(
+        state.copyWith(
+          status: ViewStatus.error,
+          errorKey: CameraGalleryErrorKeys.generic,
+        ),
+      );
+    }
+  }
+
+  Future<void> applyFilter(final ImageProcessingFilter filter) async {
+    final String? sourcePath = state.sourceImagePath;
+    if (isClosed || sourcePath == null || sourcePath.isEmpty) return;
+    final int requestId = _pickGuard.next();
+    _emitLoading();
+    try {
+      final CameraGalleryResult result = await _repository.processImage(
+        filter: filter,
+        sourcePath: sourcePath,
+      );
+      if (isClosed || !_pickGuard.isCurrent(requestId)) return;
+      result.when(
+        success: (final processedPath) {
+          emit(
+            state.copyWith(
+              status: ViewStatus.success,
+              imagePath: processedPath,
+              selectedFilter: filter,
+              errorKey: null,
+            ),
+          );
+        },
+        // Processing never cancels like a picker; keep selection if it does.
+        cancelled: () =>
+            emit(state.copyWith(status: ViewStatus.success, errorKey: null)),
+        failure: (final errorKey, final _) =>
+            emit(state.copyWith(status: ViewStatus.error, errorKey: errorKey)),
+      );
+    } on Object catch (error, stackTrace) {
+      AppLogger.error('CameraGalleryCubit.applyFilter', error, stackTrace);
       if (isClosed || !_pickGuard.isCurrent(requestId)) return;
       emit(
         state.copyWith(

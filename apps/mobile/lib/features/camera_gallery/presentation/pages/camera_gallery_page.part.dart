@@ -4,10 +4,7 @@
 part of 'camera_gallery_page.dart';
 
 class _PreviewSection extends StatelessWidget {
-  const _PreviewSection({
-    required this.theme,
-    required this.colors,
-  });
+  const _PreviewSection({required this.theme, required this.colors});
 
   final ThemeData theme;
   final ColorScheme colors;
@@ -67,10 +64,7 @@ class _PreviewSection extends StatelessWidget {
 }
 
 class _PreviewContainer extends StatelessWidget {
-  const _PreviewContainer({
-    required this.colors,
-    required this.child,
-  });
+  const _PreviewContainer({required this.colors, required this.child});
 
   final ColorScheme colors;
   final Widget child;
@@ -110,17 +104,68 @@ class _PreviewLoadingState extends StatelessWidget {
   }
 }
 
-class _PreviewImage extends StatelessWidget {
-  const _PreviewImage({
-    required this.path,
-    required this.emptyPreviewBuilder,
-  });
+class _PreviewImage extends StatefulWidget {
+  const _PreviewImage({required this.path, required this.emptyPreviewBuilder});
 
   final String path;
   final Widget Function() emptyPreviewBuilder;
 
   @override
+  State<_PreviewImage> createState() => _PreviewImageState();
+}
+
+class _PreviewImageState extends State<_PreviewImage> {
+  Uint8List? _dataUrlBytes;
+  String? _decodedPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _syncDecodedBytes(widget.path);
+  }
+
+  @override
+  void didUpdateWidget(covariant final _PreviewImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.path != widget.path) {
+      _syncDecodedBytes(widget.path);
+    }
+  }
+
+  void _syncDecodedBytes(final String path) {
+    if (!path.startsWith('data:')) {
+      _decodedPath = path;
+      _dataUrlBytes = null;
+      return;
+    }
+    try {
+      _decodedPath = path;
+      _dataUrlBytes = base64Decode(path.substring(path.indexOf(',') + 1));
+    } on FormatException catch (error, stackTrace) {
+      AppLogger.error(
+        'CameraGalleryPage.imagePreviewDecode',
+        error,
+        stackTrace,
+      );
+      _decodedPath = path;
+      _dataUrlBytes = null;
+    }
+  }
+
+  @override
   Widget build(final BuildContext context) {
+    final String path = widget.path;
+    if (path.startsWith('data:')) {
+      final Uint8List? bytes = path == _decodedPath ? _dataUrlBytes : null;
+      if (bytes == null) {
+        return widget.emptyPreviewBuilder();
+      }
+      return Image.memory(
+        bytes,
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => widget.emptyPreviewBuilder(),
+      );
+    }
     return imageFromPath(
       path: path,
       fit: BoxFit.contain,
@@ -135,10 +180,90 @@ class _PreviewImage extends StatelessWidget {
               error,
               stackTrace,
             );
-            return emptyPreviewBuilder();
+            return widget.emptyPreviewBuilder();
           },
     );
   }
+}
+
+class _ProcessingControls extends StatelessWidget {
+  const _ProcessingControls();
+
+  @override
+  Widget build(final BuildContext context) {
+    return TypeSafeBlocSelector<
+      CameraGalleryCubit,
+      CameraGalleryState,
+      _ProcessingViewData
+    >(
+      selector: (final state) => _ProcessingViewData(
+        canProcess: state.canProcess,
+        isLoading: state.isLoading,
+        selectedFilter: state.selectedFilter,
+      ),
+      builder: (final context, final data) {
+        if (!data.canProcess) return const SizedBox.shrink();
+        final AppLocalizations l10n = context.l10n;
+        return Semantics(
+          container: true,
+          label: l10n.cameraGalleryProcessingLabel,
+          child: Column(
+            key: const ValueKey('camera-gallery-processing-controls'),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.cameraGalleryProcessingLabel,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              SizedBox(height: context.responsiveGapS),
+              Wrap(
+                spacing: context.responsiveGapS,
+                runSpacing: context.responsiveGapS,
+                children: [
+                  for (final ImageProcessingFilter filter
+                      in ImageProcessingFilter.values)
+                    ChoiceChip(
+                      key: ValueKey<String>(
+                        'camera-gallery-filter-${filter.name}',
+                      ),
+                      label: Text(_labelFor(l10n, filter)),
+                      selected: data.selectedFilter == filter,
+                      onSelected: data.isLoading
+                          ? null
+                          : (_) => context
+                                .cubit<CameraGalleryCubit>()
+                                .applyFilter(filter),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static String _labelFor(
+    final AppLocalizations l10n,
+    final ImageProcessingFilter filter,
+  ) => switch (filter) {
+    ImageProcessingFilter.original => l10n.cameraGalleryFilterOriginal,
+    ImageProcessingFilter.grayscale => l10n.cameraGalleryFilterGrayscale,
+    ImageProcessingFilter.sepia => l10n.cameraGalleryFilterSepia,
+    ImageProcessingFilter.invert => l10n.cameraGalleryFilterInvert,
+  };
+}
+
+class _ProcessingViewData {
+  const _ProcessingViewData({
+    required this.canProcess,
+    required this.isLoading,
+    required this.selectedFilter,
+  });
+
+  final bool canProcess;
+  final bool isLoading;
+  final ImageProcessingFilter selectedFilter;
 }
 
 class _ActionButtons extends StatelessWidget {
@@ -181,20 +306,14 @@ class _ActionButtons extends StatelessWidget {
 }
 
 class _PreviewViewData {
-  const _PreviewViewData({
-    required this.isLoading,
-    required this.imagePath,
-  });
+  const _PreviewViewData({required this.isLoading, required this.imagePath});
 
   final bool isLoading;
   final String? imagePath;
 }
 
 class _ErrorSection extends StatelessWidget {
-  const _ErrorSection({
-    required this.l10n,
-    required this.colors,
-  });
+  const _ErrorSection({required this.l10n, required this.colors});
 
   final AppLocalizations l10n;
   final ColorScheme colors;
@@ -216,9 +335,9 @@ class _ErrorSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: context.responsiveGapM),
           child: Text(
             message,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: colors.error,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: colors.error),
             textAlign: TextAlign.center,
           ),
         );

@@ -1426,6 +1426,11 @@
   "cameraGalleryGenericError": "Bir şeyler yanlış gitti. Lütfen tekrar deneyin.",
   "cameraGalleryFileTooLarge": "Bu dosya çok büyük. Daha küçük bir görsel seçin.",
   "cameraGalleryCameraUnavailable": "Kamera kullanılamıyor. Gerçek cihaz kullanın veya galeriden seçin.",
+  "cameraGalleryProcessingLabel": "Cihaz üzerinde işleme",
+  "cameraGalleryFilterOriginal": "Orijinal",
+  "cameraGalleryFilterGrayscale": "Gri tonlama",
+  "cameraGalleryFilterSepia": "Sepya",
+  "cameraGalleryFilterInvert": "Ters çevir",
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
