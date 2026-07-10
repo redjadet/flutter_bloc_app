@@ -4,12 +4,13 @@ Educational demo that explains how Flutter apps integrate with each host platfor
 
 | Bridge | Mechanism | Host code |
 | --- | --- | --- |
-| Dart → Swift | `MethodChannel` `com.example.flutter_bloc_app/native_showcase` | `ios/Runner/NativeShowcaseBridge.swift`, `macos/Runner/NativeShowcaseBridge.swift` |
-| Dart → Kotlin | Same channel | `android/.../MainActivity.kt` |
+| Dart → Swift | `MethodChannel` `com.example.flutter_bloc_app/native_showcase` (`invokeSwift`, `triggerHaptic`, `shareText`) | `ios/Runner/AppDelegate.swift`, `NativeShowcaseBridge.swift` |
+| Dart → Kotlin | Same channel (`invokeKotlin`, `triggerHaptic`, `shareText`) | `android/.../MainActivity.kt` |
 | Dart → C/C++ | `dart:ffi` | `native/native_showcase/native_showcase.c` |
 | Native telemetry stream | `EventChannel` `com.example.flutter_bloc_app/native_showcase/telemetry` | `NativeShowcaseTelemetryStreamHandler` on Android / iOS / macOS |
+| Native platform view | `UiKitView` / `AndroidView` viewType `com.example.flutter_bloc_app/native_showcase_banner` | `NativeShowcaseBannerPlatformView` (iOS/Android) |
 
-On web, host bridges report **unavailable**; FFI uses a stub. Desktop Linux/Windows link `native_showcase.c` in CMake. **iOS and macOS** expose FFI via Swift `@_cdecl` in `NativeShowcaseBridge.swift` only (the shared `.c` file is a project reference, not compiled—avoid duplicate `native_showcase_*` symbols). macOS registers the MethodChannel in `MainFlutterWindow.swift`.
+On web, host bridges report **unavailable**; FFI uses a stub; PlatformView shows a placeholder. Desktop Linux/Windows link `native_showcase.c` in CMake. **iOS and macOS** expose FFI via Swift `@_cdecl` in `NativeShowcaseBridge.swift` only (the shared `.c` file is a project reference, not compiled—avoid duplicate `native_showcase_*` symbols). macOS registers the MethodChannel in `MainFlutterWindow.swift` for `invokeSwift` / telemetry only — haptic, share, and PlatformView are mobile-only.
 
 ## Entry points
 
@@ -26,6 +27,7 @@ Native access stays out of UI and Cubit. Presentation and domain depend on **por
 Presentation (Page, Cubit)
         ↓  LoadNativePlatformShowcaseUseCase
         ↓  WatchNativeShowcaseTelemetryUseCase
+        ↓  TriggerNativeShowcaseHapticUseCase / ShareNativeShowcaseTextUseCase
 Repository (NativePlatformInfoRepository)
         ↓  loadShowcase() → catalog + interopResults
 Platform service ports (domain)
@@ -33,6 +35,7 @@ Platform service ports (domain)
 Data adapters
         ↓
 MethodChannel / EventChannel / dart:ffi / host native code
+(+ PlatformView widget → native factory; no Cubit)
 ```
 
 ### Folder layout
@@ -45,7 +48,9 @@ lib/features/native_platform_showcase/
 │   ├── native_showcase_native_code_service.dart     # C/C++ port
 │   ├── native_showcase_telemetry_service.dart       # EventChannel port
 │   ├── use_cases/load_native_platform_showcase_use_case.dart
-│   └── use_cases/watch_native_showcase_telemetry_use_case.dart
+│   ├── use_cases/watch_native_showcase_telemetry_use_case.dart
+│   ├── use_cases/trigger_native_showcase_haptic_use_case.dart
+│   └── use_cases/share_native_showcase_text_use_case.dart
 ├── data/
 │   ├── method_channel_native_showcase_host_language_service.dart
 │   ├── event_channel_native_showcase_telemetry_service.dart
@@ -70,11 +75,20 @@ lib/features/native_platform_showcase/
 
 ### Load flow
 
-1. Route (`createNativePlatformShowcaseRoute` in `lib/app/router/routes_demos.part.dart`) builds `NativePlatformShowcaseCubit` with `LoadNativePlatformShowcaseUseCase` and `WatchNativeShowcaseTelemetryUseCase`, then calls `load()`.
+1. Route (`createNativePlatformShowcaseRoute` in `lib/app/router/routes_demos.part.dart`) builds `NativePlatformShowcaseCubit` with load, telemetry, haptic, and share use cases, then calls `load()`.
 2. `LoadNativePlatformShowcaseUseCase` → `NativePlatformInfoRepository.loadShowcase()`.
 3. `NativePlatformInfoRepositoryImpl` resolves `AppPlatformKind` via `RuntimePlatformProbe`, maps static catalog, then awaits host-language calls and invokes native-code service.
 4. Cubit emits `loaded(PlatformShowcaseData)` including `interopResults` for the interop section.
-5. After successful load, Cubit subscribes once to `WatchNativeShowcaseTelemetryUseCase` and updates only the `telemetry` field on the loaded state.
+5. After successful load, Cubit subscribes once to `WatchNativeShowcaseTelemetryUseCase` and updates only the `telemetry` field on the loaded state (preserving any action feedback).
+6. Haptic / share buttons call Cubit actions that update `lastAction` / `lastActionResult` without restarting telemetry.
+7. PlatformView section embeds the native banner on iOS/Android via viewType `com.example.flutter_bloc_app/native_showcase_banner`.
+
+### Mobile MethodChannel commands
+
+| Method | Args | Success |
+| --- | --- | --- |
+| `triggerHaptic` | none | acknowledgement `String` |
+| `shareText` | `{ "text": String }` | acknowledgement after sheet/chooser presented |
 
 ### Telemetry stream (EventChannel)
 
@@ -82,7 +96,7 @@ Channel: `com.example.flutter_bloc_app/native_showcase/telemetry`
 
 Native side samples at 60 Hz on a background worker, aggregates into compact maps every 250 ms (4 Hz), and emits via `EventChannel`. Dart maps payloads in `EventChannelNativeShowcaseTelemetryService`. Unsupported platforms receive one `unavailable` snapshot. UI uses `NativePlatformShowcaseTelemetrySection` with `TypeSafeBlocSelector` so telemetry ticks do not rebuild static showcase content.
 
-**Full rebuild required** after changing Swift/Kotlin stream handlers (same as MethodChannel / FFI).
+**Full rebuild required** after changing Swift/Kotlin handlers or PlatformView factories (hot reload is not enough).
 
 ### DI (`registerNativePlatformShowcaseServices`)
 
@@ -96,8 +110,10 @@ Registered from `lib/core/di/groups/register_demo_services.dart`:
 | `LoadNativePlatformShowcaseUseCase` | wraps repository |
 | `NativeShowcaseTelemetryService` | `EventChannelNativeShowcaseTelemetryService` |
 | `WatchNativeShowcaseTelemetryUseCase` | wraps telemetry service |
+| `TriggerNativeShowcaseHapticUseCase` | wraps host language service |
+| `ShareNativeShowcaseTextUseCase` | wraps host language service |
 
-Cubit is **not** in GetIt; only the use case is injected at the route.
+Cubit is **not** in GetIt; use cases are injected at the route.
 
 ### Interop paths
 

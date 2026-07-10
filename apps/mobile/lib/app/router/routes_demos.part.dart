@@ -73,6 +73,8 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
         create: () => NativePlatformShowcaseCubit(
           loadShowcase: getIt<LoadNativePlatformShowcaseUseCase>(),
           watchTelemetry: getIt<WatchNativeShowcaseTelemetryUseCase>(),
+          triggerHaptic: getIt<TriggerNativeShowcaseHapticUseCase>(),
+          shareText: getIt<ShareNativeShowcaseTextUseCase>(),
         ),
         init: (final cubit) => cubit.load(),
         child: const NativePlatformShowcasePage(),

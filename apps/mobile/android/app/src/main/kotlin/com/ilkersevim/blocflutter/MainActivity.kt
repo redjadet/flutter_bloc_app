@@ -18,6 +18,13 @@ class MainActivity : FlutterActivity() {
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
+    flutterEngine
+      .platformViewsController
+      .registry
+      .registerViewFactory(
+        "com.example.flutter_bloc_app/native_showcase_banner",
+        NativeShowcaseBannerPlatformViewFactory(),
+      )
     EventChannel(flutterEngine.dartExecutor.binaryMessenger, telemetryChannelName)
       .setStreamHandler(NativeShowcaseTelemetryStreamHandler())
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, showcaseChannelName)
@@ -27,6 +34,34 @@ class MainActivity : FlutterActivity() {
             result.success(
               "Hello from Kotlin (API ${Build.VERSION.SDK_INT})",
             )
+          }
+          "triggerHaptic" -> {
+            val performed = window.decorView.performHapticFeedback(
+              android.view.HapticFeedbackConstants.KEYBOARD_TAP,
+            )
+            if (performed) {
+              result.success("Haptic feedback performed")
+            } else {
+              result.success("Haptic feedback requested")
+            }
+          }
+          "shareText" -> {
+            val args = call.arguments as? Map<*, *>
+            val text = args?.get("text") as? String
+            if (text.isNullOrBlank()) {
+              result.error(
+                "invalid_args",
+                "shareText requires a non-empty text argument.",
+                null,
+              )
+            } else {
+              val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, text)
+              }
+              startActivity(Intent.createChooser(sendIntent, null))
+              result.success("Share chooser launched")
+            }
           }
           else -> result.notImplemented()
         }

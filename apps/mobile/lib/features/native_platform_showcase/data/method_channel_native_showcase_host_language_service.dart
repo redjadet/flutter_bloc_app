@@ -54,15 +54,78 @@ class MethodChannelNativeShowcaseHostLanguageService
     );
   }
 
+  @override
+  Future<NativeInteropCallResult> triggerHaptic() async {
+    final NativeInteropBridgeKind? kind = _mobileBridgeKindOrNull();
+    if (kind == null) {
+      return NativeInteropCallResult(
+        kind: _unavailableBridgeKind(),
+        status: NativeInteropStatus.unavailable,
+        message: 'Haptic feedback runs on iOS and Android only.',
+      );
+    }
+    return _invoke(method: 'triggerHaptic', kind: kind);
+  }
+
+  @override
+  Future<NativeInteropCallResult> shareText(final String text) async {
+    final String trimmed = text.trim();
+    final NativeInteropBridgeKind kind =
+        _mobileBridgeKindOrNull() ?? _unavailableBridgeKind();
+    if (trimmed.isEmpty) {
+      return NativeInteropCallResult(
+        kind: kind,
+        status: NativeInteropStatus.failed,
+        message: 'Share text must not be empty.',
+      );
+    }
+    if (_mobileBridgeKindOrNull() == null) {
+      return NativeInteropCallResult(
+        kind: kind,
+        status: NativeInteropStatus.unavailable,
+        message: 'System share runs on iOS and Android only.',
+      );
+    }
+    return _invoke(
+      method: 'shareText',
+      kind: kind,
+      arguments: <String, Object?>{'text': trimmed},
+    );
+  }
+
   static const Duration _invokeTimeout = Duration(seconds: 2);
+
+  NativeInteropBridgeKind? _mobileBridgeKindOrNull() {
+    if (kIsWeb) {
+      return null;
+    }
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.iOS => NativeInteropBridgeKind.swift,
+      TargetPlatform.android => NativeInteropBridgeKind.kotlin,
+      _ => null,
+    };
+  }
+
+  NativeInteropBridgeKind _unavailableBridgeKind() {
+    if (!kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS)) {
+      return NativeInteropBridgeKind.swift;
+    }
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return NativeInteropBridgeKind.kotlin;
+    }
+    return NativeInteropBridgeKind.swift;
+  }
 
   Future<NativeInteropCallResult> _invoke({
     required final String method,
     required final NativeInteropBridgeKind kind,
+    final Map<String, Object?>? arguments,
   }) async {
     try {
       final Object? response = await _channel
-          .invokeMethod<Object?>(method)
+          .invokeMethod<Object?>(method, arguments)
           .timeout(
             _invokeTimeout,
             onTimeout: () => throw MissingPluginException(

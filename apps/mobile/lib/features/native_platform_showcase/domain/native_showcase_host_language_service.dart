@@ -8,4 +8,8 @@ abstract class NativeShowcaseHostLanguageService {
   Future<NativeInteropCallResult> invokeSwift();
 
   Future<NativeInteropCallResult> invokeKotlin();
+
+  Future<NativeInteropCallResult> triggerHaptic();
+
+  Future<NativeInteropCallResult> shareText(String text);
 }

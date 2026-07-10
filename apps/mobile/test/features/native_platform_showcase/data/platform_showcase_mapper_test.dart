@@ -16,7 +16,7 @@ void main() {
       );
       expect(
         data.capabilities.first.platformDetail,
-        'Hybrid Composition / Texture Layer; HCPP-ready',
+        'Hybrid Composition / Texture Layer; live banner demo',
       );
       expect(data.interopResults, isEmpty);
     });
@@ -32,7 +32,7 @@ void main() {
       );
       expect(
         data.capabilities.first.platformDetail,
-        'UiKitView / PlatformView',
+        'UiKitView / PlatformView; live banner demo',
       );
     });
 

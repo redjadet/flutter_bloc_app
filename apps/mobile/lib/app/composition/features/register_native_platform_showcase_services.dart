@@ -10,6 +10,8 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_native_code_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 
 void registerNativePlatformShowcaseServices() {
@@ -37,6 +39,16 @@ void registerNativePlatformShowcaseServices() {
   registerLazySingletonIfAbsent<WatchNativeShowcaseTelemetryUseCase>(
     () => WatchNativeShowcaseTelemetryUseCase(
       getIt<NativeShowcaseTelemetryService>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<TriggerNativeShowcaseHapticUseCase>(
+    () => TriggerNativeShowcaseHapticUseCase(
+      getIt<NativeShowcaseHostLanguageService>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<ShareNativeShowcaseTextUseCase>(
+    () => ShareNativeShowcaseTextUseCase(
+      getIt<NativeShowcaseHostLanguageService>(),
     ),
   );
 }

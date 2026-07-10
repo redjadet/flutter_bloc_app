@@ -1255,6 +1255,46 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get nativePlatformShowcasePlatformViewTitle => 'عرض المنصة الأصلي';
+
+  @override
+  String get nativePlatformShowcasePlatformViewBody =>
+      'هذا الشريط هو UiKitView أو AndroidView حقيقي تستضيفه مصانع Swift/Kotlin مخصصة.';
+
+  @override
+  String get nativePlatformShowcasePlatformViewUnavailable =>
+      'تضمين عرض المنصة الأصلي متاح على أجهزة iOS وAndroid.';
+
+  @override
+  String get nativePlatformShowcaseActionsTitle => 'إجراءات أصلية';
+
+  @override
+  String get nativePlatformShowcaseActionsSubtitle =>
+      'استدعِ أوامر MethodChannel للمضيف لللمس اللمسي وورقة المشاركة في النظام.';
+
+  @override
+  String get nativePlatformShowcaseHapticButton => 'تشغيل اللمس اللمسي';
+
+  @override
+  String get nativePlatformShowcaseShareButton => 'مشاركة نص العرض';
+
+  @override
+  String get nativePlatformShowcaseShareDemoText =>
+      'مرحباً من عرض منصة Flutter الأصلي';
+
+  @override
+  String get nativePlatformShowcaseActionSuccess => 'نجاح';
+
+  @override
+  String get nativePlatformShowcaseActionFailed => 'فشل';
+
+  @override
+  String get nativePlatformShowcaseActionUnavailable => 'غير متاح';
+
+  @override
+  String get nativePlatformShowcaseLastActionLabel => 'آخر إجراء';
+
+  @override
   String get eventBusDemoTitle => 'عرض Event Bus';
 
   @override

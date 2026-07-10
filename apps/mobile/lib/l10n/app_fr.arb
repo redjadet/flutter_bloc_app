@@ -852,6 +852,18 @@
   "nativePlatformShowcaseTelemetryDroppedCountLabel": "Échantillons ignorés",
   "nativePlatformShowcaseTelemetryAverageValueLabel": "Moyenne la plus récente",
   "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
+  "nativePlatformShowcasePlatformViewTitle": "Vue plateforme native",
+  "nativePlatformShowcasePlatformViewBody": "Cette bannière est une vraie UiKitView ou AndroidView hébergée par des factories Swift/Kotlin personnalisées.",
+  "nativePlatformShowcasePlatformViewUnavailable": "L'intégration de vues natives est disponible sur iOS et Android.",
+  "nativePlatformShowcaseActionsTitle": "Actions natives",
+  "nativePlatformShowcaseActionsSubtitle": "Appelez des commandes MethodChannel hôte pour le retour haptique et la feuille de partage système.",
+  "nativePlatformShowcaseHapticButton": "Déclencher l'haptique",
+  "nativePlatformShowcaseShareButton": "Partager le texte démo",
+  "nativePlatformShowcaseShareDemoText": "Bonjour depuis la vitrine native Flutter",
+  "nativePlatformShowcaseActionSuccess": "Succès",
+  "nativePlatformShowcaseActionFailed": "Échec",
+  "nativePlatformShowcaseActionUnavailable": "Indisponible",
+  "nativePlatformShowcaseLastActionLabel": "Dernière action",
   "eventBusDemoTitle": "Démo Event Bus",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

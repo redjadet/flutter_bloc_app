@@ -7,10 +7,12 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_platform_info_repository.dart';
-import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
@@ -28,6 +30,8 @@ class _TestNativePlatformShowcaseCubit extends NativePlatformShowcaseCubit {
          loadShowcase: LoadNativePlatformShowcaseUseCase(_ThrowingRepository()),
          watchTelemetry:
              watchTelemetry ?? _EmptyWatchNativeShowcaseTelemetryUseCase(),
+         triggerHaptic: _EmptyTriggerNativeShowcaseHapticUseCase(),
+         shareText: _EmptyShareNativeShowcaseTextUseCase(),
        );
 
   void setState(final NativePlatformShowcaseState value) => emit(value);
@@ -37,6 +41,27 @@ class _EmptyWatchNativeShowcaseTelemetryUseCase
     implements WatchNativeShowcaseTelemetryUseCase {
   @override
   Stream<NativeShowcaseTelemetrySnapshot> call() => const Stream.empty();
+}
+
+class _EmptyTriggerNativeShowcaseHapticUseCase
+    implements TriggerNativeShowcaseHapticUseCase {
+  @override
+  Future<NativeInteropCallResult> call() async => const NativeInteropCallResult(
+    kind: NativeInteropBridgeKind.swift,
+    status: NativeInteropStatus.unavailable,
+    message: 'test',
+  );
+}
+
+class _EmptyShareNativeShowcaseTextUseCase
+    implements ShareNativeShowcaseTextUseCase {
+  @override
+  Future<NativeInteropCallResult> call(final String text) async =>
+      const NativeInteropCallResult(
+        kind: NativeInteropBridgeKind.swift,
+        status: NativeInteropStatus.unavailable,
+        message: 'test',
+      );
 }
 
 class _ThrowingRepository implements NativePlatformInfoRepository {
@@ -118,7 +143,7 @@ void main() {
       final tester,
     ) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
-      tester.view.physicalSize = const Size(390, 1600);
+      tester.view.physicalSize = const Size(390, 4000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
 
@@ -133,7 +158,7 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(find.text(l10n.nativePlatformShowcaseTitle), findsOneWidget);
       expect(
@@ -141,23 +166,36 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const ValueKey<String>('native-platform-showcase-lesson-0')),
-        findsOneWidget,
-      );
-      final capabilityTile = find.byKey(
-        const ValueKey<String>(
-          'native-platform-showcase-capability-nativeViewEmbedding',
-        ),
-      );
-      await tester.scrollUntilVisible(capabilityTile, 200);
-      expect(capabilityTile, findsOneWidget);
-      expect(
         find.text(l10n.nativePlatformShowcaseInteropTitle),
         findsOneWidget,
       );
       expect(
         find.byKey(
           const ValueKey<String>('native-platform-showcase-interop-swift'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey<String>('native-platform-showcase-platform-view'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey<String>('native-platform-showcase-haptic-button'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('native-platform-showcase-lesson-0')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey<String>(
+            'native-platform-showcase-capability-nativeViewEmbedding',
+          ),
         ),
         findsOneWidget,
       );
@@ -212,6 +250,8 @@ void main() {
               create: (_) => NativePlatformShowcaseCubit(
                 loadShowcase: LoadNativePlatformShowcaseUseCase(repository),
                 watchTelemetry: _EmptyWatchNativeShowcaseTelemetryUseCase(),
+                triggerHaptic: _EmptyTriggerNativeShowcaseHapticUseCase(),
+                shareText: _EmptyShareNativeShowcaseTextUseCase(),
               )..load(),
               child: const NativePlatformShowcasePage(),
             ),

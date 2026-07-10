@@ -20,6 +20,7 @@
 		C7FDEFE623DD6DB4D505C690 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D3AAA7B5F4D1C4A38C336F3 /* Pods_RunnerTests.framework */; };
 		D3E4F5A60718293A4B5E051 /* NativeShowcaseTelemetryStreamHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F5A60718293A4B5E052 /* NativeShowcaseTelemetryStreamHandler.swift */; };
 		DA684151935739E3CC9B7C98 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F63876893C416800C8DE36A /* Pods_Runner.framework */; };
+		E4F5A6B70718293A4B5E061 /* NativeShowcaseBannerPlatformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		B2C3D4E5F60718293A4B5E02 /* native_showcase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = native_showcase.c; path = ../../native/native_showcase/native_showcase.c; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5E04 /* NativeShowcaseBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseBridge.swift; sourceTree = "<group>"; };
 		D3E4F5A60718293A4B5E052 /* NativeShowcaseTelemetryStreamHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseTelemetryStreamHandler.swift; sourceTree = "<group>"; };
+		E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeShowcaseBannerPlatformView.swift; sourceTree = "<group>"; };
 		E545FBD4C70B279E80D4E759 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		FB43E27CA0B3B4BF03F3CFB7 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,6 +179,7 @@
 				A1B2C3D4E5F60718293A4B5C /* SceneDelegate.swift */,
 				B2C3D4E5F60718293A4B5E04 /* NativeShowcaseBridge.swift */,
 				D3E4F5A60718293A4B5E052 /* NativeShowcaseTelemetryStreamHandler.swift */,
+				E4F5A6B70718293A4B5E062 /* NativeShowcaseBannerPlatformView.swift */,
 				B2C3D4E5F60718293A4B5E02 /* native_showcase.c */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
@@ -447,6 +450,7 @@
 				A1B2C3D4E5F60718293A4B5D /* SceneDelegate.swift in Sources */,
 				B2C3D4E5F60718293A4B5E03 /* NativeShowcaseBridge.swift in Sources */,
 				D3E4F5A60718293A4B5E051 /* NativeShowcaseTelemetryStreamHandler.swift in Sources */,
+				E4F5A6B70718293A4B5E061 /* NativeShowcaseBannerPlatformView.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1524,6 +1524,54 @@
       }
     }
   },
+  "nativePlatformShowcasePlatformViewTitle": "Native platform view",
+  "@nativePlatformShowcasePlatformViewTitle": {
+    "description": "Title for the live PlatformView banner section"
+  },
+  "nativePlatformShowcasePlatformViewBody": "This banner is a real UiKitView or AndroidView hosted by custom Swift/Kotlin factories.",
+  "@nativePlatformShowcasePlatformViewBody": {
+    "description": "Explains the live PlatformView demo"
+  },
+  "nativePlatformShowcasePlatformViewUnavailable": "Native platform view embedding is available on iOS and Android devices.",
+  "@nativePlatformShowcasePlatformViewUnavailable": {
+    "description": "Placeholder when PlatformView is not supported"
+  },
+  "nativePlatformShowcaseActionsTitle": "Native actions",
+  "@nativePlatformShowcaseActionsTitle": {
+    "description": "Title for haptic and share action controls"
+  },
+  "nativePlatformShowcaseActionsSubtitle": "Call host MethodChannel commands for haptics and the system share sheet.",
+  "@nativePlatformShowcaseActionsSubtitle": {
+    "description": "Subtitle for haptic and share actions"
+  },
+  "nativePlatformShowcaseHapticButton": "Trigger haptic",
+  "@nativePlatformShowcaseHapticButton": {
+    "description": "Button that triggers native haptic feedback"
+  },
+  "nativePlatformShowcaseShareButton": "Share demo text",
+  "@nativePlatformShowcaseShareButton": {
+    "description": "Button that opens the system share sheet"
+  },
+  "nativePlatformShowcaseShareDemoText": "Hello from Flutter native platform showcase",
+  "@nativePlatformShowcaseShareDemoText": {
+    "description": "Frozen text payload shared via the native share sheet"
+  },
+  "nativePlatformShowcaseActionSuccess": "Success",
+  "@nativePlatformShowcaseActionSuccess": {
+    "description": "Status label for a successful native action"
+  },
+  "nativePlatformShowcaseActionFailed": "Failed",
+  "@nativePlatformShowcaseActionFailed": {
+    "description": "Status label for a failed native action"
+  },
+  "nativePlatformShowcaseActionUnavailable": "Unavailable",
+  "@nativePlatformShowcaseActionUnavailable": {
+    "description": "Status label when a native action is unavailable"
+  },
+  "nativePlatformShowcaseLastActionLabel": "Last action",
+  "@nativePlatformShowcaseLastActionLabel": {
+    "description": "Fallback label for the last native action result"
+  },
   "eventBusDemoTitle": "Event Bus demo",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

@@ -128,12 +128,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry)?  loaded,TResult Function( NativePlatformShowcaseFailureKind failure)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry,  NativePlatformShowcaseAction? lastAction,  NativeInteropCallResult? lastActionResult,  NativePlatformShowcaseAction? actionInFlight)?  loaded,TResult Function( NativePlatformShowcaseFailureKind failure)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
-return loaded(_that.data,_that.telemetry);case _Error() when error != null:
+return loaded(_that.data,_that.telemetry,_that.lastAction,_that.lastActionResult,_that.actionInFlight);case _Error() when error != null:
 return error(_that.failure);case _:
   return orElse();
 
@@ -152,12 +152,12 @@ return error(_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry)  loaded,required TResult Function( NativePlatformShowcaseFailureKind failure)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry,  NativePlatformShowcaseAction? lastAction,  NativeInteropCallResult? lastActionResult,  NativePlatformShowcaseAction? actionInFlight)  loaded,required TResult Function( NativePlatformShowcaseFailureKind failure)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _Loaded():
-return loaded(_that.data,_that.telemetry);case _Error():
+return loaded(_that.data,_that.telemetry,_that.lastAction,_that.lastActionResult,_that.actionInFlight);case _Error():
 return error(_that.failure);case _:
   throw StateError('Unexpected subclass');
 
@@ -175,12 +175,12 @@ return error(_that.failure);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry)?  loaded,TResult? Function( NativePlatformShowcaseFailureKind failure)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( PlatformShowcaseData data,  NativeShowcaseTelemetrySnapshot? telemetry,  NativePlatformShowcaseAction? lastAction,  NativeInteropCallResult? lastActionResult,  NativePlatformShowcaseAction? actionInFlight)?  loaded,TResult? Function( NativePlatformShowcaseFailureKind failure)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
-return loaded(_that.data,_that.telemetry);case _Error() when error != null:
+return loaded(_that.data,_that.telemetry,_that.lastAction,_that.lastActionResult,_that.actionInFlight);case _Error() when error != null:
 return error(_that.failure);case _:
   return null;
 
@@ -257,11 +257,14 @@ String toString() {
 
 
 class _Loaded implements NativePlatformShowcaseState {
-  const _Loaded(this.data, {this.telemetry});
+  const _Loaded(this.data, {this.telemetry, this.lastAction, this.lastActionResult, this.actionInFlight});
   
 
  final  PlatformShowcaseData data;
  final  NativeShowcaseTelemetrySnapshot? telemetry;
+ final  NativePlatformShowcaseAction? lastAction;
+ final  NativeInteropCallResult? lastActionResult;
+ final  NativePlatformShowcaseAction? actionInFlight;
 
 /// Create a copy of NativePlatformShowcaseState
 /// with the given fields replaced by the non-null parameter values.
@@ -273,16 +276,16 @@ _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.data, data) || other.data == data)&&(identical(other.telemetry, telemetry) || other.telemetry == telemetry));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loaded&&(identical(other.data, data) || other.data == data)&&(identical(other.telemetry, telemetry) || other.telemetry == telemetry)&&(identical(other.lastAction, lastAction) || other.lastAction == lastAction)&&(identical(other.lastActionResult, lastActionResult) || other.lastActionResult == lastActionResult)&&(identical(other.actionInFlight, actionInFlight) || other.actionInFlight == actionInFlight));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,data,telemetry);
+int get hashCode => Object.hash(runtimeType,data,telemetry,lastAction,lastActionResult,actionInFlight);
 
 @override
 String toString() {
-  return 'NativePlatformShowcaseState.loaded(data: $data, telemetry: $telemetry)';
+  return 'NativePlatformShowcaseState.loaded(data: $data, telemetry: $telemetry, lastAction: $lastAction, lastActionResult: $lastActionResult, actionInFlight: $actionInFlight)';
 }
 
 
@@ -293,11 +296,11 @@ abstract mixin class _$LoadedCopyWith<$Res> implements $NativePlatformShowcaseSt
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) = __$LoadedCopyWithImpl;
 @useResult
 $Res call({
- PlatformShowcaseData data, NativeShowcaseTelemetrySnapshot? telemetry
+ PlatformShowcaseData data, NativeShowcaseTelemetrySnapshot? telemetry, NativePlatformShowcaseAction? lastAction, NativeInteropCallResult? lastActionResult, NativePlatformShowcaseAction? actionInFlight
 });
 
 
-$PlatformShowcaseDataCopyWith<$Res> get data;$NativeShowcaseTelemetrySnapshotCopyWith<$Res>? get telemetry;
+$PlatformShowcaseDataCopyWith<$Res> get data;$NativeShowcaseTelemetrySnapshotCopyWith<$Res>? get telemetry;$NativeInteropCallResultCopyWith<$Res>? get lastActionResult;
 
 }
 /// @nodoc
@@ -310,11 +313,14 @@ class __$LoadedCopyWithImpl<$Res>
 
 /// Create a copy of NativePlatformShowcaseState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? data = null,Object? telemetry = freezed,}) {
+@pragma('vm:prefer-inline') $Res call({Object? data = null,Object? telemetry = freezed,Object? lastAction = freezed,Object? lastActionResult = freezed,Object? actionInFlight = freezed,}) {
   return _then(_Loaded(
 null == data ? _self.data : data // ignore: cast_nullable_to_non_nullable
 as PlatformShowcaseData,telemetry: freezed == telemetry ? _self.telemetry : telemetry // ignore: cast_nullable_to_non_nullable
-as NativeShowcaseTelemetrySnapshot?,
+as NativeShowcaseTelemetrySnapshot?,lastAction: freezed == lastAction ? _self.lastAction : lastAction // ignore: cast_nullable_to_non_nullable
+as NativePlatformShowcaseAction?,lastActionResult: freezed == lastActionResult ? _self.lastActionResult : lastActionResult // ignore: cast_nullable_to_non_nullable
+as NativeInteropCallResult?,actionInFlight: freezed == actionInFlight ? _self.actionInFlight : actionInFlight // ignore: cast_nullable_to_non_nullable
+as NativePlatformShowcaseAction?,
   ));
 }
 
@@ -338,6 +344,18 @@ $NativeShowcaseTelemetrySnapshotCopyWith<$Res>? get telemetry {
 
   return $NativeShowcaseTelemetrySnapshotCopyWith<$Res>(_self.telemetry!, (value) {
     return _then(_self.copyWith(telemetry: value));
+  });
+}/// Create a copy of NativePlatformShowcaseState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$NativeInteropCallResultCopyWith<$Res>? get lastActionResult {
+    if (_self.lastActionResult == null) {
+    return null;
+  }
+
+  return $NativeInteropCallResultCopyWith<$Res>(_self.lastActionResult!, (value) {
+    return _then(_self.copyWith(lastActionResult: value));
   });
 }
 }

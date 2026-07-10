@@ -1283,6 +1283,46 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get nativePlatformShowcasePlatformViewTitle => 'Vue plateforme native';
+
+  @override
+  String get nativePlatformShowcasePlatformViewBody =>
+      'Cette bannière est une vraie UiKitView ou AndroidView hébergée par des factories Swift/Kotlin personnalisées.';
+
+  @override
+  String get nativePlatformShowcasePlatformViewUnavailable =>
+      'L\'intégration de vues natives est disponible sur iOS et Android.';
+
+  @override
+  String get nativePlatformShowcaseActionsTitle => 'Actions natives';
+
+  @override
+  String get nativePlatformShowcaseActionsSubtitle =>
+      'Appelez des commandes MethodChannel hôte pour le retour haptique et la feuille de partage système.';
+
+  @override
+  String get nativePlatformShowcaseHapticButton => 'Déclencher l\'haptique';
+
+  @override
+  String get nativePlatformShowcaseShareButton => 'Partager le texte démo';
+
+  @override
+  String get nativePlatformShowcaseShareDemoText =>
+      'Bonjour depuis la vitrine native Flutter';
+
+  @override
+  String get nativePlatformShowcaseActionSuccess => 'Succès';
+
+  @override
+  String get nativePlatformShowcaseActionFailed => 'Échec';
+
+  @override
+  String get nativePlatformShowcaseActionUnavailable => 'Indisponible';
+
+  @override
+  String get nativePlatformShowcaseLastActionLabel => 'Dernière action';
+
+  @override
   String get eventBusDemoTitle => 'Démo Event Bus';
 
   @override

@@ -83,14 +83,37 @@ import FirebaseAppCheck
       name: showcaseChannelName,
       binaryMessenger: engineBridge.applicationRegistrar.messenger()
     )
-    showcaseChannel.setMethodCallHandler { call, result in
+    showcaseChannel.setMethodCallHandler { [weak self] call, result in
+      guard let self else {
+        result(FlutterMethodNotImplemented)
+        return
+      }
       switch call.method {
       case "invokeSwift":
         result(NativeShowcaseBridge.greeting())
+      case "triggerHaptic":
+        DispatchQueue.main.async {
+          let generator = UIImpactFeedbackGenerator(style: .medium)
+          generator.prepare()
+          generator.impactOccurred()
+          result("Haptic impact triggered")
+        }
+      case "shareText":
+        DispatchQueue.main.async {
+          self.presentShareSheet(call: call, result: result)
+        }
       default:
         result(FlutterMethodNotImplemented)
       }
     }
+
+    let bannerFactory = NativeShowcaseBannerPlatformViewFactory(
+      messenger: engineBridge.applicationRegistrar.messenger()
+    )
+    engineBridge.applicationRegistrar.register(
+      bannerFactory,
+      withId: "com.example.flutter_bloc_app/native_showcase_banner"
+    )
 
     let telemetryChannel = FlutterEventChannel(
       name: telemetryChannelName,
@@ -130,6 +153,75 @@ import FirebaseAppCheck
         NSLog("⚠️ FlutterMethodChannel: Unknown method '\(call.method)' called on '\(self?.channelName ?? "")'")
         result(FlutterMethodNotImplemented)
       }
+    }
+  }
+
+  private func presentShareSheet(
+    call: FlutterMethodCall,
+    result: @escaping FlutterResult
+  ) {
+    guard
+      let args = call.arguments as? [String: Any],
+      let text = args["text"] as? String,
+      !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    else {
+      result(
+        FlutterError(
+          code: "invalid_args",
+          message: "shareText requires a non-empty text argument.",
+          details: nil
+        )
+      )
+      return
+    }
+
+    guard let root = window?.rootViewController ?? UIApplication.shared
+      .connectedScenes
+      .compactMap({ $0 as? UIWindowScene })
+      .flatMap({ $0.windows })
+      .first(where: { $0.isKeyWindow })?
+      .rootViewController
+    else {
+      result(
+        FlutterError(
+          code: "no_presenter",
+          message: "No root view controller available for share sheet.",
+          details: nil
+        )
+      )
+      return
+    }
+
+    var presenter = root
+    while let presented = presenter.presentedViewController {
+      presenter = presented
+    }
+    if presenter.isBeingPresented || presenter.isBeingDismissed {
+      result(
+        FlutterError(
+          code: "already_presenting",
+          message: "A view controller is already presenting.",
+          details: nil
+        )
+      )
+      return
+    }
+    let activity = UIActivityViewController(
+      activityItems: [text],
+      applicationActivities: nil
+    )
+    if let popover = activity.popoverPresentationController {
+      popover.sourceView = presenter.view
+      popover.sourceRect = CGRect(
+        x: presenter.view.bounds.midX,
+        y: presenter.view.bounds.midY,
+        width: 1,
+        height: 1
+      )
+      popover.permittedArrowDirections = []
+    }
+    presenter.present(activity, animated: true) {
+      result("Share sheet presented")
     }
   }
 
