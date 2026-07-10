@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.dart';
@@ -109,13 +108,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
-const BackendAvailability _testBackendAvailability = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: true,
-  webNoBackendMode: false,
-  allowWebLocalGuestAuth: false,
-  allowLocalChatFallback: false,
-);
+const bool _testShowBackendDisabledBanner = false;
 
 Future<void> _pumpPage(
   final WidgetTester tester, {
@@ -143,7 +136,7 @@ Future<void> _pumpPage(
             child: BlocProvider<IotDemoCubit>.value(
               value: cubit,
               child: IotDemoPage(
-                backendAvailability: _testBackendAvailability,
+                showBackendDisabledBanner: _testShowBackendDisabledBanner,
               ),
             ),
           ),
@@ -183,7 +176,7 @@ Future<void> _pumpInteractivePage(
             child: BlocProvider<IotDemoCubit>.value(
               value: cubit,
               child: IotDemoPage(
-                backendAvailability: _testBackendAvailability,
+                showBackendDisabledBanner: _testShowBackendDisabledBanner,
               ),
             ),
           ),

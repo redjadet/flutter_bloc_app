@@ -38,6 +38,16 @@ class BackendAvailability {
 
   /// Allow local chat response fallback when no remote path is usable.
   final bool allowLocalChatFallback;
+
+  /// Whether the chat UI should show the backend-disabled banner: web
+  /// no-backend mode with either Firebase or Supabase unavailable.
+  bool get showChatBackendDisabledBanner =>
+      webNoBackendMode && (!firebaseInitialized || !supabaseInitialized);
+
+  /// Whether the IoT cloud tab should show the backend-disabled banner: web
+  /// no-backend mode with Supabase unavailable.
+  bool get showIotCloudBackendDisabledBanner =>
+      webNoBackendMode && !supabaseInitialized;
 }
 
 // EOF

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
@@ -15,78 +14,20 @@ import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const BackendAvailability _backendsAvailable = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: true,
-  webNoBackendMode: false,
-  allowWebLocalGuestAuth: false,
-  allowLocalChatFallback: false,
-);
-
-const BackendAvailability _webNoBackendMissingFirebase = BackendAvailability(
-  firebaseInitialized: false,
-  supabaseInitialized: true,
-  webNoBackendMode: true,
-  allowWebLocalGuestAuth: true,
-  allowLocalChatFallback: true,
-);
-
-const BackendAvailability _webNoBackendMissingSupabase = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: false,
-  webNoBackendMode: true,
-  allowWebLocalGuestAuth: true,
-  allowLocalChatFallback: true,
-);
-
-const BackendAvailability _webNoBackendAllInitialized = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: true,
-  webNoBackendMode: true,
-  allowWebLocalGuestAuth: true,
-  allowLocalChatFallback: true,
-);
-
 void main() {
-  testWidgets('ChatPage shows backend banner when web no-backend and Firebase missing', (
+  testWidgets('ChatPage shows backend banner when showBackendDisabledBanner is true', (
     final tester,
   ) async {
-    await _pumpChatPage(
-      tester,
-      backendAvailability: _webNoBackendMissingFirebase,
-    );
+    await _pumpChatPage(tester, showBackendDisabledBanner: true);
 
     expect(find.byType(BackendDisabledBanner), findsOneWidget);
     expect(find.text('Backend disabled'), findsOneWidget);
-  });
-
-  testWidgets('ChatPage shows backend banner when web no-backend and Supabase missing', (
-    final tester,
-  ) async {
-    await _pumpChatPage(
-      tester,
-      backendAvailability: _webNoBackendMissingSupabase,
-    );
-
-    expect(find.byType(BackendDisabledBanner), findsOneWidget);
-    expect(find.text('Backend disabled'), findsOneWidget);
-  });
-
-  testWidgets('ChatPage hides backend banner when backends available', (
-    final tester,
-  ) async {
-    await _pumpChatPage(tester, backendAvailability: _backendsAvailable);
-
-    expect(find.text('Backend disabled'), findsNothing);
   });
 
   testWidgets(
-    'ChatPage hides backend banner when web no-backend but both backends initialized',
+    'ChatPage hides backend banner when showBackendDisabledBanner is false',
     (final tester) async {
-      await _pumpChatPage(
-        tester,
-        backendAvailability: _webNoBackendAllInitialized,
-      );
+      await _pumpChatPage(tester, showBackendDisabledBanner: false);
 
       expect(find.text('Backend disabled'), findsNothing);
     },
@@ -95,7 +36,7 @@ void main() {
 
 Future<void> _pumpChatPage(
   final WidgetTester tester, {
-  required final BackendAvailability backendAvailability,
+  required final bool showBackendDisabledBanner,
 }) async {
   final ChatCubit cubit = ChatCubit(
     repository: _StubChatRepository(),
@@ -118,7 +59,7 @@ Future<void> _pumpChatPage(
         ],
         child: ChatPage(
           errorNotificationService: _FakeErrorNotificationService(),
-          backendAvailability: backendAvailability,
+          showBackendDisabledBanner: showBackendDisabledBanner,
           renderTransportDemoStrict: false,
           chatRenderDemoBaseUrl: '',
         ),

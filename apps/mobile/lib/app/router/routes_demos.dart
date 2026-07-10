@@ -77,7 +77,8 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
             init: (final cubit) => cubit.loadHistory(),
             child: ChatPage(
               errorNotificationService: getIt<ErrorNotificationService>(),
-              backendAvailability: availability,
+              showBackendDisabledBanner:
+                  availability.showChatBackendDisabledBanner,
               renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
               chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
             ),
@@ -110,7 +111,8 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
             renderOrchestrationDiagnostics:
                 getIt<ChatRenderOrchestrationDiagnosticsPort>(),
             errorNotificationService: getIt<ErrorNotificationService>(),
-            backendAvailability: availability,
+            showBackendDisabledBanner:
+                availability.showChatBackendDisabledBanner,
             renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
             chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
             initialHuggingfaceModel: SecretConfig.huggingfaceModel,

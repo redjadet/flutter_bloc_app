@@ -2,7 +2,6 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -19,14 +18,14 @@ part 'chat_page_actions.part.dart';
 class ChatPage extends StatefulWidget {
   const ChatPage({
     required this.errorNotificationService,
-    required this.backendAvailability,
+    required this.showBackendDisabledBanner,
     required this.renderTransportDemoStrict,
     required this.chatRenderDemoBaseUrl,
     super.key,
   });
 
   final ErrorNotificationService errorNotificationService;
-  final BackendAvailability backendAvailability;
+  final bool showBackendDisabledBanner;
   final bool renderTransportDemoStrict;
   final String chatRenderDemoBaseUrl;
 
@@ -68,11 +67,7 @@ class _ChatPageState extends State<ChatPage> {
       ],
       body: Column(
         children: <Widget>[
-          BackendDisabledBanner(
-            visible: widget.backendAvailability.webNoBackendMode &&
-                (!widget.backendAvailability.firebaseInitialized ||
-                    !widget.backendAvailability.supabaseInitialized),
-          ),
+          BackendDisabledBanner(visible: widget.showBackendDisabledBanner),
           Padding(
             padding: EdgeInsets.fromLTRB(
               context.responsiveHorizontalGapL,

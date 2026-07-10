@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
@@ -15,61 +14,21 @@ import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const BackendAvailability _nativeBackendsAvailable = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: true,
-  webNoBackendMode: false,
-  allowWebLocalGuestAuth: false,
-  allowLocalChatFallback: false,
-);
-
-const BackendAvailability _webNoBackendMissingSupabase = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: false,
-  webNoBackendMode: true,
-  allowWebLocalGuestAuth: true,
-  allowLocalChatFallback: true,
-);
-
-const BackendAvailability _webNoBackendSupabaseReady = BackendAvailability(
-  firebaseInitialized: true,
-  supabaseInitialized: true,
-  webNoBackendMode: true,
-  allowWebLocalGuestAuth: true,
-  allowLocalChatFallback: true,
-);
-
 void main() {
-  testWidgets('IotDemoCloudTab shows backend banner when web no-backend and Supabase missing', (
-    final tester,
-  ) async {
-    await _pumpCloudTab(
-      tester,
-      backendAvailability: _webNoBackendMissingSupabase,
-    );
+  testWidgets(
+    'IotDemoCloudTab shows backend banner when showBackendDisabledBanner is true',
+    (final tester) async {
+      await _pumpCloudTab(tester, showBackendDisabledBanner: true);
 
-    expect(find.byType(BackendDisabledBanner), findsOneWidget);
-    expect(find.text('Backend disabled'), findsOneWidget);
-  });
-
-  testWidgets('IotDemoCloudTab hides backend banner when not web no-backend mode', (
-    final tester,
-  ) async {
-    await _pumpCloudTab(
-      tester,
-      backendAvailability: _nativeBackendsAvailable,
-    );
-
-    expect(find.text('Backend disabled'), findsNothing);
-  });
+      expect(find.byType(BackendDisabledBanner), findsOneWidget);
+      expect(find.text('Backend disabled'), findsOneWidget);
+    },
+  );
 
   testWidgets(
-    'IotDemoCloudTab hides backend banner when web no-backend but Supabase initialized',
+    'IotDemoCloudTab hides backend banner when showBackendDisabledBanner is false',
     (final tester) async {
-      await _pumpCloudTab(
-        tester,
-        backendAvailability: _webNoBackendSupabaseReady,
-      );
+      await _pumpCloudTab(tester, showBackendDisabledBanner: false);
 
       expect(find.text('Backend disabled'), findsNothing);
     },
@@ -78,7 +37,7 @@ void main() {
 
 Future<void> _pumpCloudTab(
   final WidgetTester tester, {
-  required final BackendAvailability backendAvailability,
+  required final bool showBackendDisabledBanner,
 }) async {
   final IotDemoCubit cubit = IotDemoCubit(repository: _StubIotDemoRepository())
     ..emit(const IotDemoState.loaded(<IotDevice>[], selectedDeviceId: null));
@@ -103,7 +62,7 @@ Future<void> _pumpCloudTab(
             child: BlocProvider<IotDemoCubit>.value(
               value: cubit,
               child: IotDemoCloudTab(
-                backendAvailability: backendAvailability,
+                showBackendDisabledBanner: showBackendDisabledBanner,
               ),
             ),
           ),

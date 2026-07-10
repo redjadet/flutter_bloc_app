@@ -11,7 +11,6 @@ import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -117,13 +116,7 @@ void main() {
         ],
         child: ChatPage(
           errorNotificationService: errorNotificationService,
-          backendAvailability: const BackendAvailability(
-            firebaseInitialized: true,
-            supabaseInitialized: true,
-            webNoBackendMode: false,
-            allowWebLocalGuestAuth: false,
-            allowLocalChatFallback: false,
-          ),
+          showBackendDisabledBanner: false,
           renderTransportDemoStrict: false,
           chatRenderDemoBaseUrl: '',
         ),
