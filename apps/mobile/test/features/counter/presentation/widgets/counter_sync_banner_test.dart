@@ -1,4 +1,3 @@
-import 'package:design_system/design_system.dart';
 import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'dart:async';
