@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/state_restoration_mixin.dart';
@@ -69,10 +68,10 @@ class CounterCubit extends _CounterCubitBase
       // Clear error first when already set so listener sees a transition and
       // shows the snackbar again on every decrement attempt at zero.
       if (current.error?.type == CounterErrorType.cannotGoBelowZero) {
-        emit(current.copyWith(error: null));
+        emit(current.asReady());
         if (isClosed) return;
       }
-      emit(state.copyWith(error: const CounterError.cannotGoBelowZero()));
+      emit(state.asFailure(const CounterError.cannotGoBelowZero()));
       return;
     }
     if (!_beginManualChange()) {
@@ -106,10 +105,7 @@ class CounterCubit extends _CounterCubitBase
     }
     if (isClosed) return;
 
-    // Reset status only when we previously exposed the error state.
-    final CounterState next = state.status.isInitial
-        ? state.copyWith(error: null)
-        : state.copyWith(error: null, status: ViewStatus.initial);
+    final CounterState next = state.asInitial();
     emit(next);
     _syncTickerForState(next);
   }

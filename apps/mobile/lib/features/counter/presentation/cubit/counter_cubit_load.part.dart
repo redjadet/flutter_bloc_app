@@ -4,7 +4,7 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
   Future<void> loadInitial() async {
     final int requestId = ++_initialLoadRequestId;
     final int startingRevision = _localMutationRevision;
-    emit(state.copyWith(status: ViewStatus.loading));
+    emit(state.asLoading());
 
     if (_initialLoadDelay > Duration.zero) {
       _initialLoadHandle?.dispose();
@@ -76,18 +76,17 @@ mixin _CounterCubitLoadMixin on _CounterCubitBase, _CounterCubitSyncMixin {
     );
   }
 
-  /// Resolves [ViewStatus.loading] when a late load result is discarded because
+  /// Resolves loading when a late load result is discarded because
   /// the user mutated state while the load was in flight.
   void _finishAbortedInitialLoad() {
-    if (!state.status.isLoading) {
+    if (!state.isLoading) {
       return;
     }
-    final ViewStatus resolvedStatus = switch (state.error?.type) {
-      CounterErrorType.cannotGoBelowZero => ViewStatus.initial,
-      null => ViewStatus.success,
-      _ => ViewStatus.error,
+    final CounterState next = switch (state.error?.type) {
+      CounterErrorType.cannotGoBelowZero => state.asInitial(),
+      null => state.asReady(),
+      _ => state.asFailure(state.error!),
     };
-    final CounterState next = state.copyWith(status: resolvedStatus);
     emit(next);
     _syncTickerForState(next);
   }

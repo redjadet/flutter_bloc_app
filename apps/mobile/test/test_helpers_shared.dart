@@ -82,7 +82,7 @@ Future<void> waitForCounterCubitsToLoad(
       sawCounterPage = true;
       final bool allLoaded = elements.every((final element) {
         final CounterCubit cubit = element.read<CounterCubit>();
-        return !cubit.state.status.isLoading;
+        return !cubit.state.isLoading;
       });
       if (allLoaded) {
         return;

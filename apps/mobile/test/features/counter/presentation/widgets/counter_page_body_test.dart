@@ -21,7 +21,7 @@ void main() {
       );
       addTearDown(cubit.close);
 
-      cubit.emit(cubit.state.copyWith(status: ViewStatus.loading));
+      cubit.emit(cubit.state.asLoading());
 
       await tester.binding.setSurfaceSize(AppConstants.designSize);
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -42,14 +42,14 @@ void main() {
       );
       addTearDown(cubit.close);
 
-      cubit.emit(cubit.state.copyWith(status: ViewStatus.loading));
+      cubit.emit(cubit.state.asLoading());
 
       await tester.binding.setSurfaceSize(AppConstants.designSize);
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
       await _pumpCounterPageBody(tester, cubit: cubit);
 
-      cubit.emit(cubit.state.copyWith(status: ViewStatus.success));
+      cubit.emit(cubit.state.asReady());
       await tester.pump();
 
       final skeletonizer = tester.widget<Skeletonizer>(

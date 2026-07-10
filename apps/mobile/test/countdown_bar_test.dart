@@ -5,7 +5,6 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -46,11 +45,12 @@ void main() {
 
       // Force an active state with 3 seconds remaining
       cubit.emit(
-        CounterState(
-          count: 1,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 3,
-          status: ViewStatus.success,
+        CounterState.ready(
+          data: CounterViewData(
+            count: 1,
+            lastChanged: DateTime.now(),
+            countdownSeconds: 3,
+          ),
         ),
       );
       await tester.pump();
@@ -70,11 +70,12 @@ void main() {
 
       // Force an inactive state
       cubit.emit(
-        CounterState(
-          count: 0,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-          status: ViewStatus.success,
+        CounterState.ready(
+          data: CounterViewData(
+            count: 0,
+            lastChanged: DateTime.now(),
+            countdownSeconds: 5,
+          ),
         ),
       );
       await tester.pump();
@@ -93,11 +94,12 @@ void main() {
       );
 
       cubit.emit(
-        CounterState(
-          count: 0,
-          lastChanged: DateTime.now(),
-          countdownSeconds: 5,
-          status: ViewStatus.loading,
+        CounterState.loading(
+          data: CounterViewData(
+            count: 0,
+            lastChanged: DateTime.now(),
+            countdownSeconds: 5,
+          ),
         ),
       );
       await tester.pump();

@@ -8,7 +8,7 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
         if (isClosed) {
           return;
         }
-        emit(state.copyWith(pendingSyncCount: count));
+        emit(state.copyData(pendingSyncCount: count));
       },
       isAlive: () => !isClosed,
       onError: (_) {},

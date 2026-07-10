@@ -1,4 +1,3 @@
-import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
@@ -18,7 +17,7 @@ class CounterHint extends StatelessWidget {
     return ViewStatusSwitcher<CounterCubit, CounterState, _CounterHintData>(
       selector: (final state) => _CounterHintData(
         count: state.count,
-        isLoading: state.status.isLoading,
+        isLoading: state.isLoading,
       ),
       isLoading: (final data) => data.isLoading,
       isError: (_) => false,
