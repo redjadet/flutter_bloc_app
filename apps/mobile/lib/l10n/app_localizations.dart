@@ -2335,6 +2335,78 @@ abstract class AppLocalizations {
   /// **'{rate} Hz'**
   String nativePlatformShowcaseTelemetryRateValue(int rate);
 
+  /// Title for the live PlatformView banner section
+  ///
+  /// In en, this message translates to:
+  /// **'Native platform view'**
+  String get nativePlatformShowcasePlatformViewTitle;
+
+  /// Explains the live PlatformView demo
+  ///
+  /// In en, this message translates to:
+  /// **'This banner is a real UiKitView or AndroidView hosted by custom Swift/Kotlin factories.'**
+  String get nativePlatformShowcasePlatformViewBody;
+
+  /// Placeholder when PlatformView is not supported
+  ///
+  /// In en, this message translates to:
+  /// **'Native platform view embedding is available on iOS and Android devices.'**
+  String get nativePlatformShowcasePlatformViewUnavailable;
+
+  /// Title for haptic and share action controls
+  ///
+  /// In en, this message translates to:
+  /// **'Native actions'**
+  String get nativePlatformShowcaseActionsTitle;
+
+  /// Subtitle for haptic and share actions
+  ///
+  /// In en, this message translates to:
+  /// **'Call host MethodChannel commands for haptics and the system share sheet.'**
+  String get nativePlatformShowcaseActionsSubtitle;
+
+  /// Button that triggers native haptic feedback
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger haptic'**
+  String get nativePlatformShowcaseHapticButton;
+
+  /// Button that opens the system share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Share demo text'**
+  String get nativePlatformShowcaseShareButton;
+
+  /// Frozen text payload shared via the native share sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Hello from Flutter native platform showcase'**
+  String get nativePlatformShowcaseShareDemoText;
+
+  /// Status label for a successful native action
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get nativePlatformShowcaseActionSuccess;
+
+  /// Status label for a failed native action
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get nativePlatformShowcaseActionFailed;
+
+  /// Status label when a native action is unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get nativePlatformShowcaseActionUnavailable;
+
+  /// Fallback label for the last native action result
+  ///
+  /// In en, this message translates to:
+  /// **'Last action'**
+  String get nativePlatformShowcaseLastActionLabel;
+
   /// Title for the Event Bus pattern interactive demo
   ///
   /// In en, this message translates to:

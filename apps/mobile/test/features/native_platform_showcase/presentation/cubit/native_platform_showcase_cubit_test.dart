@@ -4,11 +4,15 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_platform_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability_kind.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_bridge_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
@@ -21,10 +25,18 @@ class _MockLoadNativePlatformShowcaseUseCase extends Mock
 class _MockWatchNativeShowcaseTelemetryUseCase extends Mock
     implements WatchNativeShowcaseTelemetryUseCase {}
 
+class _MockTriggerNativeShowcaseHapticUseCase extends Mock
+    implements TriggerNativeShowcaseHapticUseCase {}
+
+class _MockShareNativeShowcaseTextUseCase extends Mock
+    implements ShareNativeShowcaseTextUseCase {}
+
 void main() {
   group('NativePlatformShowcaseCubit', () {
     late _MockLoadNativePlatformShowcaseUseCase loadShowcase;
     late _MockWatchNativeShowcaseTelemetryUseCase watchTelemetry;
+    late _MockTriggerNativeShowcaseHapticUseCase triggerHaptic;
+    late _MockShareNativeShowcaseTextUseCase shareText;
     late StreamController<NativeShowcaseTelemetrySnapshot> telemetryController;
 
     final loadedData = PlatformShowcaseData(
@@ -49,9 +61,17 @@ void main() {
       emittedAt: DateTime(2026, 1, 1),
     );
 
+    final hapticSuccess = const NativeInteropCallResult(
+      kind: NativeInteropBridgeKind.swift,
+      status: NativeInteropStatus.success,
+      message: 'Haptic impact triggered',
+    );
+
     setUp(() {
       loadShowcase = _MockLoadNativePlatformShowcaseUseCase();
       watchTelemetry = _MockWatchNativeShowcaseTelemetryUseCase();
+      triggerHaptic = _MockTriggerNativeShowcaseHapticUseCase();
+      shareText = _MockShareNativeShowcaseTextUseCase();
       telemetryController =
           StreamController<NativeShowcaseTelemetrySnapshot>.broadcast();
       when(
@@ -66,6 +86,8 @@ void main() {
     NativePlatformShowcaseCubit buildCubit() => NativePlatformShowcaseCubit(
       loadShowcase: loadShowcase,
       watchTelemetry: watchTelemetry,
+      triggerHaptic: triggerHaptic,
+      shareText: shareText,
     );
 
     blocTest<NativePlatformShowcaseCubit, NativePlatformShowcaseState>(
@@ -142,11 +164,18 @@ void main() {
         await Future<void>.delayed(Duration.zero);
 
         cubit.state.maybeWhen(
-          loaded: (final data, final telemetry) {
-            expect(data, loadedData);
-            expect(telemetry?.status, NativeShowcaseTelemetryStatus.failed);
-            expect(telemetry?.message, contains('stream failed'));
-          },
+          loaded:
+              (
+                final data,
+                final telemetry,
+                final lastAction,
+                final lastActionResult,
+                final actionInFlight,
+              ) {
+                expect(data, loadedData);
+                expect(telemetry?.status, NativeShowcaseTelemetryStatus.failed);
+                expect(telemetry?.message, contains('stream failed'));
+              },
           orElse: () => fail('expected loaded state'),
         );
       },
@@ -225,6 +254,101 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       expect(cubit.isClosed, isTrue);
       expect(cubit.state, NativePlatformShowcaseState.loaded(loadedData));
+    });
+
+    blocTest<NativePlatformShowcaseCubit, NativePlatformShowcaseState>(
+      'triggerHaptic preserves loaded data and telemetry',
+      build: () {
+        when(() => loadShowcase()).thenAnswer((_) async => loadedData);
+        when(() => triggerHaptic()).thenAnswer((_) async => hapticSuccess);
+        return buildCubit();
+      },
+      act: (final cubit) async {
+        await cubit.load();
+        telemetryController.add(telemetrySnapshot);
+        await Future<void>.delayed(Duration.zero);
+        await cubit.triggerHaptic();
+      },
+      expect: () => <NativePlatformShowcaseState>[
+        const NativePlatformShowcaseState.loading(),
+        NativePlatformShowcaseState.loaded(loadedData),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          telemetry: telemetrySnapshot,
+        ),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          telemetry: telemetrySnapshot,
+          actionInFlight: NativePlatformShowcaseAction.haptic,
+        ),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          telemetry: telemetrySnapshot,
+          lastAction: NativePlatformShowcaseAction.haptic,
+          lastActionResult: hapticSuccess,
+        ),
+      ],
+    );
+
+    blocTest<NativePlatformShowcaseCubit, NativePlatformShowcaseState>(
+      'telemetry tick preserves last action result',
+      build: () {
+        when(() => loadShowcase()).thenAnswer((_) async => loadedData);
+        when(() => triggerHaptic()).thenAnswer((_) async => hapticSuccess);
+        return buildCubit();
+      },
+      act: (final cubit) async {
+        await cubit.load();
+        await cubit.triggerHaptic();
+        telemetryController.add(telemetrySnapshot);
+      },
+      expect: () => <NativePlatformShowcaseState>[
+        const NativePlatformShowcaseState.loading(),
+        NativePlatformShowcaseState.loaded(loadedData),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          actionInFlight: NativePlatformShowcaseAction.haptic,
+        ),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          lastAction: NativePlatformShowcaseAction.haptic,
+          lastActionResult: hapticSuccess,
+        ),
+        NativePlatformShowcaseState.loaded(
+          loadedData,
+          telemetry: telemetrySnapshot,
+          lastAction: NativePlatformShowcaseAction.haptic,
+          lastActionResult: hapticSuccess,
+        ),
+      ],
+    );
+
+    blocTest<NativePlatformShowcaseCubit, NativePlatformShowcaseState>(
+      'ignores second action while one is in flight',
+      build: () {
+        when(() => loadShowcase()).thenAnswer((_) async => loadedData);
+        when(() => triggerHaptic()).thenAnswer((_) async {
+          await Future<void>.delayed(const Duration(milliseconds: 30));
+          return hapticSuccess;
+        });
+        return buildCubit();
+      },
+      act: (final cubit) async {
+        await cubit.load();
+        final first = cubit.triggerHaptic();
+        final second = cubit.triggerHaptic();
+        await Future.wait<void>(<Future<void>>[first, second]);
+      },
+      verify: (_) {
+        verify(() => triggerHaptic()).called(1);
+      },
+    );
+
+    test('does not run action from non-loaded state', () async {
+      final cubit = buildCubit();
+      addTearDown(cubit.close);
+      await cubit.triggerHaptic();
+      verifyNever(() => triggerHaptic());
     });
   });
 }

@@ -853,6 +853,18 @@
   "nativePlatformShowcaseTelemetryDroppedCountLabel": "Atılan örnekler",
   "nativePlatformShowcaseTelemetryAverageValueLabel": "Son ortalama",
   "nativePlatformShowcaseTelemetryRateValue": "{rate} Hz",
+  "nativePlatformShowcasePlatformViewTitle": "Yerel platform görünümü",
+  "nativePlatformShowcasePlatformViewBody": "Bu banner, özel Swift/Kotlin fabrikaları tarafından barındırılan gerçek bir UiKitView veya AndroidView.",
+  "nativePlatformShowcasePlatformViewUnavailable": "Yerel platform görünümü gömme iOS ve Android cihazlarda kullanılabilir.",
+  "nativePlatformShowcaseActionsTitle": "Yerel eylemler",
+  "nativePlatformShowcaseActionsSubtitle": "Haptik ve sistem paylaşım sayfası için host MethodChannel komutlarını çağırın.",
+  "nativePlatformShowcaseHapticButton": "Haptik tetikle",
+  "nativePlatformShowcaseShareButton": "Demo metnini paylaş",
+  "nativePlatformShowcaseShareDemoText": "Flutter yerel platform vitrininden merhaba",
+  "nativePlatformShowcaseActionSuccess": "Başarılı",
+  "nativePlatformShowcaseActionFailed": "Başarısız",
+  "nativePlatformShowcaseActionUnavailable": "Kullanılamıyor",
+  "nativePlatformShowcaseLastActionLabel": "Son eylem",
   "eventBusDemoTitle": "Event Bus demosu",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"

@@ -1,6 +1,7 @@
 import 'package:auth/auth.dart';
 import 'package:core/core.dart';
 import 'package:dio/dio.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_ai_decision_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_case_study_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_event_bus_demo_services.dart';
@@ -29,6 +30,8 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repos
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_game_repository.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/fake_in_app_purchase_repository.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositories.dart';
@@ -47,7 +50,6 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:storage/storage.dart';
@@ -175,6 +177,14 @@ void main() {
     expect(
       getIt<WatchNativeShowcaseTelemetryUseCase>(),
       isA<WatchNativeShowcaseTelemetryUseCase>(),
+    );
+    expect(
+      getIt<TriggerNativeShowcaseHapticUseCase>(),
+      isA<TriggerNativeShowcaseHapticUseCase>(),
+    );
+    expect(
+      getIt<ShareNativeShowcaseTextUseCase>(),
+      isA<ShareNativeShowcaseTextUseCase>(),
     );
   });
 

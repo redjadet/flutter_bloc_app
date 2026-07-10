@@ -29,7 +29,8 @@ are **depth branches** for follow-up questions.
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
 **Depth on request** (not spine): case study, therapy, charts, GraphQL,
-iGaming, **native platform showcase** (MethodChannel + FFI layering), and other
+iGaming, **native platform showcase** (MethodChannel + EventChannel + FFI +
+mobile PlatformView/haptic/share), and other
 modules in [feature_overview.md](feature_overview.md).
 
 ## 4. JD evidence table
@@ -46,7 +47,7 @@ modules in [feature_overview.md](feature_overview.md).
 | Delivery ownership | CI, validation routing, release docs, vertical demos as depth | README badges, [feature_overview.md](feature_overview.md), [deployment.md](deployment.md) | CI badge; depth table §13 |
 | Mixpanel / Sentry (nice) | **Not shipped** — documented seams | [plans/future_observability.md](plans/future_observability.md) | Interview appendix script §12 |
 | Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
-| Platform channels / FFI (nice) | Live Swift/Kotlin/C interop behind clean-arch ports; web compiles with unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
+| Platform channels / FFI (nice) | Live Swift/Kotlin/C interop, EventChannel telemetry, mobile PlatformView banner, haptic + system share behind clean-arch ports; web/desktop unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
 | Store release (nice) | Release scripts + deployment doc | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference) |
 
 ## 5. Proof commands

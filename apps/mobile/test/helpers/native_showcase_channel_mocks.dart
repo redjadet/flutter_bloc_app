@@ -17,6 +17,17 @@ void registerNativeShowcaseChannelMock() {
             return 'Swift showcase bridge (test mock)';
           case 'invokeKotlin':
             return 'Kotlin showcase bridge (test mock)';
+          case 'triggerHaptic':
+            return 'Haptic impact triggered (test mock)';
+          case 'shareText':
+            final Object? args = call.arguments;
+            if (args is Map && args['text'] is String) {
+              return 'Share sheet presented (test mock)';
+            }
+            throw PlatformException(
+              code: 'invalid_args',
+              message: 'shareText requires a text argument.',
+            );
         }
         return null;
       });

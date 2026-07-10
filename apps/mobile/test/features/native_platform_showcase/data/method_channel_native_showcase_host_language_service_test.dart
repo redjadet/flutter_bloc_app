@@ -71,5 +71,82 @@ void main() {
       expect(result.status, NativeInteropStatus.success);
       expect(result.message, 'Swift ok');
     });
+
+    test('triggerHaptic returns success on iOS', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (final call) async {
+            if (call.method == 'triggerHaptic') {
+              return 'Haptic impact triggered';
+            }
+            return null;
+          });
+
+      const service = MethodChannelNativeShowcaseHostLanguageService(
+        channel: channel,
+      );
+      final result = await service.triggerHaptic();
+
+      expect(result.kind, NativeInteropBridgeKind.swift);
+      expect(result.status, NativeInteropStatus.success);
+      expect(result.message, 'Haptic impact triggered');
+    });
+
+    test('triggerHaptic returns unavailable off mobile', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      const service = MethodChannelNativeShowcaseHostLanguageService();
+      final result = await service.triggerHaptic();
+
+      expect(result.status, NativeInteropStatus.unavailable);
+    });
+
+    test('shareText rejects empty text without channel call', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      var invoked = false;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (final call) async {
+            invoked = true;
+            return 'should not run';
+          });
+
+      const service = MethodChannelNativeShowcaseHostLanguageService(
+        channel: channel,
+      );
+      final result = await service.shareText('   ');
+
+      expect(invoked, isFalse);
+      expect(result.status, NativeInteropStatus.failed);
+      expect(result.message, contains('empty'));
+    });
+
+    test('shareText passes text argument on Android', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      Object? capturedArgs;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(channel, (final call) async {
+            if (call.method == 'shareText') {
+              capturedArgs = call.arguments;
+              return 'Share chooser launched';
+            }
+            return null;
+          });
+
+      const service = MethodChannelNativeShowcaseHostLanguageService(
+        channel: channel,
+      );
+      final result = await service.shareText('Hello native');
+
+      expect(result.kind, NativeInteropBridgeKind.kotlin);
+      expect(result.status, NativeInteropStatus.success);
+      expect(capturedArgs, <String, Object?>{'text': 'Hello native'});
+    });
   });
 }

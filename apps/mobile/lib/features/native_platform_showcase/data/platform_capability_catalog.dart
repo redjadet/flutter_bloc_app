@@ -7,7 +7,7 @@ platformCapabilityCatalog =
     <AppPlatformKind, Map<NativeCapabilityKind, String>>{
       AppPlatformKind.android: <NativeCapabilityKind, String>{
         NativeCapabilityKind.nativeViewEmbedding:
-            'Hybrid Composition / Texture Layer; HCPP-ready',
+            'Hybrid Composition / Texture Layer; live banner demo',
         NativeCapabilityKind.platformPackageManager: 'Gradle + Play packaging',
         NativeCapabilityKind.nativeCodeInterop: 'JNI + Kotlin/Java',
         NativeCapabilityKind.lowLevelGraphics: 'Vulkan / Skia backend',
@@ -15,7 +15,8 @@ platformCapabilityCatalog =
             'Predictive back, Material motion',
       },
       AppPlatformKind.ios: <NativeCapabilityKind, String>{
-        NativeCapabilityKind.nativeViewEmbedding: 'UiKitView / PlatformView',
+        NativeCapabilityKind.nativeViewEmbedding:
+            'UiKitView / PlatformView; live banner demo',
         NativeCapabilityKind.platformPackageManager: 'Swift Package Manager',
         NativeCapabilityKind.nativeCodeInterop: 'Swift / Objective-C bridge',
         NativeCapabilityKind.lowLevelGraphics: 'Metal',

@@ -12,6 +12,8 @@ export 'domain/native_showcase_telemetry_snapshot.dart';
 export 'domain/native_showcase_telemetry_status.dart';
 export 'domain/platform_showcase_data.dart';
 export 'domain/use_cases/load_native_platform_showcase_use_case.dart';
+export 'domain/use_cases/share_native_showcase_text_use_case.dart';
+export 'domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 export 'domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 export 'presentation/cubit/native_platform_showcase_cubit.dart';
 export 'presentation/cubit/native_platform_showcase_state.dart';

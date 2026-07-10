@@ -1261,6 +1261,47 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get nativePlatformShowcasePlatformViewTitle =>
+      'Yerel platform görünümü';
+
+  @override
+  String get nativePlatformShowcasePlatformViewBody =>
+      'Bu banner, özel Swift/Kotlin fabrikaları tarafından barındırılan gerçek bir UiKitView veya AndroidView.';
+
+  @override
+  String get nativePlatformShowcasePlatformViewUnavailable =>
+      'Yerel platform görünümü gömme iOS ve Android cihazlarda kullanılabilir.';
+
+  @override
+  String get nativePlatformShowcaseActionsTitle => 'Yerel eylemler';
+
+  @override
+  String get nativePlatformShowcaseActionsSubtitle =>
+      'Haptik ve sistem paylaşım sayfası için host MethodChannel komutlarını çağırın.';
+
+  @override
+  String get nativePlatformShowcaseHapticButton => 'Haptik tetikle';
+
+  @override
+  String get nativePlatformShowcaseShareButton => 'Demo metnini paylaş';
+
+  @override
+  String get nativePlatformShowcaseShareDemoText =>
+      'Flutter yerel platform vitrininden merhaba';
+
+  @override
+  String get nativePlatformShowcaseActionSuccess => 'Başarılı';
+
+  @override
+  String get nativePlatformShowcaseActionFailed => 'Başarısız';
+
+  @override
+  String get nativePlatformShowcaseActionUnavailable => 'Kullanılamıyor';
+
+  @override
+  String get nativePlatformShowcaseLastActionLabel => 'Son eylem';
+
+  @override
   String get eventBusDemoTitle => 'Event Bus demosu';
 
   @override

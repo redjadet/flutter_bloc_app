@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-10_native_platform_showcase_native_integration_demos.md`](2026-07-10_native_platform_showcase_native_integration_demos.md): Native showcase live PlatformView banner, haptic, and system-share MethodChannel demos on iOS/Android.
 - [`2026-07-06_folder-structure-codex-followups.md`](2026-07-06_folder-structure-codex-followups.md): Codex folder-structure follow-ups — `core/di/features/`, `package:auth`, shared shim removal, feature layout drift fixes, `check_features_barrel.sh`.
 - [`2026-07-02_token-repository-memory-auth-state.md`](2026-07-02_token-repository-memory-auth-state.md): Dedicated `TokenRepository` for in-memory auth token reads; secure storage / SDK persistence limited to startup, login/session hydration, refresh, and logout cleanup.
 - [`2026-07-02_auth-session-lifecycle-regression-guards.md`](2026-07-02_auth-session-lifecycle-regression-guards.md): Auth session lifecycle focused guard routing for session-expired UX races and cross-provider invalidation drops.
