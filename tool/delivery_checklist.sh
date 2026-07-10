@@ -1553,7 +1553,6 @@ CHECK_MESSAGES=(
   "Checking iOS simulator CocoaPods framework embed..."
   "Checking agent knowledge base map..."
   "Checking Cursor/Codex harness scorecard gate..."
-  "Checking Engineering quality scorecard gate..."
   "Checking AI failure risk register..."
   "Checking agent memory compounding..."
   "Checking tracked files for secret-like literals..."
@@ -1634,7 +1633,6 @@ CHECK_SCRIPTS=(
   "tool/check_ios_pod_framework_embed.sh"
   "tool/check_agent_knowledge_base.sh"
   "tool/check_harness_scorecard_gate.sh"
-  "tool/check_engineering_quality_scorecard_gate.sh"
   "tool/check_ai_failure_risk_register.sh"
   "tool/check_agent_memory_compounding.sh"
   "tool/check_tracked_secret_literals.sh"
@@ -1712,7 +1710,6 @@ CHECK_SCRIPT_THEMES=(
   "memory"
   "ui"
   "ios-native"
-  "meta"
   "meta"
   "meta"
   "meta"
@@ -1812,6 +1809,15 @@ if [ "$ANALYZE_FAILED" -ne 0 ]; then
 fi
 echo "✅ Code analysis complete"
 echo ""
+
+# Wiring/docs only before coverage; measured Coverage proofs run after Step 5.
+echo "  Checking Engineering quality scorecard gate (wiring; coverage proofs after Step 5)..."
+if ! bash "$WORKSPACE_ROOT/tool/check_engineering_quality_scorecard_gate.sh" --skip-coverage-proof; then
+  echo "❌ Engineering scorecard gate failed; keep portfolio Engineering score docs and proof gates in sync."
+  VALIDATION_FAILED=1
+fi
+echo ""
+
 if should_run_router_feature_validate_auto; then
   echo "  Running router feature validation (path-triggered)..."
   if ! bash "$WORKSPACE_ROOT/bin/router_feature_validate"; then

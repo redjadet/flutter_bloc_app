@@ -71,7 +71,6 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_ios_pod_framework_embed.sh`
 - `check_agent_knowledge_base.sh`
 - `check_harness_scorecard_gate.sh`
-- `check_engineering_quality_scorecard_gate.sh`
 - `check_ai_failure_risk_register.sh`
 - `check_agent_memory_compounding.sh`
 - `check_tracked_secret_literals.sh`
