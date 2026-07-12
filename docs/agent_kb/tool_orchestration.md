@@ -6,8 +6,22 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md)
 
 Use capabilities as an execution system, not decoration.
 
+## Automatic routing
+
+`./bin/agent-maintain preflight --intent "<task goal>"` combines intent with
+staged, unstaged, untracked, or explicit paths and prints `tool_route|...`
+recommendations. Use `./bin/agent-maintain tools --intent "<goal>" --paths
+<files>` when scope changes. Router is read-only: it never starts apps,
+installs dependencies, deploys, or mutates external systems.
+Agents execute applicable read-only routes automatically before guessing;
+mutating routes still follow user scope and confirmation rules.
+
+Routes favor stable capabilities over host display names: Dart MCP for package
+source/static/runtime evidence, browser/Playwright for live web state, owning
+GitHub/Firebase/Supabase/Figma connectors for their state, then repo fallbacks.
+
 - Prefer direct repo scripts/tests/fixtures, code-review-graph, browser/app proof, and available MCP/connectors over model memory when they can observe the real system.
-- Use external MCP/connectors only for state they own (GitHub/CI, browser runtime, databases, docs); keep secrets out of prompts and artifacts.
+- Use external MCP/connectors only for state they own (GitHub/CI, browser runtime, databases, docs); keep secrets out of prompts and artifacts. Read-only inspection may be automatic; deploys, writes, and other external mutations still need explicit scope.
 - Tool docs/templates should name what tool does, when to use it, required inputs, side effects, retry safety, and common failure modes.
 - Semantic search/code graph finds likely files; targeted raw reads still confirm before edits.
 - Faster/mechanical tools or models may do repetitive edits only after the owner has fixed scope, write set, and validation; final judgment stays with the coordinating agent.

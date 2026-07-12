@@ -6,7 +6,7 @@ Canonical skill picker. Repo canon wins over vendor skill text.
 
 | Situation | Action |
 | --- | --- |
-| Non-trivial task start | Read [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight; invoke `agents-common-pitfalls`; run `./bin/agent-maintain preflight` |
+| Non-trivial task start | Read [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight; invoke `agents-common-pitfalls`; run `./bin/agent-maintain preflight --intent "<task goal>"` |
 | Implementation / refactor / tests / validation / debugging / host setup | Pick a matching skill before edits or broad commands |
 | Pure read-only Q&A | Skill optional; use repo docs first |
 | Trivial one-line fix with obvious convention | Skill optional only when confidence is at least 95% |
@@ -27,6 +27,7 @@ Full context ladder: [`context_loading.md`](context_loading.md).
 
 ```bash
 ./bin/agent-maintain find QUERY
+./bin/agent-maintain tools --intent "<task goal>" --paths <files>
 bash tool/find_global_agent_skills.sh QUERY
 npx skills find QUERY
 npx skills ls -g

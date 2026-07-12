@@ -21,9 +21,12 @@ Enable in Cursor MCP ([`agent_environment_setup.md`](../agent_environment_setup.
 
 | Server | Role |
 | --- | --- |
-| `user-dart` | Read **resolved** package source in the workspace (`read_package_uris`, `rip_grep_packages`, `pub_dev_search`) |
-| `plugin-context7-plugin-context7` | Up-to-date library docs and examples (`resolve-library-id` → `query-docs`) |
-| `user-ref-context` or `user-Ref` (optional) | Doc search + URL fetch (`ref_search_documentation`, `ref_read_url`) |
+| Dart MCP (`dart`; some hosts show `user-dart`) | Read **resolved** package source in the workspace (`read_package_uris`, `rip_grep_packages`, `pub_dev_search`) |
+| Context7, when installed | Current library docs and examples (`resolve-library-id` → `query-docs`) |
+| Ref/browser/web, when available | Official documentation lookup and URL reads |
+
+Server display names vary by host. Discover available capabilities first; do
+not fail the task because a documented label differs.
 
 Prefer MCP over generic web search for library documentation.
 
@@ -31,7 +34,7 @@ Prefer MCP over generic web search for library documentation.
 
 1. **Repo canon** — [`AGENTS.md`](../../AGENTS.md), feature docs, [`agents-references`](../../tool/agent_host_templates/shared/skills/agents-references/SKILL.md), existing usage in `lib/`.
 2. **Pinned version** — `pubspec.yaml` / `pubspec.lock` (implement against what the project resolves, not “latest on pub.dev”).
-3. **MCP evidence** — dependency source + Context7/ref docs (cite what you used).
+3. **Tool evidence** — resolved dependency source + current official docs (cite what you used).
 4. **Model memory** — only when MCP unavailable; say so and narrow scope.
 
 ## Workflow
@@ -45,18 +48,19 @@ Copy and execute in order:
 2. **Read resolved package source (Dart MCP)**
    - `read_package_uris` — open `package:<name>/<path>.dart` (API entrypoints, typedefs, extensions).
    - `rip_grep_packages` — search dependency `lib/` for symbol names, deprecated annotations, examples.
-   - Use project root as `file:///` URI (same as other `user-dart` tools).
+   - Use project root as `file:///` URI (same as other Dart MCP tools).
 
-3. **Fetch current library docs (Context7)**
+3. **Fetch current library docs**
    - `resolve-library-id` with library name + task context (unless user gave `/org/project` or `/org/project/version`).
    - `query-docs` with a **specific** question (good: “GoRouter redirect API with refreshListenable in v14”; bad: “routing”).
    - Limit repeated `query-docs` calls; synthesize once you have enough to implement.
+   - If Context7 is unavailable, use official package/platform docs through the available ref/browser/web capability.
 
-4. **Optional: ref-context**
-   - When Context7 has no match or you need official doc URLs: `ref_search_documentation` → `ref_read_url`.
+4. **Optional: ref/browser**
+   - When you need official doc URLs or exact pages, use the available documentation/browser tool.
 
 5. **Discover alternatives (if needed)**
-   - `pub_dev_search` on `user-dart` for package discovery or `dependency:<name>` queries.
+   - `pub_dev_search` on Dart MCP for package discovery or `dependency:<name>` queries.
 
 6. **Implement and verify**
    - Match repo architecture (Clean Architecture, Cubit/BLoC, DI).
@@ -67,12 +71,12 @@ Copy and execute in order:
 
 | Goal | MCP |
 | --- | --- |
-| Read `.dart` from a dependency | `user-dart` → `read_package_uris` |
-| Find symbol in dependency source | `user-dart` → `rip_grep_packages` |
+| Read `.dart` from a dependency | Dart MCP → `read_package_uris` |
+| Find symbol in dependency source | Dart MCP → `rip_grep_packages` |
 | Current docs + examples | Context7 → `resolve-library-id`, `query-docs` |
 | Official doc URL content | `ref_search_documentation`, `ref_read_url` |
-| Search pub.dev | `user-dart` → `pub_dev_search` |
-| Static check after edit | `user-dart` → `analyze_files` |
+| Search pub.dev | Dart MCP → `pub_dev_search` |
+| Static check after edit | Dart MCP → `analyze_files` |
 
 ## Do not
 

@@ -12,9 +12,9 @@ needs a reload hint after `--apply`.
 
 | Situation | Command | `--apply` |
 | --- | --- | --- |
-| **Non-trivial task start** (feature, fix, refactor, multi-file) | `./bin/agent-maintain preflight` | No |
+| **Non-trivial task start** (feature, fix, refactor, multi-file) | `./bin/agent-maintain preflight --intent "<task goal>"` (bootstrap + automatic tool routes + drift + trackers) | No |
 | **Cold session / unclear repo state** | `./bin/agent-maintain preflight` | No |
-| **After editing `tool/agent_host_templates/**`** | `./bin/agent-maintain after-host-edit` **in the same turn** (do not defer; `closeout` runs it when templates are in git scope) | **Yes** (agents run; never only tell the user) |
+| **After editing `tool/agent_host_templates/**`** | `./bin/agent-maintain after-host-edit` **in the same turn** (do not defer; `closeout` runs it when templates are in git scope; project-only Cursor rules sync into workspace `.cursor/rules/`) | **Yes** (agents run; never only tell the user) |
 | **After editing [`AGENTS.md`](../../AGENTS.md), [`docs/agent_knowledge_base.md`](../agent_knowledge_base.md), `docs/agent_kb/**`, host scripts, or `bin/agent-maintain`** | `./bin/agent-maintain kb` (also via `closeout` when agent-map is in scope and templates are not) | No |
 | **Before claiming any non-trivial task done** | `./bin/agent-maintain closeout` (alias: `auto`) | Host + doc sync from git scope; agents run, never delegate |
 | **Before claiming host/docs/tooling work done** (narrow lane) | `./bin/agent-maintain closeout` | Same as above |
@@ -36,7 +36,7 @@ you are finishing an explicit host-environment task. Prefer `preflight` + scoped
 
 `closeout` / `auto` runs:
 
-1. `preflight` (bootstrap + drift warn + trackers)
+1. `preflight` (bootstrap + intent/path tool routes + drift warn + trackers)
 2. **`docs-sync`** when validation tooling or markdown docs are in scope (see below)
 3. **`after-host-edit`** only when `tool/agent_host_templates/**` is in git scope (sync `--apply` + strict drift + `kb`) — **not** on every task
 4. **`kb`** only when agent-map paths changed **and** templates were not in scope
@@ -55,7 +55,7 @@ declarations stay connected.
 
 ### Why `closeout` always runs `preflight`
 
-`preflight` is cheap (read-only bootstrap, drift **warn**, task trackers) and re-establishes session context before doc/host steps. Skipping it would let agents claim done without fresh tracker/drift signals. Host/doc mutations still follow scope (`after-host-edit`, `kb`, `docs-sync` only when paths match).
+`preflight` is cheap (read-only bootstrap, tool recommendations, drift **warn**, task trackers) and re-establishes session context before doc/host steps. Skipping it would let agents claim done without fresh tracker/drift signals. Host/doc mutations still follow scope (`after-host-edit`, `kb`, `docs-sync` only when paths match).
 
 ## Doc closeout (`docs-sync`)
 

@@ -12,6 +12,8 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
   file and Codex worktrees; Cursor reads the root map in-repo.
 - Host-neutral skills live under `tool/agent_host_templates/shared/` and sync
   to both Codex and Cursor. Host-specific skills stay under their host folder.
+- Project-only Cursor rules sync to workspace `.cursor/rules/`; they do not
+  leak into `~/.cursor/rules`.
 - Shared-source skills now include `agents-quick-reference`,
   `agents-delivery-workflow`, `agents-repo-context`, `agents-references`,
   `agents-validation-testing`, `agents-principles-baseline`,
@@ -36,6 +38,6 @@ See also: [`agent_environment_setup.md`](../agent_environment_setup.md), [`agent
 - `./tool/check_agent_memory_compounding.sh`: source-aligned memory-compounding; autonomous action explicit-approval-gated.
 - `./tool/validate_validation_docs.sh`: validation docs vs on-disk `check_*.sh` inventory and catalog counts.
 - `./tool/normalize_doc_links.py`: clickable local links.
-- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates; fails on workspace `.cursor/skills/` or `.cursor/rules/` duplicates of synced host assets.
+- `./tool/check_agent_asset_drift.sh`: managed Cursor/Codex assets vs templates, including required project-only Cursor rules; fails on workspace `.cursor/skills/` or `.cursor/rules/` duplicates of globally synced host assets.
 - `./bin/checklist`: full gate. `./bin/checklist-fast`: local-only clean/narrow docs/tooling.
 - `.original.md` compression backups temporary; delete after verifying active docs.

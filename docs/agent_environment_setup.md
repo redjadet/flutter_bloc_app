@@ -19,13 +19,12 @@ Local agent-doc edits: `./tool/check_agent_knowledge_base.sh` runs safe link nor
 
 Enable only tools you will use; disabled stale servers create noise.
 
-Suggested for this Flutter repo (Cursor MCP settings):
+Suggested capabilities for this Flutter repo (server display names vary by host):
 
-- `user-dart` (Flutter/Dart tooling: analyze, DTD, **`get_runtime_errors`**, hot reload — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); **`read_package_uris`**, **`rip_grep_packages`**, `pub_dev_search` — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md))
-- `plugin-context7-plugin-context7` (current library docs for drift-prone APIs — [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md))
-- `cursor-ide-browser` (runtime proof, screenshots)
-- optional: `user-playwright` (repeatable browser flows)
-- optional: `user-github` (PRs/comments/checks)
+- Dart MCP (`dart`; some hosts prefix it as `user-dart`): analyze, DTD, **`get_runtime_errors`**, hot reload, **`read_package_uris`**, **`rip_grep_packages`**, and `pub_dev_search` — [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md), [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md)
+- Current-doc lookup: Context7 when installed; otherwise official docs through available ref/browser/web tools
+- Browser or Playwright capability for runtime proof, screenshots, and repeatable browser flows
+- GitHub capability for PRs, comments, checks, and run logs
 
 If a server needs auth, complete it once. Keep tokens out of prompts and repo files.
 
@@ -56,6 +55,8 @@ Requires Node.js (`npx`). Installs under `~/.agents/skills/` and links them to *
 ```bash
 ./bin/agent-maintain help
 ./bin/agent-maintain preflight                 # agents: run at non-trivial task start
+./bin/agent-maintain preflight --intent "runtime crash"  # adds intent/path tool routes
+./bin/agent-maintain tools --intent "package API" --paths pubspec.yaml
 ./bin/agent-maintain closeout                  # agents: before claiming task done (alias: auto)
 ./bin/agent-maintain after-host-edit           # agents: after tool/agent_host_templates/** edits
 ./bin/agent-maintain docs-sync                 # agents: mechanical validation-doc + link sync (also in closeout when in scope)

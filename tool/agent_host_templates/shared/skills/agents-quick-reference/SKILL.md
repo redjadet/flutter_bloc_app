@@ -7,7 +7,7 @@ description: Fast repo orientation, command entrypoints, cross-host guardrails, 
 
 Repo canon wins. Pointers only.
 
-**Start:** `AGENTS.md` + **Context ladder** (`docs/ai/context_loading.md`). Skill routing: `docs/ai/skill_routing.md` (`agents-skill-routing`). Commands: `docs/agents_quick_reference.md`. Doctrine/review: `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`.
+**Start:** `AGENTS.md` + **Context ladder** (`docs/ai/context_loading.md`). Skill routing: `docs/ai/skill_routing.md` (`agents-skill-routing`). Tool route: `./bin/agent-maintain preflight --intent "<goal>"` or `tools --intent "<goal>" --paths <files>`. Commands: `docs/agents_quick_reference.md`. Doctrine/review: `docs/agent_knowledge_base.md`, `docs/ai_code_review_protocol.md`.
 
 **UI/platform:** `DESIGN.md`, `docs/design_system.md`, `flutter-cross-platform-modern`.
 

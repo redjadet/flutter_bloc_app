@@ -1,10 +1,12 @@
 ---
 description: After editing Dart/Flutter code, trigger hot reload when app running (reduces edit-test loop).
 globs:
-  - lib/**/*.dart
-  - test/**/*.dart
-  - integration_test/**/*.dart
-alwaysApply: true
+  - apps/mobile/lib/**/*.dart
+  - apps/mobile/test/**/*.dart
+  - apps/mobile/integration_test/**/*.dart
+  - packages/*/lib/**/*.dart
+  - packages/*/test/**/*.dart
+alwaysApply: false
 ---
 
 # Auto hot reload after edits

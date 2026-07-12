@@ -5,7 +5,8 @@ usage() {
   cat <<'EOF'
 Usage: sync_agent_assets.sh --dry-run | --apply
 
-Sync repo-managed Cursor and Codex adapter templates into ~/.cursor and ~/.codex.
+Sync repo-managed Cursor and Codex adapter templates into ~/.cursor and ~/.codex,
+plus project-only Cursor rules into this workspace's .cursor/rules directory.
 Templates live under tool/agent_host_templates/ by default (versioned in this
 repo), or set AGENT_TEMPLATES_ROOT to another directory.
 Root AGENTS.md is the repo source map and the Codex host bootstrap copied to
@@ -81,7 +82,10 @@ report_and_maybe_apply() {
 }
 
 # shellcheck disable=SC2154
-for mapping in "${managed_cursor_files[@]}" "${managed_codex_files[@]}"; do
+for mapping in \
+  "${managed_cursor_files[@]}" \
+  "${managed_codex_files[@]}" \
+  "${managed_cursor_project_files[@]}"; do
   src_rel="${mapping%%|*}"
   dst="${mapping##*|}"
   report_and_maybe_apply "$src_rel" "$dst"

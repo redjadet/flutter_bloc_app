@@ -58,6 +58,13 @@ managed_cursor_files=(
   "cursor/rules/agent-auto-hot-reload.mdc|$HOME/.cursor/rules/agent-auto-hot-reload.mdc"
 )
 
+# Project-only Cursor rules must stay in the active workspace. Keeping these
+# separate prevents always-on project behavior from leaking into ~/.cursor.
+# shellcheck disable=SC2034
+managed_cursor_project_files=(
+  "cursor/rules/agent-execution.mdc|$repo_root/.cursor/rules/agent-execution.mdc"
+)
+
 # shellcheck disable=SC2034
 managed_codex_files=(
   "__repo_root__/AGENTS.md|$HOME/.codex/AGENTS.md"

@@ -11,8 +11,9 @@ Toolchain: Flutter 3.44.5 / Dart 3.12.2
 
 | Situation | Command |
 | --- | --- |
-| Cold start map | `bash tool/agent_session_bootstrap.sh` |
-| Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight` |
+| Cold start map | `bash tool/agent_session_bootstrap.sh --intent "<task goal>"` (prints automatic tool routes) |
+| Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight --intent "<task goal>"` |
+| Tool choice / scope changed | `./bin/agent-maintain tools --intent "<goal>" --paths <files>`; [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
 | Format Dart source | `./bin/format` or `./bin/format --changed` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
@@ -20,7 +21,7 @@ Toolchain: Flutter 3.44.5 / Dart 3.12.2
 | Integration journey / flow | `./bin/integration_tests` |
 | Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |
 | Runtime error / red screen / active debug bug | DTD `get_runtime_errors` -> fix -> hot reload -> re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); shell: `bash tool/check_runtime_errors.sh` |
-| Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Context7 + `user-dart`; `/package-docs` |
+| Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `/package-docs` |
 | iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
 | Apple debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold restart simulator |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
@@ -59,6 +60,7 @@ Fastlane: prefer `./tool/fastlane.sh`.
 
 | Trigger | Cursor | Codex |
 | --- | --- | --- |
+| Task start / changed scope | Preflight/tool router emits repo-first capability routes from intent + paths | Same |
 | Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
 | Broad/high-risk work | Use [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation helps and is allowed |
 | API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |

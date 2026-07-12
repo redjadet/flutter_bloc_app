@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-07-12_agent_tool_auto_routing.md`](2026-07-12_agent_tool_auto_routing.md): Intent/path tool router integrated into preflight; MCP naming de-drifted; hot-reload rule scoped to current workspace paths.
+- [`2026-07-12_agent_docs_and_host_sync_conflict_repair.md`](2026-07-12_agent_docs_and_host_sync_conflict_repair.md): Current package/app ownership restored in AI maps; project-only Cursor execution rule added to sync and drift enforcement.
 - [`2026-07-10_adr_quality_hardening.md`](2026-07-10_adr_quality_hardening.md): Current-path ADR repair plus deterministic metadata, consequence, section, and stale-ownership guard with negative fixture.
 - [`2026-07-10_long_agent_docs_compression.md`](2026-07-10_long_agent_docs_compression.md): State-management and responsive-review essays compressed into short decision, review, and proof contracts without removing owner gates.
 - [`2026-07-10_architecture_docs_dedup.md`](2026-07-10_architecture_docs_dedup.md): Architecture canon deduplicated around package ownership, feature references, app composition, and enforceable review owners.

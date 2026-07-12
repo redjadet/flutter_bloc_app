@@ -10,6 +10,8 @@ Purpose: one command for host upkeep and composed workflows instead of ad-hoc sh
 ./bin/agent-maintain help
 ./bin/agent-maintain list
 ./bin/agent-maintain preflight              # agents: non-trivial task start
+./bin/agent-maintain preflight --intent "runtime crash"
+./bin/agent-maintain tools --intent "package API" --paths pubspec.yaml
 ./bin/agent-maintain closeout               # before task finish (alias: auto)
 ./bin/agent-maintain after-host-edit        # after tool/agent_host_templates/** edits
 ./bin/agent-maintain session
@@ -25,7 +27,8 @@ Implementation: `tool/agent_maintain.sh`. Wrapper: `bin/agent-maintain`. Cursor 
 | Preset | What it runs |
 | --- | --- |
 | `routine` | sync dry-run + drift warn; `routine --apply` sync `--apply` + **strict** drift, `update --check`, memory `--verify`, budget report (if inventory exists) |
-| `preflight` | session bootstrap, drift (warn), task trackers |
+| `preflight` | session bootstrap, intent/path tool routes, drift (warn), task trackers |
+| `tools` / `tool-route` | read-only repo/MCP/browser recommendations from task intent + explicit or changed paths |
 | `closeout` / `auto` | `preflight`; scope `docs-sync`; templates in scope → `after-host-edit`; else agent-map → `kb` |
 | `docs-sync` | `fix_validation_docs.sh` + `validate_validation_docs.sh` when `tool/agent_maintain.sh`, `bin/agent-maintain`, checklist scripts, or `docs/**` in scope; link gardening via `agent_memory_auto_maintain.sh` |
 | `after-host-edit` | `sync --apply` + strict drift + `kb` |

@@ -2,7 +2,7 @@
 
 Back: [Tool orchestration](tool_orchestration.md) · [Agent quick reference](../agents_quick_reference.md)
 
-Agents read **live runtime errors** from the running Flutter debug app through the **`user-dart` MCP** (Dart Tooling Daemon / VM service). That is the programmatic equivalent of DevTools **Logging** and error overlays — no browser UI required.
+Agents read **live runtime errors** from the running Flutter debug app through Dart MCP (server commonly named `dart`; some hosts expose it as `user-dart`). Route by the stable DTD tools, not the display label. This is the programmatic equivalent of DevTools **Logging** and error overlays — no browser UI required.
 
 ## When to use
 
@@ -15,7 +15,7 @@ Do **not** guess stack traces from memory when a controllable debug session exis
 ## Prerequisites
 
 - App running in **debug** (`flutter run`, IDE Run/Debug, integration driver with VM service).
-- MCP server **`user-dart`** enabled ([`agent_environment_setup.md`](../agent_environment_setup.md)).
+- Dart MCP enabled with `dtd`, `get_runtime_errors`, and hot-reload tools ([`agent_environment_setup.md`](../agent_environment_setup.md)).
 - Same machine/workspace as the running app (DTD URI `workingDirectory` should match this repo when possible).
 
 ## Workflow

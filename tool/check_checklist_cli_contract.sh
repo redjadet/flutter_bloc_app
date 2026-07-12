@@ -18,7 +18,8 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$repo_root"
 
 tmp_dir="$(mktemp -d "${TMPDIR:-/tmp}/checklist-cli-contract.XXXXXX")"
-trap 'rm -rf "$tmp_dir"' EXIT
+scope_fixture="tool/agent_tool_router_scope_fixture.tmp"
+trap 'rm -rf "$tmp_dir"; rm -f "$scope_fixture"' EXIT
 
 run_ok() {
   local name="$1"
@@ -87,9 +88,49 @@ assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "host-ful
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "closeout"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness-maintain"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "tools, tool-route"
 
 run_ok agent_maintain_list ./bin/agent-maintain list
 assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "agent-maintain commands"
+assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "tools tool-route"
+
+run_ok agent_tool_router_help bash tool/agent_tool_router.sh --help
+assert_contains agent_tool_router_help "$tmp_dir/agent_tool_router_help.out" \
+  "Usage: tool/agent_tool_router.sh"
+
+run_ok agent_tool_router_runtime bash tool/agent_tool_router.sh \
+  --intent "runtime crash" --paths apps/mobile/lib/app.dart
+assert_contains agent_tool_router_runtime "$tmp_dir/agent_tool_router_runtime.out" \
+  "tool_route|runtime|dart-mcp|"
+assert_contains agent_tool_router_runtime "$tmp_dir/agent_tool_router_runtime.out" \
+  "tool_route|app-debug|dart-mcp|"
+
+run_ok agent_tool_router_mixed bash tool/agent_tool_router.sh \
+  --intent "package API" \
+  --paths pubspec.yaml apps/mobile/lib/app/router/app_router.dart docs/README.md tool/example.sh
+for route in package-api router docs shell; do
+  assert_contains agent_tool_router_mixed "$tmp_dir/agent_tool_router_mixed.out" \
+    "tool_route|$route|"
+done
+
+run_ok agent_maintain_tools ./bin/agent-maintain tools \
+  --intent "browser UI" --paths apps/mobile/lib/features/counter/presentation/counter_page.dart
+assert_contains agent_maintain_tools "$tmp_dir/agent_maintain_tools.out" \
+  "tool_route|browser|"
+assert_contains agent_maintain_tools "$tmp_dir/agent_maintain_tools.out" \
+  "tool_route|ui|"
+
+printf 'scope fixture\n' >"$scope_fixture"
+run_ok agent_bootstrap_untracked bash tool/agent_session_bootstrap.sh --intent "tool audit"
+assert_contains agent_bootstrap_untracked "$tmp_dir/agent_bootstrap_untracked.out" \
+  "scope|path|$scope_fixture"
+assert_contains agent_bootstrap_untracked "$tmp_dir/agent_bootstrap_untracked.out" \
+  "tool_route|agent-harness|"
+rm -f "$scope_fixture"
+
+run_ok agent_asset_sync_dry ./tool/sync_agent_assets.sh --dry-run
+assert_contains agent_asset_sync_dry "$tmp_dir/agent_asset_sync_dry.out" \
+  ".cursor/rules/agent-execution.mdc"
 
 run_ok agent_maintain_host_full_plan ./bin/agent-maintain host-full
 assert_contains agent_maintain_host_full_plan "$tmp_dir/agent_maintain_host_full_plan.out" "plan|host-full"

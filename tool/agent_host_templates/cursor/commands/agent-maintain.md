@@ -11,7 +11,8 @@ Route host upkeep through the repo entrypoint — do not hand-compose long shell
 
 ## When to use
 
-- **Task start / non-trivial work:** `preflight` (read-only)
+- **Task start / non-trivial work:** `preflight --intent "<task goal>"` (read-only; emits tool routes from intent + git scope)
+- **Tool choice unclear:** `tools --intent "<task goal>" --paths <files>`
 - **Before claiming any task done:** `closeout` (preflight + scope `docs-sync` / `after-host-edit` / `kb`)
 - **Validation-doc or markdown-only edits in scope:** `docs-sync` (or rely on `closeout`)
 - After editing `tool/agent_host_templates/**`: `after-host-edit` **immediately** (same turn; `closeout` runs it when templates are in scope)
@@ -26,6 +27,7 @@ When-table + scope rules: [`host_maintenance_automation.md`](../../../../docs/ag
 
 ```bash
 ./bin/agent-maintain preflight      # task start
+./bin/agent-maintain tools --intent "runtime crash" --paths apps/mobile/lib/app.dart
 ./bin/agent-maintain after-host-edit  # same turn after tool/agent_host_templates/**
 ./bin/agent-maintain harness-maintain  # before max-score / harness claim
 ./bin/agent-maintain closeout       # before claiming done

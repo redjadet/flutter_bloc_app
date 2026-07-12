@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: tool/agent_session_bootstrap.sh [--base <git-ref>] [--paths <file>...]
+Usage: tool/agent_session_bootstrap.sh [--intent <text>] [--base <git-ref>] [--paths <file>...]
 
 Read-only bootstrap for AI agent sessions.
 
@@ -12,12 +12,14 @@ Prints:
 - canonical docs to read next (AGENTS.md + docs index)
 - validation routing pointers (fast/full + router/integration)
 - scope detection summary (explicit paths > git diff > unknown-scope fallback)
+- deterministic tool recommendations from intent + scope
 
 Never mutates the working tree.
 EOF
 }
 
 base_ref=""
+intent=""
 declare -a explicit_paths=()
 
 while [[ $# -gt 0 ]]; do
@@ -25,6 +27,14 @@ while [[ $# -gt 0 ]]; do
     -h|--help)
       usage
       exit 0
+      ;;
+    --intent)
+      intent="${2:-}"
+      if [[ -z "$intent" ]]; then
+        echo "usage-error|--intent requires text" >&2
+        exit 2
+      fi
+      shift 2
       ;;
     --base)
       base_ref="${2:-}"
@@ -123,32 +133,49 @@ echo ""
 print_flutter_resolution_report || true
 echo ""
 
-scope_mode="unknown"
+declare -a scope_paths=()
 if [[ "${#explicit_paths[@]}" -gt 0 ]]; then
-  scope_mode="explicit-paths"
   echo "scope|mode|explicit-paths"
   for p in "${explicit_paths[@]}"; do
+    scope_paths+=("$p")
     echo "scope|path|$p"
   done
 elif [[ "$has_git" -eq 1 ]]; then
-  scope_mode="git-diff"
   echo "scope|mode|git-diff"
   if [[ -n "$base_ref" ]]; then
     echo "scope|base|$base_ref"
     if git rev-parse "$base_ref" >/dev/null 2>&1; then
-      git diff --name-only "$base_ref...HEAD" --diff-filter=ACMRTUXB | sed '/^$/d' | while IFS= read -r f; do
+      while IFS= read -r f; do
+        [[ -n "$f" ]] || continue
+        scope_paths+=("$f")
         echo "scope|path|$f"
-      done
+      done < <(git diff --name-only "$base_ref...HEAD" --diff-filter=ACMRTUXB | sed '/^$/d')
     else
       echo "unknown-scope|treating as broad|invalid-base-ref"
     fi
   else
-    git diff --name-only --diff-filter=ACMRTUXB | sed '/^$/d' | while IFS= read -r f; do
+    while IFS= read -r f; do
+      [[ -n "$f" ]] || continue
+      scope_paths+=("$f")
       echo "scope|path|$f"
-    done
+    done < <({
+      git diff --name-only --diff-filter=ACMRTUXBD 2>/dev/null || true
+      git diff --name-only --cached --diff-filter=ACMRTUXBD 2>/dev/null || true
+      git ls-files --others --exclude-standard 2>/dev/null || true
+    } | sed '/^$/d' | LC_ALL=C sort -u)
   fi
 else
   echo "unknown-scope|treating as broad|no-git"
+fi
+
+echo ""
+if [[ -n "$intent" ]]; then
+  echo "tool_route|intent|provided"
+fi
+if [[ "${#scope_paths[@]}" -gt 0 ]]; then
+  bash "$repo_root/tool/agent_tool_router.sh" --intent "${intent:-scope-only}" --paths "${scope_paths[@]}"
+else
+  bash "$repo_root/tool/agent_tool_router.sh" --intent "${intent:-scope-only}"
 fi
 
 echo ""

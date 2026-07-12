@@ -7,7 +7,8 @@ Usage: check_agent_asset_drift.sh
 
 Check whether managed Cursor/Codex host assets match repo sources. Cursor
 assets and Codex skills/rules come from tool/agent_host_templates/ (or
-AGENT_TEMPLATES_ROOT); Codex AGENTS.md comes from root AGENTS.md.
+AGENT_TEMPLATES_ROOT); project-only Cursor rules live in workspace
+.cursor/rules; Codex AGENTS.md comes from root AGENTS.md.
 
 If no template tree exists, this script exits 0 and prints a skip message.
 Otherwise it also verifies README toolchain markers in matching policy docs.
@@ -70,7 +71,10 @@ check_mapping() {
 }
 
 # shellcheck disable=SC2154
-for mapping in "${managed_cursor_files[@]}" "${managed_codex_files[@]}"; do
+for mapping in \
+  "${managed_cursor_files[@]}" \
+  "${managed_codex_files[@]}" \
+  "${managed_cursor_project_files[@]}"; do
   check_mapping "${mapping%%|*}" "${mapping##*|}"
 done
 

@@ -45,7 +45,7 @@ See [State Management Choice](state_management_choice.md) for the full rationale
 
 ```bash
 bash tool/workspace_pub_get.sh
-cd apps/mobile && flutter run -t apps/mobile/lib/main_dev.dart
+cd apps/mobile && flutter run -t lib/main_dev.dart
 ```
 
 For platform setup and configuration, see [Developer Guide](new_developer_guide.md) and [Security & Secrets](security_and_secrets.md).

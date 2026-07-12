@@ -30,7 +30,7 @@ echo "fixtures|agent_maintain|list"
 bash tool/agent_maintain.sh list >/dev/null
 
 echo "fixtures|agent_maintain|auto_dry"
-bash tool/agent_maintain.sh auto >/dev/null
+AGENT_MAINTAIN_PLAN_ONLY=1 bash tool/agent_maintain.sh auto >/dev/null
 
 echo "fixtures|bin_agent_maintain|help"
 agent_maintain_help="$(./bin/agent-maintain --help)"

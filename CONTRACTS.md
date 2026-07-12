@@ -5,7 +5,7 @@ Rules for agents changing APIs, repositories, and feature surfaces. Pilot stubs 
 ## Global rules
 
 1. **Domain contracts are stable** — breaking changes need migration note + tests.
-2. **No cross-feature domain imports** — use `apps/mobile/lib/shared/` ports or events ([`docs/modularity.md`](docs/modularity.md)).
+2. **No cross-feature domain imports** — use package-owned ports or app-layer composition ([`docs/modularity.md`](docs/modularity.md), [`docs/SHARED_UTILITIES.md`](docs/SHARED_UTILITIES.md)).
 3. **Repositories expose async contracts** — document error types (`Failure` / `Exception`).
 4. **Cubit public API** — document events/methods that UI relies on; test state transitions.
 5. **Routes** — add constant in `app_routes.dart` before page registration.

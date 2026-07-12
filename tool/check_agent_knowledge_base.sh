@@ -64,7 +64,7 @@ require_contains() {
     fail "Cannot scan missing file: $path"
     return
   fi
-  if ! grep -qF "$needle" "$path"; then
+  if ! grep -qF -- "$needle" "$path"; then
     fail "$path must reference: $needle"
   fi
 }
@@ -76,8 +76,20 @@ require_not_contains() {
     fail "Cannot scan missing file: $path"
     return
   fi
-  if grep -qF "$needle" "$path"; then
+  if grep -qF -- "$needle" "$path"; then
     fail "$path must not contain host-specific detail ($needle); keep it map-only and pointer-led"
+  fi
+}
+
+require_excludes() {
+  local path="$1"
+  local needle="$2"
+  if [ ! -f "$path" ]; then
+    fail "Cannot scan missing file: $path"
+    return
+  fi
+  if grep -qF -- "$needle" "$path"; then
+    fail "$path must not reference: $needle"
   fi
 }
 
@@ -101,7 +113,9 @@ require_all_contains() {
 required_files=(
   "bin/agent-maintain"
   "tool/agent_maintain.sh"
+  "tool/agent_tool_router.sh"
   "docs/agent_kb/host_maintenance_automation.md"
+  "docs/agent_kb/tool_orchestration.md"
   "docs/agent_knowledge_base.md"
   "docs/agent_kb/self_improvement.md"
   "docs/ai_code_review_protocol.md"
@@ -142,8 +156,52 @@ for path in "${line_budget_files[@]}"; do
 done
 
 require_line_budget "docs/ai/agent_operating_manual.md" 120
+require_line_budget "docs/agent_kb/tool_orchestration.md" 120
 require_contains "docs/ai/context_loading.md" "agent_operating_manual.md"
 require_contains "docs/agent_knowledge_base.md" "agent_operating_manual.md"
+require_all_contains \
+  "docs/agent_kb/tool_orchestration.md" \
+  "agent-maintain preflight --intent" \
+  "agent-maintain tools --intent" \
+  "stable capabilities" \
+  "never starts apps" \
+  "external mutations"
+require_all_contains \
+  "tool/agent_session_bootstrap.sh" \
+  "--intent" \
+  "agent_tool_router.sh" \
+  "git diff --name-only --cached" \
+  "git ls-files --others --exclude-standard"
+require_all_contains \
+  "tool/agent_maintain.sh" \
+  "tools, tool-route" \
+  "cmd_tools" \
+  "tool/agent_tool_router.sh"
+require_all_contains \
+  "docs/agent_kb/package_docs_mcp.md" \
+  "Server display names vary by host" \
+  "Dart MCP" \
+  "current official docs"
+require_excludes "docs/agent_kb/package_docs_mcp.md" "plugin-context7-plugin-context7"
+require_excludes "docs/agent_environment_setup.md" "plugin-context7-plugin-context7"
+require_all_contains \
+  "docs/ai/repo_map.md" \
+  "packages/*" \
+  "apps/mobile/lib/app/"
+require_not_contains "docs/ai/repo_map.md" "apps/mobile/lib/shared/"
+require_not_contains "docs/ai/repo_map.md" "apps/mobile/lib/core/"
+require_contains "CONTRACTS.md" "package-owned ports or app-layer composition"
+require_not_contains "CONTRACTS.md" 'use `apps/mobile/lib/shared/` ports'
+cwd_sensitive_run_docs=(
+  "docs/FAQ.md"
+  "docs/firebase_setup.md"
+  "docs/security_and_secrets.md"
+  "docs/agent_environment_setup.md"
+  "docs/agents_quick_reference.md"
+)
+for path in "${cwd_sensitive_run_docs[@]}"; do
+  require_not_contains "$path" 'cd apps/mobile && flutter run -t apps/mobile/lib/'
+done
 require_contains "docs/agent_kb/legibility_and_finish_gate.md" "Planning response shape"
 require_line_budget "docs/agent_kb/legibility_and_finish_gate.md" 120
 
@@ -424,6 +482,17 @@ if [ -d "tool/agent_host_templates" ]; then
     "docs/ai/agent_operating_manual.md"
 
   require_all_contains \
+    "tool/agent_host_templates/cursor/rules/agent-auto-hot-reload.mdc" \
+    "alwaysApply: false" \
+    "apps/mobile/lib/**/*.dart" \
+    "apps/mobile/test/**/*.dart" \
+    "packages/*/lib/**/*.dart" \
+    "packages/*/test/**/*.dart"
+  require_excludes \
+    "tool/agent_host_templates/cursor/rules/agent-auto-hot-reload.mdc" \
+    "  - lib/**/*.dart"
+
+  require_all_contains \
     "tool/agent_host_templates/cursor/rules/agent-execution.mdc" \
     "docs/ai/agent_operating_manual.md"
 
@@ -520,6 +589,8 @@ if [ -d "tool/agent_host_templates" ]; then
 
   require_contains "tool/agent_asset_lib.sh" "agents-skill-routing/SKILL.md"
   require_contains "tool/agent_asset_lib.sh" "agents-regression-capture/SKILL.md"
+  require_contains "tool/agent_asset_lib.sh" "managed_cursor_project_files"
+  require_contains "tool/agent_asset_lib.sh" ".cursor/rules/agent-execution.mdc"
 
   require_all_contains \
     "docs/ai/skill_routing.md" \
@@ -531,7 +602,8 @@ if [ -d "tool/agent_host_templates" ]; then
     "agents-quick-reference" \
     "agents-delivery-workflow" \
     "agents-canonical-rules" \
-    "./bin/agent-maintain find"
+    "./bin/agent-maintain find" \
+    "./bin/agent-maintain tools --intent"
 
   require_all_contains \
     "docs/ai/context_loading.md" \
@@ -550,7 +622,8 @@ if [ -d "tool/agent_host_templates" ]; then
     "multi-agent hub" \
     "tasks/cursor/team/<run-id>/" \
     "agent_knowledge_base.md#multi-agent-hub" \
-    "flutter-cross-platform-modern"
+    "flutter-cross-platform-modern" \
+    "agent-maintain preflight --intent"
 
 else
   echo "Host-template source checks skipped (tool/agent_host_templates not present)."

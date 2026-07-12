@@ -21,6 +21,8 @@ Commands (low-level):
   update                 Refresh globals (npx skills update -g)
                          --check for updates only
   find QUERY...          Search skills catalog
+  tools, tool-route      Recommend repo/MCP/browser tools from intent + paths
+                         Example: tools --intent "runtime crash" --paths apps/mobile/lib/app.dart
   trim                   Dedupe ~/.agents/skills vs ~/.cursor/skills
                          --apply [--mode balanced|full|flutter-repo|...]
   drift                  Host-template drift check
@@ -70,6 +72,7 @@ agent-maintain commands
   install               Global vendor skills install
   update                Global skills update (--check)
   find                  Catalog search
+  tools tool-route      Intent/path-based tool recommendations
   trim                  Dedupe global skills (--apply)
   drift                 Template drift check
   kb knowledge          KB / AGENTS invariants
@@ -127,6 +130,7 @@ scope_has_agent_kb_edits() {
       tool/agent_maintain.sh|\
       tool/agent_asset_lib.sh|\
       tool/agent_session_bootstrap.sh|\
+      tool/agent_tool_router.sh|\
       tool/setup_cursor_agent_environment.sh|\
       tool/sync_agent_assets.sh|\
       tool/check_agent_knowledge_base.sh|\
@@ -146,6 +150,7 @@ scope_has_validation_tooling_edits() {
       tool/validate_validation_docs.sh|\
       tool/fix_validation_docs.sh|\
       tool/agent_maintain.sh|\
+      tool/agent_tool_router.sh|\
       tool/check_*.sh|\
       bin/agent-maintain|\
       bin/checklist|\
@@ -200,6 +205,7 @@ scope_has_harness_edits() {
       tool/check_feature_folder_contract.sh|\
       tool/scaffold_feature_contract.sh|\
       tool/agent_maintain.sh|\
+      tool/agent_tool_router.sh|\
       bin/agent-maintain|\
       docs/agent_kb/host_maintenance_automation.md)
         return 0
@@ -330,6 +336,10 @@ cmd_find() {
     exit 2
   fi
   run_stage bash "$PROJECT_ROOT/tool/find_global_agent_skills.sh" "$@"
+}
+
+cmd_tools() {
+  run_stage bash "$PROJECT_ROOT/tool/agent_tool_router.sh" "$@"
 }
 
 cmd_trim() {
@@ -646,6 +656,9 @@ case "$command" in
     ;;
   find)
     cmd_find "$@"
+    ;;
+  tools | tool-route)
+    cmd_tools "$@"
     ;;
   trim)
     cmd_trim "$@"

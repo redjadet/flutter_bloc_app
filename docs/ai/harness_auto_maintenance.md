@@ -37,7 +37,7 @@ Git paths (staged, unstaged, untracked, deleted) matching:
 | [`feature_implementation_guide.md`](../feature_implementation_guide.md) | Delivery contract |
 | [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) | Test matrix |
 | `.cursor/rules/**` | Cursor agent rules |
-| `tool/check_harness_scorecard_gate.sh`, `update_harness_score_badge.sh`, `check_ai_failure_risk_register.sh`, `check_clean_architecture_imports.sh`, `check_feature_folder_contract.sh`, `scaffold_feature_contract.sh` | Harness gates |
+| `tool/check_harness_scorecard_gate.sh`, `update_harness_score_badge.sh`, `check_ai_failure_risk_register.sh`, `check_clean_architecture_imports.sh`, `check_feature_folder_contract.sh`, `scaffold_feature_contract.sh`, `agent_tool_router.sh` | Harness gates and automatic tool routing |
 | [`AGENTS.md`](../../AGENTS.md) | Entry map |
 
 `tool/agent_maintain.sh` implements this as `scope_has_harness_edits`.

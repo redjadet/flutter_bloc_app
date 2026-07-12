@@ -16,7 +16,7 @@ and [`agent_knowledge_base.md`](agent_knowledge_base.md).
   explicitly asks for second opinion or cross-host review.
 - If user explicitly asks for second opinion after material edits to agent-facing docs or
   [`tool/agent_host_templates/cursor/rules/agent-execution.mdc`](../tool/agent_host_templates/cursor/rules/agent-execution.mdc)
-  (copy to gitignored `.cursor/rules/` with `alwaysApply: true`),
+  (sync manages its gitignored `.cursor/rules/` copy with `alwaysApply: true`),
   Cursor may run `./tool/request_codex_feedback.sh` before merge.
 
 ## Cursor
@@ -36,5 +36,7 @@ Edit repo canon first ([`AGENTS.md`](../AGENTS.md), `docs/*`, `tool/agent_host_t
 agent-map-only edits), and `./bin/agent-maintain closeout` before claiming host/docs work done.
 Low-level equivalent: `./tool/check_agent_knowledge_base.sh`, `./tool/check_agent_memory_compounding.sh`,
 inspect with `./tool/sync_agent_assets.sh --dry-run`, reconcile with `./bin/agent-maintain sync --apply`.
+Sync includes project-only `agent-execution.mdc` in the active workspace; global
+Cursor rules remain limited to the registered host-neutral rules.
 Policy: [`docs/agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
 Re-measure with `dart run tool/skill_inventory.dart` → `docs/audits/skill_inventory_latest.json`.
