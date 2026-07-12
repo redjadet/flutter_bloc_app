@@ -93,6 +93,10 @@ Source-of-truth docs for Flutter BLoC app.
 - [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — BLoC widget test how-to
 - [`logging.md`](logging.md)
 - [`code_review_graph.md`](code_review_graph.md)
+- [`review/code_review_playbook.md`](review/code_review_playbook.md) — shared
+  AI/human review workflow, finding format, and decision record
+- [`ai_code_review_protocol.md`](ai_code_review_protocol.md) — AI-specific risk
+  matrix and Flutter review special cases
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)
 - [`review/architecture_checklist.md`](review/architecture_checklist.md)
 - [`review/bloc_checklist.md`](review/bloc_checklist.md)

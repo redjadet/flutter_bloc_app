@@ -2,7 +2,8 @@
 
 Commands + routing. Map [`AGENTS.md`](../AGENTS.md); context
 [`agent_project_context.md`](agent_project_context.md); harness
-[`agent_knowledge_base.md`](agent_knowledge_base.md); review
+[`agent_knowledge_base.md`](agent_knowledge_base.md); review workflow
+[`review/code_review_playbook.md`](review/code_review_playbook.md); AI-specific risks
 [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation detail
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
 Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](toolchain_versions.env))
@@ -67,7 +68,7 @@ Fastlane: prefer `./tool/fastlane.sh`.
 | API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |
 | External/live state | Use owning tool/MCP/connector/browser; summarize evidence | Same |
 | Git branch / PR / worktree task | Read [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect state first; require authorization for remote or destructive action | Same |
-| AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + validation routing | Same |
+| AI-authored change before done | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + validation routing | Same |
 | UI/design/theme/Mix work | Validation chooser UI row + widget/responsive proof | Same |
 | Flutter app-code/UI change with active debug run | Hot reload; hot restart if reload cannot apply; report unavailable session | Same |
 | Runtime bug / crash with active debug run | Use runtime row | Same |
