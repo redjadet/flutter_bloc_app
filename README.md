@@ -59,6 +59,31 @@ commands instead of relying on generic architecture statements.
 [![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
 [![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
 
+## Native Android and iOS engineering
+
+The native showcase is a runnable feature, not a platform-API claim. It keeps
+Flutter-facing contracts behind Clean Architecture ports while exercising
+Android and iOS implementation details directly.
+
+| Area | Android evidence | iOS evidence | Flutter boundary |
+| --- | --- | --- | --- |
+| Host-language calls | [Kotlin `MethodChannel`](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/MainActivity.kt) | [Swift `MethodChannel`](apps/mobile/ios/Runner/AppDelegate.swift) | [host-language service](apps/mobile/lib/features/native_platform_showcase/data/method_channel_native_showcase_host_language_service.dart) |
+| High-rate native telemetry | [HandlerThread aggregation and cancellation](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseTelemetryStreamHandler.kt) | [DispatchQueue timers and cancellation](apps/mobile/ios/Runner/NativeShowcaseTelemetryStreamHandler.swift) | [bounded `EventChannel` adapter](apps/mobile/lib/features/native_platform_showcase/data/event_channel_native_showcase_telemetry_service.dart) |
+| C/C++ interop | [CMake native library wiring](apps/mobile/android/app/src/main/cpp/CMakeLists.txt) | [exported Swift FFI symbols](apps/mobile/ios/Runner/NativeShowcaseBridge.swift) | [FFI adapter](apps/mobile/lib/features/native_platform_showcase/data/ffi_native_showcase_native_code_service.dart) |
+| Native UI and system actions | [Android platform-view factory](apps/mobile/android/app/src/main/kotlin/com/ilkersevim/blocflutter/NativeShowcaseBannerPlatformView.kt) | [UIKit platform view, haptic, and share sheet](apps/mobile/ios/Runner/NativeShowcaseBannerPlatformView.swift) | [showcase feature](apps/mobile/lib/features/native_platform_showcase/) |
+
+The telemetry example samples at 60 Hz, aggregates off the UI thread, emits at
+4 Hz, and tears down native work when Flutter cancels the stream. Focused
+contract, Cubit, and widget coverage lives in
+[`apps/mobile/test/features/native_platform_showcase/`](apps/mobile/test/features/native_platform_showcase/).
+
+```bash
+cd apps/mobile
+flutter test test/features/native_platform_showcase
+flutter build apk --debug --no-pub
+flutter build ios --simulator --debug --no-pub
+```
+
 ## Engineering practices
 
 [![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
