@@ -50,7 +50,7 @@ the answer.
 
 ## Current Caveat Shortlist
 
-- Flutter 3.44.5 / Dart 3.12.2 pinned; version-sensitive APIs need official or
+- Flutter 3.44.6 / Dart 3.12.2 pinned; version-sensitive APIs need official or
   repo-pinned docs before edits.
 - Flutter/Dart SDK and core framework sources are external read-only
   dependencies. Do not edit `/Users/ilkersevim/Flutter_SDK/flutter/**`,
