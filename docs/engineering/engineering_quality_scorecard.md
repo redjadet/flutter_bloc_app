@@ -30,7 +30,7 @@ It is **not** the same thing as the Cursor/Codex **Harness 10/10** score (agent 
 | Area | Score | Proof command(s) | Pass criteria |
 | --- | ---: | --- | --- |
 | Delivery gate | 10/10 | `./bin/checklist` | exit 0 on clean tree |
-| Coverage | 10/10 | `COVERAGE_THRESHOLD=85 dart run tool/update_coverage_summary.dart --enforce-threshold` + `bash tool/check_engineering_core_coverage.sh` | filtered ≥85% AND app shell (bootstrap/DI/router) aggregate ≥75% |
+| Coverage | 10/10 | `COVERAGE_THRESHOLD=85 dart run tool/update_coverage_summary.dart --enforce-threshold` + `bash tool/check_engineering_core_coverage.sh` | filtered ≥85% AND app shell (bootstrap/DI/router) aggregate ≥75% (unit baseline `coverage/lcov.base.info` from `tool/test_coverage.sh`; if integration merge left `coverage/lcov.info` below 85%, restore from that baseline—do not lower the gate) |
 | Architecture / modularity | 10/10 | `bash tool/check_clean_architecture_imports.sh && bash tool/check_feature_modularity_leaks.sh && bash tool/modular_metrics.sh --cross-feature-only` | all exit 0; 0 cross-feature edges |
 | Quality gates honesty | 10/10 | `bash tool/check_engineering_quality_scorecard_gate.sh` | [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md) has no bare `defer` rows: every item is `promoted`, `reject`, or `ADR-deferred` with an owning link |
 | Pattern program | 10/10 | Update [`audits/senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) + `bash tool/check_engineering_quality_scorecard_gate.sh` | Tier A has no R; Tier B **in scorecard** has no R; exceptions are explicitly listed |
