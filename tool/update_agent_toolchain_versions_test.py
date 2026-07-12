@@ -23,6 +23,11 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
     def setUpClass(cls):
         cls.module = _load_module()
 
+    def _swap_project_root(self, root: Path):
+        original = self.module.PROJECT_ROOT
+        setattr(self.module, "PROJECT_ROOT", root)
+        return original
+
     def test_parse_env_file_ignores_comments_and_requires_keys(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "toolchain_versions.env"
@@ -41,6 +46,26 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 self.module.parse_env_file(path)
 
+    def test_parse_env_file_rejects_duplicate_keys(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "toolchain_versions.env"
+            path.write_text(
+                "FLUTTER_VERSION=3.44.6\nDART_VERSION=3.12.2\nFLUTTER_VERSION=3.41.9\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(SystemExit):
+                self.module.parse_env_file(path)
+
+    def test_parse_env_file_rejects_malformed_line(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "toolchain_versions.env"
+            path.write_text(
+                "FLUTTER_VERSION=3.44.6\nNOT_A_KEY\nDART_VERSION=3.12.2\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(SystemExit):
+                self.module.parse_env_file(path)
+
     def test_sync_readme_badges(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -52,12 +77,11 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
                 "(https://dart.dev)\n",
                 encoding="utf-8",
             )
-            original_root = self.module.PROJECT_ROOT
+            original_root = self._swap_project_root(root)
             try:
-                self.module.PROJECT_ROOT = root
                 changed = self.module.sync_readme_badges("3.44.6", "3.12.2")
             finally:
-                self.module.PROJECT_ROOT = original_root
+                setattr(self.module, "PROJECT_ROOT", original_root)
             self.assertTrue(changed)
             text = readme.read_text(encoding="utf-8")
             self.assertIn("badge/Flutter-3.44.6-", text)
@@ -75,6 +99,25 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             self.assertIn("FLUTTER_VERSION: '3.44.6'", text)
             self.assertNotIn("DART_VERSION", text)
+
+    def test_sync_workflow_updates_all_flutter_version_pins(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ci.yml"
+            path.write_text(
+                "env:\n"
+                "  FLUTTER_VERSION: '3.41.9'\n"
+                "jobs:\n"
+                "  build:\n"
+                "    env:\n"
+                "      FLUTTER_VERSION: '3.40.0'\n",
+                encoding="utf-8",
+            )
+            changed = self.module.sync_workflow_flutter_version(path, "3.44.6")
+            self.assertTrue(changed)
+            text = path.read_text(encoding="utf-8")
+            self.assertEqual(text.count("FLUTTER_VERSION: '3.44.6'"), 2)
+            self.assertNotIn("3.41.9", text)
+            self.assertNotIn("3.40.0", text)
 
     def test_sync_deploy_web_normalizes_bare_flutter_version(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -106,56 +149,108 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
                 "Dart SDK 3.11.5\nFlutter SDK 3.41.9\n\ndependencies:\n- foo 1.0.0\n",
                 encoding="utf-8",
             )
-            original_root = self.module.PROJECT_ROOT
+            original_root = self._swap_project_root(root)
             try:
-                self.module.PROJECT_ROOT = root
                 changed = self.module.sync_melos_baseline("3.44.6", "3.12.2")
             finally:
-                self.module.PROJECT_ROOT = original_root
+                setattr(self.module, "PROJECT_ROOT", original_root)
             self.assertTrue(changed)
             lines = path.read_text(encoding="utf-8").splitlines()
             self.assertEqual(lines[0], "Dart SDK 3.12.2")
             self.assertEqual(lines[1], "Flutter SDK 3.44.6")
             self.assertIn("- foo 1.0.0", lines)
 
+    def _write_aligned_sinks(self, root: Path) -> None:
+        (root / "README.md").write_text(
+            "badge/Flutter-3.44.6- and badge/Dart-3.12.2-\n",
+            encoding="utf-8",
+        )
+        (root / "docs").mkdir()
+        (root / "docs" / "tech_stack.md").write_text(
+            "| Flutter | `3.44.6` |\n| Dart | `3.12.2` |\n",
+            encoding="utf-8",
+        )
+        workflows = root / ".github" / "workflows"
+        workflows.mkdir(parents=True)
+        for name in (
+            "ci.yml",
+            "dependency-updates.yml",
+            "drift.yml",
+            "deploy_web.yml",
+        ):
+            (workflows / name).write_text(
+                "env:\n  FLUTTER_VERSION: '3.44.6'\n",
+                encoding="utf-8",
+            )
+        plans = root / "docs" / "plans"
+        plans.mkdir(parents=True)
+        (plans / "melos_dependency_baseline.txt").write_text(
+            "Dart SDK 3.12.2\nFlutter SDK 3.44.6\n",
+            encoding="utf-8",
+        )
+
     def test_check_literal_sinks_reports_flutter_only_workflow_ok(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            (root / "README.md").write_text(
-                "badge/Flutter-3.44.6- and badge/Dart-3.12.2-\n",
-                encoding="utf-8",
-            )
-            (root / "docs").mkdir()
-            (root / "docs" / "tech_stack.md").write_text(
-                "| Flutter | `3.44.6` |\n| Dart | `3.12.2` |\n",
-                encoding="utf-8",
-            )
-            workflows = root / ".github" / "workflows"
-            workflows.mkdir(parents=True)
-            for name in (
-                "ci.yml",
-                "dependency-updates.yml",
-                "drift.yml",
-                "deploy_web.yml",
-            ):
-                (workflows / name).write_text(
-                    "env:\n  FLUTTER_VERSION: '3.44.6'\n",
-                    encoding="utf-8",
-                )
-            plans = root / "docs" / "plans"
-            plans.mkdir(parents=True)
-            (plans / "melos_dependency_baseline.txt").write_text(
-                "Dart SDK 3.12.2\nFlutter SDK 3.44.6\n",
-                encoding="utf-8",
-            )
-            original_root = self.module.PROJECT_ROOT
+            self._write_aligned_sinks(root)
+            original_root = self._swap_project_root(root)
             try:
-                self.module.PROJECT_ROOT = root
                 errors = self.module.check_literal_sinks("3.44.6", "3.12.2")
             finally:
-                self.module.PROJECT_ROOT = original_root
+                setattr(self.module, "PROJECT_ROOT", original_root)
             self.assertEqual(errors, [])
 
+    def test_check_literal_sinks_rejects_short_melos_header(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_aligned_sinks(root)
+            (root / "docs" / "plans" / "melos_dependency_baseline.txt").write_text(
+                "Dart SDK 3.12.2\n",
+                encoding="utf-8",
+            )
+            original_root = self._swap_project_root(root)
+            try:
+                errors = self.module.check_literal_sinks("3.44.6", "3.12.2")
+            finally:
+                setattr(self.module, "PROJECT_ROOT", original_root)
+            self.assertTrue(any("header too short" in e for e in errors))
+
+    def test_check_literal_sinks_rejects_stale_second_workflow_pin(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_aligned_sinks(root)
+            (root / ".github" / "workflows" / "ci.yml").write_text(
+                "env:\n"
+                "  FLUTTER_VERSION: '3.44.6'\n"
+                "jobs:\n"
+                "  build:\n"
+                "    env:\n"
+                "      FLUTTER_VERSION: '3.41.9'\n",
+                encoding="utf-8",
+            )
+            original_root = self._swap_project_root(root)
+            try:
+                errors = self.module.check_literal_sinks("3.44.6", "3.12.2")
+            finally:
+                setattr(self.module, "PROJECT_ROOT", original_root)
+            self.assertTrue(any("stale/mismatched" in e for e in errors))
+
+    def test_check_literal_sinks_ignores_commented_flutter_version(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_aligned_sinks(root)
+            (root / ".github" / "workflows" / "ci.yml").write_text(
+                "env:\n"
+                "  # FLUTTER_VERSION: '3.41.9'\n"
+                "  FLUTTER_VERSION: '3.44.6'\n",
+                encoding="utf-8",
+            )
+            original_root = self._swap_project_root(root)
+            try:
+                errors = self.module.check_literal_sinks("3.44.6", "3.12.2")
+            finally:
+                setattr(self.module, "PROJECT_ROOT", original_root)
+            self.assertEqual(errors, [])
 
     def test_parse_sdk_version_output_from_flutter_and_dart(self):
         flutter_out = (

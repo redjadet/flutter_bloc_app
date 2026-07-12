@@ -102,17 +102,8 @@ managed_codex_files=(
 managed_codex_rules_template="codex/rules/flutter_bloc_app_default.rules"
 managed_codex_rules_target="$HOME/.codex/rules/default.rules"
 
-# Literal sinks synced from docs/toolchain_versions.env.
-# Format: relative_path|keys where keys is flutter, dart, or flutter+dart.
-toolchain_literal_sinks=(
-  "README.md|flutter+dart"
-  "docs/tech_stack.md|flutter+dart"
-  ".github/workflows/ci.yml|flutter"
-  ".github/workflows/dependency-updates.yml|flutter"
-  ".github/workflows/drift.yml|flutter"
-  ".github/workflows/deploy_web.yml|flutter"
-  "docs/plans/melos_dependency_baseline.txt|flutter+dart"
-)
+# Literal sink drift is owned by tool/update_agent_toolchain_versions.py --check
+# (single checker; avoids Python vs bash divergence).
 
 agent_asset_source_path() {
   local src_rel="$1"
@@ -183,32 +174,7 @@ apply_copy_file() {
 }
 
 extract_toolchain_versions() {
-  python3 - "$repo_root/docs/toolchain_versions.env" <<'PY'
-import re
-import sys
-from pathlib import Path
-
-VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
-env_path = Path(sys.argv[1])
-if not env_path.is_file():
-    raise SystemExit(1)
-values = {}
-for raw in env_path.read_text(encoding="utf-8").splitlines():
-    line = raw.strip()
-    if not line or line.startswith("#") or "=" not in line:
-        continue
-    key, value = line.split("=", 1)
-    values[key.strip()] = value.strip().strip("'\"")
-flutter = values.get("FLUTTER_VERSION", "").strip()
-dart = values.get("DART_VERSION", "").strip()
-if not flutter or not dart:
-    raise SystemExit(1)
-if not re.fullmatch(VERSION_TOKEN_PATTERN, flutter) or not re.fullmatch(
-    VERSION_TOKEN_PATTERN, dart
-):
-    raise SystemExit(1)
-print(f"{flutter}|{dart}")
-PY
+  python3 "$repo_root/tool/update_agent_toolchain_versions.py" --print-versions
 }
 
 # Backward-compatible alias for callers that still use the old name.
@@ -216,118 +182,19 @@ extract_readme_toolchain() {
   extract_toolchain_versions
 }
 
-_check_toolchain_sink() {
-  local path="$1"
-  local keys="$2"
-  local flutter="$3"
-  local dart="$4"
-  local base
-
-  if [[ ! -f "$path" ]]; then
-    echo "toolchain-drift|$path|missing sink file"
-    return 1
-  fi
-  base="$(basename "$path")"
-
-  case "$keys" in
-    flutter|flutter+dart)
-      case "$base" in
-        *.yml)
-          if ! grep -Eq "^[[:space:]]*FLUTTER_VERSION:[[:space:]]*['\"]?${flutter}['\"]?[[:space:]]*$" "$path"; then
-            echo "toolchain-drift|$path|missing FLUTTER_VERSION $flutter"
-            return 1
-          fi
-          if grep -Eq "^[[:space:]]*flutter-version:[[:space:]]*[0-9]" "$path"; then
-            echo "toolchain-drift|$path|bare flutter-version literal still present"
-            return 1
-          fi
-          ;;
-        README.md)
-          if ! grep -Fq "badge/Flutter-${flutter}-" "$path"; then
-            echo "toolchain-drift|$path|missing Flutter badge $flutter"
-            return 1
-          fi
-          ;;
-        tech_stack.md)
-          if ! grep -Eq "^\\| Flutter \\| \`${flutter}\` \\|$" "$path"; then
-            echo "toolchain-drift|$path|missing Flutter table pin $flutter"
-            return 1
-          fi
-          ;;
-        melos_dependency_baseline.txt)
-          if ! head -n 2 "$path" | grep -Fq "Flutter SDK ${flutter}"; then
-            echo "toolchain-drift|$path|missing Flutter SDK header $flutter"
-            return 1
-          fi
-          ;;
-        *)
-          if ! grep -Fq "$flutter" "$path"; then
-            echo "toolchain-drift|$path|missing Flutter $flutter"
-            return 1
-          fi
-          ;;
-      esac
-      ;;
-  esac
-
-  case "$keys" in
-    dart|flutter+dart)
-      case "$base" in
-        *.yml)
-          # CI workflows pin Flutter only.
-          ;;
-        README.md)
-          if ! grep -Fq "badge/Dart-${dart}-" "$path"; then
-            echo "toolchain-drift|$path|missing Dart badge $dart"
-            return 1
-          fi
-          ;;
-        tech_stack.md)
-          if ! grep -Eq "^\\| Dart \\| \`${dart}\` \\|$" "$path"; then
-            echo "toolchain-drift|$path|missing Dart table pin $dart"
-            return 1
-          fi
-          ;;
-        melos_dependency_baseline.txt)
-          if ! head -n 2 "$path" | grep -Fq "Dart SDK ${dart}"; then
-            echo "toolchain-drift|$path|missing Dart SDK header $dart"
-            return 1
-          fi
-          ;;
-        *)
-          if ! grep -Fq "$dart" "$path"; then
-            echo "toolchain-drift|$path|missing Dart $dart"
-            return 1
-          fi
-          ;;
-      esac
-      ;;
-  esac
-  return 0
-}
-
 check_toolchain_mentions() {
-  local versions entry target keys flutter dart
-  if ! versions="$(extract_toolchain_versions)"; then
-    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|could not extract Flutter/Dart versions"
+  local out rc=0
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|python3 missing"
     return 1
   fi
-  flutter="${versions%%|*}"
-  dart="${versions##*|}"
-  if [[ -z "$flutter" || -z "$dart" ]]; then
-    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|empty Flutter/Dart version after extraction"
+  out="$(python3 "$repo_root/tool/update_agent_toolchain_versions.py" --check 2>&1)" || rc=$?
+  if (( rc != 0 )); then
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|literal sink drift"
+    printf '%s\n' "$out"
     return 1
   fi
-
-  for entry in "${toolchain_literal_sinks[@]}"; do
-    target="${entry%%|*}"
-    keys="${entry##*|}"
-    if ! _check_toolchain_sink "$repo_root/$target" "$keys" "$flutter" "$dart"; then
-      return 1
-    fi
-  done
-
-  echo "ok|toolchain-check|Flutter $flutter / Dart $dart"
+  printf '%s\n' "$out"
   return 0
 }
 

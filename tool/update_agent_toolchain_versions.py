@@ -14,6 +14,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ENV_PATH = PROJECT_ROOT / "docs" / "toolchain_versions.env"
 VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
 
+# Keep in sync with docs and CI; bash drift check delegates to this module.
+WORKFLOW_FLUTTER_SINKS = (
+    ".github/workflows/ci.yml",
+    ".github/workflows/dependency-updates.yml",
+    ".github/workflows/drift.yml",
+    ".github/workflows/deploy_web.yml",
+)
+
 
 def parse_env_file(path: Path) -> dict[str, str]:
     if not path.is_file():
@@ -30,6 +38,8 @@ def parse_env_file(path: Path) -> dict[str, str]:
         value = value.strip().strip("'\"")
         if not key:
             raise SystemExit(f"Empty key in {path}: {raw_line!r}")
+        if key in values:
+            raise SystemExit(f"Duplicate key {key!r} in {path}")
         values[key] = value
     flutter = values.get("FLUTTER_VERSION", "").strip()
     dart = values.get("DART_VERSION", "").strip()
@@ -198,32 +208,57 @@ def sync_tech_stack_table(flutter_version: str, dart_version: str) -> bool:
     return changed
 
 
+_FLUTTER_ENV_LINE = re.compile(
+    rf"^(?P<indent>\s*)FLUTTER_VERSION:\s*['\"]?{VERSION_TOKEN_PATTERN}['\"]?\s*$",
+    flags=re.MULTILINE,
+)
+
+
+def _collect_flutter_version_pins(text: str) -> list[str]:
+    """Non-comment FLUTTER_VERSION env values (line-anchored)."""
+    pins: list[str] = []
+    for line in text.splitlines():
+        stripped = line.lstrip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        match = _FLUTTER_ENV_LINE.match(line)
+        if match is not None:
+            value_match = re.search(
+                rf"FLUTTER_VERSION:\s*['\"]?({VERSION_TOKEN_PATTERN})['\"]?",
+                line,
+            )
+            if value_match is not None:
+                pins.append(value_match.group(1))
+            continue
+        if re.match(r"^\s*FLUTTER_VERSION:\s*", line):
+            pins.append("")
+    return pins
+
+
 def sync_workflow_flutter_version(path: Path, flutter_version: str) -> bool:
     text = path.read_text(encoding="utf-8")
     updated = text
-    env_pattern = re.compile(
-        rf"^(?P<indent>\s*)FLUTTER_VERSION:\s*['\"]?{VERSION_TOKEN_PATTERN}['\"]?\s*$",
-        flags=re.MULTILINE,
-    )
-    if env_pattern.search(updated):
-        updated = env_pattern.sub(
+    if _FLUTTER_ENV_LINE.search(updated):
+        updated = _FLUTTER_ENV_LINE.sub(
             rf"\g<indent>FLUTTER_VERSION: '{flutter_version}'",
             updated,
-            count=1,
-        )
-    elif path.name == "deploy_web.yml":
-        # Normalize bare flutter-version pin to top-level env + reference.
-        if not re.search(r"^env:\s*$", updated, flags=re.MULTILINE):
-            raise SystemExit(f"Expected top-level env: block in {path}")
-        updated = re.sub(
-            r"^env:\s*\n",
-            f"env:\n  FLUTTER_VERSION: '{flutter_version}'\n",
-            updated,
-            count=1,
-            flags=re.MULTILINE,
         )
     else:
-        raise SystemExit(f"Expected FLUTTER_VERSION env pin in {path}")
+        # Inject into the top-level env: block (content before jobs:).
+        jobs_match = re.search(r"^jobs:\s*$", updated, flags=re.MULTILINE)
+        prefix = updated[: jobs_match.start()] if jobs_match is not None else updated
+        env_match = re.search(r"^env:\s*\n", prefix, flags=re.MULTILINE)
+        if env_match is None:
+            raise SystemExit(
+                f"Expected top-level env: block before jobs: in {path} "
+                "(or an existing FLUTTER_VERSION pin)"
+            )
+        insert_at = env_match.end()
+        updated = (
+            updated[:insert_at]
+            + f"  FLUTTER_VERSION: '{flutter_version}'\n"
+            + updated[insert_at:]
+        )
 
     # Replace any bare flutter-version literals with env reference.
     updated = re.sub(
@@ -248,7 +283,6 @@ def sync_melos_baseline(flutter_version: str, dart_version: str) -> bool:
         f"Dart SDK {dart_version}\n",
         f"Flutter SDK {flutter_version}\n",
     ]
-    # Preserve trailing newline style of remaining body.
     body = lines[2:]
     if lines[0].startswith("Dart SDK ") and lines[1].startswith("Flutter SDK "):
         updated_lines = new_header + body
@@ -272,12 +306,7 @@ def sync_literal_sinks(flutter_version: str, dart_version: str) -> list[Path]:
         changed_paths.append(Path("README.md"))
     if sync_tech_stack_table(flutter_version, dart_version):
         changed_paths.append(Path("docs/tech_stack.md"))
-    for rel in (
-        ".github/workflows/ci.yml",
-        ".github/workflows/dependency-updates.yml",
-        ".github/workflows/drift.yml",
-        ".github/workflows/deploy_web.yml",
-    ):
+    for rel in WORKFLOW_FLUTTER_SINKS:
         if sync_workflow_flutter_version(PROJECT_ROOT / rel, flutter_version):
             changed_paths.append(Path(rel))
     if sync_melos_baseline(flutter_version, dart_version):
@@ -300,18 +329,16 @@ def check_literal_sinks(flutter_version: str, dart_version: str) -> list[str]:
     if f"| Dart | `{dart_version}` |" not in tech:
         errors.append(f"docs/tech_stack.md missing Dart table pin {dart_version}")
 
-    for rel in (
-        ".github/workflows/ci.yml",
-        ".github/workflows/dependency-updates.yml",
-        ".github/workflows/drift.yml",
-        ".github/workflows/deploy_web.yml",
-    ):
+    for rel in WORKFLOW_FLUTTER_SINKS:
         text = (PROJECT_ROOT / rel).read_text(encoding="utf-8")
-        if not re.search(
-            rf"FLUTTER_VERSION:\s*['\"]?{re.escape(flutter_version)}['\"]?",
-            text,
-        ):
+        pins = _collect_flutter_version_pins(text)
+        if not pins:
             errors.append(f"{rel} missing FLUTTER_VERSION {flutter_version}")
+        elif any(pin != flutter_version for pin in pins):
+            errors.append(
+                f"{rel} has stale/mismatched FLUTTER_VERSION line(s) "
+                f"(expected {flutter_version}, found {pins})"
+            )
         if re.search(
             rf"^\s*flutter-version:\s*{VERSION_TOKEN_PATTERN}\s*$",
             text,
@@ -323,10 +350,17 @@ def check_literal_sinks(flutter_version: str, dart_version: str) -> list[str]:
         encoding="utf-8"
     )
     header = melos.splitlines()[:2]
-    if f"Dart SDK {dart_version}" not in header[0] or f"Flutter SDK {flutter_version}" not in header[1]:
-        # Accept either order only if both present in first two lines.
+    if len(header) < 2:
+        errors.append(
+            "docs/plans/melos_dependency_baseline.txt header too short "
+            f"(need Dart SDK / Flutter SDK lines; got {len(header)})"
+        )
+    else:
         joined = "\n".join(header)
-        if f"Dart SDK {dart_version}" not in joined or f"Flutter SDK {flutter_version}" not in joined:
+        if (
+            f"Dart SDK {dart_version}" not in joined
+            or f"Flutter SDK {flutter_version}" not in joined
+        ):
             errors.append(
                 "docs/plans/melos_dependency_baseline.txt header missing "
                 f"Dart SDK {dart_version} / Flutter SDK {flutter_version}"
@@ -341,27 +375,32 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--from-sdk",
         action="store_true",
-        help="Detect installed Flutter/Dart versions, write env, then sync sinks",
+        help="Detect installed Flutter/Dart versions, sync sinks, then write env",
     )
     parser.add_argument(
         "--check",
         action="store_true",
         help="Exit non-zero if literal sinks drift from env (no writes)",
     )
+    parser.add_argument(
+        "--print-versions",
+        action="store_true",
+        help="Print flutter|dart from env and exit (for shell helpers)",
+    )
     args = parser.parse_args(argv)
 
-    if args.from_sdk and args.check:
-        raise SystemExit("Use either --from-sdk or --check, not both")
+    exclusive = sum(bool(x) for x in (args.from_sdk, args.check, args.print_versions))
+    if exclusive > 1:
+        raise SystemExit("Use only one of --from-sdk, --check, or --print-versions")
 
     if args.from_sdk:
         flutter_version, dart_version = detect_sdk_versions()
-        write_env_file(ENV_PATH, flutter_version, dart_version)
-        print(
-            f"Wrote {ENV_PATH.relative_to(PROJECT_ROOT)} "
-            f"from SDK -> Flutter {flutter_version}, Dart {dart_version}"
-        )
     else:
         flutter_version, dart_version = extract_versions()
+
+    if args.print_versions:
+        print(f"{flutter_version}|{dart_version}")
+        return 0
 
     if args.check:
         errors = check_literal_sinks(flutter_version, dart_version)
@@ -377,6 +416,13 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     changed_paths = sync_literal_sinks(flutter_version, dart_version)
+    if args.from_sdk:
+        # Write env after sinks so a mid-sync failure does not advance the SoT file.
+        write_env_file(ENV_PATH, flutter_version, dart_version)
+        print(
+            f"Wrote {ENV_PATH.relative_to(PROJECT_ROOT)} "
+            f"from SDK -> Flutter {flutter_version}, Dart {dart_version}"
+        )
     print(
         f"Toolchain source: {ENV_PATH.relative_to(PROJECT_ROOT)} "
         f"-> Flutter {flutter_version}, Dart {dart_version}"
