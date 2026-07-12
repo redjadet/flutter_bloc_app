@@ -39,6 +39,8 @@ Use a **clean** worktree (or stash), resolve any conflicts, then continue with `
 
 ## Watch CI, merge when green, then clean up
 
+Dedicated skill/command: `gh-watch-merge-pr` / `/watch-merge-pr`.
+
 From the PR branch (or pass a PR number), wait for checks, merge, then local cleanup:
 
 ```bash

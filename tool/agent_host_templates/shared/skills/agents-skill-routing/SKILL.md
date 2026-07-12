@@ -32,6 +32,7 @@ For non-trivial work, find and invoke a suitable skill before editing or broad c
 | Analyze / layout / runtime | [`docs/agent_kb/devtools_runtime_errors.md`](../../../../../docs/agent_kb/devtools_runtime_errors.md); `dart-fix-runtime-errors`, `systematic-debugging`, `flutter-fix-layout-issues` |
 | Pub dependency / API docs | [`docs/agent_kb/package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `context7-mcp`, `flutter-ai-rules` |
 | Globals install/trim | `agents-global-skills-setup` or `./bin/agent-maintain install/update/trim` |
+| Watch PR CI → merge when green | `gh-watch-merge-pr` |
 
 ## Find skills
 
