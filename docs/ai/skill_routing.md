@@ -60,6 +60,7 @@ Host parity: Cursor/Codex sync shim `agents-skill-routing`; Codex installs it as
 | Supabase schema / migrations | `agents-supabase`; search `ai-safe-supabase-workflow` if available |
 | Figma to code | `agents-figma` / `figma-this-repo` |
 | Install / trim / sync globals | `agents-global-skills-setup` if available; otherwise `./bin/agent-maintain install/update/trim` |
+| Watch GitHub PR CI and merge when green | `gh-watch-merge-pr` (script: `tool/commit_push_pr_watch_merge_cleanup.sh`); failing checks → `gh-fix-ci` |
 
 Repo skill sources: [`tool/agent_host_templates/shared/skills/`](../../tool/agent_host_templates/shared/skills/).
 New shared skills must be listed in `tool/agent_asset_lib.sh`.

@@ -21,6 +21,25 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-12 - PR merge left topic worktree alive
+
+- What went wrong:
+  After `gh pr merge --delete-branch` on #487, remote head deleted but local
+  branch delete failed — worktree
+  `flutter_bloc_app-ai-human-review-guide` still checked out
+  `codex/ai-human-code-review-guide`.
+- How it was fixed:
+  `git worktree remove <path>`, then `bash tool/commit_push_pr_post_merge.sh`
+  from primary tree on `main`.
+- Pattern:
+  Merge deletes remote branch only; worktree holds local branch until removed.
+- Preventive rule:
+  After watch/merge, run `git worktree list`; remove merged-head worktrees
+  before claiming closeout. Use skill `gh-watch-merge-pr` /
+  `tool/commit_push_pr_watch_merge_cleanup.sh`.
+- Evidence or affected files:
+  PR #487; `tool/agent_host_templates/shared/skills/gh-watch-merge-pr/SKILL.md`
+
 ### 2026-07-12 - Engineering 85% gate vs integration-merged lcov
 
 - What went wrong:
