@@ -13,7 +13,7 @@ are **depth branches** for follow-up questions.
 
 ## 2. Prerequisites
 
-- Flutter **3.44.5** / Dart **3.12.2** (see [README](../README.md))
+- Flutter **3.44.6** / Dart **3.12.2** (see [README](../README.md))
 - First run: [new_developer_guide.md](new_developer_guide.md)
 - Default entry: `apps/mobile/lib/main_dev.dart` (dev flavor)
 - Agent harness (optional): [AGENTS.md](../AGENTS.md), [agent_knowledge_base.md](agent_knowledge_base.md)
