@@ -8,7 +8,7 @@ Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 | Area | Source | Use when |
 | --- | --- | --- |
 | Docs index | [`README.md`](README.md) | Find source of truth. |
-| Tech stack / entrypoints | [`tech_stack.md`](tech_stack.md), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints under `apps/mobile/lib/`: `main_dev.dart`, `main_staging.dart`, `main_prod.dart`. |
+| Tech stack / entrypoints | [`toolchain_versions.env`](toolchain_versions.env) (machine pins), [`tech_stack.md`](tech_stack.md) (display), [`architecture_details.md`](architecture_details.md) | Flutter/Dart versions and app entrypoints under `apps/mobile/lib/`: `main_dev.dart`, `main_staging.dart`, `main_prod.dart`. |
 | Agent harness | [`agent_knowledge_base.md`](agent_knowledge_base.md) | Agent behavior, host templates, trackers, validation. |
 | Project-specific AI context | [`agent_project_context.md`](agent_project_context.md) | Pinned versions, package caveats, migration contracts, performance seams, forbidden patterns. |
 | Review gate | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) | Accepting AI-written code / final report. |

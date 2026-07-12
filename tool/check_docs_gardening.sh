@@ -223,7 +223,7 @@ if command -v bash >/dev/null 2>&1 && [ -f "$repo_root/tool/agent_asset_lib.sh" 
   # shellcheck source=./agent_asset_lib.sh disable=SC1091
   source "$repo_root/tool/agent_asset_lib.sh"
   if ! check_toolchain_mentions; then
-    fail "toolchain mention drift detected (README vs required docs)"
+    fail "toolchain mention drift detected (docs/toolchain_versions.env vs literal sinks)"
   fi
 fi
 

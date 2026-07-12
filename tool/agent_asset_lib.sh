@@ -102,15 +102,16 @@ managed_codex_files=(
 managed_codex_rules_template="codex/rules/flutter_bloc_app_default.rules"
 managed_codex_rules_target="$HOME/.codex/rules/default.rules"
 
-required_toolchain_targets=(
-  "README.md"
-  "docs/new_developer_guide.md"
-  "docs/ai_code_review_protocol.md"
-)
-
-optional_local_policy_targets=(
-  "AGENTS.md"
-  "docs/agents_quick_reference.md"
+# Literal sinks synced from docs/toolchain_versions.env.
+# Format: relative_path|keys where keys is flutter, dart, or flutter+dart.
+toolchain_literal_sinks=(
+  "README.md|flutter+dart"
+  "docs/tech_stack.md|flutter+dart"
+  ".github/workflows/ci.yml|flutter"
+  ".github/workflows/dependency-updates.yml|flutter"
+  ".github/workflows/drift.yml|flutter"
+  ".github/workflows/deploy_web.yml|flutter"
+  "docs/plans/melos_dependency_baseline.txt|flutter+dart"
 )
 
 agent_asset_source_path() {
@@ -181,89 +182,147 @@ apply_copy_file() {
   cp "$src" "$dst"
 }
 
-extract_readme_toolchain() {
-  python3 - "$repo_root/README.md" <<'PY'
+extract_toolchain_versions() {
+  python3 - "$repo_root/docs/toolchain_versions.env" <<'PY'
 import re
 import sys
+from pathlib import Path
 
 VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
-readme_path = sys.argv[1]
-text = open(readme_path, encoding="utf-8").read()
-
-
-def find_toolchain_section(source: str) -> str:
-    section_match = re.search(
-        r"^### (?:Prerequisites|Toolchain)\s*$\n(?P<body>.*?)(?:^\s*###\s|^\s*##\s|\Z)",
-        source,
-        flags=re.MULTILINE | re.DOTALL,
-    )
-    if section_match is not None:
-        return section_match.group("body")
-    return source
-
-
-def extract_version(source: str, label: str) -> str | None:
-    patterns = (
-        rf"^- {label} `([^`]+)`$",
-        rf"{label}\s+`([^`]+)`",
-        rf"{label}\s+({VERSION_TOKEN_PATTERN})",
-        rf"badge/{label}-({VERSION_TOKEN_PATTERN})-",
-    )
-    for pattern in patterns:
-        match = re.search(pattern, source, flags=re.MULTILINE)
-        if match is not None:
-            return match.group(1)
-    return None
-
-
-toolchain_text = find_toolchain_section(text)
-flutter_version = extract_version(toolchain_text, "Flutter") or extract_version(
-    text,
-    "Flutter",
-)
-dart_version = extract_version(toolchain_text, "Dart") or extract_version(text, "Dart")
-if flutter_version is None or dart_version is None:
+env_path = Path(sys.argv[1])
+if not env_path.is_file():
     raise SystemExit(1)
-print(f"{flutter_version}|{dart_version}")
+values = {}
+for raw in env_path.read_text(encoding="utf-8").splitlines():
+    line = raw.strip()
+    if not line or line.startswith("#") or "=" not in line:
+        continue
+    key, value = line.split("=", 1)
+    values[key.strip()] = value.strip().strip("'\"")
+flutter = values.get("FLUTTER_VERSION", "").strip()
+dart = values.get("DART_VERSION", "").strip()
+if not flutter or not dart:
+    raise SystemExit(1)
+if not re.fullmatch(VERSION_TOKEN_PATTERN, flutter) or not re.fullmatch(
+    VERSION_TOKEN_PATTERN, dart
+):
+    raise SystemExit(1)
+print(f"{flutter}|{dart}")
 PY
 }
 
+# Backward-compatible alias for callers that still use the old name.
+extract_readme_toolchain() {
+  extract_toolchain_versions
+}
+
+_check_toolchain_sink() {
+  local path="$1"
+  local keys="$2"
+  local flutter="$3"
+  local dart="$4"
+  local base
+
+  if [[ ! -f "$path" ]]; then
+    echo "toolchain-drift|$path|missing sink file"
+    return 1
+  fi
+  base="$(basename "$path")"
+
+  case "$keys" in
+    flutter|flutter+dart)
+      case "$base" in
+        *.yml)
+          if ! grep -Eq "^[[:space:]]*FLUTTER_VERSION:[[:space:]]*['\"]?${flutter}['\"]?[[:space:]]*$" "$path"; then
+            echo "toolchain-drift|$path|missing FLUTTER_VERSION $flutter"
+            return 1
+          fi
+          if grep -Eq "^[[:space:]]*flutter-version:[[:space:]]*[0-9]" "$path"; then
+            echo "toolchain-drift|$path|bare flutter-version literal still present"
+            return 1
+          fi
+          ;;
+        README.md)
+          if ! grep -Fq "badge/Flutter-${flutter}-" "$path"; then
+            echo "toolchain-drift|$path|missing Flutter badge $flutter"
+            return 1
+          fi
+          ;;
+        tech_stack.md)
+          if ! grep -Eq "^\\| Flutter \\| \`${flutter}\` \\|$" "$path"; then
+            echo "toolchain-drift|$path|missing Flutter table pin $flutter"
+            return 1
+          fi
+          ;;
+        melos_dependency_baseline.txt)
+          if ! head -n 2 "$path" | grep -Fq "Flutter SDK ${flutter}"; then
+            echo "toolchain-drift|$path|missing Flutter SDK header $flutter"
+            return 1
+          fi
+          ;;
+        *)
+          if ! grep -Fq "$flutter" "$path"; then
+            echo "toolchain-drift|$path|missing Flutter $flutter"
+            return 1
+          fi
+          ;;
+      esac
+      ;;
+  esac
+
+  case "$keys" in
+    dart|flutter+dart)
+      case "$base" in
+        *.yml)
+          # CI workflows pin Flutter only.
+          ;;
+        README.md)
+          if ! grep -Fq "badge/Dart-${dart}-" "$path"; then
+            echo "toolchain-drift|$path|missing Dart badge $dart"
+            return 1
+          fi
+          ;;
+        tech_stack.md)
+          if ! grep -Eq "^\\| Dart \\| \`${dart}\` \\|$" "$path"; then
+            echo "toolchain-drift|$path|missing Dart table pin $dart"
+            return 1
+          fi
+          ;;
+        melos_dependency_baseline.txt)
+          if ! head -n 2 "$path" | grep -Fq "Dart SDK ${dart}"; then
+            echo "toolchain-drift|$path|missing Dart SDK header $dart"
+            return 1
+          fi
+          ;;
+        *)
+          if ! grep -Fq "$dart" "$path"; then
+            echo "toolchain-drift|$path|missing Dart $dart"
+            return 1
+          fi
+          ;;
+      esac
+      ;;
+  esac
+  return 0
+}
+
 check_toolchain_mentions() {
-  local versions target text flutter dart
-  if ! versions="$(extract_readme_toolchain)"; then
-    echo "toolchain-drift|$repo_root/README.md|could not extract Flutter/Dart versions"
+  local versions entry target keys flutter dart
+  if ! versions="$(extract_toolchain_versions)"; then
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|could not extract Flutter/Dart versions"
     return 1
   fi
   flutter="${versions%%|*}"
   dart="${versions##*|}"
   if [[ -z "$flutter" || -z "$dart" ]]; then
-    echo "toolchain-drift|$repo_root/README.md|empty Flutter/Dart version after extraction"
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|empty Flutter/Dart version after extraction"
     return 1
   fi
 
-  for target in "${required_toolchain_targets[@]}"; do
-    text="$repo_root/$target"
-    if ! grep -Fq "$flutter" "$text"; then
-      echo "toolchain-drift|$text|missing Flutter $flutter"
-      return 1
-    fi
-    if ! grep -Fq "$dart" "$text"; then
-      echo "toolchain-drift|$text|missing Dart $dart"
-      return 1
-    fi
-  done
-
-  for target in "${optional_local_policy_targets[@]}"; do
-    text="$repo_root/$target"
-    if [[ ! -f "$text" ]]; then
-      continue
-    fi
-    if ! grep -Fq "$flutter" "$text"; then
-      echo "toolchain-drift|$text|missing Flutter $flutter"
-      return 1
-    fi
-    if ! grep -Fq "$dart" "$text"; then
-      echo "toolchain-drift|$text|missing Dart $dart"
+  for entry in "${toolchain_literal_sinks[@]}"; do
+    target="${entry%%|*}"
+    keys="${entry##*|}"
+    if ! _check_toolchain_sink "$repo_root/$target" "$keys" "$flutter" "$dart"; then
       return 1
     fi
   done

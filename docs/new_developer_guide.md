@@ -11,15 +11,12 @@ For the complete docs index, see [docs index](README.md).
 
 ### Toolchain
 
-- Flutter `3.44.6`
-- Dart `3.12.2`
+- Flutter / Dart: see [`tech_stack.md`](tech_stack.md) (machine pins:
+  [`toolchain_versions.env`](toolchain_versions.env))
 - Xcode for iOS/macOS work; Swift Package Manager is the preferred native
   dependency path. CocoaPods remains installed/usable for existing Podfiles and
   plugin fallback.
 - Android Studio + Android SDK for Android work
-
-The pinned Flutter version comes from [README](../README.md) and
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
 ### Environment setup
 

@@ -280,7 +280,7 @@ echo "==> Step 4/6: Run integration tests"
 "$PROJECT_ROOT/bin/integration_tests"
 
 echo "==> Step 5/6: Refresh documentation and AI agent toolchain artifacts"
-python3 "$PROJECT_ROOT/tool/update_agent_toolchain_versions.py"
+python3 "$PROJECT_ROOT/tool/update_agent_toolchain_versions.py" --from-sdk
 maybe_update_coverage_summary
 bash "$PROJECT_ROOT/tool/fix_validation_docs.sh"
 bash "$PROJECT_ROOT/tool/validate_validation_docs.sh"
