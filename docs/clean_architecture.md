@@ -109,6 +109,14 @@ The important dependency rule is:
 So the dependency picture is closer to `Presentation -> Domain <- Data` than a
 literal runtime pipeline of `Presentation -> Domain -> Data`.
 
+## SOLID decision rule
+
+Agents must preserve Clean Architecture and apply SOLID to every new or changed
+production type. Treat a violation as a stop condition, not a later cleanup.
+Detailed rules and examples: [`solid_principles.md`](solid_principles.md).
+Review against [`review/architecture_checklist.md`](review/architecture_checklist.md)
+before accepting a feature or boundary-sensitive change.
+
 At runtime, the **app shell** composes everything from above:
 
 - `BootstrapCoordinator` initializes platform/services before `runApp`

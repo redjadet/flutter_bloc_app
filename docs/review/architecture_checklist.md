@@ -26,6 +26,12 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - `apps/mobile/lib/app/` does not import `apps/mobile/lib/features/`.
 - Cross-feature needs use app composition, package-owned ports, or shared DTOs.
 
+## SOLID gate
+
+- Each changed production type conforms to the mandatory
+  [SOLID Principles](../solid_principles.md); reject violations before accepting
+  agent-generated code.
+
 ## Feature Shape
 
 - New or changed feature files sit under predictable `domain/`, `data/`, and
