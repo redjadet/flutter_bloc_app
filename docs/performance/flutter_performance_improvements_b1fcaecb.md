@@ -6,10 +6,11 @@ This file was moved from repo root to keep docs organized.
 
 ## Environment
 
-- **Pinned toolchain (current):** Flutter 3.44.6 / Dart 3.12.2 (see [README](../../README.md))
+- **Pinned toolchain (current):** [`tech_stack.md`](../tech_stack.md) (machine:
+  [`toolchain_versions.env`](../toolchain_versions.env))
 - **Date**: 2026-03-25
-- **Flutter**: 3.44.6 (stable)
-- **Dart**: 3.12.2
+- **Channel**: stable (baseline used the then-current pin; current pins live in
+  `toolchain_versions.env`, not in this note)
 - **DevTools**: 2.54.2
 - **Target**: iOS (iPhone simulator)
 - **Chosen simulator (UDID)**: `82B916E8-9CEC-48F1-8219-22C73B6F7037` (iPhone 17e)

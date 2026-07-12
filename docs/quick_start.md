@@ -6,7 +6,8 @@ Minimal path to run and validate this repo. Full onboarding:
 
 ## Toolchain
 
-Pinned versions: [tech_stack.md](tech_stack.md) (Flutter 3.44.6 / Dart 3.12.2).
+Pinned versions: [`tech_stack.md`](tech_stack.md) (machine:
+[`toolchain_versions.env`](toolchain_versions.env)).
 
 ## Bootstrap
 

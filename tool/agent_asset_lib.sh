@@ -102,16 +102,8 @@ managed_codex_files=(
 managed_codex_rules_template="codex/rules/flutter_bloc_app_default.rules"
 managed_codex_rules_target="$HOME/.codex/rules/default.rules"
 
-required_toolchain_targets=(
-  "README.md"
-  "docs/new_developer_guide.md"
-  "docs/ai_code_review_protocol.md"
-)
-
-optional_local_policy_targets=(
-  "AGENTS.md"
-  "docs/agents_quick_reference.md"
-)
+# Literal sink drift is owned by tool/update_agent_toolchain_versions.py --check
+# (single checker; avoids Python vs bash divergence).
 
 agent_asset_source_path() {
   local src_rel="$1"
@@ -181,94 +173,28 @@ apply_copy_file() {
   cp "$src" "$dst"
 }
 
+extract_toolchain_versions() {
+  python3 "$repo_root/tool/update_agent_toolchain_versions.py" --print-versions
+}
+
+# Backward-compatible alias for callers that still use the old name.
 extract_readme_toolchain() {
-  python3 - "$repo_root/README.md" <<'PY'
-import re
-import sys
-
-VERSION_TOKEN_PATTERN = r"[0-9]+(?:\.[0-9]+){2}(?:[-+][0-9A-Za-z.-]+)?"
-readme_path = sys.argv[1]
-text = open(readme_path, encoding="utf-8").read()
-
-
-def find_toolchain_section(source: str) -> str:
-    section_match = re.search(
-        r"^### (?:Prerequisites|Toolchain)\s*$\n(?P<body>.*?)(?:^\s*###\s|^\s*##\s|\Z)",
-        source,
-        flags=re.MULTILINE | re.DOTALL,
-    )
-    if section_match is not None:
-        return section_match.group("body")
-    return source
-
-
-def extract_version(source: str, label: str) -> str | None:
-    patterns = (
-        rf"^- {label} `([^`]+)`$",
-        rf"{label}\s+`([^`]+)`",
-        rf"{label}\s+({VERSION_TOKEN_PATTERN})",
-        rf"badge/{label}-({VERSION_TOKEN_PATTERN})-",
-    )
-    for pattern in patterns:
-        match = re.search(pattern, source, flags=re.MULTILINE)
-        if match is not None:
-            return match.group(1)
-    return None
-
-
-toolchain_text = find_toolchain_section(text)
-flutter_version = extract_version(toolchain_text, "Flutter") or extract_version(
-    text,
-    "Flutter",
-)
-dart_version = extract_version(toolchain_text, "Dart") or extract_version(text, "Dart")
-if flutter_version is None or dart_version is None:
-    raise SystemExit(1)
-print(f"{flutter_version}|{dart_version}")
-PY
+  extract_toolchain_versions
 }
 
 check_toolchain_mentions() {
-  local versions target text flutter dart
-  if ! versions="$(extract_readme_toolchain)"; then
-    echo "toolchain-drift|$repo_root/README.md|could not extract Flutter/Dart versions"
+  local out rc=0
+  if ! command -v python3 >/dev/null 2>&1; then
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|python3 missing"
     return 1
   fi
-  flutter="${versions%%|*}"
-  dart="${versions##*|}"
-  if [[ -z "$flutter" || -z "$dart" ]]; then
-    echo "toolchain-drift|$repo_root/README.md|empty Flutter/Dart version after extraction"
+  out="$(python3 "$repo_root/tool/update_agent_toolchain_versions.py" --check 2>&1)" || rc=$?
+  if (( rc != 0 )); then
+    echo "toolchain-drift|$repo_root/docs/toolchain_versions.env|literal sink drift"
+    printf '%s\n' "$out"
     return 1
   fi
-
-  for target in "${required_toolchain_targets[@]}"; do
-    text="$repo_root/$target"
-    if ! grep -Fq "$flutter" "$text"; then
-      echo "toolchain-drift|$text|missing Flutter $flutter"
-      return 1
-    fi
-    if ! grep -Fq "$dart" "$text"; then
-      echo "toolchain-drift|$text|missing Dart $dart"
-      return 1
-    fi
-  done
-
-  for target in "${optional_local_policy_targets[@]}"; do
-    text="$repo_root/$target"
-    if [[ ! -f "$text" ]]; then
-      continue
-    fi
-    if ! grep -Fq "$flutter" "$text"; then
-      echo "toolchain-drift|$text|missing Flutter $flutter"
-      return 1
-    fi
-    if ! grep -Fq "$dart" "$text"; then
-      echo "toolchain-drift|$text|missing Dart $dart"
-      return 1
-    fi
-  done
-
-  echo "ok|toolchain-check|Flutter $flutter / Dart $dart"
+  printf '%s\n' "$out"
   return 0
 }
 

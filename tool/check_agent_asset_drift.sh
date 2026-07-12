@@ -11,7 +11,7 @@ AGENT_TEMPLATES_ROOT); project-only Cursor rules live in workspace
 .cursor/rules; Codex AGENTS.md comes from root AGENTS.md.
 
 If no template tree exists, this script exits 0 and prints a skip message.
-Otherwise it also verifies README toolchain markers in matching policy docs.
+Otherwise it also verifies docs/toolchain_versions.env pins in literal sinks.
 EOF
 }
 

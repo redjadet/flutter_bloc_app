@@ -8,6 +8,8 @@ Source-of-truth docs for Flutter BLoC app.
   [`testing.md`](testing.md), [`engineering-decisions.md`](engineering-decisions.md),
   [`ai-workflow.md`](ai-workflow.md)
 - **Interview showcase** (30-minute portfolio walk): [`interview_showcase.md`](interview_showcase.md)
+- **Toolchain pins** (Flutter/Dart): [`toolchain_versions.env`](toolchain_versions.env) (machine),
+  [`tech_stack.md`](tech_stack.md) (human display + synced CI/README sinks)
 - **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)
 - **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md),
   integration policy [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md),
@@ -58,6 +60,7 @@ Source-of-truth docs for Flutter BLoC app.
 
 ### Architecture and design
 
+- [`tech_stack.md`](tech_stack.md) — toolchain pins display; machine SoT [`toolchain_versions.env`](toolchain_versions.env)
 - [`../DESIGN.md`](../DESIGN.md) — agent-readable visual brief and DesignMD tokens
 - [`clean_architecture.md`](clean_architecture.md)
 - [`architecture_details.md`](architecture_details.md)

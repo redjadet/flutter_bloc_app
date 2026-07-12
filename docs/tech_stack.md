@@ -6,8 +6,12 @@ not a replacement for `pubspec.yaml`.
 ## Source of truth
 
 - Dependency constraints: [`pubspec.yaml`](../pubspec.yaml)
-- Pinned Flutter toolchain: [README](../README.md) and
-  [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
+- Machine Flutter/Dart pins: [`toolchain_versions.env`](toolchain_versions.env)
+  (edit there, then `python3 tool/update_agent_toolchain_versions.py`; after SDK
+  upgrade use `--from-sdk`). README badges and CI `FLUTTER_VERSION` are synced
+  sinks, not sources.
+- After regenerating [`plans/melos_dependency_baseline.txt`](plans/melos_dependency_baseline.txt),
+  re-run the sync script so the Dart/Flutter SDK header lines stay aligned.
 
 ## Toolchain and app shell
 

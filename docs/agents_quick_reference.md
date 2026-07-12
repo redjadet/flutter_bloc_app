@@ -5,7 +5,7 @@ Commands + routing. Map [`AGENTS.md`](../AGENTS.md); context
 [`agent_knowledge_base.md`](agent_knowledge_base.md); review
 [`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation detail
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
-Toolchain: Flutter 3.44.6 / Dart 3.12.2
+Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](toolchain_versions.env))
 
 ## Validation Chooser
 

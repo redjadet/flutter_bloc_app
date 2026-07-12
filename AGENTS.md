@@ -21,9 +21,9 @@ AGENTS file and Codex worktrees.
 
 ## Snapshot
 
-Flutter 3.44.6 / Dart 3.12.2. Pinned facts and caveats:
-[`docs/agent_project_context.md`](docs/agent_project_context.md),
-[`docs/tech_stack.md`](docs/tech_stack.md).
+Toolchain pins: [`docs/tech_stack.md`](docs/tech_stack.md) (machine:
+[`docs/toolchain_versions.env`](docs/toolchain_versions.env)). Pinned facts and
+caveats: [`docs/agent_project_context.md`](docs/agent_project_context.md).
 
 ## Loop
 
