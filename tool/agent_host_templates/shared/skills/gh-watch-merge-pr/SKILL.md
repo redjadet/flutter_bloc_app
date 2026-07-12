@@ -56,15 +56,17 @@ Slash command: `/watch-merge-pr`. Full delivery loop: `/commit-push-pr`.
 
 ## Worktree cleanup (required after merge)
 
-`gh pr merge --delete-branch` deletes **remote** branch. Local delete fails if
-another worktree still checks out that branch.
+`gh pr merge --delete-branch` deletes **remote** branch. Local post-merge fails
+when another worktree still holds the **topic** branch **or** `main`.
 
 Before claiming session done:
 
 ```bash
 git worktree list
-# if a worktree still holds the merged head branch:
+# topic worktree still on merged head:
 git worktree remove <path>
+# another worktree sitting on main (blocks primary checkout):
+git -C <other-worktree> switch --detach HEAD
 # then from primary tree:
 bash tool/commit_push_pr_post_merge.sh
 ```
