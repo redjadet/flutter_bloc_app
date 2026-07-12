@@ -16,6 +16,7 @@ AGENTS file and Codex worktrees.
 1. `AGENTS.md`
 2. Canonical ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md); skills: [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md)
 3. Review/commands when needed:
+   [`docs/review/code_review_playbook.md`](docs/review/code_review_playbook.md),
    [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md),
    [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 
@@ -46,7 +47,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)
 - Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
 - Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain`
-- Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
+- Review workflow: [`docs/review/code_review_playbook.md`](docs/review/code_review_playbook.md) · AI-specific risks: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
 - Git workflow: [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md)
 - Docs index: [`docs/README.md`](docs/README.md)
