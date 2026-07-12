@@ -48,6 +48,7 @@ Long session health: compact evidence, watch context drift, reset plan when stat
 - Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain`
 - Review: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
 - Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
+- Git workflow: [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md)
 - Docs index: [`docs/README.md`](docs/README.md)
 - Feature harness: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md), [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md), [`docs/testing/matrix_required_by_change.md`](docs/testing/matrix_required_by_change.md)
 - BLoC standards: [`docs/bloc_standards.md`](docs/bloc_standards.md), [`docs/bloc/cubit_file_template.md`](docs/bloc/cubit_file_template.md), [`docs/review/bloc_checklist.md`](docs/review/bloc_checklist.md), [`docs/review/security_checklist.md`](docs/review/security_checklist.md), [`docs/review/performance_checklist.md`](docs/review/performance_checklist.md)
@@ -75,6 +76,7 @@ Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/age
 - Presentation Cubit/BLoC only; domain pure Dart; wire DI/routes/l10n/codegen when touched — [`docs/clean_architecture.md`](docs/clean_architecture.md).
 - Platforms & UI: `flutter-cross-platform-modern`; [`DESIGN.md`](DESIGN.md) + [`docs/design_system.md`](docs/design_system.md) (reusable widgets, responsive layout, cross-platform form factors).
 - Widget tests — [`docs/testing_overview.md`](docs/testing_overview.md), [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
+- Git / branch / PR / worktree actions — [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md); inspect state first and preserve user work.
 - Destructive/external side effects: confirm same turn; list affected items first.
 - Coding reports: Files Changed + Follow-up Actions.
 - Repeated failure ⇒ repo capability — [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) § Missing Capability Loop.

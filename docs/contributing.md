@@ -10,6 +10,8 @@ architecture boundaries, tests, and documentation aligned with behavior.
 3. Update the owning docs when setup, workflow, or feature behavior changes.
 4. Keep changes inside the established `Presentation -> Domain <- Data`
    structure.
+5. Follow [Git and Branching Strategy](git_and_branching_strategy.md) for
+   branch, worktree, PR, merge, and cleanup rules.
 
 ## Validation commands
 
@@ -39,6 +41,7 @@ into several files.
 ## Where to start
 
 - [New Developer Guide](new_developer_guide.md)
+- [Git and Branching Strategy](git_and_branching_strategy.md)
 - [Security and Secrets](security_and_secrets.md) (and [`envrc.example`](envrc.example) for local `direnv` setup)
 - [Feature Overview](feature_overview.md)
 - [Case studies](case_studies/README.md) (product briefs; **Case Study Demo** feature)

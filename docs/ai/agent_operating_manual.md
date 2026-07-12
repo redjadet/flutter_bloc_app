@@ -35,7 +35,7 @@ T1/T2 coding tasks after [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight
 | Testing | [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) |
 | Verification commands | [`agents_quick_reference.md`](../agents_quick_reference.md) § Validation Chooser |
 | Security | [`security_and_secrets.md`](../security_and_secrets.md), [`review/security_checklist.md`](../review/security_checklist.md) |
-| Git discipline | adaptive_execution § Scope And Safety |
+| Git, branches, PRs, and worktrees | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
 | Stop conditions | [`governance.md`](governance.md) |
 | Response / DoD | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) |
 
@@ -62,6 +62,7 @@ Before `pubspec.yaml`: (1) Flutter SDK enough? (2) existing package? (3) activel
 | No placeholders unless asked | AKM AI Productivity Traps |
 | Never claim tests passed without evidence | `RISK-VALIDATION-SHORTCUT` |
 | No silent destructive/external effects | `RISK-DESTRUCTIVE-SIDE-EFFECT` |
+| No unapproved remote or destructive Git action | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
 | No SDK/framework patches | `RISK-FLUTTER-SDK-MUTATION` |
 | No new state mgmt / DI / navigation | `RISK-ARCH-LAYER`, `RISK-BLOC-DIVERGENCE` |
 

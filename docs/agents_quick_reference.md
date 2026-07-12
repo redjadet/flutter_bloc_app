@@ -14,6 +14,7 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | Cold start map | `bash tool/agent_session_bootstrap.sh --intent "<task goal>"` (prints automatic tool routes) |
 | Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight --intent "<task goal>"` |
 | Tool choice / scope changed | `./bin/agent-maintain tools --intent "<goal>" --paths <files>`; [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) |
+| Git branch / PR / merge / worktree | [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect `git status --short --branch` and upstream state before action |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
 | Format Dart source | `./bin/format` or `./bin/format --changed` |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
@@ -65,6 +66,7 @@ Fastlane: prefer `./tool/fastlane.sh`.
 | Broad/high-risk work | Use [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation helps and is allowed |
 | API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |
 | External/live state | Use owning tool/MCP/connector/browser; summarize evidence | Same |
+| Git branch / PR / worktree task | Read [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect state first; require authorization for remote or destructive action | Same |
 | AI-authored change before done | [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + validation routing | Same |
 | UI/design/theme/Mix work | Validation chooser UI row + widget/responsive proof | Same |
 | Flutter app-code/UI change with active debug run | Hot reload; hot restart if reload cannot apply; report unavailable session | Same |

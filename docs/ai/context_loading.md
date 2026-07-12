@@ -19,6 +19,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
 | Commands / validation choice | [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| Git, branch, PR, merge, or worktree task | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
 | Harness doctrine / agent policy | [`agent_knowledge_base.md`](../agent_knowledge_base.md) |
 | Topic owner unknown | [`docs/README.md`](../README.md) |
 | AI engineering plan | [`PLAN.md`](../../PLAN.md) |

@@ -78,6 +78,7 @@ Source-of-truth docs for Flutter BLoC app.
 ### Workflow and quality
 
 - [`new_developer_guide.md`](new_developer_guide.md)
+- [`git_and_branching_strategy.md`](git_and_branching_strategy.md) — human and AI Git, branch, PR, and worktree workflow
 - [`agent_knowledge_base.md`](agent_knowledge_base.md)
 - [`agent_project_context.md`](agent_project_context.md)
 - [`agent_environment_setup.md`](agent_environment_setup.md)
