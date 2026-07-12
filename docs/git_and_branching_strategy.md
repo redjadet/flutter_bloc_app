@@ -16,6 +16,25 @@ files in this repository.
   truth. This document defines the project workflow; it does not replace live
   repository settings.
 
+## GitHub enforcement
+
+`main` is protected for administrators and contributors. GitHub requires a PR,
+resolved review conversations, and an up-to-date successful result from:
+
+- `build`
+- `integration-preflight`
+- `dependency-review`
+- `scan-pr / osv-scan`
+
+Force-pushes and branch deletion are blocked on `main`. GitHub automatically
+deletes a merged PR head branch. GitHub Actions default to read-only tokens and
+cannot approve PR reviews; a workflow must request only the additional
+permissions it needs.
+
+The current repository ruleset is disabled and is not an enforcement source.
+Do not enable or expand it without first documenting and validating its added
+rules.
+
 ## Branch names
 
 Use lowercase, slash-separated names with a clear work type and short outcome.
