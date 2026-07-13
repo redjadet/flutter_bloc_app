@@ -17,6 +17,8 @@ import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:storage/storage.dart';
 
+part 'bootstrap_coordinator_backends.part.dart';
+
 /// Coordinates the application bootstrap process
 class BootstrapCoordinator {
   @visibleForTesting
@@ -104,27 +106,19 @@ class BootstrapCoordinator {
   /// Run the complete application bootstrap with the given flavor
   static Future<void> bootstrapApp(final Flavor flavor) async {
     ensureBindingInitialized();
-
-    // Set flavor early
     FlavorManager.current = flavor;
 
     // Web: paint a splash immediately so the canvas is not blank while the
-    // remaining async bootstrap (secrets, backends, DI, migration) runs.
-    // Native hosts already show a platform splash; HTML covers pre-Dart load.
+    // remaining async bootstrap runs. HTML covers pre-Dart download.
     if (shouldShowWebLaunchSplash()) {
       startApp(const WebLaunchSplash());
     }
 
-    // Initialize platform
     await initializePlatform();
-
-    // Secrets and version are independent; overlap their I/O on web/desktop.
     await Future.wait<void>(<Future<void>>[_loadSecrets(), loadAppVersion()]);
 
     if (shouldDeferBackendInit()) {
-      // Firebase determines DI registrations used by MyApp's router. Defer
-      // only optional Supabase so configured Firebase auth is never replaced
-      // by the web-local guest implementation for this app lifetime.
+      // Keep Firebase before DI for auth registration; defer optional Supabase.
       await _initializeFirebase();
       await _finishCoreAndStartApp();
       scheduleDeferredWork(_initializeSupabaseDeferred);
@@ -133,72 +127,6 @@ class BootstrapCoordinator {
 
     await _initializeBackends();
     await _finishCoreAndStartApp();
-  }
-
-  static void _scheduleBackendInitAfterFirstFrame(
-    final Future<void> Function() work,
-  ) {
-    final WidgetsBinding _ = WidgetsBinding.instance
-      ..addPostFrameCallback((_) {
-        unawaited(work());
-      })
-      // runApp may not have scheduled a frame yet; force one so deferred work runs.
-      ..ensureVisualUpdate();
-  }
-
-  static Future<void> _initializeBackends() async {
-    final Future<void> supabaseFuture = initializeSupabase();
-    await _initializeFirebase();
-    await supabaseFuture;
-  }
-
-  static Future<void> _initializeFirebase() async {
-    final bool firebaseReady = await initializeFirebase();
-    if (firebaseReady) {
-      configureFirebaseUi();
-      registerCrashlyticsHandlers();
-    }
-  }
-
-  static Future<void> _initializeSupabaseDeferred() async {
-    try {
-      await initializeSupabase();
-    } on Object catch (error, stackTrace) {
-      AppLogger.warning('Deferred Supabase initialization failed');
-      AppLogger.error(
-        'BootstrapCoordinator._initializeSupabaseDeferred',
-        error,
-        stackTrace,
-      );
-    } finally {
-      readBackendAvailability();
-      notifyBackendAvailabilityUpdated();
-    }
-  }
-
-  static Future<void> _finishCoreAndStartApp() async {
-    await setupDependencies();
-    readRuntimeConfig();
-    readBackendAvailability();
-    await runMigration();
-    startApp(const MyApp());
-  }
-
-  static Future<void> _loadSecrets() async {
-    const enableAssetSecrets = bool.fromEnvironment(
-      SecretConfig.enableAssetSecretsDefine,
-      defaultValue: true,
-    );
-
-    if (!FlavorManager.I.isDev && enableAssetSecrets) {
-      AppLogger.warning(
-        'ENABLE_ASSET_SECRETS is true outside dev flavor; ignoring asset fallback.',
-      );
-    }
-
-    final bool allowAssets =
-        enableAssetSecrets && FlavorManager.I.isDev && kDebugMode;
-    await loadSecrets(allowAssetFallback: allowAssets);
   }
 
   @visibleForTesting
