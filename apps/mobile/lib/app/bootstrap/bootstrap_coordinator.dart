@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +9,15 @@ import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/initialization_guard.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/web_launch_splash.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:storage/storage.dart';
+
+part 'bootstrap_coordinator_backends.part.dart';
 
 /// Coordinates the application bootstrap process
 class BootstrapCoordinator {
@@ -77,61 +82,51 @@ class BootstrapCoordinator {
   @visibleForTesting
   static void Function(Widget app) startApp = runApp;
 
+  /// Whether to paint [WebLaunchSplash] before async bootstrap finishes.
+  /// Defaults to [kIsWeb]; overridable in tests.
+  @visibleForTesting
+  static bool Function() shouldShowWebLaunchSplash = () => kIsWeb;
+
+  /// Whether Supabase may finish after first [MyApp] paint.
+  ///
+  /// Firebase must finish before DI: [MyApp] resolves its auth repository while
+  /// creating its router, and that registration selects its implementation
+  /// from Firebase availability. Supabase remains optional on web.
+  @visibleForTesting
+  static bool Function() shouldDeferBackendInit = () => kIsWeb;
+
+  @visibleForTesting
+  static void Function(Future<void> Function() work) scheduleDeferredWork =
+      _scheduleBackendInitAfterFirstFrame;
+
+  @visibleForTesting
+  static void Function() notifyBackendAvailabilityUpdated =
+      BackendAvailabilityUpdates.instance.notifyUpdated;
+
   /// Run the complete application bootstrap with the given flavor
   static Future<void> bootstrapApp(final Flavor flavor) async {
     ensureBindingInitialized();
-
-    // Set flavor early
     FlavorManager.current = flavor;
 
-    // Initialize platform
+    // Web: paint a splash immediately so the canvas is not blank while the
+    // remaining async bootstrap runs. HTML covers pre-Dart download.
+    if (shouldShowWebLaunchSplash()) {
+      startApp(const WebLaunchSplash());
+    }
+
     await initializePlatform();
+    await Future.wait<void>(<Future<void>>[_loadSecrets(), loadAppVersion()]);
 
-    // Load secrets with flavor-appropriate fallbacks
-    await _loadSecrets();
-
-    // Load app version for DI
-    await loadAppVersion();
-
-    // Initialize Firebase if configured
-    final firebaseReady = await initializeFirebase();
-    if (firebaseReady) {
-      configureFirebaseUi();
-      registerCrashlyticsHandlers();
+    if (shouldDeferBackendInit()) {
+      // Keep Firebase before DI for auth registration; defer optional Supabase.
+      await _initializeFirebase();
+      await _finishCoreAndStartApp();
+      scheduleDeferredWork(_initializeSupabaseDeferred);
+      return;
     }
 
-    // Initialize Supabase if URL and anon key are configured
-    await initializeSupabase();
-
-    // Setup dependency injection
-    await setupDependencies();
-
-    // Materialize app runtime config at init (single place for feature/endpoint control)
-    readRuntimeConfig();
-    readBackendAvailability();
-
-    // Run migration (non-blocking, graceful failure)
-    await runMigration();
-
-    // Start the app
-    startApp(const MyApp());
-  }
-
-  static Future<void> _loadSecrets() async {
-    const enableAssetSecrets = bool.fromEnvironment(
-      SecretConfig.enableAssetSecretsDefine,
-      defaultValue: true,
-    );
-
-    if (!FlavorManager.I.isDev && enableAssetSecrets) {
-      AppLogger.warning(
-        'ENABLE_ASSET_SECRETS is true outside dev flavor; ignoring asset fallback.',
-      );
-    }
-
-    final bool allowAssets =
-        enableAssetSecrets && FlavorManager.I.isDev && kDebugMode;
-    await loadSecrets(allowAssetFallback: allowAssets);
+    await _initializeBackends();
+    await _finishCoreAndStartApp();
   }
 
   @visibleForTesting
@@ -162,5 +157,10 @@ class BootstrapCoordinator {
       );
     };
     startApp = runApp;
+    shouldShowWebLaunchSplash = () => kIsWeb;
+    shouldDeferBackendInit = () => kIsWeb;
+    scheduleDeferredWork = _scheduleBackendInitAfterFirstFrame;
+    notifyBackendAvailabilityUpdated =
+        BackendAvailabilityUpdates.instance.notifyUpdated;
   }
 }

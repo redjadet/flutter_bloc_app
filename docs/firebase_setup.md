@@ -2,7 +2,7 @@
 
 The repo includes a **placeholder** `apps/mobile/lib/firebase_options.dart` so the project **compiles and runs** even when Firebase is not configured. In that case the app skips Firebase initialization and runs with Firebase-dependent features disabled (no crash, no login required).
 
-**Web builds** additionally use [BackendAvailability](../apps/mobile/lib/app/config/backend_availability.dart) “no-backend mode”: Firebase and Supabase are opportunistic when configured, but never required for navigation, guest access, or local demo fallbacks (Chat/IoT). See [changes/2026-06-17_web-no-backend-mode.md](changes/2026-06-17_web-no-backend-mode.md).
+**Web builds** additionally use [BackendAvailability](../apps/mobile/lib/app/config/backend_availability.dart) “no-backend mode”: Firebase and Supabase are opportunistic when configured, but never required for navigation, guest access, or local demo fallbacks (Chat/IoT). On web, Firebase completes before DI so configured auth registers correctly; optional Supabase completes after the first `MyApp` frame, then `BackendAvailabilityUpdates` refreshes chat/IoT banners. See [changes/2026-06-17_web-no-backend-mode.md](changes/2026-06-17_web-no-backend-mode.md) and [changes/2026-07-13_web_first_load_splash.md](changes/2026-07-13_web_first_load_splash.md).
 
 To run this app **with** Firebase (Auth, Remote Config, Realtime Database, Crashlytics, etc.), add your own configuration as below.
 

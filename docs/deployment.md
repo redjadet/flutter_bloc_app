@@ -205,7 +205,13 @@ Use the repo script (required for correct `--base-href` and consistent dart-defi
 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
 ```
 
-This produces `build/web`.
+This produces `build/web` with **WebAssembly** (`--wasm`, skwasm + CanvasKit
+fallback) by default for faster first load. Opt out with `WEB_WASM=0` if a
+dependency breaks wasm compilation:
+
+```bash
+WEB_WASM=0 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
+```
 
 ### Deploy via GitHub Actions (auto on `main`)
 

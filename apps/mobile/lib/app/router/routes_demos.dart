@@ -64,9 +64,12 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     path: AppRoutes.chatPath,
     name: AppRoutes.chat,
     builder: (final context, final state) {
+      // Resolve session-gate policy once; listen only around the page so
+      // deferred backend ticks do not recreate Chat cubits.
       final BackendAvailability availability = getIt<BackendAvailability>();
       return _withChatSupabaseSessionGate(
         state: state,
+        availability: availability,
         child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
           create: () => ChatSyncStatusCubit(
             pendingRepository: getIt<PendingSyncRepository>(),
@@ -75,12 +78,13 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
           child: BlocProviderHelpers.withAsyncInit<ChatCubit>(
             create: _createChatCubit,
             init: (final cubit) => cubit.loadHistory(),
-            child: ChatPage(
-              errorNotificationService: getIt<ErrorNotificationService>(),
-              showBackendDisabledBanner:
-                  availability.showChatBackendDisabledBanner,
-              renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
-              chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
+            child: _listenBackendAvailability(
+              (final live) => ChatPage(
+                errorNotificationService: getIt<ErrorNotificationService>(),
+                showBackendDisabledBanner: live.showChatBackendDisabledBanner,
+                renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
+                chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
+              ),
             ),
           ),
         ),
@@ -94,28 +98,30 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       final BackendAvailability availability = getIt<BackendAvailability>();
       return _withChatSupabaseSessionGate(
         state: state,
+        availability: availability,
         child: BlocProviderHelpers.withAsyncInit<ChatSyncStatusCubit>(
           create: () => ChatSyncStatusCubit(
             pendingRepository: getIt<PendingSyncRepository>(),
           ),
           init: (final cubit) => cubit.refresh(),
-          child: ChatListPage(
-            repository: getIt<ChatListRepository>(),
-            chatRepository: getIt<ChatRepository>(),
-            historyRepository: getIt<ChatHistoryRepository>(),
-            renderOrchestrationHfTokenProvider:
-                getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
-                ? getIt<RenderOrchestrationHfTokenProvider>()
-                : null,
-            authSessionPort: getIt<ChatAuthSessionPort>(),
-            renderOrchestrationDiagnostics:
-                getIt<ChatRenderOrchestrationDiagnosticsPort>(),
-            errorNotificationService: getIt<ErrorNotificationService>(),
-            showBackendDisabledBanner:
-                availability.showChatBackendDisabledBanner,
-            renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
-            chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
-            initialHuggingfaceModel: SecretConfig.huggingfaceModel,
+          child: _listenBackendAvailability(
+            (final live) => ChatListPage(
+              repository: getIt<ChatListRepository>(),
+              chatRepository: getIt<ChatRepository>(),
+              historyRepository: getIt<ChatHistoryRepository>(),
+              renderOrchestrationHfTokenProvider:
+                  getIt.isRegistered<RenderOrchestrationHfTokenProvider>()
+                  ? getIt<RenderOrchestrationHfTokenProvider>()
+                  : null,
+              authSessionPort: getIt<ChatAuthSessionPort>(),
+              renderOrchestrationDiagnostics:
+                  getIt<ChatRenderOrchestrationDiagnosticsPort>(),
+              errorNotificationService: getIt<ErrorNotificationService>(),
+              showBackendDisabledBanner: live.showChatBackendDisabledBanner,
+              renderTransportDemoStrict: SecretConfig.chatRenderDemoStrict,
+              chatRenderDemoBaseUrl: SecretConfig.chatRenderDemoBaseUrl,
+              initialHuggingfaceModel: SecretConfig.huggingfaceModel,
+            ),
           ),
         ),
       );
