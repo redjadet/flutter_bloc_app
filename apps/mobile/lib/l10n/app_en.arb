@@ -3798,5 +3798,107 @@
   "realtimeMarketDisclaimer": "Simulated data for UI demo only — not a real exchange.",
   "@realtimeMarketDisclaimer": {
     "description": "Short disclaimer under the market header"
+  },
+  "certificatePinningDemoTitle": "Certificate pinning demo",
+  "@certificatePinningDemoTitle": {
+    "description": "App bar title for the certificate pinning developer demo"
+  },
+  "certificatePinningDemoModeLabel": "Active mode: {mode}",
+  "@certificatePinningDemoModeLabel": {
+    "description": "Shows the configured certificate pinning mode",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "certificatePinningDemoDisabledHint": "Pinning is disabled by default. Demo probes use a local mock validator and do not change Dio TLS. Enable globally with --dart-define=CERT_PINNING_MODE=mockSuccess|mockFailure|real.",
+  "@certificatePinningDemoDisabledHint": {
+    "description": "Explains default-disabled pinning and how to enable modes"
+  },
+  "certificatePinningDemoScenarioLabel": "Mock scenario",
+  "@certificatePinningDemoScenarioLabel": {
+    "description": "Label above mock scenario dropdown"
+  },
+  "certificatePinningDemoProbeButton": "Trigger secure probe",
+  "@certificatePinningDemoProbeButton": {
+    "description": "Button to run a certificate pin validation probe"
+  },
+  "certificatePinningDemoResetButton": "Reset scenario",
+  "@certificatePinningDemoResetButton": {
+    "description": "Button to reset mock scenario to validPrimaryPin"
+  },
+  "certificatePinningDemoClearLogsButton": "Clear logs",
+  "@certificatePinningDemoClearLogsButton": {
+    "description": "Button to clear developer pinning logs"
+  },
+  "certificatePinningDemoStatusInitial": "Ready. Select a scenario and run a probe.",
+  "@certificatePinningDemoStatusInitial": {
+    "description": "Initial status before any probe"
+  },
+  "certificatePinningDemoStatusValidating": "Validating pin…",
+  "@certificatePinningDemoStatusValidating": {
+    "description": "Status while pin validation is in progress"
+  },
+  "certificatePinningDemoStatusSuccess": "Validation succeeded ({matchKind}).",
+  "@certificatePinningDemoStatusSuccess": {
+    "description": "Success status including primary or backup match",
+    "placeholders": {
+      "matchKind": {
+        "type": "String"
+      }
+    }
+  },
+  "certificatePinningDemoLogsTitle": "Developer logs",
+  "@certificatePinningDemoLogsTitle": {
+    "description": "Section title for pinning log lines"
+  },
+  "certificatePinningDemoLogsEmpty": "No log entries yet.",
+  "@certificatePinningDemoLogsEmpty": {
+    "description": "Empty state for pinning logs"
+  },
+  "certificatePinningDemoFailurePinMismatch": "Certificate pin did not match. Connection blocked.",
+  "@certificatePinningDemoFailurePinMismatch": {
+    "description": "Safe user message for pin mismatch"
+  },
+  "certificatePinningDemoFailureMissingPin": "No pin configured for this host.",
+  "@certificatePinningDemoFailureMissingPin": {
+    "description": "Safe user message for missing pin"
+  },
+  "certificatePinningDemoFailureUnsupportedHost": "Host is not allowed for pinning.",
+  "@certificatePinningDemoFailureUnsupportedHost": {
+    "description": "Safe user message for unsupported host"
+  },
+  "certificatePinningDemoFailureExpired": "Certificate appears expired.",
+  "@certificatePinningDemoFailureExpired": {
+    "description": "Safe user message for expired certificate scenario"
+  },
+  "certificatePinningDemoFailureTimeout": "Certificate validation timed out.",
+  "@certificatePinningDemoFailureTimeout": {
+    "description": "Safe user message for validation timeout"
+  },
+  "certificatePinningDemoFailureMalformed": "Certificate data was malformed.",
+  "@certificatePinningDemoFailureMalformed": {
+    "description": "Safe user message for malformed certificate"
+  },
+  "certificatePinningDemoFailureNetworkUnavailable": "Network unavailable during validation.",
+  "@certificatePinningDemoFailureNetworkUnavailable": {
+    "description": "Safe user message for network unavailable scenario"
+  },
+  "certificatePinningDemoFailureValidation": "Certificate validation failed.",
+  "@certificatePinningDemoFailureValidation": {
+    "description": "Safe generic validation failure message"
+  },
+  "certificatePinningDemoFailureUnknown": "Something went wrong during validation.",
+  "@certificatePinningDemoFailureUnknown": {
+    "description": "Safe unknown failure message"
+  },
+  "exampleCertificatePinningDemoButton": "Certificate pinning demo",
+  "@exampleCertificatePinningDemoButton": {
+    "description": "Example hub button for certificate pinning demo"
+  },
+  "openCertificatePinningDemoTooltip": "Open certificate pinning demo",
+  "@openCertificatePinningDemoTooltip": {
+    "description": "Counter overflow tooltip for certificate pinning demo"
   }
 }

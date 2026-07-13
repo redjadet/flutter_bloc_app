@@ -18,7 +18,8 @@ Simulated high-frequency order book + trades for **UI and state patterns only**
   per-row depth tint, recent trades (empty state), stats card, `fl_chart` line
   chart with grid + touch tooltip + area fill. Buy/sell accents use app success
   green + `ColorScheme.error` via `realtime_market_ui_tokens.dart`.
-- **Security stubs** (Phase 2 placeholders, not wired): `CertificatePinningPolicy`,
+- **Security stubs** (wired to shared config): `CertificatePinningPolicy`
+  (`enabled` when mode ≠ `disabled`; see [`docs/security/certificate_pinning.md`](../security/certificate_pinning.md)),
   `TradingApiTokenStore`, `RealtimeMarketBackendConfig`, `MarketFeedRemotePort`
   (`NoopMarketFeedRemotePort`).
 

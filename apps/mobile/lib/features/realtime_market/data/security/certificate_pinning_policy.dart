@@ -1,6 +1,10 @@
-/// Demo-only placeholder for TLS pinning policy (no production exchange).
-final class CertificatePinningPolicy {
-  const CertificatePinningPolicy();
+import 'package:networking/networking.dart';
 
-  bool get enabled => false;
+/// Demo-only TLS pinning policy wired to shared [CertificatePinningConfig].
+final class CertificatePinningPolicy {
+  const CertificatePinningPolicy({required this.config});
+
+  final CertificatePinningConfig config;
+
+  bool get enabled => config.mode != CertificatePinningMode.disabled;
 }

@@ -71,6 +71,11 @@ final List<OverflowItem> _counterPageOverflowItems = <OverflowItem>[
     routeName: AppRoutes.realtimeMarket,
     labelBuilder: (final l10n) => l10n.openRealtimeMarketTooltip,
   ),
+  OverflowItem(
+    action: OverflowAction.certificatePinningDemo,
+    routeName: AppRoutes.certificatePinningDemo,
+    labelBuilder: (final l10n) => l10n.openCertificatePinningDemoTooltip,
+  ),
 ];
 
 extension _CounterPageAppBarUi on CounterPageAppBar {

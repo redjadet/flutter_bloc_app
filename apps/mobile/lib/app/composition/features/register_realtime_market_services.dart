@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/realtime_market/data/security/market_f
 import 'package:flutter_bloc_app/features/realtime_market/data/security/realtime_market_backend_config.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/security/trading_api_token_store.dart';
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
+import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 /// Hive cache + simulated feed + security stubs for the market demo.
@@ -23,7 +24,7 @@ void registerRealtimeMarketServices() {
     ),
   );
   registerLazySingletonIfAbsent<CertificatePinningPolicy>(
-    () => const CertificatePinningPolicy(),
+    () => CertificatePinningPolicy(config: getIt<CertificatePinningConfig>()),
   );
   registerLazySingletonIfAbsent<TradingApiTokenStore>(TradingApiTokenStore.new);
   registerLazySingletonIfAbsent<RealtimeMarketBackendConfig>(

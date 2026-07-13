@@ -15,6 +15,7 @@ class ExamplePageBody extends StatelessWidget {
     required this.onLoadPlatformInfo,
     required this.onOpenWebsocket,
     required this.onOpenRealtimeMarket,
+    required this.onOpenCertificatePinningDemo,
     required this.onOpenChatList,
     required this.onOpenSearch,
     required this.onOpenTodoList,
@@ -52,6 +53,7 @@ class ExamplePageBody extends StatelessWidget {
   final VoidCallback? onLoadPlatformInfo;
   final VoidCallback onOpenWebsocket;
   final VoidCallback onOpenRealtimeMarket;
+  final VoidCallback onOpenCertificatePinningDemo;
   final VoidCallback onOpenChatList;
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenTodoList;
@@ -89,6 +91,7 @@ class ExamplePageBody extends StatelessWidget {
     onLoadPlatformInfo: onLoadPlatformInfo,
     onOpenWebsocket: onOpenWebsocket,
     onOpenRealtimeMarket: onOpenRealtimeMarket,
+    onOpenCertificatePinningDemo: onOpenCertificatePinningDemo,
     onOpenChatList: onOpenChatList,
     onOpenSearch: onOpenSearch,
     onOpenTodoList: onOpenTodoList,

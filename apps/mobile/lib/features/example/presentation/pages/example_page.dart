@@ -150,6 +150,8 @@ class _ExamplePageState extends State<ExamplePage> {
         onLoadPlatformInfo: _isFetchingInfo ? null : _loadPlatformInfo,
         onOpenWebsocket: () => context.pushNamed(AppRoutes.websocket),
         onOpenRealtimeMarket: () => context.pushNamed(AppRoutes.realtimeMarket),
+        onOpenCertificatePinningDemo: () =>
+            context.pushNamed(AppRoutes.certificatePinningDemo),
         onOpenChatList: () => context.pushNamed(AppRoutes.chatList),
         onOpenSearch: () => context.pushNamed(AppRoutes.search),
         onOpenTodoList: () => context.pushNamed(AppRoutes.todoList),

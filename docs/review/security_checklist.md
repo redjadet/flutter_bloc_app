@@ -49,6 +49,8 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 
 - Retries are bounded and idempotent where duplicates are harmful.
 - Certificate pinning or trust policy changes are explicit and tested.
+  Owner: [`docs/security/certificate_pinning.md`](../security/certificate_pinning.md)
+  (default mode `disabled`; enable via `CERT_PINNING_MODE`).
 - Auth headers are not logged or cached in insecure stores.
 
 ## Proof

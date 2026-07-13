@@ -212,6 +212,8 @@ can still flag keys in **old commits**. If keys were ever pushed:
 ## Related docs
 
 - [Authentication](authentication.md)
+- [Certificate pinning](security/certificate_pinning.md) (default disabled;
+  Dio leaf SHA-256 pins)
 - [Repository lifecycle](REPOSITORY_LIFECYCLE.md)
 - [Clean architecture](clean_architecture.md)
 - [Apple debug Hive and secret storage](engineering/apple_debug_hive_storage.md)

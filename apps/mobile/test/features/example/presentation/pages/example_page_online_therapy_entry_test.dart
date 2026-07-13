@@ -23,6 +23,7 @@ void main() {
               onLoadPlatformInfo: null,
               onOpenWebsocket: () {},
               onOpenRealtimeMarket: () {},
+              onOpenCertificatePinningDemo: () {},
               onOpenChatList: () {},
               onOpenSearch: () {},
               onOpenTodoList: () {},

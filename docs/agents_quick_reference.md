@@ -49,7 +49,7 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | Global vendor skills | `./bin/agent-maintain install` / `update` / `find QUERY` / `trim`; underlying `tool/install_global_agent_skills.sh` |
 | Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md); shim `agents-skill-routing`; `bash tool/find_global_agent_skills.sh QUERY` |
 | IDE-open local env preflight | `.vscode/tasks.json` -> `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
-| Security scans | `./tool/check_tracked_secret_literals.sh`; `./tool/check_ai_generated_code_smells.sh` |
+| Security scans | `./tool/check_tracked_secret_literals.sh`; `./tool/check_ai_generated_code_smells.sh`; pinning policy [`docs/security/certificate_pinning.md`](security/certificate_pinning.md) |
 | Cross-host review (explicit only) | `./tool/request_codex_feedback.sh`; plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
 | Transcript context budgets | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` or `./bin/checklist-fast` |
 | Hive shape changes | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated`; `bash tool/check_hive_schema_fingerprints.sh`; strict input drift: `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |

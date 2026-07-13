@@ -66,6 +66,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   createStaffAppDemoShellRoute(),
   createCaseStudyDemoShellRoute(),
   createNativePlatformShowcaseRoute(),
+  createCertificatePinningDemoRoute(),
 ];
 
 RouteBase createNativePlatformShowcaseRoute() => GoRoute(
