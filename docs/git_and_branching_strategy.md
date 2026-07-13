@@ -18,8 +18,10 @@ files in this repository.
 
 ## GitHub enforcement
 
-`main` is protected for administrators and contributors. GitHub requires a PR,
-resolved review conversations, and an up-to-date successful result from:
+`main` is protected for contributors. Owners and repository administrators may
+push directly when an urgent or administrative change requires it. All other
+contributors must use a PR with resolved review conversations and an up-to-date
+successful result from:
 
 - `build`
 - `integration-preflight`
