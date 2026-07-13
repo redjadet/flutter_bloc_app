@@ -107,5 +107,20 @@ void main() {
       expect(validateStatus(404), isTrue);
       expect(validateStatus(500), isTrue);
     });
+
+    test('defaults certificate pinning to disabled validator', () {
+      registerHttpTestPrereqs(initialStatus: NetworkStatus.online);
+      registerHttpServices();
+
+      final CertificatePinningConfig config = getIt<CertificatePinningConfig>();
+      expect(config.mode, CertificatePinningMode.disabled);
+      expect(config.pinHashKind, CertificatePinHashKind.spki);
+      expect(
+        getIt<CertificatePinValidator>(),
+        isA<DisabledCertificatePinValidator>(),
+      );
+      expect(getIt.isRegistered<CertificatePinningLogger>(), isTrue);
+      expect(getIt.isRegistered<MockCertificateScenarioController>(), isTrue);
+    });
   });
 }
