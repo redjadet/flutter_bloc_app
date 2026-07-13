@@ -33,13 +33,17 @@ analyzer:
     strict-raw-types: true
   errors:
     avoid_dynamic_calls: error
+    empty_catches: error
     avoid_catches_without_on_clauses: error
     avoid_catching_errors: error
+    avoid_print: error
+    avoid_slow_async_io: error
     avoid_unnecessary_containers: error
     avoid_void_async: error
+    avoid_web_libraries_in_flutter: error
     await_only_futures: error
     cancel_subscriptions: error
-    close_sinks: warning
+    close_sinks: error
     document_ignores: error
     discarded_futures: error
     only_throw_errors: error
@@ -58,7 +62,9 @@ analyzer:
     null_check_on_nullable_type_parameter: error
     unnecessary_nullable_for_final_variable_declarations: warning
     unnecessary_null_in_if_null_operators: warning
-    # Stricter Dart analyzer rules
+    # Stricter Dart analyzer rules. These are errors because AI-generated
+    # code commonly hides runtime failures behind dynamic access, broad or
+    # empty catches, dropped async work, blocking I/O, and debug output.
     strict_top_level_inference: error
     no_wildcard_variable_uses: error
     implicit_call_tearoffs: warning

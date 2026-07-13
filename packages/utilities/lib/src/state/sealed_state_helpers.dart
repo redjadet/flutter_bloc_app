@@ -100,7 +100,6 @@ class SealedStateMatcher<S, R> {
       _idleResult = handler();
     }
     // Builder pattern requires returning 'this' for method chaining
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -110,7 +109,6 @@ class SealedStateMatcher<S, R> {
       _loadingResult = handler();
     }
     // Builder pattern requires returning 'this' for method chaining
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -124,7 +122,6 @@ class SealedStateMatcher<S, R> {
       _navigateResult = handler(null, null);
     }
     // Builder pattern requires returning 'this' for method chaining
-    // ignore: avoid_returning_this
     return this;
   }
 
@@ -136,7 +133,6 @@ class SealedStateMatcher<S, R> {
       _errorResult = handler('');
     }
     // Builder pattern requires returning 'this' for method chaining
-    // ignore: avoid_returning_this
     return this;
   }
 

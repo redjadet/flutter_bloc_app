@@ -93,7 +93,9 @@ class _CountingSubscription<T> implements StreamSubscription<T> {
   @override
   void pause([final Future<void>? resumeSignal]) {
     _isPaused = true;
-    resumeSignal?.whenComplete(resume);
+    if (resumeSignal != null) {
+      unawaited(resumeSignal.whenComplete(resume));
+    }
   }
 
   @override

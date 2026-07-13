@@ -1,0 +1,49 @@
+# Shared production-code policy for first-party workspace packages.
+#
+# Keep this focused on correctness and resource-safety diagnostics. The app
+# package adds Very Good Analysis plus UI-specific analyzer plugins on top.
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    avoid_catches_without_on_clauses: error
+    avoid_catching_errors: error
+    avoid_dynamic_calls: error
+    empty_catches: error
+    avoid_print: error
+    avoid_slow_async_io: error
+    avoid_void_async: error
+    avoid_web_libraries_in_flutter: error
+    await_only_futures: error
+    cancel_subscriptions: error
+    close_sinks: error
+    discarded_futures: error
+    document_ignores: error
+    only_throw_errors: error
+    unawaited_futures: error
+    unnecessary_ignore: error
+    unnecessary_statements: error
+    use_build_context_synchronously: error
+
+linter:
+  rules:
+    avoid_catches_without_on_clauses: true
+    avoid_catching_errors: true
+    avoid_dynamic_calls: true
+    empty_catches: true
+    avoid_print: true
+    avoid_slow_async_io: true
+    avoid_void_async: true
+    avoid_web_libraries_in_flutter: true
+    await_only_futures: true
+    cancel_subscriptions: true
+    close_sinks: true
+    discarded_futures: true
+    document_ignores: true
+    only_throw_errors: true
+    unawaited_futures: true
+    unnecessary_ignore: true
+    unnecessary_statements: true
+    use_build_context_synchronously: true
