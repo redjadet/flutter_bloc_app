@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-13_web_first_load_splash.md`](2026-07-13_web_first_load_splash.md): Web HTML + Flutter splash during first launch; parallel bootstrap steps; blank-screen fix.
 - [`2026-07-12_agent_tool_auto_routing.md`](2026-07-12_agent_tool_auto_routing.md): Intent/path tool router integrated into preflight; MCP naming de-drifted; hot-reload rule scoped to current workspace paths.
 - [`2026-07-12_agent_docs_and_host_sync_conflict_repair.md`](2026-07-12_agent_docs_and_host_sync_conflict_repair.md): Current package/app ownership restored in AI maps; project-only Cursor execution rule added to sync and drift enforcement.
 - [`2026-07-10_adr_quality_hardening.md`](2026-07-10_adr_quality_hardening.md): Current-path ADR repair plus deterministic metadata, consequence, section, and stale-ownership guard with negative fixture.

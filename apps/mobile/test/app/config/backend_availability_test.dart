@@ -26,6 +26,19 @@ void main() {
       expect(availability.supabaseInitialized, isFalse);
     });
 
+    test('BackendAvailabilityUpdates notifies listeners', () {
+      var ticks = 0;
+      void listener() => ticks += 1;
+      BackendAvailabilityUpdates.instance.addListener(listener);
+      addTearDown(
+        () => BackendAvailabilityUpdates.instance.removeListener(listener),
+      );
+
+      BackendAvailabilityUpdates.instance.notifyUpdated();
+
+      expect(ticks, 1);
+    });
+
     group('showChatBackendDisabledBanner', () {
       test('is false when not in web no-backend mode', () {
         const BackendAvailability availability = BackendAvailability(

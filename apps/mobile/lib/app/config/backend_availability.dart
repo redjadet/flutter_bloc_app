@@ -2,6 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 
+/// Notifies listeners when opportunistic backends finish initializing.
+///
+/// [BackendAvailability.fromBootstrap] already reads live Firebase/Supabase
+/// flags. This ticker exists so route builders that capture banner bools can
+/// rebuild after deferred web backend init completes.
+class BackendAvailabilityUpdates extends ChangeNotifier {
+  BackendAvailabilityUpdates._();
+
+  static final BackendAvailabilityUpdates instance =
+      BackendAvailabilityUpdates._();
+
+  void notifyUpdated() => notifyListeners();
+}
+
 /// Runtime backend availability and web no-backend policy flags.
 ///
 /// Web behavior: backends are opportunistic (used when available) but never
@@ -49,5 +63,3 @@ class BackendAvailability {
   bool get showIotCloudBackendDisabledBanner =>
       webNoBackendMode && !supabaseInitialized;
 }
-
-// EOF

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/initialization_guard.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/web_launch_splash.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
@@ -77,6 +80,27 @@ class BootstrapCoordinator {
   @visibleForTesting
   static void Function(Widget app) startApp = runApp;
 
+  /// Whether to paint [WebLaunchSplash] before async bootstrap finishes.
+  /// Defaults to [kIsWeb]; overridable in tests.
+  @visibleForTesting
+  static bool Function() shouldShowWebLaunchSplash = () => kIsWeb;
+
+  /// Whether Supabase may finish after first [MyApp] paint.
+  ///
+  /// Firebase must finish before DI: [MyApp] resolves its auth repository while
+  /// creating its router, and that registration selects its implementation
+  /// from Firebase availability. Supabase remains optional on web.
+  @visibleForTesting
+  static bool Function() shouldDeferBackendInit = () => kIsWeb;
+
+  @visibleForTesting
+  static void Function(Future<void> Function() work) scheduleDeferredWork =
+      _scheduleBackendInitAfterFirstFrame;
+
+  @visibleForTesting
+  static void Function() notifyBackendAvailabilityUpdated =
+      BackendAvailabilityUpdates.instance.notifyUpdated;
+
   /// Run the complete application bootstrap with the given flavor
   static Future<void> bootstrapApp(final Flavor flavor) async {
     ensureBindingInitialized();
@@ -84,36 +108,79 @@ class BootstrapCoordinator {
     // Set flavor early
     FlavorManager.current = flavor;
 
+    // Web: paint a splash immediately so the canvas is not blank while the
+    // remaining async bootstrap (secrets, backends, DI, migration) runs.
+    // Native hosts already show a platform splash; HTML covers pre-Dart load.
+    if (shouldShowWebLaunchSplash()) {
+      startApp(const WebLaunchSplash());
+    }
+
     // Initialize platform
     await initializePlatform();
 
-    // Load secrets with flavor-appropriate fallbacks
-    await _loadSecrets();
+    // Secrets and version are independent; overlap their I/O on web/desktop.
+    await Future.wait<void>(<Future<void>>[_loadSecrets(), loadAppVersion()]);
 
-    // Load app version for DI
-    await loadAppVersion();
+    if (shouldDeferBackendInit()) {
+      // Firebase determines DI registrations used by MyApp's router. Defer
+      // only optional Supabase so configured Firebase auth is never replaced
+      // by the web-local guest implementation for this app lifetime.
+      await _initializeFirebase();
+      await _finishCoreAndStartApp();
+      scheduleDeferredWork(_initializeSupabaseDeferred);
+      return;
+    }
 
-    // Initialize Firebase if configured
-    final firebaseReady = await initializeFirebase();
+    await _initializeBackends();
+    await _finishCoreAndStartApp();
+  }
+
+  static void _scheduleBackendInitAfterFirstFrame(
+    final Future<void> Function() work,
+  ) {
+    final WidgetsBinding _ = WidgetsBinding.instance
+      ..addPostFrameCallback((_) {
+        unawaited(work());
+      })
+      // runApp may not have scheduled a frame yet; force one so deferred work runs.
+      ..ensureVisualUpdate();
+  }
+
+  static Future<void> _initializeBackends() async {
+    final Future<void> supabaseFuture = initializeSupabase();
+    await _initializeFirebase();
+    await supabaseFuture;
+  }
+
+  static Future<void> _initializeFirebase() async {
+    final bool firebaseReady = await initializeFirebase();
     if (firebaseReady) {
       configureFirebaseUi();
       registerCrashlyticsHandlers();
     }
+  }
 
-    // Initialize Supabase if URL and anon key are configured
-    await initializeSupabase();
+  static Future<void> _initializeSupabaseDeferred() async {
+    try {
+      await initializeSupabase();
+    } on Object catch (error, stackTrace) {
+      AppLogger.warning('Deferred Supabase initialization failed');
+      AppLogger.error(
+        'BootstrapCoordinator._initializeSupabaseDeferred',
+        error,
+        stackTrace,
+      );
+    } finally {
+      readBackendAvailability();
+      notifyBackendAvailabilityUpdated();
+    }
+  }
 
-    // Setup dependency injection
+  static Future<void> _finishCoreAndStartApp() async {
     await setupDependencies();
-
-    // Materialize app runtime config at init (single place for feature/endpoint control)
     readRuntimeConfig();
     readBackendAvailability();
-
-    // Run migration (non-blocking, graceful failure)
     await runMigration();
-
-    // Start the app
     startApp(const MyApp());
   }
 
@@ -162,5 +229,10 @@ class BootstrapCoordinator {
       );
     };
     startApp = runApp;
+    shouldShowWebLaunchSplash = () => kIsWeb;
+    shouldDeferBackendInit = () => kIsWeb;
+    scheduleDeferredWork = _scheduleBackendInitAfterFirstFrame;
+    notifyBackendAvailabilityUpdated =
+        BackendAvailabilityUpdates.instance.notifyUpdated;
   }
 }

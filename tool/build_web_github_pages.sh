@@ -45,13 +45,22 @@ fi
 # shellcheck disable=SC2046
 DEFINE_ARGS=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
 
+# WebAssembly (skwasm with canvaskit fallback) improves first-load and runtime
+# performance. Opt out with WEB_WASM=0 if a dependency regresses wasm support.
+WEB_WASM="${WEB_WASM:-1}"
+
 CMD=(
   flutter build web
   --release
   -t "$ENTRYPOINT"
   --base-href "$BASE_HREF"
-  --no-wasm-dry-run
 )
+
+if [[ "$WEB_WASM" == "1" || "$WEB_WASM" == "true" ]]; then
+  CMD+=(--wasm)
+else
+  CMD+=(--no-wasm-dry-run)
+fi
 
 echo "Running:"
 printf '  %q' "${CMD[@]}" "${DEFINE_ARGS[@]}"

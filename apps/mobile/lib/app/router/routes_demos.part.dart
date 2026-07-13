@@ -5,17 +5,20 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
     path: AppRoutes.iotDemoPath,
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
+      // Gate/policy once; listen only around hub so deferred ticks do not
+      // recreate IotDemoCubit.
       final BackendAvailability availability = getIt<BackendAvailability>();
-      final bool showBackendDisabledBanner =
-          availability.showIotCloudBackendDisabledBanner;
-      if (availability.webNoBackendMode) {
-        return BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
-          create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
-          init: (final cubit) => cubit.initialize(),
-          child: IotDemoHubPage(
-            showBackendDisabledBanner: showBackendDisabledBanner,
+      final Widget hub = BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
+        create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
+        init: (final cubit) => cubit.initialize(),
+        child: _listenBackendAvailability(
+          (final live) => IotDemoHubPage(
+            showBackendDisabledBanner: live.showIotCloudBackendDisabledBanner,
           ),
-        );
+        ),
+      );
+      if (availability.webNoBackendMode) {
+        return hub;
       }
       return IotDemoAuthGate(
         isSupabaseInitialized: SupabaseBootstrapService.isSupabaseInitialized,
@@ -24,13 +27,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
         counterPath: AppRoutes.counterPath,
         supabaseAuthPath: AppRoutes.supabaseAuthPath,
         redirectReturnPath: AppRoutes.iotDemoPath,
-        child: BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
-          create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
-          init: (final cubit) => cubit.initialize(),
-          child: IotDemoHubPage(
-            showBackendDisabledBanner: showBackendDisabledBanner,
-          ),
-        ),
+        child: hub,
       );
     },
   ),
@@ -112,13 +109,13 @@ ChatCubit _createChatCubit() => ChatCubit(
 /// [AppRoutes.supabaseAuthPath] with return [GoRouterState.matchedLocation].
 Widget _withChatSupabaseSessionGate({
   required final GoRouterState state,
+  required final BackendAvailability availability,
   required final Widget child,
 }) {
-  final SupabaseAuthRepository supa = getIt<SupabaseAuthRepository>();
-  final BackendAvailability availability = getIt<BackendAvailability>();
   if (availability.webNoBackendMode) {
     return child;
   }
+  final SupabaseAuthRepository supa = getIt<SupabaseAuthRepository>();
   return IotDemoAuthGate(
     isSupabaseInitialized: supa.isConfigured,
     getCurrentUser: () => supa.currentUser,
@@ -127,6 +124,15 @@ Widget _withChatSupabaseSessionGate({
     supabaseAuthPath: AppRoutes.supabaseAuthPath,
     redirectReturnPath: state.matchedLocation,
     child: child,
+  );
+}
+
+Widget _listenBackendAvailability(
+  final Widget Function(BackendAvailability availability) builder,
+) {
+  return ListenableBuilder(
+    listenable: BackendAvailabilityUpdates.instance,
+    builder: (final context, final _) => builder(getIt<BackendAvailability>()),
   );
 }
 
