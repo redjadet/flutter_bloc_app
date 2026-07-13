@@ -8,6 +8,7 @@ best practices for AI-assisted Flutter development.
 | Layer | Source | Role |
 | ----- | ------ | ---- |
 | **Baseline** | `package:very_good_analysis/analysis_options.yaml` | VGV rule set (strict, Flutter-oriented) |
+| **Workspace inheritance** | `analysis/workspace_lint_policy.yaml` | Every first-party package inherits one canonical correctness policy; app-specific VGV and analyzer-plugin rules remain at root |
 | **Language** | `analyzer.language` | `strict-casts`, `strict-inference`, `strict-raw-types` |
 | **Severity overrides** | `analyzer.errors` | Key rules promoted to error (e.g. `use_build_context_synchronously`, `prefer_const_constructors`) |
 | **Custom preferences** | `linter.rules` | Project overrides (e.g. `lines_longer_than_80_chars: false`, `use_decorated_box: true`) |
@@ -26,14 +27,19 @@ best practices for AI-assisted Flutter development.
   `unawaited_futures`, `discarded_futures`, `avoid_void_async`,
   `await_only_futures`, `use_build_context_synchronously`,
   `avoid_catches_without_on_clauses`, `avoid_catching_errors`,
-  `only_throw_errors`, `document_ignores`, `unnecessary_ignore`, and
-  `unnecessary_statements`.
+  `empty_catches`, `only_throw_errors`, `document_ignores`,
+  `unnecessary_ignore`, `unnecessary_statements`, `avoid_dynamic_calls`,
+  `avoid_print`, `avoid_slow_async_io`, `avoid_web_libraries_in_flutter`, and
+  `close_sinks`.
+- The promoted rules target common automated-change failures: type escapes,
+  swallowed errors, dropped/pretend async work, blocking UI I/O, debug output,
+  browser-only imports, and leaked resource sinks. They are errors, rather
+  than advisory style signals, so local analysis and CI reject them.
 - **Custom overrides** are documented and intentional (e.g.
   `type_annotate_public_apis: true`, `omit_local_variable_types: false`,
   `use_decorated_box: true`).
-- **Test config** (`test/analysis_options.yaml`) relaxes only what is needed for
-  tests (const, return types, package imports) and uses
-  `package:flutter_lints/flutter.yaml`.
+- **Test config** (`test/analysis_options.yaml`) inherits the safety rules but
+  disables strict type inference for dynamic fixtures and mock boundaries.
 
 ## Recommendations
 
@@ -43,8 +49,8 @@ best practices for AI-assisted Flutter development.
    VGV, Flutter lints in test/custom packages, and local analyzer plugins.
    Additional broad lint packages would add overlap and noise.
 3. **Keep async/error rules strict** - AI agents commonly miss `await`, broad
-   `catch`, and `BuildContext` lifetime constraints. These rules should stay
-   errors unless a concrete false positive is found.
+   or empty `catch`, blocking I/O, and `BuildContext` lifetime constraints.
+   These rules should stay errors unless a concrete false positive is found.
 4. **Keep ignore comments auditable** - `document_ignores` and
    `unnecessary_ignore` should stay errors so generated fixes cannot hide stale
    suppressions.
@@ -57,5 +63,6 @@ best practices for AI-assisted Flutter development.
 - [Very Good Analysis](https://pub.dev/packages/very_good_analysis)
 - [Dart Linter Rules](https://dart.dev/tools/linter-rules)
 - [Dart Analysis Options](https://dart.dev/tools/analysis)
+- [Flutter Architecture Recommendations](https://docs.flutter.dev/app-architecture/recommendations)
 - [Flutter Lints](https://pub.dev/packages/flutter_lints)
 - [Custom Lint Rules Guide](custom_lint_rules_guide.md) (this repo)

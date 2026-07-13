@@ -68,6 +68,7 @@ mixin StreamControllerLifecycle<T> {
   /// Classes using this mixin should call [disposeController] in their
   /// dispose/close methods to properly clean up the controller.
   StreamController<T>? get controller => _controller;
+  // ignore: close_sinks - disposeController closes the controller for owners.
   StreamController<T>? _controller;
 
   /// Safely emits a value to the stream controller.

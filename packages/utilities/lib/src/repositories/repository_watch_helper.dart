@@ -64,6 +64,7 @@ class RepositoryWatchHelper<T> {
   /// if one doesn't exist yet. The controller will be properly initialized
   /// when [createWatchController] is called.
   Stream<T> get stream {
+    // ignore: close_sinks - handleOnCancel closes the helper-owned controller.
     final controller = _watchController ??= StreamController<T>.broadcast();
     return controller.stream;
   }
