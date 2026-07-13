@@ -3,59 +3,87 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:networking/networking.dart';
 
 void main() {
-  group('CertificatePinningConfigFactory', () {
-    test('parseModeForTest defaults empty to disabled', () {
+  group('parseModeForTest', () {
+    test('empty defaults to disabled', () {
       expect(
         CertificatePinningConfigFactory.parseModeForTest(''),
         CertificatePinningMode.disabled,
       );
     });
 
-    test('parseModeForTest accepts known modes', () {
+    test('accepts aliases', () {
       expect(
-        CertificatePinningConfigFactory.parseModeForTest('real'),
-        CertificatePinningMode.real,
+        CertificatePinningConfigFactory.parseModeForTest('mock_success'),
+        CertificatePinningMode.mockSuccess,
       );
       expect(
-        CertificatePinningConfigFactory.parseModeForTest('mockSuccess'),
-        CertificatePinningMode.mockSuccess,
+        CertificatePinningConfigFactory.parseModeForTest('mockFailure'),
+        CertificatePinningMode.mockFailure,
+      );
+      expect(
+        CertificatePinningConfigFactory.parseModeForTest('REAL'),
+        CertificatePinningMode.real,
       );
     });
 
-    test('parseModeForTest rejects unknown', () {
+    test('rejects unknown mode', () {
       expect(
-        () => CertificatePinningConfigFactory.parseModeForTest('nope'),
+        () => CertificatePinningConfigFactory.parseModeForTest('oops'),
         throwsStateError,
       );
     });
+  });
 
-    test('parseHashKindForTest defaults empty to spki', () {
+  group('parseHashKindForTest', () {
+    test('empty defaults to spki', () {
       expect(
         CertificatePinningConfigFactory.parseHashKindForTest(''),
         CertificatePinHashKind.spki,
       );
     });
 
-    test('parseHashKindForTest accepts spki and leaf aliases', () {
+    test('accepts leaf aliases', () {
       expect(
-        CertificatePinningConfigFactory.parseHashKindForTest('spki'),
-        CertificatePinHashKind.spki,
-      );
-      expect(
-        CertificatePinningConfigFactory.parseHashKindForTest('leaf'),
-        CertificatePinHashKind.leafCertificate,
-      );
-      expect(
-        CertificatePinningConfigFactory.parseHashKindForTest(
-          'leaf_certificate',
-        ),
+        CertificatePinningConfigFactory.parseHashKindForTest('leaf_certificate'),
         CertificatePinHashKind.leafCertificate,
       );
     });
 
-    test('parseHashKindForTest rejects unknown', () {
+    test('rejects unknown kind', () {
       expect(
         () => CertificatePinningConfigFactory.parseHashKindForTest('md5'),
+        throwsStateError,
+      );
+    });
+  });
+
+  group('parseHostsForTest', () {
+    test('parses comma-separated hosts and drops blanks', () {
+      expect(
+        CertificatePinningConfigFactory.parseHostsForTest(
+          ' api.example.com, ,cdn.example.com ',
+        ),
+        <String>{'api.example.com', 'cdn.example.com'},
+      );
+    });
+  });
+
+  group('parsePinsForTest', () {
+    test('parses host pin map', () {
+      expect(
+        CertificatePinningConfigFactory.parsePinsForTest(
+          'api.example.com=sha256/AAA=|sha256/BBB=;cdn.example.com=sha256/CCC=',
+        ),
+        <String, Set<String>>{
+          'api.example.com': <String>{'sha256/AAA=', 'sha256/BBB='},
+          'cdn.example.com': <String>{'sha256/CCC='},
+        },
+      );
+    });
+
+    test('rejects malformed entry', () {
+      expect(
+        () => CertificatePinningConfigFactory.parsePinsForTest('no-equals'),
         throwsStateError,
       );
     });

@@ -135,4 +135,11 @@ abstract final class CertificatePinningConfigFactory {
   @visibleForTesting
   static CertificatePinHashKind parseHashKindForTest(final String raw) =>
       _parseHashKind(raw);
+
+  @visibleForTesting
+  static Set<String> parseHostsForTest(final String raw) => _parseHosts(raw);
+
+  @visibleForTesting
+  static Map<String, Set<String>> parsePinsForTest(final String raw) =>
+      _parsePins(raw);
 }
