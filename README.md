@@ -59,6 +59,16 @@ commands instead of relying on generic architecture statements.
 [![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
 [![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
 
+## Engineering practices
+
+[![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
+[![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
+[![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
+[![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
+[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/REPOSITORY_LIFECYCLE.md)
+
+Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
+
 ## Native Android and iOS engineering
 
 The native showcase is a runnable feature, not a platform-API claim. It keeps
@@ -83,16 +93,6 @@ flutter test test/features/native_platform_showcase
 flutter build apk --debug --no-pub
 flutter build ios --simulator --debug --no-pub
 ```
-
-## Engineering practices
-
-[![Agent harness](https://img.shields.io/badge/Agents-AGENTS.md-18181B.svg)](AGENTS.md)
-[![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
-[![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
-[![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
-[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/REPOSITORY_LIFECYCLE.md)
-
-Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
 
 ## Live app
 
