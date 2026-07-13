@@ -5730,6 +5730,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Simulated data for UI demo only — not a real exchange.'**
   String get realtimeMarketDisclaimer;
+
+  /// App bar title for the certificate pinning developer demo
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate pinning demo'**
+  String get certificatePinningDemoTitle;
+
+  /// Shows the configured certificate pinning mode
+  ///
+  /// In en, this message translates to:
+  /// **'Active mode: {mode}'**
+  String certificatePinningDemoModeLabel(String mode);
+
+  /// Explains default-disabled pinning and how to enable modes
+  ///
+  /// In en, this message translates to:
+  /// **'Pinning is disabled by default. Demo probes use a local mock validator and do not change Dio TLS. Enable globally with --dart-define=CERT_PINNING_MODE=mockSuccess|mockFailure|real.'**
+  String get certificatePinningDemoDisabledHint;
+
+  /// Label above mock scenario dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Mock scenario'**
+  String get certificatePinningDemoScenarioLabel;
+
+  /// Button to run a certificate pin validation probe
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger secure probe'**
+  String get certificatePinningDemoProbeButton;
+
+  /// Button to reset mock scenario to validPrimaryPin
+  ///
+  /// In en, this message translates to:
+  /// **'Reset scenario'**
+  String get certificatePinningDemoResetButton;
+
+  /// Button to clear developer pinning logs
+  ///
+  /// In en, this message translates to:
+  /// **'Clear logs'**
+  String get certificatePinningDemoClearLogsButton;
+
+  /// Initial status before any probe
+  ///
+  /// In en, this message translates to:
+  /// **'Ready. Select a scenario and run a probe.'**
+  String get certificatePinningDemoStatusInitial;
+
+  /// Status while pin validation is in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Validating pin…'**
+  String get certificatePinningDemoStatusValidating;
+
+  /// Success status including primary or backup match
+  ///
+  /// In en, this message translates to:
+  /// **'Validation succeeded ({matchKind}).'**
+  String certificatePinningDemoStatusSuccess(String matchKind);
+
+  /// Section title for pinning log lines
+  ///
+  /// In en, this message translates to:
+  /// **'Developer logs'**
+  String get certificatePinningDemoLogsTitle;
+
+  /// Empty state for pinning logs
+  ///
+  /// In en, this message translates to:
+  /// **'No log entries yet.'**
+  String get certificatePinningDemoLogsEmpty;
+
+  /// Safe user message for pin mismatch
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate pin did not match. Connection blocked.'**
+  String get certificatePinningDemoFailurePinMismatch;
+
+  /// Safe user message for missing pin
+  ///
+  /// In en, this message translates to:
+  /// **'No pin configured for this host.'**
+  String get certificatePinningDemoFailureMissingPin;
+
+  /// Safe user message for unsupported host
+  ///
+  /// In en, this message translates to:
+  /// **'Host is not allowed for pinning.'**
+  String get certificatePinningDemoFailureUnsupportedHost;
+
+  /// Safe user message for expired certificate scenario
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate appears expired.'**
+  String get certificatePinningDemoFailureExpired;
+
+  /// Safe user message for validation timeout
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate validation timed out.'**
+  String get certificatePinningDemoFailureTimeout;
+
+  /// Safe user message for malformed certificate
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate data was malformed.'**
+  String get certificatePinningDemoFailureMalformed;
+
+  /// Safe user message for network unavailable scenario
+  ///
+  /// In en, this message translates to:
+  /// **'Network unavailable during validation.'**
+  String get certificatePinningDemoFailureNetworkUnavailable;
+
+  /// Safe generic validation failure message
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate validation failed.'**
+  String get certificatePinningDemoFailureValidation;
+
+  /// Safe unknown failure message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong during validation.'**
+  String get certificatePinningDemoFailureUnknown;
+
+  /// Example hub button for certificate pinning demo
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate pinning demo'**
+  String get exampleCertificatePinningDemoButton;
+
+  /// Counter overflow tooltip for certificate pinning demo
+  ///
+  /// In en, this message translates to:
+  /// **'Open certificate pinning demo'**
+  String get openCertificatePinningDemoTooltip;
 }
 
 class _AppLocalizationsDelegate

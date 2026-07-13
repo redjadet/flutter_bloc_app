@@ -26,7 +26,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **AI decision workbench**:
   [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed
   decision demo: risk score, rationale, proof trail, action history.
-- **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md)
+- **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md), [`security/certificate_pinning.md`](security/certificate_pinning.md)
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
 - **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
@@ -138,6 +138,8 @@ Source-of-truth docs for Flutter BLoC app.
 - [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - [`SECURITY.md`](SECURITY.md)
 - [`security_and_secrets.md`](security_and_secrets.md)
+- [`security/certificate_pinning.md`](security/certificate_pinning.md)
+- [`features/certificate_pinning_demo.md`](features/certificate_pinning_demo.md)
 - [`localization.md`](localization.md)
 - [`universal_links/README.md`](universal_links/README.md)
 

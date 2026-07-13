@@ -22,3 +22,5 @@ This repository’s secrets strategy (local development, CI safety, and how
 feature integrations are enabled/disabled) is documented in:
 
 - [`security_and_secrets.md`](security_and_secrets.md)
+- [`security/certificate_pinning.md`](security/certificate_pinning.md) (TLS
+  pinning; **disabled by default**)

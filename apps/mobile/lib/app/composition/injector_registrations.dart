@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_ai_decision_d
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_calculator_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_case_study_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_certificate_pinning_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_chart_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_chat_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_event_bus_demo_services.dart';

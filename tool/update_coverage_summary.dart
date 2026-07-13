@@ -23,6 +23,7 @@ const List<String> _excludedDirectories = <String>[
   'lib/features/staff_app_demo/presentation/pages/',
   'lib/features/igaming_demo/presentation/pages/',
   'lib/features/case_study_demo/presentation/pages/',
+  'lib/features/certificate_pinning_demo/presentation/pages/',
 ];
 
 const List<String> _excludedPatterns = <String>[

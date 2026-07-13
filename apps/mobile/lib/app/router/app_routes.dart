@@ -35,7 +35,8 @@ class AppRoutes {
 
   static const realtimeMarket = 'realtime-market';
   static const realtimeMarketPath = '/realtime-market';
-
+  static const certificatePinningDemo = 'certificate-pinning-demo';
+  static const certificatePinningDemoPath = '/certificate-pinning-demo';
   static const googleMaps = 'google-maps';
   static const googleMapsPath = '/google-maps';
 

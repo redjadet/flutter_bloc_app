@@ -9,6 +9,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onLoadPlatformInfo,
     required this.onOpenWebsocket,
     required this.onOpenRealtimeMarket,
+    required this.onOpenCertificatePinningDemo,
     required this.onOpenChatList,
     required this.onOpenSearch,
     required this.onOpenTodoList,
@@ -45,6 +46,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback? onLoadPlatformInfo;
   final VoidCallback onOpenWebsocket;
   final VoidCallback onOpenRealtimeMarket;
+  final VoidCallback onOpenCertificatePinningDemo;
   final VoidCallback onOpenChatList;
   final VoidCallback onOpenSearch;
   final VoidCallback onOpenTodoList;
@@ -173,6 +175,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             icon: Icons.show_chart,
             label: l10n.exampleRealtimeMarketButton,
             key: const ValueKey('example-realtime-market-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenCertificatePinningDemo,
+            icon: Icons.security,
+            label: l10n.exampleCertificatePinningDemoButton,
+            key: const ValueKey('example-certificate-pinning-demo-button'),
           ),
           SizedBox(height: context.responsiveGapS),
           _buildIconButton(

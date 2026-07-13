@@ -1,6 +1,22 @@
 /// HTTP helpers and resilience primitives.
 library;
 
+export 'src/certificate_pinning/certificate_pin_comparator.dart';
+export 'src/certificate_pinning/certificate_pin_formatter.dart';
+export 'src/certificate_pinning/certificate_pin_hash_kind.dart';
+export 'src/certificate_pinning/certificate_pin_result.dart';
+export 'src/certificate_pinning/certificate_pin_validator.dart';
+export 'src/certificate_pinning/certificate_pinning_config.dart';
+export 'src/certificate_pinning/certificate_pinning_failure.dart';
+export 'src/certificate_pinning/certificate_pinning_logger.dart';
+export 'src/certificate_pinning/certificate_pinning_mode.dart';
+export 'src/certificate_pinning/certificate_spki_extractor.dart';
+export 'src/certificate_pinning/disabled_certificate_pin_validator.dart';
+export 'src/certificate_pinning/dio_certificate_pinning.dart';
+export 'src/certificate_pinning/mock_certificate_pin_validator.dart';
+export 'src/certificate_pinning/mock_certificate_scenario.dart';
+export 'src/certificate_pinning/mock_certificate_scenario_controller.dart';
+export 'src/certificate_pinning/real_certificate_pin_validator.dart';
 export 'src/circuit_breaker.dart';
 export 'src/guards/network_guard.dart';
 export 'src/guards/websocket_guard.dart';

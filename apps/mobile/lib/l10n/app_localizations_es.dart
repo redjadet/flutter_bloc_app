@@ -3148,4 +3148,89 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get realtimeMarketDisclaimer =>
       'Datos simulados solo para la demo de interfaz — no es un exchange real.';
+
+  @override
+  String get certificatePinningDemoTitle => 'Certificate pinning demo';
+
+  @override
+  String certificatePinningDemoModeLabel(String mode) {
+    return 'Active mode: $mode';
+  }
+
+  @override
+  String get certificatePinningDemoDisabledHint =>
+      'Pinning is disabled by default. Demo probes use a local mock validator and do not change Dio TLS. Enable globally with --dart-define=CERT_PINNING_MODE=mockSuccess|mockFailure|real.';
+
+  @override
+  String get certificatePinningDemoScenarioLabel => 'Mock scenario';
+
+  @override
+  String get certificatePinningDemoProbeButton => 'Trigger secure probe';
+
+  @override
+  String get certificatePinningDemoResetButton => 'Reset scenario';
+
+  @override
+  String get certificatePinningDemoClearLogsButton => 'Clear logs';
+
+  @override
+  String get certificatePinningDemoStatusInitial =>
+      'Ready. Select a scenario and run a probe.';
+
+  @override
+  String get certificatePinningDemoStatusValidating => 'Validating pin…';
+
+  @override
+  String certificatePinningDemoStatusSuccess(String matchKind) {
+    return 'Validation succeeded ($matchKind).';
+  }
+
+  @override
+  String get certificatePinningDemoLogsTitle => 'Developer logs';
+
+  @override
+  String get certificatePinningDemoLogsEmpty => 'No log entries yet.';
+
+  @override
+  String get certificatePinningDemoFailurePinMismatch =>
+      'Certificate pin did not match. Connection blocked.';
+
+  @override
+  String get certificatePinningDemoFailureMissingPin =>
+      'No pin configured for this host.';
+
+  @override
+  String get certificatePinningDemoFailureUnsupportedHost =>
+      'Host is not allowed for pinning.';
+
+  @override
+  String get certificatePinningDemoFailureExpired =>
+      'Certificate appears expired.';
+
+  @override
+  String get certificatePinningDemoFailureTimeout =>
+      'Certificate validation timed out.';
+
+  @override
+  String get certificatePinningDemoFailureMalformed =>
+      'Certificate data was malformed.';
+
+  @override
+  String get certificatePinningDemoFailureNetworkUnavailable =>
+      'Network unavailable during validation.';
+
+  @override
+  String get certificatePinningDemoFailureValidation =>
+      'Certificate validation failed.';
+
+  @override
+  String get certificatePinningDemoFailureUnknown =>
+      'Something went wrong during validation.';
+
+  @override
+  String get exampleCertificatePinningDemoButton => 'Certificate pinning demo';
+
+  @override
+  String get openCertificatePinningDemoTooltip =>
+      'Open certificate pinning demo';
 }
