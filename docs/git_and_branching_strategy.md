@@ -147,8 +147,16 @@ git pull --ff-only origin main
 git fetch origin --prune
 ```
 
-Delete the remote branch when the PR merge flow did not already do so. Preview
-local cleanup first with the repository tool:
+Delete the remote branch when the PR merge flow did not already do so. For a
+full prune (squash-merged / closed PR heads via `gh`, remotes, and ancestor
+worktrees), preview then apply:
+
+```bash
+./bin/prune-git-stale
+./bin/prune-git-stale --closed-prs --keep mapbox-demo-improvements-2026-03-23 --apply
+```
+
+Locals-only (true-merge / `[gone]` upstream) remains available:
 
 ```bash
 bash tool/clean_merged_local_branches.sh --help
