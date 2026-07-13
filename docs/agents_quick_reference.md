@@ -116,6 +116,7 @@ Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). T
 | --- | --- |
 | Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
 | Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
+| Reclaim disk (regenerable build caches) | `./bin/clean-build-caches` (dry-run) then `--apply` / `--apply --yes`; restore with `bash tool/workspace_pub_get.sh`. Targets must stay gitignored (see `.gitignore` Flutter/coverage section). |
 | Melos tool install | Root `dart pub get` installs the repo-pinned Melos dev dependency; use `dart run melos ...` (global `melos` binary not required) |
 | Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
 | Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Reclaim disk by deleting regenerable Flutter/Dart build caches.
+# Thin wrapper around tool/clean_build_caches.sh (dry-run default; --apply to delete).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+exec bash "$PROJECT_ROOT/tool/clean_build_caches.sh" "$@"

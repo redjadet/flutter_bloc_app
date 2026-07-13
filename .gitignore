@@ -33,23 +33,26 @@ GEMINI.md
 # is commented out by default.
 #.vscode/
 
-# Flutter/Dart/Pub related
+# Flutter/Dart/Pub related — regenerable caches (see ./bin/clean-build-caches)
 **/doc/api/
 **/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
-/coverage/lcov.info
+# Directory itself + contents (**/build/** alone misses some empty/dir checks)
+**/build/
+**/build/**
 
-# Integration test runner output (per-run summaries)
+# Coverage outputs — regenerate: bash tool/test_coverage.sh
+# + dart run tool/update_coverage_summary.dart
+**/coverage/lcov.info
+**/coverage/lcov.base.info
+coverage/coverage_summary.md
+
+# Integration / perf / golden ephemeral outputs
 /artifacts/
-artifacts/integration/
-# Perf trace artifacts (traceAction report data)
-artifacts/perf/
-
-# Golden test failure artifacts
 test/failures/
 
 # Symbolication related
@@ -63,11 +66,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Platform build outputs – all files and subfolders recursively (do not commit)
-**/build/**
-
 # Gradle cache (e.g. third_party plugin builds)
 **/.gradle/
+
+# Python bytecode caches (demos)
+**/__pycache__/
 
 # Node deps (keep local, never commit)
 **/node_modules/
@@ -102,7 +105,6 @@ INTERVIEW_QA.md
 .config/
 # Local agent overlays (skills, symlinks, host-only policy); not part of the app build
 .agents/
-coverage/lcov.base.info
 
 # Agent scorecard one-off exports (keep the rolling log tracked)
 analysis/agent_scorecard/scorecard-events-*.jsonl

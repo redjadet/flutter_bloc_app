@@ -21,6 +21,28 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-13 - Regenerable outputs stay gitignored
+
+- What went wrong:
+  Coverage baselines (`lcov.base.info`, `coverage_summary.md`) and some build
+  dir patterns were tracked or only partially ignored, so safe disk reclaim
+  could hit tracked paths or leave regenerable churn in commits.
+- How it was fixed:
+  Operator: regenerable files belong in `.gitignore`. Expanded ignore for
+  `**/build/`, `**/.dart_tool/`, `__pycache__/`, coverage lcov/summary;
+  untracked prior coverage baselines; `./bin/clean-build-caches` aligned.
+- Pattern:
+  If `clean-build-caches` can delete it, `.gitignore` must cover it. Do not
+  re-commit coverage lcov/summary without an explicit new operator request.
+- Preventive rule:
+  Prefer regenerable → gitignore over “commit the baseline.” Generate locally
+  via `bash tool/test_coverage.sh`.
+- Evidence or affected files:
+  `.gitignore`
+  `bin/clean-build-caches`
+  `tool/clean_build_caches.sh`
+  `docs/agent_kb/operator_preferences_durable.md`
+
 ### 2026-07-12 - PR merge left topic worktree alive
 
 - What went wrong:
@@ -92,6 +114,8 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `apps/mobile/ios/Runner/AppDelegate.swift`
   `tool/run_integration_tests.sh`
 
+## Learned User Preferences
+
 ### 2026-07-04 - Keep coverage artifacts in commits
 
 - What went wrong:
@@ -107,8 +131,9 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `apps/mobile/coverage/` — that file is intentional repo state, not ephemeral
   build output to strip pre-push.
 - Preventive rule:
-  Do not remove coverage baseline/summary artifacts from commits or gitignore
-  them without explicit operator request. See operator prefs § `/commit-push-pr`.
+  **Superseded 2026-07-13** — regenerable coverage outputs are gitignored again
+  by explicit operator request. See top-of-file entry
+  `2026-07-13 - Regenerable outputs stay gitignored`.
 - Evidence or affected files:
   `apps/mobile/coverage/lcov.base.info`
   `.gitignore`
