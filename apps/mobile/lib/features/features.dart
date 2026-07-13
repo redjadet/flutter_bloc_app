@@ -3,6 +3,7 @@ export 'auth/auth.dart';
 export 'calculator/calculator.dart';
 export 'camera_gallery/camera_gallery.dart';
 export 'case_study_demo/case_study_demo.dart';
+export 'certificate_pinning_demo/certificate_pinning_demo.dart';
 export 'chart/chart.dart';
 export 'chat/chat.dart';
 export 'counter/counter.dart';

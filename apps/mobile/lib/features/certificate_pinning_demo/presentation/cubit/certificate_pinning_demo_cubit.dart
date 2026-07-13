@@ -54,8 +54,8 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
       state.copyWith(
         scenario: scenario,
         status: CertificatePinningDemoStatus.initial,
-        clearFailure: true,
-        clearMatch: true,
+        failure: null,
+        matchKind: null,
       ),
     );
   }
@@ -69,8 +69,8 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
       state.copyWith(
         scenario: _scenarioController.scenario,
         status: CertificatePinningDemoStatus.initial,
-        clearFailure: true,
-        clearMatch: true,
+        failure: null,
+        matchKind: null,
       ),
     );
   }
@@ -90,8 +90,8 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
     emit(
       state.copyWith(
         status: CertificatePinningDemoStatus.validating,
-        clearFailure: true,
-        clearMatch: true,
+        failure: null,
+        matchKind: null,
       ),
     );
 
@@ -111,7 +111,7 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
             status: CertificatePinningDemoStatus.success,
             matchKind: matchKind,
             logLines: logs,
-            clearFailure: true,
+            failure: null,
           ),
         );
       case SecureProbeFailure(:final failure):
@@ -120,7 +120,7 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
             status: CertificatePinningDemoStatus.failure,
             failure: failure,
             logLines: logs,
-            clearMatch: true,
+            matchKind: null,
           ),
         );
     }
