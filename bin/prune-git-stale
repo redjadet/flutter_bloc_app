@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Prune merged/closed topic branches and stale worktrees.
+# Thin wrapper around tool/prune_git_stale.sh (dry-run default; --apply to delete).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+exec bash "$PROJECT_ROOT/tool/prune_git_stale.sh" "$@"
