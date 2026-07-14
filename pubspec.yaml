@@ -28,19 +28,6 @@ dependency_overrides:
   dart_style: 3.1.4
   # Resolve email_validator conflict: genui requires ^3.0.0, firebase_ui_auth 3.0.1 requires ^2.1.17
   email_validator: ^3.0.0
-  # FlutterFire plugins published FirebasePlugin rename without platform_interface
-  # export (flutterfire#18437). Remove when 7.x+ ships FirebasePlugin.
-  cloud_firestore: 6.6.0
-  cloud_functions: 6.3.3
-  firebase_analytics: 12.4.3
-  firebase_app_check: 0.4.5
-  firebase_auth: 6.5.4
-  firebase_core: 4.11.0
-  firebase_crashlytics: 5.2.4
-  firebase_database: 12.4.4
-  firebase_messaging: 16.4.1
-  firebase_remote_config: 6.5.3
-  firebase_storage: 13.4.3
   # iOS 26.4 simulator FFI path_provider workaround (see apps/mobile pubspec comments).
   path_provider_foundation: 2.5.1
 
