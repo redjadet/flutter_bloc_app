@@ -18,7 +18,7 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | Git branch / PR / merge / worktree | [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect `git status --short --branch` and upstream state before action |
 | Watch PR CI → merge when green | Skill `gh-watch-merge-pr` / `/watch-merge-pr`; `bash tool/commit_push_pr_watch_merge_cleanup.sh <pr>` |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
-| Format Dart source | `./bin/format` or `./bin/format --changed` |
+| Format Dart source | `./bin/format` or `./bin/format --changed` (**required before finish** when any `.dart` changed) |
 | Broad / pre-ship / explicit full sweep | `./tool/delivery_checklist.sh` / `./bin/checklist` |
 | Router / `AppRoutes` / auth gates / auth UI | `./bin/router_feature_validate` |
 | Integration journey / flow | `./bin/integration_tests` |

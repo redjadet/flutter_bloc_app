@@ -113,6 +113,37 @@ GoRouterState _state(final String path) {
   return state;
 }
 
+List<BlocProvider<dynamic>> _coverageBlocProviders() => <BlocProvider<dynamic>>[
+  BlocProvider<ThemeCubit>(
+    create: (_) =>
+        ThemeCubit(repository: _FakeThemeRepository())..loadInitial(),
+  ),
+  BlocProvider<LocaleCubit>(
+    create: (_) =>
+        LocaleCubit(repository: _FakeLocaleRepository())..loadInitial(),
+  ),
+  BlocProvider<SyncStatusCubit>(
+    create: (_) => SyncStatusCubit(
+      networkStatusService: _StubNetworkStatusService(),
+      coordinator: _StubBackgroundSyncCoordinator(),
+    ),
+  ),
+];
+
+Widget _coveragePumpTree({required final Widget home}) => ScreenUtilInit(
+  designSize: const Size(390, 844),
+  minTextAdapt: true,
+  builder: (final context, final _) => MultiBlocProvider(
+    providers: _coverageBlocProviders(),
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('en'),
+      home: home,
+    ),
+  ),
+);
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -162,39 +193,12 @@ void main() {
       final GoRouterState state = _state(route.path);
       late Widget built;
       await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(390, 844),
-          minTextAdapt: true,
-          builder: (final context, final _) => MultiBlocProvider(
-            providers: <BlocProvider<dynamic>>[
-              BlocProvider<ThemeCubit>(
-                create: (_) =>
-                    ThemeCubit(repository: _FakeThemeRepository())
-                      ..loadInitial(),
-              ),
-              BlocProvider<LocaleCubit>(
-                create: (_) =>
-                    LocaleCubit(repository: _FakeLocaleRepository())
-                      ..loadInitial(),
-              ),
-              BlocProvider<SyncStatusCubit>(
-                create: (_) => SyncStatusCubit(
-                  networkStatusService: _StubNetworkStatusService(),
-                  coordinator: _StubBackgroundSyncCoordinator(),
-                ),
-              ),
-            ],
-            child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              locale: const Locale('en'),
-              home: Builder(
-                builder: (final context) {
-                  built = route.builder!(context, state);
-                  return Scaffold(body: built);
-                },
-              ),
-            ),
+        _coveragePumpTree(
+          home: Builder(
+            builder: (final context) {
+              built = route.builder!(context, state);
+              return Scaffold(body: built);
+            },
           ),
         ),
       );
@@ -206,23 +210,23 @@ void main() {
         final Widget gateChild = (built as AppRouteAuthGate).child;
         if (gateChild is SettingsPage) {
           await tester.pumpWidget(
-            ScreenUtilInit(
-              designSize: const Size(390, 844),
-              minTextAdapt: true,
-              builder: (final context, final _) => MaterialApp(
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                locale: const Locale('en'),
-                home: Builder(
-                  builder: (final context) {
-                    final List<Widget>? extras = gateChild.buildQaExtras?.call(
-                      context,
-                    );
-                    expect(extras, isNotNull);
-                    expect(extras, isNotEmpty);
-                    return Column(children: extras ?? const <Widget>[]);
-                  },
-                ),
+            _coveragePumpTree(
+              home: Builder(
+                builder: (final context) {
+                  final List<Widget>? extras = gateChild.buildQaExtras?.call(
+                    context,
+                  );
+                  expect(extras, isNotNull);
+                  expect(extras, isNotEmpty);
+                  return Scaffold(
+                    body: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: extras ?? const <Widget>[],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           );
