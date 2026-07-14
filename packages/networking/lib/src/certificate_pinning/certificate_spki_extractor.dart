@@ -22,8 +22,6 @@ abstract final class CertificateSpkiExtractor {
       return _extractSpkiFromTbs(tbs.content);
     } on FormatException {
       return null;
-    } on RangeError {
-      return null;
     }
   }
 

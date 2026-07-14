@@ -1,3 +1,4 @@
+import 'package:auth/auth.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_certificate_pinning_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_http_services.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc_app/features/certificate_pinning_demo/domain/use_ca
 import 'package:flutter_bloc_app/features/certificate_pinning_demo/domain/use_cases/trigger_secure_probe.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:networking/networking.dart';
-import 'package:auth/auth.dart';
 
 class _TestNetworkStatusService implements NetworkStatusService {
   @override
