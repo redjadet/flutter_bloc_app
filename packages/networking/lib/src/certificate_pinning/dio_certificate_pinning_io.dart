@@ -27,9 +27,7 @@ void applyCertificatePinning(
   if (validator is RealCertificatePinValidator) {
     realValidator = validator;
   } else {
-    throw StateError(
-      'applyCertificatePinning(mode=real) requires RealCertificatePinValidator.',
-    );
+    throw StateError('applyCertificatePinning(mode=real) requires RealCertificatePinValidator.');
   }
 
   CreateHttpClient? existingCreateHttpClient;
@@ -40,21 +38,16 @@ void applyCertificatePinning(
 
   dio.httpClientAdapter = IOHttpClientAdapter(
     createHttpClient: existingCreateHttpClient,
-    validateCertificate:
-        (
-          final X509Certificate? certificate,
-          final String host,
-          final int port,
-        ) {
-          if (certificate == null) {
-            return false;
-          }
-          final CertificatePinResult result = realValidator.validateSync(
-            host: host,
-            port: port,
-            certificateBytes: Uint8List.fromList(certificate.der),
-          );
-          return result is CertificatePinSuccess;
-        },
+    validateCertificate: (final X509Certificate? certificate, final String host, final int port) {
+      if (certificate == null) {
+        return false;
+      }
+      final CertificatePinResult result = realValidator.validateSync(
+        host: host,
+        port: port,
+        certificateBytes: Uint8List.fromList(certificate.der),
+      );
+      return result is CertificatePinSuccess;
+    },
   );
 }

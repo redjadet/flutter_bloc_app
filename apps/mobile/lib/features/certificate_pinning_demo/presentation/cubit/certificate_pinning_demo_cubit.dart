@@ -100,9 +100,7 @@ class CertificatePinningDemoCubit extends Cubit<CertificatePinningDemoState> {
       return;
     }
 
-    final List<String> logs = _logger.entries
-        .map((final e) => e.displayLine)
-        .toList();
+    final List<String> logs = _logger.entries.map((final e) => e.displayLine).toList();
 
     switch (outcome) {
       case SecureProbeSuccess(:final matchKind):

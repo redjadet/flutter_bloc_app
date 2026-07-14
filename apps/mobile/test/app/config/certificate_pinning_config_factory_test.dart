@@ -5,10 +5,7 @@ import 'package:networking/networking.dart';
 void main() {
   group('parseModeForTest', () {
     test('empty defaults to disabled', () {
-      expect(
-        CertificatePinningConfigFactory.parseModeForTest(''),
-        CertificatePinningMode.disabled,
-      );
+      expect(CertificatePinningConfigFactory.parseModeForTest(''), CertificatePinningMode.disabled);
     });
 
     test('accepts aliases', () {
@@ -20,26 +17,17 @@ void main() {
         CertificatePinningConfigFactory.parseModeForTest('mockFailure'),
         CertificatePinningMode.mockFailure,
       );
-      expect(
-        CertificatePinningConfigFactory.parseModeForTest('REAL'),
-        CertificatePinningMode.real,
-      );
+      expect(CertificatePinningConfigFactory.parseModeForTest('REAL'), CertificatePinningMode.real);
     });
 
     test('rejects unknown mode', () {
-      expect(
-        () => CertificatePinningConfigFactory.parseModeForTest('oops'),
-        throwsStateError,
-      );
+      expect(() => CertificatePinningConfigFactory.parseModeForTest('oops'), throwsStateError);
     });
   });
 
   group('parseHashKindForTest', () {
     test('empty defaults to spki', () {
-      expect(
-        CertificatePinningConfigFactory.parseHashKindForTest(''),
-        CertificatePinHashKind.spki,
-      );
+      expect(CertificatePinningConfigFactory.parseHashKindForTest(''), CertificatePinHashKind.spki);
     });
 
     test('accepts leaf aliases', () {
@@ -50,19 +38,14 @@ void main() {
     });
 
     test('rejects unknown kind', () {
-      expect(
-        () => CertificatePinningConfigFactory.parseHashKindForTest('md5'),
-        throwsStateError,
-      );
+      expect(() => CertificatePinningConfigFactory.parseHashKindForTest('md5'), throwsStateError);
     });
   });
 
   group('parseHostsForTest', () {
     test('parses comma-separated hosts and drops blanks', () {
       expect(
-        CertificatePinningConfigFactory.parseHostsForTest(
-          ' api.example.com, ,cdn.example.com ',
-        ),
+        CertificatePinningConfigFactory.parseHostsForTest(' api.example.com, ,cdn.example.com '),
         <String>{'api.example.com', 'cdn.example.com'},
       );
     });
@@ -82,10 +65,7 @@ void main() {
     });
 
     test('rejects malformed entry', () {
-      expect(
-        () => CertificatePinningConfigFactory.parsePinsForTest('no-equals'),
-        throwsStateError,
-      );
+      expect(() => CertificatePinningConfigFactory.parsePinsForTest('no-equals'), throwsStateError);
     });
   });
 }

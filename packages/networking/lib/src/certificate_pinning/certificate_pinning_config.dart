@@ -15,19 +15,16 @@ final class CertificatePinningConfig {
     this.realProbeUrl,
     this.pinHashKind = CertificatePinHashKind.spki,
   }) : allowedHosts = UnmodifiableSetView<String>(
-         Set<String>.unmodifiable(
-           (allowedHosts ?? const <String>{}).map(normalizeHost),
-         ),
+         Set<String>.unmodifiable((allowedHosts ?? const <String>{}).map(normalizeHost)),
        ),
        sha256PinsByHost = _freezePins(sha256PinsByHost);
 
   /// Safe default: pinning off for all flavors until explicitly enabled.
-  factory CertificatePinningConfig.disabled({
-    final bool enableVerboseLogging = false,
-  }) => CertificatePinningConfig(
-    mode: CertificatePinningMode.disabled,
-    enableVerboseLogging: enableVerboseLogging,
-  );
+  factory CertificatePinningConfig.disabled({final bool enableVerboseLogging = false}) =>
+      CertificatePinningConfig(
+        mode: CertificatePinningMode.disabled,
+        enableVerboseLogging: enableVerboseLogging,
+      );
 
   final CertificatePinningMode mode;
   final Set<String> allowedHosts;
@@ -65,17 +62,13 @@ final class CertificatePinningConfig {
     }
 
     if (allowedHosts.isEmpty) {
-      throw StateError(
-        'Certificate pinning mode=real requires at least one allowed host.',
-      );
+      throw StateError('Certificate pinning mode=real requires at least one allowed host.');
     }
 
     for (final String host in allowedHosts) {
       final Set<String>? pins = sha256PinsByHost[host];
       if (pins == null || pins.isEmpty) {
-        throw StateError(
-          'Certificate pinning mode=real requires pins for host "$host".',
-        );
+        throw StateError('Certificate pinning mode=real requires pins for host "$host".');
       }
       for (final String pin in pins) {
         if (!CertificatePinFormatter.isValidFormat(pin)) {
@@ -89,16 +82,12 @@ final class CertificatePinningConfig {
 
     for (final String host in sha256PinsByHost.keys) {
       if (!allowedHosts.contains(host)) {
-        throw StateError(
-          'Pin map contains host "$host" that is not in allowedHosts.',
-        );
+        throw StateError('Pin map contains host "$host" that is not in allowedHosts.');
       }
     }
   }
 
-  static Map<String, Set<String>> _freezePins(
-    final Map<String, Set<String>>? source,
-  ) {
+  static Map<String, Set<String>> _freezePins(final Map<String, Set<String>>? source) {
     if (source == null || source.isEmpty) {
       return const <String, Set<String>>{};
     }
@@ -108,9 +97,7 @@ final class CertificatePinningConfig {
       final List<String> ordered = entry.value
           .map(CertificatePinFormatter.canonicalize)
           .toList(growable: false);
-      frozen[host] = UnmodifiableSetView<String>(
-        LinkedHashSet<String>.from(ordered),
-      );
+      frozen[host] = UnmodifiableSetView<String>(LinkedHashSet<String>.from(ordered));
     }
     return UnmodifiableMapView<String, Set<String>>(frozen);
   }
