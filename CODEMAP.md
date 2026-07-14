@@ -4,6 +4,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 
 | Task | Start here |
 | --- | --- |
+| Agent compact context | [`llms.txt`](llms.txt) (with [`CODEMAP.md`](CODEMAP.md), [`docs/ai/repo_map.md`](docs/ai/repo_map.md)) |
 | Onboard / loop | [`AGENTS.md`](AGENTS.md), [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) |
 | Add or change feature | [`docs/feature_implementation_guide.md`](docs/feature_implementation_guide.md), `apps/mobile/lib/features/<feature>/` |
 | Routes / deep links | [`apps/mobile/lib/app/router/app_routes.dart`](apps/mobile/lib/app/router/app_routes.dart), [`apps/mobile/lib/app/router/`](apps/mobile/lib/app/router/) |

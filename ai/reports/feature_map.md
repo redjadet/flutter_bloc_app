@@ -1,8 +1,29 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T14:59:38Z"
+  git_head: "5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
 # Feature map
 
 Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). Catalog: [`docs/feature_overview.md`](../../docs/feature_overview.md).
 
+**Complexity:** `high` = platform/backend/async-heavy or co-located README; `standard` otherwise. Template: [`docs/architecture/complex_feature_readme_template.md`](../../docs/architecture/complex_feature_readme_template.md).
+
 **Legend:** `minimal_context` = smallest file set before editing (expand only as needed).
+
+## High-complexity features (co-located README)
+
+| Feature | Complexity | README |
+| --- | --- | --- |
+| native_platform_showcase | high | [`README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md) |
+| iot | high | [`README.md`](../../apps/mobile/lib/features/iot/README.md) |
+| library_demo | high | [`README.md`](../../apps/mobile/lib/features/library_demo/README.md) |
 
 ---
 
@@ -17,7 +38,7 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | LOC | 3983 |
 | Layers | `domain/`, `data/` (Hive, REST), `presentation/cubit/counter_cubit*` |
 | Key paths | `apps/mobile/lib/features/counter/counter.dart`, `presentation/pages/counter_page.dart` |
-| Tests | `test/features/counter/` |
+| Tests | `apps/mobile/test/features/counter/` |
 | Docs | [`docs/feature_overview.md`](../../docs/feature_overview.md) |
 | minimal_context | `counter.dart`, `counter_cubit_base.dart`, `counter_page.dart`, `domain/*repository*.dart`, `data/hive_counter_repository*.dart` |
 
@@ -29,7 +50,7 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | Routes | `/auth`, `/register`, `/logged-out`, `/manage-account` |
 | LOC | 2293 |
 | Layers | `domain/auth_repository.dart`, `data/firebase_auth_repository.dart`, `presentation/cubit/` |
-| Tests | `test/features/auth/` |
+| Tests | `apps/mobile/test/features/auth/` |
 | Docs | [`docs/authentication.md`](../../docs/authentication.md) |
 | minimal_context | `auth.dart`, `auth_repository.dart`, `firebase_auth_repository.dart`, main auth pages |
 
@@ -41,7 +62,7 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 | Routes | `/settings` |
 | LOC | 1219 |
 | Layers | `presentation/widgets/`, settings cubits, Hive-backed prefs |
-| Tests | `test/features/settings/` |
+| Tests | `apps/mobile/test/features/settings/` |
 | minimal_context | `settings.dart`, settings page + theme/locale sections |
 
 ### example (`status: full`)
@@ -175,13 +196,14 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 
 | Field | Value |
 | --- | --- |
+| Complexity | high |
 | Purpose | Platform capability catalog + live MethodChannel (Swift/Kotlin) and FFI (C/C++) interop demos |
 | Routes | `/native-platform-showcase` (Example hub entry) |
 | LOC | 2345 |
 | Layers | `domain/` (ports + use case), `data/` (MethodChannel, FFI, mapper), `presentation/cubit/` |
 | Key paths | `apps/mobile/lib/features/native_platform_showcase/native_platform_showcase.dart`, `presentation/pages/native_platform_showcase_page.dart` |
 | Native | `ios/Runner/NativeShowcaseBridge.swift`, `macos/Runner/NativeShowcaseBridge.swift`, `android/.../MainActivity.kt`, `native/native_showcase/` |
-| Tests | `test/features/native_platform_showcase/`, `integration_test/native_platform_showcase_flow_test.dart`, web smoke in `test/integration_preflight/web_bootstrap_smoke_test.dart` |
+| Tests | `apps/mobile/test/features/native_platform_showcase/`, `apps/mobile/integration_test/native_platform_showcase_flow_test.dart`, web smoke in `test/integration_preflight/web_bootstrap_smoke_test.dart` |
 | Docs | [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md), brief [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md) |
 | minimal_context | `native_platform_showcase.dart`, `load_native_platform_showcase_use_case.dart`, `native_platform_info_repository_impl.dart`, method channel + FFI services, `native_platform_showcase_cubit.dart`, showcase page |
 
@@ -191,23 +213,23 @@ Per-feature agent context. **17 full** + **15 stub** = 32 modules (2026-06-08). 
 
 One-line purpose only—expand when editing.
 
-| Feature | Purpose |
-| --- | --- |
-| ai_decision_demo | Local decision workbench + SQLite cases |
-| calculator | Calculator and payment summary |
-| camera_gallery | Camera/gallery picker (dep of case study) |
-| deeplink | Universal link handling |
-| fcm_demo | FCM token/message demo |
-| genui_demo | GenUI + Gemini generated UI |
-| igaming_demo | Demo game lobby |
-| in_app_purchase_demo | IAP flow demo |
-| library_demo | Figma-inspired UI showcase |
-| playlearn | Vocabulary / audio learning |
-| realtime_market | Simulated market data |
-| remote_config | Feature flags + diagnostics |
-| scapes | Visual grid demo |
-| supabase_auth | Optional Supabase auth flow |
-| websocket | Reconnecting WebSocket demo |
+| Feature | Complexity | Purpose |
+| --- | --- | --- |
+| ai_decision_demo | standard | Local decision workbench + SQLite cases |
+| calculator | standard | Calculator and payment summary |
+| camera_gallery | standard | Camera/gallery picker (dep of case study) |
+| deeplink | standard | Universal link handling |
+| fcm_demo | standard | FCM token/message demo |
+| genui_demo | standard | GenUI + Gemini generated UI |
+| igaming_demo | standard | Demo game lobby |
+| in_app_purchase_demo | high | IAP flow demo |
+| library_demo | high | Figma-inspired UI showcase |
+| playlearn | standard | Vocabulary / audio learning |
+| realtime_market | standard | Simulated market data |
+| remote_config | high | Feature flags + diagnostics |
+| scapes | standard | Visual grid demo |
+| supabase_auth | high | Optional Supabase auth flow |
+| websocket | high | Reconnecting WebSocket demo |
 
 ---
 

@@ -353,6 +353,7 @@ validate_checklist_configuration() {
     "tool/check_agent_knowledge_base.sh"
     "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
+    "tool/check_ai_snapshot_freshness.sh"
     "tool/check_checklist_cli_contract.sh"
     "tool/check_macos_debug_web_guard.sh"
     "tool/validate_task_trackers.sh"
@@ -443,6 +444,7 @@ validate_docs_only_dependencies() {
     "tool/check_agent_knowledge_base.sh"
     "tool/check_agent_memory_compounding.sh"
     "tool/check_docs_gardening.sh"
+    "tool/check_ai_snapshot_freshness.sh"
     "tool/check_checklist_cli_contract.sh"
     "tool/validate_task_trackers.sh"
     "tool/run_harness_fixtures.sh"
@@ -1280,6 +1282,11 @@ run_harness_docs_checks() {
 
   if ! bash "$WORKSPACE_ROOT/tool/check_harness_scorecard_gate.sh"; then
     echo "❌ Harness scorecard gate failed; keep Cursor/Codex max-score docs and proof gates in sync."
+    return 1
+  fi
+
+  if ! bash "$WORKSPACE_ROOT/tool/check_ai_snapshot_freshness.sh"; then
+    echo "❌ AI snapshot freshness checks failed; refresh ai/ discovery artifacts."
     return 1
   fi
 

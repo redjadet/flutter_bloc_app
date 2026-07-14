@@ -1,6 +1,17 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T14:59:38Z"
+  git_head: "5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
 # Context hotspots
 
-Largest non-generated Dart files under `apps/mobile/lib/features/` (2026-05-21). Use to scope Phase 4 refactors and agent context budgets.
+Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope Phase 4 refactors and agent context budgets. Regenerate with the find command below after large refactors.
 
 | Rank | LOC | File | Feature | Phase 4 candidate |
 | ---: | ---: | --- | --- | --- |

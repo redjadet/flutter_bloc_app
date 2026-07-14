@@ -1,3 +1,14 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T14:59:38Z"
+  git_head: "5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
 # Anti-patterns (agent stub)
 
 **Canonical source:** [`docs/flutter-anti-patterns.md`](../../docs/flutter-anti-patterns.md)

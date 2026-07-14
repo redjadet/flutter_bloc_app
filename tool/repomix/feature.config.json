@@ -1,0 +1,39 @@
+{
+  "$schema": "https://repomix.com/schemas/latest/schema.json",
+  "output": {
+    "filePath": ".repomix/feature-pack.md",
+    "style": "markdown",
+    "directoryStructure": true,
+    "files": true,
+    "fileSummary": true,
+    "instructionFilePath": "llms.txt",
+    "compress": true,
+    "removeComments": false,
+    "removeEmptyLines": false
+  },
+  "include": [
+    "AGENTS.md",
+    "CODEMAP.md",
+    "llms.txt",
+    "docs/feature_overview.md",
+    "apps/mobile/lib/app/router/app_routes.dart",
+    "apps/mobile/lib/app/router/route_groups.dart",
+    "apps/mobile/lib/app/composition/injector.dart",
+    "apps/mobile/lib/app/composition/injector_registrations.dart"
+  ],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      "**/*.freezed.dart",
+      "**/*.g.dart",
+      "**/*.gr.dart",
+      "**/.dart_tool/**",
+      "**/build/**",
+      ".repomix/**"
+    ]
+  },
+  "security": {
+    "enableSecurityCheck": true
+  }
+}

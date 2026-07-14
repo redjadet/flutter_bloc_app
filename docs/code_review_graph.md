@@ -170,6 +170,16 @@ Useful commands:
 - `watch` keeps the graph current while you edit
 - `visualize` generates an HTML graph view if you want architecture exploration
 
+## Host-neutral agent path
+
+| Host | Default exploration | Refresh |
+| --- | --- | --- |
+| Cursor | Prefer `rg` + [`CODEMAP.md`](../CODEMAP.md) / [`llms.txt`](../llms.txt) for hot path; graph optional | After large feature moves |
+| Codex | Graph-first for non-trivial existing-code work when installed | `./tool/refresh_code_review_graph.sh --if-needed` |
+| Any | Direct file reads when target path is already known | Rebuild graph after broad refactors |
+
+Freshness: stale graph → fall back to targeted `rg` and maps; do not block delivery on missing graph tooling.
+
 ## Files and locations
 
 - Repo graph cache: `.code-review-graph/graph.db`

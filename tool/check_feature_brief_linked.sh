@@ -20,7 +20,7 @@ usage() {
   cat <<'EOF'
 Usage: tool/check_feature_brief_linked.sh [--base <git-ref>]
 
-When Dart under lib/features/ changes, require a docs/changes/*.md note in the
+When Dart under apps/mobile/lib/features/ changes, require a docs/changes/*.md note in the
 same diff (Feature Brief / change log). Fails by default; set
 FEATURE_BRIEF_CHECK_STRICT=0 to warn only.
 EOF
@@ -78,6 +78,13 @@ feature_dart=()
 change_docs=()
 for f in "${changed[@]}"; do
   [[ -z "$f" ]] && continue
+  if [[ "$f" == apps/mobile/lib/features/* ]] && [[ "$f" == *.dart ]]; then
+    case "$f" in
+      *.g.dart|*.freezed.dart|*.gr.dart) continue ;;
+    esac
+    feature_dart+=("$f")
+    continue
+  fi
   if [[ "$f" == lib/features/* ]] && [[ "$f" == *.dart ]]; then
     case "$f" in
       *.g.dart|*.freezed.dart|*.gr.dart) continue ;;
@@ -101,7 +108,7 @@ if [[ ${#change_docs[@]} -gt 0 ]]; then
   exit 0
 fi
 
-msg=$'feature-brief-missing|lib/features/*.dart changed without docs/changes/*.md\n'
+msg=$'feature-brief-missing|apps/mobile/lib/features/*.dart changed without docs/changes/*.md\n'
 msg+="Changed feature files (${#feature_dart[@]}): ${feature_dart[*]:0:5}"
 if [[ ${#feature_dart[@]} -gt 5 ]]; then
   msg+=" ..."

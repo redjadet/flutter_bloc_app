@@ -253,6 +253,21 @@ if ! bash "$repo_root/tool/check_adr_quality.sh"; then
   fail "ADR quality contract failed"
 fi
 
+should_run_ai_snapshot_check=false
+for doc in "${doc_targets[@]}"; do
+  case "$doc" in
+    ai/*|ai/*/*)
+      should_run_ai_snapshot_check=true
+      break
+      ;;
+  esac
+done
+if [[ "$should_run_ai_snapshot_check" == true ]]; then
+  if ! bash "$repo_root/tool/check_ai_snapshot_freshness.sh"; then
+    fail "AI snapshot freshness contract failed"
+  fi
+fi
+
 if [[ "$failures" -ne 0 ]]; then
   exit 1
 fi

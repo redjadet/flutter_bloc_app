@@ -4,7 +4,7 @@ refresh_when:
   - After modular_metrics or major feature add/remove
   - Before Phase 4 architecture refactors
   - Quarterly or when CONTEXT_MAP drifts
-last_refreshed: 2026-05-21
+last_refreshed: 2026-07-14
 ---
 
 # AI operability layer (`/ai`)
@@ -35,8 +35,8 @@ docs/audits/      <- ranked audits; gitignored, force-add when committing
 
 ## Refresh workflow
 
-1. Run `bash tool/modular_metrics.sh` and `bash tool/modular_metrics.sh --cross-feature-only`.
-2. Update affected reports under `ai/reports/`.
+1. Run `bash tool/refresh_ai_reports.sh` (includes `tool/modular_metrics.sh`).
+2. Update affected narrative sections under `ai/reports/` when product paths change.
 3. If rankings change, update [`docs/audits/`](../docs/audits/) audit files (`git add -f`).
 4. Bump `last_refreshed` in this file.
 

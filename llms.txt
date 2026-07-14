@@ -1,9 +1,31 @@
 # Flutter BLoC App AI Context
 
-Start:
+## Workspace
 
-- `AGENTS.md`
-- `docs/agent_knowledge_base.md`
-- `docs/agent_project_context.md`
-- `docs/agents_quick_reference.md`
-- `docs/ai_code_review_protocol.md`
+- Root: .
+- App package: apps/mobile
+- Packages: packages/*
+
+## Start
+
+- AGENTS.md
+- CODEMAP.md
+- docs/ai/repo_map.md
+- docs/agents_quick_reference.md
+
+## Canon vs evidence
+
+- Behavior canon: docs/
+- Dated evidence: ai/reports/ (check generated_at + git_head)
+
+## Validation router
+
+- Fast: ./bin/checklist-fast
+- Full: ./bin/checklist
+- Feature: ./bin/router_feature_validate
+
+## Additional pointers
+
+- docs/agent_knowledge_base.md
+- docs/agent_project_context.md
+- docs/ai_code_review_protocol.md

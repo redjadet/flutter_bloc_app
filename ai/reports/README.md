@@ -1,3 +1,14 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T14:59:38Z"
+  git_head: "5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
 # AI discovery reports
 
 Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs/`](../../docs/README.md) when product rules change.
@@ -11,7 +22,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [feature_map.md](feature_map.md) | Per-feature context (17 full + 15 stub) |
 | [context_hotspots.md](context_hotspots.md) | Largest files; Phase 4 candidates |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
-| [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | ARCH-001/002 closure + metrics (shipped PR #240) |
+| [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | **Historical** — ARCH-001/002 closure (PR #240); not current discovery guidance |
 
 ## Audits (ranked findings)
 
@@ -22,6 +33,8 @@ retention policy.
 - [`docs/audits/architecture_review_2026-06.md`](../../docs/audits/architecture_review_2026-06.md) — Build Readiness program outcomes (2026-06)
 - [`docs/audits/maintainability_baseline_review_2026-07-10.md`](../../docs/audits/maintainability_baseline_review_2026-07-10.md) — current maintainability baseline and follow-up status
 
-**Generated:** 2026-05-21 via `tool/modular_metrics.sh` and repository scans.
+**Refresh:** `bash tool/refresh_ai_reports.sh` then `bash tool/check_ai_snapshot_freshness.sh`.
 
 **Ship/land:** [`docs/changes/2026-05-21_agent_automated_delivery_loop.md`](../../docs/changes/2026-05-21_agent_automated_delivery_loop.md).
+
+**Generated:** 2026-07-14 via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40`).

@@ -56,6 +56,21 @@ Write these **before or with** the first implementation commit in this change se
 
 ### Risks
 ...
+
+### depends_on
+- [ ] <task/issue/doc>
+
+### blocks
+- <downstream work>
+
+### merge_order
+- <PR or task order>
+
+### rollback
+- <revert plan>
+
+### proof_commands
+- `./bin/checklist-fast`
 ```
 
 ## AI alignment checklist

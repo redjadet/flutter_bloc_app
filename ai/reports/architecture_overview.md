@@ -1,3 +1,14 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T14:59:38Z"
+  git_head: "5ec8efd9f614cbb608dd87fe2255a3b4fba8fb40"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
 # Architecture overview (agent snapshot)
 
 **Canon:** [`docs/architecture_details.md`](../../docs/architecture_details.md), [`docs/clean_architecture.md`](../../docs/clean_architecture.md).
@@ -29,27 +40,32 @@ flowchart LR
 | --- | --- | --- |
 | Presentation | `apps/mobile/lib/features/*/presentation/` | UI + Cubit; no direct HTTP |
 | Domain | `apps/mobile/lib/features/*/domain/` | Pure Dart; no `flutter`, router, or DI imports |
-| Data | `apps/mobile/lib/features/*/domain/data/` | Implements contracts; offline-first where adopted |
-| App shell | `apps/mobile/lib/app/`, `apps/mobile/lib/core/` | Bootstrap, DI, router, theme |
-| Shared | `apps/mobile/lib/shared/` | Cross-cutting utilities, sync, HTTP, widgets |
+| Data | `apps/mobile/lib/features/*/data/` | Implements contracts; offline-first where adopted |
+| App shell | `apps/mobile/lib/app/` | Bootstrap, DI, router, theme, HTTP, sync wiring |
+| Shared packages | `packages/*` | Cross-cutting utilities owned outside features |
 
 ## Boot and navigation
 
 1. Entry: `main_dev` / `main_staging` / `main_prod` → `BootstrapCoordinator`.
-2. DI: `registerAllDependencies()` + Hive init.
+2. DI: `registerAllDependencies()` + Hive init under `apps/mobile/lib/app/composition/`.
 3. UI: `MyApp` → `AppScope` → `GoRouter` (route groups under `apps/mobile/lib/app/router/`).
-4. Routes: constants in `apps/mobile/lib/core/router/app_routes.dart`.
+4. Routes: constants in `apps/mobile/lib/app/router/app_routes.dart`.
 
-## Modular metrics baseline (2026-05-21)
+## Modular metrics baseline
 
-- **31** feature modules under `apps/mobile/lib/features/` (excluding `features.dart` barrel).
-- **Largest LOC:** `chat` (6384), `todo_list` (5166), `online_therapy_demo` (4578), `staff_app_demo` (4558).
-- **Shared fan-in:** ~497 files import `package:flutter_bloc_app/shared/`.
-- **Domain purity:** no domain imports of `app/router` or `core/di` (metrics clean).
+Regenerate with `bash tool/refresh_ai_reports.sh` or `bash tool/modular_metrics.sh`.
+Latest capture lives in `ai/reports/.modular_metrics_latest.txt` (local evidence).
 
-## Missing barrels (feature entrypoints)
+- **35** feature modules under `apps/mobile/lib/features/` (excluding `features.dart` barrel).
+- **Largest LOC:** `chat`, `staff_app_demo`, `online_therapy_demo`, `todo_list` (see dependency map).
+- **Shared fan-in:** legacy `package:flutter_bloc_app/shared/` imports are **0** post-Melos.
+- **App fan-in:** ~346 files import `package:flutter_bloc_app/app/`.
+- **Domain purity:** no domain imports of `app/router` or composition paths (metrics clean).
 
-Per `tool/modular_metrics.sh`: `case_study_demo`, `igaming_demo`, `library_demo`, `staff_app_demo` lack top-level `<feature>.dart` barrels—prefer adding when touching those modules.
+## Missing barrels
+
+All listed features report barrels via `tool/modular_metrics.sh` as of the latest refresh.
+Re-run metrics after adding new modules.
 
 ## Next reads
 
