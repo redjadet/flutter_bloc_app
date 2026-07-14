@@ -13,7 +13,7 @@ dependencies:
   connectivity_plus: ^7.2.0
   core:
     path: ../core
-  crypto: ^3.0.0
+  crypto: ^3.0.7
   dio: ^5.10.0
   flutter:
     sdk: flutter
@@ -29,4 +29,4 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  mocktail: ^1.0.4
+  mocktail: ^1.0.5
