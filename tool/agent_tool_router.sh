@@ -100,6 +100,11 @@ case "$intent_lower" in *supabase*) route_supabase=1 ;; esac
 case "$intent_lower" in *figma*) route_figma=1 ;; esac
 case "$intent_words" in *" ui "*|*" widget "*|*" layout "*|*" design "*) route_ui=1 ;; esac
 case "$intent_words" in *" route "*|*" router "*|*" navigation "*|*" auth gate "*) route_router=1 ;; esac
+case "$intent_words" in
+  *" harness "*|*" tool audit "*|*" agent-maintain "*|*" agent maintain "*|*" agent harness "*)
+    route_agent=1
+    ;;
+esac
 
 for raw_path in "${paths[@]}"; do
   path="${raw_path#"$repo_root"/}"
