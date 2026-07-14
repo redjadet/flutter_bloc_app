@@ -10,36 +10,17 @@ description: >-
 
 # Skill Routing
 
-Repo canon wins. Full routing table and discovery commands:
+Repo canon and full task table: [`docs/ai/skill_routing.md`](../../../../../docs/ai/skill_routing.md).
+Core routes: `agents-quick-reference`, `agents-delivery-workflow`,
+`agents-canonical-rules` (+ matching child).
 
-[`docs/ai/skill_routing.md`](../../../../../docs/ai/skill_routing.md)
-
-## Quick rule
-
-For non-trivial work, find and invoke a suitable skill before editing or broad commands. Read selected `SKILL.md`; follow repo validation. When tool choice is unclear, run `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
-
-## Repo-first (this project)
-
-| Trigger | Skill |
-| --- | --- |
-| Orientation / commands | `agents-quick-reference` |
-| Non-trivial delivery | `agents-delivery-workflow` |
-| Feature code | `agents-canonical-rules` (+ child matching your layer) |
-| Flutter baseline | `agents-canonical-rules-presentation`, `flutter-cross-platform-modern` |
-| Cross-platform UI | `flutter-cross-platform-modern` |
-| Checks / tests routing | `agents-validation-testing` |
-| Bug fixed / prevent recurrence | `agents-regression-capture` → `agents-validation-testing` |
-| Analyze / layout / runtime | [`docs/agent_kb/devtools_runtime_errors.md`](../../../../../docs/agent_kb/devtools_runtime_errors.md); `dart-fix-runtime-errors`, `systematic-debugging`, `flutter-fix-layout-issues` |
-| Pub dependency / API docs | [`docs/agent_kb/package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `context7-mcp`, `flutter-ai-rules` |
-| Globals install/trim | `agents-global-skills-setup` or `./bin/agent-maintain install/update/trim` |
-| Watch PR CI → merge when green | `gh-watch-merge-pr` |
-
-## Find skills
+For non-trivial work, select one matching skill before edits or broad commands;
+read only its `SKILL.md`, then follow repo validation. Tool or owner unknown:
 
 ```bash
+./bin/agent-maintain tools --intent "<goal>" --paths <files>
 ./bin/agent-maintain find QUERY
-bash tool/find_global_agent_skills.sh QUERY
-npx skills find QUERY
 ```
 
-Install/update: [`docs/agent_environment_setup.md`](../../../../../docs/agent_environment_setup.md).
+Global skill search/install: explicit host-skill work only; see
+[`docs/agent_environment_setup.md`](../../../../../docs/agent_environment_setup.md).

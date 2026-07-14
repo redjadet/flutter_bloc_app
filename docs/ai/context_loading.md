@@ -6,8 +6,8 @@ owners. Other agent docs link here; do not duplicate this list.
 ## Ladder
 
 1. [`AGENTS.md`](../../AGENTS.md) — repo map and invariants.
-2. [`skill_routing.md`](skill_routing.md) — use `agents-skill-routing`; select one
-   task skill and its owner docs.
+2. [`skill_routing.md`](skill_routing.md) — `agents-skill-routing`; select one
+   skill. Tool/validation: `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
 3. Task evidence — targeted code/tests plus [`CODEMAP.md`](../../CODEMAP.md) or
    [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) when structure is unclear.
 
@@ -18,7 +18,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | Non-trivial work | [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls` |
 | T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
-| Commands / validation choice | [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| Commands / validation choice | Tool-router output, then matching [`agents_quick_reference.md`](../agents_quick_reference.md) row |
 | PR / CI evidence | [`github_mcp_guide.md`](github_mcp_guide.md) |
 | Code review | [`../review/code_review_playbook.md`](../review/code_review_playbook.md); AI-authored change: also [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md) |
 | Git, branch, PR, merge, or worktree task | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
@@ -26,6 +26,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | Topic owner unknown | [`docs/README.md`](../README.md) |
 | AI engineering plan | [`PLAN.md`](../../PLAN.md) |
 | Debt claim only | `ai/reports/`, `docs/audits/` (`git add -f`) |
+| Specialist operation | [`agent_kb/specialist_tool_routes.md`](../agent_kb/specialist_tool_routes.md) |
 
 ## Quality claim rule
 

@@ -1,70 +1,52 @@
 # AGENTS - Flutter BLoC App Map
 
-Map only. Repo docs under `docs/` are system of record; host assets stay thin.
-No learned bullets or long prose here—link to owning `docs/` (see
-[`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)).
+Map only. Repo `docs/` canon; host assets thin. No learned prose here—use the
+owner doc ([operator preferences](docs/agent_knowledge_base.md#operator-preferences-durable)).
 
 ## Authority
 
-Priority: this map -> repo docs -> `.cursor/rules/*.mdc` -> synced host adapters.
-Done = Plan, Execute, Verify, Report proof.
-Source map: this file. Codex host sync copies this file to the Codex home
-AGENTS file and Codex worktrees.
+Priority: map -> repo docs -> `.cursor/rules/*.mdc` -> synced host adapters.
+Done: Plan, Execute, Verify, Report proof. This source syncs to Codex home and
+worktrees.
 
 ## Start
 
 1. `AGENTS.md`
-2. Canonical ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md); skills: [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md)
-3. Review/commands when needed:
-   [`docs/review/code_review_playbook.md`](docs/review/code_review_playbook.md),
-   [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md),
-   [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
-
-## Snapshot
-
-Toolchain pins: [`docs/tech_stack.md`](docs/tech_stack.md) (machine:
-[`docs/toolchain_versions.env`](docs/toolchain_versions.env)). Pinned facts and
-caveats: [`docs/agent_project_context.md`](docs/agent_project_context.md).
+2. Canonical context ladder: [`docs/ai/context_loading.md`](docs/ai/context_loading.md) →
+   one matching skill from [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md)
+3. Route by task: `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
+   Owner unknown: [`docs/README.md`](docs/README.md).
 
 ## Loop
 
-Plan once -> execute end-to-end -> verify -> Report proof. Ask only blockers
-(credentials/tooling, unsafe ambiguity below 95% confident, user-owned choice).
-Non-trivial work: [`docs/ai/ai_failure_risks.md`](docs/ai/ai_failure_risks.md) Pre-Flight +
-`agents-common-pitfalls`; [`tasks/codex/todo.md`](tasks/codex/todo.md) or
-[`tasks/cursor/todo.md`](tasks/cursor/todo.md) + context ladder + one observe/revise loop.
-Outcome: Goal / Context / Boundaries / Verification. Finish gate:
-[`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md).
-Long session health: compact evidence, watch context drift, reset plan when state corrupts.
+Plan once → execute → verify → report proof. Ask only credentials/tooling,
+unsafe ambiguity below 95% confident, or user-owned choice. Non-trivial: [`AI Failure
+Risks`](docs/ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls` +
+`./bin/agent-maintain preflight`; record Goal / Context / Boundaries /
+Verification in [`tasks/codex/todo.md`](tasks/codex/todo.md) or
+[`tasks/cursor/todo.md`](tasks/cursor/todo.md). Compact evidence; reset corrupt
+context. Finish gate: [`Agent Knowledge Base`](docs/agent_knowledge_base.md).
 
 ## Map
 
-- Doctrine: [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md)
-- Harness scorecard: [`docs/ai/harness_scorecard.md`](docs/ai/harness_scorecard.md)
-- Engineering quality scorecard: [`docs/engineering/engineering_quality_scorecard.md`](docs/engineering/engineering_quality_scorecard.md)
-- Harness auto-maintenance: [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md)
-- AI failure risks: [`docs/ai/ai_failure_risks.md`](docs/ai/ai_failure_risks.md)
-- Project context: [`docs/agent_project_context.md`](docs/agent_project_context.md)
-- Environment setup: [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
-- Host maintain (agents run): [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md) · `./bin/agent-maintain`
-- Review workflow: [`docs/review/code_review_playbook.md`](docs/review/code_review_playbook.md) · AI-specific risks: [`docs/ai_code_review_protocol.md`](docs/ai_code_review_protocol.md)
-- Commands: [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md)
-- Git workflow: [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md)
-- Docs index: [`docs/README.md`](docs/README.md)
-- Feature harness: [`docs/architecture/feature_structure_contract.md`](docs/architecture/feature_structure_contract.md), [`docs/architecture/reference_features.md`](docs/architecture/reference_features.md), [`docs/architecture/use_case_dto_policy.md`](docs/architecture/use_case_dto_policy.md), [`docs/testing/matrix_required_by_change.md`](docs/testing/matrix_required_by_change.md)
-- BLoC standards: [`docs/bloc_standards.md`](docs/bloc_standards.md), [`docs/bloc/cubit_file_template.md`](docs/bloc/cubit_file_template.md), [`docs/review/bloc_checklist.md`](docs/review/bloc_checklist.md), [`docs/review/security_checklist.md`](docs/review/security_checklist.md), [`docs/security/certificate_pinning.md`](docs/security/certificate_pinning.md), [`docs/review/performance_checklist.md`](docs/review/performance_checklist.md)
-- Design/UI: [`DESIGN.md`](DESIGN.md), [`docs/design_system.md`](docs/design_system.md)
-- Validation: [`docs/engineering/validation_routing_fast_vs_full.md`](docs/engineering/validation_routing_fast_vs_full.md)
-- Architecture: [`docs/architecture_details.md`](docs/architecture_details.md), [`docs/clean_architecture.md`](docs/clean_architecture.md), [`docs/architecture/reduce_surprise_patterns.md`](docs/architecture/reduce_surprise_patterns.md)
-- Quality: [`docs/CODE_QUALITY.md`](docs/CODE_QUALITY.md), [`docs/testing_overview.md`](docs/testing_overview.md)
-- Lifecycle: [`docs/REPOSITORY_LIFECYCLE.md`](docs/REPOSITORY_LIFECYCLE.md), [`docs/reliability_error_handling_performance.md`](docs/reliability_error_handling_performance.md)
-- Offline-first: [`docs/offline_first/adoption_guide.md`](docs/offline_first/adoption_guide.md), [`docs/offline_first/hive_schema_migrations.md`](docs/offline_first/hive_schema_migrations.md)
-- Plans/history: [`docs/plans/README.md`](docs/plans/README.md), [`docs/changes/README.md`](docs/changes/README.md), [`docs/audits/README.md`](docs/audits/README.md)
-- AI engineering: [`PLAN.md`](PLAN.md), [`CODEMAP.md`](CODEMAP.md), [`llms.txt`](llms.txt), [`docs/ai/governance.md`](docs/ai/governance.md), [`docs/ai/skill_routing.md`](docs/ai/skill_routing.md), [`docs/ai/agent_operating_manual.md`](docs/ai/agent_operating_manual.md), [`ai/reports/README.md`](ai/reports/README.md)
-- Host/env notes: [`docs/agent_host_notes.md`](docs/agent_host_notes.md), [`docs/agent_environment_setup.md`](docs/agent_environment_setup.md)
-- Operator prefs/learning: [`docs/agent_knowledge_base.md#operator-preferences-durable`](docs/agent_knowledge_base.md#operator-preferences-durable)
-- Interview/portfolio walk: [`docs/interview_showcase.md`](docs/interview_showcase.md), [`docs/adr/0005-interview-showcase-scope.md`](docs/adr/0005-interview-showcase-scope.md)
-- Observability (Crashlytics when Firebase on; analytics doc-only): [`docs/observability.md`](docs/observability.md), [`docs/plans/future_observability.md`](docs/plans/future_observability.md)
+- Agent system: [`knowledge base`](docs/agent_knowledge_base.md),
+  [`project context`](docs/agent_project_context.md), [`operating manual`](docs/ai/agent_operating_manual.md),
+  [`harness scorecard`](docs/ai/harness_scorecard.md), [`harness maintenance`](docs/ai/harness_auto_maintenance.md),
+  [`host maintenance`](docs/agent_kb/host_maintenance_automation.md), [`host notes`](docs/agent_host_notes.md).
+- Commands / quality: [`quick reference`](docs/agents_quick_reference.md),
+  [`validation routing`](docs/engineering/validation_routing_fast_vs_full.md),
+  [`engineering scorecard`](docs/engineering/engineering_quality_scorecard.md),
+  [`testing`](docs/testing_overview.md), [`code quality`](docs/CODE_QUALITY.md).
+- Build / review: [`architecture`](docs/clean_architecture.md), [`feature contract`](docs/architecture/feature_structure_contract.md),
+  [`reference features`](docs/architecture/reference_features.md), [`BLoC`](docs/bloc_standards.md),
+  [`review playbook`](docs/review/code_review_playbook.md), [`AI review`](docs/ai_code_review_protocol.md),
+  [`Git workflow`](docs/git_and_branching_strategy.md).
+- Product / platform: [`DESIGN.md`](DESIGN.md), [`design system`](docs/design_system.md),
+  [`offline first`](docs/offline_first/adoption_guide.md), [`reliability`](docs/reliability_error_handling_performance.md),
+  [`observability`](docs/observability.md).
+- Navigation / history: [`docs index`](docs/README.md), [`plans`](docs/plans/README.md),
+  [`changes`](docs/changes/README.md), [`audits`](docs/audits/README.md), [`CODEMAP.md`](CODEMAP.md),
+  [`PLAN.md`](PLAN.md), [`llms.txt`](llms.txt), [`environment`](docs/agent_environment_setup.md).
 
 ## Must Keep
 

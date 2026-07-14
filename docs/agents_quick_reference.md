@@ -1,12 +1,9 @@
 # Agent Quick Reference
 
-Commands + routing. Map [`AGENTS.md`](../AGENTS.md); context
-[`agent_project_context.md`](agent_project_context.md); harness
-[`agent_knowledge_base.md`](agent_knowledge_base.md); review workflow
-[`review/code_review_playbook.md`](review/code_review_playbook.md); AI-specific risks
-[`ai_code_review_protocol.md`](ai_code_review_protocol.md); validation detail
+Commands and routing. Run tool router first; read only matching row. Specialist
+operations: [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
+Map: [`AGENTS.md`](../AGENTS.md). Validation detail:
 [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
-Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](toolchain_versions.env))
 
 ## Validation Chooser
 
@@ -25,15 +22,6 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | Integration/bootstrap/browser guardrails | `./bin/integration_preflight` (`INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` for browser-only lane) |
 | Runtime error / red screen / active debug bug | DTD `get_runtime_errors` -> fix -> hot reload -> re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); shell: `bash tool/check_runtime_errors.sh` |
 | Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `/package-docs` |
-| iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
-| Apple debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold restart simulator |
-| SDK / tooling maintenance | `./bin/upgrade_validate_all` |
-| Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed`; [`code_review_graph.md`](code_review_graph.md) |
-| PR / CI / issue evidence | [`ai/github_mcp_guide.md`](ai/github_mcp_guide.md); `gh pr view` / checks |
-| Repomix context packs | `bash tool/repomix_pack.sh onboarding`; [`ai/repomix_profiles.md`](ai/repomix_profiles.md) |
-| AI snapshot freshness | `bash tool/check_ai_snapshot_freshness.sh`; `bash tool/refresh_ai_reports.sh` |
-| Feature/app/package diff guard | `bash tool/check_ai_change_contract.sh [--base origin/main]` |
-| Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
 | Non-trivial `apps/mobile/lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
 | New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` preview; add `--apply` only when final |
@@ -51,36 +39,21 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | Agent host maintain | [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md); `./bin/agent-maintain help`; `/agent-maintain` |
 | Cursor/Codex host setup | `./bin/agent-maintain setup --apply`; install/trim only on explicit request |
 | Global vendor skills | `./bin/agent-maintain install` / `update` / `find QUERY` / `trim`; underlying `tool/install_global_agent_skills.sh` |
-| Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md); shim `agents-skill-routing`; `bash tool/find_global_agent_skills.sh QUERY` |
-| IDE-open local env preflight | `.vscode/tasks.json` -> `./tool/local_ide_open_preflight.sh` when automatic tasks are allowed |
+| Skill routing (which skill to invoke) | [`ai/skill_routing.md`](ai/skill_routing.md); shim `agents-skill-routing`; `./bin/agent-maintain find QUERY` |
 | Security scans | `./tool/check_tracked_secret_literals.sh`; `./tool/check_ai_generated_code_smells.sh`; pinning policy [`docs/security/certificate_pinning.md`](security/certificate_pinning.md) |
-| Cross-host review (explicit only) | `./tool/request_codex_feedback.sh`; plan review: `./tool/run_codex_plan_review.sh PATH/TO/plan.md` |
-| Transcript context budgets | `CURSOR_AGENT_TRANSCRIPTS_ROOT=... ./tool/check_transcript_budgets.sh` or `./bin/checklist-fast` |
-| Hive shape changes | `dart run tool/generate_hive_schema_fingerprints.dart --check-generated`; `bash tool/check_hive_schema_fingerprints.sh`; strict input drift: `HIVE_SCHEMA_ENFORCE_INPUTS=true bash tool/check_hive_schema_fingerprints.sh` |
-| Store release | Both: `./tool/release_both_stores.sh preflight` then `deploy`; Android: `./tool/release_android_play.sh preflight` / `upload_internal` |
-
-Hive runtime: non-null `HiveRepositoryBase.schema` -> `getBox()` calls
-`ensureSchema`; shape changes still need manifest/spec/fingerprint/migrator/tests.
-Fastlane: prefer `./tool/fastlane.sh`.
 
 ## Automatic Workflow Triggers
 
-| Trigger | Cursor | Codex |
-| --- | --- | --- |
-| Task start / changed scope | Preflight/tool router emits repo-first capability routes from intent + paths | Same |
-| Non-trivial existing-code work | Context ladder; plan + verification in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Same, but [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
-| Broad/high-risk work | Use [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); team only if gate passes | Single-agent unless delegation helps and is allowed |
-| API/version-sensitive change | MCP package docs + repo-pinned source before model memory | Same |
-| External/live state | Use owning tool/MCP/connector/browser; summarize evidence | Same |
-| Git branch / PR / worktree task | Read [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect state first; require authorization for remote or destructive action | Same |
-| AI-authored change before done | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + validation routing | Same |
-| UI/design/theme/Mix work | Validation chooser UI row + widget/responsive proof | Same |
-| Flutter app-code/UI change with active debug run | Hot reload; hot restart if reload cannot apply; report unavailable session | Same |
-| Runtime bug / crash with active debug run | Use runtime row | Same |
-| Same failure repeats | Add repo capability; do not inflate prompts | Same |
-| Prompt tweak repeats | Add evaluator/test/runtime check/fixture/feedback loop; trim prompt prose | Same |
-| Agent behavior/host template changed | Source docs -> `tool/agent_host_templates/` -> dry-run -> apply -> dry-run clean -> drift check | Same |
-| Implementation / tests / debug / validation | Invoke matching skill via [`ai/skill_routing.md`](ai/skill_routing.md); skill `agents-skill-routing` | Same |
+| Trigger | Action |
+| --- | --- |
+| Task start / scope change | `preflight` / tool router, then task-matched owner docs |
+| Non-trivial existing-code work | Context ladder; plan + proof in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Broad / high-risk work | [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); delegate only when allowed |
+| API, external state, Git, UI, runtime | Matching chooser row; inspect live state; require authorization for remote/destructive action |
+| AI-authored change before done | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + routed validation |
+| Repeated failure / prompt tweak | Add evaluator, test, fixture, or script; trim prompt prose |
+| Agent behavior / template changed | Source docs → templates → `after-host-edit` → drift check |
+| Implementation / test / debug / validation | Matching skill from [`ai/skill_routing.md`](ai/skill_routing.md) |
 
 ## Harness
 
@@ -114,24 +87,16 @@ Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI en
 
 ## Melos workspace
 
-Repo root is the Pub workspace + Melos root (`melos:` in root `pubspec.yaml`). The Flutter app lives at `apps/mobile/`. Scoped migration PR-A-I is merged; current app paths use `apps/mobile/**`.
+Repo root is Pub/Melos root; app lives in `apps/mobile/`. Run repo commands from
+root; use `dart run melos ...` (global `melos` not needed). Workspace operation:
+[`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
 
 | Need | Command / path |
 | --- | --- |
-| Authoritative delivery gate | `./bin/checklist` from **repo root** (unchanged) |
-| Pub get (workspace + Flutter codegen) | `bash tool/workspace_pub_get.sh` from repo root |
-| Reclaim disk (regenerable build caches) | `./bin/clean-build-caches` (dry-run) then `--apply` / `--apply --yes`; restore with `bash tool/workspace_pub_get.sh`. Targets must stay gitignored (see `.gitignore` Flutter/coverage section). |
-| Prune merged/closed branches + stale worktrees | `./bin/prune-git-stale` (dry-run) then `--apply`; add `--closed-prs --keep <branch>` for closed-PR heads with exceptions. Locals-only: `bash tool/clean_merged_local_branches.sh --gone --merged-base origin/main`. |
-| Melos tool install | Root `dart pub get` installs the repo-pinned Melos dev dependency; use `dart run melos ...` (global `melos` binary not required) |
-| Flutter app run | `cd apps/mobile && flutter run -t lib/main_dev.dart`; root `flutter run -t apps/mobile/lib/main_dev.dart` only when `tool/direnv/bin` wrapper is first in `PATH` |
-| Flutter app analyze / test | `./tool/analyze.sh` / `bash tool/test_coverage.sh` (or `cd apps/mobile && flutter test <paths>` for narrow scope) |
-| Workspace package analyze | `dart run melos run analyze` from repo root; delegates to `tool/analyze_workspace_packages.sh` so package roots do not scan workspace `.dart_tool` metadata |
-| Workspace Dart package tests | `dart run melos run test` from repo root; non-Flutter package tests only. Use `dart run melos run test:flutter` or `cd packages/design_system && flutter test` for Flutter packages |
-| Workspace packages | `packages/ai`, `packages/app_shared_flutter`, `packages/auth`, `packages/core`, `packages/design_system`, `packages/feature_flags`, `packages/networking`, `packages/storage`, `packages/utilities` |
-| Firebase backend | `backend/firebase/` (functions, rules, indexes) |
-| Package DAG guard | `bash tool/check_package_dependency_dag.sh` (in `./bin/checklist`) |
-| Path helper | `source tool/workspace_paths.sh` |
-| Melos bootstrap | `dart run melos bootstrap` from repo root after dependency or workspace-member changes |
-| Shared design tokens/widgets | `package:design_system` (+ `package:design_system/responsive.dart`) |
+| Delivery | `./bin/checklist` |
+| App source / run | `apps/mobile/**`; `cd apps/mobile && flutter run -t lib/main_dev.dart` |
+| Shared UI | `package:design_system` / `package:design_system/responsive.dart` |
+| Backend | `backend/firebase/` |
+| Package DAG | `bash tool/check_package_dependency_dag.sh` (included in checklist) |
 
 Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
