@@ -46,8 +46,10 @@ dependencies:
   auth:
     path: ../../packages/auth
   cached_network_image: ^3.4.1
-  cloud_firestore: ^6.6.0
-  cloud_functions: ^6.3.3
+  # Hold below FlutterFire FirebasePlugin rename until platform_interface ships
+  # it (flutterfire#18437). See docs/workarounds.md.
+  cloud_firestore: ">=6.6.0 <6.7.0"
+  cloud_functions: ">=6.3.3 <6.3.4"
   collection: ^1.19.1
   confetti: ^0.8.0
   connectivity_plus: ^7.2.0
@@ -65,15 +67,15 @@ dependencies:
   feature_flags:
     path: ../../packages/feature_flags
   ffi: ^2.2.0
-  firebase_analytics: ^12.4.3
-  firebase_app_check: ^0.4.5
-  firebase_auth: ^6.5.4
-  firebase_core: ^4.11.0
-  firebase_crashlytics: ^5.2.4
-  firebase_database: ^12.4.4
-  firebase_messaging: ^16.4.1
-  firebase_remote_config: ^6.5.3
-  firebase_storage: ^13.4.3
+  firebase_analytics: ">=12.4.3 <12.4.4"
+  firebase_app_check: 0.4.5
+  firebase_auth: ">=6.5.4 <6.5.5"
+  firebase_core: ">=4.11.0 <4.12.0"
+  firebase_crashlytics: ">=5.2.4 <5.2.5"
+  firebase_database: ">=12.4.4 <12.4.5"
+  firebase_messaging: ">=16.4.1 <16.4.2"
+  firebase_remote_config: ">=6.5.3 <6.5.4"
+  firebase_storage: ">=13.4.3 <13.4.4"
   firebase_ui_auth: ^3.0.1
   firebase_ui_localizations: ^2.0.1
   firebase_ui_oauth_google: ^2.0.1
