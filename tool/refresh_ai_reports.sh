@@ -109,7 +109,8 @@ if [[ -f ai/reports/README.md ]]; then
   strip_frontmatter ai/reports/README.md
   cp ai/reports/README.md "$readme_body"
   if grep -q '^\*\*Generated:\*\*' "$readme_body"; then
-    sed -i '' "s/^\*\*Generated:\*\*.*/**Generated:** ${today} via \`bash tool/refresh_ai_reports.sh\` and \`bash tool/modular_metrics.sh\` (HEAD \`${git_head}\`)./" "$readme_body"
+    generated_line='**Generated:** '"${today}"' via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `'"${git_head}"'`).'
+    sed -i '' "s|^\*\*Generated:\*\*.*|${generated_line}|" "$readme_body"
   else
     printf '\n**Generated:** %s via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `%s`).\n' "$today" "$git_head" >>"$readme_body"
   fi
