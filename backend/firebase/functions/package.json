@@ -28,7 +28,7 @@
   "overrides": {
     "@tootallnate/once": "^3.0.1",
     "@typescript-eslint/typescript-estree": {
-      "minimatch": "^9.0.7"
+      "minimatch": "^9.0.9"
     },
     "protobufjs": "^8.7.1",
     "uuid": "^14.0.1",
