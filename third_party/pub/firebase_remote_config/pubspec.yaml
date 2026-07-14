@@ -22,7 +22,7 @@ dependencies:
   firebase_core: ^4.11.0
   firebase_core_platform_interface: ^6.0.3
   firebase_remote_config_platform_interface: ^2.1.2
-  firebase_remote_config_web: ^1.10.10
+  firebase_remote_config_web: ^1.10.11
   flutter:
     sdk: flutter
 
