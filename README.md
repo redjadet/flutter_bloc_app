@@ -27,7 +27,7 @@ commands instead of relying on generic architecture statements.
 [![Drift](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/drift.yml)
 [![OSV Scanner](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml/badge.svg)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/osv-scanner-pr.yml)
 [![CodeQL](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/redjadet/flutter_bloc_app/actions/workflows/codeql.yml)
-[![Coverage](https://img.shields.io/badge/Coverage-86%2E14%25-brightgreen.svg)](docs/CODE_QUALITY.md)
+[![Coverage](https://img.shields.io/badge/Coverage-85%2E17%25-brightgreen.svg)](docs/CODE_QUALITY.md)
 [![Delivery gate](https://img.shields.io/badge/Gate-%2Fbin%2Fchecklist-1B5E20.svg)](docs/validation_scripts.md)
 [![Modularity](https://img.shields.io/badge/Modularity-Leak%20guards-6B7280.svg)](docs/modularity.md)
 [![Code quality](https://img.shields.io/badge/Docs-CODE__QUALITY-546E7A.svg)](docs/CODE_QUALITY.md)
@@ -69,6 +69,11 @@ commands instead of relying on generic architecture statements.
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
 
+## Live app
+
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
+- [Latest web build](https://redjadet.github.io/flutter_bloc_app/)
+
 ## Native Android and iOS engineering
 
 The native showcase is a runnable feature, not a platform-API claim. It keeps
@@ -94,10 +99,25 @@ flutter build apk --debug --no-pub
 flutter build ios --simulator --debug --no-pub
 ```
 
-## Live app
+## Why this repo differs
 
-- [Google Play Store](https://play.google.com/store/apps/details?id=com.ilkersevim.blocflutter)
-- [Latest web build](https://redjadet.github.io/flutter_bloc_app/)
+Most Flutter repositories document the app. This one also documents how an AI
+agent should safely change it. Agents can locate feature ownership, architecture
+boundaries, conventions, and proof commands with minimal task-specific guidance.
+The workflow stays model-agnostic: Codex, Cursor, Claude Code, Gemini CLI, and
+human contributors use the same repository-owned files and commands.
+
+| Need | Repository mechanism |
+| --- | --- |
+| Fast, canonical orientation | [`AGENTS.md`](AGENTS.md), [context ladder](docs/ai/context_loading.md), [`CODEMAP.md`](CODEMAP.md), and [feature catalog](docs/feature_overview.md) |
+| Right tool and validation lane | `./bin/agent-maintain preflight`, `./bin/agent-maintain tools --intent "<goal>" --paths <files>`, and [`docs/agents_quick_reference.md`](docs/agents_quick_reference.md) |
+| Compact repository context | [Repomix profiles](docs/ai/repomix_profiles.md) via `bash tool/repomix_pack.sh onboarding` or `feature <name>` |
+| Current AI discovery maps | `bash tool/refresh_ai_reports.sh` plus `bash tool/check_ai_snapshot_freshness.sh` |
+| Safe incremental delivery | task trackers, `bash tool/check_ai_change_contract.sh`, focused checks, then `./bin/agent-maintain closeout` |
+
+Start an agent task with [`AGENTS.md`](AGENTS.md). Use Dart MCP when available
+for live analysis and runtime inspection; repository scripts remain the
+deterministic fallback and CI contract.
 
 ## Quick start
 

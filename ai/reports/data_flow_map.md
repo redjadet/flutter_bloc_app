@@ -1,3 +1,21 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T16:26:48Z"
+  git_head: "0d5ea373df32c1577235e19c49bcac1f9f2d6117"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
+
+
+
+
+
+
+
 # Data flow map
 
 High-traffic paths for agents implementing or debugging data behavior. Canon: [`docs/offline_first/adoption_guide.md`](../../docs/offline_first/adoption_guide.md).
@@ -10,7 +28,7 @@ CounterPage → CounterCubit → CounterRepository (contract)
   → Hive box + optional remote sync
 ```
 
-**Docs:** feature module `apps/mobile/lib/features/counter/`, remote config flags in `remote_config`.
+**Docs:** `apps/mobile/lib/features/counter/`, remote config flags in `remote_config`.
 
 ## Path 2 — Todo list (offline-first + Realtime DB)
 
@@ -20,7 +38,7 @@ TodoListPage → TodoCubit → OfflineFirstTodoRepository
   → PendingSyncRepository / BackgroundSyncCoordinator
 ```
 
-**Docs:** [`docs/offline_first/adoption_guide.md`](../../docs/offline_first/adoption_guide.md), `apps/mobile/lib/shared/sync/`.
+**Docs:** [`docs/offline_first/adoption_guide.md`](../../docs/offline_first/adoption_guide.md), `apps/mobile/lib/app/sync/`, `packages/storage/`.
 
 ## Path 3 — Chat (multi-backend orchestration)
 
@@ -41,7 +59,7 @@ Chat UI → ChatCubit → ChatRepository implementations
 | `BackgroundSyncCoordinator` | Flush on resume / schedule |
 | `NetworkStatusService` | Gate remote calls |
 
-Location: `apps/mobile/lib/shared/sync/`, wired in bootstrap / `AppScope`.
+Location: `apps/mobile/lib/app/sync/` and `packages/storage/`, wired in bootstrap / `AppScope`.
 
 ## Configuration gates
 
@@ -49,12 +67,12 @@ Location: `apps/mobile/lib/shared/sync/`, wired in bootstrap / `AppScope`.
 | --- | --- |
 | Firebase | [`docs/firebase_setup.md`](../../docs/firebase_setup.md) |
 | Supabase | `SUPABASE_URL`, `SUPABASE_ANON_KEY` |
-| HTTP / Dio | `apps/mobile/lib/shared/http/`, `register_http_services.dart` |
+| HTTP / Dio | `apps/mobile/lib/app/http/`, `apps/mobile/lib/app/composition/features/register_http_services.dart` |
 
 ## Agent checklist (data change)
 
 1. Identify contract in `domain/`.
 2. Decide offline-first vs remote-only.
-3. Register implementation in `apps/mobile/lib/core/di/`.
-4. Add regression test at repository or cubit level.
+3. Register implementation in `apps/mobile/lib/app/composition/features/`.
+4. Add regression test at repository or cubit level under `apps/mobile/test/`.
 5. Update owning doc in `docs/` (not a second copy in `ai/`).

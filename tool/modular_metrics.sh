@@ -99,5 +99,5 @@ done
 
 echo
 echo "--- Cross-feature import summary (run with --cross-feature-only for full list) ---"
-bash "$PROJECT_ROOT/tool/modular_metrics.sh" --cross-feature-only | head -80
+bash "$WORKSPACE_ROOT/tool/modular_metrics.sh" --cross-feature-only | head -80
 echo "  (truncated; full: bash tool/modular_metrics.sh --cross-feature-only)"

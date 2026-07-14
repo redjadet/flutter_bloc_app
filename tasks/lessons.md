@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-14 - AI report refresh must regenerate its claimed metrics
+
+- What went wrong:
+  `refresh_ai_reports.sh` updated report timestamps and `git_head` while leaving
+  feature LOC, inventory, and hotspot content stale; strict freshness also
+  rejected the normal follow-up metadata-only commit.
+- How it was fixed:
+  The refresh command now regenerates marker-bounded metric blocks from
+  `tool/modular_metrics.sh`; strict freshness accepts the immediate parent only
+  when HEAD changed AI snapshot metadata exclusively.
+- Pattern:
+  A fresh timestamp is not evidence that derived report content is current.
+- Preventive rule:
+  Regenerated report claims need a bounded source-owned block and a fixture for
+  the freshness contract; keep narrative guidance human-maintained.
+- Evidence or affected files:
+  `tool/refresh_ai_reports.sh`, `tool/check_ai_snapshot_freshness.sh`,
+  `tool/run_harness_fixtures.sh`, `ai/reports/dependency_map.md`,
+  `ai/reports/context_hotspots.md`, `ai/reports/feature_map.md`
+
 ### 2026-07-14 - Format Dart before task finish
 
 - What went wrong:

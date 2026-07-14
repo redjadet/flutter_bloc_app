@@ -1,0 +1,7 @@
+\bapps/mobile/lib/core/
+\bapps/mobile/lib/shared/
+\b`lib/features/
+\b`lib/core/
+\b`lib/shared/
+\b`test/features/
+\b`lib/app/router/app_routes\.dart

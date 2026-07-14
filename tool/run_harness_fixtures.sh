@@ -503,4 +503,69 @@ bash tool/check_runtime_errors.sh --self-test >/dev/null
 echo "fixtures|check_runtime_errors|skip_no_app"
 bash tool/check_runtime_errors.sh >/dev/null
 
+echo "fixtures|check_ai_snapshot_freshness|help"
+bash tool/check_ai_snapshot_freshness.sh --help >/dev/null
+
+echo "fixtures|check_ai_snapshot_freshness|forbidden_path"
+tmp_snapshot="$(mktemp)"
+cat >"$tmp_snapshot" <<'EOF'
+---
+ai_snapshot:
+  generated_at: "2026-07-14T00:00:00Z"
+  git_head: "0000000000000000000000000000000000000000"
+  app_root: "apps/mobile"
+  canon_links:
+    - CODEMAP.md
+---
+# bad snapshot
+`lib/core/foo`
+EOF
+set +e
+  snapshot_bad_output="$(bash tool/check_ai_snapshot_freshness.sh --paths "$tmp_snapshot" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_snapshot"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected AI snapshot freshness to fail on forbidden path" >&2
+  exit 1
+fi
+if ! grep -q -- "forbidden pattern" <<<"$snapshot_bad_output"; then
+  echo "❌ fixtures failed: AI snapshot freshness missing forbidden pattern message" >&2
+  echo "$snapshot_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_ai_snapshot_freshness|missing_metadata"
+tmp_snapshot="$(mktemp)"
+printf '# no frontmatter\n' >"$tmp_snapshot"
+set +e
+  snapshot_meta_output="$(bash tool/check_ai_snapshot_freshness.sh --paths "$tmp_snapshot" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_snapshot"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected AI snapshot freshness to fail on missing metadata" >&2
+  exit 1
+fi
+if ! grep -q -- "frontmatter" <<<"$snapshot_meta_output"; then
+  echo "❌ fixtures failed: AI snapshot freshness missing frontmatter message" >&2
+  echo "$snapshot_meta_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_ai_snapshot_freshness|current"
+bash tool/check_ai_snapshot_freshness.sh >/dev/null
+
+echo "fixtures|check_ai_snapshot_freshness|strict_current_or_snapshot_parent"
+bash tool/check_ai_snapshot_freshness.sh --strict-head >/dev/null
+
+echo "fixtures|check_ai_change_contract|help"
+bash tool/check_ai_change_contract.sh --help >/dev/null
+
+echo "fixtures|check_ai_change_contract|self_test"
+bash tool/check_ai_change_contract.sh --self-test >/dev/null
+
+echo "fixtures|check_repomix_contract|help"
+bash tool/check_repomix_contract.sh --help >/dev/null
+
 echo "fixtures|done"

@@ -14,6 +14,10 @@ and the next document to read.
   `apps/mobile/lib/app/router/routes_online_therapy_demo.dart`
 - Feature modules: `apps/mobile/lib/features/<feature>/`
 
+Complex features may include a co-located README (see
+[`architecture/complex_feature_readme_template.md`](architecture/complex_feature_readme_template.md)).
+Current READMEs: `native_platform_showcase`, `iot`, `library_demo`.
+
 ## Foundation and core flows
 
 | Feature | Route or entry | Code | Notes |

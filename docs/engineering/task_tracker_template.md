@@ -43,9 +43,49 @@ List the *smallest honest* validation command(s) you actually ran (or will run b
 
 If no command is required, state why (rare).
 
+## depends_on
+
+- [ ] task/issue/doc placeholder
+
+## blocks
+
+- downstream work blocked by this task
+
+## merge_order
+
+- e.g. T1 before T2
+
+## rollback
+
+- revert plan or feature flag steps
+
+## proof_commands
+
+- `./bin/checklist-fast`
+
+### Example (filled)
+
+```markdown
+## depends_on
+- [ ] docs/plans/2026-07-14_ai_native_repository_hardening_plan.md (T1 refresh)
+
+## blocks
+- T2 snapshot freshness gate wiring
+
+## merge_order
+- T1 → T2 → T3
+
+## rollback
+- Revert ai/ snapshot edits; re-run refresh from prior commit
+
+## proof_commands
+- `bash tool/check_ai_snapshot_freshness.sh`
+- `./bin/checklist-fast`
+```
+
 ## Evidence/result
 
 What proved it worked? Provide the key outputs (pass/fail) and any important notes. (Maps to **Verification**.)
 
 - `./bin/checklist-fast`: PASS
-- Residual risk: <what remains, if any>
+- Residual risk: note what remains, if any

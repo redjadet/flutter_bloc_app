@@ -155,6 +155,19 @@ for file in "${targets[@]}"; do
 
   section_non_empty "$file" "## Write-set"
   section_non_empty "$file" "## Validation command"
+
+  optional_sections=(
+    "## depends_on"
+    "## blocks"
+    "## merge_order"
+    "## rollback"
+    "## proof_commands"
+  )
+  for heading in "${optional_sections[@]}"; do
+    if grep -qF "$heading" "$file"; then
+      section_non_empty "$file" "$heading"
+    fi
+  done
 done
 
 if [[ "$failures" -ne 0 ]]; then

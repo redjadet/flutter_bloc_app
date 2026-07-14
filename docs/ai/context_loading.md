@@ -19,6 +19,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | T1/T2 coding | [`agent_operating_manual.md`](agent_operating_manual.md) |
 | Feature semantics | [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](../architecture/reference_features.md) |
 | Commands / validation choice | [`agents_quick_reference.md`](../agents_quick_reference.md) |
+| PR / CI evidence | [`github_mcp_guide.md`](github_mcp_guide.md) |
 | Code review | [`../review/code_review_playbook.md`](../review/code_review_playbook.md); AI-authored change: also [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md) |
 | Git, branch, PR, merge, or worktree task | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
 | Harness doctrine / agent policy | [`agent_knowledge_base.md`](../agent_knowledge_base.md) |

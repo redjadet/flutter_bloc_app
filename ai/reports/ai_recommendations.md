@@ -1,3 +1,21 @@
+---
+ai_snapshot:
+  generated_at: "2026-07-14T16:26:48Z"
+  git_head: "0d5ea373df32c1577235e19c49bcac1f9f2d6117"
+  app_root: "apps/mobile"
+  canon_links:
+    - docs/architecture_details.md
+    - CODEMAP.md
+    - docs/feature_overview.md
+---
+
+
+
+
+
+
+
+
 # AI recommendations
 
 Prioritized actions from discovery (2026-05-21). Each item links evidence; implementation needs Feature Brief per [`docs/plans/FEATURE_TEMPLATE.md`](../docs/plans/FEATURE_TEMPLATE.md) when touching code.
@@ -12,7 +30,7 @@ Prioritized actions from discovery (2026-05-21). Each item links evidence; imple
 | REC-006 | P2 | Pilot CONTEXT_MAP loads ≤8 files for `counter`, `chat`, `auth` | [CONTEXT_MAP.md](../CONTEXT_MAP.md) | S |
 | REC-007 | P2 | Curate `docs/domain/domain_glossary.md` from language v1 report | [ai_domain_language_report_v1.md](../../docs/audits/ai_domain_language_report_v1.md) | M |
 | REC-008 | P2 | Consolidate chat remote failure mappers | [anti_patterns.md](anti_patterns.md) AP-04, ARCH-008 | M |
-| REC-009 | P3 | Script or checklist to refresh `ai/reports` after feature adds | [ai/README.md](../README.md) | M |
+| REC-009 | P3 | ~~Script or checklist to refresh `ai/reports` after feature adds~~ **done** | `tool/refresh_ai_reports.sh` | M |
 | REC-010 | P3 | ~~Phase 5: mechanical Feature Brief guard~~ **done** | `tool/check_feature_brief_linked.sh` | L |
 
 **Next audit refresh:** after first Phase 4 merge or quarterly.

@@ -28,7 +28,11 @@ Toolchain: [`tech_stack.md`](tech_stack.md) (pins: [`toolchain_versions.env`](to
 | iOS simulator build / CocoaPods embed | `flutter build ios --simulator --debug` then `tool/check_ios_pod_framework_embed.sh --require-built-app` |
 | Apple debug Keychain -34018 / `Recovering corrupted box.` | [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold restart simulator |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
-| Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed` |
+| Existing-code exploration | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed`; [`code_review_graph.md`](code_review_graph.md) |
+| PR / CI / issue evidence | [`ai/github_mcp_guide.md`](ai/github_mcp_guide.md); `gh pr view` / checks |
+| Repomix context packs | `bash tool/repomix_pack.sh onboarding`; [`ai/repomix_profiles.md`](ai/repomix_profiles.md) |
+| AI snapshot freshness | `bash tool/check_ai_snapshot_freshness.sh`; `bash tool/refresh_ai_reports.sh` |
+| Feature/app/package diff guard | `bash tool/check_ai_change_contract.sh [--base origin/main]` |
 | Root [`DESIGN.md`](../DESIGN.md) brief | `./tool/check_design_md.sh` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
 | Non-trivial `apps/mobile/lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |

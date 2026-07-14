@@ -1,0 +1,24 @@
+# Repomix outputs (generated locally)
+.repomix/
+
+# Refresh evidence (not canon)
+ai/reports/.modular_metrics_latest.txt
+
+# Secrets and env
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Generated Dart
+**/*.freezed.dart
+**/*.g.dart
+**/*.gr.dart
+
+# Tooling caches
+**/.dart_tool/**
+**/build/**
+coverage/**
+
+# Historical / noisy AI reports unless explicitly auditing
+ai/reports/FINAL_OPTIMIZATION_REPORT.md
