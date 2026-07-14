@@ -35,9 +35,9 @@ docs/audits/      <- ranked audits; gitignored, force-add when committing
 
 ## Refresh workflow
 
-1. Run `bash tool/refresh_ai_reports.sh` (includes `tool/modular_metrics.sh`).
-2. Update affected narrative sections under `ai/reports/` when product paths change.
+1. Run `bash tool/refresh_ai_reports.sh` (includes `tool/modular_metrics.sh` and regenerates bounded metric blocks).
+2. Update affected narrative sections under `ai/reports/` when product paths or guidance change.
 3. If rankings change, update [`docs/audits/`](../docs/audits/) audit files (`git add -f`).
-4. Bump `last_refreshed` in this file.
+4. The script bumps `last_refreshed` in this file.
 
 Do **not** paste long canon here—link to `docs/` instead.

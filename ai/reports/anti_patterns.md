@@ -1,13 +1,16 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-14T15:38:12Z"
-  git_head: "a6c2c6d134a5baba099175ac25860b1635d4fc6e"
+  generated_at: "2026-07-14T16:25:45Z"
+  git_head: "135dd0cdfca1a51b87bf3414f9405d9b7c565a91"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
+
+
+
 
 
 

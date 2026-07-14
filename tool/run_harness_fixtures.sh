@@ -556,6 +556,9 @@ fi
 echo "fixtures|check_ai_snapshot_freshness|current"
 bash tool/check_ai_snapshot_freshness.sh >/dev/null
 
+echo "fixtures|check_ai_snapshot_freshness|strict_current_or_snapshot_parent"
+bash tool/check_ai_snapshot_freshness.sh --strict-head >/dev/null
+
 echo "fixtures|check_ai_change_contract|help"
 bash tool/check_ai_change_contract.sh --help >/dev/null
 

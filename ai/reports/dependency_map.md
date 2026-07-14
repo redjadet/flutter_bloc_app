@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-14T15:38:12Z"
-  git_head: "a6c2c6d134a5baba099175ac25860b1635d4fc6e"
+  generated_at: "2026-07-14T16:25:45Z"
+  git_head: "135dd0cdfca1a51b87bf3414f9405d9b7c565a91"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -12,12 +12,16 @@ ai_snapshot:
 
 
 
+
+
+
 # Dependency map
 
 **Source:** `bash tool/modular_metrics.sh` via `bash tool/refresh_ai_reports.sh`.
 
 ## Per-feature LOC (non-generated Dart)
 
+<!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
 | chat | 6728 | yes |
@@ -55,6 +59,7 @@ ai_snapshot:
 | deeplink | 521 | yes |
 | certificate_pinning_demo | 507 | yes |
 | event_bus_demo | 311 | yes |
+<!-- refresh_ai_reports:feature_metrics:end -->
 
 ## Fan-in (heuristic import counts)
 

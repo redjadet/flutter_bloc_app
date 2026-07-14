@@ -18,7 +18,8 @@ Checks active ai/ discovery snapshots for:
 - resolvable canon_links paths
 
 Options:
-  --strict-head  Fail when git_head metadata differs from current HEAD
+  --strict-head  Require git_head to match HEAD, or HEAD^ when HEAD only
+                 committed AI snapshot metadata
   --paths        Check only the given files (fixture/testing)
 EOF
 }
@@ -86,6 +87,25 @@ fail() {
 }
 
 current_head="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
+parent_head="$(git rev-parse HEAD^ 2>/dev/null || echo unknown)"
+
+is_snapshot_metadata_only_head=false
+if [[ "$current_head" != "unknown" && "$parent_head" != "unknown" ]]; then
+  changed_files="$(git diff --name-only HEAD^ HEAD --diff-filter=ACMRTUXB)"
+  if [[ -n "$changed_files" ]]; then
+    is_snapshot_metadata_only_head=true
+    while IFS= read -r changed_file; do
+      case "$changed_file" in
+        ai/CONTEXT_MAP.md|ai/README.md|ai/reports/README.md|ai/reports/architecture_overview.md|ai/reports/data_flow_map.md|ai/reports/dependency_map.md|ai/reports/feature_map.md|ai/reports/context_hotspots.md|ai/reports/anti_patterns.md|ai/reports/ai_recommendations.md)
+          ;;
+        *)
+          is_snapshot_metadata_only_head=false
+          break
+          ;;
+      esac
+    done <<<"$changed_files"
+  fi
+fi
 
 for snapshot in "${active_snapshots[@]}"; do
   if [[ ! -f "$snapshot" ]]; then
@@ -113,7 +133,9 @@ for snapshot in "${active_snapshots[@]}"; do
 
     meta_head="$(awk -F'"' '/^[[:space:]]*git_head:/ { print $2; exit }' <<<"$frontmatter")"
     if [[ "$strict_head" == true && -n "$meta_head" && "$meta_head" != "$current_head" ]]; then
-      fail "$snapshot git_head ($meta_head) != current HEAD ($current_head)"
+      if [[ "$meta_head" != "$parent_head" || "$is_snapshot_metadata_only_head" != true ]]; then
+        fail "$snapshot git_head ($meta_head) != current HEAD ($current_head)"
+      fi
     fi
 
     while IFS= read -r link; do

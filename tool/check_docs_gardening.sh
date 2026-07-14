@@ -77,7 +77,7 @@ add_doc_target_if_in_scope() {
     p="${p#$repo_root/}"
   fi
   case "$p" in
-    README.md|SECURITY.md|AGENTS.md|docs/*.md|docs/*/*.md|docs/*/*/*.md|tool/fixtures/harness/*.md)
+    README.md|SECURITY.md|AGENTS.md|ai/*.md|ai/*/*.md|docs/*.md|docs/*/*.md|docs/*/*/*.md|tool/fixtures/harness/*.md)
       add_doc_target_if_exists "$p"
       ;;
   esac

@@ -18,7 +18,7 @@ snapshots so agents do not open deleted `lib/core` / `lib/shared` locations.
 
 ```bash
 bash tool/check_ai_snapshot_freshness.sh
-bash tool/check_ai_snapshot_freshness.sh --strict-head   # CI optional: metadata git_head must match HEAD
+bash tool/check_ai_snapshot_freshness.sh --strict-head   # CI optional: source git_head must match HEAD (or HEAD^ for a metadata-only snapshot commit)
 ```
 
 ## Refresh

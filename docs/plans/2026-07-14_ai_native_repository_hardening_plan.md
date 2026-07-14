@@ -389,7 +389,9 @@ ai_snapshot:
    reports are excluded only when [`ai/reports/README.md`](../../ai/reports/README.md) labels them historical.
 2. Fail if any active snapshot lacks required metadata keys.
 3. Fail if `git_head` in metadata differs from current `git rev-parse HEAD`
-   when `--strict-head` passed (CI optional; local default off).
+   when `--strict-head` passed (CI optional; local default off). A committed
+   snapshot-only metadata refresh may retain its immediate parent as the source
+   revision, because the snapshot describes the repository it inspected.
 4. Fail if any `canon_links` path missing on disk.
 
 ##### T2 — Wire
