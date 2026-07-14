@@ -41,6 +41,8 @@ T1/T2 coding tasks after [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight
 
 ## Verification mapping
 
+When any `.dart` file changed: run format **before finish** (mandatory) — prefer `./bin/format`.
+
 | Manual command | Repo command |
 | --- | --- |
 | `dart format .` | `./bin/format` or `./bin/format --changed` |

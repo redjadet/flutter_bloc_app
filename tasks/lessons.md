@@ -21,6 +21,43 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-14 - Format Dart before task finish
+
+- What went wrong:
+  Agents could finish Dart-touching tasks without running format, leaving style
+  drift for the operator or CI.
+- How it was fixed:
+  Operator preference: after any `.dart` change, execute `./bin/format` (or
+  `dart format .`) before claiming done. Encoded in durable prefs, always-on
+  `agent-execution`, finish gate, and delivery-workflow finish steps.
+- Pattern:
+  Format is a closeout gate, not an optional nicety.
+- Preventive rule:
+  `.dart` changed → `./bin/format` before finish/report.
+- Evidence or affected files:
+  `docs/agent_kb/operator_preferences_durable.md`,
+  `docs/agent_kb/legibility_and_finish_gate.md`,
+  `tool/agent_host_templates/cursor/rules/agent-execution.mdc`,
+  `tool/agent_host_templates/shared/skills/agents-delivery-workflow/SKILL.md`,
+  `AGENTS.md`
+
+### 2026-07-14 - Coverage pump must keep SyncStatusCubit
+
+- What went wrong:
+  `routes_core_part_coverage_test` re-pumped settings QA extras without
+  `MultiBlocProvider`, so `SyncDiagnosticsSection` threw
+  `ProviderNotFoundException` for `SyncStatusCubit` (and Column overflowed).
+- How it was fixed:
+  Shared `_coveragePumpTree` with Theme/Locale/Sync providers for both pumps;
+  wrap extras in `SingleChildScrollView` + `mainAxisSize: min`.
+- Pattern:
+  Second `pumpWidget` that rebuilds a subtree still needs the same app-scoped
+  cubits the production widget tree assumes.
+- Preventive rule:
+  Re-pump settings/QA widgets with `SyncStatusCubit` (and peers) provided.
+- Evidence or affected files:
+  `apps/mobile/test/app/router/routes_core_part_coverage_test.dart`
+
 ### 2026-07-13 - Regenerable outputs stay gitignored
 
 - What went wrong:

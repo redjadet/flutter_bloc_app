@@ -75,7 +75,7 @@ Never fabricate verification results.
 
 - Requirement implemented; existing architecture preserved
 - Smallest practical diff; no duplicated logic
-- `./bin/format` or `./bin/format --changed` when Dart touched
+- **Mandatory when any `.dart` file changed:** execute `./bin/format` (preferred) or `dart format .` before claiming done — include format in Verification; do not skip as “will format later”
 - `./tool/analyze.sh` when Dart touched
 - Tests per [`testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) or `Tests: N/A — reason`
 - Cross-platform behavior preserved when shared UI/platform code touched

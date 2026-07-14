@@ -80,6 +80,7 @@ Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/age
 - Git / branch / PR / worktree actions — [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md); inspect state first and preserve user work.
 - Destructive/external side effects: confirm same turn; list affected items first.
 - Coding reports: Files Changed + Follow-up Actions.
+- After `.dart` changes: `./bin/format` (or `dart format .`) before finish — [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md) § Validation.
 - Repeated failure ⇒ repo capability — [`docs/agent_knowledge_base.md`](docs/agent_knowledge_base.md) § Missing Capability Loop.
 - Host maintain: `agent-maintain preflight` / `agent-maintain closeout` — [`docs/agent_kb/host_maintenance_automation.md`](docs/agent_kb/host_maintenance_automation.md), [`docs/ai/harness_auto_maintenance.md`](docs/ai/harness_auto_maintenance.md).
 - Verified reusable agent conclusion → owning doc / [`tasks/lessons.md`](tasks/lessons.md); never `## Learned *` here — [`docs/agent_kb/operator_preferences_durable.md`](docs/agent_kb/operator_preferences_durable.md).

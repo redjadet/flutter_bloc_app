@@ -32,6 +32,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 
 ## Validation
 
+- **Dart format before finish:** After any task that changed `.dart` files, run `./bin/format` (preferred; git-aware wrapper for `dart format`) or `dart format .` **before** claiming done / closeout report. Do not leave format drift for the user or CI. See [`legibility_and_finish_gate.md`](legibility_and_finish_gate.md) § Definition of done.
 - Fix failures in product code/DI/config first; do not "pass" checks by weakening scripts or validators. Change scripts only for demonstrated false positives.
 - Extend preflight checks when dependency/codegen drift appears before full builds break (see `./bin/integration_preflight` and delivery-checklist dependency preflight).
 - **Web/browser:** `integration_test` does not run on web; use `./bin/integration_preflight` with `INTEGRATION_PREFLIGHT_WEB_DEVICE=chrome` — [`agents_quick_reference.md`](../agents_quick_reference.md).

@@ -11,6 +11,7 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
 - **Safety:** destructive/external side effects require current-turn confirmation after listing affected items.
 - **Prove:** plan → implement end-to-end → verify → report proof; narrowest honest validation lane.
+- **Format:** after any `.dart` change, run `./bin/format` (or `dart format .`) before finish/closeout — not optional.
 - **Host maintain (agents run):** start → `./bin/agent-maintain preflight --intent "<task goal>"`; before finish → `./bin/agent-maintain closeout`; after `tool/agent_host_templates/**` → `./bin/agent-maintain after-host-edit` same turn. Policy: `docs/agent_kb/host_maintenance_automation.md`.
 - **Report:** coding-task closeout includes Files Changed and Follow-up Actions.
 - **Operating manual:** T1/T2 coding → `docs/ai/agent_operating_manual.md`; closeout tiers → `docs/agent_kb/legibility_and_finish_gate.md`.
