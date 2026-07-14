@@ -23,24 +23,12 @@ upstream packages ship a stable FFI fix for current iOS 26 simulator runtimes.
 
 ---
 
-## 2. [Updated 2026-07] FlutterFire `FirebasePlugin` missing (web / dart2wasm)
+## 2. [Resolved 2026-07] FlutterFire `FirebasePlugin` missing (web / dart2wasm)
 
-**Symptom:** `flutter build web` (including CI `deploy_web.yml`) fails with
-`Type 'FirebasePlugin' not found` across FlutterFire plugins (e.g.
-`firebase_messaging`, `firebase_auth`, `cloud_firestore`).
-
-**Root cause:** App-facing plugins were published renaming
-`FirebasePluginPlatform` → `FirebasePlugin`, but
-`firebase_core_platform_interface` latest (`7.1.0`) still only exports
-`FirebasePluginPlatform`. Upstream trackers:
-[flutterfire#18437](https://github.com/firebase/flutterfire/issues/18437),
-[flutterfire#18438](https://github.com/firebase/flutterfire/issues/18438).
-
-**Current workaround:** Cap / override Firebase packages to the last-good
-set (messaging `16.4.1`, auth `6.5.4`, core `4.11.0`, etc.) in
-`apps/mobile/pubspec.yaml`, `packages/auth/pubspec.yaml`, root
-`dependency_overrides`, and Renovate `allowedVersions`. Revisit when
-`firebase_core_platform_interface` publishes `FirebasePlugin`.
+Fixed upstream in [flutterfire#18437](https://github.com/firebase/flutterfire/issues/18437)
+(`firebase_core_platform_interface` 8.0.0 + republished plugins; `firebase_core_web`
+3.9.1). Removed root `dependency_overrides` and Renovate `allowedVersions` holds;
+mobile/auth pubspecs use the fixed wave (`firebase_core ^4.12.1`, etc.).
 
 ---
 
