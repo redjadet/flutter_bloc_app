@@ -274,7 +274,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: cloud_firestore
       sha256: f0dba6cedc1e1c84bb811c32ce1343cde4f1aa796dc4b5d00344e16a5342aed0
@@ -298,7 +298,7 @@ packages:
     source: hosted
     version: "5.6.0"
   cloud_functions:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: cloud_functions
       sha256: "94ed08514607ac591e92b9aab1da67e3c8d99c0a7d0b40d096c62843f026cd52"
@@ -610,7 +610,7 @@ packages:
     source: hosted
     version: "0.9.3+5"
   firebase_analytics:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_analytics
       sha256: "1c46136d9226e7e070013582097d997248a34cf94856c7e95f4fdf346bf4a397"
@@ -634,7 +634,7 @@ packages:
     source: hosted
     version: "0.6.1+9"
   firebase_app_check:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_app_check
       sha256: "9d5c79d382a8b87cc0d899294a5234a9f0d15125cd1c97c45ca2faeca6c62918"
@@ -658,7 +658,7 @@ packages:
     source: hosted
     version: "0.2.5"
   firebase_auth:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_auth
       sha256: "7996a49c4b4054573eac9124c1c412095ae1406ca367bd2373de1ad2eaba04b8"
@@ -690,7 +690,7 @@ packages:
     source: hosted
     version: "6.2.3"
   firebase_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_core
       sha256: d2625088d8f8836a7a74a7eb94a5372d70ad88382602ba2dcc02805c294d0d16
@@ -714,7 +714,7 @@ packages:
     source: hosted
     version: "3.9.0"
   firebase_crashlytics:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_crashlytics
       sha256: "2d9c791abef1cfd66c2572f5a4e172aa9f43476961af49742b1511dd327611df"
@@ -730,7 +730,7 @@ packages:
     source: hosted
     version: "3.8.24"
   firebase_database:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_database
       sha256: "3b21cb85159ca73ac8f19da2d54952f729dae5a9ad97b0704069cdf4360d3044"
@@ -754,7 +754,7 @@ packages:
     source: hosted
     version: "0.2.7+10"
   firebase_messaging:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_messaging
       sha256: ce21a510e5a9aed67a0404476981e19ec0361a0301eeba547dc93dc2e7dec99a
@@ -778,7 +778,7 @@ packages:
     source: hosted
     version: "4.2.1"
   firebase_remote_config:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_remote_config
       sha256: "6f310b2dfbb84d781992ac5e4be741be5606c3e971741517869b21099a1a82b0"
@@ -802,7 +802,7 @@ packages:
     source: hosted
     version: "1.10.10"
   firebase_storage:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: firebase_storage
       sha256: f732bbcd82d21cfbe49b6fe5f4c50334f5f3660a151f004f58da388f8e39e6d3

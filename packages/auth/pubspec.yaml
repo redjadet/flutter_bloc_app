@@ -10,7 +10,8 @@ environment:
 dependencies:
   core:
     path: ../core
-  firebase_auth: ^6.5.4
+  # Hold below FlutterFire FirebasePlugin rename (flutterfire#18437).
+  firebase_auth: ">=6.5.4 <6.5.5"
   flutter:
     sdk: flutter
   supabase_flutter: ^2.15.4
