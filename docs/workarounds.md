@@ -23,7 +23,28 @@ upstream packages ship a stable FFI fix for current iOS 26 simulator runtimes.
 
 ---
 
-## 2. [Partial] Firebase RTDB: FlutterFire String/Map TypeError on write failure
+## 2. [Updated 2026-07] FlutterFire `FirebasePlugin` missing (web / dart2wasm)
+
+**Symptom:** `flutter build web` (including CI `deploy_web.yml`) fails with
+`Type 'FirebasePlugin' not found` across FlutterFire plugins (e.g.
+`firebase_messaging`, `firebase_auth`, `cloud_firestore`).
+
+**Root cause:** App-facing plugins were published renaming
+`FirebasePluginPlatform` → `FirebasePlugin`, but
+`firebase_core_platform_interface` latest (`7.1.0`) still only exports
+`FirebasePluginPlatform`. Upstream trackers:
+[flutterfire#18437](https://github.com/firebase/flutterfire/issues/18437),
+[flutterfire#18438](https://github.com/firebase/flutterfire/issues/18438).
+
+**Current workaround:** Cap / override Firebase packages to the last-good
+set (messaging `16.4.1`, auth `6.5.4`, core `4.11.0`, etc.) in
+`apps/mobile/pubspec.yaml`, `packages/auth/pubspec.yaml`, root
+`dependency_overrides`, and Renovate `allowedVersions`. Revisit when
+`firebase_core_platform_interface` publishes `FirebasePlugin`.
+
+---
+
+## 3. [Partial] Firebase RTDB: FlutterFire String/Map TypeError on write failure
 
 **Symptom:** When `RealtimeDatabaseTodoRepository.save` fails (e.g. permission denied, rules mismatch), the FlutterFire SDK throws `type 'String' is not a subtype of type 'Map<dynamic, dynamic>'` because native error `details` are sometimes a `String` while `platformExceptionToFirebaseException` expects a `Map`.
 
@@ -35,9 +56,9 @@ To fix the underlying write failure itself, verify: (1) Firebase Realtime Databa
 
 ---
 
-## 3. Other workarounds (template)
+## 4. Other workarounds (template)
 
-Add new workarounds below (between ## 2 and ## 3) in the same format:
+Add new workarounds below (between ## 3 and ## 4) in the same format:
 
 - **Title:** Short name of the issue.
 - **Symptom:** What fails (error message, platform, version).
