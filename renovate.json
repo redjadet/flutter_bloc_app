@@ -77,6 +77,73 @@
       "matchPackageNames": ["/^firebase_/"]
     },
     {
+      "description": "Hold FlutterFire app plugins below FirebasePlugin rename until flutterfire#18437 (platform_interface) is published",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["cloud_firestore"],
+      "allowedVersions": "<6.7.0"
+    },
+    {
+      "description": "Hold cloud_functions below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["cloud_functions"],
+      "allowedVersions": "<6.3.4"
+    },
+    {
+      "description": "Hold firebase_analytics below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_analytics"],
+      "allowedVersions": "<12.4.4"
+    },
+    {
+      "description": "Hold firebase_app_check below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_app_check"],
+      "allowedVersions": "<=0.4.5"
+    },
+    {
+      "description": "Hold firebase_auth below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_auth"],
+      "allowedVersions": "<6.5.5"
+    },
+    {
+      "description": "Hold firebase_core with pre-rename plugin set (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_core"],
+      "allowedVersions": "<4.12.0"
+    },
+    {
+      "description": "Hold firebase_crashlytics below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_crashlytics"],
+      "allowedVersions": "<5.2.5"
+    },
+    {
+      "description": "Hold firebase_database below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_database"],
+      "allowedVersions": "<12.4.5"
+    },
+    {
+      "description": "Hold firebase_messaging below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_messaging"],
+      "allowedVersions": "<16.4.2"
+    },
+    {
+      "description": "Hold firebase_remote_config below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_remote_config"],
+      "allowedVersions": "<6.5.4"
+    },
+    {
+      "description": "Hold firebase_storage below FirebasePlugin rename (flutterfire#18437)",
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["firebase_storage"],
+      "allowedVersions": "<13.4.4"
+    },
+
+    {
       "description": "Separate major version updates for BLoC packages",
       "matchManagers": ["pub"],
       "matchUpdateTypes": ["major"],
