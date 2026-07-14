@@ -39,7 +39,8 @@ void main() {
   blocTest<CertificatePinningDemoCubit, CertificatePinningDemoState>(
     'selectScenario updates scenario and resets status',
     build: buildCubit,
-    act: (final cubit) => cubit.selectScenario(MockCertificateScenario.invalidPin),
+    act: (final cubit) =>
+        cubit.selectScenario(MockCertificateScenario.invalidPin),
     expect: () => <Matcher>[
       isA<CertificatePinningDemoState>().having(
         (final s) => s.scenario,
@@ -54,7 +55,9 @@ void main() {
     build: buildCubit,
     setUp: () {
       when(() => repo.probe()).thenAnswer(
-        (final _) async => const SecureProbeSuccess(matchKind: CertificatePinMatchKind.primary),
+        (final _) async => const SecureProbeSuccess(
+          matchKind: CertificatePinMatchKind.primary,
+        ),
       );
     },
     act: (final cubit) => cubit.triggerProbe(),
@@ -65,8 +68,16 @@ void main() {
         CertificatePinningDemoStatus.validating,
       ),
       isA<CertificatePinningDemoState>()
-          .having((final s) => s.status, 'status', CertificatePinningDemoStatus.success)
-          .having((final s) => s.matchKind, 'matchKind', CertificatePinMatchKind.primary),
+          .having(
+            (final s) => s.status,
+            'status',
+            CertificatePinningDemoStatus.success,
+          )
+          .having(
+            (final s) => s.matchKind,
+            'matchKind',
+            CertificatePinMatchKind.primary,
+          ),
     ],
   );
 
@@ -75,8 +86,9 @@ void main() {
     build: buildCubit,
     setUp: () {
       when(() => repo.probe()).thenAnswer(
-        (final _) async =>
-            const SecureProbeFailure(CertificatePinningDemoPinFailure(l10nCode: 'pinMismatch')),
+        (final _) async => const SecureProbeFailure(
+          CertificatePinningDemoPinFailure(l10nCode: 'pinMismatch'),
+        ),
       );
     },
     act: (final cubit) => cubit.triggerProbe(),
@@ -87,7 +99,11 @@ void main() {
         CertificatePinningDemoStatus.validating,
       ),
       isA<CertificatePinningDemoState>()
-          .having((final s) => s.status, 'status', CertificatePinningDemoStatus.failure)
+          .having(
+            (final s) => s.status,
+            'status',
+            CertificatePinningDemoStatus.failure,
+          )
           .having((final s) => s.failure?.l10nCode, 'l10nCode', 'pinMismatch'),
     ],
   );

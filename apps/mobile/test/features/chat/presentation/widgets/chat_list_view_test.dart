@@ -156,7 +156,9 @@ void main() {
     testWidgets('should show error state when state is error', (tester) async {
       await tester.pumpWidget(
         createWidgetUnderTest(
-          initialState: const ChatListState.error(failure: ChatFailure(message: 'Network error')),
+          initialState: const ChatListState.error(
+            failure: ChatFailure(message: 'Network error'),
+          ),
         ),
       );
 
@@ -267,7 +269,9 @@ void main() {
 
       await tester.pumpWidget(
         createWidgetUnderTest(
-          initialState: const ChatListState.error(failure: ChatFailure(message: 'Network error')),
+          initialState: const ChatListState.error(
+            failure: ChatFailure(message: 'Network error'),
+          ),
         ),
       );
 

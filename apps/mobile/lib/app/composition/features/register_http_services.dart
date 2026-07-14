@@ -41,7 +41,8 @@ void registerHttpServices() {
   registerLazySingletonIfAbsent<CertificatePinValidator>(() {
     final CertificatePinningConfig config = getIt<CertificatePinningConfig>();
     final CertificatePinningLogger logger = getIt<CertificatePinningLogger>();
-    final MockCertificateScenarioController scenarios = getIt<MockCertificateScenarioController>();
+    final MockCertificateScenarioController scenarios =
+        getIt<MockCertificateScenarioController>();
     switch (config.mode) {
       case CertificatePinningMode.disabled:
         return const DisabledCertificatePinValidator();

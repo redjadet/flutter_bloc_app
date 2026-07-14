@@ -4,8 +4,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 int compareChatConversationsByUpdatedAtDesc(
   final ChatConversation a,
   final ChatConversation b,
-) =>
-    b.updatedAt.compareTo(a.updatedAt);
+) => b.updatedAt.compareTo(a.updatedAt);
 
 List<ChatConversation> sortChatConversationHistory(
   final List<ChatConversation> conversations, {

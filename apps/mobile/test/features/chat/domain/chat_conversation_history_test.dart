@@ -12,23 +12,21 @@ void main() {
     required final String id,
     required final DateTime updatedAt,
     final List<ChatMessage> messages = const <ChatMessage>[],
-  }) =>
-      ChatConversation(
-        id: id,
-        createdAt: updatedAt,
-        updatedAt: updatedAt,
-        messages: messages,
-      );
+  }) => ChatConversation(
+    id: id,
+    createdAt: updatedAt,
+    updatedAt: updatedAt,
+    messages: messages,
+  );
 
   group('sortChatConversationHistory', () {
     test('orders by updatedAt descending', () {
-      final List<ChatConversation> sorted = sortChatConversationHistory(
-        <ChatConversation>[
-          conversation(id: 'a', updatedAt: t1),
-          conversation(id: 'c', updatedAt: t3),
-          conversation(id: 'b', updatedAt: t2),
-        ],
-      );
+      final List<ChatConversation> sorted =
+          sortChatConversationHistory(<ChatConversation>[
+            conversation(id: 'a', updatedAt: t1),
+            conversation(id: 'c', updatedAt: t3),
+            conversation(id: 'b', updatedAt: t2),
+          ]);
 
       expect(sorted.map((final c) => c.id), <String>['c', 'b', 'a']);
     });
@@ -59,9 +57,7 @@ void main() {
 
       final List<ChatConversation> history = replaceChatConversation(
         next,
-        history: <ChatConversation>[
-          conversation(id: 'old', updatedAt: t1),
-        ],
+        history: <ChatConversation>[conversation(id: 'old', updatedAt: t1)],
       );
 
       expect(history.map((final c) => c.id), <String>['new', 'old']);

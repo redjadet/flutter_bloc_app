@@ -106,8 +106,7 @@ void main() {
               errorNotificationService: _FakeErrorNotificationService(),
               showBackendDisabledBanner: false,
               renderTransportDemoStrict: false,
-              chatRenderDemoBaseUrl:
-                  'https://render-chat-api.fastapicloud.dev',
+              chatRenderDemoBaseUrl: 'https://render-chat-api.fastapicloud.dev',
             ),
           ),
         ),

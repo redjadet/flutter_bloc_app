@@ -65,8 +65,8 @@ class ScapesPage extends StatelessWidget {
           body: CommonMaxWidth(
             child: BlocBuilder<ScapesCubit, ScapesState>(
               builder: (final context, final state) => switch (state) {
-                ScapesInitial() || ScapesLoading() =>
-                  const CommonLoadingWidget(),
+                ScapesInitial() ||
+                ScapesLoading() => const CommonLoadingWidget(),
                 ScapesError(:final error) => CommonErrorView(
                   message: error.message,
                   onRetry: () => context.cubit<ScapesCubit>().reload(),

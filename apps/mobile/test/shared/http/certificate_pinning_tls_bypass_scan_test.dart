@@ -11,7 +11,9 @@ void main() {
       Directory('${root.path}/../../packages'),
     ];
 
-    final RegExp bypass = RegExp(r'badCertificateCallback\s*=\s*\([^)]*\)\s*=>\s*true');
+    final RegExp bypass = RegExp(
+      r'badCertificateCallback\s*=\s*\([^)]*\)\s*=>\s*true',
+    );
 
     final List<String> offenders = <String>[];
     for (final Directory dir in scanRoots) {
@@ -22,7 +24,8 @@ void main() {
         if (entity is! File || !entity.path.endsWith('.dart')) {
           continue;
         }
-        if (entity.path.contains('.freezed.dart') || entity.path.contains('.g.dart')) {
+        if (entity.path.contains('.freezed.dart') ||
+            entity.path.contains('.g.dart')) {
           continue;
         }
         final String source = entity.readAsStringSync();

@@ -11,7 +11,8 @@ sealed class CertificatePinningDemoState with _$CertificatePinningDemoState {
   const factory CertificatePinningDemoState({
     required final CertificatePinningMode mode,
     required final MockCertificateScenario scenario,
-    @Default(CertificatePinningDemoStatus.initial) final CertificatePinningDemoStatus status,
+    @Default(CertificatePinningDemoStatus.initial)
+    final CertificatePinningDemoStatus status,
     final CertificatePinMatchKind? matchKind,
     final CertificatePinningDemoFailure? failure,
     @Default(<String>[]) final List<String> logLines,

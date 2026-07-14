@@ -36,9 +36,18 @@ void main() {
     registerHttpServices();
     registerCertificatePinningDemoServices();
 
-    expect(getIt<CertificatePinningConfig>().mode, CertificatePinningMode.disabled);
-    expect(getIt<CertificatePinValidator>(), isA<DisabledCertificatePinValidator>());
-    expect(getIt<MockCertificatePinValidator>(), isA<MockCertificatePinValidator>());
+    expect(
+      getIt<CertificatePinningConfig>().mode,
+      CertificatePinningMode.disabled,
+    );
+    expect(
+      getIt<CertificatePinValidator>(),
+      isA<DisabledCertificatePinValidator>(),
+    );
+    expect(
+      getIt<MockCertificatePinValidator>(),
+      isA<MockCertificatePinValidator>(),
+    );
     expect(getIt<SecureProbeRepository>(), isA<SecureProbeRepository>());
     expect(getIt<TriggerSecureProbe>(), isA<TriggerSecureProbe>());
     expect(getIt<SelectMockScenario>(), isA<SelectMockScenario>());

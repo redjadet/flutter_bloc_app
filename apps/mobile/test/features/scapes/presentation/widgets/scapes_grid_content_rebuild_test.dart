@@ -30,10 +30,12 @@ void main() {
     testWidgets('selector rebuilds only when selected tuple changes', (
       final WidgetTester tester,
     ) async {
-      final ScapesReady initial = const ScapesState.ready(
-        scapes: <Scape>[],
-        viewMode: ScapesViewMode.grid,
-      ) as ScapesReady;
+      final ScapesReady initial =
+          const ScapesState.ready(
+                scapes: <Scape>[],
+                viewMode: ScapesViewMode.grid,
+              )
+              as ScapesReady;
       final StreamController<ScapesState> streamController =
           StreamController<ScapesState>.broadcast();
       addTearDown(streamController.close);

@@ -91,7 +91,11 @@ abstract final class CertificatePinningConfigFactory {
     if (raw.trim().isEmpty) {
       return const <String>{};
     }
-    return raw.split(',').map((final h) => h.trim()).where((final h) => h.isNotEmpty).toSet();
+    return raw
+        .split(',')
+        .map((final h) => h.trim())
+        .where((final h) => h.isNotEmpty)
+        .toSet();
   }
 
   /// Format: `host=sha256/PIN|sha256/PIN2;host2=sha256/PIN`
@@ -125,14 +129,17 @@ abstract final class CertificatePinningConfigFactory {
   }
 
   @visibleForTesting
-  static CertificatePinningMode parseModeForTest(final String raw) => _parseMode(raw);
+  static CertificatePinningMode parseModeForTest(final String raw) =>
+      _parseMode(raw);
 
   @visibleForTesting
-  static CertificatePinHashKind parseHashKindForTest(final String raw) => _parseHashKind(raw);
+  static CertificatePinHashKind parseHashKindForTest(final String raw) =>
+      _parseHashKind(raw);
 
   @visibleForTesting
   static Set<String> parseHostsForTest(final String raw) => _parseHosts(raw);
 
   @visibleForTesting
-  static Map<String, Set<String>> parsePinsForTest(final String raw) => _parsePins(raw);
+  static Map<String, Set<String>> parsePinsForTest(final String raw) =>
+      _parsePins(raw);
 }

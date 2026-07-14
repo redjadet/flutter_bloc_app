@@ -94,9 +94,11 @@ class AiDecisionCaseDetailDto {
       caseId: caseJson['id'] as String,
       status: caseJson['status'] as String,
       createdAt: caseJson['created_at'] as String,
-      applicant: json['applicant'] as Map<String, dynamic>? ??
+      applicant:
+          json['applicant'] as Map<String, dynamic>? ??
           const <String, dynamic>{},
-      business: json['business'] as Map<String, dynamic>? ??
+      business:
+          json['business'] as Map<String, dynamic>? ??
           const <String, dynamic>{},
       loan: json['loan'] as Map<String, dynamic>? ?? const <String, dynamic>{},
       riskSignals: (json['risk_signals'] as List<dynamic>? ?? const <dynamic>[])

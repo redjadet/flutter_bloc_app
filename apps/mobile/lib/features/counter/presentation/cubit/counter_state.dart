@@ -82,8 +82,10 @@ sealed class CounterState with _$CounterState {
     CounterInitial() => CounterState.initial(data: data),
     CounterLoading() => CounterState.loading(data: data),
     CounterReady() => CounterState.ready(data: data),
-    CounterFailure(:final error) =>
-      CounterState.failure(data: data, error: error),
+    CounterFailure(:final error) => CounterState.failure(
+      data: data,
+      error: error,
+    ),
   };
 
   CounterState asInitial() => CounterState.initial(data: data);

@@ -18,7 +18,9 @@ Future<void> main(List<String> args) async {
   final home = Platform.environment['HOME'] ?? '';
   final pluginCacheRoot = home.isEmpty ? '' : '$home/.cursor/plugins/cache';
   if (pluginCacheRoot.isEmpty || !await Directory(pluginCacheRoot).exists()) {
-    stderr.writeln('vendor plugin inventory: no plugin cache at $pluginCacheRoot');
+    stderr.writeln(
+      'vendor plugin inventory: no plugin cache at $pluginCacheRoot',
+    );
     exitCode = 2;
     return;
   }
@@ -33,7 +35,10 @@ Future<void> main(List<String> args) async {
   final skills = <Map<String, Object?>>[];
   final rootDir = Directory(pluginCacheRoot);
 
-  await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+  await for (final entity in rootDir.list(
+    recursive: true,
+    followLinks: false,
+  )) {
     if (entity is! File) continue;
     if (!entity.path.endsWith('${Platform.pathSeparator}SKILL.md')) continue;
     if (_isIgnoredPath(entity.path)) continue;
@@ -83,7 +88,8 @@ Future<void> main(List<String> args) async {
   final plugins = <Map<String, Object?>>[];
   for (final entry in byPlugin.entries) {
     final slug = _pluginSlug(entry.key);
-    final tops = (entry.value['topSkills']! as List).cast<Map<String, Object?>>();
+    final tops = (entry.value['topSkills']! as List)
+        .cast<Map<String, Object?>>();
     tops.sort(
       (a, b) =>
           (b['approxTokens']! as int).compareTo(a['approxTokens']! as int),
@@ -101,8 +107,7 @@ Future<void> main(List<String> args) async {
   }
 
   plugins.sort(
-    (a, b) =>
-        (b['approxTokens']! as int).compareTo(a['approxTokens']! as int),
+    (a, b) => (b['approxTokens']! as int).compareTo(a['approxTokens']! as int),
   );
 
   final totalTokens = plugins.fold<int>(

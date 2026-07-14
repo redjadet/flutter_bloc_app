@@ -323,7 +323,7 @@ void main() {
               onLoadPlatformInfo: () {},
               onOpenWebsocket: () {},
               onOpenRealtimeMarket: () {},
-            onOpenCertificatePinningDemo: () {},
+              onOpenCertificatePinningDemo: () {},
               onOpenSearch: () {},
               onOpenTodoList: () {},
               onOpenProfile: () {},

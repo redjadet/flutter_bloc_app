@@ -166,7 +166,10 @@ void main() {
               BlocProvider<LocaleCubit>.value(value: localeCubit),
               BlocProvider<SyncStatusCubit>.value(value: syncCubit),
             ],
-            child: SettingsPage(appInfoRepository: appInfoRepo, showQaExtras: false),
+            child: SettingsPage(
+              appInfoRepository: appInfoRepo,
+              showQaExtras: false,
+            ),
           ),
         ),
       );

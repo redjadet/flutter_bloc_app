@@ -56,23 +56,20 @@ mixin _ChatCubitHelpers on _ChatCubitCore {
   List<ChatConversation> _replaceConversation(
     final ChatConversation conversation, {
     final List<ChatConversation>? history,
-  }) =>
-      replaceChatConversation(
-        conversation,
-        history: history ?? _state.history,
-      );
+  }) => replaceChatConversation(
+    conversation,
+    history: history ?? _state.history,
+  );
 
   List<ChatConversation> _sortHistory(
     final List<ChatConversation> conversations, {
     final bool clone = true,
-  }) =>
-      sortChatConversationHistory(conversations, clone: clone);
+  }) => sortChatConversationHistory(conversations, clone: clone);
 
   ChatConversation? _conversationById(
     final List<ChatConversation> conversations,
     final String? id,
-  ) =>
-      chatConversationById(conversations, id);
+  ) => chatConversationById(conversations, id);
 
   ChatConversation _currentActiveConversation() {
     final ChatConversation? existing = _conversationById(

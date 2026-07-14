@@ -25,7 +25,10 @@ class _CountingAdapter implements HttpClientAdapter {
 void main() {
   test('RetryInterceptor does not retry badCertificate', () async {
     final Dio dio = Dio(
-      BaseOptions(baseUrl: 'https://example.com', validateStatus: (final _) => true),
+      BaseOptions(
+        baseUrl: 'https://example.com',
+        validateStatus: (final _) => true,
+      ),
     );
     final _CountingAdapter adapter = _CountingAdapter();
     dio.httpClientAdapter = adapter;
@@ -34,7 +37,11 @@ void main() {
     await expectLater(
       () => dio.get<void>('/pin'),
       throwsA(
-        isA<DioException>().having((final e) => e.type, 'type', DioExceptionType.badCertificate),
+        isA<DioException>().having(
+          (final e) => e.type,
+          'type',
+          DioExceptionType.badCertificate,
+        ),
       ),
     );
     expect(adapter.fetchCount, 1);

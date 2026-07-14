@@ -15,14 +15,15 @@ import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('ChatPage shows backend banner when showBackendDisabledBanner is true', (
-    final tester,
-  ) async {
-    await _pumpChatPage(tester, showBackendDisabledBanner: true);
+  testWidgets(
+    'ChatPage shows backend banner when showBackendDisabledBanner is true',
+    (final tester) async {
+      await _pumpChatPage(tester, showBackendDisabledBanner: true);
 
-    expect(find.byType(BackendDisabledBanner), findsOneWidget);
-    expect(find.text('Backend disabled'), findsOneWidget);
-  });
+      expect(find.byType(BackendDisabledBanner), findsOneWidget);
+      expect(find.text('Backend disabled'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'ChatPage hides backend banner when showBackendDisabledBanner is false',

@@ -46,7 +46,13 @@ void main() {
       );
 
       cubit.emit(
-        CounterState.ready(data: CounterViewData(count: 2, lastChanged: DateTime.now(), countdownSeconds: 5)),
+        CounterState.ready(
+          data: CounterViewData(
+            count: 2,
+            lastChanged: DateTime.now(),
+            countdownSeconds: 5,
+          ),
+        ),
       );
       await tester.pump();
 
@@ -62,7 +68,13 @@ void main() {
       );
 
       cubit.emit(
-        CounterState.ready(data: CounterViewData(count: 0, lastChanged: DateTime.now(), countdownSeconds: 5)),
+        CounterState.ready(
+          data: CounterViewData(
+            count: 0,
+            lastChanged: DateTime.now(),
+            countdownSeconds: 5,
+          ),
+        ),
       );
       await tester.pump();
 

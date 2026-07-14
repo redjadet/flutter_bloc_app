@@ -22,33 +22,45 @@ Uint8List _loadFixture() {
 }
 
 void main() {
-  const String expectedSpkiPin = 'sha256/3WbCnESgETyXhgHli8dpDKl0ag/VucLI5+q47FtiBr0=';
-  const String expectedLeafPin = 'sha256/Ym6BE+j1dGdMyzVYXqVn9XBUo5/wCgjU5XUrzmUw3Os=';
+  const String expectedSpkiPin =
+      'sha256/3WbCnESgETyXhgHli8dpDKl0ag/VucLI5+q47FtiBr0=';
+  const String expectedLeafPin =
+      'sha256/Ym6BE+j1dGdMyzVYXqVn9XBUo5/wCgjU5XUrzmUw3Os=';
 
   group('CertificateSpkiExtractor', () {
     test('extracts SPKI matching openssl pkey pin', () {
       final Uint8List cert = _loadFixture();
       final Uint8List? spki = CertificateSpkiExtractor.extract(cert);
       expect(spki, isNotNull);
-      final String pin = CertificatePinFormatter.fromSha256Bytes(sha256.convert(spki!).bytes);
+      final String pin = CertificatePinFormatter.fromSha256Bytes(
+        sha256.convert(spki!).bytes,
+      );
       expect(pin, expectedSpkiPin);
     });
 
     test('returns null for garbage DER', () {
-      expect(CertificateSpkiExtractor.extract(Uint8List.fromList(<int>[1, 2, 3])), isNull);
+      expect(
+        CertificateSpkiExtractor.extract(Uint8List.fromList(<int>[1, 2, 3])),
+        isNull,
+      );
     });
   });
 
   group('CertificatePinFormatter', () {
     test('accepts canonical sha256/base64 of 32 bytes', () {
-      final String pin = CertificatePinFormatter.fromSha256Bytes(List<int>.filled(32, 1));
+      final String pin = CertificatePinFormatter.fromSha256Bytes(
+        List<int>.filled(32, 1),
+      );
       expect(CertificatePinFormatter.isValidFormat(pin), isTrue);
     });
 
     test('rejects malformed pins', () {
       expect(CertificatePinFormatter.isValidFormat('sha256/'), isFalse);
       expect(CertificatePinFormatter.isValidFormat('md5/abc'), isFalse);
-      expect(CertificatePinFormatter.isValidFormat('sha256/not-base64!!!'), isFalse);
+      expect(
+        CertificatePinFormatter.isValidFormat('sha256/not-base64!!!'),
+        isFalse,
+      );
     });
   });
 
@@ -77,7 +89,9 @@ void main() {
         throwsStateError,
       );
 
-      final String pin = CertificatePinFormatter.fromSha256Bytes(List<int>.filled(32, 2));
+      final String pin = CertificatePinFormatter.fromSha256Bytes(
+        List<int>.filled(32, 2),
+      );
       expect(
         () => CertificatePinningConfig(
           mode: CertificatePinningMode.real,
@@ -92,13 +106,17 @@ void main() {
 
     test('defaults pinHashKind to spki', () {
       expect(
-        CertificatePinningConfig(mode: CertificatePinningMode.disabled).pinHashKind,
+        CertificatePinningConfig(
+          mode: CertificatePinningMode.disabled,
+        ).pinHashKind,
         CertificatePinHashKind.spki,
       );
     });
 
     test('normalizes host case for allowedHosts and pins', () {
-      final String pin = CertificatePinFormatter.fromSha256Bytes(List<int>.filled(32, 2));
+      final String pin = CertificatePinFormatter.fromSha256Bytes(
+        List<int>.filled(32, 2),
+      );
       final CertificatePinningConfig config = CertificatePinningConfig(
         mode: CertificatePinningMode.real,
         allowedHosts: <String>{'API.Example.COM'},
@@ -112,7 +130,9 @@ void main() {
     });
 
     test('real mode rejects web', () {
-      final String pin = CertificatePinFormatter.fromSha256Bytes(List<int>.filled(32, 3));
+      final String pin = CertificatePinFormatter.fromSha256Bytes(
+        List<int>.filled(32, 3),
+      );
       expect(
         () => CertificatePinningConfig(
           mode: CertificatePinningMode.real,
@@ -173,18 +193,19 @@ void main() {
     });
 
     test('matches backup SPKI pin', () async {
-      final RealCertificatePinValidator backupValidator = RealCertificatePinValidator(
-        config: CertificatePinningConfig(
-          mode: CertificatePinningMode.real,
-          allowedHosts: <String>{'api.example.com'},
-          sha256PinsByHost: <String, Set<String>>{
-            'api.example.com': <String>{
-              'sha256/${base64Encode(List<int>.filled(32, 9))}',
-              expectedSpkiPin,
-            },
-          },
-        ),
-      );
+      final RealCertificatePinValidator backupValidator =
+          RealCertificatePinValidator(
+            config: CertificatePinningConfig(
+              mode: CertificatePinningMode.real,
+              allowedHosts: <String>{'api.example.com'},
+              sha256PinsByHost: <String, Set<String>>{
+                'api.example.com': <String>{
+                  'sha256/${base64Encode(List<int>.filled(32, 9))}',
+                  expectedSpkiPin,
+                },
+              },
+            ),
+          );
       final CertificatePinResult result = await backupValidator.validate(
         host: 'api.example.com',
         port: 443,
@@ -227,16 +248,17 @@ void main() {
     });
 
     test('leafCertificate kind accepts leaf pin', () async {
-      final RealCertificatePinValidator leafValidator = RealCertificatePinValidator(
-        config: CertificatePinningConfig(
-          mode: CertificatePinningMode.real,
-          pinHashKind: CertificatePinHashKind.leafCertificate,
-          allowedHosts: <String>{'api.example.com'},
-          sha256PinsByHost: <String, Set<String>>{
-            'api.example.com': <String>{expectedLeafPin},
-          },
-        ),
-      );
+      final RealCertificatePinValidator leafValidator =
+          RealCertificatePinValidator(
+            config: CertificatePinningConfig(
+              mode: CertificatePinningMode.real,
+              pinHashKind: CertificatePinHashKind.leafCertificate,
+              allowedHosts: <String>{'api.example.com'},
+              sha256PinsByHost: <String, Set<String>>{
+                'api.example.com': <String>{expectedLeafPin},
+              },
+            ),
+          );
       final CertificatePinResult result = await leafValidator.validate(
         host: 'api.example.com',
         port: 443,
@@ -312,19 +334,24 @@ void main() {
     });
 
     test('deterministic scenarios', () async {
-      final Map<MockCertificateScenario, Type> expected = <MockCertificateScenario, Type>{
-        MockCertificateScenario.validPrimaryPin: CertificatePinSuccess,
-        MockCertificateScenario.validBackupPin: CertificatePinSuccess,
-        MockCertificateScenario.invalidPin: PinMismatchFailure,
-        MockCertificateScenario.missingPin: MissingPinFailure,
-        MockCertificateScenario.unsupportedHost: UnsupportedHostFailure,
-        MockCertificateScenario.expiredCertificate: CertificateExpiredFailure,
-        MockCertificateScenario.malformedCertificate: CertificateMalformedFailure,
-        MockCertificateScenario.networkUnavailable: CertificateNetworkUnavailableFailure,
-        MockCertificateScenario.allPinsRejected: PinMismatchFailure,
-      };
+      final Map<MockCertificateScenario, Type> expected =
+          <MockCertificateScenario, Type>{
+            MockCertificateScenario.validPrimaryPin: CertificatePinSuccess,
+            MockCertificateScenario.validBackupPin: CertificatePinSuccess,
+            MockCertificateScenario.invalidPin: PinMismatchFailure,
+            MockCertificateScenario.missingPin: MissingPinFailure,
+            MockCertificateScenario.unsupportedHost: UnsupportedHostFailure,
+            MockCertificateScenario.expiredCertificate:
+                CertificateExpiredFailure,
+            MockCertificateScenario.malformedCertificate:
+                CertificateMalformedFailure,
+            MockCertificateScenario.networkUnavailable:
+                CertificateNetworkUnavailableFailure,
+            MockCertificateScenario.allPinsRejected: PinMismatchFailure,
+          };
 
-      for (final MapEntry<MockCertificateScenario, Type> entry in expected.entries) {
+      for (final MapEntry<MockCertificateScenario, Type> entry
+          in expected.entries) {
         controller.setScenario(entry.key);
         final CertificatePinResult result = await validator.validate(
           host: 'demo.example.com',
@@ -374,7 +401,8 @@ void main() {
 
   group('DisabledCertificatePinValidator', () {
     test('always succeeds', () async {
-      const DisabledCertificatePinValidator validator = DisabledCertificatePinValidator();
+      const DisabledCertificatePinValidator validator =
+          DisabledCertificatePinValidator();
       final CertificatePinResult result = await validator.validate(
         host: 'any',
         port: 443,

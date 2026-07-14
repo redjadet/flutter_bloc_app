@@ -70,14 +70,18 @@ final class RealCertificatePinValidator implements CertificatePinValidator {
       return const CertificatePinFailureResult(CertificateMalformedFailure());
     }
 
-    final String actual = CertificatePinFormatter.fromSha256Bytes(sha256.convert(material).bytes);
+    final String actual = CertificatePinFormatter.fromSha256Bytes(
+      sha256.convert(material).bytes,
+    );
 
     final List<String> ordered = pins.toList(growable: false);
     for (var i = 0; i < ordered.length; i++) {
       final String expected = CertificatePinFormatter.canonicalize(ordered[i]);
       if (CertificatePinComparator.equalStrings(actual, expected)) {
         return CertificatePinSuccess(
-          matchKind: i == 0 ? CertificatePinMatchKind.primary : CertificatePinMatchKind.backup,
+          matchKind: i == 0
+              ? CertificatePinMatchKind.primary
+              : CertificatePinMatchKind.backup,
         );
       }
     }
