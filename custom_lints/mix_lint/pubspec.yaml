@@ -8,12 +8,12 @@ environment:
 resolution: workspace
 
 dependencies:
-  analysis_server_plugin: 0.3.19
+  analysis_server_plugin: ^0.3.20
   analyzer: 10.0.2
-  analyzer_plugin: 0.14.13
+  analyzer_plugin: ^0.14.14
 
 dev_dependencies:
-  analyzer_testing: 0.3.3
+  analyzer_testing: ^0.3.4
   test: ^1.31.0
   test_reflective_loader: ^0.4.0
   dart_code_metrics_presets: ^2.32.0
