@@ -17,7 +17,7 @@ dependencies:
     sdk: flutter
   flutter_cache_manager: ^3.4.1
   flutter_screenutil: ^5.9.3
-  flutter_svg: ^2.2.0
+  flutter_svg: ^2.3.0
   responsive_framework: ^1.5.1
   mix: ^2.1.0
   skeletonizer: ^2.1.3

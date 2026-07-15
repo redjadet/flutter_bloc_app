@@ -20,7 +20,7 @@ workspace:
   - custom_lints/mix_lint
 
 dev_dependencies:
-  melos: ^7.0.0
+  melos: ^7.8.1
 
 dependency_overrides:
   # json_serializable 6.14 + mix_lint 2.x / file_length_lint (override unifies analyzer graph).
