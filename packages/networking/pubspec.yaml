@@ -10,7 +10,7 @@ environment:
 dependencies:
   app_shared_flutter:
     path: ../app_shared_flutter
-  connectivity_plus: ^7.2.0
+  connectivity_plus: ^7.3.0
   core:
     path: ../core
   crypto: ^3.0.7
