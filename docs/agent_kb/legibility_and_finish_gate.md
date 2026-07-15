@@ -52,24 +52,19 @@ Last 20% builds trust. Before report/commit, ask when suitable:
 - Breakage impact: what fails first, blast radius, detection signal, and safe recovery path.
 - Drift: intent/spec/docs still match implementation after the patch.
 
-## Report Shape
+## Closeout response shape (SAFETY-REPORT)
 
-For coding tasks, start with outcome/proof and include:
-
-- Files Changed: each changed file plus one-line modification summary.
-- Follow-up Actions: required next steps, manual actions, or `None`.
-
-Keep unrelated observations separate from the change summary.
-
-## Closeout response shape
+Owner: [`agent_safety_contracts.md`](agent_safety_contracts.md) § SAFETY-REPORT.
 
 For coding tasks after implementation, include:
 
 - **Files Changed** — each changed file plus one-line modification summary
-- **Follow-up Actions** — required next steps, manual actions, or `None`
 - **Verification** — command + pass/fail/skipped/N/A per lane (format, analyze, tests)
+- **Known limitations** — residual risk, skipped lanes, or manual blockers; or `None`
+- **Follow-up Actions** — required next steps, manual actions, or `None`
+- **Destructive/external actions** — `No destructive or external actions were performed` unless a same-turn approved action is named with its approval
 
-Never fabricate verification results.
+Keep unrelated observations separate from the change summary. Never fabricate verification results.
 
 ## Definition of done
 

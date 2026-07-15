@@ -69,7 +69,7 @@ After cold-start ladder (see § Context Navigation Ladder): this doc → [`agent
 
 ## Adaptive Execution
 
-Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md)
+Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md); safety contracts: [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md)
 
 Required anchors (kept here for mechanical checks):
 

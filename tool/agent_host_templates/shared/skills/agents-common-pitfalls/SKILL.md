@@ -28,8 +28,11 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | Auth/PII/payments without security pass | `RISK-SECURITY-GAP` | `review/security_checklist.md` |
 | Commit or print secrets | `RISK-SECRET-LEAK` | `check_tracked_secret_literals.sh` |
 | Patch Flutter/Dart SDK or core framework files | `RISK-FLUTTER-SDK-MUTATION` | Treat `/Users/ilkersevim/Flutter_SDK/flutter/**` as read-only; fix repo code or upgrade toolchain via docs |
-| `rm`, deploy, or external mutation without ask | `RISK-DESTRUCTIVE-SIDE-EFFECT` | List affected items; current-turn confirm |
-| Reuse stale checklist / partial proof | `RISK-VALIDATION-SHORTCUT` | `--no-reuse`; scorecard gates |
+| `rm`, deploy, or external mutation without ask | `RISK-DESTRUCTIVE-SIDE-EFFECT` | [`agent_safety_contracts.md`](../../../../../docs/agent_kb/agent_safety_contracts.md) `SAFETY-02`; same-turn approval |
+| Expand beyond write-set or unrelated cleanup | `RISK-SCOPE-CREEP` | [`agent_safety_contracts.md`](../../../../../docs/agent_kb/agent_safety_contracts.md) `SAFETY-01` |
+| Guess missing path/branch/env/resource | `RISK-MISSING-TARGET` | [`agent_safety_contracts.md`](../../../../../docs/agent_kb/agent_safety_contracts.md) `SAFETY-01`; stop and ask |
+| Commit/push/PR/merge/stash without request | `RISK-UNAPPROVED-GIT` | [`agent_safety_contracts.md`](../../../../../docs/agent_kb/agent_safety_contracts.md) `SAFETY-03` |
+| Reuse stale checklist / partial proof | `RISK-VALIDATION-SHORTCUT` | `--no-reuse`; scorecard gates; `SAFETY-REPORT` |
 | Direct `Hive.openBox` / ad-hoc Dio | `RISK-ARCH-LAYER` | DI entrypoints; `agents-canonical-rules-platform` |
 | `print` instead of `AppLogger` | `RISK-UI-REGRESSION` | logging standards |
 | Hardcoded colors/strings | `RISK-UI-REGRESSION` | `DESIGN.md`; `AppTheme` / l10n |

@@ -4,7 +4,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 ## About this catalog
 
-Catalog of validation scripts in `tool/`. **102** `check_*.sh` scripts on disk
+Catalog of validation scripts in `tool/`. **103** `check_*.sh` scripts on disk
 excluding `check_helpers.sh`; **77** in `./bin/checklist` (`CHECK_SCRIPTS`) —
 see inventory map in
 [`catalog.md`](catalog.md#inventory-map-disk-vs-docs) and auto list in

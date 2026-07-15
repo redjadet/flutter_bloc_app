@@ -568,4 +568,46 @@ bash tool/check_ai_change_contract.sh --self-test >/dev/null
 echo "fixtures|check_repomix_contract|help"
 bash tool/check_repomix_contract.sh --help >/dev/null
 
+echo "fixtures|check_agent_safety_contracts|help"
+bash tool/check_agent_safety_contracts.sh --help >/dev/null
+
+echo "fixtures|check_agent_safety_contracts|current"
+bash tool/check_agent_safety_contracts.sh >/dev/null
+
+echo "fixtures|check_agent_safety_contracts|negative_owner"
+tmp_owner_doc="$(mktemp)"
+printf '# Incomplete safety owner\n\nSAFETY-01\n' >"$tmp_owner_doc"
+set +e
+  safety_bad_output="$(bash tool/check_agent_safety_contracts.sh --owner-path "$tmp_owner_doc" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_owner_doc"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected agent safety contracts check to fail on incomplete owner" >&2
+  exit 1
+fi
+if ! grep -q -- "SAFETY-REPORT" <<<"$safety_bad_output"; then
+  echo "❌ fixtures failed: agent safety contracts failure missing SAFETY-REPORT token" >&2
+  echo "$safety_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_ai_failure_risk_register|negative_scope_creep"
+tmp_risk_scope_doc="$(mktemp)"
+printf '# Incomplete risk doc\n\nRISK-ARCH-LAYER\n' >"$tmp_risk_scope_doc"
+set +e
+  risk_scope_bad_output="$(bash tool/check_ai_failure_risk_register.sh --path "$tmp_risk_scope_doc" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_risk_scope_doc"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected AI failure risk register check to fail on missing RISK-SCOPE-CREEP" >&2
+  exit 1
+fi
+if ! grep -q -- "RISK-SCOPE-CREEP" <<<"$risk_scope_bad_output"; then
+  echo "❌ fixtures failed: AI failure risk register failure missing RISK-SCOPE-CREEP token" >&2
+  echo "$risk_scope_bad_output" >&2
+  exit 1
+fi
+
 echo "fixtures|done"

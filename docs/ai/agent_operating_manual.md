@@ -37,6 +37,7 @@ T1/T2 coding tasks after [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight
 | Security | [`security_and_secrets.md`](../security_and_secrets.md), [`review/security_checklist.md`](../review/security_checklist.md) |
 | Git, branches, PRs, and worktrees | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
 | Stop conditions | [`governance.md`](governance.md) |
+| Safety contracts / closeout proof | [`agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) (`SAFETY-01..06`, `SAFETY-REPORT`) |
 | Response / DoD | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) |
 
 ## Verification mapping

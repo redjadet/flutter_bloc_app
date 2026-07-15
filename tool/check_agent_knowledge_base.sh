@@ -203,7 +203,17 @@ for path in "${cwd_sensitive_run_docs[@]}"; do
   require_not_contains "$path" 'cd apps/mobile && flutter run -t apps/mobile/lib/'
 done
 require_contains "docs/agent_kb/legibility_and_finish_gate.md" "Planning response shape"
+require_contains "docs/agent_kb/legibility_and_finish_gate.md" "SAFETY-REPORT"
 require_line_budget "docs/agent_kb/legibility_and_finish_gate.md" 120
+require_file "docs/agent_kb/agent_safety_contracts.md"
+require_line_budget "docs/agent_kb/agent_safety_contracts.md"
+require_contains "AGENTS.md" "agent_safety_contracts.md"
+require_contains "docs/agent_knowledge_base.md" "agent_safety_contracts.md"
+require_contains "docs/ai/context_loading.md" "agent_safety_contracts.md"
+require_contains "docs/ai/agent_operating_manual.md" "agent_safety_contracts.md"
+require_contains "docs/agents_quick_reference.md" "check_agent_safety_contracts.sh"
+require_contains "tool/agent_host_templates/cursor/rules/agent-execution.mdc" "agent_safety_contracts.md"
+require_contains "tool/agent_host_templates/shared/skills/agents-common-pitfalls/SKILL.md" "agent_safety_contracts.md"
 
 local_line_budget_files=(
   "tasks/codex/todo.md"

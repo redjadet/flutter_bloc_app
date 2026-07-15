@@ -20,9 +20,8 @@ Scale effort to task value; default to one small loop.
 ## Scope And Safety
 
 - Use the approved repo stack and tools from [`../agent_project_context.md`](../agent_project_context.md), [`../tech_stack.md`](../tech_stack.md), and [`../agents_quick_reference.md`](../agents_quick_reference.md). If a requested tool conflicts, flag conflict and continue with repo-approved stack unless user explicitly overrides.
-- Modify only task-owned files/functions. Do not rename, refactor, or redesign unrelated code; report unrelated issues separately.
+- Scope, missing-target stops, and destructive/external actions: [`agent_safety_contracts.md`](agent_safety_contracts.md) (`SAFETY-01`, `SAFETY-02`).
 - Use the simplest solution that solves the verified problem. Avoid speculative abstractions, package swaps, and extra boilerplate.
-- Before destructive or external-side-effect actions, stop, list affected items, and request explicit confirmation in the current conversation. This includes deleting files, overwriting generated/user code, dropping data, running migrations, deploys, and remote writes.
 
 ## Search budget
 

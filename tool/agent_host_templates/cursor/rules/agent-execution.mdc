@@ -9,11 +9,11 @@ Thin reminder. Loop, proof gate, progressive disclosure, validation routing: `AG
 
 - **Think:** unsafe ambiguity below 95% confidence → stop; evidence from repo docs, code, tests, or scripts (not guesses).
 - **Change:** smallest reversible change; every changed line traces to the user request or required validation/doc update.
-- **Safety:** destructive/external side effects require current-turn confirmation after listing affected items.
+- **Safety:** [`agent_safety_contracts.md`](docs/agent_kb/agent_safety_contracts.md) (`SAFETY-02`); destructive/external side effects need same-turn approval after listing targets, command, effect, and rollback.
 - **Prove:** plan → implement end-to-end → verify → report proof; narrowest honest validation lane.
 - **Format:** after any `.dart` change, run `./bin/format` (or `dart format .`) before finish/closeout — not optional.
 - **Host maintain (agents run):** start → `./bin/agent-maintain preflight --intent "<task goal>"`; before finish → `./bin/agent-maintain closeout`; after `tool/agent_host_templates/**` → `./bin/agent-maintain after-host-edit` same turn. Policy: `docs/agent_kb/host_maintenance_automation.md`.
-- **Report:** coding-task closeout includes Files Changed and Follow-up Actions.
+- **Report:** coding-task closeout follows `SAFETY-REPORT` — Files Changed, Verification, Known limitations, Follow-up Actions, and destructive/external-action statement.
 - **Operating manual:** T1/T2 coding → `docs/ai/agent_operating_manual.md`; closeout tiers → `docs/agent_kb/legibility_and_finish_gate.md`.
 - **Stuck:** same failure twice → add durable repo capability (doc, test, fixture, script), not a longer prompt.
 - **Seams:** Clean Architecture, Cubit/BLoC, DI, GoRouter.
