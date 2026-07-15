@@ -29,6 +29,7 @@ Map: [`AGENTS.md`](../AGENTS.md). Validation detail:
 | Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades |
 | Cubit/BLoC change | [`bloc_standards.md`](bloc_standards.md), [`review/bloc_checklist.md`](review/bloc_checklist.md); `agents-bloc-standards`; focused `flutter test <paths>` + `./tool/analyze.sh` |
 | Agent docs / map drift | `./tool/check_agent_knowledge_base.sh` |
+| Agent safety-contract drift | `bash tool/check_agent_safety_contracts.sh` |
 | AI failure-risk register | `bash tool/check_ai_failure_risk_register.sh` |
 | Harness max-score claim | [`ai/harness_auto_maintenance.md`](ai/harness_auto_maintenance.md); `./bin/agent-maintain harness-maintain`; `./bin/agent-maintain closeout` |
 | Engineering max-score claim | [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md); `bash tool/check_engineering_quality_scorecard_gate.sh`; `bash tool/update_engineering_quality_badge.sh --check`; `./bin/agent-maintain closeout` |

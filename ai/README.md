@@ -4,7 +4,7 @@ refresh_when:
   - After modular_metrics or major feature add/remove
   - Before Phase 4 architecture refactors
   - Quarterly or when CONTEXT_MAP drifts
-last_refreshed: 2026-07-14
+last_refreshed: 2026-07-15
 ---
 
 # AI operability layer (`/ai`)

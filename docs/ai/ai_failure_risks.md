@@ -10,11 +10,12 @@ Run before first edit when the task touches app code, harness docs, host
 templates, validation scripts, or architecture policy:
 
 1. Read this register; map the task to [Minimum proof by task](#minimum-proof-by-task).
-2. `./bin/agent-maintain preflight` (bootstrap, drift, trackers).
-3. Invoke `agents-common-pitfalls` — pitfall → risk ID map in that skill.
-4. Route skills via [`skill_routing.md`](skill_routing.md); load owner docs only
+2. Read [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) (`SAFETY-01..06`, `SAFETY-REPORT`).
+3. `./bin/agent-maintain preflight` (bootstrap, drift, trackers).
+4. Invoke `agents-common-pitfalls` — pitfall → risk ID map in that skill.
+5. Route skills via [`skill_routing.md`](skill_routing.md); load owner docs only
    ([`context_loading.md`](context_loading.md)), not whole feature trees.
-5. Before claiming done: match detection scripts for every risk row that applies;
+6. Before claiming done: match detection scripts for every risk row that applies;
    run [`harness_scorecard.md`](harness_scorecard.md) gates when claiming harness
    completeness; follow [`harness_auto_maintenance.md`](harness_auto_maintenance.md)
    when harness paths are in scope.
@@ -26,7 +27,7 @@ root, run `bash tool/...` instead.
 
 | Tier | When | Risk IDs |
 | --- | --- | --- |
-| P0 — stop before edit | Secrets, destructive ops, SDK/framework mutation, new feature without brief, wrong layer on new code | `RISK-SECRET-LEAK`, `RISK-DESTRUCTIVE-SIDE-EFFECT`, `RISK-FLUTTER-SDK-MUTATION`, `RISK-FEATURE-BRIEF-SKIP`, `RISK-ARCH-LAYER` |
+| P0 — stop before edit | Secrets, destructive ops, scope/target uncertainty, unapproved Git, SDK/framework mutation, new feature without brief, wrong layer on new code | `RISK-SECRET-LEAK`, `RISK-DESTRUCTIVE-SIDE-EFFECT`, `RISK-SCOPE-CREEP`, `RISK-MISSING-TARGET`, `RISK-UNAPPROVED-GIT`, `RISK-FLUTTER-SDK-MUTATION`, `RISK-FEATURE-BRIEF-SKIP`, `RISK-ARCH-LAYER` |
 | P1 — during implementation | Async, offline, seams, BLoC, tests, platform scope, false “done” | `RISK-ASYNC-LIFECYCLE`, `RISK-OFFLINE-OVERWRITE`, `RISK-INTEGRATION-SEAM`, `RISK-BLOC-DIVERGENCE`, `RISK-TEST-GAP`, `RISK-PLATFORM-SCOPE`, `RISK-VALIDATION-SHORTCUT`, `RISK-SECURITY-GAP` |
 | P2 — session hygiene | Host/docs/context/API/UI/harness drift | `RISK-HOST-DRIFT`, `RISK-DOC-DRIFT`, `RISK-HARNESS-SCORE-DROP`, `RISK-CONTEXT-OVERLOAD`, `RISK-STALE-API`, `RISK-UI-REGRESSION` |
 
@@ -50,7 +51,10 @@ root, run `bash tool/...` instead.
 | RISK-FLUTTER-SDK-MUTATION | Agent patches core Flutter/Dart SDK, framework, or toolchain cache files instead of repo-owned app code | Treat `/Users/ilkersevim/Flutter_SDK/flutter/**`, Flutter framework sources, Dart SDK sources, and toolchain caches as read-only; fix app code, add repo adapter/workaround, or use documented dependency/toolchain upgrade flow | Review changed paths before edits/commit; `git status --short`; if needed `git -C /Users/ilkersevim/Flutter_SDK/flutter status --short` | Stop; do not build on SDK edits; restore SDK/toolchain from clean source with user approval, then patch repo-owned code |
 | RISK-SECRET-LEAK | Agent commits key, token, private endpoint, or printed secret | Use [`../security_and_secrets.md`](../security_and_secrets.md); never print secret values | `./tool/check_tracked_secret_literals.sh`; `./tool/check_ai_generated_code_smells.sh` | Remove secret; rotate externally; add placeholder/env doc; rerun security checks |
 | RISK-SECURITY-GAP | Auth, payments, PII, or data mutation without security review | [`../review/security_checklist.md`](../review/security_checklist.md); [`../security_and_secrets.md`](../security_and_secrets.md) | Secret/smell scripts; security checklist pass; focused denial-path tests | Fix authz boundary; redact logs; add permission tests |
-| RISK-DESTRUCTIVE-SIDE-EFFECT | Agent runs destructive command, external mutation, or deploy without confirmation | Current-turn confirmation with affected items first | Review shell history/diff; no silent deploys | Stop; report affected state; restore from git or documented backup path |
+| RISK-DESTRUCTIVE-SIDE-EFFECT | Agent runs destructive command, external mutation, or deploy without confirmation | [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) `SAFETY-02`; same-turn approval with targets/effect/rollback first | Review shell history/diff; `bash ../../tool/check_agent_safety_contracts.sh`; no silent deploys | Stop; report affected state; restore from git or documented backup path |
+| RISK-SCOPE-CREEP | Agent expands beyond user-owned write-set or performs unrelated cleanup | Declare write-set/boundaries; use `SAFETY-01`; separate observations from requested changes | Review changed paths/diff against request; `bash ../../tool/check_agent_safety_contracts.sh` | Revert only agent-authored out-of-scope changes after approval when destructive; retain/report user work |
+| RISK-MISSING-TARGET | Agent guesses or substitutes a missing path, branch, identifier, environment, or resource | Stop and ask when uncertainty changes impact; never create a lookalike target; `SAFETY-01` | Review target resolution and tracker/plan evidence; `bash ../../tool/check_agent_safety_contracts.sh` | Stop work; report missing target and required user decision; resume only with confirmed target |
+| RISK-UNAPPROVED-GIT | Agent mutates Git state without explicit user request | Inspect status/diff first; follow `SAFETY-03` and [`../git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules | Review Git history/status and requested action; `bash ../../tool/check_agent_safety_contracts.sh` | Stop; report affected refs/worktree; recover only with user-approved Git action |
 | RISK-STALE-API | Agent uses stale package/platform/API assumptions | MCP package docs + pinned lockfile before editing — [`../agent_kb/package_docs_mcp.md`](../agent_kb/package_docs_mcp.md) | Analyzer/tests; dependency compatibility guard | Patch to pinned API; update docs when version rule changes |
 | RISK-PLATFORM-SCOPE | Agent ships shared UI/platform change for one target only (e.g. iOS-only layout, web-unsafe import, tablet/desktop untested) | [`../tech_stack.md`](../tech_stack.md) § Supported platforms; [`design_system.md`](../design_system.md) § Cross-platform form factors; `flutter-cross-platform-modern`; isolate IO in data/shared adapters | `check_sync_io_in_presentation.sh`; web/integration preflight when routing/bootstrap touched; widget tests at mobile + wide widths | Add `kIsWeb`/adapter gate; fix imports; prove mobile/tablet/web/desktop form factors |
 | RISK-UI-REGRESSION | Agent changes UI without design or responsive proof | Read [`DESIGN.md`](../../DESIGN.md) and [`../design_system.md`](../design_system.md) § Reusable widgets + § Responsive layout; `LayoutBuilder`/`MediaQuery` when suitable; extract previewable/testable leaf widgets | Widget tests at compact width + text scale when layout branches; `@Preview` or layout checks | Fix layout/theme/l10n; hot reload active session when available |
@@ -60,7 +64,7 @@ root, run `bash tool/...` instead.
 
 | Task type | Required proof |
 | --- | --- |
-| Harness/docs/rules | [`harness_auto_maintenance.md`](harness_auto_maintenance.md); `bash ../../tool/check_ai_failure_risk_register.sh`; `bash ../../tool/check_harness_scorecard_gate.sh`; `./bin/agent-maintain harness-maintain`; `./bin/checklist-fast --no-reuse`; `./bin/agent-maintain closeout` |
+| Harness/docs/rules | [`harness_auto_maintenance.md`](harness_auto_maintenance.md); [`agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md); `bash ../../tool/check_agent_safety_contracts.sh`; `bash ../../tool/check_ai_failure_risk_register.sh`; `bash ../../tool/check_harness_scorecard_gate.sh`; `./bin/agent-maintain harness-maintain`; `./bin/checklist-fast --no-reuse`; `./bin/agent-maintain closeout` |
 | Harness / agent policy docs | [`agent_operating_manual.md`](agent_operating_manual.md); `bash ../../tool/check_agent_knowledge_base.sh`; `./bin/agent-maintain closeout` |
 | Feature architecture | `bash ../../tool/check_clean_architecture_imports.sh`; `bash ../../tool/check_feature_folder_contract.sh`; `bash ../../tool/check_feature_modularity_leaks.sh`; `bash ../../tool/check_feature_brief_linked.sh`; focused tests |
 | BLoC/Cubit | Focused cubit/widget tests; `./tool/analyze.sh`; [`review/bloc_checklist.md`](../review/bloc_checklist.md); `agents-bloc-standards` |

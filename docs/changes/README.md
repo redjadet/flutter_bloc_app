@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-15_agent-safety-contracts.md`](2026-07-15_agent-safety-contracts.md): Canonical agent safety contracts (`SAFETY-01..06`, `SAFETY-REPORT`) with drift gate, risk-register wiring, and AI snapshot `git_head` refresh.
 - [`2026-07-13_web_first_load_splash.md`](2026-07-13_web_first_load_splash.md): Web HTML + Flutter splash during first launch; parallel bootstrap steps; blank-screen fix.
 - [`2026-07-12_agent_tool_auto_routing.md`](2026-07-12_agent_tool_auto_routing.md): Intent/path tool router integrated into preflight; MCP naming de-drifted; hot-reload rule scoped to current workspace paths.
 - [`2026-07-12_agent_docs_and_host_sync_conflict_repair.md`](2026-07-12_agent_docs_and_host_sync_conflict_repair.md): Current package/app ownership restored in AI maps; project-only Cursor execution rule added to sync and drift enforcement.

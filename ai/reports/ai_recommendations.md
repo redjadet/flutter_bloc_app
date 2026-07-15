@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-14T16:54:09Z"
-  git_head: "d80a1652d40fa8d0ba1901440eda4916f97bc854"
+  generated_at: "2026-07-15T12:42:39Z"
+  git_head: "6aa30de842e27a240a6474f86a1c1a865244b083"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -17,14 +17,15 @@ ai_snapshot:
 
 
 
+
 # AI recommendations
 
 Prioritized actions from discovery (2026-05-21). Each item links evidence; implementation needs Feature Brief per [`docs/plans/FEATURE_TEMPLATE.md`](../docs/plans/FEATURE_TEMPLATE.md) when touching code.
 
 | ID | Priority | Recommendation | Evidence | Effort |
 | --- | --- | --- | --- | --- |
-| REC-001 | P0 | Document AI entry path in AGENTS Map (`PLAN.md`, `CODEMAP.md`, governance) | This plan Wave 2 | S |
-| REC-002 | P0 | Keep `AGENTS.md` ≤120 lines; route roles to `docs/ai/governance.md` | `check_agent_knowledge_base.sh` | S |
+| REC-001 | P0 | Document AI entry path in AGENTS Map ([PLAN.md](../../PLAN.md), [CODEMAP.md](../../CODEMAP.md), governance) | This plan Wave 2 | S |
+| REC-002 | P0 | Keep [AGENTS.md](../../AGENTS.md) ≤120 lines; route roles to [`docs/ai/governance.md`](../../docs/ai/governance.md) | `check_agent_knowledge_base.sh` | S |
 | REC-003 | P1 | ~~Decouple `case_study_demo` from `camera_gallery` / `supabase_auth` domain imports~~ **done** | ARCH-001, [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | M |
 | REC-004 | P1 | ~~Split `case_study_session_cubit_actions.part.dart` (385 LOC)~~ **done** | ARCH-002, [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | M |
 | REC-005 | P1 | ~~Add missing feature barrels~~ **done** (PR #239) | ARCH-003 | S |

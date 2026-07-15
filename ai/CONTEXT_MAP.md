@@ -1,13 +1,14 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-14T16:54:09Z"
-  git_head: "d80a1652d40fa8d0ba1901440eda4916f97bc854"
+  generated_at: "2026-07-15T12:42:39Z"
+  git_head: "6aa30de842e27a240a6474f86a1c1a865244b083"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
+
 
 
 
@@ -60,7 +61,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 1. `apps/mobile/lib/features/settings/settings.dart`
 2. `apps/mobile/lib/features/settings/presentation/` (page + cubits)
 3. `apps/mobile/lib/app/composition/` (settings registration)
-4. `DESIGN.md` / `docs/design_system.md` (if UI)
+4. [`DESIGN.md`](../DESIGN.md) / [`docs/design_system.md`](../docs/design_system.md) (if UI)
 5. `apps/mobile/test/features/settings/`
 
 ### todo_list
@@ -80,7 +81,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 | New route | `apps/mobile/lib/app/router/app_routes.dart`, owning `apps/mobile/lib/app/router/routes_*.dart` |
 | DI change | `apps/mobile/lib/app/composition/injector.dart`, `apps/mobile/lib/app/composition/features/register_*` |
 | UI shared widget | `packages/design_system/`, `docs/design_system.md` |
-| Architecture refactor | `docs/audits/ai_architecture_audit.md`, Feature Brief |
+| Architecture refactor | [`architecture_review_2026-06.md`](../docs/audits/architecture_review_2026-06.md), Feature Brief |
 
 ## Validation
 
