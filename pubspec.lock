@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analysis_server_plugin
-      sha256: "41ccc9b73012c5355b27a3b5bb3748dcbf65fdba45704514c1dd222e74f536fc"
+      sha256: "0ba6a701c8d926f548a736ac3da8536f63f75fd49ad803f9dfcd091b869ef753"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.19"
+    version: "0.3.20"
   analyzer:
     dependency: "direct overridden"
     description:
@@ -37,18 +37,18 @@ packages:
     dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: a43d6463a4411039ab6e43c02a257b784511b81d3ee923243f5242138a5772c3
+      sha256: "8c988c96836e59db019930c603dd1493797a7aaf97ba71469ea13724602be4dd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.13"
+    version: "0.14.14"
   analyzer_testing:
     dependency: transitive
     description:
       name: analyzer_testing
-      sha256: cd5fda071b5efdfc199e0371897ffb9318c06f3cc1b550c6c660f2a1948e8d6e
+      sha256: f46f72b79c4a0fd8c38a71f4cdc604799bfe438c2ef75e7a54dc36cec27d0af6
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3"
+    version: "0.3.4"
   ansi_styles:
     dependency: transitive
     description:
@@ -2661,10 +2661,10 @@ packages:
     dependency: transitive
     description:
       name: uuid
-      sha256: "1fef9e8e11e2991bb773070d4656b7bd5d850967a2456cfc83cf47925ba79489"
+      sha256: "9b129329f58692f6e6578329498a8fe9fbe98f090beb764ffbb8ee2eadd01dcd"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.6.0"
   vector_graphics:
     dependency: transitive
     description:
