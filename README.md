@@ -104,8 +104,7 @@ flutter build ios --simulator --debug --no-pub
 Most Flutter repositories document the app. This one also documents how an AI
 agent should safely change it. Agents can locate feature ownership, architecture
 boundaries, conventions, and proof commands with minimal task-specific guidance.
-The workflow stays model-agnostic: Codex, Cursor, Claude Code, Gemini CLI, and
-human contributors use the same repository-owned files and commands.
+The workflow stays model-agnostic: Codex, Cursor, Claude Code, Gemini, any AI agent including open source self-hostable models and human contributors can use the same repository-owned files and commands.
 
 | Need | Repository mechanism |
 | --- | --- |
