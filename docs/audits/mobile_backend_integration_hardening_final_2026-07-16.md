@@ -84,7 +84,7 @@
 | Domain wire leaks | `bash tool/check_domain_wire_leaks.sh` | Warn-only, 45 (pre-existing) |
 | Focused regressions | `flutter test` AI Decision/GraphQL/counter/HF + `test/shared/http/` | **127 passed** |
 | Analyze | `bash tool/analyze.sh` | Pass (infos only) |
-| Full delivery | `./bin/checklist` | Recorded at close of Task 8 |
+| Full delivery | `./bin/checklist` | **Passed** (2026-07-16, head includes analyze lint fix `c910bc5b`) |
 
 ## No-live-backend limitation
 
