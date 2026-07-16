@@ -11,4 +11,3 @@
 
 - `flutter test test/features/counter/data/offline_first_counter_repository_test.dart`
 - `tool/check_offline_first_remote_merge.sh`
-

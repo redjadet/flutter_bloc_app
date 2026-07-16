@@ -90,10 +90,11 @@ scan_targets() {
 
 run_self_test() {
   local bad="$ROOT/tool/fixtures/adhoc_dio/bad_repository_fallback.dart"
-  local good_app="$ROOT/tool/fixtures/adhoc_dio/good_create_app_dio_usage.dart"
-  local good_render="$ROOT/tool/fixtures/adhoc_dio/good_render_chat_dio_factory.dart"
+  local bare="$ROOT/tool/fixtures/adhoc_dio/bad_bare_dio.dart"
+  local approved_app="$ROOT/apps/mobile/lib/app/http/app_dio.dart"
+  local approved_render="$ROOT/apps/mobile/lib/features/chat/data/render_chat_dio_factory.dart"
 
-  local bad_out bad_hits
+  local bad_out bad_hits bare_out bare_hits approved_out approved_hits
   bad_out="$(scan_targets "$bad")"
   bad_hits="$(echo "$bad_out" | tail -1)"
   if [[ "$bad_hits" -lt 1 ]]; then
@@ -102,13 +103,19 @@ run_self_test() {
     exit 1
   fi
 
-  if rg -n '\?\?[[:space:]]*Dio[[:space:]]*\(' "$good_app" "$good_render" >/dev/null 2>&1; then
-    echo "❌ self-test failed: good fixtures contain ?? Dio()"
+  bare_out="$(scan_targets "$bare")"
+  bare_hits="$(echo "$bare_out" | tail -1)"
+  if [[ "$bare_hits" -lt 1 ]]; then
+    echo "❌ self-test failed: expected violations in bare Dio fixture"
+    echo "$bare_out"
     exit 1
   fi
 
-  if ! rg -n '\bDio[[:space:]]*\(' "$good_app" "$good_render" >/dev/null 2>&1; then
-    echo "❌ self-test failed: good fixtures must demonstrate Dio( factory construction"
+  approved_out="$(scan_targets "$approved_app" "$approved_render")"
+  approved_hits="$(echo "$approved_out" | tail -1)"
+  if [[ "$approved_hits" -ne 0 ]]; then
+    echo "❌ self-test failed: approved factories were flagged"
+    echo "$approved_out"
     exit 1
   fi
 
@@ -146,6 +153,9 @@ if [[ "$SELF_TEST" -eq 1 ]]; then
   run_self_test
   exit 0
 fi
+
+# Always exercise fixtures before production scan so CI catches guard regressions.
+run_self_test
 
 TARGETS=()
 if [[ ${#PATHS[@]} -gt 0 ]]; then

@@ -1,25 +1,58 @@
 part of 'countries_graphql_repository.dart';
 
 extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
+  List<GraphqlContinent> mapContinents(final Object? rawContinents) {
+    final List<dynamic>? list = listFromDynamic(rawContinents);
+    if (list == null || list.isEmpty) {
+      return const <GraphqlContinent>[];
+    }
+    return List<GraphqlContinent>.unmodifiable(
+      list.map(_continentFromJson).toList(),
+    );
+  }
+
   List<GraphqlCountry> mapCountries(final Object? rawCountries) {
     final List<dynamic>? list = listFromDynamic(rawCountries);
     if (list == null || list.isEmpty) {
       return const <GraphqlCountry>[];
     }
     return List<GraphqlCountry>.unmodifiable(
-      list.map(mapFromDynamic).whereType<Map<String, dynamic>>().map((json) {
-        try {
-          return GraphqlCountryDto.fromJson(json).toDomain();
-        } on FormatException catch (e) {
-          throw GraphqlDemoException(
-            'Malformed GraphQL country payload',
-            cause: e,
-            type: GraphqlDemoErrorType.data,
-          );
-        }
-      }).toList(),
+      list.map(_countryFromJson).toList(),
     );
   }
+
+  GraphqlContinent _continentFromJson(final Object? raw) {
+    final Map<String, dynamic>? json = mapFromDynamic(raw);
+    if (json == null) {
+      throw _malformedPayload('continent');
+    }
+    try {
+      return GraphqlContinentDto.fromJson(json).toDomain();
+    } on FormatException catch (error) {
+      throw _malformedPayload('continent', cause: error);
+    }
+  }
+
+  GraphqlCountry _countryFromJson(final Object? raw) {
+    final Map<String, dynamic>? json = mapFromDynamic(raw);
+    if (json == null) {
+      throw _malformedPayload('country');
+    }
+    try {
+      return GraphqlCountryDto.fromJson(json).toDomain();
+    } on FormatException catch (error) {
+      throw _malformedPayload('country', cause: error);
+    }
+  }
+
+  GraphqlDemoException _malformedPayload(
+    final String payload, {
+    final Object? cause,
+  }) => GraphqlDemoException(
+    'Malformed GraphQL $payload payload',
+    cause: cause,
+    type: GraphqlDemoErrorType.data,
+  );
 
   String? normalizedContinentCode(final String? code) {
     if (code == null) {

@@ -72,8 +72,8 @@
 - `apps/mobile/lib/features/chat/data/huggingface_chat_repository.dart`
 - Matching tests under `apps/mobile/test/...`
 - `tool/check_adhoc_dio_construction.sh` + fixtures + `tool/delivery_checklist.sh`
-- `docs/backend/API_CONTRACT_GUIDE.md`, `docs/architecture/MOBILE_BACKEND_BOUNDARIES.md`, `docs/contributing/PR_REVIEW_CHECKLIST.md`
-- `docs/backend/MOBILE_BACKEND_DEFERRED_WORK.md` (not-done owner list)
+- [`backend/API_CONTRACT_GUIDE.md`](../backend/API_CONTRACT_GUIDE.md), [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](../architecture/MOBILE_BACKEND_BOUNDARIES.md), [`contributing/PR_REVIEW_CHECKLIST.md`](../contributing/PR_REVIEW_CHECKLIST.md)
+- [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md) (not-done owner list)
 - Hub link updates + validation_scripts catalog/overview/checklist_index
 - Baseline + final audits + change note
 
@@ -81,12 +81,26 @@
 
 | Check | Command | Result (2026-07-16) |
 | --- | --- | --- |
-| Ad-hoc Dio | `bash tool/check_adhoc_dio_construction.sh` | `✅ ok|adhoc-dio|violations=0` |
+| Ad-hoc Dio | `bash tool/check_adhoc_dio_construction.sh` | `ok/adhoc-dio/violations=0` |
 | Clean Architecture | `bash tool/check_clean_architecture_imports.sh` | Pass |
 | Domain wire leaks | `bash tool/check_domain_wire_leaks.sh` | Warn-only, 45 (pre-existing) |
 | Focused regressions | `flutter test` AI Decision/GraphQL/counter/HF + `test/shared/http/` | **127 passed** |
 | Analyze | `bash tool/analyze.sh` | Pass (infos only) |
-| Full delivery | `./bin/checklist` | **Passed** (2026-07-16, head includes analyze lint fix `c910bc5b`) |
+| Full delivery | `./bin/checklist` | **Passed** (2026-07-16 closeout re-run; 2750 tests + coverage gates) |
+| Integration | `./bin/integration_tests` | **Passed** (2026-07-16; `all_flows_test.dart` 28 tests, exit 0) |
+
+## Post-audit review repairs
+
+- Parser diagnostics report JSON value kinds only (never untrusted values);
+  `latest_decision` uses `requireAiDecisionMap` so redaction stays in one helper.
+- GraphQL continent/country lists reject malformed or non-map rows as
+  `GraphqlDemoErrorType.data`; no rows silently disappear.
+- Transport guard self-test covers fallback + bare constructors and approved
+  factories; default `check_adhoc_dio_construction.sh` runs that self-test before
+  the production scan.
+- Verified after repair: focused DTO/repository tests, transport guard, changed-doc
+  gardening, and `git diff --check`. Original full-checklist evidence above remains
+  the program-wide baseline; rerun `./bin/checklist` before a new release claim.
 
 ## No-live-backend limitation
 

@@ -42,5 +42,24 @@ void main() {
         throwsA(isA<FormatException>()),
       );
     });
+
+    test('does not include untrusted payload values in parse failures', () {
+      const String sensitiveValue = 'customer@example.com';
+
+      expect(
+        () => GraphqlCountryDto.fromJson(<String, dynamic>{
+          'code': 'TR',
+          'name': 'Turkey',
+          'continent': sensitiveValue,
+        }),
+        throwsA(
+          isA<FormatException>().having(
+            (final error) => error.message,
+            'message',
+            allOf(contains('String'), isNot(contains(sensitiveValue))),
+          ),
+        ),
+      );
+    });
   });
 }

@@ -53,6 +53,25 @@ void main() {
           throwsA(isA<GraphqlDemoException>()),
         );
       });
+
+      test('maps malformed continent entries to data failure', () async {
+        final Dio client = createMockDio(
+          '{"data":{"continents":["not-an-object"]}}',
+          200,
+        );
+        repository = CountriesGraphqlRepository(client: client);
+
+        await expectLater(
+          repository.fetchContinents(),
+          throwsA(
+            isA<GraphqlDemoException>().having(
+              (final error) => error.type,
+              'type',
+              GraphqlDemoErrorType.data,
+            ),
+          ),
+        );
+      });
     });
 
     group('fetchCountries', () {
@@ -117,6 +136,25 @@ void main() {
           );
         },
       );
+
+      test('maps non-map country entries to data failure', () async {
+        final Dio client = createMockDio(
+          '{"data":{"countries":["not-an-object"]}}',
+          200,
+        );
+        repository = CountriesGraphqlRepository(client: client);
+
+        await expectLater(
+          repository.fetchCountries(),
+          throwsA(
+            isA<GraphqlDemoException>().having(
+              (final error) => error.type,
+              'type',
+              GraphqlDemoErrorType.data,
+            ),
+          ),
+        );
+      });
     });
   });
 }

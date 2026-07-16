@@ -47,18 +47,7 @@ class CountriesGraphqlRepository
       _CountriesGraphqlRepositoryQueries.continentsQuery,
       operationName: _opContinents,
     );
-    final List<dynamic>? rawContinents = listFromDynamic(data['continents']);
-    if (rawContinents == null || rawContinents.isEmpty) {
-      return const <GraphqlContinent>[];
-    }
-    return List<GraphqlContinent>.unmodifiable(
-      rawContinents
-          .map(mapFromDynamic)
-          .whereType<Map<String, dynamic>>()
-          .map(GraphqlContinentDto.fromJson)
-          .map((final dto) => dto.toDomain())
-          .toList(),
-    );
+    return mapContinents(data['continents']);
   }
 
   @override

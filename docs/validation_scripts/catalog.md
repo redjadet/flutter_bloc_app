@@ -43,7 +43,9 @@ below.
 - **`check_adhoc_dio_construction.sh`**: Fails on production `?? Dio()` and bare
   `Dio(` under `apps/mobile/lib` except allowlisted factories (`createAppDio` in
   `app_dio.dart`, `createRenderChatDio` in `render_chat_dio_factory.dart`).
-  Supports `--self-test` / `--paths`. Included in `./bin/checklist`.
+  Default run always executes fixture self-test (fallback + bare + approved
+  factories) before the production scan. Supports `--self-test` / `--paths`.
+  Included in `./bin/checklist`.
 - **`check_feature_folder_contract.sh`**: Enforces feature folder shape:
   cubit/state under `presentation/cubit/` (or legacy `cubits/`); bans
   `application/`, `infrastructure/`, `viewmodels/`, `providers/` top-level

@@ -94,13 +94,9 @@ class AiDecisionCaseDetailDto {
     final Object? latestRaw = json['latest_decision'];
     AiDecisionDecisionResultDto? latestDecision;
     if (latestRaw != null) {
-      if (latestRaw is! Map) {
-        throw FormatException(
-          'AI Decision JSON: invalid "latest_decision" ($latestRaw)',
-        );
-      }
+      // requireAiDecisionMap redacts value kinds; never interpolate payload.
       latestDecision = AiDecisionDecisionResultDto.fromJson(
-        Map<String, dynamic>.from(latestRaw),
+        requireAiDecisionMap(json, 'latest_decision'),
       );
     }
     return AiDecisionCaseDetailDto(

@@ -73,5 +73,52 @@ void main() {
         throwsA(isA<FormatException>()),
       );
     });
+
+    test('does not include untrusted payload values in parse failures', () {
+      const String sensitiveValue = 'customer@example.com';
+
+      expect(
+        () => AiDecisionCaseSummaryDto.fromJson(<String, dynamic>{
+          'id': 'case-1',
+          'applicant_name': 'Ada',
+          'business_name': 'Engines',
+          'amount': sensitiveValue,
+          'status': 'review',
+        }),
+        throwsA(
+          isA<FormatException>().having(
+            (final error) => error.message,
+            'message',
+            allOf(contains('String'), isNot(contains(sensitiveValue))),
+          ),
+        ),
+      );
+    });
+
+    test('latest_decision non-map throws without leaking payload', () {
+      const String sensitiveValue = 'ssn:123-45-6789';
+
+      expect(
+        () => AiDecisionCaseDetailDto.fromJson(<String, dynamic>{
+          'case': <String, dynamic>{
+            'id': 'c1',
+            'status': 'open',
+            'created_at': '2026-01-01',
+          },
+          'latest_decision': sensitiveValue,
+        }),
+        throwsA(
+          isA<FormatException>().having(
+            (final error) => error.message,
+            'message',
+            allOf(
+              contains('latest_decision'),
+              contains('String'),
+              isNot(contains(sensitiveValue)),
+            ),
+          ),
+        ),
+      );
+    });
   });
 }

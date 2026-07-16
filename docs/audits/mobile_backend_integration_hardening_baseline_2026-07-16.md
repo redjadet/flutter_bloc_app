@@ -2,7 +2,7 @@
 
 **Scope:** Contract-safety and transport-injection gaps on existing mobile/backend seams before Tasks 2–8 remediation.
 **Baseline commit:** `ebfc0c54` on branch `codex/mobile-backend-integration-hardening`.
-**Program:** [`tasks/codex/mobile_backend_integration_hardening_plan.md`](../../tasks/codex/mobile_backend_integration_hardening_plan.md).
+**Program:** Mobile/backend integration hardening. The execution plan is intentionally local-only and not a tracked dependency.
 **Out of scope:** Pagination implementation, product analytics wiring, live backend calls, domain/route/UI changes, new dependencies.
 
 ## Executive summary
@@ -44,7 +44,7 @@ Subjective 1–5 per program rubric; overall = weighted average. Task 8 will rec
 | Implicit `Dio()` fallbacks remain | `RestCounterRepository`, `CountriesGraphqlRepository`, `HuggingFaceApiClient` (see evidence commands) |
 | Production composition injects shared Dio for GraphQL + HF | [`register_graphql_services.dart`](../../apps/mobile/lib/app/composition/features/register_graphql_services.dart):33, [`register_chat_services.dart`](../../apps/mobile/lib/app/composition/features/register_chat_services.dart):62–64 |
 | No pagination / product-analytics implementation | [`docs/adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md), [`docs/plans/future_observability.md`](../plans/future_observability.md) |
-| Guidance split across reliability / offline / auth / observability / DTO / review | Missing `docs/backend/API_CONTRACT_GUIDE.md`, `docs/architecture/MOBILE_BACKEND_BOUNDARIES.md`, `docs/contributing/PR_REVIEW_CHECKLIST.md` (Tasks 6–7) |
+| Guidance split across reliability / offline / auth / observability / DTO / review | At baseline these owners were absent (Task 6 added them): [`backend/API_CONTRACT_GUIDE.md`](../backend/API_CONTRACT_GUIDE.md), [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](../architecture/MOBILE_BACKEND_BOUNDARIES.md), [`contributing/PR_REVIEW_CHECKLIST.md`](../contributing/PR_REVIEW_CHECKLIST.md) |
 
 ## Risks
 
@@ -93,7 +93,7 @@ rg -n "client \?\? Dio\(\)|dio \?\? Dio\(\)" apps/mobile/lib --glob '*.dart'
 
 **Result:**
 
-```
+```text
 apps/mobile/lib/features/chat/data/huggingface_api_client.dart:19:  }) : _dio = dio ?? Dio(),
 apps/mobile/lib/features/counter/data/rest_counter_repository.dart:38:       _client = client ?? Dio(),
 apps/mobile/lib/features/graphql_demo/data/countries_graphql_repository.dart:26:    : this._fromClient(client ?? Dio());
@@ -111,7 +111,7 @@ rg -n " as String| as num| as Map<|\.cast<" \
 
 **Result:**
 
-```
+```text
 apps/mobile/lib/features/graphql_demo/data/graphql_country_dto.dart:8:        code: json['code'] as String,
 apps/mobile/lib/features/graphql_demo/data/graphql_country_dto.dart:9:        name: json['name'] as String,
 apps/mobile/lib/features/graphql_demo/data/graphql_country_dto.dart:30:        code: json['code'] as String,
@@ -151,7 +151,7 @@ apps/mobile/lib/features/ai_decision_demo/data/ai_decision_api_client.dart:41:  
 
 **Result:**
 
-```
+```text
 🔍 Checking Clean Architecture import boundaries...
 ✅ Clean Architecture imports are valid
 ```
@@ -181,7 +181,7 @@ Approved factories per program constraints: `createAppDio` ([`app_dio.dart`](../
 | Item | Why deferred |
 | --- | --- |
 | Offset/cursor pagination | No product list needing it; contract in API guide only (Task 6) |
-| Product analytics taxonomy / SDK | ADR-0005 doc-only; see `future_observability.md` |
+| Product analytics taxonomy / SDK | ADR-0005 doc-only; see [`future_observability.md`](../plans/future_observability.md) |
 | Broad per-demo DTO rewrite | Only AI Decision + GraphQL country in Tasks 2–3 |
 | Live Render / HF / Supabase network validation | This audit records **no-live-backend** limitation |
 | Domain wire-leak cleanup | Pre-existing warn-only debt outside program scope |
@@ -194,9 +194,9 @@ This baseline and the full hardening program validate contract and transport sea
 
 | Path | Change |
 | --- | --- |
-| `docs/audits/mobile_backend_integration_hardening_baseline_2026-07-16.md` | **Created** — this document |
-| `docs/audits/README.md` | Link under Architecture reviews |
-| `tasks/codex/mobile_backend_integration_hardening_plan.md` | Task 1 checkboxes marked complete |
+| [`audits/mobile_backend_integration_hardening_baseline_2026-07-16.md`](mobile_backend_integration_hardening_baseline_2026-07-16.md) | **Created** — this document |
+| [`audits/README.md`](README.md) | Link under Architecture reviews |
+| Local-only execution plan | Task 1 checkboxes marked complete; intentionally not tracked |
 
 ## Follow-ups
 

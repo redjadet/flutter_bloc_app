@@ -3,7 +3,23 @@
 /// Throws [FormatException] on missing/malformed required fields — never
 /// leak raw cast/`TypeError` to callers.
 Never _badAiDecision(final String key, final Object? value) =>
-    throw FormatException('AI Decision JSON: invalid "$key" ($value)');
+    throw FormatException(
+      'AI Decision JSON: invalid "$key" (${_jsonValueKind(value)})',
+    );
+
+/// Reports type shape only — never the untrusted payload value.
+String _jsonValueKind(final Object? value) {
+  if (value == null) {
+    return 'null';
+  }
+  if (value is Map) {
+    return 'map';
+  }
+  if (value is List) {
+    return 'list';
+  }
+  return value.runtimeType.toString();
+}
 
 String requireAiDecisionString(
   final Map<String, dynamic> json,

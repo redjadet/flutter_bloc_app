@@ -179,7 +179,8 @@ require class state or complex behavior.
 Quick check:
 
 ```bash
-rg "Hive\\.openBox" apps/mobile/lib/features apps/mobile/lib/app packages | rg -v "packages/storage/lib/src/hive"
+rg "Hive\\.openBox" apps/mobile/lib/features apps/mobile/lib/app packages \
+  | rg -v "packages/storage/lib/src/hive"
 ```
 
 ## Validation After DRY Refactoring
