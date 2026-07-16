@@ -29,6 +29,7 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 | Staff+ production review (2026-06-15) | [staff_production_review_2026-06-15.md](staff_production_review_2026-06-15.md) |
 | Build Readiness program (2026-06) | [architecture_review_2026-06.md](architecture_review_2026-06.md) |
 | Maintainability baseline (2026-07-10) | [maintainability_baseline_review_2026-07-10.md](maintainability_baseline_review_2026-07-10.md) |
+| Mobile–backend integration hardening baseline (2026-07-16) | [mobile_backend_integration_hardening_baseline_2026-07-16.md](mobile_backend_integration_hardening_baseline_2026-07-16.md) |
 
 ## Code quality baseline (program)
 
