@@ -18,7 +18,9 @@ Source-of-truth docs for Flutter BLoC app.
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md), [`bloc_standards.md`](bloc_standards.md),
   [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
-  [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md)
+  [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md),
+  [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](architecture/MOBILE_BACKEND_BOUNDARIES.md),
+  [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md)
 - **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
   [`design_system.md`](design_system.md),
   [`mix_design_system_plan.md`](mix_design_system_plan.md)
@@ -95,6 +97,8 @@ Source-of-truth docs for Flutter BLoC app.
 - [`code_review_graph.md`](code_review_graph.md)
 - [`review/code_review_playbook.md`](review/code_review_playbook.md) — shared
   AI/human review workflow, finding format, and decision record
+- [`contributing/PR_REVIEW_CHECKLIST.md`](contributing/PR_REVIEW_CHECKLIST.md) —
+  networking / pagination / Bloc / contract-test questions
 - [`ai_code_review_protocol.md`](ai_code_review_protocol.md) — AI-specific risk
   matrix and Flutter review special cases
 - [`CODE_QUALITY.md`](CODE_QUALITY.md)

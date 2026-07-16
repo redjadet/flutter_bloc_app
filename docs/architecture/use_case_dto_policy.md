@@ -60,3 +60,6 @@ add churn without type safety.
 Use focused mapper/repository tests for DTO and error mapping. Run
 `./tool/analyze.sh` plus path-specific validation; escalate per
 [Validation Routing](../engineering/validation_routing_fast_vs_full.md).
+
+Related contracts: [API contract guide](../backend/API_CONTRACT_GUIDE.md),
+[mobile/backend boundaries](MOBILE_BACKEND_BOUNDARIES.md).

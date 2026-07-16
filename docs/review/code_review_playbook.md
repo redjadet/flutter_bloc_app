@@ -3,7 +3,8 @@
 Use this playbook to turn a proposed change into an evidence-backed decision.
 It defines the review workflow; [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 defines AI-code risks and deterministic checklists define topic-specific
-acceptance criteria.
+acceptance criteria. For networking/contract PRs, also use
+[`../contributing/PR_REVIEW_CHECKLIST.md`](../contributing/PR_REVIEW_CHECKLIST.md).
 
 ## Outcomes
 
