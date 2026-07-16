@@ -60,7 +60,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app may use the microphone when recording videos in the case study demo.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Authenticate to open Settings.</string>
+	<string>Authenticate for Settings and the native security showcase demo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app accesses your photo library to pick images and videos in the Camera and Gallery and case study demos.</string>
 	<key>UIApplicationSceneManifest</key>

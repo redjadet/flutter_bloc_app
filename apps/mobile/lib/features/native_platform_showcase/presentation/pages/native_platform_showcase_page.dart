@@ -14,6 +14,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_platform_summary_card.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_platform_view_section.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_telemetry_section.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_showcase_section.dart';
 
 class NativePlatformShowcasePage extends StatelessWidget {
   const NativePlatformShowcasePage({super.key});
@@ -49,6 +50,8 @@ class NativePlatformShowcasePage extends StatelessWidget {
                       NativePlatformShowcasePlatformSummaryCard(
                         platform: data.platform,
                       ),
+                      SizedBox(height: context.responsiveGapM),
+                      const NativeSecurityShowcaseSection(),
                       SizedBox(height: context.responsiveGapM),
                       const NativePlatformShowcaseTelemetrySection(),
                       SizedBox(height: context.responsiveGapM),

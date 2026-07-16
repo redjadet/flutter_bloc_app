@@ -72,8 +72,9 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
 RouteBase createNativePlatformShowcaseRoute() => GoRoute(
   path: AppRoutes.nativePlatformShowcasePath,
   name: AppRoutes.nativePlatformShowcase,
-  builder: (final context, final state) =>
-      BlocProviderHelpers.withAsyncInit<NativePlatformShowcaseCubit>(
+  builder: (final context, final state) => MultiBlocProvider(
+    providers: <BlocProvider<dynamic>>[
+      BlocProviderHelpers.providerWithAsyncInit<NativePlatformShowcaseCubit>(
         create: () => NativePlatformShowcaseCubit(
           loadShowcase: getIt<LoadNativePlatformShowcaseUseCase>(),
           watchTelemetry: getIt<WatchNativeShowcaseTelemetryUseCase>(),
@@ -81,8 +82,13 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
           shareText: getIt<ShareNativeShowcaseTextUseCase>(),
         ),
         init: (final cubit) => cubit.load(),
-        child: const NativePlatformShowcasePage(),
       ),
+      BlocProvider<NativeSecurityShowcaseCubit>(
+        create: (_) => createNativeSecurityShowcaseCubit(),
+      ),
+    ],
+    child: const NativePlatformShowcasePage(),
+  ),
 );
 
 RouteBase createEventBusDemoRoute() => GoRoute(
@@ -159,7 +165,6 @@ class _FcmDemoRedirectWhenUnavailableState
   }
 
   @override
-  Widget build(final BuildContext context) => const Scaffold(
-    body: Center(child: CircularProgressIndicator()),
-  );
+  Widget build(final BuildContext context) =>
+      const Scaffold(body: Center(child: CircularProgressIndicator()));
 }

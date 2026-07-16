@@ -1,15 +1,23 @@
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/data/certificate_pin_policy_summary_mapper.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/data/event_channel_native_showcase_telemetry_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/data/ffi_native_showcase_native_code_service.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/data/firebase_app_check_attestation_service_impl.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/data/method_channel_native_security_showcase_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/data/method_channel_native_showcase_host_language_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/data/native_platform_info_repository_impl.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/data/runtime_platform_probe.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/firebase_app_check_attestation_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_platform_info_repository.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_showcase_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_host_language_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_native_code_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_service.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_certificate_pin_policy_summary_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/probe_app_check_attestation_use_case.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/run_native_security_operation_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
@@ -49,6 +57,28 @@ void registerNativePlatformShowcaseServices() {
   registerLazySingletonIfAbsent<ShareNativeShowcaseTextUseCase>(
     () => ShareNativeShowcaseTextUseCase(
       getIt<NativeShowcaseHostLanguageService>(),
+    ),
+  );
+
+  registerLazySingletonIfAbsent<NativeSecurityShowcaseService>(
+    MethodChannelNativeSecurityShowcaseService.new,
+  );
+  registerLazySingletonIfAbsent<FirebaseAppCheckAttestationService>(
+    FirebaseAppCheckAttestationServiceImpl.new,
+  );
+  registerLazySingletonIfAbsent<RunNativeSecurityOperationUseCase>(
+    () => RunNativeSecurityOperationUseCase(
+      getIt<NativeSecurityShowcaseService>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<ProbeAppCheckAttestationUseCase>(
+    () => ProbeAppCheckAttestationUseCase(
+      getIt<FirebaseAppCheckAttestationService>(),
+    ),
+  );
+  registerLazySingletonIfAbsent<LoadCertificatePinPolicySummaryUseCase>(
+    () => const LoadCertificatePinPolicySummaryUseCase(
+      CertificatePinPolicySummaryMapper.fromConfig,
     ),
   );
 }

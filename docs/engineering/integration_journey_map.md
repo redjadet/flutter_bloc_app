@@ -60,11 +60,15 @@ tier expectations.
 - **Primary target (native platform):**
   `integration_test/native_platform_showcase_flow_test.dart`
   (`registerNativePlatformShowcaseIntegrationFlow`: Example →
-  `example-native-platform-showcase-button` → summary + live interop tiles
+  `example-native-platform-showcase-button` → summary → native security section
+  (`native-security-showcase-section` + five cards; noninteractive crypto/AES/storage
+  taps; no secret-looking text) → live interop tiles
   `native-platform-showcase-interop-{swift,kotlin,cpp}` + lesson 0 + platform/UI
-  family labels).
+  family labels). Scroll past the security section before asserting interop keys
+  (ListView may not build off-screen children).
 - **Web lane:** `test/integration_preflight/web_bootstrap_smoke_test.dart`
-  (`opens native platform showcase from Example on web`; via `./bin/integration_preflight`;
+  (`opens native platform showcase from Example on web`; scroll security then
+  interop; via `./bin/integration_preflight`;
   showcase channel mock registered globally in `test/flutter_test_config.dart` —
   not `integration_test` on web).
 - **Tier:** `smoke`, `standard`, `exhaustive` (device integration); web via

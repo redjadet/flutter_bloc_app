@@ -20,6 +20,9 @@ import FirebaseAppCheck
   private let showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
   private let telemetryChannelName =
     "com.example.flutter_bloc_app/native_showcase/telemetry"
+  private let securityShowcaseChannelName =
+    "com.example.flutter_bloc_app/native_security_showcase"
+  private let securityShowcaseHandler = NativeSecurityShowcaseHandler()
   private var hasConfiguredFirebase = false
   private let firebaseConfigQueue = DispatchQueue(label: "com.example.flutter_bloc_app.firebaseConfigQueue")
 
@@ -120,6 +123,14 @@ import FirebaseAppCheck
       binaryMessenger: engineBridge.applicationRegistrar.messenger()
     )
     telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
+
+    let securityShowcaseChannel = FlutterMethodChannel(
+      name: securityShowcaseChannelName,
+      binaryMessenger: engineBridge.applicationRegistrar.messenger()
+    )
+    securityShowcaseChannel.setMethodCallHandler { [weak self] call, result in
+      self?.securityShowcaseHandler.handle(call, result: result)
+    }
 
     channel.setMethodCallHandler { [weak self] call, result in
       guard self != nil else {

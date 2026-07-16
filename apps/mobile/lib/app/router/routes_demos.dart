@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -136,9 +137,7 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
       if (apiKey == null || apiKey.isEmpty) {
         return CommonPageLayout(
           title: context.l10n.genuiDemoPageTitle,
-          body: CommonErrorView(
-            message: context.l10n.genuiDemoNoApiKey,
-          ),
+          body: CommonErrorView(message: context.l10n.genuiDemoNoApiKey),
         );
       }
       return BlocProviderHelpers.withAsyncInit<GenUiDemoCubit>(
@@ -193,10 +192,8 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
     builder: (final context, final state) {
       final l10n = context.l10n;
       return BlocProviderHelpers.withAsyncInit<LobbyCubit>(
-        create: () => LobbyCubit(
-          repository: getIt<DemoBalanceRepository>(),
-          l10n: l10n,
-        ),
+        create: () =>
+            LobbyCubit(repository: getIt<DemoBalanceRepository>(), l10n: l10n),
         init: (final cubit) => cubit.loadBalance(),
         child: const LobbyPage(),
       );

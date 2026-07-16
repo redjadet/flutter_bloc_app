@@ -1302,6 +1302,187 @@ class AppLocalizationsTr extends AppLocalizations {
   String get nativePlatformShowcaseLastActionLabel => 'Son eylem';
 
   @override
+  String get nativeSecurityShowcaseSectionTitle => 'Yerel güvenlik';
+
+  @override
+  String get nativeSecurityShowcaseSectionSubtitle =>
+      'Android Keystore/biyometri ve iOS CryptoKit/Keychain/Secure Enclave\'e canlı kripto, güvenli depolama ve doğrulama çağrıları. Dart\'a yalnızca durum, neden kodu ve sayaçlar ulaşır.';
+
+  @override
+  String get nativeSecurityCardCryptoTitle => 'Yerel kripto';
+
+  @override
+  String get nativeSecurityCardCryptoDescription =>
+      'P-256 anahtarları mümkün olduğunda Secure Enclave veya Android Keystore kullanır; AES-GCM anahtarının konumu cihaz bazında gösterilir.';
+
+  @override
+  String get nativeSecurityRunP256Label => 'P-256 imzala/doğrula çalıştır';
+
+  @override
+  String get nativeSecurityRunAesLabel => 'AES-GCM gidiş-dönüşü çalıştır';
+
+  @override
+  String get nativeSecurityCardCertificateTitle =>
+      'Sertifika pinleme politikası';
+
+  @override
+  String get nativeSecurityCardCertificateDescription =>
+      'Uygulamanın yapılandırılmış TLS/SPKI pin politikasının özeti. Pinler asla gösterilmez.';
+
+  @override
+  String get nativeSecurityCertificateModeLabel => 'Mod';
+
+  @override
+  String get nativeSecurityCertificatePinHashLabel => 'Pin hash türü';
+
+  @override
+  String get nativeSecurityCertificateHostCountLabel =>
+      'Yapılandırılmış sunucular';
+
+  @override
+  String get nativeSecurityCertificatePrimaryPinCountLabel =>
+      'Yapılandırılmış pinler';
+
+  @override
+  String get nativeSecurityCertificateBackupPinCountLabel => 'Yedek pinler';
+
+  @override
+  String get nativeSecurityOpenCertificateDemoLabel =>
+      'Değiştirilebilir pin demosunu aç';
+
+  @override
+  String get nativeSecurityCertificateMutableDemoUnavailable =>
+      'Değiştirilebilir demo bu derlemede kullanılamıyor.';
+
+  @override
+  String get nativeSecurityCardStorageTitle => 'Güvenli depolama yaşam döngüsü';
+
+  @override
+  String get nativeSecurityCardStorageDescription =>
+      'Keystore/Keychain destekli depolamaya bir sınama değeri yazar, geri okur ve siler. Değerin kendisi asla günlüğe kaydedilmez veya gösterilmez.';
+
+  @override
+  String get nativeSecurityRunStorageLabel =>
+      'Depolama yaşam döngüsünü çalıştır';
+
+  @override
+  String get nativeSecurityCardAppCheckTitle => 'App Check doğrulaması';
+
+  @override
+  String get nativeSecurityCardAppCheckDescription =>
+      'Önbelleğe alınmış bir Firebase App Check jetonunun alınabilir olup olmadığını kontrol eder. Sağlayıcılar Firebase Console\'da kaydedilene kadar bu kontrol \'kurulum gerekli\' döner — bu beklenen davranıştır.';
+
+  @override
+  String get nativeSecurityAppCheckDisclaimer =>
+      'Jetonun kendisi asla gösterilmez veya saklanmaz. Console kaydı ayrı bir takip adımıdır ve diğer güvenlik kartları için zorunlu değildir.';
+
+  @override
+  String get nativeSecurityRunAppCheckLabel => 'App Check jetonunu kontrol et';
+
+  @override
+  String get nativeSecurityAppCheckIdleHint =>
+      'Firebase Console App Check kaydı henüz yapılmadıysa sonuç \'kurulum gerekli\' olur. Bu demo için normaldir.';
+
+  @override
+  String get nativeSecurityAppCheckStatusSetupNeeded => 'Kurulum gerekli';
+
+  @override
+  String get nativeSecurityAppCheckSetupGuidance =>
+      'Firebase Console\'da App Check sağlayıcılarını kaydedin (yerel derlemeler için Debug; Android\'de Play Integrity, iOS\'ta App Attest), uygulamayı yeniden derleyin ve tekrar kontrol edin. Diğer yerel güvenlik kartları bu adıma bağlı değildir.';
+
+  @override
+  String get nativeSecurityAppCheckErrorGuidance =>
+      'Bu cihazda doğrulama başarısız oldu. Console kaydı henüz bitmediyse sağlayıcı kurulumunu tamamlayıp yeniden deneyin. Jeton asla gösterilmez.';
+
+  @override
+  String nativeSecurityAppCheckIssuedDetail(String provider) {
+    return 'Önbellekte jeton alınabilir (yapılandırılmış sağlayıcı: $provider). Jeton içeriği asla gösterilmez.';
+  }
+
+  @override
+  String get nativeSecurityCardBiometricTitle => 'Biyometrik korumalı işlem';
+
+  @override
+  String get nativeSecurityCardBiometricDescription =>
+      'Donanım destekli bir anahtara bağlı biyometrik güçlü bir istem arkasında küçük bir kripto işlemi çalıştırır.';
+
+  @override
+  String get nativeSecurityRunBiometricLabel => 'Biyometrik işlemi çalıştır';
+
+  @override
+  String get nativeSecurityOutcomeIdle => 'Henüz çalıştırılmadı';
+
+  @override
+  String get nativeSecurityStatusSuccess => 'Başarılı';
+
+  @override
+  String get nativeSecurityStatusUnavailable => 'Kullanılamıyor';
+
+  @override
+  String get nativeSecurityStatusDenied => 'Reddedildi';
+
+  @override
+  String get nativeSecurityStatusFailed => 'Başarısız';
+
+  @override
+  String get nativeSecurityReasonOk => 'Cihazda tamamlandı.';
+
+  @override
+  String get nativeSecurityReasonMobileOnly =>
+      'Yalnızca iOS ve Android\'de kullanılabilir.';
+
+  @override
+  String get nativeSecurityReasonMissingPlugin =>
+      'Yerel işleyici bu derlemede kayıtlı değil.';
+
+  @override
+  String get nativeSecurityReasonTimeout => 'Yerel çağrı zaman aşımına uğradı.';
+
+  @override
+  String get nativeSecurityReasonMalformedReply =>
+      'Yerel yanıt hatalı biçimliydi.';
+
+  @override
+  String get nativeSecurityReasonPlatformError =>
+      'Yerel platform çağrısı başarısız oldu.';
+
+  @override
+  String get nativeSecurityReasonSecureEnclaveUnavailable =>
+      'Bu cihazda Secure Enclave kullanılamıyor.';
+
+  @override
+  String get nativeSecurityReasonKeystoreUnavailable =>
+      'Android Keystore bir anahtar oluşturamadı.';
+
+  @override
+  String get nativeSecurityReasonBiometricNotEnrolled =>
+      'Bu cihazda kayıtlı biyometri yok.';
+
+  @override
+  String get nativeSecurityReasonBiometricLockout =>
+      'Biyometrik sensör geçici olarak kilitlendi.';
+
+  @override
+  String get nativeSecurityReasonBiometricCanceled =>
+      'Biyometrik istem iptal edildi.';
+
+  @override
+  String get nativeSecurityReasonBiometricUnsupported =>
+      'Bu cihazda biyometrik donanım desteklenmiyor.';
+
+  @override
+  String get nativeSecurityReasonConcurrentPrompt =>
+      'Başka bir biyometrik istem zaten etkin.';
+
+  @override
+  String get nativeSecurityReasonNotConfiguredOrTokenNull =>
+      'Henüz App Check jetonu yok — Firebase Console kaydı hâlâ bekleniyor.';
+
+  @override
+  String get nativeSecurityReasonAppCheckError =>
+      'App Check doğrulaması başarısız oldu.';
+
+  @override
   String get eventBusDemoTitle => 'Event Bus demosu';
 
   @override
