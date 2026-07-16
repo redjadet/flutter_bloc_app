@@ -62,6 +62,8 @@ When Renovate or Dependabot creates a pull request, GitHub Actions automatically
 
 See `.github/workflows/dependency-updates.yml` for details.
 
+**Renovate `renovate/artifacts` check:** Often fails on this Flutter workspace when the bot runs `dart pub` instead of `flutter pub`. Treat artifacts as **non-blocking** for merge triage when required `build` / dependency-updates checks are green. Prefer `bash tool/commit_push_pr_watch_merge_cleanup.sh` over ad-hoc check polling; see [`validation_scripts/upgrade_pr_triage_validate.md`](validation_scripts/upgrade_pr_triage_validate.md) and [`agent_kb/operator_preferences_durable.md`](agent_kb/operator_preferences_durable.md) § Durable Prefs.
+
 ## Manual Dependency Updates
 
 To manually check for outdated dependencies:
