@@ -1,20 +1,35 @@
 /// Native platform showcase: live interop + catalog, platform-adaptive UI.
 library;
 
+export 'domain/app_check_attestation_result.dart';
 export 'domain/app_platform_kind.dart';
+export 'domain/certificate_pin_policy_summary.dart';
+export 'domain/firebase_app_check_attestation_service.dart';
 export 'domain/native_capability.dart';
 export 'domain/native_capability_kind.dart';
 export 'domain/native_platform_info_repository.dart';
+export 'domain/native_security_operation.dart';
+export 'domain/native_security_operation_result.dart';
+export 'domain/native_security_showcase_service.dart';
+export 'domain/native_security_status.dart';
 export 'domain/native_showcase_host_language_service.dart';
 export 'domain/native_showcase_native_code_service.dart';
 export 'domain/native_showcase_telemetry_service.dart';
 export 'domain/native_showcase_telemetry_snapshot.dart';
 export 'domain/native_showcase_telemetry_status.dart';
 export 'domain/platform_showcase_data.dart';
+export 'domain/use_cases/load_certificate_pin_policy_summary_use_case.dart';
 export 'domain/use_cases/load_native_platform_showcase_use_case.dart';
+export 'domain/use_cases/probe_app_check_attestation_use_case.dart';
+export 'domain/use_cases/run_native_security_operation_use_case.dart';
 export 'domain/use_cases/share_native_showcase_text_use_case.dart';
 export 'domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
 export 'domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 export 'presentation/cubit/native_platform_showcase_cubit.dart';
 export 'presentation/cubit/native_platform_showcase_state.dart';
+export 'presentation/cubit/native_security_showcase_cubit.dart';
+export 'presentation/cubit/native_security_showcase_cubit_factory.dart';
+export 'presentation/cubit/native_security_showcase_state.dart';
 export 'presentation/pages/native_platform_showcase_page.dart';
+export 'presentation/widgets/native_security_outcome_text.dart';
+export 'presentation/widgets/native_security_showcase_section.dart';

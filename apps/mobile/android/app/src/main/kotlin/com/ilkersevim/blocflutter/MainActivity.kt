@@ -5,16 +5,19 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.content.pm.PackageManager
 import android.os.Build
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterFragmentActivity() {
   private val channelName = "com.example.flutter_bloc_app/native"
   private val showcaseChannelName = "com.example.flutter_bloc_app/native_showcase"
   private val telemetryChannelName =
     "com.example.flutter_bloc_app/native_showcase/telemetry"
+  private val securityShowcaseChannelName =
+    "com.example.flutter_bloc_app/native_security_showcase"
+  private var securityShowcaseHandler: NativeSecurityShowcaseHandler? = null
 
   override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
     super.configureFlutterEngine(flutterEngine)
@@ -27,6 +30,10 @@ class MainActivity : FlutterActivity() {
       )
     EventChannel(flutterEngine.dartExecutor.binaryMessenger, telemetryChannelName)
       .setStreamHandler(NativeShowcaseTelemetryStreamHandler())
+    val securityHandler = NativeSecurityShowcaseHandler(this)
+    securityShowcaseHandler = securityHandler
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, securityShowcaseChannelName)
+      .setMethodCallHandler(securityHandler)
     MethodChannel(flutterEngine.dartExecutor.binaryMessenger, showcaseChannelName)
       .setMethodCallHandler { call, result ->
         when (call.method) {
@@ -96,6 +103,12 @@ class MainActivity : FlutterActivity() {
           else -> result.notImplemented()
         }
       }
+  }
+
+  override fun onDestroy() {
+    securityShowcaseHandler?.dispose()
+    securityShowcaseHandler = null
+    super.onDestroy()
   }
 
   private fun getBatteryLevel(): Int? {

@@ -16,7 +16,7 @@ Measured claim gate (portfolio-honest): [`engineering/engineering_quality_scorec
 Baseline audit: [code_quality_baseline_2026-06-03.md](audits/code_quality_baseline_2026-06-03.md).
 Top gaps tracked there (cadence 3+):
 
-1. **Coverage** — CI minimum **75%** filtered rollup; Engineering scorecard target **85%** filtered + app-shell (bootstrap/DI/router) **≥75%** ([coverage summary](../coverage/coverage_summary.md), [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)). Measured (2026-07-10): filtered **85.33%**, app-shell **76.04%**.
+1. **Coverage** — CI minimum **75%** filtered rollup; Engineering scorecard target **85%** filtered + app-shell (bootstrap/DI/router) **≥75%** ([coverage summary](../coverage/coverage_summary.md), [`engineering/engineering_quality_scorecard.md`](engineering/engineering_quality_scorecard.md)). Measured (2026-07-16): filtered **85.18%**, app-shell **75.75%**.
 2. **App shell** — bootstrap/composition/router aggregate tracked by `tool/check_engineering_core_coverage.sh` (not legacy `lib/core/`).
 3. **Next arch slice** — ~~Todo list `AppError`~~ **Done (June 2026)** — [`senior_patterns_review_2026-06.md`](audits/senior_patterns_review_2026-06.md) PR-3; `TodoListState.lastError` uses `AppError`.
 

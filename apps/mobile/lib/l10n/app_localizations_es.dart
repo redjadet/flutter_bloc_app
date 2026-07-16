@@ -1312,6 +1312,183 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nativePlatformShowcaseLastActionLabel => 'Última acción';
 
   @override
+  String get nativeSecurityShowcaseSectionTitle => 'Native security';
+
+  @override
+  String get nativeSecurityShowcaseSectionSubtitle =>
+      'Live crypto, secure storage, and attestation calls into Android Keystore / biometrics and iOS CryptoKit / Keychain / Secure Enclave. Only status, reason codes, and counts ever reach Dart.';
+
+  @override
+  String get nativeSecurityCardCryptoTitle => 'Native crypto';
+
+  @override
+  String get nativeSecurityCardCryptoDescription =>
+      'P-256 keys use Secure Enclave or Android Keystore when available; AES-GCM key residency is shown per device.';
+
+  @override
+  String get nativeSecurityRunP256Label => 'Run P-256 sign/verify';
+
+  @override
+  String get nativeSecurityRunAesLabel => 'Run AES-GCM round trip';
+
+  @override
+  String get nativeSecurityCardCertificateTitle => 'Certificate pinning policy';
+
+  @override
+  String get nativeSecurityCardCertificateDescription =>
+      'Summary of the app\'s configured TLS/SPKI pin policy. Pins themselves are never shown.';
+
+  @override
+  String get nativeSecurityCertificateModeLabel => 'Mode';
+
+  @override
+  String get nativeSecurityCertificatePinHashLabel => 'Pin hash kind';
+
+  @override
+  String get nativeSecurityCertificateHostCountLabel => 'Configured hosts';
+
+  @override
+  String get nativeSecurityCertificatePrimaryPinCountLabel => 'Configured pins';
+
+  @override
+  String get nativeSecurityCertificateBackupPinCountLabel => 'Backup pins';
+
+  @override
+  String get nativeSecurityOpenCertificateDemoLabel => 'Open mutable pin demo';
+
+  @override
+  String get nativeSecurityCertificateMutableDemoUnavailable =>
+      'Mutable demo unavailable in this build.';
+
+  @override
+  String get nativeSecurityCardStorageTitle => 'Secure storage lifecycle';
+
+  @override
+  String get nativeSecurityCardStorageDescription =>
+      'Writes, reads back, and deletes a sentinel value from Keystore/Keychain-backed storage. The value itself is never logged or shown.';
+
+  @override
+  String get nativeSecurityRunStorageLabel => 'Run storage lifecycle';
+
+  @override
+  String get nativeSecurityCardAppCheckTitle => 'App Check attestation';
+
+  @override
+  String get nativeSecurityCardAppCheckDescription =>
+      'Checks whether a cached Firebase App Check token is obtainable. Until providers are registered in Firebase Console, this probe reports setup needed — that is expected.';
+
+  @override
+  String get nativeSecurityAppCheckDisclaimer =>
+      'The token itself is never shown or stored. Console registration is a separate Follow-up step and is not required for the other security cards.';
+
+  @override
+  String get nativeSecurityRunAppCheckLabel => 'Probe App Check token';
+
+  @override
+  String get nativeSecurityAppCheckIdleHint =>
+      'If Firebase Console App Check registration is still pending, the result will say setup needed. That is normal for this demo.';
+
+  @override
+  String get nativeSecurityAppCheckStatusSetupNeeded => 'Setup needed';
+
+  @override
+  String get nativeSecurityAppCheckSetupGuidance =>
+      'Register App Check providers in Firebase Console (Debug for local builds; Play Integrity on Android and App Attest on iOS for release), rebuild the app, then probe again. Other native security cards do not depend on this step.';
+
+  @override
+  String get nativeSecurityAppCheckErrorGuidance =>
+      'Attestation failed on this device. If Console registration is still unfinished, complete provider setup and retry. Token material is never shown.';
+
+  @override
+  String nativeSecurityAppCheckIssuedDetail(String provider) {
+    return 'Cached token obtainable (configured provider: $provider). Token material is never shown.';
+  }
+
+  @override
+  String get nativeSecurityCardBiometricTitle =>
+      'Biometric protected operation';
+
+  @override
+  String get nativeSecurityCardBiometricDescription =>
+      'Runs a small crypto operation gated behind a biometric-strong prompt tied to a hardware-backed key.';
+
+  @override
+  String get nativeSecurityRunBiometricLabel => 'Run biometric operation';
+
+  @override
+  String get nativeSecurityOutcomeIdle => 'Not run yet';
+
+  @override
+  String get nativeSecurityStatusSuccess => 'Success';
+
+  @override
+  String get nativeSecurityStatusUnavailable => 'Unavailable';
+
+  @override
+  String get nativeSecurityStatusDenied => 'Denied';
+
+  @override
+  String get nativeSecurityStatusFailed => 'Failed';
+
+  @override
+  String get nativeSecurityReasonOk => 'Completed on-device.';
+
+  @override
+  String get nativeSecurityReasonMobileOnly =>
+      'Available on iOS and Android only.';
+
+  @override
+  String get nativeSecurityReasonMissingPlugin =>
+      'Native handler is not registered on this build.';
+
+  @override
+  String get nativeSecurityReasonTimeout => 'Native call timed out.';
+
+  @override
+  String get nativeSecurityReasonMalformedReply =>
+      'Native reply was malformed.';
+
+  @override
+  String get nativeSecurityReasonPlatformError =>
+      'Native platform call failed.';
+
+  @override
+  String get nativeSecurityReasonSecureEnclaveUnavailable =>
+      'Secure Enclave unavailable on this device.';
+
+  @override
+  String get nativeSecurityReasonKeystoreUnavailable =>
+      'Android Keystore could not create a key.';
+
+  @override
+  String get nativeSecurityReasonBiometricNotEnrolled =>
+      'No biometrics enrolled on this device.';
+
+  @override
+  String get nativeSecurityReasonBiometricLockout =>
+      'Biometric sensor is temporarily locked out.';
+
+  @override
+  String get nativeSecurityReasonBiometricCanceled =>
+      'Biometric prompt was canceled.';
+
+  @override
+  String get nativeSecurityReasonBiometricUnsupported =>
+      'Biometric hardware unsupported on this device.';
+
+  @override
+  String get nativeSecurityReasonConcurrentPrompt =>
+      'Another biometric prompt is already active.';
+
+  @override
+  String get nativeSecurityReasonNotConfiguredOrTokenNull =>
+      'No App Check token yet — Firebase Console registration is still pending.';
+
+  @override
+  String get nativeSecurityReasonAppCheckError =>
+      'App Check attestation failed.';
+
+  @override
   String get eventBusDemoTitle => 'Demo de Event Bus';
 
   @override

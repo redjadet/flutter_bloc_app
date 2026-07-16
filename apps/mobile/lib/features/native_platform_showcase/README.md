@@ -193,8 +193,103 @@ flutter test test/integration_preflight/web_bootstrap_smoke_test.dart
 
 Test `opens native platform showcase from Example on web` asserts title, summary, runtime/UI labels, and lesson 0. It does **not** assert a specific host OS string (widget-test web often reports the host desktop platform).
 
+## Native security showcase (nested, no new route)
+
+A second `NativeSecurityShowcaseCubit` is nested (via `MultiBlocProvider`) under the
+same `/native-platform-showcase` route and renders a five-card section
+(`NativeSecurityShowcaseSection`) after the platform summary card. It demonstrates
+native crypto, TLS pin policy, secure storage, App Check attestation, and biometric
+gating **without ever surfacing key material, tokens, ciphertext, or certificates**.
+
+| Card (key `native-security-card-…`) | Demonstrates | Native call |
+| --- | --- | --- |
+| `crypto` | P-256 sign/verify **and** AES-GCM round trip (two separate buttons: `native-security-run-crypto`, `native-security-run-aes`) | `p256SignVerify`, `aesGcmRoundTrip` |
+| `certificate` | Reads existing `CertificatePinningConfig` → mode/hash/host/total-pin counts only (no inferred primary/backup role); opens the mutable pinning demo (`native-security-open-certificate-demo`) only when `!kReleaseMode && !FlavorManager.I.isProd` | none (local mapping) |
+| `storage` | Secure storage write → read → delete lifecycle (`native-security-run-storage`) | `secureStorageLifecycle` |
+| `app-check` | Cached Firebase App Check token acquisition evidence only (`native-security-run-app-check`). Missing Console registration → calm **Setup needed** panel with guidance (expected demo state, not a crash). Token never shown. | `FirebaseAppCheck.instance.getToken(false)` |
+| `biometric` | Biometric-gated native operation (`native-security-run-biometric`) | `biometricProtectedOperation` |
+
+### Channel + wire format
+
+Channel: `com.example.flutter_bloc_app/native_security_showcase` (separate from the
+`native_showcase` interop channel above). Methods: `p256SignVerify`,
+`aesGcmRoundTrip`, `secureStorageLifecycle`, `biometricProtectedOperation`. Every
+reply is a `Map` with `schemaVersion: 1`; anything else (non-map, missing/unsupported
+version, unknown `status`) is rejected by `NativeSecurityChannelReplyMapper` and
+mapped to `failed`/`malformed_reply`. Statuses: `success | unavailable | denied |
+failed`. Off Android/iOS the Dart adapter (`MethodChannelNativeSecurityShowcaseService`)
+short-circuits to `unavailable`/`mobile_only` **before** invoking the channel.
+Non-interactive crypto/storage calls use a **2s** client timeout; biometric uses a
+**60s** timeout so Face ID / fingerprint prompts are not falsely mapped to
+`unavailable`/`timeout` while the OS dialog is still open.
+
+### Security stack
+
+```text
+Presentation (NativeSecurityShowcaseCubit, section widgets)
+        ↓  RunNativeSecurityOperationUseCase / ProbeAppCheckAttestationUseCase
+        ↓  LoadCertificatePinPolicySummaryUseCase
+domain/ ports: NativeSecurityShowcaseService, FirebaseAppCheckAttestationService
+        ↓
+data/ adapters: MethodChannelNativeSecurityShowcaseService,
+        FirebaseAppCheckAttestationServiceImpl, CertificatePinPolicySummaryMapper
+        ↓
+MethodChannel `native_security_showcase` / Firebase App Check SDK / CertificatePinningConfig
+```
+
+`LoadCertificatePinPolicySummaryUseCase` takes a `CertificatePinPolicySummaryBuilder`
+function (typedef) rather than importing the data-layer mapper directly; the
+composition root injects `CertificatePinPolicySummaryMapper.fromConfig`.
+
+The Cubit tracks a shared busy gate (`inFlight` for native ops + `appCheckInFlight`
+for App Check) so all run buttons disable together while any probe is active.
+Duplicate `run*` / App Check calls while busy are ignored. Each card's result is
+stored on its own state field so running one operation never clears another card's
+prior outcome, and the Cubit never emits after `isClosed`.
+
+### DI additions (`registerNativePlatformShowcaseServices`)
+
+| Registration | Implementation |
+| --- | --- |
+| `NativeSecurityShowcaseService` | `MethodChannelNativeSecurityShowcaseService` |
+| `FirebaseAppCheckAttestationService` | `FirebaseAppCheckAttestationServiceImpl` |
+| `RunNativeSecurityOperationUseCase` | wraps `NativeSecurityShowcaseService` |
+| `ProbeAppCheckAttestationUseCase` | wraps `FirebaseAppCheckAttestationService` |
+| `LoadCertificatePinPolicySummaryUseCase` | wraps `CertificatePinPolicySummaryMapper.fromConfig` |
+
+`NativeSecurityShowcaseCubit` itself is **not** in GetIt; it is built at the route
+(`createNativePlatformShowcaseRoute`) alongside the parent
+`NativePlatformShowcaseCubit`, both provided via `MultiBlocProvider`.
+
+### No-secrets guarantee
+
+The reply mapper only copies allowlisted keys (status, reason code, platform,
+booleans, counts, algorithm/residency labels); raw key bytes, ciphertext, tokens, and
+certificates never cross the channel. `FirebaseAppCheckAttestationServiceImpl` calls
+`getToken(false)` (never `forceRefresh: true`), discards the token string
+immediately, and only reports `issued`/`unavailable`/`failed` + a configured-provider
+label. The
+certificate card exposes counts and mode names from `CertificatePinningConfig`, never
+raw pin hashes.
+
+### Native host modules (Tasks 5–6)
+
+Android and iOS handlers are wired on channel
+`com.example.flutter_bloc_app/native_security_showcase`:
+
+| Host | File | Primitives |
+| --- | --- | --- |
+| Android | `NativeSecurityShowcaseHandler.kt` | Keystore P-256 + AES-GCM, Keystore-backed sentinel prefs, `BiometricPrompt` (`BIOMETRIC_STRONG`); host is `FlutterFragmentActivity` |
+| iOS | `NativeSecurityShowcaseHandler.swift` | Secure Enclave P-256 (else `secure_enclave_unavailable`), Keychain AES-GCM + sentinel, `LAContext` + `.biometryCurrentSet` |
+
+Expected non-device outcomes (valid, not crashes): iOS Simulator may return
+`unavailable`/`secure_enclave_unavailable` for P-256; biometrics may be
+`unavailable`/`denied` without enrollment. Physical-device biometric + hardware-backed
+crypto proof remains Follow-up.
+
 ## Related docs
 
 - Feature brief: [`docs/changes/2026-06-08_native_platform_showcase_feature_brief.md`](../../../../../docs/changes/2026-06-08_native_platform_showcase_feature_brief.md)
+- Native security showcase change note: [`docs/changes/2026-07-15_native_security_showcase.md`](../../../../../docs/changes/2026-07-15_native_security_showcase.md)
 - Integration journey: [`docs/engineering/integration_journey_map.md`](../../../../../docs/engineering/integration_journey_map.md) (J6)
 - Testing matrix: [`docs/testing/matrix_required_by_change.md`](../../../../../docs/testing/matrix_required_by_change.md) (Example demo showcase)

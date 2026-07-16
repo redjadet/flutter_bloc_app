@@ -2407,6 +2407,306 @@ abstract class AppLocalizations {
   /// **'Last action'**
   String get nativePlatformShowcaseLastActionLabel;
 
+  /// Title of the native security showcase section
+  ///
+  /// In en, this message translates to:
+  /// **'Native security'**
+  String get nativeSecurityShowcaseSectionTitle;
+
+  /// Subtitle explaining the native security showcase section
+  ///
+  /// In en, this message translates to:
+  /// **'Live crypto, secure storage, and attestation calls into Android Keystore / biometrics and iOS CryptoKit / Keychain / Secure Enclave. Only status, reason codes, and counts ever reach Dart.'**
+  String get nativeSecurityShowcaseSectionSubtitle;
+
+  /// Title of the native crypto card
+  ///
+  /// In en, this message translates to:
+  /// **'Native crypto'**
+  String get nativeSecurityCardCryptoTitle;
+
+  /// Description of the native crypto card
+  ///
+  /// In en, this message translates to:
+  /// **'P-256 keys use Secure Enclave or Android Keystore when available; AES-GCM key residency is shown per device.'**
+  String get nativeSecurityCardCryptoDescription;
+
+  /// Button label to run the P-256 sign/verify operation
+  ///
+  /// In en, this message translates to:
+  /// **'Run P-256 sign/verify'**
+  String get nativeSecurityRunP256Label;
+
+  /// Button label to run the AES-GCM round trip operation
+  ///
+  /// In en, this message translates to:
+  /// **'Run AES-GCM round trip'**
+  String get nativeSecurityRunAesLabel;
+
+  /// Title of the certificate pinning policy card
+  ///
+  /// In en, this message translates to:
+  /// **'Certificate pinning policy'**
+  String get nativeSecurityCardCertificateTitle;
+
+  /// Description of the certificate pinning policy card
+  ///
+  /// In en, this message translates to:
+  /// **'Summary of the app\'s configured TLS/SPKI pin policy. Pins themselves are never shown.'**
+  String get nativeSecurityCardCertificateDescription;
+
+  /// Label for the certificate pinning mode row
+  ///
+  /// In en, this message translates to:
+  /// **'Mode'**
+  String get nativeSecurityCertificateModeLabel;
+
+  /// Label for the certificate pin hash kind row
+  ///
+  /// In en, this message translates to:
+  /// **'Pin hash kind'**
+  String get nativeSecurityCertificatePinHashLabel;
+
+  /// Label for the configured host count row
+  ///
+  /// In en, this message translates to:
+  /// **'Configured hosts'**
+  String get nativeSecurityCertificateHostCountLabel;
+
+  /// Label for the configured pin count row
+  ///
+  /// In en, this message translates to:
+  /// **'Configured pins'**
+  String get nativeSecurityCertificatePrimaryPinCountLabel;
+
+  /// Label for the backup pin count row
+  ///
+  /// In en, this message translates to:
+  /// **'Backup pins'**
+  String get nativeSecurityCertificateBackupPinCountLabel;
+
+  /// Button label to open the certificate pinning demo route
+  ///
+  /// In en, this message translates to:
+  /// **'Open mutable pin demo'**
+  String get nativeSecurityOpenCertificateDemoLabel;
+
+  /// Shown instead of the open-demo button in release/prod builds
+  ///
+  /// In en, this message translates to:
+  /// **'Mutable demo unavailable in this build.'**
+  String get nativeSecurityCertificateMutableDemoUnavailable;
+
+  /// Title of the secure storage lifecycle card
+  ///
+  /// In en, this message translates to:
+  /// **'Secure storage lifecycle'**
+  String get nativeSecurityCardStorageTitle;
+
+  /// Description of the secure storage lifecycle card
+  ///
+  /// In en, this message translates to:
+  /// **'Writes, reads back, and deletes a sentinel value from Keystore/Keychain-backed storage. The value itself is never logged or shown.'**
+  String get nativeSecurityCardStorageDescription;
+
+  /// Button label to run the secure storage lifecycle operation
+  ///
+  /// In en, this message translates to:
+  /// **'Run storage lifecycle'**
+  String get nativeSecurityRunStorageLabel;
+
+  /// Title of the App Check attestation card
+  ///
+  /// In en, this message translates to:
+  /// **'App Check attestation'**
+  String get nativeSecurityCardAppCheckTitle;
+
+  /// Description of the App Check attestation card
+  ///
+  /// In en, this message translates to:
+  /// **'Checks whether a cached Firebase App Check token is obtainable. Until providers are registered in Firebase Console, this probe reports setup needed — that is expected.'**
+  String get nativeSecurityCardAppCheckDescription;
+
+  /// Disclaimer clarifying App Check token is never displayed
+  ///
+  /// In en, this message translates to:
+  /// **'The token itself is never shown or stored. Console registration is a separate Follow-up step and is not required for the other security cards.'**
+  String get nativeSecurityAppCheckDisclaimer;
+
+  /// Button label to probe the cached App Check token
+  ///
+  /// In en, this message translates to:
+  /// **'Probe App Check token'**
+  String get nativeSecurityRunAppCheckLabel;
+
+  /// Pre-run hint that missing Console registration is expected
+  ///
+  /// In en, this message translates to:
+  /// **'If Firebase Console App Check registration is still pending, the result will say setup needed. That is normal for this demo.'**
+  String get nativeSecurityAppCheckIdleHint;
+
+  /// Friendly status label when App Check has no cached token yet
+  ///
+  /// In en, this message translates to:
+  /// **'Setup needed'**
+  String get nativeSecurityAppCheckStatusSetupNeeded;
+
+  /// Guidance shown when App Check is not configured or token is null
+  ///
+  /// In en, this message translates to:
+  /// **'Register App Check providers in Firebase Console (Debug for local builds; Play Integrity on Android and App Attest on iOS for release), rebuild the app, then probe again. Other native security cards do not depend on this step.'**
+  String get nativeSecurityAppCheckSetupGuidance;
+
+  /// Guidance shown when App Check probe throws or fails
+  ///
+  /// In en, this message translates to:
+  /// **'Attestation failed on this device. If Console registration is still unfinished, complete provider setup and retry. Token material is never shown.'**
+  String get nativeSecurityAppCheckErrorGuidance;
+
+  /// Success detail for App Check probe including allowlisted provider label
+  ///
+  /// In en, this message translates to:
+  /// **'Cached token obtainable (configured provider: {provider}). Token material is never shown.'**
+  String nativeSecurityAppCheckIssuedDetail(String provider);
+
+  /// Title of the biometric protected operation card
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric protected operation'**
+  String get nativeSecurityCardBiometricTitle;
+
+  /// Description of the biometric protected operation card
+  ///
+  /// In en, this message translates to:
+  /// **'Runs a small crypto operation gated behind a biometric-strong prompt tied to a hardware-backed key.'**
+  String get nativeSecurityCardBiometricDescription;
+
+  /// Button label to run the biometric protected operation
+  ///
+  /// In en, this message translates to:
+  /// **'Run biometric operation'**
+  String get nativeSecurityRunBiometricLabel;
+
+  /// Shown before a native security card has been run
+  ///
+  /// In en, this message translates to:
+  /// **'Not run yet'**
+  String get nativeSecurityOutcomeIdle;
+
+  /// No description provided for @nativeSecurityStatusSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get nativeSecurityStatusSuccess;
+
+  /// No description provided for @nativeSecurityStatusUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get nativeSecurityStatusUnavailable;
+
+  /// No description provided for @nativeSecurityStatusDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get nativeSecurityStatusDenied;
+
+  /// No description provided for @nativeSecurityStatusFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get nativeSecurityStatusFailed;
+
+  /// No description provided for @nativeSecurityReasonOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed on-device.'**
+  String get nativeSecurityReasonOk;
+
+  /// No description provided for @nativeSecurityReasonMobileOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Available on iOS and Android only.'**
+  String get nativeSecurityReasonMobileOnly;
+
+  /// No description provided for @nativeSecurityReasonMissingPlugin.
+  ///
+  /// In en, this message translates to:
+  /// **'Native handler is not registered on this build.'**
+  String get nativeSecurityReasonMissingPlugin;
+
+  /// No description provided for @nativeSecurityReasonTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Native call timed out.'**
+  String get nativeSecurityReasonTimeout;
+
+  /// No description provided for @nativeSecurityReasonMalformedReply.
+  ///
+  /// In en, this message translates to:
+  /// **'Native reply was malformed.'**
+  String get nativeSecurityReasonMalformedReply;
+
+  /// No description provided for @nativeSecurityReasonPlatformError.
+  ///
+  /// In en, this message translates to:
+  /// **'Native platform call failed.'**
+  String get nativeSecurityReasonPlatformError;
+
+  /// No description provided for @nativeSecurityReasonSecureEnclaveUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure Enclave unavailable on this device.'**
+  String get nativeSecurityReasonSecureEnclaveUnavailable;
+
+  /// No description provided for @nativeSecurityReasonKeystoreUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Android Keystore could not create a key.'**
+  String get nativeSecurityReasonKeystoreUnavailable;
+
+  /// No description provided for @nativeSecurityReasonBiometricNotEnrolled.
+  ///
+  /// In en, this message translates to:
+  /// **'No biometrics enrolled on this device.'**
+  String get nativeSecurityReasonBiometricNotEnrolled;
+
+  /// No description provided for @nativeSecurityReasonBiometricLockout.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric sensor is temporarily locked out.'**
+  String get nativeSecurityReasonBiometricLockout;
+
+  /// No description provided for @nativeSecurityReasonBiometricCanceled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric prompt was canceled.'**
+  String get nativeSecurityReasonBiometricCanceled;
+
+  /// No description provided for @nativeSecurityReasonBiometricUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric hardware unsupported on this device.'**
+  String get nativeSecurityReasonBiometricUnsupported;
+
+  /// No description provided for @nativeSecurityReasonConcurrentPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Another biometric prompt is already active.'**
+  String get nativeSecurityReasonConcurrentPrompt;
+
+  /// No description provided for @nativeSecurityReasonNotConfiguredOrTokenNull.
+  ///
+  /// In en, this message translates to:
+  /// **'No App Check token yet — Firebase Console registration is still pending.'**
+  String get nativeSecurityReasonNotConfiguredOrTokenNull;
+
+  /// No description provided for @nativeSecurityReasonAppCheckError.
+  ///
+  /// In en, this message translates to:
+  /// **'App Check attestation failed.'**
+  String get nativeSecurityReasonAppCheckError;
+
   /// Title for the Event Bus pattern interactive demo
   ///
   /// In en, this message translates to:

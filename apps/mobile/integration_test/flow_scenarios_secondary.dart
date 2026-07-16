@@ -207,10 +207,7 @@ void registerEventBusDemoIntegrationFlow() {
         find.byKey(const ValueKey('event-bus-demo-login-button')),
       );
 
-      await pumpUntilFound(
-        tester,
-        find.textContaining('User 101 is active'),
-      );
+      await pumpUntilFound(tester, find.textContaining('User 101 is active'));
       expect(find.textContaining('Push connected for user 101'), findsWidgets);
     },
   );
@@ -264,10 +261,76 @@ void registerNativePlatformShowcaseIntegrationFlow() {
         find.text(expectsMaterialUi ? 'Material' : 'Cupertino'),
         findsWidgets,
       );
-      expect(
-        find.byKey(const ValueKey('native-platform-showcase-interop-swift')),
-        findsOneWidget,
+
+      // Page order: summary → security → interop. Security is tall enough that
+      // interop keys are off-screen / not built until scrolled into view.
+      final Finder securitySection = find.byKey(
+        const ValueKey<String>('native-security-showcase-section'),
       );
+      await tester.scrollUntilVisible(
+        securitySection,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(securitySection, findsOneWidget);
+      for (final String cardKey in <String>[
+        'native-security-card-crypto',
+        'native-security-card-certificate',
+        'native-security-card-storage',
+        'native-security-card-app-check',
+        'native-security-card-biometric',
+      ]) {
+        final Finder card = find.byKey(ValueKey<String>(cardKey));
+        await tester.scrollUntilVisible(
+          card,
+          300,
+          scrollable: find.byType(Scrollable).last,
+        );
+        expect(card, findsOneWidget);
+      }
+
+      Future<void> tapSecurityRun(final String key) async {
+        final Finder button = find.byKey(ValueKey<String>(key));
+        await tester.scrollUntilVisible(
+          button,
+          300,
+          scrollable: find.byType(Scrollable).last,
+        );
+        await tapAndPump(tester, button);
+        await tester.pump(const Duration(milliseconds: 500));
+        await tester.pumpAndSettle(const Duration(seconds: 3));
+      }
+
+      await tapSecurityRun('native-security-run-crypto');
+      await tapSecurityRun('native-security-run-aes');
+      await tapSecurityRun('native-security-run-storage');
+
+      // Outcomes must never surface secret-looking blobs.
+      final RegExp secretLooking = RegExp(
+        '-----BEGIN|sha256/[A-Za-z0-9+/=]{20,}',
+      );
+      final Iterable<String> visibleTexts = find
+          .byType(Text)
+          .evaluate()
+          .map((final e) => (e.widget as Text).data)
+          .whereType<String>();
+      for (final String text in visibleTexts) {
+        expect(
+          secretLooking.hasMatch(text),
+          isFalse,
+          reason: 'Security showcase UI leaked secret-looking text: $text',
+        );
+      }
+
+      final Finder interopSwift = find.byKey(
+        const ValueKey('native-platform-showcase-interop-swift'),
+      );
+      await tester.scrollUntilVisible(
+        interopSwift,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(interopSwift, findsOneWidget);
       expect(
         find.byKey(const ValueKey('native-platform-showcase-interop-kotlin')),
         findsOneWidget,
@@ -276,6 +339,7 @@ void registerNativePlatformShowcaseIntegrationFlow() {
         find.byKey(const ValueKey('native-platform-showcase-interop-cpp')),
         findsOneWidget,
       );
+
       if (!kIsWeb &&
           (defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS)) {

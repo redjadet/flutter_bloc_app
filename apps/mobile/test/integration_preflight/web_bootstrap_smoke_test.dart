@@ -129,10 +129,26 @@ void main() {
     expect(find.text('Native platform showcase'), findsWidgets);
     expect(find.text('Runtime platform'), findsOneWidget);
     expect(find.text('UI family'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('native-platform-showcase-interop-swift')),
-      findsOneWidget,
+
+    final Finder securitySection = find.byKey(
+      const ValueKey('native-security-showcase-section'),
     );
+    await tester.scrollUntilVisible(
+      securitySection,
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(securitySection, findsOneWidget);
+
+    final Finder interopSwift = find.byKey(
+      const ValueKey('native-platform-showcase-interop-swift'),
+    );
+    await tester.scrollUntilVisible(
+      interopSwift,
+      300,
+      scrollable: find.byType(Scrollable).last,
+    );
+    expect(interopSwift, findsOneWidget);
     expect(
       find.byKey(const ValueKey('native-platform-showcase-interop-kotlin')),
       findsOneWidget,
