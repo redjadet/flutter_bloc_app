@@ -95,6 +95,28 @@ void main() {
           throwsA(isA<GraphqlDemoException>()),
         );
       });
+
+      test(
+        'maps malformed country payload to GraphqlDemoException data type',
+        () async {
+          final Dio client = createMockDio(
+            '{"data":{"countries":[{"code":"AD","name":"Andorra","continent":"Europe"}]}}',
+            200,
+          );
+          repository = CountriesGraphqlRepository(client: client);
+
+          await expectLater(
+            repository.fetchCountries(),
+            throwsA(
+              isA<GraphqlDemoException>().having(
+                (final e) => e.type,
+                'type',
+                GraphqlDemoErrorType.data,
+              ),
+            ),
+          );
+        },
+      );
     });
   });
 }
