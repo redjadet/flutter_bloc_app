@@ -12,6 +12,7 @@ Thin map for structure, layering, and modularity. For day-to-day implementation,
 - [architecture/use_case_dto_policy.md](architecture/use_case_dto_policy.md) — use cases, DTOs, mappers
 - [architecture/MOBILE_BACKEND_BOUNDARIES.md](architecture/MOBILE_BACKEND_BOUNDARIES.md) — six mobile/backend failure modes
 - [backend/API_CONTRACT_GUIDE.md](backend/API_CONTRACT_GUIDE.md) — mobile/backend contract + future pagination
+- [backend/MOBILE_BACKEND_DEFERRED_WORK.md](backend/MOBILE_BACKEND_DEFERRED_WORK.md) — pagination / analytics / other not-done items
 - [adr/README.md](adr/README.md) — accepted architecture decisions (ADR index)
 - [modularity.md](modularity.md) — feature barrels, cross-feature import guards
 - [system_design_showcase.md](system_design_showcase.md) — interview/portfolio talk track (claims → proof)

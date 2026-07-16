@@ -2,6 +2,9 @@
 
 **Status:** Not implemented. No Mixpanel, Sentry, or Patrol SDK in `pubspec.yaml`. Governed by [ADR 0005](../adr/0005-interview-showcase-scope.md).
 
+Hardening program deferred list (pagination + analytics + related):
+[backend/MOBILE_BACKEND_DEFERRED_WORK.md](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
+
 ## Goals
 
 - Product analytics for funnel and feature adoption (Counter, Todo, Chat)

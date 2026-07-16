@@ -71,6 +71,9 @@ When the first paginated list ships, backends and mobile must agree on:
 
 Until then: document intent in PRs that add list endpoints; do not invent a pagination framework.
 
+Full deferred list (pagination, product analytics, live-backend proof, etc.):
+[`MOBILE_BACKEND_DEFERRED_WORK.md`](MOBILE_BACKEND_DEFERRED_WORK.md).
+
 ## Related
 
 - Boundaries / failure modes: [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](../architecture/MOBILE_BACKEND_BOUNDARIES.md)

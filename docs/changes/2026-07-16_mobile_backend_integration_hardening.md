@@ -22,3 +22,5 @@ Malformed API payloads leaked raw `TypeError` from AI Decision / GraphQL DTOs, a
 ## Out of scope
 
 Pagination implementation, product analytics events, live backend validation, broad demo DTO rewrite.
+
+**Owner doc (deferred work list):** [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).

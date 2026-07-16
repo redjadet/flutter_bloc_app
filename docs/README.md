@@ -20,7 +20,8 @@ Source-of-truth docs for Flutter BLoC app.
   [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
   [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md),
   [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](architecture/MOBILE_BACKEND_BOUNDARIES.md),
-  [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md)
+  [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md),
+  [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](backend/MOBILE_BACKEND_DEFERRED_WORK.md)
 - **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
   [`design_system.md`](design_system.md),
   [`mix_design_system_plan.md`](mix_design_system_plan.md)

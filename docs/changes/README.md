@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-16_mobile_backend_integration_hardening.md`](2026-07-16_mobile_backend_integration_hardening.md): Mobile/backend contract safety — defensive DTOs, required Dio injection, ad-hoc Dio CI guard, canonical contract docs; deferred list [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
 - [`2026-07-15_native_security_showcase.md`](2026-07-15_native_security_showcase.md): Native security cards on `/native-platform-showcase` (MethodChannel crypto/storage/biometric, App Check probe, TLS pin summary) with zero secrets in UI/state.
 - [`2026-07-15_agent-safety-contracts.md`](2026-07-15_agent-safety-contracts.md): Canonical agent safety contracts (`SAFETY-01..06`, `SAFETY-REPORT`) with drift gate, risk-register wiring, and AI snapshot `git_head` refresh.
 - [`2026-07-13_web_first_load_splash.md`](2026-07-13_web_first_load_splash.md): Web HTML + Flutter splash during first launch; parallel bootstrap steps; blank-screen fix.

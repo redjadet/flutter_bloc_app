@@ -2,8 +2,8 @@
 
 **Scope:** Post-remediation evidence for Tasks 2–7 of the mobile/backend integration hardening program.
 **Baseline:** [`mobile_backend_integration_hardening_baseline_2026-07-16.md`](mobile_backend_integration_hardening_baseline_2026-07-16.md) @ `ebfc0c54` (score **3.0 / 5**).
-**Head:** `fb6faadd` on `codex/mobile-backend-integration-hardening`.
-**Out of scope (unchanged):** Live backend calls, pagination implementation, product analytics events, domain/route/UI rewrites, new dependencies.
+**Head:** `codex/mobile-backend-integration-hardening` (checklist closeout `e5ab22ff`; deferred-work owner doc + index fixes in follow-up).
+**Out of scope (unchanged):** Live backend calls, pagination implementation, product analytics events, domain/route/UI rewrites, new dependencies. See [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
 
 ## Executive summary
 
@@ -49,13 +49,14 @@
 
 - No live-backend validation — unit/fixture proof only.
 - Domain wire-leak warn-only list still 45 pre-existing hits.
-- Pagination / product analytics remain documentation contracts until a product feature requires implementation.
+- Pagination / product analytics remain documentation contracts until a product feature requires implementation — owner list: [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
 - Broad demo DTOs outside AI Decision + GraphQL country scope still use direct casts (explicitly out of scope).
 
 ## Tech debt (tracked)
 
-- Prefer initializing formals / avoid types on closure parameters infos in touched GraphQL/counter files (non-blocking infos at analyze time).
+- Analyze fatal-infos on Dio injection constructors cleared in `c910bc5b` (prefer initializing formals / avoid types on closure parameters).
 - Consider gitignore exception for `*_baseline_*.md` audits (baseline required `git add -f`).
+- Deferred owner list (pagination, analytics, live-backend proof, broad DTO rewrite, domain-wire backlog): [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
 
 ## Modified files (program)
 
@@ -72,8 +73,9 @@
 - Matching tests under `apps/mobile/test/...`
 - `tool/check_adhoc_dio_construction.sh` + fixtures + `tool/delivery_checklist.sh`
 - `docs/backend/API_CONTRACT_GUIDE.md`, `docs/architecture/MOBILE_BACKEND_BOUNDARIES.md`, `docs/contributing/PR_REVIEW_CHECKLIST.md`
+- `docs/backend/MOBILE_BACKEND_DEFERRED_WORK.md` (not-done owner list)
 - Hub link updates + validation_scripts catalog/overview/checklist_index
-- Baseline + final audits
+- Baseline + final audits + change note
 
 ## Evidence table (commands)
 
