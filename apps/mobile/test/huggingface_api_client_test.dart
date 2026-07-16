@@ -35,7 +35,7 @@ Dio createMockDio(
 void main() {
   group('HuggingFaceApiClient', () {
     test('cleans whitespace API keys', () {
-      final client = HuggingFaceApiClient(apiKey: '   ');
+      final client = HuggingFaceApiClient(dio: Dio(), apiKey: '   ');
       expect(client.hasApiKey, isFalse);
     });
 

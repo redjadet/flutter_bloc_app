@@ -22,8 +22,8 @@ part 'countries_graphql_repository_queries.part.dart';
 /// when the app shuts down.
 class CountriesGraphqlRepository
     implements GraphqlDemoRepository, GraphqlRemoteRepository {
-  CountriesGraphqlRepository({final Dio? client})
-    : this._fromClient(client ?? Dio());
+  CountriesGraphqlRepository({required final Dio client})
+    : this._fromClient(client);
 
   CountriesGraphqlRepository._fromClient(final Dio client)
     : _api = CountriesGraphqlApi(client);

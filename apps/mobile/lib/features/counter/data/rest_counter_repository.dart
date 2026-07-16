@@ -31,13 +31,12 @@ class RestCounterRepository
     implements CounterRepository {
   RestCounterRepository({
     required final String baseUrl,
-    final Dio? client,
+    required final Dio client,
     final Map<String, String>? defaultHeaders,
     this._requestTimeout = const Duration(seconds: 10),
   }) : _baseUri = _parseBaseUri(baseUrl),
-       _client = client ?? Dio(),
-       _defaultHeaders = {...?defaultHeaders},
-       _ownsClient = client == null {
+       _client = client,
+       _defaultHeaders = {...?defaultHeaders} {
     _api = CounterApi(_client, baseUrl: _baseUri.toString());
     _watchController = StreamController<CounterSnapshot>.broadcast(
       onListen: () => _triggerInitialLoadIfNeeded(this),
@@ -50,7 +49,6 @@ class RestCounterRepository
   late final CounterApi _api;
   final Map<String, String> _defaultHeaders;
   final Duration _requestTimeout;
-  final bool _ownsClient;
   static const CounterSnapshot _emptySnapshot = CounterSnapshot(
     userId: 'rest',
     count: 0,
@@ -71,9 +69,6 @@ class RestCounterRepository
   Stream<CounterSnapshot> watch() => _restCounterRepositoryWatch(this);
 
   Future<void> dispose() async {
-    if (_ownsClient) {
-      _client.close();
-    }
     if (!_watchController.isClosed) {
       await _watchController.close();
     }

@@ -13,17 +13,15 @@ typedef JsonMap = Map<String, dynamic>;
 /// headers, error handling and JSON parsing.
 class HuggingFaceApiClient {
   HuggingFaceApiClient({
-    final Dio? dio,
+    required final Dio dio,
     final String? apiKey,
     this._requestTimeout = const Duration(seconds: 30),
-  }) : _dio = dio ?? Dio(),
-       _apiKey = _clean(apiKey),
-       _ownsClient = dio == null;
+  }) : _dio = dio,
+       _apiKey = _clean(apiKey);
 
   final Dio _dio;
   final String? _apiKey;
   final Duration _requestTimeout;
-  final bool _ownsClient;
 
   bool get hasApiKey => _apiKey != null;
 
@@ -121,9 +119,7 @@ class HuggingFaceApiClient {
   }
 
   void dispose() {
-    if (_ownsClient) {
-      _dio.close();
-    }
+    // Injected Dio lifetime is owned by composition / test harness.
   }
 
   static String? _clean(final String? value) {
