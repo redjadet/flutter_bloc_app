@@ -7,7 +7,6 @@ validation without requiring production certificates.
 
 - Route: `/certificate-pinning-demo` (`AppRoutes.certificatePinningDemo`)
 - Example hub button (`ValueKey('example-certificate-pinning-demo-button')`)
-- Counter overflow → “Open certificate pinning demo”
 - **Redirects** to counter when `kReleaseMode || Flavor.prod`
 
 ## Stack

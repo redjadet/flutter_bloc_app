@@ -70,7 +70,7 @@ Production **release** builds reject mock modes at startup (`StateError`).
 ## How to run the demo
 
 1. Launch a non-prod debug/profile build (`main_dev.dart`).
-2. Open **Example** → **Certificate pinning demo**, or Counter overflow menu.
+2. Open **Example** → **Certificate pinning demo**.
 3. Pick a mock scenario → **Trigger secure probe**.
 4. Inspect safe status text and developer log lines (no raw pins/certs).
 
