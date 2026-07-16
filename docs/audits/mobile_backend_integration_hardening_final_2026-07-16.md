@@ -2,7 +2,7 @@
 
 **Scope:** Post-remediation evidence for Tasks 2–7 of the mobile/backend integration hardening program.
 **Baseline:** [`mobile_backend_integration_hardening_baseline_2026-07-16.md`](mobile_backend_integration_hardening_baseline_2026-07-16.md) @ `ebfc0c54` (score **3.0 / 5**).
-**Head:** `4d59eb31` on `codex/mobile-backend-integration-hardening`.
+**Head:** branch `codex/mobile-backend-integration-hardening` (includes deferred-work owner doc `4d59eb31` + audit pin).
 **Out of scope (unchanged):** Live backend calls, pagination implementation, product analytics events, domain/route/UI rewrites, new dependencies. See [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
 
 ## Executive summary
