@@ -7,9 +7,7 @@ extension _CountriesGraphqlRepositoryQueries on CountriesGraphqlRepository {
       return const <GraphqlCountry>[];
     }
     return List<GraphqlCountry>.unmodifiable(
-      list.map(mapFromDynamic).whereType<Map<String, dynamic>>().map((
-        final Map<String, dynamic> json,
-      ) {
+      list.map(mapFromDynamic).whereType<Map<String, dynamic>>().map((json) {
         try {
           return GraphqlCountryDto.fromJson(json).toDomain();
         } on FormatException catch (e) {
