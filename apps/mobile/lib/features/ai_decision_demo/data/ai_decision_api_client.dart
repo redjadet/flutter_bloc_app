@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_dto.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_json.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 import 'package:utilities/utilities.dart';
 
@@ -37,8 +38,10 @@ class AiDecisionApiClient {
       emptyResponseMessage:
           'AI Decision API returned empty case queue response.',
       mapper: (final json) {
-        final cases = (json['cases'] as List<dynamic>? ?? <dynamic>[])
-            .cast<_JsonMap>();
+        final List<Map<String, dynamic>> cases = requireAiDecisionMapList(
+          json,
+          'cases',
+        );
         return cases
             .map(AiDecisionCaseSummaryDto.fromJson)
             .map((final dto) => dto.toDomain())

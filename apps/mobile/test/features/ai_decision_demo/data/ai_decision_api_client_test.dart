@@ -109,6 +109,19 @@ void main() {
       });
     });
 
+    test('throws FormatException when case list element is not a map', () {
+      final client = AiDecisionApiClient(
+        dio: _mockDio(
+          body: const {
+            'cases': ['not-a-map'],
+          },
+          statusCode: 200,
+        ),
+      );
+
+      expect(client.getCases(), throwsA(isA<FormatException>()));
+    });
+
     test('throws HttpRequestFailure for non-success case queue responses', () {
       final client = AiDecisionApiClient(
         dio: _mockDio(
