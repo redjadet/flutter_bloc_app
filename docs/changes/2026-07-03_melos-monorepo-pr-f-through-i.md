@@ -11,12 +11,12 @@ barrels preserve import paths.
 
 ## PR-F wave 1 — `packages/networking`, `packages/storage`
 
-**Moved**
+### Moved (PR-F)
 
 - `circuit_breaker.dart`, `retrofit_response_utils.dart` → `packages/networking`
 - `hive_recoverable_errors.dart` → `packages/storage` (+ package unit test)
 
-**Deferred (stay in app)**
+### Deferred (PR-F, stay in app)
 
 - `app_dio.dart`, interceptors, auth token managers (app/auth coupling)
 - `hive_service`, `hive_repository_base`, migrations, secure storage stack
@@ -40,13 +40,13 @@ guard paths, [`firebase_setup.md`](../firebase_setup.md), [`deployment.md`](../d
 
 ## PR-I — `packages/auth`, `packages/feature_flags`
 
-**Moved**
+### Moved (PR-I)
 
 - Auth domain ports: `auth_user`, `auth_provider_kind`, `auth_repository`,
   `remote_backend_auth_port`, `session_invalidation_reason`
 - Feature flags: `remote_config_service`, `remote_config_keys`
 
-**Deferred**
+### Deferred (PR-I)
 
 - `token_repository`, `session_lifecycle_coordinator` (Firebase/Supabase SDK deps)
 - Sync presentation split (app-owned per plan)

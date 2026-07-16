@@ -12,6 +12,7 @@ void main() {
           'capital': 'Ankara',
           'currency': 'TRY',
           'emoji': '🇹🇷',
+          'unexpected_field': true,
         },
       );
 
@@ -21,24 +22,43 @@ void main() {
       expect(domain.capital, 'Ankara');
     });
 
-    test('throws when continent is missing', () {
+    test('throws FormatException when continent is missing', () {
       expect(
         () => GraphqlCountryDto.fromJson(<String, dynamic>{
           'code': 'TR',
           'name': 'Turkey',
         }),
-        throwsA(isA<TypeError>()),
+        throwsA(isA<FormatException>()),
       );
     });
 
-    test('throws when continent shape is malformed', () {
+    test('throws FormatException when continent shape is malformed', () {
       expect(
         () => GraphqlCountryDto.fromJson(<String, dynamic>{
           'code': 'TR',
           'name': 'Turkey',
           'continent': 'Asia',
         }),
-        throwsA(isA<TypeError>()),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('does not include untrusted payload values in parse failures', () {
+      const String sensitiveValue = 'customer@example.com';
+
+      expect(
+        () => GraphqlCountryDto.fromJson(<String, dynamic>{
+          'code': 'TR',
+          'name': 'Turkey',
+          'continent': sensitiveValue,
+        }),
+        throwsA(
+          isA<FormatException>().having(
+            (final error) => error.message,
+            'message',
+            allOf(contains('String'), isNot(contains(sensitiveValue))),
+          ),
+        ),
       );
     });
   });

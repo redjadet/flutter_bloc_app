@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_dto_mappers.dart';
+import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_json.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_models.dart';
 
 export 'ai_decision_dto_mappers.dart';
@@ -16,12 +17,12 @@ class AiDecisionCaseSummaryDto {
 
   factory AiDecisionCaseSummaryDto.fromJson(final Map<String, dynamic> json) =>
       AiDecisionCaseSummaryDto(
-        id: json['id'] as String,
-        applicantName: json['applicant_name'] as String,
-        businessName: json['business_name'] as String,
-        amount: (json['amount'] as num).toDouble(),
-        status: json['status'] as String,
-        lastDecisionBand: json['last_decision_band'] as String?,
+        id: requireAiDecisionString(json, 'id'),
+        applicantName: requireAiDecisionString(json, 'applicant_name'),
+        businessName: requireAiDecisionString(json, 'business_name'),
+        amount: requireAiDecisionNumAsDouble(json, 'amount'),
+        status: requireAiDecisionString(json, 'status'),
+        lastDecisionBand: optionalAiDecisionString(json, 'last_decision_band'),
       );
 
   final String id;
@@ -53,11 +54,11 @@ class AiDecisionDecisionResultDto {
   factory AiDecisionDecisionResultDto.fromJson(
     final Map<String, dynamic> json,
   ) => AiDecisionDecisionResultDto(
-    riskScore: (json['risk_score'] as num).toDouble(),
-    riskBand: json['risk_band'] as String,
-    recommendedAction: json['recommended_action'] as String,
-    rationale: json['rationale'] as String,
-    proof: json['proof'] as Map<String, dynamic>? ?? const <String, dynamic>{},
+    riskScore: requireAiDecisionNumAsDouble(json, 'risk_score'),
+    riskBand: requireAiDecisionString(json, 'risk_band'),
+    recommendedAction: requireAiDecisionString(json, 'recommended_action'),
+    rationale: requireAiDecisionString(json, 'rationale'),
+    proof: optionalAiDecisionMap(json, 'proof'),
   );
 
   final double riskScore;
@@ -89,29 +90,25 @@ class AiDecisionCaseDetailDto {
   });
 
   factory AiDecisionCaseDetailDto.fromJson(final Map<String, dynamic> json) {
-    final caseJson = json['case'] as Map<String, dynamic>;
+    final Map<String, dynamic> caseJson = requireAiDecisionMap(json, 'case');
+    final Object? latestRaw = json['latest_decision'];
+    AiDecisionDecisionResultDto? latestDecision;
+    if (latestRaw != null) {
+      // requireAiDecisionMap redacts value kinds; never interpolate payload.
+      latestDecision = AiDecisionDecisionResultDto.fromJson(
+        requireAiDecisionMap(json, 'latest_decision'),
+      );
+    }
     return AiDecisionCaseDetailDto(
-      caseId: caseJson['id'] as String,
-      status: caseJson['status'] as String,
-      createdAt: caseJson['created_at'] as String,
-      applicant:
-          json['applicant'] as Map<String, dynamic>? ??
-          const <String, dynamic>{},
-      business:
-          json['business'] as Map<String, dynamic>? ??
-          const <String, dynamic>{},
-      loan: json['loan'] as Map<String, dynamic>? ?? const <String, dynamic>{},
-      riskSignals: (json['risk_signals'] as List<dynamic>? ?? const <dynamic>[])
-          .map((final e) => e as Map<String, dynamic>)
-          .toList(growable: false),
-      actions: (json['actions'] as List<dynamic>? ?? const <dynamic>[])
-          .map((final e) => e as Map<String, dynamic>)
-          .toList(growable: false),
-      latestDecision: json['latest_decision'] == null
-          ? null
-          : AiDecisionDecisionResultDto.fromJson(
-              json['latest_decision'] as Map<String, dynamic>,
-            ),
+      caseId: requireAiDecisionString(caseJson, 'id'),
+      status: requireAiDecisionString(caseJson, 'status'),
+      createdAt: requireAiDecisionString(caseJson, 'created_at'),
+      applicant: optionalAiDecisionMap(json, 'applicant'),
+      business: optionalAiDecisionMap(json, 'business'),
+      loan: optionalAiDecisionMap(json, 'loan'),
+      riskSignals: requireAiDecisionMapList(json, 'risk_signals'),
+      actions: requireAiDecisionMapList(json, 'actions'),
+      latestDecision: latestDecision,
     );
   }
 

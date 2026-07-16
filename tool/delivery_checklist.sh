@@ -1498,6 +1498,7 @@ VALIDATION_FAILED=0
 CHECK_MESSAGES=(
   "Checking for Flutter imports in domain layer..."
   "Checking Clean Architecture import boundaries..."
+  "Checking ad-hoc Dio() construction (approved factories only)..."
   "Checking feature folder contract..."
   "Checking features.dart barrel completeness..."
   "Checking offline-first stale-sync guard (do not overwrite newer state)..."
@@ -1578,6 +1579,7 @@ CHECK_MESSAGES=(
 CHECK_SCRIPTS=(
   "tool/check_flutter_domain_imports.sh"
   "tool/check_clean_architecture_imports.sh"
+  "tool/check_adhoc_dio_construction.sh"
   "tool/check_feature_folder_contract.sh"
   "tool/check_features_barrel.sh"
   "tool/check_offline_first_remote_merge.sh"
@@ -1655,6 +1657,7 @@ CHECK_SCRIPTS=(
   "tool/check_flutter_layout_overflows.sh"
 )
 CHECK_SCRIPT_THEMES=(
+  "architecture"
   "architecture"
   "architecture"
   "architecture"

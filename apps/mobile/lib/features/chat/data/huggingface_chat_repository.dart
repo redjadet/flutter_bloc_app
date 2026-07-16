@@ -15,7 +15,14 @@ class HuggingfaceChatRepository implements ChatRepository {
     final HuggingFaceResponseParser? responseParser,
   }) : _apiClient =
            apiClient ??
-           HuggingFaceApiClient(dio: client, apiKey: _normalize(apiKey)),
+           HuggingFaceApiClient(
+             dio:
+                 client ??
+                 (throw ArgumentError(
+                   'HuggingfaceChatRepository requires dio or apiClient',
+                 )),
+             apiKey: _normalize(apiKey),
+           ),
        _payloadBuilder = payloadBuilder ?? const HuggingFacePayloadBuilder(),
        _responseParser =
            responseParser ??

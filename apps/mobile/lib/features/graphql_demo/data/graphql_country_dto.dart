@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_json.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 
 class GraphqlContinentDto {
@@ -5,8 +6,8 @@ class GraphqlContinentDto {
 
   factory GraphqlContinentDto.fromJson(final Map<String, dynamic> json) =>
       GraphqlContinentDto(
-        code: json['code'] as String,
-        name: json['name'] as String,
+        code: requireGraphqlString(json, 'code'),
+        name: requireGraphqlString(json, 'name'),
       );
 
   final String code;
@@ -27,14 +28,14 @@ class GraphqlCountryDto {
 
   factory GraphqlCountryDto.fromJson(final Map<String, dynamic> json) =>
       GraphqlCountryDto(
-        code: json['code'] as String,
-        name: json['name'] as String,
+        code: requireGraphqlString(json, 'code'),
+        name: requireGraphqlString(json, 'name'),
         continent: GraphqlContinentDto.fromJson(
-          json['continent'] as Map<String, dynamic>,
+          requireGraphqlMap(json, 'continent'),
         ),
-        capital: json['capital'] as String?,
-        currency: json['currency'] as String?,
-        emoji: json['emoji'] as String?,
+        capital: optionalGraphqlString(json, 'capital'),
+        currency: optionalGraphqlString(json, 'currency'),
+        emoji: optionalGraphqlString(json, 'emoji'),
       );
 
   final String code;

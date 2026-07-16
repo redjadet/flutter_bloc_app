@@ -13,6 +13,8 @@ overview.
   the deeper docs per topic.
 - **Prefer repo scripts for validation**: this document describes the intended
   patterns; `./bin/checklist` and the validator scripts enforce them.
+- **Mobile/backend contracts**: [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md),
+  [`architecture/MOBILE_BACKEND_BOUNDARIES.md`](architecture/MOBILE_BACKEND_BOUNDARIES.md).
 - **When adding new cross-cutting behavior**, update the owning utility doc
   (typically [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md)) and add/extend a validator or
   regression test when the pattern is important enough to enforce.

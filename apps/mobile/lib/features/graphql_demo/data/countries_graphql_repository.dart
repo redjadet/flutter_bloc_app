@@ -22,8 +22,8 @@ part 'countries_graphql_repository_queries.part.dart';
 /// when the app shuts down.
 class CountriesGraphqlRepository
     implements GraphqlDemoRepository, GraphqlRemoteRepository {
-  CountriesGraphqlRepository({final Dio? client})
-    : this._fromClient(client ?? Dio());
+  CountriesGraphqlRepository({required final Dio client})
+    : this._fromClient(client);
 
   CountriesGraphqlRepository._fromClient(final Dio client)
     : _api = CountriesGraphqlApi(client);
@@ -47,18 +47,7 @@ class CountriesGraphqlRepository
       _CountriesGraphqlRepositoryQueries.continentsQuery,
       operationName: _opContinents,
     );
-    final List<dynamic>? rawContinents = listFromDynamic(data['continents']);
-    if (rawContinents == null || rawContinents.isEmpty) {
-      return const <GraphqlContinent>[];
-    }
-    return List<GraphqlContinent>.unmodifiable(
-      rawContinents
-          .map(mapFromDynamic)
-          .whereType<Map<String, dynamic>>()
-          .map(GraphqlContinentDto.fromJson)
-          .map((final dto) => dto.toDomain())
-          .toList(),
-    );
+    return mapContinents(data['continents']);
   }
 
   @override

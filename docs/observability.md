@@ -21,6 +21,9 @@ Map from exceptions or HTTP status using
 `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing
 `isNetworkError` / `isTimeoutError` helpers.
 
+Product analytics remain deferred — see [plans/future_observability.md](plans/future_observability.md)
+and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/API_CONTRACT_GUIDE.md).
+
 ## Logging
 
 - Use `AppLogger.error(message, error, stackTrace)` for structured error logging.

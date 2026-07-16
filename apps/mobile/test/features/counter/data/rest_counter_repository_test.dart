@@ -72,15 +72,18 @@ void main() {
   group('RestCounterRepository.constructor', () {
     test('throws ArgumentError for invalid or unsupported baseUrl', () {
       expect(
-        () => RestCounterRepository(baseUrl: 'not-a-uri'),
+        () => RestCounterRepository(baseUrl: 'not-a-uri', client: Dio()),
         throwsArgumentError,
       );
       expect(
-        () => RestCounterRepository(baseUrl: 'https://'),
+        () => RestCounterRepository(baseUrl: 'https://', client: Dio()),
         throwsArgumentError,
       );
       expect(
-        () => RestCounterRepository(baseUrl: 'ws://api.example.com'),
+        () => RestCounterRepository(
+          baseUrl: 'ws://api.example.com',
+          client: Dio(),
+        ),
         throwsArgumentError,
       );
     });
