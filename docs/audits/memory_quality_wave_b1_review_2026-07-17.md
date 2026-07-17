@@ -29,3 +29,5 @@ flutter test … --tags memory_leak --concurrency=1  →  +8 All tests passed
 ## Non-goals
 
 Wave B2/B3; dry-run checklist gate; global `withIgnoredAll()` removal.
+
+Full open backlog: [`../plans/2026-07-17_memory_quality_deferred.md`](../plans/2026-07-17_memory_quality_deferred.md).

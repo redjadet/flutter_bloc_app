@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-17_memory_quality_deferred.md`](2026-07-17_memory_quality_deferred.md): Deferred backlog for memory quality program leftovers after B1.
 - [`2026-07-17_memory_quality_wave_b1.md`](2026-07-17_memory_quality_wave_b1.md): Tag stable leak journeys (auth, app-shell `go`, realtime/BLE teardown); no global ignore flip.
 - [`2026-07-17_memory_quality_wave_b0.md`](2026-07-17_memory_quality_wave_b0.md): Report-only leak tracking dry-run tooling + baseline audit; no global ignore flip.
 - [`2026-07-17_memory_quality_wave_a.md`](2026-07-17_memory_quality_wave_a.md): Progressive memory gate — `memory_lint` plugin, tagged `leak_tracker` suite, checklist enforcement; no global ignore flip.
