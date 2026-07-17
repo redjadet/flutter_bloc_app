@@ -25,7 +25,7 @@ Tag constant: `memoryLeakTag` (`memory_leak`).
 ## Commands
 
 ```bash
-cd apps/mobile && flutter test --tags memory_leak
+bash tool/run_memory_leak_tests.sh
 cd apps/mobile && flutter test test/shared/memory_leak_smoke_test.dart
 ```
 
