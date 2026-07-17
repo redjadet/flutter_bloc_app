@@ -163,6 +163,7 @@ json_annotation = _find_scalar("json_annotation", section_order=("dependencies",
 analyzer_override = _find_scalar("analyzer", section_order=("dependency_overrides", "dev_dependencies"))
 mix_lint_present = "mix_lint" in pubspec_sections["dev_dependencies"]
 file_length_lint_present = "file_length_lint" in pubspec_sections["dev_dependencies"]
+memory_lint_present = "memory_lint" in pubspec_sections["dev_dependencies"]
 
 json_serializable_min = _parse_version_min(json_serializable)
 json_annotation_min = _parse_version_min(json_annotation)
@@ -275,11 +276,11 @@ if errors:
     print("- preferred: json_serializable ^6.14.0 + json_annotation ^4.12.0 + dependency_overrides analyzer 10.0.2, dart_style 3.1.4 + mix_lint 2.x (analysis_server_plugin)")
     print("- legacy: analyzer 8.x + json_serializable 6.11.x + json_annotation ^4.9.0 + custom_lint 0.8.x")
     print("- move analyzer >=10 without overrides: keep mix_lint on analysis_server_plugin; migrate other custom_lints off custom_lint_builder")
-    if mix_lint_present or file_length_lint_present:
+    if mix_lint_present or file_length_lint_present or memory_lint_present:
         print("")
         print(
             "Note: custom analyzer plugins present"
-            " (`mix_lint`/`file_length_lint`); upgrade those first if raising analyzer."
+            " (`mix_lint`/`file_length_lint`/`memory_lint`); upgrade those first if raising analyzer."
         )
     raise SystemExit(1)
 
@@ -287,7 +288,7 @@ print("✅ pubspec-compat|ok")
 PY
 
 # Custom analyzer plugins pin analyzer 10 APIs; `pub upgrade` must not float these.
-for custom_lint_pkg in file_length_lint mix_lint; do
+for custom_lint_pkg in file_length_lint mix_lint memory_lint; do
   custom_pubspec="$WORKSPACE_ROOT/custom_lints/$custom_lint_pkg/pubspec.yaml"
   [ -f "$custom_pubspec" ] || continue
   if grep -Eq 'analysis_server_plugin: \^|analyzer_plugin: \^|analyzer_testing: \^' "$custom_pubspec"; then

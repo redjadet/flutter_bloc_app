@@ -159,6 +159,8 @@ dev_dependencies:
   json_serializable: ^6.14.0
   leak_tracker: ^11.0.2
   leak_tracker_flutter_testing: ^3.0.10
+  memory_lint:
+    path: ../../custom_lints/memory_lint
   mix_lint:
     path: ../../custom_lints/mix_lint
   mock_exceptions: ^0.8.2

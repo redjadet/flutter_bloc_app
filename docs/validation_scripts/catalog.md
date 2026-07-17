@@ -147,7 +147,7 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
 | Async / boundaries | post-async mounted, stream dispose, concurrent modification | existing scripts |
 | Navigation | router feature validate (path-triggered from checklist) | checklist hook + `./bin/router_feature_validate`; **fail** `check_deferred_heavy_routes.sh` |
-| Memory / lifecycle | memory scripts, lifecycle error handling | **fail** `check_lifecycle_observer_dispose.sh` |
+| Memory / lifecycle | memory scripts, lifecycle error handling, **memory_lint**, **memory_leak tests** | **fail** `check_lifecycle_observer_dispose.sh`; **fail** `run_memory_lint.sh`; **fail** tagged leak tests |
 | Background / startup | background sync coordinator test, perf scripts | regression test added; startup gate deferred |
 
 - **`check_navigation_outside_presentation.sh`**: GoRouter / `context.go` etc. only in presentation; scans `apps/mobile/lib/features/**/{domain,data}/**` and `apps/mobile/lib/app/**/{domain,data}/**`. `check-ignore` supported. Fixtures: `tool/fixtures/navigation_outside_presentation/`.
@@ -158,6 +158,8 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 - **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `apps/mobile/lib/app/router/route_groups.dart` / `apps/mobile/lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
 - **`run_file_length_lint.sh`**: Fail when `tool/check_file_length_physical.py` reports `FILE_TOO_LONG` under `lib/` (max 225 **physical** lines from `file_length_lint:` in `analysis_options.yaml`; same policy as the native plugin without whole-repo `dart analyze`). Skipped with `SKIP_FILE_LENGTH_LINT=1` or `CHECKLIST_RUN_FILE_LENGTH_LINT=0`. Plugin diagnostics may still appear in `flutter analyze` when enabled.
 - **`run_mix_lint.sh`**: Fail when `dart analyze --format machine lib` reports `mix_*` diagnostics (native `mix_lint` plugin). Scoped to `lib/`, 600s timeout, heartbeat logs; hard-fails plugin/crash output. Skipped with `SKIP_MIX_LINT=1` or `CHECKLIST_RUN_MIX_LINT=0`.
+- **`run_memory_lint.sh`**: Fail when machine analysis reports `memory_*` diagnostics under app `lib/` (native `memory_lint` plugin: dispose/close/observer/static-BuildContext rules). Skip: `SKIP_MEMORY_LINT=1` or `CHECKLIST_RUN_MEMORY_LINT=0`. Auto when `apps/mobile/lib/*`, `custom_lints/memory_lint/*`, or analyzer/pubspec wiring changes. Legacy shell heuristics (`check_memory_*`) remain active. Docs: [`../performance/memory_lints.md`](../performance/memory_lints.md).
+- **`memory_leak` tagged tests**: Checklist runs `(cd apps/mobile && flutter test --tags memory_leak)` by default (`CHECKLIST_RUN_MEMORY_LEAK_TESTS=1`). Docs: [`../performance/memory_testing.md`](../performance/memory_testing.md).
 - **`run_file_length_lint_test.py`**: Regression harness for file-length wiring (`python3 tool/run_file_length_lint_test.py`). Probes must use physical newlines (`wc -l` ≥ 226), not many `//` tokens on one line. Checklist auto-runs when `custom_lints/file_length_lint/**`, `analysis_options.yaml`, or the lint scripts change (`CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=auto|0|1`).
 
 Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).

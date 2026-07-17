@@ -25,6 +25,13 @@ plugins:
       mix_variants_last: true
       mix_mixable_styler_has_create: true
       mix_prefer_dot_shorthands: true
+  memory_lint:
+    path: custom_lints/memory_lint
+    diagnostics:
+      memory_state_controller_missing_dispose: error
+      memory_stream_controller_missing_close: error
+      memory_widgets_binding_observer_missing_remove: error
+      memory_static_build_context: error
 
 analyzer:
   language:

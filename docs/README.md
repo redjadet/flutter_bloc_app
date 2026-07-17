@@ -115,6 +115,14 @@ Source-of-truth docs for Flutter BLoC app.
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
 - [`ci_automation.md`](ci_automation.md)
 
+#### Performance / lifecycle
+
+- [`performance/memory_management.md`](performance/memory_management.md) — ownership principles
+- [`performance/memory_testing.md`](performance/memory_testing.md) — leak_tracker tagged suite
+- [`performance/memory_lints.md`](performance/memory_lints.md) — `memory_lint` rule IDs
+- [`performance/memory_ci.md`](performance/memory_ci.md) — checklist / CI gates
+- [`performance/memory_checklist.md`](performance/memory_checklist.md) — reviewer checklist
+
 #### Engineering (`docs/engineering/`)
 
 - [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) — fast vs full validation lanes

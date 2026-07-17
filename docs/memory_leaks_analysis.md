@@ -2,8 +2,20 @@
 
 This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](CODE_QUALITY.md).
 
-**Analysis Date:** 2025-02
+**Analysis Date:** 2025-02 (historical); automation status updated 2026-07-17
 **Scope:** `lib/` — StreamController, StreamSubscription, Timer, Controllers (TextEditingController, ScrollController), lifecycle patterns
+
+---
+
+## Automation status (Wave A)
+
+| Layer | Status |
+| --- | --- |
+| Static | `memory_lint` via `bash tool/run_memory_lint.sh` (four syntax rules) |
+| Runtime | Tagged `flutter test --tags memory_leak` with `withTrackedAll()` |
+| Untagged tests | Still `withIgnoredAll()` in `flutter_test_config.dart` |
+| Heuristics | Existing `check_memory_*.sh` / lifecycle scripts remain in checklist |
+| Hub docs | [`performance/memory_management.md`](performance/memory_management.md) |
 
 ---
 

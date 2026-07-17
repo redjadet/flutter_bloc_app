@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
@@ -68,6 +68,7 @@ Future<void> testExecutable(final FutureOr<void> Function() testMain) async {
         return null;
       });
   LeakTesting.enable();
+  // Untagged tests stay ignored; leakSafeTestWidgets opts tagged tests back in.
   LeakTesting.settings = LeakTesting.settings.withIgnoredAll();
   LeakTracking.warnForUnsupportedPlatforms = false;
   try {
