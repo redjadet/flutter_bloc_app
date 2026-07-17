@@ -49,12 +49,12 @@ Removed paths (no longer in tree) → current owners:
 
 Contracts only — see the files:
 
-- [`custom_painter_and_render_object.md`](../custom_painter_and_render_object.md)
-- [`todo_list_feature_guide.md`](../todo_list_feature_guide.md)
+- [`custom_painter_and_render_object.md`](../architecture/custom_painter_and_render_object.md)
+- [`todo_list_feature_guide.md`](../features/todo_list_feature_guide.md)
 - [`walletconnect_auth_status.md`](../walletconnect_auth_status.md)
 - [`staff_app_demo_walkthrough.md`](../staff_app_demo_walkthrough.md)
 - [`ide_plugins_guide.md`](../ide_plugins_guide.md)
-- [`compute_isolate_review.md`](../compute_isolate_review.md)
+- [`compute_isolate_review.md`](../performance/compute_isolate_review.md)
 - [`code_generation_guide.md`](../code_generation_guide.md)
 - [`supabase_proxy_huggingface_chat_plan.md`](../plans/supabase_proxy_huggingface_chat_plan.md)
 - [`dio_retrofit_integration_plan.md`](../plans/dio_retrofit_integration_plan.md)

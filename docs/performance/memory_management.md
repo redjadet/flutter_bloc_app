@@ -53,7 +53,7 @@ Do not store `BuildContext` in `static` fields. Enforced by
 - [`memory_lints.md`](memory_lints.md) — rule IDs
 - [`memory_ci.md`](memory_ci.md) — checklist / CI
 - [`memory_checklist.md`](memory_checklist.md) — reviewer questions
-- Historical audit: [`../memory_leaks_analysis.md`](../memory_leaks_analysis.md)
+- Historical audit: [`memory_leaks_analysis.md`](memory_leaks_analysis.md)
 
 ## Wave B backlog
 

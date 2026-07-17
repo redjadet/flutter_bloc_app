@@ -5,7 +5,7 @@
 | Status | Accepted |
 | Date | 2026-01-16 |
 | Scope | Routing, startup time, bundle size |
-| Source docs | [Architecture Details](../architecture_details.md), [Lazy Loading Review](../lazy_loading_review.md) |
+| Source docs | [Architecture Details](../architecture_details.md), [Lazy Loading Review](../performance/lazy_loading_review.md) |
 
 ## Context
 
@@ -95,5 +95,5 @@ Revisit this ADR when:
 ## Verification
 
 - Architecture lazy-loading overview: [Architecture Details — lazy loading](../architecture_lazy_loading_and_flow.md#lazy-loading-patterns)
-- Implementation review: [Lazy Loading Review](../lazy_loading_review.md)
+- Implementation review: [Lazy Loading Review](../performance/lazy_loading_review.md)
 - Targeted tests: `flutter test test/shared/widgets/deferred_page_test.dart`
