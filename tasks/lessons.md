@@ -21,6 +21,26 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-17 - check-ignore must sit on or above the jsonEncode/jsonDecode line
+
+- What went wrong:
+  After moving case_study encode helpers into data DTOs, `// check-ignore: small
+  payload` sat above the method signature while `jsonEncode(` wrapped onto the
+  next line. `tool/check_raw_json_decode.sh` only treats ignore on the match
+  line or the immediate previous line, so checklist best-practices failed.
+- How it was fixed:
+  Put `jsonEncode(` on the same line as the method signature so the ignore
+  comment is immediately above the match (same pattern as `encodeList`).
+- Pattern:
+  Multi-line `=>` / formatter wraps can orphan `check-ignore` from the call.
+- Preventive rule:
+  After any format or DTO move that touches raw `jsonEncode`/`jsonDecode`, run
+  `bash tool/check_raw_json_decode.sh` before claiming checklist-ready; keep
+  ignore adjacent to the call expression.
+- Evidence or affected files:
+  `apps/mobile/lib/features/case_study_demo/data/case_study_draft_dto.dart`,
+  `tool/check_raw_json_decode.sh`, commit `e326f4ca`.
+
 ### 2026-07-14 - AI report refresh must regenerate its claimed metrics
 
 - What went wrong:
