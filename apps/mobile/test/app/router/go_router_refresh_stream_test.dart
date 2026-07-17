@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc_app/app/router/go_router_refresh_stream.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
+
+import '../../helpers/memory/leak_safe_test_widgets.dart';
 
 void main() {
   group('GoRouterRefreshStream', () {
@@ -109,7 +110,7 @@ void main() {
       refreshStream.dispose();
     });
 
-    testWidgets('dispose is leak-safe', (final tester) async {
+    leakSafeTestWidgets('dispose is leak-safe', (final tester) async {
       final StreamController<int> controller =
           StreamController<int>.broadcast();
       final GoRouterRefreshStream refreshStream = GoRouterRefreshStream(
@@ -119,6 +120,6 @@ void main() {
       refreshStream.addListener(() {});
       refreshStream.dispose();
       await controller.close();
-    }, experimentalLeakTesting: LeakTesting.settings);
+    });
   });
 }

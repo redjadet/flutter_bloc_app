@@ -193,7 +193,7 @@ else
 
   # `pub upgrade --major-versions` rewrites custom analyzer plugin pins to caret
   # ranges; restore pinned analyzer 10 stack before compat checks.
-  for custom_pkg in file_length_lint mix_lint; do
+  for custom_pkg in file_length_lint mix_lint memory_lint; do
     custom_pubspec="custom_lints/$custom_pkg/pubspec.yaml"
     if [ -f "$custom_pubspec" ] && ! git diff --quiet -- "$custom_pubspec"; then
       git checkout -- "$custom_pubspec"

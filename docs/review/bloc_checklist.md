@@ -34,6 +34,7 @@ Use with [BLoC Standards](../bloc_standards.md) for Cursor/Codex reviews.
 - Streams/timers/controllers/listeners are disposed in `close()`.
 - `Future.delayed` and raw `Timer` are replaced with repo timer abstractions
   when cancellation or test control matters.
+- Lifecycle ownership: [`../performance/memory_checklist.md`](../performance/memory_checklist.md).
 
 ## UI Access
 

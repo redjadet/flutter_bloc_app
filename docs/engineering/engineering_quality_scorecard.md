@@ -30,6 +30,7 @@ It is **not** the same thing as the Cursor/Codex **Harness 10/10** score (agent 
 | Area | Score | Proof command(s) | Pass criteria |
 | --- | ---: | --- | --- |
 | Delivery gate | 10/10 | `./bin/checklist` | exit 0 on clean tree |
+| Memory / lifecycle | proof | `bash tool/run_memory_lint.sh` && `(cd apps/mobile && flutter test --tags memory_leak)` | both exit 0; checklist defaults enforce both gates |
 | Coverage | 10/10 | `COVERAGE_THRESHOLD=85 dart run tool/update_coverage_summary.dart --enforce-threshold` + `bash tool/check_engineering_core_coverage.sh` | filtered ≥85% AND app shell (bootstrap/DI/router) aggregate ≥75% (unit baseline `coverage/lcov.base.info` from `tool/test_coverage.sh`; if integration merge left `coverage/lcov.info` below 85%, restore from that baseline—do not lower the gate) |
 | Architecture / modularity | 10/10 | `bash tool/check_clean_architecture_imports.sh && bash tool/check_feature_modularity_leaks.sh && bash tool/modular_metrics.sh --cross-feature-only` | all exit 0; 0 cross-feature edges |
 | Quality gates honesty | 10/10 | `bash tool/check_engineering_quality_scorecard_gate.sh` | [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md) has no bare `defer` rows: every item is `promoted`, `reject`, or `ADR-deferred` with an owning link |
@@ -50,7 +51,7 @@ Do **not** claim “portfolio top-tier engineering” unless:
 
 1. README Engineering badge is **10/10** (derived from this table via `tool/update_engineering_quality_badge.sh`).
 2. `bash tool/check_engineering_quality_scorecard_gate.sh` exits 0 (wiring +, when Coverage=10/10, measured coverage proofs).
-3. Harness remains a separate claim (`docs/ai/harness_scorecard.md`); never substitute Harness for Engineering.
+3. Harness remains a separate claim ([`ai/harness_scorecard.md`](../ai/harness_scorecard.md)); never substitute Harness for Engineering.
 
 ## Proof Commands
 

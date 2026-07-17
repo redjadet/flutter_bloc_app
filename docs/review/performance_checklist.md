@@ -42,6 +42,8 @@ Primary references:
 - Large caches have bounds or eviction; images use repo sizing conventions.
 - Run lifecycle checks from validation routing when subscriptions or timers
   changed.
+- For ownership/leak gates see [`../performance/memory_checklist.md`](../performance/memory_checklist.md)
+  (`bash tool/run_memory_lint.sh`, `flutter test --tags memory_leak`).
 
 ## Scale and Edge Cases
 
