@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-17_safe_agent_autonomy.md`](2026-07-17_safe_agent_autonomy.md): Routine reversible repo-local work is autonomous; dangerous, external, secret/production, and Git mutations retain explicit approval gates.
 - [`2026-07-17_docs_aggressive_prune.md`](2026-07-17_docs_aggressive_prune.md): Delete completed plans/migrations; shorten large how-tos to current contracts; preserve owner-index pointers.
 - [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0. Deferred leftovers: [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).
 - [`2026-07-17_domain_purity_chat_counter_todo.md`](2026-07-17_domain_purity_chat_counter_todo.md): Wave B — move chat/counter/todo wire JSON into data DTOs; domain wire leaks 45→31.

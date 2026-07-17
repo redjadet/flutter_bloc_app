@@ -1,23 +1,13 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-17T10:32:19Z"
-  git_head: "5550aa33341209a55ca4b5122b9de6eb4258ccc4"
+  generated_at: "2026-07-17T14:31:48Z"
+  git_head: "bf25e04c0da6769d4141c54a7afdad8af308bdac"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
-
-
-
-
-
-
-
-
-
-
 
 # Architecture overview (agent snapshot)
 

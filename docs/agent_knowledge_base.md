@@ -18,6 +18,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 | Harness beats model choice. | Optimize prompts, evaluators, tests, runtime checks, and feedback loops before blaming the model. |
 | Clarity compounds output. | Vague requirements create vague systems faster; define boundaries and proof before generation. |
 | Outcome beats process bloat. | Treat agents as senior engineers: give Goal / Context / Boundaries / Verification; exact steps only when repo safety requires them. |
+| Safety before autonomy. | Complete reversible repo-local work end-to-end, but human approval and destructive-action protection always take precedence. |
 | Session harness beats willpower. | Protect context, memory, orchestration, and recovery; switch strategy when session state degrades. |
 
 ## AI Productivity Traps
@@ -59,7 +60,7 @@ After cold start: this doc → [`agent_project_context.md`](agent_project_contex
 
 ## Adaptive Execution
 
-Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md); safety: [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md). Anchors: unsafe ambiguity below 95% confident; 95% confident; Before report; Stop when value met.
+Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md); safety: [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md). Anchors: safe autonomy; unsafe ambiguity below 95% confident; 95% confident; Before report; Stop when value met.
 
 ## Tool Orchestration
 

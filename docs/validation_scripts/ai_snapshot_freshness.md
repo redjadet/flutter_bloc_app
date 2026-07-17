@@ -25,7 +25,13 @@ bash tool/check_ai_snapshot_freshness.sh --strict-head   # CI optional: source g
 
 ```bash
 bash tool/refresh_ai_reports.sh
+bash tool/refresh_ai_reports.sh --self-test # frontmatter idempotency + malformed/body-delimiter safety
 ```
+
+The refresh command validates every active snapshot, stages the complete output
+set, and then installs it under a repo-scoped lock. A normal install failure or
+handled interruption rolls back already installed targets, preventing mixed
+snapshot generations.
 
 ## Related
 

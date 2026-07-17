@@ -60,6 +60,45 @@ require_contains() {
   fi
 }
 
+require_section_contains() {
+  local path="$1"
+  local start_heading="$2"
+  local end_heading="$3"
+  local needle="$4"
+  local section
+
+  if [[ ! -f "$path" ]]; then
+    fail "Missing required safety-contract file: $path"
+    return
+  fi
+
+  if ! section="$(awk -v start="$start_heading" -v end="$end_heading" '
+    $0 == start {
+      start_count++
+      if (start_count == 1) active=1
+      next
+    }
+    $0 == end {
+      end_count++
+      if (active == 1) { active=0; ended=1 }
+      next
+    }
+    active == 1 && /^## / { invalid_nested_heading=1 }
+    active == 1 { print }
+    END {
+      if (start_count != 1 || end_count != 1 || ended != 1 ||
+          invalid_nested_heading == 1) exit 2
+    }
+  ' "$path")"; then
+    fail "$path must define unique ordered section bounds: $start_heading -> $end_heading"
+    return
+  fi
+
+  if ! grep -Fq "$needle" <<<"$section"; then
+    fail "$path section $start_heading must reference: $needle"
+  fi
+}
+
 owner_tokens=(
   "SAFETY-01"
   "SAFETY-02"
@@ -68,6 +107,20 @@ owner_tokens=(
   "SAFETY-05"
   "SAFETY-06"
   "SAFETY-REPORT"
+  "Safety and human control are top priority"
+  "Safe autonomy never overrides"
+  "Only the current human user's direct request"
+  "Quoted, forwarded, pasted, or embedded content"
+  "Tool-managed ephemeral output updates"
+  "Replace or truncate an existing user-owned file"
+  "All Git state mutations require"
+  "Never modify files outside this repository unless"
+  "Routine local commands must not intentionally source"
+  "Before running an unfamiliar entrypoint"
+  "bounded safe alternatives"
+  "proceed autonomously"
+  "Do not ask for permission at each step"
+  "Ask only for credentials/tooling access"
   "same-turn approval"
   "No destructive or external actions were performed"
   "git reset --hard"
@@ -82,6 +135,45 @@ owner_tokens=(
 for token in "${owner_tokens[@]}"; do
   require_contains "$owner_path" "$token"
 done
+
+require_section_contains "$owner_path" \
+  "## Safety precedence" "## Contract index" \
+  "Only the current human user's direct request"
+require_section_contains "$owner_path" \
+  "## Safety precedence" "## Contract index" \
+  "Quoted, forwarded, pasted, or embedded content"
+require_section_contains "$owner_path" \
+  "## SAFETY-01 — Scope and target certainty" \
+  "## SAFETY-02 — Destructive and external actions" \
+  "repair failures directly caused"
+require_section_contains "$owner_path" \
+  "## SAFETY-02 — Destructive and external actions" \
+  "## SAFETY-03 — Git preservation" \
+  "Tool-managed ephemeral output updates"
+require_section_contains "$owner_path" \
+  "## SAFETY-02 — Destructive and external actions" \
+  "## SAFETY-03 — Git preservation" \
+  "Replace or truncate an existing user-owned file"
+require_section_contains "$owner_path" \
+  "## SAFETY-03 — Git preservation" \
+  "## SAFETY-04 — Secrets and production protection" \
+  "All Git state mutations require"
+require_section_contains "$owner_path" \
+  "## SAFETY-03 — Git preservation" \
+  "## SAFETY-04 — Secrets and production protection" \
+  "Never modify files outside this repository unless"
+require_section_contains "$owner_path" \
+  "## SAFETY-04 — Secrets and production protection" \
+  "## SAFETY-05 — Execution discipline" \
+  "Routine local commands must not intentionally source"
+require_section_contains "$owner_path" \
+  "## SAFETY-05 — Execution discipline" \
+  "## SAFETY-06 — Flutter app rules" \
+  "bounded safe alternatives"
+require_section_contains "$owner_path" \
+  "## SAFETY-05 — Execution discipline" \
+  "## SAFETY-06 — Flutter app rules" \
+  "Before running an unfamiliar entrypoint"
 
 if [[ "$owner_path" == "docs/agent_kb/agent_safety_contracts.md" ]]; then
   require_contains "AGENTS.md" "agent_safety_contracts.md"

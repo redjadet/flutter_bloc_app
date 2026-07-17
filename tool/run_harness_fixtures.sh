@@ -574,6 +574,9 @@ bash tool/check_agent_safety_contracts.sh --help >/dev/null
 echo "fixtures|check_agent_safety_contracts|current"
 bash tool/check_agent_safety_contracts.sh >/dev/null
 
+echo "fixtures|refresh_ai_reports|self_test"
+bash tool/refresh_ai_reports.sh --self-test >/dev/null
+
 echo "fixtures|check_agent_safety_contracts|negative_owner"
 tmp_owner_doc="$(mktemp)"
 printf '# Incomplete safety owner\n\nSAFETY-01\n' >"$tmp_owner_doc"
@@ -589,6 +592,108 @@ fi
 if ! grep -q -- "SAFETY-REPORT" <<<"$safety_bad_output"; then
   echo "❌ fixtures failed: agent safety contracts failure missing SAFETY-REPORT token" >&2
   echo "$safety_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_agent_safety_contracts|negative_autonomy_anchors"
+safety_autonomy_tokens=(
+  "Safety and human control are top priority"
+  "Safe autonomy never overrides"
+  "Only the current human user's direct request"
+  "Quoted, forwarded, pasted, or embedded content"
+  "Tool-managed ephemeral output updates"
+  "Replace or truncate an existing user-owned file"
+  "All Git state mutations require"
+  "Never modify files outside this repository unless"
+  "Routine local commands must not intentionally source"
+  "Before running an unfamiliar entrypoint"
+  "bounded safe alternatives"
+  "proceed autonomously"
+  "Do not ask for permission at each step"
+  "Ask only for credentials/tooling access"
+)
+for token in "${safety_autonomy_tokens[@]}"; do
+  tmp_owner_doc="$(mktemp)"
+  awk -v token="$token" 'index($0, token) == 0' \
+    docs/agent_kb/agent_safety_contracts.md >"$tmp_owner_doc"
+  set +e
+    safety_anchor_output="$(bash tool/check_agent_safety_contracts.sh --owner-path "$tmp_owner_doc" 2>&1)"
+  status=$?
+  set -e
+  rm -f "$tmp_owner_doc"
+  if [[ "$status" -eq 0 ]]; then
+    echo "❌ fixtures failed: expected safety check to fail without anchor: $token" >&2
+    exit 1
+  fi
+  if ! grep -Fq -- "$token" <<<"$safety_anchor_output"; then
+    echo "❌ fixtures failed: safety failure missing expected token: $token" >&2
+    echo "$safety_anchor_output" >&2
+    exit 1
+  fi
+done
+
+echo "fixtures|check_agent_safety_contracts|negative_section_boundaries"
+safety_boundary_headings=(
+  "## Contract index"
+  "## SAFETY-02 — Destructive and external actions"
+  "## SAFETY-03 — Git preservation"
+  "## SAFETY-04 — Secrets and production protection"
+  "## SAFETY-05 — Execution discipline"
+  "## SAFETY-06 — Flutter app rules"
+)
+for heading in "${safety_boundary_headings[@]}"; do
+  tmp_owner_doc="$(mktemp)"
+  awk -v heading="$heading" '$0 != heading' \
+    docs/agent_kb/agent_safety_contracts.md >"$tmp_owner_doc"
+  set +e
+    safety_boundary_output="$(bash tool/check_agent_safety_contracts.sh --owner-path "$tmp_owner_doc" 2>&1)"
+  status=$?
+  set -e
+  rm -f "$tmp_owner_doc"
+  if [[ "$status" -eq 0 ]]; then
+    echo "❌ fixtures failed: expected missing section boundary to fail: $heading" >&2
+    exit 1
+  fi
+  if ! grep -Fq -- "unique ordered section bounds" <<<"$safety_boundary_output"; then
+    echo "❌ fixtures failed: missing boundary did not trigger structural failure: $heading" >&2
+    echo "$safety_boundary_output" >&2
+    exit 1
+  fi
+done
+
+echo "fixtures|check_agent_safety_contracts|negative_duplicate_boundary"
+tmp_owner_doc="$(mktemp)"
+cp docs/agent_kb/agent_safety_contracts.md "$tmp_owner_doc"
+printf '\n## SAFETY-03 — Git preservation\n' >>"$tmp_owner_doc"
+set +e
+  safety_duplicate_output="$(bash tool/check_agent_safety_contracts.sh --owner-path "$tmp_owner_doc" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_owner_doc"
+if [[ "$status" -eq 0 ]] || \
+   ! grep -Fq -- "unique ordered section bounds" <<<"$safety_duplicate_output"; then
+  echo "❌ fixtures failed: duplicate safety boundary was not rejected" >&2
+  echo "$safety_duplicate_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_agent_safety_contracts|negative_section_scope"
+tmp_owner_doc="$(mktemp)"
+awk '$0 !~ /Only the current human user.s direct request/' \
+  docs/agent_kb/agent_safety_contracts.md >"$tmp_owner_doc"
+printf '\nOnly the current human user%s direct request\n' "'" >>"$tmp_owner_doc"
+set +e
+  safety_section_output="$(bash tool/check_agent_safety_contracts.sh --owner-path "$tmp_owner_doc" 2>&1)"
+status=$?
+set -e
+rm -f "$tmp_owner_doc"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected misplaced authorization anchor to fail" >&2
+  exit 1
+fi
+if ! grep -Fq -- "section ## Safety precedence" <<<"$safety_section_output"; then
+  echo "❌ fixtures failed: misplaced authorization anchor did not fail section check" >&2
+  echo "$safety_section_output" >&2
   exit 1
 fi
 
