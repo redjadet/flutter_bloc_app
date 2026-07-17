@@ -7,9 +7,9 @@ stays under [`docs/performance/memory_*.md`](../performance/memory_management.md
 
 | ID | Item | Status | Unblock |
 | --- | --- | --- | --- |
-| **MQ-M01** | Wave B0 PR [#551](https://github.com/redjadet/flutter_bloc_app/pull/551) | OPEN → `main` | Review + merge |
-| **MQ-M02** | Wave B1 PR [#552](https://github.com/redjadet/flutter_bloc_app/pull/552) | OPEN, base = B0 branch | Merge after #551; retarget to `main` if base branch disappears |
-| **MQ-M03** | B1 CI `build` job | Was still in progress at doc time | Wait for green / fix if red |
+| **MQ-M01** | Wave B0 PR [#551](https://github.com/redjadet/flutter_bloc_app/pull/551) | **Merged** to `main` | — |
+| **MQ-M02** | Wave B1 | [#552](https://github.com/redjadet/flutter_bloc_app/pull/552) closed (base branch gone); replacement [#553](https://github.com/redjadet/flutter_bloc_app/pull/553) → `main` | Review + merge #553 |
+| **MQ-M03** | B1 CI on #553 | Check GitHub status | Fix if red |
 
 Wave A [#550](https://github.com/redjadet/flutter_bloc_app/pull/550) is **merged**.
 
