@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/router/pages/iot_demo_hub_page.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/router/pages/iot_demo_hub_page.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_repository.dart';
@@ -18,9 +19,10 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dar
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
+
+import '../../helpers/memory/leak_safe_test_widgets.dart';
 
 class _StubIotDemoRepository implements IotDemoRepository {
   @override
@@ -176,14 +178,13 @@ void main() {
     expect(find.text(AppLocalizationsEn().iotBleStatusTitle), findsOneWidget);
   });
 
-  testWidgets('leaving BLE tab tears down scan and Bluetooth sessions', (
+  leakSafeTestWidgets('leaving BLE tab tears down scan and Bluetooth sessions', (
     final tester,
   ) async {
     await getIt.unregister<MockBleRepository>();
     await getIt.unregister<MockClassicBluetoothRepository>();
     final _TrackingBleRepository bleRepository = _TrackingBleRepository();
-    final _TrackingClassicRepository classicRepository =
-        _TrackingClassicRepository();
+    final _TrackingClassicRepository classicRepository = _TrackingClassicRepository();
     getIt.registerSingleton<MockBleRepository>(
       bleRepository,
       dispose: (final repository) => repository.dispose(),
@@ -193,9 +194,7 @@ void main() {
       dispose: (final repository) => repository.dispose(),
     );
 
-    final IotDemoCubit demoCubit = IotDemoCubit(
-      repository: _StubIotDemoRepository(),
-    );
+    final IotDemoCubit demoCubit = IotDemoCubit(repository: _StubIotDemoRepository());
     addTearDown(demoCubit.close);
     final SyncStatusCubit syncCubit = SyncStatusCubit(
       networkStatusService: _FakeNetworkStatusService(),
@@ -216,9 +215,7 @@ void main() {
               value: syncCubit,
               child: BlocProvider<IotDemoCubit>.value(
                 value: demoCubit,
-                child: IotDemoHubPage(
-                  showBackendDisabledBanner: _testShowBackendDisabledBanner,
-                ),
+                child: IotDemoHubPage(showBackendDisabledBanner: _testShowBackendDisabledBanner),
               ),
             ),
           ),
@@ -240,10 +237,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(bleRepository.stopScanCalls, greaterThan(stopScanCallsBeforeSwitch));
-    expect(
-      bleRepository.disconnectCalls,
-      greaterThan(disconnectCallsBeforeSwitch),
-    );
+    expect(bleRepository.disconnectCalls, greaterThan(disconnectCallsBeforeSwitch));
     expect(classicRepository.disconnectCalls, 1);
   });
 }
