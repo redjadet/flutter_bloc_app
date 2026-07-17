@@ -21,6 +21,62 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-17 - Idle cursor todo must keep required headings
+
+- What went wrong:
+  Reset `tasks/cursor/todo.md` to a short "Idle" note and dropped `## Goal` /
+  `## Write-set` / `## Risks` / `## Validation command` / `## Evidence/result`.
+  `./bin/agent-maintain closeout` failed tracker validation.
+- How it was fixed:
+  Restored the required headings with explicit idle placeholders (`Write-set:
+  none (idle)`, validation = closeout + AI freshness).
+- Pattern:
+  Gitignored trackers still run through `validate_task_trackers.sh` on closeout.
+- Preventive rule:
+  Never strip required headings for "idle"; fill sections with idle/none text.
+- Evidence or affected files:
+  `tool/validate_task_trackers.sh`
+  `docs/engineering/task_tracker_template.md`
+  `tasks/cursor/todo.md`
+
+### 2026-07-17 - Full RealtimeMarketPage hangs under leak_tracker
+
+- What went wrong:
+  Tagged leak journey mounted `RealtimeMarketPage` + fl_chart; test hung in
+  leak finalization (SIGTERM under timeout), not on the assertion.
+- How it was fixed:
+  Thin `BlocBuilder` surface for watch→emit→teardown; ignore only proven
+  harness layers/`TextPainter`. Fake repo `broadcast(sync: true)` so emit is
+  visible before the next pump.
+- Pattern:
+  Chart-heavy pages dominate leak_tracker GC/finalization; async broadcast
+  drops look like UI staleness under a single `pump`.
+- Preventive rule:
+  Prefer minimal product ownership surfaces for `memory_leak` tags; never tag
+  full chart pages until finalization is proven bounded; use sync broadcast or
+  explicit post-emit pumps in fakes.
+- Evidence or affected files:
+  `apps/mobile/test/shared/memory_leak_realtime_teardown_test.dart`
+  `docs/plans/2026-07-17_memory_quality_deferred.md` (MQ-N05)
+  `docs/audits/memory_quality_wave_b1_review_2026-07-17.md`
+
+### 2026-07-17 - Stacked PR dies when base branch is deleted
+
+- What went wrong:
+  After B0 `#551` merged and base branch was deleted, B1 `#552` stayed CLOSED
+  and could not be reopened or retargeted (`Cannot change the base branch of a
+  closed pull request`).
+- How it was fixed:
+  Opened replacement `#553` from the same head → `main`, then merged.
+- Pattern:
+  GitHub closes stacked PRs when the base ref disappears; reopen/retarget fails.
+- Preventive rule:
+  Before deleting a stacked base branch, retarget dependents to `main` (or open
+  a replacement PR). Prefer merge order base-first with retarget, not delete-first.
+- Evidence or affected files:
+  PRs `#552` / `#553`
+  `docs/plans/2026-07-17_memory_quality_deferred.md`
+
 ### 2026-07-17 - check-ignore must sit on or above the jsonEncode/jsonDecode line
 
 - What went wrong:
