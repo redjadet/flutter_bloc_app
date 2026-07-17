@@ -3,13 +3,13 @@
 Owner index for what the A→B1 memory program **did not** finish. Current how-to
 stays under [`docs/performance/memory_*.md`](../performance/memory_management.md).
 
-## Merge / ops (open)
+## Merge / ops
 
-| ID | Item | Status | Unblock |
-| --- | --- | --- | --- |
-| **MQ-M01** | Wave B0 PR [#551](https://github.com/redjadet/flutter_bloc_app/pull/551) | **Merged** to `main` | — |
-| **MQ-M02** | Wave B1 | [#552](https://github.com/redjadet/flutter_bloc_app/pull/552) closed (base branch gone); replacement [#553](https://github.com/redjadet/flutter_bloc_app/pull/553) → `main` | Review + merge #553 |
-| **MQ-M03** | B1 CI on #553 | Check GitHub status | Fix if red |
+| ID | Item | Status |
+| --- | --- | --- |
+| **MQ-M01** | Wave B0 [#551](https://github.com/redjadet/flutter_bloc_app/pull/551) | **Merged** |
+| **MQ-M02** | Wave B1 [#553](https://github.com/redjadet/flutter_bloc_app/pull/553) (replaces closed [#552](https://github.com/redjadet/flutter_bloc_app/pull/552)) | **Merged** |
+| **MQ-M03** | B1 CI on #553 | **Passed** (build + integration-preflight) |
 
 Wave A [#550](https://github.com/redjadet/flutter_bloc_app/pull/550) is **merged**.
 
@@ -57,7 +57,7 @@ These are **MQ-B3** (or later) unless a high-confidence narrow rule ships earlie
 
 ## B1 delivered (not deferred)
 
-For contrast — already on the B1 branch / PR #552:
+Merged via [#553](https://github.com/redjadet/flutter_bloc_app/pull/553):
 
 - Auth route sign-out leak journey (`app_route_auth_gate_test.dart`)
 - App-shell `go` + `NoTransitionPage`
