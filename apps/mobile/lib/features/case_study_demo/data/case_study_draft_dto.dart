@@ -94,8 +94,9 @@ class CaseStudyDraftDto {
   }
 
   // check-ignore: small payload (<8KB) - demo draft
-  static String encode(final CaseStudyDraft draft) =>
-      jsonEncode(CaseStudyDraftDto.fromDomain(draft).toJson());
+  static String encode(final CaseStudyDraft draft) => jsonEncode(
+    CaseStudyDraftDto.fromDomain(draft).toJson(),
+  );
 
   static CaseStudyDraft? decode(final String? raw) {
     if (raw == null || raw.isEmpty) return null;
