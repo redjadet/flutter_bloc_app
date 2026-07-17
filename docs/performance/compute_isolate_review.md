@@ -19,6 +19,6 @@ Offload CPU-heavy work with `compute()` via
 
 ## Related
 
-- [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
-- Change note: [`changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md)
-- Profiling (optional): [`STARTUP_TIME_PROFILING.md`](STARTUP_TIME_PROFILING.md), [`BUNDLE_SIZE_MONITORING.md`](BUNDLE_SIZE_MONITORING.md)
+- [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)
+- Change note: [`changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](../changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md)
+- Profiling (optional): [`startup_time_profiling.md`](startup_time_profiling.md), [`bundle_size_monitoring.md`](bundle_size_monitoring.md)

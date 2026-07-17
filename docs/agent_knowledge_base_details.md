@@ -17,13 +17,13 @@ Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 | Validation routing | [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Fast vs full validation. |
 | Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), `adr/` | Structure, routing, DI, layers, feature seams. |
 | Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Risk, tests, guardrails. |
-| Runtime evidence | [`logging.md`](logging.md), [`observability.md`](observability.md), [`STARTUP_TIME_PROFILING.md`](STARTUP_TIME_PROFILING.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
+| Runtime evidence | [`logging.md`](logging.md), [`observability.md`](observability.md), [`performance/startup_time_profiling.md`](performance/startup_time_profiling.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
 | Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
 | Code graph | [`code_review_graph.md`](code_review_graph.md) | Narrow non-trivial exploration. |
 | Hive migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Stored Hive shape, manifest/spec, fingerprints, migrators/tests. Runtime `getBox()` runs `ensureSchema` when schema set. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
 | Plans/history | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Active contracts, rationale, historical snapshots. |
-| Active trackers | [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md) | Current plan/proof. |
+| Active trackers | `../tasks/codex/todo.md`, `../tasks/cursor/todo.md` | Current plan/proof. |
 | Repeated lessons | [`../tasks/lessons.md`](../tasks/lessons.md) | Durable user corrections. |
 
 ## Plans As Artifacts
@@ -100,8 +100,8 @@ shape decisions testable without widget pumps.
 ## Codex And Cursor
 
 - Same doctrine. Source docs own behavior; host templates summarize/route.
-- Codex: direct repo shell entrypoints, tracker [`../tasks/codex/todo.md`](../tasks/codex/todo.md).
-- Cursor: thin skills/commands, tracker [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
+- Codex: direct repo shell entrypoints, tracker `../tasks/codex/todo.md`.
+- Cursor: thin skills/commands, tracker `../tasks/cursor/todo.md`.
 - Shared behavior changes start in owning source doc, then `tool/agent_host_templates/`, then `./bin/agent-maintain after-host-edit` (or `./tool/sync_agent_assets.sh --apply`). Agents: `preflight` at start, `closeout` before done. See [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md).
 - Cross-host review explicit-request-only; never replaces own review/validation/self-check.
 - Host prompts stay short: slice, constraints, files, validation, report fields.

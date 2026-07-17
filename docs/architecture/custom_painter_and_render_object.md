@@ -27,5 +27,5 @@ you need layout + paint control.
 
 ## Related
 
-- [`design_system.md`](design_system.md) — tokens / Mix for surrounding chrome
-- [`bloc_standards.md`](bloc_standards.md) — state ownership
+- [`design_system.md`](../design_system.md) — tokens / Mix for surrounding chrome
+- [`bloc_standards.md`](../bloc_standards.md) — state ownership

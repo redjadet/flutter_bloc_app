@@ -86,7 +86,7 @@ bundle smaller:
 - `/realtime-market`
 
 See [Architecture Details](architecture_details.md) and
-[Lazy Loading Review](lazy_loading_review.md) for the rationale.
+[Lazy Loading Review](performance/lazy_loading_review.md) for the rationale.
 
 ## Cross-cutting modules
 

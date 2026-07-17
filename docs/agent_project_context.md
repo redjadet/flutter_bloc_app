@@ -33,7 +33,7 @@ then apply this repo's architecture, package, migration, and validation rules.
 | Validation lanes | [`validation_scripts.md`](validation_scripts.md), [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) |
 | Testing strategy | [`testing_overview.md`](testing_overview.md), [`ai_code_review_protocol.md`](ai_code_review_protocol.md) |
 | Official skill setup | [`agent_environment_setup.md`](agent_environment_setup.md) |
-| Runtime reliability/perf | [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md), [`performance_bottlenecks.md`](performance_bottlenecks.md) |
+| Runtime reliability/perf | [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md), [`performance/performance_bottlenecks.md`](performance/performance_bottlenecks.md) |
 | Offline-first / sync | [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md), [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) |
 | Supabase migrations | [`offline_first/supabase_migrations.md`](offline_first/supabase_migrations.md), [`../supabase/README.md`](../supabase/README.md) |
 | Security / secrets | [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md) |

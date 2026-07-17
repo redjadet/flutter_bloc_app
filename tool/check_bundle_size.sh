@@ -184,10 +184,9 @@ if [ $HAS_VIOLATIONS -eq 1 ]; then
   echo "   - Removing unused dependencies"
   echo "   - Using deferred imports for heavy features"
   echo "   - Optimizing images and assets"
-  echo "   - Reviewing the lazy loading guide: docs/lazy_loading_review.md"
+  echo "   - Reviewing the lazy loading guide: docs/performance/lazy_loading_review.md"
   exit 1
 else
   echo "✅ All bundle sizes within budgets"
   exit 0
 fi
-

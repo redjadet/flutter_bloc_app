@@ -1,5 +1,8 @@
 # Supabase MCP Verification Report
 
+Historical environment verification. Re-run current checks before relying on
+plugin availability or tool behavior.
+
 **Date:** 2026-03-10
 **Project:** flutter_bloc_app
 

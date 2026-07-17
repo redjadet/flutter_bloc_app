@@ -36,7 +36,7 @@ Source of truth for gates and guardrails:
 - Static review of `lib/` and supporting tooling.
 - Architecture guidelines in [`clean_architecture.md`](clean_architecture.md), [`solid_principles.md`](solid_principles.md), [`dry_principles.md`](dry_principles.md), and [`separation_of_concerns.md`](separation_of_concerns.md).
 - Quality gates via `./bin/checklist` (format, analyze, coverage).
-- Coverage source: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+- Coverage source: generated coverage summary artifact.
 
 ## Architecture Alignment
 
@@ -70,7 +70,7 @@ Source of truth for gates and guardrails:
 ## Quality Metrics and Gates
 
 - File size policy: keep files under 250 LOC; extract widgets/helpers as needed.
-- Coverage minimum: **75%** filtered rollup (CI gate). Team target: **85%** — see [`coverage/coverage_summary.md`](../coverage/coverage_summary.md).
+- Coverage minimum: **75%** filtered rollup (CI gate). Team target: **85%** — see the generated coverage summary artifact.
 - Static analysis and formatting: run `./bin/checklist`.
 - Guardrails: see [`validation_scripts.md`](validation_scripts.md) for the full automated checks list.
 
@@ -102,12 +102,12 @@ See [`testing_overview.md`](testing_overview.md) for the full testing playbook.
 ## Related Documentation
 
 - [Race Conditions and Bugs Analysis](race_conditions_and_bugs_analysis.md) – Deep analysis of lifecycle, async, and stream patterns
-- [Memory Leaks Analysis](memory_leaks_analysis.md) – StreamController, subscription, and controller disposal patterns
+- [Memory Leaks Analysis](performance/memory_leaks_analysis.md) – StreamController, subscription, and controller disposal patterns
 - [Clean Architecture](clean_architecture.md)
 - [SOLID Principles](solid_principles.md)
 - [DRY Principles](dry_principles.md)
 - [Separation of Concerns](separation_of_concerns.md)
 - [Architecture Details](architecture_details.md)
 - [Flutter Best Practices Review](flutter_best_practices_review.md)
-- [Performance Bottlenecks](performance_bottlenecks.md)
-- [Lazy Loading Review](lazy_loading_review.md)
+- [Performance Bottlenecks](performance/performance_bottlenecks.md)
+- [Lazy Loading Review](performance/lazy_loading_review.md)

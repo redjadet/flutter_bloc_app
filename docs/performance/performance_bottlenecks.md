@@ -41,7 +41,7 @@
 
 - **Heavy list items:** Wrap list item widgets that do custom paint, many children, or images in `RepaintBoundary` so repaints are isolated and scrolling stays smooth.
 - **Long lists:** Prefer `CustomScrollView` with slivers (`SliverList`, `SliverList.builder`, `SliverGrid`) over nested scrollables with `shrinkWrap: true` to avoid unbounded height and layout cost. Use `ListView.builder` / `ListView.separated` (or sliver equivalents) for dynamic length; avoid non-builder `ListView(children: ...)` for long lists.
-- **Existing audit:** See [shrinkwrap_slivers_audit.md](audits/shrinkwrap_slivers_audit.md) for current usage and optional refactors.
+- **Existing audit:** See [shrinkwrap_slivers_audit.md](../audits/shrinkwrap_slivers_audit.md) for current usage and optional refactors.
 
 ## High-frequency events (rate limiting / debouncing)
 
@@ -57,6 +57,6 @@
 ## Related Documentation
 
 - [Lazy Loading Review](lazy_loading_review.md)
-- [Startup Time Profiling](STARTUP_TIME_PROFILING.md)
-- [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md)
-- [Architecture Details](architecture_details.md)
+- [Startup Time Profiling](startup_time_profiling.md)
+- [Bundle Size Monitoring](bundle_size_monitoring.md)
+- [Architecture Details](../architecture_details.md)

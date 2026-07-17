@@ -54,10 +54,9 @@ if [ -n "$VIOLATIONS" ]; then
   echo ""
   echo "For small payloads (<8KB), you may add: // check-ignore: small payload (<8KB)"
   echo "Examples of small payloads: request bodies, config files, error responses"
-  echo "See: lib/app/utils/isolate_json.dart and docs/compute_isolate_review.md"
+  echo "See: lib/app/utils/isolate_json.dart and docs/performance/compute_isolate_review.md"
   exit 1
 else
   echo "✅ No raw jsonDecode/jsonEncode usage found"
   exit 0
 fi
-

@@ -1,5 +1,8 @@
 # Firebase vs Supabase
 
+Decision reference for backend-platform selection; revisit before relying on
+time-sensitive pricing or product capabilities.
+
 As of March 7, 2026.
 
 This comparison is for teams choosing a backend platform for a Flutter app.

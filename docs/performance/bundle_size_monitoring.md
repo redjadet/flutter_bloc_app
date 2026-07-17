@@ -300,8 +300,8 @@ EOF
 ## Related Documentation
 
 - [Lazy Loading Review](lazy_loading_review.md) - Comprehensive analysis of lazy loading patterns, deferred imports explanation, and performance optimization opportunities
-- [Startup Time Profiling](STARTUP_TIME_PROFILING.md) - Guide for measuring and profiling app startup time
-- [Architecture Details — lazy loading](architecture_lazy_loading_and_flow.md) - Deferred routes and startup impact
+- [Startup Time Profiling](startup_time_profiling.md) - Guide for measuring and profiling app startup time
+- [Architecture Details — lazy loading](../architecture_lazy_loading_and_flow.md) - Deferred routes and startup impact
 
 ## Tools Reference
 

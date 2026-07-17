@@ -25,7 +25,7 @@ This codebase already has native analyzer plugin examples:
 
 - `custom_lints/file_length_lint` (`analysis_server_plugin`, `file_too_long`)
 - `custom_lints/mix_lint` (vendored Mix design-system lints)
-- `custom_lints/memory_lint` (lifecycle rules; see [`performance/memory_lints.md`](performance/memory_lints.md))
+- `custom_lints/memory_lint` (lifecycle rules; see [`performance/memory_lints.md`](../performance/memory_lints.md))
 
 Use `mix_lint` / `file_length_lint` / `memory_lint` as references when adding BLoC-specific rules.
 
@@ -228,6 +228,6 @@ For many use cases, runtime validation (like `StateTransitionValidator`) is more
 
 ## Related Documentation
 
-- [Code Generation Guide](code_generation_guide.md) - Alternative approach using code generation
-- [State Transition Validator](../apps/mobile/lib/app/utils/bloc/state_transition_validator.dart) - Runtime validation approach
-- [Validation Scripts](validation_scripts.md) - Existing validation patterns
+- [Code Generation Guide](../code_generation_guide.md) - Alternative approach using code generation
+- [State Transition Validator](../../apps/mobile/lib/app/utils/bloc/state_transition_validator.dart) - Runtime validation approach
+- [Validation Scripts](../validation_scripts.md) - Existing validation patterns

@@ -61,7 +61,7 @@ if [ -n "$VIOLATIONS" ]; then
   echo "Note: compute() should not be called in build(), performLayout(), or synchronous callbacks"
   echo "Isolates should be triggered from async operations in repositories/cubits"
   echo "This is a heuristic check - please review manually"
-  echo "See: docs/compute_isolate_review.md"
+  echo "See: docs/performance/compute_isolate_review.md"
   # Warning only - exit 0 (non-blocking)
   exit 0
 else

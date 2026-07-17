@@ -13,8 +13,8 @@ This is a reference Flutter application that demonstrates clean architecture, of
 
 - Architecture overview: [`clean_architecture.md`](clean_architecture.md), [`architecture_details.md`](architecture_details.md)
 - Offline-first architecture case study: [`engineering/offline_first_flutter_architecture_with_conflict_resolution.md`](engineering/offline_first_flutter_architecture_with_conflict_resolution.md)
-- Performance and lazy loading: [`performance_bottlenecks.md`](performance_bottlenecks.md), [`lazy_loading_review.md`](lazy_loading_review.md)
-- Compute/isolate JSON guidance: [`compute_isolate_review.md`](compute_isolate_review.md)
+- Performance and lazy loading: [`performance/performance_bottlenecks.md`](performance/performance_bottlenecks.md), [`performance/lazy_loading_review.md`](performance/lazy_loading_review.md)
+- Compute/isolate JSON guidance: [`performance/compute_isolate_review.md`](performance/compute_isolate_review.md)
 - Testing strategy and examples: [`testing_overview.md`](testing_overview.md), `test/shared/common_bugs_prevention_test.dart`
 - Responsive UI patterns: [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md)
 - Localization workflow: [`localization.md`](localization.md), [`new_developer_guide.md`](new_developer_guide.md)

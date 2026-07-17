@@ -1,5 +1,7 @@
 # Kids English Playlearn Feature – Uygulama Planı (Demo)
 
+Historical feature plan. Current feature contracts live under [`../features/`](../features/README.md).
+
 Bu belge, Kids English Playlearn demo feature planının kopyasıdır. Başka bir AI agent (örn. Codex) veya ekip tarafından okunup analiz edilebilir.
 
 ---
@@ -96,7 +98,7 @@ apps/mobile/lib/features/playlearn/
 ## Bağımlılıklar
 
 - **pubspec.yaml:** `flutter_tts`. Asset: `assets/playlearn/files/` (tüm dosyalar bu dizine eklenir).
-- **Asset kaynakları:** Ücretsiz görsel/ses linkleri ve Flutter kullanımı için bkz. [Playlearn Asset Kaynakları](playlearn_asset_sources.md).
+- **Asset kaynakları:** Ücretsiz görsel/ses linkleri ve Flutter kullanımı için bkz. [Playlearn Asset Kaynakları](../features/playlearn_asset_sources.md).
 
 ## Uygulama Sırası (Özet)
 
