@@ -6,6 +6,9 @@ manual review alone.
 
 ## Canon primitives
 
+**Rule:** Every created disposable object's life-cycle must be explicitly ended
+on the same ownership path that created it.
+
 | Primitive | Location | Use |
 | --- | --- | --- |
 | `DisposableBag` | `packages/utilities` | Track subscriptions / disposables for widgets and services |

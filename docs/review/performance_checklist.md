@@ -37,6 +37,8 @@ Primary references:
 
 ## Memory and Lifecycle
 
+- **Every created disposable object's life-cycle must be explicitly ended**
+  (`dispose` / `close` / cancel / remove listener/observer) on the owning path.
 - Streams, timers, and controllers disposed in Cubit `close()` or widget
   dispose.
 - Large caches have bounds or eviction; images use repo sizing conventions.
