@@ -1,0 +1,92 @@
+import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
+import 'package:utilities/utilities.dart';
+
+/// Wire DTO for [ChatMessage] persistence.
+class ChatMessageDto {
+  const ChatMessageDto({
+    required this.author,
+    required this.text,
+    this.clientMessageId,
+    this.createdAt,
+    this.synchronized = true,
+    this.lastSyncedAt,
+    this.terminalSyncFailureCode,
+  });
+
+  ChatMessageDto.fromDomain(final ChatMessage message)
+    : author = message.author,
+      text = message.text,
+      clientMessageId = message.clientMessageId,
+      createdAt = message.createdAt,
+      synchronized = message.synchronized,
+      lastSyncedAt = message.lastSyncedAt,
+      terminalSyncFailureCode = message.terminalSyncFailureCode;
+
+  factory ChatMessageDto.fromJson(final Map<String, dynamic> json) {
+    final String authorValue = (json['author'] ?? '').toString();
+    final ChatAuthor author = ChatAuthor.values.firstWhere(
+      (final value) => value.name == authorValue,
+      orElse: () => ChatAuthor.system,
+    );
+    final String text = (json['text'] ?? '').toString();
+    final String? clientMessageId =
+        stringFromDynamic(json['clientMessageId']) ??
+        stringFromDynamic(json['client_message_id']);
+    final String? createdAtString = stringFromDynamic(json['createdAt']);
+    final DateTime? createdAt = createdAtString != null
+        ? DateTime.tryParse(createdAtString)
+        : null;
+    final bool synchronized = boolFromDynamic(
+      json['synchronized'] ?? json['isSynced'],
+      fallback: true,
+    );
+    final String? lastSyncedString = stringFromDynamic(json['lastSyncedAt']);
+    final DateTime? lastSyncedAt = lastSyncedString != null
+        ? DateTime.tryParse(lastSyncedString)
+        : null;
+    final String? terminalSyncFailureCode =
+        stringFromDynamic(json['terminalSyncFailureCode']) ??
+        stringFromDynamic(json['terminal_sync_failure_code']);
+
+    return ChatMessageDto(
+      author: author,
+      text: text,
+      clientMessageId: clientMessageId,
+      createdAt: createdAt,
+      synchronized: synchronized,
+      lastSyncedAt: lastSyncedAt,
+      terminalSyncFailureCode: terminalSyncFailureCode,
+    );
+  }
+
+  final ChatAuthor author;
+  final String text;
+  final String? clientMessageId;
+  final DateTime? createdAt;
+  final bool synchronized;
+  final DateTime? lastSyncedAt;
+  final String? terminalSyncFailureCode;
+
+  ChatMessage toDomain() => ChatMessage(
+    author: author,
+    text: text,
+    clientMessageId: clientMessageId,
+    createdAt: createdAt,
+    synchronized: synchronized,
+    lastSyncedAt: lastSyncedAt,
+    terminalSyncFailureCode: terminalSyncFailureCode,
+  );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'author': author.name,
+    'text': text,
+    if (clientMessageId != null) 'clientMessageId': clientMessageId,
+    if (createdAt case final timestamp?)
+      'createdAt': timestamp.toIso8601String(),
+    'synchronized': synchronized,
+    if (lastSyncedAt case final syncedAt?)
+      'lastSyncedAt': syncedAt.toIso8601String(),
+    if (terminalSyncFailureCode != null)
+      'terminalSyncFailureCode': terminalSyncFailureCode,
+  };
+}

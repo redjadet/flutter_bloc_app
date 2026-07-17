@@ -316,7 +316,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   TodoItem? _parseOperationItem(final SyncOperation operation) {
     try {
-      return TodoItem.fromJson(operation.payload);
+      return TodoItemDto.fromMap(operation.payload).toDomain();
     } on Object catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstTodoRepository.processOperation: malformed payload',

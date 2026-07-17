@@ -11,7 +11,6 @@ part of 'counter_snapshot.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$CounterSnapshot {
 
@@ -22,8 +21,6 @@ mixin _$CounterSnapshot {
 @pragma('vm:prefer-inline')
 $CounterSnapshotCopyWith<CounterSnapshot> get copyWith => _$CounterSnapshotCopyWithImpl<CounterSnapshot>(this as CounterSnapshot, _$identity);
 
-  /// Serializes this CounterSnapshot to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,count,userId,lastChanged,changeId,lastSyncedAt,synchronized);
 
@@ -211,11 +208,11 @@ return $default(_that.count,_that.userId,_that.lastChanged,_that.changeId,_that.
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _CounterSnapshot implements CounterSnapshot {
   const _CounterSnapshot({required this.count, this.userId, this.lastChanged, this.changeId, this.lastSyncedAt, this.synchronized = false});
-  factory _CounterSnapshot.fromJson(Map<String, dynamic> json) => _$CounterSnapshotFromJson(json);
+  
 
 @override final  int count;
 @override final  String? userId;
@@ -230,17 +227,14 @@ class _CounterSnapshot implements CounterSnapshot {
 @pragma('vm:prefer-inline')
 _$CounterSnapshotCopyWith<_CounterSnapshot> get copyWith => __$CounterSnapshotCopyWithImpl<_CounterSnapshot>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$CounterSnapshotToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _CounterSnapshot&&(identical(other.count, count) || other.count == count)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lastChanged, lastChanged) || other.lastChanged == lastChanged)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,count,userId,lastChanged,changeId,lastSyncedAt,synchronized);
 

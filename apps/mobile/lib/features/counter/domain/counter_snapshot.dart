@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'counter_snapshot.freezed.dart';
-part 'counter_snapshot.g.dart';
 
 /// Immutable snapshot of counter state for persistence.
 @freezed
@@ -14,7 +13,4 @@ abstract class CounterSnapshot with _$CounterSnapshot {
     final DateTime? lastSyncedAt,
     @Default(false) final bool synchronized,
   }) = _CounterSnapshot;
-
-  factory CounterSnapshot.fromJson(final Map<String, dynamic> json) =>
-      _$CounterSnapshotFromJson(json);
 }

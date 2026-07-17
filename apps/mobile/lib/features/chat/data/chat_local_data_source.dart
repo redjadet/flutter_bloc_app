@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:hive/hive.dart';
@@ -42,7 +43,7 @@ class ChatLocalDataSource extends HiveRepositoryBase
           }
 
           final List<Map<String, dynamic>> serialized = conversations
-              .map((final c) => c.toJson())
+              .map((final c) => ChatConversationDto.fromDomain(c).toJson())
               .toList(growable: false);
           await box.put(_keyConversations, serialized);
         },
@@ -79,6 +80,6 @@ class ChatLocalDataSource extends HiveRepositoryBase
       (final dynamic key, final dynamic value) =>
           MapEntry(key.toString(), value),
     );
-    return ChatConversation.fromJson(normalized);
+    return ChatConversationDto.fromJson(normalized).toDomain();
   }
 }

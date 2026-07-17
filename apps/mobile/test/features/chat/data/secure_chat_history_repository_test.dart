@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:core/core.dart';
 
+import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';
 import 'package:flutter_bloc_app/features/chat/data/secure_chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
@@ -25,7 +26,7 @@ void main() {
           model: 'awesome-model',
         );
         final String stored = jsonEncode(<Map<String, dynamic>>[
-          conversation.toJson(),
+          ChatConversationDto.fromDomain(conversation).toJson(),
         ]);
 
         final _RecordingSecretStorage storage = _RecordingSecretStorage(

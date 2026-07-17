@@ -11,7 +11,6 @@ part of 'todo_item.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$TodoItem {
 
@@ -22,8 +21,6 @@ mixin _$TodoItem {
 @pragma('vm:prefer-inline')
 $TodoItemCopyWith<TodoItem> get copyWith => _$TodoItemCopyWithImpl<TodoItem>(this as TodoItem, _$identity);
 
-  /// Serializes this TodoItem to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority,changeId,lastSyncedAt,synchronized);
 
@@ -216,11 +213,11 @@ return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.descr
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _TodoItem extends TodoItem {
   const _TodoItem({required this.id, required this.title, required this.createdAt, required this.updatedAt, this.description, this.isCompleted = false, this.dueDate, this.priority = TodoPriority.none, this.changeId, this.lastSyncedAt, this.synchronized = false}): super._();
-  factory _TodoItem.fromJson(Map<String, dynamic> json) => _$TodoItemFromJson(json);
+  
 
 @override final  String id;
 @override final  String title;
@@ -240,17 +237,14 @@ class _TodoItem extends TodoItem {
 @pragma('vm:prefer-inline')
 _$TodoItemCopyWith<_TodoItem> get copyWith => __$TodoItemCopyWithImpl<_TodoItem>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$TodoItemToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _TodoItem&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.changeId, changeId) || other.changeId == changeId)&&(identical(other.lastSyncedAt, lastSyncedAt) || other.lastSyncedAt == lastSyncedAt)&&(identical(other.synchronized, synchronized) || other.synchronized == synchronized));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,title,createdAt,updatedAt,description,isCompleted,dueDate,priority,changeId,lastSyncedAt,synchronized);
 

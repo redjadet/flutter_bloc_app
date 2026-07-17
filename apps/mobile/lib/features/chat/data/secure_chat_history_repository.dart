@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
+import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:storage/storage.dart';
@@ -28,7 +29,9 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
             final List<dynamic> decoded = await decodeJsonList(stored);
             return decoded
                 .whereType<Map<String, dynamic>>()
-                .map(ChatConversation.fromJson)
+                .map(
+                  (final map) => ChatConversationDto.fromJson(map).toDomain(),
+                )
                 .toList(growable: false);
           } on FormatException catch (error, stackTrace) {
             AppLogger.error(
@@ -53,7 +56,9 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
         }
         // check-ignore: small payload (<8KB) - chat history encoding for storage is handled via decodeJsonList on read
         final String json = jsonEncode(
-          conversations.map((final c) => c.toJson()).toList(growable: false),
+          conversations
+              .map((final c) => ChatConversationDto.fromDomain(c).toJson())
+              .toList(growable: false),
         );
         await _storage.write(_storageKeyHistory, json);
       },

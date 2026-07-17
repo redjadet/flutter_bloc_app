@@ -15,7 +15,7 @@ Do not treat Firebase Analytics on the classpath, or pagination wording in guide
 | **Product analytics events** (taxonomy, SDK wiring, consent) | ADR-0005 doc-only posture; Firebase Analytics dep ≠ event tracking | [`plans/future_observability.md`](../plans/future_observability.md), [`adr/0005-interview-showcase-scope.md`](../adr/0005-interview-showcase-scope.md), [`observability.md`](../observability.md) | Real funnel/adoption questions that Crashlytics/`AppLogger` cannot answer |
 | **Live-backend contract validation** (Render / HF / AI Decision e2e against real hosts) | Hardening proved offline with unit tests + fixtures | Final audit “No-live-backend limitation” | Staging credentials + intentional integration lane |
 | **Broad demo DTO cast rewrite** (beyond AI Decision + GraphQL country) | Surgical scope; other demos still use direct `as` casts | Same defensive pattern as `ai_decision_json.dart` / `graphql_json.dart` | Touching those features for other reasons, or a follow-up cast-hardening slice |
-| **Domain wire-leak warn-only backlog** (45 pre-existing hits) | Warn gate only; not part of this program’s score gate | `bash tool/check_domain_wire_leaks.sh`, reduce-surprise / AP-11 docs | Dedicated domain-purity cleanup |
+| **Domain wire-leak warn-only backlog** (31 remaining after chat/counter/todo) | Warn gate only; chat/counter/todo closed 2026-07-17 | `bash tool/check_domain_wire_leaks.sh`, reduce-surprise / AP-11 docs; change note [`changes/2026-07-17_domain_purity_chat_counter_todo.md`](../changes/2026-07-17_domain_purity_chat_counter_todo.md) | Dedicated slices for remaining demos (case_study, chart, igaming, …) |
 
 ## Pagination — what exists vs what does not
 

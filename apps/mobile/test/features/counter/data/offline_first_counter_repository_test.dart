@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter_bloc_app/features/counter/data/counter_snapshot_dto.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
@@ -162,7 +163,9 @@ void main() {
 
       final SyncOperation operation = SyncOperation.create(
         entityType: OfflineFirstCounterRepository.counterEntity,
-        payload: const CounterSnapshot(count: 5).toJson(),
+        payload: CounterSnapshotDto.fromDomain(
+          const CounterSnapshot(count: 5),
+        ).toJson(),
         idempotencyKey: 'op-1',
       );
 
@@ -259,7 +262,9 @@ void main() {
       await pendingRepository.enqueue(
         SyncOperation.create(
           entityType: OfflineFirstCounterRepository.counterEntity,
-          payload: const CounterSnapshot(count: 1).toJson(),
+          payload: CounterSnapshotDto.fromDomain(
+            const CounterSnapshot(count: 1),
+          ).toJson(),
           idempotencyKey: 'counter-op',
         ),
       );
@@ -552,9 +557,8 @@ void main() {
 
         final SyncOperation operation = SyncOperation.create(
           entityType: OfflineFirstCounterRepository.counterEntity,
-          payload: CounterSnapshot(
-            count: 6,
-            lastChanged: pendingChanged,
+          payload: CounterSnapshotDto.fromDomain(
+            CounterSnapshot(count: 6, lastChanged: pendingChanged),
           ).toJson(),
           idempotencyKey: 'stale-op',
         );

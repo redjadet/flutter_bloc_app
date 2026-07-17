@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/features/counter/data/counter_snapshot_dto.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
@@ -51,7 +52,7 @@ class OfflineFirstCounterRepository
         OfflineFirstCounterRepositoryHelpers.generateChangeId();
     final SyncOperation operation = SyncOperation.create(
       entityType: entityType,
-      payload: normalized.toJson(),
+      payload: CounterSnapshotDto.fromDomain(normalized).toJson(),
       idempotencyKey: changeId,
     );
     await _pendingSyncRepository.enqueue(operation);
@@ -95,9 +96,9 @@ class OfflineFirstCounterRepository
 
   @override
   Future<void> processOperation(final SyncOperation operation) async {
-    final CounterSnapshot snapshot = CounterSnapshot.fromJson(
+    final CounterSnapshot snapshot = CounterSnapshotDto.fromJson(
       operation.payload,
-    );
+    ).toDomain();
     if (_remoteRepository == null) {
       await _localRepository.save(
         snapshot.copyWith(

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
@@ -264,7 +265,7 @@ void main() {
 
         final SyncOperation operation = SyncOperation.create(
           entityType: OfflineFirstTodoRepository.todoEntity,
-          payload: item.toJson(),
+          payload: TodoItemDto.fromDomain(item).toMap(),
           idempotencyKey: 'op-1',
         );
 
@@ -314,7 +315,7 @@ void main() {
 
         final SyncOperation operation = SyncOperation.create(
           entityType: OfflineFirstTodoRepository.todoEntity,
-          payload: stalePending.toJson(),
+          payload: TodoItemDto.fromDomain(stalePending).toMap(),
           idempotencyKey: 'stale-todo-op',
         );
 
