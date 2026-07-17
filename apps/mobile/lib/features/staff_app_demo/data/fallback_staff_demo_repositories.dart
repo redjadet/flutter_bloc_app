@@ -1,4 +1,5 @@
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_time_entry_flags_dto.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
@@ -76,7 +77,9 @@ class NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
           'entryId': entryId,
           'userId': userId,
           'clockInAtClientMs': nowUtc.millisecondsSinceEpoch,
-          'flags': const StaffDemoTimeEntryFlags.none().toJson(),
+          'flags': StaffDemoTimeEntryFlagsDto.fromDomain(
+            const StaffDemoTimeEntryFlags.none(),
+          ).toJson(),
         },
       ),
     );
@@ -190,7 +193,8 @@ class NoOpStaffDemoContentRepository implements StaffDemoContentRepository {
 }
 
 /// Offline fallback when Firestore is unavailable.
-class NoOpStaffDemoEventProofRepository implements StaffDemoEventProofRepository {
+class NoOpStaffDemoEventProofRepository
+    implements StaffDemoEventProofRepository {
   @override
   Future<String> submitProof({
     required String userId,

@@ -1,3 +1,5 @@
+import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_draft_dto.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_record_dto.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
@@ -51,7 +53,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
     final Box<dynamic> box = await _openBox();
     final Object? raw = box.get(_draftKey(userId));
     if (raw is! String) return null;
-    return CaseStudyDraft.decode(raw);
+    return CaseStudyDraftDto.decode(raw);
   }
 
   @override
@@ -62,7 +64,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
-    await box.put(_draftKey(userId), CaseStudyDraft.encode(draft));
+    await box.put(_draftKey(userId), CaseStudyDraftDto.encode(draft));
   }
 
   @override
@@ -80,7 +82,7 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
     final Box<dynamic> box = await _openBox();
     final Object? raw = box.get(_recordsKey(userId));
     if (raw is! String) return <CaseStudyRecord>[];
-    return CaseStudyRecord.decodeList(raw);
+    return CaseStudyRecordDto.decodeList(raw);
   }
 
   @override
@@ -103,6 +105,6 @@ class CaseStudyHiveLocalRepository implements CaseStudyLocalRepository {
     _assertUserId(userId);
     await ensureReady();
     final Box<dynamic> box = await _openBox();
-    await box.put(_recordsKey(userId), CaseStudyRecord.encodeList(records));
+    await box.put(_recordsKey(userId), CaseStudyRecordDto.encodeList(records));
   }
 }

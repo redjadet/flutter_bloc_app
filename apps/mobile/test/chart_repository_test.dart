@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/data/http_chart_repository.dart';
-import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -155,21 +155,24 @@ void main() {
     },
   );
 
-  group('ChartPoint.fromApi', () {
+  group('ChartPointDto.fromApi', () {
     test('creates ChartPoint from valid entry', () {
       final entry = [1700000000000, 123.45];
-      final point = ChartPoint.fromApi(entry);
+      final point = ChartPointDto.fromApi(entry).toDomain();
       expect(point.value, closeTo(123.45, 0.0001));
       expect(point.date.isUtc, isTrue);
     });
 
     test('throws FormatException when entry is too short', () {
-      expect(() => ChartPoint.fromApi([1700000000000]), throwsFormatException);
+      expect(
+        () => ChartPointDto.fromApi([1700000000000]),
+        throwsFormatException,
+      );
     });
 
     test('throws FormatException when entry has invalid types', () {
       expect(
-        () => ChartPoint.fromApi(['time', 'value']),
+        () => ChartPointDto.fromApi(['time', 'value']),
         throwsFormatException,
       );
     });

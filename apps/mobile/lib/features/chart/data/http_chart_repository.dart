@@ -1,6 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:meta/meta.dart';
@@ -103,7 +104,7 @@ class HttpChartRepository extends ChartRepository {
         prices
             .whereType<List<dynamic>>()
             .where((final item) => item.length >= 2)
-            .map(ChartPoint.fromApi)
+            .map((final item) => ChartPointDto.fromApi(item).toDomain())
             .toList()
           ..sort((final a, final b) => a.date.compareTo(b.date));
 

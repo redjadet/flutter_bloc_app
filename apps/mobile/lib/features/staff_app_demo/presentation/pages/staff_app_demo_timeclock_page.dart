@@ -65,7 +65,7 @@ class StaffAppDemoTimeclockPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            Text(last.flags.toJson().toString()),
+            Text(last.flags.asMap.toString()),
             if (last.distanceMeters != null && last.radiusMeters != null) ...[
               const SizedBox(height: 8),
               Builder(

@@ -42,7 +42,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
             for (final dynamic item in list) {
               final Map<String, dynamic>? map = mapFromDynamic(item);
               if (map != null) {
-                result.add(IotDevice.fromJson(map));
+                result.add(IotDeviceDto.fromJson(map).toDomain());
               }
             }
             return List<IotDevice>.unmodifiable(result);
@@ -65,7 +65,7 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
     logContext: 'PersistentIotDemoRepository._saveDevices',
     action: () async {
       final List<Map<String, dynamic>> serialized = devices
-          .map((final d) => d.toJson())
+          .map((final d) => IotDeviceDto.fromDomain(d).toJson())
           .toList(growable: false);
       await box.put(PersistentIotDemoRepository._keyDevices, serialized);
     },

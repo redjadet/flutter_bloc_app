@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_time_entry_flags_dto.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart';
 
 class FirestoreStaffDemoTimeEntriesRepository
@@ -32,18 +32,7 @@ class FirestoreStaffDemoTimeEntriesRepository
       final flagsMap = flagsRaw is Map
           ? Map<String, dynamic>.from(flagsRaw)
           : <String, dynamic>{};
-      final flags = StaffDemoTimeEntryFlags(
-        outsideGeofence: (flagsMap['outsideGeofence'] as bool?) ?? false,
-        earlyClockIn: (flagsMap['earlyClockIn'] as bool?) ?? false,
-        locationInsufficient:
-            (flagsMap['locationInsufficient'] as bool?) ?? false,
-        missingScheduledShift:
-            (flagsMap['missingScheduledShift'] as bool?) ?? false,
-        duplicatePunchAttempt:
-            (flagsMap['duplicatePunchAttempt'] as bool?) ?? false,
-        deviceClockSkewSuspected:
-            (flagsMap['deviceClockSkewSuspected'] as bool?) ?? false,
-      );
+      final flags = StaffDemoTimeEntryFlagsDto.fromJson(flagsMap).toDomain();
       out.add(
         StaffDemoTimeEntrySummary(
           entryId: doc.id,

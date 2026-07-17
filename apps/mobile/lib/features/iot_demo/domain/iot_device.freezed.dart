@@ -11,7 +11,6 @@ part of 'iot_device.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$IotDevice {
 
@@ -22,8 +21,6 @@ mixin _$IotDevice {
 @pragma('vm:prefer-inline')
 $IotDeviceCopyWith<IotDevice> get copyWith => _$IotDeviceCopyWithImpl<IotDevice>(this as IotDevice, _$identity);
 
-  /// Serializes this IotDevice to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is IotDevice&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.lastSeen, lastSeen) || other.lastSeen == lastSeen)&&(identical(other.connectionState, connectionState) || other.connectionState == connectionState)&&(identical(other.toggledOn, toggledOn) || other.toggledOn == toggledOn)&&(identical(other.value, value) || other.value == value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,name,type,lastSeen,connectionState,toggledOn,value);
 
@@ -212,11 +209,11 @@ return $default(_that.id,_that.name,_that.type,_that.lastSeen,_that.connectionSt
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _IotDevice extends IotDevice {
   const _IotDevice({required this.id, required this.name, required this.type, this.lastSeen, this.connectionState = IotConnectionState.disconnected, this.toggledOn = false, this.value = 0.0}): super._();
-  factory _IotDevice.fromJson(Map<String, dynamic> json) => _$IotDeviceFromJson(json);
+  
 
 @override final  String id;
 @override final  String name;
@@ -232,17 +229,14 @@ class _IotDevice extends IotDevice {
 @pragma('vm:prefer-inline')
 _$IotDeviceCopyWith<_IotDevice> get copyWith => __$IotDeviceCopyWithImpl<_IotDevice>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$IotDeviceToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _IotDevice&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.lastSeen, lastSeen) || other.lastSeen == lastSeen)&&(identical(other.connectionState, connectionState) || other.connectionState == connectionState)&&(identical(other.toggledOn, toggledOn) || other.toggledOn == toggledOn)&&(identical(other.value, value) || other.value == value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,name,type,lastSeen,connectionState,toggledOn,value);
 

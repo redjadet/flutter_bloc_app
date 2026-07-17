@@ -1,4 +1,5 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_cache_repository.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -40,7 +41,7 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
         if (item is! Map<dynamic, dynamic>) continue;
         final Map<String, dynamic> typed = _convertMapToTyped(item);
         try {
-          result.add(ChartPoint.fromJson(typed));
+          result.add(ChartPointDto.fromJson(typed).toDomain());
         } on Object catch (error, stackTrace) {
           AppLogger.warning(
             'ChartDemoCacheRepository skipped invalid cached chart point',
@@ -68,18 +69,16 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
           _trendingKey,
           <String, dynamic>{
             _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
-            _itemsKey: points.map(_pointToJson).toList(),
+            _itemsKey: points
+                .map(
+                  (final point) => ChartPointDto.fromDomain(point).toJson(),
+                )
+                .toList(),
           },
         );
       },
     );
   }
-
-  Map<String, dynamic> _pointToJson(final ChartPoint point) =>
-      <String, dynamic>{
-        'date': point.date.toUtc().toIso8601String(),
-        'value': point.value,
-      };
 
   DateTime? _parseUpdatedAt(final Map<dynamic, dynamic> stored) {
     final Object? raw = stored[_updatedAtKey];

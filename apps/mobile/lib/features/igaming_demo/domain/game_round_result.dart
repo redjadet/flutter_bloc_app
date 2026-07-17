@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'game_round_result.freezed.dart';
-part 'game_round_result.g.dart';
 
 /// Result of one play-for-fun game round.
 @freezed
@@ -11,9 +10,6 @@ abstract class GameRoundResult with _$GameRoundResult {
     required final int payoutAmount,
     required final bool isWin,
   }) = _GameRoundResult;
-
-  factory GameRoundResult.fromJson(final Map<String, dynamic> json) =>
-      _$GameRoundResultFromJson(json);
 
   const GameRoundResult._();
 

@@ -11,7 +11,6 @@ part of 'game_round_result.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$GameRoundResult {
 
@@ -22,8 +21,6 @@ mixin _$GameRoundResult {
 @pragma('vm:prefer-inline')
 $GameRoundResultCopyWith<GameRoundResult> get copyWith => _$GameRoundResultCopyWithImpl<GameRoundResult>(this as GameRoundResult, _$identity);
 
-  /// Serializes this GameRoundResult to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is GameRoundResult&&(identical(other.betAmount, betAmount) || other.betAmount == betAmount)&&(identical(other.payoutAmount, payoutAmount) || other.payoutAmount == payoutAmount)&&(identical(other.isWin, isWin) || other.isWin == isWin));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,betAmount,payoutAmount,isWin);
 
@@ -208,11 +205,11 @@ return $default(_that.betAmount,_that.payoutAmount,_that.isWin);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _GameRoundResult extends GameRoundResult {
   const _GameRoundResult({required this.betAmount, required this.payoutAmount, required this.isWin}): super._();
-  factory _GameRoundResult.fromJson(Map<String, dynamic> json) => _$GameRoundResultFromJson(json);
+  
 
 @override final  int betAmount;
 @override final  int payoutAmount;
@@ -224,17 +221,14 @@ class _GameRoundResult extends GameRoundResult {
 @pragma('vm:prefer-inline')
 _$GameRoundResultCopyWith<_GameRoundResult> get copyWith => __$GameRoundResultCopyWithImpl<_GameRoundResult>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$GameRoundResultToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameRoundResult&&(identical(other.betAmount, betAmount) || other.betAmount == betAmount)&&(identical(other.payoutAmount, payoutAmount) || other.payoutAmount == payoutAmount)&&(identical(other.isWin, isWin) || other.isWin == isWin));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,betAmount,payoutAmount,isWin);
 

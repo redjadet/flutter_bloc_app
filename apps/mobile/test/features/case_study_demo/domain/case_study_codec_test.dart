@@ -1,3 +1,5 @@
+import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_draft_dto.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/data/case_study_record_dto.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_reco
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('CaseStudyDraft codec', () {
+  group('CaseStudyDraftDto codec', () {
     test('encode/decode round-trips', () {
       final CaseStudyDraft draft = CaseStudyDraft(
         caseId: 'case-1',
@@ -23,8 +25,8 @@ void main() {
         phase: CaseStudyDraftPhase.recording,
       );
 
-      final String encoded = CaseStudyDraft.encode(draft);
-      final CaseStudyDraft? decoded = CaseStudyDraft.decode(encoded);
+      final String encoded = CaseStudyDraftDto.encode(draft);
+      final CaseStudyDraft? decoded = CaseStudyDraftDto.decode(encoded);
 
       expect(decoded, isNotNull);
       expect(decoded, equals(draft));
@@ -32,13 +34,13 @@ void main() {
     });
 
     test('decode returns null for null/empty/malformed JSON', () {
-      expect(CaseStudyDraft.decode(null), isNull);
-      expect(CaseStudyDraft.decode(''), isNull);
-      expect(CaseStudyDraft.decode('not-json'), isNull);
+      expect(CaseStudyDraftDto.decode(null), isNull);
+      expect(CaseStudyDraftDto.decode(''), isNull);
+      expect(CaseStudyDraftDto.decode('not-json'), isNull);
     });
 
     test('decode tolerates unexpected JSON shape with defaults', () {
-      final CaseStudyDraft? decoded = CaseStudyDraft.decode(
+      final CaseStudyDraft? decoded = CaseStudyDraftDto.decode(
         '{"not":"a draft"}',
       );
       expect(decoded, isNotNull);
@@ -49,10 +51,10 @@ void main() {
     });
 
     test('decode tolerates non-string answer values by coercing to string', () {
-      final String raw =
+      const String raw =
           '{"caseId":"c","doctorName":"d","caseType":"implant","notes":"n","answers":{"q1":123},"remoteObjectKeysByQuestion":{"q1":456},"currentQuestionIndex":0,"phase":"metadata"}';
 
-      final CaseStudyDraft? decoded = CaseStudyDraft.decode(raw);
+      final CaseStudyDraft? decoded = CaseStudyDraftDto.decode(raw);
 
       expect(decoded, isNotNull);
       expect(decoded!.answers['q1'], '123');
@@ -60,7 +62,7 @@ void main() {
     });
   });
 
-  group('CaseStudyRecord codec', () {
+  group('CaseStudyRecordDto codec', () {
     test(
       'encodeList/decodeList round-trips (stable enough for Hive storage)',
       () {
@@ -83,8 +85,8 @@ void main() {
           ),
         ];
 
-        final String encoded = CaseStudyRecord.encodeList(records);
-        final List<CaseStudyRecord> decoded = CaseStudyRecord.decodeList(
+      final String encoded = CaseStudyRecordDto.encodeList(records);
+      final List<CaseStudyRecord> decoded = CaseStudyRecordDto.decodeList(
           encoded,
         );
 
@@ -93,14 +95,14 @@ void main() {
     );
 
     test('decodeList returns empty list for null/empty/malformed JSON', () {
-      expect(CaseStudyRecord.decodeList(null), isEmpty);
-      expect(CaseStudyRecord.decodeList(''), isEmpty);
-      expect(CaseStudyRecord.decodeList('not-json'), isEmpty);
-      expect(CaseStudyRecord.decodeList('{"not":"a list"}'), isEmpty);
+      expect(CaseStudyRecordDto.decodeList(null), isEmpty);
+      expect(CaseStudyRecordDto.decodeList(''), isEmpty);
+      expect(CaseStudyRecordDto.decodeList('not-json'), isEmpty);
+      expect(CaseStudyRecordDto.decodeList('{"not":"a list"}'), isEmpty);
     });
 
     test('decodeList drops invalid entries but keeps valid ones', () {
-      final String raw = '''
+      const String raw = '''
 [
   {"id":"r1","submittedAt":"2026-04-02T00:00:00Z","doctorName":"Dr. Ada","caseType":"implant","notes":"","answers":{"q1":"/tmp/q1.mp4"}},
   {"id":null,"submittedAt":"2026-04-02T00:00:00Z","doctorName":"x","caseType":"implant","notes":"","answers":{}},
@@ -108,8 +110,8 @@ void main() {
 ]
 ''';
 
-      final List<CaseStudyRecord> decoded = CaseStudyRecord.decodeList(raw);
-      expect(decoded.map((r) => r.id).toList(), <String>['r1', 'r2']);
+      final List<CaseStudyRecord> decoded = CaseStudyRecordDto.decodeList(raw);
+      expect(decoded.map((final r) => r.id).toList(), <String>['r1', 'r2']);
     });
   });
 }

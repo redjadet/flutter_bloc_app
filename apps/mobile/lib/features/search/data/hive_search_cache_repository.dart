@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
+import 'package:flutter_bloc_app/features/search/data/search_result_dto.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:hive/hive.dart';
@@ -61,7 +62,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
       final String key = '$_keyPrefix$normalizedQuery';
 
       final List<Map<String, dynamic>> serialized = results
-          .map((final r) => r.toJson())
+          .map((final r) => SearchResultDto.fromDomain(r).toJson())
           .toList(growable: false);
       await box.put(key, serialized);
 
@@ -148,7 +149,7 @@ class HiveSearchCacheRepository extends HiveRepositoryBase
       (final dynamic key, final dynamic value) =>
           MapEntry(key.toString(), value),
     );
-    return SearchResult.fromJson(normalized);
+    return SearchResultDto.fromJson(normalized).toDomain();
   }
 
   String _normalizeQuery(final String query) => query.trim().toLowerCase();

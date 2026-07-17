@@ -70,7 +70,7 @@ class StaffAppDemoAdminPage extends StatelessWidget {
                   title: Text(entry.entryId),
                   subtitle: Text(
                     'user=${entry.userId} state=${entry.entryState} '
-                    'flags=${entry.flags.toJson()}',
+                    'flags=${entry.flags.asMap}',
                   ),
                 ),
               const SizedBox(height: 16),

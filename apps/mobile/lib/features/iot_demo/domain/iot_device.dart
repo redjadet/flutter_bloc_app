@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'iot_device.freezed.dart';
-part 'iot_device.g.dart';
 
 /// Connection state of an IoT device.
 enum IotConnectionState {
@@ -32,9 +31,6 @@ abstract class IotDevice with _$IotDevice {
     @Default(false) final bool toggledOn,
     @Default(0.0) final double value,
   }) = _IotDevice;
-
-  factory IotDevice.fromJson(final Map<String, dynamic> json) =>
-      _$IotDeviceFromJson(json);
 
   const IotDevice._();
 }

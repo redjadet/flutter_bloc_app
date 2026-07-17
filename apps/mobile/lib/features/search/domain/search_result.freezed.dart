@@ -11,7 +11,6 @@ part of 'search_result.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$SearchResult {
 
@@ -22,8 +21,6 @@ mixin _$SearchResult {
 @pragma('vm:prefer-inline')
 $SearchResultCopyWith<SearchResult> get copyWith => _$SearchResultCopyWithImpl<SearchResult>(this as SearchResult, _$identity);
 
-  /// Serializes this SearchResult to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is SearchResult&&(identical(other.id, id) || other.id == id)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,imageUrl,title,description);
 
@@ -209,11 +206,11 @@ return $default(_that.id,_that.imageUrl,_that.title,_that.description);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _SearchResult implements SearchResult {
   const _SearchResult({required this.id, required this.imageUrl, this.title, this.description});
-  factory _SearchResult.fromJson(Map<String, dynamic> json) => _$SearchResultFromJson(json);
+  
 
 @override final  String id;
 @override final  String imageUrl;
@@ -226,17 +223,14 @@ class _SearchResult implements SearchResult {
 @pragma('vm:prefer-inline')
 _$SearchResultCopyWith<_SearchResult> get copyWith => __$SearchResultCopyWithImpl<_SearchResult>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$SearchResultToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _SearchResult&&(identical(other.id, id) || other.id == id)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,imageUrl,title,description);
 

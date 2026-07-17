@@ -5,6 +5,7 @@ import 'package:auth/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_result_unwrap.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_time_entry_flags_dto.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_punch_evaluator.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
@@ -112,7 +113,7 @@ class OfflineFirstStaffDemoTimeclockRepository
       'clockInAccuracyMeters': accuracyMeters,
       'distanceMeters': distanceMeters,
       'radiusMeters': site?.radiusMeters,
-      'flags': flags.toJson(),
+      'flags': StaffDemoTimeEntryFlagsDto.fromDomain(flags).toJson(),
     };
 
     await _localRepository.saveOpenEntry(

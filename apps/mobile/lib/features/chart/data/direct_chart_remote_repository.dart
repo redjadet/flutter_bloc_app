@@ -1,6 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
+import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
@@ -55,7 +56,7 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
     for (final dynamic item in raw) {
       if (item is! List<dynamic> || item.length < 2) continue;
       try {
-        out.add(ChartPoint.fromApi(item));
+        out.add(ChartPointDto.fromApi(item).toDomain());
       } on Object catch (error, stackTrace) {
         AppLogger.warning(
           'DirectChartRemoteRepository skip invalid price entry',

@@ -23,7 +23,8 @@ class StaffDemoTimeEntryFlags {
   final bool duplicatePunchAttempt;
   final bool deviceClockSkewSuspected;
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
+  /// Readable flag map for demo UI (not a wire contract).
+  Map<String, bool> get asMap => <String, bool>{
     'outsideGeofence': outsideGeofence,
     'earlyClockIn': earlyClockIn,
     'locationInsufficient': locationInsufficient,

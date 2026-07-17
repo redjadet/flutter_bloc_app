@@ -11,7 +11,6 @@ part of 'chart_point.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$ChartPoint {
 
@@ -22,8 +21,6 @@ mixin _$ChartPoint {
 @pragma('vm:prefer-inline')
 $ChartPointCopyWith<ChartPoint> get copyWith => _$ChartPointCopyWithImpl<ChartPoint>(this as ChartPoint, _$identity);
 
-  /// Serializes this ChartPoint to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is ChartPoint&&(identical(other.date, date) || other.date == date)&&(identical(other.value, value) || other.value == value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,date,value);
 
@@ -207,11 +204,11 @@ return $default(_that.date,_that.value);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _ChartPoint implements ChartPoint {
   const _ChartPoint({required this.date, required this.value});
-  factory _ChartPoint.fromJson(Map<String, dynamic> json) => _$ChartPointFromJson(json);
+  
 
 @override final  DateTime date;
 @override final  double value;
@@ -222,17 +219,14 @@ class _ChartPoint implements ChartPoint {
 @pragma('vm:prefer-inline')
 _$ChartPointCopyWith<_ChartPoint> get copyWith => __$ChartPointCopyWithImpl<_ChartPoint>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$ChartPointToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _ChartPoint&&(identical(other.date, date) || other.date == date)&&(identical(other.value, value) || other.value == value));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,date,value);
 

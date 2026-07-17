@@ -11,7 +11,6 @@ part of 'demo_balance.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$DemoBalance {
 
@@ -22,8 +21,6 @@ mixin _$DemoBalance {
 @pragma('vm:prefer-inline')
 $DemoBalanceCopyWith<DemoBalance> get copyWith => _$DemoBalanceCopyWithImpl<DemoBalance>(this as DemoBalance, _$identity);
 
-  /// Serializes this DemoBalance to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is DemoBalance&&(identical(other.amountUnits, amountUnits) || other.amountUnits == amountUnits));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,amountUnits);
 
@@ -206,11 +203,11 @@ return $default(_that.amountUnits);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _DemoBalance extends DemoBalance {
   const _DemoBalance({required this.amountUnits}): super._();
-  factory _DemoBalance.fromJson(Map<String, dynamic> json) => _$DemoBalanceFromJson(json);
+  
 
 @override final  int amountUnits;
 
@@ -220,17 +217,14 @@ class _DemoBalance extends DemoBalance {
 @pragma('vm:prefer-inline')
 _$DemoBalanceCopyWith<_DemoBalance> get copyWith => __$DemoBalanceCopyWithImpl<_DemoBalance>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$DemoBalanceToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _DemoBalance&&(identical(other.amountUnits, amountUnits) || other.amountUnits == amountUnits));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,amountUnits);
 
