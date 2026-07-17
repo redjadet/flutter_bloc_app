@@ -1,11 +1,12 @@
+import 'package:auth/auth.dart' as core_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:auth/auth.dart' as core_auth;
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_bloc_app/app/config/backend_availability.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/data/guest_auth_fallback_repositories.dart';
 import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart'
     as feature_auth;
@@ -77,6 +78,7 @@ void main() {
           getIt<core_auth.AuthRepository>();
 
       expect(featureRepository, isNot(isA<FirebaseAuthRepository>()));
+      expect(_unwrapAuthRepository(featureRepository), isA<UnavailableAuthRepository>());
       expect(identical(coreRepository, featureRepository), isTrue);
       expect(featureRepository.currentUser, isNull);
       expect(featureRepository.authStateChanges, emitsDone);
@@ -102,6 +104,7 @@ void main() {
 
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
         expect(repository.currentUser, isNull);
+      expect(_unwrapAuthRepository(repository), isA<UnavailableAuthRepository>());
       },
     );
 
@@ -124,6 +127,7 @@ void main() {
         await repository.signInAnonymously();
 
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
+      expect(_unwrapAuthRepository(repository), isA<LocalGuestOnlyAuthRepository>());
         expect(repository.currentUser?.id, 'web-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
       },
@@ -139,6 +143,7 @@ void main() {
 
         final repository = getIt<feature_auth.AuthRepository>();
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
+      expect(_unwrapAuthRepository(repository), isA<LocalGuestOnlyAuthRepository>());
 
         await repository.signInAnonymously();
         expect(repository.currentUser?.id, 'ios-simulator-debug-local-guest');
@@ -222,7 +227,7 @@ void main() {
 
         expect(
           _unwrapAuthRepository(repository),
-          isA<FirebaseAuthRepository>(),
+          isA<DebugKeychainGuestAuthRepository>(),
         );
         expect(repository.currentUser?.id, 'ios-simulator-debug-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
@@ -253,7 +258,7 @@ void main() {
 
         expect(
           _unwrapAuthRepository(repository),
-          isA<FirebaseAuthRepository>(),
+          isA<DebugKeychainGuestAuthRepository>(),
         );
         expect(repository.currentUser?.id, 'macos-debug-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);

@@ -1,18 +1,16 @@
-part of 'register_auth_services.dart';
+import 'dart:async';
 
-bool get _shouldUseDebugKeychainGuestFallback {
-  if (kIsWeb || kReleaseMode) {
-    return false;
-  }
-  if (defaultTargetPlatform == TargetPlatform.macOS) {
-    return true;
-  }
-  return defaultTargetPlatform == TargetPlatform.iOS &&
-      FirebaseBootstrapService.isIosSimulatorInDebug;
-}
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:auth/auth.dart' show AuthUser;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 
-class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
-  _DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
+/// Debug Firebase auth wrapper that falls back to a local guest on Keychain
+/// entitlement failures (macOS / iOS simulator).
+class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
+  DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
     _firebaseSubscription = super.authStateChanges.listen(
       (final user) {
         if (user != null) {
@@ -31,8 +29,7 @@ class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
     );
   }
 
-  final StreamController<AuthUser?> _authStateController =
-      StreamController<AuthUser?>.broadcast();
+  final StreamController<AuthUser?> _authStateController = StreamController<AuthUser?>.broadcast();
   StreamSubscription<AuthUser?>? _firebaseSubscription;
   AuthUser? _localGuest;
 
@@ -83,15 +80,14 @@ class _DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
 
 /// Local-only guest session when Firebase Auth is unavailable.
 ///
-/// Web: enabled via [BackendAvailability.allowWebLocalGuestAuth] (including release).
-/// Non-web: enabled via existing debug/simulator policy gates.
-class _LocalGuestOnlyAuthRepository implements AuthRepository {
-  _LocalGuestOnlyAuthRepository({this.localGuestIdOverride});
+/// Web: enabled via BackendAvailability.allowWebLocalGuestAuth (including
+/// release). Non-web: enabled via existing debug/simulator policy gates.
+class LocalGuestOnlyAuthRepository implements AuthRepository {
+  LocalGuestOnlyAuthRepository({this.localGuestIdOverride});
 
   final String? localGuestIdOverride;
 
-  final StreamController<AuthUser?> _authStateController =
-      StreamController<AuthUser?>.broadcast();
+  final StreamController<AuthUser?> _authStateController = StreamController<AuthUser?>.broadcast();
   AuthUser? _localGuest;
 
   String get _localGuestId {
@@ -133,8 +129,9 @@ class _LocalGuestOnlyAuthRepository implements AuthRepository {
   }
 }
 
-class _UnavailableAuthRepository implements AuthRepository {
-  const _UnavailableAuthRepository();
+/// No-op auth repository when Firebase and local guest policy are unavailable.
+class UnavailableAuthRepository implements AuthRepository {
+  const UnavailableAuthRepository();
 
   @override
   AuthUser? get currentUser => null;

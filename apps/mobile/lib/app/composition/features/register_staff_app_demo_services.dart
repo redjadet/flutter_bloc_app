@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/data/fallback_staff_demo_repositories.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_forms_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
@@ -21,30 +22,21 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_locatio
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_timeclock_local_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_profile_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 import 'package:storage/storage.dart';
-
-part 'register_staff_app_demo_services.part.dart';
 
 void registerStaffAppDemoServices() {
   registerLazySingletonIfAbsent<StaffDemoLocationService>(
@@ -70,21 +62,21 @@ void registerStaffAppDemoServices() {
     () => _withFirestoreOrFallback<StaffDemoPushTokenRepository>(
       (firestore) =>
           FirestoreStaffDemoPushTokenRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoPushTokenRepository(),
+      fallback: () => NoOpStaffDemoPushTokenRepository(),
     ),
   );
 
   registerLazySingletonIfAbsent<StaffDemoShiftRepository>(
     () => _withFirestoreOrFallback<StaffDemoShiftRepository>(
       (firestore) => FirestoreStaffDemoShiftRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoShiftRepository(),
+      fallback: () => NoOpStaffDemoShiftRepository(),
     ),
   );
 
   registerLazySingletonIfAbsent<StaffDemoSiteRepository>(
     () => _withFirestoreOrFallback<StaffDemoSiteRepository>(
       (firestore) => FirestoreStaffDemoSiteRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoSiteRepository(),
+      fallback: () => NoOpStaffDemoSiteRepository(),
     ),
   );
 
@@ -100,7 +92,7 @@ void registerStaffAppDemoServices() {
         pendingSyncRepository: getIt<PendingSyncRepository>(),
         registry: getIt<SyncableRepositoryRegistry>(),
       ),
-      fallback: () => _NoOpStaffDemoTimeclockRepository(
+      fallback: () => NoOpStaffDemoTimeclockRepository(
         authRepository: getIt<AuthRepository>(),
         localRepository: getIt<StaffDemoTimeclockLocalStore>(),
       ),
@@ -111,7 +103,7 @@ void registerStaffAppDemoServices() {
     () => _withFirestoreOrFallback<StaffDemoTimeEntriesRepository>(
       (firestore) =>
           FirestoreStaffDemoTimeEntriesRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoTimeEntriesRepository(),
+      fallback: () => NoOpStaffDemoTimeEntriesRepository(),
     ),
   );
 
@@ -121,14 +113,14 @@ void registerStaffAppDemoServices() {
         firestore: firestore,
         authRepository: getIt<AuthRepository>(),
       ),
-      fallback: () => _NoOpStaffDemoMessagingRepository(),
+      fallback: () => NoOpStaffDemoMessagingRepository(),
     ),
   );
 
   registerLazySingletonIfAbsent<StaffDemoInboxRepository>(
     () => _withFirestoreOrFallback<StaffDemoInboxRepository>(
       (firestore) => FirestoreStaffDemoInboxRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoInboxRepository(),
+      fallback: () => NoOpStaffDemoInboxRepository(),
     ),
   );
 
@@ -149,14 +141,14 @@ void registerStaffAppDemoServices() {
           storage: storage,
         );
       },
-      fallback: () => _NoOpStaffDemoContentRepository(),
+      fallback: () => NoOpStaffDemoContentRepository(),
     ),
   );
 
   registerLazySingletonIfAbsent<StaffDemoFormsRepository>(
     () => _withFirestoreOrFallback<StaffDemoFormsRepository>(
       (firestore) => FirestoreStaffDemoFormsRepository(firestore: firestore),
-      fallback: () => _NoOpStaffDemoFormsRepository(),
+      fallback: () => NoOpStaffDemoFormsRepository(),
     ),
   );
 
@@ -178,7 +170,40 @@ void registerStaffAppDemoServices() {
         operationFactory: getIt<StaffDemoEventProofSyncOperationFactory>(),
         proofFileStore: getIt<StaffDemoProofFileStore>(),
       ),
-      fallback: () => _NoOpStaffDemoEventProofRepository(),
+      fallback: () => NoOpStaffDemoEventProofRepository(),
     ),
   );
+}
+
+T _withFirestoreOrFallback<T>(
+  final T Function(FirebaseFirestore firestore) builder, {
+  required final T Function() fallback,
+}) {
+  try {
+    if (Firebase.apps.isEmpty) {
+      return fallback();
+    }
+    final app = Firebase.app();
+    final firestore = FirebaseFirestore.instanceFor(app: app);
+    return builder(firestore);
+  } on Object {
+    return fallback();
+  }
+}
+
+T _withFirestoreAndStorageOrFallback<T>(
+  final T Function(FirebaseFirestore firestore, FirebaseStorage storage) builder, {
+  required final T Function() fallback,
+}) {
+  try {
+    if (Firebase.apps.isEmpty) {
+      return fallback();
+    }
+    final app = Firebase.app();
+    final firestore = FirebaseFirestore.instanceFor(app: app);
+    final storage = FirebaseStorage.instanceFor(app: app);
+    return builder(firestore, storage);
+  } on Object {
+    return fallback();
+  }
 }

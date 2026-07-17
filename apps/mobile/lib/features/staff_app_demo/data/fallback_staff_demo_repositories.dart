@@ -1,40 +1,25 @@
-part of 'register_staff_app_demo_services.dart';
+import 'package:auth/auth.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_push_token_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entries_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_summary.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_repository.dart';
 
-T _withFirestoreOrFallback<T>(
-  final T Function(FirebaseFirestore firestore) builder, {
-  required final T Function() fallback,
-}) {
-  try {
-    if (Firebase.apps.isEmpty) {
-      return fallback();
-    }
-    final app = Firebase.app();
-    final firestore = FirebaseFirestore.instanceFor(app: app);
-    return builder(firestore);
-  } on Object {
-    return fallback();
-  }
-}
-
-T _withFirestoreAndStorageOrFallback<T>(
-  final T Function(FirebaseFirestore firestore, FirebaseStorage storage)
-  builder, {
-  required final T Function() fallback,
-}) {
-  try {
-    if (Firebase.apps.isEmpty) {
-      return fallback();
-    }
-    final app = Firebase.app();
-    final firestore = FirebaseFirestore.instanceFor(app: app);
-    final storage = FirebaseStorage.instanceFor(app: app);
-    return builder(firestore, storage);
-  } on Object {
-    return fallback();
-  }
-}
-
-class _NoOpStaffDemoShiftRepository implements StaffDemoShiftRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoShiftRepository implements StaffDemoShiftRepository {
   @override
   Future<StaffDemoShift?> findActiveShift({
     required String userId,
@@ -42,7 +27,8 @@ class _NoOpStaffDemoShiftRepository implements StaffDemoShiftRepository {
   }) async => null;
 }
 
-class _NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
   @override
   Future<List<StaffDemoSite>> listSites() async => const <StaffDemoSite>[];
 
@@ -50,9 +36,9 @@ class _NoOpStaffDemoSiteRepository implements StaffDemoSiteRepository {
   Future<StaffDemoSite?> loadSite({required String siteId}) async => null;
 }
 
-class _NoOpStaffDemoTimeclockRepository
-    implements StaffDemoTimeclockRepository {
-  _NoOpStaffDemoTimeclockRepository({
+/// Offline timeclock that persists open entries to the local store only.
+class NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
+  NoOpStaffDemoTimeclockRepository({
     required this._authRepository,
     required this._localRepository,
   });
@@ -130,15 +116,15 @@ class _NoOpStaffDemoTimeclockRepository
   }
 }
 
-class _NoOpStaffDemoTimeEntriesRepository
-    implements StaffDemoTimeEntriesRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoTimeEntriesRepository implements StaffDemoTimeEntriesRepository {
   @override
   Future<List<StaffDemoTimeEntrySummary>> fetchRecent({int limit = 20}) async =>
       const <StaffDemoTimeEntrySummary>[];
 }
 
-class _NoOpStaffDemoMessagingRepository
-    implements StaffDemoMessagingRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoMessagingRepository implements StaffDemoMessagingRepository {
   @override
   Future<String> sendShiftAssignment({
     required String toUserId,
@@ -156,7 +142,8 @@ class _NoOpStaffDemoMessagingRepository
   }) async {}
 }
 
-class _NoOpStaffDemoInboxRepository implements StaffDemoInboxRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoInboxRepository implements StaffDemoInboxRepository {
   @override
   Stream<List<StaffDemoInboxRecipientSnapshot>> watchRecipients({
     required String userId,
@@ -169,7 +156,8 @@ class _NoOpStaffDemoInboxRepository implements StaffDemoInboxRepository {
   Future<String?> loadShiftStatus(String shiftId) async => null;
 }
 
-class _NoOpStaffDemoFormsRepository implements StaffDemoFormsRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoFormsRepository implements StaffDemoFormsRepository {
   @override
   Future<void> submitAvailability({
     required String userId,
@@ -185,24 +173,24 @@ class _NoOpStaffDemoFormsRepository implements StaffDemoFormsRepository {
   }) async {}
 }
 
-class _NoOpStaffDemoPushTokenRepository
-    implements StaffDemoPushTokenRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoPushTokenRepository implements StaffDemoPushTokenRepository {
   @override
   Future<void> registerTokens({required String userId}) async {}
 }
 
-class _NoOpStaffDemoContentRepository implements StaffDemoContentRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoContentRepository implements StaffDemoContentRepository {
   @override
-  Future<List<StaffDemoContentItem>> listPublished() async =>
-      const <StaffDemoContentItem>[];
+  Future<List<StaffDemoContentItem>> listPublished() async => const <StaffDemoContentItem>[];
 
   @override
   Future<Uri> getDownloadUrl({required String storagePath}) async =>
       throw StateError('Firebase unavailable');
 }
 
-class _NoOpStaffDemoEventProofRepository
-    implements StaffDemoEventProofRepository {
+/// Offline fallback when Firestore is unavailable.
+class NoOpStaffDemoEventProofRepository implements StaffDemoEventProofRepository {
   @override
   Future<String> submitProof({
     required String userId,

@@ -1,8 +1,4 @@
-import 'dart:async';
-
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart' as core_auth;
-import 'package:auth/auth.dart' show AuthUser;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
@@ -11,10 +7,9 @@ import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/features/auth/data/firebase_auth_repository.dart';
+import 'package:flutter_bloc_app/features/auth/data/guest_auth_fallback_repositories.dart';
 import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
-
-part 'register_auth_services.guest_repos.part.dart';
 
 /// Registers auth-related services.
 ///
@@ -73,9 +68,9 @@ void registerAuthServices() {
           ? repository.delegate
           : repository;
       switch (inner) {
-        case final _DebugKeychainGuestAuthRepository fallback:
+        case final DebugKeychainGuestAuthRepository fallback:
           await fallback.dispose();
-        case final _LocalGuestOnlyAuthRepository localOnly:
+        case final LocalGuestOnlyAuthRepository localOnly:
           await localOnly.dispose();
         default:
           break;
@@ -95,17 +90,28 @@ AuthRepository _createInnerAuthRepository({
         getIt.isRegistered<BackendAvailability>() &&
         getIt<BackendAvailability>().allowWebLocalGuestAuth;
     if (allowWebLocalGuestAuth) {
-      return _LocalGuestOnlyAuthRepository(
+      return LocalGuestOnlyAuthRepository(
         localGuestIdOverride: 'web-local-guest',
       );
     }
     if (FirebaseBootstrapService.supportsDebugLocalGuestAuth) {
-      return _LocalGuestOnlyAuthRepository();
+      return LocalGuestOnlyAuthRepository();
     }
-    return const _UnavailableAuthRepository();
+    return const UnavailableAuthRepository();
   }
   if (_shouldUseDebugKeychainGuestFallback) {
-    return _DebugKeychainGuestAuthRepository(firebaseAuth: firebaseAuth);
+    return DebugKeychainGuestAuthRepository(firebaseAuth: firebaseAuth);
   }
   return FirebaseAuthRepository(firebaseAuth: firebaseAuth);
+}
+
+bool get _shouldUseDebugKeychainGuestFallback {
+  if (kIsWeb || kReleaseMode) {
+    return false;
+  }
+  if (defaultTargetPlatform == TargetPlatform.macOS) {
+    return true;
+  }
+  return defaultTargetPlatform == TargetPlatform.iOS &&
+      FirebaseBootstrapService.isIosSimulatorInDebug;
 }
