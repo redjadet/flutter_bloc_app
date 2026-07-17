@@ -1,23 +1,13 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-17T10:32:19Z"
-  git_head: "5550aa33341209a55ca4b5122b9de6eb4258ccc4"
+  generated_at: "2026-07-17T14:31:48Z"
+  git_head: "bf25e04c0da6769d4141c54a7afdad8af308bdac"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
-
-
-
-
-
-
-
-
-
-
 
 # Context hotspots
 
@@ -45,9 +35,9 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 17 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
 | 18 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
 | 19 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
-| 20 | 222 | `case_study_demo/presentation/pages/case_study_review_page.dart` | case_study_demo |
+| 20 | 222 | `counter/data/offline_first_counter_repository.dart` | counter |
 
-**Total feature Dart (non-generated):** ~75344 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~76196 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

@@ -4,7 +4,10 @@ Senior-engineer operating rules; pointers to canon, not duplicates.
 
 ## Mission
 
-Correct, maintainable, verifiable outcomes; understand first, preserve architecture, smallest practical diff; verify before claiming success and escalate product/UX/architecture decisions.
+Correct, maintainable, verifiable outcomes; understand first, preserve architecture,
+smallest practical diff; execute safe in-scope work autonomously; verify before
+claiming success. Safety and human approval take precedence over autonomy;
+escalate dangerous actions and genuinely user-owned decisions.
 
 ## When to read
 
@@ -61,6 +64,7 @@ Before `pubspec.yaml`: (1) Flutter SDK enough? (2) existing package? (3) activel
 | Never claim tests passed without evidence | `RISK-VALIDATION-SHORTCUT` |
 | No silent destructive/external effects | `RISK-DESTRUCTIVE-SIDE-EFFECT` |
 | No unapproved remote or destructive Git action | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
+| No permission loops for safe in-scope work | [`agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) `SAFETY-01`, `SAFETY-05` |
 | No SDK/framework patches | `RISK-FLUTTER-SDK-MUTATION` |
 | No new state mgmt / DI / navigation | `RISK-ARCH-LAYER`, `RISK-BLOC-DIVERGENCE` |
 

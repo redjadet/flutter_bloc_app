@@ -101,9 +101,9 @@ below.
   `test/flutter_test_config.dart`). Fails the checklist on `RenderFlex` /
   `RenderParagraph` overflow errors that can otherwise slip into manual web QA.
 - **`check_agent_knowledge_base.sh`**: Keeps AI-agent map/source-doc/host-template pointers indexed; fails if [`AGENTS.md`](../../AGENTS.md) grows past limit or required progressive-disclosure, memory-compounding, or closed-loop invariants disappear.
-- **`check_ai_snapshot_freshness.sh`**: Active `ai/` discovery snapshots — forbidden legacy paths, required `ai_snapshot` frontmatter, resolvable `canon_links`. Refresh via `bash tool/refresh_ai_reports.sh`. See [`ai_snapshot_freshness.md`](ai_snapshot_freshness.md).
+- **`check_ai_snapshot_freshness.sh`**: Active `ai/` discovery snapshots — forbidden legacy paths, required `ai_snapshot` frontmatter, resolvable `canon_links`. Refresh via the staged, lock-protected, rollback-safe `bash tool/refresh_ai_reports.sh`; verify refresh idempotency and malformed-frontmatter safety with `bash tool/refresh_ai_reports.sh --self-test`. See [`ai_snapshot_freshness.md`](ai_snapshot_freshness.md).
 - **`check_repomix_contract.sh`**: Repomix onboarding/feature pack smoke — forbidden secrets/generated paths, token budgets. See [`docs/ai/repomix_profiles.md`](../ai/repomix_profiles.md).
-- **`check_agent_safety_contracts.sh`**: Deterministic guard for agent safety contracts (`SAFETY-01..06`, `SAFETY-REPORT`); ensures owner doc, map pointers, host templates, and risk-register links stay aligned.
+- **`check_agent_safety_contracts.sh`**: Deterministic guard for agent safety contracts (`SAFETY-01..06`, `SAFETY-REPORT`); ensures safe-autonomy and approval anchors, owner doc, map pointers, host templates, and risk-register links stay aligned.
 - **`check_ai_change_contract.sh`**: Diff-scoped guard for feature/app/package edits; delegates to brief/folder/architecture checks. Docs-only diffs pass.
 - **`check_ai_failure_risk_register.sh`**: Ensures
   [`ai_failure_risks.md`](../ai/ai_failure_risks.md) keeps required Cursor/Codex

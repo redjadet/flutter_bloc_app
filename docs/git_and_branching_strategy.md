@@ -180,10 +180,11 @@ operational boundaries:
    application issue.
 4. Run the repository-selected validation lane and report executed proof,
    failures, blockers, and residual risk.
-5. Treat commit, push, PR creation, review submission, merge, branch deletion,
-   worktree removal, deployment, and force-push as external or destructive
-   actions. Take them only with user authorization; confirm affected items in
-   the same turn when required by [`AGENTS.md`](../AGENTS.md).
+5. Treat every Git state mutation as approval-gated, including stage/unstage,
+   index/ref changes, commit, amend, stash, branch/tag/worktree changes, rebase,
+   cherry-pick, push, PR creation, review submission, merge, deployment, and
+   force-push. Take them only with direct current-turn user authorization;
+   confirm affected items when required by [`AGENTS.md`](../AGENTS.md).
 6. Stop for a user-owned decision, missing credentials, ambiguous conflict, or
    a required check that cannot be made green safely. Do not hide the condition
    with retries, skipped checks, or broad unrelated edits.
