@@ -20,6 +20,13 @@ Cleared remaining domain wire `fromJson`/`toJson` (and case_study encode/decode)
 - Feature folder contract — pass
 - `./bin/format --changed`
 
-## Follow-up
+## Follow-up / intentionally deferred
 
-Domain wire-leak warn backlog closed. Presentation splits (Wave C) still deferred.
+Domain wire-leak warn backlog is **closed**.
+
+Remaining intentional deferrals (do not standalone-churn):
+
+| ID | Item | Doc |
+| --- | --- | --- |
+| MS-D01 | Wave C presentation `part` splits — only with next UI touch | [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md) |
+| MS-D02 | Staff clock-out `flags` stays partial map (pre-existing wire) | same plan |

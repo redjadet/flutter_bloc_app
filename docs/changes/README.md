@@ -7,7 +7,7 @@ that.
 
 ## Index
 
-- [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0.
+- [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0. Deferred leftovers: [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).
 - [`2026-07-17_domain_purity_chat_counter_todo.md`](2026-07-17_domain_purity_chat_counter_todo.md): Wave B — move chat/counter/todo wire JSON into data DTOs; domain wire leaks 45→31.
 - [`2026-07-17_di_composition_simplify.md`](2026-07-17_di_composition_simplify.md): Wave A — thin DI groups into `register_*` modules; move auth/staff/remote-config fallbacks into feature `data/`; preserve order/dispose/policy.
 - [`2026-07-16_mobile_backend_integration_hardening.md`](2026-07-16_mobile_backend_integration_hardening.md): Mobile/backend contract safety — defensive DTOs, required Dio injection, ad-hoc Dio CI guard, canonical contract docs; deferred list [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).

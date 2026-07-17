@@ -18,6 +18,13 @@ Cleared domain wire `fromJson`/`toJson` for three features:
 - `./tool/analyze.sh` — pass
 - `./bin/format --changed`
 
-## Out of scope (remaining warn-only)
+## Out of scope (remaining warn-only) — closed later same day
 
-case_study, chart, igaming, iot_demo, search, staff_app_demo flags — later slices.
+Originally deferred: case_study, chart, igaming, iot_demo, search, staff flags.
+**Closed** in [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md)
+(`violations=0`).
+
+## Intentionally still deferred
+
+See [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md)
+(**MS-D01** Wave C presentation splits; **MS-D02** staff clock-out partial flags).

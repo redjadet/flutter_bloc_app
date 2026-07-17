@@ -33,3 +33,8 @@ Behavior-preserving DI maintainability refactor:
 - `./bin/router_feature_validate` — pass (168 tests)
 - `./bin/checklist` — **passed** (2750 tests; coverage 85.23%; app-shell 75.73%)
 - `./bin/agent-maintain closeout` — pass
+
+## Intentionally deferred after this series
+
+Wave C presentation splits and staff clock-out partial `flags` wire shape:
+[`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).

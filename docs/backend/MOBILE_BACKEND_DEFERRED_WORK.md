@@ -16,6 +16,7 @@ Do not treat Firebase Analytics on the classpath, or pagination wording in guide
 | **Live-backend contract validation** (Render / HF / AI Decision e2e against real hosts) | Hardening proved offline with unit tests + fixtures | Final audit “No-live-backend limitation” | Staging credentials + intentional integration lane |
 | **Broad demo DTO cast rewrite** (beyond AI Decision + GraphQL country) | Surgical scope; other demos still use direct `as` casts | Same defensive pattern as `ai_decision_json.dart` / `graphql_json.dart` | Touching those features for other reasons, or a follow-up cast-hardening slice |
 | **Domain wire-leak warn-only backlog** | **Closed 2026-07-17** (`violations=0`) | `bash tool/check_domain_wire_leaks.sh`; change notes [`changes/2026-07-17_domain_purity_chat_counter_todo.md`](../changes/2026-07-17_domain_purity_chat_counter_todo.md), [`changes/2026-07-17_domain_purity_remaining_demos.md`](../changes/2026-07-17_domain_purity_remaining_demos.md) | Keep domain free of wire JSON; new models use data DTOs |
+| **Maintainability simplify leftovers** (Wave C presentation splits; staff clock-out partial `flags`) | Lower seam value / pre-existing wire — not mobile-backend hardening | [`plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md) (**MS-D01**, **MS-D02**) | UI touch for MS-D01; product/sync contract for MS-D02 |
 
 ## Pagination — what exists vs what does not
 
