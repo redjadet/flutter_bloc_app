@@ -178,7 +178,7 @@ find "$feature_root" -type f -name '*.dart' ! -name '*.g.dart' \
   ! -name '*.freezed.dart' -exec wc -l {} + \
   | awk '$2 != "total" { print $1 "\t" $2 }' \
   | LC_ALL=C sort -rn -k1,1 \
-  | head -20 >"$hotspot_rows"
+  | sed -n '1,20p' >"$hotspot_rows"
 
 hotspot_total="$(awk -F: '{ total += $2 } END { print total + 0 }' "$feature_metrics")"
 hotspot_block="$tmp_dir/hotspot_block.md"

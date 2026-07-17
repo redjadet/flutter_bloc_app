@@ -1,9 +1,7 @@
 # Agent Quick Reference
 
-Commands and routing. Run tool router first; read only matching row. Specialist
-operations: [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
-Map: [`AGENTS.md`](../AGENTS.md). Validation detail:
-[`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md).
+Commands and routing. Run tool router first; load only matching row. Map:
+[`AGENTS.md`](../AGENTS.md). Detail: [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md), [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
 
 ## Validation Chooser
 
@@ -47,57 +45,28 @@ Map: [`AGENTS.md`](../AGENTS.md). Validation detail:
 
 | Trigger | Action |
 | --- | --- |
-| Task start / scope change | `preflight` / tool router, then task-matched owner docs |
-| Non-trivial existing-code work | Context ladder; plan + proof in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
+| Start / scope change | Preflight/tool router; task-matched owner docs; non-trivial plan + proof in [`tasks/cursor/todo.md`](../tasks/cursor/todo.md) or [`tasks/codex/todo.md`](../tasks/codex/todo.md) |
 | Broad / high-risk work | [`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub); delegate only when allowed |
-| API, external state, Git, UI, runtime | Matching chooser row; inspect live state; require authorization for remote/destructive action |
-| AI-authored change before done | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + routed validation |
-| Repeated failure / prompt tweak | Add evaluator, test, fixture, or script; trim prompt prose |
-| Agent behavior / template changed | Source docs → templates → `after-host-edit` → drift check |
-| Implementation / test / debug / validation | Matching skill from [`ai/skill_routing.md`](ai/skill_routing.md) |
+| API, external state, Git, UI, runtime | Matching chooser row; inspect live state; authorize remote/destructive action |
+| AI-authored change | [`review/code_review_playbook.md`](review/code_review_playbook.md) + [`ai_code_review_protocol.md`](ai_code_review_protocol.md) + routed validation |
+| Repeated failure / agent-template change | Add evaluator/test/fixture/script; trim prose; source docs → templates → `after-host-edit` → drift check |
 
 ## Harness
 
-Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). **Context navigation ladder:**
-[`ai/context_loading.md`](ai/context_loading.md). **Skill routing:**
-[`ai/skill_routing.md`](ai/skill_routing.md). **Multi-Agent Hub:**
-[`agent_knowledge_base.md#multi-agent-hub`](agent_knowledge_base.md#multi-agent-hub).
+Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). [Context navigation ladder](ai/context_loading.md); [Skill routing](ai/skill_routing.md); [Multi-Agent Hub](agent_knowledge_base.md#multi-agent-hub).
 
 Mechanical anchors (do not drop): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
-## Host Adapters
+## Host adapters
 
-| Need | Cursor | Codex |
-| --- | --- | --- |
-| Orientation + commands | `agents-quick-reference` | `agents-quick-reference` |
-| Skill discovery / routing | `agents-skill-routing` | `agents-skill-routing` |
-| Cubit/BLoC standards | `agents-bloc-standards` | `agents-bloc-standards` |
-| Feature delivery contract | `agents-feature-delivery` | `agents-feature-delivery` |
-| Non-trivial delivery | `agents-delivery-workflow` | `agents-delivery-workflow` |
-| Plan/delegation reminders | `agents-meta-behavior` | - |
-| Explicit cross-host second opinion | `/codex-feedback` or `./tool/request_codex_feedback.sh` | `./tool/request_codex_feedback.sh` only when user asks |
-
-Shared host-neutral skill source:
-[`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/).
-Repo-managed Cursor commands: `/local-agents-quick-reference`,
-`/upgrade-validate-all`, `/commit-push-pr`, `/codex-feedback`.
-
-## Task Doc Routing
-
-Full map: [`AGENTS.md`](../AGENTS.md) § Map and [`README.md`](README.md). AI engineering index: [`PLAN.md`](../PLAN.md).
+Both: `agents-quick-reference`, `agents-skill-routing`, `agents-bloc-standards`,
+`agents-feature-delivery`, `agents-delivery-workflow`. Cursor-only planning:
+`agents-meta-behavior`. Shared source:
+[`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/). Cross-host review only when user asks: `/codex-feedback` or `./tool/request_codex_feedback.sh`.
 
 ## Melos workspace
 
-Repo root is Pub/Melos root; app lives in `apps/mobile/`. Run repo commands from
-root; use `dart run melos ...` (global `melos` not needed). Workspace operation:
-[`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
-
-| Need | Command / path |
-| --- | --- |
-| Delivery | `./bin/checklist` |
-| App source / run | `apps/mobile/**`; `cd apps/mobile && flutter run -t lib/main_dev.dart` |
-| Shared UI | `package:design_system` / `package:design_system/responsive.dart` |
-| Backend | `backend/firebase/` |
-| Package DAG | `bash tool/check_package_dependency_dag.sh` (included in checklist) |
-
-Plan: [`plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
+Root is Pub/Melos root; app: `apps/mobile/`; shared UI: `package:design_system`;
+backend: `backend/firebase/`. Use `dart run melos ...`; app run:
+`cd apps/mobile && flutter run -t lib/main_dev.dart`. Package DAG check is in
+`./bin/checklist`; workspace operations: [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).

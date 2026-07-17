@@ -1,13 +1,14 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-15T12:42:39Z"
-  git_head: "6aa30de842e27a240a6474f86a1c1a865244b083"
+  generated_at: "2026-07-17T10:32:19Z"
+  git_head: "5550aa33341209a55ca4b5122b9de6eb4258ccc4"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
+
 
 
 
@@ -37,16 +38,16 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 10 | 307 | `walletconnect_auth/data/walletconnect_auth_repository_impl_body.part.dart` | walletconnect_auth |
 | 11 | 297 | `chart/data/firebase_chart_repository_impl.part.dart` | chart |
 | 12 | 286 | `in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page_cards.part.dart` | in_app_purchase_demo |
-| 13 | 249 | `counter/presentation/widgets/counter_page_app_bar_overflow.part.dart` | counter |
+| 13 | 244 | `counter/presentation/widgets/counter_page_app_bar_overflow.part.dart` | counter |
 | 14 | 241 | `staff_app_demo/presentation/pages/staff_app_demo_proof_page_widgets.part.dart` | staff_app_demo |
-| 15 | 223 | `todo_list/presentation/cubit/todo_list_cubit.dart` | todo_list |
-| 16 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
-| 17 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
-| 18 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
-| 19 | 222 | `case_study_demo/presentation/pages/case_study_review_page.dart` | case_study_demo |
-| 20 | 221 | `in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart` | in_app_purchase_demo |
+| 15 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
+| 16 | 223 | `todo_list/presentation/cubit/todo_list_cubit.dart` | todo_list |
+| 17 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
+| 18 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
+| 19 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
+| 20 | 222 | `case_study_demo/presentation/pages/case_study_review_page.dart` | case_study_demo |
 
-**Total feature Dart (non-generated):** ~73595 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~75344 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

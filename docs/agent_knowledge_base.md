@@ -37,17 +37,7 @@ Source of truth for agent workflow + where truth lives. Goal: progressive disclo
 
 ## Business logic must be separated from UI (agent rule)
 
-Short rule: **keep widgets/pages dumb**. `build()` renders only; business rules,
-derived data, and async work move to **cubit/state** (presentation) or **domain**.
-
-Owner docs: [`clean_architecture.md`](clean_architecture.md) and
-[`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md).
-Detection scripts: `bash tool/check_solid_presentation_data_imports.sh`,
-`bash tool/check_direct_getit.sh`.
-
-Full agent-facing guidance lives in
-[`agent_knowledge_base_details.md`](agent_knowledge_base_details.md)
-§ “Business logic must be separated from UI”.
+Widgets/pages render only; derived rules and async work move to cubit/state or domain. Owners: [`clean_architecture.md`](clean_architecture.md), [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md); detection: `bash tool/check_solid_presentation_data_imports.sh`, `bash tool/check_direct_getit.sh`. Full guidance: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) § “Business logic must be separated from UI”.
 
 ## Self-Improvement
 
@@ -65,18 +55,11 @@ Required anchors (kept here for mechanical checks):
 
 ## Progressive Disclosure
 
-After cold-start ladder (see § Context Navigation Ladder): this doc → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
+After cold start: this doc → [`agent_project_context.md`](agent_project_context.md) → [`ai_code_review_protocol.md`](ai_code_review_protocol.md) → [`agents_quick_reference.md`](agents_quick_reference.md) → task docs via [`README.md`](README.md). UI: [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md).
 
 ## Adaptive Execution
 
-Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md); safety contracts: [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md)
-
-Required anchors (kept here for mechanical checks):
-
-- unsafe ambiguity below 95% confident
-- 95% confident
-- Before report
-- Stop when value met
+Owner: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md); safety: [`agent_kb/agent_safety_contracts.md`](agent_kb/agent_safety_contracts.md). Anchors: unsafe ambiguity below 95% confident; 95% confident; Before report; Stop when value met.
 
 ## Tool Orchestration
 
@@ -102,28 +85,13 @@ Repeated failure → durable repo capability, not bigger prompt: identify gap (p
 
 Owner: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md)
 
-Required anchors (kept here for mechanical checks):
-
-- Self-verify
-- Edge cases
-- Failure paths
-- Operational clarity
-- Breakage impact
+Required anchors: Self-verify; Edge cases; Failure paths; Operational clarity; Breakage impact.
 
 ## Memory Compounding
 
 Owner: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
 
-Required anchors (kept here for mechanical checks):
-
-- reusable conclusions
-- Semantic lint
-- File reusable conclusions
-- Do not dump chat transcripts
-- explicit user approval
-- separate RAG layer
-- code-review-graph
-- targeted raw-file reads
+Required anchors: reusable conclusions; Semantic lint; File reusable conclusions; Do not dump chat transcripts; explicit user approval; separate RAG layer; code-review-graph; targeted raw-file reads.
 
 ## Context Navigation Ladder
 
@@ -131,50 +99,21 @@ Numbered steps: [`docs/ai/context_loading.md`](ai/context_loading.md) only. Befo
 
 ## System Of Record Layout
 
-Details moved to keep this file small. See:
-
-- [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system-of-record table, multi-agent hub mechanics, invariants, host notes)
-
-Required anchors (kept here for agent checks; details in linked doc):
-
-- **Plans As Artifacts** (see details)
-- **Invariant Enforcement** (see details)
-- **Codex And Cursor** (see details)
-- Trackers: [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md)
-- **Surgical diffs** (see details)
+Details: [`agent_knowledge_base_details.md`](agent_knowledge_base_details.md) (system records, hub mechanics, invariants, host notes). Anchors: **Plans As Artifacts**; **Invariant Enforcement**; **Codex And Cursor**; **Surgical diffs**. Trackers: [`../tasks/codex/todo.md`](../tasks/codex/todo.md), [`../tasks/cursor/todo.md`](../tasks/cursor/todo.md).
 
 ## Multi-Agent Hub
 
 Owner: [`agent_kb/multi_agent_hub.md`](agent_kb/multi_agent_hub.md)
 
-Required anchors (kept here for mechanical checks):
-
-```text
-Benefit: team
-Benefit: single
-tasks/cursor/team/<run-id>/
-Coordinator
-Specialists
-Researcher
-Analyst
-Implementer
-Reviewer
-untrusted
-```
+Anchors: Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`; Coordinator; Specialists; Researcher; Analyst; Implementer; Reviewer; untrusted.
 
 ## Final Agent Contract
 
 Loop: [`AGENTS.md`](../AGENTS.md) § Loop. Execution: [`agent_kb/adaptive_execution.md`](agent_kb/adaptive_execution.md). Finish/report: [`agent_kb/legibility_and_finish_gate.md`](agent_kb/legibility_and_finish_gate.md). Review gate: [`ai_code_review_protocol.md`](ai_code_review_protocol.md). **Report after checking** request, diff, proof, blockers (details in legibility doc). T1/T2 coding discipline: [`docs/ai/agent_operating_manual.md`](ai/agent_operating_manual.md).
 
-## Host Parity
+## Host Parity & Mechanical Enforcement
 
-Owner: [`agent_kb/host_parity_and_enforcement.md`](agent_kb/host_parity_and_enforcement.md)
-
-## Mechanical Enforcement
-
-Owner: [`agent_kb/host_parity_and_enforcement.md`](agent_kb/host_parity_and_enforcement.md)
-
-New durable agent rule: update owning source doc first, then thin host templates, then validation if rule needs mechanical check.
+Owner: [`agent_kb/host_parity_and_enforcement.md`](agent_kb/host_parity_and_enforcement.md). New durable rule: source doc → thin host template → validation when a mechanical check is needed.
 
 ## Operator Preferences (Durable)
 

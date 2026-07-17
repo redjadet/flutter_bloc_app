@@ -1,13 +1,14 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-15T12:42:39Z"
-  git_head: "6aa30de842e27a240a6474f86a1c1a865244b083"
+  generated_at: "2026-07-17T10:32:19Z"
+  git_head: "5550aa33341209a55ca4b5122b9de6eb4258ccc4"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
     - CODEMAP.md
     - docs/feature_overview.md
 ---
+
 
 
 
@@ -27,24 +28,24 @@ ai_snapshot:
 <!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
-| chat | 6728 | yes |
+| chat | 6730 | yes |
 | staff_app_demo | 5443 | yes |
 | online_therapy_demo | 5340 | yes |
 | todo_list | 5311 | yes |
 | case_study_demo | 4606 | yes |
-| counter | 4331 | yes |
+| counter | 4319 | yes |
+| native_platform_showcase | 3464 | yes |
 | iot_demo | 3190 | yes |
 | iot | 3190 | yes |
 | auth | 2316 | yes |
 | example | 2312 | yes |
 | realtime_market | 2186 | yes |
+| graphql_demo | 2057 | yes |
 | chart | 2001 | yes |
-| graphql_demo | 1974 | yes |
-| native_platform_showcase | 1898 | yes |
 | calculator | 1867 | yes |
 | walletconnect_auth | 1560 | yes |
+| ai_decision_demo | 1536 | yes |
 | google_maps | 1493 | yes |
-| ai_decision_demo | 1426 | yes |
 | profile | 1406 | yes |
 | in_app_purchase_demo | 1363 | yes |
 | igaming_demo | 1342 | yes |
