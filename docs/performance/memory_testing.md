@@ -50,6 +50,31 @@ bash tool/run_memory_leak_tracking_dry_run.sh
 - `test/shared/memory_leak_route_cycle_test.dart` — GoRouter MaterialApp mount/unmount
 - `test/shared/memory_leak_controller_lifecycle_test.dart` — TextEditingController State
 
+## Stable journeys (Wave B1)
+
+Tag only proven-stable paths; keep global `withIgnoredAll()` for untagged tests.
+
+| Journey | Test |
+| --- | --- |
+| Auth route sign-out → teardown | `test/app/router/app_route_auth_gate_test.dart` (`authenticated route sign-out…`) |
+| App-shell `go` replacement (`NoTransitionPage`) | `test/shared/memory_leak_app_shell_route_replacement_test.dart` |
+| Realtime watch → emit → teardown (thin `BlocBuilder`, not full chart page) | `test/shared/memory_leak_realtime_teardown_test.dart` |
+| BLE tab leave teardown | `test/app/router/iot_demo_hub_page_test.dart` (`leaving BLE tab…`) |
+
+Helper may pass `ignoredNotDisposedClasses` (e.g. `memoryLeakHarnessLayerClasses` +
+`TextPainter`) for proven compositor noise only — never product owners.
+
+Scoped run:
+
+```bash
+cd apps/mobile && flutter test \
+  test/shared/memory_leak_*.dart \
+  test/app/router/app_route_auth_gate_test.dart \
+  test/app/router/go_router_refresh_stream_test.dart \
+  test/app/router/iot_demo_hub_page_test.dart \
+  --tags memory_leak --concurrency=1
+```
+
 ## Rules
 
 - Prefer bounded `pump` / short durations; avoid unbounded `pumpAndSettle`.

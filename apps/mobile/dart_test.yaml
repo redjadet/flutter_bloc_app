@@ -7,3 +7,6 @@ tags:
 
   golden:
     description: Golden toolkit visual snapshot tests
+
+  memory_leak:
+    description: Opt-in leak_tracker journeys (Wave A/B1); see leakSafeTestWidgets

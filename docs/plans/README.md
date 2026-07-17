@@ -13,6 +13,7 @@ This directory contains design notes and execution plans.
 
 ## Index
 
+- [`2026-07-17_memory_quality_deferred.md`](2026-07-17_memory_quality_deferred.md): **Deferred** — memory quality A→B1 leftovers (merge ops, B2/B3, non-goals, B0 evidence, lint exclusions).
 - [`2026-07-17_maintainability_simplify_deferred.md`](2026-07-17_maintainability_simplify_deferred.md): **Deferred** — Wave C presentation splits (MS-D01); staff clock-out partial `flags` wire (MS-D02) after 2026-07-17 DI/domain purity series.
 - [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_program.md): **Complete** — soft-seam program + follow-up wave A–H; soft presentation scan empty; `staff_app_demo` Firestore maps deferred.
 - [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md): **Agent runtime** — status, backlog, gates (~45 lines).

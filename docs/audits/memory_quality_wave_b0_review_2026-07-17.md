@@ -1,7 +1,7 @@
 # Audit — Memory quality Wave B0 dry-run (2026-07-17)
 
 Report-only full-suite leak tracking baseline. **No gate flip.** Default remains
-`withIgnoredAll()`. Wave A PR: https://github.com/redjadet/flutter_bloc_app/pull/550
+`withIgnoredAll()`. Wave A PR: <https://github.com/redjadet/flutter_bloc_app/pull/550>
 
 ## Run meta
 
@@ -81,6 +81,9 @@ Full list: `tmp/memory_leak_dry_run/wave_b0_full/failing_files.txt`
 | **B1** | Tag stable journeys: auth sign-in/out, app-shell route replacement, realtime/BLE teardown |
 | **B2** | Promote only proven product leak classes from ignore list |
 | **B3** | AST rules for timers/listeners; defer alias/GetIt/context until FP rate low |
+
+Open leftovers (merge ops, evidence, non-goals):
+[`../plans/2026-07-17_memory_quality_deferred.md`](../plans/2026-07-17_memory_quality_deferred.md).
 
 ## Suppressions / production fixes
 
