@@ -1,5 +1,7 @@
 # Privacy Policy (BlocFlutter)
 
+Security and privacy owner: [`README.md`](README.md).
+
 Last updated: 2026-03-27
 
 This Privacy Policy describes how the **BlocFlutter** mobile application ("App") handles information.

@@ -1,5 +1,7 @@
 # Todo Feature: Manual Order Normalization Improvements
 
+Historical implementation note. Current behavior contract: [todo_list_feature_guide.md](todo_list_feature_guide.md).
+
 ## Overview
 
 This document analyzes the uncommitted code quality improvements made to the todo feature, specifically focusing on manual order normalization when items are deleted or updated.

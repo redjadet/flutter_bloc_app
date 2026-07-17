@@ -85,7 +85,7 @@ class NormalizeDocLinksTest(unittest.TestCase):
 
     def test_unresolved_existing_link_reverts_to_literal(self):
         path = self.write_file(
-            "docs/STARTUP_TIME_PROFILING.md",
+            "docs/performance/startup_time_profiling.md",
             "Record metrics in [`analysis/startup_metrics.md`](analysis/startup_metrics.md).\n",
         )
 

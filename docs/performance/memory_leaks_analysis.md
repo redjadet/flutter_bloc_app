@@ -1,6 +1,6 @@
 # Memory Leaks Analysis
 
-This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](CODE_QUALITY.md).
+This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](../race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](../CODE_QUALITY.md).
 
 **Analysis Date:** 2025-02 (historical); automation status updated 2026-07-17
 **Scope:** `lib/` — StreamController, StreamSubscription, Timer, Controllers (TextEditingController, ScrollController), lifecycle patterns
@@ -14,9 +14,9 @@ This document records a deep analysis of the codebase for potential memory leaks
 | Static | `memory_lint` via `bash tool/run_memory_lint.sh` (four syntax rules) |
 | Runtime | Tagged `bash tool/run_memory_leak_tests.sh` with `withTrackedAll()` |
 | Untagged tests | Still `withIgnoredAll()` in `flutter_test_config.dart` |
-| Dry-run (B0) | `bash tool/run_memory_leak_tracking_dry_run.sh` — report-only; see [`audits/memory_quality_wave_b0_review_2026-07-17.md`](audits/memory_quality_wave_b0_review_2026-07-17.md) |
+| Dry-run (B0) | `bash tool/run_memory_leak_tracking_dry_run.sh` — report-only; see [`audits/memory_quality_wave_b0_review_2026-07-17.md`](../audits/memory_quality_wave_b0_review_2026-07-17.md) |
 | Heuristics | Existing `check_memory_*.sh` / lifecycle scripts remain in checklist |
-| Hub docs | [`performance/memory_management.md`](performance/memory_management.md) |
+| Hub docs | [`memory_management.md`](memory_management.md) |
 
 ---
 
@@ -179,6 +179,6 @@ The project uses `check_stream_controller_close.sh` (or equivalent) for StreamCo
 
 ## 6. Related Documentation
 
-- [Race Conditions and Bugs Analysis](race_conditions_and_bugs_analysis.md)
-- [CODE_QUALITY](CODE_QUALITY.md)
-- [Validation Scripts](validation_scripts.md)
+- [Race Conditions and Bugs Analysis](../race_conditions_and_bugs_analysis.md)
+- [CODE_QUALITY](../CODE_QUALITY.md)
+- [Validation Scripts](../validation_scripts.md)

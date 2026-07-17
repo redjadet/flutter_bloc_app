@@ -240,8 +240,8 @@ To protect startup targets in CI (e.g. for enterprise or high-traffic builds), a
 ## Related Documentation
 
 - [Lazy Loading Review](lazy_loading_review.md) - Comprehensive analysis of lazy loading patterns, `late` keyword usage, deferred imports explanation, and performance optimization opportunities
-- [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md) - Monitoring and optimizing app bundle size
-- [Architecture Details](architecture_details.md)
+- [Bundle Size Monitoring](bundle_size_monitoring.md) - Monitoring and optimizing app bundle size
+- [Architecture Details](../architecture_details.md)
 
 ## Tools Reference
 

@@ -43,10 +43,9 @@ if [ -n "$VIOLATIONS" ]; then
   echo ""
   echo "Note: compute() should only be used in data/presentation layers, not domain layer"
   echo "Domain layer should remain Flutter-agnostic"
-  echo "See: docs/compute_isolate_review.md"
+  echo "See: docs/performance/compute_isolate_review.md"
   exit 1
 else
   echo "✅ No compute() usage in domain layer"
   exit 0
 fi
-

@@ -92,7 +92,7 @@ GoRoute(
 - On web, deferred code is downloaded as separate JavaScript chunks.
 - Prefer deferred imports for heavy, rarely used features; avoid for core flows or shared utilities.
 
-See [`architecture_lazy_loading_and_flow.md`](architecture_lazy_loading_and_flow.md) for routing and deferred page patterns.
+See [`architecture_lazy_loading_and_flow.md`](../architecture_lazy_loading_and_flow.md) for routing and deferred page patterns.
 
 ## Opportunities and Considerations
 
@@ -106,6 +106,6 @@ These are optional improvements to revisit if profiling shows startup or memory 
 ## Related Documentation
 
 - [Performance Bottlenecks](performance_bottlenecks.md)
-- [Startup Time Profiling](STARTUP_TIME_PROFILING.md)
-- [Bundle Size Monitoring](BUNDLE_SIZE_MONITORING.md)
+- [Startup Time Profiling](startup_time_profiling.md)
+- [Bundle Size Monitoring](bundle_size_monitoring.md)
 - [Compute/Isolate Usage](compute_isolate_review.md)

@@ -41,7 +41,7 @@ GoRoute(
 
 Most feature-specific cubits (Chat, Maps, GraphQL, Profile, WebSocket) are created at route level rather than app scope, reducing memory footprint for unused features.
 
-> **See also:** [Lazy Loading Review](lazy_loading_review.md) for comprehensive analysis, implementation details, and best practices.
+> **See also:** [Lazy Loading Review](performance/lazy_loading_review.md) for comprehensive analysis, implementation details, and best practices.
 
 ## State Management Flow
 

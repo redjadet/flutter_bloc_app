@@ -52,6 +52,27 @@ Source-of-truth docs for Flutter BLoC app.
   - Cold-start map printer: `bash ../tool/agent_session_bootstrap.sh`
   - Tracker contract: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)
 
+## Browse by folder
+
+Root `docs/` contains repository-wide entry hubs and heavily referenced canon.
+Focused guidance belongs in an owner folder; do not add new leaf docs at the
+root when an existing category applies.
+
+| Category | Owns |
+| --- | --- |
+| [architecture/](architecture/README.md) | Layering, feature shape, boundaries, rendering contracts |
+| [engineering/](engineering/README.md) | Validation, quality controls, operational maintenance |
+| [features/](features/README.md) | Feature-specific contracts and demo guides |
+| [integrations/](integrations/README.md) | External-service setup, adapters, comparisons |
+| [security/](security/README.md) | Privacy, security hardening, certificate guidance |
+| [testing/](testing/README.md) | Test strategy, matrices, widget-test guidance |
+| [performance/](performance/README.md) | Profiling, memory, performance improvement evidence |
+| [review/](review/README.md) | Architecture, BLoC, security, and performance review checklists |
+| [ai/](ai/README.md) | Coding-agent operations and governance |
+| [offline_first/](offline_first/README.md) | Local-first storage, conflict, and sync guidance |
+| [validation_scripts/](validation_scripts/README.md) | Validation catalog, procedures, and targeted guides |
+| [plans/](plans/README.md) / [changes/](changes/README.md) / [audits/](audits/README.md) | Time-bound plans, shipped changes, and historical evidence |
+
 ## Core docs (by concern)
 
 ### Case studies

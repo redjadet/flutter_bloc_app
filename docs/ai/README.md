@@ -11,5 +11,6 @@ Governance and prompts for agents. **Behavior canon** stays in parent [`docs/`](
 | [repo_map.md](repo_map.md) | Path table (→ [`CODEMAP.md`](../../CODEMAP.md)) |
 | [decision_log.md](decision_log.md) | Durable AI-engineering decisions |
 | [contracts.md](contracts.md) | Link to root [`CONTRACTS.md`](../../CONTRACTS.md) |
+| [supabase_mcp_verification.md](supabase_mcp_verification.md) | Historical local MCP verification; rerun before relying on it |
 
 Evidence: [`ai/reports/`](../../ai/reports/README.md). Ship/land: [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md).

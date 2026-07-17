@@ -40,7 +40,7 @@ mobile/auth pubspecs use the fixed wave (`firebase_core ^4.12.1`, etc.).
 
 **Current workaround:** RTDB write code (`RealtimeDatabaseTodoRepository.save`, `RealtimeDatabaseCounterRepository.save`) uses `Map<String, Object?>` for `.set()` and wraps writes with a TypeError guard. If FlutterFire throws the known details-cast error, we rethrow a clearer `FirebaseException` (`database-platform-error-details`) so repository-level fallbacks and logs remain actionable.
 
-To fix the underlying write failure itself, verify: (1) Firebase Realtime Database rules are deployed and allow writes for the auth path (see [`todo_list_firebase_security_rules.md`](todo_list_firebase_security_rules.md)), (2) user is authenticated, (3) paths `todos/{userId}/{todoId}` and `counter/{userId}` are valid.
+To fix the underlying write failure itself, verify: (1) Firebase Realtime Database rules are deployed and allow writes for the auth path (see [`todo_list_firebase_security_rules.md`](../todo_list_firebase_security_rules.md)), (2) user is authenticated, (3) paths `todos/{userId}/{todoId}` and `counter/{userId}` are valid.
 
 ---
 

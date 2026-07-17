@@ -32,11 +32,11 @@ External write-ups (for example Medium pieces citing Dart VM JSON work and exper
 
 Prioritize only after profiling shows JSON as a hotspot.
 
-1. **Threshold tuning:** Make **`_kIsolateDecodeThreshold`** configurable per flavor or Remote Config for low-end devices (documented already as an idea in **`compute_isolate_review.md`**).
+1. **Threshold tuning:** Make **`_kIsolateDecodeThreshold`** configurable per flavor or Remote Config for low-end devices (documented in the [performance compute/isolate review](../performance/compute_isolate_review.md)).
 2. **Experimental FFI / SIMD JSON:** Evaluate third-party or research parsers (for example SIMD-backed native libraries) only with a clear **binary size, platform matrix, and CI** story; justify any new dependency per repo dependency-review rules. The Dart SDK issue **`dart-lang/sdk#55522`** tracks VM decoder improvements upstream.
 
 ## Where to read more
 
-- **`docs/compute_isolate_review.md`** — current usage and future JSON notes.
-- **`docs/SHARED_UTILITIES.md`** — `isolate_json` usage examples (string and bytes).
-- **`docs/reliability_error_handling_performance.md`** — performance table row for large JSON.
+- [Performance compute/isolate review](../performance/compute_isolate_review.md) — current usage and future JSON notes.
+- **[`SHARED_UTILITIES.md`](../SHARED_UTILITIES.md)** — `isolate_json` usage examples (string and bytes).
+- **[`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)** — performance table row for large JSON.
