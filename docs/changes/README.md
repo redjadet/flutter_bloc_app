@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-17_memory_quality_wave_b0.md`](2026-07-17_memory_quality_wave_b0.md): Report-only leak tracking dry-run tooling + baseline audit; no global ignore flip.
 - [`2026-07-17_memory_quality_wave_a.md`](2026-07-17_memory_quality_wave_a.md): Progressive memory gate — `memory_lint` plugin, tagged `leak_tracker` suite, checklist enforcement; no global ignore flip.
 - [`2026-07-17_safe_agent_autonomy.md`](2026-07-17_safe_agent_autonomy.md): Routine reversible repo-local work is autonomous; dangerous, external, secret/production, and Git mutations retain explicit approval gates.
 - [`2026-07-17_docs_aggressive_prune.md`](2026-07-17_docs_aggressive_prune.md): Delete completed plans/migrations; shorten large how-tos to current contracts; preserve owner-index pointers.

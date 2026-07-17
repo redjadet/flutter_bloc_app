@@ -25,9 +25,23 @@ Tag constant: `memoryLeakTag` (`memory_leak`).
 ## Commands
 
 ```bash
-cd apps/mobile && flutter test --tags memory_leak
+bash tool/run_memory_leak_tests.sh
 cd apps/mobile && flutter test test/shared/memory_leak_smoke_test.dart
 ```
+
+## Wave B0 — report-only dry-run
+
+Opt-in full-suite tracking without flipping the default ignore:
+
+```bash
+bash tool/run_memory_leak_tracking_dry_run.sh
+# optional scoped: MEMORY_LEAK_DRY_RUN_ARGS='test/shared' bash tool/run_memory_leak_tracking_dry_run.sh
+```
+
+- Sets `--dart-define=MEMORY_LEAK_TRACKING_DRY_RUN=true` (see `flutter_test_config.dart`)
+- Writes raw log + summary under `tmp/memory_leak_dry_run/<stamp>/`
+- **Always exits 0** — never a checklist/CI gate
+- Default untagged path remains `withIgnoredAll()`
 
 ## Seed suite (Wave A)
 

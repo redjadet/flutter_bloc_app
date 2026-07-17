@@ -68,8 +68,16 @@ Future<void> testExecutable(final FutureOr<void> Function() testMain) async {
         return null;
       });
   LeakTesting.enable();
-  // Untagged tests stay ignored; leakSafeTestWidgets opts tagged tests back in.
-  LeakTesting.settings = LeakTesting.settings.withIgnoredAll();
+  // Untagged tests stay ignored by default; leakSafeTestWidgets opts tagged
+  // tests back in. Wave B0 dry-run: pass
+  // `--dart-define=MEMORY_LEAK_TRACKING_DRY_RUN=true` for report-only tracking
+  // of the full suite (never wire this into checklist/CI gates).
+  const bool memoryLeakTrackingDryRun = bool.fromEnvironment(
+    'MEMORY_LEAK_TRACKING_DRY_RUN',
+  );
+  LeakTesting.settings = memoryLeakTrackingDryRun
+      ? LeakTesting.settings.withTrackedAll()
+      : LeakTesting.settings.withIgnoredAll();
   LeakTracking.warnForUnsupportedPlatforms = false;
   try {
     await testMain();

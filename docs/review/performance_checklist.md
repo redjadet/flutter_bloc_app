@@ -37,13 +37,15 @@ Primary references:
 
 ## Memory and Lifecycle
 
+- **Every created disposable object's life-cycle must be explicitly ended**
+  (`dispose` / `close` / cancel / remove listener/observer) on the owning path.
 - Streams, timers, and controllers disposed in Cubit `close()` or widget
   dispose.
 - Large caches have bounds or eviction; images use repo sizing conventions.
 - Run lifecycle checks from validation routing when subscriptions or timers
   changed.
 - For ownership/leak gates see [`../performance/memory_checklist.md`](../performance/memory_checklist.md)
-  (`bash tool/run_memory_lint.sh`, `flutter test --tags memory_leak`).
+  (`bash tool/run_memory_lint.sh`, `bash tool/run_memory_leak_tests.sh`).
 
 ## Scale and Edge Cases
 

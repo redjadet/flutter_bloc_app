@@ -2025,7 +2025,7 @@ echo ""
 
 if [ "$RUN_MEMORY_LEAK_TESTS" = "1" ]; then
   echo "🧪 Running memory_leak tagged widget tests..."
-  if ! (cd "$APP_ROOT" && flutter test --tags memory_leak); then
+  if ! bash tool/run_memory_leak_tests.sh; then
     VALIDATION_FAILED=1
     echo "❌ memory_leak tests failed."
     exit 1

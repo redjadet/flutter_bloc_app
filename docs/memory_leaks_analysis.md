@@ -12,8 +12,9 @@ This document records a deep analysis of the codebase for potential memory leaks
 | Layer | Status |
 | --- | --- |
 | Static | `memory_lint` via `bash tool/run_memory_lint.sh` (four syntax rules) |
-| Runtime | Tagged `flutter test --tags memory_leak` with `withTrackedAll()` |
+| Runtime | Tagged `bash tool/run_memory_leak_tests.sh` with `withTrackedAll()` |
 | Untagged tests | Still `withIgnoredAll()` in `flutter_test_config.dart` |
+| Dry-run (B0) | `bash tool/run_memory_leak_tracking_dry_run.sh` — report-only; see [`audits/memory_quality_wave_b0_review_2026-07-17.md`](audits/memory_quality_wave_b0_review_2026-07-17.md) |
 | Heuristics | Existing `check_memory_*.sh` / lifecycle scripts remain in checklist |
 | Hub docs | [`performance/memory_management.md`](performance/memory_management.md) |
 
