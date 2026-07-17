@@ -67,7 +67,8 @@ class CaseStudyRecordDto {
 
       return CaseStudyRecordDto(
         id: id,
-        submittedAt: DateTime.tryParse(at) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        submittedAt:
+            DateTime.tryParse(at) ?? DateTime.fromMillisecondsSinceEpoch(0),
         doctorName: json['doctorName'] as String? ?? '',
         caseType: type,
         notes: json['notes'] as String? ?? '',
@@ -80,7 +81,9 @@ class CaseStudyRecordDto {
 
   // check-ignore: small payload (<8KB) - demo history
   static String encodeList(final List<CaseStudyRecord> records) => jsonEncode(
-    records.map((final r) => CaseStudyRecordDto.fromDomain(r).toJson()).toList(),
+    records
+        .map((final r) => CaseStudyRecordDto.fromDomain(r).toJson())
+        .toList(),
   );
 
   static List<CaseStudyRecord> decodeList(final String? raw) {
@@ -95,7 +98,8 @@ class CaseStudyRecordDto {
           final Map<String, Object?> map => CaseStudyRecordDto.fromJson(map),
           final Map<Object?, Object?> map => CaseStudyRecordDto.fromJson(
             map.map(
-              (final dynamic k, final dynamic v) => MapEntry(k.toString(), v as Object?),
+              (final dynamic k, final dynamic v) =>
+                  MapEntry(k.toString(), v as Object?),
             ),
           ),
           _ => null,

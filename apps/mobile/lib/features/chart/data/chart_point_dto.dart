@@ -7,12 +7,15 @@ class ChartPointDto {
     required this.value,
   });
 
-  ChartPointDto.fromDomain(final ChartPoint point) : date = point.date, value = point.value;
+  ChartPointDto.fromDomain(final ChartPoint point)
+    : date = point.date,
+      value = point.value;
 
-  factory ChartPointDto.fromJson(final Map<String, dynamic> json) => ChartPointDto(
-    date: DateTime.parse(json['date'] as String),
-    value: (json['value'] as num).toDouble(),
-  );
+  factory ChartPointDto.fromJson(final Map<String, dynamic> json) =>
+      ChartPointDto(
+        date: DateTime.parse(json['date'] as String),
+        value: (json['value'] as num).toDouble(),
+      );
 
   factory ChartPointDto.fromApi(final List<dynamic> entry) {
     if (entry.length < 2) {

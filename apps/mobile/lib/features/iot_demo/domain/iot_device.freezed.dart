@@ -213,7 +213,7 @@ return $default(_that.id,_that.name,_that.type,_that.lastSeen,_that.connectionSt
 
 class _IotDevice extends IotDevice {
   const _IotDevice({required this.id, required this.name, required this.type, this.lastSeen, this.connectionState = IotConnectionState.disconnected, this.toggledOn = false, this.value = 0.0}): super._();
-  
+
 
 @override final  String id;
 @override final  String name;

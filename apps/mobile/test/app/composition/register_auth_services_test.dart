@@ -78,7 +78,10 @@ void main() {
           getIt<core_auth.AuthRepository>();
 
       expect(featureRepository, isNot(isA<FirebaseAuthRepository>()));
-      expect(_unwrapAuthRepository(featureRepository), isA<UnavailableAuthRepository>());
+      expect(
+        _unwrapAuthRepository(featureRepository),
+        isA<UnavailableAuthRepository>(),
+      );
       expect(identical(coreRepository, featureRepository), isTrue);
       expect(featureRepository.currentUser, isNull);
       expect(featureRepository.authStateChanges, emitsDone);
@@ -104,7 +107,10 @@ void main() {
 
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
         expect(repository.currentUser, isNull);
-      expect(_unwrapAuthRepository(repository), isA<UnavailableAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<UnavailableAuthRepository>(),
+        );
       },
     );
 
@@ -127,7 +133,10 @@ void main() {
         await repository.signInAnonymously();
 
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
-      expect(_unwrapAuthRepository(repository), isA<LocalGuestOnlyAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<LocalGuestOnlyAuthRepository>(),
+        );
         expect(repository.currentUser?.id, 'web-local-guest');
         expect(repository.currentUser?.isAnonymous, isTrue);
       },
@@ -143,7 +152,10 @@ void main() {
 
         final repository = getIt<feature_auth.AuthRepository>();
         expect(repository, isNot(isA<FirebaseAuthRepository>()));
-      expect(_unwrapAuthRepository(repository), isA<LocalGuestOnlyAuthRepository>());
+        expect(
+          _unwrapAuthRepository(repository),
+          isA<LocalGuestOnlyAuthRepository>(),
+        );
 
         await repository.signInAnonymously();
         expect(repository.currentUser?.id, 'ios-simulator-debug-local-guest');

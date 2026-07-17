@@ -85,7 +85,8 @@ class CaseStudyDraftDto {
         remoteObjectKeysByQuestion: remoteObjectKeysByQuestion,
         currentQuestionIndex: json['currentQuestionIndex'] as int? ?? 0,
         phase:
-            CaseStudyDraftPhaseX.tryParse(json['phase'] as String?) ?? CaseStudyDraftPhase.metadata,
+            CaseStudyDraftPhaseX.tryParse(json['phase'] as String?) ??
+            CaseStudyDraftPhase.metadata,
       );
     } on Object {
       return null;
@@ -107,7 +108,8 @@ class CaseStudyDraftDto {
       if (parsed is Map) {
         return CaseStudyDraftDto.fromJson(
           parsed.map(
-            (final dynamic k, final dynamic v) => MapEntry(k.toString(), v as Object?),
+            (final dynamic k, final dynamic v) =>
+                MapEntry(k.toString(), v as Object?),
           ),
         )?.toDomain();
       }

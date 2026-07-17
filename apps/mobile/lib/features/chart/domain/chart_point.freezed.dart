@@ -208,7 +208,7 @@ return $default(_that.date,_that.value);case _:
 
 class _ChartPoint implements ChartPoint {
   const _ChartPoint({required this.date, required this.value});
-  
+
 
 @override final  DateTime date;
 @override final  double value;

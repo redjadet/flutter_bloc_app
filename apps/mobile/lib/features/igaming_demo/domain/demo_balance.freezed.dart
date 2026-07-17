@@ -207,7 +207,7 @@ return $default(_that.amountUnits);case _:
 
 class _DemoBalance extends DemoBalance {
   const _DemoBalance({required this.amountUnits}): super._();
-  
+
 
 @override final  int amountUnits;
 

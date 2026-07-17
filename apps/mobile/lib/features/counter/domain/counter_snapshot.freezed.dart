@@ -212,7 +212,7 @@ return $default(_that.count,_that.userId,_that.lastChanged,_that.changeId,_that.
 
 class _CounterSnapshot implements CounterSnapshot {
   const _CounterSnapshot({required this.count, this.userId, this.lastChanged, this.changeId, this.lastSyncedAt, this.synchronized = false});
-  
+
 
 @override final  int count;
 @override final  String? userId;

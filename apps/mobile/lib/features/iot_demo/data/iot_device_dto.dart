@@ -21,17 +21,20 @@ class IotDeviceDto {
       toggledOn = device.toggledOn,
       value = device.value;
 
-  factory IotDeviceDto.fromJson(final Map<String, dynamic> json) => IotDeviceDto(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    type: _deviceTypeFromWire(json['type'] as String?),
-    lastSeen: json['lastSeen'] == null ? null : DateTime.parse(json['lastSeen'] as String),
-    connectionState: _connectionStateFromWire(
-      json['connectionState'] as String?,
-    ),
-    toggledOn: json['toggledOn'] as bool? ?? false,
-    value: (json['value'] as num?)?.toDouble() ?? 0,
-  );
+  factory IotDeviceDto.fromJson(final Map<String, dynamic> json) =>
+      IotDeviceDto(
+        id: json['id'] as String,
+        name: json['name'] as String,
+        type: _deviceTypeFromWire(json['type'] as String?),
+        lastSeen: json['lastSeen'] == null
+            ? null
+            : DateTime.parse(json['lastSeen'] as String),
+        connectionState: _connectionStateFromWire(
+          json['connectionState'] as String?,
+        ),
+        toggledOn: json['toggledOn'] as bool? ?? false,
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
 
   final String id;
   final String name;

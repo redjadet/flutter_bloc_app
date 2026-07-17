@@ -27,7 +27,8 @@ class StaffDemoTimeEntryFlagsDto {
     locationInsufficient: (json['locationInsufficient'] as bool?) ?? false,
     missingScheduledShift: (json['missingScheduledShift'] as bool?) ?? false,
     duplicatePunchAttempt: (json['duplicatePunchAttempt'] as bool?) ?? false,
-    deviceClockSkewSuspected: (json['deviceClockSkewSuspected'] as bool?) ?? false,
+    deviceClockSkewSuspected:
+        (json['deviceClockSkewSuspected'] as bool?) ?? false,
   );
 
   final bool outsideGeofence;

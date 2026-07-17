@@ -85,8 +85,8 @@ void main() {
           ),
         ];
 
-      final String encoded = CaseStudyRecordDto.encodeList(records);
-      final List<CaseStudyRecord> decoded = CaseStudyRecordDto.decodeList(
+        final String encoded = CaseStudyRecordDto.encodeList(records);
+        final List<CaseStudyRecord> decoded = CaseStudyRecordDto.decodeList(
           encoded,
         );
 

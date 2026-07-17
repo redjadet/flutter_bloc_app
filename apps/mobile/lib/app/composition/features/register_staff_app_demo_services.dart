@@ -192,7 +192,8 @@ T _withFirestoreOrFallback<T>(
 }
 
 T _withFirestoreAndStorageOrFallback<T>(
-  final T Function(FirebaseFirestore firestore, FirebaseStorage storage) builder, {
+  final T Function(FirebaseFirestore firestore, FirebaseStorage storage)
+  builder, {
   required final T Function() fallback,
 }) {
   try {

@@ -15,12 +15,13 @@ class SearchResultDto {
       title = result.title,
       description = result.description;
 
-  factory SearchResultDto.fromJson(final Map<String, dynamic> json) => SearchResultDto(
-    id: json['id'] as String,
-    imageUrl: json['imageUrl'] as String,
-    title: json['title'] as String?,
-    description: json['description'] as String?,
-  );
+  factory SearchResultDto.fromJson(final Map<String, dynamic> json) =>
+      SearchResultDto(
+        id: json['id'] as String,
+        imageUrl: json['imageUrl'] as String,
+        title: json['title'] as String?,
+        description: json['description'] as String?,
+      );
 
   final String id;
   final String imageUrl;

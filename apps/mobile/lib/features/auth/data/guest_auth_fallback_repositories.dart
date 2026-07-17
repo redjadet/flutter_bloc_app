@@ -29,7 +29,8 @@ class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
     );
   }
 
-  final StreamController<AuthUser?> _authStateController = StreamController<AuthUser?>.broadcast();
+  final StreamController<AuthUser?> _authStateController =
+      StreamController<AuthUser?>.broadcast();
   StreamSubscription<AuthUser?>? _firebaseSubscription;
   AuthUser? _localGuest;
 
@@ -87,7 +88,8 @@ class LocalGuestOnlyAuthRepository implements AuthRepository {
 
   final String? localGuestIdOverride;
 
-  final StreamController<AuthUser?> _authStateController = StreamController<AuthUser?>.broadcast();
+  final StreamController<AuthUser?> _authStateController =
+      StreamController<AuthUser?>.broadcast();
   AuthUser? _localGuest;
 
   String get _localGuestId {

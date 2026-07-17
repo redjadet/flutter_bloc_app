@@ -209,7 +209,7 @@ return $default(_that.betAmount,_that.payoutAmount,_that.isWin);case _:
 
 class _GameRoundResult extends GameRoundResult {
   const _GameRoundResult({required this.betAmount, required this.payoutAmount, required this.isWin}): super._();
-  
+
 
 @override final  int betAmount;
 @override final  int payoutAmount;

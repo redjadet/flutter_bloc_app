@@ -120,7 +120,8 @@ class NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
 }
 
 /// Offline fallback when Firestore is unavailable.
-class NoOpStaffDemoTimeEntriesRepository implements StaffDemoTimeEntriesRepository {
+class NoOpStaffDemoTimeEntriesRepository
+    implements StaffDemoTimeEntriesRepository {
   @override
   Future<List<StaffDemoTimeEntrySummary>> fetchRecent({int limit = 20}) async =>
       const <StaffDemoTimeEntrySummary>[];
@@ -185,7 +186,8 @@ class NoOpStaffDemoPushTokenRepository implements StaffDemoPushTokenRepository {
 /// Offline fallback when Firestore is unavailable.
 class NoOpStaffDemoContentRepository implements StaffDemoContentRepository {
   @override
-  Future<List<StaffDemoContentItem>> listPublished() async => const <StaffDemoContentItem>[];
+  Future<List<StaffDemoContentItem>> listPublished() async =>
+      const <StaffDemoContentItem>[];
 
   @override
   Future<Uri> getDownloadUrl({required String storagePath}) async =>

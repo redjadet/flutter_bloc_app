@@ -217,7 +217,7 @@ return $default(_that.id,_that.title,_that.createdAt,_that.updatedAt,_that.descr
 
 class _TodoItem extends TodoItem {
   const _TodoItem({required this.id, required this.title, required this.createdAt, required this.updatedAt, this.description, this.isCompleted = false, this.dueDate, this.priority = TodoPriority.none, this.changeId, this.lastSyncedAt, this.synchronized = false}): super._();
-  
+
 
 @override final  String id;
 @override final  String title;

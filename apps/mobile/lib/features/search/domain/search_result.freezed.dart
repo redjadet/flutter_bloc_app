@@ -210,7 +210,7 @@ return $default(_that.id,_that.imageUrl,_that.title,_that.description);case _:
 
 class _SearchResult implements SearchResult {
   const _SearchResult({required this.id, required this.imageUrl, this.title, this.description});
-  
+
 
 @override final  String id;
 @override final  String imageUrl;
