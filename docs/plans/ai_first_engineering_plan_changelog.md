@@ -11,8 +11,8 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 | `CODEMAP.md` at root | Keep | Task → path router | Faster than scanning AGENTS Map | New file; linked from AGENTS | Low |
 | `PLAN.md` at root | Rewrite | Index only (~120 lines) | Full plan in `docs/plans/` | Operators + agents share entry | Low |
 | `EXECUTIVE_SUMMARY` at root | Merge | `docs/plans/ai_first_engineering_executive_summary.md` | Matches plans/ convention | Less root sprawl | Low |
-| `ARCHITECTURE_AUDIT` at root | Merge | `docs/audits/ai_architecture_audit.md` (force-add) | Audits folder gitignored by default | Evidence tracked when `-f` | Low |
-| `DOMAIN_LANGUAGE_REPORT` at root | Merge | `docs/audits/ai_domain_language_report_v1.md` | v1 findings; glossary SoT in Wave 2 | Phased language work | Medium |
+| `ARCHITECTURE_AUDIT` at root | Merge | docs/audits/ai_architecture_audit (force-add) | Audits folder gitignored by default | Evidence tracked when `-f` | Low |
+| `DOMAIN_LANGUAGE_REPORT` at root | Merge | docs/audits/ai_domain_language_report_v1 | v1 findings; glossary SoT in Wave 2 | Phased language work | Medium |
 | `CONTRACTS.md` at root | Keep | Global rules + pilot stubs (Wave 2) | Single contract source | `docs/ai/contracts.md` links only | Low |
 | `FEATURE_TEMPLATE` at root | Merge | `docs/plans/FEATURE_TEMPLATE.md` | Aligns with other plans | Feature guide gets one link | Low |
 | Copy `testing_overview` | Remove | `docs/testing/testing_strategy.md` router only | Avoid duplicate canon | Shorter agent context | Low |
@@ -39,10 +39,10 @@ Classification of prior operability / AI-agent ideas against this repo (2026-05-
 | Barrel regression tests | Done — `test/features/*/*_barrel_test.dart` |
 | PR #239 merge | Done — squash to `main` |
 | ARCH-001 / ARCH-002 | **Done** — merged [PR #240](https://github.com/redjadet/flutter_bloc_app/pull/240) (`c703b9b5`) |
-| `FINAL_OPTIMIZATION_REPORT.md` | Done — `ai/reports/` |
+| FINAL_OPTIMIZATION_REPORT | Done — `ai/reports/` |
 | `check_feature_brief_linked.sh` | Done — warn default; `FEATURE_BRIEF_CHECK_STRICT=1` optional |
 | Agent delivery loop doc | Done — [`changes/2026-05-21_agent_automated_delivery_loop.md`](../changes/2026-05-21_agent_automated_delivery_loop.md) |
-| Plan split (runtime / build spec) | Done — slim [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md); archive [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md) |
+| Plan split (runtime / build spec) | Done — slim [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md); build-spec archive deleted 2026-07-17 (see [`changes/2026-07-17_docs_aggressive_prune.md`](../changes/2026-07-17_docs_aggressive_prune.md)) |
 
 ## Evidence captured (preflight 2026-05-21)
 

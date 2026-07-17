@@ -5,7 +5,7 @@ logs look suspicious. Release builds are unchanged (Keychain + default Hive path
 
 Related: [`security_and_secrets.md`](../security_and_secrets.md) (encryption
 principles), [`offline_first/hive_schema_migrations.md`](../offline_first/hive_schema_migrations.md),
-[`ios_launch_log_analysis.md`](../ios_launch_log_analysis.md).
+[`engineering/apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md).
 
 ## Symptom → cause → fix
 

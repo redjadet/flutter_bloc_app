@@ -75,6 +75,6 @@ Shared JSON fixtures live at
 
 ## Docker / Render
 
-See `Dockerfile` and `render.yaml`. The blueprint sets **`plan: free`** so Hobby workspaces validate without defaulting to paid **starter**. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/plans/render_fastapi_chat_demo_plan.md)).
+See `Dockerfile` and `render.yaml`. The blueprint sets **`plan: free`** so Hobby workspaces validate without defaulting to paid **starter**. Use a **single** uvicorn worker when relying on in-process cache ([STOP #11](../../docs/integrations/render_fastapi_chat_demo.md)).
 
 **Manual deploy from your machine:** with **`RENDER_API_KEY`** in the environment (for example `direnv`), run [`../../tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh) from the repo root; hosted Render MCP cannot start deploys. The live image follows the **branch/commit** Render is pinned to, not uncommitted local edits alone.

@@ -94,7 +94,7 @@ User prefs:
   [`tool/codex_plan_review_template.md`](../tool/codex_plan_review_template.md); `request_codex_feedback.sh` reviews
   git diffs only.
 - Render FastAPI chat: plan
-  [`plans/render_fastapi_chat_demo_plan.md`](plans/render_fastapi_chat_demo_plan.md); contract fixtures
+  [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md); contract fixtures
   `test/fixtures/render_chat_contract/` and `demos/render_chat_api`.
 - Render chat ops: add `CHAT_RENDER_*` defines in
   `tool/flutter_dart_defines_from_env.sh`; `_render_meta` body fields may

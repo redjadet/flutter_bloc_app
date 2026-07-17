@@ -16,7 +16,6 @@ This directory contains design notes and execution plans.
 - [`2026-07-17_maintainability_simplify_deferred.md`](2026-07-17_maintainability_simplify_deferred.md): **Deferred** — Wave C presentation splits (MS-D01); staff clock-out partial `flags` wire (MS-D02) after 2026-07-17 DI/domain purity series.
 - [`2026-07-10_maintainability_program.md`](2026-07-10_maintainability_program.md): **Complete** — soft-seam program + follow-up wave A–H; soft presentation scan empty; `staff_app_demo` Firestore maps deferred.
 - [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md): **Agent runtime** — status, backlog, gates (~45 lines).
-- [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md): Historical build spec (waves 1A–2); load only when auditing.
 - [`ai_first_engineering_plan_changelog.md`](ai_first_engineering_plan_changelog.md): Classification of prior AI/operability ideas vs this repo.
 - [`ai_first_engineering_executive_summary.md`](ai_first_engineering_executive_summary.md): Metrics and outcomes snapshot (2026-05-21).
 - [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md): Feature Brief + executable **Tests** contract (behaviour, state, unit, integration, proof); enforced by `tool/check_feature_brief_linked.sh` for feature Dart diffs.
@@ -35,10 +34,9 @@ This directory contains design notes and execution plans.
 - [`settings_diagnostics_decouple_plan.md`](settings_diagnostics_decouple_plan.md): completed slice (kept for context).
 - [`2026-03-13-structured-error-taxonomy-design.md`](2026-03-13-structured-error-taxonomy-design.md): design notes for typed error
   taxonomy work.
-- [`dio_retrofit_integration_plan.md`](dio_retrofit_integration_plan.md): integration plan for Dio/Retrofit patterns.
-- [`supabase_proxy_huggingface_chat_plan.md`](supabase_proxy_huggingface_chat_plan.md): Action plan for Supabase Edge → Hugging Face chat proxy (offline-first contract: [`offline_first/chat.md`](../offline_first/chat.md)).
-- [`supabase_proxy_huggingface_chat_plan_codex_review.md`](supabase_proxy_huggingface_chat_plan_codex_review.md): Archival verbatim Codex (**gpt-5.4**) operability review of that plan.
-- [`render_fastapi_chat_demo_plan.md`](render_fastapi_chat_demo_plan.md): FastAPI on Render as **AI orchestration** demo wired into existing Flutter chat (Render → FastAPI pipeline, fallthrough to Supabase/HF, security/Dio/testing contract). **Deferred auth hook:** [AUTH-D01](auth_security_hardening_deferred.md#auth-d01-render-fastapi-coordinator-hook).
+- [`dio_retrofit_integration_plan.md`](dio_retrofit_integration_plan.md): Dio/Retrofit **current contract** (pilots done).
+- [`supabase_proxy_huggingface_chat_plan.md`](supabase_proxy_huggingface_chat_plan.md): Supabase Edge → Hugging Face chat **transport contract** (offline-first shell: [`offline_first/chat.md`](../offline_first/chat.md)).
+- [`../integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md): FastAPI chat orchestration demo freezes. **Deferred auth hook:** [AUTH-D01](auth_security_hardening_deferred.md#auth-d01-render-fastapi-coordinator-hook).
 - [`auth_security_hardening_deferred.md`](auth_security_hardening_deferred.md): Post–PR A–C deferred auth/security items (Render coordinator, RegisterPage backend, role/claims ADR, `auth_injection_failed` extra).
 - [`future_observability.md`](future_observability.md): doc-only seams for Mixpanel/Sentry/Patrol (not in `pubspec.yaml`); interview appendix.
 - [`patrol_e2e_pilot.md`](patrol_e2e_pilot.md): Patrol E2E pilot plan (native sync diagnostics, settings theme); not shipped.

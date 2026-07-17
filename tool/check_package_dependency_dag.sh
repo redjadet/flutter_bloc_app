@@ -3,7 +3,7 @@
 #
 # Usage: tool/check_package_dependency_dag.sh
 #
-# Rules mirror docs/plans/melos_monorepo_migration_plan.md (Package dependency DAG).
+# Rules mirror docs/changes/2026-07-03_melos-monorepo-migration-closeout.md (Package dependency DAG).
 # App packages (apps/mobile) are not checked here — only workspace library packages.
 
 set -euo pipefail

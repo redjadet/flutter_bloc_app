@@ -3,7 +3,6 @@ description: UI/theme/Mix/AppStyles work must use DESIGN.md and design_system.md
 globs:
   - DESIGN.md
   - docs/design_system.md
-  - docs/mix_design_system_plan.md
   - lib/core/theme/**/*.dart
   - lib/shared/design_system/**/*.dart
   - lib/features/**/presentation/**/*.dart

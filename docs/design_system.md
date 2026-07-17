@@ -61,7 +61,7 @@ Default wrapper for feature screens (`apps/mobile/lib/app/widgets/common_page_la
 - **Text styles:** `AppStyles.headingStyle`, `subheadingStyle`, `bodyStyle`, `bodyLargeStyle`, `captionStyle`, `captionSmallStyle` (use `$text.style.ref(AppTextStyleTokens.*)` in Mix). For new text in Mix-aware widgets, prefer these over `AppTypography` where applicable.
 - **Examples:** **GraphqlDataSourceBadge**, **SyncDiagnosticsSection** chips use `AppStyles.chip`; **CommonCard** in settings, **SettingsCard**, **CalculatorSummaryCard**, **WebsocketConnectionBanner**; **SearchAppBar** uses `AppStyles.appBar`; **TodoSearchField** uses `AppStyles.inputField`; **CommonStatusView** uses `AppStyles.emptyState` when padding is null; **PlatformAdaptiveSheets.showPickerModal** and **register_country_picker** sheet use `AppStyles.dialogContent`.
 - **Tests:** Widget tests that need Mix theme use `pumpWithMixTheme(tester, child: ...)` from `test/helpers/pump_with_mix_theme.dart`.
-- **Relation to Theme:** Flutter `Theme` / `ThemeData` remain the source for Material widgets and `Theme.of(context)`. Mix runs alongside: `MixScope` provides tokens; styles reference them. Legacy `AppTypography` and `UI` remain valid during migration. When touching a screen, see [Mix Design System Plan](mix_design_system_plan.md) “Ongoing and next steps” for a checklist.
+- **Relation to Theme:** Flutter `Theme` / `ThemeData` remain the source for Material widgets and `Theme.of(context)`. Mix runs alongside: `MixScope` provides tokens; styles reference them. Legacy `AppTypography` and `UI` remain valid during migration. Prefer Mix/`AppStyles` when touching a screen.
 
 ## Reusable widgets (preview, test, design iteration)
 
@@ -288,6 +288,6 @@ Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Wi
 
 ## Related docs
 
-- [Mix Design System Plan](mix_design_system_plan.md) — full implementation plan (tokens, styles, pilot, migration, risks).
+- Mix tokens/styles — this document § Mix (design tokens and styles).
 - [Architecture Details](architecture_details.md#design-system)
 - [UI/UX Responsive Review](ui_ux_responsive_review.md)

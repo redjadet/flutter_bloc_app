@@ -12,7 +12,9 @@ BLoC and Cubit emit **immutable state**; the UI rebuilds when state **changes** 
 - **copyWith for emissions** — Updating one field (e.g. `state.copyWith(count: state.count + 1)`) is common. Freezed generates a type-safe `copyWith`; you avoid bugs from hand-written copyWith (wrong null handling, missing fields).
 - **Less boilerplate** — No manual `props`, `==`, `hashCode`, or `copyWith`. Add or rename a field in the factory, run `build_runner`, and generated code stays in sync. This reduces mistakes and keeps the focus on business logic in the cubit.
 
-For conversion steps and patterns, see [Equatable to Freezed Conversion Guide](equatable_to_freezed_conversion.md).
+For adoption patterns, use the tier tables and **Workflow** section below in this
+document. Prefer Freezed for new immutable state/domain models; convert Equatable
+models when touching that feature.
 
 ## Benefits of Using Freezed
 
@@ -22,8 +24,6 @@ Using Freezed for state and domain models reduces boilerplate, improves type saf
 - **Union types** — Sealed state (e.g. Initial / Loading / Loaded / Error) as one class with multiple factories and exhaustive `.when()` / `switch`.
 - **Immutability** — Generated types are immutable by default; fewer accidental mutations.
 - **Consistency** — Same pattern across the codebase; less cognitive load and easier refactors.
-
-For a fuller list and conversion steps, see [Equatable to Freezed Conversion Guide](equatable_to_freezed_conversion.md#benefits-of-freezed).
 
 ## Current Freezed Usage
 
@@ -66,7 +66,7 @@ The project already uses Freezed in many places:
 | `apps/mobile/lib/features/auth/presentation/cubit/register/register_country_option.dart` | Presentation | CountryOption |
 | `packages/networking/lib/src/sync/sync_cycle_summary.dart` | Shared | SyncCycleSummary |
 
-Build and tooling already account for Freezed (e.g. `**/*.freezed.dart` in scripts and `analysis_options.yaml`). Conversion guide: [equatable_to_freezed_conversion.md](equatable_to_freezed_conversion.md).
+Build and tooling already account for Freezed (e.g. `**/*.freezed.dart` in scripts and `analysis_options.yaml`).
 
 ---
 
@@ -166,7 +166,7 @@ These are **plain immutable data classes** (no Equatable) that could use Freezed
   - Prefer Freezed’s `.when()`/`.map()` and Dart 3 `switch`; adjust or relax `SealedStateHelpers` if it still needs to support non-Freezed sealed types.
 
 - **Workflow:**
-  - Follow [equatable_to_freezed_conversion.md](equatable_to_freezed_conversion.md).
+  - Follow the tier tables above when choosing what to migrate.
   - Run `dart run build_runner build --delete-conflicting-outputs` after changes.
   - Run `./bin/checklist` and tests (and coverage script if present) before commit.
   - The checklist runs `tool/check_freezed_preferred.sh`: it fails if any **class** in `lib/` extends or mixes in `Equatable` (Freezed is preferred for state/domain models). To allowlist a specific line, add `// check-ignore: reason` on that line or the line above.

@@ -67,7 +67,7 @@ If no command is required, state why (rare).
 
 ```markdown
 ## depends_on
-- [ ] docs/plans/2026-07-14_ai_native_repository_hardening_plan.md (T1 refresh)
+- [ ] docs/validation_scripts/ai_snapshot_freshness.md (T1 refresh)
 
 ## blocks
 - T2 snapshot freshness gate wiring

@@ -55,7 +55,8 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - Document box names/keys under `offline_first/<feature>.md`.
    - Examples: [`offline_first/chat.md`](chat.md), [`offline_first/search.md`](search.md), [`offline_first/profile.md`](profile.md), and [`offline_first/remote_config.md`](remote_config.md).
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
-   - Update [`offline_first/offline_first_plan.md`](offline_first_plan.md) progress and run `./bin/checklist` before committing. Keep the feature row in the adoption matrix current (cache strategy, UI status surfaces, tests).
+   - Update the adoption matrix in this guide (cache strategy, UI status surfaces,
+     tests) and run `./bin/checklist` before committing.
 
 ## Next Steps After Adoption
 

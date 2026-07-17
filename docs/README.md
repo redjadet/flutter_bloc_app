@@ -23,8 +23,7 @@ Source-of-truth docs for Flutter BLoC app.
   [`backend/API_CONTRACT_GUIDE.md`](backend/API_CONTRACT_GUIDE.md),
   [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](backend/MOBILE_BACKEND_DEFERRED_WORK.md)
 - **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
-  [`design_system.md`](design_system.md),
-  [`mix_design_system_plan.md`](mix_design_system_plan.md)
+  [`design_system.md`](design_system.md)
 - **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **AI decision workbench**:
   [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed

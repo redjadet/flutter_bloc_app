@@ -2,7 +2,7 @@
 # Run mix_lint via the native analyzer plugin (mix_lint 2.x / analysis_server_plugin).
 # Uses lib-scoped dart analyze (not `.`) to avoid analysis-server hangs/crashes.
 # Run from project root: ./tool/run_mix_lint.sh
-# See docs/mix_design_system_plan.md (mix_lint section).
+# See docs/design_system.md (mix_lint section).
 set -euo pipefail
 # shellcheck disable=SC1091
 source "$(cd "$(dirname "$0")" && pwd)/workspace_paths.sh"

@@ -136,8 +136,7 @@ Key files that provide the compile-time safety layer:
 - New code should use the type-safe extensions and widgets.
 - Replace `context.read<T>()` and `BlocProvider.of<T>()` with `context.cubit<T>()`.
 - Use `TypeSafeBlocSelector` for selective rebuilds.
-
-See [`migration_to_type_safe_bloc.md`](migration_to_type_safe_bloc.md) for step-by-step migration guidance.
+- Prefer Freezed for immutable states/models ([`freezed_usage_analysis.md`](freezed_usage_analysis.md)).
 
 ## Verification Checklist
 
@@ -148,10 +147,9 @@ See [`migration_to_type_safe_bloc.md`](migration_to_type_safe_bloc.md) for step-
 
 ## Related Documentation
 
-- [Migration Guide](migration_to_type_safe_bloc.md)
 - [Code Generation Guide](code_generation_guide.md)
-- [Sealed Classes Migration](sealed_classes_migration.md)
-- [Equatable to Freezed Conversion](equatable_to_freezed_conversion.md)
+- [Freezed usage](freezed_usage_analysis.md)
+- [BLoC standards](bloc_standards.md)
 - [State Management Choice](state_management_choice.md)
 - [Testing Overview](testing_overview.md)
-- [IDE Plugins Guide](ide_plugins_guide.md)
+- [IDE snippets](ide_plugins_guide.md)

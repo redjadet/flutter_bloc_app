@@ -53,7 +53,7 @@ Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `featu
 - [ ] Doc sweep for stale `lib/core/` / `lib/shared/` references in historical plan prose (melos plan § inventory)
 - [x] `check_regression_guards.sh` auto-triggers: normalize `apps/mobile/` paths before matching
 - [ ] Exhaustive iOS integration (`all_flows_test.dart`) — smoke + preflight proven locally/CI only
-- [ ] Melos plan post-merge: PR-F wave 2, PR-C deferred utils, extra apps (see [`melos_monorepo_migration_plan.md`](../plans/melos_monorepo_migration_plan.md))
+- [ ] Melos plan post-merge: PR-F wave 2, PR-C deferred utils, extra apps (see [`2026-07-03_melos-monorepo-migration-closeout.md`](../changes/2026-07-03_melos-monorepo-migration-closeout.md))
 
 ## Ownership map (final)
 
@@ -81,4 +81,4 @@ Target: `apps/mobile/lib/` becomes thin app shell (`app/**` composition + `featu
 
 - `packages/core` and `packages/utilities` remain **pure Dart** (no Flutter deps).
 - Prefer app adapters in `apps/mobile/lib/app/**` over leaking app imports into packages.
-- Parent plan: [`melos_monorepo_migration_plan.md`](../plans/melos_monorepo_migration_plan.md) — PR-J / Phase 5 row.
+- Parent plan: [`2026-07-03_melos-monorepo-migration-closeout.md`](../changes/2026-07-03_melos-monorepo-migration-closeout.md) — PR-J / Phase 5 row.

@@ -254,7 +254,6 @@ Docs:
 ```bash
 npx markdownlint-cli2 \
   docs/ai_decision_workbench.md \
-  docs/ai_decision_system_plan.md \
   demos/ai_decision_api/README.md \
   docs/README.md \
   docs/feature_overview.md \

@@ -29,5 +29,5 @@ bash tool/refresh_ai_reports.sh
 
 ## Related
 
-- Plan: [`docs/plans/2026-07-14_ai_native_repository_hardening_plan.md`](../plans/2026-07-14_ai_native_repository_hardening_plan.md)
+- Change note (PR #516): search `docs/changes/` for AI-native repository hardening.
 - Forbidden patterns fixture: `tool/fixtures/harness/ai_snapshot_forbidden_patterns.txt`
