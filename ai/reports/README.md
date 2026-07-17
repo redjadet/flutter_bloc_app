@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-17T17:15:10Z"
-  git_head: "9e1bfd3536dc381b6a5ed71cfd3a71b814f91693"
+  generated_at: "2026-07-17T17:15:28Z"
+  git_head: "3e8895d47311d5a9b7d57700c718109d01f3bad6"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -37,4 +37,4 @@ retention policy.
 
 **Ship/land:** [`docs/changes/2026-05-21_agent_automated_delivery_loop.md`](../../docs/changes/2026-05-21_agent_automated_delivery_loop.md).
 
-**Generated:** 2026-07-17 via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `9e1bfd3536dc381b6a5ed71cfd3a71b814f91693`).
+**Generated:** 2026-07-17 via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `3e8895d47311d5a9b7d57700c718109d01f3bad6`).
