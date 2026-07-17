@@ -29,6 +29,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - **Git commits:** create commits only when the user explicitly asks; do not commit working-tree fixes or doc landings proactively.
 - Review passes (review-changes-improve, cross-host review, ship-ready asks): fix every reported issue or explicitly defer with reason before claiming done.
 - **Plan todo hygiene:** During multi-step plan execution, keep todo/status current in the active `.cursor/plans/*.plan.md` and linked `docs/plans/**` / `docs/changes/**` when work is repo-tracked — same turn as milestone completion, rebase, or scope shift.
+- **Document intentionally left / not-done work:** When scope explicitly defers items (out of scope, Wave later, product follow-ups, console setup not done), land an owner deferred list in `docs/plans/**` or topic `docs/**` (e.g. [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md), [`plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md)) and link it from the change note / plan — do not leave “known limitations” only in chat closeout.
 
 ## Validation
 
