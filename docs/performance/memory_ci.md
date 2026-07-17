@@ -8,7 +8,7 @@ normal PR / push / merge-group CI via `.github/workflows/ci.yml`).
 | Gate | How |
 | --- | --- |
 | Static | `bash tool/run_memory_lint.sh` (checklist `CHECKLIST_RUN_MEMORY_LINT=auto\|0\|1`) |
-| Runtime | `(cd apps/mobile && flutter test --tags memory_leak)` (default **on**: `CHECKLIST_RUN_MEMORY_LEAK_TESTS=1`) |
+| Runtime | `bash tool/run_memory_leak_tests.sh` (default **on**: `CHECKLIST_RUN_MEMORY_LEAK_TESTS=1`) |
 
 ## Local opt-out
 
@@ -24,7 +24,7 @@ math):
 
 ```bash
 bash tool/run_memory_lint.sh
-(cd apps/mobile && flutter test --tags memory_leak)
+bash tool/run_memory_leak_tests.sh
 ```
 
 ## Wave A boundary

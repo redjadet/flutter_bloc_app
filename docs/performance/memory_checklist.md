@@ -15,6 +15,6 @@ timers, observers, or sinks.
 - [ ] Listeners removed (`removeListener` / `removeObserver`)
 - [ ] No retained `BuildContext` / `Widget` / `State` in statics or singletons
 - [ ] Tagged leak test added or existing suite still covers the surface
-- [ ] Proof: `bash tool/run_memory_lint.sh` and/or `flutter test --tags memory_leak` when lifecycle changed
+- [ ] Proof: `bash tool/run_memory_lint.sh` and/or `bash tool/run_memory_leak_tests.sh` when lifecycle changed
 
 See [`memory_management.md`](memory_management.md).

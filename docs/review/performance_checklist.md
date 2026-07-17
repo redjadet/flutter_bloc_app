@@ -45,7 +45,7 @@ Primary references:
 - Run lifecycle checks from validation routing when subscriptions or timers
   changed.
 - For ownership/leak gates see [`../performance/memory_checklist.md`](../performance/memory_checklist.md)
-  (`bash tool/run_memory_lint.sh`, `flutter test --tags memory_leak`).
+  (`bash tool/run_memory_lint.sh`, `bash tool/run_memory_leak_tests.sh`).
 
 ## Scale and Edge Cases
 

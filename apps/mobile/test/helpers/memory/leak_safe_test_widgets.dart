@@ -3,7 +3,7 @@ import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 /// Tag selector for the memory-leak gate.
 ///
-/// Run with: `flutter test --tags memory_leak`
+/// Run with: `bash tool/run_memory_leak_tests.sh`
 const String memoryLeakTag = 'memory_leak';
 
 /// Framework / compositor classes that often appear as notDisposed noise during
