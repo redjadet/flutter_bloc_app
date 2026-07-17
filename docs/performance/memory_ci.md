@@ -31,3 +31,14 @@ bash tool/run_memory_lint.sh
 
 No dedicated CI job and no memory report artifact in Wave A. Checklist stdout is
 the failure surface.
+
+## Wave B0 — report-only dry-run (not a gate)
+
+```bash
+bash tool/run_memory_leak_tracking_dry_run.sh
+```
+
+- Opt-in via `--dart-define=MEMORY_LEAK_TRACKING_DRY_RUN=true`
+- Always exits 0; artifacts under `tmp/memory_leak_dry_run/`
+- **Must not** be wired into `delivery_checklist.sh` or required CI checks
+- Default remains `withIgnoredAll()` for untagged tests

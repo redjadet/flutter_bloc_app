@@ -54,7 +54,12 @@ Do not store `BuildContext` in `static` fields. Enforced by
 
 ## Wave B backlog
 
-- Flip global `withIgnoredAll` after measured allowlists
-- Timer / listener / `ChangeNotifier` / GetIt+context AST rules
-- Broader tagged journeys (auth cycles, infinite scroll)
-- Evaluate retiring shell `check_memory_*.sh` heuristics after AST coverage
+| Wave | Scope |
+| --- | --- |
+| **B0** | Full-suite tracking dry-run (report-only); audit leak classes / harness noise |
+| **B1** | Stable tagged journeys: auth sign-in/out, app-shell route replacement, realtime/BLE teardown |
+| **B2** | Promote only proven leak classes from ignore list |
+| **B3** | AST rules for timers/listeners; defer alias/GetIt/context until FP rate proven low |
+
+Do **not** globally remove `withIgnoredAll()` until B2 evidence supports it.
+Evaluate retiring shell `check_memory_*.sh` heuristics after AST coverage (B3+).
