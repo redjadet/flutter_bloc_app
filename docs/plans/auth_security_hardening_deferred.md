@@ -42,7 +42,7 @@ behavior — not global Firebase sign-out.
   Render-named `Dio`
 - `apps/mobile/lib/features/chat/data/render_fast_api_chat_repository.dart`
 - `apps/mobile/lib/core/auth/session_lifecycle_coordinator.dart`
-- Plan: [`render_fastapi_chat_demo_plan.md`](render_fastapi_chat_demo_plan.md)
+- Integration freezes: [`../integrations/render_fastapi_chat_demo.md`](../integrations/render_fastapi_chat_demo.md)
 
 **Unblock criteria:**
 

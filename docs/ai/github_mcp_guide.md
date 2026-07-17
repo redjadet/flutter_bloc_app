@@ -40,4 +40,4 @@ For PR/CI evidence during implementation, load after [`context_loading.md`](cont
 | SQLite MCP | Do not add | Local code-review graph covers narrow graph use case |
 | Memory MCP | Do not add | Repo docs/ADRs/tests are reviewable, versioned memory |
 
-See [`plans/2026-07-14_ai_native_repository_hardening_plan.md`](../plans/2026-07-14_ai_native_repository_hardening_plan.md) for program context.
+See [`validation_scripts/ai_snapshot_freshness.md`](../validation_scripts/ai_snapshot_freshness.md) for program context.

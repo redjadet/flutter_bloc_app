@@ -164,7 +164,7 @@ The repo is a Melos-managed Pub workspace ([#437](https://github.com/redjadet/fl
 - **Melos bootstrap** — `dart run melos bootstrap` from repo root after dependency or workspace-member changes.
 - **Authoritative gate** — `./bin/checklist` from **repo root** (unchanged).
 
-Plan and phase status: [`docs/plans/melos_monorepo_migration_plan.md`](plans/melos_monorepo_migration_plan.md).
+Plan and phase status: [`docs/changes/2026-07-03_melos-monorepo-migration-closeout.md`](changes/2026-07-03_melos-monorepo-migration-closeout.md).
 
 ## Verification Pipelines
 

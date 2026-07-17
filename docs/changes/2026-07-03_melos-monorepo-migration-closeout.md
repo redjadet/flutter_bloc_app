@@ -7,7 +7,7 @@ Branch: `codex/melos-monorepo-build` · PR [#437](https://github.com/redjadet/fl
 
 Scoped Melos monorepo migration (PR-A through PR-I) is **complete** on the build
 branch. All Build Todo checkboxes in
-[`melos_monorepo_migration_plan.md`](../plans/melos_monorepo_migration_plan.md)
+[`2026-07-03_melos-monorepo-migration-closeout.md`](../changes/2026-07-03_melos-monorepo-migration-closeout.md)
 are done or explicitly deferred. Operator next step: merge PR #437 to `main`.
 
 ## Delivered phases

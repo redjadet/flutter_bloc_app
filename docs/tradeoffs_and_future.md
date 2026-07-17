@@ -56,8 +56,7 @@ would raise the bar further.
 
 - **Hive as primary local store.** Hive is lightweight and fast but lacks
   relational queries and automatic migrations. Schema changes require manual
-  migration logic. Isar was evaluated (see
-  [Isar vs Hive comparison](migration/isar_vs_hive_comparison.md)) but not
+  migration logic. Isar was evaluated historically but not
   adopted because Hive satisfies current requirements with less overhead.
 - **Offline-first repositories can become complex.** Coordinating cache, remote,
   sync queue, and conflict resolution in a single repository risks becoming a

@@ -55,7 +55,7 @@ fi
 
 if [ -n "$VIOLATIONS" ]; then
   echo "❌ Equatable used where Freezed is preferred (state/domain models)."
-  echo "   See docs/freezed_usage_analysis.md and docs/equatable_to_freezed_conversion.md"
+  echo "   See docs/freezed_usage_analysis.md"
   echo "$VIOLATIONS"
   exit 1
 else

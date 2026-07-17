@@ -1,6 +1,6 @@
 # Render + FastAPI + Flutter chat demo — integration freezes
 
-Canonical implementation plan: [`docs/plans/render_fastapi_chat_demo_plan.md`](../plans/render_fastapi_chat_demo_plan.md). This document records **product / ops freezes** so agents do not re-derive policy from the plan alone.
+Canonical **product / ops freezes** for the Render + FastAPI chat demo. Historical build plan removed 2026-07-17 — use this file + `demos/render_chat_api/`.
 
 ## FastAPI Cloud deployment (current)
 
@@ -186,4 +186,4 @@ CORS allowlist for browser clients includes **`x-client-correlation-id`** (see [
 ## Links
 
 - [`AGENTS.md`](../../AGENTS.md) — delivery and validation routing.
-- Codex plan review: `./tool/run_codex_plan_review.sh docs/plans/render_fastapi_chat_demo_plan.md`.
+- Codex plan review: `./tool/run_codex_plan_review.sh docs/integrations/render_fastapi_chat_demo.md`.

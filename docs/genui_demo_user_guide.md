@@ -141,6 +141,6 @@ Before using the GenUI Demo, you need to configure a Google Gemini API key:
 ## Related Documentation
 
 - [GenUI SDK Documentation](https://docs.flutter.dev/ai/genui/get-started)
-- [Implementation Plan](genui_sdk_demo_implementation_plan.md)
+- [Implementation Plan](genui_demo_user_guide.md)
 - [Security & Secrets](security_and_secrets.md)
 - [Feature Overview](feature_overview.md)

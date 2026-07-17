@@ -29,7 +29,7 @@ Established an **AI operability layer** (`/ai`, [`CODEMAP.md`](../../CODEMAP.md)
 
 ## Phase outcomes
 
-All phases **done** (PR #239 operability + PR #240 ARCH-001/002). Phase table detail: historical [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md) §9.
+All phases **done** (PR #239 operability + PR #240 ARCH-001/002). See slim [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md).
 
 ## Top risks
 
@@ -40,5 +40,3 @@ All phases **done** (PR #239 operability + PR #240 ARCH-001/002). Phase table de
 ## Next actions
 
 See [`PLAN.md`](../../PLAN.md) backlog + [`2026-05-21_ai_first_engineering_plan.md`](2026-05-21_ai_first_engineering_plan.md).
-
-**Archive (build spec only):** [`2026-05-21_ai_first_engineering_plan_build_spec.md`](2026-05-21_ai_first_engineering_plan_build_spec.md)

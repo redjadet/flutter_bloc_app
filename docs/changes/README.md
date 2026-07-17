@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-17_docs_aggressive_prune.md`](2026-07-17_docs_aggressive_prune.md): Delete completed plans/migrations; shorten large how-tos to current contracts; preserve owner-index pointers.
 - [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0. Deferred leftovers: [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).
 - [`2026-07-17_domain_purity_chat_counter_todo.md`](2026-07-17_domain_purity_chat_counter_todo.md): Wave B — move chat/counter/todo wire JSON into data DTOs; domain wire leaks 45→31.
 - [`2026-07-17_di_composition_simplify.md`](2026-07-17_di_composition_simplify.md): Wave A — thin DI groups into `register_*` modules; move auth/staff/remote-config fallbacks into feature `data/`; preserve order/dispose/policy.
@@ -101,10 +102,8 @@ that.
 - [`2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md`](2026-05-04_hive_schema_migrations_full_migrate_todo_counter.md): manifest-driven
   Hive schema migrations; full migrate for todo + counter; pending-sync section
   is historical-only (superseded by shipped May 5 pending-sync migration docs).
-- [`2026-04-02_case_study_supabase_private_storage_plan.md`](2026-04-02_case_study_supabase_private_storage_plan.md): optional Supabase private
-  storage, RLS, and submit flow for the dentist **Case Study Demo** feature.
 - [`2026-04-01_dentist_case_study_demo_plan.md`](2026-04-01_dentist_case_study_demo_plan.md): **Case Study Demo** feature scope, routes, auth,
-  Hive persistence, and tests (implements [`docs/case_studies/dentists.md`](../case_studies/dentists.md)).
+  Hive persistence, and tests (implements [`docs/case_studies/dentists.md`](../case_studies/dentists.md); Supabase storage plan removed 2026-07-17 — see dentists brief).
 - [`2026-03-24_agent_output_optimization_purpose.md`](2026-03-24_agent_output_optimization_purpose.md): motivation/constraints for
   agent-output optimization work.
 - [`2026-02-23_code_quality_plan.md`](2026-02-23_code_quality_plan.md): historical plan document (superseded by

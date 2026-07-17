@@ -5,7 +5,7 @@ Index only. **Status, backlog, gates:** [`docs/plans/2026-05-21_ai_first_enginee
 | Need | Path |
 | --- | --- |
 | Runtime status | [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) |
-| Build spec (archive) | [`docs/plans/2026-05-21_ai_first_engineering_plan_build_spec.md`](docs/plans/2026-05-21_ai_first_engineering_plan_build_spec.md) |
+| Build spec (archive) | [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) |
 | Changelog | [`docs/plans/ai_first_engineering_plan_changelog.md`](docs/plans/ai_first_engineering_plan_changelog.md) |
 | Task router | [`CODEMAP.md`](CODEMAP.md) |
 | Minimal context | [`ai/CONTEXT_MAP.md`](ai/CONTEXT_MAP.md) |

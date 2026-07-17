@@ -18,6 +18,6 @@ routes, and engineering plans live in the linked feature module and
 **Implementation / migration notes:**
 
 - [Dentist case study demo — plan](../changes/2026-04-01_dentist_case_study_demo_plan.md) — scope, routes, auth, Hive, tests
-- [Case study Supabase private storage — plan](../changes/2026-04-02_case_study_supabase_private_storage_plan.md) — optional Supabase bucket, RLS, signed URLs, submit flow
+- [Dentists brief](dentists.md) — includes shipped optional Supabase private storage (bucket, RLS, signed URLs, submit)
 
 For the repo-level navigation hub, see [docs index](../README.md).

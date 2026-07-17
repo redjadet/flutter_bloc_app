@@ -27,7 +27,7 @@ then apply this repo's architecture, package, migration, and validation rules.
 | Architecture boundaries | [`clean_architecture.md`](clean_architecture.md) (CA skeleton; MVVM presentation-only), [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`CODE_QUALITY.md`](CODE_QUALITY.md) |
 | Agent runtime / package APIs | [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md), [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md) |
 | DI / routing / app startup | [`architecture_details.md`](architecture_details.md), [`app_initialization_and_feature_control.md`](app_initialization_and_feature_control.md) |
-| UI/design tokens | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`mix_design_system_plan.md`](mix_design_system_plan.md) |
+| UI/design tokens | [`../DESIGN.md`](../DESIGN.md), [`design_system.md`](design_system.md), [`design_system.md`](design_system.md) |
 | Reusable widgets / responsive / cross-platform UI | [`design_system.md`](design_system.md) § Reusable widgets, § Responsive layout, § Cross-platform form factors; [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md) |
 | Agent execution invariants ([`AGENTS.md`](../AGENTS.md) § Must Keep) | This file § Current Caveat Shortlist; [`agent_knowledge_base.md`](agent_knowledge_base.md) § Final Agent Contract |
 | Validation lanes | [`validation_scripts.md`](validation_scripts.md), [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) |

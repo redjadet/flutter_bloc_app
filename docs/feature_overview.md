@@ -36,7 +36,7 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 
 | Feature | Route or entry | Code | Notes |
 | --- | --- | --- | --- |
-| Case Study Demo (dentists) | `/case-study-demo`, `/case-study-demo/new`, `/record`, `/review`, `/history`, `/history/:id` | `apps/mobile/lib/features/case_study_demo/` | Ten-question video wizard, review/submit, history and playback. Gated by primary app auth. Local Hive by default; optional Supabase private storage when configured. Brief: [Dentists](case_studies/dentists.md). Plans: [demo rollout](changes/2026-04-01_dentist_case_study_demo_plan.md), [Supabase storage](changes/2026-04-02_case_study_supabase_private_storage_plan.md). |
+| Case Study Demo (dentists) | `/case-study-demo`, `/case-study-demo/new`, `/record`, `/review`, `/history`, `/history/:id` | `apps/mobile/lib/features/case_study_demo/` | Ten-question video wizard, review/submit, history and playback. Gated by primary app auth. Local Hive by default; optional Supabase private storage when configured. Brief: [Dentists](case_studies/dentists.md). Plans: [demo rollout](changes/2026-04-01_dentist_case_study_demo_plan.md). |
 
 ## Data, sync, and backend-backed demos
 

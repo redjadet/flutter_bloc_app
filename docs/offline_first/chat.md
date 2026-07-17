@@ -70,4 +70,4 @@ This document defines how the chat feature uses the shared offline-first stack. 
 2. **Conversation metadata** (medium): last synced, pending chips in list.
 3. **Observability** (low): queue metrics, structured logging with correlation IDs.
 
-For shared offline-first patterns, see [`offline_first_plan.md`](offline_first_plan.md) and [`adoption_guide.md`](adoption_guide.md).
+For shared offline-first patterns, see [`adoption_guide.md`](adoption_guide.md) and [`adoption_guide.md`](adoption_guide.md).

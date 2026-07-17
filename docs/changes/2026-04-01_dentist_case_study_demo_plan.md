@@ -4,7 +4,7 @@
 
 This document is the **repo-tracked** copy for PRs and reviewers. Implementation defaults and checklist match the Cursor plan frontmatter todos.
 
-**Related docs:** [Dentists product brief](../case_studies/dentists.md) · [Case studies index](../case_studies/README.md) · [Feature overview](../feature_overview.md) · [Supabase storage extension](2026-04-02_case_study_supabase_private_storage_plan.md)
+**Related docs:** [Dentists product brief](../case_studies/dentists.md) · [Case studies index](../case_studies/README.md) · [Feature overview](../feature_overview.md)
 
 ## Tooling / execution note
 
@@ -118,5 +118,5 @@ Implementation notes:
 - [routes_demos.dart](../../apps/mobile/lib/app/router/routes_demos.dart) — nested routes
 - [routes_core.dart](../../apps/mobile/lib/app/router/routes_core.dart) — auth gate patterns
 - [apps/mobile/lib/features/camera_gallery/](../../apps/mobile/lib/features/camera_gallery/)
-- [docs/camera_gallery_integration_plan.md](../camera_gallery_integration_plan.md)
+- [docs/feature_overview.md](../feature_overview.md)
 - [AGENTS.md](../../AGENTS.md)

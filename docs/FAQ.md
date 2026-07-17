@@ -21,7 +21,7 @@ This is a reference Flutter application that demonstrates clean architecture, of
 - Offline-first patterns: [`offline_first/adoption_guide.md`](offline_first/adoption_guide.md)
 - Validation scripts: [`validation_scripts.md`](validation_scripts.md)
 - Cursor Runlayer hooks / “Config version must be a number”: `tool/fix_runlayer_cursor_hooks.py`, [runlayer/plugins#6](https://github.com/runlayer/plugins/pull/6)
-- Migrations (type-safe BLoC, Freezed, sealed, Cupertino): [`migration_to_type_safe_bloc.md`](migration_to_type_safe_bloc.md), [`equatable_to_freezed_conversion.md`](equatable_to_freezed_conversion.md), [`sealed_classes_migration.md`](sealed_classes_migration.md), [`cupertino_widget_migration.md`](cupertino_widget_migration.md)
+- Migrations (type-safe BLoC, Freezed, sealed, Cupertino): [`compile_time_safety.md`](compile_time_safety.md), [`freezed_usage_analysis.md`](freezed_usage_analysis.md), [`design_system.md`](design_system.md)
 
 ## 🔍 What should I review first?
 
