@@ -178,66 +178,80 @@ void main() {
     expect(find.text(AppLocalizationsEn().iotBleStatusTitle), findsOneWidget);
   });
 
-  leakSafeTestWidgets('leaving BLE tab tears down scan and Bluetooth sessions', (
-    final tester,
-  ) async {
-    await getIt.unregister<MockBleRepository>();
-    await getIt.unregister<MockClassicBluetoothRepository>();
-    final _TrackingBleRepository bleRepository = _TrackingBleRepository();
-    final _TrackingClassicRepository classicRepository = _TrackingClassicRepository();
-    getIt.registerSingleton<MockBleRepository>(
-      bleRepository,
-      dispose: (final repository) => repository.dispose(),
-    );
-    getIt.registerSingleton<MockClassicBluetoothRepository>(
-      classicRepository,
-      dispose: (final repository) => repository.dispose(),
-    );
+  leakSafeTestWidgets(
+    'leaving BLE tab tears down scan and Bluetooth sessions',
+    (final tester) async {
+      await getIt.unregister<MockBleRepository>();
+      await getIt.unregister<MockClassicBluetoothRepository>();
+      final _TrackingBleRepository bleRepository = _TrackingBleRepository();
+      final _TrackingClassicRepository classicRepository =
+          _TrackingClassicRepository();
+      getIt.registerSingleton<MockBleRepository>(
+        bleRepository,
+        dispose: (final repository) => repository.dispose(),
+      );
+      getIt.registerSingleton<MockClassicBluetoothRepository>(
+        classicRepository,
+        dispose: (final repository) => repository.dispose(),
+      );
 
-    final IotDemoCubit demoCubit = IotDemoCubit(repository: _StubIotDemoRepository());
-    addTearDown(demoCubit.close);
-    final SyncStatusCubit syncCubit = SyncStatusCubit(
-      networkStatusService: _FakeNetworkStatusService(),
-      coordinator: _FakeBackgroundSyncCoordinator(),
-    );
-    addTearDown(syncCubit.close);
+      final IotDemoCubit demoCubit = IotDemoCubit(
+        repository: _StubIotDemoRepository(),
+      );
+      addTearDown(demoCubit.close);
+      final SyncStatusCubit syncCubit = SyncStatusCubit(
+        networkStatusService: _FakeNetworkStatusService(),
+        coordinator: _FakeBackgroundSyncCoordinator(),
+      );
+      addTearDown(syncCubit.close);
 
-    await demoCubit.initialize();
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('en'),
-        home: Builder(
-          builder: (final context) => buildAppMixScope(
-            context,
-            child: BlocProvider<SyncStatusCubit>.value(
-              value: syncCubit,
-              child: BlocProvider<IotDemoCubit>.value(
-                value: demoCubit,
-                child: IotDemoHubPage(showBackendDisabledBanner: _testShowBackendDisabledBanner),
+      await demoCubit.initialize();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          home: Builder(
+            builder: (final context) => buildAppMixScope(
+              context,
+              child: BlocProvider<SyncStatusCubit>.value(
+                value: syncCubit,
+                child: BlocProvider<IotDemoCubit>.value(
+                  value: demoCubit,
+                  child: IotDemoHubPage(
+                    showBackendDisabledBanner: _testShowBackendDisabledBanner,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
 
-    final AppLocalizationsEn l10n = AppLocalizationsEn();
-    await tester.tap(find.text(l10n.iotDemoHubTabBle));
-    await tester.pumpAndSettle();
-    final BuildContext bleContext = tester.element(find.byType(IotBleSection));
-    final IotBleCubit cubit = BlocProvider.of<IotBleCubit>(bleContext);
-    await cubit.startScan();
-    await cubit.connectClassicDevice('classic-speaker');
-    final int stopScanCallsBeforeSwitch = bleRepository.stopScanCalls;
-    final int disconnectCallsBeforeSwitch = bleRepository.disconnectCalls;
+      final AppLocalizationsEn l10n = AppLocalizationsEn();
+      await tester.tap(find.text(l10n.iotDemoHubTabBle));
+      await tester.pumpAndSettle();
+      final BuildContext bleContext = tester.element(
+        find.byType(IotBleSection),
+      );
+      final IotBleCubit cubit = BlocProvider.of<IotBleCubit>(bleContext);
+      await cubit.startScan();
+      await cubit.connectClassicDevice('classic-speaker');
+      final int stopScanCallsBeforeSwitch = bleRepository.stopScanCalls;
+      final int disconnectCallsBeforeSwitch = bleRepository.disconnectCalls;
 
-    await tester.tap(find.text(l10n.iotDemoHubTabCloud));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.iotDemoHubTabCloud));
+      await tester.pumpAndSettle();
 
-    expect(bleRepository.stopScanCalls, greaterThan(stopScanCallsBeforeSwitch));
-    expect(bleRepository.disconnectCalls, greaterThan(disconnectCallsBeforeSwitch));
-    expect(classicRepository.disconnectCalls, 1);
-  });
+      expect(
+        bleRepository.stopScanCalls,
+        greaterThan(stopScanCallsBeforeSwitch),
+      );
+      expect(
+        bleRepository.disconnectCalls,
+        greaterThan(disconnectCallsBeforeSwitch),
+      );
+      expect(classicRepository.disconnectCalls, 1);
+    },
+  );
 }

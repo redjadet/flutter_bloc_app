@@ -8,6 +8,8 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../helpers/memory/leak_safe_test_widgets.dart';
+
 void main() {
   group('AppRouteAuthGate', () {
     testWidgets('redirects unauthenticated deep links for protected routes', (
@@ -156,6 +158,37 @@ void main() {
 
       expect(tester.takeException(), isNull);
     });
+
+    leakSafeTestWidgets(
+      'authenticated route sign-out and teardown are leak-safe',
+      (final tester) async {
+        final StreamController<AuthUser?> authController =
+            StreamController<AuthUser?>.broadcast();
+        AuthUser? currentUser = const AuthUser(
+          id: 'user-1',
+          isAnonymous: false,
+        );
+        final GoRouter router = _createRouter(
+          initialLocation: AppRoutes.profilePath,
+          authStateChanges: authController.stream,
+          getCurrentUser: () => currentUser,
+        );
+
+        await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+        await tester.pumpAndSettle();
+        expect(find.text('profile'), findsOneWidget);
+
+        currentUser = null;
+        authController.add(null);
+        await tester.pumpAndSettle();
+        expect(find.text('auth:/profile'), findsOneWidget);
+
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+        router.dispose();
+        await authController.close();
+      },
+    );
   });
 
   group('AppRoutePolicies', () {

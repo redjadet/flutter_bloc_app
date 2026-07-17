@@ -6,8 +6,8 @@ Tag stable leak journeys only; keep default ignore for untagged tests.
 
 ## Journeys tagged
 
-1. **Auth** — `ValueNotifier` sign-in/out under `Directionality` (avoids GoRouter
-   auth-gate harness noise).
+1. **Auth** — authenticated `AppRouteAuthGate` receives sign-out, redirects to
+   auth, then disposes its tracked auth-stream subscription.
 2. **App-shell** — `GoRouter.go` with `NoTransitionPage` (Material transitions
    dominate leak reports otherwise).
 3. **Realtime** — thin `BlocBuilder` + `BlocProvider.create`; full

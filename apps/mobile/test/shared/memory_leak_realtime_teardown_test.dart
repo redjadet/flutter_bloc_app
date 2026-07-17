@@ -29,12 +29,19 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: BlocProvider<RealtimeMarketCubit>(
-            create: (_) => RealtimeMarketCubit(repository: repo, pairId: 'btc_usdt'),
+            create: (_) =>
+                RealtimeMarketCubit(repository: repo, pairId: 'btc_usdt'),
             child: BlocBuilder<RealtimeMarketCubit, RealtimeMarketState>(
-              builder: (final BuildContext context, final RealtimeMarketState state) {
-                final double? price = state.snapshot?.lastPrice;
-                return Text(price == null ? 'waiting' : 'live:${price.toInt()}');
-              },
+              builder:
+                  (
+                    final BuildContext context,
+                    final RealtimeMarketState state,
+                  ) {
+                    final double? price = state.snapshot?.lastPrice;
+                    return Text(
+                      price == null ? 'waiting' : 'live:${price.toInt()}',
+                    );
+                  },
             ),
           ),
         ),
@@ -52,7 +59,10 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
     },
-    ignoredNotDisposedClasses: <String>[...memoryLeakHarnessLayerClasses, 'TextPainter'],
+    ignoredNotDisposedClasses: <String>[
+      ...memoryLeakHarnessLayerClasses,
+      'TextPainter',
+    ],
   );
 }
 
@@ -61,10 +71,20 @@ MarketFeedSnapshot _snap({final double lastPrice = 100}) => MarketFeedSnapshot(
   lastPrice: lastPrice,
   changePct24h: 1.2,
   connection: MarketConnectionStatus.live,
-  bids: const <OrderBookLevel>[OrderBookLevel(price: 99, quantity: 0.1, side: OrderBookSide.bid)],
-  asks: const <OrderBookLevel>[OrderBookLevel(price: 101, quantity: 0.2, side: OrderBookSide.ask)],
+  bids: const <OrderBookLevel>[
+    OrderBookLevel(price: 99, quantity: 0.1, side: OrderBookSide.bid),
+  ],
+  asks: const <OrderBookLevel>[
+    OrderBookLevel(price: 101, quantity: 0.2, side: OrderBookSide.ask),
+  ],
   recentTrades: <RecentTrade>[
-    RecentTrade(id: '1', price: 100, quantity: 0.01, isBuy: true, at: DateTime.utc(2024)),
+    RecentTrade(
+      id: '1',
+      price: 100,
+      quantity: 0.01,
+      isBuy: true,
+      at: DateTime.utc(2024),
+    ),
   ],
   stats: const MarketStats(high24h: 110, low24h: 90, volume24h: 1_000_000),
   chartCloses: const <double>[100, 101, 102],
@@ -76,9 +96,8 @@ final class _FakeRepo implements RealtimeMarketRepository {
 
   final MarketFeedSnapshot? cached;
   // sync: so emit reaches the cubit before the next pump assertion.
-  final StreamController<MarketFeedSnapshot> _out = StreamController<MarketFeedSnapshot>.broadcast(
-    sync: true,
-  );
+  final StreamController<MarketFeedSnapshot> _out =
+      StreamController<MarketFeedSnapshot>.broadcast(sync: true);
 
   void emit(final MarketFeedSnapshot snapshot) {
     if (!_out.isClosed) {

@@ -42,7 +42,8 @@ void leakSafeTestWidgets(
   if (ignoredNotDisposedClasses.isNotEmpty) {
     settings = settings.withIgnored(
       notDisposed: <String, int?>{
-        for (final String className in ignoredNotDisposedClasses) className: null,
+        for (final String className in ignoredNotDisposedClasses)
+          className: null,
       },
     );
   }

@@ -12,7 +12,9 @@ import '../helpers/memory/leak_safe_test_widgets.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  leakSafeTestWidgets('app-shell go route replacement is leak-safe', (final tester) async {
+  leakSafeTestWidgets('app-shell go route replacement is leak-safe', (
+    final tester,
+  ) async {
     final GoRouter router = GoRouter(
       initialLocation: '/home',
       routes: <RouteBase>[
