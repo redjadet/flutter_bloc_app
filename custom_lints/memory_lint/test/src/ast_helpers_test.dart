@@ -127,15 +127,12 @@ class Bad {
 }
 ''',
       ).unit;
-      final ClassDeclaration clazz = unit.declarations
-          .whereType<ClassDeclaration>()
-          .last;
+      final ClassDeclaration clazz = unit.declarations.whereType<ClassDeclaration>().last;
       final List<FieldDeclaration> staticContexts = clazz.members
           .whereType<FieldDeclaration>()
           .where(
             (FieldDeclaration f) =>
-                f.isStatic &&
-                declaredBaseTypeName(f.fields.type) == 'BuildContext',
+                f.isStatic && declaredBaseTypeName(f.fields.type) == 'BuildContext',
           )
           .toList();
       expect(staticContexts, hasLength(1));
@@ -150,9 +147,7 @@ ClassDeclaration _firstClass(String source) {
 
 MethodDeclaration? _method(ClassDeclaration clazz, String name) {
   for (final ClassMember member in clazz.members) {
-    if (member is MethodDeclaration &&
-        !member.isStatic &&
-        member.name.lexeme == name) {
+    if (member is MethodDeclaration && !member.isStatic && member.name.lexeme == name) {
       return member;
     }
   }

@@ -11,8 +11,7 @@ class MemoryStreamControllerMissingCloseRule extends AnalysisRule {
   static const LintCode code = LintCode(
     'memory_stream_controller_missing_close',
     'StreamController "{0}" must be closed in dispose() or close().',
-    correctionMessage:
-        'Call {0}.close() (or {0}?.close()) inside dispose() or close().',
+    correctionMessage: 'Call {0}.close() (or {0}?.close()) inside dispose() or close().',
   );
 
   MemoryStreamControllerMissingCloseRule()

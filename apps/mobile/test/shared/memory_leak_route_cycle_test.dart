@@ -7,9 +7,7 @@ import '../helpers/memory/leak_safe_test_widgets.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  leakSafeTestWidgets('GoRouter MaterialApp mount/unmount is leak-safe', (
-    final tester,
-  ) async {
+  leakSafeTestWidgets('GoRouter MaterialApp mount/unmount is leak-safe', (final tester) async {
     final GoRouter router = GoRouter(
       routes: <RouteBase>[
         GoRoute(

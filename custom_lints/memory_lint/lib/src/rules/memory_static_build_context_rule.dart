@@ -19,8 +19,7 @@ class MemoryStaticBuildContextRule extends AnalysisRule {
   MemoryStaticBuildContextRule()
     : super(
         name: 'memory_static_build_context',
-        description:
-            'Flags static fields typed as BuildContext or BuildContext?.',
+        description: 'Flags static fields typed as BuildContext or BuildContext?.',
       );
 
   @override
