@@ -14,7 +14,7 @@ literal `AIzaSy…` keys.
   gitignored `.envrc` and platform files.
 - **Local regen:** `flutterfire configure` → copy values to `.envrc` →
   `git checkout HEAD -- apps/mobile/lib/firebase_options.dart` (documented in
-  [`docs/firebase_setup.md`](../firebase_setup.md)).
+  [`docs/integrations/firebase_setup.md`](../integrations/firebase_setup.md)).
 - **History scrub:** `git filter-repo --replace-text tool/firebase_secret_history_replacements.txt`
   rewrites all refs (`AIzaSy…` → `REDACTED_GOOGLE_API_KEY`). Requires coordinated
   `git push --force --all origin` and collaborator re-clones.
@@ -23,9 +23,9 @@ literal `AIzaSy…` keys.
 
 ## Docs updated
 
-- [`docs/firebase_setup.md`](../firebase_setup.md) — Option A step 3b, secret scanning + filter-repo
+- [`docs/integrations/firebase_setup.md`](../integrations/firebase_setup.md) — Option A step 3b, secret scanning + filter-repo
 - [`docs/security_and_secrets.md`](../security_and_secrets.md) — Firebase artifact table, history note
-- [`docs/firebase_app_distribution.md`](../firebase_app_distribution.md) — `firebase_options.dart` row
+- [`docs/integrations/firebase_app_distribution.md`](../integrations/firebase_app_distribution.md) — `firebase_options.dart` row
 - [`docs/validation_scripts.md`](../validation_scripts.md) — pointer to history scrub tool
 
 ## Operator follow-up

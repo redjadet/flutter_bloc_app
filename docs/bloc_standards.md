@@ -5,7 +5,7 @@ reviewing feature code. **Cubit/BLoC is presentation-layer state management
 only** — under `apps/mobile/lib/features/*/presentation/cubit/` or app-scope presentation
 (`AppScope`); never in `domain/` or `data/`. This complements [Clean Architecture](clean_architecture.md),
 [Feature Structure Contract](architecture/feature_structure_contract.md), and
-[State Management Choice](state_management_choice.md).
+[State Management Choice](architecture/state_management_choice.md).
 
 ## Decision Rules
 

@@ -57,7 +57,7 @@ Invariants only — expanded rules in [`docs/agent_project_context.md`](docs/age
 - Flutter/UI edits: hot reload when session active; runtime bugs → DTD — [`docs/agent_kb/tool_orchestration.md`](docs/agent_kb/tool_orchestration.md), [`docs/agent_kb/devtools_runtime_errors.md`](docs/agent_kb/devtools_runtime_errors.md).
 - Flutter SDK/framework is read-only; do not patch `/Flutter_SDK/flutter/**` or Dart/Flutter toolchain sources to fix app issues.
 - Pub APIs: MCP + pinned source — [`docs/agent_kb/package_docs_mcp.md`](docs/agent_kb/package_docs_mcp.md).
-- Clean Architecture + SOLID are mandatory: `Presentation -> Domain <- Data`; domain pure Dart; wire DI/routes/l10n/codegen when touched — [`docs/clean_architecture.md`](docs/clean_architecture.md), [`docs/solid_principles.md`](docs/solid_principles.md), [`docs/review/architecture_checklist.md`](docs/review/architecture_checklist.md).
+- Clean Architecture + SOLID are mandatory: `Presentation -> Domain <- Data`; domain pure Dart; wire DI/routes/l10n/codegen when touched — [`docs/clean_architecture.md`](docs/clean_architecture.md), [`docs/architecture/solid_principles.md`](docs/architecture/solid_principles.md), [`docs/review/architecture_checklist.md`](docs/review/architecture_checklist.md).
 - Platforms & UI: `flutter-cross-platform-modern`; [`DESIGN.md`](DESIGN.md) + [`docs/design_system.md`](docs/design_system.md) (reusable widgets, responsive layout, cross-platform form factors).
 - Widget tests — [`docs/testing_overview.md`](docs/testing_overview.md), [`docs/testing/widget_test_playbook.md`](docs/testing/widget_test_playbook.md).
 - Git / branch / PR / worktree actions — [`docs/git_and_branching_strategy.md`](docs/git_and_branching_strategy.md); inspect state first and preserve user work.

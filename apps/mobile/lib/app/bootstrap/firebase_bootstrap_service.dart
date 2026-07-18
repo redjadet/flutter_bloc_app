@@ -76,7 +76,7 @@ class FirebaseBootstrapService {
       if (options == null) {
         AppLogger.info(
           'Firebase init skipped: platform not supported or web. '
-          'See docs/firebase_setup.md to run with Firebase.',
+          'See docs/integrations/firebase_setup.md to run with Firebase.',
         );
         return false;
       }
@@ -87,7 +87,7 @@ class FirebaseBootstrapService {
           'Firebase init skipped: missing Firebase config fields '
           '(${missingConfigFields.join(', ')}). Run `flutterfire configure`, '
           'or provide FIREBASE_* values through local direnv; see '
-          'docs/firebase_setup.md.',
+          'docs/integrations/firebase_setup.md.',
         );
         return false;
       }

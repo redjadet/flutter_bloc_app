@@ -2,7 +2,7 @@
 
 High-level architecture diagram and owner map for this Flutter BLoC app. Lazy
 loading and state-management flow:
-[`architecture_lazy_loading_and_flow.md`](architecture_lazy_loading_and_flow.md).
+[`architecture_lazy_loading_and_flow.md`](architecture/architecture_lazy_loading_and_flow.md).
 
 ## Document Map
 
@@ -12,19 +12,19 @@ Start here for the big picture; drill into the linked docs for specifics.
 | -------- | -------- |
 | How are layers structured? | [Clean Architecture](clean_architecture.md) (CA skeleton + presentation-only MVVM) |
 | How do I add a new feature? | [Feature Delivery Guide](feature_implementation_guide.md) |
-| How is SOLID applied? | [SOLID Principles](solid_principles.md) |
-| Where is duplication eliminated? | [DRY Principles](dry_principles.md) |
-| How are responsibilities split? | [Separation of Concerns](separation_of_concerns.md) |
+| How is SOLID applied? | [SOLID Principles](architecture/solid_principles.md) |
+| Where is duplication eliminated? | [DRY Principles](architecture/dry_principles.md) |
+| How are responsibilities split? | [Separation of Concerns](architecture/separation_of_concerns.md) |
 | How is modularity enforced? | [Modularity](modularity.md) |
 | How does offline-first fit the architecture? | [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) |
-| Why BLoC over Riverpod? | [State Management Choice](state_management_choice.md) |
-| Deferred routes and state flow? | [Lazy loading & flow](architecture_lazy_loading_and_flow.md) |
-| What trade-offs exist? | [Trade-offs & Future](tradeoffs_and_future.md) |
+| Why BLoC over Riverpod? | [State Management Choice](architecture/state_management_choice.md) |
+| Deferred routes and state flow? | [Lazy loading & flow](architecture/architecture_lazy_loading_and_flow.md) |
+| What trade-offs exist? | [Trade-offs & Future](architecture/tradeoffs_and_future.md) |
 | What are the architecture decisions? | [ADRs](adr/) |
 | Code quality gates? | [Code Quality](CODE_QUALITY.md) |
-| Best practices checklist? | [Flutter Best Practices Review](flutter_best_practices_review.md) |
-| Plugin failures & wrappers? | [Plugin failure-mode strategy](plugin_failure_mode_strategy.md) |
-| Where to store secrets vs prefs? | [Storage rules](storage_rules.md) |
+| Best practices checklist? | [Flutter Best Practices Review](review/flutter_best_practices_review.md) |
+| Plugin failures & wrappers? | [Plugin failure-mode strategy](engineering/plugin_failure_mode_strategy.md) |
+| Where to store secrets vs prefs? | [Storage rules](security/storage_rules.md) |
 
 ## Architecture Diagram
 
@@ -125,8 +125,8 @@ How to read the diagram:
 ## Detail owners
 
 - UI ownership: [Design System](design_system.md) and
-  [Shared Utilities And Package Ownership](SHARED_UTILITIES.md).
-- BLoC rationale: [State Management Choice](state_management_choice.md).
-- Type-safe access: [Compile-Time Safety Guide](compile_time_safety.md).
+  [Shared Utilities And Package Ownership](engineering/SHARED_UTILITIES.md).
+- BLoC rationale: [State Management Choice](architecture/state_management_choice.md).
+- Type-safe access: [Compile-Time Safety Guide](architecture/compile_time_safety.md).
 
-Continued in [`architecture_lazy_loading_and_flow.md`](architecture_lazy_loading_and_flow.md).
+Continued in [`architecture_lazy_loading_and_flow.md`](architecture/architecture_lazy_loading_and_flow.md).

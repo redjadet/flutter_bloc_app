@@ -12,7 +12,7 @@ The analyzer/codegen conflict from the original note is **resolved**:
 - `mix_lint` enforced via `./tool/run_mix_lint.sh`; `file_too_long` enforced at severity `error` (QG-D02 promoted)
 - Renovate caps `json_serializable` at `<7.0.0` (see `renovate.json` package rule description)
 
-Canonical pins and troubleshooting: [`docs/DEPENDENCY_UPDATES.md`](../DEPENDENCY_UPDATES.md).
+Canonical pins and troubleshooting: [`docs/engineering/DEPENDENCY_UPDATES.md`](../engineering/DEPENDENCY_UPDATES.md).
 
 ## Problem (historical — 2026-06-03)
 
@@ -21,7 +21,7 @@ The dashboard still listed repository problems and open PR [#285](https://github
 ## Change (historical — 2026-06-03)
 
 - `renovate.json`: add root `ignoreDeps` for `dev.flutter.flutter-plugin-loader` (suppress Maven lookup noise); add `allowedVersions` cap for `json_serializable` (later raised to `<7.0.0` after the analyzer-10 stack landed).
-- [`DEPENDENCY_UPDATES.md`](../DEPENDENCY_UPDATES.md): document the `json_serializable` / `dart-minor-patch` interaction.
+- [`DEPENDENCY_UPDATES.md`](../engineering/DEPENDENCY_UPDATES.md): document the `json_serializable` / `dart-minor-patch` interaction.
 
 ## Verification
 

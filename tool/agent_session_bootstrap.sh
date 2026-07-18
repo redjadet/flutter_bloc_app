@@ -97,7 +97,7 @@ echo "read_if_owner_unknown|docs/README.md"
 echo "read_if_ui_design|DESIGN.md"
 echo "read_if_ui_design|docs/design_system.md"
 echo "read_if_validation_detail|docs/engineering/validation_routing_fast_vs_full.md"
-echo "read_if_l10n|docs/localization.md"
+echo "read_if_l10n|docs/engineering/localization.md"
 echo ""
 
 echo "validation_pointer|fast|./bin/checklist-fast"

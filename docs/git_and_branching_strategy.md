@@ -129,7 +129,7 @@ PR description includes:
 
 Review the final diff before requesting review. Do not approve, merge, or
 bypass failing checks merely because a local command passed. CI and GitHub PR
-state decide merge readiness; [CI Automation](ci_automation.md) describes the
+state decide merge readiness; [CI Automation](engineering/ci_automation.md) describes the
 expected gates and local equivalents.
 
 ## Merge and cleanup

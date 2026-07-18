@@ -14,7 +14,7 @@ Introduced in #276 when `ignoreDeps` was added to the `dart-minor-patch` rule (w
 ## Change
 
 - `renovate.json`: remove `ignoreDeps` from the `dart-minor-patch` rule; add a `pub-coordinated-pins` group rule for `genui` and `google_sign_in_mocks` on minor/patch updates (same intent as #276, valid syntax).
-- `docs/DEPENDENCY_UPDATES.md`: document the separate group name.
+- `docs/engineering/DEPENDENCY_UPDATES.md`: document the separate group name.
 
 ## Verification
 

@@ -43,12 +43,12 @@ Vertical demos driven by product briefs in [`docs/case_studies/`](case_studies/R
 | Feature | Route or entry | Code | Notes |
 | --- | --- | --- | --- |
 | Chat | `/chat`, `/chat-list` | `apps/mobile/lib/features/chat/` | Offline-first chat flows with FastAPI Cloud orchestration, direct Hugging Face inference, and documented Supabase proxy support. |
-| AI Decision Workbench | `/ai-decision-demo` (Example hub entry) | `apps/mobile/lib/features/ai_decision_demo/` | Local decision support demo with seeded SQLite cases, risk score, rationale, visible proof trail, and action history. Backend: `demos/ai_decision_api/`. Doc: [`ai_decision_workbench.md`](ai_decision_workbench.md). |
+| AI Decision Workbench | `/ai-decision-demo` (Example hub entry) | `apps/mobile/lib/features/ai_decision_demo/` | Local decision support demo with seeded SQLite cases, risk score, rationale, visible proof trail, and action history. Backend: `demos/ai_decision_api/`. Doc: [`ai_decision_workbench.md`](features/ai_decision_workbench.md). |
 | Charts | `/charts` | `apps/mobile/lib/features/chart/` | Deferred-loaded chart experience with offline-first behavior. |
 | GraphQL Demo | `/graphql-demo` | `apps/mobile/lib/features/graphql_demo/` | Cache-first countries browser with diagnostics support. |
 | Remote Config surfaces | Counter and Settings diagnostics | `apps/mobile/lib/features/remote_config/` | Runtime feature flags, diagnostics, and cache behavior. |
 | IoT Demo | `/iot-demo` | `apps/mobile/lib/features/iot_demo/` (+ BLE: `apps/mobile/lib/features/iot/`) | **Cloud** tab: offline-first device list; Supabase when configured. **BLE** tab: local GATT showcase (mock + optional real mobile). Hub: `IotDemoHubPage`. Doc: [`features/iot_ble.md`](features/iot_ble.md); cloud contract: [`offline_first/iot_demo.md`](offline_first/iot_demo.md). |
-| Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `apps/mobile/lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](staff_app_demo_walkthrough.md). |
+| Staff App Demo | `/staff-app-demo` and nested paths (dashboard, timeclock, messages, content, forms, proof, admin) | `apps/mobile/lib/features/staff_app_demo/` | Firestore-backed staff ops demo; shared site list via `StaffDemoSitesCubit` / `staffDemoSites`. Walkthrough: [Staff app demo](features/staff_app_demo_walkthrough.md). |
 | Online Therapy Demo | `/online-therapy-demo` and nested client, therapist, and admin paths | `apps/mobile/lib/features/online_therapy_demo/` | Simulation-first product demo for booking, messaging, call state, verification, and admin audit flows. Walkthrough: [Online Therapy Demo](online_therapy_demo/README.md). |
 | Supabase Auth | `/supabase-auth` | `apps/mobile/lib/features/supabase_auth/` | Separate optional auth flow for Supabase-backed demos. |
 | WalletConnect Auth | `/walletconnect-auth` | `apps/mobile/lib/features/walletconnect_auth/` | Demo wallet-link flow layered on top of Firebase identity. **Auth-gated** (see [Authentication](authentication.md)). |
@@ -100,28 +100,28 @@ See [Architecture Details](architecture_details.md) and
 ## Configuration notes
 
 - Firebase-dependent features require platform Firebase configuration. See
-  [Firebase Setup](firebase_setup.md).
+  [Firebase Setup](integrations/firebase_setup.md).
 - Supabase-backed flows require `SUPABASE_URL` and `SUPABASE_ANON_KEY`. See
   [Authentication](authentication.md) and [Security and Secrets](security_and_secrets.md).
 - Universal-link handling is implemented under `apps/mobile/lib/features/deeplink/`; host
   verification files live in [Universal Links](universal_links/README.md).
 - Maps require Google Maps platform keys where applicable. See
-  [Google Maps Integration](google_maps_integration.md).
-- AI chat demos require API keys. See [AI Integration](ai_integration.md) and
+  [Google Maps Integration](integrations/google_maps_integration.md).
+- AI chat demos require API keys. See [AI Integration](integrations/ai_integration.md) and
   [Security and Secrets](security_and_secrets.md).
 - AI Decision Workbench uses FastAPI Cloud by default on all platforms.
   Override with `AI_DECISION_API_BASE_URL` when needed. See
-  [AI Decision Workbench](ai_decision_workbench.md).
+  [AI Decision Workbench](features/ai_decision_workbench.md).
 
 ## Deep-dive references
 
 - [Case studies index](case_studies/README.md)
-- [AI Decision Workbench](ai_decision_workbench.md)
+- [AI Decision Workbench](features/ai_decision_workbench.md)
 - [Authentication](authentication.md)
 - [Offline-First Adoption Guide](offline_first/adoption_guide.md)
 - [Testing Overview](testing_overview.md)
 - [Tech Stack](tech_stack.md)
-- [FCM Demo Integration](fcm_demo_integration.md)
-- [GenUI Demo User Guide](genui_demo_user_guide.md)
-- [Google Maps Integration](google_maps_integration.md)
+- [FCM Demo Integration](integrations/fcm_demo_integration.md)
+- [GenUI Demo User Guide](features/genui_demo_user_guide.md)
+- [Google Maps Integration](integrations/google_maps_integration.md)
 - [Native Platform Showcase](../apps/mobile/lib/features/native_platform_showcase/README.md) (feature README; brief: [2026-06-08](changes/2026-06-08_native_platform_showcase_feature_brief.md))

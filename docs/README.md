@@ -14,7 +14,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **Validation + testing**: [`validation_scripts.md`](validation_scripts.md), [`testing_overview.md`](testing_overview.md),
   integration policy [`engineering/integration_test_policy.md`](engineering/integration_test_policy.md),
   runner contract [`engineering/integration_runner_contract.md`](engineering/integration_runner_contract.md)
-- **Logging**: [`logging.md`](logging.md), [`observability.md`](observability.md)
+- **Logging**: [`logging.md`](engineering/logging.md), [`observability.md`](observability.md)
 - **Architecture**: [`feature_overview.md`](feature_overview.md), [`clean_architecture.md`](clean_architecture.md),
   [`architecture_details.md`](architecture_details.md), [`bloc_standards.md`](bloc_standards.md),
   [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md),
@@ -24,14 +24,14 @@ Source-of-truth docs for Flutter BLoC app.
   [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](backend/MOBILE_BACKEND_DEFERRED_WORK.md)
 - **Design / UI**: [`../DESIGN.md`](../DESIGN.md),
   [`design_system.md`](design_system.md)
-- **AI / chat**: [`ai_integration.md`](ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
+- **AI / chat**: [`ai_integration.md`](integrations/ai_integration.md), [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - **AI decision workbench**:
-  [`ai_decision_workbench.md`](ai_decision_workbench.md) - FastAPI-backed
+  [`ai_decision_workbench.md`](features/ai_decision_workbench.md) - FastAPI-backed
   decision demo: risk score, rationale, proof trail, action history.
 - **Security**: [`SECURITY.md`](SECURITY.md), [`security_and_secrets.md`](security_and_secrets.md), [`security/certificate_pinning.md`](security/certificate_pinning.md)
 - **Deployment**: [`deployment.md`](deployment.md)
 - **Case studies (product briefs + demo feature)**: [`case_studies/README.md`](case_studies/README.md)
-- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md),
+- **Feature walkthroughs**: [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md),
   [`online_therapy_demo/README.md`](online_therapy_demo/README.md),
   [`features/realtime_market.md`](features/realtime_market.md),
   [`features/iot_ble.md`](features/iot_ble.md),
@@ -48,7 +48,7 @@ Source-of-truth docs for Flutter BLoC app.
   [`agent_environment_setup.md`](agent_environment_setup.md),
   [`agent_kb/host_maintenance_automation.md`](agent_kb/host_maintenance_automation.md),
   [`agent_host_notes.md`](agent_host_notes.md),
-  [`code_review_graph.md`](code_review_graph.md)
+  [`code_review_graph.md`](ai/code_review_graph.md)
   - Cold-start map printer: `bash ../tool/agent_session_bootstrap.sh`
   - Tracker contract: [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md)
 
@@ -69,6 +69,7 @@ root when an existing category applies.
 | [performance/](performance/README.md) | Profiling, memory, performance improvement evidence |
 | [review/](review/README.md) | Architecture, BLoC, security, and performance review checklists |
 | [ai/](ai/README.md) | Coding-agent operations and governance |
+| [contributing/](contributing/README.md) | Contributor guide, FAQ, PR checklist |
 | [offline_first/](offline_first/README.md) | Local-first storage, conflict, and sync guidance |
 | [validation_scripts/](validation_scripts/README.md) | Validation catalog, procedures, and targeted guides |
 | [plans/](plans/README.md) / [changes/](changes/README.md) / [audits/](audits/README.md) | Time-bound plans, shipped changes, and historical evidence |
@@ -114,8 +115,8 @@ root when an existing category applies.
 - [`testing_overview.md`](testing_overview.md)
 - [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md)
 - [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md) — BLoC widget test how-to
-- [`logging.md`](logging.md)
-- [`code_review_graph.md`](code_review_graph.md)
+- [`logging.md`](engineering/logging.md)
+- [`code_review_graph.md`](ai/code_review_graph.md)
 - [`review/code_review_playbook.md`](review/code_review_playbook.md) — shared
   AI/human review workflow, finding format, and decision record
 - [`contributing/PR_REVIEW_CHECKLIST.md`](contributing/PR_REVIEW_CHECKLIST.md) —
@@ -134,7 +135,7 @@ root when an existing category applies.
 - [`plans/checklist_quality_gates_deferred.md`](plans/checklist_quality_gates_deferred.md) — deferred/rejected checklist gates backlog
 - [`feature_implementation_guide.md`](feature_implementation_guide.md)
 - [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md)
-- [`ci_automation.md`](ci_automation.md)
+- [`ci_automation.md`](engineering/ci_automation.md)
 
 #### Performance / lifecycle
 
@@ -155,7 +156,7 @@ root when an existing category applies.
 - [`engineering/task_tracker_template.md`](engineering/task_tracker_template.md) — Cursor/Codex task tracker shape
 - [`engineering/delayed_work_guide.md`](engineering/delayed_work_guide.md) — deferred work and scheduling patterns
 - [`engineering/apple_debug_hive_storage.md`](engineering/apple_debug_hive_storage.md) — iOS/macOS debug Hive + Keychain triage and regression guard
-- [`testing_integration_flows.md`](testing_integration_flows.md) — authoring integration flows (companion to policy/contract)
+- [`testing_integration_flows.md`](testing/testing_integration_flows.md) — authoring integration flows (companion to policy/contract)
 
 ### Offline-first and local storage
 
@@ -165,33 +166,33 @@ root when an existing category applies.
 
 ### Setup, secrets, and integrations
 
-- [`firebase_setup.md`](firebase_setup.md)
+- [`firebase_setup.md`](integrations/firebase_setup.md)
 - [`authentication.md`](authentication.md)
-- [`ai_integration.md`](ai_integration.md)
+- [`ai_integration.md`](integrations/ai_integration.md)
 - [`integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md)
 - [`SECURITY.md`](SECURITY.md)
 - [`security_and_secrets.md`](security_and_secrets.md)
 - [`security/certificate_pinning.md`](security/certificate_pinning.md)
 - [`features/certificate_pinning_demo.md`](features/certificate_pinning_demo.md)
-- [`localization.md`](localization.md)
+- [`localization.md`](engineering/localization.md)
 - [`universal_links/README.md`](universal_links/README.md)
 
 ### Feature walkthroughs and demos
 
-- [`ai_decision_workbench.md`](ai_decision_workbench.md)
-- [`staff_app_demo_walkthrough.md`](staff_app_demo_walkthrough.md)
+- [`ai_decision_workbench.md`](features/ai_decision_workbench.md)
+- [`staff_app_demo_walkthrough.md`](features/staff_app_demo_walkthrough.md)
 - [`online_therapy_demo/README.md`](online_therapy_demo/README.md)
 - [`features/in_app_purchase_demo.md`](features/in_app_purchase_demo.md)
 - [`features/iot_ble.md`](features/iot_ble.md)
-- [`fcm_demo_integration.md`](fcm_demo_integration.md)
+- [`fcm_demo_integration.md`](integrations/fcm_demo_integration.md)
 - [`case_studies/README.md`](case_studies/README.md)
-- [`genui_demo_user_guide.md`](genui_demo_user_guide.md)
+- [`genui_demo_user_guide.md`](features/genui_demo_user_guide.md)
 
 ### Release and distribution
 
 - [`deployment.md`](deployment.md) — iOS, Android, dual-store Fastlane (`release_both_stores.sh`), web Pages
-- [`firebase_app_distribution.md`](firebase_app_distribution.md) — pre-release testers
-- [`android_play_store_release_sop.md`](android_play_store_release_sop.md) — Play validation gates and promotion
+- [`firebase_app_distribution.md`](integrations/firebase_app_distribution.md) — pre-release testers
+- [`android_play_store_release_sop.md`](engineering/android_play_store_release_sop.md) — Play validation gates and promotion
 - [`../fastlane/README.md`](../fastlane/README.md) — Fastlane lane index (`deploy_all`, platform lanes)
 - Env templates: [`.env.ios.release.example`](../.env.ios.release.example), [`.env.android.release.example`](../.env.android.release.example)
 

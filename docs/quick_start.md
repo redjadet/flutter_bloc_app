@@ -31,7 +31,7 @@ For a quick technical read before cloning deeply:
 
 - [../README.md](../README.md) — public entrypoint, live app links, and proof map.
 - [interview_showcase.md](interview_showcase.md) — curated portfolio walk.
-- [system_design_showcase.md](system_design_showcase.md) — architecture,
+- [system_design_showcase.md](features/system_design_showcase.md) — architecture,
   operations, security, and production-readiness boundaries.
 - [modularity.md](modularity.md) — dependency boundaries and enforcement.
 

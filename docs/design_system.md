@@ -122,7 +122,7 @@ Reference: [`test/features/playlearn/presentation/widgets/word_card_test.dart`](
 - Change **tokens or leaf widgets** first; keep pages as thin composition.
 - Reuse shared rows/bars from [Horizontal action layout](#horizontal-action-layout-overflow) instead of one-off `Row`s.
 - Prove responsive / no-overlap states at the widget or page level per
-  [`DESIGN.md`](../DESIGN.md) and [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md).
+  [`DESIGN.md`](../DESIGN.md) and [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md).
 
 ## Responsive layout (avoid fixed sizes)
 
@@ -141,7 +141,7 @@ width/height when constraints can change.
 | Dual CTAs / action rows | [`ResponsiveDualCtaRow`](../packages/design_system/lib/src/widgets/responsive_action_bar.dart), [`ResponsiveActionOverflowBar`](../packages/design_system/lib/src/widgets/responsive_action_bar.dart) |
 | Platform chrome | `PlatformAdaptive.*`, `SafeArea`, keyboard via `MediaQuery.viewInsetsOf(context)` |
 
-Full review checklist: [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md).
+Full review checklist: [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md).
 
 ### When to use `LayoutBuilder`
 
@@ -241,7 +241,7 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 | Change type | Minimum proof |
 | --- | --- |
 | Layout-sensitive widget | Widget test at **compact mobile width** + at least one **wide** width (tablet/desktop); text scale ≥ 1.3 when text-heavy |
-| Shared page / shell | No overlap at mobile, tablet, and desktop breakpoints; [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md) |
+| Shared page / shell | No overlap at mobile, tablet, and desktop breakpoints; [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md) |
 | Routing / auth / deep links | `./bin/router_feature_validate` or web integration preflight when applicable |
 | Platform plugin / IO | Adapter + `check_sync_io_in_presentation.sh`; document if a target is intentionally deferred |
 
@@ -252,7 +252,7 @@ Skill: `flutter-cross-platform-modern`. Pitfall table: `agents-common-pitfalls`.
 - Use `Theme.of(context).colorScheme` and theme-derived text styles; avoid hardcoded colors and per-widget `GoogleFonts.*`.
 - For new styling, prefer Mix `Style` and tokens from `app_styles.dart` / `mix_app_theme.dart` where practical.
 - Use `context.responsiveHeadlineSize` / `TitleSize` / `BodySize` and `PlatformAdaptive.*` for UI.
-- Design responsive layouts; avoid fixed sizes for reflowable content — [`ui_ux_responsive_review.md`](ui_ux_responsive_review.md) and design_system § Responsive layout.
+- Design responsive layouts; avoid fixed sizes for reflowable content — [`ui_ux_responsive_review.md`](review/ui_ux_responsive_review.md) and design_system § Responsive layout.
 - Cross-platform widgets: mobile, tablet, web, desktop — design_system § Cross-platform form factors; `flutter-cross-platform-modern`.
 - Build actual workflow/demo first; avoid landing/marketing screens unless asked.
 - Match app density: quiet controls, scannable state, predictable nav, complete states.
@@ -290,4 +290,4 @@ Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Wi
 
 - Mix tokens/styles — this document § Mix (design tokens and styles).
 - [Architecture Details](architecture_details.md#design-system)
-- [UI/UX Responsive Review](ui_ux_responsive_review.md)
+- [UI/UX Responsive Review](review/ui_ux_responsive_review.md)

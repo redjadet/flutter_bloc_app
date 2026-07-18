@@ -1,6 +1,6 @@
 # Memory Leaks Analysis
 
-This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](../race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](../CODE_QUALITY.md).
+This document records a deep analysis of the codebase for potential memory leaks. It complements [`race_conditions_and_bugs_analysis.md`](../engineering/race_conditions_and_bugs_analysis.md) and [`CODE_QUALITY.md`](../CODE_QUALITY.md).
 
 **Analysis Date:** 2025-02 (historical); automation status updated 2026-07-17
 **Scope:** `lib/` — StreamController, StreamSubscription, Timer, Controllers (TextEditingController, ScrollController), lifecycle patterns
@@ -179,6 +179,6 @@ The project uses `check_stream_controller_close.sh` (or equivalent) for StreamCo
 
 ## 6. Related Documentation
 
-- [Race Conditions and Bugs Analysis](../race_conditions_and_bugs_analysis.md)
+- [Race Conditions and Bugs Analysis](../engineering/race_conditions_and_bugs_analysis.md)
 - [CODE_QUALITY](../CODE_QUALITY.md)
 - [Validation Scripts](../validation_scripts.md)

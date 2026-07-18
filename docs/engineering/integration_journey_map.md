@@ -95,7 +95,7 @@ tier expectations.
   to run the macOS simulator lane after preflight passes. Choose
   `integration_tier` (`smoke` | `standard` | `exhaustive`).
 
-See [`ci_automation.md`](../ci_automation.md) and
+See [`ci_automation.md`](ci_automation.md) and
 [`validation_scripts/overview.md`](../validation_scripts/overview.md) for the
 current GitHub Actions contract.
 

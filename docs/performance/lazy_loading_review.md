@@ -92,7 +92,7 @@ GoRoute(
 - On web, deferred code is downloaded as separate JavaScript chunks.
 - Prefer deferred imports for heavy, rarely used features; avoid for core flows or shared utilities.
 
-See [`architecture_lazy_loading_and_flow.md`](../architecture_lazy_loading_and_flow.md) for routing and deferred page patterns.
+See [`architecture_lazy_loading_and_flow.md`](../architecture/architecture_lazy_loading_and_flow.md) for routing and deferred page patterns.
 
 ## Opportunities and Considerations
 

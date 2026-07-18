@@ -82,7 +82,7 @@ Numbered flow:
 | Merge policy in `data/` | — (fixed PR-3) | `domain/todo_merge_policy.dart` |
 | Copy legacy demo layout/semantics | `playlearn`, root-level cubits | [`reference_features.md`](reference_features.md) gold rows |
 
-See [`../flutter-anti-patterns.md`](../flutter-anti-patterns.md) AP-11…AP-17.
+See [`../flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) AP-11…AP-17.
 
 ## Pre-ship checklist (agents)
 
@@ -110,7 +110,7 @@ Optional warn-only: `bash tool/check_domain_wire_leaks.sh`
 - One primary pattern + one primary feature per PR (paired PRs: 1B, 3B only).
 - ≤ ~400 LOC net; split cubit vs widgets if larger.
 - Update scorecard row in [`senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md).
-- Mark AP-11…17 **Fixed** in [`flutter-anti-patterns.md`](../flutter-anti-patterns.md) when remediated.
+- Mark AP-11…17 **Fixed** in [`flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) when remediated.
 - Do not add learned prose to [`AGENTS.md`](../../AGENTS.md) — link here.
 
 ## Related

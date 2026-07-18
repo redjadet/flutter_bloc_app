@@ -22,13 +22,13 @@ For the complete docs index, see [docs index](README.md).
 
 Before running the app, review:
 
-- [Firebase Setup](firebase_setup.md)
+- [Firebase Setup](integrations/firebase_setup.md)
 - [Security and Secrets](security_and_secrets.md)
 - [Tech Stack](tech_stack.md)
 
 **Optional — automatic secret injection in the terminal:** install [direnv](https://direnv.net/), copy [`docs/envrc.example`](envrc.example) to `.envrc` in the repo root, add your keys, run `direnv allow`, then let the PATH-based `flutter` wrapper inject `--dart-define` values automatically (or use `cd apps/mobile && flutter run $(../../tool/flutter_dart_defines_from_env.sh)`). Plain `flutter run` from the repo root is routed to `apps/mobile` and passes the same `--dart-define` values to iOS and Android. Only variables listed in [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh) are forwarded; optional FastAPI Cloud / legacy Render chat orchestration keys (`CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*`) are included there—see [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). For store release builds, the same keys can live in gitignored `.env.android.release` and/or `.env.ios.release` (see [`.env.android.release.example`](../.env.android.release.example), [`.env.ios.release.example`](../.env.ios.release.example), and [Deployment](deployment.md)). Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh). Both stores: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh).
 
-**Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](code_review_graph.md).
+**Optional — Codex code graph for repo exploration:** if you use Codex heavily in this repo, you can install a local `code-review-graph` MCP server and build a persistent graph cache under `.code-review-graph/`. Setup and caveats live in [Code Review Graph for Codex](ai/code_review_graph.md).
 
 ### Install dependencies and run
 
@@ -107,7 +107,7 @@ For deeper rationale, see:
 
 - [Clean Architecture](clean_architecture.md)
 - [Architecture Details](architecture_details.md)
-- [State Management Choice](state_management_choice.md)
+- [State Management Choice](architecture/state_management_choice.md)
 - [Offline-First Adoption Guide](offline_first/adoption_guide.md)
 
 ## 2. Repository layout highlights
@@ -170,7 +170,7 @@ Use these docs while implementing:
 - [Feature Delivery Guide](feature_implementation_guide.md)
 - [Validation Scripts](validation_scripts.md)
 - [Testing Overview](testing_overview.md)
-- [Code Generation Guide](code_generation_guide.md)
+- [Code Generation Guide](engineering/code_generation_guide.md)
 
 ## 5. Development workflow
 
@@ -188,7 +188,7 @@ Use repo commands instead of ad-hoc validation:
 
 Optional local Codex tooling:
 
-- [Code Review Graph for Codex](code_review_graph.md) — install, build, update, and verify the local MCP-backed code graph
+- [Code Review Graph for Codex](ai/code_review_graph.md) — install, build, update, and verify the local MCP-backed code graph
 
 Docs-only changes can stay lightweight, but feature, routing, DI, and behavior
 changes should always go through the correct validation scope.
@@ -205,14 +205,14 @@ The repo uses layered validation:
 Testing detail lives in:
 
 - [Testing Overview](testing_overview.md)
-- [Integration Flow Guide](testing_integration_flows.md)
+- [Integration Flow Guide](testing/testing_integration_flows.md)
 - [Validation Scripts](validation_scripts.md)
 
 ## Common Troubleshooting
 
 | Problem | What to check |
 | --- | --- |
-| Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` with `direnv allow`. See [Firebase Setup](firebase_setup.md) (step 3b). |
+| Firebase features are disabled | Gitignored platform files present (`flutterfire configure`) and `FIREBASE_*` in `.envrc` with `direnv allow`. See [Firebase Setup](integrations/firebase_setup.md) (step 3b). |
 | Supabase-backed flows show "not configured" | Confirm `SUPABASE_URL` and `SUPABASE_ANON_KEY` are available through the configured secrets path. See [Security and Secrets](security_and_secrets.md). |
 | Generated code is stale | Run `dart run build_runner build --delete-conflicting-outputs`. |
 | iOS build fails after dependency or Firebase changes | Run `flutter clean`, `flutter pub get`, `cd ios && pod install && cd ..`, then retry. |
@@ -227,4 +227,4 @@ Testing detail lives in:
 - [Tech Stack](tech_stack.md)
 - [Testing Overview](testing_overview.md)
 - [Deployment](deployment.md)
-- [Contributing](contributing.md)
+- [Contributing](contributing/contributing.md)

@@ -10,7 +10,7 @@ commands and owner docs, not another cold-start checklist.
 | iOS simulator / CocoaPods embed | `flutter build ios --simulator --debug`; `tool/check_ios_pod_framework_embed.sh --require-built-app` |
 | Apple Keychain `-34018` / corrupted Hive box | [`apple_debug_hive_storage.md`](../engineering/apple_debug_hive_storage.md); `bash tool/check_apple_debug_hive_storage.sh`; cold-restart simulator |
 | SDK / tooling maintenance | `./bin/upgrade_validate_all` |
-| Existing-code graph | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed`; [`code_review_graph.md`](../code_review_graph.md) |
+| Existing-code graph | `./tool/refresh_code_review_graph.sh --status-only` or `--if-needed`; [`code_review_graph.md`](../ai/code_review_graph.md) |
 | PR / CI / issue evidence | [`github_mcp_guide.md`](../ai/github_mcp_guide.md); `gh pr view` / checks |
 | Repomix context pack | `bash tool/repomix_pack.sh onboarding`; [`repomix_profiles.md`](../ai/repomix_profiles.md) |
 | AI snapshot freshness | `bash tool/check_ai_snapshot_freshness.sh`; `bash tool/refresh_ai_reports.sh` |

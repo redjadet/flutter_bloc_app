@@ -38,5 +38,5 @@ Prioritize only after profiling shows JSON as a hotspot.
 ## Where to read more
 
 - [Performance compute/isolate review](../performance/compute_isolate_review.md) — current usage and future JSON notes.
-- **[`SHARED_UTILITIES.md`](../SHARED_UTILITIES.md)** — `isolate_json` usage examples (string and bytes).
+- **[`SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)** — `isolate_json` usage examples (string and bytes).
 - **[`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)** — performance table row for large JSON.

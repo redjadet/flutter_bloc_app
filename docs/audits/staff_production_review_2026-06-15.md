@@ -58,12 +58,12 @@ Subjective 1–5 for interview/portfolio readiness; not a CI gate.
 
 | Artifact | Path |
 | --- | --- |
-| Architecture hub | [`docs/architecture.md`](../architecture.md) — **link-only** [`system_design_showcase.md`](../system_design_showcase.md) |
+| Architecture hub | [`docs/architecture.md`](../architecture.md) — **link-only** [`system_design_showcase.md`](../features/system_design_showcase.md) |
 | Testing hub | [`docs/testing.md`](../testing.md) |
 | Engineering decisions hub | [`docs/engineering-decisions.md`](../engineering-decisions.md) |
 | AI workflow hub | [`docs/ai-workflow.md`](../ai-workflow.md) |
-| Anti-patterns (canonical) | [`docs/flutter-anti-patterns.md`](../flutter-anti-patterns.md) |
-| Failure notebook | [`docs/failure-notebook.md`](../failure-notebook.md) |
+| Anti-patterns (canonical) | [`docs/engineering/flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) |
+| Failure notebook | [`docs/engineering/failure-notebook.md`](../engineering/failure-notebook.md) |
 | Agent stub | [`ai/reports/anti_patterns.md`](../../ai/reports/anti_patterns.md) |
 | Change note | [`docs/changes/2026-06-15_staff-production-review.md`](../changes/2026-06-15_staff-production-review.md) |
 

@@ -36,7 +36,7 @@ agents, RAG, MCP. No app feature migration.
 | `firestore.indexes.json` | `backend/firebase/indexes/firestore.indexes.json` |
 
 Updated: `firebase.json.example`, `tool/commit_push_pr_deploy.py`, secret-literal
-guard paths, [`firebase_setup.md`](../firebase_setup.md), [`deployment.md`](../deployment.md).
+guard paths, [`firebase_setup.md`](../integrations/firebase_setup.md), [`deployment.md`](../deployment.md).
 
 ## PR-I — `packages/auth`, `packages/feature_flags`
 

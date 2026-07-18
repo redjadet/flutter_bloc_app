@@ -41,7 +41,7 @@ modules in [feature_overview.md](feature_overview.md).
 | Flutter / Dart / Cubit | Production-style feature modules, typed state | Spine #1–3 | Run app; open `counter/presentation/cubit/counter_cubit.dart`, `todo_list_cubit.dart`, `chat_cubit.dart` |
 | Modular architecture | Feature boundaries + leak checks | [modularity.md](modularity.md), `tool/check_feature_modularity_leaks.sh` | `bash tool/check_feature_modularity_leaks.sh` |
 | Automated testing | Unit/widget + integration tiers | [testing_overview.md](testing_overview.md) | `./bin/checklist-fast`; PR smoke below |
-| API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](ai_integration.md), `packages/networking/lib/src/` | Spine #3; badges on chat |
+| API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](integrations/ai_integration.md), `packages/networking/lib/src/` | Spine #3; badges on chat |
 | Validate / instrument | Structured errors, sync telemetry, Crashlytics when Firebase on | [observability.md](observability.md), [counter_outcome_brief.md](features/counter_outcome_brief.md) | Spine #4 sync diagnostics |
 | AI-enabled delivery | Agent loop + review protocol | [ai_code_review_protocol.md](ai_code_review_protocol.md), [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md) | Spine #5 |
 | Ownership | Counter vertical narrative | [features/counter_outcome_brief.md](features/counter_outcome_brief.md) | Read brief; tie to sync + persistence test |
@@ -126,7 +126,7 @@ Review: [ai_code_review_protocol.md](ai_code_review_protocol.md).
 
 - [deployment.md](deployment.md)
 - Store release reference: `./tool/release_both_stores.sh`
-- Lifecycle: [REPOSITORY_LIFECYCLE.md](REPOSITORY_LIFECYCLE.md)
+- Lifecycle: [REPOSITORY_LIFECYCLE.md](engineering/REPOSITORY_LIFECYCLE.md)
 
 ## 11. Observability (current)
 

@@ -9,6 +9,10 @@ Feature contracts, demo guides, and feature-specific validation. Start with
 | Todo-list behavior | [todo_list_feature_guide.md](todo_list_feature_guide.md) |
 | Todo manual ordering history | [todo_manual_order_improvements.md](todo_manual_order_improvements.md) |
 | Playlearn assets | [playlearn_asset_sources.md](playlearn_asset_sources.md) |
+| Staff app walkthrough | [staff_app_demo_walkthrough.md](staff_app_demo_walkthrough.md) |
+| GenUI demo | [genui_demo_user_guide.md](genui_demo_user_guide.md) |
+| System design showcase | [system_design_showcase.md](system_design_showcase.md) |
+| AI decision workbench | [ai_decision_workbench.md](ai_decision_workbench.md) |
 | IoT demo | [iot_ble.md](iot_ble.md) |
 | Realtime market demo | [realtime_market.md](realtime_market.md) |
 

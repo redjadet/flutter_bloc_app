@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Check for Equatable usage where Freezed is preferred
 # Per project policy: "Immutable states (freezed > Equatable)." Use Freezed for
-# new cubit/Bloc state and immutable domain models. See docs/freezed_usage_analysis.md
+# new cubit/Bloc state and immutable domain models. See docs/architecture/freezed_usage_analysis.md
 
 set -euo pipefail
 
@@ -55,7 +55,7 @@ fi
 
 if [ -n "$VIOLATIONS" ]; then
   echo "❌ Equatable used where Freezed is preferred (state/domain models)."
-  echo "   See docs/freezed_usage_analysis.md"
+  echo "   See docs/architecture/freezed_usage_analysis.md"
   echo "$VIOLATIONS"
   exit 1
 else

@@ -36,7 +36,7 @@ Invalid tier or target-set values fall back to `exhaustive` / full aggregate.
 high-signal target for PR-level confidence; current PR CI runs
 `./bin/integration_preflight`, not a device integration suite. See
 [`integration_journey_map.md`](integration_journey_map.md) and
-[`ci_automation.md`](../ci_automation.md).
+[`ci_automation.md`](ci_automation.md).
 
 ## Common environment variables
 
@@ -175,8 +175,8 @@ Commit `tool/pod_shim/pod` (executable) so clones and CI can use the same path.
 
 ## Related docs
 
-- Flow authoring: [`testing_integration_flows.md`](../testing_integration_flows.md)
+- Flow authoring: [`testing_integration_flows.md`](../testing/testing_integration_flows.md)
 - Policy and ownership: [`integration_test_policy.md`](integration_test_policy.md)
 - Journey → target map: [`integration_journey_map.md`](integration_journey_map.md)
-- CI jobs and preflight: [`ci_automation.md`](../ci_automation.md)
+- CI jobs and preflight: [`ci_automation.md`](ci_automation.md)
 - Browser-only lane: `./bin/integration_preflight` ([`agents_quick_reference.md`](../agents_quick_reference.md))

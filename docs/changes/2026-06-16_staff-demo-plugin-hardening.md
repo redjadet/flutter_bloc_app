@@ -43,11 +43,11 @@ green.
   failure paths; cubit/layout tests use mock `StaffDemoProofPhotoPicker`.
 - Hive-backed offline-first tests use `HiveKeyManager(storage: InMemorySecretStorage())`
   so VM `flutter test` does not hit real secure storage (see
-  [`storage_rules.md`](../storage_rules.md)).
+  [`storage_rules.md`](../security/storage_rules.md)).
 
 ### Docs
 
-- [`storage_rules.md`](../storage_rules.md), [`plugin_failure_mode_strategy.md`](../plugin_failure_mode_strategy.md) (MD060 tables).
+- [`storage_rules.md`](../security/storage_rules.md), [`plugin_failure_mode_strategy.md`](../engineering/plugin_failure_mode_strategy.md) (MD060 tables).
 - [`README.md`](README.md) — doc index rows for storage/plugin failure strategy.
 
 ## Proof
@@ -90,7 +90,7 @@ flutter test \
   integration log records failure (degraded path per unwrap policy), no crash.
 - [ ] Proof **camera/gallery cancel** → no SnackBar; **permission denied** → SnackBar.
 - [ ] Rapid double-tap photo pick → single photo added.
-- [ ] Secure storage unavailable for **Hive encryption key** → encrypted Hive boxes fail to open (fail-closed per [`storage_rules.md`](../storage_rules.md)); app does not silently invent a fallback key.
+- [ ] Secure storage unavailable for **Hive encryption key** → encrypted Hive boxes fail to open (fail-closed per [`storage_rules.md`](../security/storage_rules.md)); app does not silently invent a fallback key.
 
 ## Out of scope (unchanged)
 

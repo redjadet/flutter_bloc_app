@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Upload an iOS IPA to Firebase App Distribution.
-# Docs: docs/firebase_app_distribution.md#ios-upload-script
+# Docs: docs/integrations/firebase_app_distribution.md#ios-upload-script
 # Usage: ./tool/upload_ios_to_firebase_app_distribution.sh [ipa] [release-notes] [groups-or-emails]
 set -e
 

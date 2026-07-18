@@ -1,6 +1,6 @@
 # System design showcase documentation
 
-Added [`system_design_showcase.md`](../system_design_showcase.md) as the
+Added [`system_design_showcase.md`](../features/system_design_showcase.md) as the
 interview map for architecture decisions, production operations, security
 boundaries, and system-design proof.
 

@@ -14,7 +14,7 @@ on the same ownership path that created it.
 | `DisposableBag` | `packages/utilities` | Track subscriptions / disposables for widgets and services |
 | `CubitSubscriptionMixin` | `apps/mobile/lib/app/utils/bloc/` | Cancel registered stream subscriptions and timers on `close()` |
 | `SubscriptionManager` / `TimerHandleManager` | `packages/utilities` | Repository/service delayed-restart and subscription facades |
-| Repository dispose | [`docs/REPOSITORY_LIFECYCLE.md`](../REPOSITORY_LIFECYCLE.md) | When DI-owned repos must implement `dispose()` |
+| Repository dispose | [`docs/engineering/REPOSITORY_LIFECYCLE.md`](../engineering/REPOSITORY_LIFECYCLE.md) | When DI-owned repos must implement `dispose()` |
 
 ## Controllers (widget State)
 
@@ -33,7 +33,7 @@ Register every `stream.listen` with `registerSubscription` (or cancel in
 
 If the type owns `StreamController`, subscriptions, WebSockets, or timers,
 implement `dispose()`/`close()` and wire it through DI dispose callbacks.
-See [`REPOSITORY_LIFECYCLE.md`](../REPOSITORY_LIFECYCLE.md). Enforced partly by
+See [`REPOSITORY_LIFECYCLE.md`](../engineering/REPOSITORY_LIFECYCLE.md). Enforced partly by
 `memory_stream_controller_missing_close` and existing `close_sinks` /
 `cancel_subscriptions` analyzer errors.
 

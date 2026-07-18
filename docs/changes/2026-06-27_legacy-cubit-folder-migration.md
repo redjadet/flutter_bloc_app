@@ -8,7 +8,7 @@
   settings, and staff_app_demo under `presentation/cubit/`.
 - Cleared `tool/config/legacy_feature_folder_allowlist.txt`; new folder-contract
   drift fails the gate instead of warning.
-- Updated barrels, routes, tests, and docs (`docs/anchors.md`,
+- Updated barrels, routes, tests, and docs (`docs/engineering/anchors.md`,
   `docs/architecture/reference_features.md`).
 
 ## Verification

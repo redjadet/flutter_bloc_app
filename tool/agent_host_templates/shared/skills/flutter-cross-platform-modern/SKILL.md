@@ -36,7 +36,7 @@ Risk: `RISK-PLATFORM-SCOPE` in [`ai_failure_risks.md`](../../../../../docs/ai/ai
 - No `dart:io` in Presentation. If platform IO is needed, isolate it behind a data/shared adapter; in `flutter_bloc_app`, checklist owns `check_sync_io_in_presentation.sh`.
 - Avoid direct `Platform.isX` in UI. Prefer project platform adapters such as `PlatformAdaptive`, responsive extensions, injected capabilities, or web-safe `kIsWeb`/`defaultTargetPlatform` gates when existing patterns require them.
 - Prefer adaptive layout and shared responsive helpers over forked widget trees. Keep app-code/UI edits on real workflow/demo surfaces, not marketing shells.
-- **Responsive layout:** avoid fixed width/height on reflowable UI; use `context.responsive*` / `UI` tokens first; add `LayoutBuilder` for parent-constraint branches and `MediaQuery` for viewport/keyboard/text-scale — [`design_system.md`](../../../../../docs/design_system.md) § Responsive layout; [`ui_ux_responsive_review.md`](../../../../../docs/ui_ux_responsive_review.md) § Agent rules.
+- **Responsive layout:** avoid fixed width/height on reflowable UI; use `context.responsive*` / `UI` tokens first; add `LayoutBuilder` for parent-constraint branches and `MediaQuery` for viewport/keyboard/text-scale — [`design_system.md`](../../../../../docs/design_system.md) § Responsive layout; [`ui_ux_responsive_review.md`](../../../../../docs/review/ui_ux_responsive_review.md) § Agent rules.
 - Keep navigation ownership explicit: GoRouter/AppRoutes and presentation route decisions stay visible; Cubit side effects must not hide navigation.
 - For platform plugins, verify `pubspec.lock`, package platform support, and current API before recommending or adding dependencies.
 

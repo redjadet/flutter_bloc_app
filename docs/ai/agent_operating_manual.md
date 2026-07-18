@@ -48,7 +48,7 @@ When any `.dart` file changed: run format **before finish** (mandatory) — pref
 | `flutter analyze` | `./tool/analyze.sh` |
 | `flutter test` | Focused `flutter test <paths>`; broad `./bin/checklist-fast` |
 | Integration test | `./bin/integration_tests`; `./bin/integration_preflight` when applicable |
-| `dart run build_runner build --delete-conflicting-outputs` | Same when codegen touched — [`contributing.md`](../contributing.md) |
+| `dart run build_runner build --delete-conflicting-outputs` | Same when codegen touched — [`contributing.md`](../contributing/contributing.md) |
 | Default full lane | `./bin/checklist-fast` or `./bin/checklist` per Validation Chooser |
 
 ## Dependency gate

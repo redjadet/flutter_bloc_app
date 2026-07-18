@@ -99,7 +99,7 @@ class NormalizeDocLinksTest(unittest.TestCase):
 
     def test_valid_existing_relative_link_is_preserved(self):
         path = self.write_file(
-            "docs/ai_integration.md",
+            "docs/integrations/ai_integration.md",
             "See [`README.md`](../README.md).\n",
         )
         self.write_file("README.md", "root\n")

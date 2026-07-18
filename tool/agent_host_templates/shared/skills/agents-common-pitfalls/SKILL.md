@@ -37,7 +37,7 @@ Pre-flight scan before first edit on non-trivial work. Owner register:
 | `print` instead of `AppLogger` | `RISK-UI-REGRESSION` | logging standards |
 | Hardcoded colors/strings | `RISK-UI-REGRESSION` | `DESIGN.md`; `AppTheme` / l10n |
 | Page-only UI (no extractable leaf widget for preview/test) | `RISK-UI-REGRESSION` | [`design_system.md`](../../../../../docs/design_system.md) § Reusable widgets; `word_card_test.dart` pattern |
-| Fixed width/height on reflowable UI (skip LayoutBuilder/MediaQuery/responsive helpers) | `RISK-UI-REGRESSION` | [`design_system.md`](../../../../../docs/design_system.md) § Responsive layout; [`ui_ux_responsive_review.md`](../../../../../docs/ui_ux_responsive_review.md) |
+| Fixed width/height on reflowable UI (skip LayoutBuilder/MediaQuery/responsive helpers) | `RISK-UI-REGRESSION` | [`design_system.md`](../../../../../docs/design_system.md) § Responsive layout; [`ui_ux_responsive_review.md`](../../../../../docs/review/ui_ux_responsive_review.md) |
 | UI change only tested on one platform/host | `RISK-PLATFORM-SCOPE` | [`tech_stack.md`](../../../../../docs/tech_stack.md) § Supported platforms; [`design_system.md`](../../../../../docs/design_system.md) § Cross-platform form factors; `flutter-cross-platform-modern` |
 | Widget works on debug device only (tablet/web/desktop not considered) | `RISK-PLATFORM-SCOPE` | Mobile + wide widget tests; `ui_ux_responsive_review.md` § Cross-platform form factors |
 | Guess pub API from model memory | `RISK-STALE-API` | [`package_docs_mcp.md`](../../../../../docs/agent_kb/package_docs_mcp.md); Context7 + `read_package_uris` |

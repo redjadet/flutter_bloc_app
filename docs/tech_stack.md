@@ -119,9 +119,9 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 
 Platform-specific setup details belong in:
 
-- [Firebase Setup](firebase_setup.md)
+- [Firebase Setup](integrations/firebase_setup.md)
 - [Deployment](deployment.md)
-- [Google Maps Integration](google_maps_integration.md)
+- [Google Maps Integration](integrations/google_maps_integration.md)
 
 ## Notes on maintenance
 
@@ -137,4 +137,4 @@ Platform-specific setup details belong in:
 - [Feature Overview](feature_overview.md)
 - [Testing Overview](testing_overview.md)
 - [Security and Secrets](security_and_secrets.md)
-- [Code Review Graph for Codex](code_review_graph.md)
+- [Code Review Graph for Codex](ai/code_review_graph.md)

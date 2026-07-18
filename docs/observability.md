@@ -28,7 +28,7 @@ and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/AP
 
 - Use `AppLogger.error(message, error, stackTrace)` for structured error logging.
 - For stream subscriptions (widgets, adapters), provide `onError` when calling `stream.listen(...)` so errors are logged and do not become unhandled zone errors.
-- Full conventions live in [logging.md](logging.md).
+- Full conventions live in [logging.md](engineering/logging.md).
 
 ## Crash reporting (Firebase Crashlytics)
 
@@ -36,7 +36,7 @@ When Firebase initializes successfully, the app registers Flutter and zone error
 
 - Implementation: [`apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart`](../apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart) (`registerCrashlyticsHandlers`)
 - **Sensitive data:** Do not attach PII, tokens, or full request/response bodies to crash reports. Use `AppErrorCode` and short context strings only.
-- Configuration and secrets: [security_and_secrets.md](security_and_secrets.md), [firebase_setup.md](firebase_setup.md)
+- Configuration and secrets: [security_and_secrets.md](security_and_secrets.md), [firebase_setup.md](integrations/firebase_setup.md)
 
 Crashlytics is **not** active when Firebase is disabled or fails to initialize (e.g. some test harnesses).
 

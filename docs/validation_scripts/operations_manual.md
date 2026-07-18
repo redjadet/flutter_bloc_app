@@ -85,6 +85,6 @@ Each script provides:
 ## Related Documentation
 
 - **Developer onboarding**: [`../new_developer_guide.md`](../new_developer_guide.md)
-- **UI/UX Guidelines**: [`../ui_ux_responsive_review.md`](../ui_ux_responsive_review.md)
+- **UI/UX Guidelines**: [`../ui_ux_responsive_review.md`](../review/ui_ux_responsive_review.md)
 - **Testing Best Practices**: [`../testing_overview.md`](../testing_overview.md)
 - **Common Bugs Prevention Tests**: `test/shared/common_bugs_prevention_test.dart`

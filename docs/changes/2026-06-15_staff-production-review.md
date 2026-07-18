@@ -19,7 +19,7 @@ Interview/portfolio repo needed a bounded staff review: modular monolith proof, 
 ### Docs
 
 - Thin hubs: [`architecture.md`](../architecture.md), [`testing.md`](../testing.md), [`engineering-decisions.md`](../engineering-decisions.md), [`ai-workflow.md`](../ai-workflow.md)
-- Canonical [`flutter-anti-patterns.md`](../flutter-anti-patterns.md), [`failure-notebook.md`](../failure-notebook.md)
+- Canonical [`flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md), [`failure-notebook.md`](../engineering/failure-notebook.md)
 - Stub [`ai/reports/anti_patterns.md`](../../ai/reports/anti_patterns.md)
 - Auth roles table + settings `publicRoute` correction in [`authentication.md`](../authentication.md)
 
@@ -60,4 +60,4 @@ bash tool/analyze.sh
 
 ## Showcase
 
-[`system_design_showcase.md`](../system_design_showcase.md) remains **link-only** from architecture hub and audit evidence—not merged into hub body.
+[`system_design_showcase.md`](../features/system_design_showcase.md) remains **link-only** from architecture hub and audit evidence—not merged into hub body.

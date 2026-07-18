@@ -9,7 +9,7 @@ For the complete docs index, see [docs index](README.md).
 ## Source of truth
 
 - Coverage report: [`coverage/coverage_summary.md`](../coverage/coverage_summary.md)
-- Integration flow structure: [Integration Flow Guide](testing_integration_flows.md)
+- Integration flow structure: [Integration Flow Guide](testing/testing_integration_flows.md)
 - Validation scripts: [Validation Scripts](validation_scripts.md)
 - CI workflow: [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)
 - RTL + localization regression guards: `test/rtl/` (e.g. Arabic `Locale('ar')` directionality + spacing checks)
@@ -202,7 +202,7 @@ unchanged.
 
 - [Widget test playbook](testing/widget_test_playbook.md)
 - [Testing strategy (router)](testing/testing_strategy.md)
-- [Integration Flow Guide](testing_integration_flows.md)
+- [Integration Flow Guide](testing/testing_integration_flows.md)
 - [Validation Scripts](validation_scripts.md)
 - [New Developer Guide](new_developer_guide.md)
-- [Code Generation Guide](code_generation_guide.md)
+- [Code Generation Guide](engineering/code_generation_guide.md)

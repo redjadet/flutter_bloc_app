@@ -41,7 +41,7 @@ Chat UI → ChatCubit → ChatRepository implementations
   → failure mappers → user-visible errors
 ```
 
-**Docs:** [`docs/ai_integration.md`](../../docs/ai_integration.md), plans under `docs/plans/*chat*`.
+**Docs:** [`docs/integrations/ai_integration.md`](../../docs/integrations/ai_integration.md), plans under `docs/plans/*chat*`.
 
 ## Shared sync infrastructure
 
@@ -58,7 +58,7 @@ Location: `apps/mobile/lib/app/sync/` and `packages/storage/`, wired in bootstra
 
 | Backend | Env / setup |
 | --- | --- |
-| Firebase | [`docs/firebase_setup.md`](../../docs/firebase_setup.md) |
+| Firebase | [`docs/integrations/firebase_setup.md`](../../docs/integrations/firebase_setup.md) |
 | Supabase | `SUPABASE_URL`, `SUPABASE_ANON_KEY` |
 | HTTP / Dio | `apps/mobile/lib/app/http/`, `apps/mobile/lib/app/composition/features/register_http_services.dart` |
 
