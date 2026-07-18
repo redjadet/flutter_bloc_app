@@ -21,6 +21,47 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-18 - Watch-merge needs worktree remove before local branch delete
+
+- What went wrong:
+  `commit_push_pr_watch_merge_cleanup.sh` squash-merged PR #557 and deleted the
+  remote branch, then failed deleting local `codex/docs-structure-cleanup`
+  because a Cod worktree still checked that branch out (`exit_code=1` after
+  successful merge).
+- How it was fixed:
+  From primary tree: `git worktree remove <path>`, prune, delete local branch,
+  then `commit_push_pr_post_merge.sh` / ff-only `main`.
+- Pattern:
+  `gh pr merge --delete-branch` only drops the remote ref. Topic worktrees still
+  pin the local branch.
+- Preventive rule:
+  Before claiming watch-merge done, `git worktree list`; remove topic worktree
+  first, then delete local branch / run post-merge. Prefer
+  `gh-watch-merge-pr` cleanup steps over assuming script exit 0 means local
+  cleanup finished.
+- Evidence or affected files:
+  PR #557, `tool/commit_push_pr_watch_merge_cleanup.sh`,
+  `tool/commit_push_pr_post_merge.sh`,
+  `.codex/worktrees/docs-structure-cleanup`
+
+### 2026-07-18 - Do not let whole-repo format pollute a docs PR
+
+- What went wrong:
+  After docs path comment edits in a few Dart files, `./bin/format` reformatted
+  unrelated `memory_lint` / memory-leak test files. `git add -A` pulled that
+  churn into the docs-move commit (PR #558).
+- How it was fixed:
+  Follow-up commit restored those paths from `origin/main` before merge.
+- Pattern:
+  Repo-wide format + blanket stage expands write-set beyond the task.
+- Preventive rule:
+  Format only the Dart files touched for the task (or restore unrelated format
+  diffs before commit). Never `git add -A` after a broad format without
+  reviewing the dart write-set.
+- Evidence or affected files:
+  PR #558, `./bin/format`, `apps/mobile/test/shared/memory_leak_*.dart`,
+  `custom_lints/memory_lint/**`
+
 ### 2026-07-17 - Idle cursor todo must keep required headings
 
 - What went wrong:
