@@ -193,8 +193,8 @@ require_not_contains "docs/ai/repo_map.md" "apps/mobile/lib/core/"
 require_contains "CONTRACTS.md" "package-owned ports or app-layer composition"
 require_not_contains "CONTRACTS.md" 'use `apps/mobile/lib/shared/` ports'
 cwd_sensitive_run_docs=(
-  "docs/FAQ.md"
-  "docs/firebase_setup.md"
+  "docs/contributing/FAQ.md"
+  "docs/integrations/firebase_setup.md"
   "docs/security_and_secrets.md"
   "docs/agent_environment_setup.md"
   "docs/agents_quick_reference.md"
@@ -536,8 +536,8 @@ if [ -d "tool/agent_host_templates" ]; then
   require_all_contains \
     "tool/agent_host_templates/shared/skills/agents-principles-baseline/SKILL.md" \
     "docs/clean_architecture.md" \
-    "docs/solid_principles.md" \
-    "docs/dry_principles.md" \
+    "docs/architecture/solid_principles.md" \
+    "docs/architecture/dry_principles.md" \
     "docs/CODE_QUALITY.md"
 
   require_all_contains \

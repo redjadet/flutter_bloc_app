@@ -9,7 +9,7 @@ reuse, ownership, or validation need justifies extracting shared capability.
 >
 > - [Clean Architecture](clean_architecture.md) - Layer responsibilities and dependency flow
 > - [Architecture Details](architecture_details.md) - High-level architecture and diagrams
-> - [Separation of Concerns](separation_of_concerns.md) - Responsibility boundaries
+> - [Separation of Concerns](architecture/separation_of_concerns.md) - Responsibility boundaries
 > - [Offline-First Architecture Case Study](engineering/offline_first_flutter_architecture_with_conflict_resolution.md) - Shared sync infrastructure and data-layer composition
 
 ## Allowed dependency shape

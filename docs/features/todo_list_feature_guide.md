@@ -16,7 +16,7 @@ Offline-first todo demo under `apps/mobile/lib/features/todo_list/`.
 | --- | --- |
 | Adopt offline-first | [`offline_first/adoption_guide.md`](../offline_first/adoption_guide.md) |
 | Don’t overwrite newer local | [`offline_first/dont_overwrite_guide.md`](../offline_first/dont_overwrite_guide.md) |
-| RTDB security rules | [`todo_list_firebase_security_rules.md`](../todo_list_firebase_security_rules.md) |
+| RTDB security rules | [`todo_list_firebase_security_rules.md`](../security/todo_list_firebase_security_rules.md) |
 | Feature layout | [`architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md) |
 
 ## Validation

@@ -15,10 +15,10 @@ Thin map for structure, layering, and modularity. For day-to-day implementation,
 - [backend/MOBILE_BACKEND_DEFERRED_WORK.md](backend/MOBILE_BACKEND_DEFERRED_WORK.md) — pagination / analytics / other not-done items
 - [adr/README.md](adr/README.md) — accepted architecture decisions (ADR index)
 - [modularity.md](modularity.md) — feature barrels, cross-feature import guards
-- [system_design_showcase.md](system_design_showcase.md) — interview/portfolio talk track (claims → proof)
+- [system_design_showcase.md](features/system_design_showcase.md) — interview/portfolio talk track (claims → proof)
 - [bloc_standards.md](bloc_standards.md) — Cubit/BLoC conventions
-- [plugin_failure_mode_strategy.md](plugin_failure_mode_strategy.md) — plugin wrappers, `Result`/`Failure`, presentation mapping
-- [storage_rules.md](storage_rules.md) — prefs vs secure storage vs Hive
+- [plugin_failure_mode_strategy.md](engineering/plugin_failure_mode_strategy.md) — plugin wrappers, `Result`/`Failure`, presentation mapping
+- [storage_rules.md](security/storage_rules.md) — prefs vs secure storage vs Hive
 
 ## Verification
 

@@ -53,15 +53,15 @@ A new or materially changed feature should usually include:
 | App architecture | Implemented | [Clean Architecture](clean_architecture.md), [Architecture Details](architecture_details.md) | `apps/mobile/lib/app/`, `apps/mobile/lib/features/`, `packages/*/` |
 | Feature catalog | Implemented | [Feature Overview](feature_overview.md) | `apps/mobile/lib/features/`, `apps/mobile/lib/app/router/app_routes.dart` |
 | API and HTTP integrations | Implemented | [Authentication](authentication.md), [Tech Stack](tech_stack.md), [Security and Secrets](security_and_secrets.md) | `packages/networking/lib/src/`, `apps/mobile/lib/app/composition/features/register_http_services.dart` |
-| Firebase setup and usage | Implemented | [Firebase Setup](firebase_setup.md), [Authentication](authentication.md) | `apps/mobile/lib/app/bootstrap/`, `apps/mobile/lib/features/auth/`, `functions/` |
+| Firebase setup and usage | Implemented | [Firebase Setup](integrations/firebase_setup.md), [Authentication](authentication.md) | `apps/mobile/lib/app/bootstrap/`, `apps/mobile/lib/features/auth/`, `functions/` |
 | Supabase-backed flows | Implemented where configured | [Authentication](authentication.md), [Security and Secrets](security_and_secrets.md) | `apps/mobile/lib/features/supabase_auth/`, `apps/mobile/lib/features/iot_demo/`, `apps/mobile/lib/app/composition/features/register_supabase_services.dart` |
 | Offline-first patterns | Implemented | [Offline-First Adoption Guide](offline_first/adoption_guide.md) | `packages/storage/lib/src/sync/`, feature repositories with `OfflineFirst*` implementations |
 | Testing and validation | Implemented | [Testing Overview](testing_overview.md), [Validation Scripts](validation_scripts.md) | `test/`, `integration_test/`, `tool/`, `bin/` |
-| Deployment and release | Implemented | [Deployment](deployment.md), [Firebase App Distribution](firebase_app_distribution.md), [Android Play Store Release SOP](android_play_store_release_sop.md) | `fastlane/Fastfile`, `tool/fastlane.sh`, `tool/release_both_stores.sh`, `tool/release_android_play.sh` |
-| FCM demo and notification-triggered sync | Implemented | [FCM Demo Integration](fcm_demo_integration.md) | `apps/mobile/lib/features/fcm_demo/`, `packages/storage/lib/src/sync/` |
-| Maps | Implemented | [Google Maps Integration](google_maps_integration.md) | `apps/mobile/lib/features/google_maps/`, deferred route files |
-| AI and GenUI demos | Implemented | [AI Integration](ai_integration.md), [GenUI Demo User Guide](genui_demo_user_guide.md) | `apps/mobile/lib/features/chat/`, `apps/mobile/lib/features/genui_demo/` |
-| Payments | Partially implemented | [Stripe Demo Integration Plan](stripe_demo_integration_plan.md) | `apps/mobile/lib/features/in_app_purchase_demo/` |
+| Deployment and release | Implemented | [Deployment](deployment.md), [Firebase App Distribution](integrations/firebase_app_distribution.md), [Android Play Store Release SOP](engineering/android_play_store_release_sop.md) | `fastlane/Fastfile`, `tool/fastlane.sh`, `tool/release_both_stores.sh`, `tool/release_android_play.sh` |
+| FCM demo and notification-triggered sync | Implemented | [FCM Demo Integration](integrations/fcm_demo_integration.md) | `apps/mobile/lib/features/fcm_demo/`, `packages/storage/lib/src/sync/` |
+| Maps | Implemented | [Google Maps Integration](integrations/google_maps_integration.md) | `apps/mobile/lib/features/google_maps/`, deferred route files |
+| AI and GenUI demos | Implemented | [AI Integration](integrations/ai_integration.md), [GenUI Demo User Guide](features/genui_demo_user_guide.md) | `apps/mobile/lib/features/chat/`, `apps/mobile/lib/features/genui_demo/` |
+| Payments | Partially implemented | [Stripe Demo Integration Plan](integrations/stripe_demo_integration_plan.md) | `apps/mobile/lib/features/in_app_purchase_demo/` |
 
 ## Adding a new feature
 
@@ -84,7 +84,7 @@ When a change lands, update the document that already owns that topic:
 - New validation behavior: [Validation Scripts](validation_scripts.md)
 - New integration flow or testing convention: [Testing Overview](testing_overview.md)
 - New release step: [Deployment](deployment.md) or
-  [Android Play Store Release SOP](android_play_store_release_sop.md)
+  [Android Play Store Release SOP](engineering/android_play_store_release_sop.md)
 
 Avoid copying the same setup or implementation prose into multiple docs.
 
@@ -100,4 +100,4 @@ Avoid copying the same setup or implementation prose into multiple docs.
 - [BLoC Standards](bloc_standards.md)
 - [Architecture Review Checklist](review/architecture_checklist.md)
 - [BLoC Review Checklist](review/bloc_checklist.md)
-- [Contributing](contributing.md)
+- [Contributing](contributing/contributing.md)

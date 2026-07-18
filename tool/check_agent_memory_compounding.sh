@@ -81,7 +81,7 @@ require_contains "$bootstrap_path" 'read_if_owner_unknown|docs/README.md'
 require_contains "$bootstrap_path" 'read_if_ui_design|DESIGN.md'
 require_contains "$bootstrap_path" 'read_if_ui_design|docs/design_system.md'
 require_contains "$bootstrap_path" 'read_if_validation_detail|docs/engineering/validation_routing_fast_vs_full.md'
-require_contains "$bootstrap_path" 'read_if_l10n|docs/localization.md'
+require_contains "$bootstrap_path" 'read_if_l10n|docs/engineering/localization.md'
 require_contains "$bootstrap_path" "context_ladder|3|structural graph"
 
 core_count="$(grep -cF 'echo "read_core|' "$bootstrap_path" 2>/dev/null || true)"

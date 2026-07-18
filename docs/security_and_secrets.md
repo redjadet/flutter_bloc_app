@@ -127,7 +127,7 @@ Both wrappers source the env files before Fastlane. Android (and dual-store) bui
 as Option B, so optional `CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*` compile-time
 keys work the same way as in `.envrc`.
 
-- Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh) — see [Android Play Store release SOP](android_play_store_release_sop.md).
+- Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh) — see [Android Play Store release SOP](engineering/android_play_store_release_sop.md).
 - iOS + Android: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) — see [Deployment](deployment.md#both-stores-ios--android).
 
 Keep Play service account JSON (`ANDROID_JSON_KEY`) and match certificate repos
@@ -149,7 +149,7 @@ Firebase config is split between **gitignored platform files** and a
 | `assets/config/secrets.json` | gitignored | [`assets/config/secrets.sample.json`](../assets/config/secrets.sample.json) | Optional local asset fallback |
 
 To enable Firebase-dependent features (Auth, Remote Config, Realtime Database,
-etc.), follow [Firebase Setup](firebase_setup.md). The app should still run when
+etc.), follow [Firebase Setup](integrations/firebase_setup.md). The app should still run when
 Firebase is not configured; the relevant surfaces disable themselves or degrade
 gracefully.
 
@@ -182,7 +182,7 @@ can still flag keys in **old commits**. If keys were ever pushed:
 2. Confirm `main` has no `AIzaSy…` literals (`./tool/check_tracked_secret_literals.sh`).
 3. Optionally rewrite history with
    [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt)
-   and `git filter-repo` (see [Secret scanning alerts](firebase_setup.md#secret-scanning-alerts) in Firebase Setup).
+   and `git filter-repo` (see [Secret scanning alerts](integrations/firebase_setup.md#secret-scanning-alerts) in Firebase Setup).
 4. Force-push all branches and have collaborators re-clone.
 
 ## Key inventory (feature-scoped)
@@ -214,6 +214,6 @@ can still flag keys in **old commits**. If keys were ever pushed:
 - [Authentication](authentication.md)
 - [Certificate pinning](security/certificate_pinning.md) (default disabled;
   Dio leaf SHA-256 pins)
-- [Repository lifecycle](REPOSITORY_LIFECYCLE.md)
+- [Repository lifecycle](engineering/REPOSITORY_LIFECYCLE.md)
 - [Clean architecture](clean_architecture.md)
 - [Apple debug Hive and secret storage](engineering/apple_debug_hive_storage.md)

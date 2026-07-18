@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/app/config/flavor.dart';
 /// Use this for compliance and a single place to control feature/endpoint
 /// behavior; keep remote config (e.g. Firebase Remote Config) on-demand.
 ///
-/// See [docs/app_initialization_and_feature_control.md](../../docs/app_initialization_and_feature_control.md).
+/// See [docs/architecture/app_initialization_and_feature_control.md](../../../../../docs/architecture/app_initialization_and_feature_control.md).
 class AppRuntimeConfig {
   AppRuntimeConfig({
     required this.flavor,

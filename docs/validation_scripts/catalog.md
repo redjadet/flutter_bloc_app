@@ -129,7 +129,7 @@ below.
   keys, OpenAI-style keys, AWS access keys, and private key blocks. Output names
   file/line/rule only and never prints the secret value. Does not scan git
   history; for history scrub after a leak, see
-  [`firebase_setup.md`](../firebase_setup.md#secret-scanning-alerts) and
+  [`firebase_setup.md`](../integrations/firebase_setup.md#secret-scanning-alerts) and
   [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt).
 - **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
   - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
@@ -220,7 +220,7 @@ CHECK_DEFERRED_HEAVY_ROUTES_MODE=fail bash tool/check_deferred_heavy_routes.sh -
 - **`check_raw_dialogs.sh`**: Prevents raw dialog APIs - should use `showAdaptiveDialog()`
 - **`check_raw_network_images.sh`**: Prevents raw `Image.network` usage - should use `CachedNetworkImageWidget`
 - **`check_raw_print.sh`**: Prevents raw `print()`/`debugPrint()` usage - use
-  `AppLogger` and [`logging.md`](../logging.md) conventions instead.
+  `AppLogger` and [`logging.md`](../engineering/logging.md) conventions instead.
 - **`check_raw_google_fonts.sh`**: Prevents per-widget `GoogleFonts.*` usage - should define fonts in `app_config.dart`
 - **`check_ui_regressions.sh`**: Runs focused widget regression tests to catch UI sizing/layout issues early (e.g. web scaling causing oversized icons, unstable controls, clipped text, or overlap)
 

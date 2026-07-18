@@ -8,7 +8,7 @@
 - **`ChatCubit`**: Removed direct Firebase/Supabase SDK imports from presentation; optional DI for `AuthRepository`, `SupabaseAuthRepository`, and `RenderOrchestrationHfTokenProvider`. Auth listeners drive transport-hint refresh and clear HF token cache on Firebase sign-out.
 - **Router / chat entrypoints**: `routes_demos*` and chat list widgets pass auth deps from `get_it`.
 - **Tests**: `test/account_section_test.dart` fakes `AuthRepository`; `test/chat_cubit_test.dart` adds auth-driven transport-hint coverage.
-- **Docs**: `docs/authentication.md`, `docs/race_conditions_and_bugs_analysis.md` (§1.4) updated for `AuthRepository` seam.
+- **Docs**: `docs/authentication.md`, `docs/engineering/race_conditions_and_bugs_analysis.md` (§1.4) updated for `AuthRepository` seam.
 
 ## Verification
 

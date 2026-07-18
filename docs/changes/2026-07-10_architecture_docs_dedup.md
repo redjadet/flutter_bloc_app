@@ -3,7 +3,7 @@
 ## Change
 
 - Removed copied package ownership and dependency tables from Clean Architecture;
-  canonical owners remain [`SHARED_UTILITIES.md`](../SHARED_UTILITIES.md) and [`modularity.md`](../modularity.md).
+  canonical owners remain [`SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) and [`modularity.md`](../modularity.md).
 - Replaced three repeated feature walkthroughs with a compact reference table.
 - Removed completed settings-diagnostics checklist from current modularity canon.
 - Repaired obsolete `shared/widgets`, `core/diagnostics`, and `core/di` placement

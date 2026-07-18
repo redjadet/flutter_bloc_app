@@ -34,7 +34,7 @@ Load these paths **before** editing a feature. Expand only when tests or DI requ
 4. `apps/mobile/lib/features/chat/presentation/cubit/chat_cubit.dart` (or list cubit if list-only change)
 5. `apps/mobile/lib/app/sync/` and/or `packages/storage/` (if sync behavior)
 6. `docs/offline_first/adoption_guide.md`
-7. `docs/ai_integration.md`
+7. `docs/integrations/ai_integration.md`
 8. `apps/mobile/test/features/chat/`
 
 ### auth

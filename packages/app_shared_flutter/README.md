@@ -49,5 +49,5 @@ cd packages/app_shared_flutter && flutter test
 ```
 
 Package ownership and dependency rules:
-[`docs/SHARED_UTILITIES.md`](../../docs/SHARED_UTILITIES.md) and
+[`docs/engineering/SHARED_UTILITIES.md`](../../docs/engineering/SHARED_UTILITIES.md) and
 [`docs/modularity.md`](../../docs/modularity.md).

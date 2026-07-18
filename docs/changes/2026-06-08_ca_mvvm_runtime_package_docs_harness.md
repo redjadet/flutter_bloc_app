@@ -53,9 +53,9 @@ bash tool/validate_validation_docs.sh
   `RISK-UI-REGRESSION` prevention row.
 - **Responsive layout policy:** avoid fixed sizes; `LayoutBuilder` /
   `MediaQuery` when suitable — [`design_system.md`](../design_system.md),
-  [`ui_ux_responsive_review.md`](../ui_ux_responsive_review.md),
+  [`ui_ux_responsive_review.md`](../review/ui_ux_responsive_review.md),
   `flutter-cross-platform-modern`, `agents-canonical-rules-presentation`.
 - **Cross-platform form factors:** mobile, tablet, web, desktop widget policy —
   [`design_system.md`](../design_system.md) § Cross-platform form factors,
-  [`ui_ux_responsive_review.md`](../ui_ux_responsive_review.md),
+  [`ui_ux_responsive_review.md`](../review/ui_ux_responsive_review.md),
   `RISK-PLATFORM-SCOPE` prevention update.

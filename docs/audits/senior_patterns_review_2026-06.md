@@ -61,4 +61,4 @@ Findings driving PR backlog:
 1. Tier A: no **R** on P3–P6 — **met**
 2. Tier B in-scope: no **R** on P3 or P6 — **met for program PRs**; `staff_app_demo` P3 stays **R** (Firestore `Map<String,dynamic>?` contract **deferred** per plan hard boundary — copy submit validator only)
 3. [`CODE_QUALITY.md`](../CODE_QUALITY.md) todo_list AppError slice closed — **met**
-4. AP-11…17 accurate in [`flutter-anti-patterns.md`](../flutter-anti-patterns.md) — **met**
+4. AP-11…17 accurate in [`flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) — **met**

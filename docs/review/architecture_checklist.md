@@ -29,7 +29,7 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 ## SOLID gate
 
 - Each changed production type conforms to the mandatory
-  [SOLID Principles](../solid_principles.md); reject violations before accepting
+  [SOLID Principles](../architecture/solid_principles.md); reject violations before accepting
   agent-generated code.
 
 ## Feature Shape

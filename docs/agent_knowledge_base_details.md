@@ -17,9 +17,9 @@ Most day-to-day section bodies live under [`agent_kb/`](agent_kb/).
 | Validation routing | [`engineering/validation_routing_fast_vs_full.md`](engineering/validation_routing_fast_vs_full.md) | Fast vs full validation. |
 | Architecture | [`architecture_details.md`](architecture_details.md), [`clean_architecture.md`](clean_architecture.md), `adr/` | Structure, routing, DI, layers, feature seams. |
 | Quality | [`CODE_QUALITY.md`](CODE_QUALITY.md), [`testing_overview.md`](testing_overview.md), [`validation_scripts.md`](validation_scripts.md) | Risk, tests, guardrails. |
-| Runtime evidence | [`logging.md`](logging.md), [`observability.md`](observability.md), [`performance/startup_time_profiling.md`](performance/startup_time_profiling.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
-| Lifecycle | [`REPOSITORY_LIFECYCLE.md`](REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
-| Code graph | [`code_review_graph.md`](code_review_graph.md) | Narrow non-trivial exploration. |
+| Runtime evidence | [`logging.md`](engineering/logging.md), [`observability.md`](observability.md), [`performance/startup_time_profiling.md`](performance/startup_time_profiling.md) | Logs, metrics, traces, startup/runtime measurements, and agent-queryable proof. |
+| Lifecycle | [`REPOSITORY_LIFECYCLE.md`](engineering/REPOSITORY_LIFECYCLE.md), [`reliability_error_handling_performance.md`](reliability_error_handling_performance.md) | Async, subscriptions, timers, retry, sync, background work. |
+| Code graph | [`code_review_graph.md`](ai/code_review_graph.md) | Narrow non-trivial exploration. |
 | Hive migrations | [`offline_first/hive_schema_migrations.md`](offline_first/hive_schema_migrations.md) | Stored Hive shape, manifest/spec, fingerprints, migrators/tests. Runtime `getBox()` runs `ensureSchema` when schema set. |
 | Integration journeys | [`engineering/integration_journey_map.md`](engineering/integration_journey_map.md) | End-to-end flow changes. |
 | Plans/history | [`plans/README.md`](plans/README.md), [`changes/README.md`](changes/README.md), [`audits/README.md`](audits/README.md) | Active contracts, rationale, historical snapshots. |

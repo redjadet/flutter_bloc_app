@@ -4,7 +4,7 @@ Back: [Agent Knowledge Base](../agent_knowledge_base.md)
 
 **Cold-start load order (numbered, do not duplicate elsewhere):** [`docs/ai/context_loading.md`](../ai/context_loading.md).
 
-See also: [`agent_project_context.md`](../agent_project_context.md), [`code_review_graph.md`](../code_review_graph.md), [`changes/2026-05-05_codex_context_navigation_ladder.md`](../changes/2026-05-05_codex_context_navigation_ladder.md)
+See also: [`agent_project_context.md`](../agent_project_context.md), [`code_review_graph.md`](../ai/code_review_graph.md), [`changes/2026-05-05_codex_context_navigation_ladder.md`](../changes/2026-05-05_codex_context_navigation_ladder.md)
 
 ## Memory Compounding
 
@@ -36,4 +36,4 @@ Use when the target file is unknown (not a second cold-start ladder):
 
 When archaeology finds a real landmine, carry it into `Context` or `Boundaries`; do not turn broad background into prompt bulk.
 
-Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](../changes/2026-05-05_codex_context_navigation_ladder.md), [`code_review_graph.md`](../code_review_graph.md).
+Related: [`changes/2026-05-05_codex_context_navigation_ladder.md`](../changes/2026-05-05_codex_context_navigation_ladder.md), [`code_review_graph.md`](../ai/code_review_graph.md).

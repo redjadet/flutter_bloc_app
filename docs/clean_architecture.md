@@ -13,7 +13,7 @@ without blurring layer responsibilities.
 Map: [Architecture Details](architecture_details.md). Folder contract:
 [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md).
 Package boundaries: [Modularity](modularity.md) and
-[Shared Utilities And Package Ownership](SHARED_UTILITIES.md).
+[Shared Utilities And Package Ownership](engineering/SHARED_UTILITIES.md).
 
 ## Architecture skeleton
 
@@ -74,7 +74,7 @@ Use this model when placing code:
 
 ## Workspace packages
 
-Packages own reusable capabilities; [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md)
+Packages own reusable capabilities; [`SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md)
 is the package ownership table. [`modularity.md`](modularity.md) owns allowed
 dependency direction. Packages never import `apps/mobile` or
 `package:flutter_bloc_app`; `bash tool/check_package_dependency_dag.sh` enforces
@@ -85,7 +85,7 @@ the current DAG.
 - **Domain** — Pure Dart contracts and models; no Flutter imports. Examples: `apps/mobile/lib/features/counter/domain/counter_repository.dart`, `apps/mobile/lib/features/remote_config/domain/remote_config_service.dart`, `apps/mobile/lib/features/deeplink/domain/deep_link_parser.dart`.
 - **Data** — Adapters that implement domain contracts and coordinate platforms, caching, and sync. Examples: `apps/mobile/lib/features/counter/data/offline_first_counter_repository.dart` (Hive + optional remote), `apps/mobile/lib/features/remote_config/data/offline_first_remote_config_repository.dart` (Firebase Remote Config + Hive cache), `apps/mobile/lib/features/supabase_auth/data/supabase_auth_repository_impl.dart` (Supabase Auth SDK → domain `AuthUser`), `apps/mobile/lib/features/deeplink/data/app_links_deep_link_service.dart` (App Links listener).
 - **Presentation** — Cubits/Blocs and widgets that orchestrate user flows while depending only on domain abstractions. Canonical ViewModel path: `presentation/cubit/` (e.g. `remote_config/presentation/cubit/remote_config_cubit.dart`, `counter/presentation/cubit/counter_cubit.dart`). Remaining legacy root-level cubits are listed in [`architecture/reference_features.md`](architecture/reference_features.md).
-- **Shared cross-cutting** — Reusable infrastructure lives in packages (`packages/storage`, `packages/networking`, `packages/design_system`, `packages/utilities`, `packages/app_shared_flutter`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](SHARED_UTILITIES.md) for detailed documentation of shared utilities.
+- **Shared cross-cutting** — Reusable infrastructure lives in packages (`packages/storage`, `packages/networking`, `packages/design_system`, `packages/utilities`, `packages/app_shared_flutter`). Remote images go through `CachedNetworkImageWidget`, timers through `TimerService`, and persistence through `HiveService` (never call `Hive.openBox` directly). See [`SHARED_UTILITIES.md`](engineering/SHARED_UTILITIES.md) for detailed documentation of shared utilities.
 - **Dependency injection** — The app shell bootstraps DI via `apps/mobile/lib/app/composition/injector_registrations.dart` and feature registrars under `apps/mobile/lib/app/composition/features/`.
 
 ## How Dependencies Flow
@@ -113,7 +113,7 @@ literal runtime pipeline of `Presentation -> Domain -> Data`.
 
 Agents must preserve Clean Architecture and apply SOLID to every new or changed
 production type. Treat a violation as a stop condition, not a later cleanup.
-Detailed rules and examples: [`solid_principles.md`](solid_principles.md).
+Detailed rules and examples: [`solid_principles.md`](architecture/solid_principles.md).
 Review against [`review/architecture_checklist.md`](review/architecture_checklist.md)
 before accepting a feature or boundary-sensitive change.
 

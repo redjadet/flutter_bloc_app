@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Warn-only: domain-layer fromJson/toJson (wire shape in domain).
 # Theme: architecture | Severity: warn
-# See docs/flutter-anti-patterns.md AP-11 and reduce_surprise_patterns.md
+# See docs/engineering/flutter-anti-patterns.md AP-11 and reduce_surprise_patterns.md
 
 set -euo pipefail
 

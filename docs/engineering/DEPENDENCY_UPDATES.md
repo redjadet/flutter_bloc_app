@@ -1,0 +1,175 @@
+# Dependency Update Monitoring
+
+This project uses automated dependency update monitoring to keep dependencies up to date and secure.
+
+## Tools
+
+### Primary: Renovate
+
+[Renovate](https://docs.renovatebot.com/) is the primary tool for automated dependency updates. It monitors `pubspec.yaml` and creates pull requests for dependency updates.
+
+**Configuration**: See `renovate.json` in the project root.
+
+**Features**:
+
+- Groups minor/patch updates together
+- Separates major version updates by category (Flutter SDK, Firebase, BLoC)
+- Runs on weekdays only (9am-5pm UTC)
+- Creates semantic commit messages
+- Provides a dependency dashboard
+
+**Update Strategy**:
+
+- **Minor/Patch updates**: Grouped together as "dart-minor-patch" (`genui`, `google_sign_in_mocks`, and `intl` use separate `pub-coordinated-pins` group plus `allowedVersions` rules below)
+- **Major updates**: Separated by category:
+  - Flutter SDK major updates
+  - Firebase major updates
+  - BLoC major updates
+- **Dev dependencies**: Patch updates are auto-merged (if tests pass)
+- **Security updates**: Created immediately, regardless of schedule
+
+**Coordinated pub pins** (see comments at top of `pubspec.yaml`; enforced in `renovate.json` via `allowedVersions` / `enabled: false`):
+
+- `genui` — held below `0.8.0` while `genui_google_generative_ai` `0.7.x` requires `genui ^0.7`
+- `google_sign_in_mocks` (dev) — held below `0.4.0` while `firebase_ui_oauth_google` stays on `google_sign_in` 6
+- `intl` — held below `0.20.3` while `flutter_localizations` from the Flutter SDK pins `intl 0.20.2` (re-check when upgrading Flutter)
+- `json_serializable` — `^6.14.0` with `dependency_overrides: analyzer: 10.0.2`, `dart_style: 3.1.4` (6.14+ needs analyzer ≥10; 10.0.2 aligns native plugin CLI with `analysis_server_plugin`). Path plugins `mix_lint` 2.x and `file_length_lint` use `analysis_server_plugin` via `analysis_options.yaml` `plugins:` + `path:`; `custom_lint` is not in the graph. Renovate caps `json_serializable` at `<7.0.0` and does not auto-bump `analyzer` / `analyzer_plugin`. Verify with `./tool/check_pubspec_codegen_compat.sh`; `upgrade_validate_all.sh` step 2b restores pins after major pub upgrades.
+
+### Backup: Dependabot
+
+[Dependabot](https://docs.github.com/en/code-security/dependabot) is configured as a backup, primarily for security vulnerability monitoring.
+
+**Configuration**: See `.github/dependabot.yml`
+
+**Features**:
+
+- Weekly security scans (Mondays at 9am UTC)
+- Creates PRs only for security vulnerabilities
+- Limited to 5 open PRs at a time
+- Also scans root `Gemfile.lock` (Fastlane / Ruby) for security advisories
+
+**Ruby / Fastlane (`Gemfile`)**: When Rubygems `fastlane` lags a security fix (for example `jwt` CVE-2026-45363), the repo may temporarily pin `fastlane` to a GitHub ref that widens the `jwt` constraint, plus `gem 'jwt', '~> 3.2'`. Revert to a Rubygems `fastlane` version once it ships with the same constraint (for example `2.235.0`).
+
+## Automated Testing
+
+When Renovate or Dependabot creates a pull request, GitHub Actions automatically:
+
+1. Runs `flutter pub get`
+2. Runs `flutter analyze`
+3. Runs `flutter test --coverage`
+4. Enforces coverage threshold (75% filtered rollup)
+5. Comments on the PR with test results
+
+See `.github/workflows/dependency-updates.yml` for details.
+
+**Renovate `renovate/artifacts` check:** Often fails on this Flutter workspace when the bot runs `dart pub` instead of `flutter pub`. Treat artifacts as **non-blocking** for merge triage when required `build` / dependency-updates checks are green. Prefer `bash tool/commit_push_pr_watch_merge_cleanup.sh` over ad-hoc check polling; see [`validation_scripts/upgrade_pr_triage_validate.md`](../validation_scripts/upgrade_pr_triage_validate.md) and [`agent_kb/operator_preferences_durable.md`](../agent_kb/operator_preferences_durable.md) § Durable Prefs.
+
+## Manual Dependency Updates
+
+To manually check for outdated dependencies:
+
+```bash
+flutter pub outdated
+```
+
+To upgrade dependencies:
+
+```bash
+# Upgrade to latest compatible versions
+flutter pub upgrade
+
+# Upgrade to latest versions (including major versions)
+flutter pub upgrade --major-versions
+```
+
+## Reviewing Dependency Updates
+
+1. **Check the Renovate Dashboard**: Visit the Renovate dashboard issue in GitHub to see all pending updates.
+
+2. **Review PRs**: Each update PR includes:
+   - Changelog links
+   - Release notes
+   - Breaking changes (if any)
+
+3. **Test Before Merging**: All PRs are automatically tested, but you should:
+   - Review the changes
+   - Test locally if needed
+   - Check for breaking changes
+
+## Configuration Files
+
+- `renovate.json` - Renovate configuration
+- `.github/dependabot.yml` - Dependabot configuration
+- `.github/workflows/dependency-updates.yml` - Automated testing workflow
+
+## Best Practices
+
+1. **Review Regularly**: Check the Renovate dashboard weekly
+2. **Merge Minor/Patch Updates**: These are generally safe and grouped together
+3. **Test Major Updates**: Major version updates may include breaking changes
+4. **Keep Security Updates Current**: Security updates are created immediately
+5. **Monitor CI/CD**: Ensure automated tests pass before merging
+
+## Disabling Updates
+
+To temporarily disable updates for a specific package, add a comment to `renovate.json`:
+
+```json
+{
+  "packageRules": [
+    {
+      "matchPackageNames": ["package-name"],
+      "enabled": false
+    }
+  ]
+}
+```
+
+## Troubleshooting
+
+### Renovate not creating PRs
+
+1. Check if Renovate is installed in your GitHub repository
+2. Verify `renovate.json` syntax is valid
+3. Check the Renovate dashboard issue for errors
+
+### Dependency Dashboard (issue #2) warnings
+
+[Issue #2](https://github.com/redjadet/flutter_bloc_app/issues/2) is Renovate’s **Dependency Dashboard** (`:dependencyDashboard` in `renovate.json`). It is meant to stay **open**; Renovate updates the body each run. Do not close it unless you remove `:dependencyDashboard` from `renovate.json`.
+
+| Dashboard message | Cause | Action |
+| --- | --- | --- |
+| `Failed to look up maven package dev.flutter.flutter-plugin-loader` | Plugin ID is resolved via Gradle plugin portal, not Maven Central | Listed in `renovate.json` `ignoreDeps` and Gradle rule (`enabled: false`). Upgrade the version in `android/settings.gradle` with Flutter/SDK release notes. |
+| `pubspec-compat` fails after a dependency PR bumps codegen or analyzer | `json_serializable` 6.14+ needs analyzer ≥10; path lints need matching `analysis_server_plugin` / overrides | Keep `json_serializable: ^6.14.0` and `dependency_overrides` (`analyzer: 10.0.2`, `dart_style: 3.1.4`). Run `./tool/check_pubspec_codegen_compat.sh`. Rebase or close the Renovate PR and restore pins via `upgrade_validate_all.sh` step 2b if needed. |
+| `Custom registries are not allowed for this datasource` | Harmless Renovate warning when `Gemfile` pins `fastlane` from GitHub (`git-refs` datasource); see [renovate#37432](https://github.com/renovatebot/renovate/issues/37432) | Safe to ignore until `fastlane` returns to a Rubygems release (see `Gemfile` comment). |
+| Rate-limited / blocked PRs | Renovate concurrency or manual edit/close | Use checkboxes on the dashboard or merge open dependency PRs; see **PR Edited (Blocked)** / **PR Closed (Blocked)** sections. |
+
+### Dependency update workflow fails to comment on the PR (403)
+
+If the **Dependency Updates** workflow fails with:
+
+- `Resource not accessible by integration` (HTTP 403) when calling `issues.createComment`
+
+It usually means the workflow run does not have the required token permissions to
+write issue/PR comments (common on `pull_request` workflows depending on repo/org
+policy).
+
+Fix options:
+
+- Ensure `.github/workflows/dependency-updates.yml` includes appropriate
+  `permissions:` (at least `issues: write`).
+- Make the “comment results” step best-effort (for example with
+  `continue-on-error: true`) so tests still report pass/fail even if the comment
+  cannot be posted.
+
+### Tests failing on dependency updates
+
+1. Review the test output in the PR
+2. Check for breaking changes in the dependency
+3. Update code if necessary to accommodate changes
+
+### Dependency conflicts
+
+1. Run `flutter pub get` to see detailed error messages
+2. Check `pubspec.lock` for version conflicts
+3. Consider using `dependency_overrides` temporarily (not recommended for production)

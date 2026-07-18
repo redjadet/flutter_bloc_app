@@ -71,7 +71,7 @@ ai_snapshot:
 bash tool/modular_metrics.sh --cross-feature-only
 ```
 
-**Guidance:** Prefer explicit ports in `packages/auth/` or app composition when features need another backend’s session—see [`docs/modularity.md`](../../docs/modularity.md) and [`docs/flutter-anti-patterns.md`](../../docs/flutter-anti-patterns.md) (AP-01).
+**Guidance:** Prefer explicit ports in `packages/auth/` or app composition when features need another backend’s session—see [`docs/modularity.md`](../../docs/modularity.md) and [`docs/engineering/flutter-anti-patterns.md`](../../docs/engineering/flutter-anti-patterns.md) (AP-01).
 
 ## Shared → feature imports
 

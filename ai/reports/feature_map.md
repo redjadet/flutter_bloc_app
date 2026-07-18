@@ -87,7 +87,7 @@ Per-feature agent context. This curated map is intentionally more selective than
 | Routes | `/chat`, `/chat-list` |
 | LOC | 6384 |
 | Layers | `domain/`, `data/*repository*`, `presentation/chat_*_cubit.dart` |
-| Docs | [`docs/ai_integration.md`](../../docs/ai_integration.md), offline-first chat doc |
+| Docs | [`docs/integrations/ai_integration.md`](../../docs/integrations/ai_integration.md), offline-first chat doc |
 | minimal_context | `chat.dart`, `chat_repository` contract, primary cubit, one repository impl |
 
 ### todo_list (`status: full`)
@@ -164,7 +164,7 @@ Per-feature agent context. This curated map is intentionally more selective than
 | Purpose | Firestore staff ops demo |
 | Routes | `/staff-app-demo/*` |
 | LOC | 4558 |
-| Docs | [`docs/staff_app_demo_walkthrough.md`](../../docs/staff_app_demo_walkthrough.md) |
+| Docs | [`docs/features/staff_app_demo_walkthrough.md`](../../docs/features/staff_app_demo_walkthrough.md) |
 | minimal_context | session cubit, sites cubit, dashboard page |
 
 ### online_therapy_demo (`status: full`)
@@ -184,7 +184,7 @@ Per-feature agent context. This curated map is intentionally more selective than
 | Purpose | Deferred maps experience |
 | Routes | `/google-maps` |
 | LOC | 1425 |
-| Docs | [`docs/google_maps_integration.md`](../../docs/google_maps_integration.md) |
+| Docs | [`docs/integrations/google_maps_integration.md`](../../docs/integrations/google_maps_integration.md) |
 | minimal_context | `google_maps.dart`, map cubit, map view widget |
 
 ### walletconnect_auth (`status: full`)

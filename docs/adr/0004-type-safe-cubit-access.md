@@ -5,7 +5,7 @@
 | Status | Accepted |
 | Date | 2026-01-16 |
 | Scope | Presentation state access |
-| Source docs | [Compile-Time Safety](../compile_time_safety.md), [State Management Choice](../state_management_choice.md) |
+| Source docs | [Compile-Time Safety](../architecture/compile_time_safety.md), [State Management Choice](../architecture/state_management_choice.md) |
 
 ## Context
 
@@ -96,4 +96,4 @@ Revisit this ADR when:
 
 - Helper tests: `cd apps/mobile && flutter test test/shared/extensions/type_safe_bloc_access_test.dart`
 - Widget tests: `cd apps/mobile && flutter test test/shared/widgets/type_safe_bloc_selector_test.dart`
-- Broader guidance: [Compile-Time Safety](../compile_time_safety.md)
+- Broader guidance: [Compile-Time Safety](../architecture/compile_time_safety.md)

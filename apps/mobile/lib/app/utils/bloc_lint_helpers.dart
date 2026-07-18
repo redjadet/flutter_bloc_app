@@ -4,7 +4,7 @@
 /// helping catch BLoC-related issues during development and testing.
 ///
 /// **Note:** These are runtime helpers. For true compile-time validation,
-/// consider creating custom analyzer plugins (see [Code Generation Guide](../docs/code_generation_guide.md)).
+/// consider creating custom analyzer plugins (see [Code Generation Guide](../../../../../docs/engineering/code_generation_guide.md)).
 library;
 
 import 'package:flutter_bloc/flutter_bloc.dart';

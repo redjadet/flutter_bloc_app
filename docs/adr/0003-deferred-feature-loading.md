@@ -94,6 +94,6 @@ Revisit this ADR when:
 
 ## Verification
 
-- Architecture lazy-loading overview: [Architecture Details — lazy loading](../architecture_lazy_loading_and_flow.md#lazy-loading-patterns)
+- Architecture lazy-loading overview: [Architecture Details — lazy loading](../architecture/architecture_lazy_loading_and_flow.md#lazy-loading-patterns)
 - Implementation review: [Lazy Loading Review](../performance/lazy_loading_review.md)
 - Targeted tests: `flutter test test/shared/widgets/deferred_page_test.dart`

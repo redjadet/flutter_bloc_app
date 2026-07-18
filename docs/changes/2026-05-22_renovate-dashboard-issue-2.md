@@ -13,7 +13,7 @@ Renovate’s Dependency Dashboard reported repository problems:
 ## Change
 
 - `renovate.json`: disable Gradle updates for `dev.flutter.flutter-plugin-loader`; skip Gradle/gradle-wrapper under `third_party/**/android/**`.
-- `docs/DEPENDENCY_UPDATES.md`: document dashboard semantics (issue stays open) and the warnings above.
+- `docs/engineering/DEPENDENCY_UPDATES.md`: document dashboard semantics (issue stays open) and the warnings above.
 
 ## Verification
 

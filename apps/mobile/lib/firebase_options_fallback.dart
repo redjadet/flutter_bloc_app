@@ -2,7 +2,7 @@
 // Firebase configuration. FirebaseBootstrapService skips initialization
 // when it detects these placeholder values.
 //
-// To run with Firebase: see docs/firebase_setup.md and run
+// To run with Firebase: see docs/integrations/firebase_setup.md and run
 // `flutterfire configure` to generate lib/firebase_options.dart.
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;

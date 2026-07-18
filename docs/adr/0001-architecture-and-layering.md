@@ -60,7 +60,7 @@ may stay compact, but code still follows the same ownership boundaries.
 | Alternative | Why not |
 | --- | --- |
 | Flat feature folders | Simpler at first, but business logic, UI, and data access become harder to test and reason about independently. |
-| Riverpod-only architecture | Combines DI and state management, but this repo already optimizes around explicit Cubit/BLoC flows and separate DI. See [State Management Choice](../state_management_choice.md). |
+| Riverpod-only architecture | Combines DI and state management, but this repo already optimizes around explicit Cubit/BLoC flows and separate DI. See [State Management Choice](../architecture/state_management_choice.md). |
 | MVC/MVVM without BLoC | Familiar patterns, but they do not give this repo the same explicit state transitions, selectors, and bloc-test surface. |
 | Widget-level service locator lookups | Convenient, but hides dependencies and makes UI tests more fragile. Widgets should use Cubits/BLoCs or explicit constructor inputs. |
 
@@ -111,7 +111,7 @@ Revisit this ADR when:
 - Architecture overview: [Architecture Details](../architecture_details.md)
 - Layer rules and examples: [Clean Architecture](../clean_architecture.md)
 - Quality gates: [Code Quality](../CODE_QUALITY.md)
-- Ownership map: [Shared Utilities And Package Ownership](../SHARED_UTILITIES.md)
+- Ownership map: [Shared Utilities And Package Ownership](../engineering/SHARED_UTILITIES.md)
 - Targeted commands: `bash tool/check_clean_architecture_imports.sh`,
   `bash tool/check_feature_modularity_leaks.sh`,
   `bash tool/check_package_dependency_dag.sh`

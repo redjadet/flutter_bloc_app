@@ -21,10 +21,15 @@ void main() {
     await test_helpers.tearDownTestDependencies();
   });
 
-  leakSafeTestWidgets('AppScope mount and unmount is leak-safe', (final tester) async {
+  leakSafeTestWidgets('AppScope mount and unmount is leak-safe', (
+    final tester,
+  ) async {
     final GoRouter router = GoRouter(
       routes: <GoRoute>[
-        GoRoute(path: '/', builder: (final context, final state) => const SizedBox.shrink()),
+        GoRoute(
+          path: '/',
+          builder: (final context, final state) => const SizedBox.shrink(),
+        ),
       ],
     );
 

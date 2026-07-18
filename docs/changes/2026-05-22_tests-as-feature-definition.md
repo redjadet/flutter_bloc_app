@@ -16,7 +16,7 @@ Adopted the practice that **tests define done** for feature work—not optional 
 | [`testing/widget_test_playbook.md`](../testing/widget_test_playbook.md) | **New** — BLoC widget test how-to |
 | [`testing/testing_strategy.md`](../testing/testing_strategy.md) | Brief Tests = done; layout-sensitive viewport wording; link to overview § |
 | [`feature_implementation_guide.md`](../feature_implementation_guide.md) | Delivery order: brief → RED tests → implement → prove |
-| [`contributing.md`](../contributing.md) | PR bar: regression tests or documented Tests N/A |
+| [`contributing.md`](../contributing/contributing.md) | PR bar: regression tests or documented Tests N/A |
 | [`README.md`](../README.md) | Playbook link under Workflow and quality |
 | [`ai_code_review_protocol.md`](../ai_code_review_protocol.md) | Review maps brief test rows → `test/` paths |
 | [`agent_kb/legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) | FEATURE_TEMPLATE Tests before broad impl |

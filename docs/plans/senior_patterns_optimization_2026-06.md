@@ -15,7 +15,7 @@ copies gold exemplars. Pattern 7 (reviewable diffs) applies to every PR.
 | [`../architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md) | Agent guide — read first for feature work |
 | [`../audits/senior_patterns_review_2026-06.md`](../audits/senior_patterns_review_2026-06.md) | Scorecard + grep appendix |
 | [`../architecture/reference_features.md`](../architecture/reference_features.md) | Folder + semantic grades |
-| [`../flutter-anti-patterns.md`](../flutter-anti-patterns.md) | AP-11…AP-17 |
+| [`../flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) | AP-11…AP-17 |
 
 ## PR order
 

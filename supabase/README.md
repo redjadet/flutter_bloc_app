@@ -10,7 +10,7 @@
 
 Implementation: [`functions/chat-complete/index.ts`](functions/chat-complete/index.ts).
 Policy and matrix: [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](../docs/plans/supabase_proxy_huggingface_chat_plan.md)
-and [`docs/ai_integration.md`](../docs/ai_integration.md).
+and [`docs/integrations/ai_integration.md`](../docs/integrations/ai_integration.md).
 
 Required secrets/env:
 
@@ -111,7 +111,7 @@ Mismatch signals:
 
 #### Frozen contract for implementation handoff
 
-Use this contract unless the plan and `docs/ai_integration.md` are updated in
+Use this contract unless the plan and `docs/integrations/ai_integration.md` are updated in
 the same change set.
 
 | Topic | Contract |

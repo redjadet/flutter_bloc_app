@@ -34,7 +34,7 @@ Source of truth for gates and guardrails:
 ## Scope and Inputs
 
 - Static review of `lib/` and supporting tooling.
-- Architecture guidelines in [`clean_architecture.md`](clean_architecture.md), [`solid_principles.md`](solid_principles.md), [`dry_principles.md`](dry_principles.md), and [`separation_of_concerns.md`](separation_of_concerns.md).
+- Architecture guidelines in [`clean_architecture.md`](clean_architecture.md), [`solid_principles.md`](architecture/solid_principles.md), [`dry_principles.md`](architecture/dry_principles.md), and [`separation_of_concerns.md`](architecture/separation_of_concerns.md).
 - Quality gates via `./bin/checklist` (format, analyze, coverage).
 - Coverage source: generated coverage summary artifact.
 
@@ -49,7 +49,7 @@ Source of truth for gates and guardrails:
 
 - SRP: Services and cubits are scoped to a single responsibility.
 - OCP/LSP/ISP/DIP: Interface-first design and DI allow swapping implementations and fakes.
-- DRY: Shared widgets/utilities and base repositories avoid duplication. See [`dry_principles.md`](dry_principles.md) for the current consolidation list.
+- DRY: Shared widgets/utilities and base repositories avoid duplication. See [`dry_principles.md`](architecture/dry_principles.md) for the current consolidation list.
 
 ## Resolved Quality Issues (Historical)
 
@@ -83,7 +83,7 @@ Source of truth for gates and guardrails:
 - Prefer Dart optional-to-non-null pattern matching (`if (x case final value?)`, `switch` null patterns) over force unwrapping (`!`) and repeated nullable branching.
 - Avoid null assertion where possible; pattern matching gives a compile-time non-null local and lowers runtime crash risk.
 
-For full guidance, see [`flutter_best_practices_review.md`](flutter_best_practices_review.md).
+For full guidance, see [`flutter_best_practices_review.md`](review/flutter_best_practices_review.md).
 
 ## Testing Standards
 
@@ -101,13 +101,13 @@ See [`testing_overview.md`](testing_overview.md) for the full testing playbook.
 
 ## Related Documentation
 
-- [Race Conditions and Bugs Analysis](race_conditions_and_bugs_analysis.md) – Deep analysis of lifecycle, async, and stream patterns
+- [Race Conditions and Bugs Analysis](engineering/race_conditions_and_bugs_analysis.md) – Deep analysis of lifecycle, async, and stream patterns
 - [Memory Leaks Analysis](performance/memory_leaks_analysis.md) – StreamController, subscription, and controller disposal patterns
 - [Clean Architecture](clean_architecture.md)
-- [SOLID Principles](solid_principles.md)
-- [DRY Principles](dry_principles.md)
-- [Separation of Concerns](separation_of_concerns.md)
+- [SOLID Principles](architecture/solid_principles.md)
+- [DRY Principles](architecture/dry_principles.md)
+- [Separation of Concerns](architecture/separation_of_concerns.md)
 - [Architecture Details](architecture_details.md)
-- [Flutter Best Practices Review](flutter_best_practices_review.md)
+- [Flutter Best Practices Review](review/flutter_best_practices_review.md)
 - [Performance Bottlenecks](performance/performance_bottlenecks.md)
 - [Lazy Loading Review](performance/lazy_loading_review.md)

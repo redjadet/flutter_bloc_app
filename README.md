@@ -42,19 +42,19 @@ commands instead of relying on generic architecture statements.
 [![DI](https://img.shields.io/badge/DI-get__it-8E44AD.svg)](https://pub.dev/packages/get_it)
 [![Persistence](https://img.shields.io/badge/Persistence-Hive-FFB300.svg)](docs/offline_first/hive_schema_migrations.md)
 [![Networking](https://img.shields.io/badge/Networking-Dio%20%7C%20Retrofit-0EA5E9.svg)](docs/plans/dio_retrofit_integration_plan.md)
-[![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/freezed_usage_analysis.md)
+[![Codegen](https://img.shields.io/badge/Codegen-Freezed%20%7C%20JSON-7C3AED.svg)](docs/architecture/freezed_usage_analysis.md)
 [![Design System](https://img.shields.io/badge/Design-Material%203%20%7C%20Mix-6200EE.svg)](docs/design_system.md)
 [![Testing](https://img.shields.io/badge/Testing-Unit%20%7C%20Widget%20%7C%20Golden%20%7C%20Integration-2E7D32.svg)](docs/testing_overview.md)
-[![Localization](https://img.shields.io/badge/Localization-6%20locales-009688.svg)](docs/localization.md)
-[![RTL](https://img.shields.io/badge/i18n-RTL%20%28ar%29-0D9488.svg)](docs/localization.md)
+[![Localization](https://img.shields.io/badge/Localization-6%20locales-009688.svg)](docs/engineering/localization.md)
+[![RTL](https://img.shields.io/badge/i18n-RTL%20%28ar%29-0D9488.svg)](docs/engineering/localization.md)
 
 ## Integrations and platform services
 
-[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](docs/firebase_setup.md)
+[![Firebase](https://img.shields.io/badge/Backend-Firebase-FFCA28.svg)](docs/integrations/firebase_setup.md)
 [![Supabase](https://img.shields.io/badge/Backend-Supabase-3ECF8E.svg)](supabase/README.md)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](docs/integrations/render_fastapi_chat_demo.md)
 [![GraphQL](https://img.shields.io/badge/GraphQL-Demo-E10098.svg)](docs/offline_first/graphql_demo.md)
-[![AI](https://img.shields.io/badge/AI-GenUI%20%7C%20chat-8B5CF6.svg)](docs/ai_integration.md)
+[![AI](https://img.shields.io/badge/AI-GenUI%20%7C%20chat-8B5CF6.svg)](docs/integrations/ai_integration.md)
 [![Deep links](https://img.shields.io/badge/Deep%20links-app__links-0F766E.svg)](docs/universal_links/README.md)
 [![Observability](https://img.shields.io/badge/Observability-Crashlytics%20%7C%20plan-DC2626.svg)](docs/observability.md)
 [![Security](https://img.shields.io/badge/Security-Secrets%20%26%20Config-111827.svg)](docs/security_and_secrets.md)
@@ -65,7 +65,7 @@ commands instead of relying on generic architecture statements.
 [![Engineering score](https://img.shields.io/badge/Engineering-10%2F10-brightgreen.svg)](docs/engineering/engineering_quality_scorecard.md)
 [![Harness score](https://img.shields.io/badge/Harness-10%2F10-brightgreen.svg)](docs/ai/harness_scorecard.md)
 [![Reliability](https://img.shields.io/badge/Reliability-Errors%20%7C%20perf-0369A1.svg)](docs/reliability_error_handling_performance.md)
-[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/REPOSITORY_LIFECYCLE.md)
+[![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
 
@@ -137,7 +137,7 @@ For a fast technical review, read these first:
 
 1. [Interview showcase](docs/interview_showcase.md) — 30-minute walkthrough with
    honest shipped-vs-planned boundaries.
-2. [System design showcase](docs/system_design_showcase.md) — architecture,
+2. [System design showcase](docs/features/system_design_showcase.md) — architecture,
    operations, security, and proof paths.
 3. [Architecture](docs/architecture.md) and [Modularity](docs/modularity.md) —
    boundary rules and enforcement scripts.
@@ -153,13 +153,13 @@ For a fast technical review, read these first:
 | Quick start (agents) | [docs/quick_start.md](docs/quick_start.md) |
 | Features | [docs/feature_overview.md](docs/feature_overview.md) |
 | Architecture | [docs/architecture.md](docs/architecture.md) → [docs/clean_architecture.md](docs/clean_architecture.md), [docs/architecture_details.md](docs/architecture_details.md) |
-| Plugin failures & storage | [docs/plugin_failure_mode_strategy.md](docs/plugin_failure_mode_strategy.md), [docs/storage_rules.md](docs/storage_rules.md) |
+| Plugin failures & storage | [docs/engineering/plugin_failure_mode_strategy.md](docs/engineering/plugin_failure_mode_strategy.md), [docs/security/storage_rules.md](docs/security/storage_rules.md) |
 | ADRs | [docs/adr/README.md](docs/adr/README.md) |
 | Design | [DESIGN.md](DESIGN.md), [docs/design_system.md](docs/design_system.md) |
 | Validation | [docs/validation_scripts.md](docs/validation_scripts.md), [docs/testing_overview.md](docs/testing_overview.md) |
 | Offline-first | [docs/offline_first/adoption_guide.md](docs/offline_first/adoption_guide.md) |
 | Security | [docs/SECURITY.md](docs/SECURITY.md), [docs/security_and_secrets.md](docs/security_and_secrets.md) |
-| Deploy / lifecycle | [docs/deployment.md](docs/deployment.md), [docs/REPOSITORY_LIFECYCLE.md](docs/REPOSITORY_LIFECYCLE.md) |
+| Deploy / lifecycle | [docs/deployment.md](docs/deployment.md), [docs/engineering/REPOSITORY_LIFECYCLE.md](docs/engineering/REPOSITORY_LIFECYCLE.md) |
 | Interview walk (~30 min) | [docs/interview_showcase.md](docs/interview_showcase.md) |
 | AI agents | [AGENTS.md](AGENTS.md) → [docs/agent_knowledge_base.md](docs/agent_knowledge_base.md) |
 

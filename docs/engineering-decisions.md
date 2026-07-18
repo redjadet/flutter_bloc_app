@@ -13,5 +13,5 @@ Governance and lasting trade-offs. For feature-local decisions, prefer feature d
 - [architecture/use_case_dto_policy.md](architecture/use_case_dto_policy.md) — when cubits call repos vs use cases
 - [authentication.md](authentication.md) — Firebase vs Supabase vs WalletConnect (dual-auth)
 - [reliability_error_handling_performance.md](reliability_error_handling_performance.md) — errors, retries, performance guards
-- [flutter-anti-patterns.md](flutter-anti-patterns.md) — AP-01–AP-10 (canonical; agents stub in `ai/reports/`)
-- [failure-notebook.md](failure-notebook.md) — symptom → cause → fix entries
+- [flutter-anti-patterns.md](engineering/flutter-anti-patterns.md) — AP-01–AP-10 (canonical; agents stub in `ai/reports/`)
+- [failure-notebook.md](engineering/failure-notebook.md) — symptom → cause → fix entries

@@ -5,7 +5,7 @@
 Living offline shell: [`offline_first/chat.md`](../offline_first/chat.md).
 Secrets: [`security_and_secrets.md`](../security_and_secrets.md).
 Edge deploy notes: [`supabase/README.md`](../../supabase/README.md).
-Policy mirror: [`ai_integration.md`](../ai_integration.md).
+Policy mirror: [`ai_integration.md`](../integrations/ai_integration.md).
 
 ## Transport matrix (normative)
 

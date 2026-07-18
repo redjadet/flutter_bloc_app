@@ -13,8 +13,8 @@ For the complete docs index, see [docs index](README.md).
 | --- | --- | --- |
 | **Both stores (one command)** | This doc | `./tool/release_both_stores.sh deploy` |
 | iOS App Store / TestFlight | This doc | `./tool/fastlane.sh ios upload_testflight` / `./tool/fastlane.sh ios upload_appstore` |
-| Android Google Play | [Android Play Store Release SOP](android_play_store_release_sop.md) | `./tool/release_android_play.sh ...` |
-| Pre-release tester distribution | [Firebase App Distribution](firebase_app_distribution.md) | `./tool/fastlane.sh android firebase_distribute` / `./tool/fastlane.sh ios firebase_distribute` |
+| Android Google Play | [Android Play Store Release SOP](engineering/android_play_store_release_sop.md) | `./tool/release_android_play.sh ...` |
+| Pre-release tester distribution | [Firebase App Distribution](integrations/firebase_app_distribution.md) | `./tool/fastlane.sh android firebase_distribute` / `./tool/fastlane.sh ios firebase_distribute` |
 
 Fastlane configuration lives in [`fastlane/Fastfile`](../fastlane/Fastfile) at the repo root.
 Run lanes through [`tool/fastlane.sh`](../tool/fastlane.sh) (Bundler-pinned) — not the legacy
@@ -41,7 +41,7 @@ Ruby deps: `bundle install` (see root [`Gemfile`](../Gemfile), Fastlane 2.234.0)
 
 - **Flutter app** ships from `apps/mobile/` (`package:flutter_bloc_app`).
 - **Authoritative gate** remains `./bin/checklist` from repo root.
-- **Firebase backend** assets are under `backend/firebase/` (see [Firebase Setup](firebase_setup.md)).
+- **Firebase backend** assets are under `backend/firebase/` (see [Firebase Setup](integrations/firebase_setup.md)).
 - GitHub Actions and deploy helpers use `tool/workspace_paths.sh` for app root;
   Firebase deploy routing is in [`tool/commit_push_pr_deploy.py`](../tool/commit_push_pr_deploy.py).
 
@@ -103,7 +103,7 @@ Android-only uploads can stop after `./tool/release_android_play.sh preflight` i
 - Paid Apple Developer Program membership for distribution.
 - Xcode configured with signing.
 - Firebase iOS config when using Firebase-dependent features (see
-  [Firebase setup](firebase_setup.md)).
+  [Firebase setup](integrations/firebase_setup.md)).
 - Secrets injected via `--dart-define` / CI (see [Security and secrets](security_and_secrets.md)).
 
 ### Recommended: Fastlane (repo wrapper)
@@ -147,7 +147,7 @@ Notes:
 
 Follow the runbook:
 
-- [Android Play Store Release SOP](android_play_store_release_sop.md)
+- [Android Play Store Release SOP](engineering/android_play_store_release_sop.md)
 
 That SOP encodes the validation gates and uses `./tool/release_android_play.sh`
 to prevent version-code drift and to keep the Play flow repeatable.
@@ -169,7 +169,7 @@ Listing copy and changelogs: `fastlane/metadata/android/en-US/` (per-build chang
 
 Use this when you want testers on real devices **before** store submission:
 
-- [Firebase App Distribution](firebase_app_distribution.md)
+- [Firebase App Distribution](integrations/firebase_app_distribution.md)
 
 The doc includes CLI usage, Fastlane lanes, and the iOS upload script (`tool/upload_ios_to_firebase_app_distribution.sh`), which runs `firebase_preflight.sh` and maps tester emails to `--testers` (and group aliases to `--groups`).
 
@@ -314,7 +314,7 @@ dart run tool/prepare_release.dart
 ## Related docs
 
 - [Security and secrets](security_and_secrets.md) — release env files and dart-defines
-- [Firebase setup](firebase_setup.md)
-- [Android Play Store Release SOP](android_play_store_release_sop.md)
-- [Firebase App Distribution](firebase_app_distribution.md)
+- [Firebase setup](integrations/firebase_setup.md)
+- [Android Play Store Release SOP](engineering/android_play_store_release_sop.md)
+- [Firebase App Distribution](integrations/firebase_app_distribution.md)
 - [Fastlane lane index](../fastlane/README.md) — `deploy_all`, `deploy_all_preflight`, per-platform lanes

@@ -104,4 +104,4 @@ When generating or refactoring UI, keep these constraints in working memory:
   (search bar in app bar, counter overflow menu); `useResponsiveBody: false` only
   when body owns padding/insets. Detail:
   [`docs/design_system.md`](docs/design_system.md) § Page shell,
-  [`docs/ui_ux_responsive_review.md`](docs/ui_ux_responsive_review.md).
+  [`docs/review/ui_ux_responsive_review.md`](docs/review/ui_ux_responsive_review.md).
