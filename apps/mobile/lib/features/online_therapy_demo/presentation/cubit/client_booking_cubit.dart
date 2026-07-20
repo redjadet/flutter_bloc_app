@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapist_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_state.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 export 'client_booking_state.dart';
 

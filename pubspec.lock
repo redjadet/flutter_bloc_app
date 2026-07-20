@@ -1479,6 +1479,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  ilkersevim_async_utils:
+    dependency: transitive
+    description:
+      name: ilkersevim_async_utils
+      sha256: d5b71aeeb80a856850be8ccdc951db05a21ea67bd44ac77c12fc08e09961fe84
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   image:
     dependency: transitive
     description:

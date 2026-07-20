@@ -17,7 +17,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 part 'chat_cubit_helpers.dart';
 part 'chat_cubit_history_actions.dart';

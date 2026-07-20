@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_r
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 /// Cubit for the Camera & Gallery demo: pick from camera/gallery and show preview.
 class CameraGalleryCubit extends Cubit<CameraGalleryState> {
