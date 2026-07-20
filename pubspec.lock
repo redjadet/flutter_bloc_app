@@ -1482,11 +1482,10 @@ packages:
   ilkersevim_async_utils:
     dependency: transitive
     description:
-      path: "."
-      ref: "v0.1.0"
-      resolved-ref: "0e7f7a837ce83119cfa5d98b6b7cd9b284ec5adf"
-      url: "https://github.com/redjadet/ilkersevim_async_utils.git"
-    source: git
+      name: ilkersevim_async_utils
+      sha256: "0eef4f6bc71b972cb02c0d0cd0e81e4e37e452b136148840c3584fd01a15df89"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.0"
   image:
     dependency: transitive

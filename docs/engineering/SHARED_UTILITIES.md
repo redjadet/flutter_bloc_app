@@ -14,7 +14,7 @@ cross-cutting code. Pick an existing owner first.
 | Need | Owner |
 | --- | --- |
 | Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
-| Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` (GitHub `v0.1.0`; Pub.dev when published) |
+| Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.0`) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
 | Auth contracts, token repository, auth user/session value types | `packages/auth` |

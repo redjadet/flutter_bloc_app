@@ -1,7 +1,7 @@
 # Change note: consume public `ilkersevim_async_utils`
 
-**Date:** 2026-07-20  
-**Branch:** `extract/public-ilkersevim-async-utils`  
+**Date:** 2026-07-20
+**Branch:** `extract/public-ilkersevim-async-utils`
 **Plan:** [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md)
 
 ## Why
@@ -12,9 +12,8 @@ so other Dart/Flutter apps can reuse them without this monorepo.
 
 ## What changed (app repo)
 
-- Added `ilkersevim_async_utils` dependency on `apps/mobile` via Git tag
-  `v0.1.0` (`https://github.com/redjadet/ilkersevim_async_utils.git`) until
-  Pub.dev `0.1.0` is uploaded manually.
+- Added `ilkersevim_async_utils: ^0.1.0` on `apps/mobile` from Pub.dev
+  (briefly consumed via Git tag `v0.1.0` until first upload landed).
 - Switched feature import sites to
   `package:ilkersevim_async_utils/ilkersevim_async_utils.dart` (dual-import
   where `AppError` / `RetryPolicy` still come from `utilities`, including
@@ -29,5 +28,5 @@ behavior should be identical.
 
 ## External package
 
-Public repo: https://github.com/redjadet/ilkersevim_async_utils (Apache-2.0).
-Pub.dev first upload deferred (interactive `dart pub login` required).
+- Pub.dev: <https://pub.dev/packages/ilkersevim_async_utils> (`0.1.0`)
+- Source: <https://github.com/redjadet/ilkersevim_async_utils> (Apache-2.0)
