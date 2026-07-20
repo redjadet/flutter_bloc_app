@@ -2,7 +2,6 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_cubit.dart';

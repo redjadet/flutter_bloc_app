@@ -1,7 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 
 /// Utility functions for common Cubit operations to reduce code duplication.
 ///

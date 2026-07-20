@@ -58,15 +58,13 @@ class TypeSafeBlocListener<C extends StateStreamableSource<S>, S>
   final bool Function(S previous, S current)? listenWhen;
 
   @override
-  Widget buildWithChild(
-    final BuildContext context,
-    final Widget? child,
-  ) => BlocListener<C, S>(
-    bloc: bloc,
-    listenWhen: listenWhen,
-    listener: listener,
-    child: child,
-  );
+  Widget buildWithChild(final BuildContext context, final Widget? child) =>
+      BlocListener<C, S>(
+        bloc: bloc,
+        listenWhen: listenWhen,
+        listener: listener,
+        child: child,
+      );
 }
 
 /// A type-safe wrapper around `BlocConsumer` that provides compile-time safety.
