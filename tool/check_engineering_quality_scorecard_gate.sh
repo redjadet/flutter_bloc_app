@@ -102,7 +102,7 @@ forbid_contains "docs/interview_showcase.md" "~399 tests"
 forbid_contains "docs/interview_showcase.md" "60% gate"
 forbid_contains "docs/CODE_QUALITY.md" "aggregate ~65% coverage"
 
-deferred_doc="docs/plans/checklist_quality_gates_deferred.md"
+deferred_doc="docs/engineering/checklist_quality_gates_deferred.md"
 if [[ -f "$deferred_doc" ]]; then
   if grep -E '\|[[:space:]]*defer[[:space:]]*\|' "$deferred_doc" | grep -q 'QG-D'; then
     missing+=("$deferred_doc has bare defer decision rows (use promoted/reject/ADR-deferred)")

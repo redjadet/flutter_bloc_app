@@ -60,4 +60,4 @@ Rules for agents changing APIs, repositories, and feature surfaces. Pilot stubs 
 ## More
 
 - Link stub only: [`docs/ai/contracts.md`](docs/ai/contracts.md)
-- Feature brief: [`docs/plans/FEATURE_TEMPLATE.md`](docs/plans/FEATURE_TEMPLATE.md)
+- Feature brief: [`docs/engineering/FEATURE_TEMPLATE.md`](docs/engineering/FEATURE_TEMPLATE.md)

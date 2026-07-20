@@ -13,4 +13,4 @@ Thin pointer for agents starting under `docs/ai/`. Prefer [`CODEMAP.md`](../../C
 | Tooling | `tool/`, `bin/checklist` |
 | Canon docs | `docs/` |
 | Evidence | `ai/reports/` |
-| Plans | `docs/plans/` |
+| Plans | `docs/plans/` (local-only; gitignored) |

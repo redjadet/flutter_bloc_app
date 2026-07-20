@@ -128,7 +128,6 @@ required_files=(
   "docs/engineering/validation_routing_fast_vs_full.md"
   "docs/ai/skill_routing.md"
   "docs/ai/agent_operating_manual.md"
-  "docs/plans/README.md"
   "docs/changes/README.md"
   "docs/audits/README.md"
 )
