@@ -168,6 +168,5 @@ tool/firebase_secret_history_replacements.txt
 # AI hardening generated outputs
 .repomix/
 ai/reports/.modular_metrics_latest.txt
-
 # Local plans only (not versioned)
 docs/plans/
