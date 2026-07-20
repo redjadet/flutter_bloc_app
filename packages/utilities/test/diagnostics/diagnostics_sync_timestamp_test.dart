@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/app/diagnostics/diagnostics_sync_timestamp.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('isPlausibleDiagnosticsSyncTime', () {

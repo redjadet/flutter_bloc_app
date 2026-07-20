@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/app/widgets/diagnostics/graphql_cache_controls_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:utilities/utilities.dart';
 
 class _MockCacheRepository extends Mock implements GraphqlCacheClearPort {}
 

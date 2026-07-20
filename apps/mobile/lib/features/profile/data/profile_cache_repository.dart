@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter_bloc_app/app/diagnostics/diagnostics_sync_timestamp.dart';
 import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';

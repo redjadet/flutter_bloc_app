@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
-import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/auth_aware_graphql_remote_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/countries_graphql_repository.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repo
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 void registerGraphqlServices() {
   registerLazySingletonIfAbsent<GraphqlCacheRepository>(

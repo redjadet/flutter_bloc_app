@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/diagnostics/diagnostics_sync_timestamp.dart';
 import 'package:flutter_bloc_app/app/diagnostics/remote_config_diagnostics_view_data.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart';
+import 'package:utilities/utilities.dart';
 
 part 'remote_config_diagnostics_section_components.dart';
 part 'remote_config_diagnostics_section_models.dart';

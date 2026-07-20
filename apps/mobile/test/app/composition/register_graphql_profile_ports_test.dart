@@ -1,17 +1,16 @@
 import 'dart:io';
 
-import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_graphql_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_profile_services.dart';
-import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
-import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_cache_clear_port_adapter.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   late Directory tempDir;
