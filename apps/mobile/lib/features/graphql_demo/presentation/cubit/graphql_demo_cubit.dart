@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/cubit/graphql_demo_state.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/graphql_demo_app_error_mapper.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:utilities/utilities.dart';
 
 class GraphqlDemoCubit extends Cubit<GraphqlDemoState> {

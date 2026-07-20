@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class SearchCubit extends Cubit<SearchState>
     with CubitSubscriptionMixin<SearchState> {

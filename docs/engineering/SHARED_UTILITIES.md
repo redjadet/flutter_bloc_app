@@ -13,7 +13,8 @@ cross-cutting code. Pick an existing owner first.
 
 | Need | Owner |
 | --- | --- |
-| Pure Dart primitives, errors, retry, request guards, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
+| Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
+| Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` (GitHub `v0.1.0`; Pub.dev when published) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
 | Auth contracts, token repository, auth user/session value types | `packages/auth` |
@@ -48,6 +49,7 @@ Prefer package barrels instead of deep imports unless package docs require a
 specific private path:
 
 ```dart
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:utilities/utilities.dart';
 import 'package:storage/storage.dart';
 import 'package:networking/networking.dart';
@@ -56,6 +58,10 @@ import 'package:feature_flags/feature_flags.dart';
 import 'package:design_system/design_system.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 ```
+
+`ilkersevim_async_utils` owns public, dependency-free single-flight and
+request-staleness guards. `packages/utilities` remains an internal workspace
+package and must not re-export those public APIs.
 
 Use app imports only from the app or app tests:
 

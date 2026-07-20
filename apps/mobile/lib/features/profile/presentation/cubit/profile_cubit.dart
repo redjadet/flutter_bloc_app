@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_failure.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/cubit/profile_state.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({required this._repository})

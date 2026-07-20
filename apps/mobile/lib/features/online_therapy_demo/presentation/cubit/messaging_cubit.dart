@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_messaging_repository.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 class MessagingState {
   const MessagingState({

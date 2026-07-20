@@ -1,4 +1,7 @@
-/// Pure Dart utilities (single-flight gates, request-id guards, time labels).
+/// Pure Dart utilities (errors, retry, lifecycle helpers, parsing, time labels).
+///
+/// Public single-flight and request-staleness guards live in
+/// `package:ilkersevim_async_utils` and are not re-exported here.
 library;
 
 export 'src/async/completer_helper.dart';
@@ -10,13 +13,11 @@ export 'src/errors/app_error.dart';
 export 'src/errors/error_codes.dart';
 export 'src/errors/failure_to_app_error.dart';
 export 'src/errors/http_request_failure.dart';
-export 'src/in_flight_coalescer.dart';
 export 'src/memory/app_memory_trim_level.dart';
 export 'src/offline_change_id.dart';
 export 'src/relative_time_formatting.dart';
 export 'src/repositories/repository_initial_load_helper.dart';
 export 'src/repositories/repository_watch_helper.dart';
-export 'src/request_id_guard.dart';
 export 'src/retry/retry_policy.dart';
 export 'src/safe_parse_utils.dart';
 export 'src/state/sealed_state_helpers.dart';

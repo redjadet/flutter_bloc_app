@@ -7,9 +7,9 @@ import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_key
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
-import 'package:utilities/utilities.dart';
 
 part 'offline_first_remote_config_repository_sync.part.dart';
 

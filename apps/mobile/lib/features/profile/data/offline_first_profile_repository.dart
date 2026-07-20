@@ -4,9 +4,9 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
-import 'package:utilities/utilities.dart';
 
 /// Offline-first implementation of [ProfileRepository].
 ///

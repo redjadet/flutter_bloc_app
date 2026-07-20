@@ -101,6 +101,10 @@ dependencies:
   google_maps_flutter_ios_sdk10: ^2.18.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  ilkersevim_async_utils:
+    git:
+      url: https://github.com/redjadet/ilkersevim_async_utils.git
+      ref: v0.1.0
   image: ^4.9.1
   image_picker: ^1.2.3
   in_app_purchase: ^3.3.0

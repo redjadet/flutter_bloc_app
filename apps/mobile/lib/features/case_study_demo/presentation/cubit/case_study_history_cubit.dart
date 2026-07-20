@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remo
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_remote_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_state.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 
 export 'case_study_history_state.dart';
 
