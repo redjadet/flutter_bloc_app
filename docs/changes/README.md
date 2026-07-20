@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-07-20_low_risk_package_extraction_tasks_2_4.md`](2026-07-20_low_risk_package_extraction_tasks_2_4.md): Tasks 2–4 — feature_flags token port + app_shared_flutter BLoC/date/JSON helpers with shims.
+- [`2026-07-20_low_risk_package_extraction_task1.md`](2026-07-20_low_risk_package_extraction_task1.md): Move diagnostics sync-time helper + GraphQL cache clear port into `packages/utilities` (import-only feature touch; behavior unchanged).
 - [`2026-07-17_memory_quality_deferred.md`](2026-07-17_memory_quality_deferred.md): Deferred backlog for memory quality program leftovers after B1.
 - [`2026-07-17_memory_quality_wave_b1.md`](2026-07-17_memory_quality_wave_b1.md): Tag stable leak journeys (auth, app-shell `go`, realtime/BLE teardown); no global ignore flip.
 - [`2026-07-17_memory_quality_wave_b0.md`](2026-07-17_memory_quality_wave_b0.md): Report-only leak tracking dry-run tooling + baseline audit; no global ignore flip.

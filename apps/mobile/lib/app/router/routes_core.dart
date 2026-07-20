@@ -6,8 +6,6 @@ import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
-import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
-import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
@@ -51,6 +49,7 @@ import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_p
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
 import 'package:go_router/go_router.dart';
 import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 part 'routes_core.part.dart';
 

@@ -1,10 +1,10 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/diagnostics/graphql_cache_clear_port.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/widgets/diagnostics/settings_diagnostics_widgets.dart';
+import 'package:utilities/utilities.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
   const GraphqlCacheControlsSection({

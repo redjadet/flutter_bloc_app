@@ -1,10 +1,9 @@
 /// Narrow port supplying the Render chat orchestration dev HF read token
 /// without coupling `chat` to the `remote_config` feature.
 ///
-/// Implementations are wired in DI (see `register_remote_config_services.dart`).
-/// The dev provider in `chat/data/render_orchestration_hf_token_provider.dart`
-/// depends only on this port, so `chat` does not import
-/// `package:flutter_bloc_app/features/remote_config/...`.
+/// Implementations are wired in app DI composition. The chat-side provider
+/// depends only on this port, so `chat` does not import remote_config feature
+/// types.
 abstract class RenderOrchestrationRemoteTokenPort {
   /// Returns the trimmed HF read token from remote config, or `null` when
   /// unset, empty, or the lookup failed.

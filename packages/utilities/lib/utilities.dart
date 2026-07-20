@@ -2,6 +2,8 @@
 library;
 
 export 'src/async/completer_helper.dart';
+export 'src/diagnostics/diagnostics_sync_timestamp.dart';
+export 'src/diagnostics/graphql_cache_clear_port.dart';
 export 'src/diagnostics/profile_cache_controls_port.dart';
 export 'src/disposable_bag.dart';
 export 'src/errors/app_error.dart';
