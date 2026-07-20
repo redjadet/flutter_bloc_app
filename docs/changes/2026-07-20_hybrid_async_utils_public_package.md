@@ -28,5 +28,8 @@ behavior should be identical.
 
 ## External package
 
-- Pub.dev: <https://pub.dev/packages/ilkersevim_async_utils> (`0.1.0`)
+- Pub.dev: <https://pub.dev/packages/ilkersevim_async_utils> (latest `0.1.1`;
+  app constraint `^0.1.0`)
 - Source: <https://github.com/redjadet/ilkersevim_async_utils> (Apache-2.0)
+- Releases: GitHub Actions OIDC publish on tag `vX.Y.Z` with Environment
+  `pub.dev` (verified on `v0.1.1`)
