@@ -45,7 +45,7 @@ context. Finish gate: [`Agent Knowledge Base`](docs/agent_knowledge_base.md).
 - Product / platform: [`DESIGN.md`](DESIGN.md), [`design system`](docs/design_system.md),
   [`offline first`](docs/offline_first/adoption_guide.md), [`reliability`](docs/reliability_error_handling_performance.md),
   [`observability`](docs/observability.md).
-- Navigation / history: [`docs index`](docs/README.md), [`plans`](docs/plans/README.md),
+- Navigation / history: [`docs index`](docs/README.md),
   [`changes`](docs/changes/README.md), [`audits`](docs/audits/README.md), [`CODEMAP.md`](CODEMAP.md),
   [`PLAN.md`](PLAN.md), [`llms.txt`](llms.txt), [`environment`](docs/agent_environment_setup.md).
 

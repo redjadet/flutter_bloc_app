@@ -143,7 +143,7 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
     def test_sync_melos_baseline_header_only(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            path = root / "docs" / "plans" / "melos_dependency_baseline.txt"
+            path = root / "docs" / "engineering" / "melos_dependency_baseline.txt"
             path.parent.mkdir(parents=True)
             path.write_text(
                 "Dart SDK 3.11.5\nFlutter SDK 3.41.9\n\ndependencies:\n- foo 1.0.0\n",
@@ -182,9 +182,9 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
                 "env:\n  FLUTTER_VERSION: '3.44.6'\n",
                 encoding="utf-8",
             )
-        plans = root / "docs" / "plans"
-        plans.mkdir(parents=True)
-        (plans / "melos_dependency_baseline.txt").write_text(
+        engineering = root / "docs" / "engineering"
+        engineering.mkdir(parents=True)
+        (engineering / "melos_dependency_baseline.txt").write_text(
             "Dart SDK 3.12.2\nFlutter SDK 3.44.6\n",
             encoding="utf-8",
         )
@@ -204,7 +204,7 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             self._write_aligned_sinks(root)
-            (root / "docs" / "plans" / "melos_dependency_baseline.txt").write_text(
+            (root / "docs" / "engineering" / "melos_dependency_baseline.txt").write_text(
                 "Dart SDK 3.12.2\n",
                 encoding="utf-8",
             )
