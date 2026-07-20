@@ -113,7 +113,7 @@ msg+="Changed feature files (${#feature_dart[@]}): ${feature_dart[*]:0:5}"
 if [[ ${#feature_dart[@]} -gt 5 ]]; then
   msg+=" ..."
 fi
-msg+=$'\nAdd a note under docs/changes/ (see docs/plans/FEATURE_TEMPLATE.md) or set SKIP_FEATURE_BRIEF=1 for trivial fixes.'
+msg+=$'\nAdd a note under docs/changes/ (see docs/engineering/FEATURE_TEMPLATE.md) or set SKIP_FEATURE_BRIEF=1 for trivial fixes.'
 
 if [[ "${FEATURE_BRIEF_CHECK_STRICT:-1}" == "0" ]]; then
   echo "warn|$msg" >&2

@@ -275,7 +275,7 @@ def sync_workflow_flutter_version(path: Path, flutter_version: str) -> bool:
 
 
 def sync_melos_baseline(flutter_version: str, dart_version: str) -> bool:
-    path = PROJECT_ROOT / "docs" / "plans" / "melos_dependency_baseline.txt"
+    path = PROJECT_ROOT / "docs" / "engineering" / "melos_dependency_baseline.txt"
     lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
     if len(lines) < 2:
         raise SystemExit(f"Expected Dart/Flutter SDK header lines in {path}")
@@ -310,7 +310,7 @@ def sync_literal_sinks(flutter_version: str, dart_version: str) -> list[Path]:
         if sync_workflow_flutter_version(PROJECT_ROOT / rel, flutter_version):
             changed_paths.append(Path(rel))
     if sync_melos_baseline(flutter_version, dart_version):
-        changed_paths.append(Path("docs/plans/melos_dependency_baseline.txt"))
+        changed_paths.append(Path("docs/engineering/melos_dependency_baseline.txt"))
     return changed_paths
 
 
@@ -346,13 +346,13 @@ def check_literal_sinks(flutter_version: str, dart_version: str) -> list[str]:
         ):
             errors.append(f"{rel} still has bare flutter-version literal")
 
-    melos = (PROJECT_ROOT / "docs" / "plans" / "melos_dependency_baseline.txt").read_text(
-        encoding="utf-8"
-    )
+    melos = (
+        PROJECT_ROOT / "docs" / "engineering" / "melos_dependency_baseline.txt"
+    ).read_text(encoding="utf-8")
     header = melos.splitlines()[:2]
     if len(header) < 2:
         errors.append(
-            "docs/plans/melos_dependency_baseline.txt header too short "
+            "docs/engineering/melos_dependency_baseline.txt header too short "
             f"(need Dart SDK / Flutter SDK lines; got {len(header)})"
         )
     else:
@@ -362,7 +362,7 @@ def check_literal_sinks(flutter_version: str, dart_version: str) -> list[str]:
             or f"Flutter SDK {flutter_version}" not in joined
         ):
             errors.append(
-                "docs/plans/melos_dependency_baseline.txt header missing "
+                "docs/engineering/melos_dependency_baseline.txt header missing "
                 f"Dart SDK {dart_version} / Flutter SDK {flutter_version}"
             )
     return errors

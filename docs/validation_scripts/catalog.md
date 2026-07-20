@@ -60,7 +60,7 @@ below.
 - **`check_feature_brief_linked.sh`**: When `apps/mobile/lib/features/**/*.dart` changes vs a git base,
   requires a matching `docs/changes/*.md` note (Feature Brief / change log). Fails
   by default; `FEATURE_BRIEF_CHECK_STRICT=0` warns; `SKIP_FEATURE_BRIEF=1`
-  skips. Included in `./bin/checklist`. See [`docs/plans/FEATURE_TEMPLATE.md`](../plans/FEATURE_TEMPLATE.md).
+  skips. Included in `./bin/checklist`. See [`docs/engineering/FEATURE_TEMPLATE.md`](../engineering/FEATURE_TEMPLATE.md).
 - **`check_feature_modularity_leaks.sh`**: Declarative cross-feature `package:` rules
   (`library_demo` / `scapes`, `settings` / `graphql_demo|profile|remote_config`,
   `remote_config` / `settings`). **Universal failures:** `apps/mobile/lib/app/**` must not
@@ -163,9 +163,9 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 - **`run_memory_leak_tracking_dry_run.sh`**: Report-only full-suite leak tracking via `--dart-define=MEMORY_LEAK_TRACKING_DRY_RUN=true`. Writes `tmp/memory_leak_dry_run/<stamp>/` summary; **always exits 0**. Not a checklist/CI gate. Docs: [`../performance/memory_ci.md`](../performance/memory_ci.md).
 - **`run_file_length_lint_test.py`**: Regression harness for file-length wiring (`python3 tool/run_file_length_lint_test.py`). Probes must use physical newlines (`wc -l` ≥ 226), not many `//` tokens on one line. Checklist auto-runs when `custom_lints/file_length_lint/**`, `analysis_options.yaml`, or the lint scripts change (`CHECKLIST_RUN_FILE_LENGTH_LINT_INTEGRATION_TEST=auto|0|1`).
 
-Baseline counts: [`docs/plans/checklist_quality_gates_baseline.md`](../plans/checklist_quality_gates_baseline.md).
+Baseline counts: [`docs/engineering/checklist_quality_gates_baseline.md`](../engineering/checklist_quality_gates_baseline.md).
 
-**Deferred / not in MVP:** [`docs/plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md)
+**Deferred / not in MVP:** [`docs/engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md)
 (`bloc_lint`, rebuild scoping, context read/watch, startup-in-build,
 `CHECK_THEME` filter; lib-wide sync-io **rejected**).
 
