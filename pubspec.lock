@@ -1487,6 +1487,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  ilkersevim_type_safe_bloc:
+    dependency: transitive
+    description:
+      name: ilkersevim_type_safe_bloc
+      sha256: "536edab884b7365b7b9d50b418732eac816ec6cc18fa52db6ce1a2b66a705ffc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   image:
     dependency: transitive
     description:

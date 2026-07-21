@@ -1,4 +1,4 @@
-export 'package:app_shared_flutter/app_shared_flutter.dart'
+export 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart'
     show
         TypeSafeBlocBuilder,
         TypeSafeBlocConsumer,

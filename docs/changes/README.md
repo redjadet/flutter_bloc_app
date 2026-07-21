@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-21_type_safe_bloc_public_package.md`](2026-07-21_type_safe_bloc_public_package.md): Extract type-safe BLoC helpers to public `ilkersevim_type_safe_bloc` on Pub.dev (`^0.1.0`).
 - [`2026-07-20_hybrid_async_utils_public_package.md`](2026-07-20_hybrid_async_utils_public_package.md): Extract async coalescers + request-id guard to public `ilkersevim_async_utils` on Pub.dev (`^0.1.0`).
 - [`2026-07-20_low_risk_package_extraction_tasks_2_4.md`](2026-07-20_low_risk_package_extraction_tasks_2_4.md): Tasks 2–4 — feature_flags token port + app_shared_flutter BLoC/date/JSON helpers with shims.
 - [`2026-07-20_low_risk_package_extraction_task1.md`](2026-07-20_low_risk_package_extraction_task1.md): Move diagnostics sync-time helper + GraphQL cache clear port into `packages/utilities` (import-only feature touch; behavior unchanged).
