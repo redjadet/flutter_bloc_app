@@ -28,8 +28,9 @@ should be identical.
 
 ## External package
 
-- Pub.dev: <https://pub.dev/packages/ilkersevim_type_safe_bloc> (`0.1.0`;
+- Pub.dev: <https://pub.dev/packages/ilkersevim_type_safe_bloc> (latest `0.1.1`;
   app constraint `^0.1.0`)
 - Source: <https://github.com/redjadet/ilkersevim_type_safe_bloc> (Apache-2.0)
 - Releases: GitHub Actions OIDC publish on tag `vX.Y.Z` with Environment
-  `pub.dev` (proof pending `0.1.1`)
+  `pub.dev` (workflow + Environment configured; enable Pub.dev Admin GitHub
+  publishing for OIDC — `0.1.1` uploaded manually)
