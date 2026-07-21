@@ -11,7 +11,8 @@ class MemoryWidgetsBindingObserverMissingRemoveRule extends AnalysisRule {
   static const LintCode code = LintCode(
     'memory_widgets_binding_observer_missing_remove',
     'addObserver(this) requires a matching removeObserver(this).',
-    correctionMessage: 'Call removeObserver(this) in dispose() (or another teardown path).',
+    correctionMessage:
+        'Call removeObserver(this) in dispose() (or another teardown path).',
   );
 
   MemoryWidgetsBindingObserverMissingRemoveRule()

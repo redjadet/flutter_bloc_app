@@ -15,6 +15,7 @@ cross-cutting code. Pick an existing owner first.
 | --- | --- |
 | Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.0`) |
+| Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.0`) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
 | Auth contracts, token repository, auth user/session value types | `packages/auth` |
@@ -50,6 +51,7 @@ specific private path:
 
 ```dart
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:utilities/utilities.dart';
 import 'package:storage/storage.dart';
 import 'package:networking/networking.dart';
@@ -60,8 +62,11 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 ```
 
 `ilkersevim_async_utils` owns public, dependency-free single-flight and
-request-staleness guards. `packages/utilities` remains an internal workspace
-package and must not re-export those public APIs.
+request-staleness guards. `ilkersevim_type_safe_bloc` owns public type-safe
+`flutter_bloc` helpers. `packages/app_shared_flutter` re-exports the hosted
+BLoC package for backward compatibility but must not duplicate those APIs.
+`packages/utilities` remains an internal workspace package and must not
+re-export those public APIs.
 
 Use app imports only from the app or app tests:
 
