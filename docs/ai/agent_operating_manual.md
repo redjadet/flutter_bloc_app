@@ -4,18 +4,26 @@ Senior-engineer operating rules; pointers to canon, not duplicates.
 
 ## Mission
 
-Correct, maintainable, verifiable outcomes; understand first, preserve architecture,
-smallest practical diff; execute safe in-scope work autonomously; verify before
-claiming success. Safety and human approval take precedence over autonomy;
-escalate dangerous actions and genuinely user-owned decisions.
+Deliver correct, maintainable, verified outcomes: understand first, preserve
+architecture, make the smallest practical diff, and escalate only dangerous
+actions or genuinely user-owned decisions.
 
 ## When to read
 
 T1/T2 coding tasks after [`ai_failure_risks.md`](ai_failure_risks.md) Pre-Flight and context ladder step 2b.
 
-## Think before coding
+## Engineering judgment loop
 
-State understanding, assumptions, risks, and missing information; offer simpler alternatives; stop on two valid interpretations — [`adaptive_execution.md`](../agent_kb/adaptive_execution.md) (95% rule).
+Use this loop for implementation, refactoring, and review:
+
+1. **Define problem and done.** Confirm requirements, boundaries, evidence, edge cases, assumptions, and risks. Stop when two valid interpretations remain — [`adaptive_execution.md`](../agent_kb/adaptive_execution.md) (95% rule). Correct code for the wrong problem fails.
+2. **Choose clarity.** Prefer direct, unsurprising code, meaningful names, small functions, and obvious structure over cleverness.
+3. **Justify abstractions.** Add indirection only for demonstrated reuse, variation, test seams, or external dependencies—not imagined needs.
+4. **Design failure paths.** Define relevant invalid, absent/null, dependency-failure, cancellation, race, stale-result, retry, and partial-completion behavior; test important paths.
+5. **Refactor deliberately.** Within the write-set, remove duplication, misleading names, oversized responsibilities, and accidental complexity exposed by the change.
+6. **Understand reuse.** Read copied/generated code and package contracts; verify them against current behavior and pinned APIs.
+7. **Communicate decisions.** Record context, assumptions, trade-offs, rejected simpler options, and requirement changes where maintainers will find them; comments explain why.
+8. **Recheck.** Ask: “Is this clear, necessary, simple, resilient, and understandable six months from now?” Inspect diff and proof before reporting.
 
 ## Topic routing
 
@@ -23,7 +31,7 @@ State understanding, assumptions, risks, and missing information; offer simpler 
 | --- | --- |
 | Mission / engineering mindset | This doc § Mission; [`agent_knowledge_base.md`](../agent_knowledge_base.md) Core Beliefs |
 | Project context / platforms / existing code | [`agent_project_context.md`](../agent_project_context.md), [`tech_stack.md`](../tech_stack.md), [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) |
-| Simplicity / surgical / architecture | [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md) |
+| Simplicity / readability / resilient design | This doc § Engineering judgment loop; [`agent_kb/adaptive_execution.md`](../agent_kb/adaptive_execution.md) |
 | Flutter widgets / composition | [`DESIGN.md`](../../DESIGN.md), [`design_system.md`](../design_system.md) |
 | flutter_bloc / state | [`bloc_standards.md`](../bloc_standards.md), [`review/bloc_checklist.md`](../review/bloc_checklist.md) |
 | Architecture layers | [`clean_architecture.md`](../clean_architecture.md), [`architecture/feature_structure_contract.md`](../architecture/feature_structure_contract.md) |
@@ -62,12 +70,7 @@ Before `pubspec.yaml`: (1) Flutter SDK enough? (2) existing package? (3) activel
 | No hallucinated APIs/deps | `RISK-STALE-API`; review protocol |
 | No placeholders unless asked | AKM AI Productivity Traps |
 | Never claim tests passed without evidence | `RISK-VALIDATION-SHORTCUT` |
-| No silent destructive/external effects | `RISK-DESTRUCTIVE-SIDE-EFFECT` |
-| No unapproved remote or destructive Git action | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
+| No silent destructive/external/Git effects | `RISK-DESTRUCTIVE-SIDE-EFFECT`; [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) § AI agent rules |
 | No permission loops for safe in-scope work | [`agent_kb/agent_safety_contracts.md`](../agent_kb/agent_safety_contracts.md) `SAFETY-01`, `SAFETY-05` |
 | No SDK/framework patches | `RISK-FLUTTER-SDK-MUTATION` |
 | No new state mgmt / DI / navigation | `RISK-ARCH-LAYER`, `RISK-BLOC-DIVERGENCE` |
-
-## Pointers
-
-Response tiers: [`legibility_and_finish_gate.md`](../agent_kb/legibility_and_finish_gate.md) § Response tiers. Loop: [`AGENTS.md`](../../AGENTS.md) § Loop.
