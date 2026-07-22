@@ -13,7 +13,8 @@ cross-cutting code. Pick an existing owner first.
 
 | Need | Owner |
 | --- | --- |
-| Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
+| Pure Dart primitives, errors, retry, lifecycle helpers, memory trim levels | `packages/utilities` |
+| Public safe dynamic/JSON parse helpers | `ilkersevim_safe_parse` ([pub.dev](https://pub.dev/packages/ilkersevim_safe_parse) `^0.1.0`) |
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.1`) |
 | Public completer + StreamController lifecycle helpers | `ilkersevim_async_lifecycle` ([pub.dev](https://pub.dev/packages/ilkersevim_async_lifecycle) `^0.1.2`) |
 | Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.2`) |
@@ -54,8 +55,9 @@ specific private path:
 ```dart
 import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:utilities/utilities.dart';
 import 'package:storage/storage.dart';
 import 'package:networking/networking.dart';
@@ -69,8 +71,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 request-staleness guards. `ilkersevim_async_lifecycle` owns public completer
 and `StreamController` lifecycle helpers. `ilkersevim_type_safe_bloc` owns
 public type-safe `flutter_bloc` helpers — import it directly (no app shims;
-`app_shared_flutter` does not re-export it). `packages/utilities` remains an
-internal workspace package and must not re-export those public APIs.
+`app_shared_flutter` does not re-export it). `ilkersevim_safe_parse` owns safe dynamic/JSON parse helpers — import it directly. `packages/utilities` remains an internal workspace package and must not re-export those public APIs.
 
 Use app imports only from the app or app tests:
 

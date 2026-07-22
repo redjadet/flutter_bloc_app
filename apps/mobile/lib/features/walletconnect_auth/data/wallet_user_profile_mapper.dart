@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/nft_metadata.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Firestore field names for [WalletUserProfile] (stored in same doc as linkage at `users/{uid}`).
 abstract class WalletUserProfileFields {

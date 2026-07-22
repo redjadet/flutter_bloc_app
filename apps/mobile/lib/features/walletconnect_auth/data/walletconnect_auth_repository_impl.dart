@@ -6,6 +6,6 @@ import 'package:flutter_bloc_app/features/walletconnect_auth/data/walletconnect_
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_address.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/wallet_user_profile.dart';
 import 'package:flutter_bloc_app/features/walletconnect_auth/domain/walletconnect_auth_repository.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 part 'walletconnect_auth_repository_impl_body.part.dart';

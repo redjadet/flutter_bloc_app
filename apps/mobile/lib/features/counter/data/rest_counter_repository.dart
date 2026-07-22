@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/data/api/counter_api.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 

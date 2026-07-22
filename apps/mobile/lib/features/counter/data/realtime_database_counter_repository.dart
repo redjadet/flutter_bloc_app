@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_bloc_app/app/firebase/run_with_auth_user.dart';
 import 'package:flutter_bloc_app/app/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Firebase Realtime Database backed implementation of [CounterRepository].
 class RealtimeDatabaseCounterRepository

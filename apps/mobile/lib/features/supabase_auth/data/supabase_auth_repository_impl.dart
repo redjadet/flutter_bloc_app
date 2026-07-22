@@ -3,8 +3,8 @@ import 'package:auth/auth.dart' as app_auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
-import 'package:utilities/utilities.dart';
 
 part 'supabase_auth_repository_impl.part.dart';
 

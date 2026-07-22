@@ -2,8 +2,8 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance_repository.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:storage/storage.dart';
-import 'package:utilities/utilities.dart';
 
 /// Hive-backed implementation of [DemoBalanceRepository].
 class HiveDemoBalanceRepository extends HiveRepositoryBase

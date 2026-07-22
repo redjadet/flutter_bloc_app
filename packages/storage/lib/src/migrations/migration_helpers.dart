@@ -1,6 +1,5 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-
-import '../utils/safe_parse_utils.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Helper functions for data migration validation and normalization.
 ///
