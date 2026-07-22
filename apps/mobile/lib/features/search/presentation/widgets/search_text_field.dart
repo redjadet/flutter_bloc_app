@@ -2,10 +2,9 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class SearchTextField extends StatefulWidget {
   const SearchTextField({super.key});

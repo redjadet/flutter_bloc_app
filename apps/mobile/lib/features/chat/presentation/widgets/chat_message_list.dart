@@ -2,16 +2,15 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_terminal_sync_failure_text.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 part 'chat_message_list.freezed.dart';
 

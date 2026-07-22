@@ -2,9 +2,9 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_cubit.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:signature/signature.dart';
 
 /// Signature capture for staff demo proof flow (theme-aware pad + export).

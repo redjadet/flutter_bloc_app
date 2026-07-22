@@ -1,11 +1,10 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});

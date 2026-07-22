@@ -12,6 +12,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 part 'camera_gallery_page.part.dart';
 

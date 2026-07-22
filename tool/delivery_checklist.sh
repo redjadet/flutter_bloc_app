@@ -918,8 +918,7 @@ should_run_todo_layout_tests_auto() {
       lib/app/theme/*|\
       lib/app/widgets/*|\
       packages/design_system/lib/src/platform_adaptive/*|\
-      lib/app/extensions/build_context_l10n.dart|\
-      lib/app/extensions/type_safe_bloc_access.dart)
+      lib/app/extensions/build_context_l10n.dart)
         return 0
         ;;
     esac

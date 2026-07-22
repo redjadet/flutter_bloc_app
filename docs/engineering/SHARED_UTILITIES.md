@@ -63,10 +63,9 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 
 `ilkersevim_async_utils` owns public, dependency-free single-flight and
 request-staleness guards. `ilkersevim_type_safe_bloc` owns public type-safe
-`flutter_bloc` helpers. `packages/app_shared_flutter` re-exports the hosted
-BLoC package for backward compatibility but must not duplicate those APIs.
-`packages/utilities` remains an internal workspace package and must not
-re-export those public APIs.
+`flutter_bloc` helpers — import it directly (no app shims;
+`app_shared_flutter` does not re-export it). `packages/utilities` remains an
+internal workspace package and must not re-export those public APIs.
 
 Use app imports only from the app or app tests:
 

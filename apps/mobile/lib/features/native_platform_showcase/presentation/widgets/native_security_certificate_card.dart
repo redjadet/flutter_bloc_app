@@ -1,12 +1,12 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/certificate_pin_policy_summary.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Certificate pin policy summary + optional mutable demo navigation.
 class NativeSecurityCertificateCard extends StatelessWidget {

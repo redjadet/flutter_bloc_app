@@ -86,7 +86,7 @@ This is enforced both by convention and by validation scripts such as
 
 ### 6. UI Access Patterns
 
-- `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart` centralizes typed cubit and
+- `package:ilkersevim_type_safe_bloc` centralizes typed cubit and
   state access, keeping widget code focused on rendering instead of provider
   lookup mechanics.
 - `apps/mobile/lib/app/utils/bloc_provider_helpers.dart` centralizes common

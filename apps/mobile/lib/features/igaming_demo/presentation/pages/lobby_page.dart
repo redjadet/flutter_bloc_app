@@ -1,7 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart'
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_cubit.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/cubit/lobby_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Lobby page for the iGaming demo: shows virtual balance and entry to game.
 class LobbyPage extends StatelessWidget {

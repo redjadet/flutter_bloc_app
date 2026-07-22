@@ -1,11 +1,10 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/app/widgets/view_status_switcher.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class GraphqlDemoPage extends StatelessWidget {
   const GraphqlDemoPage({super.key});

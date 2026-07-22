@@ -1,10 +1,8 @@
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_action_section.dart';
@@ -15,6 +13,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_platform_view_section.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_telemetry_section.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_showcase_section.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class NativePlatformShowcasePage extends StatelessWidget {
   const NativePlatformShowcasePage({super.key});

@@ -5,13 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_cubit.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_body.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});

@@ -76,8 +76,9 @@ provide the required Cubits/BLoCs.
 
 ## Implementation Notes
 
-- Extension helpers live in `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart`.
-- Typed widgets live in `apps/mobile/lib/app/widgets/type_safe_bloc_selector.dart`.
+- Extension helpers and typed widgets live in the public
+  [`ilkersevim_type_safe_bloc`](https://pub.dev/packages/ilkersevim_type_safe_bloc)
+  package (`package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart`).
 - Keep Cubit/BLoC instances route-scoped unless app-wide state is intentional.
 - Do not use type-safe access helpers to bypass constructor injection for
   reusable widgets that should receive dependencies explicitly.

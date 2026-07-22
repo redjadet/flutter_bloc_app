@@ -2,13 +2,13 @@
 import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_session_state.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/widgets/case_study_data_mode_badge.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class CaseStudyDemoHomePage extends StatelessWidget {
   const CaseStudyDemoHomePage({required this.remoteAuth, super.key});

@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/flavor_badge.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPageBody extends StatelessWidget {

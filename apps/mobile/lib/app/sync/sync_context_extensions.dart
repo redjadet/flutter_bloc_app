@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// BuildContext extensions for sync status (e.g. ensuring SyncStatusCubit is started).
 extension SyncContextExtensions on BuildContext {

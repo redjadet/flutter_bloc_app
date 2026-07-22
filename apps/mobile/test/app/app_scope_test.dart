@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
 import 'package:flutter_bloc_app/app/services/app_memory_service.dart';

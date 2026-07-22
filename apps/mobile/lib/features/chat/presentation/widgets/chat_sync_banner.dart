@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:networking/networking.dart';
 
 /// Banner showing pending chat sync count and optional manual sync action.

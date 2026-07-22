@@ -5,10 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
@@ -20,6 +18,7 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_li
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 part 'todo_list_page_app_bar.dart';
 part 'todo_list_page_body.dart';

@@ -8,9 +8,7 @@ This guide consolidates the quick reference, usage patterns, and verification st
 
 ```dart
 import 'package:design_system/design_system.dart';
-// Or import specific files:
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 ```
 
@@ -126,8 +124,7 @@ part '<state_file>.switch_helper.dart';
 
 Key files that provide the compile-time safety layer:
 
-- `apps/mobile/lib/app/extensions/type_safe_bloc_access.dart` (context extensions)
-- `apps/mobile/lib/app/widgets/type_safe_bloc_selector.dart` (type-safe widgets)
+- `package:ilkersevim_type_safe_bloc` (context extensions + type-safe widgets)
 - `apps/mobile/lib/app/utils/bloc_provider_helpers.dart` (provider helpers)
 - `tool/generate_sealed_switch.dart` (sealed state switch helper generator)
 

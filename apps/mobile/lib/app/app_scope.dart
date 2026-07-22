@@ -16,12 +16,12 @@ import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/app/widgets/retry_snackbar_listener.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/deeplink/deeplink.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 

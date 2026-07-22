@@ -1,6 +1,5 @@
 library;
 
-export 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 export 'src/date_time/date_time_formatting.dart';
 export 'src/diagnostics/integration_log_messages.dart';
 export 'src/json/isolate_json.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:mix/mix.dart';
 import 'package:networking/networking.dart';
 

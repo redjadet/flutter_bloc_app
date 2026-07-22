@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
@@ -18,9 +17,9 @@ import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:utilities/utilities.dart';
 
 part 'counter_page_content.dart';

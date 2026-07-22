@@ -1,12 +1,11 @@
 import 'package:design_system/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_line_graph.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ChartContentList extends StatelessWidget {

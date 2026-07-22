@@ -1,6 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Utility functions for common Cubit operations to reduce code duplication.
 ///
@@ -73,6 +74,6 @@ extension CubitContextHelpers on BuildContext {
   ///
   /// Prefer [TypeSafeBlocAccess.cubit] (`context.cubit<T>()`) for
   /// type-safe access and clearer errors when the cubit is missing.
-  @Deprecated('Use context.cubit<T>() from type_safe_bloc_access.dart')
+  @Deprecated('Use context.cubit<T>() from package:ilkersevim_type_safe_bloc')
   T readCubit<T extends Cubit<dynamic>>() => cubit<T>();
 }

@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/scapes/domain/scapes_repository.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_view.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 class ScapesPage extends StatelessWidget {
   const ScapesPage({

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Switches between loading, error, and success content using a single
 /// [TypeSafeBlocSelector]. Intended to reduce repeated status checks in widgets.

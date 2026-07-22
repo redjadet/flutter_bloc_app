@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:utilities/utilities.dart';
-import 'package:flutter_bloc_app/app/widgets/type_safe_bloc_selector.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 

@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_demo_controls.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_entitlement.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_produc
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/domain/iap_purchase_result.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_state.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 part 'in_app_purchase_demo_page_cards.part.dart';
 part 'in_app_purchase_demo_page_widgets.part.dart';

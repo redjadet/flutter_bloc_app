@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_state.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Listens for deep link events and navigates using the provided [GoRouter].
 class DeepLinkListener extends StatelessWidget {

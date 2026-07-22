@@ -13,6 +13,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entr
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_sync_queue_inspector_sheet.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Dev/QA control to inspect counter pending-sync queue entries.
 ///

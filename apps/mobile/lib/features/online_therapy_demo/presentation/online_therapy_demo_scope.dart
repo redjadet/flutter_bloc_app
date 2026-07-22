@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/extensions/type_safe_bloc_access.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/therapist_home_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/online_therapy_demo_dependencies.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 
 /// Owns all Online Therapy demo Cubits for the full `/online-therapy-demo/**` subtree.
 ///
