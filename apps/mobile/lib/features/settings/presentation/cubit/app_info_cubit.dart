@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_retry/ilkersevim_retry.dart';
 
 part 'app_info_cubit.freezed.dart';
 

@@ -106,6 +106,7 @@ dependencies:
   ilkersevim_disposables: ^0.1.1
   ilkersevim_json_isolate: ^0.1.1
   ilkersevim_relative_time: ^0.1.1
+  ilkersevim_retry: ^0.1.0
   ilkersevim_safe_parse: ^0.1.1
   ilkersevim_type_safe_bloc: ^0.1.2
   image: ^4.9.1

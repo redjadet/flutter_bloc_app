@@ -1,6 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_retry/ilkersevim_retry.dart';
 
 import '../services/retry_notification_service.dart';
 
