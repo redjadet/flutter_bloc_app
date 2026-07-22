@@ -8,8 +8,8 @@ Usage: tool/agent_tool_router.sh [--intent <text>] [--paths <file>...]
 
 Print repo-first tool routes for AI agents. Explicit paths win; without paths,
 the router inspects staged, unstaged, and untracked git paths. Intent augments
-path routing for runtime, package API, browser, GitHub, Firebase, Supabase, and
-Figma work.
+path routing for runtime, package API, browser, Git/worktrees, GitHub, Firebase,
+Supabase, and Figma work.
 
 This command is read-only. It recommends tools; it never starts debug apps,
 installs dependencies, deploys, or mutates external systems.
@@ -71,6 +71,7 @@ route_runtime=0
 route_package=0
 route_browser=0
 route_github=0
+route_git=0
 route_firebase=0
 route_supabase=0
 route_figma=0
@@ -94,6 +95,9 @@ case "$intent_words" in
 esac
 case "$intent_words" in
   *" github "*|*" pull request "*|*" pr "*|*" ci "*) route_github=1 ;;
+esac
+case "$intent_words" in
+  *" git "*|*" branch "*|*" worktree "*) route_git=1 ;;
 esac
 case "$intent_lower" in *firebase*) route_firebase=1 ;; esac
 case "$intent_lower" in *supabase*) route_supabase=1 ;; esac
@@ -170,6 +174,9 @@ fi
 if (( route_github )); then
   echo "tool_route|github|gh|read PR/check/run state first; external mutations require explicit scope"
 fi
+if (( route_git )); then
+  echo "tool_route|git-worktree|repo|./bin/agent-worktree --name <task> previews; add --apply only after target review"
+fi
 if (( route_firebase )); then
   echo "tool_route|firebase|firebase-mcp-or-cli|inspect project/config state; never print secrets; deploy only with confirmation"
 fi
@@ -204,6 +211,6 @@ if (( route_agent )); then
   echo "tool_route|agent-harness|repo|check_agent_knowledge_base + harness gates + agent-maintain closeout"
 fi
 
-if (( ! route_runtime && ! route_package && ! route_browser && ! route_github && ! route_firebase && ! route_supabase && ! route_figma && ! route_dart && ! route_test && ! route_ui && ! route_router && ! route_docs && ! route_shell && ! route_agent )); then
+if (( ! route_runtime && ! route_package && ! route_browser && ! route_github && ! route_git && ! route_firebase && ! route_supabase && ! route_figma && ! route_dart && ! route_test && ! route_ui && ! route_router && ! route_docs && ! route_shell && ! route_agent )); then
   echo "tool_route|fallback|repo|use ./bin/agent-maintain find QUERY, then narrowest owning validation"
 fi

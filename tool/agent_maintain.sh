@@ -23,6 +23,8 @@ Commands (low-level):
   find QUERY...          Search skills catalog
   tools, tool-route      Recommend repo/MCP/browser tools from intent + paths
                          Example: tools --intent "runtime crash" --paths apps/mobile/lib/app.dart
+  worktree               Plan isolated worktree creation; --apply creates it
+                         Example: worktree --name auth-fix --apply
   trim                   Dedupe ~/.agents/skills vs ~/.cursor/skills
                          --apply [--mode balanced|full|flutter-repo|...]
   drift                  Host-template drift check
@@ -73,6 +75,7 @@ agent-maintain commands
   update                Global skills update (--check)
   find                  Catalog search
   tools tool-route      Intent/path-based tool recommendations
+  worktree              Safe isolated worktree creation (dry-run | --apply)
   trim                  Dedupe global skills (--apply)
   drift                 Template drift check
   kb knowledge          KB / AGENTS invariants
@@ -342,6 +345,14 @@ cmd_tools() {
   run_stage bash "$PROJECT_ROOT/tool/agent_tool_router.sh" "$@"
 }
 
+cmd_worktree() {
+  local -a args=()
+  if (( has_apply )); then
+    args+=(--apply)
+  fi
+  run_stage bash "$PROJECT_ROOT/tool/create_agent_worktree.sh" "${args[@]}" "$@"
+}
+
 cmd_trim() {
   local -a args=()
   if (( has_apply )); then
@@ -608,6 +619,10 @@ cmd_auto() {
 cmd_closeout() {
   log "workflow|closeout|agents run before claiming task done"
   cmd_auto "$@"
+  if [[ "${AGENT_MAINTAIN_PLAN_ONLY:-}" == "1" ]]; then
+    log "plan|agent-scorecard-freshness|bash tool/check_agent_scorecard_freshness.sh"
+    return 0
+  fi
   run_stage bash "$PROJECT_ROOT/tool/check_agent_scorecard_freshness.sh"
 }
 
@@ -660,6 +675,9 @@ case "$command" in
     ;;
   tools | tool-route)
     cmd_tools "$@"
+    ;;
+  worktree)
+    cmd_worktree "$@"
     ;;
   trim)
     cmd_trim "$@"

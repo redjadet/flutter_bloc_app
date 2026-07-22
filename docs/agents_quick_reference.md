@@ -10,6 +10,7 @@ Commands and routing. Run tool router first; load only matching row. Map:
 | Cold start map | `bash tool/agent_session_bootstrap.sh --intent "<task goal>"` (prints automatic tool routes) |
 | Non-trivial task preflight | [`ai/ai_failure_risks.md`](ai/ai_failure_risks.md) Pre-Flight + `agents-common-pitfalls`; `./bin/agent-maintain preflight --intent "<task goal>"` |
 | Tool choice / scope changed | `./bin/agent-maintain tools --intent "<goal>" --paths <files>`; [`agent_kb/tool_orchestration.md`](agent_kb/tool_orchestration.md) |
+| Create isolated worktree | `./bin/agent-worktree --name <task>` previews; add `--apply` only after branch, path, and base are correct |
 | Git branch / PR / merge / worktree | [`git_and_branching_strategy.md`](git_and_branching_strategy.md); inspect `git status --short --branch` and upstream state before action |
 | Watch PR CI → merge when green | Skill `gh-watch-merge-pr` / `/watch-merge-pr`; `bash tool/commit_push_pr_watch_merge_cleanup.sh <pr>` |
 | Clean/narrow docs/tooling sanity | `./bin/checklist-fast` (`--explain` for mode debug) |
