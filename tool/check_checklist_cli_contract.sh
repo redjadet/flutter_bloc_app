@@ -89,10 +89,16 @@ assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "closeout
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "harness-maintain"
 assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "tools, tool-route"
+assert_contains agent_maintain_help "$tmp_dir/agent_maintain_help.out" "worktree"
 
 run_ok agent_maintain_list ./bin/agent-maintain list
 assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "agent-maintain commands"
 assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "tools tool-route"
+assert_contains agent_maintain_list "$tmp_dir/agent_maintain_list.out" "worktree"
+
+run_ok agent_worktree_contract bash tool/create_agent_worktree_test.sh
+assert_contains agent_worktree_contract "$tmp_dir/agent_worktree_contract.out" \
+  "create_agent_worktree_test|ok"
 
 run_ok agent_tool_router_help bash tool/agent_tool_router.sh --help
 assert_contains agent_tool_router_help "$tmp_dir/agent_tool_router_help.out" \
@@ -104,6 +110,11 @@ assert_contains agent_tool_router_runtime "$tmp_dir/agent_tool_router_runtime.ou
   "tool_route|runtime|dart-mcp|"
 assert_contains agent_tool_router_runtime "$tmp_dir/agent_tool_router_runtime.out" \
   "tool_route|app-debug|dart-mcp|"
+
+run_ok agent_tool_router_worktree bash tool/agent_tool_router.sh \
+  --intent "create local worktree"
+assert_contains agent_tool_router_worktree "$tmp_dir/agent_tool_router_worktree.out" \
+  "tool_route|git-worktree|repo|./bin/agent-worktree"
 
 run_ok agent_tool_router_mixed bash tool/agent_tool_router.sh \
   --intent "package API" \
@@ -155,6 +166,8 @@ assert_contains agent_maintain_scope_auto "$tmp_dir/agent_maintain_scope_auto.ou
 run_ok agent_maintain_closeout_plan env AGENT_MAINTAIN_PLAN_ONLY=1 \
   bash tool/agent_maintain.sh closeout
 assert_contains agent_maintain_closeout_plan "$tmp_dir/agent_maintain_closeout_plan.out" "workflow|closeout|"
+assert_contains agent_maintain_closeout_plan "$tmp_dir/agent_maintain_closeout_plan.out" \
+  "plan|agent-scorecard-freshness|"
 
 empty_scope_file="$tmp_dir/agent_maintain_empty_scope.txt"
 : >"$empty_scope_file"

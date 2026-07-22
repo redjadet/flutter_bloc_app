@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-22_agent_worktree_automation.md`](2026-07-22_agent_worktree_automation.md): Dry-run-first isolated worktree creation with validated base, branch, path, CLI routing, and fixture proof.
 - [`2026-07-22_bump_ilkersevim_relative_time_0.1.1.md`](2026-07-22_bump_ilkersevim_relative_time_0.1.1.md): Bump hosted `ilkersevim_relative_time` caret to `^0.1.1` after OIDC proof.
 - [`2026-07-22_bump_ilkersevim_disposables_0.1.1.md`](2026-07-22_bump_ilkersevim_disposables_0.1.1.md): Bump hosted `ilkersevim_disposables` caret to `^0.1.1` after OIDC proof.
 - [`2026-07-22_agent_engineering_judgment.md`](2026-07-22_agent_engineering_judgment.md): Lean AI coding guidance for problem definition, simple resilient design, understood reuse, maintainable communication, and proof.
@@ -26,7 +27,7 @@ that.
 - [`2026-07-17_memory_quality_wave_a.md`](2026-07-17_memory_quality_wave_a.md): Progressive memory gate — `memory_lint` plugin, tagged `leak_tracker` suite, checklist enforcement; no global ignore flip.
 - [`2026-07-17_safe_agent_autonomy.md`](2026-07-17_safe_agent_autonomy.md): Routine reversible repo-local work is autonomous; dangerous, external, secret/production, and Git mutations retain explicit approval gates.
 - [`2026-07-17_docs_aggressive_prune.md`](2026-07-17_docs_aggressive_prune.md): Delete completed plans/migrations; shorten large how-tos to current contracts; preserve owner-index pointers.
-- [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0. Deferred leftovers: [`../plans/2026-07-17_maintainability_simplify_deferred.md`](../plans/2026-07-17_maintainability_simplify_deferred.md).
+- [`2026-07-17_domain_purity_remaining_demos.md`](2026-07-17_domain_purity_remaining_demos.md): case_study → chart → iGaming → IoT → search → staff flags; domain wire leaks 31→0; deferred leftovers were later retired.
 - [`2026-07-17_domain_purity_chat_counter_todo.md`](2026-07-17_domain_purity_chat_counter_todo.md): Wave B — move chat/counter/todo wire JSON into data DTOs; domain wire leaks 45→31.
 - [`2026-07-17_di_composition_simplify.md`](2026-07-17_di_composition_simplify.md): Wave A — thin DI groups into `register_*` modules; move auth/staff/remote-config fallbacks into feature `data/`; preserve order/dispose/policy.
 - [`2026-07-16_mobile_backend_integration_hardening.md`](2026-07-16_mobile_backend_integration_hardening.md): Mobile/backend contract safety — defensive DTOs, required Dio injection, ad-hoc Dio CI guard, canonical contract docs; deferred list [`backend/MOBILE_BACKEND_DEFERRED_WORK.md`](../backend/MOBILE_BACKEND_DEFERRED_WORK.md).
@@ -55,7 +56,7 @@ that.
 - [`2026-07-06_folder-structure-codex-followups.md`](2026-07-06_folder-structure-codex-followups.md): Codex folder-structure follow-ups — `core/di/features/`, `package:auth`, shared shim removal, feature layout drift fixes, `check_features_barrel.sh`.
 - [`2026-07-02_token-repository-memory-auth-state.md`](2026-07-02_token-repository-memory-auth-state.md): Dedicated `TokenRepository` for in-memory auth token reads; secure storage / SDK persistence limited to startup, login/session hydration, refresh, and logout cleanup.
 - [`2026-07-02_auth-session-lifecycle-regression-guards.md`](2026-07-02_auth-session-lifecycle-regression-guards.md): Auth session lifecycle focused guard routing for session-expired UX races and cross-provider invalidation drops.
-- [`2026-06-28_auth-security-hardening-pr-c.md`](2026-06-28_auth-security-hardening-pr-c.md): Auth security PR C — `AppAuthCubit` session-expired UX, l10n, full [`authentication.md`](../authentication.md) pass. Deferred items: [`plans/auth_security_hardening_deferred.md`](../plans/auth_security_hardening_deferred.md).
+- [`2026-06-28_auth-security-hardening-pr-c.md`](2026-06-28_auth-security-hardening-pr-c.md): Auth security PR C — `AppAuthCubit` session-expired UX, l10n, full [`authentication.md`](../authentication.md) pass; deferred plan later retired.
 - [`2026-06-28_auth-security-hardening-pr-b.md`](2026-06-28_auth-security-hardening-pr-b.md): Auth security PR B — `SupabaseSessionManager`, `JwtClaimsReader`, Supabase repo consolidation, `sessionExpired` on Supabase cubit.
 - [`2026-06-28_auth-security-hardening-pr-a.md`](2026-06-28_auth-security-hardening-pr-a.md): Auth security PR A — `SessionLifecycleCoordinator`, decorated `AuthRepository`, DI singleton `AuthTokenManager`, classified interceptor invalidation, logging redaction.
 - [`2026-06-25_agent_operating_manual.md`](2026-06-25_agent_operating_manual.md): Project AI Operating Manual — thin router, finish-gate response tiers, context ladder 2b, check-script and host-template needles.
@@ -110,7 +111,7 @@ that.
 - **2026-05-21 (doc):** Agent doc dedup — ladder canon [`ai/context_loading.md`](../ai/context_loading.md); [`PLAN.md`](../../PLAN.md)/`quick_reference`/`KB`/`review_protocol` trimmed; harness/commands single-owner.
 - [`2026-05-21_arch_001_002_case_study_decouple.md`](2026-05-21_arch_001_002_case_study_decouple.md): ARCH-001 shared media/auth ports; ARCH-002 cubit mixin split; merged PR #240.
 - [`2026-05-21_firebase_secret_history_scrub.md`](2026-05-21_firebase_secret_history_scrub.md): Firebase secret-scanning remediation, `.envrc` + placeholder Dart workflow, `git filter-repo` history scrub, doc updates.
-- [`2026-05-20_checklist_quality_gates.md`](2026-05-20_checklist_quality_gates.md): four quality-theme checklist gates (MVP), `CHECK_SCRIPT_THEMES`, path-triggered router validate; deferred backlog in [`plans/checklist_quality_gates_deferred.md`](../plans/checklist_quality_gates_deferred.md).
+- [`2026-05-20_checklist_quality_gates.md`](2026-05-20_checklist_quality_gates.md): four quality-theme checklist gates (MVP), `CHECK_SCRIPT_THEMES`, path-triggered router validate; deferred backlog later retired.
 - [`2026-05-17_global_agent_skills_install_trim.md`](2026-05-17_global_agent_skills_install_trim.md): repo scripts to install/update/dedupe global vendor skills (`~/.agents/skills` vs synced `~/.cursor/skills`); skill inventory/budget includes `agentsSkills`.
 - [`2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md): UTF-8 bytes JSON helpers (`decodeJsonMapFromBytes` / fused `utf8`+`json` converter), Hugging Face client `ResponseType.bytes`, tests; pointers to future Retrofit-bytes and optional FFI/SIMD JSON evaluation.
 - [`2026-05-12_modular_architecture_plan_implementation.md`](2026-05-12_modular_architecture_plan_implementation.md): modular metrics script, generalized modularity gate, shared↔feature decoupling (`AppMemoryService`), DI group `part` split, tests + feasibility docs.

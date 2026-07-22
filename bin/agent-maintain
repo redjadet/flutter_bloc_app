@@ -16,7 +16,7 @@ Commands:
   session, bootstrap     Read-only session map
   sync                   Host template sync
   setup                  Full host setup (--apply [--install] [--trim-mode MODE])
-  install, update, find, tools, tool-route, trim, drift, kb, harness, harness-maintain, memory, inventory, trackers, review
+  install, update, find, tools, tool-route, worktree, trim, drift, kb, harness, harness-maintain, memory, inventory, trackers, review
   routine                Light upkeep (sync + drift + update check + memory + budgets)
   preflight              Bootstrap + automatic tool routes + drift + task trackers
   host-full              Full install + trim (requires --apply; network)
@@ -32,6 +32,7 @@ Agents: docs/agent_kb/host_maintenance_automation.md
 Examples:
   ./bin/agent-maintain preflight
   ./bin/agent-maintain tools --intent "runtime crash" --paths apps/mobile/lib/app.dart
+  ./bin/agent-maintain worktree --name auth-fix --apply
   ./bin/agent-maintain closeout
   ./bin/agent-maintain harness-maintain
   ./bin/agent-maintain after-host-edit

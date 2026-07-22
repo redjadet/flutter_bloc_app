@@ -68,8 +68,18 @@ For isolated work, create a worktree from `origin/main` rather than sharing a
 working directory with another active task:
 
 ```bash
-git worktree add -b codex/docs-git-branching-strategy \
-  ../flutter_bloc_app-git-strategy origin/main
+./bin/agent-worktree --name git-strategy
+./bin/agent-worktree --name git-strategy --apply
+```
+
+The helper defaults to branch `codex/<name>`, adjacent path
+`../flutter_bloc_app-<name>`, and existing local ref `origin/main`. It validates
+the base, branch, parent, and target path before mutation; it never fetches,
+deletes, reuses, or overwrites. Use `--base`, `--branch`, or `--path` only when
+the task requires an explicit override. Equivalent raw Git remains:
+
+```bash
+git worktree add -b codex/git-strategy ../flutter_bloc_app-git-strategy origin/main
 ```
 
 Use a path outside an existing worktree and remove only the worktree created
