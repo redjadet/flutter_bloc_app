@@ -39,7 +39,8 @@ context. Finish gate: [`Agent Knowledge Base`](docs/agent_knowledge_base.md).
   [`engineering scorecard`](docs/engineering/engineering_quality_scorecard.md),
   [`testing`](docs/testing_overview.md), [`code quality`](docs/CODE_QUALITY.md).
 - Build / review: [`architecture`](docs/clean_architecture.md), [`feature contract`](docs/architecture/feature_structure_contract.md),
-  [`reference features`](docs/architecture/reference_features.md), [`BLoC`](docs/bloc_standards.md),
+  [`reference features`](docs/architecture/reference_features.md), [`shared utilities`](docs/engineering/SHARED_UTILITIES.md),
+  [`BLoC`](docs/bloc_standards.md),
   [`review playbook`](docs/review/code_review_playbook.md), [`AI review`](docs/ai_code_review_protocol.md),
   [`Git workflow`](docs/git_and_branching_strategy.md).
 - Product / platform: [`DESIGN.md`](DESIGN.md), [`design system`](docs/design_system.md),

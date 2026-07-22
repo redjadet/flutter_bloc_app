@@ -72,6 +72,7 @@ Keep root [`README.md`](../../README.md) a professional entrypoint: short pitch,
 - **Native integration showcases:** operator expects live Dart→Swift/Kotlin (MethodChannel) and Dart→C/C++ (FFI) with unavailable stubs on web/unsupported targets—not catalog-only simulation unless explicitly accepted.
 - **Native interop layering:** never wire MethodChannel, FFI, or bindings in cubit/widgets. Stack: Presentation → use case → repository → domain platform-service ports → data adapters (MethodChannel today; JNI/SwiftGen/FFI swaps without cubit changes). Gold reference: `native_platform_showcase` in [`reference_features.md`](../architecture/reference_features.md) and [`apps/mobile/lib/features/native_platform_showcase/README.md`](../../apps/mobile/lib/features/native_platform_showcase/README.md).
 - **Integration selective map:** new device integration flows for a feature → register in `tool/integration_selective_map.json` and align the row in [`matrix_required_by_change.md`](../testing/matrix_required_by_change.md).
+- **Public `ilkersevim_*` packages:** Ownership + publish defaults in [`SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md) § Public package defaults; program plan [`plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md). After live on pub.dev, bump workspace carets to hosted versions (not path/git). Stop before public GitHub repo creation or first pub.dev publish for same-turn confirmation; lock plan G-gates before new extractionsions.
 
 ## Repo Guardrails
 
