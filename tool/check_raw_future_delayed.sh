@@ -13,7 +13,7 @@ IGNORED=""
 source "$PROJECT_ROOT/tool/check_helpers.sh"
 
 # Match Future.delayed( or Future<void>.delayed( in lib/, exclude generated and allow-listed paths
-# Allow-listed: mock/demo/samples; retry_policy (cancelToken polling); navigation (safeGo); todo_list_page_handlers (UI); walletconnect_service (demo placeholder)
+# Allow-listed: mock/demo/samples; navigation (safeGo); todo_list_page_handlers (UI); walletconnect_service (demo placeholder)
 if command -v rg &> /dev/null; then
   VIOLATIONS=$(rg -n "Future<void>\.delayed\(|Future\.delayed\(" lib/ 2>/dev/null \
     --glob "!**/*.g.dart" \
@@ -24,8 +24,6 @@ if command -v rg &> /dev/null; then
     --glob "!**/*_demo_*.dart" \
     --glob "!**/delayed_chart_repository.dart" \
     --glob "!**/isolate_samples.dart" \
-    --glob "!**/retry_policy.dart" \
-    --glob "!**/retry_policy_execute.part.dart" \
     --glob "!**/navigation.dart" \
     --glob "!**/todo_list_page_handlers.dart" \
     --glob "!**/walletconnect_service.dart" \
@@ -40,8 +38,6 @@ else
     | grep -v "_demo_" \
     | grep -v "delayed_chart_repository\.dart" \
     | grep -v "isolate_samples\.dart" \
-    | grep -v "retry_policy\.dart" \
-    | grep -v "retry_policy_execute\.part\.dart" \
     | grep -v "navigation\.dart" \
     | grep -v "todo_list_page_handlers\.dart" \
     | grep -v "walletconnect_service\.dart" \
