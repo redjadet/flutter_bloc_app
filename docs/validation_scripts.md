@@ -37,6 +37,7 @@ Catalog entries (including **memory-compounding** and **closed-loop invariants**
 | [`validation_scripts/operations_manual.md`](validation_scripts/operations_manual.md) | Manual validation, related docs |
 | [`validation_scripts/upgrade_pr_triage_validate.md`](validation_scripts/upgrade_pr_triage_validate.md) | Upgrade PR triage + `upgrade_validate_all` lane |
 | [`validation_scripts/ai_snapshot_freshness.md`](validation_scripts/ai_snapshot_freshness.md) | AI discovery snapshot path + metadata gate |
+| [`validation_scripts/agent_scorecard_freshness.md`](validation_scripts/agent_scorecard_freshness.md) | Agent scorecard summary input-fingerprint gate |
 
 ## Related Documentation
 

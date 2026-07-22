@@ -69,6 +69,19 @@ summary = {
     "line_stats": line_stats,
 }
 
+source_hasher = __import__("hashlib").sha256()
+source_files = []
+if active_file.exists():
+    source_files.append(active_file)
+source_files.extend(sorted(archive_dir.glob("scorecard-events-*.jsonl.gz")))
+for source_file in source_files:
+    source_hasher.update(source_file.name.encode("utf-8"))
+    source_hasher.update(b"\0")
+    source_hasher.update(source_file.read_bytes())
+    source_hasher.update(b"\0")
+summary["source_fingerprint"] = source_hasher.hexdigest()
+summary["source_file_count"] = len(source_files)
+
 durations = []
 delegate_used = 0
 command_stats = defaultdict(lambda: {"count": 0, "ok": 0, "failed": 0, "durations": []})
@@ -128,6 +141,7 @@ lines = [
     f"- Delegate usage rate: `{summary['delegate_usage_rate']:.2%}`",
     f"- p50 duration: `{int(summary['p50_duration_ms'])}ms`",
     f"- p95 duration: `{int(summary['p95_duration_ms'])}ms`",
+    f"- Source fingerprint: `{summary['source_fingerprint']}`",
     "",
     "## Status Counts",
     "",
@@ -139,7 +153,9 @@ lines.extend(["", "## Risk Counts", ""])
 for key, value in sorted(summary["risk_counts"].items()):
     lines.append(f"- `{key}`: `{value}`")
 
-lines.extend(["", "## Command Breakdown", ""])
+lines.extend(["", "## Command Breakdown"])
+if summary["commands"]:
+    lines.append("")
 for command, stats in sorted(summary["commands"].items()):
     lines.append(
         f"- `{command}`: count `{stats['count']}`, success `{stats['success_rate']:.2%}`, p50 `{int(stats['p50_duration_ms'])}ms`"

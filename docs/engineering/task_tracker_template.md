@@ -33,6 +33,14 @@ Bullets of concrete risk / edge cases / regressions to watch.
 - offline-first merge ordering
 - auth/retry/replay safety
 
+## Accountability
+
+- Detection signal: observable evidence that this change is wrong
+- Blast radius: affected users, systems, or data if it is wrong
+- Acceptance verdict: approve / revise / block, with named decision owner
+- Scope discovered during execution: `None` or findings kept inside this write-set
+- Deferred findings: `None` or separately owned follow-up
+
 ## Validation command
 
 List the *smallest honest* validation command(s) you actually ran (or will run before reporting):

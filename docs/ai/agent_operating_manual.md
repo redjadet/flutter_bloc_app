@@ -25,6 +25,13 @@ Use this loop for implementation, refactoring, and review:
 7. **Communicate decisions.** Record context, assumptions, trade-offs, rejected simpler options, and requirement changes where maintainers will find them; comments explain why.
 8. **Recheck.** Ask: “Is this clear, necessary, simple, resilient, and understandable six months from now?” Inspect diff and proof before reporting.
 
+## Maintainer understanding checkpoint
+
+For medium- and high-risk work, add at most five bullets to the PR or task
+evidence covering changed data flow, important invariants, failure behavior,
+and the rejected simpler option. This is an inspectable understanding check,
+not a generated-code summary. Low-risk work does not require it.
+
 ## Topic routing
 
 | Manual theme | Canonical owner |

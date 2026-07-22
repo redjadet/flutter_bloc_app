@@ -2,6 +2,15 @@
 
 <!-- What and why -->
 
+## Accountability
+
+- Intended outcome:
+- Human verdict: approve / revise / block
+- Why safe: evidence and commands
+- If wrong: detection signal, blast radius, rollback
+- Owner: person accepting consequence
+- Maintainer understanding: changed invariants and trade-offs
+
 ## Validation
 
 <!-- Commands you ran -->
