@@ -14,7 +14,7 @@ cross-cutting code. Pick an existing owner first.
 | Need | Owner |
 | --- | --- |
 | Pure Dart primitives, errors, retry, memory trim levels | `packages/utilities` |
-| Public disposable bag, subscription/timer managers, `TimerDisposable` | `ilkersevim_disposables` ([pub.dev](https://pub.dev/packages/ilkersevim_disposables) `^0.1.0`; `TimerDisposable` also re-exported from `package:core`) |
+| Public disposable bag, subscription/timer managers, `TimerDisposable` | `ilkersevim_disposables` ([pub.dev](https://pub.dev/packages/ilkersevim_disposables) `^0.1.1`; `TimerDisposable` also re-exported from `package:core`) |
 | Public short relative-time labels (`3d` / `2h` / `now`) | `ilkersevim_relative_time` ([pub.dev](https://pub.dev/packages/ilkersevim_relative_time) `^0.1.1`) |
 | Public safe dynamic/JSON parse helpers | `ilkersevim_safe_parse` ([pub.dev](https://pub.dev/packages/ilkersevim_safe_parse) `^0.1.1`) |
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.1`) |
