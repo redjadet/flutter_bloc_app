@@ -21,7 +21,7 @@ Commands and routing. Run tool router first; load only matching row. Map:
 | Runtime error / red screen / active debug bug | DTD `get_runtime_errors` -> fix -> hot reload -> re-read errors; [`agent_kb/devtools_runtime_errors.md`](agent_kb/devtools_runtime_errors.md); shell: `bash tool/check_runtime_errors.sh` |
 | Pub API / version-sensitive dependency | MCP package docs loop; [`agent_kb/package_docs_mcp.md`](agent_kb/package_docs_mcp.md); Dart MCP + current official docs; `/package-docs` |
 | UI/theme/Mix/AppStyles | Read [`../DESIGN.md`](../DESIGN.md) + [`design_system.md`](design_system.md); runtime source first (`AppTheme`, `buildAppMixScope`, `AppStyles`, `UI`); `./tool/check_design_md.sh`; `./tool/run_mix_lint.sh`; `./tool/run_file_length_lint.sh` |
-| Non-trivial `apps/mobile/lib/features/**` | Fill [`plans/FEATURE_TEMPLATE.md`](plans/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
+| Non-trivial `apps/mobile/lib/features/**` | Fill [`engineering/FEATURE_TEMPLATE.md`](engineering/FEATURE_TEMPLATE.md) Tests; see [`testing/widget_test_playbook.md`](testing/widget_test_playbook.md), [`testing_overview.md`](testing_overview.md) |
 | New feature contract scaffold | `bash tool/scaffold_feature_contract.sh --name <feature>` preview; add `--apply` only when final |
 | Feature folder / use-case / DTO / test routing | [`architecture/feature_structure_contract.md`](architecture/feature_structure_contract.md), [`architecture/use_case_dto_policy.md`](architecture/use_case_dto_policy.md), [`testing/matrix_required_by_change.md`](testing/matrix_required_by_change.md); `bash tool/check_clean_architecture_imports.sh`; skill `agents-feature-delivery` |
 | Copy feature / external API / cubit state | [`architecture/reduce_surprise_patterns.md`](architecture/reduce_surprise_patterns.md) + [`architecture/reference_features.md`](architecture/reference_features.md) semantic grades |
@@ -57,16 +57,12 @@ Doctrine: [`agent_knowledge_base.md`](agent_knowledge_base.md). [Context navigat
 
 Mechanical anchors (do not drop): below 95%; execute end-to-end, verify, report proof; Behavior changes start in source docs; Reusable agent conclusion; semantic lint; Benefit: team; Benefit: single; `tasks/cursor/team/<run-id>/`.
 
-## Host adapters
+## Host operations
 
-Both: `agents-quick-reference`, `agents-skill-routing`, `agents-bloc-standards`,
-`agents-feature-delivery`, `agents-delivery-workflow`. Cursor-only planning:
-`agents-meta-behavior`. Shared source:
-[`../tool/agent_host_templates/shared/skills/`](../tool/agent_host_templates/shared/skills/). Cross-host review only when user asks: `/codex-feedback` or `./tool/request_codex_feedback.sh`.
+Exact host/skill commands: [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md) and [`agent_host_notes.md`](agent_host_notes.md). Cross-host review only when user asks: `/codex-feedback` or `./tool/request_codex_feedback.sh`.
 
 ## Melos workspace
 
 Root is Pub/Melos root; app: `apps/mobile/`; shared UI: `package:design_system`;
-backend: `backend/firebase/`. Use `dart run melos ...`; app run:
-`cd apps/mobile && flutter run -t lib/main_dev.dart`. Package DAG check is in
-`./bin/checklist`; workspace operations: [`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md).
+backend: `backend/firebase/`. Exact run/test/package commands:
+[`agent_kb/specialist_tool_routes.md`](agent_kb/specialist_tool_routes.md). Package DAG: `./bin/checklist`.
