@@ -22,7 +22,7 @@
   "dependencies": {
     "firebase-admin": "^14.1.0",
     "firebase-functions": "^7.3.0",
-    "googleapis": "^172.0.0",
+    "googleapis": "^173.0.0",
     "twilio": "^5.13.1"
   },
   "overrides": {
