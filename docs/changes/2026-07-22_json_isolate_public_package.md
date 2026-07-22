@@ -18,7 +18,8 @@ reuse them without this monorepo.
   importers plus chart/HF/GraphQL/secure-chat consumers that imported via
   `app_shared_flutter`).
 - Pointed `apps/mobile/lib/app/utils/isolate_json.dart` shim at the hosted
-  package (retained for docs/tooling pointers; retire later).
+  package during migration; shim retired in follow-up
+  [`2026-07-22_retire_json_isolate_shim.md`](2026-07-22_retire_json_isolate_shim.md).
 - Removed `src/json/isolate_json.dart` and its barrel export from
   `app_shared_flutter`.
 - Documented ownership in [`engineering/SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md).
