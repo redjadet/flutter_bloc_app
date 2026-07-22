@@ -1,8 +1,14 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:core/core.dart';
 
 part 'retry_policy_execute.part.dart';
+
+/// Delay callback used by [RetryPolicy.executeWithRetry] for backoff waits.
+///
+/// Production default is [Future.delayed]. Callers that need [TimerService]
+/// (or other controllable clocks) pass an adapter that completes after
+/// [duration]. Cancellation polling still invokes this once per ≤50 ms chunk.
+typedef RetryDelay = Future<void> Function(Duration duration);
 
 /// Retry strategy types for different backoff patterns.
 enum RetryStrategy {
@@ -21,8 +27,8 @@ enum RetryStrategy {
 /// Provides helper methods for cubits to standardize retry behavior
 /// (search, chat, charts, etc.) with cancellation support.
 ///
-/// When a [TimerService] is passed to [executeWithRetry], backoff delays use it (testable time);
-/// when null, uses [DefaultTimerService] for production backoff.
+/// When a [RetryDelay] is passed to [executeWithRetry], backoff waits use it
+/// (testable / app-adapted delays). When null, uses [Future.delayed].
 class RetryPolicy {
   /// Creates a retry policy with the specified configuration.
   const RetryPolicy({
@@ -54,18 +60,19 @@ class RetryPolicy {
   /// after all retries are exhausted.
   ///
   /// If [cancelToken] is provided and cancelled, throws [CancellationException].
-  /// When [timerService] is provided, backoff delays use it (enables test time control).
+  /// When [delay] is provided, backoff waits use it (enables test / TimerService
+  /// adapters). When null, uses [Future.delayed].
   Future<T> executeWithRetry<T>({
     required final Future<T> Function() action,
     final CancelToken? cancelToken,
     final bool Function(Object error)? shouldRetry,
-    final TimerService? timerService,
+    final RetryDelay? delay,
   }) => _retryPolicyExecuteWithRetry(
     this,
     action: action,
     cancelToken: cancelToken,
     shouldRetry: shouldRetry,
-    timerService: timerService,
+    delay: delay,
   );
 
   /// Shared delay calculation for use by other layers (e.g. HTTP client).

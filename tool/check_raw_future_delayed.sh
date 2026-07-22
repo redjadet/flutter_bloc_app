@@ -25,6 +25,7 @@ if command -v rg &> /dev/null; then
     --glob "!**/delayed_chart_repository.dart" \
     --glob "!**/isolate_samples.dart" \
     --glob "!**/retry_policy.dart" \
+    --glob "!**/retry_policy_execute.part.dart" \
     --glob "!**/navigation.dart" \
     --glob "!**/todo_list_page_handlers.dart" \
     --glob "!**/walletconnect_service.dart" \
@@ -40,6 +41,7 @@ else
     | grep -v "delayed_chart_repository\.dart" \
     | grep -v "isolate_samples\.dart" \
     | grep -v "retry_policy\.dart" \
+    | grep -v "retry_policy_execute\.part\.dart" \
     | grep -v "navigation\.dart" \
     | grep -v "todo_list_page_handlers\.dart" \
     | grep -v "walletconnect_service\.dart" \
