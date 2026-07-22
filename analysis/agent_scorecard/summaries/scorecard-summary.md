@@ -1,22 +1,17 @@
 # Agent Scorecard Summary
 
-- Total events: `2`
+- Total events: `0`
 - Parse success: `100.00%`
 - Invalid JSON lines: `0`
 - Delegate usage rate: `0.00%`
-- p50 duration: `65745ms`
-- p95 duration: `131489ms`
+- p50 duration: `0ms`
+- p95 duration: `0ms`
+- Source fingerprint: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 
 ## Status Counts
 
-- `ok`: `2`
 
 ## Risk Counts
 
-- `high`: `1`
-- `unknown`: `1`
 
 ## Command Breakdown
-
-- `integration_tests`: count `1`, success `100.00%`, p50 `131489ms`
-- `smoke`: count `1`, success `100.00%`, p50 `1ms`

@@ -14,6 +14,18 @@ Roles, handoffs, and stop conditions. Map entry: [`AGENTS.md`](../../AGENTS.md).
 
 One session may hold multiple roles; declare role in PR description.
 
+## Human verdict by risk
+
+Classify risk before implementation and record the resulting verdict in the PR
+accountability block. Unknown risk blocks work until classified.
+
+| Risk | Required review and answerability |
+| --- | --- |
+| Low | Automated gates; human sampling. |
+| Medium | Independent review before merge; human verdict is approve, revise, or block. |
+| High | Named human approver; explicit detection signal, blast radius, and rollback proof before merge. |
+| Unknown | Block until classified; do not substitute medium-risk review. |
+
 ## Handoff protocol
 
 1. Planner -> Implementer: Feature Brief linked; ARCH/REC IDs cited.

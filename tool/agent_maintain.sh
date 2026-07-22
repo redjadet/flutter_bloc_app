@@ -608,6 +608,7 @@ cmd_auto() {
 cmd_closeout() {
   log "workflow|closeout|agents run before claiming task done"
   cmd_auto "$@"
+  run_stage bash "$PROJECT_ROOT/tool/check_agent_scorecard_freshness.sh"
 }
 
 cmd_after_host_edit() {

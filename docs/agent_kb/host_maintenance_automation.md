@@ -44,6 +44,9 @@ you are finishing an explicit host-environment task. Prefer `preflight` + scoped
    [`harness_auto_maintenance.md`](../ai/harness_auto_maintenance.md)) — runs even
    when `docs-sync` skipped the scorecard gate (for example `.cursor/rules/**`
    only)
+6. **Scorecard freshness** — `check_agent_scorecard_freshness.sh` rejects a
+   summary that no longer matches active or archived event inputs; regenerate
+   with `./tool/build_agent_scorecard_summary.sh`.
 
 For docs/tooling scopes, `docs-sync` also runs
 `tool/update_harness_score_badge.sh --check` through

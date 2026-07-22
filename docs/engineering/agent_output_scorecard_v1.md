@@ -38,7 +38,7 @@ quality in this repository.
 | `low` | docs-only, tiny single-file edits | no delegate | targeted checks |
 | `medium` | non-trivial local implementation and script changes | optional bounded sidecar review | `./bin/checklist` |
 | `high` | routing/auth/validation/rollout behavior changes | bounded sidecar strongly preferred | `./bin/router_feature_validate` and/or `./bin/integration_tests` |
-| `unknown` | uncategorized | treat as medium until classified | `./bin/checklist` |
+| `unknown` | uncategorized | do not proceed until classified | classify before selecting validation |
 
 ## KPI Definitions
 
@@ -56,6 +56,15 @@ quality in this repository.
 ```bash
 ./tool/build_agent_scorecard_summary.sh
 ```
+
+- Verify generated summaries match the active and archived event inputs:
+
+```bash
+bash tool/check_agent_scorecard_freshness.sh
+```
+
+Run the build command after event-stream changes. `closeout` enforces the
+freshness check so stale derived summaries cannot be used as evidence.
 
 - Validate broad health:
 
