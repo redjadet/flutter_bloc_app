@@ -15,6 +15,7 @@ cross-cutting code. Pick an existing owner first.
 | --- | --- |
 | Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.0`) |
+| Public completer + StreamController lifecycle helpers | `ilkersevim_async_lifecycle` ([pub.dev](https://pub.dev/packages/ilkersevim_async_lifecycle) `^0.1.0`) |
 | Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.0`) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
@@ -50,6 +51,7 @@ Prefer package barrels instead of deep imports unless package docs require a
 specific private path:
 
 ```dart
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:utilities/utilities.dart';
@@ -62,8 +64,9 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 ```
 
 `ilkersevim_async_utils` owns public, dependency-free single-flight and
-request-staleness guards. `ilkersevim_type_safe_bloc` owns public type-safe
-`flutter_bloc` helpers — import it directly (no app shims;
+request-staleness guards. `ilkersevim_async_lifecycle` owns public completer
+and `StreamController` lifecycle helpers. `ilkersevim_type_safe_bloc` owns
+public type-safe `flutter_bloc` helpers — import it directly (no app shims;
 `app_shared_flutter` does not re-export it). `packages/utilities` remains an
 internal workspace package and must not re-export those public APIs.
 

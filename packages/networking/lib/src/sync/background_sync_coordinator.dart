@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 

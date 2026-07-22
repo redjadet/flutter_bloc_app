@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 
 class _TestLifecycle with StreamControllerLifecycle<int> {
   Future<void> dispose() async {

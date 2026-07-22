@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_connection_state.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_repository.dart';
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:networking/networking.dart';
-import 'package:utilities/utilities.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 typedef WebSocketConnector = FutureOr<WebSocketChannel> Function(Uri uri);
