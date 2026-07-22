@@ -1503,6 +1503,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  ilkersevim_relative_time:
+    dependency: transitive
+    description:
+      name: ilkersevim_relative_time
+      sha256: c0f89beab396fb93d46fe766a46c0fd684697e92dd3cf0b10569508b548e5468
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   ilkersevim_safe_parse:
     dependency: transitive
     description:
