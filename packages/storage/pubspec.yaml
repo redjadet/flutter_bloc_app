@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
   freezed_annotation: ^3.1.0
   hive_flutter: ^1.1.0
-  ilkersevim_async_lifecycle: ^0.1.0
+  ilkersevim_async_lifecycle: ^0.1.2
   json_annotation: ^4.12.0
   path_provider: ^2.1.6
   shared_preferences: ^2.5.5

@@ -14,10 +14,10 @@ cross-cutting code. Pick an existing owner first.
 | Need | Owner |
 | --- | --- |
 | Pure Dart primitives, errors, retry, lifecycle helpers, parsing, memory trim levels | `packages/utilities` |
-| Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.0`) |
-| Public completer + StreamController lifecycle helpers | `ilkersevim_async_lifecycle` ([pub.dev](https://pub.dev/packages/ilkersevim_async_lifecycle) `^0.1.0`) |
-| Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.0`) |
-| Public Flutter `compute` JSON map/list decode + encode | `ilkersevim_json_isolate` ([pub.dev](https://pub.dev/packages/ilkersevim_json_isolate) `^0.1.0`) |
+| Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.1`) |
+| Public completer + StreamController lifecycle helpers | `ilkersevim_async_lifecycle` ([pub.dev](https://pub.dev/packages/ilkersevim_async_lifecycle) `^0.1.2`) |
+| Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.2`) |
+| Public Flutter `compute` JSON map/list decode + encode | `ilkersevim_json_isolate` ([pub.dev](https://pub.dev/packages/ilkersevim_json_isolate) `^0.1.1`) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
 | Auth contracts, token repository, auth user/session value types | `packages/auth` |
