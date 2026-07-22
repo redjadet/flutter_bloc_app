@@ -13,7 +13,8 @@ cross-cutting code. Pick an existing owner first.
 
 | Need | Owner |
 | --- | --- |
-| Pure Dart primitives, errors, retry, lifecycle helpers, memory trim levels | `packages/utilities` |
+| Pure Dart primitives, errors, retry, memory trim levels | `packages/utilities` |
+| Public disposable bag, subscription/timer managers, `TimerDisposable` | `ilkersevim_disposables` ([pub.dev](https://pub.dev/packages/ilkersevim_disposables) `^0.1.0`; `TimerDisposable` also re-exported from `package:core`) |
 | Public short relative-time labels (`3d` / `2h` / `now`) | `ilkersevim_relative_time` ([pub.dev](https://pub.dev/packages/ilkersevim_relative_time) `^0.1.1`) |
 | Public safe dynamic/JSON parse helpers | `ilkersevim_safe_parse` ([pub.dev](https://pub.dev/packages/ilkersevim_safe_parse) `^0.1.1`) |
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.1`) |
@@ -56,6 +57,7 @@ specific private path:
 ```dart
 import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:ilkersevim_relative_time/ilkersevim_relative_time.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
@@ -75,6 +77,9 @@ and `StreamController` lifecycle helpers. `ilkersevim_type_safe_bloc` owns
 public type-safe `flutter_bloc` helpers — import it directly (no app shims;
 `app_shared_flutter` does not re-export it). `ilkersevim_safe_parse` owns safe dynamic/JSON parse helpers — import it directly.
 `ilkersevim_relative_time` owns short relative-time labels — import it directly.
+`ilkersevim_disposables` owns `DisposableBag`, `SubscriptionManager`,
+`TimerHandleManager`, and `TimerDisposable` — import the package for bag/
+managers; `TimerDisposable` remains available via `package:core` re-export.
 `packages/utilities` remains an internal workspace package and must not
 re-export those public APIs.
 

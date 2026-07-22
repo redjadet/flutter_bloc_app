@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 /// Mixin for managing stream subscriptions in cubits.
 ///

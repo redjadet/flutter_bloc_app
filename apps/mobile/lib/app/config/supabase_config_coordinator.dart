@@ -4,7 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/app/config/supabase_config_provider.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 /// Owns the auth-driven Supabase config refresh loop.
 ///

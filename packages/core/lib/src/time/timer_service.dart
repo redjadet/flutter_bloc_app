@@ -1,8 +1,9 @@
 import 'dart:async';
 
-mixin TimerDisposable {
-  void dispose();
-}
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
+
+export 'package:ilkersevim_disposables/ilkersevim_disposables.dart'
+    show TimerDisposable;
 
 /// Abstraction over periodic timers to make time deterministic in tests.
 mixin TimerService {
