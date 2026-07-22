@@ -1,7 +1,7 @@
 # Compute / isolate — current contract
 
 Offload CPU-heavy work with `compute()` via
-`package:ilkersevim_json_isolate (shim: apps/mobile/lib/app/utils/isolate_json.dart)`.
+[`package:ilkersevim_json_isolate`](https://pub.dev/packages/ilkersevim_json_isolate).
 
 ## Rules
 
@@ -20,5 +20,8 @@ Offload CPU-heavy work with `compute()` via
 ## Related
 
 - [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md)
-- Change note: [`changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](../changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md)
+- [`SHARED_UTILITIES.md`](../engineering/SHARED_UTILITIES.md)
+- Change notes: [`2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md`](../changes/2026-05-14_json_utf8_bytes_decode_and_hf_bytes.md),
+  [`2026-07-22_json_isolate_public_package.md`](../changes/2026-07-22_json_isolate_public_package.md),
+  [`2026-07-22_retire_json_isolate_shim.md`](../changes/2026-07-22_retire_json_isolate_shim.md)
 - Profiling (optional): [`startup_time_profiling.md`](startup_time_profiling.md), [`bundle_size_monitoring.md`](bundle_size_monitoring.md)

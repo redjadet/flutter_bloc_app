@@ -16,7 +16,7 @@ source "$WORKSPACE_ROOT/tool/check_helpers.sh"
 # Use ripgrep if available, otherwise grep
 # Match "jsonDecode" or "jsonEncode" but exclude:
 # - test files
-# - isolate_json.dart (the implementation file)
+# - (implementation lives in package:ilkersevim_json_isolate)
 # - Generated files (*.g.dart, *.freezed.dart)
 # - Comments
 if command -v rg &> /dev/null; then
@@ -24,13 +24,13 @@ if command -v rg &> /dev/null; then
     --glob "!**/*.g.dart" \
     --glob "!**/*.freezed.dart" \
     --glob "!**/*.gr.dart" \
-    --glob "!lib/app/utils/isolate_json.dart" \
+\
     | rg -v "test" \
     | rg -v "^[[:space:]]*//" \
     || true)
 else
   VIOLATIONS=$(grep -rn "\\bjsonDecode(\\|\\bjsonEncode(" lib/features lib/app 2>/dev/null \
-    | grep -v "lib/app/utils/isolate_json.dart" \
+\
     | grep -v "/test/" \
     | grep -v "^[[:space:]]*//" \
     || true)
@@ -54,7 +54,7 @@ if [ -n "$VIOLATIONS" ]; then
   echo ""
   echo "For small payloads (<8KB), you may add: // check-ignore: small payload (<8KB)"
   echo "Examples of small payloads: request bodies, config files, error responses"
-  echo "See: lib/app/utils/isolate_json.dart and docs/performance/compute_isolate_review.md"
+  echo "See: package:ilkersevim_json_isolate and docs/performance/compute_isolate_review.md"
   exit 1
 else
   echo "✅ No raw jsonDecode/jsonEncode usage found"
