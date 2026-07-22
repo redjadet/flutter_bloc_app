@@ -30,8 +30,8 @@ types, and `FormatException` behavior unchanged.
 
 ## External package
 
-- Pub.dev: <https://pub.dev/packages/ilkersevim_json_isolate> (`0.1.0`;
-  app constraint `^0.1.0`)
+- Pub.dev: <https://pub.dev/packages/ilkersevim_json_isolate> (`0.1.0` manual
+  + `0.1.1` OIDC; app constraint `^0.1.0`)
 - Source: <https://github.com/redjadet/ilkersevim_json_isolate> (Apache-2.0)
-- Releases: GitHub Actions OIDC on tag `vX.Y.Z` with Environment `pub.dev`
-  (proof pending Task 16 / Pub.dev Admin enable)
+- Releases: GitHub Actions OIDC on tag `vX.Y.Z*` with Environment `pub.dev`
+  (reviewer `redjadet`); proven on `v0.1.1`
