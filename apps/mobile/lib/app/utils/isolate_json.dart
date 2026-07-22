@@ -1,4 +1,4 @@
-export 'package:app_shared_flutter/app_shared_flutter.dart'
+export 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart'
     show
         decodeJsonList,
         decodeJsonListFromBytes,

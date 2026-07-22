@@ -4,6 +4,7 @@ import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 
 /// Fetches chart trending data directly from CoinGecko (used when Supabase
 /// is not configured or user is not signed in).

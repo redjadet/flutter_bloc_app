@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_sourc
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_repository.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 

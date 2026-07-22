@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

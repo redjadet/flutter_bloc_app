@@ -17,13 +17,14 @@ cross-cutting code. Pick an existing owner first.
 | Public dependency-free single-flight and request-staleness guards | `ilkersevim_async_utils` ([pub.dev](https://pub.dev/packages/ilkersevim_async_utils) `^0.1.0`) |
 | Public completer + StreamController lifecycle helpers | `ilkersevim_async_lifecycle` ([pub.dev](https://pub.dev/packages/ilkersevim_async_lifecycle) `^0.1.0`) |
 | Public type-safe `flutter_bloc` context extensions and widgets | `ilkersevim_type_safe_bloc` ([pub.dev](https://pub.dev/packages/ilkersevim_type_safe_bloc) `^0.1.0`) |
+| Public Flutter `compute` JSON map/list decode + encode | `ilkersevim_json_isolate` ([pub.dev](https://pub.dev/packages/ilkersevim_json_isolate) `^0.1.0`) |
 | Hive, local storage, migrations, pending sync repositories | `packages/storage` |
 | Dio/network guards, retry interceptors, circuit breaker, background sync primitives | `packages/networking` |
 | Auth contracts, token repository, auth user/session value types | `packages/auth` |
 | Feature flag and remote config contracts | `packages/feature_flags` |
 | AI/rendering contracts reusable outside the app shell | `packages/ai` |
 | Reusable Flutter UI, responsive helpers, platform-adaptive widgets, markdown rendering, image widgets, view status | `packages/design_system` |
-| Flutter shared infra that is not design-system UI: logger, platform environment, secure secret storage, media pick result keys, integration log messages | `packages/app_shared_flutter` |
+| Flutter shared infra that is not design-system UI: logger, platform environment, secure secret storage, media pick result keys, integration log messages (JSON isolate helpers moved to `ilkersevim_json_isolate`) | `packages/app_shared_flutter` |
 | App startup, DI, routing, app config, app theme, Firebase/Supabase bootstrap, app-owned diagnostics, app-owned widgets, feature adapters | `apps/mobile/lib/app` |
 | Feature-specific UI, data adapters, repositories, cubits, and domain logic | `apps/mobile/lib/features/<feature>` |
 
@@ -54,6 +55,7 @@ specific private path:
 import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:utilities/utilities.dart';
 import 'package:storage/storage.dart';
 import 'package:networking/networking.dart';
