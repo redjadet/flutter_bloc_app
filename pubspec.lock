@@ -1483,10 +1483,10 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_async_lifecycle
-      sha256: b30fa39bad3aff24a81acde7daccd1bd224236516419ee3a3f59732635eaca96
+      sha256: "565e9fc8b95a6de049cc5933036bd7617fd8459c18d5b052188a6d82cc0bcedb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   ilkersevim_async_utils:
     dependency: transitive
     description:
