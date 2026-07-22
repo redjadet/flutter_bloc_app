@@ -1507,10 +1507,10 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_safe_parse
-      sha256: "639de21a4b9a91f1091be5a54de542aef4f97ddc00a7bd800b1cf1094fe40c46"
+      sha256: "4a26982dea4d739f47e8e6da26598b60dbbf3d99802f5791dd336042f3553677"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   ilkersevim_type_safe_bloc:
     dependency: transitive
     description:
