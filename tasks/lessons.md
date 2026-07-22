@@ -21,6 +21,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-22 - Verify branch before commit after parallel checkout churn
+
+- What went wrong:
+  Security fix for firebase-functions npm overrides was committed and pushed
+  onto unrelated `chore/bump-ilkersevim-retry-0.1.1` (PR #589) instead of the
+  intended `chore/fix-npm-body-parser-brace-expansion` branch after worktree
+  remove / parallel branch switches.
+- How it was fixed:
+  Cherry-picked onto the correct branch, opened #590, then
+  `git reset --hard` + `git push --force-with-lease` restored #589 to its
+  intended tip (feature branch only; never `main`).
+- Pattern:
+  Session with multiple local branches + worktree teardown can leave HEAD on
+  the wrong topic branch; `git commit` / `git push` silently attach to it.
+- Preventive rule:
+  Immediately before staging/commit/push: `git branch --show-current` and
+  `git status -sb` must match the intended topic branch name. After any
+  `git worktree remove` / `git switch`, re-check before the next write.
+- Evidence or affected files:
+  PRs #589/#590, `backend/firebase/functions/package.json`
+
 ### 2026-07-18 - Watch-merge needs worktree remove before local branch delete
 
 - What went wrong:
