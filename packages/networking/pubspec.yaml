@@ -20,7 +20,7 @@ dependencies:
   freezed_annotation: ^3.1.0
   ilkersevim_async_lifecycle: ^0.1.2
   ilkersevim_disposables: ^0.1.1
-  ilkersevim_retry: ^0.1.0
+  ilkersevim_retry: ^0.1.1
   retrofit: ^4.9.2
   storage:
     path: ../storage
