@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-18T08:57:20Z"
-  git_head: "cd2c35ed609a8301079fea2efab8d70dbbcd9c8b"
+  generated_at: "2026-07-22T18:55:47Z"
+  git_head: "3bb0b2b3b90e363a053c6d4b62294b1c460e4661"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -31,13 +31,13 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 13 | 244 | `counter/presentation/widgets/counter_page_app_bar_overflow.part.dart` | counter |
 | 14 | 241 | `staff_app_demo/presentation/pages/staff_app_demo_proof_page_widgets.part.dart` | staff_app_demo |
 | 15 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
-| 16 | 223 | `todo_list/presentation/cubit/todo_list_cubit.dart` | todo_list |
+| 16 | 224 | `todo_list/presentation/cubit/todo_list_cubit.dart` | todo_list |
 | 17 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
 | 18 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
 | 19 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
 | 20 | 222 | `counter/data/offline_first_counter_repository.dart` | counter |
 
-**Total feature Dart (non-generated):** ~76196 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~76169 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

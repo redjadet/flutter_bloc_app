@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-18T08:57:20Z"
-  git_head: "cd2c35ed609a8301079fea2efab8d70dbbcd9c8b"
+  generated_at: "2026-07-22T18:55:47Z"
+  git_head: "3bb0b2b3b90e363a053c6d4b62294b1c460e4661"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -18,34 +18,34 @@ ai_snapshot:
 <!-- refresh_ai_reports:feature_metrics:start -->
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
-| chat | 6833 | yes |
+| chat | 6827 | yes |
 | staff_app_demo | 5701 | yes |
 | online_therapy_demo | 5340 | yes |
 | todo_list | 5308 | yes |
-| case_study_demo | 4692 | yes |
-| counter | 4377 | yes |
-| native_platform_showcase | 3464 | yes |
-| iot_demo | 3291 | yes |
+| case_study_demo | 4702 | yes |
+| counter | 4372 | yes |
+| native_platform_showcase | 3458 | yes |
+| iot_demo | 3289 | yes |
 | iot | 3190 | yes |
-| auth | 2477 | yes |
+| auth | 2475 | yes |
 | example | 2312 | yes |
 | realtime_market | 2186 | yes |
-| graphql_demo | 2057 | yes |
-| chart | 2028 | yes |
-| calculator | 1867 | yes |
+| graphql_demo | 2056 | yes |
+| chart | 2027 | yes |
+| calculator | 1866 | yes |
 | walletconnect_auth | 1560 | yes |
 | ai_decision_demo | 1536 | yes |
 | google_maps | 1493 | yes |
-| profile | 1406 | yes |
+| profile | 1404 | yes |
 | in_app_purchase_demo | 1363 | yes |
 | igaming_demo | 1334 | yes |
-| supabase_auth | 1261 | yes |
-| remote_config | 1259 | yes |
-| settings | 1229 | yes |
-| search | 1136 | yes |
+| supabase_auth | 1260 | yes |
+| remote_config | 1255 | yes |
+| settings | 1226 | yes |
+| search | 1135 | yes |
 | library_demo | 1045 | yes |
-| camera_gallery | 1039 | yes |
-| scapes | 992 | yes |
+| camera_gallery | 1038 | yes |
+| scapes | 991 | yes |
 | websocket | 859 | yes |
 | fcm_demo | 813 | yes |
 | genui_demo | 736 | yes |
