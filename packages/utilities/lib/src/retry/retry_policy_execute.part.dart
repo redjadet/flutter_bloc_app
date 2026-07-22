@@ -1,14 +1,11 @@
 part of 'retry_policy.dart';
 
-final DefaultTimerService _retryPolicyDefaultTimerService =
-    DefaultTimerService();
-
 Future<T> _retryPolicyExecuteWithRetry<T>(
   final RetryPolicy policy, {
   required final Future<T> Function() action,
   final CancelToken? cancelToken,
   final bool Function(Object error)? shouldRetry,
-  final TimerService? timerService,
+  final RetryDelay? delay,
 }) async {
   Object? lastError;
   StackTrace? lastStackTrace;
@@ -36,7 +33,7 @@ Future<T> _retryPolicyExecuteWithRetry<T>(
             jitter: policy.jitter,
           ),
           cancelToken,
-          timerService,
+          delay,
         );
       }
     }
@@ -77,13 +74,13 @@ void _retryPolicyThrowIfCancelled(
 Future<void> _retryPolicyWaitBeforeRetry(
   final Duration delay,
   final CancelToken? cancelToken,
-  final TimerService? timerService,
+  final RetryDelay? delayFn,
 ) async {
-  final TimerService effectiveTimerService =
-      timerService ?? _retryPolicyDefaultTimerService;
+  final RetryDelay effectiveDelay =
+      delayFn ?? ((final Duration duration) => Future<void>.delayed(duration));
 
   if (cancelToken == null) {
-    await _retryPolicyDelayViaTimerService(effectiveTimerService, delay);
+    await effectiveDelay(delay);
     return;
   }
 
@@ -96,7 +93,7 @@ Future<void> _retryPolicyWaitBeforeRetry(
       remaining: delay - elapsed,
       checkInterval: checkInterval,
     );
-    await _retryPolicyDelayViaTimerService(effectiveTimerService, waitDuration);
+    await effectiveDelay(waitDuration);
     elapsed += waitDuration;
   }
 
@@ -108,17 +105,4 @@ Duration _retryPolicyNextDelayChunk({
   required final Duration checkInterval,
 }) {
   return remaining < checkInterval ? remaining : checkInterval;
-}
-
-Future<void> _retryPolicyDelayViaTimerService(
-  final TimerService service,
-  final Duration duration,
-) {
-  final Completer<void> completer = Completer<void>();
-  final TimerDisposable handle = service.runOnce(duration, () {
-    if (!completer.isCompleted) {
-      completer.complete();
-    }
-  });
-  return completer.future.whenComplete(handle.dispose);
 }

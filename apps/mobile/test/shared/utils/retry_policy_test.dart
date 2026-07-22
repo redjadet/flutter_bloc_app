@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../../test_helpers.dart' show FakeTimerService;
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('RetryPolicy', () {
@@ -37,6 +35,7 @@ void main() {
           }
           return 42;
         },
+        delay: _immediateRetryDelay,
       );
 
       expect(result, 42);
@@ -54,6 +53,7 @@ void main() {
           action: () async {
             throw Exception('Persistent error');
           },
+          delay: _immediateRetryDelay,
         ),
         throwsA(isA<Exception>()),
       );
@@ -126,16 +126,16 @@ void main() {
       expect(callCount, 1);
     });
 
-    test('executeWithRetry uses timerService-backed delays', () async {
+    test('executeWithRetry uses delay callback for backoff waits', () async {
       const policy = RetryPolicy(
         maxAttempts: 3,
         baseDelay: Duration(milliseconds: 50),
         jitter: false,
       );
-      final FakeTimerService fakeTimer = FakeTimerService();
+      final List<Duration> recorded = <Duration>[];
       int callCount = 0;
 
-      final Future<int> future = policy.executeWithRetry<int>(
+      final int result = await policy.executeWithRetry<int>(
         action: () async {
           callCount++;
           if (callCount == 1) {
@@ -143,27 +143,60 @@ void main() {
           }
           return 42;
         },
-        timerService: fakeTimer,
+        delay: (final Duration duration) async {
+          recorded.add(duration);
+        },
       );
 
-      await Future<void>.delayed(Duration.zero);
-      expect(callCount, 1);
-
-      fakeTimer.elapse(const Duration(milliseconds: 50));
-      await Future<void>.delayed(Duration.zero);
-
-      expect(await future, 42);
+      expect(result, 42);
       expect(callCount, 2);
+      expect(recorded, <Duration>[const Duration(milliseconds: 50)]);
     });
 
-    test('executeWithRetry cancels during timerService-backed delay', () async {
+    test('executeWithRetry polls cancelToken in 50ms delay chunks', () async {
+      const policy = RetryPolicy(
+        maxAttempts: 3,
+        baseDelay: Duration(milliseconds: 120),
+        jitter: false,
+      );
+      final List<Duration> recorded = <Duration>[];
+      int callCount = 0;
+
+      await expectLater(
+        policy.executeWithRetry<int>(
+          action: () async {
+            callCount++;
+            throw Exception('Error');
+          },
+          cancelToken: CancelToken(),
+          delay: (final Duration duration) async {
+            recorded.add(duration);
+          },
+        ),
+        throwsA(isA<Exception>()),
+      );
+
+      expect(callCount, 3);
+      expect(recorded, <Duration>[
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 20),
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 50),
+        const Duration(milliseconds: 40),
+      ]);
+    });
+
+    test('executeWithRetry cancels during delay-backed wait', () async {
       const policy = RetryPolicy(
         maxAttempts: 3,
         baseDelay: Duration(milliseconds: 50),
         jitter: false,
       );
       final CancelToken cancelToken = CancelToken();
-      final FakeTimerService fakeTimer = FakeTimerService();
+      Completer<void>? gate;
       int callCount = 0;
 
       final Future<int> future = policy.executeWithRetry<int>(
@@ -172,14 +205,18 @@ void main() {
           throw Exception('Error');
         },
         cancelToken: cancelToken,
-        timerService: fakeTimer,
+        delay: (final Duration duration) {
+          gate = Completer<void>();
+          return gate!.future;
+        },
       );
 
       await Future<void>.delayed(Duration.zero);
       expect(callCount, 1);
+      expect(gate, isNotNull);
 
       cancelToken.cancel();
-      fakeTimer.elapse(const Duration(milliseconds: 50));
+      gate!.complete();
 
       await expectLater(future, throwsA(isA<CancellationException>()));
       expect(callCount, 1);
@@ -298,3 +335,5 @@ void main() {
     });
   });
 }
+
+Future<void> _immediateRetryDelay(final Duration duration) async {}

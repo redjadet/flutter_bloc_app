@@ -59,14 +59,22 @@ await pumpEventQueue();
 
 ### Retry backoff
 
-For retry/backoff delays, pass `TimerService` into `RetryPolicy.executeWithRetry(..., timerService: myTimerService)` when you need test time control; when omitted, backoff uses `Future.delayed` (allow-listed).
+For retry/backoff delays, pass a `RetryDelay` into
+`RetryPolicy.executeWithRetry(..., delay: myDelay)` when you need testable or
+`TimerService`-backed waits. App code can adapt `TimerService.runOnce` locally
+to `RetryDelay`. When omitted, backoff uses `Future.delayed` (allow-listed in
+`retry_policy*.dart`).
 
 ## When Future.delayed is allowed
 
 validation script `tool/check_raw_future_delayed.sh` flags `Future.delayed` in `lib/` except in allow-listed paths. Allowed without change:
 
 - **Mock/demo code**: `mock_*.dart`, `*_demo_*.dart`, `delayed_chart_repository.dart`, `isolate_samples.dart`.
-- **Justified production paths** (allow-listed in script): `retry_policy.dart` (interruptible via `CancelToken` polling), `navigation.dart` (short safeGo delay with `context.mounted` check), `todo_list_page_handlers.dart` (UI timing), `walletconnect_service.dart` (demo placeholder).
+- **Justified production paths** (allow-listed in script): `retry_policy.dart` /
+  `retry_policy_execute.part.dart` (interruptible via `CancelToken` polling;
+  default [RetryDelay]), `navigation.dart` (short safeGo delay with
+  `context.mounted` check), `todo_list_page_handlers.dart` (UI timing),
+  `walletconnect_service.dart` (demo placeholder).
 
 For **new** production code, prefer `TimerService`. If you must use `Future.delayed`, add `// check-ignore: reason` on line (or line above) and ensure script’s allow-list or validation docs are updated if exception is permanent.
 

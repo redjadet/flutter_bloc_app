@@ -8,7 +8,7 @@ mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
     required final CaseStudyCaseType caseType,
   }) async {
     return _caseStudyLocalPersistRetryPolicy.executeWithRetry<CaseStudyDraft>(
-      timerService: _timerService,
+      delay: _retryDelayViaTimerService,
       action: () async {
         try {
           final List<CaseStudyRecord> records = await _local.loadRecords(

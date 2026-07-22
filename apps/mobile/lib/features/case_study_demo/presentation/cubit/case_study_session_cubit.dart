@@ -109,6 +109,17 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   StreamSubscription<dynamic>? _authSub;
   String? _authUserId;
 
+  /// Adapts [_timerService] to [RetryDelay] for local persist backoff.
+  Future<void> _retryDelayViaTimerService(final Duration duration) {
+    final Completer<void> completer = Completer<void>();
+    final TimerDisposable handle = _timerService.runOnce(duration, () {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    });
+    return completer.future.whenComplete(handle.dispose);
+  }
+
   /// Timestamp for the local history row while submit is in flight; kept if local persist fails after remote OK.
   DateTime? _pendingSubmitSubmittedAtUtc;
   Future<void> hydrate() async {
