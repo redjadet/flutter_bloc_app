@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-07-22_bump_ilkersevim_relative_time_0.1.1.md`](2026-07-22_bump_ilkersevim_relative_time_0.1.1.md): Bump hosted `ilkersevim_relative_time` caret to `^0.1.1` after OIDC proof.
+- [`2026-07-22_bump_ilkersevim_disposables_0.1.1.md`](2026-07-22_bump_ilkersevim_disposables_0.1.1.md): Bump hosted `ilkersevim_disposables` caret to `^0.1.1` after OIDC proof.
 - [`2026-07-22_agent_engineering_judgment.md`](2026-07-22_agent_engineering_judgment.md): Lean AI coding guidance for problem definition, simple resilient design, understood reuse, maintainable communication, and proof.
 - [`2026-07-22_disposables_public_package.md`](2026-07-22_disposables_public_package.md): Extract DisposableBag / managers / TimerDisposable to public `ilkersevim_disposables` on Pub.dev (`^0.1.0`).
 - [`2026-07-22_relative_time_public_package.md`](2026-07-22_relative_time_public_package.md): Extract short relative-time labels to public `ilkersevim_relative_time` on Pub.dev (`^0.1.0`).
