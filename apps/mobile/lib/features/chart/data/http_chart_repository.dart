@@ -3,6 +3,7 @@ import 'package:flutter_bloc_app/features/chart/data/api/coingecko_api.dart';
 import 'package:flutter_bloc_app/features/chart/data/chart_point_dto.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:meta/meta.dart';
 import 'package:utilities/utilities.dart';
 

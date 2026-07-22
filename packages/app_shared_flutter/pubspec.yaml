@@ -17,6 +17,7 @@ dependencies:
   logger: ^2.7.0
 
 dev_dependencies:
+  ilkersevim_json_isolate: ^0.1.0
   build_runner: ^2.15.2
   flutter_test:
     sdk: flutter

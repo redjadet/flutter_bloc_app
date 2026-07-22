@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-22_json_isolate_public_package.md`](2026-07-22_json_isolate_public_package.md): Extract Flutter compute JSON helpers to public `ilkersevim_json_isolate` on Pub.dev (`^0.1.0`).
 - [`2026-07-22_async_lifecycle_public_package.md`](2026-07-22_async_lifecycle_public_package.md): Extract completer + stream lifecycle helpers to public `ilkersevim_async_lifecycle` on Pub.dev (`^0.1.0`).
 - [`2026-07-22_retire_type_safe_bloc_shims.md`](2026-07-22_retire_type_safe_bloc_shims.md): Retire app type_safe_bloc shims; import hosted `ilkersevim_type_safe_bloc` directly.
 - [`2026-07-21_type_safe_bloc_public_package.md`](2026-07-21_type_safe_bloc_public_package.md): Extract type-safe BLoC helpers to public `ilkersevim_type_safe_bloc` on Pub.dev (`^0.1.0`).

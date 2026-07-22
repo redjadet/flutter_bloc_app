@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:hive/hive.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 

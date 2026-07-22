@@ -1,8 +1,8 @@
-import 'package:flutter_bloc_app/app/utils/isolate_json.dart';
 import 'package:flutter_bloc_app/features/search/data/search_result_dto.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:hive/hive.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:storage/storage.dart';
 
 /// Hive-backed implementation of [SearchCacheRepository].

@@ -4,6 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:storage/storage.dart';
 
 /// Stores chat history in encrypted platform storage.

@@ -1,7 +1,7 @@
 # Compute / isolate — current contract
 
 Offload CPU-heavy work with `compute()` via
-`apps/mobile/lib/app/utils/isolate_json.dart`.
+`package:ilkersevim_json_isolate (shim: apps/mobile/lib/app/utils/isolate_json.dart)`.
 
 ## Rules
 

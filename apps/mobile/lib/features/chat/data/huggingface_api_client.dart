@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
+import 'package:ilkersevim_json_isolate/ilkersevim_json_isolate.dart';
 import 'package:networking/networking.dart';
 
 typedef JsonMap = Map<String, dynamic>;
