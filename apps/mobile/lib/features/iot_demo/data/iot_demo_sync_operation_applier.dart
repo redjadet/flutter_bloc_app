@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/iot_demo/data/supabase_iot_demo_reposi
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Applies a single IoT demo sync operation payload to the remote repository.
 ///

@@ -1,6 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 List<ChartPoint> parseChartPointsResilient(
   final List<dynamic> raw, {

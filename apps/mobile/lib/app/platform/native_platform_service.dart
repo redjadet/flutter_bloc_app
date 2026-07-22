@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 const String _channelName = 'com.example.flutter_bloc_app/native';
 const String _methodGetPlatformInfo = 'getPlatformInfo';

@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/app/firebase/stream_with_auth_user.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Firebase Realtime Database backed implementation of [TodoRepository].
 class RealtimeDatabaseTodoRepository

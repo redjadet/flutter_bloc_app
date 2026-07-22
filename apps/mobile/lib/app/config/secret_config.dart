@@ -4,11 +4,10 @@ library;
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 part 'secret_config_chat_orchestration.dart';
 part 'secret_config_impl.part.dart';

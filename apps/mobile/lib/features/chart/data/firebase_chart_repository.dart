@@ -9,7 +9,7 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_data_exception.dart
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:meta/meta.dart';
-import 'package:utilities/utilities.dart';
 
 part 'firebase_chart_repository_impl.part.dart';

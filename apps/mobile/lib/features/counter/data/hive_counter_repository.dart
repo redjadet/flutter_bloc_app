@@ -1,13 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_helper.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:meta/meta.dart';
 import 'package:storage/storage.dart';
-import 'package:utilities/utilities.dart';
 
 part 'hive_counter_repository_migration.dart';
 

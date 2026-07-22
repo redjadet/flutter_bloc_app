@@ -1,5 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Wire DTO for [ChatMessage] persistence.
 class ChatMessageDto {

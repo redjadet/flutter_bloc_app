@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:storage/storage.dart';
 
 void main() {
+  // Exercises MigrationHelpers over hosted package:ilkersevim_safe_parse intFromDynamic.
   group('MigrationHelpers', () {
     group('normalizeCount', () {
       test('returns positive integer as-is', () {

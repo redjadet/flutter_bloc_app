@@ -1,4 +1,5 @@
 import 'package:flutter_bloc_app/features/chat/data/chat_sync_payload.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 

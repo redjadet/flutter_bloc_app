@@ -9,8 +9,8 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_data_source.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_exception.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_remote_repository.dart';
+import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:utilities/utilities.dart';
 
 part 'supabase_graphql_demo_repository_impl.part.dart';
 
