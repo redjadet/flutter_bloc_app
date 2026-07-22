@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core/core.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 /// Represents simplified connectivity states for offline-first coordination.
 enum NetworkStatus { unknown, online, offline }

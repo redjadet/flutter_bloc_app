@@ -4,7 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
   RemoteConfigRepository(

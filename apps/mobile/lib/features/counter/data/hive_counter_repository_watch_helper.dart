@@ -5,7 +5,7 @@ import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository_watch_state.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 /// Helper class for managing Hive box watch subscriptions and stream emissions.
 ///

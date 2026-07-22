@@ -1495,6 +1495,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  ilkersevim_disposables:
+    dependency: transitive
+    description:
+      name: ilkersevim_disposables
+      sha256: d653e22b9f6587183786a2be1ad46bcc1c1662cdf38da8436f7b70e11a045d0a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   ilkersevim_json_isolate:
     dependency: transitive
     description:

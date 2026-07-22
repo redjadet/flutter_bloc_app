@@ -4,8 +4,8 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 import 'package:networking/networking.dart' show RetryNotification;
-import 'package:utilities/utilities.dart';
 
 /// Listens to [RetryNotification] stream and shows a SnackBar with retry action.
 class RetrySnackBarListener extends StatefulWidget {

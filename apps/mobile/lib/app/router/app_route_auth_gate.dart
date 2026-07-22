@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:go_router/go_router.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
 /// Enforces a route-level auth policy for both normal navigation and deep links.
 class AppRouteAuthGate extends StatefulWidget {

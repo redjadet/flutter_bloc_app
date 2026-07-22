@@ -4,8 +4,8 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
+import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 import 'package:storage/storage.dart';
-import 'package:utilities/utilities.dart';
 
 import '../services/network_status_service.dart';
 import 'sync_cycle_summary.dart';
