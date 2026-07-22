@@ -59,7 +59,9 @@ Source of truth for gates and guardrails:
 - Auth refresh race safety: concurrent 401 refreshes are single-flight in
   `apps/mobile/lib/app/http/auth/auth_token_manager.dart` and `apps/mobile/lib/app/http/auth/interceptors/auth_token_interceptor.dart`;
   retry flow avoids double forced-refresh (tests added).
-- Completer type safety: non-nullable completion guard in `packages/utilities/lib/src/async/completer_helper.dart` (tests added).
+- Completer type safety: non-nullable completion guard in
+  `package:ilkersevim_async_lifecycle` (`CompleterHelper`; tests in the public
+  repo and `apps/mobile/test/shared/utils/completer_helper_test.dart`).
 - JSON decode error handling: try/catch and error mapping in `apps/mobile/lib/features/chat/data/huggingface_api_client.dart` (tests added).
 
 ## Notable Structural Improvements
