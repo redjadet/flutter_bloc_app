@@ -2,9 +2,10 @@
 ///
 /// Public single-flight and request-staleness guards live in
 /// `package:ilkersevim_async_utils` and are not re-exported here.
+/// Completer + stream-controller lifecycle helpers live in
+/// `package:ilkersevim_async_lifecycle` and are not re-exported here.
 library;
 
-export 'src/async/completer_helper.dart';
 export 'src/diagnostics/diagnostics_sync_timestamp.dart';
 export 'src/diagnostics/graphql_cache_clear_port.dart';
 export 'src/diagnostics/profile_cache_controls_port.dart';
@@ -22,5 +23,4 @@ export 'src/retry/retry_policy.dart';
 export 'src/safe_parse_utils.dart';
 export 'src/state/sealed_state_helpers.dart';
 export 'src/subscriptions/subscription_manager.dart';
-export 'src/streams/stream_controller_lifecycle.dart';
 export 'src/timers/timer_handle_manager.dart';

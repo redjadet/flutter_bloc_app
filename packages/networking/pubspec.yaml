@@ -18,6 +18,7 @@ dependencies:
   flutter:
     sdk: flutter
   freezed_annotation: ^3.1.0
+  ilkersevim_async_lifecycle: ^0.1.0
   retrofit: ^4.9.2
   storage:
     path: ../storage

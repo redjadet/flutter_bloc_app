@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 
 import '../hive/hive_repository_base.dart';
 import '../hive/hive_schema_fingerprints.g.dart';

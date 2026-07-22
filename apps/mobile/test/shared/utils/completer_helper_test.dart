@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_async_lifecycle/ilkersevim_async_lifecycle.dart';
 
 void main() {
   group('CompleterHelper', () {
