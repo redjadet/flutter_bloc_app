@@ -1483,66 +1483,66 @@ packages:
     dependency: transitive
     description:
       name: ilkersevim_async_lifecycle
-      sha256: "565e9fc8b95a6de049cc5933036bd7617fd8459c18d5b052188a6d82cc0bcedb"
+      sha256: "0cbb158b584c63b071625c420133ba5c7177ba6f7c75a906202e8fdd399e6d97"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.3"
   ilkersevim_async_utils:
     dependency: transitive
     description:
       name: ilkersevim_async_utils
-      sha256: d5b71aeeb80a856850be8ccdc951db05a21ea67bd44ac77c12fc08e09961fe84
+      sha256: "9a4f6dad5d7a6575e30d8105b328e74d1d13a08de824467bb6b1903758044c94"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_disposables:
     dependency: transitive
     description:
       name: ilkersevim_disposables
-      sha256: "558e374d7b7fb011b9b09f353c7673a6dbdcca96474708efe93e4fc74fbb60de"
+      sha256: e6ac78c2c46d21d33b446fc329aeef59958b9a742519b1d6bed907f55d9fbdfd
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_json_isolate:
     dependency: transitive
     description:
       name: ilkersevim_json_isolate
-      sha256: b055383aa94fe1a0572e79dd369c7f149333b8925ba88034a30539f962e55031
+      sha256: "8c765a1d899eb7ed23af0449e9ed78d3e9630f68522b6b60c3708414334af3b3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_relative_time:
     dependency: transitive
     description:
       name: ilkersevim_relative_time
-      sha256: adcd0495dd10c1105e99979e227877da28fb159c11e4f65cc830a1397eeed1e7
+      sha256: "4ec22b46f665b515f0e441ff766a95548cc42016da75b9d88ff2927ccfa7df03"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_retry:
     dependency: transitive
     description:
       name: ilkersevim_retry
-      sha256: e234010fee8a2c9653e54090ccdad7e4ffc6e88bfebc338d604c689bb3e41eeb
+      sha256: abc7abfa2b560a86700292d12021a1d71171d7366b9e425aec09cf9db9bc8be5
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_safe_parse:
     dependency: transitive
     description:
       name: ilkersevim_safe_parse
-      sha256: "4a26982dea4d739f47e8e6da26598b60dbbf3d99802f5791dd336042f3553677"
+      sha256: "484c21e60176eccea48cbeaeee3e44ba4ce53c06d0cd05c7d04d187be3786f12"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   ilkersevim_type_safe_bloc:
     dependency: transitive
     description:
       name: ilkersevim_type_safe_bloc
-      sha256: a68acc9c3546f4025c1a989c02c1c9487ae2afb37349b814b442b501b83b4047
+      sha256: ee0037b5985511b9b14d733693564aac455c5d84736da26927406f0d143a3d29
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2"
+    version: "0.1.3"
   image:
     dependency: transitive
     description:
