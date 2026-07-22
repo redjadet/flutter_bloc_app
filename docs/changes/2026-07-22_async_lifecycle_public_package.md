@@ -27,8 +27,9 @@ API names and semantics unchanged. Option B types (`DisposableBag`,
 
 ## External package
 
-- Pub.dev: <https://pub.dev/packages/ilkersevim_async_lifecycle> (`0.1.0`;
-  app constraint `^0.1.0`)
+- Pub.dev: <https://pub.dev/packages/ilkersevim_async_lifecycle> (`0.1.0` /
+  `0.1.1` manual; app constraint `^0.1.0`)
 - Source: <https://github.com/redjadet/ilkersevim_async_lifecycle> (Apache-2.0)
-- Releases: GitHub Actions OIDC publish on tag `vX.Y.Z` with Environment
-  `pub.dev` (proof pending Task 12)
+- Releases: GitHub Environment `pub.dev` + reviewer `redjadet` ready; OIDC
+  proof pending Pub.dev Admin → Enable GitHub Actions publishing, then tag
+  `v0.1.2`
