@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_avatar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_details.dart';
-import 'package:utilities/utilities.dart';
+import 'package:ilkersevim_relative_time/ilkersevim_relative_time.dart';
 
 class ChatContactTile extends StatelessWidget {
   const ChatContactTile({

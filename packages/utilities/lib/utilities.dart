@@ -1,4 +1,4 @@
-/// Pure Dart utilities (errors, retry, lifecycle helpers, time labels).
+/// Pure Dart utilities (errors, retry, lifecycle helpers).
 ///
 /// Public single-flight and request-staleness guards live in
 /// `package:ilkersevim_async_utils` and are not re-exported here.
@@ -6,6 +6,8 @@
 /// `package:ilkersevim_async_lifecycle` and are not re-exported here.
 /// Safe dynamic/JSON parse helpers live in
 /// `package:ilkersevim_safe_parse` and are not re-exported here.
+/// Short relative-time labels live in
+/// `package:ilkersevim_relative_time` and are not re-exported here.
 library;
 
 export 'src/diagnostics/diagnostics_sync_timestamp.dart';
@@ -18,7 +20,6 @@ export 'src/errors/failure_to_app_error.dart';
 export 'src/errors/http_request_failure.dart';
 export 'src/memory/app_memory_trim_level.dart';
 export 'src/offline_change_id.dart';
-export 'src/relative_time_formatting.dart';
 export 'src/repositories/repository_initial_load_helper.dart';
 export 'src/repositories/repository_watch_helper.dart';
 export 'src/retry/retry_policy.dart';
