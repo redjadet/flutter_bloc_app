@@ -106,6 +106,16 @@ Move reusable Flutter widgets to `packages/design_system` only when they are
 generic UI building blocks. Keep app-flow widgets such as banners tied to app
 state in `apps/mobile/lib/app/widgets/` or `apps/mobile/lib/app/sync/`.
 
+## Public package defaults
+
+Hybrid extraction program: [`docs/plans/2026-07-20_hybrid_shared_package_distribution.md`](../plans/2026-07-20_hybrid_shared_package_distribution.md).
+
+- License: Apache-2.0
+- GitHub: `redjadet/<package>`
+- Pub.dev publish: GitHub Actions OIDC via Environment `pub.dev` (reviewer `redjadet`)
+- After a package is live: this workspace consumes the hosted pub.dev caret (not path/git); do not phrase docs as “when published”
+- Stop before creating the public GitHub repo or the first pub.dev publish until the operator confirms same turn; lock plan G-gates before new extractionsions
+
 ## Validation
 
 Run the narrowest honest proof for the changed owner:
