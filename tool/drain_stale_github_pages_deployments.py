@@ -68,6 +68,10 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
     """Return True when a Pages deployment should be cancelled before a new deploy."""
     if is_clear_pages_status(status):
         return False
+    # Blank status often sticks after cancel; one nudge is enough so the drain
+    # loop does not treat the same ghost forever and burn poll_timeout.
+    if nudged and status in {None, ""}:
+        return False
     if is_active_queue_status(status):
         return True
     if nudged:
@@ -77,6 +81,10 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
 
 def needs_post_cancel_wait(status: str | None) -> bool:
     """Return True when a pause helps GitHub release queue capacity."""
+    # Blank-status ghosts rarely change after cancel; serial 5s sleeps across
+    # dozens of SHAs exceed the drain deadline before a recheck can clear them.
+    if status in {None, ""}:
+        return False
     if is_active_queue_status(status):
         return True
     if status in TERMINAL_STATUSES and status != "succeed":
