@@ -14,7 +14,8 @@ Future<void> _openExampleDestination(
     300,
     scrollable: find.byType(Scrollable).first,
   );
-  await tapAndPump(tester, destination);
+  // Already scrolled into view; avoid tapAndPump re-scroll.
+  await tapAndPump(tester, destination, scrollIntoView: false);
 }
 
 Future<void> _openOverflowDestination(
@@ -42,7 +43,8 @@ Future<void> _openOverflowDestination(
     await tester.drag(menuScrollable.first, const Offset(0, -96));
     await tester.pump(const Duration(milliseconds: 150));
   }
-  await tapAndPump(tester, destination);
+  // Keep nudge; tapAndPump scrollIntoView would re-scroll and can miss.
+  await tapAndPump(tester, destination, scrollIntoView: false);
 }
 
 Future<void> _pageBack(final WidgetTester tester) async {
