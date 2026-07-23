@@ -101,13 +101,13 @@ dependencies:
   google_maps_flutter_ios_sdk10: ^2.18.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  ilkersevim_async_lifecycle: ^0.1.2
+  ilkersevim_async_lifecycle: ^0.1.4
   ilkersevim_async_utils: ^0.1.1
   ilkersevim_disposables: ^0.1.1
   ilkersevim_json_isolate: ^0.1.1
-  ilkersevim_relative_time: ^0.1.1
-  ilkersevim_retry: ^0.1.1
-  ilkersevim_safe_parse: ^0.1.1
+  ilkersevim_relative_time: ^0.1.3
+  ilkersevim_retry: ^0.1.3
+  ilkersevim_safe_parse: ^0.1.3
   ilkersevim_type_safe_bloc: ^0.1.2
   image: ^4.9.1
   image_picker: ^1.2.3
