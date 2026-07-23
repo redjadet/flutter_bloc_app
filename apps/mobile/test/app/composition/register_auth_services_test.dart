@@ -34,11 +34,13 @@ feature_auth.AuthRepository _unwrapAuthRepository(
 void main() {
   setUp(() async {
     FirebaseBootstrapService.isIosSimulatorInDebug = false;
+    FirebaseBootstrapService.isAndroidEmulatorInDebug = false;
     await getIt.reset(dispose: true);
   });
 
   tearDown(() async {
     FirebaseBootstrapService.isIosSimulatorInDebug = false;
+    FirebaseBootstrapService.isAndroidEmulatorInDebug = false;
     debugDefaultTargetPlatformOverride = null;
     await getIt.reset(dispose: true);
   });

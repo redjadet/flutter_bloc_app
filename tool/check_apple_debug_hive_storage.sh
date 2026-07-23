@@ -41,6 +41,8 @@ require_pattern "$SECRET_STORAGE" 'TargetPlatform\.iOS' \
   'iOS in useInMemorySecretStorageInDebug gate'
 require_pattern "$SECRET_STORAGE" 'TargetPlatform\.macOS' \
   'macOS in useInMemorySecretStorageInDebug gate'
+require_pattern "$SECRET_STORAGE" 'TargetPlatform\.android' \
+  'Android in useInMemorySecretStorageInDebug gate'
 require_pattern "$SECRET_STORAGE" 'kIsWeb' 'kIsWeb guard in secret storage helper'
 require_pattern "$SECRET_STORAGE" 'kReleaseMode' 'kReleaseMode guard in secret storage helper'
 

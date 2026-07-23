@@ -34,9 +34,11 @@ class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
   StreamSubscription<AuthUser?>? _firebaseSubscription;
   AuthUser? _localGuest;
 
-  String get _localGuestId => defaultTargetPlatform == TargetPlatform.macOS
-      ? 'macos-debug-local-guest'
-      : 'ios-simulator-debug-local-guest';
+  String get _localGuestId => switch (defaultTargetPlatform) {
+    TargetPlatform.macOS => 'macos-debug-local-guest',
+    TargetPlatform.android => 'android-emulator-debug-local-guest',
+    _ => 'ios-simulator-debug-local-guest',
+  };
 
   @override
   AuthUser? get currentUser => super.currentUser ?? _localGuest;
@@ -100,9 +102,11 @@ class LocalGuestOnlyAuthRepository implements AuthRepository {
     if (kIsWeb) {
       return 'web-local-guest';
     }
-    return defaultTargetPlatform == TargetPlatform.macOS
-        ? 'macos-debug-local-guest'
-        : 'ios-simulator-debug-local-guest';
+    return switch (defaultTargetPlatform) {
+      TargetPlatform.macOS => 'macos-debug-local-guest',
+      TargetPlatform.android => 'android-emulator-debug-local-guest',
+      _ => 'ios-simulator-debug-local-guest',
+    };
   }
 
   @override

@@ -121,13 +121,15 @@ bool isIgnoredIntegrationLog(
     }
   }
 
-  // Web tests cannot use the secure-storage-backed Hive key path. The app
-  // falls back to an in-memory key for the session, which is expected for
-  // browser integration runs and should not fail the suite.
-  if (isWeb &&
-      entry.message == IntegrationLogMessages.hiveKeyManagerGetEncryptionKey) {
+  // Web / Android emulator debug: secure-storage-backed Hive keys can fail
+  // (browser crypto or flaky Keystore). The app falls back or uses in-memory
+  // keys; those paths must not fail the integration suite.
+  if (entry.message == IntegrationLogMessages.hiveKeyManagerGetEncryptionKey) {
     final Object? error = entry.error;
-    if (error != null && error.toString().contains('OperationError')) {
+    if (error != null &&
+        (error.toString().contains('OperationError') ||
+            error.toString().contains('HiveKeyPersistenceException') ||
+            error.toString().contains('HiveKeyReadException'))) {
       return true;
     }
   }

@@ -26,19 +26,27 @@ class FirebaseBootstrapService {
   /// non-physical iOS device. Used for simulator-only auth keychain fallbacks.
   static bool isIosSimulatorInDebug = false;
 
+  /// Set during debug bootstrap when [DeviceInfoPlugin] reports a non-physical
+  /// Android device. Used for emulator-only local guest auth when Firebase is
+  /// not configured (integration tests / placeholder config).
+  static bool isAndroidEmulatorInDebug = false;
+
   /// Test-only options override so unit tests can exercise configured-init paths
   /// without depending on generated [DefaultFirebaseOptions] placeholders.
   @visibleForTesting
   static FirebaseOptions? debugOptionsOverride;
 
-  /// Best-effort iOS simulator detection for debug auth fallbacks when Firebase
-  /// bootstrap is skipped (placeholder config, integration tests, hot restart).
+  /// Best-effort simulator/emulator detection for debug auth fallbacks when
+  /// Firebase bootstrap is skipped (placeholder config, integration tests,
+  /// hot restart). Marks iOS simulator and Android emulator flags.
   static Future<void> ensureIosSimulatorDebugFlag() async {
     await _markIosSimulatorInDebugIfNeeded();
+    await _markAndroidEmulatorInDebugIfNeeded();
   }
 
   /// Whether auth routing and local-only guest sign-in should work without a
-  /// configured Firebase app (web debug, macOS debug, or iOS simulator debug).
+  /// configured Firebase app (web debug, macOS debug, iOS simulator debug, or
+  /// Android emulator debug).
   static bool get supportsDebugLocalGuestAuth {
     if (kReleaseMode) {
       return false;
@@ -47,6 +55,10 @@ class FirebaseBootstrapService {
       return true;
     }
     if (defaultTargetPlatform == TargetPlatform.macOS) {
+      return true;
+    }
+    if (defaultTargetPlatform == TargetPlatform.android &&
+        isAndroidEmulatorInDebug) {
       return true;
     }
     return defaultTargetPlatform == TargetPlatform.iOS && isIosSimulatorInDebug;
@@ -201,12 +213,14 @@ class FirebaseBootstrapService {
 
   static Future<void> _prepareReusedFirebaseApp() async {
     await _markIosSimulatorInDebugIfNeeded();
+    await _markAndroidEmulatorInDebugIfNeeded();
     await _enableDatabasePersistence();
   }
 
   @visibleForTesting
   static void resetIosSimulatorInDebugForTest() {
     isIosSimulatorInDebug = false;
+    isAndroidEmulatorInDebug = false;
   }
 
   @visibleForTesting

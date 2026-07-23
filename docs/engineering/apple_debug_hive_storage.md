@@ -23,16 +23,17 @@ Expected **benign** dev logs (not bugs): missing Firebase/Supabase secrets,
 ## Design (three guards)
 
 1. **Secrets** — `packages/app_shared_flutter/lib/src/platform/secure_secret_storage.dart`
-   `useInMemorySecretStorageInDebug()` → `InMemorySecretStorage` on **iOS and
-   macOS** when `!kReleaseMode && !kIsWeb`. Avoids Keychain on simulator.
+   `useInMemorySecretStorageInDebug()` → `InMemorySecretStorage` on **iOS,
+   macOS, and Android** when `!kReleaseMode && !kIsWeb`. Avoids Keychain /
+   flaky emulator Keystore paths in debug and integration runs.
 
 2. **Encryption key** — `packages/storage/lib/src/hive/hive_key_manager.dart`
    Same helper → deterministic `_appleDebugFallbackKey` (32 bytes) so encrypted
    boxes stay readable across debug restarts.
 
 3. **Hive directory** — `packages/storage/lib/src/hive/hive_initializer_io.dart`
-   - iOS debug → `Application Support/hive_ios_debug`  
-   - macOS debug → `Application Support/hive_macos_debug` (existing)  
+   - iOS debug → `Application Support/hive_ios_debug`
+   - macOS debug → `Application Support/hive_macos_debug` (existing)
    Isolates debug data from release paths and from pre-fix corrupted files.
 
 Release: `FlutterSecureSecretStorage` + persisted key + `Hive.initFlutter()` /

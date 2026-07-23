@@ -16,8 +16,12 @@ void registerGuestSignInIntegrationFlow() {
       }
 
       await launchTestApp(tester, requireAuth: true);
-      await pumpUntilFound(tester, find.byKey(signInGuestButtonKey));
-      await tapAndPump(tester, find.byKey(signInGuestButtonKey));
+      final Finder guestButton = find.byKey(signInGuestButtonKey);
+      await pumpUntilFound(tester, guestButton);
+      // FirebaseUI footer can sit a few px below a short viewport; nudge up.
+      await tester.drag(find.byType(MaterialApp), const Offset(0, -120));
+      await tester.pump(const Duration(milliseconds: 200));
+      await tapAndPump(tester, guestButton);
       await pumpUntilFound(
         tester,
         find.text('Home Page'),
@@ -32,14 +36,17 @@ void registerGuestSignInIntegrationFlow() {
           ? FirebaseAuth.instance.currentUser
           : null;
       final bool hasFirebaseAnon = firebaseUser?.isAnonymous ?? false;
-      final bool hasSimulatorLocalGuest =
-          authRepository.currentUser!.id == 'ios-simulator-debug-local-guest';
+      final String guestId = authRepository.currentUser!.id;
+      final bool hasDebugLocalGuest =
+          guestId == 'ios-simulator-debug-local-guest' ||
+          guestId == 'android-emulator-debug-local-guest' ||
+          guestId == 'macos-debug-local-guest';
       expect(
-        hasFirebaseAnon || hasSimulatorLocalGuest,
+        hasFirebaseAnon || hasDebugLocalGuest,
         isTrue,
         reason:
-            'Guest flow must yield Firebase anonymous auth or the iOS '
-            'simulator keychain fallback user.',
+            'Guest flow must yield Firebase anonymous auth or a debug '
+            'simulator/emulator local guest user.',
       );
 
       await pumpUntilFound(tester, find.text('0'));

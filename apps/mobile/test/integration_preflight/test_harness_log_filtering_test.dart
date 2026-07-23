@@ -9,11 +9,16 @@ import '../../integration_test/test_harness_log_filtering.dart'
 
 void main() {
   group('test harness log filtering', () {
-    test('ignores Hive key retrieval fallback on web only', () {
+    test('ignores Hive key retrieval failures on web and mobile', () {
       const AppLogEntry hiveKeyError = AppLogEntry(
         level: AppLogLevel.error,
         message: IntegrationLogMessages.hiveKeyManagerGetEncryptionKey,
         error: 'OperationError',
+      );
+      const AppLogEntry hivePersistError = AppLogEntry(
+        level: AppLogLevel.error,
+        message: IntegrationLogMessages.hiveKeyManagerGetEncryptionKey,
+        error: 'HiveKeyPersistenceException(Instance of \'StorageFailure\')',
       );
 
       expect(
@@ -28,7 +33,14 @@ void main() {
           hiveKeyError,
           isWeb: false,
         ),
-        isFalse,
+        isTrue,
+      );
+      expect(
+        test_harness_log_filtering.isIgnoredIntegrationLog(
+          hivePersistError,
+          isWeb: false,
+        ),
+        isTrue,
       );
     });
 

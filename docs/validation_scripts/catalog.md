@@ -172,12 +172,16 @@ Baseline counts: [`docs/engineering/checklist_quality_gates_baseline.md`](../eng
 
 ### Integration testing
 
-- **`run_integration_tests.sh`** (entry: `./bin/integration_tests`): iOS simulator
+- **`run_integration_tests.sh`** (entry: `./bin/integration_tests`): device
   integration tiers, artifacts under `artifacts/integration/`, selective target
   resolution. Optional CocoaPods fallback: commit **`tool/pod_shim/pod`** (executable);
   enabled when `INTEGRATION_TESTS_ALLOW_POD_SHIM=1` (default) and
   `ios/Podfile.lock` matches `ios/Pods/Manifest.lock`. Contract:
   [`integration_runner_contract.md`](../engineering/integration_runner_contract.md).
+- **`ensure_android_integration_avd.sh`**: Patches an existing Android AVD
+  `config.ini` to a medium-phone panel (default 1080×2400@420, 2048 MB RAM) and
+  optionally boots it (`--launch`). Host-local under `~/.android/avd/`; see
+  contract § Android AVD. Not in `./bin/checklist`.
 - After `flutter build ios --simulator --debug`, run
   `tool/check_ios_pod_framework_embed.sh --require-built-app` to catch missing
   embedded frameworks before simulator launch/dyld failures.

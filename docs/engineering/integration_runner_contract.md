@@ -138,6 +138,48 @@ Default gates:
 - `flake_rerun_rate <= 20%`
 - `uncategorized_failure_count <= 0`
 
+## Android AVD (local device lane)
+
+Stock “small phone” AVDs (~720×1280@320 → ~360×640 logical) clip overflow menus
+and auth footers; integration taps miss. Prefer a medium-phone panel:
+
+| Property | Recommended |
+| --- | --- |
+| `hw.lcd.width` × `hw.lcd.height` | `1080` × `2400` |
+| `hw.lcd.density` | `420` |
+| `hw.ramSize` | `2048` |
+
+Apply (and optionally boot) with:
+
+```bash
+tool/ensure_android_integration_avd.sh              # patch existing AVD config.ini
+tool/ensure_android_integration_avd.sh --launch     # patch + boot + wait for adb
+ANDROID_INTEGRATION_AVD=Small_Phone_3 tool/ensure_android_integration_avd.sh --launch
+```
+
+Then pin the device:
+
+```bash
+CHECKLIST_INTEGRATION_DEVICE=emulator-5554 \
+INTEGRATION_TESTS_RUN_COVERAGE=0 \
+./bin/integration_tests
+```
+
+Notes:
+
+- AVD files live under `~/.android/avd/` (host-local; not in git). Re-run the
+  ensure script on a new machine after creating any AVD in Android Studio.
+- Creating a fresh “Medium Phone” via `avdmanager` / `flutter emulators --create`
+  can fail when SDK package XML and installed system images disagree (e.g. only
+  `google_apis_playstore_ps16k` visible). Sizing an existing AVD is the supported
+  local path.
+- The runner injects `FIREBASE_*` / related dart-defines from the environment
+  (direnv / `.envrc`); keys are logged, values are not. Without defines, Android
+  guest/auth flows may skip or fail.
+- Cold boot after a panel change may still show the old `wm size` until the
+  emulator process is restarted; `--launch` when no emulator is attached is
+  enough when the AVD was already resized.
+
 ## iOS simulator build prep (proactive)
 
 Before the first `flutter test` on an iPhone simulator (and again after

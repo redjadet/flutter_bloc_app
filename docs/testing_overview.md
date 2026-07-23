@@ -112,6 +112,12 @@ If multiple devices are attached, set:
 CHECKLIST_INTEGRATION_DEVICE=<deviceId>
 ```
 
+Android local lane: size AVD to ≥1080×2400@420 first
+(`tool/ensure_android_integration_avd.sh`), then pin
+`CHECKLIST_INTEGRATION_DEVICE=emulator-5554`. Details:
+[`integration_runner_contract.md`](engineering/integration_runner_contract.md)
+§ Android AVD.
+
 If you want integration flow validation without refreshing coverage output:
 
 ```bash

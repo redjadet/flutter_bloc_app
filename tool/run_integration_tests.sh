@@ -49,6 +49,20 @@ cd "$WORKSPACE_ROOT"
 # shellcheck disable=SC1091
 source "$WORKSPACE_ROOT/tool/resolve_flutter_dart.sh"
 
+# Optional compile-time secrets (FIREBASE_*, etc.) for integration device runs.
+# Prefer direnv when available; otherwise inherit the agent shell env.
+if [ -f "$WORKSPACE_ROOT/.envrc" ] && command -v direnv >/dev/null 2>&1; then
+  # shellcheck disable=SC1090
+  eval "$(cd "$WORKSPACE_ROOT" && direnv export bash 2>/dev/null)" || true
+fi
+# shellcheck disable=SC2207
+INTEGRATION_DART_DEFINES=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
+INTEGRATION_DART_DEFINE_KEYS=""
+if [ "${#INTEGRATION_DART_DEFINES[@]}" -gt 0 ]; then
+  # Redact values; store keys only for later logging.
+  INTEGRATION_DART_DEFINE_KEYS="$(printf '%s\n' "${INTEGRATION_DART_DEFINES[@]}" | sed -n 's/^--dart-define=\([^=]*\)=.*/\1/p' | paste -sd ',' -)"
+fi
+
 INTEGRATION_STARTED_AT="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 INTEGRATION_START_EPOCH_MS="$(python3 - <<'PY'
 import time
@@ -840,6 +854,11 @@ run_integration_command() {
   local label="$1"
   shift
 
+  # Inject compile-time defines into flutter test invocations (never log values).
+  if [ "${1:-}" = "flutter" ] && [ "${2:-}" = "test" ]; then
+    set -- flutter test "${INTEGRATION_DART_DEFINES[@]}" "${@:3}"
+  fi
+
   local log_path
   local temp_dir
   local exit_code=0
@@ -1351,6 +1370,11 @@ if command -v lcov >/dev/null 2>&1; then
 fi
 
 log "Running integration tests on device: $DEVICE_ID"
+if [ -n "${INTEGRATION_DART_DEFINE_KEYS:-}" ]; then
+  log "Injecting dart-defines (keys only): $INTEGRATION_DART_DEFINE_KEYS"
+else
+  log "No dart-defines from environment (Firebase/remote features may stay disabled)."
+fi
 INTEGRATION_ARTIFACT_DIR="$INTEGRATION_TESTS_ARTIFACTS_ROOT/$(date -u +%Y%m%d-%H%M%S)"
 log "Coverage mode: $RUN_COVERAGE | Retry on failure: $RETRY_ON_FAILURE | Tier: $INTEGRATION_TESTS_TIER | Test timeout: ${INTEGRATION_TESTS_TIMEOUT_SECONDS}s"
 if [ "$#" -eq 0 ]; then

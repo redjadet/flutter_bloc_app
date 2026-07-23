@@ -119,7 +119,25 @@ Future<void> tapAndPump(
   final Finder finder, {
   final Duration settle = const Duration(milliseconds: 100),
 }) async {
-  await tester.ensureVisible(finder);
+  // On small emulator viewports, ensureVisible alone often leaves controls
+  // below the fold; scroll the nearest Scrollable ancestor first when present.
+  final Finder scrollable = find.ancestor(
+    of: finder,
+    matching: find.byType(Scrollable),
+  );
+  if (tester.any(scrollable)) {
+    try {
+      await tester.scrollUntilVisible(
+        finder,
+        200,
+        scrollable: scrollable.first,
+      );
+    } on Object {
+      await tester.ensureVisible(finder);
+    }
+  } else {
+    await tester.ensureVisible(finder);
+  }
   await tester.tap(finder);
   await tester.pump(settle);
 }
