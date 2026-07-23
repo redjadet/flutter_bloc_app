@@ -97,6 +97,15 @@ class HiveTodoRepository extends HiveRepositoryBase
     },
   );
 
+  /// Wipes every stored todo. Used on Firebase sign-out / account switch.
+  Future<void> clearAllLocalData() async => StorageGuard.run<void>(
+    logContext: 'HiveTodoRepository.clearAllLocalData',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      await _save(box, const <TodoItem>[]);
+    },
+  );
+
   Future<List<TodoItem>> _loadFromBox(final Box<dynamic> box) async =>
       StorageGuard.run<List<TodoItem>>(
         logContext: 'HiveTodoRepository._loadFromBox',
@@ -108,10 +117,7 @@ class HiveTodoRepository extends HiveRepositoryBase
         fallback: () => const <TodoItem>[],
       );
 
-  Future<void> _save(
-    final Box<dynamic> box,
-    final List<TodoItem> items,
-  ) async {
+  Future<void> _save(final Box<dynamic> box, final List<TodoItem> items) async {
     if (items.isEmpty) {
       await safeDeleteKey(box, _keyTodos);
     } else {
@@ -174,9 +180,7 @@ class HiveTodoRepository extends HiveRepositoryBase
 
   List<TodoItem> _sortItems(final List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items)
-      ..sort(
-        (final a, final b) => b.updatedAt.compareTo(a.updatedAt),
-      );
+      ..sort((final a, final b) => b.updatedAt.compareTo(a.updatedAt));
     return List<TodoItem>.unmodifiable(sorted);
   }
 }

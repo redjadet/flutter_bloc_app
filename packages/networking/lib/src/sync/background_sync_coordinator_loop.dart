@@ -4,6 +4,10 @@ Future<void> _triggerSyncImpl(
   final BackgroundSyncCoordinator c, {
   required final bool immediate,
 }) {
+  if (c._sessionQuiesced) {
+    return Future<void>.value();
+  }
+
   final Future<void>? inFlight = c._currentSync;
   if (inFlight != null) {
     if (immediate) {

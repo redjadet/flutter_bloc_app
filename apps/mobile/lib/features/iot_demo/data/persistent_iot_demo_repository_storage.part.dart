@@ -69,7 +69,6 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
           .toList(growable: false);
       await box.put(PersistentIotDemoRepository._keyDevices, serialized);
     },
-    fallback: () {},
   );
 
   /// Appends [device] to the stored list and saves.
@@ -92,7 +91,6 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
           ..add(device);
         await _saveDevices(box, updated);
       },
-      fallback: () {},
     );
   }
 
@@ -103,12 +101,8 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
       logContext: 'PersistentIotDemoRepository.replaceDevices',
       action: () async {
         final Box<dynamic> box = await getBox();
-        await _saveDevices(
-          box,
-          List<IotDevice>.unmodifiable(devices),
-        );
+        await _saveDevices(box, List<IotDevice>.unmodifiable(devices));
       },
-      fallback: () {},
     );
   }
 
@@ -144,7 +138,6 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
           await _saveDevices(box, devices);
         }
       },
-      fallback: () {},
     );
   }
 
@@ -162,7 +155,6 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
         );
         await _saveDevices(box, updated);
       },
-      fallback: () {},
     );
   }
 
@@ -203,7 +195,6 @@ extension _PersistentIotDemoRepositoryStorage on PersistentIotDemoRepository {
         list[i] = updated.copyWith(lastSeen: DateTime.now());
         await _saveDevices(box, list);
       },
-      fallback: () {},
     );
   }
 }

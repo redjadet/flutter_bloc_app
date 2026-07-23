@@ -124,6 +124,189 @@ void main() {
       },
     );
 
+    test(
+      'attachAuthRepository clears local session data on A→B account switch',
+      () async {
+        final StreamController<AuthUser?> controller =
+            StreamController<AuthUser?>.broadcast();
+        final _MockAuthRepository repository = _MockAuthRepository();
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => repository.currentUser).thenReturn(userA);
+        when(
+          () => repository.authStateChanges,
+        ).thenAnswer((_) => controller.stream);
+
+        SessionLocalCleanupReason? seenReason;
+        AuthProviderKind? seenProvider;
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          seenProvider = provider;
+          seenReason = reason;
+        });
+
+        coordinator.attachAuthRepository(repository);
+        controller.add(userB);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(seenProvider, AuthProviderKind.firebase);
+        expect(seenReason, SessionLocalCleanupReason.accountSwitch);
+        await controller.close();
+      },
+    );
+
+    test(
+      'sessionReadyAuthStateChanges waits for A→B cleanup before publishing B',
+      () async {
+        final StreamController<AuthUser?> controller =
+            StreamController<AuthUser?>.broadcast();
+        final _MockAuthRepository repository = _MockAuthRepository();
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => repository.currentUser).thenReturn(userA);
+        when(
+          () => repository.authStateChanges,
+        ).thenAnswer((_) => controller.stream);
+
+        final Completer<void> cleanupStarted = Completer<void>();
+        final Completer<void> releaseCleanup = Completer<void>();
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          cleanupStarted.complete();
+          await releaseCleanup.future;
+        });
+
+        final List<AuthUser?> readyUsers = <AuthUser?>[];
+        final StreamSubscription<AuthUser?> readySub = coordinator
+            .sessionReadyAuthStateChanges
+            .listen(readyUsers.add);
+
+        coordinator.attachAuthRepository(repository);
+        await Future<void>.delayed(Duration.zero);
+        expect(readyUsers, <AuthUser?>[userA]);
+
+        controller.add(userB);
+        await cleanupStarted.future;
+        await Future<void>.delayed(Duration.zero);
+
+        expect(readyUsers, <AuthUser?>[userA]);
+
+        releaseCleanup.complete();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(readyUsers, <AuthUser?>[userA, userB]);
+        await readySub.cancel();
+        await controller.close();
+      },
+    );
+
+    test('newer auth event supersedes in-flight A→B publish', () async {
+      final StreamController<AuthUser?> controller =
+          StreamController<AuthUser?>.broadcast();
+      final _MockAuthRepository repository = _MockAuthRepository();
+      const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+      const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+      when(() => repository.currentUser).thenReturn(userA);
+      when(
+        () => repository.authStateChanges,
+      ).thenAnswer((_) => controller.stream);
+
+      final Completer<void> cleanupStarted = Completer<void>();
+      final Completer<void> releaseCleanup = Completer<void>();
+      coordinator.bindLocalSessionDataCleanup(({
+        required final AuthProviderKind provider,
+        required final SessionLocalCleanupReason reason,
+      }) async {
+        if (reason == SessionLocalCleanupReason.accountSwitch) {
+          cleanupStarted.complete();
+          await releaseCleanup.future;
+        }
+      });
+
+      final List<AuthUser?> readyUsers = <AuthUser?>[];
+      final StreamSubscription<AuthUser?> readySub = coordinator
+          .sessionReadyAuthStateChanges
+          .listen(readyUsers.add);
+
+      coordinator.attachAuthRepository(repository);
+      await Future<void>.delayed(Duration.zero);
+      readyUsers.clear();
+
+      controller.add(userB);
+      await cleanupStarted.future;
+      controller.add(null);
+      releaseCleanup.complete();
+      await Future<void>.delayed(Duration.zero);
+
+      expect(readyUsers, isNot(contains(userB)));
+      expect(readyUsers.last, isNull);
+      await readySub.cancel();
+      await controller.close();
+    });
+
+    test(
+      'account switch cleanup failure fails closed without publishing B',
+      () async {
+        final StreamController<AuthUser?> controller =
+            StreamController<AuthUser?>.broadcast();
+        final _MockAuthRepository repository = _MockAuthRepository();
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => repository.currentUser).thenReturn(userA);
+        when(
+          () => repository.authStateChanges,
+        ).thenAnswer((_) => controller.stream);
+
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          throw StateError('cleanup boom');
+        });
+
+        final List<AuthUser?> readyUsers = <AuthUser?>[];
+        final StreamSubscription<AuthUser?> readySub = coordinator
+            .sessionReadyAuthStateChanges
+            .listen(readyUsers.add);
+
+        coordinator.attachAuthRepository(repository);
+        await Future<void>.delayed(Duration.zero);
+        readyUsers.clear();
+
+        controller.add(userB);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(readyUsers, <AuthUser?>[null]);
+        await readySub.cancel();
+        await controller.close();
+      },
+    );
+
+    test(
+      'onSignOutCompleted invokes bound local session data cleanup',
+      () async {
+        var cleanupCalls = 0;
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          cleanupCalls += 1;
+          expect(provider, AuthProviderKind.firebase);
+          expect(reason, SessionLocalCleanupReason.signOut);
+        });
+
+        await coordinator.onSignOutCompleted(
+          provider: AuthProviderKind.firebase,
+        );
+
+        expect(cleanupCalls, 1);
+      },
+    );
+
     test('invalidateSession emits invalidation event', () async {
       final List<SessionInvalidationEvent> events =
           <SessionInvalidationEvent>[];

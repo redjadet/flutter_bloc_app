@@ -1,3 +1,5 @@
+import 'package:flutter_bloc_app/app/auth/firebase_local_session_cleanup.dart';
+import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_ai_decision_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_app_memory_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
@@ -51,4 +53,14 @@ Future<void> registerAllDependencies() async {
   await registerCoreServices();
   await registerFeatureServices();
   await registerDemoServices();
+  _bindFirebaseLocalSessionCleanup();
+}
+
+void _bindFirebaseLocalSessionCleanup() {
+  if (!getIt.isRegistered<SessionLifecycleCoordinator>()) {
+    return;
+  }
+  getIt<SessionLifecycleCoordinator>().bindLocalSessionDataCleanup(
+    clearFirebaseLocalSessionData,
+  );
 }

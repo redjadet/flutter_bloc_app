@@ -88,6 +88,12 @@ class _StubBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 class _MockGoRouterState extends Mock implements GoRouterState {}
@@ -130,18 +136,30 @@ List<BlocProvider<dynamic>> _coverageBlocProviders() => <BlocProvider<dynamic>>[
   ),
 ];
 
-Widget _coveragePumpTree({required final Widget home}) => ScreenUtilInit(
+Widget _coveragePumpTree({required final GoRouter router}) => ScreenUtilInit(
   designSize: const Size(390, 844),
   minTextAdapt: true,
   builder: (final context, final _) => MultiBlocProvider(
     providers: _coverageBlocProviders(),
-    child: MaterialApp(
+    child: MaterialApp.router(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
-      home: home,
+      routerConfig: router,
     ),
   ),
+);
+
+GoRouter _coverageRouter({required final Widget home}) => GoRouter(
+  initialLocation: '/',
+  routes: <RouteBase>[
+    GoRoute(path: '/', builder: (final context, final state) => home),
+    GoRoute(
+      path: AppRoutes.authPath,
+      builder: (final context, final state) =>
+          const Scaffold(body: Text('auth')),
+    ),
+  ],
 );
 
 void main() {
@@ -192,16 +210,16 @@ void main() {
     for (final GoRoute route in corePartRoutes) {
       final GoRouterState state = _state(route.path);
       late Widget built;
-      await tester.pumpWidget(
-        _coveragePumpTree(
-          home: Builder(
-            builder: (final context) {
-              built = route.builder!(context, state);
-              return Scaffold(body: built);
-            },
-          ),
+      final GoRouter router = _coverageRouter(
+        home: Builder(
+          builder: (final context) {
+            built = route.builder!(context, state);
+            return Scaffold(body: built);
+          },
         ),
       );
+      addTearDown(router.dispose);
+      await tester.pumpWidget(_coveragePumpTree(router: router));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       tester.takeException();
@@ -209,27 +227,27 @@ void main() {
       if (built is AppRouteAuthGate) {
         final Widget gateChild = (built as AppRouteAuthGate).child;
         if (gateChild is SettingsPage) {
-          await tester.pumpWidget(
-            _coveragePumpTree(
-              home: Builder(
-                builder: (final context) {
-                  final List<Widget>? extras = gateChild.buildQaExtras?.call(
-                    context,
-                  );
-                  expect(extras, isNotNull);
-                  expect(extras, isNotEmpty);
-                  return Scaffold(
-                    body: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: extras ?? const <Widget>[],
-                      ),
+          final GoRouter extrasRouter = _coverageRouter(
+            home: Builder(
+              builder: (final context) {
+                final List<Widget>? extras = gateChild.buildQaExtras?.call(
+                  context,
+                );
+                expect(extras, isNotNull);
+                expect(extras, isNotEmpty);
+                return Scaffold(
+                  body: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: extras ?? const <Widget>[],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           );
+          addTearDown(extrasRouter.dispose);
+          await tester.pumpWidget(_coveragePumpTree(router: extrasRouter));
           await tester.pump();
           tester.takeException();
         }

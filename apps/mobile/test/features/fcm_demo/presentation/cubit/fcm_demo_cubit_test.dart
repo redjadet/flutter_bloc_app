@@ -109,6 +109,12 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     triggerFromFcmCallCount += 1;
     lastHint = hint;
   }
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 PushMessage _message({

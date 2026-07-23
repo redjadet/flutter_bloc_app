@@ -307,6 +307,34 @@ void main() {
     expect(box.get('bad-op'), isNull);
   });
 
+  test('clearEntityTypes removes only matching entity types', () async {
+    final SyncOperation todo = SyncOperation.create(
+      entityType: 'todo',
+      payload: <String, dynamic>{'title': 't'},
+      idempotencyKey: 'todo-key',
+    );
+    final SyncOperation iot = SyncOperation.create(
+      entityType: 'iot_demo',
+      payload: <String, dynamic>{'supabaseUserId': 'u1'},
+      idempotencyKey: 'iot-key',
+    );
+    await repository.enqueue(todo);
+    await repository.enqueue(iot);
+
+    final int removed = await repository.clearEntityTypes(<String>{
+      'todo',
+      'counter',
+      'chat_message',
+    });
+
+    expect(removed, 1);
+    final List<SyncOperation> remaining = await repository.getPendingOperations(
+      now: DateTime.now().toUtc(),
+    );
+    expect(remaining, hasLength(1));
+    expect(remaining.single.entityType, 'iot_demo');
+  });
+
   test(
     'getPendingOperations ignores schema meta and dead-letter keys',
     () async {

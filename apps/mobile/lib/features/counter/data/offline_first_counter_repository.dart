@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/counter/data/counter_snapshot_dto.dart';
+import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
 import 'package:storage/storage.dart';
+
+part 'offline_first_counter_repository_sync.part.dart';
 
 class OfflineFirstCounterRepository
     implements CounterRepository, SyncableRepository {
@@ -95,109 +98,17 @@ class OfflineFirstCounterRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
-    final CounterSnapshot snapshot = CounterSnapshotDto.fromJson(
-      operation.payload,
-    ).toDomain();
-    if (_remoteRepository == null) {
-      await _localRepository.save(
-        snapshot.copyWith(
-          synchronized: true,
-          lastSyncedAt: DateTime.now().toUtc(),
-        ),
-      );
-      return;
-    }
-    final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
-    if (!OfflineFirstCounterRepositoryHelpers.shouldPushPendingToRemote(
-      snapshot,
-      remoteSnapshot,
-    )) {
-      final CounterSnapshot localSnapshot = await _localRepository.load();
-      if (OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
-        localSnapshot,
-        remoteSnapshot,
-      )) {
-        await _localRepository.save(
-          remoteSnapshot.copyWith(
-            changeId:
-                remoteSnapshot.changeId ??
-                OfflineFirstCounterRepositoryHelpers.generateChangeId(),
-            lastSyncedAt: DateTime.now().toUtc(),
-            synchronized: true,
-          ),
-        );
-      }
-      return;
-    }
-
-    await _remoteRepository.save(
-      CounterSnapshot(
-        count: snapshot.count,
-        lastChanged: snapshot.lastChanged,
-        userId: snapshot.userId,
-      ),
-    );
-    await _localRepository.save(
-      snapshot.copyWith(
-        synchronized: true,
-        lastSyncedAt: DateTime.now().toUtc(),
-      ),
-    );
-  }
+  Future<void> processOperation(final SyncOperation operation) =>
+      processOperationBody(operation);
 
   @override
-  Future<void> pullRemote() async {
-    if (_remoteRepository == null) {
-      return;
-    }
-    try {
-      final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
-      await _applyRemoteSnapshotIfCurrent(remoteSnapshot);
-    } on Exception catch (error, stackTrace) {
-      AppLogger.error(
-        'OfflineFirstCounterRepository.pullRemote failed',
-        error,
-        stackTrace,
-      );
-    }
-  }
-
-  Future<void> _applyRemoteSnapshotIfCurrent(
-    final CounterSnapshot remoteSnapshot,
-  ) async {
-    final CounterSnapshot localSnapshot = await _localRepository.load();
-    if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
-      localSnapshot,
-      remoteSnapshot,
-    )) {
-      return;
-    }
-
-    // Re-read before save so a local write during the first load cannot be
-    // overwritten by a stale remote decision (TOCTOU).
-    final CounterSnapshot freshLocal = await _localRepository.load();
-    if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
-      freshLocal,
-      remoteSnapshot,
-    )) {
-      return;
-    }
-
-    await _localRepository.save(
-      remoteSnapshot.copyWith(
-        changeId:
-            remoteSnapshot.changeId ??
-            OfflineFirstCounterRepositoryHelpers.generateChangeId(),
-        lastSyncedAt: DateTime.now().toUtc(),
-        synchronized: true,
-      ),
-    );
-  }
+  Future<void> pullRemote() => pullRemoteBody();
 
   Future<List<SyncOperation>> _counterPendingOperations({DateTime? now}) async {
     final List<SyncOperation> operations = await _pendingSyncRepository
-        .getPendingOperations(now: now ?? DateTime.now().toUtc());
+        .getPendingOperations(
+          now: now ?? DateTime.now().toUtc(),
+        );
     return operations
         .where((final op) => op.entityType == counterEntity)
         .toList(growable: false);
@@ -219,4 +130,16 @@ class OfflineFirstCounterRepository
         ),
       )
       .toList(growable: false);
+
+  /// Clears local counter state without enqueueing a remote sync op.
+  Future<void> clearAllLocalData() async {
+    final CounterRepository local = _localRepository;
+    if (local is HiveCounterRepository) {
+      await local.clearAllLocalData();
+      return;
+    }
+    await local.save(
+      const CounterSnapshot(userId: 'local', count: 0, synchronized: true),
+    );
+  }
 }

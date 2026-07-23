@@ -24,13 +24,20 @@ void main() {
       );
       when(() => delegate.currentUser).thenReturn(null);
       when(
-        () => delegate.authStateChanges,
+        () => coordinator.sessionReadyAuthStateChanges,
       ).thenAnswer((_) => const Stream<AuthUser?>.empty());
       when(() => delegate.signOut()).thenAnswer((_) async {});
       when(
         () =>
             coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase),
       ).thenAnswer((_) async {});
+    });
+
+    test('authStateChanges uses coordinator session-ready stream', () {
+      // ignore: unnecessary_statements
+      repository.authStateChanges;
+      verify(() => coordinator.sessionReadyAuthStateChanges).called(1);
+      verifyNever(() => delegate.authStateChanges);
     });
 
     test('delegates signOut then notifies coordinator', () async {

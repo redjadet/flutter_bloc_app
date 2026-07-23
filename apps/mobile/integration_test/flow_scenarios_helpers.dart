@@ -69,11 +69,13 @@ Future<void> _openOverflowDestination(
   final WidgetTester tester,
   final String destinationLabel,
 ) async {
+  // Material uses PopupMenuEntry; Cupertino (iOS) uses CupertinoActionSheet.
   // Lower PopupMenu entries on small Android AVDs miss intermittently under
-  // suite load. Retry only while the popup route stays open after a tap.
+  // suite load. Retry only while the overflow surface stays open after a tap.
   const int maxAttempts = 3;
   final Finder menuEntries = find.byWidgetPredicate(
-    (final widget) => widget is PopupMenuEntry,
+    (final widget) =>
+        widget is PopupMenuEntry || widget is CupertinoActionSheetAction,
   );
   for (var attempt = 0; attempt < maxAttempts; attempt++) {
     await pumpUntilFound(tester, find.byTooltip('More'));
@@ -96,12 +98,17 @@ Future<void> _openOverflowDestination(
       // Menu dismissed via item selection (not a dismiss tap).
       return;
     }
-    // Missed: dismiss leftover menu and retry with a stronger nudge.
+    // Missed: dismiss leftover menu/sheet and retry with a stronger nudge.
     await tester.tapAt(const Offset(8, 8));
     await tester.pump(const Duration(milliseconds: 250));
     if (tester.any(menuEntries)) {
-      await tester.tapAt(const Offset(8, 8));
-      await tester.pump(const Duration(milliseconds: 250));
+      final Finder cancel = find.text('Cancel');
+      if (tester.any(cancel.hitTestable())) {
+        await tapAndPump(tester, cancel.first, scrollIntoView: false);
+      } else {
+        await tester.tapAt(const Offset(8, 8));
+        await tester.pump(const Duration(milliseconds: 250));
+      }
     }
   }
   throw TestFailure(

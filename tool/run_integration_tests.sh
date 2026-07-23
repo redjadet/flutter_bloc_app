@@ -56,7 +56,11 @@ if [ -f "$WORKSPACE_ROOT/.envrc" ] && command -v direnv >/dev/null 2>&1; then
   eval "$(cd "$WORKSPACE_ROOT" && direnv export bash 2>/dev/null)" || true
 fi
 # shellcheck disable=SC2207
-INTEGRATION_DART_DEFINES=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
+INTEGRATION_DART_DEFINES=()
+while IFS= read -r _define_line; do
+  [ -n "$_define_line" ] || continue
+  INTEGRATION_DART_DEFINES+=("$_define_line")
+done < <(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh" || true)
 INTEGRATION_DART_DEFINE_KEYS=""
 if [ "${#INTEGRATION_DART_DEFINES[@]}" -gt 0 ]; then
   # Redact values; store keys only for later logging.
@@ -856,7 +860,11 @@ run_integration_command() {
 
   # Inject compile-time defines into flutter test invocations (never log values).
   if [ "${1:-}" = "flutter" ] && [ "${2:-}" = "test" ]; then
-    set -- flutter test "${INTEGRATION_DART_DEFINES[@]}" "${@:3}"
+    if [ "${#INTEGRATION_DART_DEFINES[@]}" -gt 0 ]; then
+      set -- flutter test "${INTEGRATION_DART_DEFINES[@]}" "${@:3}"
+    else
+      set -- flutter test "${@:3}"
+    fi
   fi
 
   local log_path

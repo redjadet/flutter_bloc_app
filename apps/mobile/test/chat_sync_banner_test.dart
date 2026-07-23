@@ -209,6 +209,12 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 class _TestNetworkStatusService implements NetworkStatusService {

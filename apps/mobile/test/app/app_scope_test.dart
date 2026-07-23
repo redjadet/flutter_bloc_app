@@ -56,6 +56,12 @@ class _CountingBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   }
 
   @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
+
+  @override
   Future<void> triggerFromFcm({final String? hint}) async {}
 }
 
