@@ -146,7 +146,11 @@ void registerChatListIntegrationFlow() {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Chat List Demo');
-      await pumpUntilFound(tester, find.text('Conversation history'));
+      await pumpUntilFound(
+        tester,
+        find.text('Conversation history'),
+        timeout: const Duration(seconds: 10),
+      );
 
       expect(find.text('Conversation history'), findsWidgets);
     },
@@ -249,7 +253,11 @@ void registerIotDemoIntegrationFlow() {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open IoT Demo');
-      await pumpUntilFound(tester, find.text('IoT Demo'));
+      await pumpUntilFound(
+        tester,
+        find.text('IoT Demo'),
+        timeout: const Duration(seconds: 10),
+      );
 
       expect(find.text('IoT Demo'), findsWidgets);
     },
@@ -264,7 +272,11 @@ void registerIotDemoBleTabIntegrationFlow() {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open IoT Demo');
-      await pumpUntilFound(tester, find.text('IoT Demo'));
+      await pumpUntilFound(
+        tester,
+        find.text('IoT Demo'),
+        timeout: const Duration(seconds: 10),
+      );
 
       await tapAndPump(tester, find.text('BLE'));
       await pumpUntilFound(tester, find.text('Bluetooth status'));

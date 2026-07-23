@@ -1,0 +1,6 @@
+# Copy to key.properties (gitignored) for release/Play uploads.
+# storeFile may be absolute or relative to apps/mobile/android/.
+storePassword=YOUR_STORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=YOUR_KEY_ALIAS
+storeFile=/Users/YOU/.keystores/flutter_bloc_app-upload.jks

@@ -1,11 +1,11 @@
 {
   "commands": {
     "checklist": {
-      "count": 924,
+      "count": 925,
       "failed": 334,
-      "ok": 590,
-      "p50_duration_ms": 24782.5,
-      "success_rate": 0.6385281385281385
+      "ok": 591,
+      "p50_duration_ms": 25044,
+      "success_rate": 0.6389189189189189
     },
     "cursor_to_codex_delegate": {
       "count": 1,
@@ -22,11 +22,11 @@
       "success_rate": 0.3333333333333333
     },
     "integration_tests": {
-      "count": 217,
-      "failed": 63,
-      "ok": 153,
-      "p50_duration_ms": 250128,
-      "success_rate": 0.7050691244239631
+      "count": 224,
+      "failed": 68,
+      "ok": 155,
+      "p50_duration_ms": 249621.0,
+      "success_rate": 0.6919642857142857
     },
     "smoke": {
       "count": 1,
@@ -36,26 +36,26 @@
       "success_rate": 1.0
     }
   },
-  "delegate_usage_rate": 0.0008726003490401396,
+  "delegate_usage_rate": 0.0008665511265164644,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 1152,
-    "total_non_empty_lines": 1152
+    "parsed_json_lines": 1160,
+    "total_non_empty_lines": 1160
   },
-  "p50_duration_ms": 60942.0,
-  "p95_duration_ms": 485892.6,
+  "p50_duration_ms": 61599.0,
+  "p95_duration_ms": 484531.0,
   "risk_counts": {
-    "high": 217,
-    "medium": 925,
+    "high": 224,
+    "medium": 926,
     "unknown": 4
   },
   "scorecard_parse_success": 1.0,
   "source_file_count": 70,
-  "source_fingerprint": "d09ab53750185dc3b69113cb2aeb49ddc6decde069ca6748b2a10b1aa929f853",
+  "source_fingerprint": "25688185557ac804f81aff2e99532e186760fa509c0872ba7170c9e12c21484d",
   "status_counts": {
     "cancelled": 1,
-    "failed": 399,
-    "ok": 746
+    "failed": 404,
+    "ok": 749
   },
-  "total_events": 1146
+  "total_events": 1154
 }

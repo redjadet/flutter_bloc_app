@@ -21,6 +21,24 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-23 - Android IT Chat/IoT “tap flake” was Supabase auth gate
+
+- What went wrong:
+  Full suite missed `Conversation history` / `IoT Demo`; focused re-runs
+  passed. Spent time on overflow scroll/nudge before checking route gates.
+- How it was fixed:
+  Integration harness resets/stubs `SupabaseBootstrapService` so Chat/IoT
+  `IotDemoAuthGate` stays local-only without a session.
+- Pattern:
+  Host `SUPABASE_*` (or late bootstrap) + no session → gate redirects →
+  page-title finders fail and look like navigation flakes.
+- Preventive rule:
+  When Chat/IoT IT fails only in full suite, check `IotDemoAuthGate` /
+  `isSupabaseInitialized` before blaming PopupMenu scroll.
+- Evidence or affected files:
+  `apps/mobile/integration_test/test_harness.dart`;
+  `docs/changes/2026-07-23_android_it_supabase_gate_play_readiness.md`
+
 ### 2026-07-22 - Verify branch before commit after parallel checkout churn
 
 - What went wrong:

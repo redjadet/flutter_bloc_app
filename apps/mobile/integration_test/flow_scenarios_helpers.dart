@@ -1,5 +1,48 @@
 part of 'flow_scenarios.dart';
 
+Future<void> _scrollDestinationIntoView(
+  final WidgetTester tester,
+  final Finder destination, {
+  final double delta = 240,
+  final double edgeNudge = -120,
+}) async {
+  final Finder scrollableAncestor = find.ancestor(
+    of: destination,
+    matching: find.byType(Scrollable),
+  );
+  final Finder scrollable = tester.any(scrollableAncestor)
+      ? scrollableAncestor
+      : find.byType(Scrollable);
+  if (!tester.any(scrollable)) {
+    await tester.ensureVisible(destination);
+    return;
+  }
+  await tester.scrollUntilVisible(
+    destination,
+    delta,
+    scrollable: scrollable.first,
+  );
+  // Only nudge when the target is still not hittable (flush to edge). A
+  // blanket nudge can scroll already-visible mid-list items off-screen.
+  if (!tester.any(destination.hitTestable())) {
+    await tester.drag(scrollable.first, Offset(0, edgeNudge));
+    await tester.pump(const Duration(milliseconds: 150));
+  }
+}
+
+Future<bool> _tapHitTestable(
+  final WidgetTester tester,
+  final Finder destination,
+) async {
+  final Finder hittable = destination.hitTestable();
+  if (!tester.any(hittable)) {
+    return false;
+  }
+  await tester.tap(hittable.first);
+  await tester.pump(const Duration(milliseconds: 200));
+  return true;
+}
+
 Future<void> _openExampleDestination(
   final WidgetTester tester,
   final String destinationLabel,
@@ -9,12 +52,16 @@ Future<void> _openExampleDestination(
   await pumpUntilFound(tester, find.text('Example Page'));
 
   final Finder destination = find.text(destinationLabel);
+  final Finder exampleScrollable = find.byType(Scrollable).first;
   await tester.scrollUntilVisible(
     destination,
     300,
-    scrollable: find.byType(Scrollable).first,
+    scrollable: exampleScrollable,
   );
-  // Already scrolled into view; avoid tapAndPump re-scroll.
+  if (!tester.any(destination.hitTestable())) {
+    await tester.drag(exampleScrollable, const Offset(0, -100));
+    await tester.pump(const Duration(milliseconds: 150));
+  }
   await tapAndPump(tester, destination, scrollIntoView: false);
 }
 
@@ -22,29 +69,45 @@ Future<void> _openOverflowDestination(
   final WidgetTester tester,
   final String destinationLabel,
 ) async {
-  await pumpUntilFound(tester, find.byTooltip('More'));
-  await tapAndPump(tester, find.byTooltip('More'));
-  final Finder destination = find.text(destinationLabel);
-  await pumpUntilFound(tester, destination);
-  // Popup menus on small Android emulators often clip lower items; scroll
-  // the menu's own Scrollable before tap so hit-testing lands on the entry.
-  final Finder menuScrollable = find.ancestor(
-    of: destination,
-    matching: find.byType(Scrollable),
+  // Lower PopupMenu entries on small Android AVDs miss intermittently under
+  // suite load. Retry only while the popup route stays open after a tap.
+  const int maxAttempts = 3;
+  final Finder menuEntries = find.byWidgetPredicate(
+    (final widget) => widget is PopupMenuEntry,
   );
-  if (tester.any(menuScrollable)) {
-    await tester.scrollUntilVisible(
+  for (var attempt = 0; attempt < maxAttempts; attempt++) {
+    await pumpUntilFound(tester, find.byTooltip('More'));
+    await tapAndPump(tester, find.byTooltip('More'));
+    await pumpUntilFound(tester, menuEntries);
+    final Finder destination = find.text(destinationLabel);
+    await pumpUntilFound(tester, destination);
+    await _scrollDestinationIntoView(
+      tester,
       destination,
-      120,
-      scrollable: menuScrollable.first,
+      delta: 120,
+      edgeNudge: -120 - (attempt * 48),
     );
-    // scrollUntilVisible can stop with the item flush against the bottom
-    // edge (missed taps at y == viewport height). Nudge further up.
-    await tester.drag(menuScrollable.first, const Offset(0, -96));
-    await tester.pump(const Duration(milliseconds: 150));
+    final bool tapped = await _tapHitTestable(tester, destination);
+    if (!tapped) {
+      await tapAndPump(tester, destination, scrollIntoView: false);
+    }
+    await tester.pump(const Duration(milliseconds: 300));
+    if (!tester.any(menuEntries)) {
+      // Menu dismissed via item selection (not a dismiss tap).
+      return;
+    }
+    // Missed: dismiss leftover menu and retry with a stronger nudge.
+    await tester.tapAt(const Offset(8, 8));
+    await tester.pump(const Duration(milliseconds: 250));
+    if (tester.any(menuEntries)) {
+      await tester.tapAt(const Offset(8, 8));
+      await tester.pump(const Duration(milliseconds: 250));
+    }
   }
-  // Keep nudge; tapAndPump scrollIntoView would re-scroll and can miss.
-  await tapAndPump(tester, destination, scrollIntoView: false);
+  throw TestFailure(
+    'Failed to open overflow destination "$destinationLabel" '
+    'after $maxAttempts attempts',
+  );
 }
 
 Future<void> _pageBack(final WidgetTester tester) async {

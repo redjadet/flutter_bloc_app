@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
@@ -184,6 +185,17 @@ Future<void> configureIntegrationTestDependencies({
     buildSignature: '',
   );
 
+  // Host env often exports SUPABASE_* (and IT injects them as dart-defines).
+  // Initializing Supabase without a session trips IotDemoAuthGate on Chat/IoT
+  // routes (redirect to supabase auth → missing "Conversation history" /
+  // "IoT Demo"). Keep bootstrap uninitialized for demo-flow coverage.
+  SupabaseBootstrapService.resetForTest();
+  SupabaseBootstrapService.initializeClient =
+      ({
+        required final url,
+        required final anonKey,
+      }) async {};
+
   // RTDB repos rely on plugin-backed auth to produce valid RTDB credentials.
   // Omit under mock auth or when real auth fell back to local guest only.
   integrationTestOmitFirebaseRemoteRepositories =
@@ -219,6 +231,7 @@ Future<void> tearDownIntegrationTestDependencies() async {
   await test_helpers.tearDownTestDependencies();
   integrationTestOmitFirebaseRemoteRepositories = false;
   test_helpers.resetFirebaseTestDelegate();
+  SupabaseBootstrapService.resetForTest();
 }
 
 Future<void> launchTestApp(

@@ -13,8 +13,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## General
-
 ### deploy_all_preflight
 
 ```sh
@@ -31,9 +29,8 @@ Preflight both store deploy lanes (iOS + Android)
 
 Deploy iOS (TestFlight) then Android (Play internal track) with one command
 
-Preferred wrapper: `./tool/release_both_stores.sh deploy`
-
 ----
+
 
 ## Android
 
@@ -135,6 +132,7 @@ Alias for play_promote_track (backward compatibility)
 
 ----
 
+
 ## iOS
 
 ### ios preflight
@@ -167,7 +165,7 @@ Build + upload to TestFlight (App Store Connect)
 [bundle exec] fastlane ios upload_appstore
 ```
 
-Build + upload to App Store Connect (same binary as TestFlight)
+Build + upload to App Store Connect (metadata optional; does not auto-submit for review)
 
 ### ios deploy
 
