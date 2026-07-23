@@ -46,8 +46,8 @@ void main() {
       expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
     });
 
-    test('default storage uses memory on iOS debug', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    test('default storage uses memory on Android debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
       expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
     });

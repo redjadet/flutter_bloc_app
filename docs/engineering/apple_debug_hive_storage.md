@@ -26,6 +26,10 @@ Expected **benign** dev logs (not bugs): missing Firebase/Supabase secrets,
    `useInMemorySecretStorageInDebug()` → `InMemorySecretStorage` on **iOS,
    macOS, and Android** when `!kReleaseMode && !kIsWeb`. Avoids Keychain /
    flaky emulator Keystore paths in debug and integration runs.
+   Remote Config Apple Keychain skip is **separate** (iOS/macOS only) so default
+   Android unit tests still exercise native fetch. `HiveKeyManager` uses the
+   stable debug key only when constructing with the **default** storage (injected
+   test doubles still get failure propagation).
 
 2. **Encryption key** — `packages/storage/lib/src/hive/hive_key_manager.dart`
    Same helper → deterministic `_appleDebugFallbackKey` (32 bytes) so encrypted

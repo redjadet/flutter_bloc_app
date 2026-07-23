@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
@@ -193,6 +194,15 @@ class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
 
   /// Firebase Installations uses Keychain; iOS simulators and unsigned macOS
   /// debug builds hit -34018. Skip native fetch and rely on defaults/cache.
-  static bool get _shouldSkipNativeFetchOnAppleDebug =>
-      useInMemorySecretStorageInDebug();
+  ///
+  /// Do not reuse [useInMemorySecretStorageInDebug] here — that helper also
+  /// covers Android emulator Keystore workarounds, which must not skip RC
+  /// fetches in default Android unit tests.
+  static bool get _shouldSkipNativeFetchOnAppleDebug {
+    if (kReleaseMode || kIsWeb) {
+      return false;
+    }
+    return defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS;
+  }
 }
