@@ -8,7 +8,9 @@ owners. Other agent docs link here; do not duplicate this list.
 1. [`AGENTS.md`](../../AGENTS.md) — repo map and invariants.
 2. [`skill_routing.md`](skill_routing.md) — `agents-skill-routing`; select one
    skill. Tool/validation: `./bin/agent-maintain tools --intent "<goal>" --paths <files>`.
-3. Task evidence — targeted code/tests plus [`CODEMAP.md`](../../CODEMAP.md) or
+3. Task evidence — targeted code/tests inside the declared task boundary. Load
+   another feature/package only when evidence or requested scope crosses that
+   boundary. Use [`CODEMAP.md`](../../CODEMAP.md) or
    [`ai/CONTEXT_MAP.md`](../../ai/CONTEXT_MAP.md) when structure is unclear.
 
 ## Conditional owners
@@ -23,6 +25,7 @@ owners. Other agent docs link here; do not duplicate this list.
 | Code review | [`../review/code_review_playbook.md`](../review/code_review_playbook.md); AI-authored change: also [`../ai_code_review_protocol.md`](../ai_code_review_protocol.md) |
 | Git, branch, PR, merge, or worktree task | [`git_and_branching_strategy.md`](../git_and_branching_strategy.md) |
 | Harness doctrine / agent policy | [`agent_knowledge_base.md`](../agent_knowledge_base.md) |
+| Compiled memory / resume / long session | [`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md) |
 | Topic owner unknown | [`docs/README.md`](../README.md) |
 | AI engineering plan | [`PLAN.md`](../../PLAN.md) |
 | Debt claim only | `ai/reports/`, `docs/audits/` (`git add -f`) |

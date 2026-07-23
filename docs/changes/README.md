@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-23_meterless_context_layer_guidance.md`](2026-07-23_meterless_context_layer_guidance.md): Adapt Meterless task isolation, context provenance/freshness, supersession, and bounded carryover into existing repo owners and guards.
 - [`2026-07-22_agent_worktree_automation.md`](2026-07-22_agent_worktree_automation.md): Dry-run-first isolated worktree creation with validated base, branch, path, CLI routing, and fixture proof.
 - [`2026-07-22_bump_ilkersevim_relative_time_0.1.1.md`](2026-07-22_bump_ilkersevim_relative_time_0.1.1.md): Bump hosted `ilkersevim_relative_time` caret to `^0.1.1` after OIDC proof.
 - [`2026-07-22_bump_ilkersevim_disposables_0.1.1.md`](2026-07-22_bump_ilkersevim_disposables_0.1.1.md): Bump hosted `ilkersevim_disposables` caret to `^0.1.1` after OIDC proof.

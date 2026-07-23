@@ -13,6 +13,8 @@ Checks:
 - source doc defines Memory Compounding
 - source doc defines Context Navigation Ladder
 - reusable conclusions route to durable repo memory, not chat-only notes
+- task-isolated context packets preserve provenance, freshness, and supersession
+- long-session carryover stays bounded and structured
 - low-token codebase awareness routes through code-review-graph before broad reads
 - autonomous cron/action guidance requires explicit user approval
 - quick reference and host templates expose the behavior
@@ -63,6 +65,20 @@ require_contains "docs/agent_knowledge_base.md" "separate RAG layer"
 require_contains "docs/agent_knowledge_base.md" "code-review-graph"
 require_contains "docs/agent_knowledge_base.md" "targeted raw-file reads"
 require_contains "docs/agent_knowledge_base.md" "Semantic lint"
+require_contains "docs/agent_knowledge_base.md" "task-isolated retrieval"
+require_contains "docs/agent_knowledge_base.md" "bounded carryover"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "## Context packet contract"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "**Task isolation:**"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "**Provenance:**"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "**Freshness:**"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "**Supersession:**"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "## Bounded continuation"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "COMPLETED: verified work and proof"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "REMAINING: unfinished acceptance items"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "DECISIONS: choices with source pointers"
+require_contains "docs/agent_kb/memory_and_context_ladder.md" "CONTEXT: active boundaries, blockers, exact next step"
+require_contains "docs/ai/context_loading.md" "Load"
+require_contains "docs/ai/context_loading.md" "another feature/package only when evidence or requested scope crosses that"
 require_contains "docs/agents_quick_reference.md" "Reusable agent conclusion"
 require_contains "docs/agents_quick_reference.md" "Context navigation ladder"
 require_contains "docs/agents_quick_reference.md" "semantic lint"

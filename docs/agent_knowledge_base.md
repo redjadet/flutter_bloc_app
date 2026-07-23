@@ -92,7 +92,7 @@ Required anchors: Self-verify; Edge cases; Failure paths; Operational clarity; B
 
 Owner: [`agent_kb/memory_and_context_ladder.md`](agent_kb/memory_and_context_ladder.md)
 
-Required anchors: reusable conclusions; Semantic lint; File reusable conclusions; Do not dump chat transcripts; explicit user approval; separate RAG layer; code-review-graph; targeted raw-file reads.
+Required anchors: reusable conclusions; Semantic lint; File reusable conclusions; Do not dump chat transcripts; explicit user approval; separate RAG layer; code-review-graph; targeted raw-file reads; task-isolated retrieval; context packet; bounded carryover; provenance; freshness; supersession.
 
 ## Context Navigation Ladder
 
