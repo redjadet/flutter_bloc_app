@@ -108,11 +108,17 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }
 
   void _releaseConnectionAttempt(final Object error) {
-    if (_connectionFollowerCount > 0) {
-      _connectionCompleter.completeErrorAndReset(error);
+    final Completer<void>? pending = _connectionCompleter.pending;
+    if (pending == null) {
       return;
     }
-    _connectionCompleter.reset();
+    // Completer.future is single-subscription. When no follower is awaiting,
+    // completeError would become an unhandled async error in tests/zones —
+    // attach a sink first. Followers already listen, so skip the sink then.
+    if (_connectionFollowerCount == 0) {
+      unawaited(pending.future.catchError((final Object _) {}));
+    }
+    _connectionCompleter.completeErrorAndReset(error);
   }
 
   Future<WebSocketChannel> _connectWithTimeout() => WebSocketGuard.connect(
