@@ -86,7 +86,8 @@ void main() {
       );
       expect(identical(coreRepository, featureRepository), isTrue);
       expect(featureRepository.currentUser, isNull);
-      expect(featureRepository.authStateChanges, emitsDone);
+      // Gated session-ready stream seeds currentUser (null) and stays open.
+      expect(featureRepository.authStateChanges, emits(null));
     });
 
     test(

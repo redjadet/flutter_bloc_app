@@ -86,6 +86,9 @@ class BackgroundSyncCoordinator {
   Future<void>? _currentSync;
   bool _syncRequestedAfterCurrent = false;
   bool _isRunning = false;
+
+  /// When true, new sync triggers are rejected until [resumeAfterSessionCleanup].
+  bool _sessionQuiesced = false;
   SyncStatus _currentStatus = SyncStatus.idle;
 
   Stream<SyncStatus> get statusStream => _statusController.stream.distinct();
@@ -97,14 +100,14 @@ class BackgroundSyncCoordinator {
       List<SyncCycleSummary>.unmodifiable(_history);
 
   Future<void> ensureStarted() async {
-    if (_isRunning) {
+    if (_sessionQuiesced || _isRunning) {
       return;
     }
     await start();
   }
 
   Future<void> start() async {
-    if (_isRunning) {
+    if (_sessionQuiesced || _isRunning) {
       return;
     }
     _isRunning = true;
@@ -116,15 +119,37 @@ class BackgroundSyncCoordinator {
   }
 
   Future<void> stop() async {
-    if (!_isRunning) {
-      return;
-    }
-    _isRunning = false;
-    _syncRequestedAfterCurrent = false;
+    // Always drain in-flight work (including one-shot immediate syncs started
+    // while !_isRunning). Session cleanup relies on this quiesce guarantee.
     final Future<void>? inFlight = _currentSync;
-    await _unbindSyncListeners();
+    if (_isRunning) {
+      _isRunning = false;
+      _syncRequestedAfterCurrent = false;
+      await _unbindSyncListeners();
+    }
     await _awaitInFlightSync(inFlight);
     _emit(SyncStatus.idle);
+  }
+
+  /// Reject new sync triggers and drain in-flight work before session clears.
+  Future<void> quiesceForSessionCleanup() async {
+    _sessionQuiesced = true;
+    _syncRequestedAfterCurrent = false;
+    if (_isRunning) {
+      _isRunning = false;
+      await _unbindSyncListeners();
+    }
+    // Drain any cycle that started before the quiesce flag was observed.
+    while (_currentSync != null) {
+      await _awaitInFlightSync(_currentSync);
+    }
+    _emit(SyncStatus.idle);
+  }
+
+  /// Clear the session-cleanup lock and resume periodic sync.
+  Future<void> resumeAfterSessionCleanup() async {
+    _sessionQuiesced = false;
+    await ensureStarted();
   }
 
   Future<void> dispose() async {

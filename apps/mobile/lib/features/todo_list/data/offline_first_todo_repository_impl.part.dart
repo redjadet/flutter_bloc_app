@@ -170,6 +170,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
   }
 
+  /// Clears Hive-backed todos without enqueueing remote deletes.
+  Future<void> clearAllLocalData() => _localRepository.clearAllLocalData();
+
   @override
   Future<void> processOperation(final SyncOperation operation) async {
     if (_isDeleteOperation(operation)) {
@@ -330,10 +333,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   Future<void> _markLocalItemSynchronized(final TodoItem item) {
     return _localRepository.save(
-      item.copyWith(
-        synchronized: true,
-        lastSyncedAt: DateTime.now().toUtc(),
-      ),
+      item.copyWith(synchronized: true, lastSyncedAt: DateTime.now().toUtc()),
     );
   }
 

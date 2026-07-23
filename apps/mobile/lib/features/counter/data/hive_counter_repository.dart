@@ -161,7 +161,6 @@ class HiveCounterRepository extends HiveRepositoryBase
 
           _watchHelper.emitSnapshot(normalized);
         },
-        fallback: () {},
       );
 
   @override
@@ -177,4 +176,7 @@ class HiveCounterRepository extends HiveRepositoryBase
   Future<void> dispose() async {
     await _watchHelper.dispose();
   }
+
+  /// Resets counter Hive state to the empty local snapshot.
+  Future<void> clearAllLocalData() async => save(_emptySnapshot);
 }

@@ -50,6 +50,34 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
     );
   }
 
+  Future<int> clearEntityTypesBody(final Iterable<String> types) async {
+    final Set<String> entityTypes = types
+        .where((final type) => type.isNotEmpty)
+        .toSet();
+    if (entityTypes.isEmpty) {
+      return 0;
+    }
+    // No StorageGuard fallback: session cleanup must fail closed if rows cannot
+    // be removed (returning 0 would leave another user's ops on device).
+    return StorageGuard.run<int>(
+      logContext: 'PendingSyncRepository.clearEntityTypes',
+      action: () async {
+        final Box<dynamic> box = await getBox();
+        final _PendingOperationsReadResult readResult = _readOperations(
+          box.toMap(),
+        );
+        final List<dynamic> keysToDelete = readResult.operations
+            .where(
+              (final entry) => entityTypes.contains(entry.operation.entityType),
+            )
+            .map((final entry) => entry.key)
+            .toList(growable: false);
+        await _deleteKeys(box, keysToDelete);
+        return keysToDelete.length;
+      },
+    );
+  }
+
   Future<int> pruneBody({
     required final int maxRetryCount,
     required final Duration maxAge,

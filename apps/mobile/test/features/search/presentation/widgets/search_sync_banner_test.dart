@@ -93,6 +93,12 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     _history.add(summary);
     _summaryController.add(summary);
   }
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 class _MockSyncStatusCubit extends MockCubit<SyncStatusState>

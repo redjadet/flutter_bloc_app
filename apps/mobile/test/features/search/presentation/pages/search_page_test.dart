@@ -87,6 +87,12 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
     status = newStatus;
     _controller.add(newStatus);
   }
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 void main() {

@@ -55,13 +55,14 @@ void registerAuthServices() {
         firebaseAuth: firebaseAuth,
       );
       final SessionLifecycleCoordinator coordinator =
-          getIt<SessionLifecycleCoordinator>();
-      final SignOutAwareAuthRepository decorated = SignOutAwareAuthRepository(
+          getIt<SessionLifecycleCoordinator>()
+            // Attach the undecorated stream first so cleanup can gate
+            // publication without deadlocking on session-ready auth changes.
+            ..attachAuthRepository(inner);
+      return SignOutAwareAuthRepository(
         delegate: inner,
         coordinator: coordinator,
       );
-      coordinator.attachAuthRepository(decorated);
-      return decorated;
     },
     dispose: (final repository) async {
       final AuthRepository inner = repository is SignOutAwareAuthRepository
