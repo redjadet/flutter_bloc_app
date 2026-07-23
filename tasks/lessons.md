@@ -21,6 +21,31 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-23 - Pub silent-prod bumps need call-site + lenient-parse regression checks
+
+- What went wrong:
+  App PR #605 failed CI after bumping `ilkersevim_async_lifecycle` /
+  `ilkersevim_safe_parse`. Websocket used bare `CompleterHelper.reset()` on
+  leader-only failure (now completes waiters → unhandled async /
+  `StateError`). `parseMapOfMaps` 0.1.3 rethrew `FormatException` from
+  `parseItem` even in lenient mode, breaking RTDB todo skip-invalid.
+- How it was fixed:
+  Publish `safe_parse` 0.1.4 (treat `FormatException` like other parse
+  errors when `failOnPartial: false`). Websocket always
+  `completeErrorAndReset`, with a leader-only `catchError` sink because
+  `Completer.future` is single-subscription.
+- Pattern:
+  Hardening packages that previously abandoned completers or special-cased
+  `FormatException` will surface first in app consumers, not package unit
+  tests that never threw `FormatException` from `parseItem`.
+- Preventive rule:
+  After publishing lifecycle/parse hardenings, run owning app tests for
+  `CompleterHelper` call sites and any `parseMapOfMaps`/`FormatException`
+  parsers before merge; do not assume caret bump alone is green.
+- Evidence or affected files:
+  `apps/mobile/lib/features/websocket/data/echo_websocket_repository.dart`;
+  `ilkersevim_safe_parse` 0.1.4; PR #605.
+
 ### 2026-07-23 - Android IT Chat/IoT “tap flake” was Supabase auth gate
 
 - What went wrong:
