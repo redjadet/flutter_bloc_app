@@ -51,6 +51,12 @@ void main() {
 
       expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
     });
+
+    test('default storage uses memory on Android debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
+      expect(createDefaultSecretStorage(), isA<InMemorySecretStorage>());
+    });
   });
 
   group('FlutterSecureSecretStorage', () {

@@ -110,6 +110,12 @@ void main() {
       expect(FirebaseBootstrapService.supportsDebugLocalGuestAuth, isTrue);
     });
 
+    test('supportsDebugLocalGuestAuth is true on Android emulator debug', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      FirebaseBootstrapService.isAndroidEmulatorInDebug = true;
+      expect(FirebaseBootstrapService.supportsDebugLocalGuestAuth, isTrue);
+    });
+
     test('configureFirebaseUI is safe when Firebase is not initialized', () {
       expect(FirebaseBootstrapService.isFirebaseInitialized, isFalse);
       FirebaseBootstrapService.configureFirebaseUI();
@@ -125,6 +131,7 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.linux;
       await FirebaseBootstrapService.ensureIosSimulatorDebugFlag();
       expect(FirebaseBootstrapService.isIosSimulatorInDebug, isFalse);
+      expect(FirebaseBootstrapService.isAndroidEmulatorInDebug, isFalse);
     });
 
     test('initializeFirebase uses debug options override on android', () async {

@@ -9,6 +9,7 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
       integrationTestOmitFirebaseRemoteRepositories = false;
       FirebaseBootstrapService.isIosSimulatorInDebug = false;
+      FirebaseBootstrapService.isAndroidEmulatorInDebug = false;
     });
 
     test('skips Firebase remote repositories on macOS desktop debug', () {

@@ -69,6 +69,22 @@ Future<void> _markIosSimulatorInDebugIfNeeded() async {
   }
 }
 
+/// Marks [FirebaseBootstrapService.isAndroidEmulatorInDebug] on debug Android
+/// emulators so local guest auth works when Firebase config is placeholder-only.
+Future<void> _markAndroidEmulatorInDebugIfNeeded() async {
+  if (!kDebugMode || defaultTargetPlatform != TargetPlatform.android) {
+    return;
+  }
+  try {
+    final AndroidDeviceInfo info = await DeviceInfoPlugin().androidInfo;
+    if (!info.isPhysicalDevice) {
+      FirebaseBootstrapService.isAndroidEmulatorInDebug = true;
+    }
+  } on Object catch (_) {
+    // Best-effort; DI fallbacks remain disabled when detection fails.
+  }
+}
+
 Future<bool> _activateAppleAppCheck({
   required final String debugToken,
   required final bool logSimulatorInfo,

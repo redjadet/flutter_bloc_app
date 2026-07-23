@@ -72,6 +72,11 @@ void registerTodoListFilterIntegrationFlow() {
       // Filter: show only active
       final Finder activeFilterButton = _findAdaptiveButtonByText('Active');
       await pumpUntilFound(tester, activeFilterButton);
+      await tester.scrollUntilVisible(
+        activeFilterButton,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tapAndPump(tester, activeFilterButton);
       await pumpSettleWithin(tester);
       expect(find.text('Active todo'), findsWidgets);
@@ -80,6 +85,12 @@ void registerTodoListFilterIntegrationFlow() {
       // Filter: show only completed
       final Finder completedFilterButton = _findAdaptiveButtonByText(
         'Completed',
+      );
+      await pumpUntilFound(tester, completedFilterButton);
+      await tester.scrollUntilVisible(
+        completedFilterButton,
+        200,
+        scrollable: find.byType(Scrollable).first,
       );
       await tapAndPump(tester, completedFilterButton);
       await pumpSettleWithin(tester);
@@ -143,8 +154,8 @@ void registerSettingsThemePersistenceIntegrationFlow() {
       await tapAndPump(tester, find.text('Español'));
       await pumpUntilFound(tester, find.text('Configuración'));
 
-      // Navigate back to home
-      await tester.pageBack();
+      // Navigate back to home (Material + Cupertino)
+      await _pageBack(tester);
       await pumpUntilFound(
         tester,
         find.text('Página principal de la demostración'),

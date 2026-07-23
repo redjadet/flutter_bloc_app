@@ -120,3 +120,66 @@ String _resolveGoogleClientId(
     _ => options.appId,
   };
 }
+
+/// Enable Firebase Database persistence.
+/// Must be called before any database operations.
+///
+/// [FirebaseDatabase.setPersistenceEnabled] is typed `void` but still
+/// schedules platform work that can fail asynchronously. Zone-guard so
+/// plugin errors stay best-effort and never fail Firebase init.
+Future<void> _enableDatabasePersistence() async {
+  final Completer<void> done = Completer<void>();
+  runZonedGuarded(
+    () {
+      try {
+        final FirebaseApp app = Firebase.app();
+        FirebaseDatabase.instanceFor(app: app).setPersistenceEnabled(true);
+        AppLogger.debug('Firebase Database persistence enabled');
+      } on Object catch (error, stackTrace) {
+        AppLogger.warning(
+          'Failed to enable Firebase Database persistence: $error',
+        );
+        AppLogger.debug('Persistence setup stack trace\n$stackTrace');
+      } finally {
+        scheduleMicrotask(() {
+          if (!done.isCompleted) {
+            done.complete();
+          }
+        });
+      }
+    },
+    (error, stackTrace) {
+      AppLogger.warning(
+        'Failed to enable Firebase Database persistence: $error',
+      );
+      AppLogger.debug('Persistence setup stack trace\n$stackTrace');
+      if (!done.isCompleted) {
+        done.complete();
+      }
+    },
+  );
+  await done.future;
+}
+
+Future<bool> _initializeConfiguredFirebase(
+  final FirebaseOptions options,
+) async {
+  await Firebase.initializeApp(options: options);
+  AppLogger.info('Firebase initialized for project: ${options.projectId}');
+  await _activateAppCheck();
+  await _enableDatabasePersistence();
+  return true;
+}
+
+Future<void> _prepareReusedFirebaseApp() async {
+  await _markIosSimulatorInDebugIfNeeded();
+  await _markAndroidEmulatorInDebugIfNeeded();
+  await _enableDatabasePersistence();
+}
+
+void _logFirebaseInitializationFailure(
+  final Object error,
+  final StackTrace stackTrace,
+) {
+  AppLogger.error('Firebase initialization failed', error, stackTrace);
+}

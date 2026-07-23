@@ -24,8 +24,11 @@ bool useInMemorySecretStorageInDebug() {
   if (kIsWeb) {
     return true;
   }
+  // Apple Keychain and some Android emulator Keystore paths are unreliable in
+  // debug/integration; use in-memory storage so Hive can still open.
   return defaultTargetPlatform == TargetPlatform.macOS ||
-      defaultTargetPlatform == TargetPlatform.iOS;
+      defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.android;
 }
 
 bool useUnencryptedHiveBoxesInDebug() => !kReleaseMode && kIsWeb;

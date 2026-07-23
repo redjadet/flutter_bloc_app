@@ -23,8 +23,41 @@ Future<void> _openOverflowDestination(
 ) async {
   await pumpUntilFound(tester, find.byTooltip('More'));
   await tapAndPump(tester, find.byTooltip('More'));
-  await pumpUntilFound(tester, find.text(destinationLabel));
-  await tapAndPump(tester, find.text(destinationLabel));
+  final Finder destination = find.text(destinationLabel);
+  await pumpUntilFound(tester, destination);
+  // Popup menus on small Android emulators often clip lower items; scroll
+  // the menu's own Scrollable before tap so hit-testing lands on the entry.
+  final Finder menuScrollable = find.ancestor(
+    of: destination,
+    matching: find.byType(Scrollable),
+  );
+  if (tester.any(menuScrollable)) {
+    await tester.scrollUntilVisible(
+      destination,
+      120,
+      scrollable: menuScrollable.first,
+    );
+    // scrollUntilVisible can stop with the item flush against the bottom
+    // edge (missed taps at y == viewport height). Nudge further up.
+    await tester.drag(menuScrollable.first, const Offset(0, -96));
+    await tester.pump(const Duration(milliseconds: 150));
+  }
+  await tapAndPump(tester, destination);
+}
+
+Future<void> _pageBack(final WidgetTester tester) async {
+  final Finder cupertinoBack = find.byType(CupertinoNavigationBarBackButton);
+  final Finder materialBack = find.byIcon(Icons.arrow_back);
+  if (tester.any(cupertinoBack)) {
+    await tapAndPump(tester, cupertinoBack.first);
+    return;
+  }
+  if (tester.any(materialBack)) {
+    await tapAndPump(tester, materialBack.first);
+    return;
+  }
+  // Last resort: Flutter's pageBack (Cupertino-oriented).
+  await tester.pageBack();
 }
 
 Finder _findAdaptiveButtonByText(
