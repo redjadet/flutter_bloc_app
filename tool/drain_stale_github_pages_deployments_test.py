@@ -27,6 +27,8 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
     def test_is_stale_pages_status_treats_empty_as_stale(self):
         self.assertTrue(self.module.is_stale_pages_status(""))
         self.assertTrue(self.module.is_stale_pages_status(None))
+        self.assertFalse(self.module.is_stale_pages_status("", nudged=True))
+        self.assertFalse(self.module.is_stale_pages_status(None, nudged=True))
 
     def test_is_stale_pages_status_treats_non_succeed_as_stale(self):
         self.assertFalse(self.module.is_stale_pages_status("succeed"))
@@ -46,6 +48,8 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
             self.module.needs_post_cancel_wait("deployment_cancelled"),
         )
         self.assertFalse(self.module.needs_post_cancel_wait("succeed"))
+        self.assertFalse(self.module.needs_post_cancel_wait(""))
+        self.assertFalse(self.module.needs_post_cancel_wait(None))
 
     def test_is_stale_pages_status_flags_in_progress_states(self):
         self.assertTrue(
@@ -53,6 +57,10 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         )
         self.assertTrue(
             self.module.is_stale_pages_status("deployment_in_progress"),
+        )
+        # Real queue activity must keep draining until status flips.
+        self.assertTrue(
+            self.module.is_stale_pages_status("deployment_queued", nudged=True),
         )
 
     def test_unique_shas_preserves_order_and_deduplicates(self):
@@ -242,6 +250,49 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
 
         self.assertEqual(len(cancelled), 1)
         self.assertIn(45, sleeps)
+
+    def test_drain_blank_status_backlog_clears_after_one_nudge(self):
+        """Regression: blank statuses stuck after cancel used to burn poll_timeout."""
+        module = self.module
+        blank_shas = [f"blank{i:012d}" for i in range(40)]
+
+        class FakeClient:
+            def __init__(self):
+                self.cancelled: set[str] = set()
+
+            def list_environment_deployments(self, *, environment, max_deployments):
+                return [{"sha": sha} for sha in blank_shas]
+
+            def pages_status(self, sha):
+                return module.PagesStatusLookup(found=True, status="")
+
+            def cancel_pages_deployment(self, sha):
+                self.cancelled.add(sha)
+
+        sleeps: list[float] = []
+        original_sleep = module.time.sleep
+
+        def record_sleep(seconds):
+            sleeps.append(seconds)
+
+        fake = FakeClient()
+        module.time.sleep = record_sleep
+        try:
+            cancelled = module.drain_stale_pages_deployments(
+                fake,
+                max_deployments=50,
+                poll_timeout_seconds=30,
+                poll_interval_seconds=0,
+                wait_after_cancel_seconds=5,
+                settle_seconds=0,
+            )
+        finally:
+            module.time.sleep = original_sleep
+
+        self.assertEqual(len(cancelled), len(blank_shas))
+        self.assertEqual(fake.cancelled, set(blank_shas))
+        # Blank statuses must not pay the per-cancel settle sleep.
+        self.assertNotIn(5, sleeps)
 
 
 if __name__ == "__main__":

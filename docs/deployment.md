@@ -233,7 +233,10 @@ It skips the current commit SHA so a pre-deploy cancel does not block an
 immediate redeploy of the same commit. The drain cancels every other recent
 Pages deployment that is not `succeed` (including `deployment_cancelled`
 entries that still block the queue), paginates through recent environment
-deployments, and nudges each blocker once. On retry after a failed deploy, the
+deployments, and nudges each blocker once. Blank/`null` statuses are cancelled
+once and then treated as cleared (they often never flip to a terminal label);
+the drain also skips the per-cancel settle sleep for those ghosts so a large
+backlog cannot burn the poll deadline before `deploy-pages` runs. On retry after a failed deploy, the
 script includes the current SHA, waits for a terminal Pages status, then
 retries `deploy-pages`. Branch deploys, including redispatched
 `workflow_dispatch` recovery runs on `main`, skip when the workflow commit is no

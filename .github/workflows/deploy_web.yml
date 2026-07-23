@@ -171,6 +171,7 @@ jobs:
         run: |
           python3 tool/drain_stale_github_pages_deployments.py \
             --max-deployments 50 \
+            --poll-timeout-seconds 300 \
             --settle-seconds 45
 
       - id: deployment
