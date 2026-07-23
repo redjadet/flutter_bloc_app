@@ -129,6 +129,94 @@ void main() {
       await coordinator.stop();
     });
 
+    test(
+      'stop awaits in-flight flush even when coordinator was never started',
+      () async {
+        final Completer<void> processGate = Completer<void>();
+        final SyncOperation operation = SyncOperation.create(
+          entityType: 'counter',
+          payload: const <String, dynamic>{'count': 1},
+          idempotencyKey: 'flush-key',
+        );
+        when(
+          () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+        ).thenAnswer((_) async => <SyncOperation>[operation]);
+        final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+        when(() => syncableRepo.entityType).thenReturn('counter');
+        when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+        when(
+          () => syncableRepo.processOperation(operation),
+        ).thenAnswer((_) => processGate.future);
+        registry.register(syncableRepo);
+        when(
+          () => pendingRepository.markCompleted(operation.id),
+        ).thenAnswer((_) async {});
+
+        final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+          repository: pendingRepository,
+          networkStatusService: networkService,
+          timerService: timerService,
+          registry: registry,
+          syncInterval: const Duration(milliseconds: 10),
+        );
+
+        final Future<void> flushFuture = coordinator.flush();
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+
+        var stopCompleted = false;
+        final Future<void> stopFuture = coordinator.stop().then((_) {
+          stopCompleted = true;
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+        expect(stopCompleted, isFalse);
+
+        processGate.complete();
+        await stopFuture;
+        await flushFuture;
+        expect(stopCompleted, isTrue);
+        verify(() => syncableRepo.processOperation(operation)).called(1);
+      },
+    );
+
+    test('quiesce rejects flush until resumeAfterSessionCleanup', () async {
+      final SyncOperation operation = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 1},
+        idempotencyKey: 'quiesce-key',
+      );
+      when(
+        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
+      ).thenAnswer((_) async => <SyncOperation>[operation]);
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(
+        () => syncableRepo.processOperation(operation),
+      ).thenAnswer((_) async {});
+      registry.register(syncableRepo);
+      when(
+        () => pendingRepository.markCompleted(operation.id),
+      ).thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+
+      await coordinator.quiesceForSessionCleanup();
+      await coordinator.flush();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      verifyNever(() => syncableRepo.processOperation(operation));
+
+      await coordinator.resumeAfterSessionCleanup();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      verify(() => syncableRepo.processOperation(operation)).called(1);
+      await coordinator.stop();
+    });
+
     test('default telemetry filter suppresses empty sync events', () {
       expect(
         BackgroundSyncCoordinator.shouldLogTelemetry(

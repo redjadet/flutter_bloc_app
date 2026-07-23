@@ -338,6 +338,11 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> flush() async {}
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 Widget _wrapWithCubit(
@@ -602,6 +607,12 @@ class _ManualFlushCoordinator implements BackgroundSyncCoordinator {
   Future<void> dispose() async {
     await _controller.close();
   }
+
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}

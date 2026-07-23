@@ -71,6 +71,12 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   }
 
   @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
+
+  @override
   Future<void> flush() async {
     flushCount++;
     emit(SyncStatus.syncing);

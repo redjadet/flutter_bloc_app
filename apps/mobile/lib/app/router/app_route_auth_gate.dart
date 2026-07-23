@@ -71,6 +71,24 @@ class _AppRouteAuthGateState extends State<AppRouteAuthGate> {
     );
   }
 
+  void _goAuth({final String? redirectTarget}) {
+    final GoRouter? router = GoRouter.maybeOf(context);
+    if (router == null) {
+      // Coverage / orphan pumps may mount the gate without a router ancestor.
+      AppLogger.warning(
+        'AppRouteAuthGate: GoRouter missing; skip auth redirect',
+      );
+      return;
+    }
+    if (redirectTarget != null &&
+        AppRoutes.isSafeRedirectPath(redirectTarget)) {
+      final String encoded = Uri.encodeComponent(redirectTarget);
+      router.go('${widget.authPath}?redirect=$encoded');
+      return;
+    }
+    router.go(widget.authPath);
+  }
+
   void _checkAndRedirect(_) {
     if (!mounted) return;
 
@@ -83,13 +101,7 @@ class _AppRouteAuthGateState extends State<AppRouteAuthGate> {
       }
 
       if (widget.getCurrentUser() == null) {
-        final String redirectTarget = widget.policy.path;
-        if (AppRoutes.isSafeRedirectPath(redirectTarget)) {
-          final String encoded = Uri.encodeComponent(redirectTarget);
-          context.go('${widget.authPath}?redirect=$encoded');
-          return;
-        }
-        context.go(widget.authPath);
+        _goAuth(redirectTarget: widget.policy.path);
         return;
       }
 
@@ -102,7 +114,7 @@ class _AppRouteAuthGateState extends State<AppRouteAuthGate> {
         error,
         stackTrace,
       );
-      context.go(widget.authPath);
+      _goAuth();
     }
   }
 

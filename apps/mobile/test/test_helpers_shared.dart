@@ -162,6 +162,11 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
   @override
   Future<void> triggerFromFcm({final String? hint}) async {}
+  @override
+  Future<void> quiesceForSessionCleanup() async {}
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {}
 }
 
 class FakePendingSyncRepository implements PendingSyncRepository {
@@ -220,6 +225,21 @@ class FakePendingSyncRepository implements PendingSyncRepository {
 
   @override
   Future<void> clear() async => _operations.clear();
+
+  @override
+  Future<int> clearEntityTypes(final Iterable<String> types) async {
+    final Set<String> entityTypes = types
+        .where((final type) => type.isNotEmpty)
+        .toSet();
+    if (entityTypes.isEmpty) {
+      return 0;
+    }
+    final int before = _operations.length;
+    _operations.removeWhere(
+      (final SyncOperation op) => entityTypes.contains(op.entityType),
+    );
+    return before - _operations.length;
+  }
 
   @override
   Future<void> dispose() async {}

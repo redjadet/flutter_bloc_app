@@ -163,6 +163,13 @@ class PendingSyncRepository extends HiveRepositoryBase {
   /// Clears all pending operations from the queue.
   Future<void> clear() => clearBody();
 
+  /// Deletes pending operations whose [SyncOperation.entityType] is in [types].
+  ///
+  /// Used on auth transitions to drop shared-device queues that are not
+  /// user-scoped in the payload (e.g. Firebase todo/counter/chat).
+  Future<int> clearEntityTypes(final Iterable<String> types) =>
+      clearEntityTypesBody(types);
+
   /// Prunes operations that have exceeded retry limits or are too old to retry.
   ///
   /// Returns the number of pruned operations.

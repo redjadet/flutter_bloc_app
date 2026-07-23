@@ -7,6 +7,9 @@ import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 
+part 'session_lifecycle_coordinator_auth.part.dart';
+part 'session_lifecycle_coordinator_session.part.dart';
+
 /// Emitted when a provider session is invalidated (refresh failure, remote 401, etc.).
 class SessionInvalidationEvent {
   const SessionInvalidationEvent({
@@ -20,15 +23,41 @@ class SessionInvalidationEvent {
   final DateTime occurredAt;
 }
 
+/// Why local offline/session data is being cleared.
+enum SessionLocalCleanupReason {
+  /// Provider signed out to null / explicit sign-out completed.
+  signOut,
+
+  /// Authenticated user id changed without an intermediate null hop (A→B).
+  accountSwitch,
+}
+
+/// Clears device-local offline data that must not survive auth transitions.
+typedef SessionLocalDataCleanup =
+    Future<void> Function({
+      required AuthProviderKind provider,
+      required SessionLocalCleanupReason reason,
+    });
+
 /// Central session cleanup and invalidation for Firebase and Supabase stacks.
 abstract interface class SessionLifecycleCoordinator {
   Stream<SessionInvalidationEvent> get invalidationEvents;
+
+  /// Auth identity stream that only emits after local session cleanup settles.
+  ///
+  /// Listeners (router, AppAuthCubit) must use this instead of the raw
+  /// provider stream so account-switch cannot observe the previous user's
+  /// Hive/pending-sync data mid-clear.
+  Stream<AuthUser?> get sessionReadyAuthStateChanges;
 
   void bindAuthTokenManager(AuthTokenManager manager);
 
   void bindTokenRepository(TokenRepository repository);
 
   void bindHfTokenProvider(RenderOrchestrationHfTokenProvider? provider);
+
+  /// Optional cleanup for Hive/pending-sync state that is not token-scoped.
+  void bindLocalSessionDataCleanup(SessionLocalDataCleanup cleanup);
 
   /// Idempotent cache cleanup after any sign-out (explicit or SDK-driven).
   Future<void> onSignOutCompleted({required AuthProviderKind provider});
@@ -39,7 +68,9 @@ abstract interface class SessionLifecycleCoordinator {
     required SessionInvalidationReason reason,
   });
 
-  /// Subscribe once to [AuthRepository.authStateChanges] for SDK-driven sign-out.
+  /// Subscribe once to the raw [AuthRepository.authStateChanges] for SDK-driven
+  /// sign-out / account-switch. Pass the undecorated repository (not a gated
+  /// wrapper) to avoid deadlock with session-ready auth changes.
   void attachAuthRepository(AuthRepository repository);
 }
 
@@ -48,18 +79,42 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
 
   final StreamController<SessionInvalidationEvent> _invalidationController =
       StreamController<SessionInvalidationEvent>.broadcast();
+  final StreamController<AuthUser?> _sessionReadyFanout =
+      StreamController<AuthUser?>.broadcast();
 
   AuthTokenManager? _authTokenManager;
   TokenRepository? _tokenRepository;
   RenderOrchestrationHfTokenProvider? _hfTokenProvider;
+  SessionLocalDataCleanup? _localSessionDataCleanup;
   StreamSubscription<AuthUser?>? _authSubscription;
   AuthUser? _previousUser;
+  AuthUser? _sessionReadyUser;
+  bool _hasSessionReadyUser = false;
+  Completer<void>? _localCleanupBarrier;
+  Future<void> _authTransitionChain = Future<void>.value();
+  int _authTransitionGeneration = 0;
   final Set<AuthProviderKind> _invalidationInFlight = <AuthProviderKind>{};
   bool _authRepositoryAttached = false;
 
   @override
   Stream<SessionInvalidationEvent> get invalidationEvents =>
       _invalidationController.stream;
+
+  @override
+  Stream<AuthUser?> get sessionReadyAuthStateChanges => Stream<AuthUser?>.multi(
+    (controller) {
+      if (_hasSessionReadyUser) {
+        controller.add(_sessionReadyUser);
+      }
+      final StreamSubscription<AuthUser?> sub = _sessionReadyFanout.stream
+          .listen(
+            controller.add,
+            onError: controller.addError,
+            onDone: controller.close,
+          );
+      controller.onCancel = sub.cancel;
+    },
+  );
 
   @override
   void bindAuthTokenManager(final AuthTokenManager manager) {
@@ -77,93 +132,28 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   }
 
   @override
-  void attachAuthRepository(final AuthRepository repository) {
-    if (_authRepositoryAttached) {
-      return;
-    }
-    _authRepositoryAttached = true;
-    _previousUser = repository.currentUser;
-    _authSubscription = repository.authStateChanges.listen(
-      (final user) async {
-        final AuthUser? previous = _previousUser;
-        _previousUser = user;
-        if (previous != null && user == null) {
-          await onSignOutCompleted(provider: AuthProviderKind.firebase);
-        }
-      },
-      onError: (final Object error, final StackTrace stackTrace) {
-        AppLogger.error(
-          'SessionLifecycleCoordinator.authStateChanges',
-          error,
-          stackTrace,
-        );
-      },
-      cancelOnError: false,
-    );
+  void bindLocalSessionDataCleanup(final SessionLocalDataCleanup cleanup) {
+    _localSessionDataCleanup = cleanup;
   }
+
+  @override
+  void attachAuthRepository(final AuthRepository repository) =>
+      attachAuthRepositoryBody(repository);
 
   @override
   Future<void> onSignOutCompleted({
     required final AuthProviderKind provider,
-  }) async {
-    if (provider == AuthProviderKind.firebase) {
-      _authTokenManager?.clearCache();
-    }
-    _tokenRepository?.clearProvider(provider);
-    final RenderOrchestrationHfTokenProvider? hfProvider = _hfTokenProvider;
-    if (hfProvider != null) {
-      try {
-        await hfProvider.clearRenderOrchestrationTokenCache();
-      } on Object catch (error, stackTrace) {
-        AppLogger.error(
-          'SessionLifecycleCoordinator: HF token cache clear failed',
-          error,
-          stackTrace,
-        );
-      }
-    }
-  }
+  }) => onSignOutCompletedBody(provider: provider);
 
   @override
   Future<void> invalidateSession({
     required final AuthProviderKind provider,
     required final SessionInvalidationReason reason,
-  }) async {
-    if (_invalidationInFlight.contains(provider)) {
-      return;
-    }
-    _invalidationInFlight.add(provider);
-    try {
-      switch (provider) {
-        case AuthProviderKind.firebase:
-          if (getIt.isRegistered<AuthRepository>()) {
-            await getIt<AuthRepository>().signOut();
-          }
-        case AuthProviderKind.supabase:
-          if (getIt.isRegistered<RemoteBackendAuthPort>()) {
-            await getIt<RemoteBackendAuthPort>().signOut();
-          } else {
-            AppLogger.debug(
-              'SessionLifecycleCoordinator: skip supabase signOut (port not registered)',
-            );
-          }
-      }
-      // Emit after sign-out so session-expired UX does not race a still-valid
-      // AuthRepository.currentUser (which would bounce users off /auth).
-      _invalidationController.add(
-        SessionInvalidationEvent(
-          provider: provider,
-          reason: reason,
-          occurredAt: DateTime.now().toUtc(),
-        ),
-      );
-    } finally {
-      _invalidationInFlight.remove(provider);
-    }
-  }
+  }) => invalidateSessionBody(provider: provider, reason: reason);
 
   Future<void> dispose() async {
     await _authSubscription?.cancel();
     await _invalidationController.close();
+    await _sessionReadyFanout.close();
   }
 }
