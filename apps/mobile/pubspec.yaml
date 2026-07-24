@@ -50,7 +50,7 @@ dependencies:
   cloud_functions: ^6.3.5
   collection: ^1.19.1
   confetti: ^0.8.0
-  connectivity_plus: ^7.3.0
+  connectivity_plus: ^7.3.1
   core:
     path: ../../packages/core
   cross_file: ^0.3.5+2
@@ -82,7 +82,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  flutter_cache_manager: ^3.4.1
+  flutter_cache_manager: ^3.4.2
   flutter_localizations:
     sdk: flutter
   flutter_reactive_ble: ^5.5.0
@@ -97,18 +97,18 @@ dependencies:
   get_it: ^9.2.1
   go_router: ^17.3.0
   google_fonts: ^8.2.0
-  google_maps_flutter: ^2.17.1
+  google_maps_flutter: ^2.18.0
   google_maps_flutter_ios_sdk10: ^2.18.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   ilkersevim_async_lifecycle: ^0.1.4
-  ilkersevim_async_utils: ^0.1.1
-  ilkersevim_disposables: ^0.1.1
-  ilkersevim_json_isolate: ^0.1.1
+  ilkersevim_async_utils: ^0.1.2
+  ilkersevim_disposables: ^0.1.2
+  ilkersevim_json_isolate: ^0.1.2
   ilkersevim_relative_time: ^0.1.3
   ilkersevim_retry: ^0.1.3
   ilkersevim_safe_parse: ^0.1.4
-  ilkersevim_type_safe_bloc: ^0.1.2
+  ilkersevim_type_safe_bloc: ^0.1.3
   image: ^4.9.1
   image_picker: ^1.2.3
   in_app_purchase: ^3.3.0
@@ -173,7 +173,7 @@ dev_dependencies:
     path: ../../custom_lints/mix_lint
   mock_exceptions: ^0.8.2
   mocktail: ^1.0.5
-  retrofit_generator: ^10.2.7
+  retrofit_generator: ^10.2.8
   very_good_analysis: ^10.3.0
   video_player_platform_interface: ^6.9.0
 

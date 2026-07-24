@@ -7,7 +7,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  ilkersevim_disposables: ^0.1.1
+  ilkersevim_disposables: ^0.1.2
 
 dev_dependencies:
   lints: ^6.1.0
