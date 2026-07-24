@@ -5,8 +5,9 @@ extension _SessionLifecycleCoordinatorSession
   Future<void> onSignOutCompletedBody({
     required final AuthProviderKind provider,
   }) async {
-    if (_onSignOutCompletedInFlight != null) {
-      return _onSignOutCompletedInFlight!;
+    final Future<void>? inFlight = _onSignOutCompletedInFlight;
+    if (inFlight != null) {
+      return inFlight;
     }
     final Completer<void> gate = Completer<void>();
     _onSignOutCompletedInFlight = gate.future;
