@@ -1,6 +1,20 @@
 part of 'session_lifecycle_coordinator.dart';
 
 extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
+  void onSignInCompletedBody({required final AuthUser user}) {
+    // Do not let an explicit sign-in bypass a pending sign-out/account-switch
+    // cleanup. The raw auth stream will publish once that transition settles.
+    if (_localCleanupBarrier != null) {
+      return;
+    }
+    final AuthUser? previous = _previousUser;
+    if (previous != null && previous.id != user.id) {
+      return;
+    }
+    _previousUser = user;
+    _publishSessionReady(user);
+  }
+
   void attachAuthRepositoryBody(final AuthRepository repository) {
     if (_authRepositoryAttached) {
       return;

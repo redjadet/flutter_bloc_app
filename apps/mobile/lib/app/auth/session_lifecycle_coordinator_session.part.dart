@@ -5,26 +5,39 @@ extension _SessionLifecycleCoordinatorSession
   Future<void> onSignOutCompletedBody({
     required final AuthProviderKind provider,
   }) async {
-    if (provider == AuthProviderKind.firebase) {
-      _authTokenManager?.clearCache();
+    final Future<void>? inFlight = _onSignOutCompletedInFlight;
+    if (inFlight != null) {
+      return inFlight;
     }
-    _tokenRepository?.clearProvider(provider);
-    final RenderOrchestrationHfTokenProvider? hfProvider = _hfTokenProvider;
-    if (hfProvider != null) {
-      try {
-        await hfProvider.clearRenderOrchestrationTokenCache();
-      } on Object catch (error, stackTrace) {
-        AppLogger.error(
-          'SessionLifecycleCoordinator: HF token cache clear failed',
-          error,
-          stackTrace,
-        );
+    final Completer<void> gate = Completer<void>();
+    _onSignOutCompletedInFlight = gate.future;
+    try {
+      if (provider == AuthProviderKind.firebase) {
+        _authTokenManager?.clearCache();
+      }
+      _tokenRepository?.clearProvider(provider);
+      final RenderOrchestrationHfTokenProvider? hfProvider = _hfTokenProvider;
+      if (hfProvider != null) {
+        try {
+          await hfProvider.clearRenderOrchestrationTokenCache();
+        } on Object catch (error, stackTrace) {
+          AppLogger.error(
+            'SessionLifecycleCoordinator: HF token cache clear failed',
+            error,
+            stackTrace,
+          );
+        }
+      }
+      await _clearLocalSessionData(
+        provider: provider,
+        reason: SessionLocalCleanupReason.signOut,
+      );
+    } finally {
+      _onSignOutCompletedInFlight = null;
+      if (!gate.isCompleted) {
+        gate.complete();
       }
     }
-    await _clearLocalSessionData(
-      provider: provider,
-      reason: SessionLocalCleanupReason.signOut,
-    );
   }
 
   Future<void> _clearLocalSessionData({

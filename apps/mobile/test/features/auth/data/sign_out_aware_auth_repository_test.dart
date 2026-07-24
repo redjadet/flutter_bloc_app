@@ -23,6 +23,7 @@ void main() {
         coordinator: coordinator,
       );
       when(() => delegate.currentUser).thenReturn(null);
+      when(() => coordinator.sessionReadyCurrentUser).thenReturn(null);
       when(
         () => coordinator.sessionReadyAuthStateChanges,
       ).thenAnswer((_) => const Stream<AuthUser?>.empty());
@@ -39,6 +40,35 @@ void main() {
       verify(() => coordinator.sessionReadyAuthStateChanges).called(1);
       verifyNever(() => delegate.authStateChanges);
     });
+
+    test('currentUser uses coordinator session-ready identity', () {
+      const AuthUser readyUser = AuthUser(id: 'ready-user', isAnonymous: false);
+      when(() => coordinator.sessionReadyCurrentUser).thenReturn(readyUser);
+
+      expect(repository.currentUser, readyUser);
+      verify(() => coordinator.sessionReadyCurrentUser).called(1);
+      verifyNever(() => delegate.currentUser);
+    });
+
+    test(
+      'publishes explicit anonymous sign-in when a user is available',
+      () async {
+        const AuthUser signedInUser = AuthUser(
+          id: 'signed-in-user',
+          isAnonymous: true,
+        );
+        when(() => delegate.signInAnonymously()).thenAnswer((_) async {});
+        when(() => delegate.currentUser).thenReturn(signedInUser);
+
+        await repository.signInAnonymously();
+
+        verifyInOrder([
+          () => delegate.signInAnonymously(),
+          () => delegate.currentUser,
+          () => coordinator.onSignInCompleted(user: signedInUser),
+        ]);
+      },
+    );
 
     test('delegates signOut then notifies coordinator', () async {
       await repository.signOut();
