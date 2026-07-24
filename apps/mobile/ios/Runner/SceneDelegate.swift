@@ -66,8 +66,8 @@ class SceneDelegate: FlutterSceneDelegate {
       return
     }
 
-    if !AppLinks.shared.handleLink(url: url) {
-      debugPrint("SceneDelegate: Failed to handle link from \(source): \(url.absoluteString)")
-    }
+    // app_links 6.4.x: handleLink returns Void (propagates to Flutter; no Bool success).
+    AppLinks.shared.handleLink(url: url)
+    debugPrint("SceneDelegate: Handled link from \(source): \(url.absoluteString)")
   }
 }
