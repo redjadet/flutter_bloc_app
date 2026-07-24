@@ -57,6 +57,13 @@ abstract interface class SessionLifecycleCoordinator {
   /// still hold account A during cleanup.
   AuthUser? get sessionReadyCurrentUser;
 
+  /// Publishes an initial sign-in identity when no local cleanup is pending.
+  ///
+  /// Explicit sign-in completes before some providers deliver their stream
+  /// event. Publishing this null→user transition keeps initial route checks
+  /// from redirecting to auth, without bypassing account-switch cleanup.
+  void onSignInCompleted({required AuthUser user});
+
   void bindAuthTokenManager(AuthTokenManager manager);
 
   void bindTokenRepository(TokenRepository repository);
@@ -127,6 +134,10 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
       controller.onCancel = sub.cancel;
     },
   );
+
+  @override
+  void onSignInCompleted({required final AuthUser user}) =>
+      onSignInCompletedBody(user: user);
 
   @override
   void bindAuthTokenManager(final AuthTokenManager manager) {

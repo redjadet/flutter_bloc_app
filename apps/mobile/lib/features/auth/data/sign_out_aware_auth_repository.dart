@@ -24,7 +24,13 @@ class SignOutAwareAuthRepository implements AuthRepository {
       _coordinator.sessionReadyAuthStateChanges;
 
   @override
-  Future<void> signInAnonymously() => _delegate.signInAnonymously();
+  Future<void> signInAnonymously() async {
+    await _delegate.signInAnonymously();
+    final AuthUser? user = _delegate.currentUser;
+    if (user != null) {
+      _coordinator.onSignInCompleted(user: user);
+    }
+  }
 
   @override
   Future<void> signOut() async {

@@ -324,6 +324,23 @@ void main() {
       },
     );
 
+    test('onSignInCompleted publishes an initial sign-in identity', () async {
+      final StreamController<AuthUser?> controller =
+          StreamController<AuthUser?>.broadcast();
+      final _MockAuthRepository repository = _MockAuthRepository();
+      const AuthUser user = AuthUser(id: 'user-a', isAnonymous: true);
+      when(() => repository.currentUser).thenReturn(null);
+      when(
+        () => repository.authStateChanges,
+      ).thenAnswer((_) => controller.stream);
+
+      coordinator.attachAuthRepository(repository);
+      coordinator.onSignInCompleted(user: user);
+
+      expect(coordinator.sessionReadyCurrentUser, user);
+      await controller.close();
+    });
+
     test(
       'onSignOutCompleted invokes bound local session data cleanup',
       () async {
