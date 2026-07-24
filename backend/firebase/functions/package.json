@@ -30,7 +30,7 @@
     "@typescript-eslint/typescript-estree": {
       "minimatch": "^10.2.5"
     },
-    "axios": "^1.18.0",
+    "axios": "^1.18.1",
     "body-parser": "1.20.6",
     "brace-expansion@1": "1.1.16",
     "brace-expansion@2": "2.1.2",
