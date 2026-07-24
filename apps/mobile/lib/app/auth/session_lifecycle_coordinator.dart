@@ -50,6 +50,20 @@ abstract interface class SessionLifecycleCoordinator {
   /// Hive/pending-sync data mid-clear.
   Stream<AuthUser?> get sessionReadyAuthStateChanges;
 
+  /// Last identity published on [sessionReadyAuthStateChanges].
+  ///
+  /// [AuthRepository.currentUser] must read this (not the raw provider user)
+  /// so redirects and route gates cannot observe account B while local stores
+  /// still hold account A during cleanup.
+  AuthUser? get sessionReadyCurrentUser;
+
+  /// Publishes an initial sign-in identity when no local cleanup is pending.
+  ///
+  /// Explicit sign-in completes before some providers deliver their stream
+  /// event. Publishing this null→user transition keeps initial route checks
+  /// from redirecting to auth, without bypassing account-switch cleanup.
+  void onSignInCompleted({required AuthUser user});
+
   void bindAuthTokenManager(AuthTokenManager manager);
 
   void bindTokenRepository(TokenRepository repository);
@@ -93,12 +107,17 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   Completer<void>? _localCleanupBarrier;
   Future<void> _authTransitionChain = Future<void>.value();
   int _authTransitionGeneration = 0;
+  Future<void>? _onSignOutCompletedInFlight;
   final Set<AuthProviderKind> _invalidationInFlight = <AuthProviderKind>{};
   bool _authRepositoryAttached = false;
 
   @override
   Stream<SessionInvalidationEvent> get invalidationEvents =>
       _invalidationController.stream;
+
+  @override
+  AuthUser? get sessionReadyCurrentUser =>
+      _hasSessionReadyUser ? _sessionReadyUser : null;
 
   @override
   Stream<AuthUser?> get sessionReadyAuthStateChanges => Stream<AuthUser?>.multi(
@@ -115,6 +134,10 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
       controller.onCancel = sub.cancel;
     },
   );
+
+  @override
+  void onSignInCompleted({required final AuthUser user}) =>
+      onSignInCompletedBody(user: user);
 
   @override
   void bindAuthTokenManager(final AuthTokenManager manager) {
