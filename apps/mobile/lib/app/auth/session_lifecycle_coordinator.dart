@@ -50,6 +50,13 @@ abstract interface class SessionLifecycleCoordinator {
   /// Hive/pending-sync data mid-clear.
   Stream<AuthUser?> get sessionReadyAuthStateChanges;
 
+  /// Last identity published on [sessionReadyAuthStateChanges].
+  ///
+  /// [AuthRepository.currentUser] must read this (not the raw provider user)
+  /// so redirects and route gates cannot observe account B while local stores
+  /// still hold account A during cleanup.
+  AuthUser? get sessionReadyCurrentUser;
+
   void bindAuthTokenManager(AuthTokenManager manager);
 
   void bindTokenRepository(TokenRepository repository);
@@ -93,12 +100,17 @@ class SessionLifecycleCoordinatorImpl implements SessionLifecycleCoordinator {
   Completer<void>? _localCleanupBarrier;
   Future<void> _authTransitionChain = Future<void>.value();
   int _authTransitionGeneration = 0;
+  Future<void>? _onSignOutCompletedInFlight;
   final Set<AuthProviderKind> _invalidationInFlight = <AuthProviderKind>{};
   bool _authRepositoryAttached = false;
 
   @override
   Stream<SessionInvalidationEvent> get invalidationEvents =>
       _invalidationController.stream;
+
+  @override
+  AuthUser? get sessionReadyCurrentUser =>
+      _hasSessionReadyUser ? _sessionReadyUser : null;
 
   @override
   Stream<AuthUser?> get sessionReadyAuthStateChanges => Stream<AuthUser?>.multi(

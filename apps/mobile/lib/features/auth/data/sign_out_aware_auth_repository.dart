@@ -17,7 +17,7 @@ class SignOutAwareAuthRepository implements AuthRepository {
   AuthRepository get delegate => _delegate;
 
   @override
-  AuthUser? get currentUser => _delegate.currentUser;
+  AuthUser? get currentUser => _coordinator.sessionReadyCurrentUser;
 
   @override
   Stream<AuthUser?> get authStateChanges =>

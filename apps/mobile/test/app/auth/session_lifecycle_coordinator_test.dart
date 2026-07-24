@@ -287,6 +287,44 @@ void main() {
     );
 
     test(
+      'sessionReadyCurrentUser tracks last published session-ready identity',
+      () async {
+        final StreamController<AuthUser?> controller =
+            StreamController<AuthUser?>.broadcast();
+        final _MockAuthRepository repository = _MockAuthRepository();
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => repository.currentUser).thenReturn(userA);
+        when(
+          () => repository.authStateChanges,
+        ).thenAnswer((_) => controller.stream);
+
+        final Completer<void> releaseCleanup = Completer<void>();
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          await releaseCleanup.future;
+        });
+
+        coordinator.attachAuthRepository(repository);
+        expect(coordinator.sessionReadyCurrentUser, userA);
+
+        when(() => repository.currentUser).thenReturn(userB);
+        controller.add(userB);
+        await Future<void>.delayed(Duration.zero);
+
+        expect(coordinator.sessionReadyCurrentUser, userA);
+
+        releaseCleanup.complete();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(coordinator.sessionReadyCurrentUser, userB);
+        await controller.close();
+      },
+    );
+
+    test(
       'onSignOutCompleted invokes bound local session data cleanup',
       () async {
         var cleanupCalls = 0;
@@ -389,5 +427,36 @@ void main() {
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
       await coordinator.onSignOutCompleted(provider: AuthProviderKind.firebase);
     });
+
+    test(
+      'concurrent onSignOutCompleted calls share one cleanup flight',
+      () async {
+        final Completer<void> cleanupStarted = Completer<void>();
+        final Completer<void> releaseCleanup = Completer<void>();
+        var cleanupCalls = 0;
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          cleanupCalls += 1;
+          cleanupStarted.complete();
+          await releaseCleanup.future;
+        });
+
+        final Future<void> first = coordinator.onSignOutCompleted(
+          provider: AuthProviderKind.firebase,
+        );
+        final Future<void> second = coordinator.onSignOutCompleted(
+          provider: AuthProviderKind.firebase,
+        );
+
+        await cleanupStarted.future;
+        expect(cleanupCalls, 1);
+
+        releaseCleanup.complete();
+        await Future.wait(<Future<void>>[first, second]);
+        expect(cleanupCalls, 1);
+      },
+    );
   });
 }

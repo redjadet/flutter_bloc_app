@@ -22,10 +22,11 @@ void main() {
         delegate: delegate,
         coordinator: coordinator,
       );
-      when(() => delegate.currentUser).thenReturn(null);
-      when(
-        () => coordinator.sessionReadyAuthStateChanges,
-      ).thenAnswer((_) => const Stream<AuthUser?>.empty());
+    when(() => delegate.currentUser).thenReturn(null);
+    when(() => coordinator.sessionReadyCurrentUser).thenReturn(null);
+    when(
+      () => coordinator.sessionReadyAuthStateChanges,
+    ).thenAnswer((_) => const Stream<AuthUser?>.empty());
       when(() => delegate.signOut()).thenAnswer((_) async {});
       when(
         () =>
@@ -38,6 +39,15 @@ void main() {
       repository.authStateChanges;
       verify(() => coordinator.sessionReadyAuthStateChanges).called(1);
       verifyNever(() => delegate.authStateChanges);
+    });
+
+    test('currentUser uses coordinator session-ready identity', () {
+      const AuthUser readyUser = AuthUser(id: 'ready-user', isAnonymous: false);
+      when(() => coordinator.sessionReadyCurrentUser).thenReturn(readyUser);
+
+      expect(repository.currentUser, readyUser);
+      verify(() => coordinator.sessionReadyCurrentUser).called(1);
+      verifyNever(() => delegate.currentUser);
     });
 
     test('delegates signOut then notifies coordinator', () async {
