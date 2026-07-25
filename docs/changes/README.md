@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-25_session_cleanup_profile_and_sync_ordering.md`](2026-07-25_session_cleanup_profile_and_sync_ordering.md): Clear profile cache on auth transitions; resume background sync only after session-ready identity is published.
 - [`2026-07-24_auth_session_ready_identity.md`](2026-07-24_auth_session_ready_identity.md): Gate the current user on session readiness during cleanup while preserving initial anonymous sign-in routing.
 - [`2026-07-24_agent_runtime_memory_candidate_v1_keep_legacy.md`](2026-07-24_agent_runtime_memory_candidate_v1_keep_legacy.md): Candidate v1 measured, `keep_legacy` accepted, Task 12 skipped; legacy remains sole runtime (no Meterless-equivalent cutover).
 - [`2026-07-24_flutter_3_44_8_pin.md`](2026-07-24_flutter_3_44_8_pin.md): Pin Flutter `3.44.7` → `3.44.8` via toolchain sync (Dart `3.12.2` unchanged).

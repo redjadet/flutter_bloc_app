@@ -107,6 +107,8 @@ extension _SessionLifecycleCoordinatorAuth on SessionLifecycleCoordinatorImpl {
       if (identical(_localCleanupBarrier, barrier)) {
         _localCleanupBarrier = null;
       }
+      // Pull/enqueue only after session-ready identity is published.
+      await resumeBackgroundSyncAfterSessionCleanup();
     }
   }
 

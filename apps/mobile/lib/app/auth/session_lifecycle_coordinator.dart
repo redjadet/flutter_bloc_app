@@ -4,6 +4,7 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
+import 'package:flutter_bloc_app/app/auth/firebase_local_session_cleanup.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 

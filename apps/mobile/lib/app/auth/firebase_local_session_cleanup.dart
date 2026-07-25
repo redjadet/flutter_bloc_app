@@ -1,6 +1,7 @@
 import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
@@ -47,34 +48,39 @@ Future<void> clearFirebaseLocalSessionData({
     await syncCoordinator.quiesceForSessionCleanup();
   }
 
-  try {
-    if (getIt.isRegistered<PendingSyncRepository>()) {
-      await getIt<PendingSyncRepository>().clearEntityTypes(
-        kFirebaseSharedPendingSyncEntityTypes,
-      );
-    }
+  if (getIt.isRegistered<PendingSyncRepository>()) {
+    await getIt<PendingSyncRepository>().clearEntityTypes(
+      kFirebaseSharedPendingSyncEntityTypes,
+    );
+  }
 
-    if (getIt.isRegistered<TodoRepository>()) {
-      final TodoRepository todos = getIt<TodoRepository>();
-      if (todos is OfflineFirstTodoRepository) {
-        await todos.clearAllLocalData();
-      }
-    }
-
-    if (getIt.isRegistered<CounterRepository>()) {
-      final CounterRepository counter = getIt<CounterRepository>();
-      if (counter is OfflineFirstCounterRepository) {
-        await counter.clearAllLocalData();
-      }
-    }
-
-    if (getIt.isRegistered<ChatHistoryRepository>()) {
-      await getIt<ChatHistoryRepository>().save(const <ChatConversation>[]);
-    }
-  } finally {
-    // Restart sync after clears so the next session can enqueue/push again.
-    if (syncCoordinator != null) {
-      await syncCoordinator.resumeAfterSessionCleanup();
+  if (getIt.isRegistered<TodoRepository>()) {
+    final TodoRepository todos = getIt<TodoRepository>();
+    if (todos is OfflineFirstTodoRepository) {
+      await todos.clearAllLocalData();
     }
   }
+
+  if (getIt.isRegistered<CounterRepository>()) {
+    final CounterRepository counter = getIt<CounterRepository>();
+    if (counter is OfflineFirstCounterRepository) {
+      await counter.clearAllLocalData();
+    }
+  }
+
+  if (getIt.isRegistered<ChatHistoryRepository>()) {
+    await getIt<ChatHistoryRepository>().save(const <ChatConversation>[]);
+  }
+
+  if (getIt.isRegistered<ProfileCacheControlsPort>()) {
+    await getIt<ProfileCacheControlsPort>().clearProfile();
+  }
+}
+
+/// Restarts background sync after session cleanup and identity publication.
+Future<void> resumeBackgroundSyncAfterSessionCleanup() async {
+  if (!getIt.isRegistered<BackgroundSyncCoordinator>()) {
+    return;
+  }
+  await getIt<BackgroundSyncCoordinator>().resumeAfterSessionCleanup();
 }
