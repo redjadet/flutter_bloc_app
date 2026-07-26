@@ -49,6 +49,15 @@ quality in this repository.
 - Trigger recall: true-positive routes / all routes that should be positive.
 - Unnecessary delegation rate: delegated low-risk runs / total low-risk runs.
 
+## Summary invariants
+
+- Command `count` equals the sum of outcome fields:
+  `ok + failed + cancelled + aborted + other` (`invalid` folds into `failed`).
+- Markdown duration displays round JSON medians half away from zero (not
+  truncation or bankers `round()`). `28718.5` → `28719ms`.
+- Self-test: `./tool/build_agent_scorecard_summary.sh --self-test` (also via
+  `tool/run_harness_fixtures.sh`).
+
 ## Commands
 
 - Generate summary:

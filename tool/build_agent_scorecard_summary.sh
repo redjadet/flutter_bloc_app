@@ -9,11 +9,148 @@ SUMMARY_DIR="$SCORECARD_ROOT/summaries"
 SUMMARY_JSON="$SUMMARY_DIR/scorecard-summary.json"
 SUMMARY_MD="$SUMMARY_DIR/scorecard-summary.md"
 
+usage() {
+  cat <<'EOF'
+Usage: ./tool/build_agent_scorecard_summary.sh [--self-test]
+
+Build scorecard JSON/Markdown summaries from active + archived events.
+--self-test runs fixture assertions (half-away-from-zero p50 display, count==outcomes) and exits.
+EOF
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+if [[ "${1:-}" == "--self-test" ]]; then
+  python3 - <<'PY'
+import math
+import statistics
+from collections import defaultdict
+
+def round_duration_ms(value) -> int:
+    """Round durations for display: half away from zero (not truncation/bankers)."""
+    value = float(value)
+    if value >= 0:
+        return int(math.floor(value + 0.5))
+    return int(math.ceil(value - 0.5))
+
+
+def aggregate_commands(events):
+    command_stats = defaultdict(
+        lambda: {
+            "count": 0,
+            "ok": 0,
+            "failed": 0,
+            "cancelled": 0,
+            "aborted": 0,
+            "other": 0,
+            "durations": [],
+        }
+    )
+    for event in events:
+        status = event.get("status", "unknown")
+        command = event.get("command", "unknown")
+        try:
+            duration = int(event.get("duration_ms", 0))
+        except (TypeError, ValueError):
+            duration = 0
+        stats = command_stats[command]
+        stats["count"] += 1
+        stats["durations"].append(duration)
+        if status == "ok":
+            stats["ok"] += 1
+        elif status in {"failed", "invalid"}:
+            stats["failed"] += 1
+        elif status == "cancelled":
+            stats["cancelled"] += 1
+        elif status == "aborted":
+            stats["aborted"] += 1
+        else:
+            stats["other"] += 1
+
+    commands = {}
+    for command, stats in command_stats.items():
+        durations_list = stats["durations"]
+        outcome_sum = (
+            stats["ok"]
+            + stats["failed"]
+            + stats["cancelled"]
+            + stats["aborted"]
+            + stats["other"]
+        )
+        if stats["count"] != outcome_sum:
+            raise AssertionError(
+                f"{command}: count {stats['count']} != outcomes {outcome_sum}"
+            )
+        commands[command] = {
+            "count": stats["count"],
+            "ok": stats["ok"],
+            "failed": stats["failed"],
+            "cancelled": stats["cancelled"],
+            "aborted": stats["aborted"],
+            "other": stats["other"],
+            "success_rate": (stats["ok"] / stats["count"]) if stats["count"] else 0.0,
+            "p50_duration_ms": statistics.median(durations_list) if durations_list else 0,
+        }
+    return commands
+
+
+def format_command_line(command, stats):
+    return (
+        f"- `{command}`: count `{stats['count']}`, "
+        f"success `{stats['success_rate']:.2%}`, "
+        f"p50 `{round_duration_ms(stats['p50_duration_ms'])}ms`"
+    )
+
+
+# Bug 1: half-up, not int() truncation / bankers round().
+assert round_duration_ms(28718.5) == 28719
+assert round_duration_ms(250724.5) == 250725
+assert round_duration_ms(61108) == 61108
+assert round_duration_ms(483414.8) == 483415
+assert round_duration_ms(0) == 0
+
+# Bug 2: cancelled/aborted/other must be counted so count == sum(outcomes).
+events = [
+    {"command": "integration_tests", "status": "ok", "duration_ms": 100},
+    {"command": "integration_tests", "status": "failed", "duration_ms": 200},
+    {"command": "integration_tests", "status": "cancelled", "duration_ms": 50},
+    {"command": "integration_tests", "status": "aborted", "duration_ms": 75},
+    {"command": "integration_tests", "status": "invalid", "duration_ms": 10},
+]
+commands = aggregate_commands(events)
+it = commands["integration_tests"]
+assert it["count"] == 5
+assert it["ok"] == 1
+assert it["failed"] == 2  # failed + invalid
+assert it["cancelled"] == 1
+assert it["aborted"] == 1
+assert it["other"] == 0
+assert it["count"] == it["ok"] + it["failed"] + it["cancelled"] + it["aborted"] + it["other"]
+
+# Odd-sized list → median is middle value; even → average may be .5
+even_events = [
+    {"command": "checklist", "status": "ok", "duration_ms": 28718},
+    {"command": "checklist", "status": "ok", "duration_ms": 28719},
+]
+checklist = aggregate_commands(even_events)["checklist"]
+assert checklist["p50_duration_ms"] == 28718.5
+line = format_command_line("checklist", checklist)
+assert "p50 `28719ms`" in line, line
+
+print("build_agent_scorecard_summary|self-test|pass")
+PY
+  exit 0
+fi
+
 mkdir -p "$SUMMARY_DIR" "$ARCHIVE_DIR"
 
 python3 - "$ACTIVE_FILE" "$ARCHIVE_DIR" "$SUMMARY_JSON" "$SUMMARY_MD" <<'PY'
 import gzip
 import json
+import math
 import statistics
 import sys
 from collections import defaultdict
@@ -23,6 +160,13 @@ active_file = Path(sys.argv[1])
 archive_dir = Path(sys.argv[2])
 summary_json = Path(sys.argv[3])
 summary_md = Path(sys.argv[4])
+
+def round_duration_ms(value) -> int:
+    """Round durations for display: half away from zero (not truncation/bankers)."""
+    value = float(value)
+    if value >= 0:
+        return int(math.floor(value + 0.5))
+    return int(math.ceil(value - 0.5))
 
 events = []
 seen = set()
@@ -84,7 +228,17 @@ summary["source_file_count"] = len(source_files)
 
 durations = []
 delegate_used = 0
-command_stats = defaultdict(lambda: {"count": 0, "ok": 0, "failed": 0, "durations": []})
+command_stats = defaultdict(
+    lambda: {
+        "count": 0,
+        "ok": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "aborted": 0,
+        "other": 0,
+        "durations": [],
+    }
+)
 
 for event in events:
     status = event.get("status", "unknown")
@@ -102,12 +256,20 @@ for event in events:
     if event.get("delegate_used", False):
         delegate_used += 1
 
-    command_stats[command]["count"] += 1
-    command_stats[command]["durations"].append(duration)
+    stats = command_stats[command]
+    stats["count"] += 1
+    stats["durations"].append(duration)
     if status == "ok":
-        command_stats[command]["ok"] += 1
+        stats["ok"] += 1
     elif status in {"failed", "invalid"}:
-        command_stats[command]["failed"] += 1
+        # invalid is a failed outcome for success_rate; keep folded into failed.
+        stats["failed"] += 1
+    elif status == "cancelled":
+        stats["cancelled"] += 1
+    elif status == "aborted":
+        stats["aborted"] += 1
+    else:
+        stats["other"] += 1
 
 summary["delegate_usage_rate"] = (delegate_used / len(events)) if events else 0.0
 summary["p50_duration_ms"] = statistics.median(durations) if durations else 0
@@ -119,10 +281,25 @@ else:
 
 for command, stats in command_stats.items():
     durations_list = stats["durations"]
+    outcome_sum = (
+        stats["ok"]
+        + stats["failed"]
+        + stats["cancelled"]
+        + stats["aborted"]
+        + stats["other"]
+    )
+    if stats["count"] != outcome_sum:
+        raise SystemExit(
+            f"scorecard-summary|fail|{command}: count {stats['count']} != "
+            f"outcomes {outcome_sum}"
+        )
     summary["commands"][command] = {
         "count": stats["count"],
         "ok": stats["ok"],
         "failed": stats["failed"],
+        "cancelled": stats["cancelled"],
+        "aborted": stats["aborted"],
+        "other": stats["other"],
         "success_rate": (stats["ok"] / stats["count"]) if stats["count"] else 0.0,
         "p50_duration_ms": statistics.median(durations_list) if durations_list else 0,
     }
@@ -139,8 +316,8 @@ lines = [
     f"- Parse success: `{summary['scorecard_parse_success']:.2%}`",
     f"- Invalid JSON lines: `{summary['line_stats']['invalid_json_lines']}`",
     f"- Delegate usage rate: `{summary['delegate_usage_rate']:.2%}`",
-    f"- p50 duration: `{int(summary['p50_duration_ms'])}ms`",
-    f"- p95 duration: `{int(summary['p95_duration_ms'])}ms`",
+    f"- p50 duration: `{round_duration_ms(summary['p50_duration_ms'])}ms`",
+    f"- p95 duration: `{round_duration_ms(summary['p95_duration_ms'])}ms`",
     f"- Source fingerprint: `{summary['source_fingerprint']}`",
     "",
     "## Status Counts",
@@ -158,7 +335,8 @@ if summary["commands"]:
     lines.append("")
 for command, stats in sorted(summary["commands"].items()):
     lines.append(
-        f"- `{command}`: count `{stats['count']}`, success `{stats['success_rate']:.2%}`, p50 `{int(stats['p50_duration_ms'])}ms`"
+        f"- `{command}`: count `{stats['count']}`, success `{stats['success_rate']:.2%}`, "
+        f"p50 `{round_duration_ms(stats['p50_duration_ms'])}ms`"
     )
 
 summary_md.write_text("\n".join(lines) + "\n", encoding="utf-8")

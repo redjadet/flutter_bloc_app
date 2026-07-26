@@ -21,6 +21,24 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-07-24 - Scorecard markdown must not int()-truncate medians; count all outcomes
+
+- What went wrong:
+  Scorecard MD used `int(p50)` so even medians under-reported by 0.5ms.
+  Command `count` included cancelled/aborted but ok/failed only — gap of 1
+  on `integration_tests`.
+- How it was fixed:
+  Half-away-from-zero display rounding; track cancelled/aborted/other so
+  `count == ok+failed+cancelled+aborted+other`.
+- Pattern:
+  Never use `int()` or bankers `round()` for duration display of medians;
+  every status that increments count must land in an outcome bucket.
+- Preventive rule:
+  `./tool/build_agent_scorecard_summary.sh --self-test` (harness fixtures).
+- Evidence or affected files:
+  `tool/build_agent_scorecard_summary.sh`,
+  `docs/changes/2026-07-24_agent_scorecard_summary_rounding_and_count.md`
+
 ### 2026-07-23 - Pub silent-prod bumps need call-site + lenient-parse regression checks
 
 - What went wrong:

@@ -1,37 +1,52 @@
 {
   "commands": {
     "checklist": {
+      "aborted": 0,
+      "cancelled": 0,
       "count": 928,
       "failed": 335,
       "ok": 593,
+      "other": 0,
       "p50_duration_ms": 28718.5,
       "success_rate": 0.6390086206896551
     },
     "cursor_to_codex_delegate": {
+      "aborted": 0,
+      "cancelled": 0,
       "count": 1,
       "failed": 0,
       "ok": 1,
+      "other": 0,
       "p50_duration_ms": 1000,
       "success_rate": 1.0
     },
     "deploy_fastapi_cloud": {
+      "aborted": 0,
+      "cancelled": 0,
       "count": 3,
       "failed": 2,
       "ok": 1,
+      "other": 0,
       "p50_duration_ms": 0,
       "success_rate": 0.3333333333333333
     },
     "integration_tests": {
+      "aborted": 0,
+      "cancelled": 1,
       "count": 210,
       "failed": 59,
       "ok": 150,
+      "other": 0,
       "p50_duration_ms": 250724.5,
       "success_rate": 0.7142857142857143
     },
     "smoke": {
+      "aborted": 0,
+      "cancelled": 0,
       "count": 1,
       "failed": 0,
       "ok": 1,
+      "other": 0,
       "p50_duration_ms": 1,
       "success_rate": 1.0
     }

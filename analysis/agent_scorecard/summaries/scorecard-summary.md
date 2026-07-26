@@ -5,7 +5,7 @@
 - Invalid JSON lines: `0`
 - Delegate usage rate: `0.09%`
 - p50 duration: `61108ms`
-- p95 duration: `483414ms`
+- p95 duration: `483415ms`
 - Source fingerprint: `109985700a9a020b071f12d6bd50094865b449533a6d0ef3ec672f1c6775236d`
 
 ## Status Counts
@@ -22,8 +22,8 @@
 
 ## Command Breakdown
 
-- `checklist`: count `928`, success `63.90%`, p50 `28718ms`
+- `checklist`: count `928`, success `63.90%`, p50 `28719ms`
 - `cursor_to_codex_delegate`: count `1`, success `100.00%`, p50 `1000ms`
 - `deploy_fastapi_cloud`: count `3`, success `33.33%`, p50 `0ms`
-- `integration_tests`: count `210`, success `71.43%`, p50 `250724ms`
+- `integration_tests`: count `210`, success `71.43%`, p50 `250725ms`
 - `smoke`: count `1`, success `100.00%`, p50 `1ms`

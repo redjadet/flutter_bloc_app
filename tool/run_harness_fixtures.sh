@@ -64,6 +64,9 @@ if [[ "$memory_guard_status" -eq 0 ]]; then
   exit 1
 fi
 
+echo "fixtures|build_agent_scorecard_summary|self_test"
+bash tool/build_agent_scorecard_summary.sh --self-test >/dev/null
+
 echo "fixtures|check_harness_scorecard_gate|help"
 bash tool/check_harness_scorecard_gate.sh --help >/dev/null
 
