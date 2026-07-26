@@ -8,6 +8,9 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
+
+import '../../test_helpers_shared.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -200,6 +203,47 @@ void main() {
 
         expect(readyUsers, <AuthUser?>[userA, userB]);
         await readySub.cancel();
+        await controller.close();
+      },
+    );
+
+    test(
+      'resumes background sync only after publishing session-ready identity',
+      () async {
+        final StreamController<AuthUser?> controller =
+            StreamController<AuthUser?>.broadcast();
+        final _MockAuthRepository repository = _MockAuthRepository();
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => repository.currentUser).thenReturn(userA);
+        when(
+          () => repository.authStateChanges,
+        ).thenAnswer((_) => controller.stream);
+
+        final _RecordingBackgroundSyncCoordinator syncCoordinator =
+            _RecordingBackgroundSyncCoordinator();
+        getIt.registerSingleton<BackgroundSyncCoordinator>(syncCoordinator);
+
+        final Completer<void> cleanupStarted = Completer<void>();
+        final Completer<void> releaseCleanup = Completer<void>();
+        coordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          cleanupStarted.complete();
+          await releaseCleanup.future;
+        });
+
+        coordinator.attachAuthRepository(repository);
+        controller.add(userB);
+        await cleanupStarted.future;
+        expect(syncCoordinator.resumeCalls, 0);
+
+        releaseCleanup.complete();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(coordinator.sessionReadyCurrentUser, userB);
+        expect(syncCoordinator.resumeCalls, 1);
         await controller.close();
       },
     );
@@ -476,4 +520,13 @@ void main() {
       },
     );
   });
+}
+
+class _RecordingBackgroundSyncCoordinator extends FakeBackgroundSyncCoordinator {
+  int resumeCalls = 0;
+
+  @override
+  Future<void> resumeAfterSessionCleanup() async {
+    resumeCalls += 1;
+  }
 }
