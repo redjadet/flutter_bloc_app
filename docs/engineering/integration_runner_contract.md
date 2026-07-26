@@ -176,9 +176,18 @@ Notes:
 - The runner injects `FIREBASE_*` / related dart-defines from the environment
   (direnv / `.envrc`); keys are logged, values are not. Without defines, Android
   guest/auth flows may skip or fail.
+- Dart-defines must be separate argv entries (word-split from
+  `tool/flutter_dart_defines_from_env.sh`). Packing them into one argv corrupts
+  the first key’s value and can override the direnv `flutter` wrapper — Android
+  guest sign-in then fails with “API key not valid”. Guard:
+  `tool/run_integration_tests_dart_defines_test.py`.
 - Cold boot after a panel change may still show the old `wm size` until the
   emulator process is restarted; `--launch` when no emulator is attached is
   enough when the AVD was already resized.
+- Prefer SDK `platform-tools` ahead of Homebrew `adb` on `PATH`.
+- Agent shells that reap process groups when a command ends: chain
+  `tool/ensure_android_integration_avd.sh --launch && … ./bin/integration_tests`
+  in **one** shell invocation so the emulator is not killed before tests start.
 
 ## iOS simulator build prep (proactive)
 

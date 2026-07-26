@@ -18,6 +18,11 @@
 #   - Does not download system images (avdmanager/sdkmanager XML skew can block
 #     create). Uses an already-registered AVD under ~/.android/avd/.
 #   - AVD config lives outside the repo; re-run after cloning on a new machine.
+#   - Prefer SDK `platform-tools/adb` ahead of Homebrew `adb` on PATH so the
+#     runner's adb fast-path sees the emulator.
+#   - Agent/CI shells that kill process groups on command end: chain
+#     `--launch && CHECKLIST_INTEGRATION_DEVICE=emulator-5554 ./bin/integration_tests`
+#     in one command so the emulator stays alive for the suite.
 #   - Owner: docs/engineering/integration_runner_contract.md § Android AVD
 
 set -euo pipefail
