@@ -2,6 +2,7 @@ import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:flutter_bloc_app/app/auth/firebase_local_session_cleanup.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
@@ -9,11 +10,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 import '../../test_helpers_shared.dart';
 
 class _MockChatHistoryRepository extends Mock
     implements ChatHistoryRepository {}
+
+class _MockProfileCacheControlsPort extends Mock
+    implements ProfileCacheControlsPort {}
 
 class _RecordingSyncCoordinator extends FakeBackgroundSyncCoordinator {
   int stopCalls = 0;
@@ -50,17 +55,28 @@ void main() {
   group('clearFirebaseLocalSessionData', () {
     late FakePendingSyncRepository pendingSync;
     late _MockChatHistoryRepository chatHistory;
+    late _MockProfileCacheControlsPort profileCache;
     late _RecordingSyncCoordinator syncCoordinator;
 
     setUp(() async {
       await getIt.reset();
       pendingSync = FakePendingSyncRepository();
       chatHistory = _MockChatHistoryRepository();
+      profileCache = _MockProfileCacheControlsPort();
       syncCoordinator = _RecordingSyncCoordinator();
       when(() => chatHistory.save(any())).thenAnswer((_) async {});
+      when(() => profileCache.clearProfile()).thenAnswer((_) async {});
+      when(() => profileCache.loadMetadata()).thenAnswer(
+        (_) async => const ProfileCacheMetadata(
+          hasProfile: false,
+          lastSyncedAt: null,
+          sizeBytes: null,
+        ),
+      );
 
       getIt.registerSingleton<PendingSyncRepository>(pendingSync);
       getIt.registerSingleton<ChatHistoryRepository>(chatHistory);
+      getIt.registerSingleton<ProfileCacheControlsPort>(profileCache);
       getIt.registerSingleton<BackgroundSyncCoordinator>(syncCoordinator);
     });
 
@@ -69,7 +85,7 @@ void main() {
     });
 
     test(
-      'quiesces sync, clears pending rows + chat, then restarts sync',
+      'quiesces sync, clears pending rows + chat + profile, without resuming sync',
       () async {
         await pendingSync.enqueue(
           SyncOperation.create(
@@ -105,7 +121,7 @@ void main() {
         );
 
         expect(syncCoordinator.quiesceCalls, 1);
-        expect(syncCoordinator.resumeCalls, 1);
+        expect(syncCoordinator.resumeCalls, 0);
         final List<SyncOperation> remaining = await pendingSync
             .getPendingOperations();
         expect(
@@ -113,8 +129,15 @@ void main() {
           <String>['other'],
         );
         verify(() => chatHistory.save(const <ChatConversation>[])).called(1);
+        verify(() => profileCache.clearProfile()).called(1);
       },
     );
+
+    test('resumeBackgroundSyncAfterSessionCleanup restarts sync', () async {
+      await resumeBackgroundSyncAfterSessionCleanup();
+
+      expect(syncCoordinator.resumeCalls, 1);
+    });
 
     test('skips non-firebase providers', () async {
       await clearFirebaseLocalSessionData(

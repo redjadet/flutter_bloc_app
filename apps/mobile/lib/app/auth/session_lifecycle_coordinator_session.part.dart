@@ -37,6 +37,10 @@ extension _SessionLifecycleCoordinatorSession
       if (!gate.isCompleted) {
         gate.complete();
       }
+      // Explicit sign-out with no auth-stream transition still needs sync resumed.
+      if (_localCleanupBarrier == null) {
+        await resumeBackgroundSyncAfterSessionCleanup();
+      }
     }
   }
 
