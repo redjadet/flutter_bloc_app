@@ -55,12 +55,14 @@ if [ -f "$WORKSPACE_ROOT/.envrc" ] && command -v direnv >/dev/null 2>&1; then
   # shellcheck disable=SC1090
   eval "$(cd "$WORKSPACE_ROOT" && direnv export bash 2>/dev/null)" || true
 fi
+# Word-split space-separated `--dart-define=KEY=value` tokens. A line-oriented
+# `read` would pack every token into one argv, so Flutter treats the first key's
+# value as "REAL_KEY --dart-define=NEXT=..." and overrides the direnv flutter
+# wrapper's correct defines (Android guest sign-in → invalid API key).
 # shellcheck disable=SC2207
-INTEGRATION_DART_DEFINES=()
-while IFS= read -r _define_line; do
-  [ -n "$_define_line" ] || continue
-  INTEGRATION_DART_DEFINES+=("$_define_line")
-done < <(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh" || true)
+INTEGRATION_DART_DEFINES=(
+  $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh" || true)
+)
 INTEGRATION_DART_DEFINE_KEYS=""
 if [ "${#INTEGRATION_DART_DEFINES[@]}" -gt 0 ]; then
   # Redact values; store keys only for later logging.
