@@ -435,5 +435,50 @@ void main() {
       verify(() => pending.markCompleted(op.id)).called(1);
       expect(telemetryPayload?['pendingByEntity'], containsPair('missing', 1));
     });
+
+    test('aborts pending push when shared auth uid changes mid-cycle', () async {
+      final SyncOperation op = SyncOperation(
+        id: 'op-auth-switch',
+        entityType: 'test',
+        payload: <String, dynamic>{'k': 'v'},
+        createdAt: DateTime.utc(2024, 1, 1),
+        idempotencyKey: 'auth-switch-key',
+      );
+      var processed = false;
+      registry.register(
+        _FakeSyncableRepository((final SyncOperation operation) {
+          processed = true;
+        }),
+      );
+      when(
+        () => pending.getPendingOperations(
+          now: any(named: 'now'),
+          limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+        ),
+      ).thenAnswer((_) async => <SyncOperation>[op]);
+
+      String? currentAuthUserId = 'user-a';
+      var authLookupCalls = 0;
+      final SyncCycleSummary summary = await runSyncCycle(
+        registry: registry,
+        pendingRepository: pending,
+        emitStatus: emittedStatuses.add,
+        telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetryEvent = event;
+          telemetryPayload = payload;
+        },
+        getSharedSyncAuthUserId: () {
+          authLookupCalls += 1;
+          return authLookupCalls == 1 ? 'user-a' : 'user-b';
+        },
+      );
+
+      expect(processed, isFalse);
+      expect(summary.pendingAtStart, 1);
+      expect(summary.operationsProcessed, 0);
+      expect(telemetryEvent, 'sync_cycle_aborted_auth_changed');
+      verifyNever(() => pending.markCompleted(any()));
+    });
   });
 }

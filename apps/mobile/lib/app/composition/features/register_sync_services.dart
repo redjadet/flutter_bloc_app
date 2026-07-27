@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:core/core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_realtime_subscription.dart';
@@ -28,6 +29,12 @@ void registerSyncServices() {
         registry: getIt<SyncableRepositoryRegistry>(),
         getSyncSupabaseUserId: () =>
             getIt<SupabaseAuthRepository>().currentUser?.id,
+        getSharedSyncAuthUserId: () {
+          if (!getIt.isRegistered<FirebaseAuth>()) {
+            return null;
+          }
+          return getIt<FirebaseAuth>().currentUser?.uid;
+        },
         startIotDemoRealtimeSubscription: (final onSyncRequested) =>
             realtime.start(onSyncRequested),
         stopIotDemoRealtimeSubscription: () => unawaited(realtime.stop()),

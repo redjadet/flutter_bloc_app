@@ -14,6 +14,10 @@ part 'background_sync_runner_helpers_summary.part.dart';
 ///
 /// When [supabaseUserIdForUserScopedSync] is set, only pending operations
 /// for that user (e.g. iot_demo with matching payload) are processed.
+///
+/// When [getSharedSyncAuthUserId] is set, the cycle aborts before pushing or
+/// pulling shared Firebase offline data if the provider auth uid changes
+/// mid-cycle (e.g. A→B account switch before session cleanup quiesces).
 Future<SyncCycleSummary> runSyncCycle({
   required final SyncableRepositoryRegistry registry,
   required final PendingSyncRepository pendingRepository,
@@ -21,9 +25,11 @@ Future<SyncCycleSummary> runSyncCycle({
   required final void Function(String event, Map<String, Object?> payload)
   telemetry,
   final String? supabaseUserIdForUserScopedSync,
+  final String? Function()? getSharedSyncAuthUserId,
 }) async {
   final Stopwatch stopwatch = Stopwatch()..start();
   final _PullRemoteResult initialPullResult = _PullRemoteResult();
+  final String? sharedAuthUserIdAtCycleStart = getSharedSyncAuthUserId?.call();
 
   final List<SyncOperation> pending = await pendingRepository
       .getPendingOperations(
@@ -32,10 +38,24 @@ Future<SyncCycleSummary> runSyncCycle({
       );
   final Map<String, int> pendingByEntity = _pendingByEntity(pending);
   if (pending.isEmpty) {
+    if (_isSharedSyncAuthStale(
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: sharedAuthUserIdAtCycleStart,
+    )) {
+      return _abortSyncCycleForAuthChange(
+        stopwatch: stopwatch,
+        pendingAtStart: 0,
+        pendingByEntity: pendingByEntity,
+        emitStatus: emitStatus,
+        telemetry: telemetry,
+      );
+    }
     await _pullAllRemote(
       syncables: List<SyncableRepository>.from(registry.repositories),
       emitStatus: emitStatus,
       result: initialPullResult,
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: sharedAuthUserIdAtCycleStart,
     );
     stopwatch.stop();
     final SyncCycleSummary summary = _buildSummary(
@@ -64,12 +84,26 @@ Future<SyncCycleSummary> runSyncCycle({
   );
 
   emitStatus(SyncStatus.syncing);
+  if (_isSharedSyncAuthStale(
+    getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+    authUserIdAtCycleStart: sharedAuthUserIdAtCycleStart,
+  )) {
+    return _abortSyncCycleForAuthChange(
+      stopwatch: stopwatch,
+      pendingAtStart: pending.length,
+      pendingByEntity: pendingByEntity,
+      emitStatus: emitStatus,
+      telemetry: telemetry,
+    );
+  }
   final _PendingProcessingResult processingResult =
       await _processPendingOperations(
         pending: pending,
         registry: registry,
         pendingRepository: pendingRepository,
         emitStatus: emitStatus,
+        getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+        authUserIdAtCycleStart: sharedAuthUserIdAtCycleStart,
       );
 
   final _PullRemoteResult finalPullResult = _PullRemoteResult();
@@ -77,6 +111,8 @@ Future<SyncCycleSummary> runSyncCycle({
     syncables: syncables,
     emitStatus: emitStatus,
     result: finalPullResult,
+    getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+    authUserIdAtCycleStart: sharedAuthUserIdAtCycleStart,
   );
 
   stopwatch.stop();
