@@ -6,6 +6,7 @@ extension _BackgroundSyncCoordinatorSummary on BackgroundSyncCoordinator {
       emitStatus: _emit,
       telemetry: _telemetry,
       supabaseUserIdForUserScopedSync: _getSyncSupabaseUserId?.call(),
+      getSharedSyncAuthUserId: _getSharedSyncAuthUserId,
     );
     final int pruned = await _repository.prune(
       maxRetryCount: _maxRetryCount,
