@@ -18,6 +18,7 @@ void main() {
     expect(entries.first.message, 'warning message');
     expect(entries.last.level, AppLogLevel.error);
     expect(entries.last.message, 'error message');
-    expect(entries.last.error, isA<StateError>());
+    expect(entries.last.error, isA<String>());
+    expect(entries.last.error.toString(), contains('boom'));
   });
 }

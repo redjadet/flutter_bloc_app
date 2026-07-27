@@ -22,6 +22,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_raw_dialogs.sh`
 - `check_raw_network_images.sh`
 - `check_raw_print.sh`
+- `check_sensitive_logging.sh`
 - `check_raw_google_fonts.sh`
 - `check_ui_regressions.sh`
 - `check_side_effects_build.sh`

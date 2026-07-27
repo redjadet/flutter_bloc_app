@@ -140,25 +140,65 @@ class FirebaseBootstrapService {
     FirebaseUIAuth.configureProviders(providers);
   }
 
+  /// Injectable Crashlytics sink for tests (sanitized exception text only).
+  @visibleForTesting
+  static Future<void> Function(
+    Object exception,
+    StackTrace? stack, {
+    required bool fatal,
+    required String reason,
+  })
+  recordCrash = _defaultRecordCrash;
+
+  static Future<void> _defaultRecordCrash(
+    final Object exception,
+    final StackTrace? stack, {
+    required final bool fatal,
+    required final String reason,
+  }) {
+    return FirebaseCrashlytics.instance.recordError(
+      exception,
+      stack,
+      reason: reason,
+      printDetails: false,
+      fatal: fatal,
+    );
+  }
+
   /// Register global crash reporting handlers
   static void registerCrashlyticsHandlers() {
     final previousFlutterHandler = FlutterError.onError;
     FlutterError.onError = (final details) {
-      unawaited(FirebaseCrashlytics.instance.recordFlutterFatalError(details));
+      final Object? sanitized = LogRedaction.sanitizeError(details.exception);
+      unawaited(
+        recordCrash(
+          sanitized ?? 'flutter_fatal',
+          details.stack,
+          fatal: true,
+          reason: 'flutter_fatal',
+        ),
+      );
       previousFlutterHandler?.call(details);
     };
 
     final previousPlatformHandler = PlatformDispatcher.instance.onError;
     PlatformDispatcher.instance.onError = (final error, final stackTrace) {
+      final Object? sanitized = LogRedaction.sanitizeError(error);
       unawaited(
-        FirebaseCrashlytics.instance.recordError(
-          error,
+        recordCrash(
+          sanitized ?? 'platform_fatal',
           stackTrace,
           fatal: true,
+          reason: 'platform_fatal',
         ),
       );
       return previousPlatformHandler?.call(error, stackTrace) ?? true;
     };
+  }
+
+  @visibleForTesting
+  static void resetCrashlyticsRecordingForTest() {
+    recordCrash = _defaultRecordCrash;
   }
 
   @visibleForTesting

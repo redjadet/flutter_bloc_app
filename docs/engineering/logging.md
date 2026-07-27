@@ -10,10 +10,17 @@ data or creating noisy, unstable output.
 - Keep recurring messages stable so tests, crash reports, and manual triage stay
   reliable.
 - Avoid raw console output and secrets in every build mode.
+- Prefer privacy-minimized security/diagnostic events in production — not
+  silence.
 
 ## Logger API
 
-Use [`AppLogger`](../../packages/app_shared_flutter/lib/src/utils/logger.dart) for app code:
+Use [`AppLogger`](../../packages/app_shared_flutter/lib/src/utils/logger.dart) for app code.
+All public entry points sanitize message and error text through
+[`LogRedaction`](../../packages/app_shared_flutter/lib/src/utils/log_redaction.dart)
+before console, `AppLogger.observer`, and Crashlytics sinks.
+
+Legacy string APIs remain supported:
 
 ```dart
 AppLogger.info('sync.flush completed operation=profile reason=manual');
@@ -25,18 +32,52 @@ AppLogger.error(
 );
 ```
 
+Prefer structured events for new logs:
+
+```dart
+AppLogger.event(
+  AppLogLevel.info,
+  'login_failed',
+  fields: {
+    'statusCode': response.statusCode,
+    'requestId': requestId,
+  },
+);
+```
+
+Do not pass `response.body`, headers, tokens, or full URIs with query values.
+Pass caught errors via `error:` / `AppLogger.error` so redaction runs before any
+sink.
+
 Do not use `print()` or `debugPrint()` in `lib/`. The
 [`tool/check_raw_print.sh`](../../tool/check_raw_print.sh) guard rejects raw
-console output and is part of the project validation flow.
+console output.
+[`tool/check_sensitive_logging.sh`](../../tool/check_sensitive_logging.sh)
+rejects high-confidence secret/URI/body patterns in log calls (including iOS
+`absoluteString`).
 
 `AppLogger` suppresses normal output in tests, supports `silence()` /
 `silenceAsync()` for expected noisy blocks, and emits release logs only at
 warning or error level.
 
+## Redaction contract
+
+- Secret field keys (case-insensitive camel/snake/kebab): `password`, `token`,
+  `accessToken`, `refreshToken`, `idToken`, `authorization`, `cookie`, `apiKey`,
+  `sessionId`, `secret`, `bearer` → `[REDACTED]`.
+- URIs keep scheme/host/port/path; query and fragment **values** are redacted.
+- Invalid URI strings become `[INVALID_URI]` (never echoed).
+- CR/LF/control characters collapse; messages truncate at 1024 chars with
+  `…[truncated]`.
+- Free-text scrub covers Bearer credentials, JWT-like blobs, and denylist
+  `key=value` assignments (heuristic).
+- Crashlytics receives sanitized exception **text** plus the original stack;
+  raw `FlutterErrorDetails` / exception objects are never recorded.
+
 ## Required Context
 
-Include compact `key=value` fields in the message text for fields that make the
-event searchable.
+Include compact `key=value` fields (via `AppLogger.event` fields or message
+text) that make the event searchable.
 
 Use these fields when they apply:
 
@@ -89,10 +130,12 @@ authorization headers, API keys, or unredacted file contents. See
 ## Checklist For New Logs
 
 - Does the log use `AppLogger`, not `print()` or `debugPrint()`?
+- Prefer `AppLogger.event` with safe fields for new structured events?
 - Is the event useful at a boundary or failure point, not just noisy progress?
 - Are `feature`, `operation`, and `reason` present when they help search?
 - Is there a stable `error_code`, `status_code`, `request_id`, or `sync_id`
   available?
 - Are secrets, PII, raw payloads, and full credentials excluded?
-- Does `AppLogger.error` receive the original error and stack trace?
+- Does `AppLogger.error` / `event(..., error:)` receive the original error and
+  stack (so redaction runs) rather than interpolating secrets into the message?
 - Is the message wording stable enough for future triage?

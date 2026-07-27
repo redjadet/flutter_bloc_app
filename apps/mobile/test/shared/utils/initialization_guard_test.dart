@@ -60,7 +60,11 @@ void main() {
       expect(entries, hasLength(1));
       expect(entries.single.level, AppLogLevel.error);
       expect(entries.single.message, contains('Migration failed'));
-      expect(entries.single.error, isA<FlutterError>());
+      expect(entries.single.error, isA<String>());
+      expect(
+        entries.single.error.toString(),
+        contains("path = 'migration.lock'"),
+      );
     });
 
     test('executeSafely logs errors when operation fails', () async {

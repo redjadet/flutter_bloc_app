@@ -54,14 +54,21 @@ class TelemetryInterceptor extends Interceptor {
     sw.stop();
     final int ms = sw.elapsedMilliseconds;
     _eventSink?.call(options, statusCode, error, ms);
+    final fields = <String, Object?>{
+      'method': options.method,
+      'uri': LogRedaction.uriForLog(options.uri),
+      'statusCode': statusCode,
+      'durationMs': ms,
+    };
     if (error != null) {
-      AppLogger.debug(
-        'HTTP ${options.method} ${options.uri} failed after ${ms}ms: $error',
+      AppLogger.event(
+        AppLogLevel.debug,
+        'http.request',
+        fields: fields,
+        error: error,
       );
     } else {
-      AppLogger.debug(
-        'HTTP ${options.method} ${options.uri} -> $statusCode (${ms}ms)',
-      );
+      AppLogger.event(AppLogLevel.debug, 'http.request', fields: fields);
     }
   }
 }

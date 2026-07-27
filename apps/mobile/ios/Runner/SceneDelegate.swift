@@ -62,12 +62,18 @@ class SceneDelegate: FlutterSceneDelegate {
 
   private func handleLink(_ url: URL, source: String, handledURLs: inout Set<URL>) {
     guard handledURLs.insert(url).inserted else {
-      debugPrint("SceneDelegate: Skipping duplicate URL from \(source): \(url.absoluteString)")
+      debugPrint(
+        "SceneDelegate: Skipping duplicate URL from \(source): "
+          + "\(url.scheme ?? "")://\(url.host ?? "")\(url.path)"
+      )
       return
     }
 
     // app_links 6.4.x: handleLink returns Void (propagates to Flutter; no Bool success).
     AppLinks.shared.handleLink(url: url)
-    debugPrint("SceneDelegate: Handled link from \(source): \(url.absoluteString)")
+    debugPrint(
+      "SceneDelegate: Handled link from \(source): "
+        + "\(url.scheme ?? "")://\(url.host ?? "")\(url.path)"
+    )
   }
 }
