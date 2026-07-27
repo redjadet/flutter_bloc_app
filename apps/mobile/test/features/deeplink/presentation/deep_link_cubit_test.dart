@@ -93,6 +93,29 @@ void main() {
       ],
     );
 
+    test('observer logs omit deep-link query secrets', () async {
+      final entries = <AppLogEntry>[];
+      AppLogger.observer = entries.add;
+      addTearDown(() => AppLogger.observer = null);
+
+      final secretUri = Uri.parse(
+        'https://app.example/x?token=supersecret&code=abc',
+      );
+      when(service.getInitialLink).thenAnswer((_) async => secretUri);
+      when(() => parser.parse(secretUri)).thenReturn(DeepLinkTarget.counter);
+
+      final cubit = DeepLinkCubit(service: service, parser: parser);
+      addTearDown(cubit.close);
+      await cubit.initialize();
+
+      final joined = entries.map((e) => '${e.message}|${e.error}').join('\n');
+      expect(joined, isNot(contains('supersecret')));
+      expect(joined, contains('deeplink.initial'));
+      expect(joined, contains('scheme=https'));
+      expect(joined, contains('host=app.example'));
+      expect(joined, contains('path=/x'));
+    });
+
     blocTest<DeepLinkCubit, DeepLinkState>(
       'emits error when getInitialLink throws then recovers on retry',
       build: () {

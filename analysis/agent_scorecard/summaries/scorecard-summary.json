@@ -3,74 +3,31 @@
     "checklist": {
       "aborted": 0,
       "cancelled": 0,
-      "count": 947,
-      "failed": 340,
-      "ok": 607,
-      "other": 0,
-      "p50_duration_ms": 29171,
-      "success_rate": 0.6409714889123548
-    },
-    "cursor_to_codex_delegate": {
-      "aborted": 0,
-      "cancelled": 0,
-      "count": 1,
-      "failed": 0,
-      "ok": 1,
-      "other": 0,
-      "p50_duration_ms": 1000,
-      "success_rate": 1.0
-    },
-    "deploy_fastapi_cloud": {
-      "aborted": 0,
-      "cancelled": 0,
       "count": 3,
       "failed": 2,
       "ok": 1,
       "other": 0,
-      "p50_duration_ms": 0,
+      "p50_duration_ms": 366757,
       "success_rate": 0.3333333333333333
-    },
-    "integration_tests": {
-      "aborted": 0,
-      "cancelled": 1,
-      "count": 213,
-      "failed": 59,
-      "ok": 153,
-      "other": 0,
-      "p50_duration_ms": 251430,
-      "success_rate": 0.7183098591549296
-    },
-    "smoke": {
-      "aborted": 0,
-      "cancelled": 0,
-      "count": 1,
-      "failed": 0,
-      "ok": 1,
-      "other": 0,
-      "p50_duration_ms": 1,
-      "success_rate": 1.0
     }
   },
-  "delegate_usage_rate": 0.0008583690987124463,
+  "delegate_usage_rate": 0.0,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 1171,
-    "total_non_empty_lines": 1171
+    "parsed_json_lines": 3,
+    "total_non_empty_lines": 3
   },
-  "p50_duration_ms": 61705,
-  "p95_duration_ms": 486062.8,
+  "p50_duration_ms": 366757,
+  "p95_duration_ms": 429124,
   "risk_counts": {
-    "high": 213,
-    "medium": 948,
-    "unknown": 4
+    "medium": 3
   },
   "scorecard_parse_success": 1.0,
-  "source_file_count": 73,
-  "source_fingerprint": "0b59a4464ea679f195f757d8dc5c66600dce9cd37cafb09eb9dc3294e65a81a1",
+  "source_file_count": 1,
+  "source_fingerprint": "39706a45f9160515eae321b9b6bcbc4572c82887c91799820f811c19a6733cb3",
   "status_counts": {
-    "cancelled": 1,
-    "failed": 401,
-    "ok": 763
+    "failed": 2,
+    "ok": 1
   },
-  "total_events": 1165
+  "total_events": 3
 }

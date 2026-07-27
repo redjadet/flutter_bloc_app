@@ -7,15 +7,12 @@ import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_parser.dart';
 import 'package:flutter_bloc_app/features/deeplink/domain/deep_link_service.dart';
 import 'package:flutter_bloc_app/features/deeplink/presentation/cubit/deep_link_state.dart';
-import 'package:flutter_bloc_app/features/deeplink/presentation/deep_link_target_extensions.dart';
 
 /// Handles incoming deep/universal links and exposes navigation events.
 class DeepLinkCubit extends Cubit<DeepLinkState>
     with CubitSubscriptionMixin<DeepLinkState> {
-  DeepLinkCubit({
-    required this._service,
-    required this._parser,
-  }) : super(const DeepLinkState.idle());
+  DeepLinkCubit({required this._service, required this._parser})
+    : super(const DeepLinkState.idle());
 
   final DeepLinkService _service;
   final DeepLinkParser _parser;
@@ -69,7 +66,11 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     final Uri? initialUri = await _service.getInitialLink();
     if (isClosed) return;
     if (initialUri != null) {
-      AppLogger.info('Found initial URI: $initialUri');
+      AppLogger.event(
+        AppLogLevel.info,
+        'deeplink.initial',
+        fields: _uriFields(initialUri),
+      );
       _handleUri(initialUri, DeepLinkOrigin.initial);
     }
 
@@ -77,12 +78,22 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
     _subscription = registerSubscription(
       _service.linkStream().listen(
         (final uri) {
-          AppLogger.info('Received deep link from stream: $uri');
+          AppLogger.event(
+            AppLogLevel.info,
+            'deeplink.stream',
+            fields: _uriFields(uri),
+          );
           _handleUri(uri, DeepLinkOrigin.resumed);
         },
         onError: (final Object error, final StackTrace stackTrace) {
           _consecutiveFailureCount++;
-          AppLogger.error('Deep link stream error', error, stackTrace);
+          AppLogger.event(
+            AppLogLevel.error,
+            'deeplink.stream_failed',
+            fields: {'count': _consecutiveFailureCount},
+            error: error,
+            stackTrace: stackTrace,
+          );
           _logFailureTelemetry(error);
           unawaited(_disposeSubscription());
           _initialized = false;
@@ -96,13 +107,25 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
   }
 
   void _handleUri(final Uri uri, final DeepLinkOrigin origin) {
-    AppLogger.info('Deep link received: $uri (origin: $origin)');
+    AppLogger.event(
+      AppLogLevel.info,
+      'deeplink.received',
+      fields: {..._uriFields(uri), 'origin': origin.name},
+    );
     final target = _parser.parse(uri);
     if (target == null) {
-      AppLogger.warning('Unsupported deep link: $uri');
+      AppLogger.event(
+        AppLogLevel.warning,
+        'deeplink.unsupported',
+        fields: _uriFields(uri),
+      );
       return;
     }
-    AppLogger.info('Deep link parsed to target: ${target.location}');
+    AppLogger.event(
+      AppLogLevel.info,
+      'deeplink.parsed',
+      fields: {..._uriFields(uri), 'target': target.name},
+    );
     if (isClosed) return;
     emit(DeepLinkState.navigate(target, origin));
     if (isClosed) return;
@@ -137,24 +160,33 @@ class DeepLinkCubit extends Cubit<DeepLinkState>
 
   void _logFailureTelemetry(final Object error) {
     if (_consecutiveFailureCount == 3) {
-      AppLogger.warning(
-        'Deep link initialization has failed 3 consecutive times. '
-        'This may indicate a platform configuration issue. '
-        'Last error: $error',
+      AppLogger.event(
+        AppLogLevel.warning,
+        'deeplink.init_failed_streak',
+        fields: {'count': 3},
+        error: error,
       );
     } else if (_consecutiveFailureCount == 5) {
-      AppLogger.warning(
-        'Deep link initialization has failed 5 consecutive times. '
-        'Platform misconfiguration likely. Consider checking deep link setup. '
-        'Last error: $error',
+      AppLogger.event(
+        AppLogLevel.warning,
+        'deeplink.init_failed_streak',
+        fields: {'count': 5},
+        error: error,
       );
     } else if (_consecutiveFailureCount >= 10 &&
         _consecutiveFailureCount % 5 == 0) {
-      AppLogger.warning(
-        'Deep link initialization has failed $_consecutiveFailureCount '
-        'consecutive times. Persistent platform issue detected. '
-        'Last error: $error',
+      AppLogger.event(
+        AppLogLevel.warning,
+        'deeplink.init_failed_streak',
+        fields: {'count': _consecutiveFailureCount},
+        error: error,
       );
     }
   }
+
+  Map<String, Object?> _uriFields(final Uri uri) => {
+    'scheme': uri.scheme,
+    'host': uri.host,
+    'path': uri.path,
+  };
 }

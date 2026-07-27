@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 import '../platform/platform_environment.dart';
+import 'log_redaction.dart';
 
 enum AppLogLevel { debug, info, warning, error }
 
@@ -23,6 +24,9 @@ class AppLogEntry {
 }
 
 /// App-level logging utility shared across packages.
+///
+/// All public entry points sanitize message and error via [LogRedaction]
+/// before observer / console sinks.
 class AppLogger {
   static final Logger _logger = Logger(
     filter: _DebugOnlyFilter(),
@@ -45,37 +49,46 @@ class AppLogger {
     final Object? error,
     final StackTrace? stackTrace,
   ]) {
-    _notifyObserver(
-      AppLogEntry(
-        level: AppLogLevel.error,
-        message: message,
-        error: error,
-        stackTrace: stackTrace,
-      ),
-    );
-    _logger.e(message, error: error, stackTrace: stackTrace);
+    _log(AppLogLevel.error, message, error: error, stackTrace: stackTrace);
   }
 
   static void warning(final String message) {
-    _notifyObserver(AppLogEntry(level: AppLogLevel.warning, message: message));
-    _logger.w(message);
+    _log(AppLogLevel.warning, message);
   }
 
   static void info(final String message) {
-    _notifyObserver(AppLogEntry(level: AppLogLevel.info, message: message));
-    _logger.i(message);
+    _log(AppLogLevel.info, message);
   }
 
   static void debug(final String message) {
-    _notifyObserver(AppLogEntry(level: AppLogLevel.debug, message: message));
-    _logger.d(message);
+    _log(AppLogLevel.debug, message);
   }
 
   /// Logs [message] at debug level only in debug mode (avoids work in release).
   static void debugInDebugMode(final String message) {
     if (kDebugMode) {
-      _logger.d(message);
+      _log(AppLogLevel.debug, message, notifyObserver: false);
     }
+  }
+
+  /// Structured event log: `event key=value…` from redacted [fields].
+  static void event(
+    final AppLogLevel level,
+    final String event, {
+    final Map<String, Object?> fields = const {},
+    final Object? error,
+    final StackTrace? stackTrace,
+  }) {
+    final safeEvent = LogRedaction.sanitizeMessage(event);
+    final safe = LogRedaction.safeFields(fields);
+    final buffer = StringBuffer(safeEvent);
+    for (final entry in safe.entries) {
+      buffer.write(' ');
+      buffer.write(entry.key);
+      buffer.write('=');
+      buffer.write(_formatFieldValue(entry.value));
+    }
+    _log(level, buffer.toString(), error: error, stackTrace: stackTrace);
   }
 
   /// Returns a stream error handler that logs with [logContext] and swallows.
@@ -119,6 +132,51 @@ class AppLogger {
 
   static void restoreGlobalLogging() {
     _globalSilence = false;
+  }
+
+  static void _log(
+    final AppLogLevel level,
+    final String message, {
+    final Object? error,
+    final StackTrace? stackTrace,
+    final bool notifyObserver = true,
+  }) {
+    final safeMessage = LogRedaction.sanitizeMessage(message);
+    final safeError = LogRedaction.sanitizeError(error);
+    if (notifyObserver) {
+      _notifyObserver(
+        AppLogEntry(
+          level: level,
+          message: safeMessage,
+          error: safeError,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+    switch (level) {
+      case AppLogLevel.debug:
+        _logger.d(safeMessage, error: safeError, stackTrace: stackTrace);
+      case AppLogLevel.info:
+        _logger.i(safeMessage, error: safeError, stackTrace: stackTrace);
+      case AppLogLevel.warning:
+        _logger.w(safeMessage, error: safeError, stackTrace: stackTrace);
+      case AppLogLevel.error:
+        _logger.e(safeMessage, error: safeError, stackTrace: stackTrace);
+    }
+  }
+
+  static String _formatFieldValue(final Object? value) {
+    if (value == null) {
+      return 'null';
+    }
+    if (value is Map) {
+      final parts = <String>[];
+      for (final entry in value.entries) {
+        parts.add('${entry.key}:${_formatFieldValue(entry.value)}');
+      }
+      return '{${parts.join(',')}}';
+    }
+    return value.toString();
   }
 
   static void _notifyObserver(final AppLogEntry entry) {

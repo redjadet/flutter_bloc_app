@@ -34,8 +34,11 @@ Primary protocol: [`ai_code_review_protocol.md`](../ai_code_review_protocol.md)
 ## Logging and Observability
 
 - Logs and telemetry exclude credentials, tokens, PII, and full payloads.
+  Enforce via [`AppLogger`/`LogRedaction`](../engineering/logging.md) and
+  [`tool/check_sensitive_logging.sh`](../../tool/check_sensitive_logging.sh).
 - Error messages exposed to UI use stable contracts — not raw stack traces.
-- Crashlytics/analytics hooks follow [`observability.md`](../observability.md).
+- Crashlytics/analytics hooks follow [`observability.md`](../observability.md)
+  (sanitized exception text only).
 
 ## Storage and Sync
 

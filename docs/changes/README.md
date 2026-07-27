@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-27_secure_logging_hardening.md`](2026-07-27_secure_logging_hardening.md): Central AppLogger/Crashlytics redaction, URI leak fixes, sensitive-logging CI guard.
 - [`2026-07-26_integration_dart_define_argv_split.md`](2026-07-26_integration_dart_define_argv_split.md): Split integration `FIREBASE_*` dart-defines into separate argv (fixes Android guest “API key not valid”).
 - [`2026-07-26_session_cleanup_profile_and_sync_ordering.md`](2026-07-26_session_cleanup_profile_and_sync_ordering.md): Clear profile cache on session cleanup and defer sync resume until session-ready identity is published.
 - [`2026-07-24_auth_session_ready_identity.md`](2026-07-24_auth_session_ready_identity.md): Gate the current user on session readiness during cleanup while preserving initial anonymous sign-in routing.
