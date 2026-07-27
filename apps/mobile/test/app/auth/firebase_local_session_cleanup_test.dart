@@ -6,6 +6,8 @@ import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dar
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
@@ -89,9 +91,18 @@ void main() {
       () async {
         await pendingSync.enqueue(
           SyncOperation.create(
-            entityType: 'todo',
+            entityType: todoSyncEntityType,
             payload: const <String, dynamic>{'id': 't1'},
             idempotencyKey: 'todo-1',
+            createdAt: DateTime.utc(2026),
+            nextRetryAt: DateTime.utc(2026),
+          ),
+        );
+        await pendingSync.enqueue(
+          SyncOperation.create(
+            entityType: counterSyncEntityType,
+            payload: const <String, dynamic>{'id': 'ctr1'},
+            idempotencyKey: 'counter-1',
             createdAt: DateTime.utc(2026),
             nextRetryAt: DateTime.utc(2026),
           ),

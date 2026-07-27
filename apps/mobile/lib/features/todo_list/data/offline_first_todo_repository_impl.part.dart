@@ -17,8 +17,6 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
   }
 
-  static const String todoEntity = 'todo';
-
   final HiveTodoRepository _localRepository;
   final TodoRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
@@ -36,7 +34,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   bool get hasRemoteRepository => _remoteRepository != null;
 
   @override
-  String get entityType => todoEntity;
+  String get entityType => todoSyncEntityType;
 
   @override
   Future<int> pendingSyncOperationCount({DateTime? now}) async {
@@ -44,7 +42,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         .getPendingOperations(
           now: now ?? DateTime.now().toUtc(),
         );
-    return pending.where((final op) => op.entityType == todoEntity).length;
+    return pending
+        .where((final op) => op.entityType == todoSyncEntityType)
+        .length;
   }
 
   @override

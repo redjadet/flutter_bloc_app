@@ -186,7 +186,7 @@ class _AppAuthSessionListener extends StatelessWidget {
             messenger?.showSnackBar(
               SnackBar(content: Text(context.l10n.sessionExpiredMessage)),
             );
-            context.read<AppAuthCubit>().acknowledgeSessionExpired();
+            context.cubit<AppAuthCubit>().acknowledgeSessionExpired();
             router.go(AppRoutes.authPath);
           },
           orElse: () {},

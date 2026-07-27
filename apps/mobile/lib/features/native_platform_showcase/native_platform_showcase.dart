@@ -28,7 +28,6 @@ export 'domain/use_cases/watch_native_showcase_telemetry_use_case.dart';
 export 'presentation/cubit/native_platform_showcase_cubit.dart';
 export 'presentation/cubit/native_platform_showcase_state.dart';
 export 'presentation/cubit/native_security_showcase_cubit.dart';
-export 'presentation/cubit/native_security_showcase_cubit_factory.dart';
 export 'presentation/cubit/native_security_showcase_state.dart';
 export 'presentation/pages/native_platform_showcase_page.dart';
 export 'presentation/widgets/native_security_outcome_text.dart';

@@ -13,10 +13,38 @@ import 'package:networking/networking.dart';
 
 /// Sync status banner for the counter feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
-class CounterSyncBanner extends StatelessWidget {
+class CounterSyncBanner extends StatefulWidget {
   const CounterSyncBanner({
     required this.l10n,
     super.key,
+  });
+
+  final AppLocalizations l10n;
+
+  @override
+  State<CounterSyncBanner> createState() => _CounterSyncBannerState();
+}
+
+class _CounterSyncBannerState extends State<CounterSyncBanner> {
+  bool _didEnsureSyncStarted = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) return;
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
+  }
+
+  @override
+  Widget build(final BuildContext context) => _CounterSyncBannerBody(
+    l10n: widget.l10n,
+  );
+}
+
+class _CounterSyncBannerBody extends StatelessWidget {
+  const _CounterSyncBannerBody({
+    required this.l10n,
   });
 
   final AppLocalizations l10n;
@@ -28,8 +56,6 @@ class CounterSyncBanner extends StatelessWidget {
     )) {
       return const SizedBox.shrink();
     }
-
-    context.ensureSyncStartedIfAvailable();
 
     return TypeSafeBlocConsumer<SyncStatusCubit, SyncStatusState>(
       listener: (final context, final state) {
@@ -121,16 +147,16 @@ class CounterSyncBanner extends StatelessWidget {
       },
     );
   }
+}
 
-  String _formatLastSynced(
-    final MaterialLocalizations localizations,
-    final DateTime timestamp,
-  ) {
-    final DateTime local = timestamp.toLocal();
-    final String date = localizations.formatShortDate(local);
-    final String time = localizations.formatTimeOfDay(
-      TimeOfDay.fromDateTime(local),
-    );
-    return '$date · $time';
-  }
+String _formatLastSynced(
+  final MaterialLocalizations localizations,
+  final DateTime timestamp,
+) {
+  final DateTime local = timestamp.toLocal();
+  final String date = localizations.formatShortDate(local);
+  final String time = localizations.formatTimeOfDay(
+    TimeOfDay.fromDateTime(local),
+  );
+  return '$date · $time';
 }

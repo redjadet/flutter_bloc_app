@@ -80,6 +80,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
     _authUserId = authRepository.currentUser?.id;
     _authSub = authRepository.authStateChanges.listen(
       (user) {
+        if (isClosed) return;
         final String? nextId = user?.id;
         if (nextId != _authUserId) {
           _authUserId = nextId;
@@ -123,6 +124,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   /// Timestamp for the local history row while submit is in flight; kept if local persist fails after remote OK.
   DateTime? _pendingSubmitSubmittedAtUtc;
   Future<void> hydrate() async {
+    if (isClosed) return;
     emit(
       state.copyWith(
         hydration: CaseStudyHydrationStatus.loading,
