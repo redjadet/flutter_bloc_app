@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
-import 'package:auth/auth.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
+import 'package:auth/auth.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -1085,6 +1085,35 @@ void main() {
         expect(cubit.state.draft.caseId, 'draft-b-only');
 
         await cubit.close();
+        await auth.dispose();
+      },
+    );
+
+    test(
+      'returns without emitting when hydrate is called after close',
+      () async {
+        final _MutableSilentAuthRepository auth = _MutableSilentAuthRepository(
+          null,
+        );
+
+        final CaseStudySessionCubit cubit = CaseStudySessionCubit(
+          authRepository: auth,
+          localRepository: _MemoryLocalRepository(),
+          videoRepository: _StubVideoRepository(),
+          uploadRepository: _StubUploadRepository(),
+          clipStore: _NoopClipFileStore(),
+          remoteDeleteRepository: _NoopRemoteDeleteRepository(),
+          remoteBackendAuth: _StubRemoteBackendAuth(),
+          remoteRepository: _StubRemoteRepository(),
+          timerService: DefaultTimerService(),
+        );
+
+        final CaseStudySessionState before = cubit.state;
+        await cubit.close();
+        await expectLater(cubit.hydrate(), completes);
+        expect(cubit.isClosed, isTrue);
+        expect(cubit.state, before);
+
         await auth.dispose();
       },
     );

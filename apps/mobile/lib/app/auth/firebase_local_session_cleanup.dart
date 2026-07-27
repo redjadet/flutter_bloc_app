@@ -7,8 +7,10 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.da
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
@@ -16,8 +18,8 @@ import 'package:storage/storage.dart';
 /// entry without a user id. Cleared on sign-out and account switch so the next
 /// session cannot read or sync the previous user's mutations.
 const Set<String> kFirebaseSharedPendingSyncEntityTypes = <String>{
-  OfflineFirstTodoRepository.todoEntity,
-  OfflineFirstCounterRepository.counterEntity,
+  todoSyncEntityType,
+  counterSyncEntityType,
   chatSyncEntityType,
 };
 

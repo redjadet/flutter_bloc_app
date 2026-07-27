@@ -522,7 +522,8 @@ void main() {
   });
 }
 
-class _RecordingBackgroundSyncCoordinator extends FakeBackgroundSyncCoordinator {
+class _RecordingBackgroundSyncCoordinator
+    extends FakeBackgroundSyncCoordinator {
   int resumeCalls = 0;
 
   @override

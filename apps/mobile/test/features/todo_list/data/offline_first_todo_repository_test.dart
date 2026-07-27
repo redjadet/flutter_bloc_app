@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/todo_item_dto.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 import '../../../test_helpers.dart' show FakeTimerService;
 
@@ -264,7 +265,7 @@ void main() {
         );
 
         final SyncOperation operation = SyncOperation.create(
-          entityType: OfflineFirstTodoRepository.todoEntity,
+          entityType: todoSyncEntityType,
           payload: TodoItemDto.fromDomain(item).toMap(),
           idempotencyKey: 'op-1',
         );
@@ -314,7 +315,7 @@ void main() {
         await localRepository.save(stalePending);
 
         final SyncOperation operation = SyncOperation.create(
-          entityType: OfflineFirstTodoRepository.todoEntity,
+          entityType: todoSyncEntityType,
           payload: TodoItemDto.fromDomain(stalePending).toMap(),
           idempotencyKey: 'stale-todo-op',
         );
@@ -626,7 +627,7 @@ void main() {
       );
 
       final SyncOperation operation = SyncOperation.create(
-        entityType: OfflineFirstTodoRepository.todoEntity,
+        entityType: todoSyncEntityType,
         payload: <String, dynamic>{'id': 'malformed-only-id'},
         idempotencyKey: 'bad-save-op-1',
       );
@@ -651,7 +652,7 @@ void main() {
       await localRepository.save(item);
 
       final SyncOperation operation = SyncOperation.create(
-        entityType: OfflineFirstTodoRepository.todoEntity,
+        entityType: todoSyncEntityType,
         payload: <String, dynamic>{'id': item.id, 'deleted': true},
         idempotencyKey: 'delete-op-1',
       );
@@ -681,7 +682,7 @@ void main() {
         await localRepository.save(item);
 
         final SyncOperation operation = SyncOperation.create(
-          entityType: OfflineFirstTodoRepository.todoEntity,
+          entityType: todoSyncEntityType,
           payload: <String, dynamic>{'id': 123, 'deleted': true},
           idempotencyKey: 'delete-op-non-string',
         );
@@ -712,7 +713,7 @@ void main() {
         await localRepository.save(item);
 
         final SyncOperation operation = SyncOperation.create(
-          entityType: OfflineFirstTodoRepository.todoEntity,
+          entityType: todoSyncEntityType,
           payload: <String, dynamic>{'id': '   ', 'deleted': true},
           idempotencyKey: 'delete-op-whitespace',
         );
@@ -738,7 +739,7 @@ void main() {
       await localRepository.save(item);
 
       final SyncOperation operation = SyncOperation.create(
-        entityType: OfflineFirstTodoRepository.todoEntity,
+        entityType: todoSyncEntityType,
         payload: <String, dynamic>{'id': item.id, 'deleted': true},
         idempotencyKey: 'delete-op-1',
       );
@@ -1194,14 +1195,11 @@ void main() {
         timerService: FakeTimerService(),
       );
 
-      expect(
-        registry.resolve(OfflineFirstTodoRepository.todoEntity),
-        same(repository),
-      );
+      expect(registry.resolve(todoSyncEntityType), same(repository));
 
       await repository.dispose();
 
-      expect(registry.resolve(OfflineFirstTodoRepository.todoEntity), isNull);
+      expect(registry.resolve(todoSyncEntityType), isNull);
     });
 
     test(
@@ -1222,20 +1220,14 @@ void main() {
               timerService: FakeTimerService(),
             );
 
-        expect(
-          registry.resolve(OfflineFirstTodoRepository.todoEntity),
-          same(secondRepository),
-        );
+        expect(registry.resolve(todoSyncEntityType), same(secondRepository));
 
         await firstRepository.dispose();
 
-        expect(
-          registry.resolve(OfflineFirstTodoRepository.todoEntity),
-          same(secondRepository),
-        );
+        expect(registry.resolve(todoSyncEntityType), same(secondRepository));
 
         await secondRepository.dispose();
-        expect(registry.resolve(OfflineFirstTodoRepository.todoEntity), isNull);
+        expect(registry.resolve(todoSyncEntityType), isNull);
       },
     );
 

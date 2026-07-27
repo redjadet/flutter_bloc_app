@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/counter/data/counter_snapshot_dto.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 class _FakeRemoteRepository
     with CounterRepositoryNoPendingSync
@@ -162,7 +163,7 @@ void main() {
           );
 
       final SyncOperation operation = SyncOperation.create(
-        entityType: OfflineFirstCounterRepository.counterEntity,
+        entityType: counterSyncEntityType,
         payload: CounterSnapshotDto.fromDomain(
           const CounterSnapshot(count: 5),
         ).toJson(),
@@ -261,7 +262,7 @@ void main() {
 
       await pendingRepository.enqueue(
         SyncOperation.create(
-          entityType: OfflineFirstCounterRepository.counterEntity,
+          entityType: counterSyncEntityType,
           payload: CounterSnapshotDto.fromDomain(
             const CounterSnapshot(count: 1),
           ).toJson(),
@@ -280,10 +281,7 @@ void main() {
       final List<CounterSyncQueueEntry> entries = await repository
           .pendingSyncQueueEntries();
       expect(entries, hasLength(1));
-      expect(
-        entries.single.entityType,
-        OfflineFirstCounterRepository.counterEntity,
-      );
+      expect(entries.single.entityType, counterSyncEntityType);
     });
 
     test(
@@ -556,7 +554,7 @@ void main() {
         );
 
         final SyncOperation operation = SyncOperation.create(
-          entityType: OfflineFirstCounterRepository.counterEntity,
+          entityType: counterSyncEntityType,
           payload: CounterSnapshotDto.fromDomain(
             CounterSnapshot(count: 6, lastChanged: pendingChanged),
           ).toJson(),

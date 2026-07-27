@@ -14,13 +14,26 @@ import 'package:networking/networking.dart';
 
 /// Sync status banner for the todo list feature. Uses shared logic from
 /// sync_banner_helpers (shouldShowSyncBanner, syncBannerTitleAndMessage).
-class TodoSyncBanner extends StatelessWidget {
+class TodoSyncBanner extends StatefulWidget {
   const TodoSyncBanner({super.key});
 
   @override
-  Widget build(final BuildContext context) {
-    context.ensureSyncStartedIfAvailable();
+  State<TodoSyncBanner> createState() => _TodoSyncBannerState();
+}
 
+class _TodoSyncBannerState extends State<TodoSyncBanner> {
+  bool _didEnsureSyncStarted = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didEnsureSyncStarted) return;
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
       context,
     )) {

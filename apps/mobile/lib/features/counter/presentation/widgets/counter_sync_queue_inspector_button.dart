@@ -42,6 +42,7 @@ class _CounterSyncQueueInspectorButtonState
     extends State<CounterSyncQueueInspectorButton> {
   int? _repositoryPendingCount;
   StreamSubscription<void>? _pendingEnqueueSubscription;
+  bool _didEnsureSyncStarted = false;
 
   @override
   void initState() {
@@ -50,6 +51,15 @@ class _CounterSyncQueueInspectorButtonState
       unawaited(_refreshRepositoryPendingCount());
       _subscribePendingEnqueueStream();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!kShowPendingSyncQueueUi) return;
+    if (_didEnsureSyncStarted) return;
+    _didEnsureSyncStarted = true;
+    context.ensureSyncStartedIfAvailable();
   }
 
   @override
@@ -108,7 +118,6 @@ class _CounterSyncQueueInspectorButtonState
     if (!kShowPendingSyncQueueUi) {
       return const SizedBox.shrink();
     }
-    context.ensureSyncStartedIfAvailable();
 
     final Widget child = widget.repository != null
         ? _buildRepositoryBacked(context)

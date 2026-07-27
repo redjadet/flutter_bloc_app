@@ -1,17 +1,15 @@
-import 'package:design_system/design_system.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 import '../../../../test_helpers.dart' show FakeTimerService;
 
@@ -163,6 +161,40 @@ void main() {
       );
       expect(find.text(l10n.syncStatusOfflineTitle), findsOneWidget);
       expect(find.text(l10n.syncStatusOfflineMessage(0)), findsOneWidget);
+    });
+
+    testWidgets('starts sync once from didChangeDependencies', (tester) async {
+      counterRepository.pendingCount = 0;
+      await counterCubit.refreshPendingSyncCount();
+
+      syncCubit.emitState(
+        const SyncStatusState(
+          networkStatus: NetworkStatus.online,
+          syncStatus: SyncStatus.idle,
+        ),
+      );
+
+      await tester.pumpWidget(
+        buildBanner(
+          Builder(
+            builder: (final context) =>
+                CounterSyncBanner(l10n: AppLocalizations.of(context)),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.pumpWidget(
+        buildBanner(
+          Builder(
+            builder: (final context) =>
+                CounterSyncBanner(l10n: AppLocalizations.of(context)),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      verify(() => coordinator.ensureStarted()).called(1);
     });
 
     testWidgets('shows syncing banner when operations pending', (tester) async {

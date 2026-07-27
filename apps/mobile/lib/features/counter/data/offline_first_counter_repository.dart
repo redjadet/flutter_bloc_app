@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.d
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
 import 'package:storage/storage.dart';
 
@@ -23,8 +24,6 @@ class OfflineFirstCounterRepository
     _registry.register(this);
   }
 
-  static const String counterEntity = 'counter';
-
   final CounterRepository _localRepository;
   final CounterRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
@@ -34,7 +33,7 @@ class OfflineFirstCounterRepository
   bool get hasRemoteRepository => _remoteRepository != null;
 
   @override
-  String get entityType => counterEntity;
+  String get entityType => counterSyncEntityType;
 
   @override
   Future<CounterSnapshot> load() => _localRepository.load();
@@ -110,7 +109,7 @@ class OfflineFirstCounterRepository
           now: now ?? DateTime.now().toUtc(),
         );
     return operations
-        .where((final op) => op.entityType == counterEntity)
+        .where((final op) => op.entityType == counterSyncEntityType)
         .toList(growable: false);
   }
 
