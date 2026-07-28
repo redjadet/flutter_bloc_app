@@ -14,7 +14,7 @@ dependencies:
   core:
     path: ../core
   crypto: ^3.0.7
-  dio: ^5.10.0
+  dio: ^5.11.0
   flutter:
     sdk: flutter
   freezed_annotation: ^3.1.0
