@@ -20,11 +20,13 @@ class SyncJobRunner {
     required final void Function(String event, Map<String, Object?> payload)
     telemetry,
     final String? supabaseUserIdForUserScopedSync,
+    final String? Function()? getSharedSyncAuthUserId,
   }) => runSyncCycle(
     registry: _registry,
     pendingRepository: _pendingRepository,
     emitStatus: emitStatus,
     telemetry: telemetry,
     supabaseUserIdForUserScopedSync: supabaseUserIdForUserScopedSync,
+    getSharedSyncAuthUserId: getSharedSyncAuthUserId,
   );
 }

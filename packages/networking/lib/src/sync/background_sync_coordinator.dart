@@ -40,6 +40,7 @@ class BackgroundSyncCoordinator {
     required this._timerService,
     required final SyncableRepositoryRegistry registry,
     this._getSyncSupabaseUserId,
+    this._getSharedSyncAuthUserId,
     this._syncInterval = const Duration(seconds: 60),
     final void Function(String event, Map<String, Object?> payload)? telemetry,
     this._maxHistory = 5,
@@ -60,6 +61,7 @@ class BackgroundSyncCoordinator {
   final SyncJobRunner _syncJobRunner;
   final SyncSchedulePolicy _syncSchedulePolicy;
   final String? Function()? _getSyncSupabaseUserId;
+  final String? Function()? _getSharedSyncAuthUserId;
   final NetworkStatusService _networkStatusService;
   final TimerService _timerService;
   final Duration _syncInterval;

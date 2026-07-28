@@ -16,8 +16,16 @@ Future<_PullRemoteResult> _pullAllRemote({
   required final List<SyncableRepository> syncables,
   required final void Function(SyncStatus status) emitStatus,
   required final _PullRemoteResult result,
+  final String? Function()? getSharedSyncAuthUserId,
+  final String? authUserIdAtCycleStart,
 }) async {
   for (final SyncableRepository repo in syncables) {
+    if (_isSharedSyncAuthStale(
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: authUserIdAtCycleStart,
+    )) {
+      return result;
+    }
     try {
       result.count++;
       await repo.pullRemote();
@@ -39,12 +47,20 @@ Future<_PendingProcessingResult> _processPendingOperations({
   required final SyncableRepositoryRegistry registry,
   required final PendingSyncRepository pendingRepository,
   required final void Function(SyncStatus status) emitStatus,
+  final String? Function()? getSharedSyncAuthUserId,
+  final String? authUserIdAtCycleStart,
 }) async {
   final _PendingProcessingResult result = _PendingProcessingResult();
   final _CoalescedPendingOperations coalescedPending =
       _coalescePendingOperations(pending);
 
   for (final SyncOperation operation in coalescedPending.operations) {
+    if (_isSharedSyncAuthStale(
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: authUserIdAtCycleStart,
+    )) {
+      break;
+    }
     await _processOperation(
       operation: operation,
       registry: registry,
@@ -161,4 +177,38 @@ Future<void> _processOperation({
 DateTime _nextRetryAt(final int retryCount) {
   final int backoffMinutes = pow(2, retryCount.clamp(0, 5)).toInt();
   return DateTime.now().toUtc().add(Duration(minutes: backoffMinutes));
+}
+
+bool _isSharedSyncAuthStale({
+  required final String? Function()? getSharedSyncAuthUserId,
+  required final String? authUserIdAtCycleStart,
+}) {
+  if (getSharedSyncAuthUserId == null) {
+    return false;
+  }
+  return getSharedSyncAuthUserId() != authUserIdAtCycleStart;
+}
+
+SyncCycleSummary _abortSyncCycleForAuthChange({
+  required final Stopwatch stopwatch,
+  required final int pendingAtStart,
+  required final Map<String, int> pendingByEntity,
+  required final void Function(SyncStatus status) emitStatus,
+  required final void Function(String event, Map<String, Object?> payload)
+  telemetry,
+}) {
+  stopwatch.stop();
+  final SyncCycleSummary summary = _buildSummary(
+    recordedAt: DateTime.now().toUtc(),
+    durationMs: stopwatch.elapsedMilliseconds,
+    pullRemoteCount: 0,
+    pullRemoteFailures: 0,
+    pendingAtStart: pendingAtStart,
+    operationsProcessed: 0,
+    operationsFailed: 0,
+    pendingByEntity: pendingByEntity,
+  );
+  telemetry('sync_cycle_aborted_auth_changed', _telemetryPayload(summary));
+  emitStatus(SyncStatus.idle);
+  return summary;
 }
