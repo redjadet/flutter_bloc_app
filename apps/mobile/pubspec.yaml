@@ -58,7 +58,7 @@ dependencies:
   design_system:
     path: ../../packages/design_system
   device_info_plus: ^13.2.0
-  dio: ^5.10.0
+  dio: ^5.11.0
   equatable: ^2.1.0
   event_bus: ^2.0.1
   fancy_shimmer_image: ^2.0.3
@@ -134,7 +134,7 @@ dependencies:
   responsive_framework: ^1.5.1
   retrofit: ^4.9.2
   shared_preferences: ^2.5.5
-  signature: ^6.3.0
+  signature: ^6.4.0
   skeletonizer: ^2.1.3
   storage:
     path: ../../packages/storage
@@ -149,7 +149,7 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^10.0.0
-  build_runner: ^2.15.2
+  build_runner: ^2.15.3
   fake_async: ^1.3.3
   file_length_lint:
     path: ../../custom_lints/file_length_lint
