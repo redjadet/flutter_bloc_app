@@ -53,7 +53,7 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
   }
 
   Future<void> pullRemoteBody() async {
-    if (_remoteRepository == null) {
+    if (_remoteRepository == null || _remoteMergePausedForSessionCleanup) {
       return;
     }
     try {
@@ -71,6 +71,9 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
   Future<void> _applyRemoteSnapshotIfCurrent(
     final CounterSnapshot remoteSnapshot,
   ) async {
+    if (_remoteMergePausedForSessionCleanup) {
+      return;
+    }
     final CounterSnapshot localSnapshot = await _localRepository.load();
     if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
       localSnapshot,

@@ -482,5 +482,44 @@ void main() {
         verifyNever(() => pending.markCompleted(any()));
       },
     );
+
+    test(
+      'leaves pending op when auth uid changes during processOperation',
+      () async {
+        final SyncOperation op = SyncOperation(
+          id: 'op-auth-mid-push',
+          entityType: 'test',
+          payload: <String, dynamic>{'k': 'v'},
+          createdAt: DateTime.utc(2024, 1, 1),
+          idempotencyKey: 'auth-mid-push-key',
+        );
+        registry.register(
+          _FakeSyncableRepository((final SyncOperation operation) {
+            throw const SyncAuthUserChangedException();
+          }),
+        );
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[op]);
+
+        final SyncCycleSummary summary = await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final String event, final Map<String, Object?> payload) {
+            telemetryEvent = event;
+            telemetryPayload = payload;
+          },
+          getSharedSyncAuthUserId: () => 'user-a',
+        );
+
+        expect(summary.operationsProcessed, 0);
+        verifyNever(() => pending.markCompleted(any()));
+      },
+    );
   });
 }

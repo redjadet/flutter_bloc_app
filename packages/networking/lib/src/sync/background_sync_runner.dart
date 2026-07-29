@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:storage/storage.dart';
 
+import 'sync_auth_pin_scope.dart';
+
 import 'sync_cycle_summary.dart';
 import 'sync_status.dart';
 

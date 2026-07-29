@@ -27,6 +27,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
   final TimerHandleManager _timerHandles = TimerHandleManager();
+  bool _remoteMergePausedForSessionCleanup = false;
   bool _remoteRestartScheduled = false;
   TimerDisposable? _remoteRestartHandle;
 
@@ -63,7 +64,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   void _startRemoteWatch() {
-    if (_subscriptionManager.isDisposed) {
+    if (_subscriptionManager.isDisposed || _remoteMergePausedForSessionCleanup) {
       return;
     }
     // Only watch remote if we have a remote repository and aren't already watching
@@ -74,6 +75,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
     _remoteWatchSubscription = remoteRepo.watchAll().listen(
       (final remoteItems) {
+        if (_remoteMergePausedForSessionCleanup) {
+          return;
+        }
         // Merge remote changes into local storage
         // This will trigger the local watch stream to emit
         unawaited(
@@ -110,7 +114,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   void _scheduleRemoteRestart() {
-    if (_subscriptionManager.isDisposed || _remoteRestartScheduled) {
+    if (_subscriptionManager.isDisposed ||
+        _remoteRestartScheduled ||
+        _remoteMergePausedForSessionCleanup) {
       return;
     }
     _remoteRestartScheduled = true;
@@ -173,6 +179,30 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   /// Clears Hive-backed todos without enqueueing remote deletes.
   Future<void> clearAllLocalData() => _localRepository.clearAllLocalData();
 
+  /// Stops remote merge/watch during Firebase session cleanup.
+  void pauseRemoteWatchForSessionCleanup() {
+    _remoteMergePausedForSessionCleanup = true;
+    _remoteRestartScheduled = false;
+    _remoteRestartHandle?.dispose();
+    _timerHandles.unregister(_remoteRestartHandle);
+    _remoteRestartHandle = null;
+    final StreamSubscription<List<TodoItem>>? subscription =
+        _remoteWatchSubscription;
+    _remoteWatchSubscription = null;
+    if (subscription != null) {
+      unawaited(_subscriptionManager.cancelRegistered(subscription));
+    }
+  }
+
+  /// Resumes remote merge/watch after session cleanup completes.
+  void resumeRemoteWatchForSessionCleanup() {
+    if (_subscriptionManager.isDisposed) {
+      return;
+    }
+    _remoteMergePausedForSessionCleanup = false;
+    _startRemoteWatch();
+  }
+
   @override
   Future<void> processOperation(final SyncOperation operation) async {
     if (_isDeleteOperation(operation)) {
@@ -188,7 +218,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
 
   @override
   Future<void> pullRemote() async {
-    if (_remoteRepository == null) {
+    if (_remoteRepository == null || _remoteMergePausedForSessionCleanup) {
       return;
     }
     try {
