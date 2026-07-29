@@ -13,6 +13,7 @@ for repository-wide reliability rules.
 | Bundle sizing | [bundle_size_monitoring.md](bundle_size_monitoring.md) |
 | Large JSON parsing | [compute_isolate_review.md](compute_isolate_review.md) |
 | Lazy loading and scrolling | [lazy_loading_review.md](lazy_loading_review.md), [performance_bottlenecks.md](performance_bottlenecks.md) |
+| Native sensor/telemetry bridge | [native_event_channel_telemetry.md](native_event_channel_telemetry.md) |
 
 Keep focused profiling and memory procedures here. Move a root performance doc
 only with its inbound-link updates and tool-message references.

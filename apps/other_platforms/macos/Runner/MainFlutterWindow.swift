@@ -23,10 +23,21 @@ class MainFlutterWindow: NSWindow {
       }
     }
 
-    let telemetryChannel = FlutterEventChannel(
-      name: "com.example.flutter_bloc_app/native_showcase/telemetry",
-      binaryMessenger: flutterViewController.engine.binaryMessenger
-    )
+    let messenger = flutterViewController.engine.binaryMessenger
+    let telemetryChannel: FlutterEventChannel
+    if let makeQueue = messenger.makeBackgroundTaskQueue {
+      telemetryChannel = FlutterEventChannel(
+        name: "com.example.flutter_bloc_app/native_showcase/telemetry",
+        binaryMessenger: messenger,
+        codec: FlutterStandardMethodCodec.sharedInstance(),
+        taskQueue: makeQueue()
+      )
+    } else {
+      telemetryChannel = FlutterEventChannel(
+        name: "com.example.flutter_bloc_app/native_showcase/telemetry",
+        binaryMessenger: messenger
+      )
+    }
     telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
 
     super.awakeFromNib()

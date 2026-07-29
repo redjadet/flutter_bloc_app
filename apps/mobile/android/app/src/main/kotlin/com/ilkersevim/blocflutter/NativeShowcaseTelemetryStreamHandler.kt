@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
 import io.flutter.plugin.common.EventChannel
-import kotlin.math.sin
 
 class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
   private var workerThread: HandlerThread? = null
@@ -14,81 +13,80 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
   private var sampleRunnable: Runnable? = null
   private var emitRunnable: Runnable? = null
   private var sessionGeneration = 0L
-
-  private var sequence = 0
-  private var sourceTick = 0
-  private var windowSampleCount = 0
-  private var windowSampleSum = 0.0
-  private var windowDroppedCount = 0
-  private var lastSampleValue = Double.NaN
+  private var accumulator: NativeShowcaseTelemetryAccumulator? = null
 
   override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
     stopSession()
+
+    val parsed = NativeShowcaseTelemetryAccumulator.parseConfig(arguments)
+    if (parsed == null) {
+      mainHandler = Handler(Looper.getMainLooper())
+      mainHandler?.post {
+        events?.error(
+          "invalid_config",
+          "Telemetry stream config must be schemaVersion=1 render mode with valid fields.",
+          null,
+        )
+      }
+      return
+    }
+
     sessionGeneration += 1
     val generation = sessionGeneration
-    eventSink = events
+    val localAccumulator =
+      NativeShowcaseTelemetryAccumulator(
+        sessionId = parsed.sessionId,
+        aggregation = parsed.aggregation,
+        deliveredRateHz = parsed.deliveredRateHz,
+      )
+    accumulator = localAccumulator
+
+    // Sink handoff must stay on the platform main thread even when onListen
+    // runs on a background task queue.
     mainHandler = Handler(Looper.getMainLooper())
+    mainHandler?.post {
+      if (generation == sessionGeneration) {
+        eventSink = events
+      }
+    }
+
     workerThread = HandlerThread("NativeShowcaseTelemetry").also { it.start() }
     workerHandler = Handler(workerThread!!.looper)
 
-    val sampleIntervalMs = 1000.0 / SOURCE_RATE_HZ
-    val emitIntervalMs = DELIVERY_WINDOW_MS.toLong()
+    val sampleIntervalMs =
+      (1000.0 / NativeShowcaseTelemetryAccumulator.SOURCE_RATE_HZ)
+        .toLong()
+        .coerceAtLeast(1L)
+    val emitIntervalMs = parsed.deliveryWindowMs
 
-    sampleRunnable = object : Runnable {
-      override fun run() {
-        if (generation != sessionGeneration) {
-          return
+    sampleRunnable =
+      object : Runnable {
+        override fun run() {
+          if (generation != sessionGeneration) {
+            return
+          }
+          localAccumulator.ingest(localAccumulator.demoSampleValue())
+          workerHandler?.postDelayed(this, sampleIntervalMs)
         }
-
-        val sampleValue = demoSampleValue(sourceTick)
-        sourceTick += 1
-
-        if (!lastSampleValue.isNaN() &&
-          kotlin.math.abs(sampleValue - lastSampleValue) < SAMPLE_EPSILON
-        ) {
-          windowDroppedCount += 1
-        } else {
-          windowSampleCount += 1
-          windowSampleSum += sampleValue
-          lastSampleValue = sampleValue
-        }
-
-        workerHandler?.postDelayed(this, sampleIntervalMs.toLong().coerceAtLeast(1L))
       }
-    }
 
-    emitRunnable = object : Runnable {
-      override fun run() {
-        if (generation != sessionGeneration) {
-          return
-        }
-
-        if (windowSampleCount > 0) {
-          sequence += 1
-          val averageValue = windowSampleSum / windowSampleCount
-          val payload = mapOf(
-            "sequence" to sequence,
-            "sampleCount" to windowSampleCount,
-            "averageValue" to averageValue,
-            "sourceRateHz" to SOURCE_RATE_HZ,
-            "deliveredRateHz" to DELIVERED_RATE_HZ,
-            "droppedCount" to windowDroppedCount,
-            "emittedAtMillis" to System.currentTimeMillis(),
-          )
-          mainHandler?.post {
-            if (generation == sessionGeneration) {
-              eventSink?.success(payload)
+    emitRunnable =
+      object : Runnable {
+        override fun run() {
+          if (generation != sessionGeneration) {
+            return
+          }
+          val payload = localAccumulator.emitIfReady()
+          if (payload != null) {
+            mainHandler?.post {
+              if (generation == sessionGeneration) {
+                eventSink?.success(payload)
+              }
             }
           }
+          workerHandler?.postDelayed(this, emitIntervalMs)
         }
-
-        windowSampleCount = 0
-        windowSampleSum = 0.0
-        windowDroppedCount = 0
-
-        workerHandler?.postDelayed(this, emitIntervalMs)
       }
-    }
 
     workerHandler?.post(sampleRunnable!!)
     workerHandler?.postDelayed(emitRunnable!!, emitIntervalMs)
@@ -107,26 +105,11 @@ class NativeShowcaseTelemetryStreamHandler : EventChannel.StreamHandler {
     workerHandler = null
     workerThread?.quitSafely()
     workerThread = null
+    mainHandler?.post {
+      eventSink = null
+    }
     mainHandler = null
-    eventSink = null
-    sequence = 0
-    sourceTick = 0
-    windowSampleCount = 0
-    windowSampleSum = 0.0
-    windowDroppedCount = 0
-    lastSampleValue = Double.NaN
-  }
-
-  private fun demoSampleValue(tick: Int): Double {
-    val wave = sin(tick * 0.15) * 50.0
-    val counter = (tick % 10).toDouble()
-    return wave + counter
-  }
-
-  companion object {
-    private const val SOURCE_RATE_HZ = 60
-    private const val DELIVERED_RATE_HZ = 4
-    private const val DELIVERY_WINDOW_MS = 250
-    private const val SAMPLE_EPSILON = 0.01
+    accumulator?.resetSession()
+    accumulator = null
   }
 }

@@ -144,6 +144,7 @@ root when an existing category applies.
 - [`performance/memory_lints.md`](performance/memory_lints.md) — `memory_lint` rule IDs
 - [`performance/memory_ci.md`](performance/memory_ci.md) — checklist / CI gates
 - [`performance/memory_checklist.md`](performance/memory_checklist.md) — reviewer checklist
+- [`performance/native_event_channel_telemetry.md`](performance/native_event_channel_telemetry.md) — EventChannel telemetry contract, native-side throttling, and physical-device proof plan
 
 #### Engineering (`docs/engineering/`)
 

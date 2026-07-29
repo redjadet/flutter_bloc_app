@@ -94,7 +94,21 @@ lib/features/native_platform_showcase/
 
 Channel: `com.example.flutter_bloc_app/native_showcase/telemetry`
 
-Native side samples at 60 Hz on a background worker, aggregates into compact maps every 250 ms (4 Hz), and emits via `EventChannel`. Dart maps payloads in `EventChannelNativeShowcaseTelemetryService`. Unsupported platforms receive one `unavailable` snapshot. UI uses `NativePlatformShowcaseTelemetrySection` with `TypeSafeBlocSelector` so telemetry ticks do not rebuild static showcase content.
+Contract: [`docs/performance/native_event_channel_telemetry.md`](../../../../../docs/performance/native_event_channel_telemetry.md)
+
+Dart passes schema-v1 `NativeShowcaseTelemetryStreamConfig` via
+`receiveBroadcastStream(arguments)` (`render` mode, clamped 4–15 Hz,
+`mean`/`latest` aggregation, opaque `sessionId`). Native validates args,
+samples at 60 Hz on a background worker, applies
+`NativeShowcaseTelemetryAccumulator` before the bridge, and emits compact
+maps on the main-thread sink. EventChannels are constructed with
+`makeBackgroundTaskQueue()` on Android / iOS / macOS.
+
+Dart maps payloads in `EventChannelNativeShowcaseTelemetryService` (rejects
+wrong schema, stale session, sequence regression, fractional ints).
+Unsupported platforms receive one `unavailable` snapshot. UI uses
+`NativePlatformShowcaseTelemetrySection` with `TypeSafeBlocSelector` so
+telemetry ticks do not rebuild static showcase content.
 
 **Full rebuild required** after changing Swift/Kotlin handlers or PlatformView factories (hot reload is not enough).
 

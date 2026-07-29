@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-29_native_event_channel_telemetry_schema_v1.md`](2026-07-29_native_event_channel_telemetry_schema_v1.md): Schema-v1 EventChannel telemetry config, accumulator, task queues, Dart validation.
 - [`2026-07-29_sync_auth_pin_and_remote_watch_pause.md`](2026-07-29_sync_auth_pin_and_remote_watch_pause.md): Pin Firebase uid during pending sync push; pause todo/counter remote watches during session cleanup.
 - [`2026-07-27_secure_logging_hardening.md`](2026-07-27_secure_logging_hardening.md): Central AppLogger/Crashlytics redaction, URI leak fixes, sensitive-logging CI guard.
 - [`2026-07-26_integration_dart_define_argv_split.md`](2026-07-26_integration_dart_define_argv_split.md): Split integration `FIREBASE_*` dart-defines into separate argv (fixes Android guest “API key not valid”).

@@ -8,12 +8,16 @@ abstract class NativeShowcaseTelemetrySnapshot
     with _$NativeShowcaseTelemetrySnapshot {
   const factory NativeShowcaseTelemetrySnapshot({
     required final NativeShowcaseTelemetryStatus status,
+    required final int schemaVersion,
+    required final String sessionId,
     required final int sequence,
-    required final int sampleCount,
+    required final int acceptedCount,
+    required final int sourceReceivedCount,
     required final double averageValue,
     required final int sourceRateHz,
     required final int deliveredRateHz,
-    required final int droppedCount,
+    required final int droppedBeforeBridgeCount,
+    required final DateTime windowStartedAt,
     required final DateTime emittedAt,
     final String? message,
   }) = _NativeShowcaseTelemetrySnapshot;

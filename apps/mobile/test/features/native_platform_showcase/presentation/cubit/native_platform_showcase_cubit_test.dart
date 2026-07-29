@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
@@ -32,6 +33,12 @@ class _MockShareNativeShowcaseTextUseCase extends Mock
     implements ShareNativeShowcaseTextUseCase {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(
+      NativeShowcaseTelemetryStreamConfig.renderDefault(sessionId: 'fallback'),
+    );
+  });
+
   group('NativePlatformShowcaseCubit', () {
     late _MockLoadNativePlatformShowcaseUseCase loadShowcase;
     late _MockWatchNativeShowcaseTelemetryUseCase watchTelemetry;
@@ -52,13 +59,17 @@ void main() {
 
     final telemetrySnapshot = NativeShowcaseTelemetrySnapshot(
       status: NativeShowcaseTelemetryStatus.streaming,
+      schemaVersion: 1,
+      sessionId: 'session-test',
       sequence: 1,
-      sampleCount: 10,
+      acceptedCount: 10,
+      sourceReceivedCount: 12,
       averageValue: 12.5,
       sourceRateHz: 60,
       deliveredRateHz: 4,
-      droppedCount: 2,
-      emittedAt: DateTime(2026, 1, 1),
+      droppedBeforeBridgeCount: 2,
+      windowStartedAt: DateTime(2026, 1, 1),
+      emittedAt: DateTime(2026, 1, 1, 0, 0, 1),
     );
 
     final hapticSuccess = const NativeInteropCallResult(
@@ -75,7 +86,7 @@ void main() {
       telemetryController =
           StreamController<NativeShowcaseTelemetrySnapshot>.broadcast();
       when(
-        () => watchTelemetry(),
+        () => watchTelemetry(config: any(named: 'config')),
       ).thenAnswer((_) => telemetryController.stream);
     });
 
@@ -102,7 +113,7 @@ void main() {
         NativePlatformShowcaseState.loaded(loadedData),
       ],
       verify: (_) {
-        verify(() => watchTelemetry()).called(1);
+        verify(() => watchTelemetry(config: any(named: 'config'))).called(1);
       },
     );
 
@@ -195,7 +206,7 @@ void main() {
         ),
       ],
       verify: (_) {
-        verifyNever(() => watchTelemetry());
+        verifyNever(() => watchTelemetry(config: any(named: 'config')));
       },
     );
 
@@ -242,7 +253,7 @@ void main() {
         NativePlatformShowcaseState.loading(),
       ]);
       verify(() => loadShowcase()).called(1);
-      verifyNever(() => watchTelemetry());
+      verifyNever(() => watchTelemetry(config: any(named: 'config')));
     });
 
     test('close cancels telemetry subscription', () async {
