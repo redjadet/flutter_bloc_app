@@ -1,6 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/firebase/auth_helpers.dart';
+import 'package:networking/networking.dart';
 
 /// Runs an async action with a Firebase Auth user and standardized error handling.
 ///
@@ -18,8 +19,14 @@ Future<T> runWithAuthUser<T>({
 }) async {
   try {
     final User user = await waitForAuthUser(auth);
+    final String? pinnedUid = SyncAuthPinScope.current;
+    if (pinnedUid != null && user.uid != pinnedUid) {
+      throw const SyncAuthUserChangedException();
+    }
     return await action(user);
   } on FirebaseAuthException {
+    rethrow;
+  } on SyncAuthUserChangedException {
     rethrow;
   } on FirebaseException catch (error, stackTrace) {
     AppLogger.error('$logContext failed', error, stackTrace);

@@ -32,4 +32,5 @@ export 'src/sync/fcm_sync_trigger_contract.dart';
 export 'src/sync/sync_cycle_summary.dart';
 export 'src/sync/sync_job_runner.dart';
 export 'src/sync/sync_schedule_policy.dart';
+export 'src/sync/sync_auth_pin_scope.dart';
 export 'src/sync/sync_status.dart';

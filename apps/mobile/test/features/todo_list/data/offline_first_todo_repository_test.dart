@@ -1304,5 +1304,37 @@ void main() {
         await remote.closeWatchStream();
       },
     );
+
+    test(
+      'pauseRemoteWatchForSessionCleanup stops merge and blocks restart',
+      () async {
+        final _FakeRemoteRepositoryWithErrorTracking remote =
+            _FakeRemoteRepositoryWithErrorTracking();
+        final FakeTimerService fakeTimer = FakeTimerService();
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: fakeTimer,
+            );
+
+        repository.pauseRemoteWatchForSessionCleanup();
+        remote.emitWatchError();
+        fakeTimer.elapse(const Duration(milliseconds: 2500));
+        await Future<void>.delayed(Duration.zero);
+
+        expect(remote.watchAllCallCount, 1);
+        expect(remote.activeWatchListeners, 0);
+
+        repository.resumeRemoteWatchForSessionCleanup();
+        expect(remote.watchAllCallCount, 2);
+        expect(remote.activeWatchListeners, 1);
+
+        await repository.dispose();
+        await remote.closeWatchStream();
+      },
+    );
   });
 }

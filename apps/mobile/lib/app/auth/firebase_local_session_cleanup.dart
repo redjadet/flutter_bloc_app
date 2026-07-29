@@ -23,6 +23,36 @@ const Set<String> kFirebaseSharedPendingSyncEntityTypes = <String>{
   chatSyncEntityType,
 };
 
+void _pauseSharedOfflineRemoteWatches() {
+  if (getIt.isRegistered<TodoRepository>()) {
+    final TodoRepository todos = getIt<TodoRepository>();
+    if (todos is OfflineFirstTodoRepository) {
+      todos.pauseRemoteWatchForSessionCleanup();
+    }
+  }
+  if (getIt.isRegistered<CounterRepository>()) {
+    final CounterRepository counter = getIt<CounterRepository>();
+    if (counter is OfflineFirstCounterRepository) {
+      counter.pauseRemoteWatchForSessionCleanup();
+    }
+  }
+}
+
+void _resumeSharedOfflineRemoteWatches() {
+  if (getIt.isRegistered<TodoRepository>()) {
+    final TodoRepository todos = getIt<TodoRepository>();
+    if (todos is OfflineFirstTodoRepository) {
+      todos.resumeRemoteWatchForSessionCleanup();
+    }
+  }
+  if (getIt.isRegistered<CounterRepository>()) {
+    final CounterRepository counter = getIt<CounterRepository>();
+    if (counter is OfflineFirstCounterRepository) {
+      counter.resumeRemoteWatchForSessionCleanup();
+    }
+  }
+}
+
 /// Clears shared Firebase offline caches and pending sync rows for [provider].
 ///
 /// Quiesces [BackgroundSyncCoordinator] before mutating the queue so an
@@ -46,6 +76,7 @@ Future<void> clearFirebaseLocalSessionData({
       getIt.isRegistered<BackgroundSyncCoordinator>()
       ? getIt<BackgroundSyncCoordinator>()
       : null;
+  _pauseSharedOfflineRemoteWatches();
   if (syncCoordinator != null) {
     await syncCoordinator.quiesceForSessionCleanup();
   }
@@ -81,6 +112,7 @@ Future<void> clearFirebaseLocalSessionData({
 
 /// Restarts background sync after session cleanup and identity publication.
 Future<void> resumeBackgroundSyncAfterSessionCleanup() async {
+  _resumeSharedOfflineRemoteWatches();
   if (!getIt.isRegistered<BackgroundSyncCoordinator>()) {
     return;
   }
