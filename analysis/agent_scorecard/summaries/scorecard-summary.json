@@ -3,74 +3,31 @@
     "checklist": {
       "aborted": 0,
       "cancelled": 0,
-      "count": 962,
-      "failed": 353,
-      "ok": 609,
-      "other": 0,
-      "p50_duration_ms": 32803.0,
-      "success_rate": 0.6330561330561331
-    },
-    "cursor_to_codex_delegate": {
-      "aborted": 0,
-      "cancelled": 0,
-      "count": 1,
-      "failed": 0,
+      "count": 5,
+      "failed": 4,
       "ok": 1,
       "other": 0,
-      "p50_duration_ms": 1000,
-      "success_rate": 1.0
-    },
-    "deploy_fastapi_cloud": {
-      "aborted": 0,
-      "cancelled": 0,
-      "count": 3,
-      "failed": 2,
-      "ok": 1,
-      "other": 0,
-      "p50_duration_ms": 0,
-      "success_rate": 0.3333333333333333
-    },
-    "integration_tests": {
-      "aborted": 0,
-      "cancelled": 1,
-      "count": 215,
-      "failed": 59,
-      "ok": 155,
-      "other": 0,
-      "p50_duration_ms": 251532,
-      "success_rate": 0.7209302325581395
-    },
-    "smoke": {
-      "aborted": 0,
-      "cancelled": 0,
-      "count": 1,
-      "failed": 0,
-      "ok": 1,
-      "other": 0,
-      "p50_duration_ms": 1,
-      "success_rate": 1.0
+      "p50_duration_ms": 1807,
+      "success_rate": 0.2
     }
   },
-  "delegate_usage_rate": 0.0008460236886632825,
+  "delegate_usage_rate": 0.0,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 1188,
-    "total_non_empty_lines": 1188
+    "parsed_json_lines": 5,
+    "total_non_empty_lines": 5
   },
-  "p50_duration_ms": 60040.5,
-  "p95_duration_ms": 492965.15,
+  "p50_duration_ms": 1807,
+  "p95_duration_ms": 19257,
   "risk_counts": {
-    "high": 215,
-    "medium": 963,
-    "unknown": 4
+    "medium": 5
   },
   "scorecard_parse_success": 1.0,
-  "source_file_count": 74,
-  "source_fingerprint": "c647a44f9f40307d7691b2cac6c9d9438233a62e3aed3acb05a4f5dabaa8e53c",
+  "source_file_count": 1,
+  "source_fingerprint": "ffe2d3d132ba0c8d0e20d1f836e7e5bc941e361855205694aceff72757a65022",
   "status_counts": {
-    "cancelled": 1,
-    "failed": 414,
-    "ok": 767
+    "failed": 4,
+    "ok": 1
   },
-  "total_events": 1182
+  "total_events": 5
 }
