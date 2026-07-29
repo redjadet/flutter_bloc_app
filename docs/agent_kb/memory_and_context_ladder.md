@@ -62,8 +62,8 @@ Use when the target file is unknown (not a second cold-start ladder):
 - **Map:** [`AGENTS.md`](../../AGENTS.md), [`agent_knowledge_base.md`](../agent_knowledge_base.md), [`README.md`](../README.md), task docs.
 - **Project context:** [`agent_project_context.md`](../agent_project_context.md) — versions, caveats, migrations, performance seams, forbidden patterns.
 - **Compiled memory:** owning docs, `docs/changes/`, `docs/plans/`, [`tasks/lessons.md`](../../tasks/lessons.md), current tracker. Chat is pointer only; verify drift-prone facts.
-- **Structure:** code-review-graph or [`../tool/refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed`.
-- **Raw files:** targeted reads for edit/proof; `rg` when graph is stale, missing, or too broad.
+- **Structure (optional):** code-review-graph via [`../tool/refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh) `--status-only` / `--if-needed` — narrow named query + output cap only when built and fresh; maps/`rg` stay default ([pilot FAIL](../../ai/reports/2026-07-29_code_review_graph_pilot.md)).
+- **Raw files:** targeted reads for edit/proof; prefer `rg` when graph is stale, missing, optional, or too broad.
 
 When archaeology finds a real landmine, carry it into `Context` or `Boundaries`; do not turn broad background into prompt bulk.
 

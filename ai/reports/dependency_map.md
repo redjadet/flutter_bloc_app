@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-22T21:07:00Z"
-  git_head: "4946d984b89f9328ba2cd3e93fb6eefec21fa061"
+  generated_at: "2026-07-29T14:19:11Z"
+  git_head: "bea2200b922532c5d62133afa36735b1fe1c40f0"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -21,13 +21,13 @@ ai_snapshot:
 | chat | 6827 | yes |
 | staff_app_demo | 5701 | yes |
 | online_therapy_demo | 5340 | yes |
-| todo_list | 5308 | yes |
-| case_study_demo | 4702 | yes |
-| counter | 4372 | yes |
-| native_platform_showcase | 3458 | yes |
-| iot_demo | 3289 | yes |
+| todo_list | 5331 | yes |
+| case_study_demo | 4704 | yes |
+| counter | 4438 | yes |
+| native_platform_showcase | 3439 | yes |
+| iot_demo | 3280 | yes |
 | iot | 3190 | yes |
-| auth | 2475 | yes |
+| auth | 2487 | yes |
 | example | 2312 | yes |
 | realtime_market | 2186 | yes |
 | graphql_demo | 2056 | yes |
@@ -39,18 +39,18 @@ ai_snapshot:
 | profile | 1404 | yes |
 | in_app_purchase_demo | 1363 | yes |
 | igaming_demo | 1334 | yes |
+| remote_config | 1265 | yes |
 | supabase_auth | 1260 | yes |
-| remote_config | 1255 | yes |
 | settings | 1226 | yes |
 | search | 1135 | yes |
 | library_demo | 1045 | yes |
 | camera_gallery | 1038 | yes |
 | scapes | 991 | yes |
-| websocket | 859 | yes |
+| websocket | 865 | yes |
 | fcm_demo | 813 | yes |
 | genui_demo | 736 | yes |
 | playlearn | 673 | yes |
-| deeplink | 521 | yes |
+| deeplink | 553 | yes |
 | certificate_pinning_demo | 507 | yes |
 | event_bus_demo | 311 | yes |
 <!-- refresh_ai_reports:feature_metrics:end -->

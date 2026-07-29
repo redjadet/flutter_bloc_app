@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-22T21:07:00Z"
-  git_head: "4946d984b89f9328ba2cd3e93fb6eefec21fa061"
+  generated_at: "2026-07-29T14:19:11Z"
+  git_head: "bea2200b922532c5d62133afa36735b1fe1c40f0"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -23,6 +23,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [context_hotspots.md](context_hotspots.md) | Generated largest-file ranking for context sizing |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
 | [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | **Historical** — ARCH-001/002 closure (PR #240); not current discovery guidance |
+| [2026-07-29_code_review_graph_pilot.md](2026-07-29_code_review_graph_pilot.md) | Graph pilot evidence — **FAIL** winner gate; maps+`rg` remain default |
 
 ## Audits (ranked findings)
 
@@ -37,4 +38,4 @@ retention policy.
 
 **Ship/land:** [`docs/changes/2026-05-21_agent_automated_delivery_loop.md`](../../docs/changes/2026-05-21_agent_automated_delivery_loop.md).
 
-**Generated:** 2026-07-22 via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `4946d984b89f9328ba2cd3e93fb6eefec21fa061`).
+**Generated:** 2026-07-29 via `bash tool/refresh_ai_reports.sh` and `bash tool/modular_metrics.sh` (HEAD `bea2200b922532c5d62133afa36735b1fe1c40f0`).
