@@ -2,6 +2,7 @@ import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_bloc_app/app/firebase/run_with_auth_user.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   group('runWithAuthUser', () {
@@ -26,6 +27,46 @@ void main() {
 
       expect(result, 42);
     });
+
+    test('throws when pinned uid diverges from current auth user', () async {
+      final MockFirebaseAuth auth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: MockUser(uid: 'user-b'),
+      );
+
+      await expectLater(
+        SyncAuthPinScope.runWithPin('user-a', () {
+          return runWithAuthUser<void>(
+            auth: auth,
+            logContext: 'runWithAuthUserTest',
+            action: (_) async {},
+          );
+        }),
+        throwsA(isA<SyncAuthUserChangedException>()),
+      );
+    });
+
+    test(
+      'does not use onFailureFallback for SyncAuthUserChangedException',
+      () async {
+        final MockFirebaseAuth auth = MockFirebaseAuth(
+          signedIn: true,
+          mockUser: MockUser(uid: 'user-b'),
+        );
+
+        await expectLater(
+          SyncAuthPinScope.runWithPin('user-a', () {
+            return runWithAuthUser<int>(
+              auth: auth,
+              logContext: 'runWithAuthUserTest',
+              action: (_) async => 1,
+              onFailureFallback: () async => 42,
+            );
+          }),
+          throwsA(isA<SyncAuthUserChangedException>()),
+        );
+      },
+    );
 
     test('rethrows TypeError when no fallback is provided', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(

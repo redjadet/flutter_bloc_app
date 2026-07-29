@@ -67,6 +67,8 @@ Future<_PendingProcessingResult> _processPendingOperations({
       pendingRepository: pendingRepository,
       emitStatus: emitStatus,
       result: result,
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: authUserIdAtCycleStart,
     );
   }
 
@@ -128,6 +130,8 @@ Future<void> _processOperation({
   required final PendingSyncRepository pendingRepository,
   required final void Function(SyncStatus status) emitStatus,
   required final _PendingProcessingResult result,
+  final String? Function()? getSharedSyncAuthUserId,
+  final String? authUserIdAtCycleStart,
 }) async {
   final SyncableRepository? repository = registry.resolve(operation.entityType);
   if (repository == null) {
@@ -148,9 +152,25 @@ Future<void> _processOperation({
 
   try {
     result.processed++;
-    await repository.processOperation(operation);
+    await SyncAuthPinScope.runWithPin(
+      authUserIdAtCycleStart,
+      () => repository.processOperation(operation),
+    );
+    if (_isSharedSyncAuthStale(
+      getSharedSyncAuthUserId: getSharedSyncAuthUserId,
+      authUserIdAtCycleStart: authUserIdAtCycleStart,
+    )) {
+      result.processed--;
+      return;
+    }
     await pendingRepository.markCompleted(operation.id);
     result.recordSuccess(operation);
+  } on SyncAuthUserChangedException {
+    result.processed--;
+    AppLogger.debug(
+      'BackgroundSyncCoordinator aborted ${operation.entityType} '
+      '(id=${operation.id}) after auth uid changed mid-push',
+    );
   } on SyncOperationDeferredException {
     result.processed--;
     AppLogger.debug(

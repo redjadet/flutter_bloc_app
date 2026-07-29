@@ -28,6 +28,7 @@ class OfflineFirstCounterRepository
   final CounterRepository? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
+  bool _remoteMergePausedForSessionCleanup = false;
 
   @visibleForTesting
   bool get hasRemoteRepository => _remoteRepository != null;
@@ -77,6 +78,9 @@ class OfflineFirstCounterRepository
         );
         remoteSub = _remoteRepository.watch().listen(
           (final remote) async {
+            if (_remoteMergePausedForSessionCleanup) {
+              return;
+            }
             await _applyRemoteSnapshotIfCurrent(remote);
           },
           onError: (final Object e, final StackTrace st) {
@@ -140,5 +144,15 @@ class OfflineFirstCounterRepository
     await local.save(
       const CounterSnapshot(userId: 'local', count: 0, synchronized: true),
     );
+  }
+
+  /// Stops remote merge/watch during Firebase session cleanup.
+  void pauseRemoteWatchForSessionCleanup() {
+    _remoteMergePausedForSessionCleanup = true;
+  }
+
+  /// Resumes remote merge/watch after session cleanup completes.
+  void resumeRemoteWatchForSessionCleanup() {
+    _remoteMergePausedForSessionCleanup = false;
   }
 }
