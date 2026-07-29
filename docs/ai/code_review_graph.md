@@ -9,187 +9,114 @@ This is local developer tooling. It does not affect the Flutter app runtime.
 
 ## Context ladder fit
 
-This repo’s canonical discovery routing lives in
-[`ai/context_loading.md`](context_loading.md) (cold-start) and
-[`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md)
-(unknown-path layers). `code-review-graph` fits as the **structural graph**
-layer that helps narrow scope before **targeted raw-file reads**.
+Canonical discovery: [`ai/context_loading.md`](context_loading.md) and
+[`agent_kb/memory_and_context_ladder.md`](../agent_kb/memory_and_context_ladder.md).
+`code-review-graph` is an **optional structural** layer before **targeted
+raw-file reads**. Maps + `rg` remain the default hot path (2026-07-29 pilot
+**FAIL**ed graph-first winner gate — see
+[`../../ai/reports/2026-07-29_code_review_graph_pilot.md`](../../ai/reports/2026-07-29_code_review_graph_pilot.md)).
 
-Use the graph as the structural layer, not as a replacement for source docs or
-code. If the graph cannot answer a question cheaply, fall back to `rg` and
-focused file reads.
+Source and tests remain authority. Treat graph hits as leads only.
 
 ## When agents should use it
 
-Treat `code-review-graph` as the default low-token repo-exploration path for
-Codex when all of these are true:
+Use only when all are true:
 
-- the task is non-trivial existing-code work
-- likely blast radius is more than one file or symbol
-- the exact implementation file is not already obvious
+- non-trivial existing-code work with unknown multi-file blast radius
+- local graph installed, **built**, and fresh (`./tool/refresh_code_review_graph.sh --status-only` ≠ `not built`)
+- named question with a narrow query (callers/callees/importers/tests) and an output cap
 
-In those cases, use the graph first to narrow likely files, symbols,
-callers/callees, or impact before broad `rg`, `sed`, or many-file reads.
+Skip graph when cheaper:
 
-Skip graph-first exploration when direct reads are cheaper:
+- exact-path / one-file edits
+- brand-new files or docs-only work
+- missing/stale graph (fall back to `CODEMAP` + `rg`)
 
-- trivial single-file edits
-- exact-path edits where the target file is already known
-- brand-new files or isolated docs-only work
-- stale/missing local graph where direct reads would be faster
-
-This is best-effort acceleration only. Missing tooling must not block normal
-repo work.
-
-Important: the graph does not save tokens just because it exists. The savings
-come from starting non-trivial repo exploration with graph queries that narrow
-the file/symbol set before opening files broadly.
+Missing tooling must never block normal repo work or CI.
 
 ## What it adds
 
-- A local graph cache under `.code-review-graph/`
-- A Codex MCP server entry in `~/.codex/config.toml`
-- Repo `.gitignore` coverage for `.code-review-graph/`
-
-The graph cache is intentionally ignored because `graph.db` includes absolute
-paths and code-structure metadata.
+- Local cache under `.code-review-graph/` (gitignored; absolute paths inside DB)
+- Optional Codex MCP entry in `~/.codex/config.toml`
 
 ## Current repo status
 
-On this repo, a successful full build produced:
+Do **not** trust historical index counts in older docs. Live stats come from a
+local build:
 
-- `1618` indexed files
-- `10535` nodes
-- `64888` edges
+```bash
+./tool/refresh_code_review_graph.sh --status-only
+# or, after install:
+~/.codex/venvs/code-review-graph/bin/code-review-graph status --repo "$PWD"
+```
 
-Rebuild the graph after large refactors, or use incremental update/watch mode
-during active development.
+Pilot rebuild (worktree, 2026-07-29): ~2556 files / ~15645 nodes / ~95327 edges
+in ~11s — correctness still below default-promotion bar.
 
 ## Install
 
-`code-review-graph` requires Python `3.10+`. On this machine the default
-`python3` was `3.9`, so the working setup used Homebrew Python `3.13`.
-
-Recommended local install:
+Needs Python `3.10+` (Homebrew `python3.13` on this machine):
 
 ```bash
 mkdir -p ~/.codex/venvs
 /opt/homebrew/bin/python3.13 -m venv ~/.codex/venvs/code-review-graph
 ~/.codex/venvs/code-review-graph/bin/python -m pip install --upgrade pip
 ~/.codex/venvs/code-review-graph/bin/python -m pip install code-review-graph
-```
-
-Register only the Codex integration:
-
-```bash
 ~/.codex/venvs/code-review-graph/bin/code-review-graph install \
-  --platform codex \
-  --repo "$PWD" \
-  -y
-```
-
-Then build the graph from the repo root:
-
-```bash
-~/.codex/venvs/code-review-graph/bin/code-review-graph build --repo "$PWD"
-```
-
-Repo-native wrapper:
-
-```bash
+  --platform codex --repo "$PWD" -y
 ./tool/refresh_code_review_graph.sh --build
 ```
 
-Restart Codex after the install so it picks up the new MCP server.
+Pin absolute venv `command` in `~/.codex/config.toml` if `code-review-graph` is
+not on `PATH`. Verify: `codex mcp get code-review-graph`.
 
-After install + build, the graph is available automatically through MCP.
-That does not mean every task should hit it first; it means agents should
-default to graph-first exploration for non-trivial existing-code tasks where
-scope is not already obvious.
-
-## Repo-specific caveat
-
-The installer may write this MCP server entry using `command = "code-review-graph"`:
-
-```toml
-[mcp_servers.code-review-graph]
-command = "code-review-graph"
-args = ["serve"]
-type = "stdio"
-```
-
-If the binary is not on your shell `PATH`, Codex will not be able to start the
-server. In that case, pin the absolute venv binary instead:
-
-```toml
-[mcp_servers.code-review-graph]
-command = "/Users/<you>/.codex/venvs/code-review-graph/bin/code-review-graph"
-args = ["serve"]
-type = "stdio"
-```
-
-Verify the registration with:
+## Daily usage / freshness
 
 ```bash
-codex mcp get code-review-graph
-```
-
-## Daily usage
-
-From the repo root:
-
-```bash
-./tool/refresh_code_review_graph.sh
 ./tool/refresh_code_review_graph.sh --status-only
-~/.codex/venvs/code-review-graph/bin/code-review-graph status --repo "$PWD"
-~/.codex/venvs/code-review-graph/bin/code-review-graph update --repo "$PWD"
-~/.codex/venvs/code-review-graph/bin/code-review-graph watch --repo "$PWD"
+./tool/refresh_code_review_graph.sh --if-needed
+./tool/refresh_code_review_graph.sh --build
+bash tool/check_code_review_graph_contract.sh
 ```
 
-For agents in this repo, prefer `./tool/refresh_code_review_graph.sh` after
-broad multi-file refactors or shared-surface changes. It is best-effort:
-missing local tooling should not block the task.
+Wrapper rules (best-effort, local-only):
 
-Recommended agent pattern:
+- `--status-only` prints `not built` when no real index exists; does **not**
+  create a cache
+- `--if-needed` refreshes when HEAD changed, graph missing, **or worktree dirty**
+  (never skip solely because `HEAD` matches)
+- rename/delete transitions force a full rebuild
+- refresh metadata: `.code-review-graph/refresh_meta` (revision, dirty, mode,
+  timestamp, reason)
+- missing binary → exit 0 with skip message
 
-1. On non-trivial existing-code tasks, query the graph first to narrow scope.
-2. Read only the files and symbols the graph makes likely.
-3. Fall back to direct repo scans when the graph is missing, stale, or too
-   coarse for the question.
-4. After broad multi-file refactors, refresh with
-   `./tool/refresh_code_review_graph.sh`.
+**Rebuild-before-trust** for shared refactors, renames/moves, and merge review.
 
-This matches the reference article in [`code_graph.pdf`](../code_graph.pdf): the
-point is not "always read the graph first no matter what", but "avoid rereading
-the tree when the graph can narrow the relevant slice".
+## Agent pattern (narrow)
 
-Useful commands:
-
-- `status` shows indexed file/node/edge counts plus branch and commit metadata
-- `update` reparses only changed files
-- `watch` keeps the graph current while you edit
-- `visualize` generates an HTML graph view if you want architecture exploration
+1. Freshness check → narrow named query with output cap.
+2. Read returned source/tests; verify critical edges in raw files.
+3. Fall back to maps/`rg` on miss, ambiguity, or coarse impact dumps.
+4. PR review: propose affected symbols/likely tests only; never dump whole-repo
+   graphs into context.
 
 ## Host-neutral agent path
 
 | Host | Default exploration | Refresh |
 | --- | --- | --- |
-| Cursor | Prefer `rg` + [`CODEMAP.md`](../../CODEMAP.md) / [`llms.txt`](../../llms.txt) for hot path; graph optional | After large feature moves |
-| Codex | Graph-first for non-trivial existing-code work when installed | `./tool/refresh_code_review_graph.sh --if-needed` |
-| Any | Direct file reads when target path is already known | Rebuild graph after broad refactors |
-
-Freshness: stale graph → fall back to targeted `rg` and maps; do not block delivery on missing graph tooling.
+| Cursor | `rg` + [`CODEMAP.md`](../../CODEMAP.md) / [`llms.txt`](../../llms.txt); graph optional lead | After large moves; `--if-needed` when using graph |
+| Codex | Maps/`rg` default; optional narrow graph when built+fresh | `./tool/refresh_code_review_graph.sh --if-needed` |
+| Any | Direct reads when path known | Full `--build` after renames/deletes/shared refactors |
 
 ## Files and locations
 
-- Repo graph cache: `.code-review-graph/graph.db`
-- Repo graph ignore file: `.code-review-graph/.gitignore`
-- Repo ignore rule: `.gitignore`
-- User Codex MCP config: `~/.codex/config.toml`
+- Cache: `.code-review-graph/graph.db`, `refresh_meta`, `last_head`
+- Wrapper: [`../../tool/refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh)
+- Contract: [`../../tool/check_code_review_graph_contract.sh`](../../tool/check_code_review_graph_contract.sh)
+- Codex MCP: `~/.codex/config.toml`
 
 ## Related docs
 
-- [New Developer Guide](../new_developer_guide.md)
-- [Tech Stack](../tech_stack.md)
-- [Documentation index](README.md)
-- Reference article captured in this repo: [`code_graph.pdf`](../code_graph.pdf)
+- [New Developer Guide](../new_developer_guide.md), [Tech Stack](../tech_stack.md)
+- Pilot evidence: [`../../ai/reports/2026-07-29_code_review_graph_pilot.md`](../../ai/reports/2026-07-29_code_review_graph_pilot.md)
+- Reference: [`code_graph.pdf`](../code_graph.pdf)

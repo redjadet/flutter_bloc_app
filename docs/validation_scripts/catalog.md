@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **106** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **107** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **79** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -104,6 +104,7 @@ below.
 - **`check_ai_snapshot_freshness.sh`**: Active `ai/` discovery snapshots — forbidden legacy paths, required `ai_snapshot` frontmatter, resolvable `canon_links`. Refresh via the staged, lock-protected, rollback-safe `bash tool/refresh_ai_reports.sh`; verify refresh idempotency and malformed-frontmatter safety with `bash tool/refresh_ai_reports.sh --self-test`. See [`ai_snapshot_freshness.md`](ai_snapshot_freshness.md).
 - **`check_agent_scorecard_freshness.sh`**: Rejects a generated agent scorecard summary whose source fingerprint no longer matches the active or archived event inputs. Refresh with `./tool/build_agent_scorecard_summary.sh`; enforced by `./bin/agent-maintain closeout`. See [`agent_scorecard_freshness.md`](agent_scorecard_freshness.md).
 - **`check_repomix_contract.sh`**: Repomix onboarding/feature pack smoke — forbidden secrets/generated paths, token budgets. See [`docs/ai/repomix_profiles.md`](../ai/repomix_profiles.md).
+- **`check_code_review_graph_contract.sh`**: Fake-binary contract for [`refresh_code_review_graph.sh`](../../tool/refresh_code_review_graph.sh) — status-not-built (no cache create), clean skip, dirty update, rename/delete rebuild, missing-tool fallback. See [`ai/code_review_graph.md`](../ai/code_review_graph.md). Not in `./bin/checklist`.
 - **`check_agent_safety_contracts.sh`**: Deterministic guard for agent safety contracts (`SAFETY-01..06`, `SAFETY-REPORT`); ensures safe-autonomy and approval anchors, owner doc, map pointers, host templates, and risk-register links stay aligned.
 - **`check_ai_change_contract.sh`**: Diff-scoped guard for feature/app/package edits; delegates to brief/folder/architecture checks. Docs-only diffs pass.
 - **`check_ai_failure_risk_register.sh`**: Ensures
@@ -303,6 +304,7 @@ Not listed in `CHECK_SCRIPTS`; run standalone, from checklist hooks, or report-o
 | `check_hive_schema_fingerprints.sh` | Manual / CI opt-in | `generate_hive_schema_fingerprints.dart --check-*`; optional `HIVE_SCHEMA_ENFORCE_INPUTS=true` |
 | `check_integration_rollout_threshold.sh` | Integration scorecard | Gates flake/success vs `analysis/agent_scorecard/summaries/integration-baseline.json` |
 | `check_delegate_wrapper_contracts.sh` | Manual | Delegate wrapper contract tests |
+| `check_code_review_graph_contract.sh` | Manual | code-review-graph refresh wrapper freshness contract |
 | `check_continual_learning_index.sh` | Agent memory lane | Continual-learning index invariants |
 | `check_skill_budgets.sh` | Manual | Token budgets for skill inventory JSON — [`operations_host_skills.md`](operations_host_skills.md) |
 | `audit_vendor_plugin_skills.sh` | Manual | Marketplace plugin skill rollup (`vendor_plugin_inventory_latest.json`) — [`operations_host_skills.md`](operations_host_skills.md) |

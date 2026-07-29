@@ -116,7 +116,7 @@ echo ""
 
 echo "context_ladder|canonical|docs/ai/context_loading.md (numbered cold-start only)"
 echo "context_discovery|layers|docs/agent_kb/memory_and_context_ladder.md (file discovery; unnumbered)"
-echo "context_ladder|3|structural graph: ./tool/refresh_code_review_graph.sh --status-only or --if-needed"
+echo "context_ladder|3|optional structural graph: ./tool/refresh_code_review_graph.sh --status-only or --if-needed (maps/rg default)"
 if [[ -f "$repo_root/.code-review-graph/graph.db" ]]; then
   echo "context_graph|cache|present"
   if [[ -f "$repo_root/.code-review-graph/last_head" ]]; then
@@ -126,7 +126,7 @@ if [[ -f "$repo_root/.code-review-graph/graph.db" ]]; then
     fi
   fi
 else
-  echo "context_graph|cache|missing"
+  echo "context_graph|cache|missing_or_not_built"
 fi
 echo ""
 

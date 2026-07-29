@@ -23,6 +23,7 @@ Evidence snapshots for agents and audits. **Not** behavior canon—update [`docs
 | [context_hotspots.md](context_hotspots.md) | Generated largest-file ranking for context sizing |
 | [ai_recommendations.md](ai_recommendations.md) | Prioritized `REC-###` actions |
 | [FINAL_OPTIMIZATION_REPORT.md](FINAL_OPTIMIZATION_REPORT.md) | **Historical** — ARCH-001/002 closure (PR #240); not current discovery guidance |
+| [2026-07-29_code_review_graph_pilot.md](2026-07-29_code_review_graph_pilot.md) | Graph pilot evidence — **FAIL** winner gate; maps+`rg` remain default |
 
 ## Audits (ranked findings)
 
