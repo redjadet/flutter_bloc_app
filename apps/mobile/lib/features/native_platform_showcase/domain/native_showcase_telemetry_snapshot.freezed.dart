@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NativeShowcaseTelemetrySnapshot {
 
- NativeShowcaseTelemetryStatus get status; int get sequence; int get sampleCount; double get averageValue; int get sourceRateHz; int get deliveredRateHz; int get droppedCount; DateTime get emittedAt; String? get message;
+ NativeShowcaseTelemetryStatus get status; int get schemaVersion; String get sessionId; int get sequence; int get acceptedCount; int get sourceReceivedCount; double get averageValue; int get sourceRateHz; int get deliveredRateHz; int get droppedBeforeBridgeCount; DateTime get windowStartedAt; DateTime get emittedAt; String? get message;
 /// Create a copy of NativeShowcaseTelemetrySnapshot
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $NativeShowcaseTelemetrySnapshotCopyWith<NativeShowcaseTelemetrySnapshot> get co
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NativeShowcaseTelemetrySnapshot&&(identical(other.status, status) || other.status == status)&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.sampleCount, sampleCount) || other.sampleCount == sampleCount)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.sourceRateHz, sourceRateHz) || other.sourceRateHz == sourceRateHz)&&(identical(other.deliveredRateHz, deliveredRateHz) || other.deliveredRateHz == deliveredRateHz)&&(identical(other.droppedCount, droppedCount) || other.droppedCount == droppedCount)&&(identical(other.emittedAt, emittedAt) || other.emittedAt == emittedAt)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NativeShowcaseTelemetrySnapshot&&(identical(other.status, status) || other.status == status)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.acceptedCount, acceptedCount) || other.acceptedCount == acceptedCount)&&(identical(other.sourceReceivedCount, sourceReceivedCount) || other.sourceReceivedCount == sourceReceivedCount)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.sourceRateHz, sourceRateHz) || other.sourceRateHz == sourceRateHz)&&(identical(other.deliveredRateHz, deliveredRateHz) || other.deliveredRateHz == deliveredRateHz)&&(identical(other.droppedBeforeBridgeCount, droppedBeforeBridgeCount) || other.droppedBeforeBridgeCount == droppedBeforeBridgeCount)&&(identical(other.windowStartedAt, windowStartedAt) || other.windowStartedAt == windowStartedAt)&&(identical(other.emittedAt, emittedAt) || other.emittedAt == emittedAt)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,sequence,sampleCount,averageValue,sourceRateHz,deliveredRateHz,droppedCount,emittedAt,message);
+int get hashCode => Object.hash(runtimeType,status,schemaVersion,sessionId,sequence,acceptedCount,sourceReceivedCount,averageValue,sourceRateHz,deliveredRateHz,droppedBeforeBridgeCount,windowStartedAt,emittedAt,message);
 
 @override
 String toString() {
-  return 'NativeShowcaseTelemetrySnapshot(status: $status, sequence: $sequence, sampleCount: $sampleCount, averageValue: $averageValue, sourceRateHz: $sourceRateHz, deliveredRateHz: $deliveredRateHz, droppedCount: $droppedCount, emittedAt: $emittedAt, message: $message)';
+  return 'NativeShowcaseTelemetrySnapshot(status: $status, schemaVersion: $schemaVersion, sessionId: $sessionId, sequence: $sequence, acceptedCount: $acceptedCount, sourceReceivedCount: $sourceReceivedCount, averageValue: $averageValue, sourceRateHz: $sourceRateHz, deliveredRateHz: $deliveredRateHz, droppedBeforeBridgeCount: $droppedBeforeBridgeCount, windowStartedAt: $windowStartedAt, emittedAt: $emittedAt, message: $message)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $NativeShowcaseTelemetrySnapshotCopyWith<$Res>  {
   factory $NativeShowcaseTelemetrySnapshotCopyWith(NativeShowcaseTelemetrySnapshot value, $Res Function(NativeShowcaseTelemetrySnapshot) _then) = _$NativeShowcaseTelemetrySnapshotCopyWithImpl;
 @useResult
 $Res call({
- NativeShowcaseTelemetryStatus status, int sequence, int sampleCount, double averageValue, int sourceRateHz, int deliveredRateHz, int droppedCount, DateTime emittedAt, String? message
+ NativeShowcaseTelemetryStatus status, int schemaVersion, String sessionId, int sequence, int acceptedCount, int sourceReceivedCount, double averageValue, int sourceRateHz, int deliveredRateHz, int droppedBeforeBridgeCount, DateTime windowStartedAt, DateTime emittedAt, String? message
 });
 
 
@@ -62,16 +62,20 @@ class _$NativeShowcaseTelemetrySnapshotCopyWithImpl<$Res>
 
 /// Create a copy of NativeShowcaseTelemetrySnapshot
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? sequence = null,Object? sampleCount = null,Object? averageValue = null,Object? sourceRateHz = null,Object? deliveredRateHz = null,Object? droppedCount = null,Object? emittedAt = null,Object? message = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? schemaVersion = null,Object? sessionId = null,Object? sequence = null,Object? acceptedCount = null,Object? sourceReceivedCount = null,Object? averageValue = null,Object? sourceRateHz = null,Object? deliveredRateHz = null,Object? droppedBeforeBridgeCount = null,Object? windowStartedAt = null,Object? emittedAt = null,Object? message = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as NativeShowcaseTelemetryStatus,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
-as int,sampleCount: null == sampleCount ? _self.sampleCount : sampleCount // ignore: cast_nullable_to_non_nullable
+as NativeShowcaseTelemetryStatus,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
+as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int,acceptedCount: null == acceptedCount ? _self.acceptedCount : acceptedCount // ignore: cast_nullable_to_non_nullable
+as int,sourceReceivedCount: null == sourceReceivedCount ? _self.sourceReceivedCount : sourceReceivedCount // ignore: cast_nullable_to_non_nullable
 as int,averageValue: null == averageValue ? _self.averageValue : averageValue // ignore: cast_nullable_to_non_nullable
 as double,sourceRateHz: null == sourceRateHz ? _self.sourceRateHz : sourceRateHz // ignore: cast_nullable_to_non_nullable
 as int,deliveredRateHz: null == deliveredRateHz ? _self.deliveredRateHz : deliveredRateHz // ignore: cast_nullable_to_non_nullable
-as int,droppedCount: null == droppedCount ? _self.droppedCount : droppedCount // ignore: cast_nullable_to_non_nullable
-as int,emittedAt: null == emittedAt ? _self.emittedAt : emittedAt // ignore: cast_nullable_to_non_nullable
+as int,droppedBeforeBridgeCount: null == droppedBeforeBridgeCount ? _self.droppedBeforeBridgeCount : droppedBeforeBridgeCount // ignore: cast_nullable_to_non_nullable
+as int,windowStartedAt: null == windowStartedAt ? _self.windowStartedAt : windowStartedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,emittedAt: null == emittedAt ? _self.emittedAt : emittedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -158,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NativeShowcaseTelemetryStatus status,  int sequence,  int sampleCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedCount,  DateTime emittedAt,  String? message)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( NativeShowcaseTelemetryStatus status,  int schemaVersion,  String sessionId,  int sequence,  int acceptedCount,  int sourceReceivedCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedBeforeBridgeCount,  DateTime windowStartedAt,  DateTime emittedAt,  String? message)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot() when $default != null:
-return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedCount,_that.emittedAt,_that.message);case _:
+return $default(_that.status,_that.schemaVersion,_that.sessionId,_that.sequence,_that.acceptedCount,_that.sourceReceivedCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedBeforeBridgeCount,_that.windowStartedAt,_that.emittedAt,_that.message);case _:
   return orElse();
 
 }
@@ -179,10 +183,10 @@ return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NativeShowcaseTelemetryStatus status,  int sequence,  int sampleCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedCount,  DateTime emittedAt,  String? message)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( NativeShowcaseTelemetryStatus status,  int schemaVersion,  String sessionId,  int sequence,  int acceptedCount,  int sourceReceivedCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedBeforeBridgeCount,  DateTime windowStartedAt,  DateTime emittedAt,  String? message)  $default,) {final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot():
-return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedCount,_that.emittedAt,_that.message);case _:
+return $default(_that.status,_that.schemaVersion,_that.sessionId,_that.sequence,_that.acceptedCount,_that.sourceReceivedCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedBeforeBridgeCount,_that.windowStartedAt,_that.emittedAt,_that.message);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +203,10 @@ return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NativeShowcaseTelemetryStatus status,  int sequence,  int sampleCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedCount,  DateTime emittedAt,  String? message)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( NativeShowcaseTelemetryStatus status,  int schemaVersion,  String sessionId,  int sequence,  int acceptedCount,  int sourceReceivedCount,  double averageValue,  int sourceRateHz,  int deliveredRateHz,  int droppedBeforeBridgeCount,  DateTime windowStartedAt,  DateTime emittedAt,  String? message)?  $default,) {final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot() when $default != null:
-return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedCount,_that.emittedAt,_that.message);case _:
+return $default(_that.status,_that.schemaVersion,_that.sessionId,_that.sequence,_that.acceptedCount,_that.sourceReceivedCount,_that.averageValue,_that.sourceRateHz,_that.deliveredRateHz,_that.droppedBeforeBridgeCount,_that.windowStartedAt,_that.emittedAt,_that.message);case _:
   return null;
 
 }
@@ -214,16 +218,20 @@ return $default(_that.status,_that.sequence,_that.sampleCount,_that.averageValue
 
 
 class _NativeShowcaseTelemetrySnapshot implements NativeShowcaseTelemetrySnapshot {
-  const _NativeShowcaseTelemetrySnapshot({required this.status, required this.sequence, required this.sampleCount, required this.averageValue, required this.sourceRateHz, required this.deliveredRateHz, required this.droppedCount, required this.emittedAt, this.message});
+  const _NativeShowcaseTelemetrySnapshot({required this.status, required this.schemaVersion, required this.sessionId, required this.sequence, required this.acceptedCount, required this.sourceReceivedCount, required this.averageValue, required this.sourceRateHz, required this.deliveredRateHz, required this.droppedBeforeBridgeCount, required this.windowStartedAt, required this.emittedAt, this.message});
   
 
 @override final  NativeShowcaseTelemetryStatus status;
+@override final  int schemaVersion;
+@override final  String sessionId;
 @override final  int sequence;
-@override final  int sampleCount;
+@override final  int acceptedCount;
+@override final  int sourceReceivedCount;
 @override final  double averageValue;
 @override final  int sourceRateHz;
 @override final  int deliveredRateHz;
-@override final  int droppedCount;
+@override final  int droppedBeforeBridgeCount;
+@override final  DateTime windowStartedAt;
 @override final  DateTime emittedAt;
 @override final  String? message;
 
@@ -237,16 +245,16 @@ _$NativeShowcaseTelemetrySnapshotCopyWith<_NativeShowcaseTelemetrySnapshot> get 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NativeShowcaseTelemetrySnapshot&&(identical(other.status, status) || other.status == status)&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.sampleCount, sampleCount) || other.sampleCount == sampleCount)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.sourceRateHz, sourceRateHz) || other.sourceRateHz == sourceRateHz)&&(identical(other.deliveredRateHz, deliveredRateHz) || other.deliveredRateHz == deliveredRateHz)&&(identical(other.droppedCount, droppedCount) || other.droppedCount == droppedCount)&&(identical(other.emittedAt, emittedAt) || other.emittedAt == emittedAt)&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NativeShowcaseTelemetrySnapshot&&(identical(other.status, status) || other.status == status)&&(identical(other.schemaVersion, schemaVersion) || other.schemaVersion == schemaVersion)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.sequence, sequence) || other.sequence == sequence)&&(identical(other.acceptedCount, acceptedCount) || other.acceptedCount == acceptedCount)&&(identical(other.sourceReceivedCount, sourceReceivedCount) || other.sourceReceivedCount == sourceReceivedCount)&&(identical(other.averageValue, averageValue) || other.averageValue == averageValue)&&(identical(other.sourceRateHz, sourceRateHz) || other.sourceRateHz == sourceRateHz)&&(identical(other.deliveredRateHz, deliveredRateHz) || other.deliveredRateHz == deliveredRateHz)&&(identical(other.droppedBeforeBridgeCount, droppedBeforeBridgeCount) || other.droppedBeforeBridgeCount == droppedBeforeBridgeCount)&&(identical(other.windowStartedAt, windowStartedAt) || other.windowStartedAt == windowStartedAt)&&(identical(other.emittedAt, emittedAt) || other.emittedAt == emittedAt)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,sequence,sampleCount,averageValue,sourceRateHz,deliveredRateHz,droppedCount,emittedAt,message);
+int get hashCode => Object.hash(runtimeType,status,schemaVersion,sessionId,sequence,acceptedCount,sourceReceivedCount,averageValue,sourceRateHz,deliveredRateHz,droppedBeforeBridgeCount,windowStartedAt,emittedAt,message);
 
 @override
 String toString() {
-  return 'NativeShowcaseTelemetrySnapshot(status: $status, sequence: $sequence, sampleCount: $sampleCount, averageValue: $averageValue, sourceRateHz: $sourceRateHz, deliveredRateHz: $deliveredRateHz, droppedCount: $droppedCount, emittedAt: $emittedAt, message: $message)';
+  return 'NativeShowcaseTelemetrySnapshot(status: $status, schemaVersion: $schemaVersion, sessionId: $sessionId, sequence: $sequence, acceptedCount: $acceptedCount, sourceReceivedCount: $sourceReceivedCount, averageValue: $averageValue, sourceRateHz: $sourceRateHz, deliveredRateHz: $deliveredRateHz, droppedBeforeBridgeCount: $droppedBeforeBridgeCount, windowStartedAt: $windowStartedAt, emittedAt: $emittedAt, message: $message)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$NativeShowcaseTelemetrySnapshotCopyWith<$Res> implements 
   factory _$NativeShowcaseTelemetrySnapshotCopyWith(_NativeShowcaseTelemetrySnapshot value, $Res Function(_NativeShowcaseTelemetrySnapshot) _then) = __$NativeShowcaseTelemetrySnapshotCopyWithImpl;
 @override @useResult
 $Res call({
- NativeShowcaseTelemetryStatus status, int sequence, int sampleCount, double averageValue, int sourceRateHz, int deliveredRateHz, int droppedCount, DateTime emittedAt, String? message
+ NativeShowcaseTelemetryStatus status, int schemaVersion, String sessionId, int sequence, int acceptedCount, int sourceReceivedCount, double averageValue, int sourceRateHz, int deliveredRateHz, int droppedBeforeBridgeCount, DateTime windowStartedAt, DateTime emittedAt, String? message
 });
 
 
@@ -274,16 +282,20 @@ class __$NativeShowcaseTelemetrySnapshotCopyWithImpl<$Res>
 
 /// Create a copy of NativeShowcaseTelemetrySnapshot
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? sequence = null,Object? sampleCount = null,Object? averageValue = null,Object? sourceRateHz = null,Object? deliveredRateHz = null,Object? droppedCount = null,Object? emittedAt = null,Object? message = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? schemaVersion = null,Object? sessionId = null,Object? sequence = null,Object? acceptedCount = null,Object? sourceReceivedCount = null,Object? averageValue = null,Object? sourceRateHz = null,Object? deliveredRateHz = null,Object? droppedBeforeBridgeCount = null,Object? windowStartedAt = null,Object? emittedAt = null,Object? message = freezed,}) {
   return _then(_NativeShowcaseTelemetrySnapshot(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as NativeShowcaseTelemetryStatus,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
-as int,sampleCount: null == sampleCount ? _self.sampleCount : sampleCount // ignore: cast_nullable_to_non_nullable
+as NativeShowcaseTelemetryStatus,schemaVersion: null == schemaVersion ? _self.schemaVersion : schemaVersion // ignore: cast_nullable_to_non_nullable
+as int,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as String,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as int,acceptedCount: null == acceptedCount ? _self.acceptedCount : acceptedCount // ignore: cast_nullable_to_non_nullable
+as int,sourceReceivedCount: null == sourceReceivedCount ? _self.sourceReceivedCount : sourceReceivedCount // ignore: cast_nullable_to_non_nullable
 as int,averageValue: null == averageValue ? _self.averageValue : averageValue // ignore: cast_nullable_to_non_nullable
 as double,sourceRateHz: null == sourceRateHz ? _self.sourceRateHz : sourceRateHz // ignore: cast_nullable_to_non_nullable
 as int,deliveredRateHz: null == deliveredRateHz ? _self.deliveredRateHz : deliveredRateHz // ignore: cast_nullable_to_non_nullable
-as int,droppedCount: null == droppedCount ? _self.droppedCount : droppedCount // ignore: cast_nullable_to_non_nullable
-as int,emittedAt: null == emittedAt ? _self.emittedAt : emittedAt // ignore: cast_nullable_to_non_nullable
+as int,droppedBeforeBridgeCount: null == droppedBeforeBridgeCount ? _self.droppedBeforeBridgeCount : droppedBeforeBridgeCount // ignore: cast_nullable_to_non_nullable
+as int,windowStartedAt: null == windowStartedAt ? _self.windowStartedAt : windowStartedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,emittedAt: null == emittedAt ? _self.emittedAt : emittedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

@@ -92,11 +92,11 @@ class _TelemetryBody extends StatelessWidget {
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetrySampleCountLabel,
-            value: '${snapshot.sampleCount}',
+            value: '${snapshot.acceptedCount}',
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetryDroppedCountLabel,
-            value: '${snapshot.droppedCount}',
+            value: '${snapshot.droppedBeforeBridgeCount}',
           ),
           _MetricRow(
             label: l10n.nativePlatformShowcaseTelemetryAverageValueLabel,

@@ -16,6 +16,8 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
+
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_certificate_pin_policy_summary_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
@@ -110,7 +112,9 @@ class _TestNativePlatformShowcaseCubit extends NativePlatformShowcaseCubit {
 class _EmptyWatchNativeShowcaseTelemetryUseCase
     implements WatchNativeShowcaseTelemetryUseCase {
   @override
-  Stream<NativeShowcaseTelemetrySnapshot> call() => const Stream.empty();
+  Stream<NativeShowcaseTelemetrySnapshot> call({
+    required final NativeShowcaseTelemetryStreamConfig config,
+  }) => const Stream.empty();
 }
 
 class _EmptyTriggerNativeShowcaseHapticUseCase
@@ -394,12 +398,16 @@ void main() {
             loadedData,
             telemetry: NativeShowcaseTelemetrySnapshot(
               status: NativeShowcaseTelemetryStatus.streaming,
+              schemaVersion: 1,
+              sessionId: 'session-page',
               sequence: 1,
-              sampleCount: 12,
+              acceptedCount: 12,
+              sourceReceivedCount: 15,
               averageValue: 42.5,
               sourceRateHz: 60,
               deliveredRateHz: 4,
-              droppedCount: 3,
+              droppedBeforeBridgeCount: 3,
+              windowStartedAt: _epoch,
               emittedAt: _epoch,
             ),
           ),
@@ -452,12 +460,16 @@ void main() {
               loadedData,
               telemetry: NativeShowcaseTelemetrySnapshot(
                 status: NativeShowcaseTelemetryStatus.unavailable,
+                schemaVersion: 1,
+                sessionId: 'session-page',
                 sequence: 0,
-                sampleCount: 0,
+                acceptedCount: 0,
+                sourceReceivedCount: 0,
                 averageValue: 0,
                 sourceRateHz: 0,
                 deliveredRateHz: 0,
-                droppedCount: 0,
+                droppedBeforeBridgeCount: 0,
+                windowStartedAt: _epoch,
                 emittedAt: _epoch,
               ),
             ),
@@ -507,12 +519,16 @@ void main() {
             loadedData,
             telemetry: NativeShowcaseTelemetrySnapshot(
               status: NativeShowcaseTelemetryStatus.failed,
+              schemaVersion: 1,
+              sessionId: 'session-page',
               sequence: 1,
-              sampleCount: 0,
+              acceptedCount: 0,
+              sourceReceivedCount: 0,
               averageValue: 0,
               sourceRateHz: 60,
               deliveredRateHz: 4,
-              droppedCount: 0,
+              droppedBeforeBridgeCount: 0,
+              windowStartedAt: _epoch,
               emittedAt: _epoch,
               message: 'Telemetry stream failed',
             ),

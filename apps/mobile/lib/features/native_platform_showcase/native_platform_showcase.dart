@@ -17,6 +17,7 @@ export 'domain/native_showcase_native_code_service.dart';
 export 'domain/native_showcase_telemetry_service.dart';
 export 'domain/native_showcase_telemetry_snapshot.dart';
 export 'domain/native_showcase_telemetry_status.dart';
+export 'domain/native_showcase_telemetry_stream_config.dart';
 export 'domain/platform_showcase_data.dart';
 export 'domain/use_cases/load_certificate_pin_policy_summary_use_case.dart';
 export 'domain/use_cases/load_native_platform_showcase_use_case.dart';

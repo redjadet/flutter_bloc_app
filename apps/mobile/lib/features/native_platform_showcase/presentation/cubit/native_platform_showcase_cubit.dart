@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/share_native_showcase_text_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/trigger_native_showcase_haptic_use_case.dart';
@@ -108,7 +109,12 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
       return;
     }
 
-    _telemetrySubscription = _watchTelemetry().listen(
+    final NativeShowcaseTelemetryStreamConfig config =
+        NativeShowcaseTelemetryStreamConfig.renderDefault(
+          sessionId: 'showcase-${DateTime.now().microsecondsSinceEpoch}',
+        );
+
+    _telemetrySubscription = _watchTelemetry(config: config).listen(
       _onTelemetrySnapshot,
       onError: _onTelemetryError,
     );
@@ -160,12 +166,18 @@ class NativePlatformShowcaseCubit extends Cubit<NativePlatformShowcaseState> {
         loaded.data,
         telemetry: NativeShowcaseTelemetrySnapshot(
           status: NativeShowcaseTelemetryStatus.failed,
+          schemaVersion:
+              previous?.schemaVersion ??
+              NativeShowcaseTelemetryStreamConfig.supportedSchemaVersion,
+          sessionId: previous?.sessionId ?? '',
           sequence: _lastTelemetrySequence,
-          sampleCount: previous?.sampleCount ?? 0,
+          acceptedCount: previous?.acceptedCount ?? 0,
+          sourceReceivedCount: previous?.sourceReceivedCount ?? 0,
           averageValue: previous?.averageValue ?? 0,
           sourceRateHz: previous?.sourceRateHz ?? 0,
           deliveredRateHz: previous?.deliveredRateHz ?? 0,
-          droppedCount: previous?.droppedCount ?? 0,
+          droppedBeforeBridgeCount: previous?.droppedBeforeBridgeCount ?? 0,
+          windowStartedAt: previous?.windowStartedAt ?? DateTime.now(),
           emittedAt: DateTime.now(),
           message: error.toString(),
         ),

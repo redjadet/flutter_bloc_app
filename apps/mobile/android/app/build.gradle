@@ -33,6 +33,14 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    sourceSets {
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = false
+    }
+
     defaultConfig {
         applicationId = "com.ilkersevim.blocflutter"
         minSdk = flutter.minSdkVersion
@@ -99,6 +107,7 @@ dependencies {
     implementation "androidx.sqlite:sqlite:2.7.0"
     implementation "net.zetetic:sqlcipher-android:4.17.0"
     implementation "androidx.biometric:biometric:1.1.0"
+    testImplementation "junit:junit:4.13.2"
 }
 
 afterEvaluate {

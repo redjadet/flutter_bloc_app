@@ -262,6 +262,16 @@ void registerNativePlatformShowcaseIntegrationFlow() {
         findsWidgets,
       );
 
+      final Finder telemetrySection = find.byKey(
+        const ValueKey('native-platform-showcase-telemetry'),
+      );
+      await tester.scrollUntilVisible(
+        telemetrySection,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(telemetrySection, findsOneWidget);
+
       // Page order: summary → security → interop. Security is tall enough that
       // interop keys are off-screen / not built until scrolled into view.
       final Finder securitySection = find.byKey(

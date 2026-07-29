@@ -3,31 +3,42 @@
     "checklist": {
       "aborted": 0,
       "cancelled": 0,
+      "count": 2,
+      "failed": 0,
+      "ok": 2,
+      "other": 0,
+      "p50_duration_ms": 363454.0,
+      "success_rate": 1.0
+    },
+    "integration_tests": {
+      "aborted": 0,
+      "cancelled": 0,
       "count": 5,
       "failed": 4,
       "ok": 1,
       "other": 0,
-      "p50_duration_ms": 1807,
+      "p50_duration_ms": 122198,
       "success_rate": 0.2
     }
   },
   "delegate_usage_rate": 0.0,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 5,
-    "total_non_empty_lines": 5
+    "parsed_json_lines": 7,
+    "total_non_empty_lines": 7
   },
-  "p50_duration_ms": 1807,
-  "p95_duration_ms": 19257,
+  "p50_duration_ms": 181154,
+  "p95_duration_ms": 485542,
   "risk_counts": {
-    "medium": 5
+    "high": 5,
+    "medium": 2
   },
   "scorecard_parse_success": 1.0,
   "source_file_count": 1,
-  "source_fingerprint": "ffe2d3d132ba0c8d0e20d1f836e7e5bc941e361855205694aceff72757a65022",
+  "source_fingerprint": "2de09b899dc3910fea50377c887eab5f7975c5559044d576166711b82ac71125",
   "status_counts": {
     "failed": 4,
-    "ok": 1
+    "ok": 3
   },
-  "total_events": 5
+  "total_events": 7
 }

@@ -118,10 +118,21 @@ import FirebaseAppCheck
       withId: "com.example.flutter_bloc_app/native_showcase_banner"
     )
 
-    let telemetryChannel = FlutterEventChannel(
-      name: telemetryChannelName,
-      binaryMessenger: engineBridge.applicationRegistrar.messenger()
-    )
+    let messenger = engineBridge.applicationRegistrar.messenger()
+    let telemetryChannel: FlutterEventChannel
+    if let makeQueue = messenger.makeBackgroundTaskQueue {
+      telemetryChannel = FlutterEventChannel(
+        name: telemetryChannelName,
+        binaryMessenger: messenger,
+        codec: FlutterStandardMethodCodec.sharedInstance(),
+        taskQueue: makeQueue()
+      )
+    } else {
+      telemetryChannel = FlutterEventChannel(
+        name: telemetryChannelName,
+        binaryMessenger: messenger
+      )
+    }
     telemetryChannel.setStreamHandler(NativeShowcaseTelemetryStreamHandler())
 
     let securityShowcaseChannel = FlutterMethodChannel(

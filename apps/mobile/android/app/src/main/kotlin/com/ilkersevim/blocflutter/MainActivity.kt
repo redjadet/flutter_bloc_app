@@ -9,6 +9,7 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.StandardMethodCodec
 
 class MainActivity : FlutterFragmentActivity() {
   private val channelName = "com.example.flutter_bloc_app/native"
@@ -28,13 +29,18 @@ class MainActivity : FlutterFragmentActivity() {
         "com.example.flutter_bloc_app/native_showcase_banner",
         NativeShowcaseBannerPlatformViewFactory(),
       )
-    EventChannel(flutterEngine.dartExecutor.binaryMessenger, telemetryChannelName)
-      .setStreamHandler(NativeShowcaseTelemetryStreamHandler())
+    val messenger = flutterEngine.dartExecutor.binaryMessenger
+    EventChannel(
+      messenger,
+      telemetryChannelName,
+      StandardMethodCodec.INSTANCE,
+      messenger.makeBackgroundTaskQueue(),
+    ).setStreamHandler(NativeShowcaseTelemetryStreamHandler())
     val securityHandler = NativeSecurityShowcaseHandler(this)
     securityShowcaseHandler = securityHandler
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, securityShowcaseChannelName)
+    MethodChannel(messenger, securityShowcaseChannelName)
       .setMethodCallHandler(securityHandler)
-    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, showcaseChannelName)
+    MethodChannel(messenger, showcaseChannelName)
       .setMethodCallHandler { call, result ->
         when (call.method) {
           "invokeKotlin" -> {
