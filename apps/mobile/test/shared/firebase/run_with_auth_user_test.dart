@@ -46,6 +46,28 @@ void main() {
       );
     });
 
+    test(
+      'does not use onFailureFallback for SyncAuthUserChangedException',
+      () async {
+        final MockFirebaseAuth auth = MockFirebaseAuth(
+          signedIn: true,
+          mockUser: MockUser(uid: 'user-b'),
+        );
+
+        await expectLater(
+          SyncAuthPinScope.runWithPin('user-a', () {
+            return runWithAuthUser<int>(
+              auth: auth,
+              logContext: 'runWithAuthUserTest',
+              action: (_) async => 1,
+              onFailureFallback: () async => 42,
+            );
+          }),
+          throwsA(isA<SyncAuthUserChangedException>()),
+        );
+      },
+    );
+
     test('rethrows TypeError when no fallback is provided', () async {
       final MockFirebaseAuth auth = MockFirebaseAuth(
         signedIn: true,

@@ -64,7 +64,8 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   void _startRemoteWatch() {
-    if (_subscriptionManager.isDisposed || _remoteMergePausedForSessionCleanup) {
+    if (_subscriptionManager.isDisposed ||
+        _remoteMergePausedForSessionCleanup) {
       return;
     }
     // Only watch remote if we have a remote repository and aren't already watching

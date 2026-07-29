@@ -9,7 +9,7 @@ import 'sync_auth_pin_scope.dart';
 import 'sync_cycle_summary.dart';
 import 'sync_status.dart';
 
-part 'background_sync_runner_helpers.dart';
+part 'background_sync_runner_helpers.part.dart';
 part 'background_sync_runner_helpers_summary.part.dart';
 
 /// Runs a single sync cycle and returns a summary for diagnostics.

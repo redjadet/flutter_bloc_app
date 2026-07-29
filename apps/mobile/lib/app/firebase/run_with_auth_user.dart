@@ -26,6 +26,8 @@ Future<T> runWithAuthUser<T>({
     return await action(user);
   } on FirebaseAuthException {
     rethrow;
+  } on SyncAuthUserChangedException {
+    rethrow;
   } on FirebaseException catch (error, stackTrace) {
     AppLogger.error('$logContext failed', error, stackTrace);
     if (onFailureFallback != null) {
