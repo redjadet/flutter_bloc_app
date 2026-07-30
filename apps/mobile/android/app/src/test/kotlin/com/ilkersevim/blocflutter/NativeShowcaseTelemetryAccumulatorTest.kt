@@ -34,6 +34,53 @@ class NativeShowcaseTelemetryAccumulatorTest {
   }
 
   @Test
+  fun parseConfig_rejectsFractionalIntegerFields() {
+    val baseArgs =
+      mapOf(
+        "schemaVersion" to 1,
+        "mode" to "render",
+        "maxDeliveryHz" to 4,
+        "aggregation" to "mean",
+        "sessionId" to "s1",
+      )
+
+    assertNull(
+      NativeShowcaseTelemetryAccumulator.parseConfig(baseArgs + ("schemaVersion" to 1.5)),
+    )
+    assertNull(
+      NativeShowcaseTelemetryAccumulator.parseConfig(baseArgs + ("maxDeliveryHz" to 4.5)),
+    )
+  }
+
+  @Test
+  fun parseConfig_rejectsBlankSessionId() {
+    val args =
+      mapOf(
+        "schemaVersion" to 1,
+        "mode" to "render",
+        "maxDeliveryHz" to 4,
+        "aggregation" to "mean",
+        "sessionId" to "  ",
+      )
+
+    assertNull(NativeShowcaseTelemetryAccumulator.parseConfig(args))
+  }
+
+  @Test
+  fun parseConfig_trimsSessionId() {
+    val args =
+      mapOf(
+        "schemaVersion" to 1,
+        "mode" to "render",
+        "maxDeliveryHz" to 4,
+        "aggregation" to "mean",
+        "sessionId" to "  s1  ",
+      )
+
+    assertEquals("s1", NativeShowcaseTelemetryAccumulator.parseConfig(args)?.sessionId)
+  }
+
+  @Test
   fun meanAggregation_payloadAndDropAccounting() {
     var clock = 1_000L
     val accumulator =

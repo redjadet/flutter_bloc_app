@@ -135,7 +135,7 @@ class NativeShowcaseTelemetryAccumulator(
 
     fun parseConfig(arguments: Any?): ParsedConfig? {
       val map = arguments as? Map<*, *> ?: return null
-      val schemaVersion = (map["schemaVersion"] as? Number)?.toInt() ?: return null
+      val schemaVersion = intValue(map["schemaVersion"]) ?: return null
       if (schemaVersion != SCHEMA_VERSION) {
         return null
       }
@@ -143,7 +143,7 @@ class NativeShowcaseTelemetryAccumulator(
       if (mode != "render") {
         return null
       }
-      val rawHz = (map["maxDeliveryHz"] as? Number)?.toInt() ?: return null
+      val rawHz = intValue(map["maxDeliveryHz"]) ?: return null
       val deliveryHz = rawHz.coerceIn(MIN_DELIVERY_HZ, MAX_DELIVERY_HZ)
       val aggregationRaw = map["aggregation"] as? String ?: return null
       val aggregation =
@@ -152,8 +152,8 @@ class NativeShowcaseTelemetryAccumulator(
           "latest" -> Aggregation.LATEST
           else -> return null
         }
-      val sessionId = map["sessionId"] as? String ?: return null
-      if (sessionId.isBlank()) {
+      val sessionId = (map["sessionId"] as? String)?.trim().orEmpty()
+      if (sessionId.isEmpty()) {
         return null
       }
       return ParsedConfig(
@@ -162,6 +162,15 @@ class NativeShowcaseTelemetryAccumulator(
         deliveredRateHz = deliveryHz,
       )
     }
+
+    private fun intValue(value: Any?): Int? =
+      when (value) {
+        is Byte -> value.toInt()
+        is Short -> value.toInt()
+        is Int -> value
+        is Long -> value.takeIf { it in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong() }?.toInt()
+        else -> null
+      }
   }
 
   data class ParsedConfig(
