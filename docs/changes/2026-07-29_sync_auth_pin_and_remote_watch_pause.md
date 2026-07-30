@@ -13,12 +13,17 @@ switch (A→B):
 2. Offline-first todo/counter remote watches could rebind to B and merge into
    shared Hive while session-ready identity still reflected A during cleanup
    quiesce.
+3. Background `pullRemote` ran outside the auth pin. A pull beginning under A
+   could therefore resolve B after an auth flip and merge B's RTDB todo data
+   before cleanup paused the merge.
 
 ### Scope
 
 - In: pin cycle-start Firebase uid around each pending push; fail closed in
   `runWithAuthUser` when live uid diverges; pause/resume todo+counter remote
-  watches around `clearFirebaseLocalSessionData` / resume.
+  watches around `clearFirebaseLocalSessionData` / resume; pin every
+  `pullRemote`, propagate its typed auth-change abort, and re-check Todo's
+  pause after the remote fetch before merge.
 - Out: presentation UI, non-Firebase providers, chat remote watches.
 
 ### Layers touched
@@ -38,6 +43,11 @@ switch (A→B):
   pin divergence — `apps/mobile/test/shared/firebase/run_with_auth_user_test.dart`
 - [x] Unit: todo pause remote watch for session cleanup —
   `apps/mobile/test/features/todo_list/data/offline_first_todo_repository_test.dart`
+- [x] Unit: pull pins the cycle uid and auth-change aborts are not failures —
+  `packages/networking/test/sync/background_sync_runner_test.dart`
+- [x] Unit: Todo/Counter propagate typed pull aborts; Todo skips a merge when
+  cleanup starts during fetch —
+  `apps/mobile/test/features/{todo_list,counter}/data/`
 
 ### Proof command
 
@@ -45,8 +55,9 @@ switch (A→B):
 (cd packages/networking && flutter test test/sync/)
 (cd apps/mobile && flutter test \
   test/shared/firebase/run_with_auth_user_test.dart \
+  test/features/counter/data/offline_first_counter_repository_test.dart \
   test/features/todo_list/data/offline_first_todo_repository_test.dart \
-  --name 'pauseRemoteWatch|pinned uid|SyncAuthUserChanged')
+  --name 'pauseRemoteWatch|pinned uid|SyncAuthUserChanged|session cleanup')
 ```
 
 ### Risks
