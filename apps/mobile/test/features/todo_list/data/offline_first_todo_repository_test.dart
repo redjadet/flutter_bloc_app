@@ -112,6 +112,36 @@ class _FakeRemoteRepositoryWithErrorTracking
   Future<void> clearCompleted() async {}
 }
 
+class _DeferredFetchRemoteRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
+  _DeferredFetchRemoteRepository({required final List<TodoItem> initial})
+    : _items = List<TodoItem>.from(initial);
+
+  final List<TodoItem> _items;
+  final Completer<void> _fetchGate = Completer<void>();
+
+  Future<void> releaseFetch() => _fetchGate.complete();
+
+  @override
+  Future<List<TodoItem>> fetchAll() async {
+    await _fetchGate.future;
+    return List<TodoItem>.from(_items);
+  }
+
+  @override
+  Stream<List<TodoItem>> watchAll() => const Stream<List<TodoItem>>.empty();
+
+  @override
+  Future<void> save(final TodoItem item) async {}
+
+  @override
+  Future<void> delete(final String id) async {}
+
+  @override
+  Future<void> clearCompleted() async {}
+}
+
 class _FakeRemoteRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
@@ -1302,6 +1332,34 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 50));
         expect(remote.activeWatchListeners, 0);
         await remote.closeWatchStream();
+      },
+    );
+
+    test(
+      'pullRemote skips merge when session cleanup pause starts during fetch',
+      () async {
+        final TodoItem remoteItem = TodoItem.create(
+          title: 'Remote Todo',
+          description: 'From Remote',
+        );
+        final _DeferredFetchRemoteRepository remote =
+            _DeferredFetchRemoteRepository(initial: [remoteItem]);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        final Future<void> pullFuture = repository.pullRemote();
+        repository.pauseRemoteWatchForSessionCleanup();
+        await remote.releaseFetch();
+        await pullFuture;
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, isEmpty);
       },
     );
 

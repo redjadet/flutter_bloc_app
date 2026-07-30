@@ -224,6 +224,9 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
     try {
       final List<TodoItem> remoteItems = await _remoteRepository.fetchAll();
+      if (_remoteMergePausedForSessionCleanup) {
+        return;
+      }
       await _mergeRemoteIntoLocal(
         _localRepository,
         remoteItems,

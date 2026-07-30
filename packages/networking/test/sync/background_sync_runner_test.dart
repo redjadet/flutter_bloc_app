@@ -9,15 +9,23 @@ class _MockPendingSyncRepository extends Mock
 class _MockSyncableRepository extends Mock implements SyncableRepository {}
 
 class _FakeSyncableRepository extends Fake implements SyncableRepository {
-  _FakeSyncableRepository(this.onProcess);
+  _FakeSyncableRepository(
+    this.onProcess, {
+    this.onPullRemote,
+  });
 
   final void Function(SyncOperation operation) onProcess;
+  final Future<void> Function()? onPullRemote;
 
   @override
   String get entityType => 'test';
 
   @override
-  Future<void> pullRemote() async {}
+  Future<void> pullRemote() async {
+    if (onPullRemote != null) {
+      await onPullRemote!();
+    }
+  }
 
   @override
   Future<void> processOperation(final SyncOperation operation) async {
@@ -519,6 +527,81 @@ void main() {
 
         expect(summary.operationsProcessed, 0);
         verifyNever(() => pending.markCompleted(any()));
+      },
+    );
+
+    test(
+      'pins auth uid during pullRemote when shared auth provider is wired',
+      () async {
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[]);
+
+        String? observedPinDuringPull;
+        registry.register(
+          _FakeSyncableRepository(
+            (_) {},
+            onPullRemote: () async {
+              observedPinDuringPull = SyncAuthPinScope.current;
+            },
+          ),
+        );
+
+        await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final String event, final Map<String, Object?> payload) {
+            telemetryEvent = event;
+            telemetryPayload = payload;
+          },
+          getSharedSyncAuthUserId: () => 'user-a',
+        );
+
+        expect(observedPinDuringPull, 'user-a');
+      },
+    );
+
+    test(
+      'aborts pullRemote when auth uid changes mid-pull',
+      () async {
+        when(
+          () => pending.getPendingOperations(
+            now: any(named: 'now'),
+            limit: any(named: 'limit'),
+            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+          ),
+        ).thenAnswer((_) async => <SyncOperation>[]);
+
+        var pullRemoteInvoked = false;
+        registry.register(
+          _FakeSyncableRepository(
+            (_) {},
+            onPullRemote: () async {
+              pullRemoteInvoked = true;
+              throw const SyncAuthUserChangedException();
+            },
+          ),
+        );
+
+        final SyncCycleSummary summary = await runSyncCycle(
+          registry: registry,
+          pendingRepository: pending,
+          emitStatus: emittedStatuses.add,
+          telemetry: (final String event, final Map<String, Object?> payload) {
+            telemetryEvent = event;
+            telemetryPayload = payload;
+          },
+          getSharedSyncAuthUserId: () => 'user-a',
+        );
+
+        expect(pullRemoteInvoked, isTrue);
+        expect(summary.pullRemoteFailures, 0);
+        expect(summary.pullRemoteCount, 1);
       },
     );
   });

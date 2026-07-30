@@ -28,7 +28,15 @@ Future<_PullRemoteResult> _pullAllRemote({
     }
     try {
       result.count++;
-      await repo.pullRemote();
+      await SyncAuthPinScope.runWithPin(
+        authUserIdAtCycleStart,
+        () => repo.pullRemote(),
+      );
+    } on SyncAuthUserChangedException {
+      AppLogger.debug(
+        'BackgroundSyncCoordinator.pullRemote aborted for ${repo.entityType} '
+        'after auth uid changed mid-pull',
+      );
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'BackgroundSyncCoordinator.pullRemote failed for ${repo.entityType}',
