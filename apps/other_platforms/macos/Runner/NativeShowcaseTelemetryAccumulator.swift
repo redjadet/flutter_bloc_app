@@ -70,9 +70,9 @@ final class NativeShowcaseTelemetryAccumulator {
     default:
       return nil
     }
-    guard let sessionId = map["sessionId"] as? String, !sessionId.isEmpty else {
-      return nil
-    }
+    guard let rawSessionId = map["sessionId"] as? String else { return nil }
+    let sessionId = rawSessionId.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !sessionId.isEmpty else { return nil }
     return ParsedConfig(
       sessionId: sessionId,
       aggregation: aggregation,
@@ -168,12 +168,16 @@ final class NativeShowcaseTelemetryAccumulator {
   }
 
   private static func intValue(_ any: Any?) -> Int? {
-    if let value = any as? Int {
-      return value
+    guard let value = any as? NSNumber,
+          CFGetTypeID(value) != CFBooleanGetTypeID() else {
+      return nil
     }
-    if let value = any as? NSNumber {
-      return value.intValue
+
+    switch String(cString: value.objCType) {
+    case "c", "s", "i", "l", "q":
+      return Int(exactly: value.int64Value)
+    default:
+      return nil
     }
-    return nil
   }
 }
