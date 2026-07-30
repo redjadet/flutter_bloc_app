@@ -301,12 +301,16 @@ void registerNativePlatformShowcaseIntegrationFlow() {
 
       Future<void> tapSecurityRun(final String key) async {
         final Finder button = find.byKey(ValueKey<String>(key));
+        // Prefer ensureVisible over tapAndPump: a second scrollUntilVisible can
+        // overshoot nested lists and leave the control above the hit-test area.
         await tester.scrollUntilVisible(
           button,
           300,
           scrollable: find.byType(Scrollable).last,
         );
-        await tapAndPump(tester, button);
+        await tester.ensureVisible(button);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
         await tester.pump(const Duration(milliseconds: 500));
         await tester.pumpAndSettle(const Duration(seconds: 3));
       }
