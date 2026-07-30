@@ -33,7 +33,7 @@ remove orchestration from Cubit without pulling data concerns into domain.
 | Local/remote DTO | `data/` | external/storage shape |
 | DTO mapper | `data/` | DTO <-> domain |
 | Domain model | `domain/` | app business shape |
-| View data mapper | `presentation/mappers/` or `core/diagnostics` | state/domain -> UI data |
+| View data mapper | `presentation/mappers/`; app-wide diagnostics view data may live in `apps/mobile/lib/app/diagnostics/` | state/domain -> UI data |
 
 DTOs are required when external or stored shape can drift independently from
 domain shape. DTOs are optional for tiny internal-only maps where a mapper would
@@ -41,7 +41,7 @@ add churn without type safety.
 
 ## Error Mapping
 
-- HTTP/transport failures map in data/shared utilities.
+- HTTP/transport failures map in data or owning package utilities.
 - Domain failures expose stable, testable semantics.
 - Cubit maps domain failure to visible state.
 - UI maps visible state to localized copy, retry controls, and diagnostics.

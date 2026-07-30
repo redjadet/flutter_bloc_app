@@ -1,6 +1,7 @@
 # State Management Choice: BLoC/Cubit
 
-Decision record for app state management. Implementation rules live in
+Rationale for the app-state decision accepted by
+[`ADR 0001`](../adr/0001-architecture-and-layering.md). Implementation rules live in
 [`bloc_standards.md`](../bloc_standards.md); architecture boundaries live in
 [`clean_architecture.md`](../clean_architecture.md).
 
@@ -33,9 +34,10 @@ standardized on it; those conditions do not outweigh migration cost here.
 | Data | Repository implementations, DTO mapping, SDK/storage/network access |
 | App shell | DI, routes, app-scope providers/listeners |
 
-Canonical path: `features/<feature>/presentation/cubit/`. Cubit/BLoC never lives
-in `domain/` or `data/`. Presentation depends on domain abstractions, not data
-implementations.
+Canonical path:
+`apps/mobile/lib/features/<feature>/presentation/cubit/`. Cubit/BLoC never
+lives in `domain/` or `data/`. Presentation depends on domain abstractions, not
+data implementations.
 
 ## Cubit vs BLoC
 

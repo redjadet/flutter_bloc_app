@@ -64,7 +64,7 @@ This document defines how the search feature adopts the shared offline-first sta
     refresh for that query.
   - `pullRemote` refreshes recent queries (top 10).
   - Registry registration.
-- ✅ **Bloc/widget tests**: `test/features/search/presentation/widgets/search_sync_banner_test.dart` covers banner visibility, offline/syncing states, and status change updates. `test/features/search/presentation/pages/search_page_test.dart` covers `SearchSyncBanner` integration in the search page.
+- ✅ **Bloc/widget tests**: `test/features/search/presentation/widgets/search_sync_banner_test.dart` preserves the reusable banner behavior in isolation. `test/features/search/presentation/pages/search_page_test.dart` covers the current page, which intentionally does not compose that banner.
 - All tests use `FakeTimerService` + mock connectivity to cover offline/online transitions deterministically.
 - `SyncStatusCubit` seeds its initial status via `getCurrentStatus()`; stub this in tests and use `tester.runAsync` when awaiting stream emissions after widget build to avoid timing flakes.
 

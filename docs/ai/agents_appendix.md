@@ -46,7 +46,7 @@ User prefs:
 - `SecretConfig` tests: after `SecretConfig.resetForTest()`, set
   `SecretConfig.debugEnvironment = <String, dynamic>{}` when host
   `--dart-define` must not leak. Non-null `debugEnvironment` is only env tier.
-- No `Isolate.run(` under `lib/**/presentation/**`; use `compute` or
+- No `Isolate.run(` under app/package `presentation/**`; use `compute` or
   top-level/static worker. Enforced by
   `tool/check_no_isolate_run_in_presentation.sh`.
 - Dialog overlay has separate subtree. Capture shell cubit before `showDialog`

@@ -1,0 +1,17 @@
+---
+description: Presentation layer — no Isolate.run; use compute(topLevelOrStatic, sendableMessage).
+globs:
+  - apps/mobile/lib/**/presentation/**/*.dart
+  - packages/*/lib/**/presentation/**/*.dart
+alwaysApply: false
+---
+
+# Presentation code and isolates
+
+- `Isolate.run(() { ... })` from instance methods often captures non-sendable
+  objects and can fail with an illegal isolate-message argument.
+- Use `compute` (`package:flutter/foundation.dart`) with a top-level or static
+  worker and sendable payload. For JSON payloads, prefer
+  `package:ilkersevim_json_isolate`.
+- `tool/check_no_isolate_run_in_presentation.sh` enforces this boundary. Use
+  `check-ignore` only for a reviewed exception.

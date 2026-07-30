@@ -49,10 +49,10 @@ Do not introduce larger rounded cards unless the shared token scale changes.
 - **Lists:** Prefer Material `ListTile` for standard rows. Use
   `AppStyles.listTile` only for custom row shells that cannot be expressed with
   `ListTile`.
-- **Page shell:** Prefer [`CommonPageLayout`](../apps/mobile/lib/shared/widgets/common_page_layout.dart)
+- **Page shell:** Prefer [`CommonPageLayout`](apps/mobile/lib/app/widgets/common_page_layout.dart)
   for feature screens instead of ad-hoc `Scaffold` roots.
   - **Default bar:** Pass non-empty `title` (and optional `actions`, theme params);
-    shell builds [`CommonAppBar`](../apps/mobile/lib/shared/widgets/common_app_bar.dart).
+    shell builds [`CommonAppBar`](apps/mobile/lib/app/widgets/common_app_bar.dart).
   - **Custom bar:** Pass `appBar:` (`PreferredSizeWidget`); `title` and default
     app-bar params are ignored. Require non-empty `title` **or** `appBar` (debug
     assert).
@@ -97,8 +97,8 @@ When generating or refactoring UI, keep these constraints in working memory:
   scanning, comparison, repeated action, not marketing/hero composition.
 - **Complete states**: loading, empty, error, disabled, offline/sync, success.
 - **Responsive proof**: stable constraints for boards/rows/counters/icon
-  buttons; check mobile/desktop for clipped text, overlap, unusable taps, or
-  hidden primary content.
+  buttons; check mobile, tablet, web, and narrow/wide desktop for clipped text,
+  overlap, unusable taps, or hidden primary content.
 - **Page shell**: use `CommonPageLayout` + `CommonMaxWidth` on wide viewports;
   custom `appBar` only when default `CommonAppBar` cannot express the screen
   (search bar in app bar, counter overflow menu); `useResponsiveBody: false` only

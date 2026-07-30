@@ -1,6 +1,9 @@
 # Freezed Usage Analysis
 
-Analysis of where Freezed is already used and where it is suitable to adopt: *"Immutable states (`freezed` > `Equatable`)."*
+Historical migration inventory of where Freezed was adopted. Current
+state-management policy lives in [`../bloc_standards.md`](../bloc_standards.md);
+use this file for migration evidence, not as a mandate to widen an unrelated
+feature change.
 
 ## Why use Freezed with BLoC?
 
@@ -12,9 +15,9 @@ BLoC and Cubit emit **immutable state**; the UI rebuilds when state **changes** 
 - **copyWith for emissions** — Updating one field (e.g. `state.copyWith(count: state.count + 1)`) is common. Freezed generates a type-safe `copyWith`; you avoid bugs from hand-written copyWith (wrong null handling, missing fields).
 - **Less boilerplate** — No manual `props`, `==`, `hashCode`, or `copyWith`. Add or rename a field in the factory, run `build_runner`, and generated code stays in sync. This reduces mistakes and keeps the focus on business logic in the cubit.
 
-For adoption patterns, use the tier tables and **Workflow** section below in this
-document. Prefer Freezed for new immutable state/domain models; convert Equatable
-models when touching that feature.
+Prefer Freezed for new immutable state/domain models. Convert legacy models only
+when the requested change or an owning contract requires that migration; do not
+expand a narrow feature change only to match this historical inventory.
 
 ## Benefits of Using Freezed
 

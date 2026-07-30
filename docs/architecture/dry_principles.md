@@ -26,12 +26,12 @@ replaced the duplicated code.
 <!-- markdownlint-disable MD013 -->
 | # | Area | Pattern / Location | Lines saved | Key benefit |
 | --- | ------ | -------------------- | ----------- | ----------- |
-| 1 | Skeleton widgets | `SkeletonBase` (`shared/widgets/skeletons/skeleton_base.dart`) | ~60 | Single shimmer + a11y + repaint boundary |
-| 2 | HTTP client | Shared Dio + interceptors (`shared/http/app_dio.dart`, `NetworkGuard`) | — | One auth/retry/telemetry pipeline |
-| 3 | Settings repos | `HiveSettingsRepository<T>` (`shared/storage/hive_settings_repository.dart`) | ~120 | Generic load/save/validate with converters |
-| 4 | Status views | `CommonStatusView` (`shared/widgets/common_status_view.dart`) | — | Shared error/empty layout structure |
-| 5 | Input decoration | `buildCommonInputDecoration` / `buildFilledInputDecoration` (`shared/widgets/common_input_decoration_helpers.dart`) | ~50 | Consistent form field styling |
-| 6 | Max-width layout | `CommonMaxWidth` (`shared/widgets/common_max_width.dart`) | — | Single constrained-width wrapper |
+| 1 | Skeleton widgets | `SkeletonBase` (`packages/design_system/lib/src/widgets/skeletons/skeleton_base.dart`) | ~60 | Single shimmer + a11y + repaint boundary |
+| 2 | HTTP client | Shared Dio + interceptors (`apps/mobile/lib/app/http/app_dio.dart`, `packages/networking/lib/src/guards/network_guard.dart`) | — | One auth/retry/telemetry pipeline |
+| 3 | Settings repos | `HiveSettingsRepository<T>` (`packages/storage/lib/src/hive/hive_settings_repository.dart`) | ~120 | Generic load/save/validate with converters |
+| 4 | Status views | `CommonStatusView` (`packages/design_system/lib/src/widgets/common_status_view.dart`) | — | Shared error/empty layout structure |
+| 5 | Input decoration | `buildCommonInputDecoration` / `buildFilledInputDecoration` (`packages/design_system/lib/src/widgets/common_input_decoration_helpers.dart`) | ~50 | Consistent form field styling |
+| 6 | Max-width layout | `CommonMaxWidth` (`packages/design_system/lib/src/widgets/common_max_width.dart`) | — | Single constrained-width wrapper |
 | 7 | Centered messages | Reuse of `CommonStatusView` with optional padding | — | Consistent empty states |
 | 8 | Profile buttons | `profile_button_styles.dart` | — | Shared outlined-button styling |
 | 9 | Profile layout | Local layout variables in `profile_page.dart` | — | No repeated spacing calculations |
@@ -41,8 +41,8 @@ replaced the duplicated code.
 | 13 | Status branching | `ViewStatusSwitcher` (Profile page) | — | Declarative loading/error/success |
 | 14 | Status branching | `ViewStatusSwitcher` (Chart page) | — | Same pattern, additional page |
 | 15 | DI organization | Feature-specific `register_*_services.dart` files | — | SRP per feature, smaller files |
-| 16 | Repo factories | `createRemoteRepositoryOrNull<T>()` (`core/di/injector_helpers.dart`) | ~50 | Shared Firebase null-check + error log |
-| 17 | Typography | `AppTypography` (`shared/ui/typography.dart`) | — | Theme-aware text style helpers |
+| 16 | Repo factories | `createRemoteRepositoryOrNull<T>()` (`apps/mobile/lib/app/composition/injector_helpers.dart`) | ~50 | Shared Firebase null-check + error log |
+| 17 | Typography | `AppTypography` (`packages/design_system/lib/src/ui/typography.dart`) | — | Theme-aware text style helpers |
 | 18 | Feature inputs | Chat input → `buildCommonInputDecoration` | — | More widgets using shared helpers |
 | 19 | Status branching | `ViewStatusSwitcher` (Scapes page) | — | Additional page consolidated |
 | 20 | EdgeInsets.all | `allGapS/M/L/allCardPadding` extensions | ~15 instances | Concise padding getters |
@@ -50,7 +50,8 @@ replaced the duplicated code.
 
 ## Open Consolidation Opportunities
 
-Implement incrementally when a pattern repeats across 3+ locations.
+Extract shared code at a real second consumer when behavior and ownership match.
+When similarity may be incidental, wait for a third use before generalizing.
 
 <!-- markdownlint-disable MD013 -->
 | Pattern | Where to look | Suggested action |
@@ -94,7 +95,8 @@ For utility methods on existing types:
 
 - **Dio + interceptors / `NetworkGuard`**: Shared HTTP client with
   centralized error mapping and timeouts
-- **`CubitContextHelpers`**: Convenient cubit access from `BuildContext`
+- **`context.cubit<T>()` and typed BLoC widgets**: preferred presentation access;
+  legacy `CubitContextHelpers` aliases remain for compatibility
 - **Responsive extensions**: Spacing, typography, and layout utilities
 
 **When to use**: When adding convenience methods to existing types
@@ -127,7 +129,8 @@ require class state or complex behavior.
 
 ### Consolidation Thresholds
 
-- **Repeated patterns**: Extract when the same logic appears **3+ times**
+- **Repeated patterns**: A matching second real consumer is the minimum; wait
+  for 3+ uses when the shared contract is not yet clear
 - **Similar implementations**: Consolidate when **>50% of code is shared**
 - **Common error handling**: Use shared utilities instead of
   duplicating try-catch blocks
@@ -139,8 +142,8 @@ require class state or complex behavior.
    utilities before implementing new logic
 2. **Identify patterns**: Look for similar code in the same feature or
    across features
-3. **Extract incrementally**: Refactor duplication after identifying
-   2-3 instances, not on first occurrence
+3. **Extract incrementally**: Refactor after a second real consumer proves the
+   same contract; wait longer when only implementation shape matches
 4. **Maintain contracts**: Ensure consolidated code maintains existing
    interfaces and behavior
 

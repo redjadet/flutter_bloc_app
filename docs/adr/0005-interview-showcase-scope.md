@@ -23,7 +23,10 @@ The repo contains many demo routes. Interviewers need a **short, repeatable walk
 1. **Frozen interview spine:** Counter → Todo → Chat list → Settings sync diagnostics (manual) → agent harness. Documented in [`interview_showcase.md`](../interview_showcase.md).
 2. **Doc-only product analytics:** No Mixpanel/Sentry/Patrol in `pubspec.yaml` until a real product requires them. Future seams documented in [`plans/future_observability.md`](../plans/future_observability.md).
 3. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in (anonymous → Home), counter persistence, and chat list alongside launch/charts/search/settings/todo flows.
-4. **No Melos split** for showcase purposes; modular monolith narrative remains accurate.
+4. **Workspace packaging does not change the architecture story:** the current
+   Melos workspace separates reusable capabilities into `packages/*`, while
+   `apps/mobile` remains a modular-monolith application composed through one app
+   shell.
 
 ## Alternatives considered
 
@@ -56,6 +59,7 @@ The repo contains many demo routes. Interviewers need a **short, repeatable walk
 - Second feature needs shared analytics port
 - Patrol adopted with CI budget approval
 - Spine routes change (GoRouter)
+- Workspace packaging changes the app-shell or feature ownership boundaries
 
 ## Verification
 

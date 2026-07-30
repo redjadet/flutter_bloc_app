@@ -1,0 +1,20 @@
+---
+description: Any pubspec change — justify deps, review gate, scope-matched validation (no AI-only adds).
+globs:
+  - pubspec.yaml
+  - pubspec.lock
+  - apps/*/pubspec.yaml
+  - apps/*/pubspec.lock
+  - packages/*/pubspec.yaml
+  - packages/*/pubspec.lock
+  - tool/**/pubspec.yaml
+  - tool/**/pubspec.lock
+alwaysApply: false
+---
+
+# Pubspec / lockfiles
+
+- Justify each add or upgrade; prefer an existing package or repo utility.
+- Apply `docs/ai_code_review_protocol.md` before calling the change done.
+- Scope-matched validation; `./bin/checklist` when the surface is broad or risky.
+- No dependency added only because an AI suggested it — one-line rationale in task/PR.

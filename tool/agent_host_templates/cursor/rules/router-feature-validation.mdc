@@ -1,0 +1,29 @@
+---
+description: Router tree or auth/gate/login/register UI (pages/widgets) → ./bin/router_feature_validate before done.
+globs:
+  - apps/mobile/lib/app/router/**/*.dart
+  - apps/mobile/lib/app/composition/**/*auth*.dart
+  - apps/mobile/lib/app/bootstrap/firebase_bootstrap_service*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*gate*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*auth*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*sign_in*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*signin*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*login*.dart
+  - apps/mobile/lib/features/**/presentation/widgets/*register*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*gate*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*auth*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*sign_in*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*signin*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*login*.dart
+  - apps/mobile/lib/features/**/presentation/pages/*register*.dart
+alwaysApply: false
+---
+
+# Router / auth / gates
+
+```bash
+./bin/router_feature_validate
+```
+
+If routing, DI, or auth UI changed but no rule attached, run it anyway
+(`AGENTS.md` → validation routing).

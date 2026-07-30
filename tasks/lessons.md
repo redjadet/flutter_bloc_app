@@ -597,3 +597,23 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
   `~/.codex/skills/flutter-bloc-app-quick-reference/SKILL.md`
   `~/.codex/skills/flutter-bloc-app-delivery-workflow/SKILL.md`
   `~/.codex/skills/flutter-bloc-app-cross-host-review/SKILL.md`
+
+### 2026-07-30 - Path guards must fail closed after workspace moves
+
+- What went wrong:
+  `check_no_isolate_run_in_presentation.sh` still scanned root `lib/` after the
+  app moved to `apps/mobile/lib/`; missing search roots produced an empty result
+  and a false pass.
+- How it was fixed:
+  Scan current app/package roots, reject missing focused paths, and add bad/good
+  harness fixtures through `--paths`.
+- Pattern:
+  A static guard that tolerates a missing ownership root can silently stop
+  enforcing its contract after a workspace migration.
+- Preventive rule:
+  Path-dependent guards must use canonical workspace roots, fail closed when
+  expected roots are absent, and include a fixture that proves bad input fails.
+- Evidence or affected files:
+  `tool/check_no_isolate_run_in_presentation.sh`
+  `tool/run_harness_fixtures.sh`
+  `tool/fixtures/no_isolate_run_in_presentation/`

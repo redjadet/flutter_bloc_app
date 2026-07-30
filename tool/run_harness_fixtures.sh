@@ -130,6 +130,27 @@ bash tool/check_checklist_cli_contract.sh >/dev/null
 echo "fixtures|check_clean_architecture_imports|help"
 bash tool/check_clean_architecture_imports.sh --help >/dev/null
 
+fixture_no_isolate="tool/fixtures/no_isolate_run_in_presentation"
+
+echo "fixtures|check_no_isolate_run_in_presentation|help"
+bash tool/check_no_isolate_run_in_presentation.sh --help >/dev/null
+
+echo "fixtures|check_no_isolate_run_in_presentation|bad"
+if isolate_bad_output="$(bash tool/check_no_isolate_run_in_presentation.sh \
+  --paths "$fixture_no_isolate/presentation/bad_isolate_run.dart" 2>&1)"; then
+  echo "❌ fixtures failed: expected presentation Isolate.run check to fail" >&2
+  exit 1
+fi
+if ! grep -q -- "bad_isolate_run.dart" <<<"$isolate_bad_output"; then
+  echo "❌ fixtures failed: presentation Isolate.run failure missing path" >&2
+  echo "$isolate_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_no_isolate_run_in_presentation|good"
+bash tool/check_no_isolate_run_in_presentation.sh \
+  --paths "$fixture_no_isolate/presentation/good_compute.dart" >/dev/null
+
 fixture_clean_arch="tool/fixtures/clean_architecture_imports"
 
 echo "fixtures|check_clean_architecture_imports|bad_package"

@@ -3,10 +3,9 @@ description: UI/theme/Mix/AppStyles work must use DESIGN.md and design_system.md
 globs:
   - DESIGN.md
   - docs/design_system.md
-  - lib/core/theme/**/*.dart
-  - lib/shared/design_system/**/*.dart
-  - lib/features/**/presentation/**/*.dart
-  - lib/shared/widgets/**/*.dart
+  - apps/mobile/lib/app/theme/**/*.dart
+  - apps/mobile/lib/features/**/presentation/**/*.dart
+  - packages/design_system/lib/**/*.dart
 alwaysApply: false
 ---
 
@@ -24,5 +23,5 @@ alwaysApply: false
 - If `DESIGN.md` changed, run `./tool/check_design_md.sh`.
 - If Mix tokens/styles changed, run `./tool/run_mix_lint.sh` plus focused
   widget/app-visible proof where practical.
-- Large `lib/` edits: keep files ≤225 lines (`file_too_long`); run
+- Large Dart edits: keep files ≤225 lines (`file_too_long`); run
   `./tool/run_file_length_lint.sh` when splitting or adding substantial code.
