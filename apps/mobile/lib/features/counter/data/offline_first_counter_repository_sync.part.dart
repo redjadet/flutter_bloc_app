@@ -59,6 +59,8 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
     try {
       final CounterSnapshot remoteSnapshot = await _remoteRepository.load();
       await _applyRemoteSnapshotIfCurrent(remoteSnapshot);
+    } on SyncAuthUserChangedException {
+      rethrow;
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstCounterRepository.pullRemote failed',

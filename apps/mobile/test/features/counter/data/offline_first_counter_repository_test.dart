@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 class _FakeRemoteRepository
@@ -17,14 +18,19 @@ class _FakeRemoteRepository
   _FakeRemoteRepository({
     CounterSnapshot? initial,
     this.shouldThrowOnLoad = false,
+    this.loadException,
   }) : _snapshot = initial;
 
   CounterSnapshot? _snapshot;
   CounterSnapshot? saved;
   final bool shouldThrowOnLoad;
+  final Exception? loadException;
 
   @override
   Future<CounterSnapshot> load() async {
+    if (loadException != null) {
+      throw loadException!;
+    }
     if (shouldThrowOnLoad) {
       throw Exception('Simulated remote load failure');
     }
@@ -313,6 +319,27 @@ void main() {
         final CounterSnapshot local = await localRepository.load();
         expect(local.count, 5);
         expect(local.synchronized, isTrue);
+      },
+    );
+
+    test(
+      'pullRemote propagates auth changes to the sync coordinator',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          loadException: const SyncAuthUserChangedException(),
+        );
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        await expectLater(
+          repository.pullRemote(),
+          throwsA(isA<SyncAuthUserChangedException>()),
+        );
       },
     );
 

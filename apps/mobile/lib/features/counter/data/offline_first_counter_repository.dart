@@ -9,6 +9,7 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
+import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 part 'offline_first_counter_repository_sync.part.dart';
