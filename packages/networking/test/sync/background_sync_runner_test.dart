@@ -9,10 +9,7 @@ class _MockPendingSyncRepository extends Mock
 class _MockSyncableRepository extends Mock implements SyncableRepository {}
 
 class _FakeSyncableRepository extends Fake implements SyncableRepository {
-  _FakeSyncableRepository(
-    this.onProcess, {
-    this.onPullRemote,
-  });
+  _FakeSyncableRepository(this.onProcess, {this.onPullRemote});
 
   final void Function(SyncOperation operation) onProcess;
   final Future<void> Function()? onPullRemote;
@@ -566,43 +563,40 @@ void main() {
       },
     );
 
-    test(
-      'aborts pullRemote when auth uid changes mid-pull',
-      () async {
-        when(
-          () => pending.getPendingOperations(
-            now: any(named: 'now'),
-            limit: any(named: 'limit'),
-            supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
-          ),
-        ).thenAnswer((_) async => <SyncOperation>[]);
+    test('aborts pullRemote when auth uid changes mid-pull', () async {
+      when(
+        () => pending.getPendingOperations(
+          now: any(named: 'now'),
+          limit: any(named: 'limit'),
+          supabaseUserIdFilter: any(named: 'supabaseUserIdFilter'),
+        ),
+      ).thenAnswer((_) async => <SyncOperation>[]);
 
-        var pullRemoteInvoked = false;
-        registry.register(
-          _FakeSyncableRepository(
-            (_) {},
-            onPullRemote: () async {
-              pullRemoteInvoked = true;
-              throw const SyncAuthUserChangedException();
-            },
-          ),
-        );
-
-        final SyncCycleSummary summary = await runSyncCycle(
-          registry: registry,
-          pendingRepository: pending,
-          emitStatus: emittedStatuses.add,
-          telemetry: (final String event, final Map<String, Object?> payload) {
-            telemetryEvent = event;
-            telemetryPayload = payload;
+      var pullRemoteInvoked = false;
+      registry.register(
+        _FakeSyncableRepository(
+          (_) {},
+          onPullRemote: () async {
+            pullRemoteInvoked = true;
+            throw const SyncAuthUserChangedException();
           },
-          getSharedSyncAuthUserId: () => 'user-a',
-        );
+        ),
+      );
 
-        expect(pullRemoteInvoked, isTrue);
-        expect(summary.pullRemoteFailures, 0);
-        expect(summary.pullRemoteCount, 1);
-      },
-    );
+      final SyncCycleSummary summary = await runSyncCycle(
+        registry: registry,
+        pendingRepository: pending,
+        emitStatus: emittedStatuses.add,
+        telemetry: (final String event, final Map<String, Object?> payload) {
+          telemetryEvent = event;
+          telemetryPayload = payload;
+        },
+        getSharedSyncAuthUserId: () => 'user-a',
+      );
+
+      expect(pullRemoteInvoked, isTrue);
+      expect(summary.pullRemoteFailures, 0);
+      expect(summary.pullRemoteCount, 1);
+    });
   });
 }
