@@ -30,14 +30,24 @@ This guide describes how to onboard a feature into the shared offline-first stac
      - **Critical**: Persist user-generated data locally BEFORE attempting remote call to prevent data loss if sync fails.
      - Push to remote (if available) then mark local as synced.
      - If user data doesn't exist locally yet, create and persist it first, then attempt remote call.
-   - On `pullRemote`, merge remote snapshots when newer.
-   - **Don’t overwrite:** When merging remote into local or replaying queued local writes to remote, use timestamp gates so older sync data never overwrites newer state. Re-read local immediately before each merge `save`/`delete` (TOCTOU). See [Don’t overwrite guide](dont_overwrite_guide.md).
+   - On `pullRemote`, merge remote snapshots only when the feature's explicit
+     merge predicate accepts them.
+   - **Don’t overwrite:** Never apply older remote data over newer local state,
+     whether local is synchronized or pending. Never replay an older queued
+     local snapshot over newer remote state. Re-read local immediately before
+     each merge `save`/`delete` (TOCTOU), and treat remote read failure as a
+     failed pull rather than an empty snapshot. See
+     [Don’t overwrite guide](dont_overwrite_guide.md).
    - App resume sync stays debounced and flushes must not overlap; use
      `BackgroundSyncCoordinator.flush()` instead of starting parallel sync work.
 3. **Register in DI + registry**
    - Wire the offline repo via `create<Feature>Repository` and register it in `SyncableRepositoryRegistry` within `apps/mobile/lib/app/composition/injector_registrations.dart`.
-4. **Expose status (logs + Settings)**
-   - Sync status is logged via `BackgroundSyncCoordinator` telemetry. Feature pages do not show sync banners.
+4. **Expose status according to the feature contract**
+   - Sync status is always available through `BackgroundSyncCoordinator`
+     telemetry and Settings → Sync Diagnostics in dev/qa.
+   - A feature may also show a pending/offline banner when user action or retry
+     state needs local context. Counter and Chat do; Todo, Search, Profile,
+     Remote Config, and IoT currently rely on feature state plus diagnostics.
    - For observability, the Sync Diagnostics section in Settings (dev/qa mode only) surfaces `SyncCycleSummary` history so engineering/QA can validate sync health.
    - `SyncStatusCubit` seeds its initial status via `NetworkStatusService.getCurrentStatus()`. Stub this in tests when testing sync-related flows.
 5. **Tests**
@@ -55,8 +65,8 @@ This guide describes how to onboard a feature into the shared offline-first stac
    - Document box names/keys under `offline_first/<feature>.md`.
    - Examples: [`offline_first/chat.md`](chat.md), [`offline_first/search.md`](search.md), [`offline_first/profile.md`](profile.md), and [`offline_first/remote_config.md`](remote_config.md).
    - Define and document the data retention policy for the feature's local cache (e.g., "prune synced items older than 90 days"). This is critical for managing storage.
-   - Update the adoption matrix in this guide (cache strategy, UI status surfaces,
-     tests) and run `./bin/checklist` before committing.
+   - Update the owning feature doc with cache strategy, conflict policy, UI
+     status surfaces, and tests; run `./bin/checklist` before committing.
 
 ## Next Steps After Adoption
 

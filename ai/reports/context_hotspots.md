@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-07-29T14:19:11Z"
-  git_head: "bea2200b922532c5d62133afa36735b1fe1c40f0"
+  generated_at: "2026-07-30T14:34:15Z"
+  git_head: "17b0a9e19865877c77f906ec102e96e9eade3da2"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -18,9 +18,9 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | ---: | ---: | --- | --- |
 | 1 | 483 | `walletconnect_auth/presentation/pages/walletconnect_auth_page_impl.part.dart` | walletconnect_auth |
 | 2 | 398 | `ai_decision_demo/presentation/pages/ai_decision_demo_page.part.dart` | ai_decision_demo |
-| 3 | 364 | `online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | online_therapy_demo |
-| 4 | 364 | `camera_gallery/presentation/pages/camera_gallery_page.part.dart` | camera_gallery |
-| 5 | 358 | `todo_list/data/offline_first_todo_repository_impl.part.dart` | todo_list |
+| 3 | 392 | `todo_list/data/offline_first_todo_repository_impl.part.dart` | todo_list |
+| 4 | 364 | `online_therapy_demo/presentation/pages/online_therapy_demo_shell_messaging_call.part.dart` | online_therapy_demo |
+| 5 | 364 | `camera_gallery/presentation/pages/camera_gallery_page.part.dart` | camera_gallery |
 | 6 | 352 | `example/presentation/widgets/example_page_body_content.part.dart` | example |
 | 7 | 321 | `iot_demo/data/supabase_iot_demo_repository_impl.part.dart` | iot_demo |
 | 8 | 320 | `igaming_demo/presentation/pages/game_page_sections.part.dart` | igaming_demo |
@@ -37,7 +37,7 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 19 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
 | 20 | 222 | `case_study_demo/presentation/pages/case_study_review_page.dart` | case_study_demo |
 
-**Total feature Dart (non-generated):** ~76292 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~76506 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

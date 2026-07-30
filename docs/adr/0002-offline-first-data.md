@@ -92,7 +92,13 @@ when the owning feature doc makes that trade-off explicit.
 - Preserve idempotency and user-scope fields when enqueueing operations.
 - Use `BackgroundSyncCoordinator.flush()` for explicit flushes; do not start
   overlapping sync work from feature code.
-- Remote snapshots must not overwrite newer unsynced local data.
+- Remote snapshots must not overwrite newer local data, whether synchronized or
+  pending.
+- Queued local snapshots must not overwrite strictly newer remote data.
+- Remote read failures must propagate to the pull boundary and skip merge; they
+  must not become empty/default snapshots.
+- Re-read local state before merge writes/deletes when concurrent local changes
+  can occur.
 
 ## Review Triggers
 
@@ -110,4 +116,5 @@ Revisit this ADR when:
 - Merge safety: [Don't Overwrite Guide](../offline_first/dont_overwrite_guide.md)
 - Targeted commands:
   - `bash tool/check_hive_schema_fingerprints.sh`
+  - `bash tool/check_offline_first_remote_merge.sh`
   - `./tool/check_no_hive_openbox.sh`

@@ -26,7 +26,8 @@ stay under `apps/mobile/lib/app/`.
 | Design system package | `packages/design_system/` | `package:design_system` — Mix tokens, `AppStyles`, responsive helpers, `CommonCard`, `CommonStatusView`, skeletons. **No** feature or l10n imports. |
 | Mix theme | `packages/design_system/lib/src/theme/mix_app_theme.dart` | Barrel → `package:design_system`. Mix token names; `buildAppMixScope(context, child: …)`; wrapped in `AppConfig`. |
 | Mix styles | `packages/design_system/lib/src/styles/app_styles.dart` | Barrel → `package:design_system` shared Mix `[Style]` definitions. |
-| Constants | `apps/mobile/lib/app/config/` | App-wide `AppConstants`: colors, breakpoints, window sizes, durations. |
+| Design-system breakpoints | `packages/design_system/lib/src/tokens/layout_breakpoints.dart` | `LayoutBreakpoints`: canonical mobile/tablet/desktop thresholds used by package responsive helpers. |
+| App constants | `apps/mobile/lib/app/config/` | `AppConstants`: app seed color, window/bootstrap sizes and delays; matching breakpoint aliases support app-shell code. |
 | App extensions | `apps/mobile/lib/app/extensions/` | App-level `BuildContext`, l10n, and typed BLoC access extensions. |
 | Typography | `packages/design_system/lib/src/ui/typography.dart` | `AppTypography` helpers using `Theme.of(context).textTheme`. |
 | UI constants | `packages/design_system/lib/src/ui/ui_constants.dart` | Barrel → `package:design_system` layout/spacing tokens (`UI.gapM`, `UI.radiusM`, etc.). |
@@ -54,7 +55,7 @@ Default wrapper for feature screens (`apps/mobile/lib/app/widgets/common_page_la
 
 ## Mix (design tokens and styles)
 
-- **Tokens:** `AppMixTokens`, `AppMaterialColorTokens`, and `AppTextStyleTokens` in `mix_app_theme.dart` define space, radius, color, and text-style token names. Values are filled by `buildAppMixScope(context, child: ...)` from `UI`, `AppConstants`, and Material `Theme` (including `textTheme`).
+- **Tokens:** `AppMixTokens`, `AppMaterialColorTokens`, and `AppTextStyleTokens` in `mix_app_theme.dart` define space, radius, color, and text-style token names. Values are filled by `buildAppMixScope(context, child: ...)` from `UI`, `LayoutBreakpoints`, and Material `Theme` (including `textTheme`).
 - **Surface/layout styles:** From `app_styles.dart`: `AppStyles.card`, `profileOutlinedButton`, `listTile`, `inputField`, `inputFieldShell`, `inputOutline`, `appBar`, `chip`, `dialogContent`, `banner`, `emptyState`, `statusSuccess`, `statusError`. Card uses `$on.dark`; listTile, banner, and chip use `$on.medium` for responsive padding. Use with `Box(style: AppStyles.*, child: ...)` or **CommonCard** for card-like wrappers.
 - **Button styles:** `AppStyles.filledButton`, `outlinedButton` — use with Mix `Button`/`Pressable` or align custom `ButtonStyle` with these tokens.
 - **Status text styles:** `AppStyles.statusSuccessText` and `statusErrorText` pair with the status surfaces.
@@ -214,7 +215,7 @@ layout or interaction that only works on the device under debug.
 
 | Form factor | Width (repo breakpoints) | Agent checks |
 | --- | --- | --- |
-| **Mobile** | &lt; 800 logical px (`AppConstants.mobileBreakpoint`) | Touch targets; safe area; keyboard overlap; portrait/landscape reflow; no clipped primary actions |
+| **Mobile** | &lt; 800 logical px (`LayoutBreakpoints.mobileBreakpoint`) | Touch targets; safe area; keyboard overlap; portrait/landscape reflow; no clipped primary actions |
 | **Tablet** | 800–1199 px | Use `context.isTabletOrLarger` / `responsiveValue`; multi-column or side-by-side where width allows; avoid phone-only stacks on wide tablet |
 | **Web** | Any viewport in browser | Web-safe imports (`kIsWeb`); URL/deep-link routes; pointer hover/focus; scroll without mobile-only assumptions; run web preflight when bootstrap/routing touched |
 | **Desktop (macOS)** | Often ≥ 1200 px; also **narrow windows** | Keyboard traversal and focus rings; mouse affordances; resizable window — prove compact width, not only full screen |
@@ -289,5 +290,5 @@ Static guard: `tool/check_row_action_overflow.sh` (PRIMARY_SCOPE by default). Wi
 ## Related docs
 
 - Mix tokens/styles — this document § Mix (design tokens and styles).
-- [Architecture Details](architecture_details.md#design-system)
+- [Architecture Details](architecture_details.md#detail-owners)
 - [UI/UX Responsive Review](review/ui_ux_responsive_review.md)

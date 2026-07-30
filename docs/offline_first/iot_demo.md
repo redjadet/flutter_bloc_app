@@ -1,6 +1,9 @@
 # IoT Demo Offline-First Contract
 
-This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts the shared offline-first stack with Supabase as the remote source of truth. The **BLE** tab is a separate local showcase — see [`features/iot_ble.md`](../features/iot_ble.md).
+This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts
+the shared offline-first stack. Supabase owns the durable cloud dataset; the UI
+reads the per-user local projection. The **BLE** tab is a separate local
+showcase — see [`features/iot_ble.md`](../features/iot_ble.md).
 
 ## Goals
 
@@ -15,7 +18,10 @@ This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts
 - **Local**: Per-user Hive box `iot_demo_devices_<sanitized(supabaseUserId)>`, key `devices` (list of `IotDevice` JSON). Empty storage returns an empty list (no shared defaults).
 - **Remote**: Supabase table `public.iot_devices` with `user_id` (uuid, RLS); columns id, name, type, last_seen, connection_state (enum: disconnected | connecting | connected), toggled_on, value, updated_at. Apply migration in `docs/offline_first/supabase_iot_demo_user_id_migration.sql`.
 - Encryption: use `HiveService`/`HiveRepositoryBase`; never open Hive boxes directly.
-- Merge: last-write-wins by remote; `pullRemote` replaces the current user's local device list with fetched list from Supabase.
+- Merge: `pullRemote` may replace the current user's local projection with the
+  fetched Supabase list only when no pending IoT operation or debounced local
+  value change can be overwritten. The guard is checked before and after the
+  remote fetch.
 
 ## Repository Wiring
 
@@ -27,12 +33,17 @@ This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts
   - `watchDevices(filter)`: streams from the current user's local repo with filter applied locally. Empty stream when no user. Remote changes are pulled into local storage by background sync/realtime, so the UI still updates from the local stream.
   - `connect`/`disconnect`/`sendCommand`/`addDevice`: call local first, then enqueue `SyncOperation`; for add: payload includes full device (name, type, value); for command: kind/value.
   - `processOperation`: validates user match, then delegates to `applyIotDemoSyncOperation` in `iot_demo_sync_operation_applier.dart` for add/connect/disconnect/command. Legacy ops without `supabaseUserId` are skipped.
-  - `pullRemote`: calls remote `fetchDevices()`, then current user's `local.replaceDevices(remoteDevices)`; in-flight coalesced.
+  - `pullRemote`: coalesces per user; checks pending/debounced local work before
+    and after `fetchDevices()`; only then calls the current user's
+    `local.replaceDevices(remoteDevices)`.
 - DI: `OfflineFirstIotDemoRepository` built with `getCurrentSupabaseUserId` from `SupabaseAuthRepository` and factory `(id) => PersistentIotDemoRepository(hiveService, supabaseUserId: id)`; `IotDemoRepository` resolves to it. `BackgroundSyncCoordinator` receives `getSyncSupabaseUserId` and passes current user to `runSyncCycle` for user-scoped pending op filter.
 
 ## Conflict Resolution
 
-- Single source of truth: Supabase. On `pullRemote`, local list is replaced with the fetched list (no per-device `updated_at` merge in app; Supabase has `updated_at` for future use).
+- Durable cloud authority: Supabase. UI read model: local Hive projection.
+  `pullRemote` uses whole-list replacement only when local has no pending or
+  debounced user changes. The feature has no per-device `updated_at` merge yet,
+  so pending-operation guards are its don't-overwrite policy.
 - Pending operations are applied in order; idempotency keys include deviceId, action, and timestamp.
 
 ## UI Integration
@@ -46,13 +57,17 @@ This document defines how the **Cloud** tab of the IoT demo (`/iot-demo`) adopts
 
 ## Data Retention
 
-- Local device list persists until overwritten by `pullRemote` or user actions (connect/disconnect/sendCommand).
-- No automatic eviction; Supabase table is the source of truth.
+- Local device list persists until a guarded `pullRemote` replacement or user
+  action (connect/disconnect/sendCommand).
+- No automatic eviction; Supabase owns the durable cloud dataset while Hive
+  owns the UI's local read projection.
 
 ## Testing
 
 - Unit/repository: `SupabaseIotDemoRepository` (with mocked Supabase or when not configured); `OfflineFirstIotDemoRepository` with fake local, fake remote, fake `PendingSyncRepository` and registry.
-- Repository: watchDevices returns local stream; connect enqueues op; processOperation applies to remote; pullRemote fetches and merges.
+- Repository: `watchDevices` returns local stream; connect enqueues an operation;
+  `processOperation` applies to remote; `pullRemote` replaces only when pending
+  and concurrent local-work guards pass.
 - Widget: IoT demo page shows device list; sync runs in background with status in logs.
 
 ## Implementation Status

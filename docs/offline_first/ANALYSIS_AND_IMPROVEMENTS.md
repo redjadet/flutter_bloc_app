@@ -1,5 +1,12 @@
 # Offline-First Implementation Analysis & Improvements
 
+> Historical audit snapshot from 2025-11-27. Current policy lives in
+> [`adoption_guide.md`](adoption_guide.md),
+> [`dont_overwrite_guide.md`](dont_overwrite_guide.md), and
+> [`../adr/0002-offline-first-data.md`](../adr/0002-offline-first-data.md).
+> Test counts and production-readiness claims below are historical evidence, not
+> current verification.
+
 ## Analysis Date
 
 2025-11-27
