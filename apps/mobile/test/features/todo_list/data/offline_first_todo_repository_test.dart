@@ -10,6 +10,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 
 import '../../../test_helpers.dart' show FakeTimerService;
@@ -121,7 +122,9 @@ class _DeferredFetchRemoteRepository
   final List<TodoItem> _items;
   final Completer<void> _fetchGate = Completer<void>();
 
-  Future<void> releaseFetch() => _fetchGate.complete();
+  Future<void> releaseFetch() async {
+    _fetchGate.complete();
+  }
 
   @override
   Future<List<TodoItem>> fetchAll() async {
@@ -150,6 +153,7 @@ class _FakeRemoteRepository
     this.shouldThrowOnSave = false,
     this.shouldThrowOnDelete = false,
     this.shouldThrowOnFetch = false,
+    this.fetchException,
     // Keep disabled by default to avoid background merges affecting tests.
     this.enableWatch = false,
   }) : _items = initial ?? [];
@@ -160,10 +164,14 @@ class _FakeRemoteRepository
   final bool shouldThrowOnSave;
   final bool shouldThrowOnDelete;
   final bool shouldThrowOnFetch;
+  final Exception? fetchException;
   final bool enableWatch;
 
   @override
   Future<List<TodoItem>> fetchAll() async {
+    if (fetchException != null) {
+      throw fetchException!;
+    }
     if (shouldThrowOnFetch) {
       throw Exception('Simulated remote fetch failure');
     }
@@ -807,6 +815,29 @@ void main() {
         expect(local.length, 1);
         expect(local.first.id, localItem.id);
         expect(local.first.title, 'Synced Local');
+      },
+    );
+
+    test(
+      'pullRemote propagates auth changes to the sync coordinator',
+      () async {
+        final _FakeRemoteRepository remote = _FakeRemoteRepository(
+          fetchException: const SyncAuthUserChangedException(),
+          enableWatch: false,
+        );
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        await expectLater(
+          repository.pullRemote(),
+          throwsA(isA<SyncAuthUserChangedException>()),
+        );
       },
     );
 

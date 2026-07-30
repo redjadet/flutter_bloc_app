@@ -40,9 +40,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   @override
   Future<int> pendingSyncOperationCount({DateTime? now}) async {
     final List<SyncOperation> pending = await _pendingSyncRepository
-        .getPendingOperations(
-          now: now ?? DateTime.now().toUtc(),
-        );
+        .getPendingOperations(now: now ?? DateTime.now().toUtc());
     return pending
         .where((final op) => op.entityType == todoSyncEntityType)
         .length;
@@ -233,6 +231,8 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         _generateChangeId,
         _mergePolicy.shouldApplyRemote,
       );
+    } on SyncAuthUserChangedException {
+      rethrow;
     } on Exception catch (error, stackTrace) {
       AppLogger.error(
         'OfflineFirstTodoRepository.pullRemote failed',
