@@ -29,12 +29,12 @@ are **depth branches** for follow-up questions.
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
-### 3b. Alternate job-focused spine (~12 minutes)
+### 3b. 12-minute production ownership walkthrough
 
 Use when the JD emphasizes **production ownership** (analytics consent, Remote
 Config kill-switch, FCM safety, Crashlytics, frame budgets, release dry-run).
-Documented in the [README walkthrough](../README.md#12-minute-production-ownership-walkthrough)
-and [ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
+Policy: [ADR 0005](adr/0005-interview-showcase-scope.md) and
+[ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
 it is a registered alternate.
 
 | Min | Do | Evidence |
