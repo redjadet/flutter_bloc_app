@@ -53,6 +53,9 @@ void main() {
         () => messaging.onTokenRefresh,
       ).thenAnswer((_) => tokenRefreshController.stream);
       when(
+        () => messaging.getNotificationSettings(),
+      ).thenAnswer((_) async => _settings(AuthorizationStatus.notDetermined));
+      when(
         () => messaging.requestPermission(),
       ).thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
       when(() => messaging.getToken()).thenAnswer((_) async => 'fcm-token');
@@ -74,12 +77,38 @@ void main() {
 
     test('requestPermission maps authorization status', () async {
       when(
+        () => messaging.getNotificationSettings(),
+      ).thenAnswer((_) async => _settings(AuthorizationStatus.notDetermined));
+      when(
         () => messaging.requestPermission(),
       ).thenAnswer((_) async => _settings(AuthorizationStatus.provisional));
 
       final state = await repository.requestPermission();
 
       expect(state, FcmPermissionState.provisional);
+      verify(() => messaging.requestPermission()).called(1);
+    });
+
+    test('requestPermission skips OS prompt when already authorized', () async {
+      when(
+        () => messaging.getNotificationSettings(),
+      ).thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
+
+      final state = await repository.requestPermission();
+
+      expect(state, FcmPermissionState.authorized);
+      verifyNever(() => messaging.requestPermission());
+    });
+
+    test('requestPermission skips OS prompt when already denied', () async {
+      when(
+        () => messaging.getNotificationSettings(),
+      ).thenAnswer((_) async => _settings(AuthorizationStatus.denied));
+
+      final state = await repository.requestPermission();
+
+      expect(state, FcmPermissionState.denied);
+      verifyNever(() => messaging.requestPermission());
     });
 
     test('getToken returns null when firebase throws', () async {

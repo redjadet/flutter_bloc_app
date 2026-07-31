@@ -34,8 +34,9 @@ class FirebaseProductAnalytics implements ProductAnalytics {
     try {
       await _gateway.setAnalyticsCollectionEnabled(enabled: enabled);
     } on Object catch (error) {
-      AppLogger.debug(
-        'Firebase analytics gateway unavailable (setCollectionEnabled): $error',
+      AppLogger.warning(
+        '${IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix} '
+        '(setCollectionEnabled): $error',
       );
       _gatewayUnavailable = true;
     }
@@ -53,8 +54,9 @@ class FirebaseProductAnalytics implements ProductAnalytics {
         parameters: Map<String, Object>.from(event.parameters),
       );
     } on Object catch (error) {
-      AppLogger.debug(
-        'Firebase analytics gateway unavailable (logEvent): $error',
+      AppLogger.warning(
+        '${IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix} '
+        '(logEvent): $error',
       );
       _gatewayUnavailable = true;
     }

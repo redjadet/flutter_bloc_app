@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -138,6 +141,37 @@ void main() {
       );
     });
 
+    testWidgets('shows FCM stream error banner while remaining ready', (
+      final tester,
+    ) async {
+      final StreamController<PushMessage> foreground =
+          StreamController<PushMessage>.broadcast();
+      addTearDown(foreground.close);
+      final _ErroringFcm messaging = _ErroringFcm(foreground: foreground);
+      final ProductionReadinessCubit wired = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        messaging: messaging,
+        fcmMode: FcmDemoMode.simulated,
+        firebaseInitialized: false,
+      );
+      addTearDown(wired.close);
+      await wired.initialize();
+      foreground.addError(StateError('stream down'));
+      await pumpPage(tester, cubit: wired);
+
+      expect(
+        find.byKey(const ValueKey('production-readiness-error-banner')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('production-readiness-list')),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('renders at 1024px and textScale 2.0', (final tester) async {
       await pumpPage(
         tester,
@@ -210,4 +244,32 @@ class _FakeRemoteConfig implements RemoteConfigService {
 
   @override
   double getDouble(final String key) => 0;
+}
+
+class _ErroringFcm implements FcmMessagingService {
+  _ErroringFcm({required this.foreground});
+
+  final StreamController<PushMessage> foreground;
+
+  @override
+  Future<FcmPermissionState> requestPermission() async =>
+      FcmPermissionState.authorized;
+
+  @override
+  Future<String?> getToken() async => null;
+
+  @override
+  Future<String?> getApnsToken() async => null;
+
+  @override
+  Future<PushMessage?> getInitialMessage() async => null;
+
+  @override
+  Stream<PushMessage> get foregroundMessages => foreground.stream;
+
+  @override
+  Stream<PushMessage> get openedMessages => const Stream<PushMessage>.empty();
+
+  @override
+  Stream<String> get tokenRefreshes => const Stream<String>.empty();
 }

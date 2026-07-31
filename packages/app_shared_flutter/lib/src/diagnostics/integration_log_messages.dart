@@ -53,4 +53,8 @@ abstract final class IntegrationLogMessages {
 
   static const String remoteConfigRealtimeFetchDisabledPrefix =
       'RemoteConfig realtime fetch disabled (Keychain unavailable)';
+
+  /// Prefix for expected Analytics plugin channel failures (web/tests).
+  static const String firebaseAnalyticsGatewayUnavailablePrefix =
+      'Firebase analytics gateway unavailable';
 }
