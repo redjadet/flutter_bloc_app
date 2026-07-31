@@ -38,7 +38,7 @@ void main() {
             await SharedPreferences.getInstance(),
           );
       final Future<bool> next = repo.changes.first;
-      await repo.save(enabled: true);
+      expect(await repo.save(enabled: true), isTrue);
       expect(await next, isTrue);
     });
   });
@@ -70,6 +70,42 @@ void main() {
           'source': 'user@example.com',
         }),
         throwsArgumentError,
+      );
+    });
+    test('validateParameters rejects UUID-like identifiers', () {
+      expect(
+        () => AppAnalyticsEvent.validateParameters(<String, Object?>{
+          'source': '550e8400-e29b-41d4-a716-446655440000',
+        }),
+        throwsArgumentError,
+      );
+    });
+
+    test('validateParameters rejects long hex identifiers', () {
+      expect(
+        () => AppAnalyticsEvent.validateParameters(<String, Object?>{
+          'mode': 'deadbeefdeadbeefdeadbeefdeadbeef',
+        }),
+        throwsArgumentError,
+      );
+    });
+
+    test('parameters map is unmodifiable', () {
+      final AppAnalyticsEvent event = AppAnalyticsEvent.showcaseOpened(
+        mode: 'simulated',
+        source: 'production_readiness',
+      );
+      expect(() => event.parameters['mode'] = 'live', throwsUnsupportedError);
+    });
+
+    test('coerceToken falls back for illegal remote values', () {
+      expect(
+        AppAnalyticsEvent.coerceToken('user@example.com', fallback: 'defaults'),
+        'defaults',
+      );
+      expect(
+        AppAnalyticsEvent.coerceToken('remote', fallback: 'defaults'),
+        'remote',
       );
     });
   });

@@ -123,6 +123,26 @@ class AnalyzePerfTraceTest(unittest.TestCase):
         trace = summary["traces"]["perf_trace"]
         self.assertEqual(trace["gate"], "pass")
 
+    def test_cli_exit_nonzero_on_fail_trace(self):
+        script = Path(__file__).with_name("analyze_perf_trace.py")
+        result = __import__("subprocess").run(
+            [sys.executable, str(script), str(TESTDATA / "fail_p90.json")],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 1, msg=result.stdout[-500:])
+
+    def test_cli_exit_zero_on_pass_trace(self):
+        script = Path(__file__).with_name("analyze_perf_trace.py")
+        result = __import__("subprocess").run(
+            [sys.executable, str(script), str(TESTDATA / "pass_trace.json")],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout[-500:])
+
 
 if __name__ == "__main__":
     unittest.main()

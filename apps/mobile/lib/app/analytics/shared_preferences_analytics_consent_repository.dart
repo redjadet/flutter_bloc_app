@@ -34,18 +34,19 @@ class SharedPreferencesAnalyticsConsentRepository
   );
 
   @override
-  Future<void> save({required final bool enabled}) async {
-    await StorageGuard.run<void>(
+  Future<bool> save({required final bool enabled}) async {
+    final bool saved = await StorageGuard.run<bool>(
       logContext: 'SharedPreferencesAnalyticsConsentRepository.save',
       action: () async {
         final SharedPreferences preferences = await _preferences();
-        await preferences.setBool(preferencesKey, enabled);
+        return preferences.setBool(preferencesKey, enabled);
       },
-      fallback: () {},
+      fallback: () => false,
     );
-    if (!_changesController.isClosed) {
+    if (saved && !_changesController.isClosed) {
       _changesController.add(enabled);
     }
+    return saved;
   }
 
   /// App-lifetime singleton; close only for tests / DI reset.

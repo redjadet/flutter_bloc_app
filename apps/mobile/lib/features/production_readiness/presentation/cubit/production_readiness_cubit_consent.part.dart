@@ -2,7 +2,10 @@ part of 'production_readiness_cubit.dart';
 
 mixin _ProductionReadinessCubitConsent on _ProductionReadinessCubitBase {
   Future<void> setAnalyticsConsent({required final bool enabled}) async {
-    await _consentRepository.save(enabled: enabled);
+    final bool saved = await _consentRepository.save(enabled: enabled);
+    if (!saved) {
+      return;
+    }
     await _analytics.setCollectionEnabled(enabled: enabled);
     if (isClosed) {
       return;

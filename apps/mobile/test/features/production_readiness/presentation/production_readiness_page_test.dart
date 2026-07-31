@@ -206,9 +206,10 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => enabled;
 
   @override
-  Future<void> save({required final bool enabled}) async {
+  Future<bool> save({required final bool enabled}) async {
     this.enabled = enabled;
     _changes.add(enabled);
+    return true;
   }
 }
 

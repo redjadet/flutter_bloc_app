@@ -1,6 +1,7 @@
 /// Typed analytics events. Construct only via named factories.
 ///
 /// Allowed parameter keys: `mode`, `source`, `result`, `variant`.
+/// Values are schema-constrained (short enum-like tokens), never free-form IDs.
 final class AppAnalyticsEvent {
   factory AppAnalyticsEvent.showcaseOpened({
     required final String mode,
@@ -43,11 +44,12 @@ final class AppAnalyticsEvent {
     'result': result,
     'source': source,
   });
-  AppAnalyticsEvent._(this.name, this.parameters)
-    : assert(
-        parameters.keys.every(allowedParameterKeys.contains),
-        'Analytics parameters must use allowlisted keys only',
-      );
+
+  AppAnalyticsEvent._(final String name, final Map<String, String> parameters)
+    : name = name,
+      parameters = Map<String, String>.unmodifiable(parameters) {
+    validateParameters(this.parameters);
+  }
 
   static const Set<String> allowedParameterKeys = <String>{
     'mode',
@@ -55,6 +57,17 @@ final class AppAnalyticsEvent {
     'result',
     'variant',
   };
+
+  /// Max length for allowlisted string values (enum-like tokens only).
+  static const int maxParameterValueLength = 32;
+
+  static final RegExp _allowedValuePattern = RegExp(
+    r'^[a-zA-Z][a-zA-Z0-9_.:\-]*$',
+  );
+  static final RegExp _uuidPattern = RegExp(
+    r'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$',
+  );
+  static final RegExp _hexIdPattern = RegExp(r'^[0-9a-fA-F]{16,}$');
 
   final String name;
   final Map<String, String> parameters;
@@ -77,14 +90,39 @@ final class AppAnalyticsEvent {
           'Analytics parameter values must be String',
         );
       }
-      if (_looksLikeForbiddenPayload(value)) {
+      if (!_isAllowedParameterValue(value)) {
         throw ArgumentError.value(
           value,
           entry.key,
-          'Analytics parameter looks like a forbidden payload',
+          'Analytics parameter is not a schema-allowed token',
         );
       }
     }
+  }
+
+  /// Coerce free-form remote/config strings into allowlisted tokens.
+  static String coerceToken(
+    final String raw, {
+    required final String fallback,
+  }) {
+    final String trimmed = raw.trim();
+    if (_isAllowedParameterValue(trimmed)) {
+      return trimmed;
+    }
+    return fallback;
+  }
+
+  static bool _isAllowedParameterValue(final String value) {
+    if (value.isEmpty || value.length > maxParameterValueLength) {
+      return false;
+    }
+    if (!_allowedValuePattern.hasMatch(value)) {
+      return false;
+    }
+    if (_looksLikeForbiddenPayload(value)) {
+      return false;
+    }
+    return true;
   }
 
   static bool _looksLikeForbiddenPayload(final String value) {
@@ -93,6 +131,9 @@ final class AppAnalyticsEvent {
       return true; // email-like
     }
     if (lower.contains('token') || lower.contains('bearer ')) {
+      return true;
+    }
+    if (_uuidPattern.hasMatch(value) || _hexIdPattern.hasMatch(value)) {
       return true;
     }
     // Long opaque strings that look like device tokens.
