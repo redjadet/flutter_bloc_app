@@ -121,7 +121,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => false;
 
   @override
-  Future<void> save({required final bool enabled}) async {}
+  Future<bool> save({required final bool enabled}) async => true;
 }
 
 GoRouterState _state(final String path) {

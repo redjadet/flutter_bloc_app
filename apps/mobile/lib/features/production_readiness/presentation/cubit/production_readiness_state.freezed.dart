@@ -225,7 +225,7 @@ return $default(_that.status,_that.mode,_that.analyticsConsentEnabled,_that.loca
 
 class _ProductionReadinessState implements ProductionReadinessState {
   const _ProductionReadinessState({this.status = ProductionReadinessStatus.initial, this.mode = ProductionReadinessMode.simulated, this.analyticsConsentEnabled = false, this.localEventCount = 0, this.releaseFlagEnabled = true, this.releaseVariant = 'control', this.configSource = 'defaults', this.crashlyticsAvailable = false, this.fcmMode = FcmDemoMode.simulated, this.fcmPermission, this.fcmDataKeyCount = 0, this.fcmHasTitle = false, this.fcmHasBody = false, this.fcmLastSource, this.frameSampleCount = 0, this.frameP90Ms = 0, this.frameP99Ms = 0, this.framesMissedOver16_7Ms = 0, this.errorMessage});
-  
+
 
 @override@JsonKey() final  ProductionReadinessStatus status;
 @override@JsonKey() final  ProductionReadinessMode mode;

@@ -417,9 +417,17 @@ def main() -> int:
             "top_async": [s.to_row() for s in top_async],
         }
 
+    def gate_exit_code() -> int:
+        """Nonzero when any analyzed trace gate outcome is fail."""
+        for summary in out["traces"].values():
+            gate = summary.get("gate") or {}
+            if gate.get("outcome") == "fail":
+                return 1
+        return 0
+
     if args.json:
         print(json.dumps(out, indent=2, sort_keys=True))
-        return 0
+        return gate_exit_code()
 
     print(f"perf trace: {args.path}")
     for k, summary in out["traces"].items():
@@ -464,7 +472,7 @@ def main() -> int:
         show("Top complete spans (ph='X')", summary["top_complete"])
         show("Top async spans (b/e ids)", summary["top_async"])
 
-    return 0
+    return gate_exit_code()
 
 
 if __name__ == "__main__":

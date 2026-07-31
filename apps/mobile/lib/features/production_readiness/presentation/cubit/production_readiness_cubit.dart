@@ -70,8 +70,6 @@ abstract class _ProductionReadinessCubitBase
 
   void _startFrameMonitor();
 
-  Future<void> _trackNotificationReceived();
-
   void _subscribeToConsentChanges();
 
   Future<void> initialize() async {
@@ -128,8 +126,8 @@ abstract class _ProductionReadinessCubitBase
       await _analytics.track(
         AppAnalyticsEvent.releaseFlagEvaluated(
           result: releaseEnabled ? 'enabled' : 'disabled',
-          variant: variant,
-          source: source,
+          variant: AppAnalyticsEvent.coerceToken(variant, fallback: 'control'),
+          source: AppAnalyticsEvent.coerceToken(source, fallback: 'defaults'),
         ),
       );
       if (!isClosed) {
@@ -151,8 +149,9 @@ abstract class _ProductionReadinessCubitBase
   }
 
   void emitSimulatedNotification() {
+    // Tracking happens once via the foreground listener when the simulated
+    // message is delivered — do not track here or events double-count.
     _simulationController?.emitSimulatedNotification();
-    unawaited(_trackNotificationReceived());
   }
 
   Future<void> refreshReleaseFlag() async {
@@ -187,8 +186,8 @@ abstract class _ProductionReadinessCubitBase
     await _analytics.track(
       AppAnalyticsEvent.releaseFlagEvaluated(
         result: releaseEnabled ? 'enabled' : 'disabled',
-        variant: variant,
-        source: source,
+        variant: AppAnalyticsEvent.coerceToken(variant, fallback: 'control'),
+        source: AppAnalyticsEvent.coerceToken(source, fallback: 'defaults'),
       ),
     );
     if (!isClosed) {

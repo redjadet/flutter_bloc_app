@@ -104,8 +104,15 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     if (consent == null || analytics == null) {
       return;
     }
+    final bool previous = _enabled;
     setState(() => _enabled = value);
-    await consent.save(enabled: value);
+    final bool saved = await consent.save(enabled: value);
+    if (!saved) {
+      if (mounted) {
+        setState(() => _enabled = previous);
+      }
+      return;
+    }
     await analytics.setCollectionEnabled(enabled: value);
   }
 
