@@ -56,7 +56,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     unawaited(_load());
     final AnalyticsConsentRepository? consent = _consentOrNull;
     if (consent != null) {
-      _changesSubscription = consent.changes.listen((final bool enabled) {
+      _changesSubscription = consent.changes.listen((final enabled) {
         if (!mounted) {
           return;
         }

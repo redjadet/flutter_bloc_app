@@ -209,7 +209,7 @@ abstract class _ProductionReadinessCubitBase
 
   void _subscribeToConsentChanges() {
     registerSubscription(
-      _consentRepository.changes.listen((final bool enabled) {
+      _consentRepository.changes.listen((final enabled) {
         if (isClosed) {
           return;
         }
