@@ -3403,6 +3403,10 @@ class AppLocalizationsTr extends AppLocalizations {
       'Açıkken uygulama yalnızca düşük kardinaliteli ürün olayları (mode, source, result, variant) gönderebilir. Jeton, mesaj içeriği ve kimlikler asla dahil edilmez. Varsayılan kapalıdır.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'Analitik onayı geçici olarak kullanılamıyor. Ürün analitikleri kapalı kalır.';
+
+  @override
   String get productionReadinessPageTitle => 'Üretim hazırlığı';
 
   @override

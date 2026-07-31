@@ -2528,6 +2528,7 @@
   "settingsAnalyticsConsentSectionTitle": "Datenschutz",
   "settingsAnalyticsConsentTitle": "Produktanalytik",
   "settingsAnalyticsConsentExplanation": "Wenn aktiviert, kann die App nach Opt-in niedrigkardinale Produkt-Events (mode, source, result, variant) senden. Tokens, Nachrichteninhalte und Kennungen werden nie einbezogen. Standard ist aus.",
+  "settingsAnalyticsUnavailable": "Analytics-Einwilligung ist vorübergehend nicht verfügbar. Produkt-Analytics bleiben aus.",
   "productionReadinessPageTitle": "Produktionsbereitschaft",
   "exampleProductionReadinessButton": "Produktionsbereitschaft",
   "productionReadinessModeLabel": "Laufzeitmodus",

@@ -3390,6 +3390,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'When enabled, the app may send low-cardinality product events (mode, source, result, variant) after you opt in. Tokens, message content, and identifiers are never included. Default is off.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'Analytics consent is temporarily unavailable. Product analytics stay off.';
+
+  @override
   String get productionReadinessPageTitle => 'Production readiness';
 
   @override

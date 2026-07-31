@@ -3422,6 +3422,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Cuando está activada, la app puede enviar eventos de producto de baja cardinalidad (mode, source, result, variant) tras el consentimiento. Nunca se incluyen tokens, contenido de mensajes ni identificadores. Desactivado por defecto.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'El consentimiento de analítica no está disponible temporalmente. Las analíticas de producto permanecen desactivadas.';
+
+  @override
   String get productionReadinessPageTitle => 'Preparación para producción';
 
   @override

@@ -2528,6 +2528,7 @@
   "settingsAnalyticsConsentSectionTitle": "Confidentialité",
   "settingsAnalyticsConsentTitle": "Analytique produit",
   "settingsAnalyticsConsentExplanation": "Lorsqu'elle est activée, l'application peut envoyer des événements produit à faible cardinalité (mode, source, result, variant) après opt-in. Jetons, contenu des messages et identifiants ne sont jamais inclus. Désactivé par défaut.",
+  "settingsAnalyticsUnavailable": "Le consentement analytique est temporairement indisponible. Les analyses produit restent désactivées.",
   "productionReadinessPageTitle": "Préparation production",
   "exampleProductionReadinessButton": "Préparation production",
   "productionReadinessModeLabel": "Mode d'exécution",

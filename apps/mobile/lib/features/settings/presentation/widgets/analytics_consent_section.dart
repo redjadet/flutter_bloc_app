@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
@@ -27,6 +28,7 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   bool _enabled = false;
   bool _loading = true;
   bool _available = true;
+  StreamSubscription<bool>? _changesSubscription;
 
   AnalyticsConsentRepository? get _consentOrNull {
     if (widget.consentRepository != null) {
@@ -52,6 +54,21 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   void initState() {
     super.initState();
     unawaited(_load());
+    final AnalyticsConsentRepository? consent = _consentOrNull;
+    if (consent != null) {
+      _changesSubscription = consent.changes.listen((final bool enabled) {
+        if (!mounted) {
+          return;
+        }
+        setState(() => _enabled = enabled);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    unawaited(_changesSubscription?.cancel());
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -89,10 +106,21 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
 
   @override
   Widget build(final BuildContext context) {
+    final l10n = context.l10n;
     if (!_available) {
+      if (kReleaseMode) {
+        return SettingsSection(
+          title: l10n.settingsAnalyticsConsentSectionTitle,
+          child: CommonCard(
+            child: ListTile(
+              key: const ValueKey('settings-analytics-consent-unavailable'),
+              title: Text(l10n.settingsAnalyticsUnavailable),
+            ),
+          ),
+        );
+      }
       return const SizedBox.shrink();
     }
-    final l10n = context.l10n;
     return SettingsSection(
       title: l10n.settingsAnalyticsConsentSectionTitle,
       child: CommonCard(

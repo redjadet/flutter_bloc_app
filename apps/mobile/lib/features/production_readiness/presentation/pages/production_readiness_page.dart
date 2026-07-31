@@ -46,6 +46,20 @@ class ProductionReadinessPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                if (state.errorMessage != null)
+                  Padding(
+                    padding: EdgeInsets.only(bottom: context.responsiveGapM),
+                    child: CommonCard(
+                      key: const ValueKey('production-readiness-error-banner'),
+                      child: ListTile(
+                        leading: Icon(
+                          Icons.error_outline,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        title: Text(state.errorMessage!),
+                      ),
+                    ),
+                  ),
                 if (!state.releaseFlagEnabled)
                   Padding(
                     padding: EdgeInsets.only(bottom: context.responsiveGapM),

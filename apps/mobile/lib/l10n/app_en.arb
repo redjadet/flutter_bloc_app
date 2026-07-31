@@ -4206,6 +4206,10 @@
   "@settingsAnalyticsConsentExplanation": {
     "description": "Explanation under analytics consent toggle"
   },
+  "settingsAnalyticsUnavailable": "Analytics consent is temporarily unavailable. Product analytics stay off.",
+  "@settingsAnalyticsUnavailable": {
+    "description": "Shown in release builds when analytics DI failed to register"
+  },
   "productionReadinessPageTitle": "Production readiness",
   "@productionReadinessPageTitle": {
     "description": "Title for production readiness demo page"

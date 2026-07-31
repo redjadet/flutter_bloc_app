@@ -3435,6 +3435,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wenn aktiviert, kann die App nach Opt-in niedrigkardinale Produkt-Events (mode, source, result, variant) senden. Tokens, Nachrichteninhalte und Kennungen werden nie einbezogen. Standard ist aus.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'Analytics-Einwilligung ist vorübergehend nicht verfügbar. Produkt-Analytics bleiben aus.';
+
+  @override
   String get productionReadinessPageTitle => 'Produktionsbereitschaft';
 
   @override

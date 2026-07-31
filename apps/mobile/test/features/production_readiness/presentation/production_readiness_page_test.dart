@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:feature_flags/feature_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -161,6 +163,10 @@ void main() {
 
 class _FakeConsent implements AnalyticsConsentRepository {
   bool enabled = false;
+  final StreamController<bool> _changes = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get changes => _changes.stream;
 
   @override
   Future<bool> load() async => enabled;
@@ -168,6 +174,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   @override
   Future<void> save({required final bool enabled}) async {
     this.enabled = enabled;
+    _changes.add(enabled);
   }
 }
 

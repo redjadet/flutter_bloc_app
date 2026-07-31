@@ -6187,6 +6187,12 @@ abstract class AppLocalizations {
   /// **'When enabled, the app may send low-cardinality product events (mode, source, result, variant) after you opt in. Tokens, message content, and identifiers are never included. Default is off.'**
   String get settingsAnalyticsConsentExplanation;
 
+  /// Shown in release builds when analytics DI failed to register
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics consent is temporarily unavailable. Product analytics stay off.'**
+  String get settingsAnalyticsUnavailable;
+
   /// Title for production readiness demo page
   ///
   /// In en, this message translates to:

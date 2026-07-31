@@ -3434,6 +3434,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Lorsqu\'elle est activée, l\'application peut envoyer des événements produit à faible cardinalité (mode, source, result, variant) après opt-in. Jetons, contenu des messages et identifiants ne sont jamais inclus. Désactivé par défaut.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'Le consentement analytique est temporairement indisponible. Les analyses produit restent désactivées.';
+
+  @override
   String get productionReadinessPageTitle => 'Préparation production';
 
   @override

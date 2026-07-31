@@ -2528,6 +2528,7 @@
   "settingsAnalyticsConsentSectionTitle": "Privacidad",
   "settingsAnalyticsConsentTitle": "Analítica de producto",
   "settingsAnalyticsConsentExplanation": "Cuando está activada, la app puede enviar eventos de producto de baja cardinalidad (mode, source, result, variant) tras el consentimiento. Nunca se incluyen tokens, contenido de mensajes ni identificadores. Desactivado por defecto.",
+  "settingsAnalyticsUnavailable": "El consentimiento de analítica no está disponible temporalmente. Las analíticas de producto permanecen desactivadas.",
   "productionReadinessPageTitle": "Preparación para producción",
   "exampleProductionReadinessButton": "Preparación para producción",
   "productionReadinessModeLabel": "Modo de ejecución",

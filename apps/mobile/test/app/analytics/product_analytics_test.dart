@@ -30,6 +30,17 @@ void main() {
       await repo.save(enabled: false);
       expect(await repo.load(), isFalse);
     });
+
+    test('save emits changes stream', () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      final SharedPreferencesAnalyticsConsentRepository repo =
+          SharedPreferencesAnalyticsConsentRepository(
+            await SharedPreferences.getInstance(),
+          );
+      final Future<bool> next = repo.changes.first;
+      await repo.save(enabled: true);
+      expect(await next, isTrue);
+    });
   });
 
   group('AppAnalyticsEvent allowlist', () {

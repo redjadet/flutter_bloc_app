@@ -166,6 +166,8 @@ Future<bool> _initializeConfiguredFirebase(
 ) async {
   await Firebase.initializeApp(options: options);
   AppLogger.info('Firebase initialized for project: ${options.projectId}');
+  // Opt out until app-layer consent is loaded in registerAnalyticsServices.
+  await _disableAnalyticsUntilConsentApplied();
   await _activateAppCheck();
   await _enableDatabasePersistence();
   return true;
@@ -174,7 +176,20 @@ Future<bool> _initializeConfiguredFirebase(
 Future<void> _prepareReusedFirebaseApp() async {
   await _markIosSimulatorInDebugIfNeeded();
   await _markAndroidEmulatorInDebugIfNeeded();
+  await _disableAnalyticsUntilConsentApplied();
   await _enableDatabasePersistence();
+}
+
+/// Firebase Analytics defaults to collecting until disabled; close the window
+/// between [Firebase.initializeApp] and consent-aware DI registration.
+Future<void> _disableAnalyticsUntilConsentApplied() async {
+  try {
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(false);
+  } on Object catch (error) {
+    AppLogger.warning(
+      'Could not disable Firebase Analytics before consent load: $error',
+    );
+  }
 }
 
 void _logFirebaseInitializationFailure(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:feature_flags/feature_flags.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
@@ -149,6 +151,48 @@ void main() {
       expect(wired.state.fcmHasBody, isTrue);
       expect(wired.state.fcmLastSource, message.source.name);
     });
+
+    test('simulated notification does not track without consent', () async {
+      final SimulatedFcmMessagingService messaging =
+          SimulatedFcmMessagingService();
+      addTearDown(messaging.dispose);
+
+      final ProductionReadinessCubit wired = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        messaging: messaging,
+        simulationController: messaging,
+        fcmMode: FcmDemoMode.simulated,
+        firebaseInitialized: false,
+      );
+      addTearDown(wired.close);
+
+      await wired.initialize();
+      expect(analytics.eventCount, 0);
+      wired.emitSimulatedNotification();
+      await Future<void>.delayed(Duration.zero);
+      expect(analytics.eventCount, 0);
+    });
+
+    test('refreshReleaseFlag does not track without consent', () async {
+      await cubit.initialize();
+      expect(analytics.eventCount, 0);
+      await cubit.refreshReleaseFlag();
+      expect(analytics.eventCount, 0);
+    });
+
+    test('external consent save syncs cubit state', () async {
+      await cubit.initialize();
+      expect(cubit.state.analyticsConsentEnabled, isFalse);
+
+      await consent.save(enabled: true);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.state.analyticsConsentEnabled, isTrue);
+      expect(analytics.collectionEnabled, isTrue);
+    });
   });
 }
 
@@ -177,6 +221,10 @@ class _FakeFrameMonitor implements FrameTimingMonitor {
 
 class _FakeConsent implements AnalyticsConsentRepository {
   bool enabled = false;
+  final StreamController<bool> _changes = StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get changes => _changes.stream;
 
   @override
   Future<bool> load() async => enabled;
@@ -184,6 +232,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   @override
   Future<void> save({required final bool enabled}) async {
     this.enabled = enabled;
+    _changes.add(enabled);
   }
 }
 

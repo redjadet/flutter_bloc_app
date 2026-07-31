@@ -3482,6 +3482,7 @@
   "settingsAnalyticsConsentSectionTitle": "الخصوصية",
   "settingsAnalyticsConsentTitle": "تحليلات المنتج",
   "settingsAnalyticsConsentExplanation": "عند التفعيل، قد ترسل التطبيق أحداث منتج منخفضة التعدد (mode وsource وresult وvariant) بعد الموافقة. لا تُضمَّن الرموز أو محتوى الرسائل أو المعرفات أبدًا. الافتراضي متوقف.",
+  "settingsAnalyticsUnavailable": "موافقة التحليلات غير متاحة مؤقتًا. تبقى تحليلات المنتج متوقفة.",
   "productionReadinessPageTitle": "جاهزية الإنتاج",
   "exampleProductionReadinessButton": "جاهزية الإنتاج",
   "productionReadinessModeLabel": "وضع التشغيل",
