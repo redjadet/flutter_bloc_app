@@ -33,8 +33,8 @@ are **depth branches** for follow-up questions.
 
 Use when the JD emphasizes **production ownership** (analytics consent, Remote
 Config kill-switch, FCM safety, Crashlytics, frame budgets, release dry-run).
-Policy: [ADR 0005](adr/0005-interview-showcase-scope.md) and
-[ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
+Documented in the [README walkthrough](../README.md#12-minute-production-ownership-walkthrough)
+and [ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
 it is a registered alternate.
 
 | Min | Do | Evidence |
