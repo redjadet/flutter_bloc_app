@@ -123,12 +123,12 @@ jobs:
             -storepass android \
             -keypass android \
             -dname 'CN=CI Dry Run, OU=Engineering, O=Local, L=Local, ST=NA, C=US'
-          cat > apps/mobile/android/key.properties <<EOF
-storePassword=android
-keyPassword=android
-keyAlias=ci
-storeFile=${KEYSTORE_PATH}
-EOF
+          printf '%s\n' \
+            'storePassword=android' \
+            'keyPassword=android' \
+            'keyAlias=ci' \
+            "storeFile=${KEYSTORE_PATH}" \
+            > apps/mobile/android/key.properties
 
       - name: Build Android release appbundle
         working-directory: apps/mobile
