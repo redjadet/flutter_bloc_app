@@ -15,10 +15,11 @@ import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_control
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_state.dart';
 
+part 'production_readiness_cubit_consent.part.dart';
 part 'production_readiness_cubit_fcm.part.dart';
 
 class ProductionReadinessCubit extends _ProductionReadinessCubitBase
-    with _ProductionReadinessCubitFcm {
+    with _ProductionReadinessCubitConsent, _ProductionReadinessCubitFcm {
   ProductionReadinessCubit({
     required super.remoteConfig,
     required super.consentRepository,
@@ -70,6 +71,8 @@ abstract class _ProductionReadinessCubitBase
   void _startFrameMonitor();
 
   Future<void> _trackNotificationReceived();
+
+  void _subscribeToConsentChanges();
 
   Future<void> initialize() async {
     emit(state.copyWith(status: ProductionReadinessStatus.loading));
@@ -191,44 +194,6 @@ abstract class _ProductionReadinessCubitBase
     if (!isClosed) {
       emit(state.copyWith(localEventCount: _memoryAnalytics?.eventCount ?? 0));
     }
-  }
-
-  Future<void> setAnalyticsConsent({required final bool enabled}) async {
-    await _consentRepository.save(enabled: enabled);
-    await _analytics.setCollectionEnabled(enabled: enabled);
-    if (isClosed) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        analyticsConsentEnabled: enabled,
-        localEventCount: _memoryAnalytics?.eventCount ?? 0,
-      ),
-    );
-  }
-
-  void _subscribeToConsentChanges() {
-    registerSubscription(
-      _consentRepository.changes.listen((final enabled) {
-        if (isClosed) {
-          return;
-        }
-        unawaited(_applyExternalConsent(enabled: enabled));
-      }),
-    );
-  }
-
-  Future<void> _applyExternalConsent({required final bool enabled}) async {
-    await _analytics.setCollectionEnabled(enabled: enabled);
-    if (isClosed || state.analyticsConsentEnabled == enabled) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        analyticsConsentEnabled: enabled,
-        localEventCount: _memoryAnalytics?.eventCount ?? 0,
-      ),
-    );
   }
 
   @override

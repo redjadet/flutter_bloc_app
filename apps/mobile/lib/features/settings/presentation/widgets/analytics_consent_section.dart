@@ -56,12 +56,17 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
     unawaited(_load());
     final AnalyticsConsentRepository? consent = _consentOrNull;
     if (consent != null) {
-      _changesSubscription = consent.changes.listen((final enabled) {
-        if (!mounted) {
-          return;
-        }
-        setState(() => _enabled = enabled);
-      });
+      _changesSubscription = consent.changes.listen(
+        (final enabled) {
+          if (!mounted) {
+            return;
+          }
+          setState(() => _enabled = enabled);
+        },
+        onError: (final Object _, final StackTrace _) {
+          // Keep last loaded toggle value if the consent stream fails.
+        },
+      );
     }
   }
 
