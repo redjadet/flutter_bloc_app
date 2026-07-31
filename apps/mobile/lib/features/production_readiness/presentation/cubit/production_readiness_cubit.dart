@@ -70,8 +70,6 @@ abstract class _ProductionReadinessCubitBase
 
   void _startFrameMonitor();
 
-  Future<void> _trackNotificationReceived();
-
   void _subscribeToConsentChanges();
 
   Future<void> initialize() async {

@@ -45,10 +45,9 @@ final class AppAnalyticsEvent {
     'source': source,
   });
 
-  AppAnalyticsEvent._(final String name, final Map<String, String> parameters)
-    : name = name,
-      parameters = Map<String, String>.unmodifiable(parameters) {
-    validateParameters(this.parameters);
+  AppAnalyticsEvent._(this.name, final Map<String, String> rawParameters)
+    : parameters = Map<String, String>.unmodifiable(rawParameters) {
+    validateParameters(parameters);
   }
 
   static const Set<String> allowedParameterKeys = <String>{

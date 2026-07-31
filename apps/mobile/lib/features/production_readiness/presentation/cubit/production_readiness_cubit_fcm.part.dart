@@ -85,7 +85,6 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
     );
   }
 
-  @override
   Future<void> _trackNotificationReceived() async {
     if (!state.analyticsConsentEnabled) {
       return;
