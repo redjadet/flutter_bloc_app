@@ -15,10 +15,11 @@ mixin _ProductionReadinessCubitConsent on _ProductionReadinessCubitBase {
     );
   }
 
+  @override
   void _subscribeToConsentChanges() {
     registerSubscription(
       _consentRepository.changes.listen(
-        (final bool enabled) {
+        (final enabled) {
           if (isClosed) {
             return;
           }
