@@ -1,15 +1,5 @@
 # Flutter BLoC App
 
-Production-style Flutter reference app for a mobile engineering portfolio:
-feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
-CI-backed validation, and a broad set of integration demos. The repo is
-intentionally proof-oriented: claims in the README link to source, docs, or
-commands instead of relying on generic architecture statements.
-
-Interview / production-ownership walk: see
-[interview showcase §3b](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough)
-(~12 minutes). General portfolio spine: [§3](docs/interview_showcase.md#3-30-minute-walk-frozen-spine).
-
 ## Platform and toolchain
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.8-blue.svg)](https://flutter.dev)
@@ -72,6 +62,16 @@ Interview / production-ownership walk: see
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
+
+Production-style Flutter reference app for a mobile engineering portfolio:
+feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
+CI-backed validation, and a broad set of integration demos. The repo is
+intentionally proof-oriented: claims in the README link to source, docs, or
+commands instead of relying on generic architecture statements.
+
+Interview / production-ownership walk: see
+[interview showcase §3b](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough)
+(~12 minutes). General portfolio spine: [§3](docs/interview_showcase.md#3-30-minute-walk-frozen-spine).
 
 ## Live app
 
