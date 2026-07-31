@@ -18,6 +18,9 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
     required this._coordinator,
   }) : super(const FcmDemoState());
 
+  static const String _streamErrorMessage =
+      'Push notification stream is temporarily unavailable.';
+
   final FcmMessagingService _messaging;
   final BackgroundSyncCoordinator _coordinator;
   bool _streamsSubscribed = false;
@@ -135,7 +138,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
             emit(
               state.copyWith(
                 status: FcmDemoStatus.error,
-                errorMessage: error.toString(),
+                errorMessage: _streamErrorMessage,
               ),
             );
           },
@@ -158,7 +161,7 @@ class FcmDemoCubit extends Cubit<FcmDemoState>
             emit(
               state.copyWith(
                 status: FcmDemoStatus.error,
-                errorMessage: error.toString(),
+                errorMessage: _streamErrorMessage,
               ),
             );
           },

@@ -127,3 +127,12 @@ For any trace we change (or any optimization we attempt), only proceed if we see
 - **any `>16.7ms` frames** (true frame-budget misses on 60Hz),
 
 then identify the tightest code-level hypothesis and re-capture before/after on the pinned simulator UDID.
+
+### Frame budget scope (locked)
+
+Frame budgets apply **only** to Flutter `FrameTiming` samples and async `Frame` timeline spans
+from `traceAction()` captures (`tool/analyze_perf_trace.py`). Do **not** treat arbitrary
+operation durations (for example `PipelineProduce`, `PipelineItem`, or other complete/async
+spans) as frames when evaluating the gate. Checked-in thresholds live in `tool/perf_budgets.json`;
+`evaluate_frame_budget_gate()` enforces pass / fail / report-only outcomes (report-only when a
+3-run baseline p90 spread exceeds 20%).

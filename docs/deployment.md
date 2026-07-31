@@ -45,6 +45,20 @@ Ruby deps: `bundle install` (see root [`Gemfile`](../Gemfile), Fastlane 2.234.0)
 - GitHub Actions and deploy helpers use `tool/workspace_paths.sh` for app root;
   Firebase deploy routing is in [`tool/commit_push_pr_deploy.py`](../tool/commit_push_pr_deploy.py).
 
+### Mobile release dry-run (not store publishing)
+
+Manual workflow [`.github/workflows/mobile_release_dry_run.yml`](../.github/workflows/mobile_release_dry_run.yml)
+(`workflow_dispatch` only) proves release **builds** and perf budget tooling:
+
+- Delivery checklist (`CHECKLIST_ALLOW_REUSE=auto`)
+- Firebase Functions `npm test`
+- Android release AAB with an **ephemeral CI keystore** (discarded after the job)
+- iOS `flutter build ios --release --no-codesign`
+- Perf budget fixture gate (`tool/analyze_perf_trace.py` + unit tests)
+
+It does **not** publish to Play, TestFlight, Firebase App Distribution, or App
+Store Connect. Use Fastlane / `tool/release_*.sh` for real store uploads.
+
 ## Both stores (iOS + Android)
 
 Use this when you want **one scripted flow** for TestFlight and Play internal testing

@@ -16,6 +16,7 @@ part 'flow_scenarios_helpers.dart';
 part 'flow_scenarios_primary.dart';
 part 'flow_scenarios_secondary.dart';
 part 'flow_scenarios_tertiary.dart';
+part 'flow_scenarios_production_readiness.dart';
 
 void registerSmokeIntegrationFlows() {
   registerGuestSignInIntegrationFlow();
@@ -37,6 +38,7 @@ void registerSmokeIntegrationFlows() {
   registerNativePlatformShowcaseIntegrationFlow();
   registerWhiteboardIntegrationFlow();
   registerCameraGalleryIntegrationFlow();
+  registerProductionReadinessIntegrationFlow();
 }
 
 void registerPrSmokeIntegrationFlows() {
@@ -48,6 +50,7 @@ void registerPrSmokeIntegrationFlows() {
   registerTodoListIntegrationFlow();
   registerCounterPersistenceIntegrationFlow();
   registerChatListIntegrationFlow();
+  registerProductionReadinessIntegrationFlow();
 }
 
 void registerExtendedIntegrationFlows() {

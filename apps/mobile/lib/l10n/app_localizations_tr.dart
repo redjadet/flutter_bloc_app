@@ -3391,4 +3391,125 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get openCertificatePinningDemoTooltip =>
       'Open certificate pinning demo';
+
+  @override
+  String get settingsAnalyticsConsentSectionTitle => 'Gizlilik';
+
+  @override
+  String get settingsAnalyticsConsentTitle => 'Ürün analitiği';
+
+  @override
+  String get settingsAnalyticsConsentExplanation =>
+      'Açıkken uygulama yalnızca düşük kardinaliteli ürün olayları (mode, source, result, variant) gönderebilir. Jeton, mesaj içeriği ve kimlikler asla dahil edilmez. Varsayılan kapalıdır.';
+
+  @override
+  String get productionReadinessPageTitle => 'Üretim hazırlığı';
+
+  @override
+  String get exampleProductionReadinessButton => 'Üretim hazırlığı';
+
+  @override
+  String get productionReadinessModeLabel => 'Çalışma modu';
+
+  @override
+  String get productionReadinessModeLive => 'Canlı Firebase';
+
+  @override
+  String get productionReadinessModeSimulated => 'Simüle';
+
+  @override
+  String get productionReadinessConsentLabel => 'Analitik onayı';
+
+  @override
+  String get productionReadinessConsentOn => 'Toplama açık';
+
+  @override
+  String get productionReadinessConsentOff => 'Toplama kapalı (varsayılan)';
+
+  @override
+  String get productionReadinessEventCountLabel => 'Yerel olay sayısı';
+
+  @override
+  String get productionReadinessReleaseFlagLabel => 'Sürüm bayrağı';
+
+  @override
+  String get productionReadinessReleaseFlagEnabled => 'Açık';
+
+  @override
+  String get productionReadinessReleaseFlagDisabled => 'Kapalı (kill-switch)';
+
+  @override
+  String get productionReadinessVariantLabel => 'Varyant';
+
+  @override
+  String get productionReadinessSourceLabel => 'Yapılandırma kaynağı';
+
+  @override
+  String get productionReadinessCrashlyticsLabel => 'Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsActive =>
+      'Kullanılabilir (Firebase başlatıldı)';
+
+  @override
+  String get productionReadinessCrashlyticsUnavailable =>
+      'Kullanılamıyor (simüle / Firebase yok)';
+
+  @override
+  String get productionReadinessFcmLabel => 'Anlık bildirimler (FCM)';
+
+  @override
+  String get productionReadinessFcmModeLabel => 'FCM modu';
+
+  @override
+  String get productionReadinessFcmModeLive => 'Canlı';
+
+  @override
+  String get productionReadinessFcmModeSimulated => 'Simüle';
+
+  @override
+  String get productionReadinessFcmPermissionLabel => 'İzin';
+
+  @override
+  String get productionReadinessFcmLastSource => 'Son kaynak';
+
+  @override
+  String get productionReadinessFcmHasTitle => 'Başlık var';
+
+  @override
+  String get productionReadinessFcmHasBody => 'Gövde var';
+
+  @override
+  String get productionReadinessFcmDataKeys => 'Veri anahtarları';
+
+  @override
+  String get productionReadinessFcmNoMessage => 'Henüz mesaj alınmadı';
+
+  @override
+  String get productionReadinessEmitSimulatedButton => 'Simüle bildirim gönder';
+
+  @override
+  String get productionReadinessFrameTimingLabel => 'Kare zamanlaması';
+
+  @override
+  String get productionReadinessFrameSampleCount => 'Örnekler';
+
+  @override
+  String get productionReadinessFrameP90 => 'P90';
+
+  @override
+  String get productionReadinessFrameP99 => 'P99';
+
+  @override
+  String get productionReadinessFrameMissed => '>16,7 ms kaçan';
+
+  @override
+  String get productionReadinessKillSwitchBanner =>
+      'Sürüm kill-switch kapalı. Üretimde demo özellikleri kapalı olabilir.';
+
+  @override
+  String get productionReadinessSettingsLink => 'Ayarları aç';
+
+  @override
+  String get productionReadinessNativeShowcaseLink => 'Yerel platform vitrini';
 }

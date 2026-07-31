@@ -48,6 +48,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
@@ -108,6 +109,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
@@ -165,6 +167,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
@@ -221,6 +224,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenProductionReadiness: () {},
             onOpenEventBusDemo: () {},
             onOpenNativePlatformShowcase: () {},
           ),
@@ -283,6 +287,7 @@ void main() {
             onOpenIapDemo: () {},
             onOpenAiDecisionDemo: () {},
             onOpenOnlineTherapyDemo: () {},
+            onOpenProductionReadiness: () {},
             onOpenNativePlatformShowcase: () {},
             onOpenEventBusDemo: () {
               tapped = true;
@@ -348,6 +353,7 @@ void main() {
               onOpenIapDemo: () {},
               onOpenAiDecisionDemo: () {},
               onOpenOnlineTherapyDemo: () {},
+              onOpenProductionReadiness: () {},
               onOpenEventBusDemo: () {},
               onOpenNativePlatformShowcase: () {
                 tapped = true;

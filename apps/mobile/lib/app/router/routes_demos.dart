@@ -1,13 +1,17 @@
 import 'package:core/core.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:feature_flags/feature_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/native_security_showcase_cubit_factory.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
+import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_case_study_demo.dart';
@@ -32,7 +36,9 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_stat
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/event_bus_demo.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_controller.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
@@ -54,6 +60,7 @@ import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_servic
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
+import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:go_router/go_router.dart';
 import 'package:networking/networking.dart';
@@ -169,23 +176,6 @@ List<RouteBase> createDemoRoutes() => <RouteBase>[
         },
       ),
     ],
-  ),
-  GoRoute(
-    path: AppRoutes.fcmDemoPath,
-    name: AppRoutes.fcmDemo,
-    builder: (final context, final state) {
-      if (!FirebaseBootstrapService.isFirebaseInitialized) {
-        return const _FcmDemoRedirectWhenUnavailable();
-      }
-      return BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
-        create: () => FcmDemoCubit(
-          messaging: getIt<FcmMessagingService>(),
-          coordinator: getIt<BackgroundSyncCoordinator>(),
-        ),
-        init: (final cubit) => cubit.initialize(),
-        child: const FcmDemoPage(),
-      );
-    },
   ),
   GoRoute(
     path: AppRoutes.igamingDemoPath,

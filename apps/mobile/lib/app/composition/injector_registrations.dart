@@ -1,6 +1,7 @@
 import 'package:flutter_bloc_app/app/auth/firebase_local_session_cleanup.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_ai_decision_demo_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_analytics_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_app_memory_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_auth_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_calculator_services.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_bloc_app/app/composition/features/register_iot_services.
 import 'package:flutter_bloc_app/app/composition/features/register_native_platform_showcase_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_online_therapy_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_playlearn_services.dart';
+import 'package:flutter_bloc_app/app/composition/features/register_production_readiness_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_profile_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_realtime_market_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_remote_config_services.dart';

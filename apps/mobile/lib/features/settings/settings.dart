@@ -16,6 +16,7 @@ export 'presentation/cubit/locale_cubit.dart';
 export 'presentation/cubit/theme_cubit.dart';
 export 'presentation/pages/settings_page.dart';
 export 'presentation/widgets/account_section.dart';
+export 'presentation/widgets/analytics_consent_section.dart';
 export 'presentation/widgets/app_info_section.dart';
 export 'presentation/widgets/integrations_section.dart';
 export 'presentation/widgets/language_section.dart';

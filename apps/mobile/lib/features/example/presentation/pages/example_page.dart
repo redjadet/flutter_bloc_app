@@ -162,9 +162,7 @@ class _ExamplePageState extends State<ExamplePage> {
         onOpenIgamingDemo: () => context.pushNamed(AppRoutes.igamingDemo),
         onOpenStaffAppDemo: () =>
             context.pushNamed(AppRoutes.staffAppDemoDashboard),
-        onOpenFcmDemo: widget.isFirebaseInitialized
-            ? () => context.pushNamed(AppRoutes.fcmDemo)
-            : null,
+        onOpenFcmDemo: () => context.pushNamed(AppRoutes.fcmDemo),
         onOpenFirebaseFunctionsTest: widget.isFirebaseInitialized
             ? () => context.pushNamed(AppRoutes.firebaseFunctionsTest)
             : null,
@@ -180,6 +178,8 @@ class _ExamplePageState extends State<ExamplePage> {
             context.pushNamed(AppRoutes.nativePlatformShowcase),
         onOpenOnlineTherapyDemo: () =>
             context.pushNamed(AppRoutes.onlineTherapyDemo),
+        onOpenProductionReadiness: () =>
+            context.pushNamed(AppRoutes.productionReadiness),
         onRunIsolates: _isRunningIsolates ? null : _runIsolateSamples,
         isRunningIsolates: _isRunningIsolates,
         isolateError: _isolateError,

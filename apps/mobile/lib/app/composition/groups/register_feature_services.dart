@@ -1,6 +1,7 @@
 part of '../injector_registrations.dart';
 
 Future<void> registerFeatureServices() async {
+  await registerAnalyticsServices();
   registerCounterServices();
   registerAuthServices();
   registerRemoteConfigServices();

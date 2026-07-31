@@ -1444,29 +1444,101 @@
     "description": "Material UI family label"
   },
   "nativePlatformShowcasePlatformAndroid": "Android",
+  "@nativePlatformShowcasePlatformAndroid": {
+    "description": "Android platform label in native platform showcase"
+  },
   "nativePlatformShowcasePlatformIos": "iOS",
+  "@nativePlatformShowcasePlatformIos": {
+    "description": "iOS platform label in native platform showcase"
+  },
   "nativePlatformShowcasePlatformMacos": "macOS",
+  "@nativePlatformShowcasePlatformMacos": {
+    "description": "macOS platform label in native platform showcase"
+  },
   "nativePlatformShowcasePlatformWindows": "Windows",
+  "@nativePlatformShowcasePlatformWindows": {
+    "description": "Windows platform label in native platform showcase"
+  },
   "nativePlatformShowcasePlatformLinux": "Linux",
+  "@nativePlatformShowcasePlatformLinux": {
+    "description": "Linux platform label in native platform showcase"
+  },
   "nativePlatformShowcasePlatformWeb": "Web",
+  "@nativePlatformShowcasePlatformWeb": {
+    "description": "Web platform label in native platform showcase"
+  },
   "nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle": "Native view embedding",
+  "@nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle": {
+    "description": "Title for native view embedding capability card"
+  },
   "nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary": "Embed native UI surfaces inside Flutter layouts when widgets are not enough.",
+  "@nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary": {
+    "description": "Summary for native view embedding capability card"
+  },
   "nativePlatformShowcaseCapabilityPlatformPackageManagerTitle": "Platform packaging",
+  "@nativePlatformShowcaseCapabilityPlatformPackageManagerTitle": {
+    "description": "Title for platform packaging capability card"
+  },
   "nativePlatformShowcaseCapabilityPlatformPackageManagerSummary": "Ship and update platform packages alongside the Flutter bundle.",
+  "@nativePlatformShowcaseCapabilityPlatformPackageManagerSummary": {
+    "description": "Summary for platform packaging capability card"
+  },
   "nativePlatformShowcaseCapabilityNativeCodeInteropTitle": "Native code interop",
+  "@nativePlatformShowcaseCapabilityNativeCodeInteropTitle": {
+    "description": "Title for native code interop capability card"
+  },
   "nativePlatformShowcaseCapabilityNativeCodeInteropSummary": "Call platform languages behind repositories and platform channels.",
+  "@nativePlatformShowcaseCapabilityNativeCodeInteropSummary": {
+    "description": "Summary for native code interop capability card"
+  },
   "nativePlatformShowcaseCapabilityLowLevelGraphicsTitle": "Low-level graphics",
+  "@nativePlatformShowcaseCapabilityLowLevelGraphicsTitle": {
+    "description": "Title for low-level graphics capability card"
+  },
   "nativePlatformShowcaseCapabilityLowLevelGraphicsSummary": "Reach GPU-backed APIs when Flutter's canvas layer needs a boost.",
+  "@nativePlatformShowcaseCapabilityLowLevelGraphicsSummary": {
+    "description": "Summary for low-level graphics capability card"
+  },
   "nativePlatformShowcaseCapabilityAdaptiveGesturesTitle": "Adaptive gestures",
+  "@nativePlatformShowcaseCapabilityAdaptiveGesturesTitle": {
+    "description": "Title for adaptive gestures capability card"
+  },
   "nativePlatformShowcaseCapabilityAdaptiveGesturesSummary": "Tune motion, haptics, and navigation to each platform's expectations.",
+  "@nativePlatformShowcaseCapabilityAdaptiveGesturesSummary": {
+    "description": "Summary for adaptive gestures capability card"
+  },
   "nativePlatformShowcaseLesson1Title": "Compose, don't replace",
+  "@nativePlatformShowcaseLesson1Title": {
+    "description": "Title for native platform showcase lesson 1"
+  },
   "nativePlatformShowcaseLesson1Body": "Flutter can integrate with native platform views instead of replacing them.",
+  "@nativePlatformShowcaseLesson1Body": {
+    "description": "Body for native platform showcase lesson 1"
+  },
   "nativePlatformShowcaseLesson2Title": "Decouple design systems",
+  "@nativePlatformShowcaseLesson2Title": {
+    "description": "Title for native platform showcase lesson 2"
+  },
   "nativePlatformShowcaseLesson2Body": "Design systems should be decoupled from core app logic.",
+  "@nativePlatformShowcaseLesson2Body": {
+    "description": "Body for native platform showcase lesson 2"
+  },
   "nativePlatformShowcaseLesson3Title": "Isolate platform behavior",
+  "@nativePlatformShowcaseLesson3Title": {
+    "description": "Title for native platform showcase lesson 3"
+  },
   "nativePlatformShowcaseLesson3Body": "Platform-specific behaviour should be isolated, not scattered across widgets.",
+  "@nativePlatformShowcaseLesson3Body": {
+    "description": "Body for native platform showcase lesson 3"
+  },
   "nativePlatformShowcaseLesson4Title": "Abstract native interop",
+  "@nativePlatformShowcaseLesson4Title": {
+    "description": "Title for native platform showcase lesson 4"
+  },
   "nativePlatformShowcaseLesson4Body": "Native interop should sit behind abstractions so the app remains testable.",
+  "@nativePlatformShowcaseLesson4Body": {
+    "description": "Body for native platform showcase lesson 4"
+  },
   "nativePlatformShowcaseLoadError": "Could not load platform showcase data.",
   "@nativePlatformShowcaseLoadError": {
     "description": "Error message when showcase repository load fails"
@@ -1703,24 +1775,81 @@
     "description": "Shown before a native security card has been run"
   },
   "nativeSecurityStatusSuccess": "Success",
+  "@nativeSecurityStatusSuccess": {
+    "description": "Native security outcome status: success"
+  },
   "nativeSecurityStatusUnavailable": "Unavailable",
+  "@nativeSecurityStatusUnavailable": {
+    "description": "Native security outcome status: unavailable"
+  },
   "nativeSecurityStatusDenied": "Denied",
+  "@nativeSecurityStatusDenied": {
+    "description": "Native security outcome status: denied"
+  },
   "nativeSecurityStatusFailed": "Failed",
+  "@nativeSecurityStatusFailed": {
+    "description": "Native security outcome status: failed"
+  },
   "nativeSecurityReasonOk": "Completed on-device.",
+  "@nativeSecurityReasonOk": {
+    "description": "Native security reason when the operation completed successfully"
+  },
   "nativeSecurityReasonMobileOnly": "Available on iOS and Android only.",
+  "@nativeSecurityReasonMobileOnly": {
+    "description": "Native security reason when feature is mobile-only"
+  },
   "nativeSecurityReasonMissingPlugin": "Native handler is not registered on this build.",
+  "@nativeSecurityReasonMissingPlugin": {
+    "description": "Native security reason when the platform plugin is missing"
+  },
   "nativeSecurityReasonTimeout": "Native call timed out.",
+  "@nativeSecurityReasonTimeout": {
+    "description": "Native security reason when the platform call times out"
+  },
   "nativeSecurityReasonMalformedReply": "Native reply was malformed.",
+  "@nativeSecurityReasonMalformedReply": {
+    "description": "Native security reason when the platform reply is malformed"
+  },
   "nativeSecurityReasonPlatformError": "Native platform call failed.",
+  "@nativeSecurityReasonPlatformError": {
+    "description": "Native security reason for a generic platform error"
+  },
   "nativeSecurityReasonSecureEnclaveUnavailable": "Secure Enclave unavailable on this device.",
+  "@nativeSecurityReasonSecureEnclaveUnavailable": {
+    "description": "Native security reason when Secure Enclave is unavailable"
+  },
   "nativeSecurityReasonKeystoreUnavailable": "Android Keystore could not create a key.",
+  "@nativeSecurityReasonKeystoreUnavailable": {
+    "description": "Native security reason when Android Keystore is unavailable"
+  },
   "nativeSecurityReasonBiometricNotEnrolled": "No biometrics enrolled on this device.",
+  "@nativeSecurityReasonBiometricNotEnrolled": {
+    "description": "Native security reason when no biometrics are enrolled"
+  },
   "nativeSecurityReasonBiometricLockout": "Biometric sensor is temporarily locked out.",
+  "@nativeSecurityReasonBiometricLockout": {
+    "description": "Native security reason when biometrics are locked out"
+  },
   "nativeSecurityReasonBiometricCanceled": "Biometric prompt was canceled.",
+  "@nativeSecurityReasonBiometricCanceled": {
+    "description": "Native security reason when the biometric prompt is canceled"
+  },
   "nativeSecurityReasonBiometricUnsupported": "Biometric hardware unsupported on this device.",
+  "@nativeSecurityReasonBiometricUnsupported": {
+    "description": "Native security reason when biometric hardware is unsupported"
+  },
   "nativeSecurityReasonConcurrentPrompt": "Another biometric prompt is already active.",
+  "@nativeSecurityReasonConcurrentPrompt": {
+    "description": "Native security reason when another biometric prompt is active"
+  },
   "nativeSecurityReasonNotConfiguredOrTokenNull": "No App Check token yet — Firebase Console registration is still pending.",
+  "@nativeSecurityReasonNotConfiguredOrTokenNull": {
+    "description": "Native security reason when App Check is not configured or token is null"
+  },
   "nativeSecurityReasonAppCheckError": "App Check attestation failed.",
+  "@nativeSecurityReasonAppCheckError": {
+    "description": "Native security reason when App Check attestation fails"
+  },
   "eventBusDemoTitle": "Event Bus demo",
   "@eventBusDemoTitle": {
     "description": "Title for the Event Bus pattern interactive demo"
@@ -2383,10 +2512,25 @@
     "description": "Shown when camera cannot be used (e.g. iOS Simulator has no camera)"
   },
   "cameraGalleryProcessingLabel": "On-device processing",
+  "@cameraGalleryProcessingLabel": {
+    "description": "Label for on-device image processing section in camera/gallery demo"
+  },
   "cameraGalleryFilterOriginal": "Original",
+  "@cameraGalleryFilterOriginal": {
+    "description": "Camera/gallery filter chip: original"
+  },
   "cameraGalleryFilterGrayscale": "Grayscale",
+  "@cameraGalleryFilterGrayscale": {
+    "description": "Camera/gallery filter chip: grayscale"
+  },
   "cameraGalleryFilterSepia": "Sepia",
+  "@cameraGalleryFilterSepia": {
+    "description": "Camera/gallery filter chip: sepia"
+  },
   "cameraGalleryFilterInvert": "Invert",
+  "@cameraGalleryFilterInvert": {
+    "description": "Camera/gallery filter chip: invert"
+  },
   "scapesPageTitle": "Library / Scapes",
   "@scapesPageTitle": {
     "description": "Title for the scapes page"
@@ -4049,5 +4193,161 @@
   "openCertificatePinningDemoTooltip": "Open certificate pinning demo",
   "@openCertificatePinningDemoTooltip": {
     "description": "Counter overflow tooltip for certificate pinning demo"
+  },
+  "settingsAnalyticsConsentSectionTitle": "Privacy",
+  "@settingsAnalyticsConsentSectionTitle": {
+    "description": "Settings section title for analytics consent"
+  },
+  "settingsAnalyticsConsentTitle": "Product analytics",
+  "@settingsAnalyticsConsentTitle": {
+    "description": "Toggle title for analytics collection consent"
+  },
+  "settingsAnalyticsConsentExplanation": "When enabled, the app may send low-cardinality product events (mode, source, result, variant) after you opt in. Tokens, message content, and identifiers are never included. Default is off.",
+  "@settingsAnalyticsConsentExplanation": {
+    "description": "Explanation under analytics consent toggle"
+  },
+  "productionReadinessPageTitle": "Production readiness",
+  "@productionReadinessPageTitle": {
+    "description": "Title for production readiness demo page"
+  },
+  "exampleProductionReadinessButton": "Production readiness",
+  "@exampleProductionReadinessButton": {
+    "description": "Example hub button for production readiness"
+  },
+  "productionReadinessModeLabel": "Runtime mode",
+  "@productionReadinessModeLabel": {
+    "description": "Label for live vs simulated mode card"
+  },
+  "productionReadinessModeLive": "Live Firebase",
+  "@productionReadinessModeLive": {
+    "description": "Live mode badge"
+  },
+  "productionReadinessModeSimulated": "Simulated",
+  "@productionReadinessModeSimulated": {
+    "description": "Simulated mode badge"
+  },
+  "productionReadinessConsentLabel": "Analytics consent",
+  "@productionReadinessConsentLabel": {
+    "description": "Consent status card label"
+  },
+  "productionReadinessConsentOn": "Collection enabled",
+  "@productionReadinessConsentOn": {
+    "description": "Consent enabled status"
+  },
+  "productionReadinessConsentOff": "Collection disabled (default)",
+  "@productionReadinessConsentOff": {
+    "description": "Consent disabled status"
+  },
+  "productionReadinessEventCountLabel": "Local event count",
+  "@productionReadinessEventCountLabel": {
+    "description": "In-memory analytics event count label"
+  },
+  "productionReadinessReleaseFlagLabel": "Release flag",
+  "@productionReadinessReleaseFlagLabel": {
+    "description": "Remote Config kill-switch card label"
+  },
+  "productionReadinessReleaseFlagEnabled": "Enabled",
+  "@productionReadinessReleaseFlagEnabled": {
+    "description": "Release flag enabled"
+  },
+  "productionReadinessReleaseFlagDisabled": "Disabled (kill-switch)",
+  "@productionReadinessReleaseFlagDisabled": {
+    "description": "Release flag disabled"
+  },
+  "productionReadinessVariantLabel": "Variant",
+  "@productionReadinessVariantLabel": {
+    "description": "RC variant label"
+  },
+  "productionReadinessSourceLabel": "Config source",
+  "@productionReadinessSourceLabel": {
+    "description": "RC cache vs remote source label"
+  },
+  "productionReadinessCrashlyticsLabel": "Crashlytics",
+  "@productionReadinessCrashlyticsLabel": {
+    "description": "Crashlytics status card label"
+  },
+  "productionReadinessCrashlyticsActive": "Available (Firebase initialized)",
+  "@productionReadinessCrashlyticsActive": {
+    "description": "Crashlytics available when Firebase is live"
+  },
+  "productionReadinessCrashlyticsUnavailable": "Unavailable (simulated / no Firebase)",
+  "@productionReadinessCrashlyticsUnavailable": {
+    "description": "Crashlytics unavailable status"
+  },
+  "productionReadinessFcmLabel": "Push notifications (FCM)",
+  "@productionReadinessFcmLabel": {
+    "description": "FCM diagnostics card title"
+  },
+  "productionReadinessFcmModeLabel": "FCM mode",
+  "@productionReadinessFcmModeLabel": {
+    "description": "Live vs simulated FCM mode label"
+  },
+  "productionReadinessFcmModeLive": "Live",
+  "@productionReadinessFcmModeLive": {
+    "description": "Live FCM mode badge"
+  },
+  "productionReadinessFcmModeSimulated": "Simulated",
+  "@productionReadinessFcmModeSimulated": {
+    "description": "Simulated FCM mode badge"
+  },
+  "productionReadinessFcmPermissionLabel": "Permission",
+  "@productionReadinessFcmPermissionLabel": {
+    "description": "FCM permission status label"
+  },
+  "productionReadinessFcmLastSource": "Last source",
+  "@productionReadinessFcmLastSource": {
+    "description": "Redacted last message source label"
+  },
+  "productionReadinessFcmHasTitle": "Has title",
+  "@productionReadinessFcmHasTitle": {
+    "description": "Whether last message had a title (redacted)"
+  },
+  "productionReadinessFcmHasBody": "Has body",
+  "@productionReadinessFcmHasBody": {
+    "description": "Whether last message had a body (redacted)"
+  },
+  "productionReadinessFcmDataKeys": "Data keys",
+  "@productionReadinessFcmDataKeys": {
+    "description": "Count of data keys on last message"
+  },
+  "productionReadinessFcmNoMessage": "No message received yet",
+  "@productionReadinessFcmNoMessage": {
+    "description": "FCM summary when no message yet"
+  },
+  "productionReadinessEmitSimulatedButton": "Emit simulated notification",
+  "@productionReadinessEmitSimulatedButton": {
+    "description": "Button to emit simulated FCM payload"
+  },
+  "productionReadinessFrameTimingLabel": "Frame timing",
+  "@productionReadinessFrameTimingLabel": {
+    "description": "Frame timing diagnostics card title"
+  },
+  "productionReadinessFrameSampleCount": "Samples",
+  "@productionReadinessFrameSampleCount": {
+    "description": "Frame timing sample count label"
+  },
+  "productionReadinessFrameP90": "P90",
+  "@productionReadinessFrameP90": {
+    "description": "90th percentile frame time label"
+  },
+  "productionReadinessFrameP99": "P99",
+  "@productionReadinessFrameP99": {
+    "description": "99th percentile frame time label"
+  },
+  "productionReadinessFrameMissed": "Missed >16.7ms",
+  "@productionReadinessFrameMissed": {
+    "description": "Frames slower than one 60fps frame"
+  },
+  "productionReadinessKillSwitchBanner": "Release kill-switch is disabled. Demo features may be off in production.",
+  "@productionReadinessKillSwitchBanner": {
+    "description": "Banner when remote config kill-switch is off"
+  },
+  "productionReadinessSettingsLink": "Open Settings",
+  "@productionReadinessSettingsLink": {
+    "description": "Link to settings for sync diagnostics"
+  },
+  "productionReadinessNativeShowcaseLink": "Native platform showcase",
+  "@productionReadinessNativeShowcaseLink": {
+    "description": "Link to native platform showcase demo"
   }
 }

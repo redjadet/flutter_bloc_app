@@ -36,12 +36,14 @@ class OfflineFirstRemoteConfigRepository
   static const List<String> _trackedBoolKeys = <String>[
     RemoteConfigKeys.awesomeFeatureEnabled,
     RemoteConfigKeys.supabaseConfigEnabled,
+    RemoteConfigKeys.productionDemoEnabled,
   ];
   static const List<String> _trackedStringKeys = <String>[
     RemoteConfigKeys.testValue1,
     RemoteConfigKeys.supabaseUrl,
     RemoteConfigKeys.supabaseAnonKey,
     RemoteConfigKeys.renderChatDemoHfReadToken,
+    RemoteConfigKeys.productionDemoVariant,
   ];
   static const List<String> _trackedIntKeys = <String>[
     RemoteConfigKeys.supabaseConfigVersion,

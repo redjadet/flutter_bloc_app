@@ -1,0 +1,224 @@
+# Mobile release dry-run (NOT store publishing)
+#
+# Manual-only proof that release *builds* and budget tooling work.
+# Does NOT upload to Play, TestFlight, Firebase App Distribution, or App Store Connect.
+# Keep this workflow free of store-upload / cloud-deploy publish steps.
+
+name: Mobile release dry-run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-release-dry-run-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FLUTTER_VERSION: '3.44.8'
+  # Checklist may reuse a prior green fingerprint when inputs match (repo policy).
+  CHECKLIST_ALLOW_REUSE: auto
+
+jobs:
+  checklist:
+    name: Delivery checklist (allow-reuse)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: bash tool/workspace_pub_get.sh
+
+      - name: Install ripgrep and lcov
+        shell: bash
+        run: |
+          set -euo pipefail
+          packages=()
+          command -v rg >/dev/null 2>&1 || packages+=(ripgrep)
+          command -v lcov >/dev/null 2>&1 || packages+=(lcov)
+          if ((${#packages[@]} == 0)); then
+            echo "ripgrep and lcov already installed"
+            exit 0
+          fi
+          sudo apt-get update
+          sudo apt-get install -y "${packages[@]}"
+
+      - name: Run delivery checklist
+        run: ./bin/checklist
+
+  functions-test:
+    name: Firebase Functions unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend/firebase/functions
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: backend/firebase/functions/package-lock.json
+
+      - name: npm ci
+        run: npm ci
+
+      - name: npm test
+        run: npm test
+
+  android-aab:
+    name: Android release AAB (ephemeral CI keystore)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: bash tool/workspace_pub_get.sh
+
+      - name: Create ephemeral release keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Ephemeral keystore for CI dry-run signing only — never upload to stores.
+          KEYSTORE_PATH="${RUNNER_TEMP}/ci-ephemeral-release.jks"
+          keytool -genkeypair \
+            -v \
+            -storetype JKS \
+            -keystore "${KEYSTORE_PATH}" \
+            -alias ci \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 30 \
+            -storepass android \
+            -keypass android \
+            -dname 'CN=CI Dry Run, OU=Engineering, O=Local, L=Local, ST=NA, C=US'
+          cat > apps/mobile/android/key.properties <<EOF
+storePassword=android
+keyPassword=android
+keyAlias=ci
+storeFile=${KEYSTORE_PATH}
+EOF
+
+      - name: Build Android release appbundle
+        working-directory: apps/mobile
+        run: flutter build appbundle --release
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: android-release-aab-dry-run
+          path: apps/mobile/build/app/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+  ios-release-nocodesign:
+    name: iOS release build (--no-codesign)
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: bash tool/workspace_pub_get.sh
+
+      - name: Build iOS release without codesign
+        working-directory: apps/mobile
+        # Dry-run only — no IPA upload / TestFlight / App Store Connect.
+        run: flutter build ios --release --no-codesign
+
+      - name: Upload iOS build directory (trimmed)
+        uses: actions/upload-artifact@v7
+        with:
+          name: ios-release-nocodesign-dry-run
+          path: |
+            apps/mobile/build/ios/iphoneos/*.app
+          if-no-files-found: warn
+
+  perf-budget-gate:
+    name: Perf budget analyzer (fixture gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Run perf budget unit tests
+        run: python3 -m unittest tool/analyze_perf_trace_test.py -v
+
+      - name: Analyze pass fixture against budgets
+        run: |
+          set -euo pipefail
+          python3 tool/analyze_perf_trace.py \
+            tool/testdata/perf/pass_trace.json \
+            --budgets tool/perf_budgets.json \
+            --json > "${RUNNER_TEMP}/perf_gate.json"
+          python3 - <<'PY'
+          import json, os, pathlib, sys
+          path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "perf_gate.json"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          outcomes = []
+          for summary in data.get("traces", {}).values():
+              gate = summary.get("gate") or {}
+              outcomes.append(gate.get("outcome"))
+          print("gate outcomes:", outcomes)
+          if not outcomes:
+              sys.exit("no gate outcomes in analyzer JSON")
+          if any(o == "fail" for o in outcomes):
+              sys.exit("perf budget gate failed on pass fixture")
+          print("perf budget dry-run gate: ok")
+          PY
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo '## Mobile release dry-run'
+            echo
+            echo 'This workflow is **dry-run only**. It does **not** publish to Play, TestFlight, Firebase, or App Store Connect.'
+            echo
+            echo '- Checklist: allow-reuse via `CHECKLIST_ALLOW_REUSE=auto`'
+            echo '- Functions: `backend/firebase/functions` `npm test`'
+            echo '- Android: release AAB with ephemeral CI keystore'
+            echo '- iOS: `flutter build ios --release --no-codesign`'
+            echo '- Perf: fixture budgets via `tool/analyze_perf_trace.py` (+ unit tests)'
+            echo
+            echo 'Simulator live FrameTiming capture remains optional / local (`tool/capture_perf_trace.sh`).'
+          } >> "$GITHUB_STEP_SUMMARY"

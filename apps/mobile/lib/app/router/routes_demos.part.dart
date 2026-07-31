@@ -2,6 +2,49 @@ part of 'routes_demos.dart';
 
 List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   GoRoute(
+    path: AppRoutes.fcmDemoPath,
+    name: AppRoutes.fcmDemo,
+    builder: (final context, final state) =>
+        BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
+          create: () => FcmDemoCubit(
+            messaging: getIt<FcmMessagingService>(),
+            coordinator: getIt<BackgroundSyncCoordinator>(),
+          ),
+          init: (final cubit) => cubit.initialize(),
+          child: const FcmDemoPage(),
+        ),
+  ),
+  GoRoute(
+    path: AppRoutes.productionReadinessPath,
+    name: AppRoutes.productionReadiness,
+    builder: (final context, final state) {
+      final FcmSimulationController? simulation =
+          getIt.isRegistered<FcmSimulationController>()
+          ? getIt<FcmSimulationController>()
+          : null;
+      return BlocProviderHelpers.withAsyncInit<ProductionReadinessCubit>(
+        create: () => ProductionReadinessCubit(
+          remoteConfig: getIt<RemoteConfigService>(),
+          consentRepository: getIt<AnalyticsConsentRepository>(),
+          analytics: getIt<ProductAnalytics>(),
+          memoryAnalytics: getIt.isRegistered<InMemoryProductAnalytics>()
+              ? getIt<InMemoryProductAnalytics>()
+              : null,
+          messaging: getIt<FcmMessagingService>(),
+          frameMonitor: getIt<FrameTimingMonitor>(),
+          simulationController: simulation,
+          fcmMode: getIt.isRegistered<FcmDemoMode>()
+              ? getIt<FcmDemoMode>()
+              : FcmDemoMode.simulated,
+        ),
+        init: (final cubit) => cubit.initialize(),
+        child: ProductionReadinessPage(
+          showSimulatedNotificationButton: simulation != null,
+        ),
+      );
+    },
+  ),
+  GoRoute(
     path: AppRoutes.iotDemoPath,
     name: AppRoutes.iotDemo,
     builder: (final context, final state) {
@@ -141,30 +184,4 @@ Widget _listenBackendAvailability(
     listenable: BackendAvailabilityUpdates.instance,
     builder: (final context, final _) => builder(getIt<BackendAvailability>()),
   );
-}
-
-/// Shown when user reaches FCM demo route but Firebase is not initialized;
-/// redirects to counter so the app does not crash.
-class _FcmDemoRedirectWhenUnavailable extends StatefulWidget {
-  const _FcmDemoRedirectWhenUnavailable();
-
-  @override
-  State<_FcmDemoRedirectWhenUnavailable> createState() =>
-      _FcmDemoRedirectWhenUnavailableState();
-}
-
-class _FcmDemoRedirectWhenUnavailableState
-    extends State<_FcmDemoRedirectWhenUnavailable> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      context.go(AppRoutes.counterPath);
-    });
-  }
-
-  @override
-  Widget build(final BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
 }

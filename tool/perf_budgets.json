@@ -1,0 +1,8 @@
+{
+  "min_measured_frames": 100,
+  "p90_ms_max": 8.3,
+  "p99_ms_max": 16.7,
+  "over_16_7ms_ratio_max": 0.01,
+  "p90_regression_vs_median_max": 0.25,
+  "variance_report_only_threshold": 0.20
+}
