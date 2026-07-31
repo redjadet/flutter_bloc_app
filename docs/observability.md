@@ -21,7 +21,7 @@ Map from exceptions or HTTP status using
 `getErrorCodeForStatusCode(statusCode)` for raw status codes, or the existing
 `isNetworkError` / `isTimeoutError` helpers.
 
-Product analytics remain deferred — see [plans/future_observability.md](plans/future_observability.md)
+Product analytics: consent-gated Firebase allowlist for `/production-readiness` (ADR 0006); Mixpanel/Sentry/Patrol remain deferred — see [plans/future_observability.md](plans/future_observability.md)
 and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/API_CONTRACT_GUIDE.md).
 
 ## Logging
@@ -92,13 +92,26 @@ As code volume increases (including AI-assisted development), **time to find and
 
 Mitigations and rollout steps live in [plans/future_observability.md](plans/future_observability.md) under the Sentry section.
 
-## Product analytics (not configured)
+## Product analytics
 
-There is **no** Mixpanel, Sentry product SDK, or custom `AnalyticsPort` implementation in `pubspec.yaml` today. Operational diagnostics UI data lives under [`apps/mobile/lib/app/diagnostics/`](../apps/mobile/lib/app/diagnostics/) (Remote Config view models, cache controls) — not product funnel analytics.
+**Shipped (narrow):** consent-gated Firebase Analytics via
+[`apps/mobile/lib/app/analytics/`](../apps/mobile/lib/app/analytics/) for the
+[`/production-readiness`](../apps/mobile/lib/features/production_readiness/)
+demo. Consent defaults **off** (SharedPreferences). Events use an allowlist of
+params (`mode`, `source`, `result`, `variant`). The Firebase adapter swallows
+platform-channel failures so bootstrap/DI does not abort. Policy:
+[ADR 0006](adr/0006-production-readiness-demo.md),
+[ADR 0005](adr/0005-interview-showcase-scope.md) (exception to doc-only Mixpanel/Sentry).
 
-- Interview/portfolio scope: [ADR 0005](adr/0005-interview-showcase-scope.md)
-- Planned seams and event taxonomy: [plans/future_observability.md](plans/future_observability.md)
-- Portfolio walk: [interview_showcase.md](interview_showcase.md) §11–12
+**Not configured:** Mixpanel, Sentry product SDK, or Patrol. Planned seams:
+[plans/future_observability.md](plans/future_observability.md).
+
+Operational diagnostics UI (Remote Config view models, cache controls) lives under
+[`apps/mobile/lib/app/diagnostics/`](../apps/mobile/lib/app/diagnostics/) —
+not a general product funnel.
+
+- Portfolio walk: [interview_showcase.md](interview_showcase.md) §3b, §11–12
+- Case study: [changes/2026-07-31_production_readiness_case_study.md](changes/2026-07-31_production_readiness_case_study.md)
 
 Sync and settings surfaces expose **operational** telemetry (queue depth, flush status) via [`packages/storage/lib/src/sync/`](../packages/storage/lib/src/sync/) and Settings sync diagnostics — not product funnel analytics.
 

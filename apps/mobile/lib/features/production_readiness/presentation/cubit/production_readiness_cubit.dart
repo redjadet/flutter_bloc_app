@@ -94,6 +94,9 @@ abstract class _ProductionReadinessCubitBase
         source = 'defaults';
       }
 
+      if (isClosed) {
+        return;
+      }
       emit(
         state.copyWith(
           status: ProductionReadinessStatus.ready,
@@ -131,6 +134,9 @@ abstract class _ProductionReadinessCubitBase
         );
       }
     } on Object catch (error) {
+      if (isClosed) {
+        return;
+      }
       emit(
         state.copyWith(
           status: ProductionReadinessStatus.error,

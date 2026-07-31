@@ -1,10 +1,10 @@
 @TestOn('vm')
 library;
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../integration_test/test_harness.dart';
@@ -20,7 +20,7 @@ void main() {
     await test_helpers.setupHiveForTesting();
   });
 
-  setUp(() async {
+  void installLogObserver() {
     unexpectedLogs.clear();
     AppLogger.observer = (final entry) {
       if (test_harness_log_filtering.isUnexpectedIntegrationLog(
@@ -30,10 +30,9 @@ void main() {
         unexpectedLogs.add(entry);
       }
     };
-    await configureIntegrationTestDependencies();
-  });
+  }
 
-  tearDown(() async {
+  Future<void> clearLogObserverAndDeps() async {
     AppLogger.observer = null;
     final String details = unexpectedLogs
         .map(test_harness_log_filtering.formatIntegrationLogEntry)
@@ -45,245 +44,264 @@ void main() {
         'Unexpected warning/error logs during web bootstrap preflight:\n$details',
       );
     }
-  });
+  }
 
-  testWidgets('launches home screen through web bootstrap path', (
-    tester,
-  ) async {
-    await launchTestApp(tester);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions during home launch.',
-    );
+  group('web bootstrap smoke', () {
+    setUp(() async {
+      installLogObserver();
+      await configureIntegrationTestDependencies();
+    });
 
-    expect(find.text('Home Page'), findsOneWidget);
-    expect(find.byType(MaterialApp), findsOneWidget);
-    await pumpUntilFound(tester, find.text('0'));
-    expect(find.text('0'), findsWidgets);
+    tearDown(clearLogObserverAndDeps);
 
-    // Mirror the high-signal half of `registerAppLaunchIntegrationFlow` on web.
-    final Finder incrementButton = find
-        .widgetWithIcon(FloatingActionButton, Icons.add)
-        .first;
-    await tapAndPump(tester, incrementButton);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after increment.',
-    );
-    await pumpUntilFound(tester, find.text('1'));
-    expect(find.text('1'), findsWidgets);
-
-    final Finder decrementButton = find
-        .widgetWithIcon(FloatingActionButton, Icons.remove)
-        .first;
-    await tapAndPump(tester, decrementButton);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after decrement.',
-    );
-    await pumpUntilFound(tester, find.text('0'));
-    expect(find.text('0'), findsWidgets);
-  });
-
-  testWidgets('opens native platform showcase from Example on web', (
-    tester,
-  ) async {
-    await launchTestApp(tester);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions during launch.',
-    );
-
-    await pumpUntilFound(tester, find.byTooltip('Open example page'));
-    await tapAndPump(tester, find.byTooltip('Open example page'));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after opening Example.',
-    );
-    await pumpUntilFound(tester, find.text('Example Page'));
-
-    final Finder showcaseButton = find.byKey(
-      const ValueKey('example-native-platform-showcase-button'),
-    );
-    await tester.scrollUntilVisible(
-      showcaseButton,
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tapAndPump(tester, showcaseButton);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after opening showcase.',
-    );
-    await pumpUntilFound(
+    testWidgets('launches home screen through web bootstrap path', (
       tester,
-      find.byKey(const ValueKey('native-platform-showcase-summary')),
-    );
+    ) async {
+      await launchTestApp(tester);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions during home launch.',
+      );
 
-    expect(find.text('Native platform showcase'), findsWidgets);
-    expect(find.text('Runtime platform'), findsOneWidget);
-    expect(find.text('UI family'), findsOneWidget);
+      expect(find.text('Home Page'), findsOneWidget);
+      expect(find.byType(MaterialApp), findsOneWidget);
+      await pumpUntilFound(tester, find.text('0'));
+      expect(find.text('0'), findsWidgets);
 
-    final Finder securitySection = find.byKey(
-      const ValueKey('native-security-showcase-section'),
-    );
-    await tester.scrollUntilVisible(
-      securitySection,
-      300,
-      scrollable: find.byType(Scrollable).last,
-    );
-    expect(securitySection, findsOneWidget);
+      // Mirror the high-signal half of `registerAppLaunchIntegrationFlow` on web.
+      final Finder incrementButton = find
+          .widgetWithIcon(FloatingActionButton, Icons.add)
+          .first;
+      await tapAndPump(tester, incrementButton);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after increment.',
+      );
+      await pumpUntilFound(tester, find.text('1'));
+      expect(find.text('1'), findsWidgets);
 
-    final Finder interopSwift = find.byKey(
-      const ValueKey('native-platform-showcase-interop-swift'),
-    );
-    await tester.scrollUntilVisible(
-      interopSwift,
-      300,
-      scrollable: find.byType(Scrollable).last,
-    );
-    expect(interopSwift, findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('native-platform-showcase-interop-kotlin')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('native-platform-showcase-interop-cpp')),
-      findsOneWidget,
-    );
-    final Finder lessonZero = find.byKey(
-      const ValueKey('native-platform-showcase-lesson-0'),
-    );
-    await tester.scrollUntilVisible(
-      lessonZero,
-      300,
-      scrollable: find.byType(Scrollable).last,
-    );
-    expect(lessonZero, findsOneWidget);
+      final Finder decrementButton = find
+          .widgetWithIcon(FloatingActionButton, Icons.remove)
+          .first;
+      await tapAndPump(tester, decrementButton);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after decrement.',
+      );
+      await pumpUntilFound(tester, find.text('0'));
+      expect(find.text('0'), findsWidgets);
+    });
+
+    testWidgets('opens native platform showcase from Example on web', (
+      tester,
+    ) async {
+      await launchTestApp(tester);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions during launch.',
+      );
+
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after opening Example.',
+      );
+      await pumpUntilFound(tester, find.text('Example Page'));
+
+      final Finder showcaseButton = find.byKey(
+        const ValueKey('example-native-platform-showcase-button'),
+      );
+      await tester.scrollUntilVisible(
+        showcaseButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, showcaseButton);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after opening showcase.',
+      );
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('native-platform-showcase-summary')),
+      );
+
+      expect(find.text('Native platform showcase'), findsWidgets);
+      expect(find.text('Runtime platform'), findsOneWidget);
+      expect(find.text('UI family'), findsOneWidget);
+
+      final Finder securitySection = find.byKey(
+        const ValueKey('native-security-showcase-section'),
+      );
+      await tester.scrollUntilVisible(
+        securitySection,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(securitySection, findsOneWidget);
+
+      final Finder interopSwift = find.byKey(
+        const ValueKey('native-platform-showcase-interop-swift'),
+      );
+      await tester.scrollUntilVisible(
+        interopSwift,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(interopSwift, findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-interop-kotlin')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('native-platform-showcase-interop-cpp')),
+        findsOneWidget,
+      );
+      final Finder lessonZero = find.byKey(
+        const ValueKey('native-platform-showcase-lesson-0'),
+      );
+      await tester.scrollUntilVisible(
+        lessonZero,
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(lessonZero, findsOneWidget);
+    });
+
+    testWidgets('opens staff app demo shell on web after sign-in', (
+      tester,
+    ) async {
+      await launchTestApp(tester, ensureSignedIn: true);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions during signed-in launch.',
+      );
+
+      tester
+          .widget<AppScope>(find.byType(AppScope))
+          .router
+          .go(AppRoutes.staffAppDemoPath);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after routing to staff demo.',
+      );
+      await pumpUntilFound(
+        tester,
+        find.text('Home'),
+        timeout: const Duration(seconds: 15),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after staff demo settle.',
+      );
+
+      expect(find.text('Staff demo'), findsWidgets);
+      expect(find.text('0', skipOffstage: true), findsNothing);
+    });
+
+    testWidgets('opens case study demo home on web after sign-in', (
+      tester,
+    ) async {
+      await launchTestApp(tester, ensureSignedIn: true);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions during signed-in launch.',
+      );
+
+      tester
+          .widget<AppScope>(find.byType(AppScope))
+          .router
+          .go(AppRoutes.caseStudyDemoPath);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason:
+            'No layout/runtime exceptions after routing to case study demo.',
+      );
+      await pumpUntilFound(
+        tester,
+        find.text('Case study demo'),
+        timeout: const Duration(seconds: 15),
+      );
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after case study demo settle.',
+      );
+
+      expect(find.text('Home Page', skipOffstage: true), findsNothing);
+    });
   });
 
-  testWidgets('opens Camera & Gallery from Example on web', (tester) async {
-    // Reconfigure after setUp so gallery pick is deterministic on web.
-    await configureIntegrationTestDependencies(
-      overrideCameraGalleryRepository: true,
-    );
-    await launchTestApp(tester);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions during launch.',
-    );
+  // Gallery fake must be registered in setUp only — a second
+  // configureIntegrationTestDependencies() in the test body hangs Chrome.
+  group('web bootstrap smoke (camera gallery override)', () {
+    setUp(() async {
+      installLogObserver();
+      await configureIntegrationTestDependencies(
+        overrideCameraGalleryRepository: true,
+      );
+    });
 
-    await pumpUntilFound(tester, find.byTooltip('Open example page'));
-    await tapAndPump(tester, find.byTooltip('Open example page'));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after opening Example.',
-    );
-    await pumpUntilFound(tester, find.text('Example Page'));
+    tearDown(clearLogObserverAndDeps);
 
-    final Finder cameraGalleryButton = find.byKey(
-      const ValueKey('example-camera-gallery-button'),
-    );
-    await tester.scrollUntilVisible(
-      cameraGalleryButton,
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tapAndPump(tester, cameraGalleryButton);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after opening Camera & Gallery.',
-    );
-    await pumpUntilFound(tester, find.text('Camera & Gallery'));
-    expect(find.text('Take photo'), findsOneWidget);
-    expect(find.text('Pick from gallery'), findsOneWidget);
+    testWidgets('opens Camera & Gallery from Example on web', (tester) async {
+      await launchTestApp(tester);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions during launch.',
+      );
 
-    await tapAndPump(tester, find.text('Pick from gallery'));
-    await pumpUntilFound(
-      tester,
-      find.byKey(const ValueKey('camera-gallery-processing-controls')),
-    );
-    expect(find.text('On-device processing'), findsOneWidget);
-    expect(find.text('Grayscale'), findsOneWidget);
-  });
+      await pumpUntilFound(tester, find.byTooltip('Open example page'));
+      await tapAndPump(tester, find.byTooltip('Open example page'));
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after opening Example.',
+      );
+      await pumpUntilFound(tester, find.text('Example Page'));
 
-  testWidgets('opens staff app demo shell on web after sign-in', (
-    tester,
-  ) async {
-    await launchTestApp(tester, ensureSignedIn: true);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions during signed-in launch.',
-    );
+      final Finder cameraGalleryButton = find.byKey(
+        const ValueKey('example-camera-gallery-button'),
+      );
+      await tester.scrollUntilVisible(
+        cameraGalleryButton,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tapAndPump(tester, cameraGalleryButton);
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'No layout/runtime exceptions after opening Camera & Gallery.',
+      );
+      await pumpUntilFound(tester, find.text('Camera & Gallery'));
+      expect(find.text('Take photo'), findsOneWidget);
+      expect(find.text('Pick from gallery'), findsOneWidget);
 
-    tester
-        .widget<AppScope>(find.byType(AppScope))
-        .router
-        .go(AppRoutes.staffAppDemoPath);
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after routing to staff demo.',
-    );
-    await pumpUntilFound(
-      tester,
-      find.text('Home'),
-      timeout: const Duration(seconds: 15),
-    );
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after staff demo settle.',
-    );
-
-    expect(find.text('Staff demo'), findsWidgets);
-    expect(find.text('0', skipOffstage: true), findsNothing);
-  });
-
-  testWidgets('opens case study demo home on web after sign-in', (
-    tester,
-  ) async {
-    await launchTestApp(tester, ensureSignedIn: true);
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions during signed-in launch.',
-    );
-
-    tester
-        .widget<AppScope>(find.byType(AppScope))
-        .router
-        .go(AppRoutes.caseStudyDemoPath);
-    await tester.pump(const Duration(milliseconds: 100));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after routing to case study demo.',
-    );
-    await pumpUntilFound(
-      tester,
-      find.text('Case study demo'),
-      timeout: const Duration(seconds: 15),
-    );
-    await tester.pump(const Duration(milliseconds: 500));
-    expect(
-      tester.takeException(),
-      isNull,
-      reason: 'No layout/runtime exceptions after case study demo settle.',
-    );
-
-    expect(find.text('Home Page', skipOffstage: true), findsNothing);
+      await tapAndPump(tester, find.text('Pick from gallery'));
+      await pumpUntilFound(
+        tester,
+        find.byKey(const ValueKey('camera-gallery-processing-controls')),
+      );
+      expect(find.text('On-device processing'), findsOneWidget);
+      expect(find.text('Grayscale'), findsOneWidget);
+    });
   });
 }
