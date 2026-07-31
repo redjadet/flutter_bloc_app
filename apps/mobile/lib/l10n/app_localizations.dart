@@ -2113,145 +2113,145 @@ abstract class AppLocalizations {
   /// **'Material'**
   String get nativePlatformShowcaseUiMaterial;
 
-  /// No description provided for @nativePlatformShowcasePlatformAndroid.
+  /// Android platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'Android'**
   String get nativePlatformShowcasePlatformAndroid;
 
-  /// No description provided for @nativePlatformShowcasePlatformIos.
+  /// iOS platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'iOS'**
   String get nativePlatformShowcasePlatformIos;
 
-  /// No description provided for @nativePlatformShowcasePlatformMacos.
+  /// macOS platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'macOS'**
   String get nativePlatformShowcasePlatformMacos;
 
-  /// No description provided for @nativePlatformShowcasePlatformWindows.
+  /// Windows platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'Windows'**
   String get nativePlatformShowcasePlatformWindows;
 
-  /// No description provided for @nativePlatformShowcasePlatformLinux.
+  /// Linux platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'Linux'**
   String get nativePlatformShowcasePlatformLinux;
 
-  /// No description provided for @nativePlatformShowcasePlatformWeb.
+  /// Web platform label in native platform showcase
   ///
   /// In en, this message translates to:
   /// **'Web'**
   String get nativePlatformShowcasePlatformWeb;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle.
+  /// Title for native view embedding capability card
   ///
   /// In en, this message translates to:
   /// **'Native view embedding'**
   String get nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary.
+  /// Summary for native view embedding capability card
   ///
   /// In en, this message translates to:
   /// **'Embed native UI surfaces inside Flutter layouts when widgets are not enough.'**
   String get nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityPlatformPackageManagerTitle.
+  /// Title for platform packaging capability card
   ///
   /// In en, this message translates to:
   /// **'Platform packaging'**
   String get nativePlatformShowcaseCapabilityPlatformPackageManagerTitle;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityPlatformPackageManagerSummary.
+  /// Summary for platform packaging capability card
   ///
   /// In en, this message translates to:
   /// **'Ship and update platform packages alongside the Flutter bundle.'**
   String get nativePlatformShowcaseCapabilityPlatformPackageManagerSummary;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityNativeCodeInteropTitle.
+  /// Title for native code interop capability card
   ///
   /// In en, this message translates to:
   /// **'Native code interop'**
   String get nativePlatformShowcaseCapabilityNativeCodeInteropTitle;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityNativeCodeInteropSummary.
+  /// Summary for native code interop capability card
   ///
   /// In en, this message translates to:
   /// **'Call platform languages behind repositories and platform channels.'**
   String get nativePlatformShowcaseCapabilityNativeCodeInteropSummary;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityLowLevelGraphicsTitle.
+  /// Title for low-level graphics capability card
   ///
   /// In en, this message translates to:
   /// **'Low-level graphics'**
   String get nativePlatformShowcaseCapabilityLowLevelGraphicsTitle;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityLowLevelGraphicsSummary.
+  /// Summary for low-level graphics capability card
   ///
   /// In en, this message translates to:
   /// **'Reach GPU-backed APIs when Flutter\'s canvas layer needs a boost.'**
   String get nativePlatformShowcaseCapabilityLowLevelGraphicsSummary;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityAdaptiveGesturesTitle.
+  /// Title for adaptive gestures capability card
   ///
   /// In en, this message translates to:
   /// **'Adaptive gestures'**
   String get nativePlatformShowcaseCapabilityAdaptiveGesturesTitle;
 
-  /// No description provided for @nativePlatformShowcaseCapabilityAdaptiveGesturesSummary.
+  /// Summary for adaptive gestures capability card
   ///
   /// In en, this message translates to:
   /// **'Tune motion, haptics, and navigation to each platform\'s expectations.'**
   String get nativePlatformShowcaseCapabilityAdaptiveGesturesSummary;
 
-  /// No description provided for @nativePlatformShowcaseLesson1Title.
+  /// Title for native platform showcase lesson 1
   ///
   /// In en, this message translates to:
   /// **'Compose, don\'t replace'**
   String get nativePlatformShowcaseLesson1Title;
 
-  /// No description provided for @nativePlatformShowcaseLesson1Body.
+  /// Body for native platform showcase lesson 1
   ///
   /// In en, this message translates to:
   /// **'Flutter can integrate with native platform views instead of replacing them.'**
   String get nativePlatformShowcaseLesson1Body;
 
-  /// No description provided for @nativePlatformShowcaseLesson2Title.
+  /// Title for native platform showcase lesson 2
   ///
   /// In en, this message translates to:
   /// **'Decouple design systems'**
   String get nativePlatformShowcaseLesson2Title;
 
-  /// No description provided for @nativePlatformShowcaseLesson2Body.
+  /// Body for native platform showcase lesson 2
   ///
   /// In en, this message translates to:
   /// **'Design systems should be decoupled from core app logic.'**
   String get nativePlatformShowcaseLesson2Body;
 
-  /// No description provided for @nativePlatformShowcaseLesson3Title.
+  /// Title for native platform showcase lesson 3
   ///
   /// In en, this message translates to:
   /// **'Isolate platform behavior'**
   String get nativePlatformShowcaseLesson3Title;
 
-  /// No description provided for @nativePlatformShowcaseLesson3Body.
+  /// Body for native platform showcase lesson 3
   ///
   /// In en, this message translates to:
   /// **'Platform-specific behaviour should be isolated, not scattered across widgets.'**
   String get nativePlatformShowcaseLesson3Body;
 
-  /// No description provided for @nativePlatformShowcaseLesson4Title.
+  /// Title for native platform showcase lesson 4
   ///
   /// In en, this message translates to:
   /// **'Abstract native interop'**
   String get nativePlatformShowcaseLesson4Title;
 
-  /// No description provided for @nativePlatformShowcaseLesson4Body.
+  /// Body for native platform showcase lesson 4
   ///
   /// In en, this message translates to:
   /// **'Native interop should sit behind abstractions so the app remains testable.'**
@@ -2593,115 +2593,115 @@ abstract class AppLocalizations {
   /// **'Not run yet'**
   String get nativeSecurityOutcomeIdle;
 
-  /// No description provided for @nativeSecurityStatusSuccess.
+  /// Native security outcome status: success
   ///
   /// In en, this message translates to:
   /// **'Success'**
   String get nativeSecurityStatusSuccess;
 
-  /// No description provided for @nativeSecurityStatusUnavailable.
+  /// Native security outcome status: unavailable
   ///
   /// In en, this message translates to:
   /// **'Unavailable'**
   String get nativeSecurityStatusUnavailable;
 
-  /// No description provided for @nativeSecurityStatusDenied.
+  /// Native security outcome status: denied
   ///
   /// In en, this message translates to:
   /// **'Denied'**
   String get nativeSecurityStatusDenied;
 
-  /// No description provided for @nativeSecurityStatusFailed.
+  /// Native security outcome status: failed
   ///
   /// In en, this message translates to:
   /// **'Failed'**
   String get nativeSecurityStatusFailed;
 
-  /// No description provided for @nativeSecurityReasonOk.
+  /// Native security reason when the operation completed successfully
   ///
   /// In en, this message translates to:
   /// **'Completed on-device.'**
   String get nativeSecurityReasonOk;
 
-  /// No description provided for @nativeSecurityReasonMobileOnly.
+  /// Native security reason when feature is mobile-only
   ///
   /// In en, this message translates to:
   /// **'Available on iOS and Android only.'**
   String get nativeSecurityReasonMobileOnly;
 
-  /// No description provided for @nativeSecurityReasonMissingPlugin.
+  /// Native security reason when the platform plugin is missing
   ///
   /// In en, this message translates to:
   /// **'Native handler is not registered on this build.'**
   String get nativeSecurityReasonMissingPlugin;
 
-  /// No description provided for @nativeSecurityReasonTimeout.
+  /// Native security reason when the platform call times out
   ///
   /// In en, this message translates to:
   /// **'Native call timed out.'**
   String get nativeSecurityReasonTimeout;
 
-  /// No description provided for @nativeSecurityReasonMalformedReply.
+  /// Native security reason when the platform reply is malformed
   ///
   /// In en, this message translates to:
   /// **'Native reply was malformed.'**
   String get nativeSecurityReasonMalformedReply;
 
-  /// No description provided for @nativeSecurityReasonPlatformError.
+  /// Native security reason for a generic platform error
   ///
   /// In en, this message translates to:
   /// **'Native platform call failed.'**
   String get nativeSecurityReasonPlatformError;
 
-  /// No description provided for @nativeSecurityReasonSecureEnclaveUnavailable.
+  /// Native security reason when Secure Enclave is unavailable
   ///
   /// In en, this message translates to:
   /// **'Secure Enclave unavailable on this device.'**
   String get nativeSecurityReasonSecureEnclaveUnavailable;
 
-  /// No description provided for @nativeSecurityReasonKeystoreUnavailable.
+  /// Native security reason when Android Keystore is unavailable
   ///
   /// In en, this message translates to:
   /// **'Android Keystore could not create a key.'**
   String get nativeSecurityReasonKeystoreUnavailable;
 
-  /// No description provided for @nativeSecurityReasonBiometricNotEnrolled.
+  /// Native security reason when no biometrics are enrolled
   ///
   /// In en, this message translates to:
   /// **'No biometrics enrolled on this device.'**
   String get nativeSecurityReasonBiometricNotEnrolled;
 
-  /// No description provided for @nativeSecurityReasonBiometricLockout.
+  /// Native security reason when biometrics are locked out
   ///
   /// In en, this message translates to:
   /// **'Biometric sensor is temporarily locked out.'**
   String get nativeSecurityReasonBiometricLockout;
 
-  /// No description provided for @nativeSecurityReasonBiometricCanceled.
+  /// Native security reason when the biometric prompt is canceled
   ///
   /// In en, this message translates to:
   /// **'Biometric prompt was canceled.'**
   String get nativeSecurityReasonBiometricCanceled;
 
-  /// No description provided for @nativeSecurityReasonBiometricUnsupported.
+  /// Native security reason when biometric hardware is unsupported
   ///
   /// In en, this message translates to:
   /// **'Biometric hardware unsupported on this device.'**
   String get nativeSecurityReasonBiometricUnsupported;
 
-  /// No description provided for @nativeSecurityReasonConcurrentPrompt.
+  /// Native security reason when another biometric prompt is active
   ///
   /// In en, this message translates to:
   /// **'Another biometric prompt is already active.'**
   String get nativeSecurityReasonConcurrentPrompt;
 
-  /// No description provided for @nativeSecurityReasonNotConfiguredOrTokenNull.
+  /// Native security reason when App Check is not configured or token is null
   ///
   /// In en, this message translates to:
   /// **'No App Check token yet — Firebase Console registration is still pending.'**
   String get nativeSecurityReasonNotConfiguredOrTokenNull;
 
-  /// No description provided for @nativeSecurityReasonAppCheckError.
+  /// Native security reason when App Check attestation fails
   ///
   /// In en, this message translates to:
   /// **'App Check attestation failed.'**
@@ -3571,31 +3571,31 @@ abstract class AppLocalizations {
   /// **'Camera is not available. Use a real device or pick from gallery.'**
   String get cameraGalleryCameraUnavailable;
 
-  /// No description provided for @cameraGalleryProcessingLabel.
+  /// Label for on-device image processing section in camera/gallery demo
   ///
   /// In en, this message translates to:
   /// **'On-device processing'**
   String get cameraGalleryProcessingLabel;
 
-  /// No description provided for @cameraGalleryFilterOriginal.
+  /// Camera/gallery filter chip: original
   ///
   /// In en, this message translates to:
   /// **'Original'**
   String get cameraGalleryFilterOriginal;
 
-  /// No description provided for @cameraGalleryFilterGrayscale.
+  /// Camera/gallery filter chip: grayscale
   ///
   /// In en, this message translates to:
   /// **'Grayscale'**
   String get cameraGalleryFilterGrayscale;
 
-  /// No description provided for @cameraGalleryFilterSepia.
+  /// Camera/gallery filter chip: sepia
   ///
   /// In en, this message translates to:
   /// **'Sepia'**
   String get cameraGalleryFilterSepia;
 
-  /// No description provided for @cameraGalleryFilterInvert.
+  /// Camera/gallery filter chip: invert
   ///
   /// In en, this message translates to:
   /// **'Invert'**
@@ -6168,6 +6168,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open certificate pinning demo'**
   String get openCertificatePinningDemoTooltip;
+
+  /// Settings section title for analytics consent
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settingsAnalyticsConsentSectionTitle;
+
+  /// Toggle title for analytics collection consent
+  ///
+  /// In en, this message translates to:
+  /// **'Product analytics'**
+  String get settingsAnalyticsConsentTitle;
+
+  /// Explanation under analytics consent toggle
+  ///
+  /// In en, this message translates to:
+  /// **'When enabled, the app may send low-cardinality product events (mode, source, result, variant) after you opt in. Tokens, message content, and identifiers are never included. Default is off.'**
+  String get settingsAnalyticsConsentExplanation;
+
+  /// Title for production readiness demo page
+  ///
+  /// In en, this message translates to:
+  /// **'Production readiness'**
+  String get productionReadinessPageTitle;
+
+  /// Example hub button for production readiness
+  ///
+  /// In en, this message translates to:
+  /// **'Production readiness'**
+  String get exampleProductionReadinessButton;
+
+  /// Label for live vs simulated mode card
+  ///
+  /// In en, this message translates to:
+  /// **'Runtime mode'**
+  String get productionReadinessModeLabel;
+
+  /// Live mode badge
+  ///
+  /// In en, this message translates to:
+  /// **'Live Firebase'**
+  String get productionReadinessModeLive;
+
+  /// Simulated mode badge
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated'**
+  String get productionReadinessModeSimulated;
+
+  /// Consent status card label
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics consent'**
+  String get productionReadinessConsentLabel;
+
+  /// Consent enabled status
+  ///
+  /// In en, this message translates to:
+  /// **'Collection enabled'**
+  String get productionReadinessConsentOn;
+
+  /// Consent disabled status
+  ///
+  /// In en, this message translates to:
+  /// **'Collection disabled (default)'**
+  String get productionReadinessConsentOff;
+
+  /// In-memory analytics event count label
+  ///
+  /// In en, this message translates to:
+  /// **'Local event count'**
+  String get productionReadinessEventCountLabel;
+
+  /// Remote Config kill-switch card label
+  ///
+  /// In en, this message translates to:
+  /// **'Release flag'**
+  String get productionReadinessReleaseFlagLabel;
+
+  /// Release flag enabled
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get productionReadinessReleaseFlagEnabled;
+
+  /// Release flag disabled
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled (kill-switch)'**
+  String get productionReadinessReleaseFlagDisabled;
+
+  /// RC variant label
+  ///
+  /// In en, this message translates to:
+  /// **'Variant'**
+  String get productionReadinessVariantLabel;
+
+  /// RC cache vs remote source label
+  ///
+  /// In en, this message translates to:
+  /// **'Config source'**
+  String get productionReadinessSourceLabel;
+
+  /// Crashlytics status card label
+  ///
+  /// In en, this message translates to:
+  /// **'Crashlytics'**
+  String get productionReadinessCrashlyticsLabel;
+
+  /// Crashlytics available when Firebase is live
+  ///
+  /// In en, this message translates to:
+  /// **'Available (Firebase initialized)'**
+  String get productionReadinessCrashlyticsActive;
+
+  /// Crashlytics unavailable status
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable (simulated / no Firebase)'**
+  String get productionReadinessCrashlyticsUnavailable;
+
+  /// FCM diagnostics card title
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications (FCM)'**
+  String get productionReadinessFcmLabel;
+
+  /// Live vs simulated FCM mode label
+  ///
+  /// In en, this message translates to:
+  /// **'FCM mode'**
+  String get productionReadinessFcmModeLabel;
+
+  /// Live FCM mode badge
+  ///
+  /// In en, this message translates to:
+  /// **'Live'**
+  String get productionReadinessFcmModeLive;
+
+  /// Simulated FCM mode badge
+  ///
+  /// In en, this message translates to:
+  /// **'Simulated'**
+  String get productionReadinessFcmModeSimulated;
+
+  /// FCM permission status label
+  ///
+  /// In en, this message translates to:
+  /// **'Permission'**
+  String get productionReadinessFcmPermissionLabel;
+
+  /// Redacted last message source label
+  ///
+  /// In en, this message translates to:
+  /// **'Last source'**
+  String get productionReadinessFcmLastSource;
+
+  /// Whether last message had a title (redacted)
+  ///
+  /// In en, this message translates to:
+  /// **'Has title'**
+  String get productionReadinessFcmHasTitle;
+
+  /// Whether last message had a body (redacted)
+  ///
+  /// In en, this message translates to:
+  /// **'Has body'**
+  String get productionReadinessFcmHasBody;
+
+  /// Count of data keys on last message
+  ///
+  /// In en, this message translates to:
+  /// **'Data keys'**
+  String get productionReadinessFcmDataKeys;
+
+  /// FCM summary when no message yet
+  ///
+  /// In en, this message translates to:
+  /// **'No message received yet'**
+  String get productionReadinessFcmNoMessage;
+
+  /// Button to emit simulated FCM payload
+  ///
+  /// In en, this message translates to:
+  /// **'Emit simulated notification'**
+  String get productionReadinessEmitSimulatedButton;
+
+  /// Frame timing diagnostics card title
+  ///
+  /// In en, this message translates to:
+  /// **'Frame timing'**
+  String get productionReadinessFrameTimingLabel;
+
+  /// Frame timing sample count label
+  ///
+  /// In en, this message translates to:
+  /// **'Samples'**
+  String get productionReadinessFrameSampleCount;
+
+  /// 90th percentile frame time label
+  ///
+  /// In en, this message translates to:
+  /// **'P90'**
+  String get productionReadinessFrameP90;
+
+  /// 99th percentile frame time label
+  ///
+  /// In en, this message translates to:
+  /// **'P99'**
+  String get productionReadinessFrameP99;
+
+  /// Frames slower than one 60fps frame
+  ///
+  /// In en, this message translates to:
+  /// **'Missed >16.7ms'**
+  String get productionReadinessFrameMissed;
+
+  /// Banner when remote config kill-switch is off
+  ///
+  /// In en, this message translates to:
+  /// **'Release kill-switch is disabled. Demo features may be off in production.'**
+  String get productionReadinessKillSwitchBanner;
+
+  /// Link to settings for sync diagnostics
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get productionReadinessSettingsLink;
+
+  /// Link to native platform showcase demo
+  ///
+  /// In en, this message translates to:
+  /// **'Native platform showcase'**
+  String get productionReadinessNativeShowcaseLink;
 }
 
 class _AppLocalizationsDelegate

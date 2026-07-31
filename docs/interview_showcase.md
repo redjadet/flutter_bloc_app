@@ -29,6 +29,22 @@ are **depth branches** for follow-up questions.
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
+### 3b. Alternate job-focused spine (~12 minutes)
+
+Use when the JD emphasizes **production ownership** (analytics consent, Remote
+Config kill-switch, FCM safety, Crashlytics, frame budgets, release dry-run).
+Documented in the [README walkthrough](../README.md#12-minute-production-ownership-walkthrough)
+and [ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
+it is a registered alternate.
+
+| Step | Route | Signal | Open in code |
+| --- | --- | --- | --- |
+| A1 | `/production-readiness` | Dual-mode live\|simulated; consent default off; RC kill-switch; Crashlytics status | [`features/production_readiness/`](../apps/mobile/lib/features/production_readiness/) |
+| A2 | Same page → FCM card | Simulated emit when Firebase absent; redacted logs; masked release tokens | [`fcm_demo/`](../apps/mobile/lib/features/fcm_demo/), [`app/analytics/`](../apps/mobile/lib/app/analytics/) |
+| A3 | Same page → frames | Live FrameTiming p90/p99 | [`frame_timing_monitor.dart`](../apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart) |
+| A4 | CI dry-run | Manual workflow; no store publish | [`.github/workflows/mobile_release_dry_run.yml`](../.github/workflows/mobile_release_dry_run.yml) |
+| A5 | Offline sync / native (optional depth) | Counter sync or native telemetry after ownership story | Counter spine #1; native showcase |
+
 **Depth on request** (not spine): case study, therapy, charts, GraphQL,
 iGaming, **native platform showcase** (MethodChannel + EventChannel + FFI +
 mobile PlatformView/haptic/share), and other
@@ -42,14 +58,14 @@ modules in [feature_overview.md](feature_overview.md).
 | Modular architecture | Feature boundaries + leak checks | [modularity.md](modularity.md), `tool/check_feature_modularity_leaks.sh` | `bash tool/check_feature_modularity_leaks.sh` |
 | Automated testing | Unit/widget + integration tiers | [testing_overview.md](testing_overview.md) | `./bin/checklist-fast`; PR smoke below |
 | API-first / cross-stack | Chat + HTTP stack | [ai_integration.md](integrations/ai_integration.md), `packages/networking/lib/src/` | Spine #3; badges on chat |
-| Validate / instrument | Structured errors, sync telemetry, Crashlytics when Firebase on | [observability.md](observability.md), [counter_outcome_brief.md](features/counter_outcome_brief.md) | Spine #4 sync diagnostics |
+| Validate / instrument | Structured errors, sync telemetry, Crashlytics when Firebase on; **consent-gated** product analytics allowlist | [observability.md](observability.md), [ADR 0006](adr/0006-production-readiness-demo.md), [counter_outcome_brief.md](features/counter_outcome_brief.md) | Spine #4; alternate spine A1–A2 |
 | AI-enabled delivery | Agent loop + review protocol | [ai_code_review_protocol.md](ai_code_review_protocol.md), [changes/2026-05-12_modular_architecture_plan_implementation.md](changes/2026-05-12_modular_architecture_plan_implementation.md) | Spine #5 |
-| Ownership | Counter vertical narrative | [features/counter_outcome_brief.md](features/counter_outcome_brief.md) | Read brief; tie to sync + persistence test |
-| Delivery ownership | CI, validation routing, release docs, vertical demos as depth | README badges, [feature_overview.md](feature_overview.md), [deployment.md](deployment.md) | CI badge; depth table §13 |
-| Mixpanel / Sentry (nice) | **Not shipped** — documented seams | [plans/future_observability.md](plans/future_observability.md) | Interview appendix script §12 |
+| Ownership | Counter vertical narrative **or** production-readiness case study | [features/counter_outcome_brief.md](features/counter_outcome_brief.md), [changes/2026-07-31_production_readiness_case_study.md](changes/2026-07-31_production_readiness_case_study.md) | Read brief; tie to sync + persistence test **or** `/production-readiness` |
+| Delivery ownership | CI, validation routing, release docs, dry-run workflow | README badges, [feature_overview.md](feature_overview.md), [deployment.md](deployment.md), [mobile_release_dry_run.yml](../.github/workflows/mobile_release_dry_run.yml) | CI badge; depth table §13; dry-run Actions |
+| Mixpanel / Sentry (nice) | **Not shipped** — documented seams; Firebase Analytics only via consent-gated port | [plans/future_observability.md](plans/future_observability.md), [observability.md](observability.md) | Interview appendix script §12 |
 | Patrol (nice) | **Plan only** | [plans/patrol_e2e_pilot.md](plans/patrol_e2e_pilot.md) | — |
 | Platform channels / FFI (nice) | Live Swift/Kotlin/C interop, EventChannel telemetry, mobile PlatformView banner, haptic + system share behind clean-arch ports; web/desktop unavailable stubs | [`apps/mobile/lib/features/native_platform_showcase/`](../apps/mobile/lib/features/native_platform_showcase/), [reference_features.md](architecture/reference_features.md) | Example → Native platform showcase; `cd apps/mobile && flutter test test/features/native_platform_showcase/` |
-| Store release (nice) | Release scripts + deployment doc | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference) |
+| Store release (nice) | Release scripts + deployment doc; **dry-run workflow is not publishing** | [deployment.md](deployment.md) | `./tool/release_both_stores.sh` (reference); Actions → Mobile release dry-run |
 
 ## 5. Proof commands
 
@@ -84,6 +100,7 @@ Registered in `registerPrSmokeIntegrationFlows()`:
 6. Todo list
 7. Counter persistence
 8. Chat list
+9. Production readiness (J6: route → optional simulated emit → consent → release retry)
 
 ## 6. Testing story
 

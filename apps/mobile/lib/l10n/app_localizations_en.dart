@@ -3378,4 +3378,127 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get openCertificatePinningDemoTooltip =>
       'Open certificate pinning demo';
+
+  @override
+  String get settingsAnalyticsConsentSectionTitle => 'Privacy';
+
+  @override
+  String get settingsAnalyticsConsentTitle => 'Product analytics';
+
+  @override
+  String get settingsAnalyticsConsentExplanation =>
+      'When enabled, the app may send low-cardinality product events (mode, source, result, variant) after you opt in. Tokens, message content, and identifiers are never included. Default is off.';
+
+  @override
+  String get productionReadinessPageTitle => 'Production readiness';
+
+  @override
+  String get exampleProductionReadinessButton => 'Production readiness';
+
+  @override
+  String get productionReadinessModeLabel => 'Runtime mode';
+
+  @override
+  String get productionReadinessModeLive => 'Live Firebase';
+
+  @override
+  String get productionReadinessModeSimulated => 'Simulated';
+
+  @override
+  String get productionReadinessConsentLabel => 'Analytics consent';
+
+  @override
+  String get productionReadinessConsentOn => 'Collection enabled';
+
+  @override
+  String get productionReadinessConsentOff => 'Collection disabled (default)';
+
+  @override
+  String get productionReadinessEventCountLabel => 'Local event count';
+
+  @override
+  String get productionReadinessReleaseFlagLabel => 'Release flag';
+
+  @override
+  String get productionReadinessReleaseFlagEnabled => 'Enabled';
+
+  @override
+  String get productionReadinessReleaseFlagDisabled => 'Disabled (kill-switch)';
+
+  @override
+  String get productionReadinessVariantLabel => 'Variant';
+
+  @override
+  String get productionReadinessSourceLabel => 'Config source';
+
+  @override
+  String get productionReadinessCrashlyticsLabel => 'Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsActive =>
+      'Available (Firebase initialized)';
+
+  @override
+  String get productionReadinessCrashlyticsUnavailable =>
+      'Unavailable (simulated / no Firebase)';
+
+  @override
+  String get productionReadinessFcmLabel => 'Push notifications (FCM)';
+
+  @override
+  String get productionReadinessFcmModeLabel => 'FCM mode';
+
+  @override
+  String get productionReadinessFcmModeLive => 'Live';
+
+  @override
+  String get productionReadinessFcmModeSimulated => 'Simulated';
+
+  @override
+  String get productionReadinessFcmPermissionLabel => 'Permission';
+
+  @override
+  String get productionReadinessFcmLastSource => 'Last source';
+
+  @override
+  String get productionReadinessFcmHasTitle => 'Has title';
+
+  @override
+  String get productionReadinessFcmHasBody => 'Has body';
+
+  @override
+  String get productionReadinessFcmDataKeys => 'Data keys';
+
+  @override
+  String get productionReadinessFcmNoMessage => 'No message received yet';
+
+  @override
+  String get productionReadinessEmitSimulatedButton =>
+      'Emit simulated notification';
+
+  @override
+  String get productionReadinessFrameTimingLabel => 'Frame timing';
+
+  @override
+  String get productionReadinessFrameSampleCount => 'Samples';
+
+  @override
+  String get productionReadinessFrameP90 => 'P90';
+
+  @override
+  String get productionReadinessFrameP99 => 'P99';
+
+  @override
+  String get productionReadinessFrameMissed => 'Missed >16.7ms';
+
+  @override
+  String get productionReadinessKillSwitchBanner =>
+      'Release kill-switch is disabled. Demo features may be off in production.';
+
+  @override
+  String get productionReadinessSettingsLink => 'Open Settings';
+
+  @override
+  String get productionReadinessNativeShowcaseLink =>
+      'Native platform showcase';
 }

@@ -133,10 +133,18 @@ void registerSettingsIntegrationFlow() {
 
       await tester.scrollUntilVisible(
         find.text('Español'),
-        250,
+        300,
         scrollable: find.byType(Scrollable).first,
       );
-      await tapAndPump(tester, find.text('Español'));
+      // Analytics consent section lengthens Settings; ensureVisible avoids
+      // tapping a partially-obscured locale chip.
+      await tester.ensureVisible(find.text('Español'));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tapAndPump(
+        tester,
+        find.text('Español'),
+        scrollIntoView: false,
+      );
       await pumpUntilFound(tester, find.text('Configuración'));
 
       app = tester.widget<MaterialApp>(find.byType(MaterialApp));

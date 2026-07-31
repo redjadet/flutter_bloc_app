@@ -1,7 +1,9 @@
 import 'package:flutter_bloc_app/app/composition/features/register_fcm_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/data/no_op_fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/data/simulated_fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,10 +15,18 @@ void main() {
     await getIt.reset(dispose: true);
   });
 
-  test('registerFcmDemoServices uses no-op service when Firebase absent', () {
-    registerFcmDemoServices();
+  test(
+    'registerFcmDemoServices uses simulated service when Firebase absent',
+    () {
+      registerFcmDemoServices();
 
-    final service = getIt<FcmMessagingService>();
-    expect(service, isA<NoOpFcmMessagingService>());
-  });
+      final FcmMessagingService service = getIt<FcmMessagingService>();
+      expect(service, isA<SimulatedFcmMessagingService>());
+      expect(getIt<FcmDemoMode>(), FcmDemoMode.simulated);
+      expect(
+        getIt<FcmSimulationController>(),
+        isA<SimulatedFcmMessagingService>(),
+      );
+    },
+  );
 }

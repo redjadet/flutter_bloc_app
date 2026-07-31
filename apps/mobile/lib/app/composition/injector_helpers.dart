@@ -26,6 +26,14 @@ void registerLazySingletonIfAbsent<T extends Object>(
   }
 }
 
+/// Registers a factory if the type is not already registered.
+void registerFactoryIfAbsent<T extends Object>(final T Function() factory) {
+  final GetIt getIt = GetIt.instance;
+  if (!getIt.isRegistered<T>()) {
+    getIt.registerFactory<T>(factory);
+  }
+}
+
 /// Creates a remote repository with Firebase error handling.
 ///
 /// Returns null if Firebase is not available or if creation fails.

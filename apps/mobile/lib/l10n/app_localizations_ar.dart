@@ -3403,4 +3403,124 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get openCertificatePinningDemoTooltip =>
       'Open certificate pinning demo';
+
+  @override
+  String get settingsAnalyticsConsentSectionTitle => 'الخصوصية';
+
+  @override
+  String get settingsAnalyticsConsentTitle => 'تحليلات المنتج';
+
+  @override
+  String get settingsAnalyticsConsentExplanation =>
+      'عند التفعيل، قد ترسل التطبيق أحداث منتج منخفضة التعدد (mode وsource وresult وvariant) بعد الموافقة. لا تُضمَّن الرموز أو محتوى الرسائل أو المعرفات أبدًا. الافتراضي متوقف.';
+
+  @override
+  String get productionReadinessPageTitle => 'جاهزية الإنتاج';
+
+  @override
+  String get exampleProductionReadinessButton => 'جاهزية الإنتاج';
+
+  @override
+  String get productionReadinessModeLabel => 'وضع التشغيل';
+
+  @override
+  String get productionReadinessModeLive => 'Firebase مباشر';
+
+  @override
+  String get productionReadinessModeSimulated => 'محاكى';
+
+  @override
+  String get productionReadinessConsentLabel => 'موافقة التحليلات';
+
+  @override
+  String get productionReadinessConsentOn => 'الجمع مفعّل';
+
+  @override
+  String get productionReadinessConsentOff => 'الجمع متوقف (افتراضي)';
+
+  @override
+  String get productionReadinessEventCountLabel => 'عدد الأحداث المحلي';
+
+  @override
+  String get productionReadinessReleaseFlagLabel => 'علم الإصدار';
+
+  @override
+  String get productionReadinessReleaseFlagEnabled => 'مفعّل';
+
+  @override
+  String get productionReadinessReleaseFlagDisabled => 'متوقف (إيقاف طارئ)';
+
+  @override
+  String get productionReadinessVariantLabel => 'المتغير';
+
+  @override
+  String get productionReadinessSourceLabel => 'مصدر الإعداد';
+
+  @override
+  String get productionReadinessCrashlyticsLabel => 'Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsActive => 'متاح (تم تهيئة Firebase)';
+
+  @override
+  String get productionReadinessCrashlyticsUnavailable =>
+      'غير متاح (محاكاة / لا Firebase)';
+
+  @override
+  String get productionReadinessFcmLabel => 'إشعارات الدفع (FCM)';
+
+  @override
+  String get productionReadinessFcmModeLabel => 'وضع FCM';
+
+  @override
+  String get productionReadinessFcmModeLive => 'مباشر';
+
+  @override
+  String get productionReadinessFcmModeSimulated => 'محاكاة';
+
+  @override
+  String get productionReadinessFcmPermissionLabel => 'الإذن';
+
+  @override
+  String get productionReadinessFcmLastSource => 'آخر مصدر';
+
+  @override
+  String get productionReadinessFcmHasTitle => 'يحتوي عنوانًا';
+
+  @override
+  String get productionReadinessFcmHasBody => 'يحتوي نصًا';
+
+  @override
+  String get productionReadinessFcmDataKeys => 'مفاتيح البيانات';
+
+  @override
+  String get productionReadinessFcmNoMessage => 'لم تُستلم رسالة بعد';
+
+  @override
+  String get productionReadinessEmitSimulatedButton => 'إرسال إشعار محاكى';
+
+  @override
+  String get productionReadinessFrameTimingLabel => 'توقيت الإطارات';
+
+  @override
+  String get productionReadinessFrameSampleCount => 'عينات';
+
+  @override
+  String get productionReadinessFrameP90 => 'P90';
+
+  @override
+  String get productionReadinessFrameP99 => 'P99';
+
+  @override
+  String get productionReadinessFrameMissed => 'فائت >16.7 مللي ث';
+
+  @override
+  String get productionReadinessKillSwitchBanner =>
+      'مفتاح إيقاف الإصدار معطّل. قد تكون ميزات العرض غير مفعّلة في الإنتاج.';
+
+  @override
+  String get productionReadinessSettingsLink => 'فتح الإعدادات';
+
+  @override
+  String get productionReadinessNativeShowcaseLink => 'عرض المنصة الأصلية';
 }

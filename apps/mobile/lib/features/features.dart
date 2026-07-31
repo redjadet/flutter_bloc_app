@@ -22,6 +22,7 @@ export 'library_demo/library_demo.dart';
 export 'native_platform_showcase/native_platform_showcase.dart';
 export 'online_therapy_demo/online_therapy_demo.dart';
 export 'playlearn/playlearn.dart';
+export 'production_readiness/production_readiness.dart';
 export 'profile/profile.dart';
 export 'realtime_market/realtime_market.dart';
 export 'remote_config/remote_config.dart';

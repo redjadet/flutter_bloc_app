@@ -12,6 +12,12 @@ abstract final class RemoteConfigKeys {
   static const String renderChatDemoHfReadToken =
       'RENDER_CHAT_DEMO_HF_READ_TOKEN';
 
+  /// Production readiness demo kill-switch (default enabled when unset).
+  static const String productionDemoEnabled = 'production_demo_enabled';
+
+  /// Production readiness demo experiment variant (default `control`).
+  static const String productionDemoVariant = 'production_demo_variant';
+
   /// Offline-first cache metadata (Hive snapshot, not Firebase console keys).
   static const String lastSyncedAt = 'last_synced_at';
   static const String lastDataSource = 'last_data_source';

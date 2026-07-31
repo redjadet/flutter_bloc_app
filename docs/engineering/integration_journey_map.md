@@ -75,11 +75,22 @@ tier expectations.
   `./bin/integration_preflight`
 - **Owner:** feature QA owner
 
+## J6 Production readiness walkthrough
+
+- **Intent:** Prove consent-gated analytics, simulated FCM emit, release-flag
+  refresh, and diagnostics cards without Firebase credentials.
+- **Primary target:** `integration_test/pr_smoke_flows_test.dart` via
+  `registerProductionReadinessIntegrationFlow` (Example →
+  `example-production-readiness-button` → list → optional emit simulated →
+  consent toggle → release retry).
+- **Tier:** `pr_smoke`, `smoke`, `standard`, `exhaustive`
+- **Owner:** production-readiness feature owner
+
 ## Aggregate mapping
 
 - `pr_smoke` -> `integration_test/pr_smoke_flows_test.dart`
   (`registerPrSmokeIntegrationFlows`: guest sign-in, launch, charts, search,
-  settings, todo, counter persistence, chat list)
+  settings, todo, counter persistence, chat list, production readiness)
 - `smoke` -> `integration_test/smoke_flows_test.dart`
 - `standard` -> `integration_test/standard_flows_test.dart`
   (`registerStandardIntegrationFlows`: smoke + extended; see `flow_scenarios.dart`)

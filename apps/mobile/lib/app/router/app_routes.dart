@@ -107,25 +107,20 @@ class AppRoutes {
 
   static const fcmDemo = 'fcm-demo';
   static const fcmDemoPath = '/fcm-demo';
-
+  static const productionReadiness = 'production-readiness';
+  static const productionReadinessPath = '/production-readiness';
   static const firebaseFunctionsTest = 'firebase-functions-test';
   static const firebaseFunctionsTestPath = '/firebase-functions-test';
-
   static const iotDemo = 'iot-demo';
   static const iotDemoPath = '/iot-demo';
-
   static const iapDemo = 'iap-demo';
   static const iapDemoPath = '/iap-demo';
-
   static const caseStudyDemo = 'case-study-demo';
   static const caseStudyDemoPath = '/case-study-demo';
-
   static const caseStudyDemoNew = 'case-study-demo-new';
   static const caseStudyDemoNewPath = '/case-study-demo/new';
-
   static const caseStudyDemoRecord = 'case-study-demo-record';
   static const caseStudyDemoRecordPath = '/case-study-demo/record';
-
   static const caseStudyDemoReview = 'case-study-demo-review';
   static const caseStudyDemoReviewPath = '/case-study-demo/review';
 

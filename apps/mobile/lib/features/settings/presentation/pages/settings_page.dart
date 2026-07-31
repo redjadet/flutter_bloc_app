@@ -89,6 +89,13 @@ class _SettingsView extends StatelessWidget {
         key: const ValueKey('settings-gap-2'),
         height: context.responsiveGapL,
       ),
+      const AnalyticsConsentSection(
+        key: ValueKey('settings-analytics-consent'),
+      ),
+      SizedBox(
+        key: const ValueKey('settings-gap-analytics'),
+        height: context.responsiveGapL,
+      ),
       const IntegrationsSection(key: ValueKey('settings-integrations')),
       SizedBox(
         key: const ValueKey('settings-gap-3'),

@@ -18,7 +18,8 @@ then update the ADR or supersede it.
 | [0002](0002-offline-first-data.md) | Accepted | Data access and sync | Use offline-first repositories with Hive local stores, `PendingSyncRepository`, and `BackgroundSyncCoordinator`. |
 | [0003](0003-deferred-feature-loading.md) | Accepted | Routing and startup | Use deferred imports and `DeferredPage` for heavy or infrequently used routed features. |
 | [0004](0004-type-safe-cubit-access.md) | Accepted | Presentation state access | Prefer shared type-safe BLoC/Cubit access helpers and selectors for routine presentation code. |
-| [0005](0005-interview-showcase-scope.md) | Accepted | Portfolio curation | Frozen interview spine, doc-only analytics until second consumer, PR smoke aligned to spine; current Melos workspace keeps modular-monolith boundaries. |
+| [0005](0005-interview-showcase-scope.md) | Accepted | Portfolio curation | Frozen interview spine, doc-only Mixpanel/Sentry/Patrol until second consumer; consent-gated Firebase Analytics allowed per ADR 0006; PR smoke aligned to spine; Melos keeps modular-monolith boundaries. |
+| [0006](0006-production-readiness-demo.md) | Accepted | Production ownership demo | Dual-mode `/production-readiness` walkthrough: consent-gated Firebase Analytics, RC kill-switch, safe FCM simulation, FrameTiming budgets, credential-free release dry-run. |
 
 ## When To Add Or Update An ADR
 

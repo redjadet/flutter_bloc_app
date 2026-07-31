@@ -6,6 +6,9 @@ import 'dart:async';
 import 'package:auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
+import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
+import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -110,6 +113,14 @@ class _SignedInAuthRepository implements AuthRepository {
   Stream<AuthUser?> get authStateChanges => Stream<AuthUser?>.value(_user);
 }
 
+class _FakeConsent implements AnalyticsConsentRepository {
+  @override
+  Future<bool> load() async => false;
+
+  @override
+  Future<void> save({required final bool enabled}) async {}
+}
+
 GoRouterState _state(final String path) {
   final _MockGoRouterState state = _MockGoRouterState();
   when(() => state.uri).thenReturn(Uri.parse(path));
@@ -176,10 +187,33 @@ void main() {
         useMockFirebasePlatform: true,
       ),
     );
+    expect(
+      getIt.isRegistered<AuthRepository>(),
+      isTrue,
+      reason: 'AuthRepository missing after setupTestDependencies',
+    );
     if (getIt.isRegistered<AuthRepository>()) {
       await getIt.unregister<AuthRepository>();
     }
     getIt.registerSingleton<AuthRepository>(const _SignedInAuthRepository());
+    expect(
+      getIt.isRegistered<AuthRepository>(),
+      isTrue,
+      reason: 'AuthRepository missing after coverage re-register',
+    );
+    if (!getIt.isRegistered<AnalyticsConsentRepository>()) {
+      getIt.registerSingleton<AnalyticsConsentRepository>(_FakeConsent());
+    }
+    if (!getIt.isRegistered<InMemoryProductAnalytics>()) {
+      getIt.registerSingleton<InMemoryProductAnalytics>(
+        InMemoryProductAnalytics(),
+      );
+    }
+    if (!getIt.isRegistered<ProductAnalytics>()) {
+      getIt.registerSingleton<ProductAnalytics>(
+        getIt<InMemoryProductAnalytics>(),
+      );
+    }
   });
 
   tearDown(() async {
@@ -209,11 +243,19 @@ void main() {
 
     for (final GoRoute route in corePartRoutes) {
       final GoRouterState state = _state(route.path);
-      late Widget built;
+      Widget? built;
+      Object? builderError;
+      StackTrace? builderStack;
       final GoRouter router = _coverageRouter(
         home: Builder(
           builder: (final context) {
-            built = route.builder!(context, state);
+            try {
+              built = route.builder!(context, state);
+            } on Object catch (error, stackTrace) {
+              builderError = error;
+              builderStack = stackTrace;
+              return Scaffold(body: Text('builder-error:${route.name}'));
+            }
             return Scaffold(body: built);
           },
         ),
@@ -224,8 +266,17 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       tester.takeException();
 
+      if (builderError != null) {
+        fail('Route ${route.name} builder threw: $builderError\n$builderStack');
+      }
+      expect(
+        built,
+        isNotNull,
+        reason: 'Route ${route.name} builder returned null',
+      );
+
       if (built is AppRouteAuthGate) {
-        final Widget gateChild = (built as AppRouteAuthGate).child;
+        final Widget gateChild = (built! as AppRouteAuthGate).child;
         if (gateChild is SettingsPage) {
           final GoRouter extrasRouter = _coverageRouter(
             home: Builder(

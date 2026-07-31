@@ -28,6 +28,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
     required this.onOpenEventBusDemo,
     required this.onOpenNativePlatformShowcase,
     required this.onOpenOnlineTherapyDemo,
+    required this.onOpenProductionReadiness,
     required this.onRunIsolates,
     required this.isRunningIsolates,
     required this.isolateError,
@@ -67,6 +68,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final VoidCallback onOpenEventBusDemo;
   final VoidCallback onOpenNativePlatformShowcase;
   final VoidCallback onOpenOnlineTherapyDemo;
+  final VoidCallback onOpenProductionReadiness;
   final VoidCallback? onRunIsolates;
   final bool isRunningIsolates;
   final String? isolateError;
@@ -153,6 +155,14 @@ class _ExamplePageBodyContent extends StatelessWidget {
             icon: Icons.devices_outlined,
             label: l10n.exampleNativePlatformShowcaseButton,
             key: const ValueKey('example-native-platform-showcase-button'),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          _buildIconButton(
+            context: context,
+            onPressed: onOpenProductionReadiness,
+            icon: Icons.verified_user_outlined,
+            label: l10n.exampleProductionReadinessButton,
+            key: const ValueKey('example-production-readiness-button'),
           ),
           SizedBox(height: context.responsiveGapL),
           _buildIconButton(

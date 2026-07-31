@@ -11,13 +11,21 @@ class _TokenSection extends StatelessWidget {
   final String? value;
   final AppLocalizations l10n;
 
+  static const String _maskedToken = '••••••••';
+
+  bool get _shouldMaskToken => kReleaseMode || FlavorManager.I.isProd;
+
+  bool get _canRevealToken =>
+      !kReleaseMode && (FlavorManager.I.isDev || FlavorManager.I.isQa);
+
   @override
   Widget build(final BuildContext context) {
     final theme = Theme.of(context);
     final String? tokenValue = value;
-    final String display = (tokenValue != null && tokenValue.isNotEmpty)
-        ? tokenValue
-        : l10n.fcmDemoTokenNotAvailable;
+    final bool hasToken = tokenValue != null && tokenValue.isNotEmpty;
+    final String display = !hasToken
+        ? l10n.fcmDemoTokenNotAvailable
+        : (_shouldMaskToken ? _maskedToken : tokenValue);
     return CommonCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +39,7 @@ class _TokenSection extends StatelessWidget {
                   style: theme.textTheme.titleSmall,
                 ),
               ),
-              if (tokenValue != null && tokenValue.isNotEmpty)
+              if (hasToken && _canRevealToken)
                 PlatformAdaptive.textButton(
                   context: context,
                   onPressed: () => _handleCopyPressed(context, tokenValue),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_log_redaction.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
@@ -98,9 +99,9 @@ class FirebaseMessagingRepository implements FcmMessagingService {
       message,
       source: PushMessageSource.initial,
     );
-    AppLogger.debug(
-      'FCM initial message (opened from notification): '
-      'id=${push.messageId} title=${push.title} body=${push.body}',
+    FcmLogRedaction.logPushMessage(
+      'fcm_initial_message',
+      message: push,
     );
     return push;
   }
@@ -112,9 +113,9 @@ class FirebaseMessagingRepository implements FcmMessagingService {
         m,
         source: PushMessageSource.foreground,
       );
-      AppLogger.debug(
-        'FCM foreground message: id=${p.messageId} title=${p.title} '
-        'body=${p.body}',
+      FcmLogRedaction.logPushMessage(
+        'fcm_foreground_message',
+        message: p,
       );
       return p;
     },
@@ -127,9 +128,9 @@ class FirebaseMessagingRepository implements FcmMessagingService {
         m,
         source: PushMessageSource.opened,
       );
-      AppLogger.debug(
-        'FCM opened-from-notification: id=${p.messageId} title=${p.title} '
-        'body=${p.body}',
+      FcmLogRedaction.logPushMessage(
+        'fcm_opened_message',
+        message: p,
       );
       return p;
     },

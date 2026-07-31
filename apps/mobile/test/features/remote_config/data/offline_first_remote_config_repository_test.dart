@@ -69,6 +69,9 @@ void main() {
         () => remoteRepository.getBool(RemoteConfigKeys.supabaseConfigEnabled),
       ).thenReturn(true);
       when(
+        () => remoteRepository.getBool(RemoteConfigKeys.productionDemoEnabled),
+      ).thenReturn(true);
+      when(
         () => remoteRepository.getString(RemoteConfigKeys.supabaseUrl),
       ).thenReturn('');
       when(
@@ -79,6 +82,10 @@ void main() {
           RemoteConfigKeys.renderChatDemoHfReadToken,
         ),
       ).thenReturn('');
+      when(
+        () =>
+            remoteRepository.getString(RemoteConfigKeys.productionDemoVariant),
+      ).thenReturn('control');
       when(
         () => remoteRepository.getInt(RemoteConfigKeys.supabaseConfigVersion),
       ).thenReturn(1);

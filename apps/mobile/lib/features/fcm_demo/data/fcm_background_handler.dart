@@ -1,6 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_log_redaction.dart';
 import 'package:flutter_bloc_app/firebase_options.dart';
 
 /// Top-level background message handler for FCM.
@@ -14,10 +15,10 @@ Future<void> fcmBackgroundHandler(final RemoteMessage message) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    final String title = message.notification?.title ?? '(no title)';
-    final String body = message.notification?.body ?? '(no body)';
-    AppLogger.debug(
-      'FCM background message: id=${message.messageId} title=$title body=$body',
+    FcmLogRedaction.logRemoteMessage(
+      'fcm_background_message',
+      message: message,
+      source: 'background',
     );
   } on Object catch (error, stackTrace) {
     AppLogger.error('FCM background handler failed', error, stackTrace);

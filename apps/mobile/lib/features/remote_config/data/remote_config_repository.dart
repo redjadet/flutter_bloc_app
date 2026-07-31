@@ -51,6 +51,8 @@ class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
         // Remote disable is still supported by setting the key to false.
         RemoteConfigKeys.supabaseConfigEnabled: true,
         RemoteConfigKeys.renderChatDemoHfReadToken: '',
+        RemoteConfigKeys.productionDemoEnabled: true,
+        RemoteConfigKeys.productionDemoVariant: 'control',
       },
     );
 
