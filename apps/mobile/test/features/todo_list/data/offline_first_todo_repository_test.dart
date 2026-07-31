@@ -113,6 +113,40 @@ class _FakeRemoteRepositoryWithErrorTracking
   Future<void> clearCompleted() async {}
 }
 
+class _GatedWatchRemoteRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
+  _GatedWatchRemoteRepository();
+
+  final StreamController<List<TodoItem>> _watchController =
+      StreamController<List<TodoItem>>.broadcast();
+
+  void emitWatch(final List<TodoItem> items) {
+    _watchController.add(List<TodoItem>.from(items));
+  }
+
+  Future<void> closeWatchStream() async {
+    if (!_watchController.isClosed) {
+      await _watchController.close();
+    }
+  }
+
+  @override
+  Future<List<TodoItem>> fetchAll() async => const <TodoItem>[];
+
+  @override
+  Stream<List<TodoItem>> watchAll() => _watchController.stream;
+
+  @override
+  Future<void> save(final TodoItem item) async {}
+
+  @override
+  Future<void> delete(final String id) async {}
+
+  @override
+  Future<void> clearCompleted() async {}
+}
+
 class _DeferredFetchRemoteRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
@@ -1362,6 +1396,34 @@ void main() {
         await repository.dispose();
         await Future<void>.delayed(const Duration(milliseconds: 50));
         expect(remote.activeWatchListeners, 0);
+        await remote.closeWatchStream();
+      },
+    );
+
+    test(
+      'remote watch aborts in-flight merge when session cleanup pause engages',
+      () async {
+        final TodoItem remoteItem = TodoItem.create(
+          title: 'Remote Todo',
+          description: 'From Remote',
+        );
+        final _GatedWatchRemoteRepository remote = _GatedWatchRemoteRepository();
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        repository.watchAll();
+        remote.emitWatch([remoteItem]);
+        repository.pauseRemoteWatchForSessionCleanup();
+        await Future<void>.delayed(Duration.zero);
+
+        final List<TodoItem> local = await localRepository.fetchAll();
+        expect(local, isEmpty);
         await remote.closeWatchStream();
       },
     );
