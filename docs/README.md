@@ -7,7 +7,7 @@ Source-of-truth docs for Flutter BLoC app.
 - **Thin entry hubs** (link-only; do not duplicate): [`architecture.md`](architecture.md),
   [`testing.md`](testing.md), [`engineering-decisions.md`](engineering-decisions.md),
   [`ai-workflow.md`](ai-workflow.md)
-- **Interview showcase** (30-minute portfolio walk): [`interview_showcase.md`](interview_showcase.md)
+- **Interview showcase** (30-minute portfolio walk + §3b 12-minute production ownership): [`interview_showcase.md`](interview_showcase.md)
 - **Toolchain pins** (Flutter/Dart): [`toolchain_versions.env`](toolchain_versions.env) (machine),
   [`tech_stack.md`](tech_stack.md) (human display + synced CI/README sinks)
 - **Onboarding / first run**: [`new_developer_guide.md`](new_developer_guide.md)

@@ -15,10 +15,11 @@ import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_control
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_state.dart';
 
+part 'production_readiness_cubit_consent.part.dart';
 part 'production_readiness_cubit_fcm.part.dart';
 
 class ProductionReadinessCubit extends _ProductionReadinessCubitBase
-    with _ProductionReadinessCubitFcm {
+    with _ProductionReadinessCubitConsent, _ProductionReadinessCubitFcm {
   ProductionReadinessCubit({
     required super.remoteConfig,
     required super.consentRepository,
@@ -71,6 +72,8 @@ abstract class _ProductionReadinessCubitBase
 
   Future<void> _trackNotificationReceived();
 
+  void _subscribeToConsentChanges();
+
   Future<void> initialize() async {
     emit(state.copyWith(status: ProductionReadinessStatus.loading));
     try {
@@ -114,6 +117,7 @@ abstract class _ProductionReadinessCubitBase
 
       await _initializeFcm();
       _startFrameMonitor();
+      _subscribeToConsentChanges();
 
       await _analytics.track(
         AppAnalyticsEvent.showcaseOpened(
@@ -190,20 +194,6 @@ abstract class _ProductionReadinessCubitBase
     if (!isClosed) {
       emit(state.copyWith(localEventCount: _memoryAnalytics?.eventCount ?? 0));
     }
-  }
-
-  Future<void> setAnalyticsConsent({required final bool enabled}) async {
-    await _consentRepository.save(enabled: enabled);
-    await _analytics.setCollectionEnabled(enabled: enabled);
-    if (isClosed) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        analyticsConsentEnabled: enabled,
-        localEventCount: _memoryAnalytics?.eventCount ?? 0,
-      ),
-    );
   }
 
   @override

@@ -38,6 +38,11 @@ Interviewers need one runnable `/production-readiness` route on a fresh clone
    (`analytics_collection_enabled`; missing → `false`). Disable Firebase
    collection until opt-in. Allowlist params: `mode`, `source`, `result`,
    `variant`. Reject tokens, IDs, message content, email, arbitrary maps.
+   Platform manifests default collection off (`firebase_analytics_collection_enabled`
+   / `FIREBASE_ANALYTICS_COLLECTION_ENABLED`); Dart bootstrap also disables
+   Analytics immediately after `Firebase.initializeApp` (and on reused apps)
+   before DI loads consent. Settings and the walkthrough share
+   `AnalyticsConsentRepository.changes` so toggles stay in sync.
 3. **Composite analytics:** In-memory ring buffer (max 50) always records for
    demo UI counts; Firebase adapter participates only when Firebase is available
    and consent is on.
@@ -83,7 +88,9 @@ Interviewers need one runnable `/production-readiness` route on a fresh clone
 
 ## Implementation notes
 
-- Feature: `apps/mobile/lib/features/production_readiness/`
+- Feature: `apps/mobile/lib/features/production_readiness/` (presentation
+  orchestration over existing Firebase / RC / FCM / analytics seams — intentional
+  portfolio scope, not a full domain-layer reference feature)
 - Analytics: `apps/mobile/lib/app/analytics/`
 - Plan (local): `docs/plans/improvement_PLAN.md` (gitignored working plan)
 

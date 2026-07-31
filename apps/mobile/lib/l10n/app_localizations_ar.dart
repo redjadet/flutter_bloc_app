@@ -3415,6 +3415,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'عند التفعيل، قد ترسل التطبيق أحداث منتج منخفضة التعدد (mode وsource وresult وvariant) بعد الموافقة. لا تُضمَّن الرموز أو محتوى الرسائل أو المعرفات أبدًا. الافتراضي متوقف.';
 
   @override
+  String get settingsAnalyticsUnavailable =>
+      'موافقة التحليلات غير متاحة مؤقتًا. تبقى تحليلات المنتج متوقفة.';
+
+  @override
   String get productionReadinessPageTitle => 'جاهزية الإنتاج';
 
   @override

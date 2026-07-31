@@ -1,36 +1,5 @@
 # Flutter BLoC App
 
-Production-style Flutter reference app for a mobile engineering portfolio:
-feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
-CI-backed validation, and a broad set of integration demos. The repo is
-intentionally proof-oriented: claims in the README link to source, docs, or
-commands instead of relying on generic architecture statements.
-
-## 12-minute production ownership walkthrough
-
-Job-focused path (consent, kill-switch, safe FCM, frames, release dry-run).
-Alternate to the general Counter → Todo → Chat spine in
-[`docs/interview_showcase.md`](docs/interview_showcase.md). Policy:
-[ADR 0006](docs/adr/0006-production-readiness-demo.md),
-[ADR 0005](docs/adr/0005-interview-showcase-scope.md).
-
-| Min | Do | Evidence |
-| --- | --- | --- |
-| 0–2 | Run `apps/mobile` (`main_dev.dart`). Open **Example → Production readiness**. | Route [`/production-readiness`](apps/mobile/lib/app/router/app_routes.dart); no Firebase redirect. |
-| 2–4 | Confirm **mode** (live \| simulated), Crashlytics status, kill-switch / RC variant + retry. | Cubit/page under [`features/production_readiness/`](apps/mobile/lib/features/production_readiness/); RC keys `production_demo_*`. |
-| 4–6 | Toggle **analytics consent** (default off). Event count stays silent until opt-in. | [`app/analytics/`](apps/mobile/lib/app/analytics/); Settings section [`analytics_consent_section.dart`](apps/mobile/lib/features/settings/presentation/widgets/analytics_consent_section.dart). |
-| 6–8 | In simulated mode, **Emit simulated notification**. Logs show source / presence / key count only. | [`SimulatedFcmMessagingService`](apps/mobile/lib/features/fcm_demo/data/simulated_fcm_messaging_service.dart); [`fcm_log_redaction.dart`](apps/mobile/lib/features/fcm_demo/data/fcm_log_redaction.dart). |
-| 8–10 | Watch **frame** p90/p99 / missed counters update. | [`frame_timing_monitor.dart`](apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart); budgets [`tool/perf_budgets.json`](tool/perf_budgets.json). |
-| 10–12 | Point at CI dry-run (not store publish). | [`.github/workflows/mobile_release_dry_run.yml`](.github/workflows/mobile_release_dry_run.yml); [deployment.md](docs/deployment.md). |
-
-```bash
-cd apps/mobile && flutter test test/features/production_readiness test/app/analytics test/app/diagnostics
-python3 -m unittest tool/analyze_perf_trace_test.py
-./bin/integration_tests integration_test/pr_smoke_flows_test.dart   # includes J6 production readiness
-```
-
-Case study: [`docs/changes/2026-07-31_production_readiness_case_study.md`](docs/changes/2026-07-31_production_readiness_case_study.md).
-
 ## Platform and toolchain
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.44.8-blue.svg)](https://flutter.dev)
@@ -93,6 +62,16 @@ Case study: [`docs/changes/2026-07-31_production_readiness_case_study.md`](docs/
 [![Lifecycle](https://img.shields.io/badge/Lifecycle-Repo%20hygiene-334155.svg)](docs/engineering/REPOSITORY_LIFECYCLE.md)
 
 Harness = agent tooling wiring. Engineering = app/portfolio proof. Do not conflate.
+
+Production-style Flutter reference app for a mobile engineering portfolio:
+feature-based Clean Architecture, offline-first sync, Cubit/BLoC, GoRouter,
+CI-backed validation, and a broad set of integration demos. The repo is
+intentionally proof-oriented: claims in the README link to source, docs, or
+commands instead of relying on generic architecture statements.
+
+Interview / production-ownership walk: see
+[interview showcase §3b](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough)
+(~12 minutes). General portfolio spine: [§3](docs/interview_showcase.md#3-30-minute-walk-frozen-spine).
 
 ## Live app
 
@@ -160,7 +139,8 @@ Agent-oriented bootstrap and validation: [docs/quick_start.md](docs/quick_start.
 
 For a fast technical review, read these first:
 
-1. [Interview showcase](docs/interview_showcase.md) — 30-minute walkthrough with
+1. [Interview showcase](docs/interview_showcase.md) — 30-minute spine (§3) plus
+   [§3b 12-minute production ownership](docs/interview_showcase.md#3b-12-minute-production-ownership-walkthrough);
    honest shipped-vs-planned boundaries.
 2. [System design showcase](docs/features/system_design_showcase.md) — architecture,
    operations, security, and proof paths.

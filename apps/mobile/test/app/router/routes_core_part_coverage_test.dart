@@ -115,6 +115,9 @@ class _SignedInAuthRepository implements AuthRepository {
 
 class _FakeConsent implements AnalyticsConsentRepository {
   @override
+  Stream<bool> get changes => const Stream<bool>.empty();
+
+  @override
   Future<bool> load() async => false;
 
   @override

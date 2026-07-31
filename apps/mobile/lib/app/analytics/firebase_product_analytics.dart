@@ -1,3 +1,4 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/app/analytics/app_analytics_event.dart';
 import 'package:flutter_bloc_app/app/analytics/product_analytics.dart';
 
@@ -13,8 +14,8 @@ abstract class FirebaseAnalyticsGateway {
 
 /// Firebase Analytics adapter. No-ops tracks while collection is disabled.
 ///
-/// Platform channel failures (tests / missing plugin) are swallowed so DI
-/// bootstrap never aborts the rest of app registration.
+/// Platform channel failures (tests / missing plugin) are logged once then
+/// swallowed so DI bootstrap never aborts the rest of app registration.
 class FirebaseProductAnalytics implements ProductAnalytics {
   FirebaseProductAnalytics(this._gateway);
 
@@ -32,7 +33,11 @@ class FirebaseProductAnalytics implements ProductAnalytics {
     }
     try {
       await _gateway.setAnalyticsCollectionEnabled(enabled: enabled);
-    } on Object {
+    } on Object catch (error) {
+      AppLogger.warning(
+        '${IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix} '
+        '(setCollectionEnabled): $error',
+      );
       _gatewayUnavailable = true;
     }
   }
@@ -48,7 +53,11 @@ class FirebaseProductAnalytics implements ProductAnalytics {
         name: event.name,
         parameters: Map<String, Object>.from(event.parameters),
       );
-    } on Object {
+    } on Object catch (error) {
+      AppLogger.warning(
+        '${IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix} '
+        '(logEvent): $error',
+      );
       _gatewayUnavailable = true;
     }
   }

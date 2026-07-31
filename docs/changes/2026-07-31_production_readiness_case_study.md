@@ -58,7 +58,7 @@ python3 -m unittest tool/analyze_perf_trace_test.py
 ./bin/integration_tests integration_test/pr_smoke_flows_test.dart
 ```
 
-Manual: README [12-minute walkthrough](../../README.md#12-minute-production-ownership-walkthrough).
+Manual: [interview showcase §3b](../interview_showcase.md#3b-12-minute-production-ownership-walkthrough).
 
 ## Rollback
 

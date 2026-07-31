@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage/storage.dart';
@@ -11,6 +13,11 @@ class SharedPreferencesAnalyticsConsentRepository
   static const String preferencesKey = 'analytics_collection_enabled';
 
   final SharedPreferences? _preferencesInstance;
+  final StreamController<bool> _changesController =
+      StreamController<bool>.broadcast();
+
+  @override
+  Stream<bool> get changes => _changesController.stream;
 
   Future<SharedPreferences> _preferences() => _preferencesInstance != null
       ? Future<SharedPreferences>.value(_preferencesInstance)
@@ -27,13 +34,24 @@ class SharedPreferencesAnalyticsConsentRepository
   );
 
   @override
-  Future<void> save({required final bool enabled}) async =>
-      StorageGuard.run<void>(
-        logContext: 'SharedPreferencesAnalyticsConsentRepository.save',
-        action: () async {
-          final SharedPreferences preferences = await _preferences();
-          await preferences.setBool(preferencesKey, enabled);
-        },
-        fallback: () {},
-      );
+  Future<void> save({required final bool enabled}) async {
+    await StorageGuard.run<void>(
+      logContext: 'SharedPreferencesAnalyticsConsentRepository.save',
+      action: () async {
+        final SharedPreferences preferences = await _preferences();
+        await preferences.setBool(preferencesKey, enabled);
+      },
+      fallback: () {},
+    );
+    if (!_changesController.isClosed) {
+      _changesController.add(enabled);
+    }
+  }
+
+  /// App-lifetime singleton; close only for tests / DI reset.
+  Future<void> dispose() async {
+    if (!_changesController.isClosed) {
+      await _changesController.close();
+    }
+  }
 }

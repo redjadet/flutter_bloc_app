@@ -114,5 +114,22 @@ void main() {
         isFalse,
       );
     });
+
+    test('ignores Firebase Analytics gateway channel failures', () {
+      const AppLogEntry gatewayWarning = AppLogEntry(
+        level: AppLogLevel.warning,
+        message:
+            '${IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix} '
+            '(setCollectionEnabled): PlatformException(channel-error)',
+      );
+
+      expect(
+        test_harness_log_filtering.isUnexpectedIntegrationLog(
+          gatewayWarning,
+          isWeb: true,
+        ),
+        isFalse,
+      );
+    });
   });
 }

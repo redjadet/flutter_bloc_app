@@ -97,9 +97,12 @@ Mitigations and rollout steps live in [plans/future_observability.md](plans/futu
 **Shipped (narrow):** consent-gated Firebase Analytics via
 [`apps/mobile/lib/app/analytics/`](../apps/mobile/lib/app/analytics/) for the
 [`/production-readiness`](../apps/mobile/lib/features/production_readiness/)
-demo. Consent defaults **off** (SharedPreferences). Events use an allowlist of
-params (`mode`, `source`, `result`, `variant`). The Firebase adapter swallows
-platform-channel failures so bootstrap/DI does not abort. Policy:
+demo. Consent defaults **off** (SharedPreferences + Android/iOS manifest
+collection flags). Dart bootstrap disables Analytics immediately after Firebase
+init; DI then applies the saved preference. Events use an allowlist of
+params (`mode`, `source`, `result`, `variant`). The Firebase adapter logs and
+disables the gateway on platform-channel failures so bootstrap/DI does not
+abort. Policy:
 [ADR 0006](adr/0006-production-readiness-demo.md),
 [ADR 0005](adr/0005-interview-showcase-scope.md) (exception to doc-only Mixpanel/Sentry).
 

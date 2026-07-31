@@ -283,7 +283,7 @@ def evaluate_frame_budget_gate(
                 BudgetViolation(
                     check="over_16_7ms_ratio_max",
                     message=(
-                        f">{budgets.p99_ms_max}ms ratio {ratio:.4f} > "
+                        f">16.7ms frame ratio {ratio:.4f} > "
                         f"budget {budgets.over_16_7ms_ratio_max:.4f}"
                     ),
                 )

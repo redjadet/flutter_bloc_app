@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-07-31_production_readiness_consent_hardening.md`](2026-07-31_production_readiness_consent_hardening.md): Consent bootstrap/platform defaults, Settings↔demo sync, FCM error banner, walkthrough moved to interview_showcase §3b.
 - [`2026-07-31_production_readiness_case_study.md`](2026-07-31_production_readiness_case_study.md): Dual-mode production ownership demo — consent analytics, RC kill-switch, safe FCM, frames, dry-run CI; ADR 0005/0006.
 - [`2026-07-31_production_readiness_feature_brief.md`](2026-07-31_production_readiness_feature_brief.md): Feature brief for `/production-readiness` (scope, dual-mode, non-goals).
 - [`2026-07-29_native_event_channel_telemetry_schema_v1.md`](2026-07-29_native_event_channel_telemetry_schema_v1.md): Schema-v1 EventChannel telemetry config, accumulator, task queues, Dart validation.

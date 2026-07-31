@@ -67,6 +67,15 @@ class FirebaseMessagingRepository implements FcmMessagingService {
 
   @override
   Future<FcmPermissionState> requestPermission() async {
+    final NotificationSettings current = await _messaging
+        .getNotificationSettings();
+    final AuthorizationStatus status = current.authorizationStatus;
+    if (status == AuthorizationStatus.authorized ||
+        status == AuthorizationStatus.provisional ||
+        status == AuthorizationStatus.denied) {
+      // Do not re-prompt after the OS has a determined answer.
+      return _mapPermissionState(status);
+    }
     final NotificationSettings settings = await _messaging.requestPermission();
     return _mapPermissionState(settings.authorizationStatus);
   }

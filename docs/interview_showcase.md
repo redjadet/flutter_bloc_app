@@ -29,21 +29,30 @@ are **depth branches** for follow-up questions.
 | 4 | `/settings` → **Sync diagnostics** | “Validate what you ship”: scroll to Sync diagnostics (theme/locale E2E does **not** cover this — **demo live**). | [`sync_diagnostics_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/sync_diagnostics_section.dart) |
 | 5 | Repo harness | Plan → implement → verify: [`AGENTS.md`](../AGENTS.md), `./bin/checklist`, validation routing. | [AGENTS.md](../AGENTS.md), [validation_scripts.md](validation_scripts.md) |
 
-### 3b. Alternate job-focused spine (~12 minutes)
+### 3b. 12-minute production ownership walkthrough
 
 Use when the JD emphasizes **production ownership** (analytics consent, Remote
 Config kill-switch, FCM safety, Crashlytics, frame budgets, release dry-run).
-Documented in the [README walkthrough](../README.md#12-minute-production-ownership-walkthrough)
-and [ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
+Policy: [ADR 0005](adr/0005-interview-showcase-scope.md) and
+[ADR 0006](adr/0006-production-readiness-demo.md). Does **not** replace §3;
 it is a registered alternate.
 
-| Step | Route | Signal | Open in code |
-| --- | --- | --- | --- |
-| A1 | `/production-readiness` | Dual-mode live\|simulated; consent default off; RC kill-switch; Crashlytics status | [`features/production_readiness/`](../apps/mobile/lib/features/production_readiness/) |
-| A2 | Same page → FCM card | Simulated emit when Firebase absent; redacted logs; masked release tokens | [`fcm_demo/`](../apps/mobile/lib/features/fcm_demo/), [`app/analytics/`](../apps/mobile/lib/app/analytics/) |
-| A3 | Same page → frames | Live FrameTiming p90/p99 | [`frame_timing_monitor.dart`](../apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart) |
-| A4 | CI dry-run | Manual workflow; no store publish | [`.github/workflows/mobile_release_dry_run.yml`](../.github/workflows/mobile_release_dry_run.yml) |
-| A5 | Offline sync / native (optional depth) | Counter sync or native telemetry after ownership story | Counter spine #1; native showcase |
+| Min | Do | Evidence |
+| --- | --- | --- |
+| 0–2 | Run `apps/mobile` (`main_dev.dart`). Open **Example → Production readiness**. | Route [`/production-readiness`](../apps/mobile/lib/app/router/app_routes.dart); no Firebase redirect. |
+| 2–4 | Confirm **mode** (live \| simulated), Crashlytics status, kill-switch / RC variant + retry. | Cubit/page under [`features/production_readiness/`](../apps/mobile/lib/features/production_readiness/); RC keys `production_demo_*`. |
+| 4–6 | Toggle **analytics consent** (default off). Event count stays silent until opt-in. | [`app/analytics/`](../apps/mobile/lib/app/analytics/); Settings section [`analytics_consent_section.dart`](../apps/mobile/lib/features/settings/presentation/widgets/analytics_consent_section.dart). |
+| 6–8 | In simulated mode, **Emit simulated notification**. Logs show source / presence / key count only. | [`SimulatedFcmMessagingService`](../apps/mobile/lib/features/fcm_demo/data/simulated_fcm_messaging_service.dart); [`fcm_log_redaction.dart`](../apps/mobile/lib/features/fcm_demo/data/fcm_log_redaction.dart). |
+| 8–10 | Watch **frame** p90/p99 / missed counters update. | [`frame_timing_monitor.dart`](../apps/mobile/lib/app/diagnostics/frame_timing_monitor.dart); budgets [`tool/perf_budgets.json`](../tool/perf_budgets.json). |
+| 10–12 | Point at CI dry-run, then choose Counter sync or native telemetry for depth. | [`.github/workflows/mobile_release_dry_run.yml`](../.github/workflows/mobile_release_dry_run.yml); [deployment.md](deployment.md); general spine #1 / native showcase. |
+
+```bash
+cd apps/mobile && flutter test test/features/production_readiness test/app/analytics test/app/diagnostics
+python3 -m unittest tool/analyze_perf_trace_test.py
+./bin/integration_tests integration_test/pr_smoke_flows_test.dart   # includes J6 production readiness
+```
+
+Case study: [production readiness](changes/2026-07-31_production_readiness_case_study.md).
 
 **Depth on request** (not spine): case study, therapy, charts, GraphQL,
 iGaming, **native platform showcase** (MethodChannel + EventChannel + FFI +

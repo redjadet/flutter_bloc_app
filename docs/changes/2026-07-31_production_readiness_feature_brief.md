@@ -72,7 +72,7 @@ store secrets.
 ## Docs
 
 - [ ] ADR 0006 + amend ADR 0005 alternate spine
-- [ ] README 12-minute walkthrough, interview_showcase, INTERVIEW_QA, observability
+- [ ] interview_showcase §3b walkthrough, INTERVIEW_QA, observability
 
 ## Risks
 

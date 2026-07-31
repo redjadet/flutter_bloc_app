@@ -168,6 +168,14 @@ bool isIgnoredIntegrationLog(
     return true;
   }
 
+  // Web / test harness often lacks Analytics method channels; adapter logs once
+  // and disables the gateway without aborting DI bootstrap.
+  if (entry.message.startsWith(
+    IntegrationLogMessages.firebaseAnalyticsGatewayUnavailablePrefix,
+  )) {
+    return true;
+  }
+
   return false;
 }
 
