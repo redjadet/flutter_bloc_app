@@ -26,12 +26,27 @@ class AnalyticsConsentSection extends StatefulWidget {
 class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   bool _enabled = false;
   bool _loading = true;
+  bool _available = true;
 
-  AnalyticsConsentRepository get _consent =>
-      widget.consentRepository ?? getIt<AnalyticsConsentRepository>();
+  AnalyticsConsentRepository? get _consentOrNull {
+    if (widget.consentRepository != null) {
+      return widget.consentRepository;
+    }
+    if (getIt.isRegistered<AnalyticsConsentRepository>()) {
+      return getIt<AnalyticsConsentRepository>();
+    }
+    return null;
+  }
 
-  ProductAnalytics get _analytics =>
-      widget.analytics ?? getIt<ProductAnalytics>();
+  ProductAnalytics? get _analyticsOrNull {
+    if (widget.analytics != null) {
+      return widget.analytics;
+    }
+    if (getIt.isRegistered<ProductAnalytics>()) {
+      return getIt<ProductAnalytics>();
+    }
+    return null;
+  }
 
   @override
   void initState() {
@@ -40,7 +55,18 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   }
 
   Future<void> _load() async {
-    final bool enabled = await _consent.load();
+    final AnalyticsConsentRepository? consent = _consentOrNull;
+    if (consent == null) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _available = false;
+        _loading = false;
+      });
+      return;
+    }
+    final bool enabled = await consent.load();
     if (!mounted) {
       return;
     }
@@ -51,13 +77,21 @@ class _AnalyticsConsentSectionState extends State<AnalyticsConsentSection> {
   }
 
   Future<void> _onChanged(final bool value) async {
+    final AnalyticsConsentRepository? consent = _consentOrNull;
+    final ProductAnalytics? analytics = _analyticsOrNull;
+    if (consent == null || analytics == null) {
+      return;
+    }
     setState(() => _enabled = value);
-    await _consent.save(enabled: value);
-    await _analytics.setCollectionEnabled(enabled: value);
+    await consent.save(enabled: value);
+    await analytics.setCollectionEnabled(enabled: value);
   }
 
   @override
   Widget build(final BuildContext context) {
+    if (!_available) {
+      return const SizedBox.shrink();
+    }
     final l10n = context.l10n;
     return SettingsSection(
       title: l10n.settingsAnalyticsConsentSectionTitle,

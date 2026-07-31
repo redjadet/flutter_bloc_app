@@ -9,6 +9,29 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  testWidgets('AnalyticsConsentSection hides when DI not registered', (
+    final tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: AnalyticsConsentSection()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('settings-analytics-consent-switch')),
+      findsNothing,
+    );
+  });
+
   testWidgets('AnalyticsConsentSection toggles consent', (final tester) async {
     final _FakeConsent consent = _FakeConsent();
     final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
