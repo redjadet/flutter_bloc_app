@@ -25,7 +25,7 @@ Some JDs emphasize **production ownership** (consent, kill-switch, FCM safety, f
 ## Decision
 
 1. **Frozen interview spine:** Counter → Todo → Chat list → Settings sync diagnostics (manual) → agent harness. Documented in [`interview_showcase.md`](../interview_showcase.md) §3.
-2. **Alternate job-focused spine:** Production readiness → (optional) offline sync / native telemetry → CI/release dry-run evidence. Documented in README “12-minute production ownership walkthrough”, showcase §3b, and [ADR 0006](0006-production-readiness-demo.md). Does **not** replace §3.
+2. **Alternate job-focused spine:** Production readiness → (optional) offline sync / native telemetry → CI/release dry-run evidence. Documented in showcase §3b and [ADR 0006](0006-production-readiness-demo.md). Does **not** replace §3.
 3. **Doc-only Mixpanel / Sentry / Patrol:** No Mixpanel, Sentry product SDK, or Patrol in `pubspec.yaml` until a real product requires them. Future seams remain in [`plans/future_observability.md`](../plans/future_observability.md).
 4. **Consent-gated Firebase Analytics exception:** A typed product-analytics port with SharedPreferences consent (default off), allowlisted params (`mode`, `source`, `result`, `variant`), in-memory buffer, and Firebase adapter that swallows platform-channel failures is **allowed** for the production-readiness demo. This does **not** authorize Mixpanel/Sentry/Patrol or unscoped event taxonomies. Policy detail: [ADR 0006](0006-production-readiness-demo.md).
 5. **PR smoke alignment:** `registerPrSmokeIntegrationFlows()` includes guest sign-in, counter persistence, chat list, launch/charts/search/settings/todo, and **production readiness (J6)**.
