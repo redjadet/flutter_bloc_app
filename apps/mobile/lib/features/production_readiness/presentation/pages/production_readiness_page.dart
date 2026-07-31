@@ -46,7 +46,7 @@ class ProductionReadinessPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                if (state.errorMessage != null)
+                if (state.errorMessage case final String errorMessage)
                   Padding(
                     padding: EdgeInsets.only(bottom: context.responsiveGapM),
                     child: CommonCard(
@@ -56,7 +56,7 @@ class ProductionReadinessPage extends StatelessWidget {
                           Icons.error_outline,
                           color: Theme.of(context).colorScheme.error,
                         ),
-                        title: Text(state.errorMessage!),
+                        title: Text(errorMessage),
                       ),
                     ),
                   ),
