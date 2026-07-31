@@ -557,6 +557,34 @@ void main() {
     );
 
     test(
+      'remote watch aborts in-flight merge when session cleanup pause engages',
+      () async {
+        final _StreamRemoteRepository remote = _StreamRemoteRepository();
+        addTearDown(remote.controller.close);
+
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: localRepository,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
+
+        remote.controller.add(
+          CounterSnapshot(count: 3, lastChanged: DateTime(2024, 1, 1, 12)),
+        );
+        repository.pauseRemoteWatchForSessionCleanup();
+        await Future<void>.delayed(Duration.zero);
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 0);
+      },
+    );
+
+    test(
       'processOperation does not push stale pending over newer remote',
       () async {
         final DateTime pendingChanged = DateTime(2024, 1, 1, 12);

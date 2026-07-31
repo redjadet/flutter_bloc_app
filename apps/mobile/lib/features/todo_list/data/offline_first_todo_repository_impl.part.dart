@@ -85,6 +85,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
             remoteItems,
             _generateChangeId,
             _mergePolicy.shouldApplyRemote,
+            shouldAbortMerge: () => _remoteMergePausedForSessionCleanup,
           ),
         );
       },
@@ -230,6 +231,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         remoteItems,
         _generateChangeId,
         _mergePolicy.shouldApplyRemote,
+        shouldAbortMerge: () => _remoteMergePausedForSessionCleanup,
       );
     } on SyncAuthUserChangedException {
       rethrow;
