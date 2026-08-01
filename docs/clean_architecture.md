@@ -40,8 +40,8 @@ domain/
   <feature>_repository.dart   ← Repository interface
 
 data/
-  <feature>_repository_impl   ← Repository implementation
-  *_remote_*, *_local_*, etc.  ← Data source (HTTP, Hive, SDK adapters)
+  <feature>_repository_impl   ← Repository implementation (facade; OfflineFirst*)
+  *_remote_*, *_local_*, *_data_source.dart  ← Leaf DataSource (HTTP, Hive, SDK)
   *_dto.dart                  ← DTO
   *_mapper.dart               ← DTO ↔ domain mapping
 ```

@@ -116,7 +116,7 @@ Future<void> _mergeRemoteIntoLocal(
 
 TodoItem _normalizeItem(
   final TodoItem item,
-  final TodoRepository? remoteRepository,
+  final TodoDataSource? remoteRepository,
   final String Function() generateChangeId,
 ) {
   final DateTime now = DateTime.now().toUtc();

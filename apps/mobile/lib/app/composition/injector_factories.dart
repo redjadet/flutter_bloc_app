@@ -14,7 +14,7 @@ import 'package:flutter_bloc_app/features/realtime_market/data/realtime_market_r
 import 'package:flutter_bloc_app/features/realtime_market/data/simulated_market_feed.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/fake_remote_config_remote_data_source.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/firebase_remote_config_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
@@ -30,7 +30,7 @@ CounterRepository createCounterRepository() {
   final HiveCounterRepository localRepository = HiveCounterRepository(
     hiveService: getIt<HiveService>(),
   );
-  final CounterRepository? remoteRepository =
+  final CounterDataSource? remoteRepository =
       _createRemoteCounterRepositoryOrNull();
   return OfflineFirstCounterRepository(
     localRepository: localRepository,
@@ -40,8 +40,8 @@ CounterRepository createCounterRepository() {
   );
 }
 
-CounterRepository? _createRemoteCounterRepositoryOrNull() =>
-    createRemoteRepositoryOrNull<CounterRepository>(
+CounterDataSource? _createRemoteCounterRepositoryOrNull() =>
+    createRemoteRepositoryOrNull<CounterDataSource>(
       context: 'counter repository',
       factory: () {
         final FirebaseApp app = Firebase.app();
@@ -64,7 +64,7 @@ TodoRepository createTodoRepository() {
   final HiveTodoRepository localRepository = HiveTodoRepository(
     hiveService: getIt<HiveService>(),
   );
-  final TodoRepository? remoteRepository = _createRemoteTodoRepositoryOrNull();
+  final TodoDataSource? remoteRepository = _createRemoteTodoRepositoryOrNull();
   return OfflineFirstTodoRepository(
     localRepository: localRepository,
     remoteRepository: remoteRepository,
@@ -74,8 +74,8 @@ TodoRepository createTodoRepository() {
   );
 }
 
-TodoRepository? _createRemoteTodoRepositoryOrNull() =>
-    createRemoteRepositoryOrNull<TodoRepository>(
+TodoDataSource? _createRemoteTodoRepositoryOrNull() =>
+    createRemoteRepositoryOrNull<TodoDataSource>(
       context: 'todo repository',
       factory: () {
         final FirebaseApp app = Firebase.app();
@@ -97,7 +97,7 @@ RemoteConfigRemoteDataSource createRemoteConfigRemoteDataSource() {
     return FakeRemoteConfigRemoteDataSource();
   }
   try {
-    return RemoteConfigRepository(FirebaseRemoteConfig.instance);
+    return FirebaseRemoteConfigDataSource(FirebaseRemoteConfig.instance);
   } on Object {
     return FakeRemoteConfigRemoteDataSource();
   }

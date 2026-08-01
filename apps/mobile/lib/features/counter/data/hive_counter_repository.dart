@@ -10,9 +10,8 @@ import 'package:storage/storage.dart';
 
 part 'hive_counter_repository_migration.dart';
 
-/// Hive-backed implementation of [CounterRepository].
+/// Hive-backed leaf [CounterDataSource] (local I/O only).
 class HiveCounterRepository extends HiveRepositoryBase
-    with CounterRepositoryNoPendingSync
     implements CounterRepository {
   HiveCounterRepository({required super.hiveService}) {
     _watchHelper = HiveCounterRepositoryWatchHelper(

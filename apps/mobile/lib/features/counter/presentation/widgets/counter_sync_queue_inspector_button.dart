@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/counter_sync_queue_inspector_sheet.dart';
@@ -18,8 +18,8 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 /// Dev/QA control to inspect counter pending-sync queue entries.
 ///
 /// When [repository] is set (e.g. Settings QA extras), pending counts are read
-/// from the repository directly. Otherwise the widget expects [CounterCubit] in
-/// the tree (counter page).
+/// from the sync-diagnostics port directly. Otherwise the widget expects
+/// [CounterCubit] in the tree (counter page).
 class CounterSyncQueueInspectorButton extends StatefulWidget {
   const CounterSyncQueueInspectorButton({
     this.repository,
@@ -27,7 +27,7 @@ class CounterSyncQueueInspectorButton extends StatefulWidget {
     super.key,
   });
 
-  final CounterRepository? repository;
+  final CounterSyncDiagnosticsPort? repository;
 
   /// When set with [repository], refreshes pending count as soon as the shared
   /// queue enqueues (without waiting for [SyncStatusCubit] transitions).
@@ -102,7 +102,7 @@ class _CounterSyncQueueInspectorButtonState
   }
 
   Future<void> _refreshRepositoryPendingCount() async {
-    final CounterRepository? repository = widget.repository;
+    final CounterSyncDiagnosticsPort? repository = widget.repository;
     if (repository == null) {
       return;
     }
@@ -189,7 +189,7 @@ class _CounterSyncQueueInspectorButtonState
     final AppLocalizations l10n,
   ) async {
     final List<CounterSyncQueueEntry> entries;
-    if (widget.repository case final CounterRepository repository) {
+    if (widget.repository case final CounterSyncDiagnosticsPort repository) {
       entries = await repository.pendingSyncQueueEntries();
     } else {
       entries = await context.cubit<CounterCubit>().pendingSyncQueueEntries();

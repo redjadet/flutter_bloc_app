@@ -4,7 +4,7 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
   Future<void> refreshPendingSyncCount() async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
-        final int count = await _repository.pendingSyncOperationCount();
+        final int count = await _syncDiagnostics.pendingSyncOperationCount();
         if (isClosed) {
           return;
         }
@@ -17,7 +17,7 @@ mixin _CounterCubitSyncMixin on _CounterCubitBase {
   }
 
   Future<List<CounterSyncQueueEntry>> pendingSyncQueueEntries() =>
-      _repository.pendingSyncQueueEntries();
+      _syncDiagnostics.pendingSyncQueueEntries();
 
   void _subscribeToRepository() {
     final StreamSubscription<CounterSnapshot>? oldSubscription =

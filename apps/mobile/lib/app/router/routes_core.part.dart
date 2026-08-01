@@ -46,7 +46,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
           ),
           CounterSyncQueueInspectorButton(
             key: const ValueKey('settings-qa-counter-sync-queue-inspector'),
-            repository: getIt<CounterRepository>(),
+            repository: getIt<CounterSyncDiagnosticsPort>(),
             onPendingSyncEnqueued:
                 getIt<PendingSyncRepository>().onOperationEnqueued,
           ),

@@ -36,7 +36,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
 ### Example 2: Remote Config Repository (Needs Dispose)
 
 ```dart
-class RemoteConfigRepository implements RemoteConfigRepository {
+class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
   StreamSubscription<RemoteConfigUpdate>? _configUpdatesSubscription;
 
   Future<void> dispose() async {

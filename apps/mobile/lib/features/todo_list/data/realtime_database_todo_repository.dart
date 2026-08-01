@@ -11,10 +11,8 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
-/// Firebase Realtime Database backed implementation of [TodoRepository].
-class RealtimeDatabaseTodoRepository
-    with TodoRepositoryNoPendingSync
-    implements TodoRepository {
+/// Firebase Realtime Database backed leaf [TodoDataSource].
+class RealtimeDatabaseTodoRepository implements TodoRepository {
   RealtimeDatabaseTodoRepository({
     final FirebaseDatabase? database,
     final DatabaseReference? todoRef,

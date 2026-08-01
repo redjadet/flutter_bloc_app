@@ -1,28 +1,12 @@
-import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_data_source.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_sync_diagnostics_port.dart';
 
-/// Abstraction over counter persistence.
-/// Enables substituting storage without changing business logic (DIP).
-abstract class CounterRepository {
-  Future<CounterSnapshot> load();
-  Future<void> save(final CounterSnapshot snapshot);
-  Stream<CounterSnapshot> watch();
+export 'counter_data_source.dart';
+export 'counter_sync_diagnostics_port.dart';
 
-  /// Count of pending sync operations for this feature's entity type.
-  Future<int> pendingSyncOperationCount({DateTime? now});
-
-  /// Pending operations for sync inspector UI.
-  Future<List<CounterSyncQueueEntry>> pendingSyncQueueEntries({DateTime? now});
-}
-
-/// No-op pending-sync reads for repositories without an offline queue.
-mixin CounterRepositoryNoPendingSync {
-  Future<int> pendingSyncOperationCount({DateTime? now}) =>
-      Future<int>.value(0);
-
-  Future<List<CounterSyncQueueEntry>> pendingSyncQueueEntries({
-    DateTime? now,
-  }) => Future<List<CounterSyncQueueEntry>>.value(
-    const <CounterSyncQueueEntry>[],
-  );
-}
+/// Abstraction over counter persistence (domain-facing facade).
+///
+/// Enables substituting OfflineFirst / local-only backends without changing
+/// presentation. Leaf Hive/REST adapters implement [CounterDataSource];
+/// sync inspector APIs live on [CounterSyncDiagnosticsPort].
+abstract class CounterRepository implements CounterDataSource {}

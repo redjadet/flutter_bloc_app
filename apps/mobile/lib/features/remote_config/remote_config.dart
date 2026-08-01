@@ -2,7 +2,9 @@
 library;
 
 /// Data exports
-export 'data/remote_config_repository.dart';
+export 'data/firebase_remote_config_data_source.dart';
+export 'data/offline_first_remote_config_repository.dart';
+export 'data/remote_config_cache_repository.dart';
 
 /// Domain exports
 export 'domain/remote_config_keys.dart';

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/features/remote_config/data/remote_config_repository.dart';
+import 'package:flutter_bloc_app/features/remote_config/data/firebase_remote_config_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -10,7 +10,7 @@ import 'package:mocktail/mocktail.dart';
 class _MockFirebaseRemoteConfig extends Mock implements FirebaseRemoteConfig {}
 
 void main() {
-  group('RemoteConfigRepository', () {
+  group('FirebaseRemoteConfigDataSource', () {
     late _MockFirebaseRemoteConfig remoteConfig;
     late List<String> debugMessages;
 
@@ -55,7 +55,7 @@ void main() {
         () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
 
-      final repository = RemoteConfigRepository(
+      final repository = FirebaseRemoteConfigDataSource(
         remoteConfig,
         debugLogger: debugMessages.add,
       );
@@ -89,7 +89,7 @@ void main() {
           () => remoteConfig.getString(RemoteConfigKeys.testValue1),
         ).thenReturn('latest-value');
 
-        final repository = RemoteConfigRepository(
+        final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
           debugLogger: debugMessages.add,
         );
@@ -126,7 +126,7 @@ void main() {
           () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
         ).thenReturn(true);
 
-        final repository = RemoteConfigRepository(
+        final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
           debugLogger: debugMessages.add,
         );
@@ -156,7 +156,7 @@ void main() {
         () => remoteConfig.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
 
-      final repository = RemoteConfigRepository(
+      final repository = FirebaseRemoteConfigDataSource(
         remoteConfig,
         debugLogger: debugMessages.add,
       );
@@ -188,7 +188,7 @@ void main() {
           () => remoteConfig.fetchAndActivate(),
         ).thenThrow(Exception('SecItemAdd failed with -34018'));
 
-        final repository = RemoteConfigRepository(
+        final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
           debugLogger: debugMessages.add,
         );
@@ -212,7 +212,7 @@ void main() {
         debugDefaultTargetPlatformOverride = platform;
         debugMessages.clear();
 
-        final repository = RemoteConfigRepository(
+        final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
           debugLogger: debugMessages.add,
         );
@@ -236,7 +236,7 @@ void main() {
           () => remoteConfig.onConfigUpdated,
         ).thenAnswer((_) => controller.stream);
 
-        final repository = RemoteConfigRepository(
+        final repository = FirebaseRemoteConfigDataSource(
           remoteConfig,
           debugLogger: debugMessages.add,
         );

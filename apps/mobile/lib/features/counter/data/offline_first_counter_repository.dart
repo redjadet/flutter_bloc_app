@@ -15,7 +15,10 @@ import 'package:storage/storage.dart';
 part 'offline_first_counter_repository_sync.part.dart';
 
 class OfflineFirstCounterRepository
-    implements CounterRepository, SyncableRepository {
+    implements
+        CounterRepository,
+        CounterSyncDiagnosticsPort,
+        SyncableRepository {
   OfflineFirstCounterRepository({
     required this._localRepository,
     required this._pendingSyncRepository,
@@ -25,8 +28,8 @@ class OfflineFirstCounterRepository
     _registry.register(this);
   }
 
-  final CounterRepository _localRepository;
-  final CounterRepository? _remoteRepository;
+  final CounterDataSource _localRepository;
+  final CounterDataSource? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
   bool _remoteMergePausedForSessionCleanup = false;
@@ -139,7 +142,7 @@ class OfflineFirstCounterRepository
   /// Clears local counter state without enqueueing a remote sync op.
   Future<void> clearAllLocalData() async {
     await _waitForRemoteWatchMerges();
-    final CounterRepository local = _localRepository;
+    final CounterDataSource local = _localRepository;
     if (local is HiveCounterRepository) {
       await local.clearAllLocalData();
       return;

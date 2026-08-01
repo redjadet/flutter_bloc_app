@@ -55,7 +55,9 @@ if [[ "$format_changed" -eq 1 ]]; then
     } | sort -u
   )
 else
+  # Skip deleted-but-still-indexed paths (git ls-files --modified lists them).
   while IFS= read -r file; do
+    [[ -z "$file" || "$file" != *.dart || ! -f "$file" ]] && continue
     dart_files+=("$file")
   done < <(git ls-files --cached --modified --others --exclude-standard -- '*.dart')
 fi

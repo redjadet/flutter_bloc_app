@@ -34,7 +34,7 @@ All repositories are registered as **lazy singletons** in the dependency injecti
 Implement a `dispose()` method if your repository:
 
 1. **Manages Stream Subscriptions**
-   - Example: `EchoWebsocketRepository`, `RemoteConfigRepository`
+   - Example: `EchoWebsocketRepository`, `FirebaseRemoteConfigDataSource`
    - **Why:** Prevents memory leaks from active subscriptions
 
 2. **Maintains Network Connections**

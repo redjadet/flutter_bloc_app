@@ -96,7 +96,7 @@ consistent across similar widgets.
 | CounterCubit / CounterCubitBase | repository watch | CubitSubscriptionMixin + close |
 | TodoListCubit | repository watch | CubitSubscriptionMixin + close |
 | InAppPurchaseDemoCubit | purchase results | CubitSubscriptionMixin + registered cancel/untrack |
-| RemoteConfigRepository | onConfigUpdated | `dispose()` cancels; DI calls dispose |
+| FirebaseRemoteConfigDataSource | onConfigUpdated | `dispose()` cancels; DI calls dispose |
 | EchoWebsocketRepository | channel stream | `dispose()` cancels |
 | WalletConnectService | session stream | `dispose()` cancels; DI calls dispose |
 | CounterSyncBanner | counter repository | `DisposableBag` owns widget subscription |
@@ -155,7 +155,7 @@ Services with explicit `dispose` in GetIt:
 - `BackgroundSyncCoordinator`
 - `GenUiDemoAgentImpl`
 - `RetryNotificationService` (via registerHttpServices)
-- `RemoteConfigRepository`
+- `FirebaseRemoteConfigDataSource`
 - `WalletConnectService`
 - Shared `Dio` (app HTTP client)
 

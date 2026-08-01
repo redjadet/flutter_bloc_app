@@ -11,6 +11,7 @@ import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_sync_diagnostics_resolver.dart';
 import 'package:ilkersevim_async_utils/ilkersevim_async_utils.dart';
 import 'package:utilities/utilities.dart';
 
@@ -19,20 +20,29 @@ part 'todo_list_cubit_helpers.dart';
 part 'todo_list_cubit_logging.dart';
 part 'todo_list_cubit_methods.dart';
 part 'todo_list_cubit_methods_reorder.part.dart';
+part 'todo_list_cubit_pending_sync.part.dart';
 
 class TodoListCubit extends Cubit<TodoListState>
     with
         CubitSubscriptionMixin<TodoListState>,
         _TodoListCubitMethods,
+        _TodoListCubitPendingSync,
         _TodoListCubitMethodsReorder,
         _TodoListCubitCrud {
   TodoListCubit({
     required this.repository,
     required this._timerService,
     this._searchDebounceDuration = const Duration(milliseconds: 300),
-  }) : super(const TodoListState());
+    final TodoSyncDiagnosticsPort? syncDiagnostics,
+  }) : _syncDiagnostics = resolveTodoSyncDiagnostics(
+         repository: repository,
+         syncDiagnostics: syncDiagnostics,
+       ),
+       super(const TodoListState());
   @override
   final TodoRepository repository;
+  @override
+  final TodoSyncDiagnosticsPort _syncDiagnostics;
   @override
   // ignore: cancel_subscriptions - Subscription is managed by CubitSubscriptionMixin
   StreamSubscription<List<TodoItem>>? subscription;
@@ -77,22 +87,6 @@ class TodoListCubit extends Cubit<TodoListState>
   Future<void> refresh() async {
     if (isClosed || isLoading) return;
     await loadInitial();
-  }
-
-  @override
-  Future<void> refreshPendingSyncCount() async {
-    await CubitExceptionHandler.executeAsyncVoid(
-      operation: () async {
-        final int count = await repository.pendingSyncOperationCount();
-        if (isClosed) {
-          return;
-        }
-        emit(state.copyWith(pendingSyncCount: count));
-      },
-      isAlive: () => !isClosed,
-      onError: (_) {},
-      logContext: 'TodoListCubit.refreshPendingSyncCount',
-    );
   }
 
   void setFilter(final TodoFilter filter) {
