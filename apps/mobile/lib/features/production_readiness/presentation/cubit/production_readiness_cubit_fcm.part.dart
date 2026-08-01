@@ -8,18 +8,31 @@ mixin _ProductionReadinessCubitFcm on _ProductionReadinessCubitBase {
       return;
     }
 
-    final permission = await messaging.requestPermission();
-    if (isClosed) {
-      return;
-    }
-    emit(state.copyWith(fcmPermission: permission));
+    try {
+      final permission = await messaging.requestPermission();
+      if (isClosed) {
+        return;
+      }
+      emit(state.copyWith(fcmPermission: permission));
 
-    final PushMessage? initial = await messaging.getInitialMessage();
-    if (initial != null && !isClosed) {
-      _applyFcmMessageSummary(initial);
-    }
+      final PushMessage? initial = await messaging.getInitialMessage();
+      if (initial != null && !isClosed) {
+        _applyFcmMessageSummary(initial);
+      }
 
-    _subscribeToFcmStreams();
+      _subscribeToFcmStreams();
+    } on Object {
+      if (isClosed) {
+        return;
+      }
+      // FCM may be unavailable even when Firebase initialized (for example,
+      // platform permission/plugin failures). Keep the ownership demo usable.
+      emit(
+        state.copyWith(
+          errorMessage: _ProductionReadinessCubitBase.fcmStreamErrorMessage,
+        ),
+      );
+    }
   }
 
   void _subscribeToFcmStreams() {
