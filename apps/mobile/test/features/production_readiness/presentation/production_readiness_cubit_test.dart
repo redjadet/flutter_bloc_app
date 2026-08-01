@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/app/analytics/shared_preferences_analytics_cons
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/simulated_fcm_messaging_service.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
+import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_cubit.dart';
@@ -155,6 +156,24 @@ void main() {
       expect(wired.state.fcmLastSource, message.source.name);
     });
 
+    test('keeps demo ready when FCM setup throws', () async {
+      final ProductionReadinessCubit wired = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        messaging: _ThrowingFcmMessagingService(),
+        fcmMode: FcmDemoMode.live,
+        firebaseInitialized: true,
+      );
+      addTearDown(wired.close);
+
+      await wired.initialize();
+
+      expect(wired.state.status, ProductionReadinessStatus.ready);
+      expect(wired.state.errorMessage, isNotNull);
+    });
+
     test('simulated notification tracks exactly once with consent', () async {
       SharedPreferences.setMockInitialValues(<String, Object>{
         'analytics_collection_enabled': true,
@@ -259,6 +278,31 @@ class _FakeFrameMonitor implements FrameTimingMonitor {
   void stop() {
     _onSummary = null;
   }
+}
+
+class _ThrowingFcmMessagingService implements FcmMessagingService {
+  @override
+  Stream<PushMessage> get foregroundMessages =>
+      const Stream<PushMessage>.empty();
+
+  @override
+  Future<PushMessage?> getInitialMessage() async => null;
+
+  @override
+  Future<String?> getApnsToken() async => null;
+
+  @override
+  Future<String?> getToken() async => null;
+
+  @override
+  Stream<PushMessage> get openedMessages => const Stream<PushMessage>.empty();
+
+  @override
+  Future<FcmPermissionState> requestPermission() =>
+      Future<FcmPermissionState>.error(StateError('platform unavailable'));
+
+  @override
+  Stream<String> get tokenRefreshes => const Stream<String>.empty();
 }
 
 class _FakeConsent implements AnalyticsConsentRepository {
