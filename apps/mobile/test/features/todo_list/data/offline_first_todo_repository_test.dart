@@ -113,40 +113,6 @@ class _FakeRemoteRepositoryWithErrorTracking
   Future<void> clearCompleted() async {}
 }
 
-class _GatedWatchRemoteRepository
-    with TodoRepositoryNoPendingSync
-    implements TodoRepository {
-  _GatedWatchRemoteRepository();
-
-  final StreamController<List<TodoItem>> _watchController =
-      StreamController<List<TodoItem>>.broadcast();
-
-  void emitWatch(final List<TodoItem> items) {
-    _watchController.add(List<TodoItem>.from(items));
-  }
-
-  Future<void> closeWatchStream() async {
-    if (!_watchController.isClosed) {
-      await _watchController.close();
-    }
-  }
-
-  @override
-  Future<List<TodoItem>> fetchAll() async => const <TodoItem>[];
-
-  @override
-  Stream<List<TodoItem>> watchAll() => _watchController.stream;
-
-  @override
-  Future<void> save(final TodoItem item) async {}
-
-  @override
-  Future<void> delete(final String id) async {}
-
-  @override
-  Future<void> clearCompleted() async {}
-}
-
 class _DeferredFetchRemoteRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
@@ -289,6 +255,35 @@ class _ReReadAwareHiveTodoRepository extends HiveTodoRepository {
       await onSecondFetchAll!();
     }
     return super.fetchAll();
+  }
+}
+
+class _GatedSaveHiveTodoRepository extends HiveTodoRepository {
+  _GatedSaveHiveTodoRepository({required super.hiveService});
+
+  Completer<void>? _saveStarted;
+  Completer<void>? _saveGate;
+  Completer<void>? _activeSaveGate;
+
+  void gateNextSave() {
+    _saveStarted = Completer<void>();
+    _saveGate = Completer<void>();
+  }
+
+  Future<void> waitForGatedSave() => _saveStarted!.future;
+
+  void releaseGatedSave() => _activeSaveGate!.complete();
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    final Completer<void>? gate = _saveGate;
+    if (gate != null) {
+      _saveGate = null;
+      _activeSaveGate = gate;
+      _saveStarted!.complete();
+      await gate.future;
+    }
+    await super.save(item);
   }
 }
 
@@ -1407,24 +1402,31 @@ void main() {
           title: 'Remote Todo',
           description: 'From Remote',
         );
-        final _GatedWatchRemoteRepository remote = _GatedWatchRemoteRepository();
+        final _StreamRemoteTodoRepository remote =
+            _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final _GatedSaveHiveTodoRepository gatedLocal =
+            _GatedSaveHiveTodoRepository(hiveService: hiveService);
         final OfflineFirstTodoRepository repository =
             OfflineFirstTodoRepository(
-              localRepository: localRepository,
+              localRepository: gatedLocal,
               remoteRepository: remote,
               pendingSyncRepository: pendingRepository,
               registry: registry,
               timerService: FakeTimerService(),
             );
 
+        gatedLocal.gateNextSave();
         repository.watchAll();
-        remote.emitWatch([remoteItem]);
+        remote.controller.add(<TodoItem>[remoteItem]);
+        await gatedLocal.waitForGatedSave();
         repository.pauseRemoteWatchForSessionCleanup();
-        await Future<void>.delayed(Duration.zero);
+        final Future<void> cleanup = repository.clearAllLocalData();
+        gatedLocal.releaseGatedSave();
+        await cleanup;
 
-        final List<TodoItem> local = await localRepository.fetchAll();
+        final List<TodoItem> local = await gatedLocal.fetchAll();
         expect(local, isEmpty);
-        await remote.closeWatchStream();
       },
     );
 

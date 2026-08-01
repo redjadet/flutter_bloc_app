@@ -155,7 +155,7 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 
 - **Counter (single-entity):** `apps/mobile/lib/features/counter/data/offline_first_counter_repository_helpers.dart` — `shouldApplyRemote`; `offline_first_counter_repository.dart` — `watch()` / `pullRemote()` merge.
 - **Todo (list-entity):** `apps/mobile/lib/features/todo_list/data/offline_first_todo_repository_helpers.dart` — `_shouldMergeRemoteItem`, `_mergeRemoteIntoLocal`; policy in `TodoMergePolicy.shouldApplyRemote`.
-- **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`; `pullRemote re-checks local before save when local advances`; `remote watch re-checks local before save when local advances`; `processOperation does not push stale pending over newer remote`. `test/features/todo_list/data/offline_first_todo_repository_test.dart` — `pullRemote re-checks local before save when local advances`; `pullRemote re-checks local before deleting a missing remote item`; `remote watch re-checks local before save when local advances`; `remote watch re-checks local before deleting a missing remote item`; `remote watch does not overwrite newer synchronized local item`; `remote watch does not overwrite newer unsynced local item`; `processOperation does not push stale pending over newer remote`.
+- **Regression tests:** `test/features/counter/data/offline_first_counter_repository_test.dart` — `remote watch does not overwrite newer unsynced local count`; `remote watch does not overwrite newer synchronized local count`; `pullRemote does not overwrite newer synchronized local count`; `pullRemote re-checks local before save when local advances`; `remote watch re-checks local before save when local advances`; `remote watch aborts in-flight merge when session cleanup pause engages`; `processOperation does not push stale pending over newer remote`. `test/features/todo_list/data/offline_first_todo_repository_test.dart` — `pullRemote re-checks local before save when local advances`; `pullRemote re-checks local before deleting a missing remote item`; `remote watch re-checks local before save when local advances`; `remote watch re-checks local before deleting a missing remote item`; `remote watch does not overwrite newer synchronized local item`; `remote watch does not overwrite newer unsynced local item`; `remote watch aborts in-flight merge when session cleanup pause engages`; `processOperation does not push stale pending over newer remote`.
 - **Validation script:** `tool/check_offline_first_remote_merge.sh` (run via `./bin/checklist` or directly).
 - **Docs:** [`validation_scripts.md`](../validation_scripts.md) § “check_offline_first_remote_merge.sh”.
 
@@ -168,6 +168,7 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 | Stale remote on watch (unsynced) | `remote watch does not overwrite newer unsynced local count` | `remote watch does not overwrite newer unsynced local item` |
 | TOCTOU save on `pullRemote` | `pullRemote re-checks local before save when local advances` | `pullRemote re-checks local before save when local advances` |
 | TOCTOU save on watch | `remote watch re-checks local before save when local advances` | `remote watch re-checks local before save when local advances` |
+| Session cleanup during in-flight watch save | `remote watch aborts in-flight merge when session cleanup pause engages` | `remote watch aborts in-flight merge when session cleanup pause engages` |
 | TOCTOU delete on `pullRemote` | N/A (single-entity) | `pullRemote re-checks local before deleting a missing remote item` |
 | TOCTOU delete on watch | N/A (single-entity) | `remote watch re-checks local before deleting a missing remote item` |
 | Stale pending queue replay | `processOperation does not push stale pending over newer remote` | `processOperation does not push stale pending over newer remote` |
@@ -178,6 +179,8 @@ Run these tests (and any other “don’t overwrite” tests) in CI. In this rep
 When adding or reviewing offline-first “remote watch → merge into local”:
 
 - [ ] Before applying remote over local, use a `_shouldApplyRemote`-style check.
+- [ ] During destructive session cleanup, stop new remote-watch merges and drain
+  already-started local writes before clearing shared persistence.
 - [ ] Reject remote when `local.lastChanged` is strictly after `remote.lastChanged` (all sync states).
 - [ ] When local is not synchronized, apply remote only if remote is strictly newer (timestamp).
 - [ ] **Re-read local immediately before each merge `save`/`delete` and re-run the predicate (TOCTOU).**
@@ -195,7 +198,7 @@ Use these steps to adopt the don't-overwrite rule in a different codebase.
 
 ### 1. Copy or adapt the guide
 
-- Copy this file into the other repo, e.g. [`offline_first/dont_overwrite_guide.md`](dont_overwrite_guide.md) or `sync/dont_overwrite_guide.md`.
+- Copy this file into the other repo, e.g. [`offline_first/dont_overwrite_guide.md`](dont_overwrite_guide.md) or its `sync/` equivalent.
 - Adjust "References in this repo" to point to that repo's equivalent paths (or remove that section and keep the pattern + checklist).
 
 ### 2. Implement `_shouldApplyRemote` when merging remote watch into local

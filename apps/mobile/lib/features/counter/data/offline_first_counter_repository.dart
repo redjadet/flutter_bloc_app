@@ -30,6 +30,7 @@ class OfflineFirstCounterRepository
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
   bool _remoteMergePausedForSessionCleanup = false;
+  final Set<Future<void>> _inFlightRemoteWatchMerges = <Future<void>>{};
 
   @visibleForTesting
   bool get hasRemoteRepository => _remoteRepository != null;
@@ -82,7 +83,9 @@ class OfflineFirstCounterRepository
             if (_remoteMergePausedForSessionCleanup) {
               return;
             }
-            await _applyRemoteSnapshotIfCurrent(remote);
+            final Future<void> merge = _applyRemoteSnapshotIfCurrent(remote);
+            _trackRemoteWatchMerge(merge);
+            await merge;
           },
           onError: (final Object e, final StackTrace st) {
             AppLogger.error(
@@ -110,9 +113,7 @@ class OfflineFirstCounterRepository
 
   Future<List<SyncOperation>> _counterPendingOperations({DateTime? now}) async {
     final List<SyncOperation> operations = await _pendingSyncRepository
-        .getPendingOperations(
-          now: now ?? DateTime.now().toUtc(),
-        );
+        .getPendingOperations(now: now ?? DateTime.now().toUtc());
     return operations
         .where((final op) => op.entityType == counterSyncEntityType)
         .toList(growable: false);
@@ -137,6 +138,7 @@ class OfflineFirstCounterRepository
 
   /// Clears local counter state without enqueueing a remote sync op.
   Future<void> clearAllLocalData() async {
+    await _waitForRemoteWatchMerges();
     final CounterRepository local = _localRepository;
     if (local is HiveCounterRepository) {
       await local.clearAllLocalData();
@@ -155,5 +157,27 @@ class OfflineFirstCounterRepository
   /// Resumes remote merge/watch after session cleanup completes.
   void resumeRemoteWatchForSessionCleanup() {
     _remoteMergePausedForSessionCleanup = false;
+  }
+
+  void _trackRemoteWatchMerge(final Future<void> merge) {
+    _inFlightRemoteWatchMerges.add(merge);
+    unawaited(
+      merge.then<void>(
+        (_) {
+          _inFlightRemoteWatchMerges.remove(merge);
+        },
+        onError: (final Object _, final StackTrace _) {
+          _inFlightRemoteWatchMerges.remove(merge);
+        },
+      ),
+    );
+  }
+
+  Future<void> _waitForRemoteWatchMerges() async {
+    while (_inFlightRemoteWatchMerges.isNotEmpty) {
+      await Future.wait<void>(
+        _inFlightRemoteWatchMerges.toList(growable: false),
+      );
+    }
   }
 }

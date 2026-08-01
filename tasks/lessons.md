@@ -21,6 +21,27 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-01 - Pause flags must drain in-flight remote-watch writes
+
+- What went wrong:
+  A session-cleanup pause prevented future watch merges, but a merge already
+  awaiting local Hive `save` could complete after the cleanup clear and restore
+  previous-account data.
+- How it was fixed:
+  Todo and counter track active remote-watch merge futures; their local-clear
+  methods wait for the tracked work before clearing. Gated-save tests force the
+  exact interleaving.
+- Pattern:
+  A cancellation/pause flag alone cannot order an operation already past its
+  last guard and inside an asynchronous persistence write.
+- Preventive rule:
+  For destructive cleanup, stop admission and drain tracked in-flight writers
+  before clearing shared persistence; test with a save gate, not only a
+  pause-before-stream-delivery test.
+- Evidence or affected files:
+  `apps/mobile/lib/features/{todo_list,counter}/data/offline_first_*`; focused
+  repository tests; `tool/check_offline_first_remote_merge.sh`.
+
 ### 2026-07-24 - Scorecard markdown must not int()-truncate medians; count all outcomes
 
 - What went wrong:
