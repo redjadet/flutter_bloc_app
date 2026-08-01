@@ -18,7 +18,7 @@ The codebase demonstrates strong adherence to lifecycle guards and race-conditio
 ### 1.1 Cubit Async and Stream Subscriptions
 
 - **Cubit emit after async:** Cubits consistently use `if (isClosed) return;` before `emit()` in async callbacks. Examples: `WalletConnectAuthCubit`, `ChatListCubit`, `RemoteConfigCubit`, `DeepLinkCubit`, `WebsocketCubit`, `GenUiDemoCubit`, `SyncStatusCubit`.
-- **Stream subscription disposal:** Subscriptions are nullified before `cancel()` to avoid races (e.g. `SyncStatusCubit.close()`, `DeepLinkCubit._disposeSubscription`, `RemoteConfigRepository.dispose`).
+- **Stream subscription disposal:** Subscriptions are nullified before `cancel()` to avoid races (e.g. `SyncStatusCubit.close()`, `DeepLinkCubit._disposeSubscription`, `FirebaseRemoteConfigDataSource.dispose`).
 - **CubitSubscriptionMixin:** Used where appropriate to centralize subscription cancellation in `close()`.
 
 ### 1.2 Search Out-of-Order Completion
@@ -87,9 +87,9 @@ await _boxSubscription?.cancel();
 
 At that point, `_boxSubscription` is still `null` (we just passed the double-check). The line is effectively a no-op. Not incorrect, but redundant.
 
-### 2.4 RemoteConfigRepository – Async Listener Callback
+### 2.4 FirebaseRemoteConfigDataSource – Async Listener Callback
 
-**Location:** `apps/mobile/lib/features/remote_config/data/remote_config_repository.dart`
+**Location:** `apps/mobile/lib/features/remote_config/data/firebase_remote_config_data_source.dart`
 
 The `onConfigUpdated` listener uses an `async` callback:
 

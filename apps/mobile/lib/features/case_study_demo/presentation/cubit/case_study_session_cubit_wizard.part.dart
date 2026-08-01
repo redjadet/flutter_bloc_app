@@ -13,7 +13,9 @@ mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
     if (isClosed) return;
     await _local.clearDraft(userId);
     if (isClosed) return;
-    final CaseStudyDraft next = CaseStudyDraft.fresh(caseId: _newCaseId());
+    final CaseStudyDraft next = CaseStudyDraft.fresh(
+      caseId: newCaseStudyCaseId(),
+    );
     await _local.saveDraft(userId, next);
     if (isClosed) return;
     emit(state.copyWith(draft: next, clearPickError: true));

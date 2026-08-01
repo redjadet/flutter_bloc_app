@@ -22,6 +22,7 @@ class CounterCubit extends _CounterCubitBase
   CounterCubit({
     required super.repository,
     required super.timerService,
+    super.syncDiagnostics,
     final bool startTicker = true,
     final Duration loadDelay = Duration.zero,
     final DateTime Function()? now,

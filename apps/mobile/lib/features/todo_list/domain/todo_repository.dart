@@ -1,28 +1,11 @@
-import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_data_source.dart';
+import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_diagnostics_port.dart';
 
-/// Repository contract for todo items: watch, fetch, save, delete, and clear.
-abstract class TodoRepository {
-  /// Stream of all todo items; emits when the list changes.
-  Stream<List<TodoItem>> watchAll();
+export 'todo_data_source.dart';
+export 'todo_sync_diagnostics_port.dart';
 
-  /// Fetches all todo items (e.g. from remote or cache).
-  Future<List<TodoItem>> fetchAll();
-
-  /// Creates or updates a todo item.
-  Future<void> save(final TodoItem item);
-
-  /// Deletes the todo item with the given [id].
-  Future<void> delete(final String id);
-
-  /// Removes all completed todo items.
-  Future<void> clearCompleted();
-
-  /// Count of pending sync operations for entity type `todo`.
-  Future<int> pendingSyncOperationCount({DateTime? now});
-}
-
-/// No-op pending-sync count for repositories without an offline queue.
-mixin TodoRepositoryNoPendingSync {
-  Future<int> pendingSyncOperationCount({DateTime? now}) =>
-      Future<int>.value(0);
-}
+/// Repository contract for todo items (domain-facing facade).
+///
+/// Leaf Hive/RTDB adapters implement [TodoDataSource]; pending-sync inspector
+/// APIs live on [TodoSyncDiagnosticsPort].
+abstract class TodoRepository implements TodoDataSource {}

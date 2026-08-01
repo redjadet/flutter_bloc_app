@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_factories.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
@@ -13,4 +14,11 @@ void registerTodoServices() {
       }
     },
   );
+  registerLazySingletonIfAbsent<TodoSyncDiagnosticsPort>(() {
+    final TodoRepository repo = getIt<TodoRepository>();
+    if (repo is TodoSyncDiagnosticsPort) {
+      return repo as TodoSyncDiagnosticsPort;
+    }
+    return const NoPendingTodoSyncDiagnostics();
+  });
 }

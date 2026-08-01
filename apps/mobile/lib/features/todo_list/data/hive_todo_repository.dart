@@ -10,9 +10,7 @@ import 'package:storage/storage.dart';
 
 part 'hive_todo_repository_migration.dart';
 
-class HiveTodoRepository extends HiveRepositoryBase
-    with TodoRepositoryNoPendingSync
-    implements TodoRepository {
+class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   HiveTodoRepository({required super.hiveService});
 
   static const String _boxName = 'todo_list';

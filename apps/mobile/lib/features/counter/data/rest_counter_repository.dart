@@ -13,7 +13,7 @@ import 'package:utilities/utilities.dart';
 part 'rest_counter_repository_internal.dart';
 part 'rest_counter_repository_watch.dart';
 
-/// Example REST-backed implementation of [CounterRepository].
+/// Example REST-backed leaf [CounterDataSource].
 ///
 /// **Note:** This is an intentionally incomplete example implementation
 /// demonstrating how to structure a REST-based repository. It is not used
@@ -26,9 +26,7 @@ part 'rest_counter_repository_watch.dart';
 /// 3. Implement proper error handling for your API
 /// 4. Add request/response models as needed
 /// 5. Register in `lib/app/composition/injector.dart` if needed
-class RestCounterRepository
-    with CounterRepositoryNoPendingSync
-    implements CounterRepository {
+class RestCounterRepository implements CounterRepository {
   RestCounterRepository({
     required final String baseUrl,
     required this.client,

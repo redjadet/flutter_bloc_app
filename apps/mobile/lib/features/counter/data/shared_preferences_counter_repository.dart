@@ -6,10 +6,8 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage/storage.dart';
 
-/// SharedPreferences-backed implementation of [CounterRepository].
-class SharedPreferencesCounterRepository
-    with CounterRepositoryNoPendingSync
-    implements CounterRepository {
+/// SharedPreferences-backed leaf [CounterDataSource].
+class SharedPreferencesCounterRepository implements CounterRepository {
   SharedPreferencesCounterRepository([final SharedPreferences? instance])
     : _preferencesInstance = instance;
 

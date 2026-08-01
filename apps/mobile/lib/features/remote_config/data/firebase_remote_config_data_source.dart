@@ -7,8 +7,8 @@ import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_key
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
 
-class RemoteConfigRepository implements RemoteConfigRemoteDataSource {
-  RemoteConfigRepository(
+class FirebaseRemoteConfigDataSource implements RemoteConfigRemoteDataSource {
+  FirebaseRemoteConfigDataSource(
     this._remoteConfig, {
     final void Function(String message)? debugLogger,
   }) : _logDebug = debugLogger ?? AppLogger.debug;

@@ -53,7 +53,7 @@ class _PerfChartRepository extends ChartRepository {
 }
 
 class _PerfTodoRepository
-    with TodoRepositoryNoPendingSync
+    with TodoSyncDiagnosticsNoPendingSync
     implements TodoRepository {
   _PerfTodoRepository({required final int itemCount})
     : _items = List<TodoItem>.generate(

@@ -1,50 +1,6 @@
 part of 'case_study_session_cubit.dart';
 
 mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
-  Future<CaseStudyDraft> _persistSubmissionToLocalHistory({
-    required final String userId,
-    required final String caseId,
-    required final DateTime submittedAtUtc,
-    required final CaseStudyCaseType caseType,
-  }) async {
-    return _caseStudyLocalPersistRetryPolicy.executeWithRetry<CaseStudyDraft>(
-      delay: _retryDelayViaTimerService,
-      action: () async {
-        try {
-          final List<CaseStudyRecord> records = await _local.loadRecords(
-            userId,
-          );
-          final CaseStudyRecord record = CaseStudyRecord(
-            id: caseId,
-            submittedAt: submittedAtUtc,
-            doctorName: state.draft.doctorName,
-            caseType: caseType,
-            notes: state.draft.notes,
-            answers: Map<String, String>.from(state.draft.answers),
-          );
-          final List<CaseStudyRecord> nextRecords = <CaseStudyRecord>[
-            record,
-            ...records,
-          ];
-          await _local.saveRecords(userId, nextRecords);
-          await _local.clearDraft(userId);
-          final CaseStudyDraft fresh = CaseStudyDraft.fresh(
-            caseId: _newCaseId(),
-          );
-          await _local.saveDraft(userId, fresh);
-          return fresh;
-        } on Object catch (error, stackTrace) {
-          AppLogger.error(
-            'CaseStudySessionCubit._persistSubmissionToLocalHistory',
-            error,
-            stackTrace,
-          );
-          rethrow;
-        }
-      },
-    );
-  }
-
   /// Retries local history + fresh draft when submitLocalHistoryFailed is set.
   ///
   /// When Supabase is active, this also reads the remote row to align
@@ -91,11 +47,12 @@ mixin _CaseStudySessionCubitHistory on _CaseStudySessionCubitBase {
         }
       }
       if (isClosed) return;
-      final CaseStudyDraft fresh = await _persistSubmissionToLocalHistory(
+      final CaseStudyDraft fresh = await _persistSubmission(
         userId: userId,
-        caseId: state.draft.caseId,
+        draft: state.draft,
         submittedAtUtc: submittedAtUtc,
         caseType: caseType,
+        retryDelay: _retryDelayViaTimerService,
       );
       _pendingSubmitSubmittedAtUtc = null;
       if (isClosed) return;

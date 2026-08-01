@@ -10,10 +10,8 @@ import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
-/// Firebase Realtime Database backed implementation of [CounterRepository].
-class RealtimeDatabaseCounterRepository
-    with CounterRepositoryNoPendingSync
-    implements CounterRepository {
+/// Firebase Realtime Database backed leaf [CounterDataSource].
+class RealtimeDatabaseCounterRepository implements CounterRepository {
   RealtimeDatabaseCounterRepository({
     final FirebaseDatabase? database,
     final DatabaseReference? counterRef,

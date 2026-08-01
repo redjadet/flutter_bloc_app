@@ -26,6 +26,24 @@ remove orchestration from Cubit without pulling data concerns into domain.
   Firebase snapshots, Supabase rows, or GoRouter locations.
 - Watch/stream APIs should document initial emission and error behavior in tests.
 
+### Repository vs leaf DataSource naming
+
+Copy gold features: `todo_list`, `remote_config`, `native_platform_showcase`,
+`counter` (OfflineFirst + DataSource leaves). Do not invent a parallel stack.
+
+| Role | Name | Lives in |
+| --- | --- | --- |
+| Domain-facing facade (OF / composite) | `*Repository` / `*Service` | `domain/` contract; `data/` impl |
+| Leaf I/O only (Hive, REST, SDK) | `*LocalDataSource` / `*RemoteDataSource` / `*DataSource` | `data/`; may share a `*DataSource` domain port |
+| Sync inspector / pending queue UI | `*SyncDiagnosticsPort` | `domain/` — keep off CRUD repository contracts |
+
+Offline-first facades compose leaf data sources and implement the domain
+`*Repository` (and `SyncableRepository` when queued). Example leaf rename:
+`FirebaseRemoteConfigDataSource` implements `RemoteConfigRemoteDataSource`.
+
+Multi-repository submit/upload/finalize workflows belong in
+`domain/use_cases/` (see case_study `SubmitCaseStudyUseCase`), not Cubits.
+
 ## DTOs And Mappers
 
 | Type | Location | Direction |

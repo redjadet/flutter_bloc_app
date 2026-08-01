@@ -1,6 +1,7 @@
 part of 'offline_first_todo_repository.dart';
 
-class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
+class OfflineFirstTodoRepository
+    implements TodoRepository, TodoSyncDiagnosticsPort, SyncableRepository {
   OfflineFirstTodoRepository({
     required this._localRepository,
     required this._pendingSyncRepository,
@@ -18,7 +19,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   final HiveTodoRepository _localRepository;
-  final TodoRepository? _remoteRepository;
+  final TodoDataSource? _remoteRepository;
   final PendingSyncRepository _pendingSyncRepository;
   final SyncableRepositoryRegistry _registry;
   final TimerService _timerService;
@@ -68,7 +69,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
     // Only watch remote if we have a remote repository and aren't already watching
-    final TodoRepository? remoteRepo = _remoteRepository;
+    final TodoDataSource? remoteRepo = _remoteRepository;
     if (remoteRepo == null || _remoteWatchSubscription != null) {
       return;
     }
@@ -275,7 +276,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       operation.payload['deleted'] == true;
 
   Future<void> _syncSaveToRemote(final TodoItem normalized) async {
-    final TodoRepository? remoteRepository = _remoteRepository;
+    final TodoDataSource? remoteRepository = _remoteRepository;
     if (remoteRepository == null) {
       return;
     }
@@ -300,7 +301,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   Future<void> _syncDeleteToRemote(final String normalizedId) async {
-    final TodoRepository? remoteRepository = _remoteRepository;
+    final TodoDataSource? remoteRepository = _remoteRepository;
     if (remoteRepository == null) {
       return;
     }
@@ -329,7 +330,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
       return;
     }
 
-    final TodoRepository? remoteRepository = _remoteRepository;
+    final TodoDataSource? remoteRepository = _remoteRepository;
     if (remoteRepository != null) {
       await remoteRepository.delete(deleteId);
     }
@@ -337,7 +338,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   Future<void> _processSaveOperation(final TodoItem item) async {
-    if (_remoteRepository case final TodoRepository remoteRepository?) {
+    if (_remoteRepository case final TodoDataSource remoteRepository?) {
       final Iterable<TodoItem> remoteMatches =
           (await remoteRepository.fetchAll()).where(
             (final candidate) => candidate.id == item.id,

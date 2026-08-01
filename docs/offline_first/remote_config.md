@@ -16,7 +16,7 @@
 ## Repository Layering
 
 - `OfflineFirstRemoteConfigRepository`
-  - Wraps the Firebase-backed `RemoteConfigRepository`
+  - Wraps the Firebase-backed `FirebaseRemoteConfigDataSource`
   - Hydrates `_snapshot` from Hive on `initialize()`
   - On `forceFetch()`:
     - Checks `NetworkStatusService` – if offline, serves cached values
