@@ -8,6 +8,7 @@ that.
 ## Index
 
 - [`2026-08-01_production_readiness_fcm_setup_resilience.md`](2026-08-01_production_readiness_fcm_setup_resilience.md): Keep the production-readiness route ready when FCM permission or initial-message setup fails.
+- [`2026-08-01_remote_watch_session_cleanup_drain.md`](2026-08-01_remote_watch_session_cleanup_drain.md): Drain in-flight todo/counter remote-watch merges before Firebase session cleanup clears local Hive state.
 - [`2026-08-01_analytics_consent_stream_dispose.md`](2026-08-01_analytics_consent_stream_dispose.md): Consent repo `dispose()` on interface + GetIt teardown closes changes StreamController.
 - [`2026-07-31_production_readiness_codex_review.md`](2026-07-31_production_readiness_codex_review.md): Codex review follow-ups — immutable analytics params, consent save success gate, single FCM track, Node 24 dry-run, perf CLI exit.
 - [`2026-07-31_production_readiness_consent_hardening.md`](2026-07-31_production_readiness_consent_hardening.md): Consent bootstrap/platform defaults, Settings↔demo sync, FCM error banner, walkthrough moved to interview_showcase §3b.

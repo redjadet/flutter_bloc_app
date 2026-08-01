@@ -24,10 +24,17 @@ Future<void> _mergeRemoteIntoLocal(
   final List<TodoItem> remoteItems,
   final String Function() generateChangeId,
   final bool Function(TodoItem? localItem, TodoItem remoteItem)
-  shouldApplyRemote,
-) async {
+  shouldApplyRemote, {
+  final bool Function()? shouldAbortMerge,
+}) async {
   try {
+    if (shouldAbortMerge?.call() ?? false) {
+      return;
+    }
     final List<TodoItem> localItems = await localRepository.fetchAll();
+    if (shouldAbortMerge?.call() ?? false) {
+      return;
+    }
     final Map<String, TodoItem> localMap = {
       for (final TodoItem item in localItems) item.id: item,
     };
@@ -47,6 +54,9 @@ Future<void> _mergeRemoteIntoLocal(
       // Re-read before save so a local write during the initial fetch cannot be
       // overwritten by a stale remote decision (TOCTOU).
       final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
+      if (shouldAbortMerge?.call() ?? false) {
+        return;
+      }
       final Iterable<TodoItem> freshMatches = freshLocalItems.where(
         (item) => item.id == remoteItem.id,
       );
@@ -61,6 +71,9 @@ Future<void> _mergeRemoteIntoLocal(
         continue;
       }
 
+      if (shouldAbortMerge?.call() ?? false) {
+        return;
+      }
       await localRepository.save(
         remoteItem.copyWith(
           changeId: remoteItem.changeId ?? generateChangeId(),
@@ -75,6 +88,9 @@ Future<void> _mergeRemoteIntoLocal(
         // Re-read before delete for the same reason as remote saves: a local
         // edit may have made this item pending after the initial snapshot.
         final List<TodoItem> freshLocalItems = await localRepository.fetchAll();
+        if (shouldAbortMerge?.call() ?? false) {
+          return;
+        }
         final Iterable<TodoItem> freshMatches = freshLocalItems.where(
           (item) => item.id == localItem.id,
         );
@@ -82,6 +98,9 @@ Future<void> _mergeRemoteIntoLocal(
             ? null
             : freshMatches.first;
         if (freshLocalItem != null && freshLocalItem.synchronized) {
+          if (shouldAbortMerge?.call() ?? false) {
+            return;
+          }
           await localRepository.delete(localItem.id);
         }
       }

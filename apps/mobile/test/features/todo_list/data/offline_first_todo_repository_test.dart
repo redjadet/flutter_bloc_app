@@ -258,6 +258,35 @@ class _ReReadAwareHiveTodoRepository extends HiveTodoRepository {
   }
 }
 
+class _GatedSaveHiveTodoRepository extends HiveTodoRepository {
+  _GatedSaveHiveTodoRepository({required super.hiveService});
+
+  Completer<void>? _saveStarted;
+  Completer<void>? _saveGate;
+  Completer<void>? _activeSaveGate;
+
+  void gateNextSave() {
+    _saveStarted = Completer<void>();
+    _saveGate = Completer<void>();
+  }
+
+  Future<void> waitForGatedSave() => _saveStarted!.future;
+
+  void releaseGatedSave() => _activeSaveGate!.complete();
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    final Completer<void>? gate = _saveGate;
+    if (gate != null) {
+      _saveGate = null;
+      _activeSaveGate = gate;
+      _saveStarted!.complete();
+      await gate.future;
+    }
+    await super.save(item);
+  }
+}
+
 void main() {
   group('OfflineFirstTodoRepository', () {
     late Directory tempDir;
@@ -1363,6 +1392,41 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 50));
         expect(remote.activeWatchListeners, 0);
         await remote.closeWatchStream();
+      },
+    );
+
+    test(
+      'remote watch aborts in-flight merge when session cleanup pause engages',
+      () async {
+        final TodoItem remoteItem = TodoItem.create(
+          title: 'Remote Todo',
+          description: 'From Remote',
+        );
+        final _StreamRemoteTodoRepository remote =
+            _StreamRemoteTodoRepository();
+        addTearDown(remote.controller.close);
+        final _GatedSaveHiveTodoRepository gatedLocal =
+            _GatedSaveHiveTodoRepository(hiveService: hiveService);
+        final OfflineFirstTodoRepository repository =
+            OfflineFirstTodoRepository(
+              localRepository: gatedLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+              timerService: FakeTimerService(),
+            );
+
+        gatedLocal.gateNextSave();
+        repository.watchAll();
+        remote.controller.add(<TodoItem>[remoteItem]);
+        await gatedLocal.waitForGatedSave();
+        repository.pauseRemoteWatchForSessionCleanup();
+        final Future<void> cleanup = repository.clearAllLocalData();
+        gatedLocal.releaseGatedSave();
+        await cleanup;
+
+        final List<TodoItem> local = await gatedLocal.fetchAll();
+        expect(local, isEmpty);
       },
     );
 

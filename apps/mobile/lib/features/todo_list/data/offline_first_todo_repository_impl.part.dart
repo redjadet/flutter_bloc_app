@@ -28,6 +28,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   final SubscriptionManager _subscriptionManager = SubscriptionManager();
   final TimerHandleManager _timerHandles = TimerHandleManager();
   bool _remoteMergePausedForSessionCleanup = false;
+  final Set<Future<void>> _inFlightRemoteWatchMerges = <Future<void>>{};
   bool _remoteRestartScheduled = false;
   TimerDisposable? _remoteRestartHandle;
 
@@ -79,14 +80,15 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         }
         // Merge remote changes into local storage
         // This will trigger the local watch stream to emit
-        unawaited(
-          _mergeRemoteIntoLocal(
-            _localRepository,
-            remoteItems,
-            _generateChangeId,
-            _mergePolicy.shouldApplyRemote,
-          ),
+        final Future<void> merge = _mergeRemoteIntoLocal(
+          _localRepository,
+          remoteItems,
+          _generateChangeId,
+          _mergePolicy.shouldApplyRemote,
+          shouldAbortMerge: () => _remoteMergePausedForSessionCleanup,
         );
+        _trackRemoteWatchMerge(merge);
+        unawaited(merge);
       },
       onError: (final Object error, final StackTrace stackTrace) {
         AppLogger.error(
@@ -176,7 +178,10 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
   }
 
   /// Clears Hive-backed todos without enqueueing remote deletes.
-  Future<void> clearAllLocalData() => _localRepository.clearAllLocalData();
+  Future<void> clearAllLocalData() async {
+    await _waitForRemoteWatchMerges();
+    await _localRepository.clearAllLocalData();
+  }
 
   /// Stops remote merge/watch during Firebase session cleanup.
   void pauseRemoteWatchForSessionCleanup() {
@@ -200,6 +205,28 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
     }
     _remoteMergePausedForSessionCleanup = false;
     _startRemoteWatch();
+  }
+
+  void _trackRemoteWatchMerge(final Future<void> merge) {
+    _inFlightRemoteWatchMerges.add(merge);
+    unawaited(
+      merge.then<void>(
+        (_) {
+          _inFlightRemoteWatchMerges.remove(merge);
+        },
+        onError: (final Object _, final StackTrace _) {
+          _inFlightRemoteWatchMerges.remove(merge);
+        },
+      ),
+    );
+  }
+
+  Future<void> _waitForRemoteWatchMerges() async {
+    while (_inFlightRemoteWatchMerges.isNotEmpty) {
+      await Future.wait<void>(
+        _inFlightRemoteWatchMerges.toList(growable: false),
+      );
+    }
   }
 
   @override
@@ -230,6 +257,7 @@ class OfflineFirstTodoRepository implements TodoRepository, SyncableRepository {
         remoteItems,
         _generateChangeId,
         _mergePolicy.shouldApplyRemote,
+        shouldAbortMerge: () => _remoteMergePausedForSessionCleanup,
       );
     } on SyncAuthUserChangedException {
       rethrow;

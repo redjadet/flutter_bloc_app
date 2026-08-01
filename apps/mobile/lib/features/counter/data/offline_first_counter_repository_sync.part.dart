@@ -77,6 +77,9 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
       return;
     }
     final CounterSnapshot localSnapshot = await _localRepository.load();
+    if (_remoteMergePausedForSessionCleanup) {
+      return;
+    }
     if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
       localSnapshot,
       remoteSnapshot,
@@ -87,10 +90,17 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
     // Re-read before save so a local write during the first load cannot be
     // overwritten by a stale remote decision (TOCTOU).
     final CounterSnapshot freshLocal = await _localRepository.load();
+    if (_remoteMergePausedForSessionCleanup) {
+      return;
+    }
     if (!OfflineFirstCounterRepositoryHelpers.shouldApplyRemote(
       freshLocal,
       remoteSnapshot,
     )) {
+      return;
+    }
+
+    if (_remoteMergePausedForSessionCleanup) {
       return;
     }
 

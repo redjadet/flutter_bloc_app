@@ -76,6 +76,44 @@ class _ReReadAwareLocalRepository
   Stream<CounterSnapshot> watch() => _inner.watch();
 }
 
+class _GatedSaveLocalRepository
+    with CounterRepositoryNoPendingSync
+    implements CounterRepository {
+  _GatedSaveLocalRepository(this._inner);
+
+  final CounterRepository _inner;
+  Completer<void>? _saveStarted;
+  Completer<void>? _saveGate;
+  Completer<void>? _activeSaveGate;
+
+  void gateNextSave() {
+    _saveStarted = Completer<void>();
+    _saveGate = Completer<void>();
+  }
+
+  Future<void> waitForGatedSave() => _saveStarted!.future;
+
+  void releaseGatedSave() => _activeSaveGate!.complete();
+
+  @override
+  Future<CounterSnapshot> load() => _inner.load();
+
+  @override
+  Future<void> save(final CounterSnapshot snapshot) async {
+    final Completer<void>? gate = _saveGate;
+    if (gate != null) {
+      _saveGate = null;
+      _activeSaveGate = gate;
+      _saveStarted!.complete();
+      await gate.future;
+    }
+    await _inner.save(snapshot);
+  }
+
+  @override
+  Stream<CounterSnapshot> watch() => _inner.watch();
+}
+
 class _StreamRemoteRepository
     with CounterRepositoryNoPendingSync
     implements CounterRepository {
@@ -553,6 +591,41 @@ void main() {
         expect(local.count, 5);
 
         await sub.cancel();
+      },
+    );
+
+    test(
+      'remote watch aborts in-flight merge when session cleanup pause engages',
+      () async {
+        final _StreamRemoteRepository remote = _StreamRemoteRepository();
+        addTearDown(remote.controller.close);
+        final _GatedSaveLocalRepository gatedLocal = _GatedSaveLocalRepository(
+          localRepository,
+        );
+
+        final OfflineFirstCounterRepository repository =
+            OfflineFirstCounterRepository(
+              localRepository: gatedLocal,
+              remoteRepository: remote,
+              pendingSyncRepository: pendingRepository,
+              registry: registry,
+            );
+
+        final StreamSubscription sub = repository.watch().listen((_) {});
+        addTearDown(sub.cancel);
+
+        gatedLocal.gateNextSave();
+        remote.controller.add(
+          CounterSnapshot(count: 3, lastChanged: DateTime(2024, 1, 1, 12)),
+        );
+        await gatedLocal.waitForGatedSave();
+        repository.pauseRemoteWatchForSessionCleanup();
+        final Future<void> cleanup = repository.clearAllLocalData();
+        gatedLocal.releaseGatedSave();
+        await cleanup;
+
+        final CounterSnapshot local = await localRepository.load();
+        expect(local.count, 0);
       },
     );
 
