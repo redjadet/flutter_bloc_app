@@ -49,7 +49,7 @@ class SharedPreferencesAnalyticsConsentRepository
     return saved;
   }
 
-  /// App-lifetime singleton; close only for tests / DI reset.
+  @override
   Future<void> dispose() async {
     if (!_changesController.isClosed) {
       await _changesController.close();
