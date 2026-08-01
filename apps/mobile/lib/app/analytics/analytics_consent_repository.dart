@@ -8,4 +8,7 @@ abstract class AnalyticsConsentRepository {
 
   /// Emits after a successful [save] so Settings and demo UIs stay in sync.
   Stream<bool> get changes;
+
+  /// Releases stream resources. Call on DI reset / test teardown.
+  Future<void> dispose();
 }

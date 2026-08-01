@@ -13,6 +13,7 @@ void main() {
           SharedPreferencesAnalyticsConsentRepository(
             await SharedPreferences.getInstance(),
           );
+      addTearDown(repo.dispose);
 
       expect(await repo.load(), isFalse);
     });
@@ -22,6 +23,7 @@ void main() {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final SharedPreferencesAnalyticsConsentRepository repo =
           SharedPreferencesAnalyticsConsentRepository(prefs);
+      addTearDown(repo.dispose);
 
       await repo.save(enabled: true);
       expect(await repo.load(), isTrue);
@@ -37,9 +39,22 @@ void main() {
           SharedPreferencesAnalyticsConsentRepository(
             await SharedPreferences.getInstance(),
           );
+      addTearDown(repo.dispose);
       final Future<bool> next = repo.changes.first;
       expect(await repo.save(enabled: true), isTrue);
       expect(await next, isTrue);
+    });
+
+    test('dispose closes changes stream', () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      final SharedPreferencesAnalyticsConsentRepository repo =
+          SharedPreferencesAnalyticsConsentRepository(
+            await SharedPreferences.getInstance(),
+          );
+      final Future<void> done = repo.changes.drain<void>();
+      await repo.dispose();
+      await done;
+      expect(await repo.save(enabled: true), isTrue);
     });
   });
 

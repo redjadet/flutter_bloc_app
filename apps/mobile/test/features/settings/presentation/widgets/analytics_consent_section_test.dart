@@ -36,6 +36,7 @@ void main() {
 
   testWidgets('AnalyticsConsentSection toggles consent', (final tester) async {
     final _FakeConsent consent = _FakeConsent();
+    addTearDown(consent.dispose);
     final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
 
     await tester.pumpWidget(
@@ -74,6 +75,7 @@ void main() {
     final tester,
   ) async {
     final _FakeConsent consent = _FakeConsent();
+    addTearDown(consent.dispose);
     final InMemoryProductAnalytics analytics = InMemoryProductAnalytics();
 
     await tester.pumpWidget(
@@ -124,5 +126,12 @@ class _FakeConsent implements AnalyticsConsentRepository {
     this.enabled = enabled;
     _changes.add(enabled);
     return true;
+  }
+
+  @override
+  Future<void> dispose() async {
+    if (!_changes.isClosed) {
+      await _changes.close();
+    }
   }
 }

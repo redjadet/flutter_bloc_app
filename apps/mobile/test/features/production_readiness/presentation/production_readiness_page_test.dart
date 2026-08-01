@@ -77,6 +77,7 @@ void main() {
 
     tearDown(() async {
       await cubit.close();
+      await consent.dispose();
     });
 
     testWidgets('renders diagnostic cards at 360px', (final tester) async {
@@ -210,6 +211,13 @@ class _FakeConsent implements AnalyticsConsentRepository {
     this.enabled = enabled;
     _changes.add(enabled);
     return true;
+  }
+
+  @override
+  Future<void> dispose() async {
+    if (!_changes.isClosed) {
+      await _changes.close();
+    }
   }
 }
 
