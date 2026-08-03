@@ -20,7 +20,7 @@ Short router for agents. Canon remains in [`docs/`](docs/README.md). Plan: [`PLA
 | Modularity / deps | [`docs/modularity.md`](docs/modularity.md), [`ai/reports/dependency_map.md`](ai/reports/dependency_map.md) |
 | AI engineering | [`PLAN.md`](PLAN.md), [`docs/plans/2026-05-21_ai_first_engineering_plan.md`](docs/plans/2026-05-21_ai_first_engineering_plan.md) (runtime; build spec archived) |
 | Discovery evidence | [`ai/reports/README.md`](ai/reports/README.md) |
-| Ranked tech debt | [`docs/audits/ai_architecture_audit.md`](docs/audits/ai_architecture_audit.md) |
+| Ranked tech debt | [`docs/audits/architecture_review_2026-06.md`](docs/audits/architecture_review_2026-06.md) |
 | Agent governance | [`docs/ai/governance.md`](docs/ai/governance.md) |
 | Contracts (pilots) | [`CONTRACTS.md`](CONTRACTS.md) |
 

@@ -19,8 +19,7 @@ under `docs/audits/`, not this note.
 
 ## Scope
 
-- Canonical write-up: [`../audits/senior_quality_hotspots_2026-05-12.md`](../audits/senior_quality_hotspots_2026-05-12.md).
-- Machine log: [`../audits/_senior_quality_hotspots_seed_2026-05-12.log`](../audits/_senior_quality_hotspots_seed_2026-05-12.log).
+- Canonical committed summary: this file (local `docs/audits/` hotspot log/write-up was machine-local / not tracked).
 - Local Cursor plan outside the repo is closed with all todos completed.
 - Operator / continual-learning map detail lives in
   [`../agent_knowledge_base.md#operator-preferences-durable`](../agent_knowledge_base.md#operator-preferences-durable);
@@ -30,8 +29,7 @@ under `docs/audits/`, not this note.
 
 - `apps/mobile/lib/core/config/secret_config.dart`
 - [`../audits/README.md`](../audits/README.md)
-- [`../audits/senior_quality_hotspots_2026-05-12.md`](../audits/senior_quality_hotspots_2026-05-12.md)
-- [`../audits/_senior_quality_hotspots_seed_2026-05-12.log`](../audits/_senior_quality_hotspots_seed_2026-05-12.log)
+- This change note (local audit dump under `docs/audits/` was gitignored)
 - [`README.md`](README.md)
 - [`../agent_knowledge_base.md`](../agent_knowledge_base.md)
 - [`../../AGENTS.md`](../../AGENTS.md)

@@ -41,13 +41,13 @@
 
 - **Heavy list items:** Wrap list item widgets that do custom paint, many children, or images in `RepaintBoundary` so repaints are isolated and scrolling stays smooth.
 - **Long lists:** Prefer `CustomScrollView` with slivers (`SliverList`, `SliverList.builder`, `SliverGrid`) over nested scrollables with `shrinkWrap: true` to avoid unbounded height and layout cost. Use `ListView.builder` / `ListView.separated` (or sliver equivalents) for dynamic length; avoid non-builder `ListView(children: ...)` for long lists.
-- **Existing audit:** See [shrinkwrap_slivers_audit.md](../audits/shrinkwrap_slivers_audit.md) for current usage and optional refactors.
+- **Current guidance:** See list/scroll patterns below (and `tool/check_perf_shrinkwrap_lists.sh`) for shrinkWrap usage and optional refactors.
 
 ## High-frequency events (rate limiting / debouncing)
 
 - **Pattern:** For actions that trigger network or heavy work at high frequency (search-as-you-type, scroll-driven load, rapid taps), use **debounce or throttle** and, where order matters, **in-flight/request-id guards** so the app does not flood the backend or UI.
-- **Existing patterns:** Counter page uses a 500 ms throttle for sync flush; SearchCubit uses debounce + [RequestIdGuard](../packages/utilities/lib/src/request_id_guard.dart); TodoListCubit uses debounce for search query. Prefer `TimerService.runOnce` for cancellable delays and [RequestIdGuard](../packages/utilities/lib/src/request_id_guard.dart) (or `isCurrent(id)` before emit) for async loads. Repositories use [InFlightCoalescer](../packages/utilities/lib/src/in_flight_coalescer.dart) / [KeyedInFlightCoalescer](../packages/utilities/lib/src/in_flight_coalescer.dart) for single-flight refresh.
-- **When adding new triggers:** Apply debounce/throttle and optional [RequestIdGuard](../packages/utilities/lib/src/request_id_guard.dart) in the cubit; use [InFlightCoalescer](../packages/utilities/lib/src/in_flight_coalescer.dart) in repos for coalesced refresh.
+- **Existing patterns:** Counter page uses a 500 ms throttle for sync flush; SearchCubit uses debounce + [RequestIdGuard](https://pub.dev/packages/ilkersevim_async_utils); TodoListCubit uses debounce for search query. Prefer `TimerService.runOnce` for cancellable delays and [RequestIdGuard](https://pub.dev/packages/ilkersevim_async_utils) (or `isCurrent(id)` before emit) for async loads. Repositories use [InFlightCoalescer](https://pub.dev/packages/ilkersevim_async_utils) / [KeyedInFlightCoalescer](https://pub.dev/packages/ilkersevim_async_utils) for single-flight refresh.
+- **When adding new triggers:** Apply debounce/throttle and optional [RequestIdGuard](https://pub.dev/packages/ilkersevim_async_utils) in the cubit; use [InFlightCoalescer](https://pub.dev/packages/ilkersevim_async_utils) in repos for coalesced refresh.
 
 ## Follow-up Ideas
 

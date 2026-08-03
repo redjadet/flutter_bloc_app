@@ -132,7 +132,7 @@ below.
   file/line/rule only and never prints the secret value. Does not scan git
   history; for history scrub after a leak, see
   [`firebase_setup.md`](../integrations/firebase_setup.md#secret-scanning-alerts) and
-  [`tool/firebase_secret_history_replacements.txt`](../tool/firebase_secret_history_replacements.txt).
+  [`tool/firebase_secret_history_replacements.txt`](../../tool/firebase_secret_history_replacements.txt).
 - **`check_ai_generated_code_smells.sh`**: High-signal AI-code smell scan: secret-looking literals, swallowed exceptions, obvious SQL string interpolation, and risky Supabase Edge `verify_jwt = false`. Uses `check-ignore: <reason>` allowlist and fixtures under `tool/fixtures/ai_generated_code_smells/`.
   - **Limitation (intentional)**: `verify_jwt = false` is enforced via TOML section parsing only (`[functions.<name>]`). It does not detect equivalent behavior in deploy flags/scripts/docs/MCP payloads unless those surfaces are added explicitly.
 
@@ -187,7 +187,7 @@ Baseline counts: [`docs/engineering/checklist_quality_gates_baseline.md`](../eng
   `tool/check_ios_pod_framework_embed.sh --require-built-app` to catch missing
   embedded frameworks before simulator launch/dyld failures.
 
-**Router companion inside checklist:** After static checks, `./bin/checklist` may run `./bin/router_feature_validate` when changed files match [`.cursor/rules/router-feature-validation.mdc`](../.cursor/rules/router-feature-validation.mdc) globs (same rules as `tool/check_router_trigger_precision.sh`). Expect extra time when router/auth UI changes. Skip locally: `CHECKLIST_SKIP_ROUTER_VALIDATE=1`.
+**Router companion inside checklist:** After static checks, `./bin/checklist` may run `./bin/router_feature_validate` when changed files match [`.cursor/rules/router-feature-validation.mdc`](../../.cursor/rules/router-feature-validation.mdc) globs (same rules as `tool/check_router_trigger_precision.sh`). Expect extra time when router/auth UI changes. Skip locally: `CHECKLIST_SKIP_ROUTER_VALIDATE=1`.
 
 **Fixture proof (per new gate):**
 

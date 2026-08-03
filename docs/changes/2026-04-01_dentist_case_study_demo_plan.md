@@ -18,8 +18,8 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 - [x] After `pubspec.yaml` / ARB changes: `flutter pub get` and your repo’s l10n codegen step if applicable
 - [x] `./bin/router_feature_validate` after routes/auth/example
 - [x] `flutter analyze` and targeted `flutter test` (via router_feature_validate batch)
-- [x] Extend stable-route expectations in [test/core/router/app_routes_test.dart](../../test/core/router/app_routes_test.dart) when new `AppRoutes` constants ship
-- [x] Extend policy tests in [test/app/router/app_route_auth_gate_test.dart](../../test/app/router/app_route_auth_gate_test.dart) for the new `AppRoutePolicies` entry
+- [x] Extend stable-route expectations in [test/core/router/app_routes_test.dart](../../apps/mobile/test/app/router/app_routes_test.dart) when new `AppRoutes` constants ship
+- [x] Extend policy tests in [test/app/router/app_route_auth_gate_test.dart](../../apps/mobile/test/app/router/app_route_auth_gate_test.dart) for the new `AppRoutePolicies` entry
 - [ ] Physical device smoke (iOS + Android)
 - [ ] Manual pass: auth swap, abandon flow, retake, missing file on history, background app while video playing
 
@@ -54,7 +54,7 @@ This document is the **repo-tracked** copy for PRs and reviewers. Implementation
 
 ## DI / registration
 
-- Add `apps/mobile/lib/core/di/features/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../apps/mobile/lib/core/di/injector_registrations.dart) alongside other feature registers.
+- Add `apps/mobile/lib/core/di/features/register_case_study_demo_services.dart` and call it from [injector_registrations.dart](../../apps/mobile/lib/app/composition/injector_registrations.dart) alongside other feature registers.
 
 ## Routes
 
@@ -74,12 +74,12 @@ Implementation notes:
 - Prefer **`ShellRoute`** so one [AppRouteAuthGate](../../apps/mobile/lib/app/router/app_route_auth_gate.dart) and one session `BlocProvider` wrap nested routes. Route composition now lives in [routes_case_study_demo.dart](../../apps/mobile/lib/app/router/routes_case_study_demo.dart) and is joined through [routes.dart](../../apps/mobile/lib/app/router/routes.dart) before the `GoRouter(routes: …)` call in [app.dart](../../apps/mobile/lib/app.dart).
 - Add **`AppRoutePolicies.caseStudyDemo`** in [route_auth_policy.dart](../../apps/mobile/lib/app/router/route_auth_policy.dart).
 - **Async redirect** on `record` / `review` when draft is invalid; keep a light **in-page guard** as backup.
-- Add `AppRoutes` constants + route **names** in [app_routes.dart](../../apps/mobile/lib/core/router/app_routes.dart).
+- Add `AppRoutes` constants + route **names** in [app_routes.dart](../../apps/mobile/lib/app/router/app_routes.dart).
 
 ## Platform permissions
 
-- **iOS:** [Info.plist](../../ios/Runner/Info.plist) — **`NSMicrophoneUsageDescription`** for video recording; consider widening existing camera/library copy to mention case-study capture.
-- **Android:** [AndroidManifest.xml](../../android/app/src/main/AndroidManifest.xml) — permissions for `image_picker` video consistent with your `compileSdk` / storage model.
+- **iOS:** [Info.plist](../../apps/mobile/ios/Runner/Info.plist) — **`NSMicrophoneUsageDescription`** for video recording; consider widening existing camera/library copy to mention case-study capture.
+- **Android:** [AndroidManifest.xml](../../apps/mobile/android/app/src/main/AndroidManifest.xml) — permissions for `image_picker` video consistent with your `compileSdk` / storage model.
 
 ## File lifecycle
 
@@ -103,13 +103,13 @@ Implementation notes:
 - **`video_player` lifecycle** — Dispose controllers when the preview widget is disposed; pause on `AppLifecycleState.inactive/paused` to reduce GPU/audio leaks and background crashes (align with repo lifecycle docs).
 - **Request coalescing / race** — Use a **request-id guard** (same pattern as [camera gallery cubit](../../apps/mobile/lib/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart)) so an older async pick result cannot commit after the user cancelled or moved to another question.
 - **Redirect vs loading** — Async redirects must not flash infinite loops: if draft is still loading, avoid redirecting **away** from `record` based on a null draft until the first load completes (or use a dedicated “unknown” state). Prefer: redirect only after `ensureReady()` + explicit load returns.
-- **`AppRoutePolicies` path** — The policy `path` must match the **authenticated subtree** you wrap (typically `/case-study-demo`). Mismatch breaks expectations in [app_route_auth_gate_test](../../test/app/router/app_route_auth_gate_test.dart) and mental model for “which routes are protected”.
+- **`AppRoutePolicies` path** — The policy `path` must match the **authenticated subtree** you wrap (typically `/case-study-demo`). Mismatch breaks expectations in [app_route_auth_gate_test](../../apps/mobile/test/app/router/app_route_auth_gate_test.dart) and mental model for “which routes are protected”.
 - **`retrieveLostData` (video)** — If the plugin returns image-only recovery, document and return null for video; don’t assume parity with `pickImage`.
 - **Deep links** — Direct navigation to `/case-study-demo/review` with an incomplete draft must **redirect** to `record` or `new`; page-level guard alone is weaker for bookmarked URLs.
 
 ## Verification
 
-- `./bin/router_feature_validate` — formats + analyzes router/core/features + runs [test/app/router/](../../test/app/router/) and scoped feature tests.
+- `./bin/router_feature_validate` — formats + analyzes router/core/features + runs [test/app/router/](../../apps/mobile/test/app/router) and scoped feature tests.
 - Broader `flutter analyze` if you touch files outside those directories.
 - Widget/cubit tests for session logic and at least one persistence-oriented test.
 

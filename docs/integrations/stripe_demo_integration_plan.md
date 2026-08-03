@@ -64,19 +64,19 @@ After these are done, you can start implementing the app (SecretConfig + Flutter
 Create a new feature module `payments`.
 
 - **Domain** (Flutter-agnostic):
-  - [apps/mobile/lib/features/payments/domain/payment_method_repository.dart](../../apps/mobile/lib/features/payments/domain/payment_method_repository.dart) (interface)
+  - `apps/mobile/lib/features/payments/domain/payment_method_repository.dart` (interface)
   - Entities / failures (e.g. `SetupIntentParams`, `PaymentMethodId`, `PaymentsFailure`)
 - **Data**:
-  - [apps/mobile/lib/features/payments/data/stripe_payment_method_repository.dart](../../apps/mobile/lib/features/payments/data/stripe_payment_method_repository.dart)
-  - [apps/mobile/lib/features/payments/data/payments_functions_api.dart](../../apps/mobile/lib/features/payments/data/payments_functions_api.dart) (wrap `cloud_functions` call)
+  - `apps/mobile/lib/features/payments/data/stripe_payment_method_repository.dart`
+  - `apps/mobile/lib/features/payments/data/payments_functions_api.dart` (wrap `cloud_functions` call)
 - **Presentation**:
-  - [apps/mobile/lib/features/payments/presentation/cubit/payments_cubit.dart](../../apps/mobile/lib/features/payments/presentation/cubit/payments_cubit.dart)
-  - [apps/mobile/lib/features/payments/presentation/cubit/payments_state.dart](../../apps/mobile/lib/features/payments/presentation/cubit/payments_state.dart) (prefer `freezed`)
-  - [apps/mobile/lib/features/payments/presentation/pages/payments_demo_page.dart](../../apps/mobile/lib/features/payments/presentation/pages/payments_demo_page.dart)
+  - `apps/mobile/lib/features/payments/presentation/cubit/payments_cubit.dart`
+  - `apps/mobile/lib/features/payments/presentation/cubit/payments_state.dart` (prefer `freezed`)
+  - `apps/mobile/lib/features/payments/presentation/pages/payments_demo_page.dart`
 
 ## Dependency injection
 
-- Add [apps/mobile/lib/app/composition/features/register_payments_services.dart](../../apps/mobile/lib/app/composition/features/register_payments_services.dart) and call it from `registerAllDependencies()` in [apps/mobile/lib/app/composition/injector_registrations.dart](../../apps/mobile/lib/app/composition/injector_registrations.dart).
+- Add `apps/mobile/lib/app/composition/features/register_payments_services.dart` and call it from `registerAllDependencies()` in [apps/mobile/lib/app/composition/injector_registrations.dart](../../apps/mobile/lib/app/composition/injector_registrations.dart).
 - Follow existing pattern: `registerXServices()` per feature; presentation does not reference GetIt directly.
 
 ## Routing / navigation
