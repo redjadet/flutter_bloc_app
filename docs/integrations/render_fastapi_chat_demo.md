@@ -72,7 +72,7 @@ Record these before broad Flutter integration starts:
 ## Python validation (FastAPI + repo `tool/`)
 
 - **`./tool/check_pyright_python.sh`** — Pyright on `demos/render_chat_api` and `tool/`; rejects invalid repo-root `pyrightconfig.json` (e.g. `venvPath` nested under `executionEnvironments`); creates `demos/render_chat_api/.venv` and installs `requirements.txt` when missing. Runs as part of **`./bin/checklist`** / **`./tool/delivery_checklist.sh`** (see [`docs/validation_scripts.md`](../validation_scripts.md)).
-- **pytest** — From `demos/render_chat_api`: `python -m pytest` (shared fixtures under [`test/fixtures/render_chat_contract/`](../../test/fixtures/render_chat_contract/)).
+- **pytest** — From `demos/render_chat_api`: `python -m pytest` (shared fixtures under [`test/fixtures/render_chat_contract/`](../../apps/mobile/test/fixtures/render_chat_contract)).
 - **Editor** — Basedpyright/Pyright: [`demos/render_chat_api/README.md`](../../demos/render_chat_api/README.md) (IDE section).
 
 ## Render MCP (Cursor marketplace plugin)

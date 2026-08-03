@@ -81,7 +81,7 @@ Before implementation:
 2. Confirm no new cross-feature domain imports ([`docs/modularity.md`](../modularity.md)).
 3. Link offline-first guide if syncing ([`docs/offline_first/adoption_guide.md`](../offline_first/adoption_guide.md)).
 4. Pick validation lane ([`docs/agents_quick_reference.md`](../agents_quick_reference.md)).
-5. If ARCH-### applies, cite ID from [`docs/audits/ai_architecture_audit.md`](../audits/ai_architecture_audit.md).
+5. If ARCH-### applies, cite ID from [`docs/audits/architecture_review_2026-06.md`](../audits/architecture_review_2026-06.md).
 
 ## Trivial-fix quick path
 

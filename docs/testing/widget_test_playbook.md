@@ -29,14 +29,14 @@ Pattern:
 1. Pump the **widget directly** with fixture constructor args (no live DI).
 2. Reuse the same minimal shell as previews: `MaterialApp` + l10n; Mix scope when needed.
 3. Mirror path: `test/features/<feature>/presentation/widgets/<widget>_test.dart`.
-4. Example: [`word_card_test.dart`](../../test/features/playlearn/presentation/widgets/word_card_test.dart).
+4. Example: [`word_card_test.dart`](../../apps/mobile/test/features/playlearn/presentation/widgets/word_card_test.dart).
 
 Add `@Preview` targets with the **same fixtures** when using Flutter Widget Preview.
 
 ## Minimal app shell
 
 Wrap the subject with `MaterialApp`, localization delegates, and supported locales.
-See [`test/features/auth/presentation/pages/register_page_test.dart`](../../test/features/auth/presentation/pages/register_page_test.dart).
+See [`test/features/auth/presentation/pages/register_page_test.dart`](../../apps/mobile/test/features/auth/presentation/pages/register_page_test.dart).
 
 ## Inject cubit (BLoC)
 
@@ -46,7 +46,7 @@ Prefer `BlocProvider.value` with a cubit you control in the test; close in tear-
 addTearDown(cubit.close);
 ```
 
-See [`test/features/calculator/presentation/pages/calculator_payment_page_test.dart`](../../test/features/calculator/presentation/pages/calculator_payment_page_test.dart).
+See [`test/features/calculator/presentation/pages/calculator_payment_page_test.dart`](../../apps/mobile/test/features/calculator/presentation/pages/calculator_payment_page_test.dart).
 
 This repo uses **BLoC + get_it**, not Riverpod. Override repositories via fakes registered in test setup or pass cubits explicitly—do not hit live APIs.
 
@@ -57,7 +57,7 @@ Put `ValueKey` on buttons and fields that tests tap (register page pattern). Pre
 ## Fakes and stability
 
 1. Search `test/` for an existing fake before adding mocks.
-2. Reuse [`test/test_helpers.dart`](../../test/test_helpers.dart) for Firebase/Hive/DI stubs when needed.
+2. Reuse [`test/test_helpers.dart`](../../apps/mobile/test/test_helpers.dart) for Firebase/Hive/DI stubs when needed.
 3. No live HTTP in widget tests.
 
 ## Async pumps
@@ -74,7 +74,7 @@ For overflow-prone action bars or narrow widths:
   reset them in `addTearDown`.
 - Run [`tool/check_action_bar_layout.sh`](../../tool/check_action_bar_layout.sh) when changing horizontal CTAs.
 
-See [`test/shared/widgets/action_bar_layout_regression_test.dart`](../../test/shared/widgets/action_bar_layout_regression_test.dart)
+See [`test/shared/widgets/action_bar_layout_regression_test.dart`](../../apps/mobile/test/shared/widgets/action_bar_layout_regression_test.dart)
 for the current pattern. Do **not** add viewport setup to every widget test until
 a shared harness exists—use it only where layout is part of the contract.
 

@@ -1,6 +1,6 @@
 # Domain glossary (source of truth)
 
-Curated ubiquitous language for this app. Findings inventory: [`docs/audits/ai_domain_language_report_v1.md`](../audits/ai_domain_language_report_v1.md).
+Curated ubiquitous language for this app.
 
 | Term | Definition | Bounded context |
 | --- | --- | --- |

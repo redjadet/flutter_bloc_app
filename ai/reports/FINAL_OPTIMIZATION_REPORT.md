@@ -64,7 +64,7 @@ Not wired into `./bin/checklist` by default (avoid false positives on small fixe
 
 | ID | Note |
 | --- | --- |
-| ARCH-004–011 | See [`docs/audits/ai_architecture_audit.md`](../../docs/audits/ai_architecture_audit.md) |
+| ARCH-004–011 | See [`docs/audits/architecture_review_2026-06.md`](../../docs/audits/architecture_review_2026-06.md) |
 | 32/31 full `CONTRACTS.md` bodies | Five pilots only (Wave 2) |
 | REC-004 | Addressed by ARCH-002 split |
 

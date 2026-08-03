@@ -30,7 +30,7 @@ Also load [`use_case_dto_policy.md`](use_case_dto_policy.md),
 | P2 Domain naming | Types name business concepts | [`clean_architecture.md`](../clean_architecture.md) |
 | P3 Boundaries | DTOs/adapters at system edges | [`use_case_dto_policy.md`](use_case_dto_policy.md), AP-11 |
 | P4 Invalid states | Sealed unions; one status channel | [`bloc/cubit_file_template.md`](../bloc/cubit_file_template.md), AP-13/14 |
-| P5 Decisions | Pure domain rules, no I/O | [`calculator`](../features/calculator.md) domain, AP-16 |
+| P5 Decisions | Pure domain rules, no I/O | [`calculator`](reference_features.md) domain, AP-16 |
 | P6 Errors | Typed failures → l10n | [`reliability_error_handling_performance.md`](../reliability_error_handling_performance.md), AP-15 |
 | P7 Reviewable diffs | One pattern, one feature, ≤400 LOC | [`../testing/matrix_required_by_change.md`](../testing/matrix_required_by_change.md) |
 

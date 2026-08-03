@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-23 → 2026-07-24
 **Plan (local, gitignored):** [`docs/plans/2026-07-23_meterless_equivalent_agent_runtime_memory.md`](../plans/2026-07-23_meterless_equivalent_agent_runtime_memory.md)
-**Transcript:** [Meterless runtime memory](e3c4fd4c-9948-4a47-8bb6-2c504556b965)
+**Transcript:** Meterless runtime memory
 
 ## Verdict
 
@@ -101,7 +101,7 @@ worktree was removed):
 - No `packages/agent_memory_runtime` on `main`
 - No default host route to candidate runtime
 - Accidental `main` leak of `analysis/agent_memory/` removed at closeout
-- Continual-learning pass: no high-signal `AGENTS.md` learned-section updates
+- Continual-learning pass: no high-signal [`AGENTS.md`](../../AGENTS.md) learned-section updates
 
 ## Follow-ups (only if operator asks)
 

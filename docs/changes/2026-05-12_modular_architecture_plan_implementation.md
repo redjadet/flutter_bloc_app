@@ -12,16 +12,16 @@
 - **`tool/modular_metrics.sh`** — read-only baseline; `--cross-feature-only` for import inventory.
 - **Modular baseline audit** — captured output under ignored `docs/audits/` during the implementation session; recreate with `tool/modular_metrics.sh` when a fresh snapshot is needed.
 - **`tool/check_feature_modularity_leaks.sh`** — declarative pairwise rules + universal **shared→features** + **domain import purity** (with `rg`; grep fallback for pairwise only).
-- **`AppMemoryService`** — removed `shared` → `chart` import; chart trim wired via `onChartMemoryTrim` from [`apps/mobile/lib/core/di/injector_registrations.dart`](../../apps/mobile/lib/core/di/injector_registrations.dart).
-- **DI orchestration** — [`injector_registrations.dart`](../../apps/mobile/lib/core/di/injector_registrations.dart) split into `part` files under [`apps/mobile/lib/core/di/groups/`](../../apps/mobile/lib/core/di/groups/): `register_core_services.dart`, `register_feature_services.dart`, `register_demo_services.dart` (`registerCoreServices`, `registerFeatureServices`, `registerDemoServices`).
-- **Tests** — [`test/shared/services/app_memory_service_test.dart`](../../test/shared/services/app_memory_service_test.dart); domain surface tests under [`test/domain_public_surface/`](../../test/domain_public_surface/).
+- **`AppMemoryService`** — removed `shared` → `chart` import; chart trim wired via `onChartMemoryTrim` from [`apps/mobile/lib/core/di/injector_registrations.dart`](../../apps/mobile/lib/app/composition/injector_registrations.dart).
+- **DI orchestration** — [`injector_registrations.dart`](../../apps/mobile/lib/app/composition/injector_registrations.dart) split into `part` files under [`apps/mobile/lib/core/di/groups/`](../../apps/mobile/lib/app/composition/groups): `register_core_services.dart`, `register_feature_services.dart`, `register_demo_services.dart` (`registerCoreServices`, `registerFeatureServices`, `registerDemoServices`).
+- **Tests** — [`test/shared/services/app_memory_service_test.dart`](../../apps/mobile/test/shared/services/app_memory_service_test.dart); domain surface tests under [`test/domain_public_surface/`](../../apps/mobile/test/domain_public_surface).
 - **`tool/check_feature_barrel_exports.sh`** — report-only deep-import list from `apps/mobile/lib/app/`.
 - **Docs** — [`modularity.md`](../modularity.md), [`validation_scripts.md`](../validation_scripts.md); feasibility: [`plans/dependency_validator_feasibility.md`](../plans/dependency_validator_feasibility.md), [`plans/feature_scoped_di_feasibility.md`](../plans/feature_scoped_di_feasibility.md), [`plans/melos_package_split_feasibility.md`](../plans/melos_package_split_feasibility.md); sweep: [`engineering/ports_adapters_modular_sweep_2026-05-12.md`](../engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 ## Deferred / backlog
 
 - **`dependency_validator`** — not added to `pubspec` / checklist (noisy); see feasibility doc.
-- **Oversized `.part.dart` splits** — audit list unchanged; `secret_config` already uses [`secret_config_chat_orchestration.dart`](../../apps/mobile/lib/core/config/secret_config_chat_orchestration.dart). Further splits remain test-first per hotspot audit.
+- **Oversized `.part.dart` splits** — audit list unchanged; `secret_config` already uses [`secret_config_chat_orchestration.dart`](../../apps/mobile/lib/app/config/secret_config_chat_orchestration.dart). Further splits remain test-first per hotspot audit.
 - **Feature-to-feature default-deny** — use metrics report + classify before failing CI ([`modularity.md`](../modularity.md) Phase 1B).
 - **get_it scopes** — feasibility only.
 
