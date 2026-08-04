@@ -22,6 +22,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'helpers/memory/leak_safe_test_widgets.dart';
+
 class _MockPendingSyncRepository extends Mock
     implements PendingSyncRepository {}
 
@@ -62,6 +64,23 @@ void main() {
     await tester.pump();
 
     expect(find.byType(ChatSyncBanner), findsOneWidget);
+  });
+
+  leakSafeTestWidgets('ChatPage controller ownership teardown is leak-safe', (
+    final WidgetTester tester,
+  ) async {
+    final _TestChatCubit cubit = _TestChatCubit(
+      supportedModels: const <String>['only-model'],
+    );
+    addTearDown(cubit.close);
+
+    await tester.pumpWidget(_wrapWithCubit(cubit));
+    await tester.pump();
+    expect(find.byType(ChatPage), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
   });
 
   testWidgets('ChatPage sends message via ChatCubit', (
