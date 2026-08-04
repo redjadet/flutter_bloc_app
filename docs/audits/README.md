@@ -26,6 +26,7 @@ Full table: [`validation_scripts/operations_host_skills.md`](../validation_scrip
 
 | Review | Path |
 | --- | --- |
+| Quality re-measure PR0 (2026-08-04) | [quality_remeasure_review_2026-08-04.md](quality_remeasure_review_2026-08-04.md) |
 | Staff+ production review (2026-06-15) | [staff_production_review_2026-06-15.md](staff_production_review_2026-06-15.md) |
 | Build Readiness program (2026-06) | [architecture_review_2026-06.md](architecture_review_2026-06.md) |
 | Maintainability baseline (2026-07-10) | [maintainability_baseline_review_2026-07-10.md](maintainability_baseline_review_2026-07-10.md) |

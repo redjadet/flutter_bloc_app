@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-04_quality_remeasure_wave0.md`](2026-08-04_quality_remeasure_wave0.md): Evidence-only quality re-measure (scorecards, coverage, D04, dual memory dry-runs) + locked PR1–3 ranking.
 - [`2026-08-01_repository_ports_and_case_study_submission.md`](2026-08-01_repository_ports_and_case_study_submission.md): Split repository CRUD and sync-diagnostics ports; move case-study submission workflow into domain use cases with idempotent retry persistence.
 - [`2026-08-01_production_readiness_fcm_setup_resilience.md`](2026-08-01_production_readiness_fcm_setup_resilience.md): Keep the production-readiness route ready when FCM permission or initial-message setup fails.
 - [`2026-08-01_remote_watch_session_cleanup_drain.md`](2026-08-01_remote_watch_session_cleanup_drain.md): Drain in-flight todo/counter remote-watch merges before Firebase session cleanup clears local Hive state.
