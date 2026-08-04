@@ -135,6 +135,66 @@ fixture_no_isolate="tool/fixtures/no_isolate_run_in_presentation"
 echo "fixtures|check_no_isolate_run_in_presentation|help"
 bash tool/check_no_isolate_run_in_presentation.sh --help >/dev/null
 
+fixture_context_read="tool/fixtures/context_read_watch/presentation"
+
+echo "fixtures|check_context_read_watch|help"
+bash tool/check_context_read_watch.sh --help >/dev/null
+
+echo "fixtures|check_context_read_watch|good"
+CHECK_CONTEXT_READ_WATCH_MODE=fail bash tool/check_context_read_watch.sh \
+  --paths "$fixture_context_read/good.dart" >/dev/null
+
+echo "fixtures|check_context_read_watch|bad"
+set +e
+  context_read_bad_output="$(CHECK_CONTEXT_READ_WATCH_MODE=fail \
+    bash tool/check_context_read_watch.sh \
+    --paths "$fixture_context_read/bad.dart" 2>&1)"
+context_read_bad_status=$?
+set -e
+if [[ "$context_read_bad_status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected context.read/watch check to fail on bad.dart" >&2
+  exit 1
+fi
+if ! grep -q -- "bad.dart" <<<"$context_read_bad_output"; then
+  echo "❌ fixtures failed: context.read/watch failure missing bad.dart path" >&2
+  echo "$context_read_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_context_read_watch|suppressed"
+CHECK_CONTEXT_READ_WATCH_MODE=fail bash tool/check_context_read_watch.sh \
+  --paths "$fixture_context_read/suppressed.dart" >/dev/null
+
+fixture_bloc_rebuild="tool/fixtures/bloc_rebuild_scoping/presentation"
+
+echo "fixtures|check_bloc_rebuild_scoping|help"
+bash tool/check_bloc_rebuild_scoping.sh --help >/dev/null
+
+echo "fixtures|check_bloc_rebuild_scoping|good"
+CHECK_BLOC_REBUILD_SCOPING_MODE=fail bash tool/check_bloc_rebuild_scoping.sh \
+  --paths "$fixture_bloc_rebuild/good.dart" >/dev/null
+
+echo "fixtures|check_bloc_rebuild_scoping|bad"
+set +e
+  bloc_rebuild_bad_output="$(CHECK_BLOC_REBUILD_SCOPING_MODE=fail \
+    bash tool/check_bloc_rebuild_scoping.sh \
+    --paths "$fixture_bloc_rebuild/bad.dart" 2>&1)"
+bloc_rebuild_bad_status=$?
+set -e
+if [[ "$bloc_rebuild_bad_status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected bloc rebuild scoping check to fail on bad.dart" >&2
+  exit 1
+fi
+if ! grep -q -- "bad.dart" <<<"$bloc_rebuild_bad_output"; then
+  echo "❌ fixtures failed: bloc rebuild scoping failure missing bad.dart path" >&2
+  echo "$bloc_rebuild_bad_output" >&2
+  exit 1
+fi
+
+echo "fixtures|check_bloc_rebuild_scoping|suppressed"
+CHECK_BLOC_REBUILD_SCOPING_MODE=fail bash tool/check_bloc_rebuild_scoping.sh \
+  --paths "$fixture_bloc_rebuild/suppressed.dart" >/dev/null
+
 echo "fixtures|check_no_isolate_run_in_presentation|bad"
 if isolate_bad_output="$(bash tool/check_no_isolate_run_in_presentation.sh \
   --paths "$fixture_no_isolate/presentation/bad_isolate_run.dart" 2>&1)"; then

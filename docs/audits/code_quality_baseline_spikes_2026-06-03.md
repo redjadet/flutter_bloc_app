@@ -35,18 +35,28 @@ Baseline: [`code_quality_baseline_2026-06-03.md`](code_quality_baseline_2026-06-
 
 ## Spike: QG-D03 — bloc rebuild scoping
 
-- **Script:** `tool/check_bloc_rebuild_scoping.sh` — **missing**
-- **Label:** **needs_fixtures**
+- **Script:** `tool/check_bloc_rebuild_scoping.sh` — shipped 2026-08-04
+- **Fixtures:** `tool/fixtures/bloc_rebuild_scoping/presentation/{good,bad,suppressed}.dart`
+- **Harness:** good pass / bad fail / suppressed pass under fail mode in `tool/run_harness_fixtures.sh`
+- **Inventory (non-demo presentation, 2026-08-04):** 2 candidates
+  - `scapes/presentation/pages/scapes_page.dart` — intentional full-state (list + phase)
+  - `production_readiness/presentation/pages/production_readiness_page.dart` — intentional full-state ownership view
+- **Label:** **promoted (warn)** inventory only — **not** in checklist `CHECK_SCRIPTS`; fail flip deferred until product needs selective rebuild
+- **Change note:** [`../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md`](../changes/2026-08-04_bloc_rebuild_scoping_qg-d03.md)
 
 ## Spike: QG-D04 — context read/watch
 
-- **Script:** `tool/check_context_read_watch.sh` — **missing**
-- **Label:** **needs_fixtures** — demo glob exclusions required
+- **Script:** `tool/check_context_read_watch.sh` — shipped; default **fail** 2026-08-04
+- **Fixtures:** `tool/fixtures/context_read_watch/presentation/{good,bad,suppressed}.dart`
+- **Harness:** triad in `tool/run_harness_fixtures.sh`
+- **Remeasure:** 0 unsuppressed non-demo presentation hits (fail mode)
+- **Label:** **promoted (fail)**
+- **Change note:** [`../changes/2026-08-04_context_read_watch_qg-d04_fail.md`](../changes/2026-08-04_context_read_watch_qg-d04_fail.md)
 
 ## Spike: QG-D06 — startup work in build
 
-- **Script:** `tool/check_startup_work_in_build.sh` — **missing**
-- **Label:** **needs_fixtures** — diff vs `check_side_effects_build.sh` required
+- **Script:** check_startup_work_in_build — **rejected** (overlaps `check_side_effects_build.sh`; see engineering deferred backlog)
+- **Label:** **reject**
 
 ## Spike: QG-D01 — bloc_lint
 

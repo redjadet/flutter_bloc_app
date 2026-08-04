@@ -6,7 +6,7 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **107** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `tool/check_*.sh` on disk | **108** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
 | `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **79** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
@@ -143,7 +143,7 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 | Theme (representative) | Existing coverage | New / wired in MVP |
 | --- | --- | --- |
 | Architecture / layering | domain imports, SOLID imports, modularity | **fail** `check_navigation_outside_presentation.sh` |
-| Rebuild / widget trees | context read/watch, widget identity, row overflow | **fail** `file_too_long` via `file_length_lint` plugin (`./tool/run_file_length_lint.sh`); (deferred: bloc rebuild scoping) |
+| Rebuild / widget trees | context read/watch, widget identity, row overflow | **fail** `file_too_long` via `file_length_lint` plugin (`./tool/run_file_length_lint.sh`); **fail** `check_context_read_watch.sh` (default); report-only `check_bloc_rebuild_scoping.sh` (not checklist-wired) |
 | Blocking main isolate | compute/isolate guards | **fail** `check_sync_io_in_presentation.sh` (presentation only) |
 | Images / cache | raw network images, image cache width | **fail** `check_remote_image_cache_hints.sh` |
 | State management | cubit isClosed, dynamic list safety | **fail** `check_cubit_subscription_cancel.sh` |
@@ -158,6 +158,8 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 - **`check_cubit_subscription_cancel.sh`**: Heuristics for `StreamSubscription` / `CubitSubscriptionMixin` / `registerSubscription` when `.listen(` is used. Exits 1 on violations (promoted from warn-only, 2026-06-03).
 - **`check_lifecycle_observer_dispose.sh`**: Fail-by-default `WidgetsBindingObserver` guard. Scans for `addObserver(this)` without `removeObserver(this)`; use `CHECK_LIFECYCLE_OBSERVER_MODE=warn` to soften locally. Fixtures: `tool/fixtures/lifecycle_observer_dispose/`.
 - **`check_deferred_heavy_routes.sh`**: Fail-by-default deferred route import allowlist. Deferred imports must stay in `apps/mobile/lib/app/router/route_groups.dart` / `apps/mobile/lib/app/router/routes_core.dart`; use `CHECK_DEFERRED_HEAVY_ROUTES_MODE=warn` to soften locally. Fixtures: `tool/fixtures/deferred_heavy_routes/`.
+- **`check_context_read_watch.sh`**: Fail-by-default: `context.read` / `context.watch` inside `Widget build()` under non-demo presentation. Soften: `CHECK_CONTEXT_READ_WATCH_MODE=warn`. Fixtures: `tool/fixtures/context_read_watch/`. Harness triad in `tool/run_harness_fixtures.sh`.
+- **`check_bloc_rebuild_scoping.sh`**: Report-only inventory (default **warn**; not in checklist `CHECK_SCRIPTS`). Flags `BlocBuilder` / `BlocConsumer` without `buildWhen` (excludes `TypeSafeBloc*`). Fixtures: `tool/fixtures/bloc_rebuild_scoping/`.
 - **`run_file_length_lint.sh`**: Fail when `tool/check_file_length_physical.py` reports `FILE_TOO_LONG` under `lib/` (max 225 **physical** lines from `file_length_lint:` in `analysis_options.yaml`; same policy as the native plugin without whole-repo `dart analyze`). Skipped with `SKIP_FILE_LENGTH_LINT=1` or `CHECKLIST_RUN_FILE_LENGTH_LINT=0`. Plugin diagnostics may still appear in `flutter analyze` when enabled.
 - **`run_mix_lint.sh`**: Fail when `dart analyze --format machine lib` reports `mix_*` diagnostics (native `mix_lint` plugin). Scoped to `lib/`, 600s timeout, heartbeat logs; hard-fails plugin/crash output. Skipped with `SKIP_MIX_LINT=1` or `CHECKLIST_RUN_MIX_LINT=0`.
 - **`run_memory_lint.sh`**: Fail when machine analysis reports `memory_*` diagnostics under app `lib/` (native `memory_lint` plugin: dispose/close/observer/static-BuildContext rules). Skip: `SKIP_MEMORY_LINT=1` or `CHECKLIST_RUN_MEMORY_LINT=0`. Auto when `apps/mobile/lib/*`, `custom_lints/memory_lint/*`, or analyzer/pubspec wiring changes. Legacy shell heuristics (`check_memory_*`) remain active. Docs: [`../performance/memory_lints.md`](../performance/memory_lints.md).
@@ -168,8 +170,9 @@ Checklist scripts extend `./bin/checklist` with navigation/sync-io/image-cache/c
 Baseline counts: [`docs/engineering/checklist_quality_gates_baseline.md`](../engineering/checklist_quality_gates_baseline.md).
 
 **Deferred / not in MVP:** [`docs/engineering/checklist_quality_gates_deferred.md`](../engineering/checklist_quality_gates_deferred.md)
-(`bloc_lint`, rebuild scoping, context read/watch, startup-in-build,
-`CHECK_THEME` filter; lib-wide sync-io **rejected**).
+(`bloc_lint`, checklist wiring of rebuild scoping, startup-in-build,
+`CHECK_THEME` filter; lib-wide sync-io **rejected**). QG-D04 is **fail**;
+QG-D03 inventory is **promoted (warn)** but not in `CHECK_SCRIPTS`.
 
 ### Integration testing
 

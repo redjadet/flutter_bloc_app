@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Warn/fail: context.read/watch in Widget build() causes unnecessary rebuilds.
-# Theme: rebuild | Severity: warn by default (CHECK_CONTEXT_READ_WATCH_MODE=warn)
+# Theme: rebuild | Severity: fail by default (CHECK_CONTEXT_READ_WATCH_MODE=fail)
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 source "$PROJECT_ROOT/tool/check_helpers.sh"
-MODE="${CHECK_CONTEXT_READ_WATCH_MODE:-warn}"
+MODE="${CHECK_CONTEXT_READ_WATCH_MODE:-fail}"
 IGNORED=""
 echo "🔍 Checking context.read/watch in presentation build() (mode=$MODE)..."
 usage() {
