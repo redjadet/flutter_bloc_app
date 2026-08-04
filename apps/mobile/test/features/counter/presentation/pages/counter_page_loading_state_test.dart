@@ -15,6 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../test_helpers.dart' show FakeTimerService;
+import '../../../../helpers/memory/leak_safe_test_widgets.dart';
 
 class _DelayedCounterRepository
     with CounterRepositoryNoPendingSync
@@ -54,69 +55,81 @@ class _FakeErrorNotificationService implements ErrorNotificationService {
 }
 
 void main() {
-  testWidgets('CounterPage toggles skeletons with loading state', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(AppConstants.designSize);
-    addTearDown(() => tester.binding.setSurfaceSize(null));
+  leakSafeTestWidgets(
+    'CounterPage toggles skeletons with loading state',
+    (tester) async {
+      await tester.binding.setSurfaceSize(AppConstants.designSize);
+      addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final Completer<CounterSnapshot> completer = Completer<CounterSnapshot>();
-    final CounterSnapshot snapshot = const CounterSnapshot(
-      userId: 'tester',
-      count: 3,
-    );
-    final CounterRepository repository = _DelayedCounterRepository(
-      completer: completer,
-      snapshot: snapshot,
-    );
-    final CounterCubit cubit = CounterCubit(
-      repository: repository,
-      timerService: FakeTimerService(),
-      startTicker: false,
-    );
-    addTearDown(cubit.close);
+      final Completer<CounterSnapshot> completer = Completer<CounterSnapshot>();
+      final CounterSnapshot snapshot = const CounterSnapshot(
+        userId: 'tester',
+        count: 3,
+      );
+      final CounterRepository repository = _DelayedCounterRepository(
+        completer: completer,
+        snapshot: snapshot,
+      );
+      final CounterCubit cubit = CounterCubit(
+        repository: repository,
+        timerService: FakeTimerService(),
+        startTicker: false,
+      );
+      addTearDown(cubit.close);
 
-    unawaited(cubit.loadInitial());
+      unawaited(cubit.loadInitial());
 
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: ResponsiveScope(
-          child: BlocProvider<CounterCubit>.value(
-            value: cubit,
-            child: CounterPage(
-              title: 'Counter',
-              errorNotificationService: _FakeErrorNotificationService(),
-              biometricAuthenticator: _FakeBiometricAuthenticator(),
-              showFlavorBadge: false,
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: ResponsiveScope(
+            child: BlocProvider<CounterCubit>.value(
+              value: cubit,
+              child: CounterPage(
+                title: 'Counter',
+                errorNotificationService: _FakeErrorNotificationService(),
+                biometricAuthenticator: _FakeBiometricAuthenticator(),
+                showFlavorBadge: false,
+              ),
             ),
           ),
         ),
-      ),
-    );
-    await tester.pump();
+      );
+      await tester.pump();
 
-    final Iterable<Skeletonizer> loadingSkeletons = tester
-        .widgetList(find.byWidgetPredicate((widget) => widget is Skeletonizer))
-        .cast<Skeletonizer>();
-    expect(loadingSkeletons.isNotEmpty, isTrue);
-    expect(
-      loadingSkeletons.every((final skeleton) => skeleton.enabled),
-      isTrue,
-    );
+      final Iterable<Skeletonizer> loadingSkeletons = tester
+          .widgetList(
+            find.byWidgetPredicate((widget) => widget is Skeletonizer),
+          )
+          .cast<Skeletonizer>();
+      expect(loadingSkeletons.isNotEmpty, isTrue);
+      expect(
+        loadingSkeletons.every((final skeleton) => skeleton.enabled),
+        isTrue,
+      );
 
-    completer.complete(snapshot);
-    await tester.pump();
-    await tester.pump();
+      completer.complete(snapshot);
+      await tester.pump();
+      await tester.pump();
 
-    final Iterable<Skeletonizer> loadedSkeletons = tester
-        .widgetList(find.byWidgetPredicate((widget) => widget is Skeletonizer))
-        .cast<Skeletonizer>();
-    expect(loadedSkeletons.isNotEmpty, isTrue);
-    expect(
-      loadedSkeletons.every((final skeleton) => !skeleton.enabled),
-      isTrue,
-    );
-  });
+      final Iterable<Skeletonizer> loadedSkeletons = tester
+          .widgetList(
+            find.byWidgetPredicate((widget) => widget is Skeletonizer),
+          )
+          .cast<Skeletonizer>();
+      expect(loadedSkeletons.isNotEmpty, isTrue);
+      expect(
+        loadedSkeletons.every((final skeleton) => !skeleton.enabled),
+        isTrue,
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+    },
+    ignoredNotDisposedClasses: <String>[
+      ...memoryLeakHarnessLayerClasses,
+      // package:confetti internals survive controller disposal in widget tests.
+      'ParticleSystem',
+    ],
+  );
 }
