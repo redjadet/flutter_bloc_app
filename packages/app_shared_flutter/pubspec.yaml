@@ -18,7 +18,7 @@ dependencies:
 
 dev_dependencies:
   ilkersevim_json_isolate: ^0.1.2
-  build_runner: ^2.15.3
+  build_runner: ^2.16.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0

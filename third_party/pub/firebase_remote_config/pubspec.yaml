@@ -19,17 +19,17 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
-  firebase_core: ^4.12.1
-  firebase_core_platform_interface: ^8.0.0
-  firebase_remote_config_platform_interface: ^3.0.5
-  firebase_remote_config_web: ^1.10.12
+  firebase_core: ^4.13.0
+  firebase_core_platform_interface: ^8.1.0
+  firebase_remote_config_platform_interface: ^3.0.6
+  firebase_remote_config_web: ^1.10.13
   flutter:
     sdk: flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  mockito: ^5.7.0
+  mockito: ^5.8.0
   plugin_platform_interface: ^2.1.8
 
 flutter:
