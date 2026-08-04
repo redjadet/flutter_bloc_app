@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-04T18:20:17Z"
-  git_head: "0b8fa8d029dcf313c8fed299c544d1e8651614d4"
+  generated_at: "2026-08-04T18:22:03Z"
+  git_head: "6225a3291b0aabc575e5fd618e27faa23a5ce040"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
