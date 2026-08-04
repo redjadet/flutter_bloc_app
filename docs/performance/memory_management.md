@@ -61,7 +61,7 @@ Do not store `BuildContext` in `static` fields. Enforced by
 | --- | --- |
 | **B0** | Full-suite tracking dry-run (report-only); audit leak classes / harness noise |
 | **B1** | Stable tagged journeys: auth sign-in/out, app-shell route replacement, realtime/BLE teardown |
-| **B2** | Promote only proven leak classes from ignore list |
+| **B2** | Promote only proven leak classes from ignore list — **partial 2026-08-04** (tagged TEC+ScrollController + ConfettiController journeys) |
 | **B3** | AST rules for timers/listeners; defer alias/GetIt/context until FP rate proven low |
 
 Do **not** globally remove `withIgnoredAll()` until B2 evidence supports it.

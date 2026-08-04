@@ -7,6 +7,9 @@ that.
 
 ## Index
 
+- [`2026-08-04_bloc_rebuild_scoping_qg-d03.md`](2026-08-04_bloc_rebuild_scoping_qg-d03.md): QG-D03 report-only BlocBuilder inventory (warn; not checklist-wired).
+- [`2026-08-04_memory_quality_wave_b2.md`](2026-08-04_memory_quality_wave_b2.md): Memory B2 tagged dispose journeys for TEC/ScrollController/confetti path.
+- [`2026-08-04_context_read_watch_qg-d04_fail.md`](2026-08-04_context_read_watch_qg-d04_fail.md): QG-D04 fail-default context.read/watch + harness triad.
 - [`2026-08-04_quality_remeasure_wave0.md`](2026-08-04_quality_remeasure_wave0.md): Evidence-only quality re-measure (scorecards, coverage, D04, dual memory dry-runs) + locked PR1–3 ranking.
 - [`2026-08-01_repository_ports_and_case_study_submission.md`](2026-08-01_repository_ports_and_case_study_submission.md): Split repository CRUD and sync-diagnostics ports; move case-study submission workflow into domain use cases with idempotent retry persistence.
 - [`2026-08-01_production_readiness_fcm_setup_resilience.md`](2026-08-01_production_readiness_fcm_setup_resilience.md): Keep the production-readiness route ready when FCM permission or initial-message setup fails.
