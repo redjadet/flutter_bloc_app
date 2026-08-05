@@ -6,14 +6,11 @@ import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart'
 import 'package:flutter_bloc_app/app/analytics/shared_preferences_analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/diagnostics/frame_timing_monitor.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/simulated_fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_cubit.dart';
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('ProductionReadinessCubit', () {

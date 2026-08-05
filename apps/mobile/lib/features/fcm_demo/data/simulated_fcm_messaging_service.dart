@@ -1,9 +1,5 @@
 import 'dart:async';
-
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_controller.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
+import 'package:utilities/utilities.dart';
 
 /// Deterministic FCM stand-in when Firebase is not initialized.
 class SimulatedFcmMessagingService

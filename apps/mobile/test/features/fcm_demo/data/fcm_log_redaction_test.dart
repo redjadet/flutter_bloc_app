@@ -4,9 +4,9 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_log_redaction.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/firebase_messaging_repository.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:utilities/utilities.dart';
 
 class _MockFirebaseMessaging extends Mock implements FirebaseMessaging {}
 

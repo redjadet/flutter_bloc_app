@@ -1,6 +1,5 @@
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:utilities/utilities.dart';
 
 part 'production_readiness_state.freezed.dart';
 

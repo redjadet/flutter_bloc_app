@@ -3,9 +3,7 @@ import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/firebase_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/simulated_fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_controller.dart';
+import 'package:utilities/utilities.dart';
 
 /// Registers FCM demo services.
 /// When Firebase is not initialized (e.g. placeholder config, web), registers

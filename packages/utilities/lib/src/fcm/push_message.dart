@@ -16,9 +16,4 @@ abstract class PushMessage with _$PushMessage {
 }
 
 /// Source of the message for demo diagnostics.
-enum PushMessageSource {
-  foreground,
-  opened,
-  initial,
-  background,
-}
+enum PushMessageSource { foreground, opened, initial, background }

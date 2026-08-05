@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_log_redaction.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
+import 'package:utilities/utilities.dart';
 
 /// Maps FCM [AuthorizationStatus] to domain [FcmPermissionState].
 FcmPermissionState _mapPermissionState(final AuthorizationStatus status) {
