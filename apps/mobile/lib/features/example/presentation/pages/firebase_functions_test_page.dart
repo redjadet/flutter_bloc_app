@@ -68,7 +68,7 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
       setState(() {
         _errorMessage = _safeFunctionsError(e, context.l10n);
       });
-    } on Exception {
+    } on Object {
       if (!mounted) {
         return;
       }
@@ -121,7 +121,7 @@ class _FirebaseFunctionsTestPageState extends State<FirebaseFunctionsTestPage> {
       setState(() {
         _errorMessage = _safeFunctionsError(e, context.l10n);
       });
-    } on Exception {
+    } on Object {
       if (!mounted) {
         return;
       }

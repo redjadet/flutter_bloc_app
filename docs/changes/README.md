@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-05_functions_object_catch_android_pin.md`](2026-08-05_functions_object_catch_android_pin.md): Functions diagnostic `Object` catch + pin `permission_handler` 12.0.3 for compileSdk 36.
 - [`2026-08-05_senior_flutter_jd_alignment.md`](2026-08-05_senior_flutter_jd_alignment.md): Crashlytics non-fatal ownership, auth-gated Functions diagnostic, inbox map isolation, RTL proof.
 - [`2026-08-05_fcm_shared_contract_extraction.md`](2026-08-05_fcm_shared_contract_extraction.md): Move shared FCM contracts into `package:utilities`; zero cross-feature FCM edges.
 - [`2026-08-04_bloc_rebuild_scoping_qg-d03.md`](2026-08-04_bloc_rebuild_scoping_qg-d03.md): QG-D03 report-only BlocBuilder inventory (warn; not checklist-wired).
