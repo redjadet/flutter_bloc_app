@@ -13,8 +13,9 @@ Follow-up after Senior Flutter JD alignment (#675):
 
 ## Residuals
 
-- Revisit `permission_handler` ^13 when Android SDK Platform 37 is available
-  and Flutter/`compileSdk` can move with it
+- Resolved 2026-08-06: local SDK Platform 37 + compileSdk 37 restored
+  `permission_handler` ^13 (see
+  [`2026-08-06_restore_permission_handler_compile_sdk_37.md`](2026-08-06_restore_permission_handler_compile_sdk_37.md)).
 
 ## Validation
 

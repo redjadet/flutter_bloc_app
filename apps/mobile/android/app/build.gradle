@@ -21,7 +21,8 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.ilkersevim.blocflutter"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android 14 requires compileSdk 37; Flutter default is still 36.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
