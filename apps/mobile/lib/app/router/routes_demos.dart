@@ -36,9 +36,6 @@ import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_stat
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/event_bus_demo.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_simulation_controller.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
 import 'package:flutter_bloc_app/features/genui_demo/domain/genui_demo_agent.dart';
@@ -65,6 +62,7 @@ import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_rep
 import 'package:go_router/go_router.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
+import 'package:utilities/utilities.dart';
 
 part 'routes_demos.part.dart';
 

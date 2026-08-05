@@ -129,7 +129,7 @@ Cross-feature `package:` imports are **reported** via `modular_metrics.sh`, not
 failed by default, until each hit is classified (move to `apps/mobile/lib/app/`, a package-owned port,
 or an explicit time-boxed exception documented in this file).
 
-**Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change). Current status: no reported cross-feature imports.
+**Exception register** (regenerate pairs with `bash tool/modular_metrics.sh --cross-feature-only`; update this table when imports change). Current status: no reported cross-feature imports (verified 2026-08-05 after FCM contract move to `package:utilities`; see [`changes/2026-08-05_fcm_shared_contract_extraction.md`](changes/2026-08-05_fcm_shared_contract_extraction.md)).
 
 | From → To | Representative files | Classification | Owner | Expiry / removal |
 | --- | --- | --- | --- | --- |

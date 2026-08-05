@@ -1,6 +1,6 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
+import 'package:utilities/utilities.dart';
 
 /// Redacted FCM logging helpers — never log title, body, data values, or tokens.
 abstract final class FcmLogRedaction {

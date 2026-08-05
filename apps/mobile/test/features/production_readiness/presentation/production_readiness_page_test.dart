@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_demo_mode.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

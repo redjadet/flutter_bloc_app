@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
+import 'fcm_permission_state.dart';
+import 'push_message.dart';
 
 /// Domain contract for FCM: permission, token, and message streams.
 abstract class FcmMessagingService {

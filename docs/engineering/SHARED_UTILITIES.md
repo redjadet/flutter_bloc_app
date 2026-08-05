@@ -13,7 +13,7 @@ cross-cutting code. Pick an existing owner first.
 
 | Need | Owner |
 | --- | --- |
-| Pure Dart primitives, errors, memory trim levels | `packages/utilities` |
+| Pure Dart primitives, errors, memory trim levels, FCM messaging ports (`FcmMessagingService`, `PushMessage`, related enums/controller) | `packages/utilities` |
 | Public disposable bag, subscription/timer managers, `TimerDisposable` | `ilkersevim_disposables` ([pub.dev](https://pub.dev/packages/ilkersevim_disposables) `^0.1.1`; `TimerDisposable` also re-exported from `package:core`) |
 | Public short relative-time labels (`3d` / `2h` / `now`) | `ilkersevim_relative_time` ([pub.dev](https://pub.dev/packages/ilkersevim_relative_time) `^0.1.3`) |
 | Public `RetryPolicy` / `RetryDelay` / `CancelToken` | `ilkersevim_retry` ([pub.dev](https://pub.dev/packages/ilkersevim_retry) `^0.1.3`) |

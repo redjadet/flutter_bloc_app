@@ -4,11 +4,9 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_subscription_mixin.dart';
 import 'package:flutter_bloc_app/app/utils/cubit_async_operations.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_messaging_service.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/fcm_permission_state.dart';
-import 'package:flutter_bloc_app/features/fcm_demo/domain/push_message.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
 import 'package:networking/networking.dart';
+import 'package:utilities/utilities.dart';
 
 /// Cubit for the FCM demo: permission, token, and last message.
 class FcmDemoCubit extends Cubit<FcmDemoState>
