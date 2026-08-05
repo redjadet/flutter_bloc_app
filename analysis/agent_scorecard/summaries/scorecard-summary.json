@@ -33,12 +33,12 @@
     "integration_tests": {
       "aborted": 0,
       "cancelled": 1,
-      "count": 239,
+      "count": 240,
       "failed": 66,
-      "ok": 172,
+      "ok": 173,
       "other": 0,
-      "p50_duration_ms": 273147,
-      "success_rate": 0.7196652719665272
+      "p50_duration_ms": 271426.5,
+      "success_rate": 0.7208333333333333
     },
     "smoke": {
       "aborted": 0,
@@ -51,26 +51,26 @@
       "success_rate": 1.0
     }
   },
-  "delegate_usage_rate": 0.0008176614881439084,
+  "delegate_usage_rate": 0.0008169934640522876,
   "line_stats": {
     "invalid_json_lines": 0,
-    "parsed_json_lines": 1229,
-    "total_non_empty_lines": 1229
+    "parsed_json_lines": 1230,
+    "total_non_empty_lines": 1230
   },
-  "p50_duration_ms": 63447,
-  "p95_duration_ms": 496649.6,
+  "p50_duration_ms": 63965.5,
+  "p95_duration_ms": 496617.25,
   "risk_counts": {
-    "high": 239,
+    "high": 240,
     "medium": 980,
     "unknown": 4
   },
   "scorecard_parse_success": 1.0,
   "source_file_count": 79,
-  "source_fingerprint": "1366c9c06ca2a49111c999cc82d79737bba19ef3bfbf97f8138c25b99f01cacd",
+  "source_fingerprint": "3175f8da872af9fc5b205c91ae12b105525d7ba291879f6b273868b2d02fcddf",
   "status_counts": {
     "cancelled": 1,
     "failed": 426,
-    "ok": 796
+    "ok": 797
   },
-  "total_events": 1223
+  "total_events": 1224
 }
