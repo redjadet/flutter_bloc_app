@@ -8,7 +8,8 @@ Credential-safe ownership proof for the target Senior Flutter JD:
   plus production-readiness **Emit test non-fatal** (simulated = local only)
 - Auth-gated Functions diagnostic for `issueRenderChatDemoHfReadToken` with
   `hf_read_token`/`token` never rendered (presence + length only); App Check
-  preview removed from the diagnostic page
+  preview removed from the diagnostic page; non-`Exception` failures now map
+  to the same safe localized error without crashing the page
 - Staff demo inbox Firestore mapping extracted and unit-tested; feature P3 stays **R**
 - Arabic RTL widget coverage strengthened for production-readiness + Counter
 - Showcase §3b/§4 and triage runbook updated; dry-run remains non-publishing

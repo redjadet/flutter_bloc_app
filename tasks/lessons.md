@@ -21,6 +21,48 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-05 - Do not adopt permission_handler 13 until Android SDK 37 exists
+
+- What went wrong:
+  `permission_handler` ^13 pulls `permission_handler_android` 14, which needs
+  `compileSdk` 37 (`CINNAMON_BUN` / `ACCESS_LOCAL_NETWORK`). Local SDK only had
+  platforms through 36, so Android integration `assembleDebug` failed.
+- How it was fixed:
+  Pin `permission_handler: 12.0.3` (android 13.0.1) until `platforms;android-37`
+  is installable and the app compileSdk can move with it.
+- Pattern:
+  Federated plugin major bumps often raise compileSdk before the host SDK ships.
+- Preventive rule:
+  Before accepting a plugin that raises compileSdk, confirm
+  `sdkmanager --list_installed` includes that platform and bump root + plugin
+  `compileSdk` together — or pin the prior major.
+- Evidence or affected files:
+  `apps/mobile/pubspec.yaml`; `pubspec.lock`; Android assemble via
+  `./bin/integration_tests`.
+
+### 2026-08-05 - Callable UI must catch `Object`, not only `Exception`
+
+- What went wrong:
+  The authenticated Functions diagnostic caught generic failures with
+  `on Exception`. A `StateError` from the callable seam bypassed that branch,
+  surfaced through the Flutter test binding, and crashed the page instead of
+  showing its safe localized error.
+- How it was fixed:
+  Both callable actions now catch `Object` after the typed
+  `FirebaseFunctionsException` branch. Regression tests cover a non-Exception
+  error, duplicate tap while pending, and disposal before completion.
+- Pattern:
+  Dart errors are not all `Exception`; presentation async boundaries that must
+  keep sensitive SDK failures out of the UI need a typed-safe branch followed
+  by an `Object` fallback.
+- Preventive rule:
+  For credential-adjacent UI calls, catch the known typed exception first, then
+  map every remaining `Object` to a stable localized error. Test an `Error`
+  subtype, not only an `Exception` subtype.
+- Evidence or affected files:
+  `apps/mobile/lib/features/example/presentation/pages/firebase_functions_test_page.dart`;
+  `apps/mobile/test/features/example/presentation/pages/firebase_functions_test_page_test.dart`.
+
 ### 2026-08-01 - Pause flags must drain in-flight remote-watch writes
 
 - What went wrong:

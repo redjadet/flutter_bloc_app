@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/pages/firebase_functions_test_page.dart';
@@ -166,6 +168,71 @@ void main() {
     expect(find.textContaining('unauthenticated'), findsOneWidget);
     expect(find.textContaining('secret-message'), findsNothing);
     expect(find.textContaining('secret-details'), findsNothing);
+  });
+
+  testWidgets('token generic error exposes no error text', (
+    final tester,
+  ) async {
+    when(
+      () => tokenCallable.call<dynamic>(any()),
+    ).thenThrow(StateError('secret-generic-error'));
+    await pumpPage(tester, isFirebaseReady: true, isAuthenticated: true);
+    await tester.tap(
+      find.byKey(const ValueKey('firebase-functions-token-button')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Callable failed'), findsOneWidget);
+    expect(find.textContaining('secret-generic-error'), findsNothing);
+  });
+
+  testWidgets('pending token call ignores a second tap', (final tester) async {
+    final Completer<HttpsCallableResult<dynamic>> result =
+        Completer<HttpsCallableResult<dynamic>>();
+    var callCount = 0;
+    when(() => tokenCallable.call<dynamic>(any())).thenAnswer((final _) {
+      callCount++;
+      return result.future;
+    });
+    await pumpPage(tester, isFirebaseReady: true, isAuthenticated: true);
+    final Finder tokenButton = find.byKey(
+      const ValueKey('firebase-functions-token-button'),
+    );
+    await tester.tap(tokenButton);
+    await tester.pump();
+    await tester.tap(tokenButton);
+    await tester.pump();
+    expect(callCount, 1);
+
+    result.complete(
+      _FakeHttpsCallableResult<dynamic>(<String, dynamic>{
+        'hf_read_token': 'secret',
+      }),
+    );
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('disposing during token call causes no exception', (
+    final tester,
+  ) async {
+    final Completer<HttpsCallableResult<dynamic>> result =
+        Completer<HttpsCallableResult<dynamic>>();
+    when(
+      () => tokenCallable.call<dynamic>(any()),
+    ).thenAnswer((final _) => result.future);
+    await pumpPage(tester, isFirebaseReady: true, isAuthenticated: true);
+    await tester.tap(
+      find.byKey(const ValueKey('firebase-functions-token-button')),
+    );
+    await tester.pump();
+    await tester.pumpWidget(const SizedBox.shrink());
+
+    result.complete(
+      _FakeHttpsCallableResult<dynamic>(<String, dynamic>{
+        'hf_read_token': 'secret',
+      }),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('malformed token payload shows safe error', (final tester) async {
