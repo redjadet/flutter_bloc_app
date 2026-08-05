@@ -5,7 +5,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
@@ -139,67 +138,6 @@ class FirebaseBootstrapService {
     }
 
     FirebaseUIAuth.configureProviders(providers);
-  }
-
-  /// Injectable Crashlytics sink for tests (sanitized exception text only).
-  @visibleForTesting
-  static Future<void> Function(
-    Object exception,
-    StackTrace? stack, {
-    required bool fatal,
-    required String reason,
-  })
-  recordCrash = _defaultRecordCrash;
-
-  static Future<void> _defaultRecordCrash(
-    final Object exception,
-    final StackTrace? stack, {
-    required final bool fatal,
-    required final String reason,
-  }) {
-    return FirebaseCrashlytics.instance.recordError(
-      exception,
-      stack,
-      reason: reason,
-      printDetails: false,
-      fatal: fatal,
-    );
-  }
-
-  /// Register global crash reporting handlers
-  static void registerCrashlyticsHandlers() {
-    final previousFlutterHandler = FlutterError.onError;
-    FlutterError.onError = (final details) {
-      final Object? sanitized = LogRedaction.sanitizeError(details.exception);
-      unawaited(
-        recordCrash(
-          sanitized ?? 'flutter_fatal',
-          details.stack,
-          fatal: true,
-          reason: 'flutter_fatal',
-        ),
-      );
-      previousFlutterHandler?.call(details);
-    };
-
-    final previousPlatformHandler = PlatformDispatcher.instance.onError;
-    PlatformDispatcher.instance.onError = (final error, final stackTrace) {
-      final Object? sanitized = LogRedaction.sanitizeError(error);
-      unawaited(
-        recordCrash(
-          sanitized ?? 'platform_fatal',
-          stackTrace,
-          fatal: true,
-          reason: 'platform_fatal',
-        ),
-      );
-      return previousPlatformHandler?.call(error, stackTrace) ?? true;
-    };
-  }
-
-  @visibleForTesting
-  static void resetCrashlyticsRecordingForTest() {
-    recordCrash = _defaultRecordCrash;
   }
 
   @visibleForTesting

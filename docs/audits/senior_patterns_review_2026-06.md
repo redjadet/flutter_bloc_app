@@ -6,7 +6,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 **Grade key:** G Green · Y Yellow · R Red · — not scored
 
-**Last updated:** 2026-07-10 (maintainability follow-up wave A–H closeout)
+**Last updated:** 2026-08-05 (inbox Firestore map isolation; feature P3 still R)
 
 ## Tier A
 
@@ -29,7 +29,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 | `ai_decision_demo` | G | G | G | G | Follow-up C/G — `AiDecisionFailure` + typed domain models (DTO mappers at data boundary) |
 | `graphql_demo` | G | Y | G | G | PR-1B DTOs |
 | `scapes` | G | G | G | G | Follow-up B/D — `toggleFavorite` domain + sealed `ScapesState` |
-| `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; Firestore maps deferred (separate program) |
+| `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; inbox recipient/message maps isolated in `staff_demo_inbox_firestore_map.dart` (unit-tested); remaining Firestore maps still deferred (separate program) |
 
 ## Heuristic appendix (baseline grep)
 

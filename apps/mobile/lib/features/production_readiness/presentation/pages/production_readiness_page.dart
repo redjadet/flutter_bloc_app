@@ -81,12 +81,9 @@ class ProductionReadinessPage extends StatelessWidget {
                       : l10n.productionReadinessModeSimulated,
                 ),
                 SizedBox(height: context.responsiveGapM),
-                _StatusCard(
+                _CrashlyticsCard(
                   key: const ValueKey('production-readiness-crashlytics-card'),
-                  title: l10n.productionReadinessCrashlyticsLabel,
-                  value: state.crashlyticsAvailable
-                      ? l10n.productionReadinessCrashlyticsActive
-                      : l10n.productionReadinessCrashlyticsUnavailable,
+                  state: state,
                 ),
                 SizedBox(height: context.responsiveGapM),
                 _FcmCard(

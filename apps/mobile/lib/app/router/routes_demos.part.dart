@@ -23,20 +23,28 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
           ? getIt<FcmSimulationController>()
           : null;
       return BlocProviderHelpers.withAsyncInit<ProductionReadinessCubit>(
-        create: () => ProductionReadinessCubit(
-          remoteConfig: getIt<RemoteConfigService>(),
-          consentRepository: getIt<AnalyticsConsentRepository>(),
-          analytics: getIt<ProductAnalytics>(),
-          memoryAnalytics: getIt.isRegistered<InMemoryProductAnalytics>()
-              ? getIt<InMemoryProductAnalytics>()
-              : null,
-          messaging: getIt<FcmMessagingService>(),
-          frameMonitor: getIt<FrameTimingMonitor>(),
-          simulationController: simulation,
-          fcmMode: getIt.isRegistered<FcmDemoMode>()
-              ? getIt<FcmDemoMode>()
-              : FcmDemoMode.simulated,
-        ),
+        create: () {
+          final bool firebaseReady =
+              FirebaseBootstrapService.isFirebaseInitialized;
+          return ProductionReadinessCubit(
+            remoteConfig: getIt<RemoteConfigService>(),
+            consentRepository: getIt<AnalyticsConsentRepository>(),
+            analytics: getIt<ProductAnalytics>(),
+            memoryAnalytics: getIt.isRegistered<InMemoryProductAnalytics>()
+                ? getIt<InMemoryProductAnalytics>()
+                : null,
+            messaging: getIt<FcmMessagingService>(),
+            frameMonitor: getIt<FrameTimingMonitor>(),
+            simulationController: simulation,
+            fcmMode: getIt.isRegistered<FcmDemoMode>()
+                ? getIt<FcmDemoMode>()
+                : FcmDemoMode.simulated,
+            recordNonFatal: firebaseReady
+                ? FirebaseCrashlyticsBootstrap
+                      .recordProductionReadinessTestNonFatal
+                : null,
+          );
+        },
         init: (final cubit) => cubit.initialize(),
         child: ProductionReadinessPage(
           showSimulatedNotificationButton: simulation != null,

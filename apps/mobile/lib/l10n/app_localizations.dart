@@ -4159,6 +4159,36 @@ abstract class AppLocalizations {
   /// **'Call helloWorld'**
   String get firebaseFunctionsCallButton;
 
+  /// Button to invoke the auth-gated HF read token callable
+  ///
+  /// In en, this message translates to:
+  /// **'Call issueRenderChatDemoHfReadToken'**
+  String get firebaseFunctionsTokenCallButton;
+
+  /// Shown when Firebase is ready but user is signed out
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to call the token function.'**
+  String get firebaseFunctionsAuthRequired;
+
+  /// Safe localized label paired with Functions error code
+  ///
+  /// In en, this message translates to:
+  /// **'Callable failed (details hidden).'**
+  String get firebaseFunctionsSafeError;
+
+  /// Generic Functions failure without exception text
+  ///
+  /// In en, this message translates to:
+  /// **'Callable failed.'**
+  String get firebaseFunctionsGenericError;
+
+  /// Token callable response missing hf_read_token/token
+  ///
+  /// In en, this message translates to:
+  /// **'Callable returned an unexpected payload.'**
+  String get firebaseFunctionsMalformedResponse;
+
   /// Label for the result section on the Firebase Functions test page
   ///
   /// In en, this message translates to:
@@ -6294,6 +6324,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unavailable (simulated / no Firebase)'**
   String get productionReadinessCrashlyticsUnavailable;
+
+  /// Button to emit a sanitized Crashlytics non-fatal test event
+  ///
+  /// In en, this message translates to:
+  /// **'Emit test non-fatal'**
+  String get productionReadinessCrashlyticsEmitNonFatalButton;
+
+  /// Label for Crashlytics test non-fatal status
+  ///
+  /// In en, this message translates to:
+  /// **'Test non-fatal status'**
+  String get productionReadinessCrashlyticsNonFatalStatusLabel;
+
+  /// No test non-fatal emitted yet
+  ///
+  /// In en, this message translates to:
+  /// **'Idle'**
+  String get productionReadinessCrashlyticsNonFatalIdle;
+
+  /// Test non-fatal in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Recording…'**
+  String get productionReadinessCrashlyticsNonFatalRecording;
+
+  /// Simulated mode recorded non-fatal locally
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded locally (simulated)'**
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal;
+
+  /// Live mode recorded non-fatal to Crashlytics
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded to Crashlytics'**
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase;
+
+  /// Test non-fatal recording failed
+  ///
+  /// In en, this message translates to:
+  /// **'Recording failed'**
+  String get productionReadinessCrashlyticsNonFatalFailed;
 
   /// FCM diagnostics card title
   ///

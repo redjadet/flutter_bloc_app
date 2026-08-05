@@ -2307,6 +2307,25 @@ class AppLocalizationsTr extends AppLocalizations {
   String get firebaseFunctionsCallButton => 'helloWorld çağır';
 
   @override
+  String get firebaseFunctionsTokenCallButton =>
+      'issueRenderChatDemoHfReadToken çağır';
+
+  @override
+  String get firebaseFunctionsAuthRequired =>
+      'Jeton fonksiyonunu çağırmak için oturum açın.';
+
+  @override
+  String get firebaseFunctionsSafeError =>
+      'Callable başarısız (ayrıntılar gizli).';
+
+  @override
+  String get firebaseFunctionsGenericError => 'Callable başarısız.';
+
+  @override
+  String get firebaseFunctionsMalformedResponse =>
+      'Callable beklenmeyen bir yanıt döndürdü.';
+
+  @override
   String get firebaseFunctionsResultLabel => 'Sonuç';
 
   @override
@@ -3458,6 +3477,31 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get productionReadinessCrashlyticsUnavailable =>
       'Kullanılamıyor (simüle / Firebase yok)';
+
+  @override
+  String get productionReadinessCrashlyticsEmitNonFatalButton =>
+      'Test non-fatal gönder';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalStatusLabel =>
+      'Test non-fatal durumu';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalIdle => 'Boşta';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecording => 'Kaydediliyor…';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal =>
+      'Yerel kaydedildi (simüle)';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase =>
+      'Crashlytics\'e kaydedildi';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalFailed => 'Kayıt başarısız';
 
   @override
   String get productionReadinessFcmLabel => 'Anlık bildirimler (FCM)';

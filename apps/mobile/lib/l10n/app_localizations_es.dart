@@ -2320,6 +2320,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get firebaseFunctionsCallButton => 'Llamar a helloWorld';
 
   @override
+  String get firebaseFunctionsTokenCallButton =>
+      'Llamar issueRenderChatDemoHfReadToken';
+
+  @override
+  String get firebaseFunctionsAuthRequired =>
+      'Inicia sesión para llamar a la función de token.';
+
+  @override
+  String get firebaseFunctionsSafeError =>
+      'Falló el callable (detalles ocultos).';
+
+  @override
+  String get firebaseFunctionsGenericError => 'Falló el callable.';
+
+  @override
+  String get firebaseFunctionsMalformedResponse =>
+      'El callable devolvió una carga inesperada.';
+
+  @override
   String get firebaseFunctionsResultLabel => 'Resultado';
 
   @override
@@ -3479,6 +3498,32 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get productionReadinessCrashlyticsUnavailable =>
       'No disponible (simulado / sin Firebase)';
+
+  @override
+  String get productionReadinessCrashlyticsEmitNonFatalButton =>
+      'Emitir non-fatal de prueba';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalStatusLabel =>
+      'Estado non-fatal de prueba';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalIdle => 'Inactivo';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecording => 'Registrando…';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal =>
+      'Registrado localmente (simulado)';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase =>
+      'Registrado en Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalFailed =>
+      'Error al registrar';
 
   @override
   String get productionReadinessFcmLabel => 'Notificaciones push (FCM)';

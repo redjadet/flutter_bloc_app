@@ -2916,6 +2916,26 @@
   "@firebaseFunctionsCallButton": {
     "description": "Button label that calls the helloWorld callable Cloud Function"
   },
+  "firebaseFunctionsTokenCallButton": "Call issueRenderChatDemoHfReadToken",
+  "@firebaseFunctionsTokenCallButton": {
+    "description": "Button to invoke the auth-gated HF read token callable"
+  },
+  "firebaseFunctionsAuthRequired": "Sign in to call the token function.",
+  "@firebaseFunctionsAuthRequired": {
+    "description": "Shown when Firebase is ready but user is signed out"
+  },
+  "firebaseFunctionsSafeError": "Callable failed (details hidden).",
+  "@firebaseFunctionsSafeError": {
+    "description": "Safe localized label paired with Functions error code"
+  },
+  "firebaseFunctionsGenericError": "Callable failed.",
+  "@firebaseFunctionsGenericError": {
+    "description": "Generic Functions failure without exception text"
+  },
+  "firebaseFunctionsMalformedResponse": "Callable returned an unexpected payload.",
+  "@firebaseFunctionsMalformedResponse": {
+    "description": "Token callable response missing hf_read_token/token"
+  },
   "firebaseFunctionsResultLabel": "Result",
   "@firebaseFunctionsResultLabel": {
     "description": "Label for the result section on the Firebase Functions test page"
@@ -4277,6 +4297,34 @@
   "productionReadinessCrashlyticsUnavailable": "Unavailable (simulated / no Firebase)",
   "@productionReadinessCrashlyticsUnavailable": {
     "description": "Crashlytics unavailable status"
+  },
+  "productionReadinessCrashlyticsEmitNonFatalButton": "Emit test non-fatal",
+  "@productionReadinessCrashlyticsEmitNonFatalButton": {
+    "description": "Button to emit a sanitized Crashlytics non-fatal test event"
+  },
+  "productionReadinessCrashlyticsNonFatalStatusLabel": "Test non-fatal status",
+  "@productionReadinessCrashlyticsNonFatalStatusLabel": {
+    "description": "Label for Crashlytics test non-fatal status"
+  },
+  "productionReadinessCrashlyticsNonFatalIdle": "Idle",
+  "@productionReadinessCrashlyticsNonFatalIdle": {
+    "description": "No test non-fatal emitted yet"
+  },
+  "productionReadinessCrashlyticsNonFatalRecording": "Recording…",
+  "@productionReadinessCrashlyticsNonFatalRecording": {
+    "description": "Test non-fatal in progress"
+  },
+  "productionReadinessCrashlyticsNonFatalRecordedLocal": "Recorded locally (simulated)",
+  "@productionReadinessCrashlyticsNonFatalRecordedLocal": {
+    "description": "Simulated mode recorded non-fatal locally"
+  },
+  "productionReadinessCrashlyticsNonFatalRecordedFirebase": "Recorded to Crashlytics",
+  "@productionReadinessCrashlyticsNonFatalRecordedFirebase": {
+    "description": "Live mode recorded non-fatal to Crashlytics"
+  },
+  "productionReadinessCrashlyticsNonFatalFailed": "Recording failed",
+  "@productionReadinessCrashlyticsNonFatalFailed": {
+    "description": "Test non-fatal recording failed"
   },
   "productionReadinessFcmLabel": "Push notifications (FCM)",
   "@productionReadinessFcmLabel": {

@@ -122,6 +122,30 @@ void main() {
       );
     });
 
+    testWidgets('emit test non-fatal updates localized status', (
+      final tester,
+    ) async {
+      await pumpPage(tester, cubit: cubit);
+      expect(
+        find.byKey(
+          const ValueKey('production-readiness-crashlytics-emit-nonfatal'),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(
+        find.byKey(
+          const ValueKey('production-readiness-crashlytics-emit-nonfatal'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        cubit.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.recordedLocal,
+      );
+      expect(find.textContaining('simulated'), findsWidgets);
+      expect(find.textContaining('StateError'), findsNothing);
+    });
+
     testWidgets('shows kill-switch banner when release flag disabled', (
       final tester,
     ) async {
@@ -184,11 +208,31 @@ void main() {
     });
 
     testWidgets('renders Arabic RTL locale', (final tester) async {
-      await pumpPage(tester, cubit: cubit, locale: const Locale('ar'));
+      await pumpPage(
+        tester,
+        cubit: cubit,
+        locale: const Locale('ar'),
+        size: const Size(360, 800),
+      );
       expect(
         find.byKey(const ValueKey('production-readiness-mode-card')),
         findsOneWidget,
       );
+      expect(
+        Directionality.of(
+          tester.element(
+            find.byKey(const ValueKey('production-readiness-mode-card')),
+          ),
+        ),
+        TextDirection.rtl,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.drag(
+        find.byKey(const ValueKey('production-readiness-list')),
+        const Offset(0, -200),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
     });
   });
 }
