@@ -1,5 +1,72 @@
 part of 'production_readiness_page.dart';
 
+class _CrashlyticsCard extends StatelessWidget {
+  const _CrashlyticsCard({required this.state, super.key});
+
+  final ProductionReadinessState state;
+
+  static String _nonFatalLabel(
+    final ProductionReadinessNonFatalStatus status,
+    final AppLocalizations l10n,
+  ) {
+    return switch (status) {
+      ProductionReadinessNonFatalStatus.idle =>
+        l10n.productionReadinessCrashlyticsNonFatalIdle,
+      ProductionReadinessNonFatalStatus.recording =>
+        l10n.productionReadinessCrashlyticsNonFatalRecording,
+      ProductionReadinessNonFatalStatus.recordedLocal =>
+        l10n.productionReadinessCrashlyticsNonFatalRecordedLocal,
+      ProductionReadinessNonFatalStatus.recordedFirebase =>
+        l10n.productionReadinessCrashlyticsNonFatalRecordedFirebase,
+      ProductionReadinessNonFatalStatus.failed =>
+        l10n.productionReadinessCrashlyticsNonFatalFailed,
+    };
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    final l10n = context.l10n;
+    final bool recording =
+        state.lastNonFatalStatus == ProductionReadinessNonFatalStatus.recording;
+    return CommonCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.productionReadinessCrashlyticsLabel),
+            subtitle: Text(
+              state.crashlyticsAvailable
+                  ? l10n.productionReadinessCrashlyticsActive
+                  : l10n.productionReadinessCrashlyticsUnavailable,
+            ),
+          ),
+          Text(
+            '${l10n.productionReadinessCrashlyticsNonFatalStatusLabel}: '
+            '${_nonFatalLabel(state.lastNonFatalStatus, l10n)}',
+            key: const ValueKey(
+              'production-readiness-crashlytics-nonfatal-status',
+            ),
+          ),
+          SizedBox(height: context.responsiveGapS),
+          PlatformAdaptive.filledButton(
+            key: const ValueKey(
+              'production-readiness-crashlytics-emit-nonfatal',
+            ),
+            context: context,
+            onPressed: recording
+                ? null
+                : () => context
+                      .read<ProductionReadinessCubit>()
+                      .emitTestNonFatal(),
+            child: Text(l10n.productionReadinessCrashlyticsEmitNonFatalButton),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _FcmCard extends StatelessWidget {
   const _FcmCard({
     required this.state,

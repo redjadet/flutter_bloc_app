@@ -7,6 +7,14 @@ enum ProductionReadinessMode { live, simulated }
 
 enum ProductionReadinessStatus { initial, loading, ready, error }
 
+enum ProductionReadinessNonFatalStatus {
+  idle,
+  recording,
+  recordedLocal,
+  recordedFirebase,
+  failed,
+}
+
 @freezed
 abstract class ProductionReadinessState with _$ProductionReadinessState {
   const factory ProductionReadinessState({
@@ -20,6 +28,8 @@ abstract class ProductionReadinessState with _$ProductionReadinessState {
     @Default('control') final String releaseVariant,
     @Default('defaults') final String configSource,
     @Default(false) final bool crashlyticsAvailable,
+    @Default(ProductionReadinessNonFatalStatus.idle)
+    final ProductionReadinessNonFatalStatus lastNonFatalStatus,
     @Default(FcmDemoMode.simulated) final FcmDemoMode fcmMode,
     final FcmPermissionState? fcmPermission,
     @Default(0) final int fcmDataKeyCount,

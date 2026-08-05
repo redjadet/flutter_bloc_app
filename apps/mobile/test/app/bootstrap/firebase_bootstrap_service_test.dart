@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_crashlytics_bootstrap.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_helpers_firebase.dart';
@@ -190,7 +191,7 @@ void main() {
 
     test('registerCrashlyticsHandlers installs handlers', () {
       final previous = FlutterError.onError;
-      FirebaseBootstrapService.registerCrashlyticsHandlers();
+      FirebaseCrashlyticsBootstrap.registerHandlers();
       expect(FlutterError.onError, isNotNull);
       FlutterError.onError = previous;
     });

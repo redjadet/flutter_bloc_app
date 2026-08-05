@@ -1,21 +1,41 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_crashlytics_bootstrap.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   tearDown(() {
-    FirebaseBootstrapService.resetCrashlyticsRecordingForTest();
+    FirebaseCrashlyticsBootstrap.resetRecordingForTest();
     FlutterError.onError = FlutterError.presentError;
   });
 
-  test('Crashlytics recordCrash receives sanitized exception text', () async {
+  test('metadataKeys returns only allowlisted keys', () {
+    final keys = FirebaseCrashlyticsBootstrap.metadataKeys(
+      flavorName: 'dev',
+      appVersion: '9.9.9',
+      firebaseReady: true,
+    );
+    expect(keys.keys.toList(), <String>[
+      'flavor',
+      'app_version',
+      'firebase_ready',
+    ]);
+    expect(keys['flavor'], 'dev');
+    expect(keys['app_version'], '9.9.9');
+    expect(keys['firebase_ready'], 'true');
+  });
+
+  test('registerHandlers writes metadata then sanitizes fatals', () async {
+    final Map<String, Object> written = <String, Object>{};
     Object? recordedException;
     StackTrace? recordedStack;
     String? recordedReason;
     var recordedFatal = false;
 
-    FirebaseBootstrapService.recordCrash =
+    FirebaseCrashlyticsBootstrap.setCustomKey = (final key, final value) {
+      written[key] = value;
+    };
+    FirebaseCrashlyticsBootstrap.recordCrash =
         (
           final exception,
           final stack, {
@@ -29,7 +49,13 @@ void main() {
         };
 
     final previous = FlutterError.onError;
-    FirebaseBootstrapService.registerCrashlyticsHandlers();
+    FirebaseCrashlyticsBootstrap.registerHandlers();
+
+    expect(written.keys.toSet(), <String>{
+      'flavor',
+      'app_version',
+      'firebase_ready',
+    });
 
     final stack = StackTrace.current;
     FlutterError.reportError(

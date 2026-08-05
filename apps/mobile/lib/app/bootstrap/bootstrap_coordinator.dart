@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/app_version_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
+import 'package:flutter_bloc_app/app/bootstrap/firebase_crashlytics_bootstrap.dart';
 import 'package:flutter_bloc_app/app/bootstrap/initialization_guard.dart';
 import 'package:flutter_bloc_app/app/bootstrap/platform_init.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
@@ -51,7 +52,7 @@ class BootstrapCoordinator {
 
   @visibleForTesting
   static void Function() registerCrashlyticsHandlers =
-      FirebaseBootstrapService.registerCrashlyticsHandlers;
+      FirebaseCrashlyticsBootstrap.registerHandlers;
 
   @visibleForTesting
   static Future<void> Function() initializeSupabase =
@@ -140,8 +141,7 @@ class BootstrapCoordinator {
     loadAppVersion = AppVersionService.loadAppVersion;
     initializeFirebase = FirebaseBootstrapService.initializeFirebase;
     configureFirebaseUi = FirebaseBootstrapService.configureFirebaseUI;
-    registerCrashlyticsHandlers =
-        FirebaseBootstrapService.registerCrashlyticsHandlers;
+    registerCrashlyticsHandlers = FirebaseCrashlyticsBootstrap.registerHandlers;
     initializeSupabase = SupabaseBootstrapService.initializeSupabase;
     setupDependencies = configureDependencies;
     readRuntimeConfig = () => getIt<AppRuntimeConfig>();

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
@@ -104,9 +105,15 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.firebaseFunctionsTestPath,
     name: AppRoutes.firebaseFunctionsTest,
-    builder: (final context, final state) => FirebaseFunctionsTestPage(
-      isFirebaseReady: FirebaseBootstrapService.isFirebaseInitialized,
-    ),
+    builder: (final context, final state) {
+      final bool isAuthenticated =
+          getIt.isRegistered<FirebaseAuth>() &&
+          getIt<FirebaseAuth>().currentUser != null;
+      return FirebaseFunctionsTestPage(
+        isFirebaseReady: FirebaseBootstrapService.isFirebaseInitialized,
+        isAuthenticated: isAuthenticated,
+      );
+    },
   ),
   GoRoute(
     path: AppRoutes.whiteboardPath,

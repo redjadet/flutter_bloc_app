@@ -34,11 +34,13 @@ and the mobile/backend contract guide [backend/API_CONTRACT_GUIDE.md](backend/AP
 
 When Firebase initializes successfully, the app registers Flutter and zone error handlers that forward fatals to **Firebase Crashlytics**:
 
-- Implementation: [`apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart`](../apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart) (`registerCrashlyticsHandlers`)
+- Implementation: [`apps/mobile/lib/app/bootstrap/firebase_crashlytics_bootstrap.dart`](../apps/mobile/lib/app/bootstrap/firebase_crashlytics_bootstrap.dart) (`registerHandlers`)
 - **Sensitive data:** Do not attach PII, tokens, or full request/response bodies to crash reports. Use `AppErrorCode` and short context strings only.
 - Configuration and secrets: [security_and_secrets.md](security_and_secrets.md), [firebase_setup.md](integrations/firebase_setup.md)
 
 Crashlytics is **not** active when Firebase is disabled or fails to initialize (e.g. some test harnesses).
+
+Post-ship triage loop: [crashlytics_triage_runbook.md](observability/crashlytics_triage_runbook.md). Allowlisted custom keys at handler registration: `flavor`, `app_version`, `firebase_ready`. In-app proof: `/production-readiness` **Emit test non-fatal**.
 
 ## Sentry + Crashlytics (plan: dual-stack, single “source of truth”)
 

@@ -2331,6 +2331,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get firebaseFunctionsCallButton => 'helloWorld aufrufen';
 
   @override
+  String get firebaseFunctionsTokenCallButton =>
+      'issueRenderChatDemoHfReadToken aufrufen';
+
+  @override
+  String get firebaseFunctionsAuthRequired =>
+      'Melden Sie sich an, um die Token-Funktion aufzurufen.';
+
+  @override
+  String get firebaseFunctionsSafeError =>
+      'Callable fehlgeschlagen (Details ausgeblendet).';
+
+  @override
+  String get firebaseFunctionsGenericError => 'Callable fehlgeschlagen.';
+
+  @override
+  String get firebaseFunctionsMalformedResponse =>
+      'Callable lieferte eine unerwartete Nutzlast.';
+
+  @override
   String get firebaseFunctionsResultLabel => 'Ergebnis';
 
   @override
@@ -3492,6 +3511,33 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get productionReadinessCrashlyticsUnavailable =>
       'Nicht verfügbar (simuliert / kein Firebase)';
+
+  @override
+  String get productionReadinessCrashlyticsEmitNonFatalButton =>
+      'Test-Non-Fatal senden';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalStatusLabel =>
+      'Test-Non-Fatal-Status';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalIdle => 'Bereit';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecording =>
+      'Wird aufgezeichnet…';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal =>
+      'Lokal aufgezeichnet (simuliert)';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase =>
+      'In Crashlytics aufgezeichnet';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalFailed =>
+      'Aufzeichnung fehlgeschlagen';
 
   @override
   String get productionReadinessFcmLabel => 'Push-Benachrichtigungen (FCM)';

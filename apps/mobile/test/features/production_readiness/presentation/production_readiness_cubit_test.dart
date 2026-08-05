@@ -106,6 +106,122 @@ void main() {
       expect(cubit.isClosed, isTrue);
     });
 
+    test('emitTestNonFatal simulated records local without callback', () async {
+      await cubit.initialize();
+      var callbackCount = 0;
+      final ProductionReadinessCubit withCallback = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        firebaseInitialized: false,
+        recordNonFatal:
+            (
+              final exception,
+              final stack, {
+              required final bool fatal,
+              required final String reason,
+            }) async {
+              callbackCount++;
+            },
+      );
+      addTearDown(withCallback.close);
+      await withCallback.initialize();
+      await withCallback.emitTestNonFatal();
+      expect(callbackCount, 0);
+      expect(
+        withCallback.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.recordedLocal,
+      );
+      expect(withCallback.state.status, ProductionReadinessStatus.ready);
+    });
+
+    test('emitTestNonFatal live success records firebase once', () async {
+      var callbackCount = 0;
+      Object? seenException;
+      var seenFatal = true;
+      String? seenReason;
+      final Completer<void> gate = Completer<void>();
+      final ProductionReadinessCubit live = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        firebaseInitialized: true,
+        recordNonFatal:
+            (
+              final exception,
+              final stack, {
+              required final bool fatal,
+              required final String reason,
+            }) async {
+              callbackCount++;
+              seenException = exception;
+              seenFatal = fatal;
+              seenReason = reason;
+              await gate.future;
+            },
+      );
+      addTearDown(live.close);
+      await live.initialize();
+      final Future<void> pending = live.emitTestNonFatal();
+      expect(
+        live.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.recording,
+      );
+      // Duplicate while recording is ignored.
+      await live.emitTestNonFatal();
+      expect(callbackCount, 1);
+      gate.complete();
+      await pending;
+      expect(callbackCount, 1);
+      expect(seenFatal, isFalse);
+      expect(seenReason, 'production_readiness_test_nonfatal');
+      expect(seenException, isA<StateError>());
+      expect(
+        live.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.recordedFirebase,
+      );
+      expect(live.state.status, ProductionReadinessStatus.ready);
+    });
+
+    test('emitTestNonFatal live failure stays ready', () async {
+      final ProductionReadinessCubit live = ProductionReadinessCubit(
+        remoteConfig: remoteConfig,
+        consentRepository: consent,
+        analytics: analytics,
+        memoryAnalytics: analytics,
+        firebaseInitialized: true,
+        recordNonFatal:
+            (
+              final exception,
+              final stack, {
+              required final bool fatal,
+              required final String reason,
+            }) async {
+              throw StateError('sink failed');
+            },
+      );
+      addTearDown(live.close);
+      await live.initialize();
+      await live.emitTestNonFatal();
+      expect(
+        live.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.failed,
+      );
+      expect(live.state.status, ProductionReadinessStatus.ready);
+    });
+
+    test('emitTestNonFatal closed cubit emits nothing', () async {
+      await cubit.initialize();
+      await cubit.close();
+      await cubit.emitTestNonFatal();
+      expect(
+        cubit.state.lastNonFatalStatus,
+        ProductionReadinessNonFatalStatus.idle,
+      );
+    });
+
     test('wires FCM and frame monitor summaries', () async {
       final SimulatedFcmMessagingService messaging =
           SimulatedFcmMessagingService();

@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-05_senior_flutter_jd_alignment.md`](2026-08-05_senior_flutter_jd_alignment.md): Crashlytics non-fatal ownership, auth-gated Functions diagnostic, inbox map isolation, RTL proof.
 - [`2026-08-05_fcm_shared_contract_extraction.md`](2026-08-05_fcm_shared_contract_extraction.md): Move shared FCM contracts into `package:utilities`; zero cross-feature FCM edges.
 - [`2026-08-04_bloc_rebuild_scoping_qg-d03.md`](2026-08-04_bloc_rebuild_scoping_qg-d03.md): QG-D03 report-only BlocBuilder inventory (warn; not checklist-wired).
 - [`2026-08-04_memory_quality_wave_b2.md`](2026-08-04_memory_quality_wave_b2.md): Memory B2 tagged dispose journeys for TEC/ScrollController/confetti path.

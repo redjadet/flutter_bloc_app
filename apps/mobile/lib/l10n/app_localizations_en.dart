@@ -2296,6 +2296,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get firebaseFunctionsCallButton => 'Call helloWorld';
 
   @override
+  String get firebaseFunctionsTokenCallButton =>
+      'Call issueRenderChatDemoHfReadToken';
+
+  @override
+  String get firebaseFunctionsAuthRequired =>
+      'Sign in to call the token function.';
+
+  @override
+  String get firebaseFunctionsSafeError => 'Callable failed (details hidden).';
+
+  @override
+  String get firebaseFunctionsGenericError => 'Callable failed.';
+
+  @override
+  String get firebaseFunctionsMalformedResponse =>
+      'Callable returned an unexpected payload.';
+
+  @override
   String get firebaseFunctionsResultLabel => 'Result';
 
   @override
@@ -3445,6 +3463,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get productionReadinessCrashlyticsUnavailable =>
       'Unavailable (simulated / no Firebase)';
+
+  @override
+  String get productionReadinessCrashlyticsEmitNonFatalButton =>
+      'Emit test non-fatal';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalStatusLabel =>
+      'Test non-fatal status';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalIdle => 'Idle';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecording => 'Recording…';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal =>
+      'Recorded locally (simulated)';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase =>
+      'Recorded to Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalFailed => 'Recording failed';
 
   @override
   String get productionReadinessFcmLabel => 'Push notifications (FCM)';

@@ -14,9 +14,13 @@ import 'package:utilities/utilities.dart';
 
 part 'production_readiness_cubit_consent.part.dart';
 part 'production_readiness_cubit_fcm.part.dart';
+part 'production_readiness_cubit_crashlytics.part.dart';
 
 class ProductionReadinessCubit extends _ProductionReadinessCubitBase
-    with _ProductionReadinessCubitConsent, _ProductionReadinessCubitFcm {
+    with
+        _ProductionReadinessCubitConsent,
+        _ProductionReadinessCubitFcm,
+        _ProductionReadinessCubitCrashlytics {
   ProductionReadinessCubit({
     required super.remoteConfig,
     required super.consentRepository,
@@ -27,6 +31,7 @@ class ProductionReadinessCubit extends _ProductionReadinessCubitBase
     super.simulationController,
     super.fcmMode,
     super.firebaseInitialized,
+    super.recordNonFatal,
   });
 }
 
@@ -41,6 +46,7 @@ abstract class _ProductionReadinessCubitBase
     this._messaging,
     this._frameMonitor,
     this._simulationController,
+    this.recordNonFatal,
     final FcmDemoMode? fcmMode,
     final bool? firebaseInitialized,
   }) : _fcmMode = fcmMode ?? FcmDemoMode.simulated,
@@ -61,7 +67,21 @@ abstract class _ProductionReadinessCubitBase
   final FcmSimulationController? _simulationController;
   final FcmDemoMode _fcmMode;
   final bool _firebaseInitialized;
+
+  /// Live-mode Crashlytics non-fatal sink. Null in simulated mode.
+  final Future<void> Function(
+    Object exception,
+    StackTrace? stack, {
+    required bool fatal,
+    required String reason,
+  })?
+  recordNonFatal;
+
   bool _fcmStreamsSubscribed = false;
+
+  ProductionReadinessMode get mode => _firebaseInitialized
+      ? ProductionReadinessMode.live
+      : ProductionReadinessMode.simulated;
 
   Future<void> _initializeFcm();
 

@@ -2317,6 +2317,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get firebaseFunctionsCallButton => 'اتصل بـ helloWorld';
 
   @override
+  String get firebaseFunctionsTokenCallButton =>
+      'استدعاء issueRenderChatDemoHfReadToken';
+
+  @override
+  String get firebaseFunctionsAuthRequired =>
+      'سجّل الدخول لاستدعاء دالة الرمز.';
+
+  @override
+  String get firebaseFunctionsSafeError => 'فشل الاستدعاء (التفاصيل مخفية).';
+
+  @override
+  String get firebaseFunctionsGenericError => 'فشل الاستدعاء.';
+
+  @override
+  String get firebaseFunctionsMalformedResponse =>
+      'أعاد الاستدعاء حمولة غير متوقعة.';
+
+  @override
   String get firebaseFunctionsResultLabel => 'نتيجة';
 
   @override
@@ -3469,6 +3487,31 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get productionReadinessCrashlyticsUnavailable =>
       'غير متاح (محاكاة / لا Firebase)';
+
+  @override
+  String get productionReadinessCrashlyticsEmitNonFatalButton =>
+      'إرسال غير قاتل اختباري';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalStatusLabel =>
+      'حالة غير قاتل اختباري';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalIdle => 'خامل';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecording => 'جارٍ التسجيل…';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedLocal =>
+      'سُجّل محليًا (محاكاة)';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalRecordedFirebase =>
+      'سُجّل في Crashlytics';
+
+  @override
+  String get productionReadinessCrashlyticsNonFatalFailed => 'فشل التسجيل';
 
   @override
   String get productionReadinessFcmLabel => 'إشعارات الدفع (FCM)';
