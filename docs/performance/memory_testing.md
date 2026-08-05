@@ -64,6 +64,17 @@ Tag only proven-stable paths; keep global `withIgnoredAll()` for untagged tests.
 Helper may pass `ignoredNotDisposedClasses` (e.g. `memoryLeakHarnessLayerClasses` +
 `TextPainter`) for proven compositor noise only — never product owners.
 
+## Product journeys (Wave B2)
+
+Real-page ownership proofs (still keep global `withIgnoredAll()` for untagged
+tests; MQ-B2 remains partial).
+
+| Journey | Test | Owners |
+| --- | --- | --- |
+| ChatPage mount/unmount | `test/chat_page_test.dart` | `TextEditingController`, `ScrollController` |
+| CounterPage mount/unmount | `test/features/counter/presentation/pages/counter_page_loading_state_test.dart` | `ConfettiController` (`ParticleSystem` ignore on that test only) |
+| TodoListPage mount/unmount | `test/features/todo_list/presentation/pages/todo_list_page_test.dart` | list `ScrollController`, search `TextEditingController` |
+
 Scoped run:
 
 ```bash

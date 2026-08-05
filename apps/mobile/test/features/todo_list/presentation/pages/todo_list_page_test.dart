@@ -1,18 +1,21 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/pages/todo_list_page.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_content.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_search_field.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../helpers/memory/leak_safe_test_widgets.dart';
 import '../../../../test_helpers.dart';
 
 class _FakeTodoRepository
@@ -136,6 +139,48 @@ void main() {
       await cubit.close();
       await repository.dispose();
     });
+
+    leakSafeTestWidgets(
+      'TodoListPage controller ownership teardown is leak-safe',
+      (final tester) async {
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+        tester.view.devicePixelRatio = 3;
+        tester.view.physicalSize = const Size(1083, 1800);
+
+        await tester.pumpWidget(
+          buildSubject(
+            initialItems: <TodoItem>[
+              _todoItem(id: '1', title: 'Leak owner 1'),
+              _todoItem(id: '2', title: 'Leak owner 2'),
+            ],
+          ),
+        );
+
+        await cubit.loadInitial();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pump();
+
+        expect(find.byType(TodoListPage), findsOneWidget);
+        expect(find.byType(TodoListContent), findsOneWidget);
+        final TodoListContent listContent = tester.widget<TodoListContent>(
+          find.byType(TodoListContent),
+        );
+        expect(listContent.scrollController.hasClients, isTrue);
+        expect(
+          find.byKey(const ValueKey<String>('todo_search_field')),
+          findsOneWidget,
+        );
+        expect(find.byType(TodoSearchField), findsOneWidget);
+        expect(find.byType(TextField), findsOneWidget);
+
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+      },
+    );
 
     testWidgets('renders TodoListPage', (tester) async {
       await tester.pumpWidget(buildSubject());
