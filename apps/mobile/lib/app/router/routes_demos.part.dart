@@ -40,13 +40,8 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
                 ? getIt<FcmDemoMode>()
                 : FcmDemoMode.simulated,
             recordNonFatal: firebaseReady
-                ? (
-                    exception,
-                    stack, {
-                    required fatal,
-                    required reason,
-                  }) =>
-                      FirebaseCrashlyticsBootstrap.recordProductionReadinessTestNonFatal()
+                ? FirebaseCrashlyticsBootstrap
+                      .recordProductionReadinessTestNonFatal
                 : null,
           );
         },

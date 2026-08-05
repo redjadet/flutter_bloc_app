@@ -22,4 +22,4 @@ Operational loop for post-ship crash ownership (target Senior Flutter JD proof).
 ## Related
 
 - [Observability](../observability.md)
-- Bootstrap: `apps/mobile/lib/app/bootstrap/firebase_bootstrap_service.dart`
+- Bootstrap: `apps/mobile/lib/app/bootstrap/firebase_crashlytics_bootstrap.dart`

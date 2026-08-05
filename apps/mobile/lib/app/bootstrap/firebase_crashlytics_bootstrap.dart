@@ -99,12 +99,20 @@ class FirebaseCrashlyticsBootstrap {
   }
 
   /// Production-readiness demo: emit a sanitized non-fatal (no PII).
-  static Future<void> recordProductionReadinessTestNonFatal() {
+  ///
+  /// Signature matches the production-readiness cubit non-fatal sink so the
+  /// router can pass this method as a tear-off without touching test-only APIs.
+  static Future<void> recordProductionReadinessTestNonFatal(
+    final Object exception,
+    final StackTrace? stack, {
+    required final bool fatal,
+    required final String reason,
+  }) {
     return recordCrash(
-      StateError('production_readiness_test_nonfatal'),
-      StackTrace.current,
-      fatal: false,
-      reason: 'production_readiness_test_nonfatal',
+      exception,
+      stack,
+      fatal: fatal,
+      reason: reason,
     );
   }
 
