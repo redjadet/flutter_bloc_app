@@ -31,7 +31,7 @@ Scaffold output (no runtime code) matches the same shape:
 | Feature / path | Reason |
 | --- | --- |
 | `ai_decision_demo` (state) | Equatable bag state — copy DTO boundary only until state migrates |
-| `staff_app_demo` Firestore maps | `Map<String,dynamic>?` contract — deferred; copy submit validator pattern only |
+| `staff_app_demo` | Legacy demo patterns elsewhere; inbox/timeclock domain Maps removed 2026-08-06 — copy submit validator only, not as a gold layout |
 
 ## Legacy drift
 

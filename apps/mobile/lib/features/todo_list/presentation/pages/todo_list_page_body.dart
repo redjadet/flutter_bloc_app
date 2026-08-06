@@ -25,19 +25,16 @@ class _TodoListBodyState extends State<_TodoListBody> {
   @override
   Widget build(
     final BuildContext context,
-  ) => TypeSafeBlocSelector<TodoListCubit, TodoListState, TodoListViewData>(
+  ) => ViewStatusSwitcher<TodoListCubit, TodoListState, TodoListViewData>(
     selector: TodoListViewData.fromState,
+    isLoading: (final data) => data.isLoading,
+    isError: (final data) => data.hasError,
+    loadingBuilder: (final _) => const CommonLoadingWidget(),
+    errorBuilder: (final context, final data) => CommonErrorView(
+      message: data.errorMessage ?? context.l10n.todoListLoadError,
+      onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
+    ),
     builder: (final context, final data) {
-      if (data.isLoading) {
-        return const CommonLoadingWidget();
-      }
-      if (data.hasError) {
-        return CommonErrorView(
-          message: data.errorMessage ?? context.l10n.todoListLoadError,
-          onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
-        );
-      }
-
       final TodoListCubit cubit = context.cubit<TodoListCubit>();
       final ThemeData theme = Theme.of(context);
       final ColorScheme colors = theme.colorScheme;

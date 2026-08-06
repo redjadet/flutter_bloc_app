@@ -1,9 +1,9 @@
 import 'package:auth/auth.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_time_entry_flags_dto.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_content_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_messaging_repository.dart';
@@ -71,16 +71,6 @@ class NoOpStaffDemoTimeclockRepository implements StaffDemoTimeclockRepository {
         clockInAtUtc: nowUtc,
         shiftId: null,
         siteId: null,
-        payload: <String, dynamic>{
-          'action': 'clock_in',
-          'mode': 'offline_no_firebase',
-          'entryId': entryId,
-          'userId': userId,
-          'clockInAtClientMs': nowUtc.millisecondsSinceEpoch,
-          'flags': StaffDemoTimeEntryFlagsDto.fromDomain(
-            const StaffDemoTimeEntryFlags.none(),
-          ).toJson(),
-        },
       ),
     );
 
@@ -154,7 +144,7 @@ class NoOpStaffDemoInboxRepository implements StaffDemoInboxRepository {
   }) => const Stream<List<StaffDemoInboxRecipientSnapshot>>.empty();
 
   @override
-  Future<Map<String, dynamic>?> loadMessage(String messageId) async => null;
+  Future<StaffDemoInboxMessage?> loadMessage(String messageId) async => null;
 
   @override
   Future<String?> loadShiftStatus(String shiftId) async => null;

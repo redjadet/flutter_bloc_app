@@ -248,6 +248,63 @@ set +e
   clean_arch_bad_presentation="$(bash tool/check_clean_architecture_imports.sh --paths "$fixture_clean_arch/lib/features/orders/presentation/bad_data_import.dart" 2>&1)"
 status=$?
 set -e
+
+fixture_domain_maps="tool/fixtures/domain_map_bags"
+
+echo "fixtures|check_domain_map_bags|good"
+good_maps_out="$(bash tool/check_domain_map_bags.sh --paths "$fixture_domain_maps/good_typed_domain_model.dart")"
+if ! grep -q 'ok|domain-map-bags|violations=0' <<<"$good_maps_out"; then
+  echo "❌ fixtures failed: expected domain map bags good fixture to report 0" >&2
+  echo "$good_maps_out" >&2
+  exit 1
+fi
+
+echo "fixtures|check_domain_map_bags|non_public_good"
+non_public_maps_out="$(bash tool/check_domain_map_bags.sh --paths "$fixture_domain_maps/good_non_public_domain_maps.dart")"
+if ! grep -q 'ok|domain-map-bags|violations=0' <<<"$non_public_maps_out"; then
+  echo "❌ fixtures failed: expected private/local domain Maps to stay out of the public API scan" >&2
+  echo "$non_public_maps_out" >&2
+  exit 1
+fi
+
+echo "fixtures|check_domain_map_bags|bad_warn"
+bad_maps_out="$(bash tool/check_domain_map_bags.sh --paths "$fixture_domain_maps/bad_domain_map_bag.dart")"
+if ! grep -q 'warn|domain-map-bags|violations=1' <<<"$bad_maps_out"; then
+  echo "❌ fixtures failed: expected domain map bags bad fixture to warn once" >&2
+  echo "$bad_maps_out" >&2
+  exit 1
+fi
+
+echo "fixtures|check_domain_map_bags|bad_contract_warn"
+bad_contract_maps_out="$(bash tool/check_domain_map_bags.sh --paths "$fixture_domain_maps/bad_domain_map_contract.dart")"
+if ! grep -q 'warn|domain-map-bags|violations=1' <<<"$bad_contract_maps_out"; then
+  echo "❌ fixtures failed: expected domain map bags contract fixture to warn once" >&2
+  echo "$bad_contract_maps_out" >&2
+  exit 1
+fi
+
+echo "fixtures|check_domain_map_bags|baseline_allowlist"
+baseline_maps_out="$(bash tool/check_domain_map_bags.sh)"
+if ! grep -q 'ok|domain-map-bags|violations=0' <<<"$baseline_maps_out"; then
+  echo "❌ fixtures failed: expected allowlisted domain map baseline to be clean" >&2
+  echo "$baseline_maps_out" >&2
+  exit 1
+fi
+
+echo "fixtures|check_domain_map_bags|malformed_allowlist"
+tmp_allow_bad="$(mktemp)"
+printf 'lib/x.dart||missing reason\n' >"$tmp_allow_bad"
+set +e
+  DOMAIN_MAP_BAG_ALLOWLIST_FILE="$tmp_allow_bad" \
+  bash tool/check_domain_map_bags.sh --paths "$fixture_domain_maps/good_typed_domain_model.dart" >/dev/null 2>&1
+status=$?
+set -e
+rm -f "$tmp_allow_bad"
+if [[ "$status" -eq 0 ]]; then
+  echo "❌ fixtures failed: expected malformed domain map allowlist to exit non-zero" >&2
+  exit 1
+fi
+
 if [[ "$status" -eq 0 ]]; then
   echo "❌ fixtures failed: expected clean architecture check to fail on presentation data import" >&2
   exit 1

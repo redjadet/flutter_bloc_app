@@ -56,6 +56,9 @@ and [Use Case / DTO Policy](../architecture/use_case_dto_policy.md).
 - Navigation from domain/data.
 - Shared utility buckets named only `Utils`, `Helper`, `Manager`, or `Base*`
   without a narrow capability.
+- Public domain models/contracts exposing wire `Map<String, dynamic>` unless an
+  intentional allowlisted dynamic bag exists (AP-18;
+  `tool/check_domain_map_bags.sh`).
 
 ## Proof
 

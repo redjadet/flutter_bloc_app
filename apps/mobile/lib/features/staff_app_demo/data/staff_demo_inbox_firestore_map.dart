@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 
 /// Firestore map helpers for staff demo inbox (data layer only).
@@ -36,8 +37,27 @@ abstract final class StaffDemoInboxFirestoreMap {
     );
   }
 
-  /// Pass-through of Firestore message document data (domain API unchanged).
-  static Map<String, dynamic>? messageFromData(
+  /// Maps Firestore message document data to a domain inbox message.
+  ///
+  /// Returns null only when [data] is null. Malformed/missing optional fields
+  /// become null on the model (presentation defaults blank strings).
+  static StaffDemoInboxMessage? messageFromData(
     final Map<String, dynamic>? data,
-  ) => data;
+  ) {
+    if (data == null) {
+      return null;
+    }
+    return StaffDemoInboxMessage(
+      body: _optionalString(data['body']),
+      type: _optionalString(data['type']),
+      shiftId: _optionalString(data['shiftId']),
+    );
+  }
+
+  static String? _optionalString(final Object? value) {
+    if (value is! String) {
+      return null;
+    }
+    return value;
+  }
 }

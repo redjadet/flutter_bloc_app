@@ -80,7 +80,6 @@ void main() {
         clockInAtUtc: DateTime.utc(2026),
         shiftId: null,
         siteId: null,
-        payload: const <String, dynamic>{},
       ),
     );
   });
@@ -309,7 +308,6 @@ void main() {
           clockInAtUtc: DateTime.utc(2026, 1, 1),
           shiftId: 'shift-1',
           siteId: 'site-1',
-          payload: const <String, dynamic>{},
         ),
       );
 
@@ -376,7 +374,6 @@ void main() {
           clockInAtUtc: DateTime.utc(2026, 1, 1),
           shiftId: null,
           siteId: null,
-          payload: const <String, dynamic>{},
         ),
       );
 

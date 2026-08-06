@@ -41,6 +41,7 @@ The list below is generated from `tool/delivery_checklist.sh` `CHECK_SCRIPTS`.
 - `check_package_dependency_dag.sh`
 - `check_solid_presentation_data_imports.sh`
 - `check_solid_data_presentation_imports.sh`
+- `check_domain_map_bags.sh`
 - `check_perf_shrinkwrap_lists.sh`
 - `check_perf_nonbuilder_lists.sh`
 - `check_widget_identity.sh`

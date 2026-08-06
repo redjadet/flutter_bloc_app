@@ -2,6 +2,7 @@
 library;
 
 // Domain exports
+export 'domain/staff_demo_inbox_message.dart';
 export 'domain/staff_demo_inbox_repository.dart';
 export 'domain/staff_demo_messaging_repository.dart';
 export 'domain/staff_demo_profile.dart';

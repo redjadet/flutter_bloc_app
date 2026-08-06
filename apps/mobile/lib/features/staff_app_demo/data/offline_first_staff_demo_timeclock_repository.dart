@@ -123,7 +123,6 @@ class OfflineFirstStaffDemoTimeclockRepository
         clockInAtUtc: nowUtc,
         shiftId: shift?.shiftId,
         siteId: shift?.siteId,
-        payload: payload,
       ),
     );
 

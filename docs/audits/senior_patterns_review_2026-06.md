@@ -6,7 +6,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 
 **Grade key:** G Green · Y Yellow · R Red · — not scored
 
-**Last updated:** 2026-08-05 (inbox Firestore map isolation; feature P3 still R)
+**Last updated:** 2026-08-06 (staff_app_demo domain Map contracts cleared; P3 G)
 
 ## Tier A
 
@@ -29,7 +29,7 @@ Evidence for the reduce-surprise program. Import/folder gates:
 | `ai_decision_demo` | G | G | G | G | Follow-up C/G — `AiDecisionFailure` + typed domain models (DTO mappers at data boundary) |
 | `graphql_demo` | G | Y | G | G | PR-1B DTOs |
 | `scapes` | G | G | G | G | Follow-up B/D — `toggleFavorite` domain + sealed `ScapesState` |
-| `staff_app_demo` | R | Y | G | Y | PR-3B submit validator; inbox recipient/message maps isolated in `staff_demo_inbox_firestore_map.dart` (unit-tested); remaining Firestore maps still deferred (separate program) |
+| `staff_app_demo` | G | Y | G | Y | 2026-08-06 — domain inbox/timeclock Maps removed (P3 G); remaining Firestore map isolation deferred outside this wave |
 
 ## Heuristic appendix (baseline grep)
 
@@ -59,6 +59,6 @@ Findings driving PR backlog:
 ## Program success criteria
 
 1. Tier A: no **R** on P3–P6 — **met**
-2. Tier B in-scope: no **R** on P3 or P6 — **met for program PRs**; `staff_app_demo` P3 stays **R** (Firestore `Map<String,dynamic>?` contract **deferred** per plan hard boundary — copy submit validator only)
+2. Tier B in-scope: no **R** on P3 or P6 — **met**; `staff_app_demo` P3 cleared to **G** on 2026-08-06 (domain inbox/timeclock Maps removed)
 3. [`CODE_QUALITY.md`](../CODE_QUALITY.md) todo_list AppError slice closed — **met**
-4. AP-11…17 accurate in [`flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) — **met**
+4. AP-11…18 accurate in [`flutter-anti-patterns.md`](../engineering/flutter-anti-patterns.md) — **met**

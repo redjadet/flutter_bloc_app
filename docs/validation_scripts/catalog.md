@@ -6,8 +6,8 @@ Router: [`../validation_scripts.md`](../validation_scripts.md).
 
 | Source | What it is |
 | --- | --- |
-| `tool/check_*.sh` on disk | **108** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
-| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **79** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
+| `tool/check_*.sh` on disk | **109** scripts (excludes `check_helpers.sh`; includes standalone, report-only, and fixture scripts) |
+| `CHECK_SCRIPTS` in `tool/delivery_checklist.sh` | **80** scripts in `./bin/checklist` static sweep — auto list: [`checklist_index.md`](checklist_index.md) |
 | This catalog | Human-oriented index; one-line purpose + when to run |
 | Guide shards | Long-form purpose, examples, suppressions — see [Contents](../validation_scripts.md#contents) |
 
@@ -74,8 +74,14 @@ below.
   `apps/mobile/lib/features/*/domain` (AP-11). Always exit 0; use during DTO/boundary PRs.
   See [`architecture/reduce_surprise_patterns.md`](../architecture/reduce_surprise_patterns.md).
   Not in `./bin/checklist`.
-  shared→feature probe, domain→app-composition probe, fan-in heuristics, cross-feature import
-  report). Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
+- **`check_domain_map_bags.sh`**: Warn-only scan for public domain
+  `Map<String, dynamic>` fields/signatures (AP-18). Allowlist in
+  `tool/config/domain_map_bag_allowlist.txt`. Always exit 0 on findings; config
+  errors exit non-zero. Included in `./bin/checklist` as warn-only.
+  Fixtures: `tool/fixtures/domain_map_bags/`.
+- **`modular_metrics.sh`**: Report-only modularity metrics (shared→feature probe,
+  domain→app-composition probe, fan-in heuristics, cross-feature import report).
+  Usage: `bash tool/modular_metrics.sh` or `--cross-feature-only`.
 - **`check_feature_barrel_exports.sh`**: **Report-only** (always exit 0). Summarizes
   `apps/mobile/lib/app/**` imports that reach into feature `presentation/`, `data/`, or `domain/`
   (barrel migration backlog). Not in `./bin/checklist` by default.

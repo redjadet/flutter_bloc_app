@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-04T19:22:23Z"
-  git_head: "597665c022cf670553cb99c770aa8df3ece3163e"
+  generated_at: "2026-08-06T13:14:40Z"
+  git_head: "478563c0f2a3a7a96ecf31a013da029ba3f5849d"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -28,16 +28,16 @@ Largest non-generated Dart files under `apps/mobile/lib/features/`. Use to scope
 | 10 | 307 | `walletconnect_auth/data/walletconnect_auth_repository_impl_body.part.dart` | walletconnect_auth |
 | 11 | 297 | `chart/data/firebase_chart_repository_impl.part.dart` | chart |
 | 12 | 286 | `in_app_purchase_demo/presentation/pages/in_app_purchase_demo_page_cards.part.dart` | in_app_purchase_demo |
-| 13 | 244 | `counter/presentation/widgets/counter_page_app_bar_overflow.part.dart` | counter |
-| 14 | 241 | `staff_app_demo/presentation/pages/staff_app_demo_proof_page_widgets.part.dart` | staff_app_demo |
-| 15 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
-| 16 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
-| 17 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
-| 18 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
-| 19 | 222 | `case_study_demo/presentation/pages/case_study_review_page.dart` | case_study_demo |
-| 20 | 221 | `in_app_purchase_demo/presentation/cubit/in_app_purchase_demo_cubit.dart` | in_app_purchase_demo |
+| 13 | 263 | `production_readiness/presentation/pages/production_readiness_page.part.dart` | production_readiness |
+| 14 | 244 | `counter/presentation/widgets/counter_page_app_bar_overflow.part.dart` | counter |
+| 15 | 241 | `staff_app_demo/presentation/pages/staff_app_demo_proof_page_widgets.part.dart` | staff_app_demo |
+| 16 | 225 | `graphql_demo/data/countries_graphql_repository_queries.part.dart` | graphql_demo |
+| 17 | 223 | `online_therapy_demo/presentation/cubit/messaging_cubit.dart` | online_therapy_demo |
+| 18 | 223 | `library_demo/presentation/widgets/library_demo_body.dart` | library_demo |
+| 19 | 223 | `example/presentation/pages/firebase_functions_test_page.dart` | example |
+| 20 | 223 | `camera_gallery/data/image_picker_camera_gallery_repository.dart` | camera_gallery |
 
-**Total feature Dart (non-generated):** ~77953 LOC across `apps/mobile/lib/features`.
+**Total feature Dart (non-generated):** ~78129 LOC across `apps/mobile/lib/features`.
 <!-- refresh_ai_reports:hotspots:end -->
 
 **Regenerate:**

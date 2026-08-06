@@ -1,0 +1,5 @@
+# path|symbol|reason
+# Paths are relative to apps/mobile (APP_ROOT).
+lib/features/remote_config/domain/remote_config_snapshot.dart|values|intentional dynamic Remote Config value bag
+lib/features/ai_decision_demo/domain/ai_decision_models.dart|inputSnapshot|deferred legacy migration; do-not-copy
+lib/features/ai_decision_demo/domain/ai_decision_models.dart|extras|deferred legacy migration; do-not-copy
