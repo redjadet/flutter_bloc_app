@@ -2973,6 +2973,156 @@
   "@exampleCaseStudyDemoButton": {
     "description": "Example page entry to the dentist case study demo"
   },
+  "@caseStudyDemoTitle": {
+    "description": "Title for the dentist case study demo page"
+  },
+  "@caseStudyDemoNewCase": {
+    "description": "Label for starting a new case tab/action"
+  },
+  "@caseStudyDemoHistory": {
+    "description": "Label for case history tab/action"
+  },
+  "@caseStudyDemoSettings": {
+    "description": "Label for case demo settings tab/action"
+  },
+  "@caseStudyDemoMetadataTitle": {
+    "description": "Section title for case metadata details"
+  },
+  "@caseStudyDoctorNameLabel": {
+    "description": "Label for the doctor name field"
+  },
+  "@caseStudyCaseTypeLabel": {
+    "description": "Label for the case type field"
+  },
+  "@caseStudyNotesLabel": {
+    "description": "Label for the optional notes field"
+  },
+  "@caseStudyContinue": {
+    "description": "Continue button label to advance to the next step"
+  },
+  "@caseStudyCaseTypeImplant": {
+    "description": "Case type option: implant"
+  },
+  "@caseStudyCaseTypeOrtho": {
+    "description": "Case type option: orthodontics"
+  },
+  "@caseStudyCaseTypeCosmetic": {
+    "description": "Case type option: cosmetic"
+  },
+  "@caseStudyCaseTypeGeneral": {
+    "description": "Case type option: general"
+  },
+  "@caseStudyRecordTitle": {
+    "description": "Title for the record responses screen"
+  },
+  "@caseStudyPickVideoCamera": {
+    "description": "Label for recording video with the camera"
+  },
+  "@caseStudyPickVideoGallery": {
+    "description": "Label for choosing a video from the gallery"
+  },
+  "@caseStudyNext": {
+    "description": "Next step button label"
+  },
+  "@caseStudyGoToReview": {
+    "description": "Button label to continue to the review step"
+  },
+  "@caseStudyBack": {
+    "description": "Back button label"
+  },
+  "@caseStudyReviewTitle": {
+    "description": "Title for the case review and submit screen"
+  },
+  "@caseStudySubmit": {
+    "description": "Submit case button label"
+  },
+  "@caseStudyAbandon": {
+    "description": "Abandon case creation flow button label"
+  },
+  "@caseStudyAbandonConfirmBody": {
+    "description": "Confirmation body when abandoning a case"
+  },
+  "@caseStudyDeleteDialogTitle": {
+    "description": "Title for delete-case confirmation dialog"
+  },
+  "@caseStudyDeleteDialogBody": {
+    "description": "Body for delete-case confirmation dialog"
+  },
+  "@caseStudyUploading": {
+    "description": "Status text shown while uploading video"
+  },
+  "@caseStudyDataModeLocalOnly": {
+    "description": "Case data mode option: local only"
+  },
+  "@caseStudyDataModeSupabase": {
+    "description": "Case data mode option: Supabase"
+  },
+  "@caseStudyHistoryTitle": {
+    "description": "Title for submitted cases history screen"
+  },
+  "@caseStudyHistoryEmpty": {
+    "description": "Empty-state text when no submitted cases exist"
+  },
+  "@caseStudyHistoryDetailTitle": {
+    "description": "Title for case history detail screen"
+  },
+  "@caseStudySubmittedAt": {
+    "description": "Label for case submitted date/time"
+  },
+  "@caseStudyVideoMissing": {
+    "description": "Error when the video file is missing"
+  },
+  "@caseStudyErrorGeneric": {
+    "description": "Generic error message in the case study flow"
+  },
+  "@caseStudyHistoryDetailNotFound": {
+    "description": "Error when a case detail cannot be found"
+  },
+  "@caseStudyHistoryDetailUnavailable": {
+    "description": "Error when a case detail cannot be loaded"
+  },
+  "@caseStudySubmitLocalHistoryFailed": {
+    "description": "Message when cloud save succeeded but local history update failed"
+  },
+  "@caseStudyRetryLocalSave": {
+    "description": "Button label to retry saving to local history"
+  },
+  "@caseStudyRefreshDetailTooltip": {
+    "description": "Tooltip/text for refreshing case detail"
+  },
+  "@caseStudySignedUrlsRefreshHint": {
+    "description": "Hint about temporary signed URLs for clip playback"
+  },
+  "@caseStudyQuestion1": {
+    "description": "Case study question 1 text"
+  },
+  "@caseStudyQuestion2": {
+    "description": "Case study question 2 text"
+  },
+  "@caseStudyQuestion3": {
+    "description": "Case study question 3 text"
+  },
+  "@caseStudyQuestion4": {
+    "description": "Case study question 4 text"
+  },
+  "@caseStudyQuestion5": {
+    "description": "Case study question 5 text"
+  },
+  "@caseStudyQuestion6": {
+    "description": "Case study question 6 text"
+  },
+  "@caseStudyQuestion7": {
+    "description": "Case study question 7 text"
+  },
+  "@caseStudyQuestion8": {
+    "description": "Case study question 8 text"
+  },
+  "@caseStudyQuestion9": {
+    "description": "Case study question 9 text"
+  },
+  "@caseStudyQuestion10": {
+    "description": "Case study question 10 text"
+  },
   "@caseStudyQuestionProgress": {
     "placeholders": {
       "current": {
