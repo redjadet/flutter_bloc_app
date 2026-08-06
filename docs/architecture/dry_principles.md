@@ -56,10 +56,13 @@ When similarity may be incidental, wait for a third use before generalizing.
 <!-- markdownlint-disable MD013 -->
 | Pattern | Where to look | Suggested action |
 | ------- | ------------- | ---------------- |
-| Custom `InputDecoration` | `search_text_field.dart`, `graphql_filter_bar.dart` | Reuse `buildCommonInputDecoration` or `CommonFormField` |
-| Manual loading/error branching | Any new page that doesn't use `ViewStatusSwitcher` | Prefer `ViewStatusSwitcher` + `CommonStatusView` |
-| Max-width layout wrappers | `profile_page.dart`, `chat_message_list.dart`, `chart_page.dart` | Expand `CommonMaxWidth` / `CommonPageLayout` usage |
+| Borderless search chrome | `search_text_field.dart`, `todo_search_field.dart` | Exception: keep local decoration until a second consumer shares the full borderless + platform/shell contract. Do not force `buildCommonInputDecoration`. |
+| Manual loading/error branching | New pages still hand-branching `isLoading`/`hasError` | Prefer `ViewStatusSwitcher` + existing status widgets (`todo_list_page_body` adopted 2026-08-06) |
 <!-- markdownlint-enable MD013 -->
+
+Closed (verified live code, 2026-08-06): `GraphqlFilterBar` uses
+`CommonDropdownField`; GraphQL/chart/profile/search pages already use
+`ViewStatusSwitcher` and/or shared max-width layout.
 
 ## DRY Patterns Used
 

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:design_system/design_system.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
@@ -78,6 +80,86 @@ class _FakeTodoRepository
   }
 }
 
+/// Controllable repo for ViewStatusSwitcher loading / error / retry proof.
+class _ControllableTodoRepository
+    with TodoRepositoryNoPendingSync
+    implements TodoRepository {
+  _ControllableTodoRepository({final List<TodoItem>? initialItems})
+    : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
+    _controller = StreamController<List<TodoItem>>.broadcast(
+      onListen: _emitCurrent,
+    );
+  }
+
+  final List<TodoItem> _items;
+  late final StreamController<List<TodoItem>> _controller;
+  Completer<List<TodoItem>>? pendingFetch;
+  Object? nextFetchError;
+  int fetchCount = 0;
+
+  @override
+  Stream<List<TodoItem>> watchAll() => _controller.stream;
+
+  @override
+  Future<List<TodoItem>> fetchAll() async {
+    fetchCount += 1;
+    final Completer<List<TodoItem>>? pending = pendingFetch;
+    if (pending != null) {
+      return pending.future;
+    }
+    final Object? error = nextFetchError;
+    if (error != null) {
+      nextFetchError = null;
+      throw error;
+    }
+    return _snapshot();
+  }
+
+  @override
+  Future<void> save(final TodoItem item) async {
+    final int index = _items.indexWhere(
+      (final current) => current.id == item.id,
+    );
+    if (index == -1) {
+      _items.add(item);
+    } else {
+      _items[index] = item;
+    }
+    _emitCurrent();
+  }
+
+  @override
+  Future<void> delete(final String id) async {
+    _items.removeWhere((final item) => item.id == id);
+    _emitCurrent();
+  }
+
+  @override
+  Future<void> clearCompleted() async {
+    _items.removeWhere((final item) => item.isCompleted);
+    _emitCurrent();
+  }
+
+  List<TodoItem> _snapshot() => List<TodoItem>.unmodifiable(_items);
+
+  void _emitCurrent() {
+    scheduleMicrotask(() {
+      if (_controller.isClosed) {
+        return;
+      }
+      _controller.add(_snapshot());
+    });
+  }
+
+  Future<void> dispose() async {
+    final Completer<List<TodoItem>>? pending = pendingFetch;
+    if (pending != null && !pending.isCompleted) {
+      pending.complete(_snapshot());
+    }
+    await _controller.close();
+  }
+}
+
 TodoItem _todoItem({
   required final String id,
   required final String title,
@@ -110,11 +192,23 @@ void main() {
   });
 
   group('TodoListPage', () {
-    late _FakeTodoRepository repository;
+    late TodoRepository repository;
     late TodoListCubit cubit;
+    _FakeTodoRepository? ownedFake;
+    _ControllableTodoRepository? ownedControllable;
 
-    Widget buildSubject({final List<TodoItem>? initialItems}) {
-      repository = _FakeTodoRepository(initialItems: initialItems);
+    Widget buildSubject({
+      final List<TodoItem>? initialItems,
+      final TodoRepository? repositoryOverride,
+    }) {
+      if (repositoryOverride != null) {
+        repository = repositoryOverride;
+        ownedFake = null;
+      } else {
+        ownedControllable = null;
+        ownedFake = _FakeTodoRepository(initialItems: initialItems);
+        repository = ownedFake!;
+      }
       cubit = TodoListCubit(
         repository: repository,
         timerService: FakeTimerService(),
@@ -137,7 +231,8 @@ void main() {
 
     tearDown(() async {
       await cubit.close();
-      await repository.dispose();
+      await ownedFake?.dispose();
+      await ownedControllable?.dispose();
     });
 
     leakSafeTestWidgets(
@@ -652,5 +747,64 @@ void main() {
         );
       },
     );
+
+    testWidgets('ViewStatusSwitcher shows loading then ready content', (
+      final tester,
+    ) async {
+      ownedControllable = _ControllableTodoRepository(
+        initialItems: <TodoItem>[_todoItem(id: '1', title: 'Ready item')],
+      );
+      final Completer<List<TodoItem>> pending = Completer<List<TodoItem>>();
+      ownedControllable!.pendingFetch = pending;
+
+      await tester.pumpWidget(
+        buildSubject(repositoryOverride: ownedControllable),
+      );
+      unawaited(cubit.loadInitial());
+      await tester.pump();
+
+      expect(find.byType(CommonLoadingWidget), findsOneWidget);
+      expect(find.byType(TodoListContent), findsNothing);
+
+      pending.complete(<TodoItem>[_todoItem(id: '1', title: 'Ready item')]);
+      ownedControllable!.pendingFetch = null;
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      expect(find.byType(CommonLoadingWidget), findsNothing);
+      expect(find.byType(TodoListContent), findsOneWidget);
+      expect(find.text('Ready item'), findsOneWidget);
+    });
+
+    testWidgets('ViewStatusSwitcher shows error with retry and recovers', (
+      final tester,
+    ) async {
+      ownedControllable = _ControllableTodoRepository(
+        initialItems: <TodoItem>[_todoItem(id: '1', title: 'Recovered')],
+      );
+      ownedControllable!.nextFetchError = Exception('load failed');
+
+      await tester.pumpWidget(
+        buildSubject(repositoryOverride: ownedControllable),
+      );
+      await cubit.loadInitial();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.byType(CommonErrorView), findsOneWidget);
+      expect(find.byType(CommonRetryButton), findsOneWidget);
+      expect(find.text(AppLocalizationsEn().retryButtonLabel), findsOneWidget);
+
+      await tester.tap(find.byType(CommonRetryButton));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+
+      expect(find.byType(CommonErrorView), findsNothing);
+      expect(find.byType(TodoListContent), findsOneWidget);
+      expect(find.text('Recovered'), findsOneWidget);
+      expect(ownedControllable!.fetchCount, greaterThanOrEqualTo(2));
+    });
   });
 }

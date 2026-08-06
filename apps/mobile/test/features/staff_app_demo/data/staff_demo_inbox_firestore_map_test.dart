@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_inbox_firestore_map.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -42,13 +43,33 @@ void main() {
       expect(mapped!.confirmedAtMs, isNull);
     });
 
-    test('messageFromData preserves identity including null', () {
+    test('messageFromData returns null for null document', () {
       expect(StaffDemoInboxFirestoreMap.messageFromData(null), isNull);
-      final Map<String, dynamic> raw = <String, dynamic>{'body': 'hi'};
-      expect(
-        identical(StaffDemoInboxFirestoreMap.messageFromData(raw), raw),
-        isTrue,
-      );
+    });
+
+    test('messageFromData maps valid string fields', () {
+      final StaffDemoInboxMessage? mapped =
+          StaffDemoInboxFirestoreMap.messageFromData(<String, dynamic>{
+            'body': 'hello',
+            'type': 'shift_assignment',
+            'shiftId': 'shift-1',
+          });
+      expect(mapped, isNotNull);
+      expect(mapped!.body, 'hello');
+      expect(mapped.type, 'shift_assignment');
+      expect(mapped.shiftId, 'shift-1');
+    });
+
+    test('messageFromData nulls missing and wrong-type optional fields', () {
+      final StaffDemoInboxMessage? mapped =
+          StaffDemoInboxFirestoreMap.messageFromData(<String, dynamic>{
+            'body': 42,
+            'type': 'ok',
+          });
+      expect(mapped, isNotNull);
+      expect(mapped!.body, isNull);
+      expect(mapped.type, 'ok');
+      expect(mapped.shiftId, isNull);
     });
   });
 }

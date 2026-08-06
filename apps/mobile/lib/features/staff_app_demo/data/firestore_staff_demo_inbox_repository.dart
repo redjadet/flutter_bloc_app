@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_inbox_firestore_map.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_repository.dart';
 
@@ -50,7 +51,7 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
   }
 
   @override
-  Future<Map<String, dynamic>?> loadMessage(final String messageId) async {
+  Future<StaffDemoInboxMessage?> loadMessage(final String messageId) async {
     final snap = await _firestore
         .collection('staffDemoMessages')
         .doc(messageId)

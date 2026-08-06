@@ -1,3 +1,4 @@
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_message.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox_recipient_snapshot.dart';
 
 abstract interface class StaffDemoInboxRepository {
@@ -5,7 +6,7 @@ abstract interface class StaffDemoInboxRepository {
     required String userId,
   });
 
-  Future<Map<String, dynamic>?> loadMessage(String messageId);
+  Future<StaffDemoInboxMessage?> loadMessage(String messageId);
 
   Future<String?> loadShiftStatus(String shiftId);
 }

@@ -196,6 +196,10 @@ void main() {
       final open = await localStore.loadOpenEntry(userId: user.id);
       expect(open, isNotNull);
       expect(open!.entryId, result.entryId);
+      expect(open.shiftId, isNull);
+      expect(open.siteId, isNull);
+      // Punch evidence lives on the sync operation, not the domain snapshot.
+      expect(payload.containsKey('action'), isTrue);
     },
   );
 

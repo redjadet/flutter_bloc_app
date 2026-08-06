@@ -29,10 +29,6 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
       if (clockInAtMs is! int) return null;
       final shiftId = map['shiftId'] as String?;
       final siteId = map['siteId'] as String?;
-      final payloadRaw = map['payload'];
-      final payload = payloadRaw is Map
-          ? Map<String, dynamic>.from(payloadRaw)
-          : <String, dynamic>{};
       return StaffDemoOpenEntrySnapshot(
         entryId: entryId,
         clockInAtUtc: DateTime.fromMillisecondsSinceEpoch(
@@ -41,7 +37,6 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
         ),
         shiftId: shiftId,
         siteId: siteId,
-        payload: payload,
       );
     },
     fallback: () => null,
@@ -61,7 +56,6 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
           'clockInAtMs': snapshot.clockInAtUtc.millisecondsSinceEpoch,
           'shiftId': snapshot.shiftId,
           'siteId': snapshot.siteId,
-          'payload': snapshot.payload,
         });
       },
     );

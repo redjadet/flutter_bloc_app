@@ -1,7 +1,7 @@
 ---
 ai_snapshot:
-  generated_at: "2026-08-04T19:22:23Z"
-  git_head: "597665c022cf670553cb99c770aa8df3ece3163e"
+  generated_at: "2026-08-06T13:43:30Z"
+  git_head: "dacb838bc7d2724c890cc3d3c31d3a4d75f47ce7"
   app_root: "apps/mobile"
   canon_links:
     - docs/architecture_details.md
@@ -19,8 +19,8 @@ ai_snapshot:
 | Feature | LOC | Barrel |
 | --- | ---: | --- |
 | chat | 6827 | yes |
-| staff_app_demo | 5701 | yes |
-| todo_list | 5458 | yes |
+| staff_app_demo | 5735 | yes |
+| todo_list | 5456 | yes |
 | online_therapy_demo | 5340 | yes |
 | case_study_demo | 4830 | yes |
 | counter | 4540 | yes |
@@ -28,7 +28,7 @@ ai_snapshot:
 | iot_demo | 3280 | yes |
 | iot | 3190 | yes |
 | auth | 2487 | yes |
-| example | 2325 | yes |
+| example | 2404 | yes |
 | realtime_market | 2186 | yes |
 | graphql_demo | 2056 | yes |
 | chart | 2027 | yes |
@@ -46,9 +46,9 @@ ai_snapshot:
 | library_demo | 1045 | yes |
 | camera_gallery | 1038 | yes |
 | scapes | 991 | yes |
-| fcm_demo | 969 | yes |
+| production_readiness | 958 | yes |
+| fcm_demo | 879 | yes |
 | websocket | 865 | yes |
-| production_readiness | 803 | yes |
 | genui_demo | 736 | yes |
 | playlearn | 673 | yes |
 | deeplink | 553 | yes |

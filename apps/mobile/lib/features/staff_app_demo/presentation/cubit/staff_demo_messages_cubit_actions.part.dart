@@ -21,7 +21,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
         if (hydrationToken != _inboxHydrationToken) return;
         if (msg == null) continue;
 
-        final shiftId = msg['shiftId'] as String?;
+        final shiftId = msg.shiftId;
         final String? shiftStatus = (shiftId == null || shiftId.isEmpty)
             ? null
             : await _inboxRepository.loadShiftStatus(shiftId);
@@ -31,8 +31,8 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
         items.add(
           StaffDemoInboxItem(
             messageId: messageId,
-            body: (msg['body'] as String?) ?? '',
-            type: (msg['type'] as String?) ?? '',
+            body: msg.body ?? '',
+            type: msg.type ?? '',
             shiftId: shiftId,
             confirmedAtMs: confirmedAtMs,
             shiftStatus: shiftStatus,
