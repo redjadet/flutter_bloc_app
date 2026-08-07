@@ -77,7 +77,9 @@ Cursor expects plugin `hooks/hooks.json` to include a numeric top-level `version
 
 ## ✅ How is testing handled?
 
-The project uses unit, bloc, widget, and golden tests. Common pitfalls are captured in `test/shared/common_bugs_prevention_test.dart`.
+The project uses unit, bloc, widget, golden (pixel), and approval (text/JSON)
+tests. Common pitfalls are captured in `test/shared/common_bugs_prevention_test.dart`.
+Use `approval_tests` for complex payloads/DTO graphs; keep goldens for UI pixels.
 
 See [Testing Overview](../testing_overview.md) for details.
 

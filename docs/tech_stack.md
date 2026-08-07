@@ -101,6 +101,7 @@ helpers — not ad-hoc `dart:io` / `Platform.is*` in widgets. Skill:
 | Concern | Libraries or approach |
 | --- | --- |
 | Unit and bloc testing | `flutter_test`, `bloc_test` `^10.0.0`, `mocktail` `^1.0.4`, `fake_async` `^1.3.3` |
+| Text/JSON approval snapshots | `approval_tests` `^1.7.1` (complex payloads/collections; not UI pixels) |
 | Golden tests | `golden_toolkit` `^0.15.0` |
 | Integration tests | `integration_test` plus repo scripts under `bin/` and `tool/` |
 | Code generation | `build_runner`, `json_serializable`, `freezed`, `retrofit_generator` |
