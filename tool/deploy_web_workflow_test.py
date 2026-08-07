@@ -55,6 +55,21 @@ class DeployWebWorkflowTest(unittest.TestCase):
 
         self.assertIn("recovery: 'true'", block)
 
+    def test_retry_drain_continues_on_error_and_recovery_uses_always(self):
+        retry = self._step_block("Drain stale GitHub Pages deployments (retry)")
+        self.assertIn("continue-on-error: true", retry)
+        self.assertIn("id: drain_retry", retry)
+
+        for step_name in (
+            "Re-dispatch Deploy web workflow after Pages failure",
+            "Re-check deploy guards before failing",
+            "Fail when Pages deploy did not succeed",
+        ):
+            with self.subTest(step=step_name):
+                block = self._step_block(step_name)
+                self.assertIn("always()", block)
+                self.assertIn("!cancelled()", block)
+
     def test_recovery_workflow_dispatch_does_not_fail_commit_check(self):
         block = self._step_block("Fail when Pages deploy did not succeed")
 
