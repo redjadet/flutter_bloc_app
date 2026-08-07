@@ -17,6 +17,16 @@ For the complete docs index, see [docs index](README.md).
   dependency path. CocoaPods remains installed/usable for existing Podfiles and
   plugin fallback.
 - Android Studio + Android SDK for Android work
+- **Android JDK:** use JDK **17 or 21** (Android Studio embedded JBR is fine).
+  Do **not** point Gradle at system **Java 25** — old wrappers (and some
+  vendored examples) fail with “Could not use Gradle version X and Java
+  version 25”. Pin locally via `.envrc` `JAVA_HOME` (see
+  [`envrc.example`](envrc.example)) and/or
+  `flutter config --jdk-dir="/Applications/Android Studio.app/Contents/jbr/Contents/Home"`.
+  In Android Studio: **Settings → Build, Execution, Deployment → Build Tools →
+  Gradle → Gradle JDK →** Embedded JDK (jbr-21). Open
+  `apps/mobile/android` (Gradle **9.6.x**), not `vendor/**/screengrab`
+  (Gradle **6.8**).
 
 ### Environment setup
 

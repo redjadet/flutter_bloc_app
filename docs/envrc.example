@@ -89,7 +89,14 @@ Then you can run `flutter run` from the repo root without typing
 #   ./tool/trigger_render_chat_api_deploy.sh
 # (see docs/integrations/render_fastapi_chat_demo.md — MCP cannot start deploys).
 
+# Optional: Android/Gradle JDK (recommended: Android Studio embedded JDK 21).
+# System Java 25 breaks older Gradle (e.g. vendor Fastlane screengrab = Gradle 6.8).
+# Flutter CLI also honors: flutter config --jdk-dir=".../Android Studio.app/Contents/jbr/Contents/Home"
+# export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+# export PATH="$JAVA_HOME/bin:$PATH"
+
 # Optional: make `flutter run` auto-append --dart-define from env (zsh/bash).
 # The wrapper injects defines after the subcommand (e.g. `flutter run --dart-define=...`).
 export PATH="$(pwd)/tool/direnv/bin:${PATH}"
 ```
+
