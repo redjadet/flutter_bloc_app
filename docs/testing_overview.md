@@ -57,7 +57,8 @@ workflow dispatch and supports the
 | Unit tests | Pure Dart logic, repositories, services, helpers | `test/**` |
 | Bloc tests | Cubit/BLoC state transitions and side-effect boundaries | `test/**` |
 | Widget tests | Screen and widget behavior, interaction, and layout | `test/**` |
-| Golden tests | Visual regressions for deterministic UIs | `test/**` |
+| Approval tests | Text/JSON snapshots for complex payloads, DTO graphs, collections (`approval_tests`) | `test/**` + committed `*.approved.*` |
+| Golden tests | Visual (pixel) regressions for deterministic UIs (`golden_toolkit`) | `test/**` + `test/goldens/**` |
 | Integration tests | End-to-end flows, navigation, persistence, and cross-feature behavior | `integration_test/**` |
 | Performance traces | Focused integration/perf harnesses and traces | `integration_test/perf/**` |
 
@@ -102,8 +103,11 @@ tool/test_coverage.sh
 # Run a single test file
 flutter test test/counter_cubit_test.dart
 
-# Regenerate golden files
+# Regenerate golden files (pixels)
 flutter test --update-goldens
+
+# Review approval mismatches (text/JSON; from apps/mobile)
+dart run approval_tests:review
 ```
 
 If multiple devices are attached, set:
@@ -166,8 +170,9 @@ When fixing a bug class, extend these paths (or register in `tool/check_regressi
 | Auth session lifecycle races | `test/app/presentation/cubit/app_auth_cubit_test.dart`, `test/core/auth/session_lifecycle_coordinator_test.dart` (+ `tool/check_regression_guards.sh` route for `packages/auth/lib/src/*` and `AppAuthCubit`) |
 | HTTP error mapping | 401/429/503, unmapped fallback, `Retry-After` parsing |
 | Auth refresh single-flight | one forced refresh on 401 retry with new bearer |
+| Chat HF payload / parse approvals | `test/huggingface_payload_builder_test.dart`, `test/huggingface_response_parser_test.dart`, `test/features/chat/data/chat_conversation_dto_approval_test.dart` (+ `test/helpers/approval_test_options.dart`) |
 
-Lifecycle script lists: [`validation_scripts.md`](validation_scripts.md) catalog + `tool/check_regression_guards.sh`. Mix/goldens: skill `agents-validation-testing` (pointer only).
+Lifecycle script lists: [`validation_scripts.md`](validation_scripts.md) catalog + `tool/check_regression_guards.sh`. Mix/goldens/approvals: skill `agents-validation-testing` (pointer only).
 
 ## Feature-defined testing
 
