@@ -90,8 +90,15 @@ For full guidance, see [`flutter_best_practices_review.md`](review/flutter_best_
 ## Testing Standards
 
 - Required types: unit, bloc, widget, golden, and common bug prevention tests.
+- For complex JSON/object graphs (payloads, serializers), prefer
+  `approval_tests` snapshots over brittle multi-field `expect`s; keep focused
+  expects for behavior edges. See [`testing_overview.md`](testing_overview.md)
+  § Repo testing conventions.
 - Run `./bin/checklist` before merging.
 - Update goldens after Flutter upgrades (`flutter test --update-goldens`).
+- Update committed `*.approved.*` artifacts deliberately after reviewing diffs
+  (`dart run approval_tests:review` from `apps/mobile`); never auto-baseline in
+  CI.
 
 See [`testing_overview.md`](testing_overview.md) for the full testing playbook.
 
