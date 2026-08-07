@@ -182,10 +182,12 @@ jobs:
         continue-on-error: true
 
       - name: Drain stale GitHub Pages deployments (retry)
+        id: drain_retry
         if: >-
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure'
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -199,6 +201,8 @@ jobs:
       - name: Re-dispatch Deploy web workflow after Pages failure
         id: redispatch
         if: >-
+          always() &&
+          !cancelled() &&
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           github.event_name == 'push' &&
@@ -224,6 +228,8 @@ jobs:
       - name: Re-check deploy guards before failing
         id: final_skip
         if: >-
+          always() &&
+          !cancelled() &&
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure' &&
@@ -254,6 +260,8 @@ jobs:
 
       - name: Fail when Pages deploy did not succeed
         if: >-
+          always() &&
+          !cancelled() &&
           steps.branch_tip.outputs.skip != 'true' &&
           steps.pages_already_live.outputs.skip != 'true' &&
           steps.deployment.outcome == 'failure' &&

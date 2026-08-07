@@ -68,9 +68,10 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
     """Return True when a Pages deployment should be cancelled before a new deploy."""
     if is_clear_pages_status(status):
         return False
-    # Blank status often sticks after cancel; one nudge is enough so the drain
-    # loop does not treat the same ghost forever and burn poll_timeout.
-    if nudged and status in {None, ""}:
+    # Blank / stuck in_progress often never flip after cancel; one nudge is
+    # enough so the drain loop does not treat the same ghost forever and burn
+    # poll_timeout. Keep deployment_queued after nudge — that is real backlog.
+    if nudged and status in {None, "", "deployment_in_progress"}:
         return False
     if is_active_queue_status(status):
         return True
@@ -81,12 +82,13 @@ def is_stale_pages_status(status: str | None, *, nudged: bool = False) -> bool:
 
 def needs_post_cancel_wait(status: str | None) -> bool:
     """Return True when a pause helps GitHub release queue capacity."""
-    # Blank-status ghosts rarely change after cancel; serial 5s sleeps across
-    # dozens of SHAs exceed the drain deadline before a recheck can clear them.
+    # Blank / active-queue ghosts rarely change after cancel; serial 5s sleeps
+    # across dozens of SHAs exceed the drain deadline before a recheck can
+    # clear them. Rely on poll_interval / settle_seconds for batch settle.
     if status in {None, ""}:
         return False
     if is_active_queue_status(status):
-        return True
+        return False
     if status in TERMINAL_STATUSES and status != "succeed":
         return True
     return False

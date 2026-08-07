@@ -249,19 +249,23 @@ Pages deployment that is not `succeed` (including `deployment_cancelled`
 entries that still block the queue), paginates through recent environment
 deployments, and nudges each blocker once. Blank/`null` statuses are cancelled
 once and then treated as cleared (they often never flip to a terminal label);
-the drain also skips the per-cancel settle sleep for those ghosts so a large
-backlog cannot burn the poll deadline before `deploy-pages` runs. On retry after a failed deploy, the
-script includes the current SHA, waits for a terminal Pages status, then
-retries `deploy-pages`. Branch deploys, including redispatched
-`workflow_dispatch` recovery runs on `main`, skip when the workflow commit is no
-longer the branch tip, so stale queued runs do not fight newer `main` pushes.
-Redispatched recovery runs also skip when the commit's Pages deployment already
-succeeded (for example after a concurrent push deploy), so a late retry cannot
-fail the commit check. Recovery dispatches pass `recovery=true`; when that
-retry still cannot publish, the workflow exits without failing the commit check
-(the push run already redispatched once). Before any hard failure, the workflow
-re-checks branch tip and published status so a long-lived `workflow_dispatch`
-cannot fail `main` after newer commits land.
+stuck `deployment_in_progress` statuses get the same one-nudge treatment
+(cancel often accepts but the label never flips). The drain also skips the
+per-cancel settle sleep for blank and active-queue ghosts so a large backlog
+cannot burn the poll deadline before `deploy-pages` runs. On retry after a
+failed deploy, the script includes the current SHA, waits for a terminal Pages
+status, then continues recovery; the retry drain uses `continue-on-error` so a
+ghost backlog cannot skip redispatch / published-status guards. Branch
+deploys, including redispatched `workflow_dispatch` recovery runs on `main`,
+skip when the workflow commit is no longer the branch tip, so stale queued
+runs do not fight newer `main` pushes. Redispatched recovery runs also skip
+when the commit's Pages deployment already succeeded (for example after a
+concurrent push deploy), so a late retry cannot fail the commit check.
+Recovery dispatches pass `recovery=true`; when that retry still cannot
+publish, the workflow exits without failing the commit check (the push run
+already redispatched once). Before any hard failure, the workflow re-checks
+branch tip and published status so a long-lived `workflow_dispatch` cannot
+fail `main` after newer commits land.
 
 #### `base_href` input
 
