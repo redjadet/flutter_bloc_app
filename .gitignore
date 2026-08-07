@@ -55,6 +55,9 @@ coverage/coverage_summary.md
 /artifacts/
 test/failures/
 
+# approval_tests: commit *.approved.*; ignore generated mismatches
+*.received.*
+
 # Symbolication related
 app.*.symbols
 

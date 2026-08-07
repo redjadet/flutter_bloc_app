@@ -140,6 +140,14 @@ auto-cleared when the recorded owner PID is gone.
   tests.
 - Update goldens when rendering changes are intentional and review the image
   diff before committing.
+- For complex JSON/objects/collections (payload builders, serializers), prefer
+  `approval_tests` (`Approvals.verifyAsJson` / `Approvals.verify`) with
+  committed `*.approved.*` artifacts and ignored `*.received.*`. Keep focused
+  `expect`s for behavior edges; use
+  `MissingApprovedPolicy.writeReceivedAndFail` so CI never auto-baselines.
+  Avoid `/` or `\` in test names (artifact name segments). Shared options:
+  `test/helpers/approval_test_options.dart`. Local review:
+  `dart run approval_tests:review` (from `apps/mobile`).
 - Extend an existing regression guard when fixing a bug instead of creating a
   parallel duplicate test.
 
