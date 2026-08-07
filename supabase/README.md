@@ -52,7 +52,7 @@ Deploy checklist:
 
 Avoid `--no-verify-jwt` for `chat-complete`. That would bypass the intended auth boundary and diverge from the client/runtime contract.
 
-If the app or logs show **Requested function was not found**, the `chat-complete` function is not deployed on the Supabase project your app is using (wrong project, or deploy was never run). The Flutter client treats that as `missing_configuration` and, when a device Hugging Face key is allowed, **falls back to direct** chat until the function exists.
+If the app or logs show **Requested function was not found**, the `chat-complete` function is not deployed on the Supabase project your app is using (wrong project, or deploy was never run). A local debug build may **fall back to direct** chat only when a development device key is explicitly allowed. Store/release builds must omit the Hugging Face key and therefore must not rely on that fallback.
 
 #### Troubleshooting `401 auth_required` vs `Requested function was not found`
 

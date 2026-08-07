@@ -23,6 +23,25 @@ fi
 
 # shellcheck disable=SC2207
 dart_defines=( $(./tool/flutter_dart_defines_from_env.sh) )
+
+if [ "$BUILD_MODE" != "debug" ]; then
+  prohibited=(
+    HUGGINGFACE_API_KEY
+    GEMINI_API_KEY
+    GOOGLE_API_KEY
+    CHAT_FASTAPICLOUD_DEMO_SECRET
+    CHAT_RENDER_DEMO_SECRET
+  )
+  for define in "${dart_defines[@]}"; do
+    for name in "${prohibited[@]}"; do
+      if [[ "$define" == "--dart-define=${name}="* ]]; then
+        echo "${name} must not be supplied to a mobile release/profile build. Keep it on a trusted backend."
+        exit 1
+      fi
+    done
+  done
+fi
+
 args+=("${dart_defines[@]}")
 
 echo "Building iOS IPA (${BUILD_MODE}) with dart-defines from environment (values redacted)."
@@ -32,4 +51,3 @@ if [ -n "${FLAVOR// /}" ]; then
 fi
 
 exec "${args[@]}"
-

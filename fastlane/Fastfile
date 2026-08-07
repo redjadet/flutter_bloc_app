@@ -202,6 +202,7 @@ def build_flutter(platform, options = {})
       args = ['flutter', 'build', 'ipa', "--#{build_mode}", "--target=#{entrypoint}"]
       args.concat(['--flavor', flavor]) if flavor
       defines = flutter_dart_defines
+      reject_client_secret_defines!(defines) unless build_mode == 'debug'
       args.concat(defines)
       sh(*args, log: false)
     when :android

@@ -18,10 +18,17 @@ From the repo root:
 
 ### FastAPI Cloud required environment
 
-The deployed service validates Firebase ID tokens when `CALLER_AUTH_MODE=firebase`. Ensure these are set in the FastAPI Cloud app’s environment (otherwise requests will 401 with `auth_required` and logs will show `FIREBASE_PROJECT_ID missing while caller_auth_mode=firebase`):
+The deployed service validates Firebase ID tokens when `CALLER_AUTH_MODE=firebase`
+and calls Hugging Face with a server-held credential. Set these in the FastAPI
+Cloud app's environment:
 
 - `CALLER_AUTH_MODE=firebase`
 - `FIREBASE_PROJECT_ID=<your firebase project id>` (for this repo’s app, typically `flutter-bloc-app-697e8`)
+- `HUGGINGFACE_API_KEY=<server-side provider token>`
+
+Missing Firebase project configuration returns **401** `auth_required`; a
+missing Hugging Face credential returns **503** `server_misconfigured`. Neither
+credential is returned to Flutter.
 
 ## Cursor agent gate
 
@@ -39,9 +46,9 @@ Do not rely on branch-local assumptions that only live in chat history.
 | # | Topic | Recorded default |
 | --- | --- | --- |
 | 1 | Caller auth | **Firebase ID token required** on every Render chat request via `Authorization: Bearer <id_token>`. App Check is optional and deferred for v1. |
-| 2 | HF delivery by flavor | **dev** = Firebase Remote Config demo-scoped HF read token. **staging/prod** = Callable or equivalent short-lived backend-issued token only. |
+| 2 | HF credential ownership | The FastAPI service reads `HUGGINGFACE_API_KEY` from its server environment in every flavor. Flutter never receives or forwards the provider credential. |
 | 3 | Anonymous cache policy | If caller identity is not verified, **disable server response cache** for that request. No anonymous shared cache bucket in v1. |
-| 4 | Header names | Caller auth = **`Authorization`**. HF token = **`X-HF-Authorization`**. Demo gate = **`X-Render-Demo-Secret`**. Idempotency = **`Idempotency-Key`**. Optional client correlation = **`X-Client-Correlation-Id`** (server logs + success **`_render_meta`**). |
+| 4 | Header names | Caller auth = **`Authorization`**. Demo gate = **`X-Render-Demo-Secret`**. Idempotency = **`Idempotency-Key`**. Optional client correlation = **`X-Client-Correlation-Id`** (server logs + success **`_render_meta`**). No Hugging Face credential header is accepted. |
 | 6 | Overload vs rate limit | Semaphore saturation → **503** + `upstream_unavailable`, `retryable: true`. **429** + `rate_limited` reserved for upstream HF only. |
 | 7 | Complexity thresholds | **Complex** if any: latest user message `> 400` chars; total normalized chars `> 1200`; message count `> 8`; fenced code block present; or latest user message contains `2+` markers from bullet/numbered-list items, `compare`, `analyze`, `design`, `architecture`, `refactor`, `debug`, `step-by-step`. Otherwise **simple**. |
 | 8 | Permanent `auth_required` on replay | **Dead-letter** after one dequeue attempt; terminal failed state + `chatAuthRefreshRequired` / `chatSessionEnded` UX; no infinite retry. |
@@ -56,7 +63,7 @@ These defaults make the v1 plan autonomous for Cursor agents. Product overrides 
 Record these before broad Flutter integration starts:
 
 - Caller-auth mode for Render (`Authorization` with Firebase ID token vs alternate JWT).
-- Exact header names for HF token, optional demo secret, idempotency, optional client **`X-Client-Correlation-Id`**, and any caller-auth header.
+- Exact header names for optional demo secret, idempotency, optional client **`X-Client-Correlation-Id`**, and caller auth; confirm no upstream credential header exists.
 - Success/error JSON envelope fields and the frozen machine-readable `code` values; success payloads include **`_render_meta`** (`server_request_id`, optional `client_correlation_id`) for client log correlation when CDN/proxies omit custom response headers.
 - `model: "auto"` sentinel and allowlisted explicit model ids.
 - Shared fixture filenames under `test/fixtures/render_chat_contract/`.
@@ -97,7 +104,7 @@ The **Render** Cursor plugin (marketplace) ships skills, rules, and the same **h
 | Goal | Use |
 | --- | --- |
 | **Provision** Docker web service + monorepo **`rootDir: demos/render_chat_api`** + `dockerfilePath` | **Blueprint or Dashboard**, using committed [`demos/render_chat_api/render.yaml`](../../demos/render_chat_api/render.yaml) (`plan: free` for Hobby). Render MCP **`create_web_service`** is limited to native **build/start** flows and does not replace blueprint fields for this layout. |
-| **Secrets / env** after the service exists | MCP **`update_environment_variables`** (or Dashboard): `CORS_ORIGINS`, `FIREBASE_PROJECT_ID`, optional `DEMO_SHARED_SECRET`. HF read token for chat is **client** `X-HF-Authorization` (not Render `HF_TOKEN` in current FastAPI). |
+| **Secrets / env** after the service exists | MCP **`update_environment_variables`** (or Dashboard): `CORS_ORIGINS`, `FIREBASE_PROJECT_ID`, `HUGGINGFACE_API_KEY`, optional `DEMO_SHARED_SECRET`. Keep all credential values server-side. |
 | **Observe** | MCP **`list_services`**, **`get_service`**, **`list_deploys`**, **`list_logs`**, **`get_metrics`**. |
 | **Trigger deploy** | Repo script [`tool/trigger_render_chat_api_deploy.sh`](../../tool/trigger_render_chat_api_deploy.sh): `POST /v1/services/{id}/deploys` with **`RENDER_API_KEY`** (hosted Render MCP **cannot** start deploys; use this script, Dashboard, deploy hook, or `render deploys create`). |
 
@@ -111,15 +118,18 @@ When the workspace service name matches [`demos/render_chat_api/render.yaml`](..
 
 Set Flutter `CHAT_RENDER_DEMO_BASE_URL` to that origin (no trailing slash). **Do not** paste Render API keys into the app, repo, or chat—use Dashboard env vars / `PUT …/env-vars` from a local shell with `RENDER_API_KEY` in the environment, then **rotate** the key if it was ever exposed.
 
-**Hugging Face token for real chat (current FastAPI):** the handler in [`demos/render_chat_api/main.py`](../../demos/render_chat_api/main.py) reads the HF read token **only** from the **`X-HF-Authorization: Bearer <hf_read_token>`** header on each `POST /v1/chat/completions`. It does **not** read a Render env var named `HF_TOKEN`. The Flutter app supplies that header after resolving the token from **Firebase** (Remote Config **`RENDER_CHAT_DEMO_HF_READ_TOKEN`** in dev, or the **Callable** path in non-dev) per [`render_orchestration_hf_token_provider.dart`](../../apps/mobile/lib/features/chat/data/render_orchestration_hf_token_provider.dart). Optional **`DEMO_SHARED_SECRET`** on Render matches **`X-Render-Demo-Secret`** if you enable that gate in settings.
-
-**Optional Render env `HF_TOKEN`:** not consumed by the shipped FastAPI entrypoint; the plan allows it only for **future** operator/CI patterns. To test with **`curl`**, pass **`X-HF-Authorization: Bearer hf_...`** (and Firebase **`Authorization`**, **`Idempotency-Key`**, etc.) instead of relying on server-side `HF_TOKEN`.
+**Hugging Face credential for real chat:** the handler in
+[`demos/render_chat_api/main.py`](../../demos/render_chat_api/main.py) reads
+`HUGGINGFACE_API_KEY` from the service environment and passes it only to the
+fixed Hugging Face upstream. It does not accept `X-HF-Authorization` or any
+other client-supplied provider credential. Optional `DEMO_SHARED_SECRET` on the
+service matches `X-Render-Demo-Secret` when that additional gate is enabled.
 
 ### `RENDER_API_KEY` (Render REST / Cursor MCP only)
 
 - **Local:** `export RENDER_API_KEY=...` in gitignored **`.envrc`** (see [`docs/envrc.example`](../envrc.example)).
 - **Do not** create a Firebase **Remote Config** parameter for `RENDER_API_KEY`. Remote Config is retrieved by the **client** app; Render API keys are **workspace-admin** credentials and would be exposed to anyone who can read your Remote Config payload.
-- **If you need “Firebase” server-side storage:** use **Cloud Functions secrets** (`firebase functions:secrets:set …`) or another **server-only** secret channel for code that runs on Firebase **never** for keys consumed by the Flutter app from RC. The demo HF path uses RC key **`RENDER_CHAT_DEMO_HF_READ_TOKEN`** (demo-scoped HF read token), not the Render API key.
+- **If you need Firebase-hosted server-side storage:** use **Cloud Functions secrets** (`firebase functions:secrets:set …`) or another server-only channel for Firebase code. The retired `issueRenderChatDemoHfReadToken` Callable fails closed and must not be repurposed to deliver the FastAPI provider credential to Flutter.
 
 ## Ops / timeouts
 
@@ -139,7 +149,7 @@ Scale-to-zero or small Render plans can push the **first** `POST /v1/chat/comple
 #### Checklist (run after meaningful Render, Dio, or fallthrough policy changes)
 
 1. **Cold instance:** Idle the service until scale-to-zero (or use a fresh preview deploy).
-2. **Measure first POST:** Call `POST /v1/chat/completions` with production-like headers (`Authorization`, `X-HF-Authorization`, `Idempotency-Key`, optional `X-Render-Demo-Secret`) and record wall time to first complete response (e.g. `curl -w '\n%{time_total}\n'` or Render **Metrics / Logs**).
+2. **Measure first POST:** Call `POST /v1/chat/completions` with production-like headers (`Authorization`, `Idempotency-Key`, optional `X-Render-Demo-Secret`) and record wall time to first complete response (e.g. `curl -w '\n%{time_total}\n'` or Render **Metrics / Logs**).
 3. **Compare to Dio:** Confirm typical cold path stays **under** `receiveTimeout` (120s) for success, or explicitly document product choice to rely on **fallthrough** / user-visible timeout when stricter budgets are set later.
 4. **Client path:** Repeat once on **emulator or device** on a representative network; watch for **connect** stalls approaching **30s**.
 5. **Append one evidence row** to the table below.
@@ -156,16 +166,16 @@ Do not append numeric **Cold POST wall (s)** values without a primary measuremen
 ## Flutter client (`SecretConfig` compile-time defines)
 
 - **Client configuration:** Export only non-secret `CHAT_FASTAPICLOUD_*` routing values (preferred; legacy `CHAT_RENDER_*` still supported) from `.envrc`. The mobile app sends Firebase identity and payload; the FastAPI service owns `HUGGINGFACE_API_KEY`.
-- **Store release (Fastlane):** Android rejects provider keys and demo shared secrets in Dart defines. Do not place `HUGGINGFACE_API_KEY`, Gemini/Google keys, or `CHAT_*_DEMO_SECRET` in release environment files. See [Security and Secrets](../security_and_secrets.md).
-- `CHAT_FASTAPICLOUD_DEMO_ENABLED` / `CHAT_RENDER_DEMO_ENABLED` — when `true`, the orchestration **runnable** gate in [`register_chat_services.dart`](../../apps/mobile/lib/app/composition/features/register_chat_services.dart) (`_chatRenderOrchestrationRunnable`) requires a non-empty base URL, a signed-in **Firebase** user, **`https`** origin in release builds, and registered `FirebaseAuth`. **HF read token** presence is enforced in [`render_fastapi_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart) at send time (empty → client `token_missing`), not inside that gate. **DemoFirstChatRepository** still orders orchestration before composite when the gate passes.
+- **Store release (Fastlane):** Android and iOS release/profile paths reject provider keys and demo shared secrets in Dart defines. Keep `HUGGINGFACE_API_KEY`, Gemini/Google keys, and `CHAT_*_DEMO_SECRET` out of mobile release environments. See [Security and Secrets](../security_and_secrets.md).
+- `CHAT_FASTAPICLOUD_DEMO_ENABLED` / `CHAT_RENDER_DEMO_ENABLED` — when `true`, the orchestration **runnable** gate in [`register_chat_services.dart`](../../apps/mobile/lib/app/composition/features/register_chat_services.dart) (`_chatRenderOrchestrationRunnable`) requires a non-empty base URL, a signed-in **Firebase** user, **`https`** origin in release builds, and registered `FirebaseAuth`. The Render repository sends Firebase identity and request data only; provider-key availability is a server-side readiness concern. **DemoFirstChatRepository** still orders orchestration before composite when the gate passes.
 - `CHAT_FASTAPICLOUD_DEMO_BASE_URL` / `CHAT_RENDER_DEMO_BASE_URL` — service origin (no trailing slash); release builds require `https`.
 - `CHAT_FASTAPICLOUD_DEMO_STRICT` / `CHAT_RENDER_DEMO_STRICT` — when `true`, no fallthrough to composite after a retryable orchestration failure.
 - `CHAT_FASTAPICLOUD_DEMO_SECRET` / `CHAT_RENDER_DEMO_SECRET` — dev-only compatibility headers. Never ship either value in a mobile artifact.
 - The former `issueRenderChatDemoHfReadToken` Callable is retired and fails closed. Configure `HUGGINGFACE_API_KEY` only in the FastAPI service’s secret manager; the client never receives or forwards this upstream credential.
 - **Offline dequeue dead-letter:** non-retryable remote failures during `processOperation` mark the user bubble with `terminalSyncFailureCode` (same string as `ChatRemoteFailureException.code`), complete the pending op, and show plan ARB copy under the bubble (no infinite retry).
 - **Live send errors:** `ChatCubit` keeps `remoteFailureL10nCode` alongside `error` for `ChatRemoteFailureException`; the chat screen snackbar uses the same ARB mapping as terminal dequeue (`terminalSyncFailureMessage`) instead of raw upstream text when a code is present.
-- **Client-only machine code:** **`token_missing`** — HF read token is absent before the outbound Render request (Flutter preflight in [`render_fastapi_chat_repository.dart`](../../apps/mobile/lib/features/chat/data/render_fastapi_chat_repository.dart)); maps to ARB **`chatTokenMissing`**. Distinct from server JSON **`auth_required`** (Firebase / caller auth).
-- **Logout vs queue:** Clearing orchestration token cache on Firebase sign-out does not delete pending chat sync operations; the next dequeue may hit Render without a valid HF token and surface a non-retryable remote failure until the user re-authenticates or the row is cleared per existing offline-first chat UX.
+- **Legacy compatibility:** `token_missing` localization and token-provider types may remain for older/direct chat paths, but the current Render repository does not resolve or send an HF token. Render authentication failures use server JSON `auth_required`; missing server provider configuration uses `server_misconfigured`.
+- **Logout vs queue:** Pending chat sync operations survive Firebase sign-out. A later dequeue without a valid Firebase session reaches the Render caller-auth boundary and fails with non-retryable `auth_required` until the user re-authenticates or existing offline-first UX clears the row.
 
 ## Log correlation (Flutter ↔ Render)
 
@@ -179,7 +189,7 @@ CORS allowlist for browser clients includes **`x-client-correlation-id`** (see [
 
 ## Security notes
 
-- **Caller auth header** on the client: owned by a dedicated DI provider (see plan **Caller auth implementation contract**), separate from HF token provider.
+- **Caller auth header** on the client: owned by a dedicated DI provider (see plan **Caller auth implementation contract**). The Render request path has no HF token provider or upstream credential header.
 - **FastAPI:** per-uid/IP limits, max body/header sizes, auth-failure telemetry; v1 **no** user-controlled upstream hosts (HF base fixed; future tools need allowlists).
 
 ## Links

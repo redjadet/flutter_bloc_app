@@ -47,6 +47,7 @@ Production-style caller auth (Firebase ID tokens):
 ```bash
 export CALLER_AUTH_MODE=firebase
 export FIREBASE_PROJECT_ID=your-project-id
+export HUGGINGFACE_API_KEY=your-server-side-provider-token
 unset ALLOW_TEST_AUTH_BYPASS
 uvicorn main:app --host 0.0.0.0 --port 8787
 ```

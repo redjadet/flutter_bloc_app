@@ -78,7 +78,7 @@ Protected examples:
 ## Session lifecycle coordinator (PR A)
 
 - `SessionLifecycleCoordinator` (`apps/mobile/lib/app/auth/session_lifecycle_coordinator.dart`) is the central cleanup and invalidation seam for Firebase-primary auth.
-- All `AuthRepository` DI registrations are wrapped with `SignOutAwareAuthRepository` so explicit `signOut()` clears `AuthTokenManager` and optional Render HF token cache.
+- All `AuthRepository` DI registrations are wrapped with `SignOutAwareAuthRepository` so explicit `signOut()` clears `AuthTokenManager` and the legacy Render token-provider cache retained for compatibility. The current Render request path sends Firebase identity only and does not consume that cache.
 - An auth-stream listener also runs cleanup when Firebase SDK sign-out occurs (e.g. FirebaseUI `SignOutButton` bypassing the repository).
 - `AuthTokenManager` is a DI singleton; `register_http_services.dart` binds it to the coordinator after `Dio` creation.
 - `AuthTokenInterceptor` invalidates the Firebase session on auth-classified refresh failures and on persistent 401 after one forced refresh + replay (`auth_token_refresh_classifier.dart`).
