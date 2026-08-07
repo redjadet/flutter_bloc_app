@@ -4,30 +4,12 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_fastapi_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
-import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeCaller implements RenderCallerAuthHeaderProvider {
   @override
   Future<String?> bearerIdToken({final bool forceRefresh = false}) async =>
       'id-token';
-}
-
-class _FakeHf implements RenderOrchestrationHfTokenProvider {
-  @override
-  Future<void> clearRenderOrchestrationTokenCache() async {}
-
-  @override
-  Future<String?> readHfTokenForUpstream() async => 'hf-token';
-}
-
-class _EmptyHf implements RenderOrchestrationHfTokenProvider {
-  @override
-  Future<void> clearRenderOrchestrationTokenCache() async {}
-
-  @override
-  Future<String?> readHfTokenForUpstream() async => null;
 }
 
 Dio _dioThatCapturesPayload(
@@ -77,7 +59,6 @@ void main() {
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),
-        hfTokenProvider: _FakeHf(),
         isRunnable: () => true,
       );
 
@@ -101,7 +82,6 @@ void main() {
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),
-        hfTokenProvider: _FakeHf(),
         isRunnable: () => true,
       );
 
@@ -125,7 +105,6 @@ void main() {
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),
-        hfTokenProvider: _FakeHf(),
         isRunnable: () => true,
       );
 
@@ -138,32 +117,6 @@ void main() {
 
       expect(seen, isNotNull);
       expect(seen!['model'], 'openai/gpt-oss-120b');
-    });
-
-    test('throws token_missing when HF read token is absent', () async {
-      final RenderFastApiChatRepository repo = RenderFastApiChatRepository(
-        dio: Dio(),
-        payloadBuilder: const HuggingFacePayloadBuilder(),
-        responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
-        callerAuth: _FakeCaller(),
-        hfTokenProvider: _EmptyHf(),
-        isRunnable: () => true,
-      );
-
-      expect(
-        () => repo.sendMessage(
-          pastUserInputs: const <String>[],
-          generatedResponses: const <String>[],
-          prompt: 'hello',
-        ),
-        throwsA(
-          isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
-            'code',
-            'token_missing',
-          ),
-        ),
-      );
     });
   });
 }

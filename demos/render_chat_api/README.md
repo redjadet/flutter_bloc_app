@@ -24,6 +24,7 @@ When running with `CALLER_AUTH_MODE=firebase`, the server must know which Fireba
 
 - `CALLER_AUTH_MODE=firebase`
 - `FIREBASE_PROJECT_ID=<your firebase project id>`
+- `HUGGINGFACE_API_KEY=<server-side provider token>`
 
 If `FIREBASE_PROJECT_ID` is missing, the service returns **401** on `POST /v1/chat/completions` and logs `FIREBASE_PROJECT_ID missing while caller_auth_mode=firebase`.
 
@@ -55,10 +56,12 @@ uvicorn main:app --host 0.0.0.0 --port 8787
 | Header | Purpose |
 | --- | --- |
 | `Authorization` | `Bearer <Firebase ID token>` |
-| `X-HF-Authorization` | `Bearer <Hugging Face read token>` |
 | `Idempotency-Key` | Required; stable per logical send |
 | `X-Client-Correlation-Id` | Optional; echoed in logs and in success JSON **`_render_meta`** for Flutter ↔ server correlation |
 | `X-Render-Demo-Secret` | Optional; must match `DEMO_SHARED_SECRET` when set |
+
+The service, not Flutter, owns `HUGGINGFACE_API_KEY`. Do not send an upstream
+provider token in a request header or bundle it in a mobile build.
 
 Successful **`POST /v1/chat/completions`** responses merge OpenAI-shaped JSON with **`_render_meta`**: `server_request_id` (UUID) and `client_correlation_id` when the client sent the header. The same values are also set on response headers when intermediaries pass them through. See **Log correlation** in [`docs/integrations/render_fastapi_chat_demo.md`](../../docs/integrations/render_fastapi_chat_demo.md).
 

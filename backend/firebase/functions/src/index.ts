@@ -13,47 +13,30 @@ admin.initializeApp();
 const staffDemoSheetsSpreadsheetIdSecret = defineSecret("STAFF_DEMO_SHEETS_SPREADSHEET_ID");
 const staffDemoSheetsCredentialsJsonSecret = defineSecret("STAFF_DEMO_SHEETS_CREDENTIALS_JSON");
 
-/** Hugging Face read token for Flutter Render orchestration (Callable path). */
-const renderChatDemoHfReadTokenSecret = defineSecret("RENDER_CHAT_DEMO_HF_READ_TOKEN");
-
 // Simple callable function returning "Hello World"
 export const helloWorld = onCall({region: "us-central1"}, () => ({
   message: "Hello World",
 }));
 
 /**
- * Returns the payload expected by Flutter `LayeredRenderOrchestrationHfTokenProvider`:
- * `{ "hf_read_token": "<trimmed>" }` (also accepts legacy `{ "token": "..." }` on client).
- *
- * Auth: Firebase Auth required. Configure secret `RENDER_CHAT_DEMO_HF_READ_TOKEN`
- * (demo-scoped HF read key) or for emulators set env `RENDER_CHAT_DEMO_HF_READ_TOKEN`.
+ * Retired migration endpoint. Upstream credentials are now owned by the
+ * authenticated orchestration service and must never be returned to apps.
  */
 export const issueRenderChatDemoHfReadToken = onCall(
   {
     region: "us-central1",
-    secrets: [renderChatDemoHfReadTokenSecret],
   },
   (request: CallableRequest) => {
     if (!request.auth?.uid) {
       throw new HttpsError(
         "unauthenticated",
-        "Must be signed in to obtain Render demo HF read token"
+        "Must be signed in to use Render chat"
       );
     }
-    const isEmulator = process.env.FUNCTIONS_EMULATOR === "true";
-    const raw = isEmulator ?
-      (getOptionalEnv("RENDER_CHAT_DEMO_HF_READ_TOKEN") ??
-        getOptionalSecretValue(renderChatDemoHfReadTokenSecret)) :
-      (getOptionalSecretValue(renderChatDemoHfReadTokenSecret) ??
-        getOptionalEnv("RENDER_CHAT_DEMO_HF_READ_TOKEN"));
-    const trimmed = raw?.trim() ?? "";
-    if (trimmed.length === 0) {
-      throw new HttpsError(
-        "failed-precondition",
-        "RENDER_CHAT_DEMO_HF_READ_TOKEN is not configured for this project"
-      );
-    }
-    return {hf_read_token: trimmed};
+    throw new HttpsError(
+      "failed-precondition",
+      "This endpoint no longer returns upstream credentials. Use the authenticated Render chat service."
+    );
   }
 );
 

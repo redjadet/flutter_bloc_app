@@ -73,10 +73,6 @@ def ensure_release_inputs!
     'Set SUPABASE_ANON_KEY before release builds.',
   ) if ENV['SUPABASE_ANON_KEY'].to_s.strip.empty?
 
-  UI.user_error!(
-    'Set HUGGINGFACE_API_KEY before release builds.',
-  ) if ENV['HUGGINGFACE_API_KEY'].to_s.strip.empty?
-
   begin
     require 'json'
     data = JSON.parse(File.read(ENV['ANDROID_JSON_KEY']))
@@ -99,6 +95,26 @@ def flutter_dart_defines
     defines = output.split(/\s+/).map(&:strip).reject(&:empty?)
   end
   defines
+end
+
+def reject_client_secret_defines!(defines)
+  prohibited = %w[
+    HUGGINGFACE_API_KEY
+    GEMINI_API_KEY
+    GOOGLE_API_KEY
+    CHAT_FASTAPICLOUD_DEMO_SECRET
+    CHAT_RENDER_DEMO_SECRET
+  ]
+  configured = defines.filter_map do |define|
+    match = define.match(/\A--dart-define=([^=]+)=/)
+    match && prohibited.include?(match[1]) ? match[1] : nil
+  end
+  return if configured.empty?
+
+  UI.user_error!(
+    "Release builds reject client-bundled secret dart-defines: #{configured.sort.join(', ')}. " \
+    'Move these credentials to a trusted backend.',
+  )
 end
 
 def aab_path_for(flavor)
@@ -193,6 +209,7 @@ def build_flutter(platform, options = {})
       args << '--no-tree-shake-icons' if ENV['ANDROID_NO_TREE_SHAKE_ICONS'] != 'false'
       args.concat(['--flavor', flavor]) if flavor
       defines = flutter_dart_defines
+      reject_client_secret_defines!(defines)
       args.concat(defines)
       sh(*args, log: false)
       sh('ls', '-R', 'build/app/outputs/bundle') if ENV['FL_FASTLANE_DEBUG'] == 'true'

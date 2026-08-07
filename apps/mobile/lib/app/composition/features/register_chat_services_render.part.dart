@@ -50,31 +50,12 @@ void _registerChatRenderOrchestrationServices() {
   registerLazySingletonIfAbsent<RenderCallerAuthHeaderProvider>(
     () => DefaultRenderCallerAuthHeaderProvider(() => getIt<FirebaseAuth>()),
   );
-  registerLazySingletonIfAbsent<RenderOrchestrationHfTokenProvider>(
-    () {
-      final RenderOrchestrationHfTokenProvider provider =
-          LayeredRenderOrchestrationHfTokenProvider(
-            runtime: getIt<AppRuntimeConfig>(),
-            remoteTokenPort: getIt<RenderOrchestrationRemoteTokenPort>(),
-            storage: SecretConfig.storage ?? createDefaultSecretStorage(),
-            firebaseAuth:
-                getIt.isRegistered<FirebaseAuth>() && Firebase.apps.isNotEmpty
-                ? getIt<FirebaseAuth>()
-                : null,
-          );
-      if (getIt.isRegistered<SessionLifecycleCoordinator>()) {
-        getIt<SessionLifecycleCoordinator>().bindHfTokenProvider(provider);
-      }
-      return provider;
-    },
-  );
   registerLazySingletonIfAbsent<RenderFastApiChatRepository>(
     () => RenderFastApiChatRepository(
       dio: getIt<Dio>(instanceName: _renderChatDioName),
       payloadBuilder: getIt<HuggingFacePayloadBuilder>(),
       responseParser: getIt<HuggingFaceResponseParser>(),
       callerAuth: getIt<RenderCallerAuthHeaderProvider>(),
-      hfTokenProvider: getIt<RenderOrchestrationHfTokenProvider>(),
       isRunnable: _chatRenderOrchestrationRunnable,
       logOrchestrationDiagnostics: (tag) =>
           getIt<ChatRenderOrchestrationDiagnosticsPort>().logIfDebug(tag),

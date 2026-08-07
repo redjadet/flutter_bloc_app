@@ -166,7 +166,6 @@ async def chat_completions(
     request: Request,
     body: ChatCompletionRequest,
     authorization: Optional[str] = Header(default=None),
-    x_hf_authorization: Optional[str] = Header(default=None, alias="X-HF-Authorization"),
     x_render_demo_secret: Optional[str] = Header(default=None, alias="X-Render-Demo-Secret"),
     idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
     x_client_correlation_id: Optional[str] = Header(
@@ -253,27 +252,13 @@ async def chat_completions(
             ),
         )
 
-    if not x_hf_authorization or not x_hf_authorization.lower().startswith("bearer "):
-        return JSONResponse(
-            status_code=401,
-            content=ErrorBody(
-                code="auth_required",
-                message="Missing X-HF-Authorization bearer token.",
-                request_id=request_id,
-                retryable=False,
-            ).model_dump(),
-            headers=_telemetry_headers(
-                server_request_id=request_id,
-                client_correlation_id=client_correlation_id,
-            ),
-        )
-    hf_token = x_hf_authorization.split(" ", 1)[1].strip()
+    hf_token = (settings.hf_api_key or "").strip()
     if not hf_token:
         return JSONResponse(
-            status_code=401,
+            status_code=503,
             content=ErrorBody(
-                code="auth_required",
-                message="Empty Hugging Face token.",
+                code="server_misconfigured",
+                message="Hugging Face upstream credential is not configured.",
                 request_id=request_id,
                 retryable=False,
             ).model_dump(),

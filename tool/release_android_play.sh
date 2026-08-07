@@ -31,14 +31,26 @@ require_env "ANDROID_PACKAGE_NAME"
 require_env "ANDROID_JSON_KEY"
 require_env "SUPABASE_URL"
 require_env "SUPABASE_ANON_KEY"
-require_env "HUGGINGFACE_API_KEY"
-
 # Maps key must be present during release build so manifest placeholders do not
 # fall back to the demo value.
 if [ -z "${GOOGLE_MAPS_ANDROID_API_KEY:-}" ] && [ -z "${GOOGLE_MAPS_API_KEY:-}" ]; then
   echo "Missing GOOGLE_MAPS_ANDROID_API_KEY (or GOOGLE_MAPS_API_KEY) in .env.android.release"
   exit 1
 fi
+
+reject_client_secret() {
+  local name="$1"
+  if [ -n "${!name:-}" ]; then
+    echo "${name} must not be supplied to a mobile release build. Keep it on a trusted backend."
+    exit 1
+  fi
+}
+
+reject_client_secret "HUGGINGFACE_API_KEY"
+reject_client_secret "GEMINI_API_KEY"
+reject_client_secret "GOOGLE_API_KEY"
+reject_client_secret "CHAT_FASTAPICLOUD_DEMO_SECRET"
+reject_client_secret "CHAT_RENDER_DEMO_SECRET"
 
 if [ -z "${JAVA_HOME:-}" ] && [ -d "/Applications/Android Studio.app/Contents/jbr/Contents/Home" ]; then
   export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"

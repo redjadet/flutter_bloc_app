@@ -9,7 +9,6 @@ import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 part 'render_fastapi_chat_repository_send.part.dart';
@@ -29,7 +28,6 @@ class RenderFastApiChatRepository implements ChatRepository {
     required this._payloadBuilder,
     required this._responseParser,
     required this._callerAuth,
-    required this._hfTokenProvider,
     required this._isRunnable,
     this._logOrchestrationDiagnostics,
   });
@@ -38,7 +36,6 @@ class RenderFastApiChatRepository implements ChatRepository {
   final HuggingFacePayloadBuilder _payloadBuilder;
   final HuggingFaceResponseParser _responseParser;
   final RenderCallerAuthHeaderProvider _callerAuth;
-  final RenderOrchestrationHfTokenProvider _hfTokenProvider;
   final bool Function() _isRunnable;
   final void Function(String tag)? _logOrchestrationDiagnostics;
 

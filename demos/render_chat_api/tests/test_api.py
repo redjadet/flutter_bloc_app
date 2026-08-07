@@ -27,7 +27,10 @@ def test_health() -> None:
     assert r.json() == {"status": "ok"}
 
 
-def test_chat_missing_hf_token() -> None:
+def test_chat_rejects_missing_server_held_hf_token(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("HUGGINGFACE_API_KEY", raising=False)
     with TestClient(app) as client:
         r = client.post(
             "/v1/chat/completions",
@@ -40,9 +43,9 @@ def test_chat_missing_hf_token() -> None:
                 "messages": [{"role": "user", "content": "Hello"}],
             },
         )
-    assert r.status_code == 401
+    assert r.status_code == 503
     body = r.json()
-    assert body["code"] == "auth_required"
+    assert body["code"] == "server_misconfigured"
 
 
 def test_chat_success_with_mock_hf() -> None:
@@ -58,7 +61,6 @@ def test_chat_success_with_mock_hf() -> None:
                 "/v1/chat/completions",
                 headers={
                     "Authorization": "Bearer test-token",
-                    "X-HF-Authorization": "Bearer hf-test",
                     "Idempotency-Key": "k-success-1",
                     "X-Client-Correlation-Id": "pytest-correlation-1",
                 },
@@ -92,7 +94,6 @@ def test_cache_hit_second_call_no_second_hf() -> None:
         with TestClient(app) as client:
             headers = {
                 "Authorization": "Bearer test-token",
-                "X-HF-Authorization": "Bearer hf-test",
                 "Idempotency-Key": "idem-cache",
             }
             body = {
@@ -120,7 +121,6 @@ def test_complex_auto_selects_mini_for_short_prompt() -> None:
                 "/v1/chat/completions",
                 headers={
                     "Authorization": "Bearer test-token",
-                    "X-HF-Authorization": "Bearer hf-test",
                     "Idempotency-Key": "k-mini",
                 },
                 json={

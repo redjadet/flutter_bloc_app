@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-07_mobile_release_secret_boundary.md`](2026-08-07_mobile_release_secret_boundary.md): Reject client-bundled release secrets; move Render upstream credentials server-side.
 - [`2026-08-06_solid_dry_remediation.md`](2026-08-06_solid_dry_remediation.md): Staff demo domain Map removal, Todo `ViewStatusSwitcher`, warn-only AP-18 Map-bag gate.
 - [`2026-08-06_restore_permission_handler_compile_sdk_37.md`](2026-08-06_restore_permission_handler_compile_sdk_37.md): Restore `permission_handler` ^13 + compileSdk 37 after local SDK 37 install.
 - [`2026-08-05_functions_object_catch_android_pin.md`](2026-08-05_functions_object_catch_android_pin.md): Functions diagnostic `Object` catch + pin `permission_handler` 12.0.3 for compileSdk 36.
