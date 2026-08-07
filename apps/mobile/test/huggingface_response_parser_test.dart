@@ -1,7 +1,9 @@
+import 'package:approval_tests/approval_tests.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_response_parser.dart';
-import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'helpers/approval_test_options.dart';
 
 typedef JsonMap = Map<String, dynamic>;
 
@@ -21,10 +23,10 @@ void main() {
 
       final ChatResult result = parser.buildInferenceResult(json);
 
-      expect(result.reply.author, ChatAuthor.assistant);
-      expect(result.reply.text, 'hello again');
-      expect(result.pastUserInputs, equals(<String>['hi']));
-      expect(result.generatedResponses, equals(<String>['hello']));
+      Approvals.verifyAsJson(
+        _chatResultSnapshot(result),
+        options: approvalTestOptions(),
+      );
     });
 
     test('buildInferenceResult falls back when generated text missing', () {
@@ -43,7 +45,7 @@ void main() {
     });
 
     test(
-      'buildChatCompletionsResult appends prompt/history and parses string',
+      'buildChatCompletionsResult appends prompt and history then parses string',
       () {
         final JsonMap json = <String, dynamic>{
           'choices': <JsonMap>[
@@ -60,11 +62,9 @@ void main() {
           prompt: 'new prompt',
         );
 
-        expect(result.reply.text, 'assistant reply');
-        expect(result.pastUserInputs, equals(<String>['hi', 'new prompt']));
-        expect(
-          result.generatedResponses,
-          equals(<String>['hello', 'assistant reply']),
+        Approvals.verifyAsJson(
+          _chatResultSnapshot(result),
+          options: approvalTestOptions(),
         );
       },
     );
@@ -92,8 +92,10 @@ void main() {
           prompt: 'prompt',
         );
 
-        expect(result.reply.text, 'part1 part2');
-        expect(result.generatedResponses.last, 'part1 part2');
+        Approvals.verifyAsJson(
+          _chatResultSnapshot(result),
+          options: approvalTestOptions(),
+        );
       },
     );
 
@@ -167,3 +169,10 @@ void main() {
     );
   });
 }
+
+JsonMap _chatResultSnapshot(final ChatResult result) => <String, dynamic>{
+  'replyAuthor': result.reply.author.name,
+  'replyText': result.reply.text,
+  'pastUserInputs': result.pastUserInputs,
+  'generatedResponses': result.generatedResponses,
+};

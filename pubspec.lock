@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.2+1"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      sha256: "50e982d500bc863e1d703448afdbf9e5a72eb48840a4f766fa361ffd6877055f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   app_links:
     dependency: transitive
     description:
@@ -97,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  approval_tests:
+    dependency: transitive
+    description:
+      name: approval_tests
+      sha256: "5bb7b6e561318ebd8c5cd140a147a9d098f28468099aaca2df3109f88d03027b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.1"
   archive:
     dependency: transitive
     description:
@@ -497,6 +513,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
+  diff_match_patch2:
+    dependency: transitive
+    description:
+      name: diff_match_patch2
+      sha256: "8ab8f0f294d22a738d7c11cea95d015f212bd4ef9eb5080064695c6a1ca6c63d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   dio:
     dependency: transitive
     description:
@@ -1668,6 +1692,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  ispectify:
+    dependency: transitive
+    description:
+      name: ispectify
+      sha256: "1c5b48c49f8fd428455d0b1ecfa8bbf8e451f9db4c76a618444819cd54e8e1bc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.7"
   jni:
     dependency: transitive
     description:
@@ -2276,6 +2308,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.2.8"
+  rikulo_commons:
+    dependency: transitive
+    description:
+      name: rikulo_commons
+      sha256: "4415375dde57daaf6c1dabdafead3e4a6a124b70c161c421800453ad055721ac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.0"
   rxdart:
     dependency: transitive
     description:
