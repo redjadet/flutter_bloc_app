@@ -79,6 +79,9 @@ cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_def
 ```
 
 The wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
+It intentionally excludes `HUGGINGFACE_API_KEY` and chat shared secrets;
+configure them only in the owning backend's secret manager, never as manual
+Flutter Dart defines.
 Android release builds reject `HUGGINGFACE_API_KEY`, `GEMINI_API_KEY`,
 `GOOGLE_API_KEY`, `CHAT_FASTAPICLOUD_DEMO_SECRET`, and
 `CHAT_RENDER_DEMO_SECRET`; keep them out of `.env.android.release`. iOS

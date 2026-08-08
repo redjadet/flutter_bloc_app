@@ -265,6 +265,14 @@ run_regression_test() {
   fi
 }
 
+run_regression_tests() {
+  local test_file
+
+  for test_file in "${tests[@]}"; do
+    run_regression_test "$test_file"
+  done
+}
+
 case "$REGRESSION_GUARDS_MODE" in
   always)
     tests=("${ALL_TESTS[@]}")
@@ -285,8 +293,19 @@ for test_file in "${tests[@]}"; do
   echo "  • $test_file"
 done
 
-for test_file in "${tests[@]}"; do
-  run_regression_test "$test_file"
-done
+native_assets_stderr="$(mktemp "${TMPDIR:-/tmp}/check_regression_guards.XXXXXX.stderr")"
+trap 'rm -f "$native_assets_stderr"' EXIT
+
+rm -rf build/unit_test_assets
+
+if ! run_regression_tests 2> >(tee "$native_assets_stderr" >&2); then
+  if grep -Eq "build/unit_test_assets|NativeAssetsManifest\\.json|build/native_assets/macos/native_assets\\.json|Failed to code sign binary" "$native_assets_stderr"; then
+    echo "check_regression_guards: flutter unit_test_assets/native-assets failed; cleaning build assets and retrying once"
+    rm -rf build/unit_test_assets build/native_assets
+    run_regression_tests
+  else
+    exit 1
+  fi
+fi
 
 echo "✅ Regression guard tests passed"

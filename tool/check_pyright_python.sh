@@ -134,6 +134,10 @@ sys.exit(0 if sys.version_info >= (3, 10) else 1)
 PY
 }
 
+demo_venv_pip_works() {
+  "$1" -m pip help install >/dev/null 2>&1
+}
+
 find_demo_venv_python() {
   local expected_version="${1:-}"
   local candidate
@@ -154,6 +158,19 @@ find_demo_venv_python() {
   return 1
 }
 
+ensure_demo_dev_requirements() {
+  local venv_python="$1"
+  local demo_dev_reqs="$2"
+  local label="$3"
+
+  if [ -f "$demo_dev_reqs" ]; then
+    # Deployment tooling creates a runtime-only venv. Install this demo's
+    # declared development dependencies before Pyright analyzes its tests.
+    echo "INFO: Ensuring development requirements ($label) ..."
+    "$venv_python" -m pip install -q -r "$demo_dev_reqs"
+  fi
+}
+
 ensure_demo_venv() {
   local demo_root="$1"
   local demo_venv="$2"
@@ -165,11 +182,12 @@ ensure_demo_venv() {
   existing_python="$(find_demo_venv_python "" "$demo_venv" || true)"
 
   if [ -n "$existing_python" ]; then
-    if python_supports_demo_venv "$existing_python"; then
+    if python_supports_demo_venv "$existing_python" && demo_venv_pip_works "$existing_python"; then
+      ensure_demo_dev_requirements "$existing_python" "$demo_dev_reqs" "$label"
       return 0
     fi
 
-    echo "INFO: Existing venv python is not runnable or is older than 3.10; recreating $demo_venv ($label) ..."
+    echo "INFO: Existing venv is not runnable, is older than 3.10, or has unusable pip; recreating $demo_venv ($label) ..."
     rm -rf "$demo_venv"
   fi
   if [ ! -f "$demo_reqs" ]; then
@@ -202,9 +220,7 @@ PY
 
   "$venv_python" -m pip install -q -U pip setuptools wheel
   "$venv_python" -m pip install -q -r "$demo_reqs"
-  if [ -f "$demo_dev_reqs" ]; then
-    "$venv_python" -m pip install -q -r "$demo_dev_reqs"
-  fi
+  ensure_demo_dev_requirements "$venv_python" "$demo_dev_reqs" "$label"
 }
 
 echo "Checking Pyright config guard (repo root pyrightconfig.json)..."

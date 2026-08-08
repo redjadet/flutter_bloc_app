@@ -15,3 +15,17 @@ redeploy the backend before relying on Render chat. The FastAPI Cloud deploy
 helper now honors the CLI's supported `rich-toolkit` version range so this
 secret-driven restart can complete and runs `pip check` before upload to catch
 future incompatible dependency pins.
+
+Local pre-merge validation also ensures each FastAPI demo's declared development
+requirements before Pyright runs. This keeps tests importable when a deployment
+helper has already created a runtime-only `.venv`, and recreates only a demo
+venv whose Python or `pip` is unusable.
+
+Focused Flutter regression guards also reset stale generated unit-test assets
+and retry once for native-asset manifest or code-signing races; genuine test
+failures still stop validation.
+
+The automatic Flutter Dart-define helper now excludes `HUGGINGFACE_API_KEY`,
+preventing a server credential from reaching local Flutter command arguments or
+client artifacts; it also excludes chat shared secrets. A regression test
+verifies integration-test argv exclusion.
