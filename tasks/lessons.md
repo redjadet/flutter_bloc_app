@@ -21,6 +21,25 @@ Operator pref: [`docs/agent_kb/operator_preferences_durable.md`](../docs/agent_k
 - Preventive rule:
 - Evidence or affected files:
 
+### 2026-08-08 - Hive 2.x + Flutter web `--wasm` breaks counter save
+
+- What went wrong:
+  GH Pages `--wasm` build linked Hive's stub backend (`dart.library.html` absent
+  under dart2wasm). `openBox('counter')` threw `UnimplementedError`; UI showed
+  “Failed to save counter” on Increment. Local dart2js debug hid the bug.
+- How it was fixed:
+  Default `WEB_WASM=0` + `WEB_WASM_FORCE` gate in `tool/build_web_github_pages.sh`;
+  always `Hive.init` on web (`hive_web_v1` release).
+- Pattern:
+  Packages that conditional-import on `dart.library.html` alone break under
+  `--wasm`; prefer `dart.library.js_interop` / hive_ce before re-enabling WASM.
+- Preventive rule:
+  Do not default web deploy to `--wasm` while Hive 2.x is in tree; run
+  `tool/test_build_web_github_pages_wasm_guard.sh`.
+- Evidence or affected files:
+  `tool/build_web_github_pages.sh`, `packages/storage/.../hive_initializer_web.dart`,
+  `docs/engineering/workarounds.md` §4, production console logs on Pages.
+
 ### 2026-08-05 - Do not adopt permission_handler 13 until Android SDK 37 exists
 
 - What went wrong:

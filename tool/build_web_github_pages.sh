@@ -45,9 +45,12 @@ fi
 # shellcheck disable=SC2046
 DEFINE_ARGS=( $(bash "$WORKSPACE_ROOT/tool/flutter_dart_defines_from_env.sh") )
 
-# WebAssembly (skwasm with canvaskit fallback) improves first-load and runtime
-# performance. Opt out with WEB_WASM=0 if a dependency regresses wasm support.
-WEB_WASM="${WEB_WASM:-1}"
+# Hive 2.x selects its IndexedDB backend via `dart.library.html`. dart2wasm
+# does not define that library, so Hive resolves to the stub backend and
+# `openBox` throws UnimplementedError (web counter save fails). Keep WASM off
+# until we migrate to hive_ce (or another js_interop-capable store).
+# Opt in only with WEB_WASM=1 and WEB_WASM_FORCE=1.
+WEB_WASM="${WEB_WASM:-0}"
 
 CMD=(
   flutter build web
@@ -57,6 +60,9 @@ CMD=(
 )
 
 if [[ "$WEB_WASM" == "1" || "$WEB_WASM" == "true" ]]; then
+  if [[ "${WEB_WASM_FORCE:-}" != "1" ]]; then
+    fail "WEB_WASM=1 blocked: Hive 2.x is stubbed under dart2wasm (UnimplementedError on openBox). Set WEB_WASM_FORCE=1 to override, or migrate to hive_ce."
+  fi
   CMD+=(--wasm)
 else
   CMD+=(--no-wasm-dry-run)

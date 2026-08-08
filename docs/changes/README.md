@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-08_web_hive_wasm_counter_save.md`](2026-08-08_web_hive_wasm_counter_save.md): Default web deploy off `--wasm` — Hive 2.x stub under dart2wasm caused “Failed to save counter”.
 - [`2026-08-08_flutter_3_44_9_pin.md`](2026-08-08_flutter_3_44_9_pin.md): Pin Flutter `3.44.8` → `3.44.9` via toolchain sync (Dart `3.12.2` unchanged); include `mobile_release_dry_run` sink.
 - [`2026-08-07_mobile_release_secret_boundary.md`](2026-08-07_mobile_release_secret_boundary.md): Android/iOS release secret guards, server-held Render credential, and client-token retirement.
 - [`2026-08-07_approval_tests.md`](2026-08-07_approval_tests.md): `approval_tests` for complex JSON/text snapshots; goldens remain for UI pixels.
