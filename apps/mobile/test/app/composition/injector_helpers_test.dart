@@ -24,17 +24,11 @@ void main() {
       expect(repository, isNull);
     });
 
-    test('skips Firebase remote repositories on iOS simulator debug', () {
+    test('does not skip Firebase remotes on iOS simulator debug', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       FirebaseBootstrapService.isIosSimulatorInDebug = true;
 
-      final Object? repository = createRemoteRepositoryOrNull<Object>(
-        context: 'test repository',
-        factory: () => Object(),
-      );
-
-      expect(shouldSkipFirebaseRemoteRepositories, isTrue);
-      expect(repository, isNull);
+      expect(shouldSkipFirebaseRemoteRepositories, isFalse);
     });
 
     test('does not skip iOS debug remotes on physical device by default', () {

@@ -1,4 +1,8 @@
 #!/bin/bash
+# Embed CocoaPods frameworks into the simulator Runner.app without codesigning
+# each framework (avoids CocoaPods frameworks.sh SIGKILL on large pods).
+# Runner itself must remain code-signed so Keychain entitlements apply for
+# Firebase Auth — do not set CODE_SIGNING_ALLOWED=NO on the Runner target.
 set -euo pipefail
 
 frameworks_list="${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist"

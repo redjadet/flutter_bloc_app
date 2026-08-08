@@ -90,9 +90,9 @@ Format: **Symptom → Cause → Fix → Proof**
 ## FN-10 — iOS simulator Keychain guest fallback
 
 **Symptom:** Firebase Auth fails on simulator; app stuck on auth screen.
-**Cause:** Keychain entitlement errors (`keychain-error`).
-**Fix:** Local-only guest session in debug; omit RTDB remotes until real Firebase user.
-**Proof:** [`docs/changes/2026-06-06_guest-sign-in-ios-simulator.md`](../changes/2026-06-06_guest-sign-in-ios-simulator.md); integration journey J1
+**Cause:** Unsigned simulator Runner (`CODE_SIGNING_ALLOWED[sdk=iphonesimulator*]=NO`) → Keychain `-34018` / `keychain-error`. Separately, injecting `keychain-access-groups` into simulator entitlements → launch denial (`SBMainWorkspace`).
+**Fix (primary):** Re-enable Runner code signing + keep simulator `.xcent` empty (do not embed Keychain Sharing on simulator); keep unsigned CocoaPods framework embed script only. Local-guest DI fallback remains as safety net.
+**Proof:** [`docs/changes/2026-08-08_ios-simulator-firebase-auth-keychain.md`](../changes/2026-08-08_ios-simulator-firebase-auth-keychain.md); earlier guest path [`docs/changes/2026-06-06_guest-sign-in-ios-simulator.md`](../changes/2026-06-06_guest-sign-in-ios-simulator.md); integration journey J1
 
 ---
 
