@@ -177,6 +177,7 @@ class UpdateAgentToolchainVersionsTest(unittest.TestCase):
             "dependency-updates.yml",
             "drift.yml",
             "deploy_web.yml",
+            "mobile_release_dry_run.yml",
         ):
             (workflows / name).write_text(
                 "env:\n  FLUTTER_VERSION: '3.44.6'\n",

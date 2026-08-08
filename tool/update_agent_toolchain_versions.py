@@ -20,6 +20,7 @@ WORKFLOW_FLUTTER_SINKS = (
     ".github/workflows/dependency-updates.yml",
     ".github/workflows/drift.yml",
     ".github/workflows/deploy_web.yml",
+    ".github/workflows/mobile_release_dry_run.yml",
 )
 
 
