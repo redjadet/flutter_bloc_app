@@ -91,6 +91,9 @@ jobs:
       - name: Pub get
         run: bash tool/workspace_pub_get.sh
 
+      - name: Guard Hive-incompatible web WASM default
+        run: bash tool/test_build_web_github_pages_wasm_guard.sh
+
       - name: Build web (Pages)
         env:
           REPO_NAME: ${{ github.event.repository.name }}

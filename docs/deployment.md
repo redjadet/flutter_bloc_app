@@ -219,13 +219,17 @@ Use the repo script (required for correct `--base-href` and consistent dart-defi
 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
 ```
 
-This produces `build/web` with **WebAssembly** (`--wasm`, skwasm + CanvasKit
-fallback) by default for faster first load. Opt out with `WEB_WASM=0` if a
-dependency breaks wasm compilation:
+This produces `build/web` as **dart2js** by default. Hive 2.x is incompatible
+with `--wasm` / dart2wasm (`dart.library.html` missing → stub backend →
+`UnimplementedError` on `openBox`, which surfaces as “Failed to save counter”).
+WASM stays opt-in only:
 
 ```bash
-WEB_WASM=0 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
+# Experimental — requires acknowledging the Hive break:
+WEB_WASM=1 WEB_WASM_FORCE=1 REPO_NAME="<repo>" bash tool/build_web_github_pages.sh
 ```
+
+Follow-up: migrate to `hive_ce` (js_interop IndexedDB) before re-defaulting WASM.
 
 ### Deploy via GitHub Actions (auto on `main`)
 

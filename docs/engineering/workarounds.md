@@ -44,9 +44,30 @@ To fix the underlying write failure itself, verify: (1) Firebase Realtime Databa
 
 ---
 
-## 4. Other workarounds (template)
+## 4. [Active 2026-08] Hive 2.x incompatible with Flutter web `--wasm`
 
-Add new workarounds below (between ## 3 and ## 4) in the same format:
+**Symptom:** Release web (GitHub Pages) logs `Failed to open Hive box: counter` /
+`UnimplementedError`; Increment shows “Failed to save counter”. Load falls back
+to empty snapshot; save has no fallback.
+
+**Root cause:** `hive` 2.2.3 selects IndexedDB via `if (dart.library.html)`.
+dart2wasm does not define `dart.library.html`, so the stub backend is linked and
+`openBox` throws `UnimplementedError`. Local `flutter run -d chrome` (dart2js)
+keeps working.
+
+**Current workaround:** `tool/build_web_github_pages.sh` defaults `WEB_WASM=0`
+and refuses `WEB_WASM=1` unless `WEB_WASM_FORCE=1`. Web init always calls
+`Hive.init(...)` (release: `hive_web_v1`) because `Hive.initFlutter()` is a
+no-op on web.
+
+**Remove when:** Migrated to `hive_ce` / `hive_ce_flutter` (js_interop IndexedDB)
+and web counter save verified under `--wasm`.
+
+---
+
+## 5. Other workarounds (template)
+
+Add new workarounds below (between ## 4 and ## 5) in the same format:
 
 - **Title:** Short name of the issue.
 - **Symptom:** What fails (error message, platform, version).
