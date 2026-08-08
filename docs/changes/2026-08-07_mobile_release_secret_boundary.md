@@ -11,4 +11,7 @@ forbidden provider or shared secret is present.
 
 Deployment follow-up: configure `HUGGINGFACE_API_KEY` in the FastAPI service's
 secret manager, rotate any credential previously used by the mobile path, and
-redeploy the backend before relying on Render chat.
+redeploy the backend before relying on Render chat. The FastAPI Cloud deploy
+helper now honors the CLI's supported `rich-toolkit` version range so this
+secret-driven restart can complete and runs `pip check` before upload to catch
+future incompatible dependency pins.
