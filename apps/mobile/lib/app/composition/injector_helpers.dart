@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:get_it/get_it.dart';
 
 /// When true, [createRemoteRepositoryOrNull] returns null so Realtime DB
@@ -80,15 +79,13 @@ bool get shouldSkipFirebaseRemoteRepositories =>
     _shouldSkipFirebaseRemoteRepositoriesInDebug ||
     integrationTestOmitFirebaseRemoteRepositories;
 
-/// Omits RTDB remotes on macOS debug (Keychain) and iOS simulator debug when
-/// the app uses a local-only guest without a Firebase Auth session.
+/// Omits RTDB remotes on macOS debug where Keychain/Auth often stays local-only.
+///
+/// iOS simulator debug keeps remotes wired: Runner is code-signed so Firebase
+/// Auth can use Keychain. Local-guest fallback remains for rare Keychain misses.
 bool get _shouldSkipFirebaseRemoteRepositoriesInDebug {
   if (kIsWeb || kReleaseMode) {
     return false;
   }
-  if (defaultTargetPlatform == TargetPlatform.macOS) {
-    return true;
-  }
-  return defaultTargetPlatform == TargetPlatform.iOS &&
-      FirebaseBootstrapService.isIosSimulatorInDebug;
+  return defaultTargetPlatform == TargetPlatform.macOS;
 }

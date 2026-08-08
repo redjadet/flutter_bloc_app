@@ -11,7 +11,7 @@ principles), [`offline_first/hive_schema_migrations.md`](../offline_first/hive_s
 
 | Log / symptom | Likely cause | Fix |
 | --- | --- | --- |
-| `FlutterSecureSecretStorage.* failed` + Keychain **-34018** | iOS simulator / debug lacks Keychain entitlements; `flutter_secure_storage` cannot persist | Confirm `useInMemorySecretStorageInDebug()` covers iOS; **full restart** (not hot reload). Run `bash tool/check_apple_debug_hive_storage.sh`. |
+| `FlutterSecureSecretStorage.* failed` + Keychain **-34018** | Historically unsigned iOS simulator Runner (no entitlements). Auth path now requires signed Runner + Keychain Sharing; secrets still use in-memory debug storage by design | Confirm `useInMemorySecretStorageInDebug()` covers iOS secrets; for Auth `keychain-error` see [`authentication.md`](../authentication.md#debug--simulator-auth-behavior). **Full restart** after signing/entitlement changes. Run `bash tool/check_apple_debug_hive_storage.sh`. |
 | `Secure storage unavailable; using non-persisted Hive encryption key` | Ephemeral key each launch when secure storage write fails | Same as above + stable `_appleDebugFallbackKey` in `HiveKeyManager` for Apple debug. |
 | `Recovering corrupted box.` (Hive, multiple times at startup) | Old on-disk boxes encrypted with a **previous** key or default `Hive.initFlutter()` path | iOS debug must use **`hive_ios_debug`** dir (not legacy path). Erase app on simulator once if noise persists after code fix. |
 | `Hive initialized in hive_ios_debug (...)` once, no recovery spam | Healthy Apple debug path | No action. |

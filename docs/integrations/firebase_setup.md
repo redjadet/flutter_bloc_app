@@ -308,6 +308,8 @@ Full rules and explanation: [Todo List Firebase Realtime Database Security Rules
 | **Todo list / Counter sync permission denied** | Deploy [Realtime Database rules](../security/todo_list_firebase_security_rules.md) and ensure the user is signed in. |
 | **Charts show `UNAUTHENTICATED` but a Firebase user exists** | Check Cloud Run IAM for the Gen2 callable (see “Gen2 (Node 22) IAM note” above). |
 | **App Check errors on iOS simulator** | This repo skips App Check activation on iOS simulators in debug (“monitoring-only demo”). In production, use App Attest / DeviceCheck and enforce App Check as needed. |
+| **`keychain-error` / Auth fails on iOS simulator** | Runner must be **code-signed** (do not set `CODE_SIGNING_ALLOWED[sdk=iphonesimulator*]=NO` on the Runner target). Do **not** inject `keychain-access-groups` into simulator builds — that triggers `SBMainWorkspace` launch denial. `ios/scripts/sign_simulator_keychain_entitlements.sh` keeps simulator `.xcent` empty. Pods frameworks still use the unsigned embed script. Full rebuild after changes; uninstall app from simulator if launch still fails. Guest fallback remains if Keychain fails; see [authentication.md](../authentication.md#debug--simulator-auth-behavior). |
+| **Simulator build OK but launch denied (`FBSOpenApplicationServiceErrorDomain` / `SBMainWorkspace`)** | Usually invalid simulator entitlements (especially `keychain-access-groups`). Confirm empty entitlements: `codesign -d --entitlements :- build/ios/iphonesimulator/Runner.app`. Uninstall `com.example.flutterBlocApp` from the simulator and cold `flutter run` again. |
 
 ### Workaround when FlutterFire CLI fails on macOS
 
