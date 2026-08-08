@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Emits `--dart-define=KEY=value` args for any configured secrets in the current
-# environment.
+# Emits `--dart-define=KEY=value` args for approved client configuration in the
+# current environment. Never add provider credentials or shared backend secrets:
+# command-line arguments are observable and Flutter embeds Dart defines.
 #
 # Intended usage (direnv recommended):
 #   eval "$(./tool/flutter_dart_defines_from_env.sh)"
@@ -12,8 +13,8 @@ set -euo pipefail
 #   flutter run $(./tool/flutter_dart_defines_from_env.sh)
 #
 # Notes:
-# - This script intentionally does NOT print secret values.
 # - It outputs args separated by spaces.
+# - Server-only variables such as HUGGINGFACE_API_KEY are intentionally excluded.
 
 emit_define() {
   local key="$1"
@@ -23,10 +24,7 @@ emit_define() {
   fi
 }
 
-# Required by some remote-backed features.
-emit_define "HUGGINGFACE_API_KEY"
-emit_define "HUGGINGFACE_MODEL"
-emit_define "HUGGINGFACE_USE_CHAT_COMPLETIONS"
+# Public client configuration for remote-backed features.
 emit_define "SUPABASE_URL"
 emit_define "SUPABASE_ANON_KEY"
 
@@ -64,7 +62,6 @@ emit_define "GOOGLE_MAPS_API_KEY"
 emit_define "CHAT_RENDER_DEMO_ENABLED"
 emit_define "CHAT_RENDER_DEMO_STRICT"
 emit_define "CHAT_RENDER_DEMO_BASE_URL"
-emit_define "CHAT_RENDER_DEMO_SECRET"
 emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE"
 emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION"
 
@@ -72,7 +69,6 @@ emit_define "CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION"
 emit_define "CHAT_FASTAPICLOUD_DEMO_ENABLED"
 emit_define "CHAT_FASTAPICLOUD_DEMO_STRICT"
 emit_define "CHAT_FASTAPICLOUD_DEMO_BASE_URL"
-emit_define "CHAT_FASTAPICLOUD_DEMO_SECRET"
 emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE"
 emit_define "CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION"
 

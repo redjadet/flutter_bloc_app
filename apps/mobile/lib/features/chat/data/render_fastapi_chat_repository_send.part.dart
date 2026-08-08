@@ -41,22 +41,6 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
       );
     }
 
-    final String? hfToken = await _hfTokenProvider.readHfTokenForUpstream();
-    if (hfToken == null || hfToken.isEmpty) {
-      if (kDebugMode) {
-        AppLogger.info(
-          'Chat: RenderFastApi.sendMessage blocked: HF read token missing '
-          '(callable / secure storage / huggingface_api_key).',
-        );
-      }
-      throw const ChatRemoteFailureException(
-        'Missing Hugging Face read token for orchestration.',
-        code: 'token_missing',
-        retryable: false,
-        isEdge: false,
-      );
-    }
-
     final String? trimmedModel = model?.trim();
     final String targetModel = (trimmedModel != null && trimmedModel.isNotEmpty)
         ? trimmedModel
@@ -78,7 +62,6 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
     final String clientCorrelationId = _newRenderClientCorrelationId();
     final Map<String, String> headers = <String, String>{
       'Authorization': 'Bearer $idToken',
-      'X-HF-Authorization': 'Bearer $hfToken',
       'Idempotency-Key': idempotencyKey,
       'X-Client-Correlation-Id': clientCorrelationId,
     };

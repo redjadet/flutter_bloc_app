@@ -39,6 +39,7 @@ class Settings(BaseSettings):
         default=120.0,
         alias="HF_UPSTREAM_TIMEOUT_SECONDS",
     )
+    hf_api_key: Optional[str] = Field(default=None, alias="HUGGINGFACE_API_KEY")
     max_concurrent_120b: int = Field(default=2, alias="MAX_CONCURRENT_120B")
     rate_limit_per_uid_per_minute: int = Field(
         default=120,
@@ -61,6 +62,5 @@ FROZEN_ALLOW_HEADERS: tuple[str, ...] = (
     "content-type",
     "idempotency-key",
     "x-client-correlation-id",
-    "x-hf-authorization",
     "x-render-demo-secret",
 )

@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-08-08_flutter_3_44_9_pin.md`](2026-08-08_flutter_3_44_9_pin.md): Pin Flutter `3.44.8` → `3.44.9` via toolchain sync (Dart `3.12.2` unchanged); include `mobile_release_dry_run` sink.
+- [`2026-08-07_mobile_release_secret_boundary.md`](2026-08-07_mobile_release_secret_boundary.md): Android/iOS release secret guards, server-held Render credential, and client-token retirement.
 - [`2026-08-07_approval_tests.md`](2026-08-07_approval_tests.md): `approval_tests` for complex JSON/text snapshots; goldens remain for UI pixels.
 - [`2026-08-06_solid_dry_remediation.md`](2026-08-06_solid_dry_remediation.md): Staff demo domain Map removal, Todo `ViewStatusSwitcher`, warn-only AP-18 Map-bag gate.
 - [`2026-08-06_restore_permission_handler_compile_sdk_37.md`](2026-08-06_restore_permission_handler_compile_sdk_37.md): Restore `permission_handler` ^13 + compileSdk 37 after local SDK 37 install.

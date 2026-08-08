@@ -74,9 +74,9 @@ the smallest capability the caller needs:
 - **QA cache diagnostics widgets** – `GraphqlCacheControlsSection` and `ProfileCacheControlsSection` live under `apps/mobile/lib/app/widgets/diagnostics/**` (app-wired) and depend on diagnostics ports in packages (see `packages/utilities` ports and app adapters) so the **settings** feature stays free of `graphql_demo`, `profile`, and `remote_config` imports.
 - **Remote config diagnostics DTO** – `RemoteConfigDiagnosticsViewData` + `RemoteConfigDiagnosticsStatus` live in a package-owned diagnostics port module (see `packages/utilities` ports). The **remote_config** feature maps `RemoteConfigState` via `mapRemoteConfigStateToDiagnosticsViewData` (`apps/mobile/lib/features/remote_config/presentation/mappers/remote_config_diagnostics_mapper.dart`) so the cubit state type does not leak into app composition.
 
-### Render orchestration HF token (`packages/utilities` ports)
+### Legacy Render token-provider compatibility (`packages/utilities` ports)
 
-- **`RenderOrchestrationRemoteTokenPort`** – Narrow port in `packages/utilities` exposing `readDevToken()` + `forceRefresh()`. The chat token provider depends only on this port, so **`chat` does not import `remote_config`**. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart` and is wired in app composition. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
+- **`RenderOrchestrationRemoteTokenPort`** – Legacy narrow port in `packages/utilities` exposing `readDevToken()` + `forceRefresh()`. It remains for compatibility without creating a **`chat` → `remote_config`** import. The current Render repository does not resolve or send an HF token; FastAPI owns `HUGGINGFACE_API_KEY`. The adapter lives in `apps/mobile/lib/features/remote_config/data/render_orchestration_remote_token_adapter.dart`. See [ports sweep](engineering/ports_adapters_modular_sweep_2026-05-12.md).
 
 Completed settings-diagnostics extraction history lives in
 [`settings_diagnostics_decouple_plan.md`](plans/settings_diagnostics_decouple_plan.md).

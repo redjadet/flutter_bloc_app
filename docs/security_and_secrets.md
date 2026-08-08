@@ -18,8 +18,9 @@ secret injection**, not vulnerability triage.
   Google API key, rotate or restrict that key in Google Cloud/Firebase, replace
   the committed value with a placeholder, then run
   [`tool/check_tracked_secret_literals.sh`](../tool/check_tracked_secret_literals.sh).
-- **Prefer runtime injection**: use `--dart-define` (or a wrapper that produces
-  those flags) rather than hardcoding secrets in the repo.
+- **Dart defines are client-visible**: `--dart-define` values used by Flutter
+  are compiled into distributable artifacts. Use them only for public client
+  configuration; never use them for provider tokens or shared backend secrets.
 - **Fail safe**: when a key is missing, the owning feature should be disabled
   or fall back to a safe local-only mode.
 
@@ -28,8 +29,9 @@ secret injection**, not vulnerability triage.
 The app supports layered secret loading:
 
 1. **Secure storage (primary)**: Keychain/Keystore via `flutter_secure_storage`.
-2. **Runtime defines**: `--dart-define=KEY=value` values (optionally persisted
-   into secure storage by the app’s secret bootstrap).
+2. **Runtime defines**: public client configuration only (for example a
+   Supabase anon key or restricted Maps key). Server credentials stay in the
+   owning backend’s secret manager.
 3. **Local-only asset file (optional)**: `assets/config/secrets.json`.
 
 ## Supabase config via Firebase Remote Config
@@ -62,7 +64,7 @@ scripts that you may want to run without exporting env vars. The repo only ships
 cd apps/mobile && flutter run -t lib/main_dev.dart \
   --dart-define=SUPABASE_URL=... \
   --dart-define=SUPABASE_ANON_KEY=... \
-  --dart-define=HUGGINGFACE_API_KEY=...
+  # Never pass provider credentials in a release build.
 ```
 
 ### Option B (recommended): `direnv` + `.envrc`
@@ -76,14 +78,33 @@ direnv allow
 cd apps/mobile && flutter run -t lib/main_dev.dart $(../../tool/flutter_dart_defines_from_env.sh)
 ```
 
-When `.envrc` follows [`docs/envrc.example`](envrc.example) and prepends `tool/direnv/bin` to `PATH`, plain `flutter run` / `flutter build` from the repo root is routed to `apps/mobile` and still receives the same flags: the wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh), which emits `--dart-define=...` only for **named** environment variables (for example `HUGGINGFACE_API_KEY`, `SUPABASE_*`, and optional orchestration demo keys `CHAT_FASTAPICLOUD_*` (preferred) / legacy `CHAT_RENDER_*`). **New** compile-time keys must be added to that script or they will not reach the app even if exported in `.envrc`. Orchestration demo wiring is summarized in [`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md). **`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render REST, Cursor MCP, or [`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never as a Flutter `dart-define` or Remote Config parameter.
+The wrapper calls [`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
+It intentionally excludes `HUGGINGFACE_API_KEY` and chat shared secrets;
+configure them only in the owning backend's secret manager, never as manual
+Flutter Dart defines.
+Android release builds reject `HUGGINGFACE_API_KEY`, `GEMINI_API_KEY`,
+`GOOGLE_API_KEY`, `CHAT_FASTAPICLOUD_DEMO_SECRET`, and
+`CHAT_RENDER_DEMO_SECRET`; keep them out of `.env.android.release`. iOS
+release/profile builds enforce the same denylist; keep those values out of
+`.env.ios.release` and inherited CI or shell environments. Orchestration
+demo wiring is summarized in
+[`docs/integrations/render_fastapi_chat_demo.md`](integrations/render_fastapi_chat_demo.md).
+**`RENDER_API_KEY`** stays shell-only (for example `.envrc`); use it for Render
+REST, Cursor MCP, or
+[`tool/trigger_render_chat_api_deploy.sh`](../tool/trigger_render_chat_api_deploy.sh)—never
+as a Flutter `dart-define` or Remote Config parameter.
 
-If you want iOS builds to use the same values without re-typing flags:
+For local iOS development, the helper can forward the same public client
+configuration without re-typing flags:
 
 ```bash
 direnv allow
-./tool/build_ios_with_direnv.sh
+BUILD_MODE=debug ./tool/build_ios_with_direnv.sh
 ```
+
+Do not run the helper in `release` or `profile` mode while any provider token or
+shared backend secret is present. Flutter `--dart-define` values are recoverable
+from the resulting IPA.
 
 ### Before local debug
 
@@ -110,10 +131,12 @@ Use this pre-debug checklist when a feature depends on local secrets:
 
 ## CI / release builds
 
-CI should inject secrets via the CI system (GitHub Actions secrets, etc.) and
-then pass them as `--dart-define` values (or use the same helper script used for
-local development). Avoid “production flutter run” guidance: for release builds,
-focus on how the build environment supplies keys.
+CI may pass explicitly public client configuration, such as a Supabase anon key
+or restricted platform key, through `--dart-define`. Reusable provider tokens,
+service-account credentials, and shared backend secrets must stay in the owning
+backend or deployment platform's secret manager and must never enter a Flutter
+build command. Keep release jobs scoped so unrelated CI secrets are not inherited
+by mobile build steps.
 
 For **store release** uploads from a maintainer machine:
 
@@ -122,10 +145,12 @@ For **store release** uploads from a maintainer machine:
 | `.env.android.release` | [`.env.android.release.example`](../.env.android.release.example) | [`tool/release_android_play.sh`](../tool/release_android_play.sh), [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) |
 | `.env.ios.release` | [`.env.ios.release.example`](../.env.ios.release.example) | [`tool/release_both_stores.sh`](../tool/release_both_stores.sh), manual `./tool/fastlane.sh ios …` |
 
-Both wrappers source the env files before Fastlane. Android (and dual-store) builds use the same
-[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh)
-as Option B, so optional `CHAT_FASTAPICLOUD_*` / `CHAT_RENDER_*` compile-time
-keys work the same way as in `.envrc`.
+Both wrappers source the env files before Fastlane and use
+[`tool/flutter_dart_defines_from_env.sh`](../tool/flutter_dart_defines_from_env.sh).
+Only non-secret routing values such as `CHAT_FASTAPICLOUD_DEMO_ENABLED`,
+`CHAT_FASTAPICLOUD_DEMO_BASE_URL`, and `CHAT_FASTAPICLOUD_DEMO_STRICT` belong in
+mobile release defines. Android and iOS release/profile paths reject the
+provider/shared-secret denylist before invoking Flutter.
 
 - Android-only: [`tool/release_android_play.sh`](../tool/release_android_play.sh) — see [Android Play Store release SOP](engineering/android_play_store_release_sop.md).
 - iOS + Android: [`tool/release_both_stores.sh`](../tool/release_both_stores.sh) — see [Deployment](deployment.md#both-stores-ios--android).
@@ -189,8 +214,8 @@ can still flag keys in **old commits**. If keys were ever pushed:
 
 | Key | Used by | Notes |
 | --- | --- | --- |
-| `HUGGINGFACE_API_KEY` | Chat (optional in proxy-first setups) | **Direct path:** `HuggingfaceChatRepository` calls Hugging Face from the app when this key is set and the composite allows direct inference. **Proxy path:** completions run on Supabase Edge `chat-complete`, which holds the server-side HF secret (`HUGGINGFACE_API_KEY` / router access for the function); the app sends the user JWT + anon key only. A client key is still useful for **online fallback** when Edge returns retryable transport errors and for **offline-only** sends when there is no session. Proxy-only product builds may omit the client key; see [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md). |
-| `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | GenUI demo | Key creation: [Google AI Studio](https://makersuite.google.com/app/apikey). |
+| `HUGGINGFACE_API_KEY` | Chat backends; development-only direct client path | Render/FastAPI and Supabase Edge own this credential server-side. A local debug build may use the legacy direct `HuggingfaceChatRepository` path, but store/release builds must omit the key and must not use client fallback that requires it. See [`docs/plans/supabase_proxy_huggingface_chat_plan.md`](plans/supabase_proxy_huggingface_chat_plan.md). |
+| `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | GenUI demo | Development-only when used directly by the client. Production mobile releases must proxy provider calls through a trusted backend or disable the feature. Key creation: [Google AI Studio](https://makersuite.google.com/app/apikey). |
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Supabase-backed demos | Enables Supabase client bootstrap; some demos fall back to local-only mode when missing. See [Supabase README](../supabase/README.md). |
 | Google Maps keys | Maps demos | Platform-specific; keep in each platform’s secure configuration. |
 

@@ -2,15 +2,11 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart' as core_auth;
 import 'package:auth/auth.dart' show RemoteBackendAuthPort;
 import 'package:dio/dio.dart';
-import 'package:feature_flags/feature_flags.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
-import 'package:flutter_bloc_app/app/config/app_runtime_config.dart';
 import 'package:flutter_bloc_app/app/config/backend_availability.dart';
 import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
@@ -30,15 +26,12 @@ import 'package:flutter_bloc_app/features/chat/data/offline_first_chat_repositor
 import 'package:flutter_bloc_app/features/chat/data/render_caller_auth_header_provider.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_chat_dio_factory.dart';
 import 'package:flutter_bloc_app/features/chat/data/render_fastapi_chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/data/render_orchestration_hf_token_provider.dart'
-    show LayeredRenderOrchestrationHfTokenProvider;
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
 

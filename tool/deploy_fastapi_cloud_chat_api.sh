@@ -89,9 +89,10 @@ fi
 
 .venv/bin/pip install -q -r requirements.txt
 
-# FastAPI Cloud CLI transitively depends on rich-toolkit; newer versions have
-# broken compatibility with some FastAPI Cloud CLI builds.
-.venv/bin/pip install -q "rich-toolkit==0.18.1"
+# Keep rich-toolkit compatible with the FastAPI Cloud CLI's declared lower
+# bound. The former 0.18.1 pin is incompatible with current CLI releases.
+.venv/bin/pip install -q "rich-toolkit>=0.20.3"
+.venv/bin/python -m pip check
 
 echo "Deploying demos/render_chat_api to FastAPI Cloud (app_id=${APP_ID})"
 .venv/bin/fastapi deploy --app-id "${APP_ID}"

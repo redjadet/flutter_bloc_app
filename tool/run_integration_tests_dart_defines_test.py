@@ -23,6 +23,8 @@ class RunIntegrationTestsDartDefinesTest(unittest.TestCase):
             # Marker keys guaranteed present even when direnv reloads .envrc.
             export FIREBASE_ANDROID_API_KEY='test-android-key'
             export FIREBASE_ANDROID_APP_ID='1:123:android:abc'
+            export HUGGINGFACE_API_KEY='server-only-test-token'
+            export CHAT_FASTAPICLOUD_DEMO_SECRET='server-only-shared-secret'
             source "{RUNNER_PATH}"
             trap - EXIT
             [ "${{#INTEGRATION_DART_DEFINES[@]}}" -ge 2 ]
@@ -30,6 +32,14 @@ class RunIntegrationTestsDartDefinesTest(unittest.TestCase):
             found_app=0
             for def in "${{INTEGRATION_DART_DEFINES[@]}}"; do
               case "$def" in
+                --dart-define=HUGGINGFACE_API_KEY=*)
+                  echo "provider credential forwarded to Flutter argv" >&2
+                  exit 8
+                  ;;
+                --dart-define=CHAT_FASTAPICLOUD_DEMO_SECRET=*)
+                  echo "shared backend secret forwarded to Flutter argv" >&2
+                  exit 9
+                  ;;
                 *' --dart-define='*)
                   echo "packed dart-define argv: $def" >&2
                   exit 2
@@ -71,6 +81,10 @@ class RunIntegrationTestsDartDefinesTest(unittest.TestCase):
         env["INTEGRATION_TESTS_SOURCE_ONLY"] = "1"
         env["FIREBASE_ANDROID_API_KEY"] = "test-android-key"
         env["FIREBASE_ANDROID_APP_ID"] = "1:123:android:abc"
+        env["HUGGINGFACE_API_KEY"] = "server-only-test-token"
+        env["CHAT_FASTAPICLOUD_DEMO_SECRET"] = "server-only-shared-secret"
+        # Keep this fixture independent from a developer's allowed .envrc.
+        env["PATH"] = "/usr/bin:/bin"
 
         result = subprocess.run(
             ["bash", "-c", script],

@@ -57,13 +57,29 @@ fi
 # `--dart-define` is not a global flutter flag; it must come after the subcommand
 # (e.g. `flutter run --dart-define=...`). Only inject for subcommands that
 # accept dart-defines.
+#
+# For `flutter build <target> ...`, defines must follow the build target
+# (`ios`/`apk`/…), not sit between `build` and the target — Flutter 3.44+
+# rejects `flutter build --dart-define=... ios`.
 case "$subcommand" in
-  run|build|test|drive|attach)
+  run|test|drive|attach)
     shift || true
     if [ "$CURRENT_DIR" = "$ROOT_DIR" ] && [ "$APP_DIR" != "$ROOT_DIR" ]; then
       cd "$APP_DIR"
     fi
     exec env PATH="$REAL_PATH" "$REAL_FLUTTER" "$subcommand" "${DART_DEFINES[@]}" "$@"
+    ;;
+  build)
+    shift || true
+    if [ "$CURRENT_DIR" = "$ROOT_DIR" ] && [ "$APP_DIR" != "$ROOT_DIR" ]; then
+      cd "$APP_DIR"
+    fi
+    build_target="${1:-}"
+    if [ -n "$build_target" ]; then
+      shift || true
+      exec env PATH="$REAL_PATH" "$REAL_FLUTTER" build "$build_target" "${DART_DEFINES[@]}" "$@"
+    fi
+    exec env PATH="$REAL_PATH" "$REAL_FLUTTER" build "$@"
     ;;
   *)
     exec env PATH="$REAL_PATH" "$REAL_FLUTTER" "$@"

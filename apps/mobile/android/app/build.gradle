@@ -4,6 +4,9 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+import java.nio.charset.StandardCharsets
+import java.util.Base64
+
 def googleServicesFile = file("google-services.json")
 if (googleServicesFile.exists()) {
     apply plugin: "com.google.gms.google-services"
@@ -97,6 +100,57 @@ android {
                 }
             }
         }
+    }
+}
+
+// Dart defines are compiled into Flutter release artifacts. These values must
+// stay server-side; accepting one here would make it recoverable from an APK.
+def releaseForbiddenDartDefineKeys = [
+    "HUGGINGFACE_API_KEY",
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "CHAT_FASTAPICLOUD_DEMO_SECRET",
+    "CHAT_RENDER_DEMO_SECRET",
+] as Set
+
+Set<String> releaseDartDefineKeys() {
+    final Object rawDefines = project.findProperty("dart-defines")
+    if (rawDefines == null || rawDefines.toString().trim().isEmpty()) {
+        return [] as Set<String>
+    }
+    return rawDefines.toString().split(",").collect { String encoded ->
+        for (decoder in [Base64.getDecoder(), Base64.getUrlDecoder()]) {
+            try {
+                final String decoded = new String(
+                    decoder.decode(encoded),
+                    StandardCharsets.UTF_8,
+                )
+                return decoded.split("=", 2)[0]
+            } catch (IllegalArgumentException ignored) {
+                // Try the alternate standard/URL-safe decoder.
+            }
+        }
+        return null
+    }.findAll { it != null } as Set<String>
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    final boolean isReleaseBuild = taskGraph.allTasks.any { task ->
+        final String name = task.name.toLowerCase()
+        name.contains("release") && !name.contains("debug")
+    }
+    if (!isReleaseBuild) {
+        return
+    }
+    final Set<String> prohibited = releaseDartDefineKeys().intersect(
+        releaseForbiddenDartDefineKeys,
+    )
+    if (!prohibited.isEmpty()) {
+        throw new GradleException(
+            "Release builds reject client-bundled secret dart-defines: " +
+            prohibited.sort().join(", ") +
+            ". Move these credentials to a trusted backend.",
+        )
     }
 }
 

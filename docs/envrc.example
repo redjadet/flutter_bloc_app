@@ -14,8 +14,9 @@ Then you can run `flutter run` from the repo root without typing
 # Local direnv config (copy to repo root as `.envrc`)
 # `.envrc` is gitignored; never commit real secrets.
 
-# Used by the FastAPI demo (if you deploy it) to call Hugging Face Inference.
-# This is a secret; keep it out of git.
+# Used by the FastAPI demo server (if you run or deploy it) to call Hugging Face
+# Inference. This is a server credential: keep it out of git. The Flutter env
+# helper intentionally excludes it; never pass it manually as a Dart define.
 # export HUGGINGFACE_API_KEY="hf_..."
 
 # Optional: AI Decision Workbench backend base URL.
@@ -56,7 +57,7 @@ Then you can run `flutter run` from the repo root without typing
 # export FIREBASE_MACOS_CLIENT_ID="000000000000-example.apps.googleusercontent.com"
 # export FIREBASE_MACOS_BUNDLE_ID="com.example.flutterBlocApp"
 
-# Optional
+# Optional local-debug provider keys. Keep them unset for release/profile builds.
 # export GEMINI_API_KEY="..."
 # export GOOGLE_MAPS_API_KEY="..."
 # export GOOGLE_MAPS_ANDROID_API_KEY="..."
@@ -66,21 +67,17 @@ Then you can run `flutter run` from the repo root without typing
 # export CHAT_FASTAPICLOUD_DEMO_ENABLED="true"
 # export CHAT_FASTAPICLOUD_DEMO_BASE_URL="https://render-chat-api.fastapicloud.dev"
 # export CHAT_FASTAPICLOUD_DEMO_STRICT="false"
-# export CHAT_FASTAPICLOUD_DEMO_SECRET="..."  # only if the FastAPI service gates requests
-# export CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE="issueRenderChatDemoHfReadToken"
-# export CHAT_FASTAPICLOUD_HF_READ_TOKEN_CALLABLE_REGION="us-central1"  # omit to use default
+# `CHAT_FASTAPICLOUD_DEMO_SECRET` is server-only and intentionally excluded.
 #
 # Legacy Render naming (still supported):
 # export CHAT_RENDER_DEMO_ENABLED="true"
 # export CHAT_RENDER_DEMO_BASE_URL="https://your-service.onrender.com"
 # export CHAT_RENDER_DEMO_STRICT="false"
-# export CHAT_RENDER_DEMO_SECRET="..."  # only if the FastAPI service uses DEMO_SHARED_SECRET
-# export CHAT_RENDER_HF_READ_TOKEN_CALLABLE="issueRenderChatDemoHfReadToken"
-# export CHAT_RENDER_HF_READ_TOKEN_CALLABLE_REGION="us-central1"  # omit to use default
+# `CHAT_RENDER_DEMO_SECRET` is server-only and intentionally excluded.
 
-# Optional: Firebase Functions emulator — Callable `issueRenderChatDemoHfReadToken` reads this
-# when FUNCTIONS_EMULATOR=true (not a Flutter dart-define; export for the shell that runs `firebase emulators:start`).
-# export RENDER_CHAT_DEMO_HF_READ_TOKEN="hf_..."
+# The former `issueRenderChatDemoHfReadToken` Callable is retired and fails
+# closed. Do not configure client token delivery through Remote Config or
+# Callable environment variables.
 
 # Optional: Render workspace API key (local shell + Cursor MCP `Authorization: Bearer ${RENDER_API_KEY}`).
 # Do NOT put this in Firebase Remote Config — the Flutter app fetches RC to the device; Render keys are admin-scoped.
@@ -99,4 +96,3 @@ Then you can run `flutter run` from the repo root without typing
 # The wrapper injects defines after the subcommand (e.g. `flutter run --dart-define=...`).
 export PATH="$(pwd)/tool/direnv/bin:${PATH}"
 ```
-
