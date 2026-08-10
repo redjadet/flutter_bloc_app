@@ -11,6 +11,9 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
+class _MockSessionLifecycleCoordinator extends Mock
+    implements SessionLifecycleCoordinator {}
+
 void main() {
   group('AppAuthCubit', () {
     late _MockAuthRepository authRepository;
@@ -108,6 +111,52 @@ void main() {
         expect(cubit.state, const AppAuthState.unauthenticated());
       },
     );
+
+    test('cancels auth and invalidation subscriptions on close', () async {
+      final StreamController<SessionInvalidationEvent> invalidationController =
+          StreamController<SessionInvalidationEvent>.broadcast();
+      final _MockSessionLifecycleCoordinator closeCoordinator =
+          _MockSessionLifecycleCoordinator();
+      when(
+        () => closeCoordinator.invalidationEvents,
+      ).thenAnswer((_) => invalidationController.stream);
+      final AppAuthCubit closeCubit = AppAuthCubit(
+        authRepository: authRepository,
+        sessionCoordinator: closeCoordinator,
+      );
+      addTearDown(() async {
+        await closeCubit.close();
+        await invalidationController.close();
+      });
+
+      await closeCubit.start();
+      const AuthUser user = AuthUser(id: 'u1', isAnonymous: false);
+      authController.add(user);
+      await Future<void>.delayed(Duration.zero);
+      expect(closeCubit.state, AppAuthState.authenticated(user));
+      expect(authController.hasListener, isTrue);
+      expect(invalidationController.hasListener, isTrue);
+
+      final AppAuthState stateAtClose = closeCubit.state;
+      await closeCubit.close();
+      expect(authController.hasListener, isFalse);
+      expect(invalidationController.hasListener, isFalse);
+
+      authController.add(null);
+      invalidationController.add(
+        SessionInvalidationEvent(
+          provider: AuthProviderKind.firebase,
+          reason: SessionInvalidationReason.remoteRejected,
+          occurredAt: DateTime.now().toUtc(),
+        ),
+      );
+      await closeCubit.start();
+      closeCubit.acknowledgeSessionExpired();
+      await Future<void>.delayed(Duration.zero);
+
+      expect(closeCubit.isClosed, isTrue);
+      expect(closeCubit.state, stateAtClose);
+    });
   });
 
   group('AppAuthCubit + SignOutAware session-ready', () {
