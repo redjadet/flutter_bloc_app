@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-10_app_auth_cubit_session_ready_ab.md`](2026-08-10_app_auth_cubit_session_ready_ab.md): AppAuthCubit + SignOutAware A→B session-ready regression (AUTH-CUBIT-01).
 - [`2026-08-10_session_cleanup_search_cache.md`](2026-08-10_session_cleanup_search_cache.md): Clear search Hive cache on Firebase sign-out / account switch (SEARCH-01).
 - [`2026-08-10_auth_sync_lifecycle_reliability_remeasure.md`](2026-08-10_auth_sync_lifecycle_reliability_remeasure.md): Auth/sync/Cubit lifecycle remeasure — green matrix; lock SEARCH-01 + AppAuthCubit test PRs.
 - [`2026-08-08_web_hive_wasm_counter_save.md`](2026-08-08_web_hive_wasm_counter_save.md): Default web deploy off `--wasm` — Hive 2.x stub under dart2wasm caused “Failed to save counter”.
