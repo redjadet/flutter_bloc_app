@@ -108,6 +108,27 @@ void main() {
         expect(cubit.state, const AppAuthState.unauthenticated());
       },
     );
+
+    test('ignores late auth and invalidation events after close', () async {
+      await cubit.start();
+      const AuthUser user = AuthUser(id: 'u1', isAnonymous: false);
+      authController.add(user);
+      await Future<void>.delayed(Duration.zero);
+      expect(cubit.state, AppAuthState.authenticated(user));
+
+      final AppAuthState stateAtClose = cubit.state;
+      await cubit.close();
+
+      authController.add(null);
+      await sessionCoordinator.invalidateSession(
+        provider: AuthProviderKind.firebase,
+        reason: SessionInvalidationReason.remoteRejected,
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(cubit.isClosed, isTrue);
+      expect(cubit.state, stateAtClose);
+    });
   });
 
   group('AppAuthCubit + SignOutAware session-ready', () {
