@@ -24,6 +24,7 @@ import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 part 'todo_list_page_app_bar.dart';
 part 'todo_list_page_body.dart';
 part 'todo_list_page_body.part.dart';
+part 'todo_list_page_header.part.dart';
 part 'todo_list_page_handlers.dart';
 
 enum _BatchMenuAction { complete, uncomplete, delete }

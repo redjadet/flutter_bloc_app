@@ -20,8 +20,7 @@ class _TodoHeaderLayout {
     required final List<TodoItem> filteredItems,
     required final double availableHeight,
   }) {
-    // Use window height (not current layout height) so keyboard insets do not
-    // flip this branch and steal TextField focus on iOS.
+    // Window height (not layout height) so keyboard insets do not steal focus.
     final bool isSpaceLimited = MediaQuery.sizeOf(context).height < 600;
     final bool isKeyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
     final double gapM = isSpaceLimited
@@ -86,3 +85,42 @@ class _TodoHeaderLayout {
   static const double batchActionsMinHeight = 560;
   static const double addButtonMinHeight = 620;
 }
+
+Widget _todoListPane({
+  required final BuildContext context,
+  required final _TodoHeaderLayout layout,
+  required final TodoListListProjection listData,
+  required final List<TodoItem> filteredItems,
+  required final TodoListCubit cubit,
+  required final ScrollController scrollController,
+  required final bool padTop,
+}) => Expanded(
+  child: Padding(
+    padding: EdgeInsets.only(top: padTop ? layout.gapS : 0),
+    child:
+        TypeSafeBlocSelector<
+          TodoListCubit,
+          TodoListState,
+          TodoListSelectionData
+        >(
+          selector: TodoListSelectionData.fromState,
+          builder: (final context, final selection) => TodoListContent(
+            filteredItems: filteredItems,
+            sortOrder: listData.sortOrder,
+            selectedItemIds: selection.selectedItemIds,
+            scrollController: scrollController,
+            cubit: cubit,
+            onItemSelectionChanged: (final itemId, {required final selected}) {
+              if (selected != selection.selectedItemIds.contains(itemId)) {
+                cubit.toggleItemSelection(itemId);
+              }
+            },
+            onAddTodo: () => _handleAddTodo(context),
+            onEditTodo: (final item) => _handleEditTodo(context, item),
+            onDeleteTodo: (final item) => _handleDeleteTodo(context, item),
+            onDeleteWithUndo: (final item, final cubit) =>
+                _handleDeleteWithUndo(context, item, cubit),
+          ),
+        ),
+  ),
+);
