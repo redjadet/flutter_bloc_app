@@ -39,12 +39,15 @@ class _TodoAppBarData {
     required this.selectedCount,
   });
 
-  factory _TodoAppBarData.fromState(final TodoListState state) {
-    final filtered = state.filteredItems;
-    final ids = state.selectedItemIds;
-    final items = state.items;
+  factory _TodoAppBarData.fromProjections({
+    required final List<TodoItem> items,
+    required final List<TodoItem> filteredItems,
+    required final TodoListSelectionData selection,
+  }) {
+    final ids = selection.selectedItemIds;
     final allSelected =
-        filtered.isNotEmpty && filtered.every((final i) => ids.contains(i.id));
+        filteredItems.isNotEmpty &&
+        filteredItems.every((final i) => ids.contains(i.id));
     final hasSelectedActive = items.any(
       (final i) => ids.contains(i.id) && !i.isCompleted,
     );
@@ -52,12 +55,12 @@ class _TodoAppBarData {
       (final i) => ids.contains(i.id) && i.isCompleted,
     );
     return _TodoAppBarData(
-      hasFilteredItems: filtered.isNotEmpty,
+      hasFilteredItems: filteredItems.isNotEmpty,
       allFilteredSelected: allSelected,
-      hasSelection: state.hasSelectedItems,
+      hasSelection: selection.hasSelectedItems,
       hasSelectedActive: hasSelectedActive,
       hasSelectedCompleted: hasSelectedCompleted,
-      selectedCount: state.selectedCount,
+      selectedCount: selection.selectedCount,
     );
   }
 
@@ -99,22 +102,43 @@ class TodoListPage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     final l10n = context.l10n;
-    return TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoAppBarData>(
-      selector: _TodoAppBarData.fromState,
-      builder: (final context, final barData) {
-        return CommonPageLayout(
-          title: l10n.todoListTitle,
-          actions: _buildTodoListAppBarActions(context, barData),
-          body: const _TodoListBody(),
-          floatingActionButton: Semantics(
-            button: true,
-            label: l10n.todoListAddAction,
-            child: FloatingActionButton(
-              onPressed: () => _handleAddTodo(context),
-              tooltip: l10n.todoListAddAction,
-              child: const Icon(Icons.add),
-            ),
-          ),
+    // Outer list projection derives filtered rows only when list inputs change.
+    // Inner selection rebuilds app-bar actions without re-filtering.
+    return TypeSafeBlocSelector<
+      TodoListCubit,
+      TodoListState,
+      TodoListListProjection
+    >(
+      selector: TodoListListProjection.fromState,
+      builder: (final context, final listData) {
+        final List<TodoItem> filteredItems = listData.filteredItems;
+        return TypeSafeBlocSelector<
+          TodoListCubit,
+          TodoListState,
+          TodoListSelectionData
+        >(
+          selector: TodoListSelectionData.fromState,
+          builder: (final context, final selection) {
+            final _TodoAppBarData barData = _TodoAppBarData.fromProjections(
+              items: listData.items,
+              filteredItems: filteredItems,
+              selection: selection,
+            );
+            return CommonPageLayout(
+              title: l10n.todoListTitle,
+              actions: _buildTodoListAppBarActions(context, barData),
+              body: const _TodoListBody(),
+              floatingActionButton: Semantics(
+                button: true,
+                label: l10n.todoListAddAction,
+                child: FloatingActionButton(
+                  onPressed: () => _handleAddTodo(context),
+                  tooltip: l10n.todoListAddAction,
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            );
+          },
         );
       },
     );

@@ -16,7 +16,8 @@ class _TodoHeaderLayout {
 
   factory _TodoHeaderLayout.resolve({
     required final BuildContext context,
-    required final TodoListViewData data,
+    required final TodoListListProjection listData,
+    required final List<TodoItem> filteredItems,
     required final double availableHeight,
   }) {
     // Use window height (not current layout height) so keyboard insets do not
@@ -35,9 +36,9 @@ class _TodoHeaderLayout {
         !isKeyboardVisible &&
         availableHeight >= statsMinHeight;
     final bool shouldKeepSearchVisible =
-        isKeyboardVisible || data.searchQuery.isNotEmpty;
+        isKeyboardVisible || listData.searchQuery.isNotEmpty;
     final bool showSearch =
-        data.items.isNotEmpty &&
+        listData.items.isNotEmpty &&
         (isSpaceLimited ||
             availableHeight >= searchMinHeight ||
             shouldKeepSearchVisible);
@@ -45,14 +46,14 @@ class _TodoHeaderLayout {
         !isKeyboardVisible && availableHeight >= filterMinHeight;
     final bool showSecondaryControls =
         showFilterBar &&
-        data.items.isNotEmpty &&
+        listData.items.isNotEmpty &&
         !showCompactHeader &&
         availableHeight >= secondaryControlsMinHeight;
     final bool showBatchActions =
         showSecondaryControls && availableHeight >= batchActionsMinHeight;
     final bool showAddButton =
         showBatchActions &&
-        data.filteredItems.isNotEmpty &&
+        filteredItems.isNotEmpty &&
         availableHeight >= addButtonMinHeight;
 
     return _TodoHeaderLayout(
