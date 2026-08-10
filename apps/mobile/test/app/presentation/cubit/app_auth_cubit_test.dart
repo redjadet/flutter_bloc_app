@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
-import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_state.dart';
 import 'package:auth/auth.dart' hide AuthRepository;
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
+import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_cubit.dart';
+import 'package:flutter_bloc_app/app/presentation/cubit/app_auth_state.dart';
+import 'package:flutter_bloc_app/features/auth/data/sign_out_aware_auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -105,6 +106,76 @@ void main() {
         cubit.acknowledgeSessionExpired();
 
         expect(cubit.state, const AppAuthState.unauthenticated());
+      },
+    );
+  });
+
+  group('AppAuthCubit + SignOutAware session-ready', () {
+    late _MockAuthRepository rawRepository;
+    late SessionLifecycleCoordinatorImpl sessionCoordinator;
+    late StreamController<AuthUser?> rawAuthController;
+    late SignOutAwareAuthRepository gatedRepository;
+    late AppAuthCubit cubit;
+
+    setUp(() {
+      rawRepository = _MockAuthRepository();
+      sessionCoordinator = SessionLifecycleCoordinatorImpl();
+      rawAuthController = StreamController<AuthUser?>.broadcast();
+      when(
+        () => rawRepository.authStateChanges,
+      ).thenAnswer((_) => rawAuthController.stream);
+      when(() => rawRepository.currentUser).thenReturn(null);
+      gatedRepository = SignOutAwareAuthRepository(
+        delegate: rawRepository,
+        coordinator: sessionCoordinator,
+      );
+      cubit = AppAuthCubit(
+        authRepository: gatedRepository,
+        sessionCoordinator: sessionCoordinator,
+      );
+    });
+
+    tearDown(() async {
+      await cubit.close();
+      await sessionCoordinator.dispose();
+      await rawAuthController.close();
+    });
+
+    test(
+      'does not emit account B until session-ready cleanup finishes',
+      () async {
+        const AuthUser userA = AuthUser(id: 'user-a', isAnonymous: false);
+        const AuthUser userB = AuthUser(id: 'user-b', isAnonymous: false);
+        when(() => rawRepository.currentUser).thenReturn(userA);
+
+        final Completer<void> cleanupStarted = Completer<void>();
+        final Completer<void> releaseCleanup = Completer<void>();
+        sessionCoordinator.bindLocalSessionDataCleanup(({
+          required final AuthProviderKind provider,
+          required final SessionLocalCleanupReason reason,
+        }) async {
+          cleanupStarted.complete();
+          await releaseCleanup.future;
+        });
+
+        // Attach undecorated repo (production DI rule) so cleanup can observe
+        // raw A→B hops without session-ready deadlock.
+        sessionCoordinator.attachAuthRepository(rawRepository);
+        await cubit.start();
+        await Future<void>.delayed(Duration.zero);
+        expect(cubit.state, AppAuthState.authenticated(userA));
+
+        when(() => rawRepository.currentUser).thenReturn(userB);
+        rawAuthController.add(userB);
+        await cleanupStarted.future;
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state, AppAuthState.authenticated(userA));
+
+        releaseCleanup.complete();
+        await Future<void>.delayed(Duration.zero);
+
+        expect(cubit.state, AppAuthState.authenticated(userB));
       },
     );
   });
