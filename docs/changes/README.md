@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-10_session_cleanup_search_cache.md`](2026-08-10_session_cleanup_search_cache.md): Clear search Hive cache on Firebase sign-out / account switch (SEARCH-01).
 - [`2026-08-10_auth_sync_lifecycle_reliability_remeasure.md`](2026-08-10_auth_sync_lifecycle_reliability_remeasure.md): Auth/sync/Cubit lifecycle remeasure — green matrix; lock SEARCH-01 + AppAuthCubit test PRs.
 - [`2026-08-08_web_hive_wasm_counter_save.md`](2026-08-08_web_hive_wasm_counter_save.md): Default web deploy off `--wasm` — Hive 2.x stub under dart2wasm caused “Failed to save counter”.
 - [`2026-08-08_ios-simulator-firebase-auth-keychain.md`](2026-08-08_ios-simulator-firebase-auth-keychain.md): Re-enable simulator Runner code signing for Firebase Auth Keychain; keep simulator entitlements empty (Keychain Sharing breaks launch); keep unsigned CocoaPods embed; wire RTDB remotes on iOS sim.
