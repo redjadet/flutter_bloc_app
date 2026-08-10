@@ -43,7 +43,6 @@ class TodoListListProjection {
   const TodoListListProjection({
     required this.items,
     required this.filter,
-    required this.hasCompleted,
     required this.searchQuery,
     required this.sortOrder,
     required this.manualOrder,
@@ -53,7 +52,6 @@ class TodoListListProjection {
       TodoListListProjection(
         items: state.items,
         filter: state.filter,
-        hasCompleted: state.hasCompleted,
         searchQuery: state.searchQuery,
         sortOrder: state.sortOrder,
         manualOrder: state.manualOrder,
@@ -61,12 +59,14 @@ class TodoListListProjection {
 
   final List<TodoItem> items;
   final TodoFilter filter;
-  final bool hasCompleted;
   final String searchQuery;
   final TodoSortOrder sortOrder;
   final Map<String, int> manualOrder;
 
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
+
+  /// Derived only when the list projection rebuilds, not on selection emits.
+  bool get hasCompleted => items.any((final item) => item.isCompleted);
 
   /// Derive filtered/sorted rows only when this projection rebuilds.
   List<TodoItem> get filteredItems {
@@ -87,7 +87,6 @@ class TodoListListProjection {
       other is TodoListListProjection &&
           _collectionEq.equals(other.items, items) &&
           other.filter == filter &&
-          other.hasCompleted == hasCompleted &&
           other.searchQuery == searchQuery &&
           other.sortOrder == sortOrder &&
           _collectionEq.equals(other.manualOrder, manualOrder);
@@ -96,7 +95,6 @@ class TodoListListProjection {
   int get hashCode => Object.hash(
     _collectionEq.hash(items),
     filter,
-    hasCompleted,
     searchQuery,
     sortOrder,
     _collectionEq.hash(manualOrder),

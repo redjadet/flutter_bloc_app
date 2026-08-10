@@ -7,14 +7,14 @@
 - Name: iPhone 17 Pro (simulator)
 - UDID: `3439532F-5E88-4860-A9E8-A020EACA656C`
 - Runtime: iOS 26.5 (`com.apple.CoreSimulator.SimRuntime.iOS-26-5`)
-- Profile command: `cd apps/mobile && flutter run --profile -d 3439532F-5E88-4860-A9E8-A020EACA656C`
+- Profile attempt: `cd apps/mobile && flutter run --profile -d 3439532F-5E88-4860-A9E8-A020EACA656C` — unsupported on iOS Simulator.
 - Item count for measurement: **120** (widget rebuild harness; no in-repo Hive seed)
 
 ### Evidence
 
 1. **Structural (pre-fix):** `TodoListViewData.fromState` included `selectedItemIds` and called `state.filteredItems` on every Cubit emission; `_TodoListBody` used one wide `ViewStatusSwitcher`, so selection rebuilt header + list shell.
 2. **Rebuild counts (widget harness):** nested `TodoListListProjection` / `TodoListSelectionData` selectors — selection-only emit keeps `listBuildCount == 1` and increments selection builder only (`todo_list_rebuild_isolation_test.dart`).
-3. **Profile launch:** simulator booted and listed via `flutter devices` before implementation. Full interactive DevTools Timeline on a signed-in 100+ Hive store was not required once GO criterion 2 (unrelated rebuild / rebuild counts) was met by the harness.
+3. **Device check:** simulator booted and listed via `flutter devices` before implementation. Flutter rejected `--profile` on the simulator; GO used structural rebuild evidence instead.
 
 ### Interaction matrix (expected hotspot pre-fix)
 

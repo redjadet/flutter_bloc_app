@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,29 @@ TodoItem _item(final int index) {
 List<TodoItem> _largeList({final int count = 120}) =>
     List<TodoItem>.generate(count, _item, growable: false);
 
+class _ReadCountingTodoList extends ListBase<TodoItem> {
+  _ReadCountingTodoList(this._items);
+
+  final List<TodoItem> _items;
+  int readCount = 0;
+
+  @override
+  int get length => _items.length;
+
+  @override
+  set length(final int value) => throw UnsupportedError('read only');
+
+  @override
+  TodoItem operator [](final int index) {
+    readCount++;
+    return _items[index];
+  }
+
+  @override
+  void operator []=(final int index, final TodoItem value) =>
+      throw UnsupportedError('read only');
+}
+
 void main() {
   group('Todo list rebuild isolation', () {
     test('list projection equality ignores selection-only state copies', () {
@@ -107,6 +131,21 @@ void main() {
         b.filteredItems.map((final i) => i.id),
         a.filteredItems.map((final i) => i.id),
       );
+    });
+
+    test('list projection defers item scans until list data is consumed', () {
+      final _ReadCountingTodoList items = _ReadCountingTodoList(_largeList());
+      final TodoListState state = TodoListState(
+        status: ViewStatus.success,
+        items: items,
+      );
+
+      final TodoListListProjection projection =
+          TodoListListProjection.fromState(state);
+
+      expect(items.readCount, 0);
+      expect(projection.hasCompleted, isFalse);
+      expect(items.readCount, 120);
     });
 
     test('selection projection changes when selection changes', () {
