@@ -7,6 +7,8 @@ that.
 
 ## Index
 
+- [`2026-08-10_todo_list_rebuild_remeasure.md`](2026-08-10_todo_list_rebuild_remeasure.md): Todo list narrow-selector remeasure — sim Hive Timeline + physical iPhone profile DevTools (~119 FPS); accept.
+- [`2026-08-10_todo_list_rebuild_baseline.md`](2026-08-10_todo_list_rebuild_baseline.md): Todo list presentation rebuild baseline on iPhone 17 Pro simulator — **GO** for narrow selector split.
 - [`2026-08-10_app_auth_cubit_close_guard.md`](2026-08-10_app_auth_cubit_close_guard.md): AppAuthCubit close subscription regression (AUTH-CUBIT-02).
 - [`2026-08-10_app_auth_cubit_session_ready_ab.md`](2026-08-10_app_auth_cubit_session_ready_ab.md): AppAuthCubit + SignOutAware A→B session-ready regression (AUTH-CUBIT-01).
 - [`2026-08-10_session_cleanup_search_cache.md`](2026-08-10_session_cleanup_search_cache.md): Clear search Hive cache on Firebase sign-out / account switch (SEARCH-01).
