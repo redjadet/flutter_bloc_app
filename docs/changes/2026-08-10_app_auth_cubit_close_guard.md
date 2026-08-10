@@ -1,21 +1,23 @@
-# AppAuthCubit late-event-after-close regression
+# AppAuthCubit close subscription regression
 
 ## Feature: AUTH-CUBIT-02 (auth/sync lifecycle remeasure)
 
 ### Problem
 
-No regression proved that late `authStateChanges` or session-invalidation
-events after `AppAuthCubit.close()` leave state unchanged (guards exist;
-proof did not).
+No AppAuthCubit-level regression proved that `close()` cancels both the auth
+and session-invalidation subscriptions. The shared mixin tests its generic
+contract, but this owner must still register both streams and delegate to
+`super.close()`.
 
 ### Scope
 
-- In: cubit unit test only
+- In: cubit unit test proving both subscriptions cancel and public calls no-op
+  after close
 - Out: product code
 
 ### Tests
 
-- [x] `ignores late auth and invalidation events after close`
+- [x] `cancels auth and invalidation subscriptions on close`
 
 ### Proof command
 
