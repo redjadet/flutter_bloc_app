@@ -7,6 +7,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -21,6 +22,9 @@ class _MockChatHistoryRepository extends Mock
 
 class _MockProfileCacheControlsPort extends Mock
     implements ProfileCacheControlsPort {}
+
+class _MockSearchCacheRepository extends Mock
+    implements SearchCacheRepository {}
 
 class _RecordingSyncCoordinator extends FakeBackgroundSyncCoordinator {
   int stopCalls = 0;
@@ -58,6 +62,7 @@ void main() {
     late FakePendingSyncRepository pendingSync;
     late _MockChatHistoryRepository chatHistory;
     late _MockProfileCacheControlsPort profileCache;
+    late _MockSearchCacheRepository searchCache;
     late _RecordingSyncCoordinator syncCoordinator;
 
     setUp(() async {
@@ -65,9 +70,11 @@ void main() {
       pendingSync = FakePendingSyncRepository();
       chatHistory = _MockChatHistoryRepository();
       profileCache = _MockProfileCacheControlsPort();
+      searchCache = _MockSearchCacheRepository();
       syncCoordinator = _RecordingSyncCoordinator();
       when(() => chatHistory.save(any())).thenAnswer((_) async {});
       when(() => profileCache.clearProfile()).thenAnswer((_) async {});
+      when(() => searchCache.clearCache()).thenAnswer((_) async {});
       when(() => profileCache.loadMetadata()).thenAnswer(
         (_) async => const ProfileCacheMetadata(
           hasProfile: false,
@@ -79,6 +86,7 @@ void main() {
       getIt.registerSingleton<PendingSyncRepository>(pendingSync);
       getIt.registerSingleton<ChatHistoryRepository>(chatHistory);
       getIt.registerSingleton<ProfileCacheControlsPort>(profileCache);
+      getIt.registerSingleton<SearchCacheRepository>(searchCache);
       getIt.registerSingleton<BackgroundSyncCoordinator>(syncCoordinator);
     });
 
@@ -87,7 +95,7 @@ void main() {
     });
 
     test(
-      'quiesces sync, clears pending rows + chat + profile, without resuming sync',
+      'quiesces sync, clears pending rows + chat + profile + search, without resuming sync',
       () async {
         await pendingSync.enqueue(
           SyncOperation.create(
@@ -141,6 +149,7 @@ void main() {
         );
         verify(() => chatHistory.save(const <ChatConversation>[])).called(1);
         verify(() => profileCache.clearProfile()).called(1);
+        verify(() => searchCache.clearCache()).called(1);
       },
     );
 

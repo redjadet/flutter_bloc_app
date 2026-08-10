@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_sync_constants.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_constants.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/offline_first_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_sync_constants.dart';
@@ -107,6 +108,10 @@ Future<void> clearFirebaseLocalSessionData({
 
   if (getIt.isRegistered<ProfileCacheControlsPort>()) {
     await getIt<ProfileCacheControlsPort>().clearProfile();
+  }
+
+  if (getIt.isRegistered<SearchCacheRepository>()) {
+    await getIt<SearchCacheRepository>().clearCache();
   }
 }
 
