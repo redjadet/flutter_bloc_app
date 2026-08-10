@@ -8,6 +8,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart'
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/pages/todo_list_page_data.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_selectable_item.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -237,6 +238,73 @@ void main() {
         find.byKey(const ValueKey<String>('todo-todo-50')),
         findsOneWidget,
       );
+    });
+
+    testWidgets('row selector updates the tapped row selection chrome', (
+      final WidgetTester tester,
+    ) async {
+      final _FakeTodoRepository repository = _FakeTodoRepository(
+        initialItems: _largeList(count: 2),
+      );
+      addTearDown(repository.dispose);
+      final TodoListCubit cubit = TodoListCubit(
+        repository: repository,
+        timerService: FakeTimerService(),
+      );
+      addTearDown(cubit.close);
+      await cubit.loadInitial();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: BlocProvider<TodoListCubit>.value(
+            value: cubit,
+            child: Column(
+              children: [
+                TodoListSelectableItem(
+                  item: _item(0),
+                  showDragHandle: false,
+                  onItemSelectionChanged:
+                      (final itemId, {required final selected}) =>
+                          cubit.toggleItemSelection(itemId),
+                  onToggle: () {},
+                  onEdit: () {},
+                  onDelete: () {},
+                ),
+                TodoListSelectableItem(
+                  item: _item(1),
+                  showDragHandle: false,
+                  onItemSelectionChanged:
+                      (final itemId, {required final selected}) =>
+                          cubit.toggleItemSelection(itemId),
+                  onToggle: () {},
+                  onEdit: () {},
+                  onDelete: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byType(Checkbox).first);
+      await tester.pump();
+
+      expect(cubit.state.selectedItemIds, <String>{'todo-0'});
+      expect(find.byType(TodoListSelectableItem), findsNWidgets(2));
+      final List<Checkbox> checkboxes = tester
+          .widgetList<Checkbox>(find.byType(Checkbox))
+          .toList(growable: false);
+      expect(checkboxes.map((final checkbox) => checkbox.value), <bool?>[
+        true,
+        false,
+      ]);
     });
   });
 }

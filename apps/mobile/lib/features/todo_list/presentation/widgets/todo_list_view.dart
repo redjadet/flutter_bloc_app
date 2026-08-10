@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
+import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_selectable_item.dart';
 
 /// Optimized list view for todo items.
 /// Uses ListView.builder for 100+ items, ListView.separated for smaller lists.
@@ -33,25 +34,33 @@ class TodoListView extends StatelessWidget {
   onItemSelectionChanged;
 
   Widget _buildListItem(final TodoItem item) {
-    final itemSelectionChanged = onItemSelectionChanged;
     final deleteWithoutConfirmation = onDeleteWithoutConfirmation;
+    final itemSelectionChanged = onItemSelectionChanged;
     return RepaintBoundary(
       key: ValueKey<String>('todo-${item.id}'),
-      child: TodoListItem(
-        item: item,
-        showDragHandle: sortOrder == TodoSortOrder.manual,
-        isSelected: selectedItemIds.contains(item.id),
-        onSelectionChanged: itemSelectionChanged != null
-            ? (final selected) =>
-                  itemSelectionChanged(item.id, selected: selected)
-            : null,
-        onToggle: () => onToggle(item),
-        onEdit: () => onEdit(item),
-        onDelete: () => onDelete(item),
-        onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
-            ? () => deleteWithoutConfirmation(item)
-            : null,
-      ),
+      child: itemSelectionChanged == null
+          ? TodoListItem(
+              item: item,
+              showDragHandle: sortOrder == TodoSortOrder.manual,
+              isSelected: selectedItemIds.contains(item.id),
+              onToggle: () => onToggle(item),
+              onEdit: () => onEdit(item),
+              onDelete: () => onDelete(item),
+              onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
+                  ? () => deleteWithoutConfirmation(item)
+                  : null,
+            )
+          : TodoListSelectableItem(
+              item: item,
+              showDragHandle: sortOrder == TodoSortOrder.manual,
+              onItemSelectionChanged: itemSelectionChanged,
+              onToggle: () => onToggle(item),
+              onEdit: () => onEdit(item),
+              onDelete: () => onDelete(item),
+              onDeleteWithoutConfirmation: deleteWithoutConfirmation != null
+                  ? () => deleteWithoutConfirmation(item)
+                  : null,
+            ),
     );
   }
 

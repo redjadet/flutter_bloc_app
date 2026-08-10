@@ -97,30 +97,19 @@ Widget _todoListPane({
 }) => Expanded(
   child: Padding(
     padding: EdgeInsets.only(top: padTop ? layout.gapS : 0),
-    child:
-        TypeSafeBlocSelector<
-          TodoListCubit,
-          TodoListState,
-          TodoListSelectionData
-        >(
-          selector: TodoListSelectionData.fromState,
-          builder: (final context, final selection) => TodoListContent(
-            filteredItems: filteredItems,
-            sortOrder: listData.sortOrder,
-            selectedItemIds: selection.selectedItemIds,
-            scrollController: scrollController,
-            cubit: cubit,
-            onItemSelectionChanged: (final itemId, {required final selected}) {
-              if (selected != selection.selectedItemIds.contains(itemId)) {
-                cubit.toggleItemSelection(itemId);
-              }
-            },
-            onAddTodo: () => _handleAddTodo(context),
-            onEditTodo: (final item) => _handleEditTodo(context, item),
-            onDeleteTodo: (final item) => _handleDeleteTodo(context, item),
-            onDeleteWithUndo: (final item, final cubit) =>
-                _handleDeleteWithUndo(context, item, cubit),
-          ),
-        ),
+    child: TodoListContent(
+      filteredItems: filteredItems,
+      sortOrder: listData.sortOrder,
+      scrollController: scrollController,
+      cubit: cubit,
+      onItemSelectionChanged: (final itemId, {required final selected}) {
+        cubit.toggleItemSelection(itemId);
+      },
+      onAddTodo: () => _handleAddTodo(context),
+      onEditTodo: (final item) => _handleEditTodo(context, item),
+      onDeleteTodo: (final item) => _handleDeleteTodo(context, item),
+      onDeleteWithUndo: (final item, final cubit) =>
+          _handleDeleteWithUndo(context, item, cubit),
+    ),
   ),
 );
