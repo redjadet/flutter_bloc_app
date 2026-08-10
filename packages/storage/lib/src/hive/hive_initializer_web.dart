@@ -12,7 +12,9 @@ Future<bool> initHive() async {
   // Debug uses a dedicated namespace so stale payloads encrypted with prior
   // ephemeral keys are not opened after hot restart / key rotation.
   // Release uses a stable namespace so persisted counters survive deploys.
-  final String hiveNamespace = kReleaseMode ? 'hive_web_v1' : 'hive_web_debug_v4';
+  final String hiveNamespace = kReleaseMode
+      ? 'hive_web_v1'
+      : 'hive_web_debug_v4';
   Hive.init(hiveNamespace);
   AppLogger.debug('Hive initialized in $hiveNamespace');
   return true;
