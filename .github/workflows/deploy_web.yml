@@ -212,6 +212,8 @@ jobs:
           steps.deployment.outcome == 'failure'
         uses: actions/github-script@v9
         with:
+          retries: 5
+          retry-exempt-status-codes: 400,401,403,404,422
           script: |
             const workflowFile = 'deploy_web.yml';
             const ref = context.ref.replace('refs/heads/', '');

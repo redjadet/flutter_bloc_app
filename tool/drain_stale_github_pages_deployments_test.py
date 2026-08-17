@@ -1,6 +1,8 @@
 import importlib.util
+import io
 import sys
 import unittest
+import urllib.error
 from pathlib import Path
 
 
@@ -350,6 +352,68 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
         self.assertEqual(len(cancelled), len(stuck_shas))
         self.assertEqual(fake.cancelled, set(stuck_shas))
         self.assertNotIn(5, sleeps)
+
+    def test_is_retryable_github_http_status_covers_transient_codes(self):
+        self.assertTrue(self.module.is_retryable_github_http_status(503))
+        self.assertTrue(self.module.is_retryable_github_http_status(500))
+        self.assertTrue(self.module.is_retryable_github_http_status(429))
+        self.assertFalse(self.module.is_retryable_github_http_status(404))
+
+    def test_request_retries_http_503_then_succeeds(self):
+        module = self.module
+
+        class FakeSuccess:
+            status = 204
+
+            def read(self):
+                return b""
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        calls = {"count": 0}
+        original_urlopen = module.urllib.request.urlopen
+        original_sleep = module.time.sleep
+        sleeps: list[float] = []
+
+        def fake_sleep(seconds):
+            sleeps.append(seconds)
+
+        def fake_urlopen(_request, timeout=30):
+            del timeout
+            calls["count"] += 1
+            if calls["count"] == 1:
+                raise urllib.error.HTTPError(
+                    "https://api.github.com/x",
+                    503,
+                    "unavailable",
+                    None,
+                    io.BytesIO(b'{"message":"unavailable"}'),
+                )
+            return FakeSuccess()
+
+        client = module.GitHubPagesDrainClient(
+            repository="owner/repo",
+            token="token",
+        )
+        module.urllib.request.urlopen = fake_urlopen
+        module.time.sleep = fake_sleep
+        try:
+            status, body = client._request(
+                "POST",
+                "/repos/owner/repo/pages/deployments/abc/cancel",
+            )
+        finally:
+            module.urllib.request.urlopen = original_urlopen
+            module.time.sleep = original_sleep
+
+        self.assertEqual(status, 204)
+        self.assertEqual(body, "")
+        self.assertEqual(calls["count"], 2)
+        self.assertEqual(sleeps, [2])
 
 
 if __name__ == "__main__":
