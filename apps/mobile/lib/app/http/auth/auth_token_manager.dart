@@ -40,7 +40,7 @@ class AuthTokenManager {
       final User? user = userOverride ?? _firebaseAuth?.currentUser;
       if (user == null) {
         completer.complete(false);
-        return future;
+        return await future;
       }
       final String? token = await _tokenRepository.refreshFirebaseAccessToken(
         user,

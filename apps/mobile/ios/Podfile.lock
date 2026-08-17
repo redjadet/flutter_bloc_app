@@ -78,7 +78,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   apple_maps_flutter: 2237d66a8e242082a2d88134af372f7b3375d7a6
   desktop_webview_auth: 4cf620136c3d79796496eef85e59508e3a1a003d
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   flutter_tts: 35ac3c7d42412733e795ea96ad2d7e05d0a75113
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   wallet_connect_v2: a0257f41698dae4494029381da1eebc67d458edd

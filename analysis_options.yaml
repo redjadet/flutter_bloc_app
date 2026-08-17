@@ -99,6 +99,12 @@ analyzer:
     - third_party/**
     - custom_lints/**
     - tool/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 # Native analyzer plugin configuration (file_length_lint).
 file_length_lint:

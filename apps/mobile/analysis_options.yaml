@@ -1,2 +1,11 @@
 # App package analyzer config — canonical rules live at workspace root (../../ = repo root).
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: ../../analysis_options.yaml

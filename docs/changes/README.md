@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-17_flutter_3_47_0_pin.md`](2026-08-17_flutter_3_47_0_pin.md): Pin Flutter `3.44.9` → `3.47.0` and Dart `3.12.2` → `3.13.0`; macOS 12.0 minimum; keep Dart language floor 3.12 (`final` params).
 - [`2026-08-10_todo_list_rebuild_remeasure.md`](2026-08-10_todo_list_rebuild_remeasure.md): Todo list narrow-selector remeasure — sim Hive Timeline + physical iPhone profile DevTools (~119 FPS); accept.
 - [`2026-08-10_todo_list_rebuild_baseline.md`](2026-08-10_todo_list_rebuild_baseline.md): Todo list presentation rebuild baseline on iPhone 17 Pro simulator — **GO** for narrow selector split.
 - [`2026-08-10_app_auth_cubit_close_guard.md`](2026-08-10_app_auth_cubit_close_guard.md): AppAuthCubit close subscription regression (AUTH-CUBIT-02).

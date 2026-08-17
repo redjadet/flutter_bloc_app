@@ -78,7 +78,7 @@ final class SupabaseConfigProvider {
     try {
       final user = await waitForAuthUser(auth);
       await user.getIdToken(true);
-    } on FirebaseAuthException catch (e, _) {
+    } on FirebaseAuthException catch (e) {
       AppLogger.info(
         'SupabaseConfigProvider: auth/token not ready (${e.code}); skipping fetch',
       );
@@ -204,7 +204,7 @@ final class SupabaseConfigProvider {
         skipped: false,
         version: version,
       );
-    } on Object catch (error, _) {
+    } on Object catch (error) {
       AppLogger.info(
         'SupabaseConfigProvider fetch failed (${error.runtimeType})',
       );

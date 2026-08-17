@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:utilities/utilities.dart';
 
 /// No-op [FcmMessagingService] when Firebase is not initialized (e.g. placeholder

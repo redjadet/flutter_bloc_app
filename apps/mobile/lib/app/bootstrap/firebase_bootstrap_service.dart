@@ -104,7 +104,7 @@ class FirebaseBootstrapService {
         return false;
       }
 
-      return _initializeConfiguredFirebase(options);
+      return await _initializeConfiguredFirebase(options);
     } on FirebaseException catch (error, stackTrace) {
       if (error.code == 'duplicate-app') {
         AppLogger.warning(

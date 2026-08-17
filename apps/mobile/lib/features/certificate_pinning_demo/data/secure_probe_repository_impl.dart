@@ -29,7 +29,7 @@ final class SecureProbeRepositoryImpl implements SecureProbeRepository {
   Future<SecureProbeOutcome> probe() async {
     try {
       if (config.mode == CertificatePinningMode.real) {
-        return _probeReal();
+        return await _probeReal();
       }
       final CertificatePinResult result = await mockValidator.validate(
         host: 'demo.pinning.local',

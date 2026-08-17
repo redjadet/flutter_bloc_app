@@ -92,7 +92,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
       // Ensure Functions gets a fresh ID token attached to the request.
       await user.getIdToken(true);
       cloudAttempt = await _tryFetchFromCloud();
-    } on FirebaseAuthException catch (e, _) {
+    } on FirebaseAuthException catch (e) {
       // Do not return [] here: that looks like success to auth-aware callers.
       // Skip cloud and still try direct HTTP + Firestore (same as empty cloud).
       AppLogger.info(
@@ -182,7 +182,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
         return const _FirebaseChartFetchAttempt();
       }
       return _FirebaseChartFetchAttempt(points: parseChartPointsResilient(raw));
-    } on FirebaseFunctionsException catch (e, _) {
+    } on FirebaseFunctionsException catch (e) {
       if (e.code == 'unauthenticated') {
         final auth = _safeAuth;
         final uid = auth?.currentUser?.uid;
@@ -199,7 +199,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
           logStackTrace: false,
         ),
       );
-    } on Object catch (error, _) {
+    } on Object catch (error) {
       return _FirebaseChartFetchAttempt(
         failure: _FirebaseChartFetchFailure(
           label: error.runtimeType.toString(),
