@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_leve
 import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 
 /// JSON-serializable snapshot for Hive (demo feature).
-class MarketSnapshotDto {
+class MarketSnapshotDto._(final Map<String, Object?> _json) {
   factory MarketSnapshotDto.fromDomain(MarketFeedSnapshot s) {
     return MarketSnapshotDto._(<String, Object?>{
       'pairId': s.pairId,
@@ -28,10 +28,6 @@ class MarketSnapshotDto {
     }
     return MarketSnapshotDto._(out);
   }
-
-  MarketSnapshotDto._(this._json);
-
-  final Map<String, Object?> _json;
 
   Map<String, Object?> toJson() => _json;
 

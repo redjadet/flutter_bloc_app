@@ -1,23 +1,23 @@
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
 
 /// Wire DTO for [StaffDemoTimeEntryFlags] sync / Firestore payloads.
-class StaffDemoTimeEntryFlagsDto {
-  const StaffDemoTimeEntryFlagsDto({
-    required this.outsideGeofence,
-    required this.earlyClockIn,
-    required this.locationInsufficient,
-    required this.missingScheduledShift,
-    required this.duplicatePunchAttempt,
-    required this.deviceClockSkewSuspected,
-  });
-
+class const StaffDemoTimeEntryFlagsDto({
+  required final bool outsideGeofence,
+  required final bool earlyClockIn,
+  required final bool locationInsufficient,
+  required final bool missingScheduledShift,
+  required final bool duplicatePunchAttempt,
+  required final bool deviceClockSkewSuspected,
+}) {
   StaffDemoTimeEntryFlagsDto.fromDomain(StaffDemoTimeEntryFlags flags)
-    : outsideGeofence = flags.outsideGeofence,
-      earlyClockIn = flags.earlyClockIn,
-      locationInsufficient = flags.locationInsufficient,
-      missingScheduledShift = flags.missingScheduledShift,
-      duplicatePunchAttempt = flags.duplicatePunchAttempt,
-      deviceClockSkewSuspected = flags.deviceClockSkewSuspected;
+    : this(
+        outsideGeofence: flags.outsideGeofence,
+        earlyClockIn: flags.earlyClockIn,
+        locationInsufficient: flags.locationInsufficient,
+        missingScheduledShift: flags.missingScheduledShift,
+        duplicatePunchAttempt: flags.duplicatePunchAttempt,
+        deviceClockSkewSuspected: flags.deviceClockSkewSuspected,
+      );
 
   factory StaffDemoTimeEntryFlagsDto.fromJson(
     Map<String, dynamic> json,
@@ -30,13 +30,6 @@ class StaffDemoTimeEntryFlagsDto {
     deviceClockSkewSuspected:
         (json['deviceClockSkewSuspected'] as bool?) ?? false,
   );
-
-  final bool outsideGeofence;
-  final bool earlyClockIn;
-  final bool locationInsufficient;
-  final bool missingScheduledShift;
-  final bool duplicatePunchAttempt;
-  final bool deviceClockSkewSuspected;
 
   StaffDemoTimeEntryFlags toDomain() => StaffDemoTimeEntryFlags(
     outsideGeofence: outsideGeofence,

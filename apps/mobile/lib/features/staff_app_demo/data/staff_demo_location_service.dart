@@ -4,19 +4,12 @@ import 'package:core/core.dart';
 
 import 'package:geolocator/geolocator.dart';
 
-class StaffDemoCapturedLocation {
-  const StaffDemoCapturedLocation({
-    required this.lat,
-    required this.lng,
-    required this.accuracyMeters,
-    required this.capturedAtUtc,
-  });
-
-  final double lat;
-  final double lng;
-  final double? accuracyMeters;
-  final DateTime capturedAtUtc;
-}
+class const StaffDemoCapturedLocation({
+  required final double lat,
+  required final double lng,
+  required final double? accuracyMeters,
+  required final DateTime capturedAtUtc,
+});
 
 class StaffDemoLocationService {
   StaffDemoLocationService({

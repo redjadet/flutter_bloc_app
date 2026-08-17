@@ -1,31 +1,27 @@
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_json.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 
-class GraphqlContinentDto {
-  GraphqlContinentDto({required this.code, required this.name});
-
+class GraphqlContinentDto({
+  required final String code,
+  required final String name,
+}) {
   factory GraphqlContinentDto.fromJson(Map<String, dynamic> json) =>
       GraphqlContinentDto(
         code: requireGraphqlString(json, 'code'),
         name: requireGraphqlString(json, 'name'),
       );
 
-  final String code;
-  final String name;
-
   GraphqlContinent toDomain() => GraphqlContinent(code: code, name: name);
 }
 
-class GraphqlCountryDto {
-  GraphqlCountryDto({
-    required this.code,
-    required this.name,
-    required this.continent,
-    this.capital,
-    this.currency,
-    this.emoji,
-  });
-
+class GraphqlCountryDto({
+  required final String code,
+  required final String name,
+  required final GraphqlContinentDto continent,
+  final String? capital,
+  final String? currency,
+  final String? emoji,
+}) {
   factory GraphqlCountryDto.fromJson(Map<String, dynamic> json) =>
       GraphqlCountryDto(
         code: requireGraphqlString(json, 'code'),
@@ -37,13 +33,6 @@ class GraphqlCountryDto {
         currency: optionalGraphqlString(json, 'currency'),
         emoji: optionalGraphqlString(json, 'emoji'),
       );
-
-  final String code;
-  final String name;
-  final GraphqlContinentDto continent;
-  final String? capital;
-  final String? currency;
-  final String? emoji;
 
   GraphqlCountry toDomain() => GraphqlCountry(
     code: code,

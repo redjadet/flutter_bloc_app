@@ -1,23 +1,23 @@
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 
 /// Wire DTO for [CounterSnapshot] persistence and sync payloads.
-class CounterSnapshotDto {
-  const CounterSnapshotDto({
-    required this.count,
-    this.userId,
-    this.lastChanged,
-    this.changeId,
-    this.lastSyncedAt,
-    this.synchronized = false,
-  });
-
+class const CounterSnapshotDto({
+  required final int count,
+  final String? userId,
+  final DateTime? lastChanged,
+  final String? changeId,
+  final DateTime? lastSyncedAt,
+  final bool synchronized = false,
+}) {
   CounterSnapshotDto.fromDomain(CounterSnapshot snapshot)
-    : count = snapshot.count,
-      userId = snapshot.userId,
-      lastChanged = snapshot.lastChanged,
-      changeId = snapshot.changeId,
-      lastSyncedAt = snapshot.lastSyncedAt,
-      synchronized = snapshot.synchronized;
+    : this(
+        count: snapshot.count,
+        userId: snapshot.userId,
+        lastChanged: snapshot.lastChanged,
+        changeId: snapshot.changeId,
+        lastSyncedAt: snapshot.lastSyncedAt,
+        synchronized: snapshot.synchronized,
+      );
 
   factory CounterSnapshotDto.fromJson(Map<String, dynamic> json) {
     return CounterSnapshotDto(
@@ -33,13 +33,6 @@ class CounterSnapshotDto {
       synchronized: json['synchronized'] as bool? ?? false,
     );
   }
-
-  final int count;
-  final String? userId;
-  final DateTime? lastChanged;
-  final String? changeId;
-  final DateTime? lastSyncedAt;
-  final bool synchronized;
 
   CounterSnapshot toDomain() => CounterSnapshot(
     count: count,

@@ -1,17 +1,8 @@
-class StaffDemoShift {
-  const StaffDemoShift({
-    required this.shiftId,
-    required this.userId,
-    required this.siteId,
-    required this.startAtUtc,
-    required this.endAtUtc,
-    required this.timezoneName,
-  });
-
-  final String shiftId;
-  final String userId;
-  final String siteId;
-  final DateTime startAtUtc;
-  final DateTime endAtUtc;
-  final String timezoneName;
-}
+class const StaffDemoShift({
+  required final String shiftId,
+  required final String userId,
+  required final String siteId,
+  required final DateTime startAtUtc,
+  required final DateTime endAtUtc,
+  required final String timezoneName,
+});

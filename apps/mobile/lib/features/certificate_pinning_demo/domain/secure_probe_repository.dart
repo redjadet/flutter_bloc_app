@@ -6,11 +6,9 @@ sealed class SecureProbeOutcome {
   const SecureProbeOutcome();
 }
 
-final class SecureProbeSuccess extends SecureProbeOutcome {
-  const SecureProbeSuccess({required this.matchKind});
-
-  final CertificatePinMatchKind matchKind;
-}
+final class const SecureProbeSuccess({
+  required final CertificatePinMatchKind matchKind,
+}) extends SecureProbeOutcome;
 
 final class SecureProbeFailure extends SecureProbeOutcome {
   const SecureProbeFailure(this.failure);

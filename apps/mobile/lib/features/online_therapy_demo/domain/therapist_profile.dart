@@ -1,21 +1,10 @@
-class TherapistProfile {
-  const TherapistProfile({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.specialties,
-    required this.languages,
-    required this.bio,
-    required this.rating,
-    required this.isVerified,
-  });
-
-  final String id;
-  final String userId;
-  final String title;
-  final List<String> specialties;
-  final List<String> languages;
-  final String bio;
-  final double rating;
-  final bool isVerified;
-}
+class const TherapistProfile({
+  required final String id,
+  required final String userId,
+  required final String title,
+  required final List<String> specialties,
+  required final List<String> languages,
+  required final String bio,
+  required final double rating,
+  required final bool isVerified,
+});

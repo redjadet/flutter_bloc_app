@@ -7,16 +7,10 @@ enum BleConnectionPhaseKind {
   error,
 }
 
-class BleConnectionPhase {
-  const BleConnectionPhase({
-    required this.deviceId,
-    required this.phase,
-    this.errorMessage,
-  });
-
-  final String deviceId;
-  final BleConnectionPhaseKind phase;
-  final String? errorMessage;
-
-  bool get isConnected => phase == BleConnectionPhaseKind.connected;
+class const BleConnectionPhase({
+  required final String deviceId,
+  required final BleConnectionPhaseKind phase,
+  final String? errorMessage,
+}) {
+  bool get isConnected => phase == .connected;
 }

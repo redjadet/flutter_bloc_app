@@ -4,30 +4,23 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_record.dart';
 
 /// Wire DTO for [CaseStudyRecord] Hive persistence.
-class CaseStudyRecordDto {
-  const CaseStudyRecordDto({
-    required this.id,
-    required this.submittedAt,
-    required this.doctorName,
-    required this.caseType,
-    required this.notes,
-    required this.answers,
-  });
-
+class const CaseStudyRecordDto({
+  required final String id,
+  required final DateTime submittedAt,
+  required final String doctorName,
+  required final CaseStudyCaseType caseType,
+  required final String notes,
+  required final Map<String, String> answers,
+}) {
   CaseStudyRecordDto.fromDomain(CaseStudyRecord record)
-    : id = record.id,
-      submittedAt = record.submittedAt,
-      doctorName = record.doctorName,
-      caseType = record.caseType,
-      notes = record.notes,
-      answers = Map<String, String>.from(record.answers);
-
-  final String id;
-  final DateTime submittedAt;
-  final String doctorName;
-  final CaseStudyCaseType caseType;
-  final String notes;
-  final Map<String, String> answers;
+    : this(
+        id: record.id,
+        submittedAt: record.submittedAt,
+        doctorName: record.doctorName,
+        caseType: record.caseType,
+        notes: record.notes,
+        answers: Map<String, String>.from(record.answers),
+      );
 
   CaseStudyRecord toDomain() => CaseStudyRecord(
     id: id,

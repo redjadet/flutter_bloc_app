@@ -57,6 +57,11 @@ DTOs are required when external or stored shape can drift independently from
 domain shape. DTOs are optional for tiny internal-only maps where a mapper would
 add churn without type safety.
 
+Hand-written DTO and plain/Equatable domain field bags use Dart 3.13 primary
+constructors (`class const Foo({required final String id})`). Keep `@freezed`
+types generated. See [`CODE_QUALITY.md`](../CODE_QUALITY.md) § Best-Practice
+Expectations.
+
 ## Error Mapping
 
 - HTTP/transport failures map in data or owning package utilities.

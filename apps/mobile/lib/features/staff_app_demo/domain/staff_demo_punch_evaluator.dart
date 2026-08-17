@@ -1,12 +1,8 @@
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_entry_flags.dart';
 
-class StaffDemoClockInEvaluation {
-  const StaffDemoClockInEvaluation({
-    required this.flags,
-  });
-
-  final StaffDemoTimeEntryFlags flags;
-}
+class const StaffDemoClockInEvaluation({
+  required final StaffDemoTimeEntryFlags flags,
+});
 
 class StaffDemoPunchEvaluator {
   static const Duration earlyClockInThreshold = Duration(minutes: 15);

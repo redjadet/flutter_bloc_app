@@ -1,15 +1,7 @@
-class AuditEvent {
-  const AuditEvent({
-    required this.id,
-    required this.actorId,
-    required this.action,
-    required this.targetId,
-    required this.createdAt,
-  });
-
-  final String id;
-  final String actorId;
-  final String action;
-  final String targetId;
-  final DateTime createdAt;
-}
+class const AuditEvent({
+  required final String id,
+  required final String actorId,
+  required final String action,
+  required final String targetId,
+  required final DateTime createdAt,
+});

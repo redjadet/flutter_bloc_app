@@ -1,25 +1,25 @@
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 
 /// Wire DTO for [IotDevice] Hive persistence.
-class IotDeviceDto {
-  const IotDeviceDto({
-    required this.id,
-    required this.name,
-    required this.type,
-    this.lastSeen,
-    this.connectionState = IotConnectionState.disconnected,
-    this.toggledOn = false,
-    this.value = 0,
-  });
-
+class const IotDeviceDto({
+  required final String id,
+  required final String name,
+  required final IotDeviceType type,
+  final DateTime? lastSeen,
+  final IotConnectionState connectionState = .disconnected,
+  final bool toggledOn = false,
+  final double value = 0,
+}) {
   IotDeviceDto.fromDomain(IotDevice device)
-    : id = device.id,
-      name = device.name,
-      type = device.type,
-      lastSeen = device.lastSeen,
-      connectionState = device.connectionState,
-      toggledOn = device.toggledOn,
-      value = device.value;
+    : this(
+        id: device.id,
+        name: device.name,
+        type: device.type,
+        lastSeen: device.lastSeen,
+        connectionState: device.connectionState,
+        toggledOn: device.toggledOn,
+        value: device.value,
+      );
 
   factory IotDeviceDto.fromJson(Map<String, dynamic> json) => IotDeviceDto(
     id: json['id'] as String,
@@ -34,14 +34,6 @@ class IotDeviceDto {
     toggledOn: json['toggledOn'] as bool? ?? false,
     value: (json['value'] as num?)?.toDouble() ?? 0,
   );
-
-  final String id;
-  final String name;
-  final IotDeviceType type;
-  final DateTime? lastSeen;
-  final IotConnectionState connectionState;
-  final bool toggledOn;
-  final double value;
 
   IotDevice toDomain() => IotDevice(
     id: id,
