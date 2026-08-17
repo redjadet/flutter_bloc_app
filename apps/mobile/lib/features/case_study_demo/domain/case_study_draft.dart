@@ -4,18 +4,21 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_ques
 
 /// In-progress case metadata + per-question clip paths (local files).
 // check-ignore: freezed_preferred - demo model (kept lightweight)
-class CaseStudyDraft extends Equatable {
-  const CaseStudyDraft({
-    required this.caseId,
-    required this.doctorName,
-    required this.caseType,
-    required this.notes,
-    required this.answers,
-    required this.remoteObjectKeysByQuestion,
-    required this.currentQuestionIndex,
-    required this.phase,
-  });
+class const CaseStudyDraft({
+  required final String caseId,
+  required final String doctorName,
+  required final CaseStudyCaseType? caseType,
+  required final String notes,
+  required final Map<String, String> answers,
 
+  /// Supabase object keys for uploaded clips (keyed by question id).
+  ///
+  /// This must stay separate from [answers] because [answers] are local file
+  /// paths used for in-progress playback.
+  required final Map<String, String> remoteObjectKeysByQuestion,
+  required final int currentQuestionIndex,
+  required final CaseStudyDraftPhase phase,
+}) extends Equatable {
   factory CaseStudyDraft.fresh({required String caseId}) {
     return CaseStudyDraft(
       caseId: caseId,
@@ -25,23 +28,9 @@ class CaseStudyDraft extends Equatable {
       answers: const <String, String>{},
       remoteObjectKeysByQuestion: const <String, String>{},
       currentQuestionIndex: 0,
-      phase: CaseStudyDraftPhase.metadata,
+      phase: .metadata,
     );
   }
-
-  final String caseId;
-  final String doctorName;
-  final CaseStudyCaseType? caseType;
-  final String notes;
-  final Map<String, String> answers;
-
-  /// Supabase object keys for uploaded clips (keyed by question id).
-  ///
-  /// This must stay separate from [answers] because [answers] are local file paths
-  /// used for in-progress playback.
-  final Map<String, String> remoteObjectKeysByQuestion;
-  final int currentQuestionIndex;
-  final CaseStudyDraftPhase phase;
 
   bool get hasMetadata => doctorName.trim().isNotEmpty && caseType != null;
 

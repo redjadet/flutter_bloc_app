@@ -51,18 +51,11 @@ class ChatOfflineEnqueuedException extends ChatException {
   ]);
 }
 
-class ChatResult {
-  const ChatResult({
-    required this.reply,
-    required this.pastUserInputs,
-    required this.generatedResponses,
-    this.transportUsed,
-  });
-
-  final ChatMessage reply;
-  final List<String> pastUserInputs;
-  final List<String> generatedResponses;
+class const ChatResult({
+  required final ChatMessage reply,
+  required final List<String> pastUserInputs,
+  required final List<String> generatedResponses,
 
   /// Which path produced this completion (for request-scoped transport chip).
-  final ChatRemotePath? transportUsed;
-}
+  final ChatRemotePath? transportUsed,
+});

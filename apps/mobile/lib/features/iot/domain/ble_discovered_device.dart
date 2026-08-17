@@ -1,17 +1,10 @@
 /// Device seen during an active scan.
-class BleDiscoveredDevice {
-  const BleDiscoveredDevice({
-    required this.id,
-    required this.name,
-    required this.rssi,
-    this.connectable = true,
-  });
-
-  final String id;
-  final String name;
-  final int rssi;
-  final bool connectable;
-
+class const BleDiscoveredDevice({
+  required final String id,
+  required final String name,
+  required final int rssi,
+  final bool connectable = true,
+}) {
   BleDiscoveredDevice copyWith({
     String? id,
     String? name,

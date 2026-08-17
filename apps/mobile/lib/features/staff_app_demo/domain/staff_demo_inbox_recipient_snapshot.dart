@@ -1,9 +1,4 @@
-class StaffDemoInboxRecipientSnapshot {
-  const StaffDemoInboxRecipientSnapshot({
-    required this.messageId,
-    this.confirmedAtMs,
-  });
-
-  final String messageId;
-  final int? confirmedAtMs;
-}
+class const StaffDemoInboxRecipientSnapshot({
+  required final String messageId,
+  final int? confirmedAtMs,
+});

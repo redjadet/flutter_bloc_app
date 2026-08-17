@@ -4,38 +4,29 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 
 /// Wire DTO for [CaseStudyDraft] Hive persistence.
-class CaseStudyDraftDto {
-  const CaseStudyDraftDto({
-    required this.caseId,
-    required this.doctorName,
-    required this.caseType,
-    required this.notes,
-    required this.answers,
-    required this.remoteObjectKeysByQuestion,
-    required this.currentQuestionIndex,
-    required this.phase,
-  });
-
+class const CaseStudyDraftDto({
+  required final String caseId,
+  required final String doctorName,
+  required final CaseStudyCaseType? caseType,
+  required final String notes,
+  required final Map<String, String> answers,
+  required final Map<String, String> remoteObjectKeysByQuestion,
+  required final int currentQuestionIndex,
+  required final CaseStudyDraftPhase phase,
+}) {
   CaseStudyDraftDto.fromDomain(CaseStudyDraft draft)
-    : caseId = draft.caseId,
-      doctorName = draft.doctorName,
-      caseType = draft.caseType,
-      notes = draft.notes,
-      answers = Map<String, String>.from(draft.answers),
-      remoteObjectKeysByQuestion = Map<String, String>.from(
-        draft.remoteObjectKeysByQuestion,
-      ),
-      currentQuestionIndex = draft.currentQuestionIndex,
-      phase = draft.phase;
-
-  final String caseId;
-  final String doctorName;
-  final CaseStudyCaseType? caseType;
-  final String notes;
-  final Map<String, String> answers;
-  final Map<String, String> remoteObjectKeysByQuestion;
-  final int currentQuestionIndex;
-  final CaseStudyDraftPhase phase;
+    : this(
+        caseId: draft.caseId,
+        doctorName: draft.doctorName,
+        caseType: draft.caseType,
+        notes: draft.notes,
+        answers: Map<String, String>.from(draft.answers),
+        remoteObjectKeysByQuestion: Map<String, String>.from(
+          draft.remoteObjectKeysByQuestion,
+        ),
+        currentQuestionIndex: draft.currentQuestionIndex,
+        phase: draft.phase,
+      );
 
   CaseStudyDraft toDomain() => CaseStudyDraft(
     caseId: caseId,

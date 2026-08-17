@@ -1,13 +1,6 @@
-class StaffDemoOpenEntrySnapshot {
-  const StaffDemoOpenEntrySnapshot({
-    required this.entryId,
-    required this.clockInAtUtc,
-    required this.shiftId,
-    required this.siteId,
-  });
-
-  final String entryId;
-  final DateTime clockInAtUtc;
-  final String? shiftId;
-  final String? siteId;
-}
+class const StaffDemoOpenEntrySnapshot({
+  required final String entryId,
+  required final DateTime clockInAtUtc,
+  required final String? shiftId,
+  required final String? siteId,
+});

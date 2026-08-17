@@ -10,18 +10,10 @@ enum CallJoinStatus {
   failed,
 }
 
-class CallSession {
-  const CallSession({
-    required this.id,
-    required this.appointmentId,
-    required this.roomId,
-    required this.provider,
-    required this.joinStatus,
-  });
-
-  final String id;
-  final String appointmentId;
-  final String roomId;
-  final CallProvider provider;
-  final CallJoinStatus joinStatus;
-}
+class const CallSession({
+  required final String id,
+  required final String appointmentId,
+  required final String roomId,
+  required final CallProvider provider,
+  required final CallJoinStatus joinStatus,
+});

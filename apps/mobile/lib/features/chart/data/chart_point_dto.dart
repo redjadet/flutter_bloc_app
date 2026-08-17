@@ -1,15 +1,15 @@
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 
 /// Wire DTO for [ChartPoint] cache and API payloads.
-class ChartPointDto {
-  const ChartPointDto({
-    required this.date,
-    required this.value,
-  });
-
+class const ChartPointDto({
+  required final DateTime date,
+  required final double value,
+}) {
   ChartPointDto.fromDomain(ChartPoint point)
-    : date = point.date,
-      value = point.value;
+    : this(
+        date: point.date,
+        value: point.value,
+      );
 
   factory ChartPointDto.fromJson(Map<String, dynamic> json) => ChartPointDto(
     date: DateTime.parse(json['date'] as String),
@@ -33,9 +33,6 @@ class ChartPointDto {
       value: rawValue.toDouble(),
     );
   }
-
-  final DateTime date;
-  final double value;
 
   ChartPoint toDomain() => ChartPoint(date: date, value: value);
 

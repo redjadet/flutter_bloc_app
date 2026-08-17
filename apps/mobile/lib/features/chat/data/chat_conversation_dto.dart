@@ -4,31 +4,31 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Wire DTO for [ChatConversation] persistence.
-class ChatConversationDto {
-  const ChatConversationDto({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    this.messages = const <ChatMessage>[],
-    this.pastUserInputs = const <String>[],
-    this.generatedResponses = const <String>[],
-    this.model,
-    this.lastSyncedAt,
-    this.synchronized = true,
-    this.changeId,
-  });
-
+class const ChatConversationDto({
+  required final String id,
+  required final DateTime createdAt,
+  required final DateTime updatedAt,
+  final List<ChatMessage> messages = const <ChatMessage>[],
+  final List<String> pastUserInputs = const <String>[],
+  final List<String> generatedResponses = const <String>[],
+  final String? model,
+  final DateTime? lastSyncedAt,
+  final bool synchronized = true,
+  final String? changeId,
+}) {
   ChatConversationDto.fromDomain(ChatConversation conversation)
-    : id = conversation.id,
-      createdAt = conversation.createdAt,
-      updatedAt = conversation.updatedAt,
-      messages = conversation.messages,
-      pastUserInputs = conversation.pastUserInputs,
-      generatedResponses = conversation.generatedResponses,
-      model = conversation.model,
-      lastSyncedAt = conversation.lastSyncedAt,
-      synchronized = conversation.synchronized,
-      changeId = conversation.changeId;
+    : this(
+        id: conversation.id,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        messages: conversation.messages,
+        pastUserInputs: conversation.pastUserInputs,
+        generatedResponses: conversation.generatedResponses,
+        model: conversation.model,
+        lastSyncedAt: conversation.lastSyncedAt,
+        synchronized: conversation.synchronized,
+        changeId: conversation.changeId,
+      );
 
   factory ChatConversationDto.fromJson(Map<String, dynamic> json) {
     final dynamic messagesRaw = json['messages'];
@@ -62,17 +62,6 @@ class ChatConversationDto {
       changeId: _normalizeChangeId(json['changeId']),
     );
   }
-
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<ChatMessage> messages;
-  final List<String> pastUserInputs;
-  final List<String> generatedResponses;
-  final String? model;
-  final DateTime? lastSyncedAt;
-  final bool synchronized;
-  final String? changeId;
 
   ChatConversation toDomain() => ChatConversation(
     id: id,

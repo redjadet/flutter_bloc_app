@@ -1,17 +1,9 @@
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_role.dart';
 
-class TherapyUser {
-  const TherapyUser({
-    required this.id,
-    required this.role,
-    required this.displayName,
-    required this.maskedEmail,
-    required this.createdAt,
-  });
-
-  final String id;
-  final TherapyRole role;
-  final String displayName;
-  final String maskedEmail;
-  final DateTime createdAt;
-}
+class const TherapyUser({
+  required final String id,
+  required final TherapyRole role,
+  required final String displayName,
+  required final String maskedEmail,
+  required final DateTime createdAt,
+});

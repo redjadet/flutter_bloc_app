@@ -1,15 +1,9 @@
 /// Mock classic Bluetooth paired device.
-class ClassicBtDevice {
-  const ClassicBtDevice({
-    required this.id,
-    required this.name,
-    this.isConnected = false,
-  });
-
-  final String id;
-  final String name;
-  final bool isConnected;
-
+class const ClassicBtDevice({
+  required final String id,
+  required final String name,
+  final bool isConnected = false,
+}) {
   ClassicBtDevice copyWith({
     String? id,
     String? name,
@@ -23,14 +17,8 @@ class ClassicBtDevice {
 
 enum ClassicBtMessageDirection { incoming, outgoing }
 
-class ClassicBtMessage {
-  const ClassicBtMessage({
-    required this.direction,
-    required this.text,
-    required this.timestamp,
-  });
-
-  final ClassicBtMessageDirection direction;
-  final String text;
-  final DateTime timestamp;
-}
+class const ClassicBtMessage({
+  required final ClassicBtMessageDirection direction,
+  required final String text,
+  required final DateTime timestamp,
+});

@@ -7,6 +7,7 @@ that.
 
 ## Index
 
+- [`2026-08-17_dart_313_primary_model_ctors.md`](2026-08-17_dart_313_primary_model_ctors.md): Hand-written DTO/domain field bags use Dart 3.13 primary constructors; Freezed/Cubit state unchanged.
 - [`2026-08-17_android_builtin_kotlin_app.md`](2026-08-17_android_builtin_kotlin_app.md): App drops app-level `kotlin-android` (AGP 9 `compilerOptions`); `android.builtInKotlin` still false — four plugins apply KGP unconditionally.
 - [`2026-08-17_pub_upgrade_347_followups.md`](2026-08-17_pub_upgrade_347_followups.md): Constraint-bounded `pub upgrade`; `material_ui`/`cupertino_ui` dart-fix; Dart 3.13 language floor; built-in Kotlin still blocked by plugin KGP.
 - [`2026-08-17_flutter_3_47_0_pin.md`](2026-08-17_flutter_3_47_0_pin.md): Pin Flutter `3.44.9` → `3.47.0` and Dart `3.12.2` → `3.13.0`; macOS 12.0 minimum; keep Dart language floor 3.12 (`final` params).

@@ -2,25 +2,25 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Wire DTO for [ChatMessage] persistence.
-class ChatMessageDto {
-  const ChatMessageDto({
-    required this.author,
-    required this.text,
-    this.clientMessageId,
-    this.createdAt,
-    this.synchronized = true,
-    this.lastSyncedAt,
-    this.terminalSyncFailureCode,
-  });
-
+class const ChatMessageDto({
+  required final ChatAuthor author,
+  required final String text,
+  final String? clientMessageId,
+  final DateTime? createdAt,
+  final bool synchronized = true,
+  final DateTime? lastSyncedAt,
+  final String? terminalSyncFailureCode,
+}) {
   ChatMessageDto.fromDomain(ChatMessage message)
-    : author = message.author,
-      text = message.text,
-      clientMessageId = message.clientMessageId,
-      createdAt = message.createdAt,
-      synchronized = message.synchronized,
-      lastSyncedAt = message.lastSyncedAt,
-      terminalSyncFailureCode = message.terminalSyncFailureCode;
+    : this(
+        author: message.author,
+        text: message.text,
+        clientMessageId: message.clientMessageId,
+        createdAt: message.createdAt,
+        synchronized: message.synchronized,
+        lastSyncedAt: message.lastSyncedAt,
+        terminalSyncFailureCode: message.terminalSyncFailureCode,
+      );
 
   factory ChatMessageDto.fromJson(Map<String, dynamic> json) {
     final String authorValue = (json['author'] ?? '').toString();
@@ -58,14 +58,6 @@ class ChatMessageDto {
       terminalSyncFailureCode: terminalSyncFailureCode,
     );
   }
-
-  final ChatAuthor author;
-  final String text;
-  final String? clientMessageId;
-  final DateTime? createdAt;
-  final bool synchronized;
-  final DateTime? lastSyncedAt;
-  final String? terminalSyncFailureCode;
 
   ChatMessage toDomain() => ChatMessage(
     author: author,

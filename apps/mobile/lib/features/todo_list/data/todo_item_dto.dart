@@ -1,33 +1,33 @@
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
-class TodoItemDto {
-  TodoItemDto({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.isCompleted,
-    required this.createdAt,
-    required this.updatedAt,
-    this.dueDate,
-    this.priority = TodoPriority.none,
-    this.changeId,
-    this.lastSyncedAt,
-    this.synchronized = false,
-  });
-
+class TodoItemDto({
+  required final String id,
+  required final String title,
+  required final String? description,
+  required final bool isCompleted,
+  required final DateTime createdAt,
+  required final DateTime updatedAt,
+  final DateTime? dueDate,
+  final TodoPriority priority = .none,
+  final String? changeId,
+  final DateTime? lastSyncedAt,
+  final bool synchronized = false,
+}) {
   TodoItemDto.fromDomain(TodoItem item)
-    : id = item.id,
-      title = item.title,
-      description = item.description,
-      isCompleted = item.isCompleted,
-      createdAt = item.createdAt,
-      updatedAt = item.updatedAt,
-      dueDate = item.dueDate,
-      priority = item.priority,
-      changeId = item.changeId,
-      lastSyncedAt = item.lastSyncedAt,
-      synchronized = item.synchronized;
+    : this(
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        isCompleted: item.isCompleted,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+        dueDate: item.dueDate,
+        priority: item.priority,
+        changeId: item.changeId,
+        lastSyncedAt: item.lastSyncedAt,
+        synchronized: item.synchronized,
+      );
 
   factory TodoItemDto.fromMap(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
@@ -70,18 +70,6 @@ class TodoItemDto {
       synchronized: synchronized,
     );
   }
-
-  final String id;
-  final String title;
-  final String? description;
-  final bool isCompleted;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? dueDate;
-  final TodoPriority priority;
-  final String? changeId;
-  final DateTime? lastSyncedAt;
-  final bool synchronized;
 
   TodoItem toDomain() => TodoItem(
     id: id,

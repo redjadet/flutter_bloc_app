@@ -5,16 +5,14 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_mo
 export 'ai_decision_dto_mappers.dart';
 
 /// Wire DTO for AI Decision API case queue rows.
-class AiDecisionCaseSummaryDto {
-  AiDecisionCaseSummaryDto({
-    required this.id,
-    required this.applicantName,
-    required this.businessName,
-    required this.amount,
-    required this.status,
-    required this.lastDecisionBand,
-  });
-
+class AiDecisionCaseSummaryDto({
+  required final String id,
+  required final String applicantName,
+  required final String businessName,
+  required final double amount,
+  required final String status,
+  required final String? lastDecisionBand,
+}) {
   factory AiDecisionCaseSummaryDto.fromJson(Map<String, dynamic> json) =>
       AiDecisionCaseSummaryDto(
         id: requireAiDecisionString(json, 'id'),
@@ -24,13 +22,6 @@ class AiDecisionCaseSummaryDto {
         status: requireAiDecisionString(json, 'status'),
         lastDecisionBand: optionalAiDecisionString(json, 'last_decision_band'),
       );
-
-  final String id;
-  final String applicantName;
-  final String businessName;
-  final double amount;
-  final String status;
-  final String? lastDecisionBand;
 
   AiDecisionCaseSummary toDomain() => AiDecisionCaseSummary(
     id: id,
@@ -42,15 +33,13 @@ class AiDecisionCaseSummaryDto {
   );
 }
 
-class AiDecisionDecisionResultDto {
-  AiDecisionDecisionResultDto({
-    required this.riskScore,
-    required this.riskBand,
-    required this.recommendedAction,
-    required this.rationale,
-    required this.proof,
-  });
-
+class AiDecisionDecisionResultDto({
+  required final double riskScore,
+  required final String riskBand,
+  required final String recommendedAction,
+  required final String rationale,
+  required final Map<String, dynamic> proof,
+}) {
   factory AiDecisionDecisionResultDto.fromJson(
     Map<String, dynamic> json,
   ) => AiDecisionDecisionResultDto(
@@ -61,12 +50,6 @@ class AiDecisionDecisionResultDto {
     proof: optionalAiDecisionMap(json, 'proof'),
   );
 
-  final double riskScore;
-  final String riskBand;
-  final String recommendedAction;
-  final String rationale;
-  final Map<String, dynamic> proof;
-
   AiDecisionDecisionResult toDomain() => AiDecisionDecisionResult(
     riskScore: riskScore,
     riskBand: riskBand,
@@ -76,19 +59,17 @@ class AiDecisionDecisionResultDto {
   );
 }
 
-class AiDecisionCaseDetailDto {
-  AiDecisionCaseDetailDto({
-    required this.caseId,
-    required this.status,
-    required this.createdAt,
-    required this.applicant,
-    required this.business,
-    required this.loan,
-    required this.riskSignals,
-    required this.actions,
-    required this.latestDecision,
-  });
-
+class AiDecisionCaseDetailDto({
+  required final String caseId,
+  required final String status,
+  required final String createdAt,
+  required final Map<String, dynamic> applicant,
+  required final Map<String, dynamic> business,
+  required final Map<String, dynamic> loan,
+  required final List<Map<String, dynamic>> riskSignals,
+  required final List<Map<String, dynamic>> actions,
+  required final AiDecisionDecisionResultDto? latestDecision,
+}) {
   factory AiDecisionCaseDetailDto.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> caseJson = requireAiDecisionMap(json, 'case');
     final Object? latestRaw = json['latest_decision'];
@@ -111,16 +92,6 @@ class AiDecisionCaseDetailDto {
       latestDecision: latestDecision,
     );
   }
-
-  final String caseId;
-  final String status;
-  final String createdAt;
-  final Map<String, dynamic> applicant;
-  final Map<String, dynamic> business;
-  final Map<String, dynamic> loan;
-  final List<Map<String, dynamic>> riskSignals;
-  final List<Map<String, dynamic>> actions;
-  final AiDecisionDecisionResultDto? latestDecision;
 
   AiDecisionCaseDetail toDomain() => AiDecisionCaseDetail(
     caseId: caseId,

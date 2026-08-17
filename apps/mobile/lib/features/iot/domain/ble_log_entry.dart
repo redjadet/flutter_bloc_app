@@ -10,14 +10,8 @@ enum BleLogKind {
   error,
 }
 
-class BleLogEntry {
-  const BleLogEntry({
-    required this.timestamp,
-    required this.kind,
-    required this.message,
-  });
-
-  final DateTime timestamp;
-  final BleLogKind kind;
-  final String message;
-}
+class const BleLogEntry({
+  required final DateTime timestamp,
+  required final BleLogKind kind,
+  required final String message,
+});

@@ -11,14 +11,9 @@ enum BleAdapterState {
 }
 
 /// Snapshot of the BLE adapter.
-class BleAdapterStatus {
-  const BleAdapterStatus({
-    required this.state,
-    this.message,
-  });
-
-  final BleAdapterState state;
-  final String? message;
-
-  bool get isReady => state == BleAdapterState.poweredOn;
+class const BleAdapterStatus({
+  required final BleAdapterState state,
+  final String? message,
+}) {
+  bool get isReady => state == .poweredOn;
 }
