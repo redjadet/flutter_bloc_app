@@ -3,6 +3,7 @@ import io
 import sys
 import unittest
 import urllib.error
+from email.message import Message
 from pathlib import Path
 
 
@@ -390,7 +391,7 @@ class DrainStaleGitHubPagesDeploymentsTest(unittest.TestCase):
                     "https://api.github.com/x",
                     503,
                     "unavailable",
-                    None,
+                    Message(),
                     io.BytesIO(b'{"message":"unavailable"}'),
                 )
             return FakeSuccess()
