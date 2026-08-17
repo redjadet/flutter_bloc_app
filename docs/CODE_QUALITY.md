@@ -84,7 +84,7 @@ Source of truth for gates and guardrails:
 - Guard `context.mounted` after `await` and avoid side effects in `build()`.
 - Prefer Dart optional-to-non-null pattern matching (`if (x case final value?)`, `switch` null patterns) over force unwrapping (`!`) and repeated nullable branching.
 - Avoid null assertion where possible; pattern matching gives a compile-time non-null local and lowers runtime crash risk.
-- Hand-written data bags (DTOs, plain/Equatable field records) use Dart 3.13 primary constructors (`class const Foo({required final String id})`) so fields are not duplicated. Keep `@freezed` types generated. `final` on primary-constructor parameters is allowed; ordinary function `final` params remain forbidden.
+- Hand-written data bags (DTOs, plain/Equatable field records) use Dart 3.13 primary constructors (`class const Foo({required final String id})`) so fields are not duplicated. Prefer `class const` even when call sites stay non-const (e.g. `DateTime` fields). Keep `@freezed` types generated. `final` on primary-constructor parameters is allowed; ordinary function `final` params remain forbidden.
 
 For full guidance, see [`flutter_best_practices_review.md`](review/flutter_best_practices_review.md).
 

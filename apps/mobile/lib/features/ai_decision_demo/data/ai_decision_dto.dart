@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_mo
 export 'ai_decision_dto_mappers.dart';
 
 /// Wire DTO for AI Decision API case queue rows.
-class AiDecisionCaseSummaryDto({
+class const AiDecisionCaseSummaryDto({
   required final String id,
   required final String applicantName,
   required final String businessName,
@@ -33,7 +33,7 @@ class AiDecisionCaseSummaryDto({
   );
 }
 
-class AiDecisionDecisionResultDto({
+class const AiDecisionDecisionResultDto({
   required final double riskScore,
   required final String riskBand,
   required final String recommendedAction,
@@ -59,7 +59,7 @@ class AiDecisionDecisionResultDto({
   );
 }
 
-class AiDecisionCaseDetailDto({
+class const AiDecisionCaseDetailDto({
   required final String caseId,
   required final String status,
   required final String createdAt,

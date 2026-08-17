@@ -65,6 +65,9 @@ analyzer:
     use_key_in_widget_constructors: error
     avoid_final_parameters: error
     parameter_assignments: error
+    # Dart 3.13 deprecated this VGV lint. Keep ISP one-method ports; do not
+    # list the rule under linter.rules (that raises deprecated_lint).
+    one_member_abstracts: ignore
     # Stricter type inference and null-safety rules
     always_declare_return_types: warning
     prefer_typing_uninitialized_variables: warning
@@ -129,7 +132,6 @@ linter:
     lines_longer_than_80_chars: false
     no_default_cases: false
     unnecessary_lambdas: false
-    one_member_abstracts: false
     use_decorated_box: true
     unnecessary_breaks: false
 

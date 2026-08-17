@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:core/core.dart';
 
-import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';

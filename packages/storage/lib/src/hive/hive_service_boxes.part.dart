@@ -41,7 +41,7 @@ mixin HiveServiceBoxOperations on Object {
       );
       try {
         return await action(box);
-      } on Object catch (error, _) {
+      } on Object catch (error) {
         if (!isRecoverableHiveFailure(error)) {
           rethrow;
         }

@@ -8,21 +8,13 @@ import 'package:material_ui/material_ui.dart';
 
 export 'todo_list_delete_dialogs.dart';
 
-class TodoEditorResult {
-  const TodoEditorResult({
-    required this.title,
-    required this.description,
-    this.dueDate,
-    this.priority = TodoPriority.none,
-    this.isCompleted = false,
-  });
-
-  final String title;
-  final String description;
-  final DateTime? dueDate;
-  final TodoPriority priority;
-  final bool isCompleted;
-}
+class const TodoEditorResult({
+  required final String title,
+  required final String description,
+  final DateTime? dueDate,
+  final TodoPriority priority = .none,
+  final bool isCompleted = false,
+});
 
 Future<TodoEditorResult?> showTodoEditorDialog({
   required BuildContext context,

@@ -2,17 +2,11 @@ import 'package:flutter_bloc_app/features/iot/domain/ble_discovered_device.dart'
 import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
 
 /// Static GATT profiles for the mock BLE simulator.
-class MockBleDeviceProfile {
-  const MockBleDeviceProfile({
-    required this.device,
-    required this.services,
-    this.notifyInterval = const Duration(seconds: 2),
-  });
-
-  final BleDiscoveredDevice device;
-  final List<BleService> services;
-  final Duration notifyInterval;
-}
+class const MockBleDeviceProfile({
+  required final BleDiscoveredDevice device,
+  required final List<BleService> services,
+  final Duration notifyInterval = const Duration(seconds: 2),
+});
 
 /// Catalog of four interview demo peripherals.
 class MockBleDeviceCatalog {

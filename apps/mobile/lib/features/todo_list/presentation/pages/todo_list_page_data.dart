@@ -5,23 +5,17 @@ import 'package:meta/meta.dart';
 
 /// Loading / error projection for ViewStatusSwitcher. Ignores selection.
 @immutable
-class TodoListLifecycleData {
-  const TodoListLifecycleData({
-    required this.isLoading,
-    required this.hasError,
-    required this.errorMessage,
-  });
-
+class const TodoListLifecycleData({
+  required final bool isLoading,
+  required final bool hasError,
+  required final String? errorMessage,
+}) {
   factory TodoListLifecycleData.fromState(TodoListState state) =>
       TodoListLifecycleData(
         isLoading: state.isLoading,
         hasError: state.hasError,
         errorMessage: state.errorMessage,
       );
-
-  final bool isLoading;
-  final bool hasError;
-  final String? errorMessage;
 
   @override
   bool operator ==(Object other) =>
@@ -39,15 +33,13 @@ class TodoListLifecycleData {
 /// emissions do not rebuild header/list shells. Does not call
 /// `TodoListState.filteredItems` in `fromState` — derive in the list builder.
 @immutable
-class TodoListListProjection {
-  const TodoListListProjection({
-    required this.items,
-    required this.filter,
-    required this.searchQuery,
-    required this.sortOrder,
-    required this.manualOrder,
-  });
-
+class const TodoListListProjection({
+  required final List<TodoItem> items,
+  required final TodoFilter filter,
+  required final String searchQuery,
+  required final TodoSortOrder sortOrder,
+  required final Map<String, int> manualOrder,
+}) {
   factory TodoListListProjection.fromState(TodoListState state) =>
       TodoListListProjection(
         items: state.items,
@@ -56,12 +48,6 @@ class TodoListListProjection {
         sortOrder: state.sortOrder,
         manualOrder: state.manualOrder,
       );
-
-  final List<TodoItem> items;
-  final TodoFilter filter;
-  final String searchQuery;
-  final TodoSortOrder sortOrder;
-  final Map<String, int> manualOrder;
 
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 
@@ -103,23 +89,17 @@ class TodoListListProjection {
 
 /// Selection-only projection for batch/app-bar/row selection chrome.
 @immutable
-class TodoListSelectionData {
-  const TodoListSelectionData({
-    required this.selectedItemIds,
-    required this.hasSelectedItems,
-    required this.selectedCount,
-  });
-
+class const TodoListSelectionData({
+  required final Set<String> selectedItemIds,
+  required final bool hasSelectedItems,
+  required final int selectedCount,
+}) {
   factory TodoListSelectionData.fromState(TodoListState state) =>
       TodoListSelectionData(
         selectedItemIds: state.selectedItemIds,
         hasSelectedItems: state.hasSelectedItems,
         selectedCount: state.selectedCount,
       );
-
-  final Set<String> selectedItemIds;
-  final bool hasSelectedItems;
-  final int selectedCount;
 
   static const DeepCollectionEquality _collectionEq = DeepCollectionEquality();
 

@@ -1,17 +1,15 @@
 part of 'simulated_market_feed.dart';
 
-class _SimState {
-  _SimState({
-    required this.pairId,
-    required this.lastPrice,
-    required this.open24,
-    required this.bids,
-    required this.asks,
-    required this.recentTrades,
-    required this.stats,
-    required this.chartCloses,
-  });
-
+class _SimState({
+  required final String pairId,
+  required final double lastPrice,
+  required final double open24,
+  required final List<OrderBookLevel> bids,
+  required final List<OrderBookLevel> asks,
+  required final List<RecentTrade> recentTrades,
+  required final MarketStats stats,
+  required final List<double> chartCloses,
+}) {
   factory _SimState.fromSnapshot(MarketFeedSnapshot snapshot) {
     final double denominator = 1 + snapshot.changePct24h / 100;
     final double reconstructedOpen = denominator > 0
@@ -40,7 +38,7 @@ class _SimState {
         OrderBookLevel(
           price: price - 1 - i * 2.5,
           quantity: 0.5 + i * 0.12,
-          side: OrderBookSide.bid,
+          side: .bid,
         ),
     ];
     final List<OrderBookLevel> asks = <OrderBookLevel>[
@@ -48,7 +46,7 @@ class _SimState {
         OrderBookLevel(
           price: price + 1 + i * 2.5,
           quantity: 0.48 + i * 0.11,
-          side: OrderBookSide.ask,
+          side: .ask,
         ),
     ];
     final List<double> chart = <double>[
@@ -70,15 +68,6 @@ class _SimState {
     );
   }
 
-  final String pairId;
-  final double lastPrice;
-  final double open24;
-  final List<OrderBookLevel> bids;
-  final List<OrderBookLevel> asks;
-  final List<RecentTrade> recentTrades;
-  final MarketStats stats;
-  final List<double> chartCloses;
-
   _SimState nudgePrices(Random random) {
     final double delta = (random.nextDouble() - 0.5) * 8;
     final double next = (lastPrice + delta).clamp(open24 * 0.95, open24 * 1.08);
@@ -90,7 +79,7 @@ class _SimState {
               0.01,
               999,
             ),
-            side: OrderBookSide.bid,
+            side: .bid,
           ),
         )
         .toList();
@@ -102,7 +91,7 @@ class _SimState {
               0.01,
               999,
             ),
-            side: OrderBookSide.ask,
+            side: .ask,
           ),
         )
         .toList();
@@ -156,7 +145,7 @@ class _SimState {
       pairId: pairId,
       lastPrice: lastPrice,
       changePct24h: changePct,
-      connection: MarketConnectionStatus.live,
+      connection: .live,
       bids: bids,
       asks: asks,
       recentTrades: recentTrades,

@@ -38,6 +38,11 @@ best practices for AI-assisted Flutter development.
 - **Custom overrides** are documented and intentional (e.g.
   `type_annotate_public_apis: true`, `omit_local_variable_types: false`,
   `use_decorated_box: true`).
+- **`one_member_abstracts` is deprecated (Dart 3.13)** and has no replacement
+  lint. Do not list it under `linter.rules` (even as `false`) — that raises
+  `deprecated_lint`. VGA still enables it; root config silences the diagnostic
+  with `analyzer.errors.one_member_abstracts: ignore`. Keep single-method
+  abstract ports as ISP/DIP DI seams ([SOLID](../architecture/solid_principles.md) § ISP).
 - **Test config** (`test/analysis_options.yaml`) inherits the safety rules but
   disables strict type inference for dynamic fixtures and mock boundaries.
 

@@ -48,31 +48,19 @@ abstract class CaseStudyRemoteRepository {
 /// Maximum TTL for signed clip playback URLs (long sessions should refresh).
 const Duration kCaseStudySignedPlaybackUrlTtl = Duration(hours: 24);
 
-class RemoteCaseStudySummary {
-  const RemoteCaseStudySummary({
-    required this.caseId,
-    required this.submittedAtUtc,
-    required this.doctorName,
-    required this.caseType,
-    required this.notes,
-  });
+class const RemoteCaseStudySummary({
+  required final String caseId,
+  required final DateTime submittedAtUtc,
+  required final String doctorName,
+  required final CaseStudyCaseType caseType,
+  required final String notes,
+});
 
-  final String caseId;
-  final DateTime submittedAtUtc;
-  final String doctorName;
-  final CaseStudyCaseType caseType;
-  final String notes;
-}
-
-class RemoteCaseStudyDetail extends RemoteCaseStudySummary {
-  const RemoteCaseStudyDetail({
-    required super.caseId,
-    required super.submittedAtUtc,
-    required super.doctorName,
-    required super.caseType,
-    required super.notes,
-    required this.remoteObjectKeysByQuestion,
-  });
-
-  final Map<String, String> remoteObjectKeysByQuestion;
-}
+class const RemoteCaseStudyDetail({
+  required super.caseId,
+  required super.submittedAtUtc,
+  required super.doctorName,
+  required super.caseType,
+  required super.notes,
+  required final Map<String, String> remoteObjectKeysByQuestion,
+}) extends RemoteCaseStudySummary;

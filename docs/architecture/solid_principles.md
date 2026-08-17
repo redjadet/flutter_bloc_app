@@ -100,6 +100,9 @@ Give each consumer the smallest named capability it needs.
   multiple consumers need the boundary. Keep feature-only contracts local.
 - Prefer behavior names such as `AuthTokenReader` over containers such as
   `Helper`, `Manager`, or `Utils`.
+- Single-method `abstract class` ports (domain repositories, diagnostics,
+  Retrofit APIs, command bases) are the ISP/DIP seam for DI and test doubles.
+  Do not collapse them to top-level functions.
 
 See [Modularity](../modularity.md#capability-boundaries) for extraction and
 cross-feature ownership rules.
