@@ -28,10 +28,11 @@ were stale. 3.47 follow-ups were still open after the toolchain pin.
   locals (regression: `tool/strip_freezed_dart_313_params_test.py`).
   Root `dart run tool/*.dart` scripts were also stripped (`--tool-scripts`);
   `analysis_options.yaml` excludes `tool/**`, so `dart fix` missed them.
-- Built-in Kotlin **not** enabled. Plugins still apply `kotlin-android`:
-  cloud_functions, desktop_webview_auth, firebase_analytics,
-  firebase_app_check, firebase_database, firebase_remote_config,
-  firebase_storage, flutter_tts, reactive_ble_mobile, wallet_connect_v2.
+- Built-in Kotlin **not** enabled. Flutter’s KGP warning listed FlutterFire
+  plus `desktop_webview_auth`, `flutter_tts`, `reactive_ble_mobile`, and
+  `wallet_connect_v2`. Later same-day correction: FlutterFire already guards
+  the apply; only those four remain unconditional. See
+  [`2026-08-17_android_builtin_kotlin_app.md`](2026-08-17_android_builtin_kotlin_app.md).
 
 ## Out of scope
 
