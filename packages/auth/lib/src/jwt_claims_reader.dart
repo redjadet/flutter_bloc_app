@@ -13,7 +13,7 @@ class JwtClaims {
 }
 
 /// Parses JWT payload claims without signature verification.
-JwtClaims? tryReadJwtClaims(final String? token) {
+JwtClaims? tryReadJwtClaims(String? token) {
   if (token == null || token.isEmpty) {
     return null;
   }
@@ -44,11 +44,11 @@ JwtClaims? tryReadJwtClaims(final String? token) {
   }
 }
 
-String? _stringClaim(final Object? value) {
+String? _stringClaim(Object? value) {
   return value is String ? value : null;
 }
 
-int? _intClaim(final Object? value) {
+int? _intClaim(Object? value) {
   if (value is int) {
     return value;
   }

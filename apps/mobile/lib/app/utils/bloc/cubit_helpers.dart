@@ -1,7 +1,7 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Utility functions for common Cubit operations to reduce code duplication.
 ///
@@ -11,8 +11,8 @@ class CubitHelpers {
   CubitHelpers._();
 
   static T? _tryCubit<T extends Cubit<Object?>>(
-    final BuildContext context, {
-    final String? failureMessage,
+    BuildContext context, {
+    String? failureMessage,
   }) {
     final T? result = context.tryCubit<T>();
     if (result == null && failureMessage != null) {
@@ -24,8 +24,8 @@ class CubitHelpers {
   /// Safely read a Cubit from context and execute an action.
   /// Returns true if successful, false if Cubit is not found.
   static bool safeExecute<T extends Cubit<S>, S>(
-    final BuildContext context,
-    final void Function(T cubit) action,
+    BuildContext context,
+    void Function(T cubit) action,
   ) {
     final T? cubit = _tryCubit<T>(
       context,
@@ -39,8 +39,8 @@ class CubitHelpers {
   /// Safely read a Cubit from context and execute an action with return value.
   /// Returns the result if successful, null if Cubit is not found.
   static R? safeExecuteWithResult<T extends Cubit<S>, S, R>(
-    final BuildContext context,
-    final R Function(T cubit) action,
+    BuildContext context,
+    R Function(T cubit) action,
   ) {
     final T? cubit = _tryCubit<T>(
       context,
@@ -52,13 +52,13 @@ class CubitHelpers {
 
   /// Check if a Cubit is available in the widget tree.
   static bool isCubitAvailable<T extends Cubit<S>, S>(
-    final BuildContext context,
+    BuildContext context,
   ) => context.tryCubit<T>() != null;
 
   /// Get the current state of a Cubit safely.
   /// Returns null if Cubit is not found.
   static S? getCurrentState<T extends Cubit<S>, S>(
-    final BuildContext context,
+    BuildContext context,
   ) {
     final T? cubit = _tryCubit<T>(
       context,

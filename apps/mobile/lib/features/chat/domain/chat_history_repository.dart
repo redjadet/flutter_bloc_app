@@ -6,5 +6,5 @@ abstract class ChatHistoryRepository {
   Future<List<ChatConversation>> load();
 
   /// Persists the given [conversations], replacing existing history.
-  Future<void> save(final List<ChatConversation> conversations);
+  Future<void> save(List<ChatConversation> conversations);
 }

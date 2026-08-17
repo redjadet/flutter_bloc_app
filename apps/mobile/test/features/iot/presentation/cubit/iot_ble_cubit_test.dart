@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_platform_gateway_impl.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_device_catalog.dart';
 import 'package:flutter_bloc_app/features/iot/data/mock_ble_repository.dart';
@@ -7,23 +7,18 @@ import 'package:flutter_bloc_app/features/iot/data/mock_classic_bluetooth_reposi
 import 'package:flutter_bloc_app/features/iot/data/unsupported_ble_repository.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_platform_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
+import 'package:flutter_bloc_app/features/iot/domain/iot_ble_runtime_config.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_state.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) => _NoopDisposable();
+  TimerDisposable periodic(Duration interval, void Function() onTick) =>
+      _NoopDisposable();
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopDisposable();
   }
@@ -31,16 +26,12 @@ class _ImmediateTimerService implements TimerService {
 
 class _DeferredTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) => _NoopDisposable();
+  TimerDisposable periodic(Duration interval, void Function() onTick) =>
+      _NoopDisposable();
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) => _NoopDisposable();
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) =>
+      _NoopDisposable();
 }
 
 class _NoopDisposable with TimerDisposable {
@@ -52,16 +43,11 @@ class _ManualTimerService implements TimerService {
   final List<_ManualTimerDisposable> handles = <_ManualTimerDisposable>[];
 
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) => _NoopDisposable();
+  TimerDisposable periodic(Duration interval, void Function() onTick) =>
+      _NoopDisposable();
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     final handle = _ManualTimerDisposable(onComplete);
     handles.add(handle);
     return handle;
@@ -118,8 +104,8 @@ void main() {
       runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
       timerService: _ImmediateTimerService(),
     ),
-    act: (final cubit) => cubit.initialize(),
-    verify: (final cubit) {
+    act: (cubit) => cubit.initialize(),
+    verify: (cubit) {
       expect(cubit.state.status, IotBleStatus.ready);
       expect(cubit.state.useMockBle, isTrue);
     },
@@ -135,12 +121,12 @@ void main() {
       runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
       timerService: _DeferredTimerService(),
     ),
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.initialize();
       await cubit.startScan();
       await Future<void>.delayed(const Duration(milliseconds: 100));
     },
-    verify: (final cubit) {
+    verify: (cubit) {
       expect(cubit.state.isScanning, isTrue);
       expect(cubit.state.devices, isNotEmpty);
     },
@@ -156,11 +142,11 @@ void main() {
       runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
       timerService: _DeferredTimerService(),
     ),
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.initialize();
       await cubit.toggleBleMode(useMock: false);
     },
-    verify: (final cubit) {
+    verify: (cubit) {
       expect(cubit.state.useMockBle, isFalse);
       expect(cubit.state.status, IotBleStatus.error);
       expect(cubit.state.errorCode, IotBleErrorCode.unsupportedPlatform);
@@ -177,12 +163,12 @@ void main() {
       runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
       timerService: _DeferredTimerService(),
     ),
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.initialize();
       await cubit.toggleBleMode(useMock: false);
       await cubit.recoverFromBleError();
     },
-    verify: (final cubit) {
+    verify: (cubit) {
       expect(cubit.state.useMockBle, isTrue);
       expect(cubit.state.status, IotBleStatus.ready);
       expect(cubit.state.errorCode, isNull);
@@ -199,12 +185,12 @@ void main() {
       runtimeConfig: const IotBleRuntimeConfig(defaultMockMode: true),
       timerService: _DeferredTimerService(),
     ),
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.initialize();
       await cubit.connect(MockBleDeviceCatalog.esp32Id);
       await cubit.reconnect();
     },
-    verify: (final cubit) {
+    verify: (cubit) {
       expect(cubit.state.errorCode, isNull);
       expect(cubit.state.services, isNotEmpty);
       expect(cubit.state.isConnected, isTrue);

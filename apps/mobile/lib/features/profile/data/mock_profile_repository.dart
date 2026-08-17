@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 class MockProfileRepository implements ProfileRepository {
   const MockProfileRepository();
 
-  static String _decodeUrl(final String encoded) =>
+  static String _decodeUrl(String encoded) =>
       utf8.decode(base64Decode(encoded));
 
   static final String _avatarUrl = _decodeUrl(

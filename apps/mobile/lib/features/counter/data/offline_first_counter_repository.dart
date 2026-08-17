@@ -45,7 +45,7 @@ class OfflineFirstCounterRepository
   Future<CounterSnapshot> load() => _localRepository.load();
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     final CounterSnapshot normalized =
         OfflineFirstCounterRepositoryHelpers.normalizeSnapshot(
           snapshot,
@@ -82,7 +82,7 @@ class OfflineFirstCounterRepository
           onDone: () => controller.close(),
         );
         remoteSub = _remoteRepository.watch().listen(
-          (final remote) async {
+          (remote) async {
             if (_remoteMergePausedForSessionCleanup) {
               return;
             }
@@ -90,7 +90,7 @@ class OfflineFirstCounterRepository
             _trackRemoteWatchMerge(merge);
             await merge;
           },
-          onError: (final Object e, final StackTrace st) {
+          onError: (Object e, StackTrace st) {
             AppLogger.error(
               'OfflineFirstCounterRepository remote watch failed',
               e,
@@ -108,7 +108,7 @@ class OfflineFirstCounterRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) =>
+  Future<void> processOperation(SyncOperation operation) =>
       processOperationBody(operation);
 
   @override
@@ -118,7 +118,7 @@ class OfflineFirstCounterRepository
     final List<SyncOperation> operations = await _pendingSyncRepository
         .getPendingOperations(now: now ?? DateTime.now().toUtc());
     return operations
-        .where((final op) => op.entityType == counterSyncEntityType)
+        .where((op) => op.entityType == counterSyncEntityType)
         .toList(growable: false);
   }
 
@@ -131,7 +131,7 @@ class OfflineFirstCounterRepository
     DateTime? now,
   }) async => (await _counterPendingOperations(now: now))
       .map(
-        (final operation) => CounterSyncQueueEntry(
+        (operation) => CounterSyncQueueEntry(
           id: operation.id,
           entityType: operation.entityType,
           retryCount: operation.retryCount,
@@ -162,14 +162,14 @@ class OfflineFirstCounterRepository
     _remoteMergePausedForSessionCleanup = false;
   }
 
-  void _trackRemoteWatchMerge(final Future<void> merge) {
+  void _trackRemoteWatchMerge(Future<void> merge) {
     _inFlightRemoteWatchMerges.add(merge);
     unawaited(
       merge.then<void>(
         (_) {
           _inFlightRemoteWatchMerges.remove(merge);
         },
-        onError: (final Object _, final StackTrace _) {
+        onError: (Object _, StackTrace _) {
           _inFlightRemoteWatchMerges.remove(merge);
         },
       ),

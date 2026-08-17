@@ -13,28 +13,28 @@ sealed class ScapesState with _$ScapesState {
   const factory ScapesState.loading() = ScapesLoading;
 
   const factory ScapesState.ready({
-    required final List<Scape> scapes,
-    @Default(ScapesViewMode.grid) final ScapesViewMode viewMode,
+    required List<Scape> scapes,
+    @Default(ScapesViewMode.grid) ScapesViewMode viewMode,
   }) = ScapesReady;
 
-  const factory ScapesState.error(final AppError error) = ScapesError;
+  const factory ScapesState.error(AppError error) = ScapesError;
 
   const ScapesState._();
 
   List<Scape> get scapes => maybeWhen(
-    ready: (final scapes, _) => scapes,
+    ready: (scapes, _) => scapes,
     orElse: () => const <Scape>[],
   );
 
   ScapesViewMode get viewMode => maybeWhen(
-    ready: (_, final viewMode) => viewMode,
+    ready: (_, viewMode) => viewMode,
     orElse: () => ScapesViewMode.grid,
   );
 
   bool get isLoading => this is ScapesLoading;
 
   AppError? get lastError => maybeWhen(
-    error: (final error) => error,
+    error: (error) => error,
     orElse: () => null,
   );
 

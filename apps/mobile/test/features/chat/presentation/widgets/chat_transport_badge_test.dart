@@ -1,23 +1,24 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_transport_badge.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('shows Supabase label for ChatRemotePath.edgeProxy', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
-        builder: (final BuildContext context, final Widget? child) =>
+        builder: (BuildContext context, Widget? child) =>
             buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
         home: const Scaffold(
           body: ChatTransportBadge(transport: ChatRemotePath.edgeProxy),
@@ -29,9 +30,8 @@ void main() {
     final BuildContext badgeContext = tester.element(
       find.byType(ChatTransportBadge),
     );
-    final String expectedSemantics = AppLocalizations.of(
-      badgeContext,
-    ).chatTransportSupabaseSemanticsLabel;
+    final String expectedSemantics = AppLocalizations.of(badgeContext)
+        .chatTransportSupabaseSemanticsLabel;
 
     expect(find.text('Supabase'), findsOneWidget);
     expect(find.bySemanticsLabel(expectedSemantics), findsOneWidget);
@@ -40,16 +40,16 @@ void main() {
   });
 
   testWidgets('shows Direct label for ChatRemotePath.directApi', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
-        builder: (final BuildContext context, final Widget? child) =>
+        builder: (BuildContext context, Widget? child) =>
             buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
         home: const Scaffold(
           body: ChatTransportBadge(transport: ChatRemotePath.directApi),
@@ -61,9 +61,8 @@ void main() {
     final BuildContext badgeContext = tester.element(
       find.byType(ChatTransportBadge),
     );
-    final String expectedSemantics = AppLocalizations.of(
-      badgeContext,
-    ).chatTransportDirectSemanticsLabel;
+    final String expectedSemantics = AppLocalizations.of(badgeContext)
+        .chatTransportDirectSemanticsLabel;
 
     expect(find.text('Direct'), findsOneWidget);
     expect(find.bySemanticsLabel(expectedSemantics), findsOneWidget);
@@ -73,19 +72,18 @@ void main() {
 
   testWidgets(
     'shows Orchestration label for ChatRemotePath.renderOrchestration',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       final SemanticsHandle handle = tester.ensureSemantics();
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          builder: (final BuildContext context, final Widget? child) =>
-              buildAppMixScope(
-                context,
-                child: child ?? const SizedBox.shrink(),
-              ),
+          builder: (BuildContext context, Widget? child) => buildAppMixScope(
+            context,
+            child: child ?? const SizedBox.shrink(),
+          ),
           home: const Scaffold(
             body: ChatTransportBadge(
               transport: ChatRemotePath.renderOrchestration,
@@ -98,9 +96,8 @@ void main() {
       final BuildContext badgeContext = tester.element(
         find.byType(ChatTransportBadge),
       );
-      final String expectedSemantics = AppLocalizations.of(
-        badgeContext,
-      ).chatTransportRenderOrchestrationSemanticsLabel;
+      final String expectedSemantics = AppLocalizations.of(badgeContext)
+          .chatTransportRenderOrchestrationSemanticsLabel;
 
       expect(find.text('Orchestration'), findsOneWidget);
       expect(find.bySemanticsLabel(expectedSemantics), findsOneWidget);
@@ -111,17 +108,16 @@ void main() {
 
   testWidgets(
     'shows strict mode copy under orchestration when renderDemoStrict',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          builder: (final BuildContext context, final Widget? child) =>
-              buildAppMixScope(
-                context,
-                child: child ?? const SizedBox.shrink(),
-              ),
+          builder: (BuildContext context, Widget? child) => buildAppMixScope(
+            context,
+            child: child ?? const SizedBox.shrink(),
+          ),
           home: const Scaffold(
             body: ChatTransportBadge(
               transport: ChatRemotePath.renderOrchestration,
@@ -142,17 +138,16 @@ void main() {
 
   testWidgets(
     'does not show strict copy for non-orchestration even when renderDemoStrict',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          builder: (final BuildContext context, final Widget? child) =>
-              buildAppMixScope(
-                context,
-                child: child ?? const SizedBox.shrink(),
-              ),
+          builder: (BuildContext context, Widget? child) => buildAppMixScope(
+            context,
+            child: child ?? const SizedBox.shrink(),
+          ),
           home: const Scaffold(
             body: ChatTransportBadge(
               transport: ChatRemotePath.edgeProxy,

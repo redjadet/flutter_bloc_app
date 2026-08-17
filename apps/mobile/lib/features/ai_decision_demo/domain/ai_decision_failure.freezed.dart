@@ -86,8 +86,7 @@ extension AiDecisionFailurePatterns on AiDecisionFailure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AiDecisionLoadFailure value)?  load,TResult Function( AiDecisionUnknownFailure value)?  unknown,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AiDecisionLoadFailure value)?  load,TResult Function( AiDecisionUnknownFailure value)?  unknown,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case AiDecisionLoadFailure() when load != null:
 return load(_that);case AiDecisionUnknownFailure() when unknown != null:
@@ -109,8 +108,7 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AiDecisionLoadFailure value)  load,required TResult Function( AiDecisionUnknownFailure value)  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AiDecisionLoadFailure value)  load,required TResult Function( AiDecisionUnknownFailure value)  unknown,}){final _that = this;
 switch (_that) {
 case AiDecisionLoadFailure():
 return load(_that);case AiDecisionUnknownFailure():
@@ -128,8 +126,7 @@ return unknown(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AiDecisionLoadFailure value)?  load,TResult? Function( AiDecisionUnknownFailure value)?  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AiDecisionLoadFailure value)?  load,TResult? Function( AiDecisionUnknownFailure value)?  unknown,}){final _that = this;
 switch (_that) {
 case AiDecisionLoadFailure() when load != null:
 return load(_that);case AiDecisionUnknownFailure() when unknown != null:

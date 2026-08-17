@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 class WebsocketConnectionBanner extends StatelessWidget {
   const WebsocketConnectionBanner({
@@ -17,7 +17,7 @@ class WebsocketConnectionBanner extends StatelessWidget {
   final String? errorMessage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     if (errorMessage case final msg?) {

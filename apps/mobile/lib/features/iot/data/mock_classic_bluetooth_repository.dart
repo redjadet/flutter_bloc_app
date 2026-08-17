@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/features/iot/domain/classic_bluetooth_repository.dart';
@@ -26,8 +27,8 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
       _pairedController.stream;
 
   @override
-  Future<Result<void>> connect(final String deviceId) async {
-    if (!_paired.any((final d) => d.id == deviceId)) {
+  Future<Result<void>> connect(String deviceId) async {
+    if (!_paired.any((d) => d.id == deviceId)) {
       return const FailureResult<void>(
         ValidationFailure('device_not_found'),
       );
@@ -45,8 +46,8 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
 
   @override
   Future<Result<void>> send(
-    final String deviceId,
-    final String message,
+    String deviceId,
+    String message,
   ) async {
     if (_connectedId != deviceId) {
       return const FailureResult<void>(ValidationFailure('not_connected'));
@@ -62,7 +63,7 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   }
 
   @override
-  Stream<ClassicBtMessage> watchIncoming(final String deviceId) =>
+  Stream<ClassicBtMessage> watchIncoming(String deviceId) =>
       _incomingController(deviceId).stream;
 
   void dispose() {
@@ -76,7 +77,7 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   void _emitPaired() {
     final List<ClassicBtDevice> devices = _paired
         .map(
-          (final device) => device.copyWith(
+          (device) => device.copyWith(
             isConnected: device.id == _connectedId,
           ),
         )
@@ -85,7 +86,7 @@ class MockClassicBluetoothRepository implements ClassicBluetoothRepository {
   }
 
   StreamController<ClassicBtMessage> _incomingController(
-    final String deviceId,
+    String deviceId,
   ) => _incomingControllers.putIfAbsent(
     deviceId,
     StreamController<ClassicBtMessage>.broadcast,

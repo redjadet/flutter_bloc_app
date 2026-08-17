@@ -7,7 +7,7 @@ const String _methodHasGoogleMapsApiKey = 'hasGoogleMapsApiKey';
 const String _keyBatteryLevel = 'batteryLevel';
 
 class NativePlatformService {
-  NativePlatformService({final MethodChannel? channel})
+  NativePlatformService({MethodChannel? channel})
     : _channel = channel ?? const MethodChannel(_channelName);
 
   final MethodChannel _channel;
@@ -43,7 +43,7 @@ class NativePlatformInfo {
     this.batteryLevel,
   });
 
-  factory NativePlatformInfo.fromMap(final Map<String, dynamic>? map) {
+  factory NativePlatformInfo.fromMap(Map<String, dynamic>? map) {
     if (map == null) {
       return const NativePlatformInfo(platform: 'unknown', version: 'unknown');
     }
@@ -57,11 +57,11 @@ class NativePlatformInfo {
   }
 
   static String? _stringFromMap(
-    final Map<String, dynamic> map,
-    final String key,
+    Map<String, dynamic> map,
+    String key,
   ) => stringFromDynamicTrimmed(map[key]);
 
-  static int? _batteryLevelFromMap(final Map<String, dynamic> map) =>
+  static int? _batteryLevelFromMap(Map<String, dynamic> map) =>
       intFromDynamic(map[_keyBatteryLevel]);
 
   final String platform;

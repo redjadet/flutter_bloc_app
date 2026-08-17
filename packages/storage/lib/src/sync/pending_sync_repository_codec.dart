@@ -21,9 +21,7 @@ extension on PendingSyncRepository {
   static const String _deadLetterPrefix = 'dead_letter:';
   static const String _metaKeyFingerprints = '__meta__schema_fingerprints';
 
-  _PendingOperationsReadResult _readOperations(
-    final Map<dynamic, dynamic> entries,
-  ) {
+  _PendingOperationsReadResult _readOperations(Map<dynamic, dynamic> entries) {
     final List<dynamic> malformedKeys = <dynamic>[];
     final List<_StoredPendingOperation> operations =
         <_StoredPendingOperation>[];
@@ -59,19 +57,13 @@ extension on PendingSyncRepository {
     );
   }
 
-  Future<void> _deleteKeys(
-    final Box<dynamic> box,
-    final Iterable<dynamic> keys,
-  ) async {
+  Future<void> _deleteKeys(Box<dynamic> box, Iterable<dynamic> keys) async {
     for (final dynamic key in keys) {
       await box.delete(key);
     }
   }
 
-  bool _isReadyForRetry(
-    final SyncOperation operation,
-    final DateTime threshold,
-  ) {
+  bool _isReadyForRetry(SyncOperation operation, DateTime threshold) {
     return switch (operation.nextRetryAt) {
       final nextRetryAt? => !nextRetryAt.isAfter(threshold),
       _ => true,
@@ -79,8 +71,8 @@ extension on PendingSyncRepository {
   }
 
   bool _matchesSupabaseUserIdFilter(
-    final SyncOperation operation,
-    final String supabaseUserIdFilter,
+    SyncOperation operation,
+    String supabaseUserIdFilter,
   ) {
     if (operation.entityType != 'iot_demo') {
       return true;
@@ -90,10 +82,7 @@ extension on PendingSyncRepository {
     return uid == supabaseUserIdFilter;
   }
 
-  bool _isOlderThanCutoff(
-    final SyncOperation operation,
-    final DateTime cutoff,
-  ) {
+  bool _isOlderThanCutoff(SyncOperation operation, DateTime cutoff) {
     return switch (operation.nextRetryAt) {
       final nextRetryAt? => nextRetryAt.isBefore(cutoff),
       _ => false,
@@ -103,7 +92,7 @@ extension on PendingSyncRepository {
   // When reading from a Hive box with no explicit type, the map keys
   // are dynamic. We need to recursively convert to Map<String, dynamic>.
   /// Returns null when the stored map is malformed (log and skip).
-  SyncOperation? _operationFromJsonOrNull(final Map<dynamic, dynamic> json) {
+  SyncOperation? _operationFromJsonOrNull(Map<dynamic, dynamic> json) {
     final Map<String, dynamic> converted = _convertMapToTyped(json);
     try {
       return SyncOperation.fromJson(converted);
@@ -119,7 +108,7 @@ extension on PendingSyncRepository {
 
   /// Recursively converts `Map<dynamic, dynamic>` to `Map<String, dynamic>`.
   /// Handles nested maps and lists that may contain maps.
-  Map<String, dynamic> _convertMapToTyped(final Map<dynamic, dynamic> source) {
+  Map<String, dynamic> _convertMapToTyped(Map<dynamic, dynamic> source) {
     final Map<String, dynamic> result = <String, dynamic>{};
     for (final MapEntry<dynamic, dynamic> entry in source.entries) {
       if (entry.key is! String) {
@@ -144,9 +133,9 @@ extension on PendingSyncRepository {
     return result;
   }
 
-  List<dynamic> _convertListToTyped(final List<dynamic> source) {
+  List<dynamic> _convertListToTyped(List<dynamic> source) {
     return source
-        .map((final dynamic item) {
+        .map((dynamic item) {
           if (item is Map<dynamic, dynamic>) {
             return _convertMapToTyped(item);
           }

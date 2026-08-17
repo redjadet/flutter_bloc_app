@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Main body content for the GraphQL demo page with list view and error handling.
 class GraphqlBody extends StatelessWidget {
@@ -16,7 +16,7 @@ class GraphqlBody extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (bodyData.countries.isEmpty) {
       return AppMessage(message: l10n.graphqlSampleEmpty);
     }
@@ -27,7 +27,7 @@ class GraphqlBody extends StatelessWidget {
     return ListView.separated(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: context.responsiveListPadding,
-      itemBuilder: (final context, final index) {
+      itemBuilder: (context, index) {
         final GraphqlCountry country = bodyData.countries[index];
         return GraphqlCountryCard(
           key: ValueKey<String>('graphql-country-${country.code}'),
@@ -44,26 +44,26 @@ class GraphqlBody extends StatelessWidget {
 
 /// Builds error message for GraphQL demo based on error type.
 String buildGraphqlErrorMessage(
-  final AppLocalizations l10n,
-  final GraphqlBodyData bodyData,
+  AppLocalizations l10n,
+  GraphqlBodyData bodyData,
 ) => _getErrorMessageFromType(l10n, bodyData.errorType, bodyData.errorMessage);
 
 String _getErrorMessageFromType(
-  final AppLocalizations l10n,
-  final GraphqlDemoErrorType? errorType,
-  final String? errorMessage,
+  AppLocalizations l10n,
+  GraphqlDemoErrorType? errorType,
+  String? errorMessage,
 ) => _resolveErrorMessage(l10n, errorType, errorMessage);
 
 String _resolveErrorMessage(
-  final AppLocalizations l10n,
-  final GraphqlDemoErrorType? errorType,
-  final String? errorMessage,
+  AppLocalizations l10n,
+  GraphqlDemoErrorType? errorType,
+  String? errorMessage,
 ) => _getMessageForErrorType(l10n, errorType, errorMessage);
 
 String _getMessageForErrorType(
-  final AppLocalizations l10n,
-  final GraphqlDemoErrorType? errorType,
-  final String? errorMessage,
+  AppLocalizations l10n,
+  GraphqlDemoErrorType? errorType,
+  String? errorMessage,
 ) {
   switch (errorType) {
     case GraphqlDemoErrorType.network:
@@ -83,9 +83,9 @@ String _getMessageForErrorType(
 
 /// Builds the error widget for GraphQL demo.
 Widget buildGraphqlErrorWidget(
-  final BuildContext context,
-  final GraphqlBodyData data,
-  final AppLocalizations l10n,
+  BuildContext context,
+  GraphqlBodyData data,
+  AppLocalizations l10n,
 ) {
   final bool showRetry = data.lastError?.isRetryable ?? true;
   return AppMessage(
@@ -99,7 +99,7 @@ Widget buildGraphqlErrorWidget(
               onPressed: () =>
                   CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
                     context,
-                    (final cubit) => cubit.loadInitial(),
+                    (cubit) => cubit.loadInitial(),
                   ),
               child: Text(l10n.graphqlSampleRetryButton),
             ),

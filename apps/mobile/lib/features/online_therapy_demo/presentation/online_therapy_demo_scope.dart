@@ -27,7 +27,7 @@ class OnlineTherapyDemoScope extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
         BlocProvider<OnlineTherapyDemoSessionCubit>(
@@ -65,31 +65,35 @@ class OnlineTherapyDemoScope extends StatelessWidget {
           ),
         ),
       ],
-      child: BlocListener<OnlineTherapyDemoSessionCubit, OnlineTherapyDemoSessionState>(
-        listenWhen: (prev, next) =>
-            prev.user != next.user || prev.role != next.role,
-        listener: (context, state) {
-          if (state.user != null && state.role == TherapyRole.client) {
-            // check-ignore: side_effects_build - BlocListener listener is event-driven.
-            unawaited(context.cubit<ClientBookingCubit>().refresh());
-          }
-          if (state.user != null && state.role == TherapyRole.therapist) {
-            // check-ignore: side_effects_build - BlocListener listener is event-driven.
-            unawaited(context.cubit<TherapistHomeCubit>().refresh());
-          }
-          if (state.user != null && state.role == TherapyRole.admin) {
-            // check-ignore: side_effects_build - BlocListener listener is event-driven.
-            unawaited(context.cubit<AdminCubit>().refresh());
-          }
-          if (state.user != null) {
-            // check-ignore: side_effects_build - BlocListener listener is event-driven.
-            unawaited(context.cubit<MessagingCubit>().refresh());
-            // check-ignore: side_effects_build - BlocListener listener is event-driven.
-            unawaited(context.cubit<CallCubit>().refresh());
-          }
-        },
-        child: child,
-      ),
+      child:
+          BlocListener<
+            OnlineTherapyDemoSessionCubit,
+            OnlineTherapyDemoSessionState
+          >(
+            listenWhen: (prev, next) =>
+                prev.user != next.user || prev.role != next.role,
+            listener: (context, state) {
+              if (state.user != null && state.role == TherapyRole.client) {
+                // check-ignore: side_effects_build - BlocListener listener is event-driven.
+                unawaited(context.cubit<ClientBookingCubit>().refresh());
+              }
+              if (state.user != null && state.role == TherapyRole.therapist) {
+                // check-ignore: side_effects_build - BlocListener listener is event-driven.
+                unawaited(context.cubit<TherapistHomeCubit>().refresh());
+              }
+              if (state.user != null && state.role == TherapyRole.admin) {
+                // check-ignore: side_effects_build - BlocListener listener is event-driven.
+                unawaited(context.cubit<AdminCubit>().refresh());
+              }
+              if (state.user != null) {
+                // check-ignore: side_effects_build - BlocListener listener is event-driven.
+                unawaited(context.cubit<MessagingCubit>().refresh());
+                // check-ignore: side_effects_build - BlocListener listener is event-driven.
+                unawaited(context.cubit<CallCubit>().refresh());
+              }
+            },
+            child: child,
+          ),
     );
   }
 }

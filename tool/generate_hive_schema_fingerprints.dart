@@ -5,7 +5,7 @@ const String _manifestPath = 'tool/hive_schema_manifest.json';
 const String _outPath =
     'packages/storage/lib/src/hive/hive_schema_fingerprints.g.dart';
 
-String _fnv1a64Bytes(final List<int> bytes) {
+String _fnv1a64Bytes(List<int> bytes) {
   final BigInt mask = (BigInt.one << 64) - BigInt.one;
   final BigInt prime = BigInt.parse('100000001b3', radix: 16);
   BigInt hash = BigInt.parse('cbf29ce484222325', radix: 16);
@@ -16,16 +16,16 @@ String _fnv1a64Bytes(final List<int> bytes) {
   return hash.toRadixString(16).padLeft(16, '0');
 }
 
-String _fnv1a64Hex(final String s) {
+String _fnv1a64Hex(String s) {
   return _fnv1a64Bytes(utf8.encode(s));
 }
 
-String _readText(final String path) {
+String _readText(String path) {
   final String text = File(_resolveInputPath(path)).readAsStringSync();
   return text.replaceAll('\r\n', '\n');
 }
 
-String _resolveInputPath(final String path) {
+String _resolveInputPath(String path) {
   if (path.startsWith('packages/')) {
     return path;
   }
@@ -36,8 +36,8 @@ String _resolveInputPath(final String path) {
 }
 
 String _renderGenerated({
-  required final Map<String, String> fingerprints,
-  required final Map<String, String> inputDigests,
+  required Map<String, String> fingerprints,
+  required Map<String, String> inputDigests,
 }) {
   final StringBuffer b = StringBuffer()
     ..writeln('// GENERATED FILE. DO NOT EDIT.')
@@ -65,12 +65,12 @@ String _renderGenerated({
   return b.toString();
 }
 
-Never _fail(final String message) {
+Never _fail(String message) {
   stderr.writeln(message);
   exit(1);
 }
 
-void main(final List<String> args) {
+void main(List<String> args) {
   final bool checkGenerated = args.contains('--check-generated');
   final bool checkInputs = args.contains('--check-inputs');
   final bool enforceInputs = args.contains('--enforce-inputs');
@@ -83,7 +83,7 @@ void main(final List<String> args) {
   final Map<String, String> fingerprints = <String, String>{};
   final Map<String, String> inputDigests = <String, String>{};
 
-  for (final dynamic box in boxes) {
+  for (dynamic box in boxes) {
     final Map<String, dynamic> entry = box as Map<String, dynamic>;
     final String name = (entry['name'] as String?)?.trim() ?? '';
     final String spec = (entry['spec'] as String?)?.trim() ?? '';
@@ -94,7 +94,7 @@ void main(final List<String> args) {
 
     final List<dynamic> inputs =
         entry['inputs'] as List<dynamic>? ?? <dynamic>[];
-    for (final dynamic input in inputs) {
+    for (dynamic input in inputs) {
       final String path = (input as String).trim();
       if (path.isEmpty) continue;
       inputDigests[path] = _fnv1a64Hex(_readText(path));
@@ -145,7 +145,7 @@ void main(final List<String> args) {
   File(_outPath).writeAsStringSync(rendered);
 }
 
-String _extractDigest(final String generatedFile, final String key) {
+String _extractDigest(String generatedFile, String key) {
   final String needle = "  '$key': '";
   final int idx = generatedFile.indexOf(needle);
   if (idx == -1) return '';

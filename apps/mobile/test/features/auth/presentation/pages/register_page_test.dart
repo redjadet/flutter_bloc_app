@@ -1,17 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/pages/register_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   Widget buildSubject() => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: const RegisterPage(),
   );
 
   testWidgets('shows validation errors when submitting empty form', (
-    final tester,
+    tester,
   ) async {
     await tester.pumpWidget(buildSubject());
     final BuildContext pageContext = tester.element(find.byType(RegisterPage));
@@ -31,9 +32,7 @@ void main() {
     expect(find.text(l10n.registerTermsError), findsOneWidget);
   });
 
-  testWidgets('shows success dialog when inputs are valid', (
-    final tester,
-  ) async {
+  testWidgets('shows success dialog when inputs are valid', (tester) async {
     await tester.pumpWidget(buildSubject());
     final BuildContext pageContext = tester.element(find.byType(RegisterPage));
     final AppLocalizations l10n = AppLocalizations.of(pageContext);
@@ -87,9 +86,7 @@ void main() {
     expect(find.text(l10n.registerDialogTitle), findsNothing);
   });
 
-  testWidgets('terms dialog must be accepted from checkbox', (
-    final tester,
-  ) async {
+  testWidgets('terms dialog must be accepted from checkbox', (tester) async {
     await tester.pumpWidget(buildSubject());
     final BuildContext pageContext = tester.element(find.byType(RegisterPage));
     final AppLocalizations l10n = AppLocalizations.of(pageContext);

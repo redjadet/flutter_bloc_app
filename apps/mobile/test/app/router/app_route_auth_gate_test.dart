@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_route_auth_gate.dart';
-import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/route_auth_policy.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/memory/leak_safe_test_widgets.dart';
 
 void main() {
   group('AppRouteAuthGate', () {
     testWidgets('redirects unauthenticated deep links for protected routes', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -35,7 +35,7 @@ void main() {
     });
 
     testWidgets('redirects unauthenticated in-app navigation to auth', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -62,7 +62,7 @@ void main() {
     });
 
     testWidgets('shows protected child for authenticated users', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -84,7 +84,7 @@ void main() {
     });
 
     testWidgets('shows public child without an authenticated user', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -106,7 +106,7 @@ void main() {
     });
 
     testWidgets('does not crash when authStateChanges emits an error', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -132,7 +132,7 @@ void main() {
     });
 
     testWidgets('does not navigate after dispose when auth stream emits', (
-      final tester,
+      tester,
     ) async {
       final StreamController<AuthUser?> authController =
           StreamController<AuthUser?>.broadcast();
@@ -161,7 +161,7 @@ void main() {
 
     leakSafeTestWidgets(
       'authenticated route sign-out and teardown are leak-safe',
-      (final tester) async {
+      (tester) async {
         final StreamController<AuthUser?> authController =
             StreamController<AuthUser?>.broadcast();
         AuthUser? currentUser = const AuthUser(
@@ -221,35 +221,29 @@ void main() {
       },
     );
 
-    test(
-      'online therapy demo admin verification route is explicitly marked authenticated',
-      () {
-        expect(
-          AppRoutePolicies.onlineTherapyDemoAdminVerification.path,
-          AppRoutes.onlineTherapyDemoAdminVerificationPath,
-        );
-        expect(
-          AppRoutePolicies
-              .onlineTherapyDemoAdminVerification
-              .requiresAuthentication,
-          isTrue,
-        );
-      },
-    );
+    test('online therapy demo admin verification route is explicitly marked authenticated', () {
+      expect(
+        AppRoutePolicies.onlineTherapyDemoAdminVerification.path,
+        AppRoutes.onlineTherapyDemoAdminVerificationPath,
+      );
+      expect(
+        AppRoutePolicies
+            .onlineTherapyDemoAdminVerification
+            .requiresAuthentication,
+        isTrue,
+      );
+    });
 
-    test(
-      'online therapy demo admin audit route is explicitly marked authenticated',
-      () {
-        expect(
-          AppRoutePolicies.onlineTherapyDemoAdminAudit.path,
-          AppRoutes.onlineTherapyDemoAdminAuditPath,
-        );
-        expect(
-          AppRoutePolicies.onlineTherapyDemoAdminAudit.requiresAuthentication,
-          isTrue,
-        );
-      },
-    );
+    test('online therapy demo admin audit route is explicitly marked authenticated', () {
+      expect(
+        AppRoutePolicies.onlineTherapyDemoAdminAudit.path,
+        AppRoutes.onlineTherapyDemoAdminAuditPath,
+      );
+      expect(
+        AppRoutePolicies.onlineTherapyDemoAdminAudit.requiresAuthentication,
+        isTrue,
+      );
+    });
 
     test('walletconnect auth route is explicitly marked authenticated', () {
       expect(
@@ -267,15 +261,15 @@ void main() {
 }
 
 GoRouter _createRouter({
-  required final String initialLocation,
-  required final Stream<AuthUser?> authStateChanges,
-  required final AuthUser? Function() getCurrentUser,
+  required String initialLocation,
+  required Stream<AuthUser?> authStateChanges,
+  required AuthUser? Function() getCurrentUser,
 }) => GoRouter(
   initialLocation: initialLocation,
   routes: <GoRoute>[
     GoRoute(
       path: AppRoutes.counterPath,
-      builder: (final context, final state) => Scaffold(
+      builder: (context, state) => Scaffold(
         body: Center(
           child: TextButton(
             onPressed: () => context.go(AppRoutes.profilePath),
@@ -286,7 +280,7 @@ GoRouter _createRouter({
     ),
     GoRoute(
       path: AppRoutes.profilePath,
-      builder: (final context, final state) => AppRouteAuthGate(
+      builder: (context, state) => AppRouteAuthGate(
         policy: AppRoutePolicies.profile,
         getCurrentUser: getCurrentUser,
         authStateChanges: authStateChanges,
@@ -296,7 +290,7 @@ GoRouter _createRouter({
     ),
     GoRoute(
       path: AppRoutes.settingsPath,
-      builder: (final context, final state) => AppRouteAuthGate(
+      builder: (context, state) => AppRouteAuthGate(
         policy: AppRoutePolicies.settings,
         getCurrentUser: getCurrentUser,
         authStateChanges: authStateChanges,
@@ -306,7 +300,7 @@ GoRouter _createRouter({
     ),
     GoRoute(
       path: AppRoutes.authPath,
-      builder: (final context, final state) => Scaffold(
+      builder: (context, state) => Scaffold(
         body: Center(
           child: Text('auth:${state.uri.queryParameters['redirect'] ?? ''}'),
         ),

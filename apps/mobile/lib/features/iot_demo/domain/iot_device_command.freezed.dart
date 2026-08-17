@@ -55,8 +55,7 @@ extension IotDeviceCommandPatterns on IotDeviceCommand {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( IotDeviceCommandToggle value)?  toggle,TResult Function( IotDeviceCommandSetValue value)?  setValue,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( IotDeviceCommandToggle value)?  toggle,TResult Function( IotDeviceCommandSetValue value)?  setValue,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case IotDeviceCommandToggle() when toggle != null:
 return toggle(_that);case IotDeviceCommandSetValue() when setValue != null:
@@ -78,8 +77,7 @@ return setValue(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( IotDeviceCommandToggle value)  toggle,required TResult Function( IotDeviceCommandSetValue value)  setValue,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( IotDeviceCommandToggle value)  toggle,required TResult Function( IotDeviceCommandSetValue value)  setValue,}){final _that = this;
 switch (_that) {
 case IotDeviceCommandToggle():
 return toggle(_that);case IotDeviceCommandSetValue():
@@ -97,8 +95,7 @@ return setValue(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( IotDeviceCommandToggle value)?  toggle,TResult? Function( IotDeviceCommandSetValue value)?  setValue,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( IotDeviceCommandToggle value)?  toggle,TResult? Function( IotDeviceCommandSetValue value)?  setValue,}){final _that = this;
 switch (_that) {
 case IotDeviceCommandToggle() when toggle != null:
 return toggle(_that);case IotDeviceCommandSetValue() when setValue != null:

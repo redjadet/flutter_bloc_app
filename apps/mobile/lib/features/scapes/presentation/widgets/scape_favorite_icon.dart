@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Custom favorite (star) icon for scapes, matching Figma design
 class ScapeFavoriteIcon extends StatelessWidget {
@@ -15,14 +15,13 @@ class ScapeFavoriteIcon extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
     width: size,
     height: size,
     child: ColorFiltered(
       colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
       child: ResilientSvgAssetImage(
-        assetPath:
-            'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_favorite_icon.svg',
+        assetPath: 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_favorite_icon.svg',
         fit: BoxFit.contain,
         fallbackBuilder: () => const SizedBox.shrink(),
       ),

@@ -8,17 +8,17 @@ import 'package:networking/networking.dart';
 /// Creates a [Dio] instance with app-wide interceptors (network check, auth,
 /// retry, telemetry).
 Dio createAppDio({
-  required final NetworkStatusService networkStatusService,
-  required final String userAgent,
-  required final AuthTokenManager authTokenManager,
-  final FirebaseAuth? firebaseAuth,
-  final SessionLifecycleCoordinator? sessionCoordinator,
-  final RetryNotificationService? retryNotificationService,
-  final TelemetryEventSink? telemetryEventSink,
-  final Future<void> Function(Duration delay)? waitForRetryDelay,
-  final bool enableTelemetry = true,
-  final bool enableRetry = true,
-  final int maxRetries = 3,
+  required NetworkStatusService networkStatusService,
+  required String userAgent,
+  required AuthTokenManager authTokenManager,
+  FirebaseAuth? firebaseAuth,
+  SessionLifecycleCoordinator? sessionCoordinator,
+  RetryNotificationService? retryNotificationService,
+  TelemetryEventSink? telemetryEventSink,
+  Future<void> Function(Duration delay)? waitForRetryDelay,
+  bool enableTelemetry = true,
+  bool enableRetry = true,
+  int maxRetries = 3,
 }) {
   final Dio dio = Dio(_createBaseOptions(userAgent: userAgent));
   _configureInterceptors(
@@ -48,7 +48,7 @@ Dio createAppDio({
   return dio;
 }
 
-BaseOptions _createBaseOptions({required final String userAgent}) {
+BaseOptions _createBaseOptions({required String userAgent}) {
   return BaseOptions(
     headers: <String, dynamic>{
       'User-Agent': userAgent,
@@ -59,24 +59,24 @@ BaseOptions _createBaseOptions({required final String userAgent}) {
     receiveTimeout: const Duration(seconds: 30),
     // Let repositories and NetworkGuard inspect non-2xx responses directly
     // so existing status-based error mapping remains intact.
-    validateStatus: (final _) => true,
+    validateStatus: (_) => true,
   );
 }
 
 void _configureInterceptors({
-  required final Dio dio,
-  required final NetworkStatusService networkStatusService,
-  required final RetryNotificationService? retryNotificationService,
-  required final TelemetryEventSink? telemetryEventSink,
-  required final Future<void> Function(Duration delay)? waitForRetryDelay,
-  required final bool enableAuth,
-  required final bool enableRetry,
-  required final bool enableTelemetry,
-  required final int maxRetries,
-  final AuthTokenManager? authTokenManager,
-  final FirebaseAuth? firebaseAuth,
-  final SessionLifecycleCoordinator? sessionCoordinator,
-  final Dio Function()? createAuthRetryDio,
+  required Dio dio,
+  required NetworkStatusService networkStatusService,
+  required RetryNotificationService? retryNotificationService,
+  required TelemetryEventSink? telemetryEventSink,
+  required Future<void> Function(Duration delay)? waitForRetryDelay,
+  required bool enableAuth,
+  required bool enableRetry,
+  required bool enableTelemetry,
+  required int maxRetries,
+  AuthTokenManager? authTokenManager,
+  FirebaseAuth? firebaseAuth,
+  SessionLifecycleCoordinator? sessionCoordinator,
+  Dio Function()? createAuthRetryDio,
 }) {
   dio.interceptors.add(NetworkCheckInterceptor(networkStatusService));
 
@@ -124,14 +124,14 @@ void _configureInterceptors({
 }
 
 Dio _createAuthRetryDio({
-  required final Dio sourceDio,
-  required final NetworkStatusService networkStatusService,
-  required final RetryNotificationService? retryNotificationService,
-  required final TelemetryEventSink? telemetryEventSink,
-  required final Future<void> Function(Duration delay)? waitForRetryDelay,
-  required final bool enableRetry,
-  required final bool enableTelemetry,
-  required final int maxRetries,
+  required Dio sourceDio,
+  required NetworkStatusService networkStatusService,
+  required RetryNotificationService? retryNotificationService,
+  required TelemetryEventSink? telemetryEventSink,
+  required Future<void> Function(Duration delay)? waitForRetryDelay,
+  required bool enableRetry,
+  required bool enableTelemetry,
+  required int maxRetries,
 }) {
   final Dio dio = Dio(sourceDio.options.copyWith())
     ..httpClientAdapter = sourceDio.httpClientAdapter

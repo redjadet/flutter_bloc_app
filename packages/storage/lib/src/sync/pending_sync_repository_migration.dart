@@ -6,8 +6,8 @@ const String _deadLetterSchema = 'dead_letter:v1';
 const String _deadLetterPrefix = 'dead_letter:';
 
 Future<void> _migratePendingSyncOperations(
-  final Box<dynamic> box, {
-  required final String? fromFingerprint,
+  Box<dynamic> box, {
+  required String? fromFingerprint,
 }) async {
   final Map<dynamic, dynamic> entries = box.toMap();
 
@@ -48,14 +48,14 @@ final class _LegacyValidationResult {
 
   const _LegacyValidationResult.valid() : this(isValid: true, error: null);
 
-  const _LegacyValidationResult.invalid(final String error)
+  const _LegacyValidationResult.invalid(String error)
     : this(isValid: false, error: error);
 
   final bool isValid;
   final String? error;
 }
 
-_LegacyValidationResult _validateLegacyOperation(final dynamic value) {
+_LegacyValidationResult _validateLegacyOperation(dynamic value) {
   if (value is! Map<dynamic, dynamic>) {
     return const _LegacyValidationResult.invalid('value_not_map');
   }
@@ -92,10 +92,10 @@ _LegacyValidationResult _validateLegacyOperation(final dynamic value) {
 }
 
 _DeadLetterPayload _buildDeadLetterPayload({
-  required final dynamic originalKey,
-  required final dynamic originalValue,
-  required final String? error,
-  required final String? fromFingerprint,
+  required dynamic originalKey,
+  required dynamic originalValue,
+  required String? error,
+  required String? fromFingerprint,
 }) {
   return <String, dynamic>{
     'schema': _deadLetterSchema,
@@ -107,7 +107,7 @@ _DeadLetterPayload _buildDeadLetterPayload({
   };
 }
 
-dynamic _deadLetterOriginalValue(final dynamic originalValue) {
+dynamic _deadLetterOriginalValue(dynamic originalValue) {
   if (originalValue is Map<dynamic, dynamic>) {
     return _convertMapToTypedMigrator(originalValue);
   }
@@ -117,9 +117,7 @@ dynamic _deadLetterOriginalValue(final dynamic originalValue) {
   return originalValue;
 }
 
-SyncOperation? _operationFromJsonOrNullMigrator(
-  final Map<dynamic, dynamic> json,
-) {
+SyncOperation? _operationFromJsonOrNullMigrator(Map<dynamic, dynamic> json) {
   final Map<String, dynamic> converted = _convertMapToTypedMigrator(json);
   try {
     return SyncOperation.fromJson(converted);
@@ -128,9 +126,7 @@ SyncOperation? _operationFromJsonOrNullMigrator(
   }
 }
 
-Map<String, dynamic> _convertMapToTypedMigrator(
-  final Map<dynamic, dynamic> source,
-) {
+Map<String, dynamic> _convertMapToTypedMigrator(Map<dynamic, dynamic> source) {
   final Map<String, dynamic> result = <String, dynamic>{};
   for (final MapEntry<dynamic, dynamic> entry in source.entries) {
     if (entry.key is! String) {
@@ -155,9 +151,9 @@ Map<String, dynamic> _convertMapToTypedMigrator(
   return result;
 }
 
-List<dynamic> _convertListToTypedMigrator(final List<dynamic> source) {
+List<dynamic> _convertListToTypedMigrator(List<dynamic> source) {
   return source
-      .map((final dynamic item) {
+      .map((dynamic item) {
         if (item is Map<dynamic, dynamic>) {
           return _convertMapToTypedMigrator(item);
         }

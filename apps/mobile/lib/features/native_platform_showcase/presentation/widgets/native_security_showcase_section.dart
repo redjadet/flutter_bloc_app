@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_app_check_card.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_biometric_card.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_certificate_card.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_crypto_card.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_storage_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Five-card native security showcase, nested under
 /// `/native-platform-showcase` (no route of its own).
@@ -16,7 +16,7 @@ class NativeSecurityShowcaseSection extends StatelessWidget {
   const NativeSecurityShowcaseSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final bool wide = context.isTabletOrLarger;
@@ -80,7 +80,7 @@ class _WideCardRow extends StatelessWidget {
   final Widget right;
 
   @override
-  Widget build(final BuildContext context) => Row(
+  Widget build(BuildContext context) => Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Expanded(child: left),

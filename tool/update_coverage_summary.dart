@@ -108,7 +108,7 @@ const List<String> _documentationFiles = <String>[
   'docs/feature_overview.md',
 ];
 
-void main(final List<String> args) {
+void main(List<String> args) {
   final File lcov = File('coverage/lcov.info');
   if (!lcov.existsSync()) {
     stderr.writeln('coverage/lcov.info not found');
@@ -184,7 +184,7 @@ class _CoverageRecord {
 }
 
 class _Coverage {
-  factory _Coverage.fromLines(final List<String> lines) {
+  factory _Coverage.fromLines(List<String> lines) {
     String? currentFile;
     int linesFound = 0;
     int linesHit = 0;
@@ -210,7 +210,7 @@ class _Coverage {
       linesHit = 0;
     }
 
-    for (final String raw in lines) {
+    for (String raw in lines) {
       final String line = raw.trim();
       if (line.startsWith('SF:')) {
         finishRecord();
@@ -228,10 +228,10 @@ class _Coverage {
 
     final List<_CoverageRecord> filtered =
         perFile.values
-            .where((final record) => record.path.startsWith('lib/'))
-            .where((final record) => record.linesFound > 0)
+            .where((record) => record.path.startsWith('lib/'))
+            .where((record) => record.linesFound > 0)
             .toList()
-          ..sort((final a, final b) {
+          ..sort((a, b) {
             final int percentageComparison = a.percentage.compareTo(
               b.percentage,
             );
@@ -243,11 +243,11 @@ class _Coverage {
 
     final int totalFound = filtered.fold<int>(
       0,
-      (final sum, final record) => sum + record.linesFound,
+      (sum, record) => sum + record.linesFound,
     );
     final int totalHit = filtered.fold<int>(
       0,
-      (final sum, final record) => sum + record.linesHit,
+      (sum, record) => sum + record.linesHit,
     );
 
     return _Coverage._(filtered, totalHit, totalFound);
@@ -335,7 +335,7 @@ class _Coverage {
       ..writeln('| File | Coverage | Covered/Total |')
       ..writeln('| --- | ---: | ---: |');
 
-    for (final _CoverageRecord record in records) {
+    for (_CoverageRecord record in records) {
       buffer
         ..write('| `')
         ..write(record.path)
@@ -351,7 +351,7 @@ class _Coverage {
     return _withSingleTrailingNewline(buffer.toString());
   }
 
-  static String _normalizePath(final String path) {
+  static String _normalizePath(String path) {
     final String normalized = path.replaceAll(r'\', '/');
     if (normalized.startsWith('${Directory.current.path}/')) {
       return normalized.substring(Directory.current.path.length + 1);
@@ -359,7 +359,7 @@ class _Coverage {
     return normalized;
   }
 
-  static bool _shouldInclude(final String path) {
+  static bool _shouldInclude(String path) {
     if (!path.startsWith('lib/')) {
       return false;
     }
@@ -372,23 +372,23 @@ class _Coverage {
     if (_generatedExact.contains(path)) {
       return false;
     }
-    for (final String suffix in _generatedSuffixes) {
+    for (String suffix in _generatedSuffixes) {
       if (path.endsWith(suffix)) {
         return false;
       }
     }
-    for (final String directory in _excludedDirectories) {
+    for (String directory in _excludedDirectories) {
       if (path.startsWith(directory)) {
         return false;
       }
     }
-    for (final String prefix in _generatedPrefixes) {
+    for (String prefix in _generatedPrefixes) {
       if (path.startsWith(prefix)) {
         return false;
       }
     }
     // Check exclusion patterns (mock repositories, debug utilities, etc.)
-    for (final String pattern in _excludedPatterns) {
+    for (String pattern in _excludedPatterns) {
       if (path.contains(pattern)) {
         return false;
       }
@@ -408,7 +408,7 @@ class _Coverage {
     return true;
   }
 
-  static bool _hasCoverageIgnoreFile(final String path) {
+  static bool _hasCoverageIgnoreFile(String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -421,7 +421,7 @@ class _Coverage {
     );
   }
 
-  static bool _isTrivialDartFile(final String path) {
+  static bool _isTrivialDartFile(String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -431,7 +431,7 @@ class _Coverage {
     }
     final List<String> lines = file.readAsLinesSync();
     bool inBlockComment = false;
-    for (final String raw in lines) {
+    for (String raw in lines) {
       final String line = raw.trim();
       if (line.isEmpty) {
         continue;
@@ -468,7 +468,7 @@ class _Coverage {
   /// - Freezed classes (only data, no logic)
   /// - Simple Equatable classes with only properties and props getter
   /// - Files with very few lines (< 10) that are just data containers
-  static bool _isSimpleDataClass(final String path) {
+  static bool _isSimpleDataClass(String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -490,7 +490,7 @@ class _Coverage {
       // Count lines that indicate actual logic (methods, complex getters, etc.)
       int logicLines = 0;
       bool inConstructor = false;
-      for (final String line in lines) {
+      for (String line in lines) {
         final String trimmed = line.trim();
         if (trimmed.isEmpty ||
             trimmed.startsWith('//') ||
@@ -542,7 +542,7 @@ class _Coverage {
   /// Checks if a file is a configuration file (only constants, no logic).
   ///
   /// Configuration files contain only static constants and don't require tests.
-  static bool _isConfigurationFile(final String path) {
+  static bool _isConfigurationFile(String path) {
     if (!path.endsWith('.dart')) {
       return false;
     }
@@ -561,7 +561,7 @@ class _Coverage {
         !content.contains('=>')) {
       // Count non-trivial lines
       int nonTrivialLines = 0;
-      for (final String line in lines) {
+      for (String line in lines) {
         final String trimmed = line.trim();
         if (trimmed.isEmpty ||
             trimmed.startsWith('//') ||
@@ -595,12 +595,12 @@ class _Updator {
   /// Updates all documentation files with the latest coverage percentage.
   /// Returns the number of files that were successfully updated.
   static int updateAllDocumentation(
-    final double percentage, {
-    required final int totalLinesHit,
-    required final int totalLinesFound,
+    double percentage, {
+    required int totalLinesHit,
+    required int totalLinesFound,
   }) {
     int updatedCount = 0;
-    for (final String filePath in _documentationFiles) {
+    for (String filePath in _documentationFiles) {
       final File file = File(filePath);
       if (!file.existsSync()) {
         continue;
@@ -615,10 +615,10 @@ class _Updator {
   /// Updates a single file with the latest coverage percentage.
   /// Returns true if the file was updated, false otherwise.
   static bool _updateFile(
-    final File file,
-    final double percentage,
-    final int totalLinesHit,
-    final int totalLinesFound,
+    File file,
+    double percentage,
+    int totalLinesHit,
+    int totalLinesFound,
   ) {
     final List<String> lines = file.readAsLinesSync();
     final String percentageStr = percentage.toStringAsFixed(2);
@@ -694,7 +694,7 @@ class _Updator {
       if (badgePattern.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           badgePattern,
-          (final match) =>
+          (match) =>
               '${match.group(1)}$percentageUrlEncoded%25${match.group(3)}',
         );
       }
@@ -702,42 +702,42 @@ class _Updator {
       else if (textPattern1.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern1,
-          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+          (match) => '${match.group(1)}$percentageStr%${match.group(3)}',
         );
       }
       // Update "**Current Coverage**: 75% (6186/7249 lines)"
       else if (textPattern2.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern2,
-          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+          (match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
       // Update "- **Current Coverage:** 82.50% (9091/11020 lines)"
       else if (textPattern2b.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern2b,
-          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+          (match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
       // Update "**75% (6186/7249 lines)" - update both percentage and line counts
       else if (textPattern3.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern3,
-          (final match) => '${match.group(1)}$percentageStr% $lineCountStr',
+          (match) => '${match.group(1)}$percentageStr% $lineCountStr',
         );
       }
       // Update "with 83.97% code coverage"
       else if (textPattern4.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern4,
-          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+          (match) => '${match.group(1)}$percentageStr%${match.group(3)}',
         );
       }
       // Update "- **Code Coverage** - 83.97% test coverage"
       else if (textPattern4b.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern4b,
-          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+          (match) => '${match.group(1)}$percentageStr%${match.group(3)}',
         );
       }
       // Update "83.97% test coverage" (simple pattern, check after other patterns to avoid conflicts)
@@ -747,21 +747,21 @@ class _Updator {
           !textPattern3.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern4c,
-          (final match) => '$percentageStr%${match.group(2)}',
+          (match) => '$percentageStr%${match.group(2)}',
         );
       }
       // Update "**Coverage Target:** 75% baseline | **Current:** 77.32%"
       else if (textPattern5b.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern5b,
-          (final match) => '${match.group(1)}$percentageStr%',
+          (match) => '${match.group(1)}$percentageStr%',
         );
       }
       // Update "**Current Coverage:** 77.32% (9919/12829 lines) | **Target:** 75%"
       else if (textPattern5c.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern5c,
-          (final match) =>
+          (match) =>
               '${match.group(1)}$percentageStr% $lineCountStr${match.group(3)}',
         );
       }
@@ -769,14 +769,14 @@ class _Updator {
       else if (textPattern5.hasMatch(line) && !line.contains('**Target:**')) {
         replacement = line.replaceFirstMapped(
           textPattern5,
-          (final match) => '${match.group(1)}$percentageStr%',
+          (match) => '${match.group(1)}$percentageStr%',
         );
       }
       // Update "coverage: **73.63%**"
       else if (textPattern8.hasMatch(line)) {
         replacement = line.replaceFirstMapped(
           textPattern8,
-          (final match) => '${match.group(1)}$percentageStr%${match.group(3)}',
+          (match) => '${match.group(1)}$percentageStr%${match.group(3)}',
         );
       }
 
@@ -794,7 +794,7 @@ class _Updator {
   }
 }
 
-String _withSingleTrailingNewline(final String value) {
+String _withSingleTrailingNewline(String value) {
   final String stripped = value.replaceFirst(RegExp(r'\n+$'), '');
   return '$stripped\n';
 }

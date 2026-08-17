@@ -38,7 +38,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
   }
 
   Future<List<GraphqlCountry>> _tryFetchCountriesFromEdge({
-    required final String? continentCode,
+    required String? continentCode,
   }) async {
     try {
       final String? accessToken = _readAccessToken();
@@ -79,8 +79,8 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
   }
 
   void _logJwtMismatchDiagnostics({
-    required final Object error,
-    required final String? accessToken,
+    required Object error,
+    required String? accessToken,
   }) {
     if (error is! FunctionException) return;
     if (error.status != 401) return;
@@ -104,7 +104,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
   }
 
   Future<List<GraphqlCountry>> _fetchCountriesFromTables({
-    required final String? continentCode,
+    required String? continentCode,
   }) async {
     final Object? raw = await _fetchCountryRows(continentCode);
     return parseGraphqlCountriesFromRaw(raw);
@@ -119,7 +119,7 @@ extension _SupabaseGraphqlDemoRepositoryPrivate
     }
   }
 
-  String? _normalizedContinentCode(final String? code) {
+  String? _normalizedContinentCode(String? code) {
     if (code == null) return null;
     final String trimmed = code.trim();
     if (trimmed.isEmpty) return null;

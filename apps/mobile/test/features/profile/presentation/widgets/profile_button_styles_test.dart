@@ -1,23 +1,23 @@
-import 'package:flutter/material.dart';
+import 'package:design_system/responsive.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/profile/presentation/widgets/profile_button_styles.dart';
-import 'package:design_system/responsive.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('ProfileButtonStyles', () {
     testWidgets('profileOutlinedButtonStyle creates button style', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => buildAppMixScope(
+            builder: (context) => buildAppMixScope(
               context,
               child: ResponsiveScope(
                 child: Scaffold(
                   body: Builder(
-                    builder: (final innerContext) {
+                    builder: (innerContext) {
                       final style = profileOutlinedButtonStyle(
                         innerContext,
                         backgroundColor: Colors.blue,
@@ -37,17 +37,17 @@ void main() {
     });
 
     testWidgets('profileButtonTextStyle creates text style with theme', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => buildAppMixScope(
+            builder: (context) => buildAppMixScope(
               context,
               child: ResponsiveScope(
                 child: Scaffold(
                   body: Builder(
-                    builder: (final innerContext) {
+                    builder: (innerContext) {
                       final style = profileButtonTextStyle(
                         innerContext,
                         color: Colors.red,
@@ -71,17 +71,17 @@ void main() {
 
     testWidgets(
       'profileButtonTextStyle falls back when theme textTheme is null',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData(textTheme: const TextTheme()),
             home: Builder(
-              builder: (final context) => buildAppMixScope(
+              builder: (context) => buildAppMixScope(
                 context,
                 child: ResponsiveScope(
                   child: Scaffold(
                     body: Builder(
-                      builder: (final innerContext) {
+                      builder: (innerContext) {
                         final style = profileButtonTextStyle(
                           innerContext,
                           color: Colors.blue,

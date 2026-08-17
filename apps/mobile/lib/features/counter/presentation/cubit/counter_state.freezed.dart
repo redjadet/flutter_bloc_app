@@ -91,8 +91,7 @@ extension CounterViewDataPatterns on CounterViewData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CounterViewData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CounterViewData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _CounterViewData() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CounterViewData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CounterViewData value)  $default,){final _that = this;
 switch (_that) {
 case _CounterViewData():
 return $default(_that);case _:
@@ -134,8 +132,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CounterViewData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CounterViewData value)?  $default,){final _that = this;
 switch (_that) {
 case _CounterViewData() when $default != null:
 return $default(_that);case _:
@@ -367,8 +364,7 @@ extension CounterStatePatterns on CounterState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CounterInitial value)?  initial,TResult Function( CounterLoading value)?  loading,TResult Function( CounterReady value)?  ready,TResult Function( CounterFailure value)?  failure,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CounterInitial value)?  initial,TResult Function( CounterLoading value)?  loading,TResult Function( CounterReady value)?  ready,TResult Function( CounterFailure value)?  failure,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case CounterInitial() when initial != null:
 return initial(_that);case CounterLoading() when loading != null:
@@ -392,8 +388,7 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CounterInitial value)  initial,required TResult Function( CounterLoading value)  loading,required TResult Function( CounterReady value)  ready,required TResult Function( CounterFailure value)  failure,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CounterInitial value)  initial,required TResult Function( CounterLoading value)  loading,required TResult Function( CounterReady value)  ready,required TResult Function( CounterFailure value)  failure,}){final _that = this;
 switch (_that) {
 case CounterInitial():
 return initial(_that);case CounterLoading():
@@ -413,8 +408,7 @@ return failure(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CounterInitial value)?  initial,TResult? Function( CounterLoading value)?  loading,TResult? Function( CounterReady value)?  ready,TResult? Function( CounterFailure value)?  failure,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CounterInitial value)?  initial,TResult? Function( CounterLoading value)?  loading,TResult? Function( CounterReady value)?  ready,TResult? Function( CounterFailure value)?  failure,}){final _that = this;
 switch (_that) {
 case CounterInitial() when initial != null:
 return initial(_that);case CounterLoading() when loading != null:

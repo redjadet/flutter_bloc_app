@@ -19,15 +19,15 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
     }
   }
 
-  Future<void> _sleep(final Duration delay) {
+  Future<void> _sleep(Duration delay) {
     final completer = Completer<void>();
     _timerService.runOnce(delay, () => completer.complete());
     return completer.future;
   }
 
   TherapyUser _userForRole(
-    final TherapyRole role, {
-    required final String email,
+    TherapyRole role, {
+    required String email,
   }) {
     final String normalized = email.trim().isEmpty
         ? 'user@example.com'
@@ -61,8 +61,8 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
       _currentUser ?? (throw StateError('Not authenticated'));
 
   void _requireRole(
-    final TherapyUser user, {
-    required final List<TherapyRole> allowed,
+    TherapyUser user, {
+    required List<TherapyRole> allowed,
   }) {
     if (!allowed.contains(user.role)) {
       throw StateError('Not allowed');
@@ -70,20 +70,20 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
   }
 
   bool _isTherapistOwner({
-    required final String userId,
-    required final String therapistId,
+    required String userId,
+    required String therapistId,
   }) {
     final therapist = _therapists.firstWhere((t) => t.id == therapistId);
     return therapist.userId == userId;
   }
 
-  void _replaceSlot(final AvailabilitySlot slot) {
+  void _replaceSlot(AvailabilitySlot slot) {
     final idx = _slots.indexWhere((s) => s.id == slot.id);
     if (idx < 0) return;
     _slots[idx] = slot;
   }
 
-  void _touchConversation(final String conversationId) {
+  void _touchConversation(String conversationId) {
     final idx = _conversations.indexWhere((c) => c.id == conversationId);
     if (idx < 0) return;
     final current = _conversations[idx];
@@ -95,7 +95,7 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
     );
   }
 
-  void _ensureConversationForAppointment(final Appointment appointment) {
+  void _ensureConversationForAppointment(Appointment appointment) {
     final therapist = _therapists.firstWhere(
       (t) => t.id == appointment.therapistId,
     );
@@ -111,7 +111,7 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
     );
   }
 
-  void _appendAudit(final String action, {required final String targetId}) {
+  void _appendAudit(String action, {required String targetId}) {
     final actor = _currentUser?.id ?? 'system';
     _audit.add(
       AuditEvent(
@@ -126,7 +126,7 @@ extension OnlineTherapyFakeApiInternals on OnlineTherapyFakeApi {
 
   DateTime _now() => _nowFn();
 
-  String _maskEmail(final String email) {
+  String _maskEmail(String email) {
     final parts = email.split('@');
     if (parts.length != 2) return '***';
     final user = parts[0];

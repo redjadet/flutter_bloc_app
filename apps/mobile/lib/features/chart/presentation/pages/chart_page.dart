@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
@@ -17,6 +16,7 @@ import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_loadi
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'chart_page.freezed.dart';
@@ -50,7 +50,7 @@ class _ChartPageState extends State<ChartPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => BlocProvider.value(
+  Widget build(BuildContext context) => BlocProvider.value(
     value: _cubit,
     child: const _ChartView(),
   );
@@ -59,12 +59,12 @@ class _ChartPageState extends State<ChartPage> {
 @freezed
 abstract class _ChartViewData with _$ChartViewData {
   const factory _ChartViewData({
-    required final bool showLoading,
-    required final bool showError,
-    required final bool showEmpty,
-    required final List<ChartPoint> points,
-    required final bool zoomEnabled,
-    required final AppError? lastError,
+    required bool showLoading,
+    required bool showError,
+    required bool showEmpty,
+    required List<ChartPoint> points,
+    required bool zoomEnabled,
+    required AppError? lastError,
   }) = __ChartViewData;
 }
 
@@ -72,7 +72,7 @@ class _ChartView extends StatelessWidget {
   const _ChartView();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.chartPageTitle,
@@ -80,8 +80,8 @@ class _ChartView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           TypeSafeBlocSelector<ChartCubit, ChartState, ChartDataSource>(
-            selector: (final state) => state.dataSource,
-            builder: (final context, final source) => Align(
+            selector: (state) => state.dataSource,
+            builder: (context, source) => Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Padding(
                 padding: EdgeInsetsDirectional.only(
@@ -96,7 +96,7 @@ class _ChartView extends StatelessWidget {
             child: RefreshIndicator(
               onRefresh: () => context.cubit<ChartCubit>().refresh(),
               child: ViewStatusSwitcher<ChartCubit, ChartState, _ChartViewData>(
-                selector: (final state) => _ChartViewData(
+                selector: (state) => _ChartViewData(
                   showLoading:
                       (state.status.isInitial || state.status.isLoading) &&
                       state.points.isEmpty,
@@ -106,17 +106,17 @@ class _ChartView extends StatelessWidget {
                   zoomEnabled: state.zoomEnabled,
                   lastError: state.lastError,
                 ),
-                isLoading: (final data) => data.showLoading,
-                isError: (final data) => data.showError,
-                loadingBuilder: (final _) => const ChartLoadingList(),
-                errorBuilder: (final context, final data) => CommonEmptyState(
+                isLoading: (data) => data.showLoading,
+                isError: (data) => data.showError,
+                loadingBuilder: (_) => const ChartLoadingList(),
+                errorBuilder: (context, data) => CommonEmptyState(
                   message: l10n.chartPageError,
                   icon: Icons.error_outline,
                   primaryAction: data.lastError?.isRetryable == true
                       ? () => context.cubit<ChartCubit>().refresh()
                       : null,
                 ),
-                builder: (final context, final data) {
+                builder: (context, data) {
                   if (data.showEmpty) {
                     return CommonEmptyState(
                       message: l10n.chartPageEmpty,

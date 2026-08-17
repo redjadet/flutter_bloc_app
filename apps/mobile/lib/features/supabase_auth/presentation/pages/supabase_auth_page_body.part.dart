@@ -24,7 +24,7 @@ class _SupabaseAuthBody extends StatelessWidget {
   final VoidCallback onSignOut;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     final AppLocalizations l10n = context.l10n;
@@ -41,7 +41,7 @@ class _SupabaseAuthBody extends StatelessWidget {
               child: const CommonLoadingWidget(),
             ),
           ),
-          authenticated: (final user) => SupabaseAuthAuthenticatedSection(
+          authenticated: (user) => SupabaseAuthAuthenticatedSection(
             user: user,
             theme: theme,
             colors: colors,
@@ -72,7 +72,7 @@ class _SupabaseAuthBody extends StatelessWidget {
             colors: colors,
             l10n: l10n,
           ),
-          error: (final message) => _SupabaseAuthCredentialsSection(
+          error: (message) => _SupabaseAuthCredentialsSection(
             errorMessage: message,
             onDismissError: context.cubit<SupabaseAuthCubit>().clearError,
             emailController: emailController,
@@ -127,7 +127,7 @@ class _SupabaseAuthCredentialsSection extends StatelessWidget {
   final VoidCallback? onDismissError;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final Widget form = SupabaseAuthSignInForm(
       emailController: emailController,
       passwordController: passwordController,
@@ -135,7 +135,7 @@ class _SupabaseAuthCredentialsSection extends StatelessWidget {
       canSubmit: canSubmit,
       onFieldsChanged: onFieldsChanged,
       onSignIn: (_, _) => onSignIn(),
-      onSignUp: (_, _, final _) => onSignUp(),
+      onSignUp: (_, _, _) => onSignUp(),
       theme: theme,
       colors: colors,
       l10n: l10n,

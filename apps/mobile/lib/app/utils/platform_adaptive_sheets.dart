@@ -1,8 +1,8 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 part 'platform_adaptive_sheets.part.dart';
@@ -12,13 +12,13 @@ class PlatformAdaptiveSheets {
   const PlatformAdaptiveSheets._();
 
   static Future<T?> showAdaptiveModalBottomSheet<T>({
-    required final BuildContext context,
-    required final WidgetBuilder builder,
-    final bool isScrollControlled = false,
-    final Color? backgroundColor,
-    final bool useSafeArea = false,
-    final bool isDismissible = true,
-    final bool enableDrag = true,
+    required BuildContext context,
+    required WidgetBuilder builder,
+    bool isScrollControlled = false,
+    Color? backgroundColor,
+    bool useSafeArea = false,
+    bool isDismissible = true,
+    bool enableDrag = true,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return showCupertinoModalPopup<T>(
@@ -38,25 +38,25 @@ class PlatformAdaptiveSheets {
   }
 
   static Future<T?> showPickerModal<T>({
-    required final BuildContext context,
-    required final List<T> items,
-    required final T selectedItem,
-    required final String Function(T) itemLabel,
-    final Object Function(T item)? itemKey,
-    final String? title,
-    final Widget Function(BuildContext, T)? itemBuilder,
+    required BuildContext context,
+    required List<T> items,
+    required T selectedItem,
+    required String Function(T) itemLabel,
+    Object Function(T item)? itemKey,
+    String? title,
+    Widget Function(BuildContext, T)? itemBuilder,
   }) async {
     if (PlatformAdaptive.isCupertino(context)) {
       return showCupertinoModalPopup<T>(
         context: context,
-        builder: (final popupContext) => _CupertinoPickerSheetContent<T>(
+        builder: (popupContext) => _CupertinoPickerSheetContent<T>(
           items: items,
           selectedItem: selectedItem,
           title: title,
           itemLabel: itemLabel,
           itemKey: itemKey,
           itemBuilder: itemBuilder,
-          onDone: (final result) =>
+          onDone: (result) =>
               NavigationUtils.maybePop(popupContext, result: result),
           onCancel: () => NavigationUtils.maybePop(popupContext),
         ),
@@ -65,7 +65,7 @@ class PlatformAdaptiveSheets {
 
     return showModalBottomSheet<T>(
       context: context,
-      builder: (final sheetContext) => _MaterialPickerSheetContent<T>(
+      builder: (sheetContext) => _MaterialPickerSheetContent<T>(
         items: items,
         selectedItem: selectedItem,
         itemLabel: itemLabel,

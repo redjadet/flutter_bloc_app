@@ -36,7 +36,7 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
     await CubitExceptionHandler.executeAsync<StaffDemoProfile?>(
       operation: () => _profileRepository.loadProfile(userId: userId),
       isAlive: () => !isClosed,
-      onSuccess: (final profile) {
+      onSuccess: (profile) {
         if (isClosed) return;
         if (_authRepository.currentUser?.id != userId) {
           unawaited(hydrate());
@@ -64,7 +64,7 @@ class StaffDemoSessionCubit extends Cubit<StaffDemoSessionState> {
         );
         unawaited(_pushTokenRepository.registerTokens(userId: userId));
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         if (_authRepository.currentUser?.id != userId) {
           unawaited(hydrate());

@@ -1,27 +1,27 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialogs.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item_swipe.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Wraps a todo item widget with dismissible functionality for mobile devices.
 Widget buildTodoItemDismissible({
-  required final BuildContext context,
-  required final TodoItem item,
-  required final Widget child,
-  required final VoidCallback onDelete,
-  final VoidCallback? onToggle,
-  final VoidCallback? onDeleteWithoutConfirmation,
+  required BuildContext context,
+  required TodoItem item,
+  required Widget child,
+  required VoidCallback onDelete,
+  VoidCallback? onToggle,
+  VoidCallback? onDeleteWithoutConfirmation,
 }) {
   final l10n = context.l10n;
   final colors = Theme.of(context).colorScheme;
 
   Future<bool> confirmDelete(
-    final BuildContext context,
-    final String title,
+    BuildContext context,
+    String title,
   ) async {
     final bool? shouldDelete = await showTodoDeleteConfirmDialog(
       context: context,
@@ -59,7 +59,7 @@ Widget buildTodoItemDismissible({
         icon: Icons.delete_outline,
         label: l10n.todoListDeleteAction,
       ),
-      confirmDismiss: (final direction) async {
+      confirmDismiss: (direction) async {
         if (direction == DismissDirection.startToEnd) {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.selectionClick());
@@ -71,7 +71,7 @@ Widget buildTodoItemDismissible({
           return confirmDelete(context, item.title);
         }
       },
-      onDismissed: (final direction) {
+      onDismissed: (direction) {
         if (direction == DismissDirection.endToStart) {
           // check-ignore: side_effects_build - triggered by user gesture callback.
           unawaited(HapticFeedback.mediumImpact());

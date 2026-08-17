@@ -8,41 +8,37 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _FakeCaller implements RenderCallerAuthHeaderProvider {
   @override
-  Future<String?> bearerIdToken({final bool forceRefresh = false}) async =>
+  Future<String?> bearerIdToken({bool forceRefresh = false}) async =>
       'id-token';
 }
 
 Dio _dioThatCapturesPayload(
-  final void Function(Map<String, dynamic> payload) capture,
+  void Function(Map<String, dynamic> payload) capture,
 ) {
   final Dio dio = Dio();
   dio.interceptors.add(
     InterceptorsWrapper(
-      onRequest:
-          (
-            final RequestOptions options,
-            final RequestInterceptorHandler handler,
-          ) {
-            final Object? raw = options.data;
-            expect(raw, isA<Map<String, dynamic>>());
-            capture(Map<String, dynamic>.from(raw! as Map<dynamic, dynamic>));
-            handler.resolve(
-              Response<dynamic>(
-                requestOptions: options,
-                statusCode: 200,
-                headers: Headers.fromMap(<String, List<String>>{
-                  'content-type': <String>['application/json'],
-                }),
-                data: <String, dynamic>{
-                  'choices': <Map<String, dynamic>>[
-                    <String, dynamic>{
-                      'message': <String, dynamic>{'content': 'ok'},
-                    },
-                  ],
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
+        final Object? raw = options.data;
+        expect(raw, isA<Map<String, dynamic>>());
+        capture(Map<String, dynamic>.from(raw! as Map<dynamic, dynamic>));
+        handler.resolve(
+          Response<dynamic>(
+            requestOptions: options,
+            statusCode: 200,
+            headers: Headers.fromMap(<String, List<String>>{
+              'content-type': <String>['application/json'],
+            }),
+            data: <String, dynamic>{
+              'choices': <Map<String, dynamic>>[
+                <String, dynamic>{
+                  'message': <String, dynamic>{'content': 'ok'},
                 },
-              ),
-            );
-          },
+              ],
+            },
+          ),
+        );
+      },
     ),
   );
   return dio;
@@ -53,9 +49,7 @@ void main() {
     test('defaults missing model to orchestration auto sentinel', () async {
       Map<String, dynamic>? seen;
       final RenderFastApiChatRepository repo = RenderFastApiChatRepository(
-        dio: _dioThatCapturesPayload(
-          (final Map<String, dynamic> p) => seen = p,
-        ),
+        dio: _dioThatCapturesPayload((Map<String, dynamic> p) => seen = p),
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),
@@ -76,9 +70,7 @@ void main() {
     test('defaults blank model to orchestration auto sentinel', () async {
       Map<String, dynamic>? seen;
       final RenderFastApiChatRepository repo = RenderFastApiChatRepository(
-        dio: _dioThatCapturesPayload(
-          (final Map<String, dynamic> p) => seen = p,
-        ),
+        dio: _dioThatCapturesPayload((Map<String, dynamic> p) => seen = p),
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),
@@ -99,9 +91,7 @@ void main() {
     test('passes explicit model unchanged', () async {
       Map<String, dynamic>? seen;
       final RenderFastApiChatRepository repo = RenderFastApiChatRepository(
-        dio: _dioThatCapturesPayload(
-          (final Map<String, dynamic> p) => seen = p,
-        ),
+        dio: _dioThatCapturesPayload((Map<String, dynamic> p) => seen = p),
         payloadBuilder: const HuggingFacePayloadBuilder(),
         responseParser: const HuggingFaceResponseParser(fallbackMessage: ''),
         callerAuth: _FakeCaller(),

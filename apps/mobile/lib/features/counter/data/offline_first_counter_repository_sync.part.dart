@@ -1,7 +1,7 @@
 part of 'offline_first_counter_repository.dart';
 
 extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
-  Future<void> processOperationBody(final SyncOperation operation) async {
+  Future<void> processOperationBody(SyncOperation operation) async {
     final CounterSnapshot snapshot = CounterSnapshotDto.fromJson(
       operation.payload,
     ).toDomain();
@@ -71,7 +71,7 @@ extension _OfflineFirstCounterRepositorySync on OfflineFirstCounterRepository {
   }
 
   Future<void> _applyRemoteSnapshotIfCurrent(
-    final CounterSnapshot remoteSnapshot,
+    CounterSnapshot remoteSnapshot,
   ) async {
     if (_remoteMergePausedForSessionCleanup) {
       return;

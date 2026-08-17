@@ -8,10 +8,10 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift
 /// checks; this function is safe to use on arbitrary documents (e.g. seed
 /// contract tests).
 StaffDemoShift? staffDemoActiveShiftFromFirestoreDoc({
-  required final String shiftId,
-  required final String userId,
-  required final Map<String, dynamic> data,
-  required final DateTime nowUtc,
+  required String shiftId,
+  required String userId,
+  required Map<String, dynamic> data,
+  required DateTime nowUtc,
 }) {
   final docUserId = (data['userId'] as String?)?.trim();
   if (docUserId == null || docUserId.isEmpty || docUserId != userId) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/features/in_app_purchase_demo/data/iap_demo_credits_store.dart';
@@ -14,7 +15,7 @@ class FakeInAppPurchaseRepository
     implements InAppPurchaseRepository, IapFakeOutcomePort {
   FakeInAppPurchaseRepository({
     required this._timerService,
-    final IapDemoCreditsStore? creditsStore,
+    IapDemoCreditsStore? creditsStore,
     this.delay = const Duration(milliseconds: 450),
     this.clockNow,
   }) : _creditsStore = creditsStore ?? InMemoryIapDemoCreditsStore();
@@ -73,20 +74,20 @@ class FakeInAppPurchaseRepository
   /// Simulates a platform purchase-stream failure for cubit regression tests.
   @visibleForTesting
   void simulatePurchaseStreamError(
-    final Object error, [
-    final StackTrace? stackTrace,
+    Object error, [
+    StackTrace? stackTrace,
   ]) {
     _resultsController.addError(error, stackTrace ?? StackTrace.current);
   }
 
   /// Simulates a terminal purchase result on the results stream.
   @visibleForTesting
-  void simulatePurchaseResult(final IapPurchaseResult result) {
+  void simulatePurchaseResult(IapPurchaseResult result) {
     _resultsController.add(result);
   }
 
   @override
-  Future<IapPurchaseResult> purchase(final IapProduct product) async {
+  Future<IapPurchaseResult> purchase(IapProduct product) async {
     await _sleep(delay);
     final outcome = _resolveOutcome(product.id);
 
@@ -148,7 +149,7 @@ class FakeInAppPurchaseRepository
     await _resultsController.close();
   }
 
-  IapDemoForcedOutcome _resolveOutcome(final String productId) {
+  IapDemoForcedOutcome _resolveOutcome(String productId) {
     if (forcedOutcome != IapDemoForcedOutcome.deterministic) {
       return forcedOutcome;
     }
@@ -157,7 +158,7 @@ class FakeInAppPurchaseRepository
     return IapDemoForcedOutcome.success;
   }
 
-  IapEntitlements _applyEntitlement(final IapProduct product) {
+  IapEntitlements _applyEntitlement(IapProduct product) {
     switch (product.type) {
       case IapProductType.consumable:
         return _entitlements.copyWith(credits: _entitlements.credits + 100);
@@ -173,7 +174,7 @@ class FakeInAppPurchaseRepository
 
   DateTime _now() => (clockNow ?? DateTime.now)();
 
-  Future<void> _sleep(final Duration d) {
+  Future<void> _sleep(Duration d) {
     if (d <= Duration.zero) return Future<void>.value();
     final completer = Completer<void>();
     _timerService.runOnce(d, completer.complete);

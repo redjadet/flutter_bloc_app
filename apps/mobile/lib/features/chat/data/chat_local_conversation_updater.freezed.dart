@@ -99,8 +99,7 @@ extension ChatLocalConversationStatePatterns on ChatLocalConversationState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatLocalConversationState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatLocalConversationState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChatLocalConversationState() when $default != null:
 return $default(_that);case _:
@@ -121,8 +120,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatLocalConversationState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatLocalConversationState value)  $default,){final _that = this;
 switch (_that) {
 case _ChatLocalConversationState():
 return $default(_that);case _:
@@ -142,8 +140,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatLocalConversationState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatLocalConversationState value)?  $default,){final _that = this;
 switch (_that) {
 case _ChatLocalConversationState() when $default != null:
 return $default(_that);case _:
@@ -219,7 +216,7 @@ return $default(_that.conversation,_that.messages,_that.existing,_that.index,_th
 
 
 class _ChatLocalConversationState implements ChatLocalConversationState {
-  const _ChatLocalConversationState({required this.conversation, required final  List<ChatMessage> messages, required final  List<ChatConversation> existing, required this.index, required this.now}): _messages = messages,_existing = existing;
+  const _ChatLocalConversationState({required this.conversation, required  List<ChatMessage> messages, required  List<ChatConversation> existing, required this.index, required this.now}): _messages = messages,_existing = existing;
   
 
 @override final  ChatConversation conversation;

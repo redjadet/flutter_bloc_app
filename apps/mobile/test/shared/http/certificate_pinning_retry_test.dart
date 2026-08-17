@@ -9,13 +9,13 @@ class _CountingAdapter implements HttpClientAdapter {
   int fetchCount = 0;
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<Uint8List>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
   ) async {
     fetchCount++;
     throw DioException.badCertificate(requestOptions: options);
@@ -25,10 +25,7 @@ class _CountingAdapter implements HttpClientAdapter {
 void main() {
   test('RetryInterceptor does not retry badCertificate', () async {
     final Dio dio = Dio(
-      BaseOptions(
-        baseUrl: 'https://example.com',
-        validateStatus: (final _) => true,
-      ),
+      BaseOptions(baseUrl: 'https://example.com', validateStatus: (_) => true),
     );
     final _CountingAdapter adapter = _CountingAdapter();
     dio.httpClientAdapter = adapter;
@@ -38,7 +35,7 @@ void main() {
       () => dio.get<void>('/pin'),
       throwsA(
         isA<DioException>().having(
-          (final e) => e.type,
+          (e) => e.type,
           'type',
           DioExceptionType.badCertificate,
         ),

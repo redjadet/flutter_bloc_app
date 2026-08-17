@@ -6,12 +6,12 @@ part 'scape.freezed.dart';
 @freezed
 abstract class Scape with _$Scape {
   const factory Scape({
-    required final String id,
-    required final String name,
-    required final String imageUrl,
-    required final Duration duration,
-    required final int assetCount,
-    @Default(false) final bool isFavorite,
+    required String id,
+    required String name,
+    required String imageUrl,
+    required Duration duration,
+    required int assetCount,
+    @Default(false) bool isFavorite,
   }) = _Scape;
 
   const Scape._();

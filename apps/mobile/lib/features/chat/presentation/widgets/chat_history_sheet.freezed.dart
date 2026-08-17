@@ -89,8 +89,7 @@ extension _HistorySheetDataPatterns on _HistorySheetData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __HistorySheetData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __HistorySheetData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __HistorySheetData() when $default != null:
 return $default(_that);case _:
@@ -111,8 +110,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __HistorySheetData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __HistorySheetData value)  $default,){final _that = this;
 switch (_that) {
 case __HistorySheetData():
 return $default(_that);case _:
@@ -132,8 +130,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __HistorySheetData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __HistorySheetData value)?  $default,){final _that = this;
 switch (_that) {
 case __HistorySheetData() when $default != null:
 return $default(_that);case _:
@@ -209,7 +206,7 @@ return $default(_that.history,_that.hasHistory,_that.activeConversationId,_that.
 
 
 class __HistorySheetData implements _HistorySheetData {
-  const __HistorySheetData({required final  List<ChatConversation> history, required this.hasHistory, required this.activeConversationId, required this.hasActiveMessages}): _history = history;
+  const __HistorySheetData({required  List<ChatConversation> history, required this.hasHistory, required this.activeConversationId, required this.hasActiveMessages}): _history = history;
   
 
  final  List<ChatConversation> _history;

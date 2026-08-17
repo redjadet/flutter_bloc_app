@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:storage/storage.dart';
 
 class SharedPreferencesLocaleRepository implements LocaleRepository {
-  SharedPreferencesLocaleRepository([final SharedPreferences? instance])
+  SharedPreferencesLocaleRepository([SharedPreferences? instance])
     : _preferencesInstance = instance;
 
   static const String _preferencesKey = 'preferred_locale_code';
@@ -26,7 +26,7 @@ class SharedPreferencesLocaleRepository implements LocaleRepository {
   );
 
   @override
-  Future<void> save(final AppLocale? locale) async => StorageGuard.run<void>(
+  Future<void> save(AppLocale? locale) async => StorageGuard.run<void>(
     logContext: 'SharedPreferencesLocaleRepository.save',
     action: () async {
       final SharedPreferences preferences = await _preferences();

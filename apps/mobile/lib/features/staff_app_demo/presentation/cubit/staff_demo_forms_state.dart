@@ -13,9 +13,9 @@ enum StaffDemoFormsSuccessKind { availabilitySubmitted, managerReportSubmitted }
 @freezed
 abstract class StaffDemoFormsState with _$StaffDemoFormsState {
   const factory StaffDemoFormsState({
-    @Default(StaffDemoFormsStatus.initial) final StaffDemoFormsStatus status,
-    final String? errorMessage,
-    final StaffDemoFormsKnownError? knownError,
-    final StaffDemoFormsSuccessKind? lastSuccessKind,
+    @Default(StaffDemoFormsStatus.initial) StaffDemoFormsStatus status,
+    String? errorMessage,
+    StaffDemoFormsKnownError? knownError,
+    StaffDemoFormsSuccessKind? lastSuccessKind,
   }) = _StaffDemoFormsState;
 }

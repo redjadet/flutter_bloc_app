@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/diagnostics/profile_cache_controls_port.dart';
+import 'package:flutter_bloc_app/app/widgets/diagnostics/profile_cache_controls_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/app/widgets/diagnostics/profile_cache_controls_section.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockProfileCacheRepository extends Mock
@@ -28,11 +29,11 @@ void main() {
       when(repository.clearProfile).thenAnswer((_) async {});
     });
 
-    Future<void> pumpWidget(final WidgetTester tester) {
+    Future<void> pumpWidget(WidgetTester tester) {
       return tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: ProfileCacheControlsSection(
@@ -43,9 +44,7 @@ void main() {
       );
     }
 
-    testWidgets('clears cache when button tapped', (
-      final WidgetTester tester,
-    ) async {
+    testWidgets('clears cache when button tapped', (WidgetTester tester) async {
       await pumpWidget(tester);
       await tester.pumpAndSettle();
 
@@ -69,7 +68,7 @@ void main() {
     });
 
     testWidgets('shows loading indicator while clearing cache', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final Completer<void> completer = Completer<void>();
       when(repository.clearProfile).thenAnswer((_) => completer.future);
@@ -110,7 +109,7 @@ void main() {
     });
 
     testWidgets('omits negative sizeBytes and still shows last synced', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       when(repository.loadMetadata).thenAnswer(
         (_) async => ProfileCacheMetadata(
@@ -128,7 +127,7 @@ void main() {
     });
 
     testWidgets('uses fallback when hasProfile but no displayable fields', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       when(repository.loadMetadata).thenAnswer(
         (_) async => const ProfileCacheMetadata(
@@ -149,7 +148,7 @@ void main() {
 
     testWidgets(
       'uses no-cache string when nothing displayable and no profile',
-      (final WidgetTester tester) async {
+      (WidgetTester tester) async {
         when(repository.loadMetadata).thenAnswer(
           (_) async => const ProfileCacheMetadata(
             hasProfile: false,
@@ -169,7 +168,7 @@ void main() {
     );
 
     testWidgets('hides implausible lastSynced but keeps valid cache size', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       when(repository.loadMetadata).thenAnswer(
         (_) async => ProfileCacheMetadata(
@@ -187,7 +186,7 @@ void main() {
     });
 
     testWidgets('does not setState after dispose while clear is in flight', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final Completer<void> clearCompleter = Completer<void>();
       when(repository.clearProfile).thenAnswer((_) => clearCompleter.future);
@@ -203,7 +202,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SizedBox.shrink()),
         ),
@@ -218,11 +217,10 @@ void main() {
     });
 
     testWidgets('stops metadata loading spinner when loadMetadata fails', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
-      when(
-        repository.loadMetadata,
-      ).thenAnswer((_) async => throw Exception('metadata fail'));
+      when(repository.loadMetadata)
+          .thenAnswer((_) async => throw Exception('metadata fail'));
 
       await pumpWidget(tester);
       await tester.pumpAndSettle();

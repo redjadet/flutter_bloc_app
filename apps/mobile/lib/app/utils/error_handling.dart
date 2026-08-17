@@ -1,10 +1,10 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/app/utils/network_error_mapper.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart' show AppError;
 
 /// Common error handling utilities to reduce code duplication
@@ -13,8 +13,8 @@ class ErrorHandling {
 
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
   _showSnackBar(
-    final BuildContext context,
-    final SnackBar snackBar,
+    BuildContext context,
+    SnackBar snackBar,
   ) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling._showSnackBar');
@@ -36,7 +36,7 @@ class ErrorHandling {
     }
   }
 
-  static bool _isNoDescendantScaffoldSnackBarError(final Object error) {
+  static bool _isNoDescendantScaffoldSnackBarError(Object error) {
     final String message = error.toString();
     return message.contains(
           'ScaffoldMessenger.showSnackBar was called, but there are currently '
@@ -48,10 +48,10 @@ class ErrorHandling {
   /// Show a snackbar with error message
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
   showErrorSnackBar(
-    final BuildContext context,
-    final String message, {
-    final Duration duration = const Duration(seconds: 4),
-    final SnackBarAction? action,
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 4),
+    SnackBarAction? action,
   }) => _showSnackBar(
     context,
     SnackBar(
@@ -66,9 +66,9 @@ class ErrorHandling {
   /// Show a success snackbar using theme colors.
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?
   showSuccessSnackBar(
-    final BuildContext context,
-    final String message, {
-    final Duration duration = const Duration(seconds: 3),
+    BuildContext context,
+    String message, {
+    Duration duration = const Duration(seconds: 3),
   }) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.showSuccessSnackBar');
@@ -94,10 +94,10 @@ class ErrorHandling {
   /// [NetworkErrorMapper.getErrorMessage]; when it is a string/exception,
   /// existing string-based mapping is preserved.
   static void handleCubitError(
-    final BuildContext context,
-    final dynamic error, {
-    final String? customMessage,
-    final VoidCallback? onRetry,
+    BuildContext context,
+    dynamic error, {
+    String? customMessage,
+    VoidCallback? onRetry,
   }) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.handleCubitError');
@@ -122,7 +122,7 @@ class ErrorHandling {
   /// Catches [StateError] if the snackbar queue is already empty (e.g. snackbar
   /// was already dismissed) to avoid "Bad state: No element" from
   /// ScaffoldMessenger internals.
-  static void clearSnackBars(final BuildContext context) {
+  static void clearSnackBars(BuildContext context) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.clearSnackBars');
       return;
@@ -145,8 +145,8 @@ class ErrorHandling {
   /// Catches [StateError] if the snackbar was already removed to avoid "Bad
   /// state: No element" from ScaffoldMessenger internals.
   static void hideCurrentSnackBar(
-    final BuildContext context, {
-    final SnackBarClosedReason reason = SnackBarClosedReason.timeout,
+    BuildContext context, {
+    SnackBarClosedReason reason = SnackBarClosedReason.timeout,
   }) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.hideCurrentSnackBar');
@@ -167,8 +167,8 @@ class ErrorHandling {
 
   /// Show a loading dialog
   static Future<void> showLoadingDialog(
-    final BuildContext context,
-    final String message,
+    BuildContext context,
+    String message,
   ) async {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.showLoadingDialog');
@@ -178,7 +178,7 @@ class ErrorHandling {
     await showAdaptiveDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (final dialogContext) {
+      builder: (dialogContext) {
         final bool isCupertino = PlatformAdaptive.isCupertino(context);
         if (isCupertino) {
           return CupertinoAlertDialog(
@@ -205,7 +205,7 @@ class ErrorHandling {
   }
 
   /// Hide loading dialog
-  static void hideLoadingDialog(final BuildContext context) {
+  static void hideLoadingDialog(BuildContext context) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ErrorHandling.hideLoadingDialog');
       return;

@@ -98,8 +98,7 @@ extension NativeShowcaseTelemetrySnapshotPatterns on NativeShowcaseTelemetrySnap
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NativeShowcaseTelemetrySnapshot value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NativeShowcaseTelemetrySnapshot value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot() when $default != null:
 return $default(_that);case _:
@@ -120,8 +119,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NativeShowcaseTelemetrySnapshot value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NativeShowcaseTelemetrySnapshot value)  $default,){final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot():
 return $default(_that);case _:
@@ -141,8 +139,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NativeShowcaseTelemetrySnapshot value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NativeShowcaseTelemetrySnapshot value)?  $default,){final _that = this;
 switch (_that) {
 case _NativeShowcaseTelemetrySnapshot() when $default != null:
 return $default(_that);case _:

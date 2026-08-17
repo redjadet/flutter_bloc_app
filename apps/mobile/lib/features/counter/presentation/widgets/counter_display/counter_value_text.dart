@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterValueText extends StatelessWidget {
   const CounterValueText({
@@ -14,11 +14,11 @@ class CounterValueText extends StatelessWidget {
   final Duration animDuration;
 
   @override
-  Widget build(final BuildContext context) => AnimatedSwitcher(
+  Widget build(BuildContext context) => AnimatedSwitcher(
     duration: animDuration,
     switchInCurve: Curves.easeOut,
     switchOutCurve: Curves.easeIn,
-    transitionBuilder: (final child, final animation) => ScaleTransition(
+    transitionBuilder: (child, animation) => ScaleTransition(
       scale: Tween<double>(begin: 0.9, end: 1).animate(animation),
       child: child,
     ),

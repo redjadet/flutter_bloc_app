@@ -8,21 +8,21 @@ class GenUiDemoState with _$GenUiDemoState {
   const factory GenUiDemoState.initial() = _Initial;
 
   const factory GenUiDemoState.loading({
-    @Default(<String>[]) final List<String> surfaceIds,
-    @Default(false) final bool isSending,
-    final genui.A2uiMessageProcessor? hostHandle,
+    @Default(<String>[]) List<String> surfaceIds,
+    @Default(false) bool isSending,
+    genui.A2uiMessageProcessor? hostHandle,
   }) = _Loading;
 
   const factory GenUiDemoState.ready({
-    required final List<String> surfaceIds,
-    required final genui.A2uiMessageProcessor? hostHandle,
-    @Default(false) final bool isSending,
+    required List<String> surfaceIds,
+    required genui.A2uiMessageProcessor? hostHandle,
+    @Default(false) bool isSending,
   }) = _Ready;
 
   const factory GenUiDemoState.error({
-    required final String message,
-    @Default(<String>[]) final List<String> surfaceIds,
-    final genui.A2uiMessageProcessor? hostHandle,
-    @Default(false) final bool isSending,
+    required String message,
+    @Default(<String>[]) List<String> surfaceIds,
+    genui.A2uiMessageProcessor? hostHandle,
+    @Default(false) bool isSending,
   }) = _Error;
 }

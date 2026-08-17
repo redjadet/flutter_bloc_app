@@ -13,7 +13,7 @@ const RetryPolicy _caseStudyLocalPersistRetryPolicy = RetryPolicy(
 /// Persists a submitted case to local history and seeds a fresh draft.
 class PersistCaseStudySubmissionUseCase {
   const PersistCaseStudySubmissionUseCase({
-    required final CaseStudyLocalRepository localRepository,
+    required CaseStudyLocalRepository localRepository,
     required this._newCaseId,
   }) : _local = localRepository;
 
@@ -21,11 +21,11 @@ class PersistCaseStudySubmissionUseCase {
   final String Function() _newCaseId;
 
   Future<CaseStudyDraft> call({
-    required final String userId,
-    required final CaseStudyDraft draft,
-    required final DateTime submittedAtUtc,
-    required final CaseStudyCaseType caseType,
-    required final RetryDelay retryDelay,
+    required String userId,
+    required CaseStudyDraft draft,
+    required DateTime submittedAtUtc,
+    required CaseStudyCaseType caseType,
+    required RetryDelay retryDelay,
   }) {
     return _caseStudyLocalPersistRetryPolicy.executeWithRetry<CaseStudyDraft>(
       delay: retryDelay,
@@ -43,7 +43,7 @@ class PersistCaseStudySubmissionUseCase {
         // same case ID so a partial prior attempt cannot duplicate history.
         final List<CaseStudyRecord> nextRecords = <CaseStudyRecord>[
           record,
-          ...records.where((final item) => item.id != record.id),
+          ...records.where((item) => item.id != record.id),
         ];
         await _local.saveRecords(userId, nextRecords);
         await _local.clearDraft(userId);

@@ -2,13 +2,13 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:bloc_test/bloc_test.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_repository.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/cubit/chart_cubit.dart';
-import 'package:design_system/design_system.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   final List<ChartPoint> defaultPoints = <ChartPoint>[
@@ -21,22 +21,21 @@ void main() {
     'emits loading then success when load succeeds',
     build: () =>
         ChartCubit(repository: _StubChartRepository(() async => defaultPoints)),
-    act: (final cubit) => cubit.load(),
+    act: (cubit) => cubit.load(),
     expect: () => <Matcher>[
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.loading)
+          .having((state) => state.status, 'status', ViewStatus.loading)
           .having(
-            (final state) => state.points,
+            (state) => state.points,
             'points',
             equals(const <ChartPoint>[]),
           ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.success)
+          .having((state) => state.status, 'status', ViewStatus.success)
           .having(
-            (final state) =>
-                state.points.map((final point) => point.value).toList(),
+            (state) => state.points.map((point) => point.value).toList(),
             'values',
-            equals(defaultPoints.map((final point) => point.value).toList()),
+            equals(defaultPoints.map((point) => point.value).toList()),
           ),
     ],
   );
@@ -46,17 +45,17 @@ void main() {
     build: () => ChartCubit(
       repository: _StubChartRepository(() async => const <ChartPoint>[]),
     ),
-    act: (final cubit) => cubit.load(),
+    act: (cubit) => cubit.load(),
     expect: () => <Matcher>[
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.loading,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.success)
+          .having((state) => state.status, 'status', ViewStatus.success)
           .having(
-            (final state) => state.points,
+            (state) => state.points,
             'points',
             equals(const <ChartPoint>[]),
           ),
@@ -68,24 +67,24 @@ void main() {
     build: () => ChartCubit(
       repository: _StubChartRepository(() async => throw StateError('boom')),
     ),
-    act: (final cubit) => cubit.load(),
+    act: (cubit) => cubit.load(),
     expect: () => <Matcher>[
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.loading,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.error)
-          .having((final state) => state.points, 'points', equals(const []))
+          .having((state) => state.status, 'status', ViewStatus.error)
+          .having((state) => state.points, 'points', equals(const []))
           .having(
-            (final state) => state.dataSource,
+            (state) => state.dataSource,
             'dataSource',
             ChartDataSource.unknown,
           )
-          .having((final state) => state.lastError, 'lastError', isNotNull),
+          .having((state) => state.lastError, 'lastError', isNotNull),
     ],
-    verify: (final cubit) {
+    verify: (cubit) {
       final AppError? err = cubit.state.lastError;
       expect(err, isNotNull);
       expect(err, isA<UnknownError>());
@@ -104,34 +103,32 @@ void main() {
           ]);
       return ChartCubit(repository: _QueueChartRepository(responses));
     },
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.load();
       await cubit.refresh();
     },
     expect: () => <Matcher>[
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.loading,
       ),
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.success,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.loading)
+          .having((state) => state.status, 'status', ViewStatus.loading)
           .having(
-            (final state) =>
-                state.points.map((final point) => point.value).toList(),
+            (state) => state.points.map((point) => point.value).toList(),
             'values',
-            equals(defaultPoints.map((final point) => point.value).toList()),
+            equals(defaultPoints.map((point) => point.value).toList()),
           ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.success)
+          .having((state) => state.status, 'status', ViewStatus.success)
           .having(
-            (final state) =>
-                state.points.map((final point) => point.value).toList(),
+            (state) => state.points.map((point) => point.value).toList(),
             'values',
             equals(<double>[44]),
           ),
@@ -142,23 +139,23 @@ void main() {
     'updateZoom toggles zoomEnabled flag',
     build: () =>
         ChartCubit(repository: _StubChartRepository(() async => defaultPoints)),
-    act: (final cubit) async {
+    act: (cubit) async {
       await cubit.load();
       cubit.setZoomEnabled(isEnabled: true);
     },
     expect: () => <Matcher>[
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.loading,
       ),
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.success,
       ),
       isA<ChartState>().having(
-        (final state) => state.zoomEnabled,
+        (state) => state.zoomEnabled,
         'zoomEnabled',
         isTrue,
       ),
@@ -171,7 +168,7 @@ void main() {
       raceRepository = _RaceChartRepository();
       return ChartCubit(repository: raceRepository);
     },
-    act: (final cubit) async {
+    act: (cubit) async {
       unawaited(cubit.load());
       await Future<void>.delayed(Duration.zero);
 
@@ -190,15 +187,14 @@ void main() {
     },
     expect: () => <Matcher>[
       isA<ChartState>().having(
-        (final state) => state.status,
+        (state) => state.status,
         'status',
         ViewStatus.loading,
       ),
       isA<ChartState>()
-          .having((final state) => state.status, 'status', ViewStatus.success)
+          .having((state) => state.status, 'status', ViewStatus.success)
           .having(
-            (final state) =>
-                state.points.map((final point) => point.value).toList(),
+            (state) => state.points.map((point) => point.value).toList(),
             'values',
             equals(<double>[200]),
           ),
@@ -253,13 +249,13 @@ class _RaceChartRepository extends ChartRepository {
   @override
   Future<List<ChartPoint>> refreshTrendingCounts() => fetchTrendingCounts();
 
-  void completeFirst(final List<ChartPoint> points) {
+  void completeFirst(List<ChartPoint> points) {
     if (!_first.isCompleted) {
       _first.complete(points);
     }
   }
 
-  void completeSecond(final List<ChartPoint> points) {
+  void completeSecond(List<ChartPoint> points) {
     if (!_second.isCompleted) {
       _second.complete(points);
     }

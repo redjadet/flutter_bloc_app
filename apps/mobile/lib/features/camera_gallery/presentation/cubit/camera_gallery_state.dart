@@ -7,14 +7,14 @@ part 'camera_gallery_state.freezed.dart';
 @freezed
 abstract class CameraGalleryState with _$CameraGalleryState {
   const factory CameraGalleryState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    final String? sourceImagePath,
-    final String? imagePath,
+    @Default(ViewStatus.initial) ViewStatus status,
+    String? sourceImagePath,
+    String? imagePath,
     @Default(ImageProcessingFilter.original)
-    final ImageProcessingFilter selectedFilter,
+    ImageProcessingFilter selectedFilter,
 
     /// L10n key for user-visible error (e.g. cameraGalleryPermissionDenied).
-    final String? errorKey,
+    String? errorKey,
   }) = _CameraGalleryState;
 
   const CameraGalleryState._();

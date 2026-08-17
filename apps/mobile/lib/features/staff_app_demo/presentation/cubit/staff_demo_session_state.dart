@@ -15,9 +15,8 @@ enum StaffDemoSessionStatus {
 @freezed
 abstract class StaffDemoSessionState with _$StaffDemoSessionState {
   const factory StaffDemoSessionState({
-    @Default(StaffDemoSessionStatus.initial)
-    final StaffDemoSessionStatus status,
-    final StaffDemoProfile? profile,
-    final String? errorMessage,
+    @Default(StaffDemoSessionStatus.initial) StaffDemoSessionStatus status,
+    StaffDemoProfile? profile,
+    String? errorMessage,
   }) = _StaffDemoSessionState;
 }

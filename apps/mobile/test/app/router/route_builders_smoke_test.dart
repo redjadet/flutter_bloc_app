@@ -1,13 +1,14 @@
 @TestOn('vm')
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../test_helpers.dart';
@@ -16,7 +17,7 @@ const MethodChannel _flutterTtsChannel = MethodChannel('flutter_tts');
 
 class _MockGoRouterState extends Mock implements GoRouterState {}
 
-GoRouterState _stateForRoute(final GoRoute route) {
+GoRouterState _stateForRoute(GoRoute route) {
   final _MockGoRouterState state = _MockGoRouterState();
   final String path = switch (route.name) {
     AppRoutes.playlearnVocabulary => '/playlearn/vocabulary/animals',
@@ -32,7 +33,7 @@ GoRouterState _stateForRoute(final GoRoute route) {
   return state;
 }
 
-void _invokeRoutes(final BuildContext context, final List<RouteBase> routes) {
+void _invokeRoutes(BuildContext context, List<RouteBase> routes) {
   for (final RouteBase route in routes) {
     if (route is GoRoute) {
       final GoRouterState state = _stateForRoute(route);
@@ -61,9 +62,7 @@ void main() {
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(_flutterTtsChannel, (
-          final MethodCall call,
-        ) async {
+        .setMockMethodCallHandler(_flutterTtsChannel, (MethodCall call) async {
           return null;
         });
     await setupHiveForTesting();
@@ -88,16 +87,14 @@ void main() {
       await tearDownTestDependencies();
     });
 
-    testWidgets('app route builders execute for coverage', (
-      final tester,
-    ) async {
+    testWidgets('app route builders execute for coverage', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: Builder(
-            builder: (final context) {
+            builder: (context) {
               _invokeRoutes(context, createAppRoutes());
               return const SizedBox.shrink();
             },

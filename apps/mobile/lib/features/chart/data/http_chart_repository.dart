@@ -10,7 +10,7 @@ import 'package:utilities/utilities.dart';
 class HttpChartRepository extends ChartRepository {
   HttpChartRepository({
     required this._api,
-    final DateTime Function()? now,
+    DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
   static const Map<String, String> _marketChartQuery = <String, String>{
@@ -35,7 +35,7 @@ class HttpChartRepository extends ChartRepository {
   @visibleForTesting
   static int get debugCacheSize => _cached?.length ?? 0;
 
-  static void trimMemory(final AppMemoryTrimLevel level) {
+  static void trimMemory(AppMemoryTrimLevel level) {
     if (level == AppMemoryTrimLevel.pressure) {
       clearCache();
     }
@@ -80,8 +80,8 @@ class HttpChartRepository extends ChartRepository {
   }
 
   List<ChartPoint> _cache(
-    final List<ChartPoint> data,
-    final DateTime fetchedAt,
+    List<ChartPoint> data,
+    DateTime fetchedAt,
   ) {
     final List<ChartPoint> cached = List<ChartPoint>.unmodifiable(data);
     _cached = cached;
@@ -94,7 +94,7 @@ class HttpChartRepository extends ChartRepository {
 
   /// Parses the market_chart response map into chart points.
   /// Keeps validation and fallback semantics in the repository.
-  List<ChartPoint> _parseFromMap(final Map<String, dynamic> decoded) {
+  List<ChartPoint> _parseFromMap(Map<String, dynamic> decoded) {
     final dynamic prices = decoded['prices'];
     if (prices is! List) {
       throw const FormatException('Invalid chart payload content');
@@ -103,10 +103,10 @@ class HttpChartRepository extends ChartRepository {
     final data =
         prices
             .whereType<List<dynamic>>()
-            .where((final item) => item.length >= 2)
-            .map((final item) => ChartPointDto.fromApi(item).toDomain())
+            .where((item) => item.length >= 2)
+            .map((item) => ChartPointDto.fromApi(item).toDomain())
             .toList()
-          ..sort((final a, final b) => a.date.compareTo(b.date));
+          ..sort((a, b) => a.date.compareTo(b.date));
 
     if (data.isEmpty) {
       throw const FormatException('Chart payload missing points');
@@ -115,10 +115,10 @@ class HttpChartRepository extends ChartRepository {
     return data;
   }
 
-  List<ChartPoint> _fallbackData(final DateTime now) {
+  List<ChartPoint> _fallbackData(DateTime now) {
     final base = now.toUtc();
     const values = <double>[27150, 27320, 26980, 27560, 28040, 28410, 28200];
-    return List<ChartPoint>.generate(values.length, (final index) {
+    return List<ChartPoint>.generate(values.length, (index) {
       final date = base.subtract(Duration(days: values.length - index - 1));
       return ChartPoint(date: date, value: values[index]);
     });

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
@@ -8,10 +8,11 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/repositorie
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_booking_confirm_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:core/core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('shows error card when booking state has errorMessage', (
@@ -138,7 +139,7 @@ Widget _wrapPage({
 }) {
   return MaterialApp(
     locale: const Locale('en'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
@@ -156,33 +157,32 @@ Widget _routerApp({
 }) {
   return MaterialApp.router(
     locale: const Locale('en'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     routerConfig: GoRouter(
       initialLocation: AppRoutes.onlineTherapyDemoClientBookingConfirmPath,
       routes: <RouteBase>[
         ShellRoute(
-          builder: (final context, final state, final child) =>
-              MultiBlocProvider(
-                providers: <BlocProvider<dynamic>>[
-                  BlocProvider<OnlineTherapyDemoSessionCubit>.value(
-                    value: sessionCubit,
-                  ),
-                  BlocProvider<ClientBookingCubit>.value(value: bookingCubit),
-                ],
-                child: child,
+          builder: (context, state, child) => MultiBlocProvider(
+            providers: <BlocProvider<dynamic>>[
+              BlocProvider<OnlineTherapyDemoSessionCubit>.value(
+                value: sessionCubit,
               ),
+              BlocProvider<ClientBookingCubit>.value(value: bookingCubit),
+            ],
+            child: child,
+          ),
           routes: <RouteBase>[
             GoRoute(
               path: AppRoutes.onlineTherapyDemoClientBookingConfirmPath,
               name: AppRoutes.onlineTherapyDemoClientBookingConfirm,
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   const OnlineTherapyDemoClientBookingConfirmPage(),
             ),
             GoRoute(
               path: AppRoutes.onlineTherapyDemoClientAppointmentsPath,
               name: AppRoutes.onlineTherapyDemoClientAppointments,
-              builder: (final context, final state) =>
+              builder: (context, state) =>
                   const Scaffold(body: Text('appointments-marker')),
             ),
           ],
@@ -201,7 +201,7 @@ AvailabilitySlot _sampleSlot() => AvailabilitySlot(
 );
 
 Future<AvailabilitySlot> _firstAvailableSlot(
-  final TherapistRepository therapists,
+  TherapistRepository therapists,
 ) async {
   final list = await therapists.listTherapists();
   final first = list.first;
@@ -210,7 +210,7 @@ Future<AvailabilitySlot> _firstAvailableSlot(
     date: DateTime.utc(2026, 4, 22),
   );
   return slots.firstWhere(
-    (final slot) => slot.status == AvailabilitySlotStatus.available,
+    (slot) => slot.status == AvailabilitySlotStatus.available,
   );
 }
 
@@ -226,19 +226,13 @@ class _SeededClientBookingCubit extends ClientBookingCubit {
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _NoopTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopTimerDisposable();
   }

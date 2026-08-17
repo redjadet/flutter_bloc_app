@@ -55,8 +55,7 @@ extension IotDemoStatePatterns on IotDemoState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _IotDemoInitial value)?  initial,TResult Function( _IotDemoLoading value)?  loading,TResult Function( _IotDemoLoaded value)?  loaded,TResult Function( _IotDemoError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _IotDemoInitial value)?  initial,TResult Function( _IotDemoLoading value)?  loading,TResult Function( _IotDemoLoaded value)?  loaded,TResult Function( _IotDemoError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial(_that);case _IotDemoLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _IotDemoInitial value)  initial,required TResult Function( _IotDemoLoading value)  loading,required TResult Function( _IotDemoLoaded value)  loaded,required TResult Function( _IotDemoError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _IotDemoInitial value)  initial,required TResult Function( _IotDemoLoading value)  loading,required TResult Function( _IotDemoLoaded value)  loaded,required TResult Function( _IotDemoError value)  error,}){final _that = this;
 switch (_that) {
 case _IotDemoInitial():
 return initial(_that);case _IotDemoLoading():
@@ -104,8 +102,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _IotDemoInitial value)?  initial,TResult? Function( _IotDemoLoading value)?  loading,TResult? Function( _IotDemoLoaded value)?  loaded,TResult? Function( _IotDemoError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _IotDemoInitial value)?  initial,TResult? Function( _IotDemoLoading value)?  loading,TResult? Function( _IotDemoLoaded value)?  loaded,TResult? Function( _IotDemoError value)?  error,}){final _that = this;
 switch (_that) {
 case _IotDemoInitial() when initial != null:
 return initial(_that);case _IotDemoLoading() when loading != null:
@@ -257,7 +254,7 @@ String toString() {
 
 
 class _IotDemoLoaded implements IotDemoState {
-  const _IotDemoLoaded(final  List<IotDevice> devices, {this.selectedDeviceId, this.filter = IotDemoDeviceFilter.all}): _devices = devices;
+  const _IotDemoLoaded( List<IotDevice> devices, {this.selectedDeviceId, this.filter = IotDemoDeviceFilter.all}): _devices = devices;
   
 
  final  List<IotDevice> _devices;

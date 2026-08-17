@@ -7,8 +7,8 @@ import 'package:networking/networking.dart';
 /// `--dart-define=CERT_PINNING_MODE=` overrides it.
 abstract final class CertificatePinningConfigFactory {
   static CertificatePinningConfig fromBootstrap({
-    required final bool isProd,
-    required final bool isReleaseMode,
+    required bool isProd,
+    required bool isReleaseMode,
   }) {
     final CertificatePinningMode mode = _parseMode(
       const String.fromEnvironment('CERT_PINNING_MODE'),
@@ -41,7 +41,7 @@ abstract final class CertificatePinningConfigFactory {
     return config;
   }
 
-  static CertificatePinningMode _parseMode(final String raw) {
+  static CertificatePinningMode _parseMode(String raw) {
     if (raw.isEmpty) {
       return CertificatePinningMode.disabled;
     }
@@ -65,7 +65,7 @@ abstract final class CertificatePinningConfigFactory {
   }
 
   /// `spki` (default) or `leaf` / `leafCertificate`.
-  static CertificatePinHashKind _parseHashKind(final String raw) {
+  static CertificatePinHashKind _parseHashKind(String raw) {
     if (raw.isEmpty) {
       return CertificatePinHashKind.spki;
     }
@@ -87,19 +87,19 @@ abstract final class CertificatePinningConfigFactory {
   }
 
   /// Comma-separated hosts: `api.example.com,cdn.example.com`
-  static Set<String> _parseHosts(final String raw) {
+  static Set<String> _parseHosts(String raw) {
     if (raw.trim().isEmpty) {
       return const <String>{};
     }
     return raw
         .split(',')
-        .map((final h) => h.trim())
-        .where((final h) => h.isNotEmpty)
+        .map((h) => h.trim())
+        .where((h) => h.isNotEmpty)
         .toSet();
   }
 
   /// Format: `host=sha256/PIN|sha256/PIN2;host2=sha256/PIN`
-  static Map<String, Set<String>> _parsePins(final String raw) {
+  static Map<String, Set<String>> _parsePins(String raw) {
     if (raw.trim().isEmpty) {
       return const <String, Set<String>>{};
     }
@@ -120,8 +120,8 @@ abstract final class CertificatePinningConfigFactory {
       final Set<String> pins = trimmed
           .substring(eq + 1)
           .split('|')
-          .map((final p) => p.trim())
-          .where((final p) => p.isNotEmpty)
+          .map((p) => p.trim())
+          .where((p) => p.isNotEmpty)
           .toSet();
       out[host] = pins;
     }
@@ -129,17 +129,16 @@ abstract final class CertificatePinningConfigFactory {
   }
 
   @visibleForTesting
-  static CertificatePinningMode parseModeForTest(final String raw) =>
-      _parseMode(raw);
+  static CertificatePinningMode parseModeForTest(String raw) => _parseMode(raw);
 
   @visibleForTesting
-  static CertificatePinHashKind parseHashKindForTest(final String raw) =>
+  static CertificatePinHashKind parseHashKindForTest(String raw) =>
       _parseHashKind(raw);
 
   @visibleForTesting
-  static Set<String> parseHostsForTest(final String raw) => _parseHosts(raw);
+  static Set<String> parseHostsForTest(String raw) => _parseHosts(raw);
 
   @visibleForTesting
-  static Map<String, Set<String>> parsePinsForTest(final String raw) =>
+  static Map<String, Set<String>> parsePinsForTest(String raw) =>
       _parsePins(raw);
 }

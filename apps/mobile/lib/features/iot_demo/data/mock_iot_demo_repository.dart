@@ -53,25 +53,25 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   List<IotDevice> _applyFilter(
-    final List<IotDevice> list,
-    final IotDemoDeviceFilter filter,
+    List<IotDevice> list,
+    IotDemoDeviceFilter filter,
   ) {
     if (filter == IotDemoDeviceFilter.toggledOnOnly) {
-      return list.where((final d) => d.toggledOn).toList();
+      return list.where((d) => d.toggledOn).toList();
     }
     if (filter == IotDemoDeviceFilter.toggledOffOnly) {
-      return list.where((final d) => !d.toggledOn).toList();
+      return list.where((d) => !d.toggledOn).toList();
     }
     return list;
   }
 
-  int _indexOf(final String deviceId) {
-    return _devices.indexWhere((final d) => d.id == deviceId);
+  int _indexOf(String deviceId) {
+    return _devices.indexWhere((d) => d.id == deviceId);
   }
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) {
     final StreamController<List<IotDevice>>? controller = _controller;
     final List<IotDevice> filtered = _applyFilter(_devices, filter);
@@ -80,11 +80,11 @@ class MockIotDemoRepository implements IotDemoRepository {
         List<IotDevice>.unmodifiable(filtered),
       );
     }
-    return Stream<List<IotDevice>>.multi((final multi) {
+    return Stream<List<IotDevice>>.multi((multi) {
       multi.add(List<IotDevice>.unmodifiable(filtered));
       final StreamSubscription<List<IotDevice>> subscription = controller.stream
           .listen(
-            (final list) => multi.add(
+            (list) => multi.add(
               List<IotDevice>.unmodifiable(_applyFilter(list, filter)),
             ),
             onError: multi.addError,
@@ -98,7 +98,7 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     final i = _indexOf(deviceId);
     if (i < 0) return;
     _devices[i] = _devices[i].copyWith(
@@ -120,7 +120,7 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> disconnect(final String deviceId) async {
+  Future<void> disconnect(String deviceId) async {
     final i = _indexOf(deviceId);
     if (i < 0) return;
     _devices[i] = _devices[i].copyWith(
@@ -130,7 +130,7 @@ class MockIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> addDevice(final IotDevice device) async {
+  Future<void> addDevice(IotDevice device) async {
     if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
       throw ArgumentError('device id and name must not be empty');
     }
@@ -141,8 +141,8 @@ class MockIotDemoRepository implements IotDemoRepository {
 
   @override
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) async {
     final i = _indexOf(deviceId);
     if (i < 0) return;

@@ -11,16 +11,13 @@ class NetworkCheckInterceptor extends Interceptor {
   final NetworkStatusService _networkStatusService;
 
   @override
-  void onRequest(
-    final RequestOptions options,
-    final RequestInterceptorHandler handler,
-  ) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     unawaited(_checkAndNext(options, handler));
   }
 
   Future<void> _checkAndNext(
-    final RequestOptions options,
-    final RequestInterceptorHandler handler,
+    RequestOptions options,
+    RequestInterceptorHandler handler,
   ) async {
     try {
       final NetworkStatus status = await _networkStatusService

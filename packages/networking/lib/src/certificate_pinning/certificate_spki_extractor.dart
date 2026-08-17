@@ -7,7 +7,7 @@ import 'dart:typed_data';
 abstract final class CertificateSpkiExtractor {
   /// Returns the full DER encoding of `subjectPublicKeyInfo`, or `null` if
   /// the certificate cannot be parsed.
-  static Uint8List? extract(final Uint8List certificateDer) {
+  static Uint8List? extract(Uint8List certificateDer) {
     try {
       final _Asn1Reader reader = _Asn1Reader(certificateDer);
       final _Asn1Element cert = reader.readElement();
@@ -25,7 +25,7 @@ abstract final class CertificateSpkiExtractor {
     }
   }
 
-  static Uint8List? _extractSpkiFromTbs(final Uint8List tbsContent) {
+  static Uint8List? _extractSpkiFromTbs(Uint8List tbsContent) {
     final _Asn1Reader reader = _Asn1Reader(tbsContent);
     // version [0] EXPLICIT is optional
     if (!reader.hasMore) {

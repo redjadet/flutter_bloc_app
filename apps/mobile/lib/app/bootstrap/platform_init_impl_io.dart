@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/material.dart' show Size;
+import 'package:material_ui/material_ui.dart' show Size;
 import 'package:window_manager/window_manager.dart';
 
 Future<void> initializePlatformWindowingImpl({

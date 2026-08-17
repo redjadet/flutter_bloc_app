@@ -36,7 +36,7 @@ mixin IotBleCubitStreams on IotBleCubitCore {
     );
   }
 
-  Future<void> toggleBleMode({required final bool useMock}) async {
+  Future<void> toggleBleMode({required bool useMock}) async {
     if (!state.canToggleRealBle && !useMock) {
       return;
     }
@@ -93,13 +93,13 @@ mixin IotBleCubitStreams on IotBleCubitCore {
     unawaited(_adapterSubscription?.cancel());
     final StreamSubscription<BleAdapterStatus> subscription =
         _adapterSubscription = activeRepository.watchAdapterStatus().listen(
-          (final status) {
+          (status) {
             if (isClosed) {
               return;
             }
             emit(state.copyWith(adapterStatus: status));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit adapter stream', error, stackTrace);
           },
         );
@@ -110,13 +110,13 @@ mixin IotBleCubitStreams on IotBleCubitCore {
     unawaited(_scanSubscription?.cancel());
     final StreamSubscription<List<BleDiscoveredDevice>> subscription =
         _scanSubscription = activeRepository.watchScanResults().listen(
-          (final devices) {
+          (devices) {
             if (isClosed) {
               return;
             }
             emit(state.copyWith(devices: devices));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit scan stream', error, stackTrace);
           },
         );
@@ -127,13 +127,13 @@ mixin IotBleCubitStreams on IotBleCubitCore {
     unawaited(_classicSubscription?.cancel());
     final StreamSubscription<List<ClassicBtDevice>> subscription =
         _classicSubscription = classicRepository.watchPairedDevices().listen(
-          (final devices) {
+          (devices) {
             if (isClosed) {
               return;
             }
             emit(state.copyWith(classicDevices: devices));
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error('IotBleCubit classic stream', error, stackTrace);
           },
         );

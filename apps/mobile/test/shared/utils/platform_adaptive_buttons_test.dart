@@ -1,18 +1,18 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('PlatformAdaptiveButtons', () {
     testWidgets('button creates Material ElevatedButton on Material platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveButtons.button(
+              builder: (context) => PlatformAdaptiveButtons.button(
                 context: context,
                 onPressed: () {},
                 child: const Text('Button'),
@@ -26,14 +26,14 @@ void main() {
       expect(find.byType(CupertinoButton), findsNothing);
     });
 
-    testWidgets('button respects onPressed parameter', (final tester) async {
+    testWidgets('button respects onPressed parameter', (tester) async {
       bool pressed = false;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveButtons.button(
+              builder: (context) => PlatformAdaptiveButtons.button(
                 context: context,
                 onPressed: () {
                   pressed = true;
@@ -49,12 +49,12 @@ void main() {
       expect(pressed, isTrue);
     });
 
-    testWidgets('button respects disabled state', (final tester) async {
+    testWidgets('button respects disabled state', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveButtons.button(
+              builder: (context) => PlatformAdaptiveButtons.button(
                 context: context,
                 onPressed: null,
                 child: const Text('Button'),
@@ -69,13 +69,13 @@ void main() {
     });
 
     testWidgets('textButton creates Material TextButton on Material platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Builder(
-              builder: (final context) => PlatformAdaptiveButtons.textButton(
+              builder: (context) => PlatformAdaptiveButtons.textButton(
                 context: context,
                 onPressed: () {},
                 child: const Text('Text Button'),
@@ -90,17 +90,16 @@ void main() {
 
     testWidgets(
       'filledButton creates Material FilledButton on Material platform',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder: (final context) =>
-                    PlatformAdaptiveButtons.filledButton(
-                      context: context,
-                      onPressed: () {},
-                      child: const Text('Filled Button'),
-                    ),
+                builder: (context) => PlatformAdaptiveButtons.filledButton(
+                  context: context,
+                  onPressed: () {},
+                  child: const Text('Filled Button'),
+                ),
               ),
             ),
           ),
@@ -112,17 +111,16 @@ void main() {
 
     testWidgets(
       'outlinedButton creates Material OutlinedButton on Material platform',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder: (final context) =>
-                    PlatformAdaptiveButtons.outlinedButton(
-                      context: context,
-                      onPressed: () {},
-                      child: const Text('Outlined Button'),
-                    ),
+                builder: (context) => PlatformAdaptiveButtons.outlinedButton(
+                  context: context,
+                  onPressed: () {},
+                  child: const Text('Outlined Button'),
+                ),
               ),
             ),
           ),
@@ -134,17 +132,16 @@ void main() {
 
     testWidgets(
       'dialogAction creates Material TextButton on Material platform',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder: (final context) =>
-                    PlatformAdaptiveButtons.dialogAction(
-                      context: context,
-                      onPressed: () {},
-                      label: 'Action',
-                    ),
+                builder: (context) => PlatformAdaptiveButtons.dialogAction(
+                  context: context,
+                  onPressed: () {},
+                  label: 'Action',
+                ),
               ),
             ),
           ),
@@ -157,18 +154,17 @@ void main() {
 
     testWidgets(
       'dialogAction applies destructive styling when isDestructive is true',
-      (final tester) async {
+      (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: Builder(
-                builder: (final context) =>
-                    PlatformAdaptiveButtons.dialogAction(
-                      context: context,
-                      onPressed: () {},
-                      label: 'Delete',
-                      isDestructive: true,
-                    ),
+                builder: (context) => PlatformAdaptiveButtons.dialogAction(
+                  context: context,
+                  onPressed: () {},
+                  label: 'Delete',
+                  isDestructive: true,
+                ),
               ),
             ),
           ),

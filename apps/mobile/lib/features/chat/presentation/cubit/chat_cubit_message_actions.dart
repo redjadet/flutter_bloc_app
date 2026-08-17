@@ -1,7 +1,7 @@
 part of 'chat_cubit.dart';
 
 mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
-  Future<void> sendMessage(final String message) async {
+  Future<void> sendMessage(String message) async {
     if (state.isLoading) {
       return;
     }
@@ -69,7 +69,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
         clientMessageId: clientMessageId,
       ),
       isAlive: () => !isClosed,
-      onSuccess: (final result) {
+      onSuccess: (result) {
         if (isClosed) {
           return;
         }
@@ -104,7 +104,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
         if (!isRequestCurrent(requestId)) {
           // Reply was generated even if a newer request superseded this one.
-          if (_state.history.any((final c) => c.id == withUser.id)) {
+          if (_state.history.any((c) => c.id == withUser.id)) {
             unawaited(_persistHistory(finalHistory));
             if (_state.activeConversationId == withUser.id) {
               _emitConversationSnapshot(
@@ -129,7 +129,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
 
         unawaited(_persistHistory(finalHistory));
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) {
           return;
         }
@@ -146,7 +146,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
       },
       logContext: 'ChatCubit.sendMessage',
       specificExceptionHandlers: {
-        ChatRemoteFailureException: (final error, final stackTrace) {
+        ChatRemoteFailureException: (error, stackTrace) {
           final ChatRemoteFailureException exception =
               error as ChatRemoteFailureException;
           if (isClosed) {
@@ -164,7 +164,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             remoteFailureL10nCode: exception.code,
           );
         },
-        ChatException: (final error, final stackTrace) {
+        ChatException: (error, stackTrace) {
           final ChatException exception = error as ChatException;
           if (isClosed) {
             return;
@@ -180,7 +180,7 @@ mixin _ChatCubitMessageActions on _ChatCubitCore, _ChatCubitHelpers {
             error: exception.message,
           );
         },
-        ChatOfflineEnqueuedException: (final error, final stackTrace) {
+        ChatOfflineEnqueuedException: (error, stackTrace) {
           AppLogger.info('Chat message queued for offline sync');
           if (isClosed) {
             return;

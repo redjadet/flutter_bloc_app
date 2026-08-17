@@ -1,5 +1,5 @@
-import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/secret_config.dart';
 import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';

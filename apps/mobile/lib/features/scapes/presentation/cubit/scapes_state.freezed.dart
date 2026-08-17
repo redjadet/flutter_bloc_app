@@ -55,8 +55,7 @@ extension ScapesStatePatterns on ScapesState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ScapesInitial value)?  initial,TResult Function( ScapesLoading value)?  loading,TResult Function( ScapesReady value)?  ready,TResult Function( ScapesError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ScapesInitial value)?  initial,TResult Function( ScapesLoading value)?  loading,TResult Function( ScapesReady value)?  ready,TResult Function( ScapesError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case ScapesInitial() when initial != null:
 return initial(_that);case ScapesLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ScapesInitial value)  initial,required TResult Function( ScapesLoading value)  loading,required TResult Function( ScapesReady value)  ready,required TResult Function( ScapesError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ScapesInitial value)  initial,required TResult Function( ScapesLoading value)  loading,required TResult Function( ScapesReady value)  ready,required TResult Function( ScapesError value)  error,}){final _that = this;
 switch (_that) {
 case ScapesInitial():
 return initial(_that);case ScapesLoading():
@@ -101,8 +99,7 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ScapesInitial value)?  initial,TResult? Function( ScapesLoading value)?  loading,TResult? Function( ScapesReady value)?  ready,TResult? Function( ScapesError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ScapesInitial value)?  initial,TResult? Function( ScapesLoading value)?  loading,TResult? Function( ScapesReady value)?  ready,TResult? Function( ScapesError value)?  error,}){final _that = this;
 switch (_that) {
 case ScapesInitial() when initial != null:
 return initial(_that);case ScapesLoading() when loading != null:
@@ -251,7 +248,7 @@ String toString() {
 
 
 class ScapesReady extends ScapesState {
-  const ScapesReady({required final  List<Scape> scapes, this.viewMode = ScapesViewMode.grid}): _scapes = scapes,super._();
+  const ScapesReady({required  List<Scape> scapes, this.viewMode = ScapesViewMode.grid}): _scapes = scapes,super._();
   
 
  final  List<Scape> _scapes;

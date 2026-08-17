@@ -1,23 +1,24 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_add_device_dialog.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> _pumpDialog(
-  final WidgetTester tester, {
-  required final Future<void> Function(BuildContext) open,
-  final ThemeData? theme,
+  WidgetTester tester, {
+  required Future<void> Function(BuildContext) open,
+  ThemeData? theme,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
       theme: theme,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => Scaffold(
+        builder: (context) => Scaffold(
           body: Center(
             child: TextButton(
               onPressed: () async => open(context),
@@ -34,13 +35,11 @@ void main() {
   group('IotDemoAddDeviceDialogBody', () {
     final AppLocalizationsEn l10n = AppLocalizationsEn();
 
-    testWidgets('empty name shows error and does not close', (
-      final tester,
-    ) async {
+    testWidgets('empty name shows error and does not close', (tester) async {
       IotDemoAddDeviceResult? result;
       await _pumpDialog(
         tester,
-        open: (final ctx) async {
+        open: (ctx) async {
           result = await showAdaptiveDialog<IotDemoAddDeviceResult>(
             context: ctx,
             builder: (_) => IotDemoAddDeviceDialogBody(l10n: l10n),
@@ -59,11 +58,11 @@ void main() {
       expect(result, isNull);
     });
 
-    testWidgets('valid name and type returns result', (final tester) async {
+    testWidgets('valid name and type returns result', (tester) async {
       IotDemoAddDeviceResult? result;
       await _pumpDialog(
         tester,
-        open: (final ctx) async {
+        open: (ctx) async {
           result = await showAdaptiveDialog<IotDemoAddDeviceResult>(
             context: ctx,
             builder: (_) => IotDemoAddDeviceDialogBody(l10n: l10n),
@@ -90,11 +89,11 @@ void main() {
     testWidgets(
       'builds without error in Cupertino context (Material ancestor for '
       'dropdown)',
-      (final tester) async {
+      (tester) async {
         await _pumpDialog(
           tester,
           theme: ThemeData(platform: TargetPlatform.iOS),
-          open: (final ctx) async {
+          open: (ctx) async {
             await showAdaptiveDialog<IotDemoAddDeviceResult>(
               context: ctx,
               builder: (_) => IotDemoAddDeviceDialogBody(l10n: l10n),

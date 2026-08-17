@@ -13,10 +13,10 @@ class BleDiscoveredDevice {
   final bool connectable;
 
   BleDiscoveredDevice copyWith({
-    final String? id,
-    final String? name,
-    final int? rssi,
-    final bool? connectable,
+    String? id,
+    String? name,
+    int? rssi,
+    bool? connectable,
   }) => BleDiscoveredDevice(
     id: id ?? this.id,
     name: name ?? this.name,

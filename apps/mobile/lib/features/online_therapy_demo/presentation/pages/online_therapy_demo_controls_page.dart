@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/online_therapy_network_mode.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoControlsPage extends StatelessWidget {
   const OnlineTherapyDemoControlsPage({super.key});
 
   String _explain({
-    required final OnlineTherapyNetworkMode mode,
-    required final AppLocalizations l10n,
+    required OnlineTherapyNetworkMode mode,
+    required AppLocalizations l10n,
   }) => switch (mode) {
     OnlineTherapyNetworkMode.normal =>
       l10n.onlineTherapyDemoControlsExplainNormal,
@@ -25,7 +25,7 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
   };
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
     final controls = context
@@ -34,7 +34,7 @@ class OnlineTherapyDemoControlsPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           ({OnlineTherapyNetworkMode networkMode, bool isBusy})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             networkMode: state.networkMode,
             isBusy: state.isBusy,
           ),

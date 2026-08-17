@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/platform/
 import 'package:video_player/video_player.dart';
 
 Future<VideoPlayerController> createCaseStudyVideoController(
-  final String videoPath,
+  String videoPath,
 ) async {
   final Uri? uri = Uri.tryParse(videoPath);
   if (uri != null &&

@@ -1,5 +1,5 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatContactTileConfig {
   ChatContactTileConfig({
@@ -39,7 +39,7 @@ class ChatContactTileConfig {
     );
   }
 
-  factory ChatContactTileConfig.fromContext(final BuildContext context) {
+  factory ChatContactTileConfig.fromContext(BuildContext context) {
     final isDesktopLayout = context.isDesktop;
     final isTabletOrLarger = context.isTabletOrLarger;
     final usesTabletTypography = isTabletOrLarger && !isDesktopLayout;

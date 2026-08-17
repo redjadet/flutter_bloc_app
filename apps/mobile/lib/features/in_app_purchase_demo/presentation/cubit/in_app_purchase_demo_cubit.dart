@@ -68,7 +68,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     _realDemoControls?.resetDemoState();
   }
 
-  Future<void> toggleRepository({required final bool useFake}) async {
+  Future<void> toggleRepository({required bool useFake}) async {
     if (state.isBusy) return;
     _attempt++;
     emit(
@@ -85,7 +85,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     await initialize();
   }
 
-  void setForcedOutcome(final IapDemoForcedOutcome outcome) {
+  void setForcedOutcome(IapDemoForcedOutcome outcome) {
     final fakeControls = _fakeOutcomeControls;
     if (fakeControls == null) return;
     fakeControls.forcedOutcome = outcome;
@@ -93,7 +93,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     emit(state.copyWith(forcedOutcome: outcome));
   }
 
-  Future<void> buy(final IapProduct product) async {
+  Future<void> buy(IapProduct product) async {
     if (state.isBusy) return;
     final int attempt = ++_attempt;
     if (isClosed) return;
@@ -179,7 +179,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     );
   }
 
-  Future<void> _onPurchaseResult(final IapPurchaseResult result) async {
+  Future<void> _onPurchaseResult(IapPurchaseResult result) async {
     if (isClosed) return;
     final bool isPending = result.maybeWhen(
       pending: (_, _) => true,
@@ -195,7 +195,7 @@ class InAppPurchaseDemoCubit extends Cubit<InAppPurchaseDemoState>
     await refreshEntitlements();
   }
 
-  void _onPurchaseStreamError(final Object error, final StackTrace stackTrace) {
+  void _onPurchaseStreamError(Object error, StackTrace stackTrace) {
     AppLogger.error(
       'InAppPurchaseDemoCubit.watchPurchaseResults',
       error,

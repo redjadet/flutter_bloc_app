@@ -20,7 +20,7 @@ void main() {
   registerIntegrationHarness();
 
   group('Perf smoke flows', () {
-    testWidgets('captures todo list add flow trace', (final tester) async {
+    testWidgets('captures todo list add flow trace', (tester) async {
       await configureIntegrationTestDependencies();
       await overrideChartRepositoryForPerf(pointCount: 400);
       await overrideTodoRepositoryForPerf(itemCount: 250);
@@ -256,23 +256,19 @@ void main() {
 
       binding.reportData ??= <String, dynamic>{};
       binding.reportData!.addAll(<String, dynamic>{
-        'meta.todo_list_add_trace.note':
-            'Timeline events are available via the integration_test report data for reportKey=todo_list_add_trace.',
+        'meta.todo_list_add_trace.note': 'Timeline events are available via the integration_test report data for reportKey=todo_list_add_trace.',
         'meta.todo_list_add_trace.flutter': '3.41.9',
         'meta.todo_list_scroll_zoom_trace.note':
             'Zoomed trace for isolating list scrolling pipeline spikes.',
         'meta.todo_list_scroll_zoom_trace.flutter': '3.41.9',
-        'meta.chat_list_scroll_trace.note':
-            'Timeline events are available via the integration_test report data for reportKey=chat_list_scroll_trace.',
+        'meta.chat_list_scroll_trace.note': 'Timeline events are available via the integration_test report data for reportKey=chat_list_scroll_trace.',
         'meta.chat_list_scroll_trace.flutter': '3.41.9',
         'meta.chat_list_scroll_zoom_trace.note':
             'Zoomed trace for isolating list scrolling pipeline spikes.',
         'meta.chat_list_scroll_zoom_trace.flutter': '3.41.9',
-        'meta.scapes_grid_scroll_trace.note':
-            'Image-heavy grid scroll trace (network images + TextPainter sizing).',
+        'meta.scapes_grid_scroll_trace.note': 'Image-heavy grid scroll trace (network images + TextPainter sizing).',
         'meta.scapes_grid_scroll_trace.flutter': '3.41.9',
-        'meta.charts_scroll_refresh_trace.note':
-            'Timeline events are available via the integration_test report data for reportKey=charts_scroll_refresh_trace.',
+        'meta.charts_scroll_refresh_trace.note': 'Timeline events are available via the integration_test report data for reportKey=charts_scroll_refresh_trace.',
         'meta.charts_scroll_refresh_trace.flutter': '3.41.9',
         'meta.charts_scroll_refresh_zoom_trace.note':
             'Zoomed trace for isolating scroll/refresh pipeline spikes.',

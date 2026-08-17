@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 import '../../../../test_helpers.dart' show FakeTimerService;
@@ -60,7 +61,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> quiesceForSessionCleanup() async {}
@@ -92,7 +93,7 @@ class _FakeCounterRepository
   Future<CounterSnapshot> load() async => _snapshot;
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {}
+  Future<void> save(CounterSnapshot snapshot) async {}
 
   @override
   Stream<CounterSnapshot> watch() async* {
@@ -153,7 +154,7 @@ void main() {
 
     Widget buildWidget() => MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: ResponsiveScope(
         child: MultiBlocProvider(

@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
@@ -11,17 +10,18 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_body.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
+  Widget build(BuildContext context) => BlocProvider(
     create: (_) => RegisterCubit(),
     child: TypeSafeBlocListener<RegisterCubit, RegisterState>(
-      listenWhen: (final previous, final current) =>
+      listenWhen: (previous, current) =>
           previous.submissionStatus != current.submissionStatus,
-      listener: (final context, final state) {
+      listener: (context, state) {
         if (state.submissionStatus == RegisterSubmissionStatus.success) {
           _handleSuccess(context, state);
         }
@@ -35,7 +35,7 @@ class _RegisterView extends StatelessWidget {
   const _RegisterView();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
@@ -55,7 +55,7 @@ class _RegisterView extends StatelessWidget {
   }
 }
 
-void _handleSuccess(final BuildContext context, final RegisterState state) {
+void _handleSuccess(BuildContext context, RegisterState state) {
   final cubit = context.cubit<RegisterCubit>();
   final l10n = context.l10n;
   final displayName = state.fullName.value.trim();
@@ -63,7 +63,7 @@ void _handleSuccess(final BuildContext context, final RegisterState state) {
   unawaited(
     showAdaptiveDialog<void>(
       context: context,
-      builder: (final dialogContext) {
+      builder: (dialogContext) {
         final bool isCupertino = PlatformAdaptive.isCupertino(context);
         if (isCupertino) {
           return CupertinoAlertDialog(

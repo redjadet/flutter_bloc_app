@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.da
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../helpers/memory/leak_safe_test_widgets.dart';
 
@@ -23,7 +23,7 @@ void main() {
 
   leakSafeTestWidgets(
     'realtime market mount emit teardown is leak-safe',
-    (final tester) async {
+    (tester) async {
       final _FakeRepo repo = _FakeRepo(cached: _snap());
 
       await tester.pumpWidget(
@@ -32,16 +32,12 @@ void main() {
             create: (_) =>
                 RealtimeMarketCubit(repository: repo, pairId: 'btc_usdt'),
             child: BlocBuilder<RealtimeMarketCubit, RealtimeMarketState>(
-              builder:
-                  (
-                    final BuildContext context,
-                    final RealtimeMarketState state,
-                  ) {
-                    final double? price = state.snapshot?.lastPrice;
-                    return Text(
-                      price == null ? 'waiting' : 'live:${price.toInt()}',
-                    );
-                  },
+              builder: (BuildContext context, RealtimeMarketState state) {
+                final double? price = state.snapshot?.lastPrice;
+                return Text(
+                  price == null ? 'waiting' : 'live:${price.toInt()}',
+                );
+              },
             ),
           ),
         ),
@@ -66,7 +62,7 @@ void main() {
   );
 }
 
-MarketFeedSnapshot _snap({final double lastPrice = 100}) => MarketFeedSnapshot(
+MarketFeedSnapshot _snap({double lastPrice = 100}) => MarketFeedSnapshot(
   pairId: 'btc_usdt',
   lastPrice: lastPrice,
   changePct24h: 1.2,
@@ -99,20 +95,20 @@ final class _FakeRepo implements RealtimeMarketRepository {
   final StreamController<MarketFeedSnapshot> _out =
       StreamController<MarketFeedSnapshot>.broadcast(sync: true);
 
-  void emit(final MarketFeedSnapshot snapshot) {
+  void emit(MarketFeedSnapshot snapshot) {
     if (!_out.isClosed) {
       _out.add(snapshot);
     }
   }
 
   @override
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) async => cached;
+  Future<MarketFeedSnapshot?> loadCached(String pairId) async => cached;
 
   @override
-  Stream<MarketFeedSnapshot> watch(final String pairId) => _out.stream;
+  Stream<MarketFeedSnapshot> watch(String pairId) => _out.stream;
 
   @override
-  Future<void> reconnect(final String pairId) async {}
+  Future<void> reconnect(String pairId) async {}
 
   @override
   Future<void> dispose() async {

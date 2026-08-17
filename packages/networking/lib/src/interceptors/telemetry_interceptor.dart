@@ -2,13 +2,12 @@ import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 
 const String _keyStopwatch = '_sw';
-typedef TelemetryEventSink =
-    void Function(
-      RequestOptions options,
-      int? statusCode,
-      String? error,
-      int elapsedMilliseconds,
-    );
+typedef TelemetryEventSink = void Function(
+  RequestOptions options,
+  int? statusCode,
+  String? error,
+  int elapsedMilliseconds,
+);
 
 /// Logs request/response duration and status.
 class TelemetryInterceptor extends Interceptor {
@@ -17,25 +16,22 @@ class TelemetryInterceptor extends Interceptor {
   final TelemetryEventSink? _eventSink;
 
   @override
-  void onRequest(
-    final RequestOptions options,
-    final RequestInterceptorHandler handler,
-  ) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.extra[_keyStopwatch] = Stopwatch()..start();
     handler.next(options);
   }
 
   @override
   void onResponse(
-    final Response<dynamic> response,
-    final ResponseInterceptorHandler handler,
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
   ) {
     _log(response.requestOptions, response.statusCode, null);
     handler.next(response);
   }
 
   @override
-  void onError(final DioException err, final ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     _log(
       err.requestOptions,
       err.response?.statusCode,
@@ -44,11 +40,7 @@ class TelemetryInterceptor extends Interceptor {
     handler.next(err);
   }
 
-  void _log(
-    final RequestOptions options,
-    final int? statusCode,
-    final String? error,
-  ) {
+  void _log(RequestOptions options, int? statusCode, String? error) {
     final Stopwatch? sw = options.extra[_keyStopwatch] as Stopwatch?;
     if (sw == null) return;
     sw.stop();

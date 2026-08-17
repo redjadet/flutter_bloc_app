@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../helpers/memory/leak_safe_test_widgets.dart';
 
@@ -13,14 +13,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   leakSafeTestWidgets('app-shell go route replacement is leak-safe', (
-    final tester,
+    tester,
   ) async {
     final GoRouter router = GoRouter(
       initialLocation: '/home',
       routes: <RouteBase>[
         GoRoute(
           path: '/home',
-          pageBuilder: (final BuildContext context, final GoRouterState state) {
+          pageBuilder: (BuildContext context, GoRouterState state) {
             return const NoTransitionPage<void>(
               child: Scaffold(body: Center(child: Text('shell-home'))),
             );
@@ -28,7 +28,7 @@ void main() {
         ),
         GoRoute(
           path: '/settings',
-          pageBuilder: (final BuildContext context, final GoRouterState state) {
+          pageBuilder: (BuildContext context, GoRouterState state) {
             return const NoTransitionPage<void>(
               child: Scaffold(body: Center(child: Text('shell-settings'))),
             );

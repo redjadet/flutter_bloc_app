@@ -87,8 +87,7 @@ extension GraphqlContinentPatterns on GraphqlContinent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlContinent value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlContinent value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GraphqlContinent() when $default != null:
 return $default(_that);case _:
@@ -109,8 +108,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlContinent value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlContinent value)  $default,){final _that = this;
 switch (_that) {
 case _GraphqlContinent():
 return $default(_that);case _:
@@ -130,8 +128,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlContinent value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlContinent value)?  $default,){final _that = this;
 switch (_that) {
 case _GraphqlContinent() when $default != null:
 return $default(_that);case _:
@@ -360,8 +357,7 @@ extension GraphqlCountryPatterns on GraphqlCountry {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlCountry value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlCountry value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GraphqlCountry() when $default != null:
 return $default(_that);case _:
@@ -382,8 +378,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlCountry value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlCountry value)  $default,){final _that = this;
 switch (_that) {
 case _GraphqlCountry():
 return $default(_that);case _:
@@ -403,8 +398,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlCountry value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlCountry value)?  $default,){final _that = this;
 switch (_that) {
 case _GraphqlCountry() when $default != null:
 return $default(_that);case _:

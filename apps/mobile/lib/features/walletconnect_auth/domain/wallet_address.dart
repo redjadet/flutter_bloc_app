@@ -7,7 +7,7 @@ part 'wallet_address.freezed.dart';
 /// Wallet addresses are Ethereum-style addresses (0x followed by 40 hex characters).
 @freezed
 abstract class WalletAddress with _$WalletAddress {
-  const factory WalletAddress(final String value) = _WalletAddress;
+  const factory WalletAddress(String value) = _WalletAddress;
 
   const WalletAddress._();
 

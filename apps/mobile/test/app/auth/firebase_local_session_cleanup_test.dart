@@ -94,64 +94,61 @@ void main() {
       await getIt.reset();
     });
 
-    test(
-      'quiesces sync, clears pending rows + chat + profile + search, without resuming sync',
-      () async {
-        await pendingSync.enqueue(
-          SyncOperation.create(
-            entityType: todoSyncEntityType,
-            payload: const <String, dynamic>{'id': 't1'},
-            idempotencyKey: 'todo-1',
-            createdAt: DateTime.utc(2026),
-            nextRetryAt: DateTime.utc(2026),
-          ),
-        );
-        await pendingSync.enqueue(
-          SyncOperation.create(
-            entityType: counterSyncEntityType,
-            payload: const <String, dynamic>{'id': 'ctr1'},
-            idempotencyKey: 'counter-1',
-            createdAt: DateTime.utc(2026),
-            nextRetryAt: DateTime.utc(2026),
-          ),
-        );
-        await pendingSync.enqueue(
-          SyncOperation.create(
-            entityType: chatSyncEntityType,
-            payload: const <String, dynamic>{'id': 'c1'},
-            idempotencyKey: 'chat-1',
-            createdAt: DateTime.utc(2026),
-            nextRetryAt: DateTime.utc(2026),
-          ),
-        );
-        await pendingSync.enqueue(
-          SyncOperation.create(
-            entityType: 'other',
-            payload: const <String, dynamic>{'id': 'o1'},
-            idempotencyKey: 'other-1',
-            createdAt: DateTime.utc(2026),
-            nextRetryAt: DateTime.utc(2026),
-          ),
-        );
+    test('quiesces sync, clears pending rows + chat + profile + search, without resuming sync', () async {
+      await pendingSync.enqueue(
+        SyncOperation.create(
+          entityType: todoSyncEntityType,
+          payload: const <String, dynamic>{'id': 't1'},
+          idempotencyKey: 'todo-1',
+          createdAt: DateTime.utc(2026),
+          nextRetryAt: DateTime.utc(2026),
+        ),
+      );
+      await pendingSync.enqueue(
+        SyncOperation.create(
+          entityType: counterSyncEntityType,
+          payload: const <String, dynamic>{'id': 'ctr1'},
+          idempotencyKey: 'counter-1',
+          createdAt: DateTime.utc(2026),
+          nextRetryAt: DateTime.utc(2026),
+        ),
+      );
+      await pendingSync.enqueue(
+        SyncOperation.create(
+          entityType: chatSyncEntityType,
+          payload: const <String, dynamic>{'id': 'c1'},
+          idempotencyKey: 'chat-1',
+          createdAt: DateTime.utc(2026),
+          nextRetryAt: DateTime.utc(2026),
+        ),
+      );
+      await pendingSync.enqueue(
+        SyncOperation.create(
+          entityType: 'other',
+          payload: const <String, dynamic>{'id': 'o1'},
+          idempotencyKey: 'other-1',
+          createdAt: DateTime.utc(2026),
+          nextRetryAt: DateTime.utc(2026),
+        ),
+      );
 
-        await clearFirebaseLocalSessionData(
-          provider: AuthProviderKind.firebase,
-          reason: SessionLocalCleanupReason.accountSwitch,
-        );
+      await clearFirebaseLocalSessionData(
+        provider: AuthProviderKind.firebase,
+        reason: SessionLocalCleanupReason.accountSwitch,
+      );
 
-        expect(syncCoordinator.quiesceCalls, 1);
-        expect(syncCoordinator.resumeCalls, 0);
-        final List<SyncOperation> remaining = await pendingSync
-            .getPendingOperations();
-        expect(
-          remaining.map((final SyncOperation op) => op.entityType).toList(),
-          <String>['other'],
-        );
-        verify(() => chatHistory.save(const <ChatConversation>[])).called(1);
-        verify(() => profileCache.clearProfile()).called(1);
-        verify(() => searchCache.clearCache()).called(1);
-      },
-    );
+      expect(syncCoordinator.quiesceCalls, 1);
+      expect(syncCoordinator.resumeCalls, 0);
+      final List<SyncOperation> remaining = await pendingSync
+          .getPendingOperations();
+      expect(
+        remaining.map((SyncOperation op) => op.entityType).toList(),
+        <String>['other'],
+      );
+      verify(() => chatHistory.save(const <ChatConversation>[])).called(1);
+      verify(() => profileCache.clearProfile()).called(1);
+      verify(() => searchCache.clearCache()).called(1);
+    });
 
     test('resumeBackgroundSyncAfterSessionCleanup restarts sync', () async {
       await resumeBackgroundSyncAfterSessionCleanup();

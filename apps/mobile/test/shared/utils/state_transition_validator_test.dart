@@ -94,7 +94,7 @@ void main() {
 
 class TestValidator extends StateTransitionValidator<TestState> {
   @override
-  bool isValidTransition(final TestState from, final TestState to) {
+  bool isValidTransition(TestState from, TestState to) {
     // Allow transitions where value increases by 1
     return to.value == from.value + 1;
   }
@@ -106,7 +106,7 @@ class TestState {
   final int value;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TestState &&
           runtimeType == other.runtimeType &&

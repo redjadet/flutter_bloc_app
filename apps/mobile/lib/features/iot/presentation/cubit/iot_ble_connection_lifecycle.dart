@@ -7,11 +7,11 @@ part 'iot_ble_connection_lifecycle.freezed.dart';
 @freezed
 sealed class IotBleConnectionLifecycle with _$IotBleConnectionLifecycle {
   const factory IotBleConnectionLifecycle.idle({
-    final String? selectedDeviceId,
+    String? selectedDeviceId,
   }) = IotBleConnectionIdle;
 
   const factory IotBleConnectionLifecycle.active(
-    final BleConnectionPhase phase,
+    BleConnectionPhase phase,
   ) = IotBleConnectionActive;
 
   const IotBleConnectionLifecycle._();

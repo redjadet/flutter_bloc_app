@@ -1,3 +1,4 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_bloc_app/features/chart/data/firebase_chart_repository.d
 import 'package:flutter_bloc_app/features/chart/domain/chart_data_source.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_remote_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -109,38 +109,35 @@ void main() {
       },
     );
 
-    test(
-      'skips cloud and uses direct when getIdToken throws FirebaseAuthException',
-      () async {
-        final MockFirebaseFirestore firestore = MockFirebaseFirestore();
-        final MockFirebaseAuth failingAuth = MockFirebaseAuth(
-          signedIn: true,
-          mockUser: _MockUserFailingIdToken(),
-        );
-        final _RecordingDirectChartRemote direct = _RecordingDirectChartRemote(
-          <ChartPoint>[ChartPoint(date: DateTime.utc(2025, 6, 1), value: 77)],
-        );
+    test('skips cloud and uses direct when getIdToken throws FirebaseAuthException', () async {
+      final MockFirebaseFirestore firestore = MockFirebaseFirestore();
+      final MockFirebaseAuth failingAuth = MockFirebaseAuth(
+        signedIn: true,
+        mockUser: _MockUserFailingIdToken(),
+      );
+      final _RecordingDirectChartRemote direct = _RecordingDirectChartRemote(
+        <ChartPoint>[ChartPoint(date: DateTime.utc(2025, 6, 1), value: 77)],
+      );
 
-        final FirebaseChartRepository repository = FirebaseChartRepository(
-          auth: failingAuth,
-          functions: functions,
-          firestore: firestore,
-          liveDirectFallback: direct,
-        );
+      final FirebaseChartRepository repository = FirebaseChartRepository(
+        auth: failingAuth,
+        functions: functions,
+        firestore: firestore,
+        liveDirectFallback: direct,
+      );
 
-        final List<ChartPoint> points = await AppLogger.silenceAsync(
-          () => repository.fetchTrendingCounts(),
-        );
+      final List<ChartPoint> points = await AppLogger.silenceAsync(
+        () => repository.fetchTrendingCounts(),
+      );
 
-        expect(points, <ChartPoint>[
-          ChartPoint(date: DateTime.utc(2025, 6, 1), value: 77),
-        ]);
-        expect(repository.lastSource, ChartDataSource.remote);
-        expect(direct.callCount, 1);
-        verifyNever(() => functions.httpsCallable(any()));
-        verifyNever(() => firestore.doc(any()));
-      },
-    );
+      expect(points, <ChartPoint>[
+        ChartPoint(date: DateTime.utc(2025, 6, 1), value: 77),
+      ]);
+      expect(repository.lastSource, ChartDataSource.remote);
+      expect(direct.callCount, 1);
+      verifyNever(() => functions.httpsCallable(any()));
+      verifyNever(() => firestore.doc(any()));
+    });
 
     test(
       'falls back to Firestore when cloud and direct return no points',
@@ -158,7 +155,7 @@ void main() {
           auth: auth,
           functions: functions,
           liveDirectFallback: direct,
-          firestoreDocDataLoader: (final String path) async {
+          firestoreDocDataLoader: (String path) async {
             expect(path, 'chart_trending/bitcoin_7d');
             return <String, dynamic>{
               'points': <dynamic>[

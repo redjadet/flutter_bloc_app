@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -49,6 +48,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_info_repository.da
 import 'package:flutter_bloc_app/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/sync_diagnostics_section.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:storage/storage.dart';
 import 'package:utilities/utilities.dart';
 
@@ -59,7 +59,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.authPath,
     name: AppRoutes.auth,
-    builder: (final context, final state) => SignInPage(
+    builder: (context, state) => SignInPage(
       authRepository: getIt<AuthRepository>(),
       redirectAfterLogin: state.uri.queryParameters['redirect'],
     ),
@@ -67,7 +67,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.calculatorPath,
     name: AppRoutes.calculator,
-    builder: (final context, final state) => BlocProvider(
+    builder: (context, state) => BlocProvider(
       create: (_) => CalculatorCubit(
         calculator: getIt<PaymentCalculator>(),
       ),
@@ -77,7 +77,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
       GoRoute(
         path: 'payment',
         name: AppRoutes.calculatorPayment,
-        builder: (final context, final state) {
+        builder: (context, state) {
           final Object? extra = state.extra;
           if (extra is CalculatorCubit) {
             return BlocProvider.value(
@@ -98,14 +98,14 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.examplePath,
     name: AppRoutes.example,
-    builder: (final context, final state) => ExamplePage(
+    builder: (context, state) => ExamplePage(
       isFirebaseInitialized: FirebaseBootstrapService.isFirebaseInitialized,
     ),
   ),
   GoRoute(
     path: AppRoutes.firebaseFunctionsTestPath,
     name: AppRoutes.firebaseFunctionsTest,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final bool isAuthenticated =
           getIt.isRegistered<FirebaseAuth>() &&
           getIt<FirebaseAuth>().currentUser != null;
@@ -118,12 +118,12 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.whiteboardPath,
     name: AppRoutes.whiteboard,
-    builder: (final context, final state) => const WhiteboardPage(),
+    builder: (context, state) => const WhiteboardPage(),
   ),
   GoRoute(
     path: AppRoutes.cameraGalleryPath,
     name: AppRoutes.cameraGallery,
-    builder: (final context, final state) => BlocProvider<CameraGalleryCubit>(
+    builder: (context, state) => BlocProvider<CameraGalleryCubit>(
       create: (_) => CameraGalleryCubit(
         repository: getIt<CameraGalleryRepository>(),
       ),
@@ -133,7 +133,7 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.scapesPath,
     name: AppRoutes.scapes,
-    builder: (final context, final state) => ScapesPage(
+    builder: (context, state) => ScapesPage(
       repository: getIt<ScapesRepository>(),
       timerService: getIt<TimerService>(),
     ),
@@ -141,30 +141,29 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
   GoRoute(
     path: AppRoutes.markdownEditorPath,
     name: AppRoutes.markdownEditor,
-    builder: (final context, final state) => DeferredPage(
+    builder: (context, state) => DeferredPage(
       loadLibrary: markdown_editor_page.loadLibrary,
-      builder: (final context) =>
-          markdown_editor_page.buildMarkdownEditorPage(),
+      builder: (context) => markdown_editor_page.buildMarkdownEditorPage(),
     ),
   ),
   GoRoute(
     path: AppRoutes.graphqlPath,
     name: AppRoutes.graphql,
-    builder: (final context, final state) =>
+    builder: (context, state) =>
         BlocProviderHelpers.withAsyncInit<GraphqlDemoCubit>(
           create: () => GraphqlDemoCubit(
             repository: getIt<GraphqlDemoRepository>(),
           ),
-          init: (final cubit) => cubit.loadInitial(),
+          init: (cubit) => cubit.loadInitial(),
           child: const GraphqlDemoPage(),
         ),
   ),
   GoRoute(
     path: AppRoutes.chartsPath,
     name: AppRoutes.charts,
-    builder: (final context, final state) => DeferredPage(
+    builder: (context, state) => DeferredPage(
       loadLibrary: chart_page.loadLibrary,
-      builder: (final context) => chart_page.buildChartPage(),
+      builder: (context) => chart_page.buildChartPage(),
     ),
   ),
   ..._coreRoutesSettingsAndProfile(),
@@ -175,21 +174,20 @@ List<RouteBase> createCoreRoutes() => <RouteBase>[
 RouteBase createCounterRoute() => GoRoute(
   path: AppRoutes.counterPath,
   name: AppRoutes.counter,
-  builder: (final context, final state) =>
-      BlocProviderHelpers.withAsyncInit<CounterCubit>(
-        create: () => CounterCubit(
-          repository: getIt<CounterRepository>(),
-          timerService: getIt<TimerService>(),
-          loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
-        ),
-        init: (final cubit) => cubit.loadInitial(),
-        child: CounterPage(
-          title: context.l10n.homeTitle,
-          errorNotificationService: getIt<ErrorNotificationService>(),
-          biometricAuthenticator: getIt<BiometricAuthenticator>(),
-          timerService: getIt<TimerService>(),
-          showFlavorBadge: FlavorManager.I.flavor != Flavor.prod,
-          optionalBanner: const AwesomeFeatureWidget(),
-        ),
-      ),
+  builder: (context, state) => BlocProviderHelpers.withAsyncInit<CounterCubit>(
+    create: () => CounterCubit(
+      repository: getIt<CounterRepository>(),
+      timerService: getIt<TimerService>(),
+      loadDelay: getIt<AppRuntimeConfig>().skeletonDelay,
+    ),
+    init: (cubit) => cubit.loadInitial(),
+    child: CounterPage(
+      title: context.l10n.homeTitle,
+      errorNotificationService: getIt<ErrorNotificationService>(),
+      biometricAuthenticator: getIt<BiometricAuthenticator>(),
+      timerService: getIt<TimerService>(),
+      showFlavorBadge: FlavorManager.I.flavor != Flavor.prod,
+      optionalBanner: const AwesomeFeatureWidget(),
+    ),
+  ),
 );

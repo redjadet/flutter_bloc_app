@@ -14,10 +14,10 @@ import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 /// Firebase Realtime Database backed leaf [TodoDataSource].
 class RealtimeDatabaseTodoRepository implements TodoRepository {
   RealtimeDatabaseTodoRepository({
-    final FirebaseDatabase? database,
-    final DatabaseReference? todoRef,
-    final FirebaseAuth? auth,
-    final String todoPath = _defaultTodoPath,
+    FirebaseDatabase? database,
+    DatabaseReference? todoRef,
+    FirebaseAuth? auth,
+    String todoPath = _defaultTodoPath,
   }) : _todoRef =
            todoRef ?? (database ?? FirebaseDatabase.instance).ref(todoPath),
        _auth = auth ?? FirebaseAuth.instance;
@@ -30,7 +30,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<List<TodoItem>> fetchAll() async => _executeForUser<List<TodoItem>>(
     operation: 'fetchAll',
-    action: (final user) async {
+    action: (user) async {
       AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.fetchAll requesting todos',
       );
@@ -47,19 +47,18 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   Stream<List<TodoItem>> watchAll() => streamWithAuthUser<List<TodoItem>>(
     auth: _auth,
     logContext: IntegrationLogMessages.realtimeDatabaseTodoWatchAllLogContext,
-    streamPerUser: (final user) => _todoRef
+    streamPerUser: (user) => _todoRef
         .child(user.uid)
         .onValue
         .map(
-          (final event) =>
-              _itemsFromValue(event.snapshot.value, userId: user.uid),
+          (event) => _itemsFromValue(event.snapshot.value, userId: user.uid),
         ),
   );
 
   @override
-  Future<void> save(final TodoItem item) async => _executeForUser<void>(
+  Future<void> save(TodoItem item) async => _executeForUser<void>(
     operation: 'save',
-    action: (final user) async {
+    action: (user) async {
       AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.save writing todo item',
       );
@@ -67,7 +66,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
       // Use Map<String, Object?> to ensure JSON-safe types for platform channel.
       // FlutterFire may mishandle non-primitive values; explicit copy avoids issues.
       final Map<String, Object?> jsonSafe = data.map(
-        (final k, final v) => MapEntry(k, v as Object?),
+        (k, v) => MapEntry(k, v as Object?),
       );
       await _setTodoWithPlatformErrorGuard(
         userId: user.uid,
@@ -79,9 +78,9 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   @override
-  Future<void> delete(final String id) async => _executeForUser<void>(
+  Future<void> delete(String id) async => _executeForUser<void>(
     operation: 'delete',
-    action: (final user) async {
+    action: (user) async {
       AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.delete removing todo item',
       );
@@ -93,7 +92,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   @override
   Future<void> clearCompleted() async => _executeForUser<void>(
     operation: 'clearCompleted',
-    action: (final user) async {
+    action: (user) async {
       AppLogger.debugInDebugMode(
         'RealtimeDatabaseTodoRepository.clearCompleted removing completed todos',
       );
@@ -106,7 +105,7 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
         userId: user.uid,
       );
       final List<TodoItem> completedItems = items
-          .where((final item) => item.isCompleted)
+          .where((item) => item.isCompleted)
           .toList(growable: false);
       if (completedItems.isEmpty) {
         return;
@@ -121,9 +120,9 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   Future<T> _executeForUser<T>({
-    required final String operation,
-    required final Future<T> Function(User user) action,
-    final Future<T> Function()? onFailureFallback,
+    required String operation,
+    required Future<T> Function(User user) action,
+    Future<T> Function()? onFailureFallback,
   }) => runWithAuthUser<T>(
     auth: _auth,
     logContext: 'RealtimeDatabaseTodoRepository.$operation',
@@ -132,13 +131,13 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   );
 
   List<TodoItem> _itemsFromValue(
-    final Object? value, {
-    required final String userId,
+    Object? value, {
+    required String userId,
   }) {
     final List<TodoItem> items = parseMapOfMaps<TodoItem>(
       value,
       logContext: 'RealtimeDatabaseTodoRepository._itemsFromValue',
-      parseItem: (final key, final map) {
+      parseItem: (key, map) {
         final Object? rawId = map['id'];
         if (rawId == null || (rawId is String && rawId.trim().isEmpty)) {
           map['id'] = key?.toString();
@@ -151,26 +150,26 @@ class RealtimeDatabaseTodoRepository implements TodoRepository {
   }
 
   Map<String, dynamic> _todoToMap(
-    final TodoItem item, {
-    required final String userId,
+    TodoItem item, {
+    required String userId,
   }) {
     final Map<String, dynamic> map = TodoItemDto.fromDomain(item).toMap();
     map['userId'] = userId;
     return map;
   }
 
-  List<TodoItem> _sortItems(final List<TodoItem> items) {
+  List<TodoItem> _sortItems(List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items)
       ..sort(
-        (final a, final b) => b.updatedAt.compareTo(a.updatedAt),
+        (a, b) => b.updatedAt.compareTo(a.updatedAt),
       );
     return List<TodoItem>.unmodifiable(sorted);
   }
 
   Future<void> _setTodoWithPlatformErrorGuard({
-    required final String userId,
-    required final String todoId,
-    required final Map<String, Object?> data,
+    required String userId,
+    required String todoId,
+    required Map<String, Object?> data,
   }) async {
     await guardRealtimeDatabaseWrite(
       () => _todoRef.child(userId).child(todoId).set(data),

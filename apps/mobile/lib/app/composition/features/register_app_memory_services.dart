@@ -11,7 +11,7 @@ void registerAppMemoryServices() {
   if (!_isFlutterTestProcess) {
     registerLazySingletonIfAbsent<AppImageCacheManager>(
       AppImageCacheManager.new,
-      dispose: (final manager) => manager.dispose(),
+      dispose: (manager) => manager.dispose(),
     );
   }
   registerLazySingletonIfAbsent<AppMemoryService>(

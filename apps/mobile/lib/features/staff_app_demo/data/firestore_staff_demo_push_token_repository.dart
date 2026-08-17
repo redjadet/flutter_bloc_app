@@ -7,14 +7,14 @@ class FirestoreStaffDemoPushTokenRepository
     implements StaffDemoPushTokenRepository {
   FirestoreStaffDemoPushTokenRepository({
     required this._firestore,
-    final FirebaseMessaging? messaging,
+    FirebaseMessaging? messaging,
   }) : _messaging = messaging ?? FirebaseMessaging.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseMessaging _messaging;
 
   @override
-  Future<void> registerTokens({required final String userId}) async {
+  Future<void> registerTokens({required String userId}) async {
     try {
       final settings = await _messaging.requestPermission();
       if (settings.authorizationStatus == AuthorizationStatus.denied) {

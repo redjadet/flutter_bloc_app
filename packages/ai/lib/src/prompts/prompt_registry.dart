@@ -4,10 +4,10 @@ import 'prompt_template.dart';
 class PromptRegistry {
   final Map<String, PromptTemplate> _templates = {};
 
-  void register(final PromptTemplate template) {
+  void register(PromptTemplate template) {
     _templates['${template.id}@${template.version}'] = template;
   }
 
-  PromptTemplate? lookup(final String id, final String version) =>
+  PromptTemplate? lookup(String id, String version) =>
       _templates['$id@$version'];
 }

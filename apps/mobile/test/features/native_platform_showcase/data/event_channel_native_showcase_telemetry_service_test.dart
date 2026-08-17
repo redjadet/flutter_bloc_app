@@ -8,9 +8,9 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, Object> _validPayload({
-  final int sequence = 1,
-  final String sessionId = 'session-a',
-  final int schemaVersion = 1,
+  int sequence = 1,
+  String sessionId = 'session-a',
+  int schemaVersion = 1,
 }) {
   return <String, Object>{
     'schemaVersion': schemaVersion,
@@ -27,9 +27,7 @@ Map<String, Object> _validPayload({
   };
 }
 
-NativeShowcaseTelemetryStreamConfig _config({
-  final String sessionId = 'session-a',
-}) {
+NativeShowcaseTelemetryStreamConfig _config({String sessionId = 'session-a'}) {
   return NativeShowcaseTelemetryStreamConfig.renderDefault(
     sessionId: sessionId,
   );
@@ -197,28 +195,25 @@ void main() {
       await controller.close();
 
       final snapshots = await values;
-      expect(snapshots.map((final s) => s.sequence), <int>[5, 6]);
+      expect(snapshots.map((s) => s.sequence), <int>[5, 6]);
     });
 
-    test(
-      'emits unavailable snapshot when injected event stream throws MissingPluginException',
-      () async {
-        final service = EventChannelNativeShowcaseTelemetryService(
-          events: (_) =>
-              Stream<Object?>.error(MissingPluginException('no handler')),
-        );
+    test('emits unavailable snapshot when injected event stream throws MissingPluginException', () async {
+      final service = EventChannelNativeShowcaseTelemetryService(
+        events: (_) =>
+            Stream<Object?>.error(MissingPluginException('no handler')),
+      );
 
-        final snapshots = await service
-            .watchTelemetry(config: _config())
-            .toList();
+      final snapshots = await service
+          .watchTelemetry(config: _config())
+          .toList();
 
-        expect(snapshots, hasLength(1));
-        expect(
-          snapshots.single.status,
-          NativeShowcaseTelemetryStatus.unavailable,
-        );
-        expect(snapshots.single.sessionId, 'session-a');
-      },
-    );
+      expect(snapshots, hasLength(1));
+      expect(
+        snapshots.single.status,
+        NativeShowcaseTelemetryStatus.unavailable,
+      );
+      expect(snapshots.single.sessionId, 'session-a');
+    });
   });
 }

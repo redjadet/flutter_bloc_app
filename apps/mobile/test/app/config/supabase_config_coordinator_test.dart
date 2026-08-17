@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/config/supabase_config_coordinator.dart';
 import 'package:flutter_bloc_app/app/config/supabase_config_provider.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_service.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -23,16 +23,16 @@ class _FakeRemoteConfigService implements RemoteConfigService {
   Future<void> clearCache() async {}
 
   @override
-  bool getBool(final String key) => false;
+  bool getBool(String key) => false;
 
   @override
-  String getString(final String key) => '';
+  String getString(String key) => '';
 
   @override
-  int getInt(final String key) => 0;
+  int getInt(String key) => 0;
 
   @override
-  double getDouble(final String key) => 0.0;
+  double getDouble(String key) => 0.0;
 }
 
 void main() {

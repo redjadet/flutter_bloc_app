@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
@@ -6,10 +7,10 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_booking_confirm_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../helpers/layout_overflow_expectations.dart';
 
@@ -62,7 +63,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: <BlocProvider<dynamic>>[
@@ -105,19 +106,13 @@ class _SeededClientBookingCubit extends ClientBookingCubit {
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _NoopTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopTimerDisposable();
   }

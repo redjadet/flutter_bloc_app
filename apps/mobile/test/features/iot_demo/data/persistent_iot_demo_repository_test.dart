@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/persistent_iot_demo_repository.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   group('PersistentIotDemoRepository', () {
@@ -134,7 +134,7 @@ void main() {
 
         final List<IotDevice> devices = await repository.watchDevices().first;
         final IotDevice thermostat = devices.firstWhere(
-          (final d) => d.id == 'thermostat-1',
+          (d) => d.id == 'thermostat-1',
         );
         expect(thermostat.value, 23.5);
       },
@@ -157,7 +157,7 @@ void main() {
 
       final List<IotDevice> devices = await repository.watchDevices().first;
       final IotDevice thermostat = devices.firstWhere(
-        (final d) => d.id == 'thermostat-1',
+        (d) => d.id == 'thermostat-1',
       );
       expect(thermostat.value, iotDemoValueMax);
     });
@@ -175,7 +175,7 @@ void main() {
         ]);
         await repository.connect('thermostat-1');
         final IotDevice connected = (await repository.watchDevices().first)
-            .firstWhere((final d) => d.id == 'thermostat-1');
+            .firstWhere((d) => d.id == 'thermostat-1');
         expect(connected.lastSeen, isNotNull);
         final DateTime before = connected.lastSeen!;
 
@@ -185,7 +185,7 @@ void main() {
         );
 
         final IotDevice thermostat = (await repository.watchDevices().first)
-            .firstWhere((final d) => d.id == 'thermostat-1');
+            .firstWhere((d) => d.id == 'thermostat-1');
         expect(thermostat.value, 23.5);
         expect(thermostat.lastSeen, before);
       },
@@ -203,9 +203,7 @@ void main() {
       await repository.sendCommand('light-1', const IotDeviceCommand.toggle());
 
       final List<IotDevice> devices = await repository.watchDevices().first;
-      final IotDevice light = devices.firstWhere(
-        (final d) => d.id == 'light-1',
-      );
+      final IotDevice light = devices.firstWhere((d) => d.id == 'light-1');
       expect(light.toggledOn, isTrue);
     });
 
@@ -236,12 +234,10 @@ void main() {
       );
       final List<IotDevice> devices = await repo2.watchDevices().first;
 
-      final IotDevice sensor = devices.firstWhere(
-        (final d) => d.id == 'sensor-1',
-      );
+      final IotDevice sensor = devices.firstWhere((d) => d.id == 'sensor-1');
       expect(sensor.value, 19.0);
 
-      final IotDevice plug = devices.firstWhere((final d) => d.id == 'plug-1');
+      final IotDevice plug = devices.firstWhere((d) => d.id == 'plug-1');
       expect(plug.toggledOn, isTrue);
       expect(plug.connectionState, IotConnectionState.connected);
     });
@@ -296,9 +292,7 @@ void main() {
         await connectFuture;
 
         final List<IotDevice> devices = await repository.watchDevices().first;
-        final IotDevice light = devices.firstWhere(
-          (final d) => d.id == 'light-1',
-        );
+        final IotDevice light = devices.firstWhere((d) => d.id == 'light-1');
 
         expect(light.connectionState, IotConnectionState.disconnected);
       },

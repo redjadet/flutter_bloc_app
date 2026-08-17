@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 /// Constant-time equality for pin strings / digests.
 abstract final class CertificatePinComparator {
-  static bool equalStrings(final String a, final String b) {
+  static bool equalStrings(String a, String b) {
     if (a.length != b.length) {
       return false;
     }
@@ -13,7 +13,7 @@ abstract final class CertificatePinComparator {
     return diff == 0;
   }
 
-  static bool equalBytes(final Uint8List a, final Uint8List b) {
+  static bool equalBytes(Uint8List a, Uint8List b) {
     if (a.length != b.length) {
       return false;
     }

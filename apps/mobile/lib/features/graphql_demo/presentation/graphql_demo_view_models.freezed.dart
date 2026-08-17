@@ -88,8 +88,7 @@ extension GraphqlFilterBarDataPatterns on GraphqlFilterBarData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlFilterBarData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlFilterBarData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GraphqlFilterBarData() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlFilterBarData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlFilterBarData value)  $default,){final _that = this;
 switch (_that) {
 case _GraphqlFilterBarData():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlFilterBarData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlFilterBarData value)?  $default,){final _that = this;
 switch (_that) {
 case _GraphqlFilterBarData() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.continents,_that.activeContinentCode,_that.isLoading);case
 
 
 class _GraphqlFilterBarData implements GraphqlFilterBarData {
-  const _GraphqlFilterBarData({required final  List<GraphqlContinent> continents, required this.activeContinentCode, required this.isLoading}): _continents = continents;
+  const _GraphqlFilterBarData({required  List<GraphqlContinent> continents, required this.activeContinentCode, required this.isLoading}): _continents = continents;
   
 
  final  List<GraphqlContinent> _continents;
@@ -360,8 +357,7 @@ extension GraphqlBodyDataPatterns on GraphqlBodyData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlBodyData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GraphqlBodyData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GraphqlBodyData() when $default != null:
 return $default(_that);case _:
@@ -382,8 +378,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlBodyData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GraphqlBodyData value)  $default,){final _that = this;
 switch (_that) {
 case _GraphqlBodyData():
 return $default(_that);case _:
@@ -403,8 +398,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlBodyData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GraphqlBodyData value)?  $default,){final _that = this;
 switch (_that) {
 case _GraphqlBodyData() when $default != null:
 return $default(_that);case _:
@@ -480,7 +474,7 @@ return $default(_that.isLoading,_that.hasError,_that.countries,_that.errorType,_
 
 
 class _GraphqlBodyData implements GraphqlBodyData {
-  const _GraphqlBodyData({required this.isLoading, required this.hasError, required final  List<GraphqlCountry> countries, required this.errorType, required this.errorMessage, this.lastError}): _countries = countries;
+  const _GraphqlBodyData({required this.isLoading, required this.hasError, required  List<GraphqlCountry> countries, required this.errorType, required this.errorMessage, this.lastError}): _countries = countries;
   
 
 @override final  bool isLoading;

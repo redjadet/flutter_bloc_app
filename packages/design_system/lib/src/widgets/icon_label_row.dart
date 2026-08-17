@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../responsive.dart';
 
@@ -24,7 +24,7 @@ class IconLabelRow extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final gap = context.responsiveHorizontalGapS;
     final effectiveIconSize = iconSize ?? context.responsiveIconSize;
 

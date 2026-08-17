@@ -9,7 +9,7 @@ class MockStaffDemoProfileRepository implements StaffDemoProfileRepository {
   final Map<String, StaffDemoProfile> _profiles;
 
   @override
-  Future<StaffDemoProfile?> loadProfile({required final String userId}) async =>
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async =>
       _profiles[userId];
 
   @override

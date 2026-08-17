@@ -16,8 +16,8 @@ bool integrationTestOmitFirebaseRemoteRepositories = false;
 /// This prevents duplicate registrations and allows safe re-registration
 /// during testing or hot reload scenarios.
 void registerLazySingletonIfAbsent<T extends Object>(
-  final T Function() factory, {
-  final FutureOr<void> Function(T instance)? dispose,
+  T Function() factory, {
+  FutureOr<void> Function(T instance)? dispose,
 }) {
   final GetIt getIt = GetIt.instance;
   if (!getIt.isRegistered<T>()) {
@@ -26,7 +26,7 @@ void registerLazySingletonIfAbsent<T extends Object>(
 }
 
 /// Registers a factory if the type is not already registered.
-void registerFactoryIfAbsent<T extends Object>(final T Function() factory) {
+void registerFactoryIfAbsent<T extends Object>(T Function() factory) {
   final GetIt getIt = GetIt.instance;
   if (!getIt.isRegistered<T>()) {
     getIt.registerFactory<T>(factory);
@@ -51,8 +51,8 @@ void registerFactoryIfAbsent<T extends Object>(final T Function() factory) {
 /// );
 /// ```
 T? createRemoteRepositoryOrNull<T>({
-  required final String context,
-  required final T Function() factory,
+  required String context,
+  required T Function() factory,
 }) {
   if (shouldSkipFirebaseRemoteRepositories) {
     return null;

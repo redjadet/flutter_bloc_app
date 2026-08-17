@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_disposables/ilkersevim_disposables.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Gate that shows [child] when either Supabase is not configured (local-only
 /// mode) or Supabase is initialized and [getCurrentUser] returns a non-null
@@ -50,7 +50,7 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
   }
 
   @override
-  void didUpdateWidget(covariant final IotDemoAuthGate oldWidget) {
+  void didUpdateWidget(covariant IotDemoAuthGate oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.authStateChanges != widget.authStateChanges) {
       final StreamSubscription<AuthUser?>? previousSubscription =
@@ -65,8 +65,8 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
   void _subscribeToAuthStateChanges() {
     _authStateSubscription = _disposables.trackSubscription(
       widget.authStateChanges.listen(
-        (final _) => _checkAndRedirect(null),
-        onError: (final Object error, final StackTrace stackTrace) {
+        (_) => _checkAndRedirect(null),
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'IotDemoAuthGate: auth state listener failed',
             error,
@@ -104,7 +104,7 @@ class _IotDemoAuthGateState extends State<IotDemoAuthGate> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!_allowed) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),

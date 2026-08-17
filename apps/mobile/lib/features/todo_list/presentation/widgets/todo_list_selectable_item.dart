@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_item.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Rebuilds only this row's selection chrome for selection-only state changes.
 class TodoListSelectableItem extends StatelessWidget {
@@ -28,14 +28,14 @@ class TodoListSelectableItem extends StatelessWidget {
   final VoidCallback? onDeleteWithoutConfirmation;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocSelector<TodoListCubit, TodoListState, bool>(
-        selector: (final state) => state.isItemSelected(item.id),
-        builder: (final context, final isSelected) => TodoListItem(
+        selector: (state) => state.isItemSelected(item.id),
+        builder: (context, isSelected) => TodoListItem(
           item: item,
           showDragHandle: showDragHandle,
           isSelected: isSelected,
-          onSelectionChanged: (final selected) {
+          onSelectionChanged: (selected) {
             if (selected != isSelected) {
               onItemSelectionChanged(item.id, selected: selected);
             }

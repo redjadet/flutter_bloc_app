@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_formatters.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('CalculatorFormatters', () {
@@ -11,9 +10,7 @@ void main() {
         MaterialApp(
           locale: const Locale('en', 'US'),
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: const [Locale('en', 'US')],
           home: Builder(
@@ -33,9 +30,7 @@ void main() {
         MaterialApp(
           locale: const Locale('en', 'US'),
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: const [Locale('en', 'US')],
           home: Builder(
@@ -59,9 +54,7 @@ void main() {
         MaterialApp(
           locale: const Locale('en', 'US'),
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: const [Locale('en', 'US')],
           home: Builder(
@@ -82,9 +75,7 @@ void main() {
         MaterialApp(
           locale: const Locale('de', 'DE'),
           localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: const [Locale('de', 'DE'), Locale('en', 'US')],
           home: Builder(

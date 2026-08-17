@@ -7,18 +7,18 @@ mixin BiometricAuthenticator {
   /// Prompts the user for biometric authentication and returns whether the
   /// user successfully authenticated. Implementations should handle cases where
   /// biometrics are unavailable and decide whether to allow or block access.
-  Future<bool> authenticate({final String? localizedReason});
+  Future<bool> authenticate({String? localizedReason});
 }
 
 /// Uses the `local_auth` package to request biometric authentication.
 class LocalBiometricAuthenticator implements BiometricAuthenticator {
-  LocalBiometricAuthenticator({final LocalAuthentication? localAuth})
+  LocalBiometricAuthenticator({LocalAuthentication? localAuth})
     : _localAuth = localAuth ?? LocalAuthentication();
 
   final LocalAuthentication _localAuth;
 
   @override
-  Future<bool> authenticate({final String? localizedReason}) async {
+  Future<bool> authenticate({String? localizedReason}) async {
     try {
       final bool isSupported = await _localAuth.isDeviceSupported();
       if (!isSupported) {

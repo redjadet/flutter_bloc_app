@@ -13,6 +13,6 @@ void registerTimerNetworkServices() {
     () => ConnectivityNetworkStatusService(
       timerService: getIt<TimerService>(),
     ),
-    dispose: (final service) => service.dispose(),
+    dispose: (service) => service.dispose(),
   );
 }

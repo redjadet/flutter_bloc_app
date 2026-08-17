@@ -1,6 +1,6 @@
 import 'dart:async';
 
-bool isStaffDemoTransientNetworkError(final Object error) {
+bool isStaffDemoTransientNetworkError(Object error) {
   if (error is TimeoutException) {
     return true;
   }

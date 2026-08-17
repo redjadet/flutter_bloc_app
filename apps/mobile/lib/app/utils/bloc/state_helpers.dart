@@ -18,14 +18,14 @@ class StateHelpers {
   StateHelpers._();
 
   /// Check if a ViewStatus indicates loading
-  static bool isLoading(final ViewStatus status) => status.isLoading;
+  static bool isLoading(ViewStatus status) => status.isLoading;
 
   /// Check if a ViewStatus indicates error
-  static bool hasError(final ViewStatus status) => status.isError;
+  static bool hasError(ViewStatus status) => status.isError;
 
   /// Check if a ViewStatus indicates success
-  static bool isSuccess(final ViewStatus status) => status.isSuccess;
+  static bool isSuccess(ViewStatus status) => status.isSuccess;
 
   /// Check if a ViewStatus indicates initial state
-  static bool isInitial(final ViewStatus status) => status.isInitial;
+  static bool isInitial(ViewStatus status) => status.isInitial;
 }

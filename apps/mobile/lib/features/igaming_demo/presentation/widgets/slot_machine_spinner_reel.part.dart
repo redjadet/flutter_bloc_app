@@ -18,10 +18,10 @@ class _ReelColumn extends StatelessWidget {
   final Color borderColor;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     const int repeat = 20;
     final List<String> strip = List<String>.generate(symbols.length * repeat, (
-      final i,
+      i,
     ) {
       return symbols[i % symbols.length];
     });
@@ -45,7 +45,7 @@ class _ReelColumn extends StatelessWidget {
             height: strip.length * symbolHeight,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: strip.map((final s) {
+              children: strip.map((s) {
                 return SizedBox(
                   height: symbolHeight,
                   width: reelWidth,

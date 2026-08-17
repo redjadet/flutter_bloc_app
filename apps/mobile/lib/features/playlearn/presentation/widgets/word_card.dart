@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/widgets/listen_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Card showing a vocabulary word with tap-to-hear (kid-friendly).
 class WordCard extends StatelessWidget {
@@ -18,7 +18,7 @@ class WordCard extends StatelessWidget {
   final VoidCallback onListen;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gapM = context.responsiveGapM;
     final imageRadius = context.responsiveGapS;
@@ -30,7 +30,7 @@ class WordCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(gapM),
       child: LayoutBuilder(
-        builder: (final context, final constraints) {
+        builder: (context, constraints) {
           final maxW = constraints.maxWidth;
           final bool isCompact = maxW < 260;
           const minSpaceForTextAndButton = 140.0;
@@ -118,10 +118,10 @@ class WordCard extends StatelessWidget {
   }
 
   Widget _buildImage(
-    final BuildContext context,
-    final String path,
-    final double size,
-    final ThemeData theme,
+    BuildContext context,
+    String path,
+    double size,
+    ThemeData theme,
   ) {
     final fallback = SizedBox(
       width: size,
@@ -147,7 +147,7 @@ class WordCard extends StatelessWidget {
       width: size,
       height: size,
       fit: BoxFit.contain,
-      errorBuilder: (final c, final e, final s) => fallback,
+      errorBuilder: (c, e, s) => fallback,
     );
   }
 }

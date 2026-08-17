@@ -55,8 +55,7 @@ extension GameStatePatterns on GameState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _GameIdle value)?  idle,TResult Function( _GamePlacingBet value)?  placingBet,TResult Function( _GameSpinning value)?  spinning,TResult Function( _GameResult value)?  result,TResult Function( _GameError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _GameIdle value)?  idle,TResult Function( _GamePlacingBet value)?  placingBet,TResult Function( _GameSpinning value)?  spinning,TResult Function( _GameResult value)?  result,TResult Function( _GameError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _GameIdle() when idle != null:
 return idle(_that);case _GamePlacingBet() when placingBet != null:
@@ -81,8 +80,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _GameIdle value)  idle,required TResult Function( _GamePlacingBet value)  placingBet,required TResult Function( _GameSpinning value)  spinning,required TResult Function( _GameResult value)  result,required TResult Function( _GameError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _GameIdle value)  idle,required TResult Function( _GamePlacingBet value)  placingBet,required TResult Function( _GameSpinning value)  spinning,required TResult Function( _GameResult value)  result,required TResult Function( _GameError value)  error,}){final _that = this;
 switch (_that) {
 case _GameIdle():
 return idle(_that);case _GamePlacingBet():
@@ -106,8 +104,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _GameIdle value)?  idle,TResult? Function( _GamePlacingBet value)?  placingBet,TResult? Function( _GameSpinning value)?  spinning,TResult? Function( _GameResult value)?  result,TResult? Function( _GameError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _GameIdle value)?  idle,TResult? Function( _GamePlacingBet value)?  placingBet,TResult? Function( _GameSpinning value)?  spinning,TResult? Function( _GameResult value)?  result,TResult? Function( _GameError value)?  error,}){final _that = this;
 switch (_that) {
 case _GameIdle() when idle != null:
 return idle(_that);case _GamePlacingBet() when placingBet != null:
@@ -353,7 +350,7 @@ $DemoBalanceCopyWith<$Res> get balance {
 
 
 class _GameSpinning extends GameState {
-  const _GameSpinning(this.balance, this.bet, final  List<int> targetReelSymbolIndices): _targetReelSymbolIndices = targetReelSymbolIndices,super._();
+  const _GameSpinning(this.balance, this.bet, List<int> targetReelSymbolIndices): _targetReelSymbolIndices = targetReelSymbolIndices,super._();
   
 
  final  DemoBalance balance;
@@ -438,7 +435,7 @@ $DemoBalanceCopyWith<$Res> get balance {
 
 
 class _GameResult extends GameState {
-  const _GameResult(this.roundResult, this.newBalance, this.selectedStake, final  List<int> targetReelSymbolIndices): _targetReelSymbolIndices = targetReelSymbolIndices,super._();
+  const _GameResult(this.roundResult, this.newBalance, this.selectedStake, List<int> targetReelSymbolIndices): _targetReelSymbolIndices = targetReelSymbolIndices,super._();
   
 
  final  GameRoundResult roundResult;

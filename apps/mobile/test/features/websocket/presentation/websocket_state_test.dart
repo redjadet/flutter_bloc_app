@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket_state.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final Uri endpoint = Uri.parse('wss://example.com');

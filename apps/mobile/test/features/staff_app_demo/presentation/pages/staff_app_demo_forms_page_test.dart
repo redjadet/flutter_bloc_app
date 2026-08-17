@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_forms_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_forms_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_forms_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_sites_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_forms_page.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
@@ -27,9 +27,8 @@ void main() {
     when(() => authRepository.currentUser).thenReturn(
       const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
     );
-    when(
-      () => authRepository.authStateChanges,
-    ).thenAnswer((_) => const Stream<AuthUser?>.empty());
+    when(() => authRepository.authStateChanges)
+        .thenAnswer((_) => const Stream<AuthUser?>.empty());
     when(
       () => formsRepository.submitManagerReport(
         userId: any(named: 'userId'),
@@ -38,9 +37,8 @@ void main() {
       ),
     ).thenThrow(Exception('submit failed'));
     when(() => siteRepository.listSites()).thenAnswer((_) async => const []);
-    when(
-      () => siteRepository.loadSite(siteId: any(named: 'siteId')),
-    ).thenAnswer((_) async => null);
+    when(() => siteRepository.loadSite(siteId: any(named: 'siteId')))
+        .thenAnswer((_) async => null);
 
     final formsCubit = StaffDemoFormsCubit(
       authRepository: authRepository,

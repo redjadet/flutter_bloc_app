@@ -55,49 +55,43 @@ void main() {
       expect(holdValue, isTrue);
     });
 
-    test(
-      'applyRestorationOutcome calls onHoldSideEffects when holdSideEffects is true',
-      () async {
-        final TestCubit cubit = TestCubit();
-        addTearDown(cubit.close);
-        bool holdSideEffectsCalled = false;
+    test('applyRestorationOutcome calls onHoldSideEffects when holdSideEffects is true', () async {
+      final TestCubit cubit = TestCubit();
+      addTearDown(cubit.close);
+      bool holdSideEffectsCalled = false;
 
-        await cubit.testApplyRestorationOutcome(
-          (
-            state: const TestState(value: 1),
-            shouldPersist: false,
-            holdSideEffects: true,
-          ),
-          onHoldSideEffects: () {
-            holdSideEffectsCalled = true;
-          },
-        );
+      await cubit.testApplyRestorationOutcome(
+        (
+          state: const TestState(value: 1),
+          shouldPersist: false,
+          holdSideEffects: true,
+        ),
+        onHoldSideEffects: () {
+          holdSideEffectsCalled = true;
+        },
+      );
 
-        expect(holdSideEffectsCalled, isTrue);
-      },
-    );
+      expect(holdSideEffectsCalled, isTrue);
+    });
 
-    test(
-      'applyRestorationOutcome does not call onHoldSideEffects when holdSideEffects is false',
-      () async {
-        final TestCubit cubit = TestCubit();
-        addTearDown(cubit.close);
-        bool holdSideEffectsCalled = false;
+    test('applyRestorationOutcome does not call onHoldSideEffects when holdSideEffects is false', () async {
+      final TestCubit cubit = TestCubit();
+      addTearDown(cubit.close);
+      bool holdSideEffectsCalled = false;
 
-        await cubit.testApplyRestorationOutcome(
-          (
-            state: const TestState(value: 1),
-            shouldPersist: false,
-            holdSideEffects: false,
-          ),
-          onHoldSideEffects: () {
-            holdSideEffectsCalled = true;
-          },
-        );
+      await cubit.testApplyRestorationOutcome(
+        (
+          state: const TestState(value: 1),
+          shouldPersist: false,
+          holdSideEffects: false,
+        ),
+        onHoldSideEffects: () {
+          holdSideEffectsCalled = true;
+        },
+      );
 
-        expect(holdSideEffectsCalled, isFalse);
-      },
-    );
+      expect(holdSideEffectsCalled, isFalse);
+    });
 
     test('applyRestorationOutcome calls onAfterEmit when provided', () async {
       final TestCubit cubit = TestCubit();
@@ -111,7 +105,7 @@ void main() {
           shouldPersist: false,
           holdSideEffects: false,
         ),
-        onAfterEmit: (final state) {
+        onAfterEmit: (state) {
           afterEmitCalled = true;
           emittedState = state;
         },
@@ -135,7 +129,7 @@ void main() {
             shouldPersist: true,
             holdSideEffects: false,
           ),
-          onPersist: (final state) async {
+          onPersist: (state) async {
             persistCalled = true;
             persistedState = state;
           },
@@ -146,27 +140,24 @@ void main() {
       },
     );
 
-    test(
-      'applyRestorationOutcome does not call onPersist when shouldPersist is false',
-      () async {
-        final TestCubit cubit = TestCubit();
-        addTearDown(cubit.close);
-        bool persistCalled = false;
+    test('applyRestorationOutcome does not call onPersist when shouldPersist is false', () async {
+      final TestCubit cubit = TestCubit();
+      addTearDown(cubit.close);
+      bool persistCalled = false;
 
-        await cubit.testApplyRestorationOutcome(
-          (
-            state: const TestState(value: 42),
-            shouldPersist: false,
-            holdSideEffects: false,
-          ),
-          onPersist: (final state) async {
-            persistCalled = true;
-          },
-        );
+      await cubit.testApplyRestorationOutcome(
+        (
+          state: const TestState(value: 42),
+          shouldPersist: false,
+          holdSideEffects: false,
+        ),
+        onPersist: (state) async {
+          persistCalled = true;
+        },
+      );
 
-        expect(persistCalled, isFalse);
-      },
-    );
+      expect(persistCalled, isFalse);
+    });
   });
 }
 
@@ -175,12 +166,12 @@ class TestCubit extends Cubit<TestState> with StateRestorationMixin<TestState> {
 
   // Expose protected method for testing
   Future<void> testApplyRestorationOutcome(
-    final StateRestorationOutcome<TestState> outcome, {
-    final FutureOr<void> Function(TestState state)? onPersist,
-    final void Function({required bool holdSideEffects})? onHoldChanged,
-    final void Function()? onHoldSideEffects,
-    final void Function(TestState state)? onAfterEmit,
-    final String logContext = 'StateRestorationMixin.applyRestorationOutcome',
+    StateRestorationOutcome<TestState> outcome, {
+    FutureOr<void> Function(TestState state)? onPersist,
+    void Function({required bool holdSideEffects})? onHoldChanged,
+    void Function()? onHoldSideEffects,
+    void Function(TestState state)? onAfterEmit,
+    String logContext = 'StateRestorationMixin.applyRestorationOutcome',
   }) async {
     return applyRestorationOutcome(
       outcome,
@@ -199,7 +190,7 @@ class TestState {
   final int value;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is TestState &&
           runtimeType == other.runtimeType &&

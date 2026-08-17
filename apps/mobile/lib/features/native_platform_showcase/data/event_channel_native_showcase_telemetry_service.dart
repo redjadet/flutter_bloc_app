@@ -19,21 +19,20 @@ const String kNativeShowcaseTelemetryChannel =
 class EventChannelNativeShowcaseTelemetryService
     implements NativeShowcaseTelemetryService {
   EventChannelNativeShowcaseTelemetryService({
-    final Stream<Object?> Function(NativeShowcaseTelemetryStreamConfig config)?
+    Stream<Object?> Function(NativeShowcaseTelemetryStreamConfig config)?
     events,
   }) : _events =
            events ??
-           ((final NativeShowcaseTelemetryStreamConfig config) =>
-               const EventChannel(
-                 kNativeShowcaseTelemetryChannel,
-               ).receiveBroadcastStream(config.toChannelArguments()));
+           ((NativeShowcaseTelemetryStreamConfig config) => const EventChannel(
+             kNativeShowcaseTelemetryChannel,
+           ).receiveBroadcastStream(config.toChannelArguments()));
 
   final Stream<Object?> Function(NativeShowcaseTelemetryStreamConfig config)
   _events;
 
   @override
   Stream<NativeShowcaseTelemetrySnapshot> watchTelemetry({
-    required final NativeShowcaseTelemetryStreamConfig config,
+    required NativeShowcaseTelemetryStreamConfig config,
   }) async* {
     if (_isUnsupportedTarget) {
       yield _unavailableSnapshot(config.sessionId);
@@ -65,7 +64,7 @@ class EventChannelNativeShowcaseTelemetryService
       defaultTargetPlatform == TargetPlatform.linux;
 
   static NativeShowcaseTelemetrySnapshot _unavailableSnapshot(
-    final String sessionId,
+    String sessionId,
   ) {
     return NativeShowcaseTelemetrySnapshot(
       status: NativeShowcaseTelemetryStatus.unavailable,
@@ -85,9 +84,9 @@ class EventChannelNativeShowcaseTelemetryService
   }
 
   static NativeShowcaseTelemetrySnapshot? _mapEvent(
-    final Object? event, {
-    required final String expectedSessionId,
-    required final int lastSequence,
+    Object? event, {
+    required String expectedSessionId,
+    required int lastSequence,
   }) {
     if (event is! Map) {
       return null;
@@ -152,14 +151,14 @@ class EventChannelNativeShowcaseTelemetryService
     );
   }
 
-  static int? _readInt(final Object? value) {
+  static int? _readInt(Object? value) {
     if (value is int) {
       return value;
     }
     return null;
   }
 
-  static double? _readDouble(final Object? value) {
+  static double? _readDouble(Object? value) {
     if (value is double) {
       return value;
     }
@@ -169,7 +168,7 @@ class EventChannelNativeShowcaseTelemetryService
     return null;
   }
 
-  static String? _readNonEmptyString(final Object? value) {
+  static String? _readNonEmptyString(Object? value) {
     if (value is String && value.isNotEmpty) {
       return value;
     }

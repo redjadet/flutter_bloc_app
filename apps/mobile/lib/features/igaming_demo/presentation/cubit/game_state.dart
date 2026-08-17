@@ -10,49 +10,49 @@ abstract class GameState with _$GameState {
   const GameState._();
 
   const factory GameState.idle(
-    final DemoBalance balance,
-    final int selectedStake,
+    DemoBalance balance,
+    int selectedStake,
   ) = _GameIdle;
   const factory GameState.placingBet(
-    final DemoBalance balance,
-    final int selectedStake,
+    DemoBalance balance,
+    int selectedStake,
   ) = _GamePlacingBet;
   const factory GameState.spinning(
-    final DemoBalance balance,
-    final int bet,
-    final List<int> targetReelSymbolIndices,
+    DemoBalance balance,
+    int bet,
+    List<int> targetReelSymbolIndices,
   ) = _GameSpinning;
   const factory GameState.result(
-    final GameRoundResult roundResult,
-    final DemoBalance newBalance,
-    final int selectedStake,
-    final List<int> targetReelSymbolIndices,
+    GameRoundResult roundResult,
+    DemoBalance newBalance,
+    int selectedStake,
+    List<int> targetReelSymbolIndices,
   ) = _GameResult;
-  const factory GameState.error(final String message) = _GameError;
+  const factory GameState.error(String message) = _GameError;
 
   /// Current balance when in idle, placingBet, spinning, or result; null otherwise.
   DemoBalance? get balanceOrNull => mapOrNull(
-    idle: (final s) => s.balance,
-    placingBet: (final s) => s.balance,
-    spinning: (final s) => s.balance,
-    result: (final s) => s.newBalance,
+    idle: (s) => s.balance,
+    placingBet: (s) => s.balance,
+    spinning: (s) => s.balance,
+    result: (s) => s.newBalance,
     error: (_) => null,
   );
 
   /// Selected stake when in idle, placingBet, spinning (bet), or result; null otherwise.
   int? get selectedStakeOrNull => mapOrNull(
-    idle: (final s) => s.selectedStake,
-    placingBet: (final s) => s.selectedStake,
-    spinning: (final s) => s.bet,
-    result: (final s) => s.selectedStake,
+    idle: (s) => s.selectedStake,
+    placingBet: (s) => s.selectedStake,
+    spinning: (s) => s.bet,
+    result: (s) => s.selectedStake,
     error: (_) => null,
   );
 
   /// Target symbol index per reel (0..symbolCount-1) when spinning or in result; empty otherwise.
   List<int> get targetReelSymbolIndicesOrEmpty =>
       mapOrNull(
-        spinning: (final s) => s.targetReelSymbolIndices,
-        result: (final s) => s.targetReelSymbolIndices,
+        spinning: (s) => s.targetReelSymbolIndices,
+        result: (s) => s.targetReelSymbolIndices,
         idle: (_) => null,
         placingBet: (_) => null,
         error: (_) => null,

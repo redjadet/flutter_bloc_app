@@ -48,7 +48,7 @@ name: bloc_lint
 publish_to: none
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.0
 
 dependencies:
   analysis_server_plugin: ^0.3.0

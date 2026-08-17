@@ -2,8 +2,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_conte
 
 /// Parses `staffDemoContent/{contentId}` document data into [StaffDemoContentItem].
 StaffDemoContentItem? staffDemoContentItemFromFirestoreMap({
-  required final String contentId,
-  required final Map<String, dynamic> data,
+  required String contentId,
+  required Map<String, dynamic> data,
 }) {
   final title = data['title'] as String?;
   final typeRaw = data['type'] as String?;

@@ -10,8 +10,8 @@ class _SpyCoordinator extends SessionLifecycleCoordinatorImpl {
 
   @override
   Future<void> invalidateSession({
-    required final AuthProviderKind provider,
-    required final SessionInvalidationReason reason,
+    required AuthProviderKind provider,
+    required SessionInvalidationReason reason,
   }) async {
     invalidateCalls += 1;
     lastReason = reason;
@@ -34,30 +34,27 @@ void main() {
       },
     );
 
-    test(
-      'getAccessToken lazy re-hydrates when memory is empty but SDK session exists',
-      () {
-        var sessionAvailable = false;
-        var persistentReads = 0;
-        final SupabaseSessionManager manager = SupabaseSessionManager(
-          readPersistentAccessToken: () {
-            persistentReads += 1;
-            return sessionAvailable ? 'restored-token' : null;
-          },
-        );
+    test('getAccessToken lazy re-hydrates when memory is empty but SDK session exists', () {
+      var sessionAvailable = false;
+      var persistentReads = 0;
+      final SupabaseSessionManager manager = SupabaseSessionManager(
+        readPersistentAccessToken: () {
+          persistentReads += 1;
+          return sessionAvailable ? 'restored-token' : null;
+        },
+      );
 
-        manager.hydrateFromPersistentSession();
-        expect(manager.getAccessToken(), isNull);
-        expect(persistentReads, 2);
+      manager.hydrateFromPersistentSession();
+      expect(manager.getAccessToken(), isNull);
+      expect(persistentReads, 2);
 
-        sessionAvailable = true;
-        expect(manager.getAccessToken(), 'restored-token');
-        expect(persistentReads, 3);
+      sessionAvailable = true;
+      expect(manager.getAccessToken(), 'restored-token');
+      expect(persistentReads, 3);
 
-        expect(manager.getAccessToken(), 'restored-token');
-        expect(persistentReads, 3);
-      },
-    );
+      expect(manager.getAccessToken(), 'restored-token');
+      expect(persistentReads, 3);
+    });
 
     test('single-flight refresh shares one refresh call', () async {
       var refreshCalls = 0;

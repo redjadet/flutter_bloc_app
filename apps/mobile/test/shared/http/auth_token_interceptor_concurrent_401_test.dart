@@ -5,9 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc_app/app/http/app_dio.dart';
 import 'package:flutter_bloc_app/app/http/auth/auth_token_manager.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _MockUser extends Mock implements User {}
 
@@ -36,9 +36,9 @@ class _Concurrent401Adapter implements HttpClientAdapter {
 
   @override
   Future<ResponseBody> fetch(
-    final RequestOptions options,
-    final Stream<List<int>>? requestStream,
-    final Future<void>? cancelFuture,
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
   ) async {
     _requestCount += 1;
     if (_requestCount == 1) {
@@ -56,7 +56,7 @@ class _Concurrent401Adapter implements HttpClientAdapter {
   }
 
   @override
-  void close({final bool force = false}) {}
+  void close({bool force = false}) {}
 }
 
 void main() {
@@ -70,13 +70,11 @@ void main() {
     when(() => user.uid).thenReturn('user-1');
     when(() => auth.currentUser).thenReturn(user);
     when(() => initial.token).thenReturn('initial');
-    when(
-      () => initial.expirationTime,
-    ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+    when(() => initial.expirationTime)
+        .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
     when(() => refreshed.token).thenReturn('refreshed');
-    when(
-      () => refreshed.expirationTime,
-    ).thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
+    when(() => refreshed.expirationTime)
+        .thenReturn(DateTime.now().toUtc().add(const Duration(hours: 1)));
     when(() => user.getIdTokenResult(false)).thenAnswer((_) async => initial);
     when(() => user.getIdTokenResult(true)).thenAnswer((_) async {
       adapter.markRefreshCalled();
@@ -104,7 +102,7 @@ void main() {
       <Future<Response<dynamic>>>[first, second],
     );
 
-    expect(responses.every((final r) => r.statusCode == 200), isTrue);
+    expect(responses.every((r) => r.statusCode == 200), isTrue);
     expect(adapter.refreshCalls, 1);
   });
 }

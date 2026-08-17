@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter_bloc_app/features/profile/domain/profile_cache_repository.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
 import 'package:hive/hive.dart';
@@ -14,7 +15,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
 
   /// Writes a UTC instant with an explicit `Z` suffix so [DateTime.tryParse] never
   /// treats the value as local wall time (zone-less ISO is local in Dart).
-  static String _lastSyncedAtToStorageString(final DateTime value) {
+  static String _lastSyncedAtToStorageString(DateTime value) {
     final DateTime utc = value.toUtc();
     String s = utc.toIso8601String();
     if (!s.endsWith('Z')) {
@@ -25,7 +26,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
 
   /// Parses a stored last-sync string as a UTC instant; legacy values without a
   /// timezone are treated as UTC (same convention as `_lastSyncedAtToStorageString`).
-  static DateTime? _parseLastSyncedAtUtc(final String raw) {
+  static DateTime? _parseLastSyncedAtUtc(String raw) {
     final String trimmed = raw.trim();
     if (trimmed.isEmpty) {
       return null;
@@ -37,7 +38,7 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     return DateTime.tryParse(s)?.toUtc();
   }
 
-  static bool _iso8601HasExplicitTimeZone(final String s) {
+  static bool _iso8601HasExplicitTimeZone(String s) {
     if (s.endsWith('Z') || s.endsWith('z')) {
       return true;
     }
@@ -64,19 +65,18 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> saveProfile(final ProfileUser user) async =>
-      StorageGuard.run<void>(
-        logContext: 'HiveProfileCacheRepository.saveProfile',
-        action: () async {
-          final Box<dynamic> box = await getBox();
-          final Map<String, dynamic> payload = _profileToJson(user);
-          await box.put(_profileKey, payload);
-          await box.put(
-            _lastSyncedKey,
-            _lastSyncedAtToStorageString(DateTime.now()),
-          );
-        },
+  Future<void> saveProfile(ProfileUser user) async => StorageGuard.run<void>(
+    logContext: 'HiveProfileCacheRepository.saveProfile',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      final Map<String, dynamic> payload = _profileToJson(user);
+      await box.put(_profileKey, payload);
+      await box.put(
+        _lastSyncedKey,
+        _lastSyncedAtToStorageString(DateTime.now()),
       );
+    },
+  );
 
   @override
   Future<void> clearProfile() async => StorageGuard.run<void>(
@@ -117,11 +117,10 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     ),
   );
 
-  ProfileUser? _parseProfile(final dynamic raw) {
+  ProfileUser? _parseProfile(dynamic raw) {
     if (raw is Map<dynamic, dynamic>) {
       final Map<String, dynamic> map = raw.map(
-        (final dynamic key, final dynamic value) =>
-            MapEntry(key.toString(), value),
+        (dynamic key, dynamic value) => MapEntry(key.toString(), value),
       );
       final dynamic galleryRaw = map['galleryImages'];
       final List<ProfileImage> gallery = galleryRaw is List<dynamic>
@@ -146,10 +145,9 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     return null;
   }
 
-  ProfileImage _mapToImage(final Map<dynamic, dynamic> raw) {
+  ProfileImage _mapToImage(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
-      (final dynamic key, final dynamic value) =>
-          MapEntry(key.toString(), value),
+      (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );
     final String url = stringFromDynamic(normalized['url']) ?? '';
     final dynamic ar = normalized['aspectRatio'];
@@ -157,22 +155,21 @@ class HiveProfileCacheRepository extends HiveRepositoryBase
     return ProfileImage(url: url, aspectRatio: aspectRatio);
   }
 
-  Map<String, dynamic> _profileToJson(final ProfileUser user) =>
-      <String, dynamic>{
-        'name': user.name,
-        'location': user.location,
-        'avatarUrl': user.avatarUrl,
-        'galleryImages': user.galleryImages
-            .map(
-              (final image) => <String, dynamic>{
-                'url': image.url,
-                'aspectRatio': image.aspectRatio,
-              },
-            )
-            .toList(growable: false),
-      };
+  Map<String, dynamic> _profileToJson(ProfileUser user) => <String, dynamic>{
+    'name': user.name,
+    'location': user.location,
+    'avatarUrl': user.avatarUrl,
+    'galleryImages': user.galleryImages
+        .map(
+          (image) => <String, dynamic>{
+            'url': image.url,
+            'aspectRatio': image.aspectRatio,
+          },
+        )
+        .toList(growable: false),
+  };
 
-  Future<int?> _estimateSizeBytes(final dynamic raw) async {
+  Future<int?> _estimateSizeBytes(dynamic raw) async {
     if (raw == null) {
       return null;
     }

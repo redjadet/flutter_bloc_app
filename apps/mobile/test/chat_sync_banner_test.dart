@@ -1,18 +1,18 @@
-import 'package:design_system/design_system.dart';
-import 'package:networking/networking.dart';
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_sync_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   late MockPendingSyncRepository pendingRepository;
@@ -25,9 +25,8 @@ void main() {
 
   setUp(() {
     pendingRepository = MockPendingSyncRepository();
-    when(
-      () => pendingRepository.onOperationEnqueued,
-    ).thenAnswer((_) => const Stream<void>.empty());
+    when(() => pendingRepository.onOperationEnqueued)
+        .thenAnswer((_) => const Stream<void>.empty());
     coordinator = _TestBackgroundSyncCoordinator();
     networkStatusService = _TestNetworkStatusService();
   });
@@ -49,7 +48,7 @@ void main() {
     required SyncStatusCubit syncCubit,
     required ChatSyncStatusCubit chatSyncCubit,
   }) => MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: MultiBlocProvider(
       providers: <BlocProvider<dynamic>>[
@@ -61,11 +60,10 @@ void main() {
   );
 
   testWidgets('does not render when online with no pending operations', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer((_) async => <SyncOperation>[]);
+    when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+        .thenAnswer((_) async => <SyncOperation>[]);
 
     final SyncStatusCubit syncCubit = buildSyncStatusCubit();
     final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
@@ -83,19 +81,18 @@ void main() {
   });
 
   testWidgets('shows offline message and disables sync button', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer(
-      (_) async => <SyncOperation>[
-        SyncOperation.create(
-          entityType: 'chat_message',
-          payload: const <String, dynamic>{},
-          idempotencyKey: 'op-1',
-        ),
-      ],
-    );
+    when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+        .thenAnswer(
+          (_) async => <SyncOperation>[
+            SyncOperation.create(
+              entityType: 'chat_message',
+              payload: const <String, dynamic>{},
+              idempotencyKey: 'op-1',
+            ),
+          ],
+        );
 
     final SyncStatusCubit syncCubit = buildSyncStatusCubit();
     final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
@@ -124,19 +121,18 @@ void main() {
   });
 
   testWidgets('hides pending-only banner when queue UI flag is off', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer(
-      (_) async => <SyncOperation>[
-        SyncOperation.create(
-          entityType: 'chat_message',
-          payload: const <String, dynamic>{},
-          idempotencyKey: 'op-2',
-        ),
-      ],
-    );
+    when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+        .thenAnswer(
+          (_) async => <SyncOperation>[
+            SyncOperation.create(
+              entityType: 'chat_message',
+              payload: const <String, dynamic>{},
+              idempotencyKey: 'op-2',
+            ),
+          ],
+        );
 
     final SyncStatusCubit syncCubit = buildSyncStatusCubit();
     final ChatSyncStatusCubit chatSyncCubit = buildChatSyncStatusCubit();
@@ -165,7 +161,7 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   SyncStatus _status = SyncStatus.idle;
   int flushCount = 0;
 
-  void emitStatus(final SyncStatus status) {
+  void emitStatus(SyncStatus status) {
     _status = status;
     _controller.add(status);
   }
@@ -208,7 +204,7 @@ class _TestBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> quiesceForSessionCleanup() async {}
@@ -222,7 +218,7 @@ class _TestNetworkStatusService implements NetworkStatusService {
       StreamController<NetworkStatus>.broadcast();
   NetworkStatus _status = NetworkStatus.online;
 
-  void emit(final NetworkStatus status) {
+  void emit(NetworkStatus status) {
     _status = status;
     _controller.add(status);
   }
@@ -246,10 +242,7 @@ class _ButtonVariant {
   final bool isEnabled;
 }
 
-_ButtonVariant _resolveButtonVariant(
-  final WidgetTester tester,
-  final Finder textFinder,
-) {
+_ButtonVariant _resolveButtonVariant(WidgetTester tester, Finder textFinder) {
   final Finder cupertinoFinder = find.ancestor(
     of: textFinder,
     matching: find.byType(CupertinoButton),

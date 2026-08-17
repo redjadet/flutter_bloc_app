@@ -1,22 +1,22 @@
 part of 'chat_page.dart';
 
 extension _ChatPageStateActions on _ChatPageState {
-  void _submit(final BuildContext context) {
+  void _submit(BuildContext context) {
     final String text = _controller.text;
     _controller.clear();
     CubitHelpers.safeExecute<ChatCubit, ChatState>(
       context,
-      (final cubit) => cubit.sendMessage(text),
+      (cubit) => cubit.sendMessage(text),
     );
   }
 
-  Future<void> _showHistorySheet(final BuildContext context) async {
+  Future<void> _showHistorySheet(BuildContext context) async {
     final ChatCubit cubit = context.cubit<ChatCubit>();
     await PlatformAdaptive.showAdaptiveModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (final sheetContext) => BlocProvider.value(
+      builder: (sheetContext) => BlocProvider.value(
         value: cubit,
         child: ChatHistorySheet(
           onClose: () => NavigationUtils.maybePop(sheetContext),
@@ -25,14 +25,14 @@ extension _ChatPageStateActions on _ChatPageState {
     );
   }
 
-  Future<void> _confirmAndClearHistory(final BuildContext context) async {
+  Future<void> _confirmAndClearHistory(BuildContext context) async {
     final ChatCubit cubit = context.cubit<ChatCubit>();
     final l10n = context.l10n;
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final bool confirmed =
         await showAdaptiveDialog<bool>(
           context: context,
-          builder: (final dialogContext) {
+          builder: (dialogContext) {
             if (isCupertino) {
               return CupertinoAlertDialog(
                 title: Text(l10n.chatHistoryClearAll),

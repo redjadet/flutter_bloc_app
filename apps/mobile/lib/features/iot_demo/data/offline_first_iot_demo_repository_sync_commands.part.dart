@@ -1,8 +1,8 @@
 part of 'offline_first_iot_demo_repository.dart';
 
 Future<void> addDeviceImpl(
-  final OfflineFirstIotDemoRepository r,
-  final IotDevice device,
+  OfflineFirstIotDemoRepository r,
+  IotDevice device,
 ) async {
   if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
     throw ArgumentError('device id and name must not be empty');
@@ -38,8 +38,8 @@ Future<void> addDeviceImpl(
 }
 
 Future<void> connectImpl(
-  final OfflineFirstIotDemoRepository r,
-  final String deviceId,
+  OfflineFirstIotDemoRepository r,
+  String deviceId,
 ) async {
   final PersistentIotDemoRepository? local = r._getLocalRepository();
   if (local == null) return;
@@ -57,8 +57,8 @@ Future<void> connectImpl(
 }
 
 Future<void> disconnectImpl(
-  final OfflineFirstIotDemoRepository r,
-  final String deviceId,
+  OfflineFirstIotDemoRepository r,
+  String deviceId,
 ) async {
   final PersistentIotDemoRepository? local = r._getLocalRepository();
   if (local == null) return;
@@ -76,9 +76,9 @@ Future<void> disconnectImpl(
 }
 
 Future<void> sendCommandImpl(
-  final OfflineFirstIotDemoRepository r,
-  final String deviceId,
-  final IotDeviceCommand command,
+  OfflineFirstIotDemoRepository r,
+  String deviceId,
+  IotDeviceCommand command,
 ) async {
   final PersistentIotDemoRepository? local = r._getLocalRepository();
   if (local == null) return;
@@ -99,10 +99,10 @@ Future<void> sendCommandImpl(
 }
 
 void _scheduleSetValueSyncImpl(
-  final OfflineFirstIotDemoRepository r, {
-  required final String userId,
-  required final String deviceId,
-  required final double value,
+  OfflineFirstIotDemoRepository r, {
+  required String userId,
+  required String deviceId,
+  required double value,
 }) {
   final String pendingKey = r._pendingSetValueKey(
     userId: userId,
@@ -140,10 +140,10 @@ void _scheduleSetValueSyncImpl(
 }
 
 Future<void> _enqueueSetValueCommandImpl(
-  final OfflineFirstIotDemoRepository r,
-  final String deviceId,
-  final double value, {
-  required final String supabaseUserId,
+  OfflineFirstIotDemoRepository r,
+  String deviceId,
+  double value, {
+  required String supabaseUserId,
 }) {
   return _enqueueCommandImpl(
     r,
@@ -157,10 +157,10 @@ Future<void> _enqueueSetValueCommandImpl(
 }
 
 Future<void> _enqueueCommandImpl(
-  final OfflineFirstIotDemoRepository r,
-  final String deviceId,
-  final Map<String, dynamic> commandPayload, {
-  final String? supabaseUserId,
+  OfflineFirstIotDemoRepository r,
+  String deviceId,
+  Map<String, dynamic> commandPayload, {
+  String? supabaseUserId,
 }) async {
   final String idempotencyKey =
       '${OfflineFirstIotDemoRepository.iotDemoEntity}_command_${deviceId}_${DateTime.now().microsecondsSinceEpoch}';

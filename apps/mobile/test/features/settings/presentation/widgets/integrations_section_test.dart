@@ -1,15 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/integrations_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('IntegrationsSection trailing chevron is size-capped', (
-    final tester,
+    tester,
   ) async {
     await tester.pumpWidget(
       const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MediaQuery(
           data: MediaQueryData(size: Size(1200, 900)),
@@ -20,7 +21,7 @@ void main() {
 
     final SizedBox box = tester.widget<SizedBox>(
       find.byWidgetPredicate(
-        (final widget) =>
+        (widget) =>
             widget is SizedBox &&
             widget.width == 24 &&
             widget.height == 24 &&

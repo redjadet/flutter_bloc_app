@@ -68,14 +68,14 @@ class CallCubit extends Cubit<CallState> {
   final TherapyCallRepository _calls;
   final RequestIdGuard _operationGuard = RequestIdGuard();
 
-  bool _isRequestStillActive(final int requestId) =>
+  bool _isRequestStillActive(int requestId) =>
       !isClosed && _operationGuard.isCurrent(requestId);
 
-  void toggleCameraPermission({required final bool granted}) {
+  void toggleCameraPermission({required bool granted}) {
     emit(state.copyWith(cameraPermissionGranted: granted));
   }
 
-  void toggleMicrophonePermission({required final bool granted}) {
+  void toggleMicrophonePermission({required bool granted}) {
     emit(state.copyWith(microphonePermissionGranted: granted));
   }
 
@@ -114,7 +114,7 @@ class CallCubit extends Cubit<CallState> {
     );
   }
 
-  void selectAppointment(final String appointmentId) {
+  void selectAppointment(String appointmentId) {
     _operationGuard.invalidate();
     emit(
       state.copyWith(

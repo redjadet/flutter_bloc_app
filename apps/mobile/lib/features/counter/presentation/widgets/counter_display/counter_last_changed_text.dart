@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterLastChangedText extends StatelessWidget {
   const CounterLastChangedText({
@@ -16,7 +16,7 @@ class CounterLastChangedText extends StatelessWidget {
   final TextTheme textTheme;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context).languageCode;
     final formatted = switch (lastChanged) {
       final d? => DateFormat.yMd(locale).add_jm().format(d),

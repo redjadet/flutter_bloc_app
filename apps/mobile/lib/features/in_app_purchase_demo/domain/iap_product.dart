@@ -7,11 +7,11 @@ enum IapProductType { consumable, nonConsumable, subscription }
 @freezed
 abstract class IapProduct with _$IapProduct {
   const factory IapProduct({
-    required final String id,
-    required final String title,
-    required final String description,
-    required final String priceLabel,
-    required final IapProductType type,
+    required String id,
+    required String title,
+    required String description,
+    required String priceLabel,
+    required IapProductType type,
   }) = _IapProduct;
 }
 

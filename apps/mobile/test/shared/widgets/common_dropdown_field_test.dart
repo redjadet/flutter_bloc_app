@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('CommonDropdownField', () {
     testWidgets('renders DropdownButtonFormField on Material platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -17,7 +17,7 @@ void main() {
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                   DropdownMenuItem(value: 'option2', child: Text('Option 2')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
               ),
             ),
           ),
@@ -27,7 +27,7 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
-    testWidgets('displays label text when provided', (final tester) async {
+    testWidgets('displays label text when provided', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -37,7 +37,7 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 labelText: 'Select Option',
               ),
             ),
@@ -48,7 +48,7 @@ void main() {
       expect(find.text('Select Option'), findsOneWidget);
     });
 
-    testWidgets('respects enabled parameter', (final tester) async {
+    testWidgets('respects enabled parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -58,7 +58,7 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 enabled: false,
               ),
             ),
@@ -72,7 +72,7 @@ void main() {
       expect(field.onChanged, isNull);
     });
 
-    testWidgets('respects isExpanded parameter', (final tester) async {
+    testWidgets('respects isExpanded parameter', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -82,7 +82,7 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 isExpanded: false,
               ),
             ),
@@ -95,7 +95,7 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
-    testWidgets('uses customPickerItems when provided', (final tester) async {
+    testWidgets('uses customPickerItems when provided', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -105,7 +105,7 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 customPickerItems: const ['option1', 'option2', 'option3'],
               ),
             ),
@@ -116,7 +116,7 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
-    testWidgets('uses customItemLabel when provided', (final tester) async {
+    testWidgets('uses customItemLabel when provided', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -126,8 +126,8 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
-                customItemLabel: (final value) => 'Custom: $value',
+                onChanged: (value) {},
+                customItemLabel: (value) => 'Custom: $value',
               ),
             ),
           ),
@@ -137,7 +137,7 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
-    testWidgets('handles null value', (final tester) async {
+    testWidgets('handles null value', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -147,7 +147,7 @@ void main() {
                 items: const [
                   DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                 ],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 hintText: 'Select an option',
               ),
             ),
@@ -158,7 +158,7 @@ void main() {
       expect(find.byType(DropdownButtonFormField<String>), findsOneWidget);
     });
 
-    testWidgets('handles empty items without throwing', (final tester) async {
+    testWidgets('handles empty items without throwing', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveScope(
@@ -166,7 +166,7 @@ void main() {
               body: CommonDropdownField<String>(
                 value: 'any',
                 items: const [],
-                onChanged: (final value) {},
+                onChanged: (value) {},
                 hintText: 'Select',
               ),
             ),
@@ -177,7 +177,7 @@ void main() {
       expect(find.byType(CommonDropdownField<String>), findsOneWidget);
     });
 
-    testWidgets('calls validator when provided', (final tester) async {
+    testWidgets('calls validator when provided', (tester) async {
       String? validationResult;
       final formKey = GlobalKey<FormState>();
 
@@ -192,8 +192,8 @@ void main() {
                   items: const [
                     DropdownMenuItem(value: 'option1', child: Text('Option 1')),
                   ],
-                  onChanged: (final value) {},
-                  validator: (final value) {
+                  onChanged: (value) {},
+                  validator: (value) {
                     validationResult = value == null ? 'Required' : null;
                     return validationResult;
                   },

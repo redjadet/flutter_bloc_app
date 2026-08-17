@@ -1,29 +1,30 @@
 @Tags(['golden'])
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
-import 'test_helpers.dart' as test_helpers;
+import 'helpers/material_ui_app_wrapper.dart';
 
 // Import test helpers directly for convenience
 import 'test_helpers.dart'
     show MockCounterRepository, FakeTimerService, waitForCounterCubitsToLoad;
+import 'test_helpers.dart' as test_helpers;
 
 final DateTime _goldenTimestamp = DateTime.utc(2024, 1, 1, 12);
 
@@ -89,13 +90,7 @@ void main() {
       final Widget demo = _CounterComponentsDemo();
       await tester.pumpWidgetBuilder(
         demo,
-        wrapper: materialAppWrapper(
-          localizations: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
+        wrapper: materialUiAppWrapper(
           theme: ThemeData.light(),
           localeOverrides: const [Locale('tr')],
         ),
@@ -241,12 +236,7 @@ Widget _buildCounterPageApp({required CounterCubit cubit, ThemeData? theme}) =>
           ),
         ],
         child: MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           theme: theme ?? ThemeData.light(),
           home: CounterPage(

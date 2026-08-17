@@ -35,21 +35,21 @@ class BackgroundSyncTrigger {
 
 class BackgroundSyncCoordinator {
   BackgroundSyncCoordinator({
-    required final PendingSyncRepository repository,
+    required PendingSyncRepository repository,
     required this._networkStatusService,
     required this._timerService,
-    required final SyncableRepositoryRegistry registry,
+    required SyncableRepositoryRegistry registry,
     this._getSyncSupabaseUserId,
     this._getSharedSyncAuthUserId,
     this._syncInterval = const Duration(seconds: 60),
-    final void Function(String event, Map<String, Object?> payload)? telemetry,
+    void Function(String event, Map<String, Object?> payload)? telemetry,
     this._maxHistory = 5,
     this._maxRetryCount = 10,
     this._maxOperationAge = const Duration(days: 30),
     this._startIotDemoRealtimeSubscription,
     this._stopIotDemoRealtimeSubscription,
-    final SyncJobRunner? syncJobRunner,
-    final SyncSchedulePolicy? syncSchedulePolicy,
+    SyncJobRunner? syncJobRunner,
+    SyncSchedulePolicy? syncSchedulePolicy,
   }) : _repository = repository,
        _telemetry = telemetry ?? _defaultTelemetry,
        _syncJobRunner =
@@ -169,18 +169,15 @@ class BackgroundSyncCoordinator {
   /// without assuming feature-level payload hints. Callers may provide an
   /// optional [hint] (e.g. feature name or resource key) for telemetry and
   /// future routing.
-  Future<void> triggerFromFcm({final String? hint}) {
+  Future<void> triggerFromFcm({String? hint}) {
     _telemetry('sync_trigger_fcm', <String, Object?>{'hint': hint});
     return _triggerSync(immediate: true);
   }
 
-  Future<void> _triggerSync({required final bool immediate}) =>
+  Future<void> _triggerSync({required bool immediate}) =>
       _triggerSyncImpl(this, immediate: immediate);
 
-  static void _defaultTelemetry(
-    final String event,
-    final Map<String, Object?> payload,
-  ) {
+  static void _defaultTelemetry(String event, Map<String, Object?> payload) {
     if (!shouldLogTelemetry(event, payload)) {
       return;
     }
@@ -188,10 +185,7 @@ class BackgroundSyncCoordinator {
   }
 
   @visibleForTesting
-  static bool shouldLogTelemetry(
-    final String event,
-    final Map<String, Object?> payload,
-  ) {
+  static bool shouldLogTelemetry(String event, Map<String, Object?> payload) {
     if (event == 'sync_prune_completed') {
       return payload['pruned'] != 0;
     }

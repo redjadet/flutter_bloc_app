@@ -65,8 +65,8 @@ class FirebaseBootstrapService {
   }
 
   /// Initialize Firebase with platform-specific configuration
-  static Future<bool> initializeFirebase() => _firebaseInitialization ??=
-      _initializeFirebaseOnce().then((final initialized) {
+  static Future<bool> initializeFirebase() =>
+      _firebaseInitialization ??= _initializeFirebaseOnce().then((initialized) {
         if (!initialized) {
           _firebaseInitialization = null;
         }
@@ -78,7 +78,7 @@ class FirebaseBootstrapService {
       if (Firebase.apps.isNotEmpty) {
         AppLogger.debug(
           'Firebase already initialized: '
-          '${Firebase.apps.map((final app) => app.name).join(', ')}',
+          '${Firebase.apps.map((app) => app.name).join(', ')}',
         );
         await _prepareReusedFirebaseApp();
         return true;

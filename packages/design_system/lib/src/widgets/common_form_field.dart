@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'common_input_decoration_helpers.dart';
 
@@ -50,7 +50,7 @@ class CommonFormField extends StatelessWidget {
   final bool autofocus;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return TextFormField(

@@ -1,6 +1,6 @@
 part of 'hive_service.dart';
 
-bool _effectiveHiveEncryption(final bool encrypted) {
+bool _effectiveHiveEncryption(bool encrypted) {
   if (encrypted && useUnencryptedHiveBoxesInDebug()) {
     return false;
   }
@@ -8,22 +8,19 @@ bool _effectiveHiveEncryption(final bool encrypted) {
 }
 
 mixin HiveServiceBoxOperations on Object {
-  Future<Box<dynamic>> openBox(
-    final String name, {
-    final bool encrypted = true,
-  }) async {
+  Future<Box<dynamic>> openBox(String name, {bool encrypted = true}) async {
     final self = this as HiveService;
     return self.openBoxAndRun<Box<dynamic>>(
       name,
       encrypted: encrypted,
-      action: (final box) async => box,
+      action: (box) async => box,
     );
   }
 
   Future<T> openBoxAndRun<T>(
-    final String name, {
-    required final Future<T> Function(Box<dynamic> box) action,
-    final bool encrypted = true,
+    String name, {
+    required Future<T> Function(Box<dynamic> box) action,
+    bool encrypted = true,
   }) async {
     final self = this as HiveService;
     if (name.isEmpty) {
@@ -70,8 +67,8 @@ mixin HiveServiceBoxOperations on Object {
   }
 
   Future<Box<dynamic>> _openBoxInternal(
-    final String name, {
-    required final bool encrypted,
+    String name, {
+    required bool encrypted,
   }) async {
     try {
       return await _openBoxOnce(name, encrypted: encrypted);
@@ -96,8 +93,8 @@ mixin HiveServiceBoxOperations on Object {
   }
 
   Future<Box<dynamic>> _recoverCorruptBox(
-    final String name, {
-    required final bool encrypted,
+    String name, {
+    required bool encrypted,
   }) async {
     if (Hive.isBoxOpen(name)) {
       await Hive.box<dynamic>(name).close();
@@ -110,9 +107,9 @@ mixin HiveServiceBoxOperations on Object {
   }
 
   Future<Box<dynamic>> _openBoxOnce(
-    final String name, {
-    required final bool encrypted,
-    final bool resetInMemory = false,
+    String name, {
+    required bool encrypted,
+    bool resetInMemory = false,
   }) async {
     final self = this as HiveService;
     final bool inMemoryDebug = useInMemoryHiveBoxesInDebug();
@@ -141,7 +138,7 @@ mixin HiveServiceBoxOperations on Object {
     return Hive.openBox(name);
   }
 
-  Future<void> closeBox(final String name) async {
+  Future<void> closeBox(String name) async {
     final self = this as HiveService;
     if (name.isEmpty) {
       return;
@@ -160,7 +157,7 @@ mixin HiveServiceBoxOperations on Object {
     });
   }
 
-  Future<void> deleteBox(final String name) async {
+  Future<void> deleteBox(String name) async {
     final self = this as HiveService;
     if (name.isEmpty) {
       return;
@@ -188,7 +185,7 @@ mixin HiveServiceBoxOperations on Object {
 class _BoxMutex {
   Future<void> _tail = Future<void>.value();
 
-  Future<T> run<T>(final Future<T> Function() action) {
+  Future<T> run<T>(Future<T> Function() action) {
     final Completer<T> completer = Completer<T>();
 
     _tail = _tail.then((_) async {

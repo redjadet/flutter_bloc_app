@@ -16,11 +16,11 @@ class SyncJobRunner {
 
   /// Runs one sync cycle and returns the summary.
   Future<SyncCycleSummary> run({
-    required final void Function(SyncStatus status) emitStatus,
-    required final void Function(String event, Map<String, Object?> payload)
+    required void Function(SyncStatus status) emitStatus,
+    required void Function(String event, Map<String, Object?> payload)
     telemetry,
-    final String? supabaseUserIdForUserScopedSync,
-    final String? Function()? getSharedSyncAuthUserId,
+    String? supabaseUserIdForUserScopedSync,
+    String? Function()? getSharedSyncAuthUserId,
   }) => runSyncCycle(
     registry: _registry,
     pendingRepository: _pendingRepository,

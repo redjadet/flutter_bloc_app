@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_platform_dialogs.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Simple example page used to demonstrate GoRouter navigation
 class ExamplePage extends StatefulWidget {
@@ -111,10 +111,10 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   void _setIsolateResults({
-    required final int input,
-    required final int result,
-    required final List<int> parallelValues,
-    required final Duration elapsed,
+    required int input,
+    required int result,
+    required List<int> parallelValues,
+    required Duration elapsed,
   }) {
     if (!mounted) return;
     setState(() {
@@ -127,7 +127,7 @@ class _ExamplePageState extends State<ExamplePage> {
     });
   }
 
-  void _setIsolateFailure(final Object error) {
+  void _setIsolateFailure(Object error) {
     if (!mounted) return;
     setState(() {
       _isRunningIsolates = false;
@@ -136,7 +136,7 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;

@@ -1,8 +1,8 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RecentTradesPanel extends StatelessWidget {
   const RecentTradesPanel({
@@ -15,7 +15,7 @@ class RecentTradesPanel extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     final List<RecentTrade> shown = trades.length > 12
@@ -55,7 +55,7 @@ class RecentTradesPanel extends StatelessWidget {
           )
         else
           ...shown.map(
-            (final t) {
+            (t) {
               final Color accent = t.isBuy
                   ? RealtimeMarketUiTokens.bidAccent(scheme)
                   : RealtimeMarketUiTokens.askAccent(scheme);

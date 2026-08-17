@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
 class _FakeFcmMessagingService implements FcmMessagingService {
@@ -103,7 +103,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {
+  Future<void> triggerFromFcm({String? hint}) async {
     triggerFromFcmCallCount += 1;
     lastHint = hint;
   }
@@ -116,8 +116,8 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 }
 
 PushMessage _message({
-  required final String id,
-  final PushMessageSource source = PushMessageSource.foreground,
+  required String id,
+  PushMessageSource source = PushMessageSource.foreground,
 }) => PushMessage(
   messageId: id,
   title: 'Title $id',
@@ -154,28 +154,28 @@ void main() {
         );
         return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
       },
       expect: () => [
         isA<FcmDemoState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'status',
           FcmDemoStatus.loading,
         ),
         isA<FcmDemoState>()
-            .having((final s) => s.status, 'status', FcmDemoStatus.loading)
+            .having((s) => s.status, 'status', FcmDemoStatus.loading)
             .having(
-              (final s) => s.permissionState,
+              (s) => s.permissionState,
               'permission',
               FcmPermissionState.provisional,
             ),
         isA<FcmDemoState>()
-            .having((final s) => s.status, 'status', FcmDemoStatus.ready)
-            .having((final s) => s.fcmToken, 'token', 'fcm-token')
-            .having((final s) => s.apnsToken, 'apnsToken', 'custom-apns-token')
+            .having((s) => s.status, 'status', FcmDemoStatus.ready)
+            .having((s) => s.fcmToken, 'token', 'fcm-token')
+            .having((s) => s.apnsToken, 'apnsToken', 'custom-apns-token')
             .having(
-              (final s) => s.lastMessage?.source,
+              (s) => s.lastMessage?.source,
               'initialSource',
               PushMessageSource.initial,
             ),
@@ -188,22 +188,22 @@ void main() {
         service = _FakeFcmMessagingService(throwPermissionError: true);
         return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
       },
       expect: () => [
         isA<FcmDemoState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'status',
           FcmDemoStatus.loading,
         ),
         isA<FcmDemoState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'status',
           FcmDemoStatus.error,
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(service.getTokenCallCount, 0);
       },
     );
@@ -214,29 +214,25 @@ void main() {
         service = _FakeFcmMessagingService(token: 'initial-token');
         return FcmDemoCubit(messaging: service, coordinator: coordinator);
       },
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         service.tokenRefreshController.add('refreshed-token');
         await Future<void>.delayed(Duration.zero);
       },
       expect: () => [
         isA<FcmDemoState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'status',
           FcmDemoStatus.loading,
         ),
         isA<FcmDemoState>().having(
-          (final s) => s.permissionState,
+          (s) => s.permissionState,
           'permission',
           FcmPermissionState.authorized,
         ),
+        isA<FcmDemoState>().having((s) => s.fcmToken, 'token', 'initial-token'),
         isA<FcmDemoState>().having(
-          (final s) => s.fcmToken,
-          'token',
-          'initial-token',
-        ),
-        isA<FcmDemoState>().having(
-          (final s) => s.fcmToken,
+          (s) => s.fcmToken,
           'token',
           'refreshed-token',
         ),

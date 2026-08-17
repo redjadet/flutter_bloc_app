@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/came
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'camera_gallery_page.part.dart';
 
@@ -35,7 +35,7 @@ class _CameraGalleryPageState extends State<CameraGalleryPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return CommonPageLayout(
       title: context.l10n.cameraGalleryPageTitle,
       body: const _CameraGalleryPageBody(),
@@ -47,7 +47,7 @@ class _CameraGalleryPageBody extends StatelessWidget {
   const _CameraGalleryPageBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     return SingleChildScrollView(

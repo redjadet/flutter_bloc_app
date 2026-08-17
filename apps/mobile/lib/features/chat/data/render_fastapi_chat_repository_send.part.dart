@@ -2,12 +2,12 @@ part of 'render_fastapi_chat_repository.dart';
 
 extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
   Future<ChatResult> sendMessageImpl({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     if (!_isRunnable()) {
       if (kDebugMode) {
@@ -169,8 +169,8 @@ extension _RenderFastApiChatRepositorySend on RenderFastApiChatRepository {
   }
 
   String idempotencyKeyFor(
-    final String? clientMessageId,
-    final String? conversationId,
+    String? clientMessageId,
+    String? conversationId,
   ) {
     final String? a = clientMessageId?.trim();
     if (a != null && a.isNotEmpty) {

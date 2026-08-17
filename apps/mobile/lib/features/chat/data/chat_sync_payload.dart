@@ -6,19 +6,19 @@ part 'chat_sync_payload.freezed.dart';
 @freezed
 abstract class ChatSyncPayload with _$ChatSyncPayload {
   const factory ChatSyncPayload({
-    required final String conversationId,
-    required final String prompt,
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String? model,
-    required final String clientMessageId,
-    required final DateTime createdAt,
+    required String conversationId,
+    required String prompt,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String? model,
+    required String clientMessageId,
+    required DateTime createdAt,
   }) = _ChatSyncPayload;
 
   const ChatSyncPayload._();
 
   ChatMessage userMessage({
-    required final String promptText,
+    required String promptText,
   }) => ChatMessage(
     author: ChatAuthor.user,
     text: promptText,

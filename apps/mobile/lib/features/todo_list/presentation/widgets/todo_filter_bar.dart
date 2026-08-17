@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
+import 'package:material_ui/material_ui.dart';
 
-double _todoFilterChipFontSize(final BuildContext context) =>
+double _todoFilterChipFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 18.0);
 
 class TodoFilterBar extends StatelessWidget {
@@ -21,7 +21,7 @@ class TodoFilterBar extends StatelessWidget {
   final VoidCallback? onClearCompleted;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
 
     return Column(
@@ -65,7 +65,7 @@ class _FilterChip extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final Color backgroundColor = isSelected ? colors.primary : colors.surface;

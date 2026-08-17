@@ -27,7 +27,7 @@ mixin _CaseStudySessionCubitSubmit
       draft: state.draft,
       remoteSubmit: remoteSubmit,
       retryDelay: _retryDelayViaTimerService,
-      onProgress: (final progress) {
+      onProgress: (progress) {
         if (isClosed) return;
         emit(state.copyWith(submitProgress: progress));
       },

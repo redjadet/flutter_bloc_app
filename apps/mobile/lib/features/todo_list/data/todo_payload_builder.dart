@@ -10,9 +10,9 @@ class TodoPayloadBuilder {
 
   /// Builds a sync operation for saving [item] with [idempotencyKey].
   SyncOperation buildSaveOperation(
-    final TodoItem item,
-    final String entityType,
-    final String idempotencyKey,
+    TodoItem item,
+    String entityType,
+    String idempotencyKey,
   ) => SyncOperation.create(
     entityType: entityType,
     payload: TodoItemDto.fromDomain(item).toMap(),
@@ -21,9 +21,9 @@ class TodoPayloadBuilder {
 
   /// Builds a sync operation for deleting the todo with [id].
   SyncOperation buildDeleteOperation(
-    final String id,
-    final String entityType,
-    final String idempotencyKey,
+    String id,
+    String entityType,
+    String idempotencyKey,
   ) => SyncOperation.create(
     entityType: entityType,
     payload: <String, dynamic>{

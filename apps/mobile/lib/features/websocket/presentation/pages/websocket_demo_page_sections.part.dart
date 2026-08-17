@@ -4,11 +4,11 @@ class _ReconnectAction extends StatelessWidget {
   const _ReconnectAction();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isConnecting = context
         .selectState<WebsocketCubit, WebsocketState, bool>(
-          selector: (final state) => state.isConnecting,
+          selector: (state) => state.isConnecting,
         );
     return IconButton(
       tooltip: l10n.websocketReconnectTooltip,
@@ -24,7 +24,7 @@ class _ConnectionBannerSection extends StatelessWidget {
   const _ConnectionBannerSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final bannerState = context
         .selectState<
           WebsocketCubit,
@@ -36,7 +36,7 @@ class _ConnectionBannerSection extends StatelessWidget {
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             endpoint: state.endpoint,
             isConnecting: state.isConnecting,
             isConnected: state.isConnected,
@@ -58,10 +58,10 @@ class _MessagesSection extends StatelessWidget {
   final String emptyLabel;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final messages = context
         .selectState<WebsocketCubit, WebsocketState, List<WebsocketMessage>>(
-          selector: (final state) => state.messages,
+          selector: (state) => state.messages,
         );
     return WebsocketMessageList(messages: messages, emptyLabel: emptyLabel);
   }
@@ -77,7 +77,7 @@ class _ComposerSection extends StatelessWidget {
   final Future<void> Function() onSendCurrentMessage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final composerState = context
         .selectState<
@@ -85,7 +85,7 @@ class _ComposerSection extends StatelessWidget {
           WebsocketState,
           ({bool isConnected, bool isSending})
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isConnected: state.isConnected,
             isSending: state.isSending,
           ),

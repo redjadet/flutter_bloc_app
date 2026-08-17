@@ -1,8 +1,8 @@
+import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
 import 'package:flutter_bloc_app/features/chat/data/supabase_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:flutter_bloc_app/app/http/supabase/supabase_session_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -35,9 +35,9 @@ void main() {
           readAnonKey: () => 'anon',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 throw StateError('invoke should not run');
               },
@@ -51,7 +51,7 @@ void main() {
           ),
           throwsA(
             isA<ChatRemoteFailureException>().having(
-              (final ChatRemoteFailureException e) => e.code,
+              (ChatRemoteFailureException e) => e.code,
               'code',
               'missing_configuration',
             ),
@@ -67,9 +67,9 @@ void main() {
         readAnonKey: () => 'anon',
         invoke:
             ({
-              required final String accessToken,
-              required final String anonKey,
-              required final Map<String, dynamic> body,
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
             }) async {
               throw StateError('invoke should not run');
             },
@@ -84,12 +84,12 @@ void main() {
         throwsA(
           isA<ChatRemoteFailureException>()
               .having(
-                (final ChatRemoteFailureException e) => e.code,
+                (ChatRemoteFailureException e) => e.code,
                 'code',
                 'auth_required',
               )
               .having(
-                (final ChatRemoteFailureException e) => e.retryable,
+                (ChatRemoteFailureException e) => e.retryable,
                 'retryable',
                 isFalse,
               ),
@@ -104,9 +104,9 @@ void main() {
         readAnonKey: () => '',
         invoke:
             ({
-              required final String accessToken,
-              required final String anonKey,
-              required final Map<String, dynamic> body,
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
             }) async {
               throw StateError('invoke should not run');
             },
@@ -120,7 +120,7 @@ void main() {
         ),
         throwsA(
           isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
+            (ChatRemoteFailureException e) => e.code,
             'code',
             'missing_configuration',
           ),
@@ -141,9 +141,9 @@ void main() {
           readAnonKey: () => 'anon-xyz',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 seenToken = accessToken;
                 seenAnon = anonKey;
@@ -191,9 +191,9 @@ void main() {
           readAnonKey: () => 'anon-xyz',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 seenBody = body;
                 return FunctionResponse(
@@ -218,43 +218,39 @@ void main() {
       },
     );
 
-    test(
-      'non-200 FunctionResponse maps to upstream_unavailable with retryable from status',
-      () async {
-        final SupabaseChatRepository repository = SupabaseChatRepository(
-          payloadBuilder: payloadBuilder,
-          readAccessToken: () => 't',
-          readAnonKey: () => 'anon',
-          invoke:
-              ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
-              }) async => FunctionResponse(status: 503, data: null),
-        );
+    test('non-200 FunctionResponse maps to upstream_unavailable with retryable from status', () async {
+      final SupabaseChatRepository repository = SupabaseChatRepository(
+        payloadBuilder: payloadBuilder,
+        readAccessToken: () => 't',
+        readAnonKey: () => 'anon',
+        invoke: ({
+          required String accessToken,
+          required String anonKey,
+          required Map<String, dynamic> body,
+        }) async => FunctionResponse(status: 503, data: null),
+      );
 
-        await expectLater(
-          () => repository.sendMessage(
-            pastUserInputs: const <String>[],
-            generatedResponses: const <String>[],
-            prompt: 'Hi',
-          ),
-          throwsA(
-            isA<ChatRemoteFailureException>()
-                .having(
-                  (final ChatRemoteFailureException e) => e.code,
-                  'code',
-                  'upstream_unavailable',
-                )
-                .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
-                  'retryable',
-                  isTrue,
-                ),
-          ),
-        );
-      },
-    );
+      await expectLater(
+        () => repository.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'Hi',
+        ),
+        throwsA(
+          isA<ChatRemoteFailureException>()
+              .having(
+                (ChatRemoteFailureException e) => e.code,
+                'code',
+                'upstream_unavailable',
+              )
+              .having(
+                (ChatRemoteFailureException e) => e.retryable,
+                'retryable',
+                isTrue,
+              ),
+        ),
+      );
+    });
 
     test(
       'maps undeployed function (404 / reason phrase) to missing_configuration',
@@ -265,9 +261,9 @@ void main() {
           readAnonKey: () => 'anon',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 throw const FunctionException(
                   status: 404,
@@ -285,12 +281,12 @@ void main() {
           throwsA(
             isA<ChatRemoteFailureException>()
                 .having(
-                  (final ChatRemoteFailureException e) => e.code,
+                  (ChatRemoteFailureException e) => e.code,
                   'code',
                   'missing_configuration',
                 )
                 .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
+                  (ChatRemoteFailureException e) => e.retryable,
                   'retryable',
                   isFalse,
                 ),
@@ -303,9 +299,9 @@ void main() {
           readAnonKey: () => 'anon',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 throw const FunctionException(
                   status: 400,
@@ -322,7 +318,7 @@ void main() {
           ),
           throwsA(
             isA<ChatRemoteFailureException>().having(
-              (final ChatRemoteFailureException e) => e.code,
+              (ChatRemoteFailureException e) => e.code,
               'code',
               'missing_configuration',
             ),
@@ -340,9 +336,9 @@ void main() {
           readAnonKey: () => 'anon',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 throw FunctionException(
                   status: 400,
@@ -364,17 +360,17 @@ void main() {
           throwsA(
             isA<ChatRemoteFailureException>()
                 .having(
-                  (final ChatRemoteFailureException e) => e.code,
+                  (ChatRemoteFailureException e) => e.code,
                   'code',
                   'invalid_payload',
                 )
                 .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
+                  (ChatRemoteFailureException e) => e.retryable,
                   'retryable',
                   isFalse,
                 )
                 .having(
-                  (final ChatRemoteFailureException e) => e.message,
+                  (ChatRemoteFailureException e) => e.message,
                   'message',
                   'Schema mismatch',
                 ),
@@ -383,55 +379,52 @@ void main() {
       },
     );
 
-    test(
-      'after HTTP 401 refresh retry maps retry FunctionException not original 401',
-      () async {
-        int calls = 0;
-        final SupabaseChatRepository repository = SupabaseChatRepository(
-          payloadBuilder: payloadBuilder,
-          readAccessToken: () => 't',
-          readAnonKey: () => 'anon',
-          sessionManager: noopRefreshSessionManager(),
-          invoke:
-              ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
-              }) async {
-                calls += 1;
-                if (calls == 1) {
-                  throw const FunctionException(status: 401);
-                }
-                throw const FunctionException(
-                  status: 404,
-                  reasonPhrase: 'Requested function was not found',
-                );
-              },
-        );
+    test('after HTTP 401 refresh retry maps retry FunctionException not original 401', () async {
+      int calls = 0;
+      final SupabaseChatRepository repository = SupabaseChatRepository(
+        payloadBuilder: payloadBuilder,
+        readAccessToken: () => 't',
+        readAnonKey: () => 'anon',
+        sessionManager: noopRefreshSessionManager(),
+        invoke:
+            ({
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
+            }) async {
+              calls += 1;
+              if (calls == 1) {
+                throw const FunctionException(status: 401);
+              }
+              throw const FunctionException(
+                status: 404,
+                reasonPhrase: 'Requested function was not found',
+              );
+            },
+      );
 
-        await expectLater(
-          () => repository.sendMessage(
-            pastUserInputs: const <String>[],
-            generatedResponses: const <String>[],
-            prompt: 'Hi',
-          ),
-          throwsA(
-            isA<ChatRemoteFailureException>()
-                .having(
-                  (final ChatRemoteFailureException e) => e.code,
-                  'code',
-                  'missing_configuration',
-                )
-                .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
-                  'retryable',
-                  isFalse,
-                ),
-          ),
-        );
-        expect(calls, 2);
-      },
-    );
+      await expectLater(
+        () => repository.sendMessage(
+          pastUserInputs: const <String>[],
+          generatedResponses: const <String>[],
+          prompt: 'Hi',
+        ),
+        throwsA(
+          isA<ChatRemoteFailureException>()
+              .having(
+                (ChatRemoteFailureException e) => e.code,
+                'code',
+                'missing_configuration',
+              )
+              .having(
+                (ChatRemoteFailureException e) => e.retryable,
+                'retryable',
+                isFalse,
+              ),
+        ),
+      );
+      expect(calls, 2);
+    });
 
     test('after HTTP 401 refresh retry can succeed on second invoke', () async {
       int calls = 0;
@@ -442,9 +435,9 @@ void main() {
         sessionManager: noopRefreshSessionManager(),
         invoke:
             ({
-              required final String accessToken,
-              required final String anonKey,
-              required final Map<String, dynamic> body,
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
             }) async {
               calls += 1;
               if (calls == 1) {
@@ -478,9 +471,9 @@ void main() {
           readAnonKey: () => 'anon',
           invoke:
               ({
-                required final String accessToken,
-                required final String anonKey,
-                required final Map<String, dynamic> body,
+                required String accessToken,
+                required String anonKey,
+                required Map<String, dynamic> body,
               }) async {
                 throw const FunctionException(status: 403);
               },
@@ -495,12 +488,12 @@ void main() {
           throwsA(
             isA<ChatRemoteFailureException>()
                 .having(
-                  (final ChatRemoteFailureException e) => e.code,
+                  (ChatRemoteFailureException e) => e.code,
                   'code',
                   'forbidden',
                 )
                 .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
+                  (ChatRemoteFailureException e) => e.retryable,
                   'retryable',
                   isFalse,
                 ),
@@ -516,9 +509,9 @@ void main() {
         readAnonKey: () => 'anon',
         invoke:
             ({
-              required final String accessToken,
-              required final String anonKey,
-              required final Map<String, dynamic> body,
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
             }) async {
               throw const FunctionException(status: 429);
             },
@@ -532,7 +525,7 @@ void main() {
         ),
         throwsA(
           isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
+            (ChatRemoteFailureException e) => e.code,
             'code',
             'rate_limited',
           ),
@@ -547,9 +540,9 @@ void main() {
         readAnonKey: () => 'anon',
         invoke:
             ({
-              required final String accessToken,
-              required final String anonKey,
-              required final Map<String, dynamic> body,
+              required String accessToken,
+              required String anonKey,
+              required Map<String, dynamic> body,
             }) async {
               throw const FunctionException(status: 504);
             },
@@ -564,12 +557,12 @@ void main() {
         throwsA(
           isA<ChatRemoteFailureException>()
               .having(
-                (final ChatRemoteFailureException e) => e.code,
+                (ChatRemoteFailureException e) => e.code,
                 'code',
                 'upstream_timeout',
               )
               .having(
-                (final ChatRemoteFailureException e) => e.retryable,
+                (ChatRemoteFailureException e) => e.retryable,
                 'retryable',
                 isTrue,
               ),

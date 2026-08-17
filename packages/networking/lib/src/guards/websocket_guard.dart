@@ -14,9 +14,9 @@ class WebSocketGuard {
   /// that duration. Timeout and other exceptions are logged using [logContext]
   /// before being rethrown.
   static Future<WebSocketChannel> connect({
-    required final Future<WebSocketChannel> Function() connect,
-    required final Duration timeout,
-    required final String logContext,
+    required Future<WebSocketChannel> Function() connect,
+    required Duration timeout,
+    required String logContext,
   }) async {
     try {
       final Future<WebSocketChannel> future = connect();

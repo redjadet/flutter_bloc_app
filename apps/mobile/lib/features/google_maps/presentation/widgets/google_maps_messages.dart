@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsUnsupportedMessage extends StatelessWidget {
   const GoogleMapsUnsupportedMessage({required this.message, super.key});
@@ -9,7 +9,7 @@ class GoogleMapsUnsupportedMessage extends StatelessWidget {
   final String message;
 
   @override
-  Widget build(final BuildContext context) => AppMessage(message: message);
+  Widget build(BuildContext context) => AppMessage(message: message);
 }
 
 class GoogleMapsErrorMessage extends StatelessWidget {
@@ -23,7 +23,7 @@ class GoogleMapsErrorMessage extends StatelessWidget {
   final VoidCallback? onRetry;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
     return AppMessage(
       message: message,
@@ -52,6 +52,6 @@ class GoogleMapsMissingKeyMessage extends StatelessWidget {
   final String description;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       AppMessage(title: title, message: description, isError: true);
 }

@@ -9,12 +9,12 @@ enum CertificatePinningDemoStatus { initial, validating, success, failure }
 @freezed
 sealed class CertificatePinningDemoState with _$CertificatePinningDemoState {
   const factory CertificatePinningDemoState({
-    required final CertificatePinningMode mode,
-    required final MockCertificateScenario scenario,
+    required CertificatePinningMode mode,
+    required MockCertificateScenario scenario,
     @Default(CertificatePinningDemoStatus.initial)
-    final CertificatePinningDemoStatus status,
-    final CertificatePinMatchKind? matchKind,
-    final CertificatePinningDemoFailure? failure,
-    @Default(<String>[]) final List<String> logLines,
+    CertificatePinningDemoStatus status,
+    CertificatePinMatchKind? matchKind,
+    CertificatePinningDemoFailure? failure,
+    @Default(<String>[]) List<String> logLines,
   }) = _CertificatePinningDemoState;
 }

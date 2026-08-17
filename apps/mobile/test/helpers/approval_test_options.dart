@@ -6,9 +6,9 @@ import 'package:approval_tests/approval_tests.dart';
 /// locally with `MissingApprovedPolicy.createAndPass` / `approveResult: true`,
 /// review the `*.approved.*` artifact, then keep this helper in strict mode.
 Options approvalTestOptions({
-  final ApprovalNamer namer = const Namer(),
-  final bool approveResult = false,
-  final MissingApprovedPolicy missingApprovedPolicy =
+  ApprovalNamer namer = const Namer(),
+  bool approveResult = false,
+  MissingApprovedPolicy missingApprovedPolicy =
       MissingApprovedPolicy.writeReceivedAndFail,
 }) => Options(
   reporter: const CommandLineReporter(),

@@ -3,9 +3,9 @@ import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 List<ChartPoint> parseChartPointsResilient(
-  final List<dynamic> raw, {
-  final String dateKey = 'date_utc',
-  final String valueKey = 'value',
+  List<dynamic> raw, {
+  String dateKey = 'date_utc',
+  String valueKey = 'value',
 }) {
   final List<ChartPoint> out = <ChartPoint>[];
   for (final dynamic item in raw) {
@@ -27,6 +27,6 @@ List<ChartPoint> parseChartPointsResilient(
       AppLogger.error('parseChartPointsResilient', error, stackTrace);
     }
   }
-  out.sort((final a, final b) => a.date.compareTo(b.date));
+  out.sort((a, b) => a.date.compareTo(b.date));
   return List<ChartPoint>.unmodifiable(out);
 }

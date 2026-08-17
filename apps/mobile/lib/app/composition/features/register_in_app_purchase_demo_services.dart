@@ -15,12 +15,12 @@ void registerInAppPurchaseDemoServices() {
       timerService: getIt<TimerService>(),
       creditsStore: getIt<IapDemoCreditsStore>(),
     ),
-    dispose: (final repo) => repo.dispose(),
+    dispose: (repo) => repo.dispose(),
   );
   registerLazySingletonIfAbsent<FlutterInAppPurchaseRepository>(
     () => FlutterInAppPurchaseRepository(
       creditsStore: getIt<IapDemoCreditsStore>(),
     ),
-    dispose: (final repo) => repo.dispose(),
+    dispose: (repo) => repo.dispose(),
   );
 }

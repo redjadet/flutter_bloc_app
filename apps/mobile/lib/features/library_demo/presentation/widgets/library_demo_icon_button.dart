@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoIconButton extends StatelessWidget {
   const LibraryDemoIconButton({
@@ -18,7 +18,7 @@ class LibraryDemoIconButton extends StatelessWidget {
   final double? size;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double buttonSize = size ?? EpochSpacing.buttonSize;
     final BorderRadius radius = BorderRadius.circular(
       EpochSpacing.borderRadiusLarge,

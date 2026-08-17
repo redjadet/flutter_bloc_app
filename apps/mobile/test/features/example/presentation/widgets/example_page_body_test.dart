@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/example_page_body.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('ExamplePageBody', () {
     testWidgets('invokes onOpenRegister when tapping register button', (
-      final tester,
+      tester,
     ) async {
       bool registerTapped = false;
       final theme = ThemeData.light();
@@ -67,7 +67,7 @@ void main() {
     });
 
     testWidgets('invokes onOpenFcmDemo when tapping FCM demo button', (
-      final tester,
+      tester,
     ) async {
       bool fcmTapped = false;
       final theme = ThemeData.light();
@@ -125,7 +125,7 @@ void main() {
     });
 
     testWidgets('invokes onOpenCaseStudyDemo when tapping case study button', (
-      final tester,
+      tester,
     ) async {
       bool caseStudyTapped = false;
       final theme = ThemeData.light();
@@ -183,7 +183,7 @@ void main() {
     });
 
     testWidgets('invokes onOpenRealtimeMarket when tapping realtime button', (
-      final tester,
+      tester,
     ) async {
       var tapped = false;
       final theme = ThemeData.light();
@@ -246,7 +246,7 @@ void main() {
     });
 
     testWidgets('invokes onOpenEventBusDemo when tapping event bus button', (
-      final tester,
+      tester,
     ) async {
       var tapped = false;
       final theme = ThemeData.light();
@@ -313,7 +313,7 @@ void main() {
 
     testWidgets(
       'invokes onOpenNativePlatformShowcase when tapping showcase button',
-      (final tester) async {
+      (tester) async {
         var tapped = false;
         final theme = ThemeData.light();
         final l10n = AppLocalizationsEn();

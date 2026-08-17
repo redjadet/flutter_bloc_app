@@ -12,7 +12,7 @@ class IotDeviceDto {
     this.value = 0,
   });
 
-  IotDeviceDto.fromDomain(final IotDevice device)
+  IotDeviceDto.fromDomain(IotDevice device)
     : id = device.id,
       name = device.name,
       type = device.type,
@@ -21,20 +21,19 @@ class IotDeviceDto {
       toggledOn = device.toggledOn,
       value = device.value;
 
-  factory IotDeviceDto.fromJson(final Map<String, dynamic> json) =>
-      IotDeviceDto(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        type: _deviceTypeFromWire(json['type'] as String?),
-        lastSeen: json['lastSeen'] == null
-            ? null
-            : DateTime.parse(json['lastSeen'] as String),
-        connectionState: _connectionStateFromWire(
-          json['connectionState'] as String?,
-        ),
-        toggledOn: json['toggledOn'] as bool? ?? false,
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory IotDeviceDto.fromJson(Map<String, dynamic> json) => IotDeviceDto(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    type: _deviceTypeFromWire(json['type'] as String?),
+    lastSeen: json['lastSeen'] == null
+        ? null
+        : DateTime.parse(json['lastSeen'] as String),
+    connectionState: _connectionStateFromWire(
+      json['connectionState'] as String?,
+    ),
+    toggledOn: json['toggledOn'] as bool? ?? false,
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final String id;
   final String name;
@@ -64,7 +63,7 @@ class IotDeviceDto {
     'value': value,
   };
 
-  static IotDeviceType _deviceTypeFromWire(final String? raw) {
+  static IotDeviceType _deviceTypeFromWire(String? raw) {
     return switch (raw) {
       'light' => IotDeviceType.light,
       'sensor' => IotDeviceType.sensor,
@@ -75,7 +74,7 @@ class IotDeviceDto {
     };
   }
 
-  static String _deviceTypeToWire(final IotDeviceType type) {
+  static String _deviceTypeToWire(IotDeviceType type) {
     return switch (type) {
       IotDeviceType.light => 'light',
       IotDeviceType.sensor => 'sensor',
@@ -85,7 +84,7 @@ class IotDeviceDto {
     };
   }
 
-  static IotConnectionState _connectionStateFromWire(final String? raw) {
+  static IotConnectionState _connectionStateFromWire(String? raw) {
     return switch (raw) {
       'connecting' => IotConnectionState.connecting,
       'connected' => IotConnectionState.connected,
@@ -94,7 +93,7 @@ class IotDeviceDto {
     };
   }
 
-  static String _connectionStateToWire(final IotConnectionState state) {
+  static String _connectionStateToWire(IotConnectionState state) {
     return switch (state) {
       IotConnectionState.disconnected => 'disconnected',
       IotConnectionState.connecting => 'connecting',

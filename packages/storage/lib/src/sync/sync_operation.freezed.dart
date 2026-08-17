@@ -95,8 +95,7 @@ extension SyncOperationPatterns on SyncOperation {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncOperation value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SyncOperation value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _SyncOperation() when $default != null:
 return $default(_that);case _:
@@ -117,8 +116,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncOperation value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SyncOperation value)  $default,){final _that = this;
 switch (_that) {
 case _SyncOperation():
 return $default(_that);case _:
@@ -138,8 +136,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncOperation value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SyncOperation value)?  $default,){final _that = this;
 switch (_that) {
 case _SyncOperation() when $default != null:
 return $default(_that);case _:
@@ -215,7 +212,7 @@ return $default(_that.id,_that.entityType,_that.payload,_that.idempotencyKey,_th
 @JsonSerializable()
 
 class _SyncOperation extends SyncOperation {
-  const _SyncOperation({required this.id, required this.entityType, required final  Map<String, dynamic> payload, required this.idempotencyKey, required this.createdAt, this.nextRetryAt, this.retryCount = 0}): _payload = payload,super._();
+  const _SyncOperation({required this.id, required this.entityType, required  Map<String, dynamic> payload, required this.idempotencyKey, required this.createdAt, this.nextRetryAt, this.retryCount = 0}): _payload = payload,super._();
   factory _SyncOperation.fromJson(Map<String, dynamic> json) => _$SyncOperationFromJson(json);
 
 @override final  String id;

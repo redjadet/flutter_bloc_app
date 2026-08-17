@@ -1,5 +1,4 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -8,13 +7,14 @@ import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/rea
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_page_body.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/realtime_market_ui_tokens.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RealtimeMarketPage extends StatelessWidget {
   const RealtimeMarketPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ThemeData marketTheme = theme.copyWith(
@@ -38,8 +38,8 @@ class RealtimeMarketPage extends StatelessWidget {
                       RealtimeMarketState,
                       bool
                     >(
-                      selector: (final s) => s.loadErrorMessage != null,
-                      builder: (final context, final hasError) {
+                      selector: (s) => s.loadErrorMessage != null,
+                      builder: (context, hasError) {
                         if (!hasError) {
                           return const SizedBox.shrink();
                         }
@@ -54,11 +54,11 @@ class RealtimeMarketPage extends StatelessWidget {
               ),
               SliverToBoxAdapter(
                 child: BlocBuilder<RealtimeMarketCubit, RealtimeMarketState>(
-                  buildWhen: (final a, final b) =>
+                  buildWhen: (a, b) =>
                       a.snapshot != b.snapshot ||
                       a.bootstrapComplete != b.bootstrapComplete ||
                       a.sideTab != b.sideTab,
-                  builder: (final context, final state) {
+                  builder: (context, state) {
                     final bool showSkeleton =
                         !state.bootstrapComplete && state.snapshot == null;
                     final snap = state.snapshot;

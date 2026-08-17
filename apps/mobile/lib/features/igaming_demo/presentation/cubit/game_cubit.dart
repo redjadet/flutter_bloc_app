@@ -20,8 +20,8 @@ class GameCubit extends Cubit<GameState>
   GameCubit({
     required this._balanceRepository,
     required this._timerService,
-    final Random? random,
-    final AppLocalizations? l10n,
+    Random? random,
+    AppLocalizations? l10n,
   }) : _testRandom = random,
        _l10n = l10n,
        super(
@@ -44,7 +44,7 @@ class GameCubit extends Cubit<GameState>
   static const String _defaultInsufficientBalanceError = 'Insufficient balance';
 
   /// Sets the stake amount for the next round (used by UI).
-  void setStake(final int amount) {
+  void setStake(int amount) {
     if (isClosed) return;
     final DemoBalance? balance = state.balanceOrNull;
     if (balance != null && !isClosed) {
@@ -58,11 +58,11 @@ class GameCubit extends Cubit<GameState>
     await CubitExceptionHandler.executeAsync<DemoBalance>(
       operation: () => _balanceRepository.getBalance(),
       isAlive: () => !isClosed,
-      onSuccess: (final balance) {
+      onSuccess: (balance) {
         if (isClosed) return;
         emit(GameState.idle(balance, _defaultStake));
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),
@@ -75,7 +75,7 @@ class GameCubit extends Cubit<GameState>
   static const int _symbolCount = 6;
 
   /// Picks three reel symbol indices: all same (win) or not all same (loss). 50% win chance.
-  List<int> _pickTargetReelSymbolIndices(final Random rng) {
+  List<int> _pickTargetReelSymbolIndices(Random rng) {
     final bool isWin = rng.nextBool();
     if (isWin) {
       final int s = rng.nextInt(_symbolCount);
@@ -130,7 +130,7 @@ class GameCubit extends Cubit<GameState>
   void _resolveRoundAfterSpin() {
     if (isClosed) return;
     final (int, List<int>)? spinData = state.mapOrNull(
-      spinning: (final s) => (s.bet, s.targetReelSymbolIndices),
+      spinning: (s) => (s.bet, s.targetReelSymbolIndices),
     );
     if (spinData == null) {
       return;
@@ -153,7 +153,7 @@ class GameCubit extends Cubit<GameState>
           return _balanceRepository.getBalance();
         },
         isAlive: () => !isClosed,
-        onSuccess: (final newBalance) {
+        onSuccess: (newBalance) {
           if (isClosed) return;
           emit(
             GameState.result(
@@ -164,7 +164,7 @@ class GameCubit extends Cubit<GameState>
             ),
           );
         },
-        onError: (final message) {
+        onError: (message) {
           if (isClosed) return;
           emit(
             GameState.error(_l10n?.igamingDemoErrorLoadBalance ?? message),
@@ -187,14 +187,13 @@ class GameCubit extends Cubit<GameState>
   void playAgain() {
     if (isClosed) return;
     state.when(
-      idle: (final balance, final stake) {},
-      placingBet: (final balance, final stake) {},
-      spinning: (final balance, final bet, final _) {},
-      result:
-          (final roundResult, final newBalance, final selectedStake, final _) {
-            if (isClosed) return;
-            emit(GameState.idle(newBalance, selectedStake));
-          },
+      idle: (balance, stake) {},
+      placingBet: (balance, stake) {},
+      spinning: (balance, bet, _) {},
+      result: (roundResult, newBalance, selectedStake, _) {
+        if (isClosed) return;
+        emit(GameState.idle(newBalance, selectedStake));
+      },
       error: (_) {},
     );
   }

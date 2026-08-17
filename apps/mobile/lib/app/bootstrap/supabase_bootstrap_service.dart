@@ -86,8 +86,8 @@ class SupabaseBootstrapService {
   }
 
   static Future<void> _defaultInitializeClient({
-    required final String url,
-    required final String anonKey,
+    required String url,
+    required String anonKey,
   }) => Supabase.initialize(url: url, publishableKey: anonKey);
 
   static bool _hasCachedConfigProjectMismatch() {

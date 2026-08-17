@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:core/core.dart';
 
 import 'package:fake_async/fake_async.dart';
@@ -14,7 +15,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('SimulatedMarketFeed', () {
     test('first snapshot is stable for fixed clock and seed', () {
-      fakeAsync((final FakeAsync async) {
+      fakeAsync((FakeAsync async) {
         final SimulatedMarketFeed feed = SimulatedMarketFeed(
           random: Random(42),
           timerService: DefaultTimerService(),
@@ -23,7 +24,7 @@ void main() {
         MarketFeedSnapshot? first;
         final StreamSubscription<MarketFeedSnapshot> sub = feed
             .watch('btc_usdt')
-            .listen((final MarketFeedSnapshot s) => first = s);
+            .listen((MarketFeedSnapshot s) => first = s);
         async.elapse(Duration.zero);
         expect(first, isNotNull);
         final MarketFeedSnapshot s = first!;
@@ -39,7 +40,7 @@ void main() {
     });
 
     test('resume continues trade ids after cached recent trades', () {
-      fakeAsync((final FakeAsync async) {
+      fakeAsync((FakeAsync async) {
         final SimulatedMarketFeed feed = SimulatedMarketFeed(
           random: Random(1),
           timerService: DefaultTimerService(),
@@ -77,13 +78,13 @@ void main() {
                 updatedAt: DateTime.utc(2024, 1, 1, 10),
               ),
             )
-            .listen((final MarketFeedSnapshot s) => first = s);
+            .listen((MarketFeedSnapshot s) => first = s);
         async.elapse(Duration.zero);
 
         expect(first, isNotNull);
         expect(first!.recentTrades.first.id, 't6');
         expect(
-          first!.recentTrades.map((final RecentTrade t) => t.id).toSet().length,
+          first!.recentTrades.map((RecentTrade t) => t.id).toSet().length,
           first!.recentTrades.length,
         );
         sub.cancel();
@@ -92,7 +93,7 @@ void main() {
     });
 
     test('resume snapshot with full loss keeps finite prices', () {
-      fakeAsync((final FakeAsync async) {
+      fakeAsync((FakeAsync async) {
         final SimulatedMarketFeed feed = SimulatedMarketFeed(
           random: Random(1),
           timerService: DefaultTimerService(),
@@ -115,7 +116,7 @@ void main() {
                 updatedAt: DateTime(2024),
               ),
             )
-            .listen((final MarketFeedSnapshot s) => first = s);
+            .listen((MarketFeedSnapshot s) => first = s);
         async.elapse(Duration.zero);
 
         expect(first, isNotNull);

@@ -107,8 +107,7 @@ extension ChatStatePatterns on ChatState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
 return $default(_that);case _:
@@ -129,8 +128,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatState value)  $default,){final _that = this;
 switch (_that) {
 case _ChatState():
 return $default(_that);case _:
@@ -150,8 +148,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatState value)?  $default,){final _that = this;
 switch (_that) {
 case _ChatState() when $default != null:
 return $default(_that);case _:
@@ -227,7 +224,7 @@ return $default(_that.messages,_that.isLoading,_that.failure,_that.pastUserInput
 
 
 class _ChatState extends ChatState {
-  const _ChatState({final  List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.failure, final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.currentModel, final  List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.runnableTransportHint, this.lastCompletionTransport}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
+  const _ChatState({ List<ChatMessage> messages = const <ChatMessage>[], this.isLoading = false, this.failure, List<String> pastUserInputs = const <String>[], List<String> generatedResponses = const <String>[], this.currentModel, List<ChatConversation> history = const <ChatConversation>[], this.activeConversationId, this.runnableTransportHint, this.lastCompletionTransport}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,_history = history,super._();
   
 
  final  List<ChatMessage> _messages;

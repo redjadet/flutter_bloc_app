@@ -5,7 +5,7 @@ final class SelectMockScenario {
 
   final MockCertificateScenarioController _controller;
 
-  void call(final MockCertificateScenario scenario) {
+  void call(MockCertificateScenario scenario) {
     _controller.setScenario(scenario);
   }
 }

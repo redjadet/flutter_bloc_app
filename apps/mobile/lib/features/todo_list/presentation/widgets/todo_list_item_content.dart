@@ -1,17 +1,17 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_item_density.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_priority_badge.dart';
+import 'package:material_ui/material_ui.dart';
 
 Widget buildTodoItemContent({
-  required final BuildContext context,
-  required final TodoItem item,
-  required final bool isCompactLayout,
-  required final TodoItemDensity density,
-  required final TextStyle? titleStyle,
-  required final TextStyle? descriptionStyle,
-  required final DateTime? dueDateLocal,
+  required BuildContext context,
+  required TodoItem item,
+  required bool isCompactLayout,
+  required TodoItemDensity density,
+  required TextStyle? titleStyle,
+  required TextStyle? descriptionStyle,
+  required DateTime? dueDateLocal,
 }) {
   final ColorScheme colorScheme = Theme.of(context).colorScheme;
   final int titleMaxLines = density.isCompact ? 1 : 2;

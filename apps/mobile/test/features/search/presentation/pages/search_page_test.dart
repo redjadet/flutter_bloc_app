@@ -1,16 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/pages/search_page.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_results_grid.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 import '../../../../test_helpers.dart';
 
@@ -34,7 +35,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
     await _controller.close();
   }
 
-  void emit(final NetworkStatus newStatus) {
+  void emit(NetworkStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
@@ -81,9 +82,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
-  void emit(final SyncStatus newStatus) {
+  void emit(SyncStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
@@ -117,7 +118,7 @@ void main() {
       );
 
       return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SyncStatusCubit>.value(
           value: syncCubit,
@@ -154,9 +155,8 @@ void main() {
     testWidgets('shows loading indicator when loading', (tester) async {
       // Use a Completer to delay the repository response so we can catch loading state
       final completer = Completer<List<SearchResult>>();
-      when(
-        () => mockRepository.search(any()),
-      ).thenAnswer((_) => completer.future);
+      when(() => mockRepository.search(any()))
+          .thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(buildSubject());
       await tester.pump(); // Initial pump

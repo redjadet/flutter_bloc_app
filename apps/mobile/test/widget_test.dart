@@ -5,15 +5,14 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-
-import 'test_helpers.dart' as test_helpers;
+import 'package:material_ui/material_ui.dart';
 
 // Import waitForCounterCubitsToLoad directly
 import 'test_helpers.dart' show waitForCounterCubitsToLoad;
+import 'test_helpers.dart' as test_helpers;
 
 void main() {
   setUpAll(() async {

@@ -17,10 +17,10 @@ sealed class DeepLinkState with _$DeepLinkState {
 
   /// Signals that navigation to [target] should occur.
   const factory DeepLinkState.navigate(
-    final DeepLinkTarget target,
-    final DeepLinkOrigin origin,
+    DeepLinkTarget target,
+    DeepLinkOrigin origin,
   ) = DeepLinkNavigate;
 
   /// Emitted when initialization fails or the stream encounters an error.
-  const factory DeepLinkState.error(final String message) = DeepLinkError;
+  const factory DeepLinkState.error(String message) = DeepLinkError;
 }

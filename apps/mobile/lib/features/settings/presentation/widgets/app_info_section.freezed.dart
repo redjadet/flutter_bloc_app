@@ -101,8 +101,7 @@ extension _AppInfoViewDataPatterns on _AppInfoViewData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __AppInfoViewData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __AppInfoViewData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __AppInfoViewData() when $default != null:
 return $default(_that);case _:
@@ -123,8 +122,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __AppInfoViewData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __AppInfoViewData value)  $default,){final _that = this;
 switch (_that) {
 case __AppInfoViewData():
 return $default(_that);case _:
@@ -144,8 +142,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __AppInfoViewData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __AppInfoViewData value)?  $default,){final _that = this;
 switch (_that) {
 case __AppInfoViewData() when $default != null:
 return $default(_that);case _:

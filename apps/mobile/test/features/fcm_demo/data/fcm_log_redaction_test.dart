@@ -43,9 +43,8 @@ void main() {
     final StreamController<RemoteMessage> foreground =
         StreamController<RemoteMessage>.broadcast();
 
-    when(
-      () => messaging.onTokenRefresh,
-    ).thenAnswer((_) => const Stream<String>.empty());
+    when(() => messaging.onTokenRefresh)
+        .thenAnswer((_) => const Stream<String>.empty());
 
     final FirebaseMessagingRepository repository = FirebaseMessagingRepository(
       messaging: messaging,
@@ -73,7 +72,7 @@ void main() {
     await next;
 
     expect(entries, isNotEmpty);
-    final String logged = entries.map((final e) => e.message).join('\n');
+    final String logged = entries.map((e) => e.message).join('\n');
     expect(logged, isNot(contains(leakedTitle)));
     expect(logged, isNot(contains(leakedBody)));
     expect(logged, isNot(contains(leakedToken)));

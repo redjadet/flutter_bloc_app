@@ -21,37 +21,36 @@ class NetworkErrorMapper {
   NetworkErrorMapper._();
 
   /// Get user-friendly typed error from various error inputs.
-  static AppError getAppError(final dynamic error) => _getAppError(error);
+  static AppError getAppError(dynamic error) => _getAppError(error);
 
   /// Get user-friendly error message from various error inputs.
   static String getErrorMessage(
-    final dynamic error, {
-    final AppLocalizations? l10n,
+    dynamic error, {
+    AppLocalizations? l10n,
   }) => _getErrorMessage(error, l10n: l10n);
 
   /// Map HTTP status code to [AppErrorCode] for branching and analytics.
-  static AppErrorCode getErrorCodeForStatusCode(final int statusCode) =>
+  static AppErrorCode getErrorCodeForStatusCode(int statusCode) =>
       _getErrorCodeForStatusCode(statusCode);
 
   /// Get [AppErrorCode] from an error (e.g. [HttpRequestFailure], [DioException] or generic).
-  static AppErrorCode getErrorCode(final dynamic error) => _getErrorCode(error);
+  static AppErrorCode getErrorCode(dynamic error) => _getErrorCode(error);
 
   /// Map HTTP status code to user-friendly error message.
   ///
   /// Pass [l10n] for localized messages; omit for English fallback.
   /// Returns null if the status code doesn't map to a known error.
   static String? getMessageForStatusCode(
-    final int statusCode, {
-    final AppLocalizations? l10n,
+    int statusCode, {
+    AppLocalizations? l10n,
   }) => _getMessageForStatusCode(statusCode, l10n: l10n);
 
   /// Check if an error indicates a network connectivity issue.
-  static bool isNetworkError(final dynamic error) => _isNetworkError(error);
+  static bool isNetworkError(dynamic error) => _isNetworkError(error);
 
   /// Check if an error indicates a timeout.
-  static bool isTimeoutError(final dynamic error) => _isTimeoutError(error);
+  static bool isTimeoutError(dynamic error) => _isTimeoutError(error);
 
   /// Check if an HTTP status code indicates a transient error (should retry).
-  static bool isTransientError(final int statusCode) =>
-      _isTransientError(statusCode);
+  static bool isTransientError(int statusCode) => _isTransientError(statusCode);
 }

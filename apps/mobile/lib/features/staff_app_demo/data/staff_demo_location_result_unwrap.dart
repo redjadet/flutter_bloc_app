@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_locatio
 
 /// Logs location capture failures and returns nullable location for clock flows.
 StaffDemoCapturedLocation? unwrapStaffDemoLocationResult(
-  final Result<StaffDemoCapturedLocation> result,
-  final String context,
+  Result<StaffDemoCapturedLocation> result,
+  String context,
 ) {
   final failure = result.failureOrNull;
   if (failure != null) {

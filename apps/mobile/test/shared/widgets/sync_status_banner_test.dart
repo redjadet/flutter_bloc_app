@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/widgets/sync_status_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   NetworkStatus status = NetworkStatus.online;
@@ -73,9 +74,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   }
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
-  void emit(final SyncStatus next) {
+  void emit(SyncStatus next) {
     status = next;
     _controller.add(next);
   }
@@ -103,7 +104,7 @@ void main() {
     });
 
     Widget buildSubject() => MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: BlocProvider<SyncStatusCubit>.value(
         value: syncCubit,
@@ -114,7 +115,7 @@ void main() {
     testWidgets('renders safely without SyncStatusCubit', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SyncStatusBanner()),
         ),

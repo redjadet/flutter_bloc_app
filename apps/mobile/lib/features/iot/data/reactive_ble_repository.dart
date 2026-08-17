@@ -104,7 +104,7 @@ class _ReactiveBleRepositoryBase {
   }
 
   Future<Result<List<int>>> readCharacteristic(
-    final BleCharacteristicRef ref,
+    BleCharacteristicRef ref,
   ) async {
     try {
       final List<int> value = await client.readCharacteristic(ref);
@@ -119,9 +119,9 @@ class _ReactiveBleRepositoryBase {
   }
 
   Future<Result<void>> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async {
     try {
       await client.writeCharacteristic(
@@ -139,7 +139,7 @@ class _ReactiveBleRepositoryBase {
     }
   }
 
-  Stream<List<int>> subscribeCharacteristic(final BleCharacteristicRef ref) {
+  Stream<List<int>> subscribeCharacteristic(BleCharacteristicRef ref) {
     try {
       return client.subscribeToCharacteristic(ref);
     } on BleCharacteristicNotFoundException {
@@ -147,7 +147,7 @@ class _ReactiveBleRepositoryBase {
     }
   }
 
-  Future<void> _delay(final Duration duration) {
+  Future<void> _delay(Duration duration) {
     if (duration <= Duration.zero) {
       return Future<void>.value();
     }
@@ -156,17 +156,16 @@ class _ReactiveBleRepositoryBase {
     return completer.future;
   }
 
-  BleAdapterStatus _mapAdapterStatus(final BleStatus status) =>
-      BleAdapterStatus(
-        state: switch (status) {
-          BleStatus.unknown => BleAdapterState.unknown,
-          BleStatus.unsupported => BleAdapterState.unavailable,
-          BleStatus.unauthorized => BleAdapterState.unauthorized,
-          BleStatus.poweredOff => BleAdapterState.poweredOff,
-          BleStatus.locationServicesDisabled => BleAdapterState.unavailable,
-          BleStatus.ready => BleAdapterState.poweredOn,
-        },
-      );
+  BleAdapterStatus _mapAdapterStatus(BleStatus status) => BleAdapterStatus(
+    state: switch (status) {
+      BleStatus.unknown => BleAdapterState.unknown,
+      BleStatus.unsupported => BleAdapterState.unavailable,
+      BleStatus.unauthorized => BleAdapterState.unauthorized,
+      BleStatus.poweredOff => BleAdapterState.poweredOff,
+      BleStatus.locationServicesDisabled => BleAdapterState.unavailable,
+      BleStatus.ready => BleAdapterState.poweredOn,
+    },
+  );
 
   void dispose() {
     _scanTimeoutHandle?.dispose();

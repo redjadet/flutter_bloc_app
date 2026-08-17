@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/search/data/hive_search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/data/offline_first_search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_cache_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 class _FakeRemoteRepository implements SearchRepository {
   _FakeRemoteRepository();
@@ -19,7 +19,7 @@ class _FakeRemoteRepository implements SearchRepository {
   final List<String> calledQueries = <String>[];
 
   @override
-  Future<List<SearchResult>> search(final String query) async {
+  Future<List<SearchResult>> search(String query) async {
     calledQueries.add(query);
     if (shouldFail) {
       throw Exception('network error');
@@ -33,7 +33,7 @@ class _FakeRemoteRepository implements SearchRepository {
   }
 
   @override
-  Future<List<SearchResult>> call(final String query) => search(query);
+  Future<List<SearchResult>> call(String query) => search(query);
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {
@@ -55,7 +55,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
     await _controller.close();
   }
 
-  void emit(final NetworkStatus status) {
+  void emit(NetworkStatus status) {
     _controller.add(status);
   }
 }
@@ -143,40 +143,37 @@ void main() {
       expect(remoteRepository.calledQueries, isEmpty);
     });
 
-    test(
-      'search returns cached immediately and refreshes in background when online',
-      () async {
-        networkService.isOnline = true;
-        final OfflineFirstSearchRepository repository = buildRepository();
+    test('search returns cached immediately and refreshes in background when online', () async {
+      networkService.isOnline = true;
+      final OfflineFirstSearchRepository repository = buildRepository();
 
-        // Pre-populate cache
-        const List<SearchResult> cachedResults = [
-          SearchResult(
-            id: 'cached_1',
-            imageUrl: 'https://example.com/cached.jpg',
-          ),
-        ];
-        await cacheRepository.saveCachedResults('dogs', cachedResults);
+      // Pre-populate cache
+      const List<SearchResult> cachedResults = [
+        SearchResult(
+          id: 'cached_1',
+          imageUrl: 'https://example.com/cached.jpg',
+        ),
+      ];
+      await cacheRepository.saveCachedResults('dogs', cachedResults);
 
-        final List<SearchResult> results = await repository.search('dogs');
+      final List<SearchResult> results = await repository.search('dogs');
 
-        // Should return cached immediately
-        expect(results.length, 1);
-        expect(results.first.id, 'cached_1');
+      // Should return cached immediately
+      expect(results.length, 1);
+      expect(results.first.id, 'cached_1');
 
-        // Wait for background refresh
-        await Future<void>.delayed(const Duration(milliseconds: 100));
+      // Wait for background refresh
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
-        // Verify remote was called for refresh
-        expect(remoteRepository.calledQueries, contains('dogs'));
+      // Verify remote was called for refresh
+      expect(remoteRepository.calledQueries, contains('dogs'));
 
-        // Verify cache was updated
-        final List<SearchResult>? updatedCache = await cacheRepository
-            .loadCachedResults('dogs');
-        expect(updatedCache, isNotNull);
-        expect(updatedCache!.first.id, 'remote_dogs');
-      },
-    );
+      // Verify cache was updated
+      final List<SearchResult>? updatedCache = await cacheRepository
+          .loadCachedResults('dogs');
+      expect(updatedCache, isNotNull);
+      expect(updatedCache!.first.id, 'remote_dogs');
+    });
 
     test('search returns empty when cache miss and offline', () async {
       networkService.isOnline = false;
@@ -283,34 +280,31 @@ void main() {
       expect(remoteRepository.calledQueries.length, 10);
     });
 
-    test(
-      'concurrent cached searches for same query run only one background refresh',
-      () async {
-        networkService.isOnline = true;
-        const List<SearchResult> cachedResults = [
-          SearchResult(
-            id: 'cached_1',
-            imageUrl: 'https://example.com/cached.jpg',
-          ),
-        ];
-        await cacheRepository.saveCachedResults('dogs', cachedResults);
-        final OfflineFirstSearchRepository repository = buildRepository();
+    test('concurrent cached searches for same query run only one background refresh', () async {
+      networkService.isOnline = true;
+      const List<SearchResult> cachedResults = [
+        SearchResult(
+          id: 'cached_1',
+          imageUrl: 'https://example.com/cached.jpg',
+        ),
+      ];
+      await cacheRepository.saveCachedResults('dogs', cachedResults);
+      final OfflineFirstSearchRepository repository = buildRepository();
 
-        final List<Future<List<SearchResult>>> calls =
-            <Future<List<SearchResult>>>[
-              repository.search('dogs'),
-              repository.search('dogs'),
-              repository.search('dogs'),
-            ];
-        await Future.wait(calls);
+      final List<Future<List<SearchResult>>> calls =
+          <Future<List<SearchResult>>>[
+            repository.search('dogs'),
+            repository.search('dogs'),
+            repository.search('dogs'),
+          ];
+      await Future.wait(calls);
 
-        await Future<void>.delayed(const Duration(milliseconds: 150));
-        expect(
-          remoteRepository.calledQueries.where((q) => q == 'dogs').length,
-          1,
-        );
-      },
-    );
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+      expect(
+        remoteRepository.calledQueries.where((q) => q == 'dogs').length,
+        1,
+      );
+    });
 
     test('entityType returns search', () {
       final OfflineFirstSearchRepository repository = buildRepository();

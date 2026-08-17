@@ -1,7 +1,7 @@
 part of 'pending_sync_repository.dart';
 
 extension _PendingSyncRepositoryMutations on PendingSyncRepository {
-  Future<void> markCompletedBody(final String operationId) async {
+  Future<void> markCompletedBody(String operationId) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.markCompleted',
       action: () async {
@@ -12,9 +12,9 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
   }
 
   Future<void> markFailedBody({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
+    required String operationId,
+    required DateTime nextRetryAt,
+    int? retryCount,
   }) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.markFailed',
@@ -50,9 +50,9 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
     );
   }
 
-  Future<int> clearEntityTypesBody(final Iterable<String> types) async {
+  Future<int> clearEntityTypesBody(Iterable<String> types) async {
     final Set<String> entityTypes = types
-        .where((final type) => type.isNotEmpty)
+        .where((type) => type.isNotEmpty)
         .toSet();
     if (entityTypes.isEmpty) {
       return 0;
@@ -67,10 +67,8 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
           box.toMap(),
         );
         final List<dynamic> keysToDelete = readResult.operations
-            .where(
-              (final entry) => entityTypes.contains(entry.operation.entityType),
-            )
-            .map((final entry) => entry.key)
+            .where((entry) => entityTypes.contains(entry.operation.entityType))
+            .map((entry) => entry.key)
             .toList(growable: false);
         await _deleteKeys(box, keysToDelete);
         return keysToDelete.length;
@@ -79,8 +77,8 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
   }
 
   Future<int> pruneBody({
-    required final int maxRetryCount,
-    required final Duration maxAge,
+    required int maxRetryCount,
+    required Duration maxAge,
   }) async => StorageGuard.run<int>(
     logContext: 'PendingSyncRepository.prune',
     action: () async {
@@ -93,11 +91,11 @@ extension _PendingSyncRepositoryMutations on PendingSyncRepository {
         ...readResult.malformedKeys,
         ...readResult.operations
             .where(
-              (final entry) =>
+              (entry) =>
                   entry.operation.retryCount >= maxRetryCount ||
                   _isOlderThanCutoff(entry.operation, cutoff),
             )
-            .map((final entry) => entry.key),
+            .map((entry) => entry.key),
       ];
       await _deleteKeys(box, keysToDelete);
       return keysToDelete.length;

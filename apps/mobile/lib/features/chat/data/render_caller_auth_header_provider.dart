@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 /// Supplies Firebase ID tokens for Render caller auth (`Authorization: Bearer`).
 abstract class RenderCallerAuthHeaderProvider {
   /// Returns a fresh ID token, or null when signed out.
-  Future<String?> bearerIdToken({final bool forceRefresh = false});
+  Future<String?> bearerIdToken({bool forceRefresh = false});
 }
 
 class DefaultRenderCallerAuthHeaderProvider
@@ -16,7 +16,7 @@ class DefaultRenderCallerAuthHeaderProvider
   final FirebaseAuth Function() _auth;
 
   @override
-  Future<String?> bearerIdToken({final bool forceRefresh = false}) async {
+  Future<String?> bearerIdToken({bool forceRefresh = false}) async {
     final User? user = _auth().currentUser;
     if (user == null) {
       return null;

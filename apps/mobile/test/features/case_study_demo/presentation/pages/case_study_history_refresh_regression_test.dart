@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -14,9 +14,10 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_detail_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _StubAuthRepository implements AuthRepository {
   _StubAuthRepository(this._currentUser);
@@ -47,28 +48,28 @@ class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
 class _StubRemoteRepository implements CaseStudyRemoteRepository {
   @override
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   }) async => '';
 
   @override
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   }) async {}
 
   @override
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   }) async {}
 
   @override
@@ -77,54 +78,54 @@ class _StubRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   }) async => null;
 
   @override
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   }) async => '';
 }
 
 class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
   @override
-  Future<void> deleteCaseStudyRemote({required final String caseId}) async {}
+  Future<void> deleteCaseStudyRemote({required String caseId}) async {}
 }
 
 class _NoopClipStore implements CaseStudyClipFileStore {
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {}
+  Future<void> deleteCaseFolder(String caseId) async {}
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {}
+  Future<void> deleteFileIfExists(String? path) async {}
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+  String finalClipFilePathFromStaging(String stagingPath) => stagingPath;
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async => sourcePath;
 
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async => sourcePath;
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) => finalPath;
 
   @override
-  Future<List<int>> readClipBytes(final String path) async => const <int>[];
+  Future<List<int>> readClipBytes(String path) async => const <int>[];
 }
 
 class _InMemoryLocalRepository implements CaseStudyLocalRepository {
@@ -137,32 +138,26 @@ class _InMemoryLocalRepository implements CaseStudyLocalRepository {
   Future<void> ensureReady() async {}
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async => null;
+  Future<CaseStudyDraft?> loadDraft(String userId) async => null;
 
   @override
-  Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
-  ) async {}
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {}
 
   @override
-  Future<void> clearDraft(final String userId) async {}
+  Future<void> clearDraft(String userId) async {}
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
-      records;
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async => records;
 
   @override
   Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
+    String userId,
+    List<CaseStudyRecord> records,
   ) async {}
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
-  ) async => byId[recordId];
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async =>
+      byId[recordId];
 }
 
 Widget _buildHistoryPage() {
@@ -175,12 +170,12 @@ Widget _buildHistoryPage() {
       clipStore: getIt<CaseStudyClipFileStore>(),
       remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
     ),
-    init: (final cubit) => cubit.load(),
+    init: (cubit) => cubit.load(),
     child: const CaseStudyHistoryPage(),
   );
 }
 
-Widget _buildHistoryDetailPage({required final String recordId}) {
+Widget _buildHistoryDetailPage({required String recordId}) {
   return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryDetailCubit>(
     create: () => CaseStudyHistoryDetailCubit(
       recordId: recordId,
@@ -191,22 +186,19 @@ Widget _buildHistoryDetailPage({required final String recordId}) {
       clipStore: getIt<CaseStudyClipFileStore>(),
       remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
     ),
-    init: (final cubit) => cubit.load(),
+    init: (cubit) => cubit.load(),
     child: const CaseStudyHistoryDetailPage(),
   );
 }
 
-Future<void> _pumpLocalizedPage(
-  final WidgetTester tester,
-  final Widget page,
-) async {
+Future<void> _pumpLocalizedPage(WidgetTester tester, Widget page) async {
   await tester.pumpWidget(
     MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('en'),
       home: Builder(
-        builder: (final context) => buildAppMixScope(context, child: page),
+        builder: (context) => buildAppMixScope(context, child: page),
       ),
     ),
   );
@@ -214,8 +206,8 @@ Future<void> _pumpLocalizedPage(
 }
 
 Future<void> _triggerPullToRefresh(
-  final WidgetTester tester,
-  final Finder scrollable,
+  WidgetTester tester,
+  Finder scrollable,
 ) async {
   await tester.drag(scrollable, const Offset(0, 300));
   await tester.pump();
@@ -262,7 +254,7 @@ void main() {
     });
 
     testWidgets('history list pull-to-refresh throws no exceptions', (
-      final tester,
+      tester,
     ) async {
       await _pumpLocalizedPage(tester, _buildHistoryPage());
 
@@ -276,7 +268,7 @@ void main() {
     });
 
     testWidgets('history detail pull-to-refresh throws no exceptions', (
-      final tester,
+      tester,
     ) async {
       await _pumpLocalizedPage(tester, _buildHistoryDetailPage(recordId: 'r1'));
 

@@ -14,7 +14,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
   @override
   final PaymentCalculator calculator;
 
-  void inputDigit(final String digit) {
+  void inputDigit(String digit) {
     if (!_ensureEditable(resetForInput: true)) {
       return;
     }
@@ -54,7 +54,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
     );
   }
 
-  void selectOperation(final CalculatorOperation operation) {
+  void selectOperation(CalculatorOperation operation) {
     if (!_ensureEditable(resetForInput: false)) {
       return;
     }
@@ -187,14 +187,14 @@ class CalculatorCubit extends Cubit<CalculatorState>
     emit(current.copyWith(display: next));
   }
 
-  void setTaxRate(final double rate) {
+  void setTaxRate(double rate) {
     if (!_ensureEditable(resetForInput: true)) {
       return;
     }
     emit(state.copyWith(taxRate: clampRate(rate)));
   }
 
-  void setTipRate(final double rate) {
+  void setTipRate(double rate) {
     if (!_ensureEditable(resetForInput: true)) {
       return;
     }
@@ -215,7 +215,7 @@ class CalculatorCubit extends Cubit<CalculatorState>
     emit(state.copyWith(taxRate: 0));
   }
 
-  void _writeDigits(final String digits) {
+  void _writeDigits(String digits) {
     emit(writeDigitsState(state, digits, calculator));
   }
 }

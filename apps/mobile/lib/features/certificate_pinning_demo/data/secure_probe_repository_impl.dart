@@ -22,7 +22,7 @@ final class SecureProbeRepositoryImpl implements SecureProbeRepository {
   final Dio dio;
 
   static final Uint8List _demoCertBytes = Uint8List.fromList(
-    List<int>.generate(32, (final i) => i),
+    List<int>.generate(32, (i) => i),
   );
 
   @override
@@ -67,7 +67,7 @@ final class SecureProbeRepositoryImpl implements SecureProbeRepository {
     }
   }
 
-  SecureProbeOutcome _mapResult(final CertificatePinResult result) {
+  SecureProbeOutcome _mapResult(CertificatePinResult result) {
     return switch (result) {
       CertificatePinSuccess(:final matchKind) => SecureProbeSuccess(
         matchKind: matchKind,

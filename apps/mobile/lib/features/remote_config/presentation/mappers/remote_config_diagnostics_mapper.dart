@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remot
 
 /// Maps feature [RemoteConfigState] to core diagnostics view data for shared UI.
 RemoteConfigDiagnosticsViewData mapRemoteConfigStateToDiagnosticsViewData(
-  final RemoteConfigState state,
+  RemoteConfigState state,
 ) {
   if (state is RemoteConfigLoading) {
     return const RemoteConfigDiagnosticsViewData(

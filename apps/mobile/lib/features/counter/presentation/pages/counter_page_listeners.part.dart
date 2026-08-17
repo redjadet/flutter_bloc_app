@@ -8,26 +8,25 @@ final class _CounterPageListenerDelegate {
   List<TypeSafeBlocListener<CounterCubit, CounterState>> buildListeners() {
     return <TypeSafeBlocListener<CounterCubit, CounterState>>[
       TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => prev.error != curr.error,
+        listenWhen: (prev, curr) => prev.error != curr.error,
         listener: _handleCounterErrorStateChanged,
       ),
       TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => curr.count > prev.count,
+        listenWhen: (prev, curr) => curr.count > prev.count,
         listener: _handleCounterIncremented,
       ),
       TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) =>
-            prev.count == 0 && curr.count > 0,
+        listenWhen: (prev, curr) => prev.count == 0 && curr.count > 0,
         listener: _handleCounterRecoveredFromZero,
       ),
       TypeSafeBlocListener<CounterCubit, CounterState>(
-        listenWhen: (final prev, final curr) => prev.count != curr.count,
+        listenWhen: (prev, curr) => prev.count != curr.count,
         listener: _handleCounterCountChanged,
       ),
     ];
   }
 
-  Future<void> flushSyncIfPossible(final BuildContext context) async {
+  Future<void> flushSyncIfPossible(BuildContext context) async {
     try {
       final SyncStatusCubit syncCubit = context.cubit<SyncStatusCubit>();
       if (!syncCubit.state.isOnline) {
@@ -50,8 +49,8 @@ final class _CounterPageListenerDelegate {
   }
 
   void _handleCounterErrorStateChanged(
-    final BuildContext context,
-    final CounterState state,
+    BuildContext context,
+    CounterState state,
   ) {
     final CounterError? error = state.error;
     if (error == null) {
@@ -78,29 +77,29 @@ final class _CounterPageListenerDelegate {
       customMessage: localizedMessage,
       onRetry: () => CubitHelpers.safeExecute<CounterCubit, CounterState>(
         context,
-        (final cubit) => cubit.clearError(),
+        (cubit) => cubit.clearError(),
       ),
     );
   }
 
   void _handleCounterIncremented(
-    final BuildContext context,
-    final CounterState state,
+    BuildContext context,
+    CounterState state,
   ) {
     _state._confettiController.play();
   }
 
   void _handleCounterRecoveredFromZero(
-    final BuildContext context,
-    final CounterState state,
+    BuildContext context,
+    CounterState state,
   ) {
     _state._isCannotGoBelowZeroSnackBarVisible = false;
     ErrorHandling.clearSnackBars(context);
   }
 
   void _handleCounterCountChanged(
-    final BuildContext context,
-    final CounterState state,
+    BuildContext context,
+    CounterState state,
   ) {
     // check-ignore: listener callback is event-driven, not a build side effect
     unawaited(flushSyncIfPossible(context));
@@ -126,14 +125,14 @@ final class _CounterPageListenerDelegate {
     }
   }
 
-  void _scheduleCannotGoBelowZeroSnackBarHide(final TimerService timerService) {
+  void _scheduleCannotGoBelowZeroSnackBarHide(TimerService timerService) {
     _state._snackBarHideTimerHandle = timerService.runOnce(
       _CounterPageState._cannotGoBelowZeroSnackBarDuration,
       _hideCannotGoBelowZeroSnackBar,
     );
   }
 
-  void _showCannotGoBelowZeroSnackBar(final String message) {
+  void _showCannotGoBelowZeroSnackBar(String message) {
     disposeCannotGoBelowZeroSnackBarDelayHandle();
 
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>?

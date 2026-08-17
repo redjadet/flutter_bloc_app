@@ -17,7 +17,7 @@ sealed class WebsocketConnectionState with _$WebsocketConnectionState {
   const factory WebsocketConnectionState.connected() =
       WebsocketConnectionStateConnected;
 
-  const factory WebsocketConnectionState.error(final String message) =
+  const factory WebsocketConnectionState.error(String message) =
       WebsocketConnectionStateError;
 
   WebsocketStatus get status => when(
@@ -31,6 +31,6 @@ sealed class WebsocketConnectionState with _$WebsocketConnectionState {
     disconnected: () => null,
     connecting: () => null,
     connected: () => null,
-    error: (final m) => m,
+    error: (m) => m,
   );
 }

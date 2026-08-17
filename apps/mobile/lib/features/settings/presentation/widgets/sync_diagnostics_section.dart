@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 import 'package:networking/networking.dart';
 
@@ -28,7 +28,7 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double gap = context.responsiveGapS;
     final l10n = context.l10n;
     final theme = Theme.of(context);
@@ -42,8 +42,8 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
               SyncStatusState,
               List<SyncCycleSummary>
             >(
-              selector: (final state) => state.history,
-              builder: (final context, final historyList) {
+              selector: (state) => state.history,
+              builder: (context, historyList) {
                 final List<SyncCycleSummary> history = historyList.reversed
                     .toList(growable: false);
                 if (history.isEmpty) {
@@ -64,7 +64,7 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
                     ),
                     SizedBox(height: gap),
                     ...history.map(
-                      (final summary) {
+                      (summary) {
                         final DateTime local = summary.recordedAt.toLocal();
                         final String timestamp =
                             '${material.formatShortDate(local)} · ${material.formatTimeOfDay(
@@ -73,13 +73,13 @@ class _SyncDiagnosticsSectionState extends State<SyncDiagnosticsSection> {
                         final List<MapEntry<String, int>> pendingEntries =
                             summary.pendingByEntity.entries.toList()..sort(
                               (
-                                final a,
-                                final b,
+                                a,
+                                b,
                               ) => a.key.compareTo(b.key),
                             );
                         final List<Widget> pendingChips = pendingEntries
                             .map(
-                              (final entry) => Box(
+                              (entry) => Box(
                                 style: AppStyles.chip,
                                 child: Text(
                                   '${entry.key}: ${entry.value}',

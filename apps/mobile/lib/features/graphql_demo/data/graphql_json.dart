@@ -1,11 +1,10 @@
 /// Defensive JSON readers for GraphQL country wire payloads.
-Never _badGraphql(final String key, final Object? value) =>
-    throw FormatException(
-      'GraphQL JSON: invalid "$key" (${_jsonValueKind(value)})',
-    );
+Never _badGraphql(String key, Object? value) => throw FormatException(
+  'GraphQL JSON: invalid "$key" (${_jsonValueKind(value)})',
+);
 
 /// Reports type shape only — never the untrusted payload value.
-String _jsonValueKind(final Object? value) {
+String _jsonValueKind(Object? value) {
   if (value == null) {
     return 'null';
   }
@@ -19,8 +18,8 @@ String _jsonValueKind(final Object? value) {
 }
 
 String requireGraphqlString(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value is! String || value.isEmpty) {
@@ -30,8 +29,8 @@ String requireGraphqlString(
 }
 
 String? optionalGraphqlString(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value == null) {
@@ -44,8 +43,8 @@ String? optionalGraphqlString(
 }
 
 Map<String, dynamic> requireGraphqlMap(
-  final Map<String, dynamic> json,
-  final String key,
+  Map<String, dynamic> json,
+  String key,
 ) {
   final Object? value = json[key];
   if (value is! Map) {

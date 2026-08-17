@@ -91,8 +91,7 @@ extension PushMessagePatterns on PushMessage {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PushMessage value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PushMessage value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _PushMessage() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PushMessage value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PushMessage value)  $default,){final _that = this;
 switch (_that) {
 case _PushMessage():
 return $default(_that);case _:
@@ -134,8 +132,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PushMessage value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PushMessage value)?  $default,){final _that = this;
 switch (_that) {
 case _PushMessage() when $default != null:
 return $default(_that);case _:
@@ -211,7 +208,7 @@ return $default(_that.messageId,_that.title,_that.body,_that.sentTime,_that.data
 
 
 class _PushMessage implements PushMessage {
-  const _PushMessage({required this.messageId, required this.title, required this.body, required this.sentTime, required final  Map<String, String> data, this.source = PushMessageSource.foreground}): _data = data;
+  const _PushMessage({required this.messageId, required this.title, required this.body, required this.sentTime, required  Map<String, String> data, this.source = PushMessageSource.foreground}): _data = data;
   
 
 @override final  String messageId;

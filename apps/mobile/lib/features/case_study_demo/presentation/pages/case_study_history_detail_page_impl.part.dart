@@ -3,11 +3,11 @@ part of 'case_study_history_detail_page.dart';
 class CaseStudyHistoryDetailPage extends StatelessWidget {
   const CaseStudyHistoryDetailPage({super.key});
 
-  Future<bool> _confirmDelete(final BuildContext context) async {
+  Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = context.l10n;
     final bool? confirmed = await showAdaptiveDialog<bool>(
       context: context,
-      builder: (final dialogContext) => AlertDialog.adaptive(
+      builder: (dialogContext) => AlertDialog.adaptive(
         title: Text(l10n.caseStudyDeleteDialogTitle),
         content: Text(l10n.caseStudyDeleteDialogBody),
         actions: [
@@ -26,16 +26,16 @@ class CaseStudyHistoryDetailPage extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return TypeSafeBlocListener<
       CaseStudyHistoryDetailCubit,
       CaseStudyHistoryDetailState
     >(
-      listenWhen: (final prev, final curr) =>
+      listenWhen: (prev, curr) =>
           prev.transientError != curr.transientError &&
           curr.transientError != null,
-      listener: (final context, final state) {
+      listener: (context, state) {
         final Object? error = state.transientError;
         if (error == null) return;
         ErrorHandling.handleCubitError(context, error);
@@ -48,9 +48,8 @@ class CaseStudyHistoryDetailPage extends StatelessWidget {
             CaseStudyHistoryDetailCubit,
             CaseStudyHistoryDetailState
           >(
-            buildWhen: (final prev, final curr) =>
-                prev.isDeleting != curr.isDeleting,
-            builder: (final context, final deleteState) {
+            buildWhen: (prev, curr) => prev.isDeleting != curr.isDeleting,
+            builder: (context, deleteState) {
               return IconButton(
                 icon: const Icon(Icons.delete_outline),
                 tooltip: l10n.deleteButtonLabel,
@@ -81,7 +80,7 @@ class CaseStudyHistoryDetailPage extends StatelessWidget {
               CaseStudyHistoryDetailCubit,
               CaseStudyHistoryDetailState
             >(
-              builder: (final context, final state) {
+              builder: (context, state) {
                 if (state.isLoading && state.record == null) {
                   return const Center(child: CircularProgressIndicator());
                 }

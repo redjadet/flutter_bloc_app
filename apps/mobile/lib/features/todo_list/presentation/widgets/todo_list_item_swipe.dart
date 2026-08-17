@@ -1,14 +1,14 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds the swipe background widget for dismissible todo items.
 Widget buildTodoSwipeBackground({
-  required final BuildContext context,
-  required final AlignmentGeometry alignment,
-  required final Color color,
-  required final Color foregroundColor,
-  required final IconData icon,
-  required final String label,
+  required BuildContext context,
+  required AlignmentGeometry alignment,
+  required Color color,
+  required Color foregroundColor,
+  required IconData icon,
+  required String label,
 }) => CommonCard(
   color: color,
   elevation: 0,

@@ -1,17 +1,17 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoDashboardPage extends StatelessWidget {
   const StaffAppDemoDashboardPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final state = context.watch<StaffDemoSessionCubit>().state;
     final l10n = context.l10n;
 
@@ -42,7 +42,7 @@ class _DashboardBody extends StatelessWidget {
   final StaffDemoSessionState state;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final profile = state.profile;
     return ListView(

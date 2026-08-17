@@ -1,5 +1,5 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:auth/auth.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
@@ -12,17 +12,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 const _user = AuthUser(id: 'user-1', isAnonymous: false);
 
-CaseStudyRecord _record({
-  final String id = 'r1',
-  final String notes = 'notes',
-}) => CaseStudyRecord(
-  id: id,
-  submittedAt: DateTime.utc(2026, 4, 1, 12),
-  doctorName: 'Dr. Test',
-  caseType: CaseStudyCaseType.implant,
-  notes: notes,
-  answers: const <String, String>{},
-);
+CaseStudyRecord _record({String id = 'r1', String notes = 'notes'}) =>
+    CaseStudyRecord(
+      id: id,
+      submittedAt: DateTime.utc(2026, 4, 1, 12),
+      doctorName: 'Dr. Test',
+      caseType: CaseStudyCaseType.implant,
+      notes: notes,
+      answers: const <String, String>{},
+    );
 
 class _StubAuthRepository implements AuthRepository {
   const _StubAuthRepository(this._currentUser);
@@ -52,7 +50,7 @@ class _StubRemoteBackendAuth implements RemoteBackendAuthPort {
 
 class _MutableLocalRepository implements CaseStudyLocalRepository {
   _MutableLocalRepository({
-    required final List<CaseStudyRecord> initialRecords,
+    required List<CaseStudyRecord> initialRecords,
     this.onGetRecord,
     this.onSaveRecords,
   }) : _records = List<CaseStudyRecord>.from(initialRecords);
@@ -67,26 +65,20 @@ class _MutableLocalRepository implements CaseStudyLocalRepository {
   Future<void> ensureReady() async {}
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async => null;
+  Future<CaseStudyDraft?> loadDraft(String userId) async => null;
 
   @override
-  Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
-  ) async {}
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {}
 
   @override
-  Future<void> clearDraft(final String userId) async {}
+  Future<void> clearDraft(String userId) async {}
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async =>
       List<CaseStudyRecord>.from(_records);
 
   @override
-  Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
-  ) async {
+  Future<void> saveRecords(String userId, List<CaseStudyRecord> records) async {
     if (onSaveRecords != null) {
       await onSaveRecords!(userId, records);
     }
@@ -94,10 +86,7 @@ class _MutableLocalRepository implements CaseStudyLocalRepository {
   }
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
-  ) async {
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async {
     if (onGetRecord != null) {
       return onGetRecord!(userId, recordId);
     }
@@ -111,7 +100,7 @@ class _MutableLocalRepository implements CaseStudyLocalRepository {
 class _ThrowingLocalRepository extends _MutableLocalRepository {
   _ThrowingLocalRepository({required super.initialRecords})
     : super(
-        onGetRecord: (final userId, final recordId) async {
+        onGetRecord: (userId, recordId) async {
           throw Exception('load failed for $recordId ($userId)');
         },
       );
@@ -123,7 +112,7 @@ class _SlowDeleteRepository implements CaseStudyRemoteDeleteRepository {
   final void Function() onDeleteStarted;
 
   @override
-  Future<void> deleteCaseStudyRemote({required final String caseId}) async {
+  Future<void> deleteCaseStudyRemote({required String caseId}) async {
     onDeleteStarted();
     await Future<void>.delayed(const Duration(milliseconds: 50));
   }
@@ -131,59 +120,59 @@ class _SlowDeleteRepository implements CaseStudyRemoteDeleteRepository {
 
 class _NoopClipStore implements CaseStudyClipFileStore {
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {}
+  Future<void> deleteCaseFolder(String caseId) async {}
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {}
+  Future<void> deleteFileIfExists(String? path) async {}
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+  String finalClipFilePathFromStaging(String stagingPath) => stagingPath;
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async => sourcePath;
 
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async => sourcePath;
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) => finalPath;
 
   @override
-  Future<List<int>> readClipBytes(final String path) async => const <int>[];
+  Future<List<int>> readClipBytes(String path) async => const <int>[];
 }
 
 class _NoopRemoteRepository implements CaseStudyRemoteRepository {
   @override
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   }) async => '';
 
   @override
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   }) async {}
 
   @override
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   }) async => null;
 
   @override
@@ -192,27 +181,27 @@ class _NoopRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   }) async => '';
 
   @override
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   }) async {}
 }
 
 void main() {
   group('CaseStudyHistoryDetailCubit', () {
     CaseStudyHistoryDetailCubit buildCubit({
-      required final String recordId,
-      final CaseStudyLocalRepository? localRepository,
-      final CaseStudyRemoteDeleteRepository? remoteDelete,
+      required String recordId,
+      CaseStudyLocalRepository? localRepository,
+      CaseStudyRemoteDeleteRepository? remoteDelete,
     }) => CaseStudyHistoryDetailCubit(
       recordId: recordId,
       authRepository: const _StubAuthRepository(_user),
@@ -228,35 +217,35 @@ void main() {
     blocTest<CaseStudyHistoryDetailCubit, CaseStudyHistoryDetailState>(
       'load with empty recordId emits notFound',
       build: () => buildCubit(recordId: ''),
-      act: (final cubit) => cubit.load(),
+      act: (cubit) => cubit.load(),
       expect: () => <dynamic>[
         isA<CaseStudyHistoryDetailState>()
             .having(
-              (final s) => s.status,
+              (s) => s.status,
               'status',
               CaseStudyHistoryDetailStatus.notFound,
             )
-            .having((final s) => s.record, 'record', isNull),
+            .having((s) => s.record, 'record', isNull),
       ],
     );
 
     blocTest<CaseStudyHistoryDetailCubit, CaseStudyHistoryDetailState>(
       'load loads local record',
       build: () => buildCubit(recordId: 'r1'),
-      act: (final cubit) => cubit.load(),
+      act: (cubit) => cubit.load(),
       expect: () => <dynamic>[
         isA<CaseStudyHistoryDetailState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'loading',
           CaseStudyHistoryDetailStatus.loading,
         ),
         isA<CaseStudyHistoryDetailState>()
             .having(
-              (final s) => s.status,
+              (s) => s.status,
               'loaded',
               CaseStudyHistoryDetailStatus.loaded,
             )
-            .having((final s) => s.record?.id, 'record id', 'r1'),
+            .having((s) => s.record?.id, 'record id', 'r1'),
       ],
     );
 
@@ -268,20 +257,20 @@ void main() {
           initialRecords: <CaseStudyRecord>[_record()],
         ),
       ),
-      act: (final cubit) => cubit.load(),
+      act: (cubit) => cubit.load(),
       expect: () => <dynamic>[
         isA<CaseStudyHistoryDetailState>().having(
-          (final s) => s.status,
+          (s) => s.status,
           'loading',
           CaseStudyHistoryDetailStatus.loading,
         ),
         isA<CaseStudyHistoryDetailState>()
             .having(
-              (final s) => s.status,
+              (s) => s.status,
               'error',
               CaseStudyHistoryDetailStatus.error,
             )
-            .having((final s) => s.errorMessage, 'errorMessage', isNotNull),
+            .having((s) => s.errorMessage, 'errorMessage', isNotNull),
       ],
     );
 
@@ -294,7 +283,7 @@ void main() {
           authRepository: const _StubAuthRepository(_user),
           localRepository: _MutableLocalRepository(
             initialRecords: <CaseStudyRecord>[_record()],
-            onGetRecord: (final _, final recordId) async {
+            onGetRecord: (_, recordId) async {
               loadCount += 1;
               if (loadCount == 1) {
                 await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -326,10 +315,10 @@ void main() {
         authRepository: const _StubAuthRepository(_user),
         localRepository: _MutableLocalRepository(
           initialRecords: <CaseStudyRecord>[_record()],
-          onSaveRecords: (final _, final records) async {
+          onSaveRecords: (_, records) async {
             await Future<void>.delayed(const Duration(milliseconds: 30));
           },
-          onGetRecord: (final _, final recordId) async {
+          onGetRecord: (_, recordId) async {
             fetchCount += 1;
             if (fetchCount == 2) {
               final CaseStudyRecord stale = _record(id: recordId);
@@ -363,7 +352,7 @@ void main() {
         authRepository: const _StubAuthRepository(_user),
         localRepository: _MutableLocalRepository(
           initialRecords: <CaseStudyRecord>[_record()],
-          onSaveRecords: (final _, final records) async {
+          onSaveRecords: (_, records) async {
             deleteStarted = true;
             await Future<void>.delayed(const Duration(milliseconds: 50));
           },

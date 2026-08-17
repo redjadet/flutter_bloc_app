@@ -94,8 +94,7 @@ extension MapSampleStatePatterns on MapSampleState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MapSampleState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MapSampleState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _MapSampleState() when $default != null:
 return $default(_that);case _:
@@ -116,8 +115,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MapSampleState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MapSampleState value)  $default,){final _that = this;
 switch (_that) {
 case _MapSampleState():
 return $default(_that);case _:
@@ -137,8 +135,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MapSampleState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MapSampleState value)?  $default,){final _that = this;
 switch (_that) {
 case _MapSampleState() when $default != null:
 return $default(_that);case _:
@@ -214,7 +211,7 @@ return $default(_that.cameraPosition,_that.isLoading,_that.errorMessage,_that.la
 
 
 class _MapSampleState extends MapSampleState {
-  const _MapSampleState({required this.cameraPosition, this.isLoading = true, this.errorMessage, this.lastError, final  Set<gmaps.Marker> markers = const <gmaps.Marker>{}, this.mapType = gmaps.MapType.normal, this.trafficEnabled = false, final  List<MapLocation> locations = const <MapLocation>[], this.selectedMarkerId}): _markers = markers,_locations = locations,super._();
+  const _MapSampleState({required this.cameraPosition, this.isLoading = true, this.errorMessage, this.lastError, Set<gmaps.Marker> markers = const <gmaps.Marker>{}, this.mapType = gmaps.MapType.normal, this.trafficEnabled = false, List<MapLocation> locations = const <MapLocation>[], this.selectedMarkerId}): _markers = markers,_locations = locations,super._();
   
 
 @override final  gmaps.CameraPosition cameraPosition;

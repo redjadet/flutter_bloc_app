@@ -97,17 +97,13 @@ void main() {
         );
         return buildCubit();
       },
-      act: (final cubit) async => cubit.loadQueue(),
+      act: (cubit) async => cubit.loadQueue(),
       expect: () => [
-        isA<AiDecisionState>().having(
-          (final s) => s.isLoadingQueue,
-          'loading',
-          true,
-        ),
+        isA<AiDecisionState>().having((s) => s.isLoadingQueue, 'loading', true),
         isA<AiDecisionState>()
-            .having((final s) => s.isLoadingQueue, 'loading', false)
+            .having((s) => s.isLoadingQueue, 'loading', false)
             .having(
-              (final s) => s.failure?.displayMessage,
+              (s) => s.failure?.displayMessage,
               'failure.displayMessage',
               'Network connection error. Please check your internet connection.',
             ),
@@ -118,29 +114,24 @@ void main() {
       'loadQueue emits loading -> queue -> case detail',
       build: () {
         when(repository.getCases).thenAnswer((_) async => queue);
-        when(
-          () => repository.getCaseDetail('case_1'),
-        ).thenAnswer((_) async => detail);
+        when(() => repository.getCaseDetail('case_1'))
+            .thenAnswer((_) async => detail);
         return buildCubit();
       },
-      act: (final cubit) async => cubit.loadQueue(),
+      act: (cubit) async => cubit.loadQueue(),
       expect: () => [
-        isA<AiDecisionState>().having(
-          (final s) => s.isLoadingQueue,
-          'loading',
-          true,
-        ),
+        isA<AiDecisionState>().having((s) => s.isLoadingQueue, 'loading', true),
         isA<AiDecisionState>()
-            .having((final s) => s.isLoadingQueue, 'loading', false)
-            .having((final s) => s.queue.length, 'queue length', 2)
-            .having((final s) => s.selectedCaseId, 'selectedCaseId', 'case_1'),
+            .having((s) => s.isLoadingQueue, 'loading', false)
+            .having((s) => s.queue.length, 'queue length', 2)
+            .having((s) => s.selectedCaseId, 'selectedCaseId', 'case_1'),
         isA<AiDecisionState>().having(
-          (final s) => s.caseDetail?.caseId,
+          (s) => s.caseDetail?.caseId,
           'caseId',
           'case_1',
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         verify(repository.getCases).called(1);
         verify(() => repository.getCaseDetail('case_1')).called(1);
       },
@@ -149,9 +140,8 @@ void main() {
     blocTest<AiDecisionCubit, AiDecisionState>(
       'runDecisionSupport emits running -> decision -> reloads case',
       build: () {
-        when(
-          () => repository.getCaseDetail('case_1'),
-        ).thenAnswer((_) async => detail);
+        when(() => repository.getCaseDetail('case_1'))
+            .thenAnswer((_) async => detail);
         when(
           () => repository.runDecisionSupport(
             caseId: 'case_1',
@@ -166,48 +156,45 @@ void main() {
         selectedCaseId: 'case_1',
         caseDetail: detail,
       ),
-      act: (final cubit) async =>
-          cubit.runDecisionSupport(operatorNote: 'note'),
+      act: (cubit) async => cubit.runDecisionSupport(operatorNote: 'note'),
       expect: () => [
         isA<AiDecisionState>().having(
-          (final s) => s.isRunningDecision,
+          (s) => s.isRunningDecision,
           'running',
           true,
         ),
         isA<AiDecisionState>()
-            .having((final s) => s.isRunningDecision, 'running', false)
-            .having((final s) => s.decision?.riskBand, 'band', 'high'),
+            .having((s) => s.isRunningDecision, 'running', false)
+            .having((s) => s.decision?.riskBand, 'band', 'high'),
         // loadCase intermediate emit
         isA<AiDecisionState>().having(
-          (final s) => s.selectedCaseId,
+          (s) => s.selectedCaseId,
           'selectedCaseId',
           'case_1',
         ),
         isA<AiDecisionState>().having(
-          (final s) => s.caseDetail?.caseId,
+          (s) => s.caseDetail?.caseId,
           'reloaded case',
           'case_1',
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         verify(
           () => repository.runDecisionSupport(
             caseId: 'case_1',
             operatorNote: any(named: 'operatorNote'),
           ),
         ).called(1);
-        verify(
-          () => repository.getCaseDetail('case_1'),
-        ).called(greaterThanOrEqualTo(1));
+        verify(() => repository.getCaseDetail('case_1'))
+            .called(greaterThanOrEqualTo(1));
       },
     );
 
     blocTest<AiDecisionCubit, AiDecisionState>(
       'loadCase clears stale decision proof for the previously selected case',
       build: () {
-        when(
-          () => repository.getCaseDetail('case_2'),
-        ).thenAnswer((_) async => secondDetail);
+        when(() => repository.getCaseDetail('case_2'))
+            .thenAnswer((_) async => secondDetail);
         return buildCubit();
       },
       seed: () => AiDecisionState.initial().copyWith(
@@ -217,17 +204,17 @@ void main() {
         caseDetail: detail,
         decision: highDecision,
       ),
-      act: (final cubit) async => cubit.loadCase('case_2'),
+      act: (cubit) async => cubit.loadCase('case_2'),
       expect: () => [
         isA<AiDecisionState>()
-            .having((final s) => s.selectedCaseId, 'selectedCaseId', 'case_2')
-            .having((final s) => s.caseDetail, 'caseDetail', isNull)
-            .having((final s) => s.decision, 'decision', isNull),
+            .having((s) => s.selectedCaseId, 'selectedCaseId', 'case_2')
+            .having((s) => s.caseDetail, 'caseDetail', isNull)
+            .having((s) => s.decision, 'decision', isNull),
         isA<AiDecisionState>()
-            .having((final s) => s.caseDetail?.caseId, 'caseId', 'case_2')
-            .having((final s) => s.decision, 'decision', isNull),
+            .having((s) => s.caseDetail?.caseId, 'caseId', 'case_2')
+            .having((s) => s.decision, 'decision', isNull),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         verify(() => repository.getCaseDetail('case_2')).called(1);
       },
     );
@@ -242,9 +229,8 @@ void main() {
             note: any(named: 'note'),
           ),
         ).thenAnswer((_) async {});
-        when(
-          () => repository.getCaseDetail('case_1'),
-        ).thenAnswer((_) async => detail);
+        when(() => repository.getCaseDetail('case_1'))
+            .thenAnswer((_) async => detail);
         return buildCubit();
       },
       seed: () => AiDecisionState.initial().copyWith(
@@ -253,32 +239,23 @@ void main() {
         selectedCaseId: 'case_1',
         caseDetail: detail,
       ),
-      act: (final cubit) async =>
-          cubit.saveAction(actionType: 'approve', note: 'ok'),
+      act: (cubit) async => cubit.saveAction(actionType: 'approve', note: 'ok'),
       expect: () => [
-        isA<AiDecisionState>().having(
-          (final s) => s.isSavingAction,
-          'saving',
-          true,
-        ),
-        isA<AiDecisionState>().having(
-          (final s) => s.isSavingAction,
-          'saving',
-          false,
-        ),
+        isA<AiDecisionState>().having((s) => s.isSavingAction, 'saving', true),
+        isA<AiDecisionState>().having((s) => s.isSavingAction, 'saving', false),
         // loadCase intermediate emit
         isA<AiDecisionState>().having(
-          (final s) => s.selectedCaseId,
+          (s) => s.selectedCaseId,
           'selectedCaseId',
           'case_1',
         ),
         isA<AiDecisionState>().having(
-          (final s) => s.caseDetail?.caseId,
+          (s) => s.caseDetail?.caseId,
           'reloaded case',
           'case_1',
         ),
       ],
-      verify: (final cubit) {
+      verify: (cubit) {
         verify(
           () => repository.createAction(
             caseId: 'case_1',

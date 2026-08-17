@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/app/widgets/backend_disabled_banner.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
@@ -9,15 +9,16 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dar
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_cloud_tab.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   testWidgets(
     'IotDemoCloudTab shows backend banner when showBackendDisabledBanner is true',
-    (final tester) async {
+    (tester) async {
       await _pumpCloudTab(tester, showBackendDisabledBanner: true);
 
       expect(find.byType(BackendDisabledBanner), findsOneWidget);
@@ -27,7 +28,7 @@ void main() {
 
   testWidgets(
     'IotDemoCloudTab hides backend banner when showBackendDisabledBanner is false',
-    (final tester) async {
+    (tester) async {
       await _pumpCloudTab(tester, showBackendDisabledBanner: false);
 
       expect(find.text('Backend disabled'), findsNothing);
@@ -36,8 +37,8 @@ void main() {
 }
 
 Future<void> _pumpCloudTab(
-  final WidgetTester tester, {
-  required final bool showBackendDisabledBanner,
+  WidgetTester tester, {
+  required bool showBackendDisabledBanner,
 }) async {
   final IotDemoCubit cubit = IotDemoCubit(repository: _StubIotDemoRepository())
     ..emit(const IotDemoState.loaded(<IotDevice>[], selectedDeviceId: null));
@@ -52,10 +53,10 @@ Future<void> _pumpCloudTab(
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => buildAppMixScope(
+        builder: (context) => buildAppMixScope(
           context,
           child: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
@@ -76,23 +77,20 @@ Future<void> _pumpCloudTab(
 class _StubIotDemoRepository implements IotDemoRepository {
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) => Stream<List<IotDevice>>.value(const <IotDevice>[]);
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {
@@ -139,7 +137,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 

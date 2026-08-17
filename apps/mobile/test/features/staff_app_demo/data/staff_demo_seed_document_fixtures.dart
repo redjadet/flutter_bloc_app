@@ -43,9 +43,9 @@ const Map<String, dynamic> kStaffDemoSeedEmployeeProfileDocument =
 
 /// `staffDemoShifts/shift1`-shaped document (timestamps are caller-provided).
 Map<String, dynamic> staffDemoSeedShift1Document({
-  required final String employeeUid,
-  required final Timestamp startAt,
-  required final Timestamp endAt,
+  required String employeeUid,
+  required Timestamp startAt,
+  required Timestamp endAt,
 }) => <String, dynamic>{
   'userId': employeeUid,
   'siteId': kStaffDemoSeedSiteId,

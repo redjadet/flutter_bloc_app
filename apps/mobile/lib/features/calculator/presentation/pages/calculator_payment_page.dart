@@ -1,15 +1,15 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_summary_card.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CalculatorPaymentPage extends StatelessWidget {
   const CalculatorPaymentPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final bool isWide = context.isMediumWidth || context.isTabletOrLarger;
     final EdgeInsets padding = EdgeInsets.symmetric(

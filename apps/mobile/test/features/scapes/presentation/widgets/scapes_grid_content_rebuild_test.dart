@@ -1,17 +1,18 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_cubit.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/cubit/scapes_state.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scapes_grid_content.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:utilities/utilities.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:utilities/utilities.dart';
 
 class _MockScapesCubit extends MockCubit<ScapesState> implements ScapesCubit {}
 
@@ -28,14 +29,12 @@ void main() {
     });
 
     testWidgets('selector rebuilds only when selected tuple changes', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
-      final ScapesReady initial =
-          const ScapesState.ready(
-                scapes: <Scape>[],
-                viewMode: ScapesViewMode.grid,
-              )
-              as ScapesReady;
+      final ScapesReady initial = const ScapesState.ready(
+        scapes: <Scape>[],
+        viewMode: ScapesViewMode.grid,
+      ) as ScapesReady;
       final StreamController<ScapesState> streamController =
           StreamController<ScapesState>.broadcast();
       addTearDown(streamController.close);
@@ -45,7 +44,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<ScapesCubit>.value(
             value: cubit,
@@ -80,9 +79,9 @@ void main() {
                   ScapesState,
                   (bool, bool, String?, List<Scape>)
                 >(
-                  selector: (final s) =>
+                  selector: (s) =>
                       (s.isLoading, s.hasError, s.errorMessage, s.scapes),
-                  builder: (final context, final data) {
+                  builder: (context, data) {
                     buildCount++;
                     return Text(
                       'loading=${data.$1}, error=${data.$2}, scapes=${data.$4.length}',

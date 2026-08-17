@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staf
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String staffDemoMessagesResolvedError(
-  final AppLocalizations l10n,
-  final StaffDemoMessagesState state,
+  AppLocalizations l10n,
+  StaffDemoMessagesState state,
 ) {
   final known = state.knownError;
   if (known != null) {
@@ -20,8 +20,8 @@ String staffDemoMessagesResolvedError(
 
 /// Status banner copy for the staff demo forms page.
 String? staffDemoFormsStatusBannerMessage(
-  final AppLocalizations l10n,
-  final StaffDemoFormsState state,
+  AppLocalizations l10n,
+  StaffDemoFormsState state,
 ) {
   return switch (state.status) {
     StaffDemoFormsStatus.initial => null,

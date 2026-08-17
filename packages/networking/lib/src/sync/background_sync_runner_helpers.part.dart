@@ -1,11 +1,11 @@
 part of 'background_sync_runner.dart';
 
-Map<String, int> _pendingByEntity(final List<SyncOperation> pending) {
+Map<String, int> _pendingByEntity(List<SyncOperation> pending) {
   final Map<String, int> pendingByEntity = <String, int>{};
   for (final SyncOperation operation in pending) {
     pendingByEntity.update(
       operation.entityType,
-      (final count) => count + 1,
+      (count) => count + 1,
       ifAbsent: () => 1,
     );
   }
@@ -13,11 +13,11 @@ Map<String, int> _pendingByEntity(final List<SyncOperation> pending) {
 }
 
 Future<_PullRemoteResult> _pullAllRemote({
-  required final List<SyncableRepository> syncables,
-  required final void Function(SyncStatus status) emitStatus,
-  required final _PullRemoteResult result,
-  final String? Function()? getSharedSyncAuthUserId,
-  final String? authUserIdAtCycleStart,
+  required List<SyncableRepository> syncables,
+  required void Function(SyncStatus status) emitStatus,
+  required _PullRemoteResult result,
+  String? Function()? getSharedSyncAuthUserId,
+  String? authUserIdAtCycleStart,
 }) async {
   for (final SyncableRepository repo in syncables) {
     if (_isSharedSyncAuthStale(
@@ -51,12 +51,12 @@ Future<_PullRemoteResult> _pullAllRemote({
 }
 
 Future<_PendingProcessingResult> _processPendingOperations({
-  required final List<SyncOperation> pending,
-  required final SyncableRepositoryRegistry registry,
-  required final PendingSyncRepository pendingRepository,
-  required final void Function(SyncStatus status) emitStatus,
-  final String? Function()? getSharedSyncAuthUserId,
-  final String? authUserIdAtCycleStart,
+  required List<SyncOperation> pending,
+  required SyncableRepositoryRegistry registry,
+  required PendingSyncRepository pendingRepository,
+  required void Function(SyncStatus status) emitStatus,
+  String? Function()? getSharedSyncAuthUserId,
+  String? authUserIdAtCycleStart,
 }) async {
   final _PendingProcessingResult result = _PendingProcessingResult();
   final _CoalescedPendingOperations coalescedPending =
@@ -88,17 +88,17 @@ Future<_PendingProcessingResult> _processPendingOperations({
 }
 
 _CoalescedPendingOperations _coalescePendingOperations(
-  final List<SyncOperation> pending,
+  List<SyncOperation> pending,
 ) {
   const String counterEntity = 'counter';
   final List<SyncOperation> operations = <SyncOperation>[];
   final List<String> operationIdsToMarkCompleted = <String>[];
   final List<SyncOperation> counterOps = pending
-      .where((final op) => op.entityType == counterEntity)
+      .where((op) => op.entityType == counterEntity)
       .toList();
 
   if (counterOps.length > 1) {
-    final SyncOperation latestCounterOp = counterOps.reduce((final a, final b) {
+    final SyncOperation latestCounterOp = counterOps.reduce((a, b) {
       if (b.createdAt.isAfter(a.createdAt)) {
         return b;
       }
@@ -133,13 +133,13 @@ _CoalescedPendingOperations _coalescePendingOperations(
 }
 
 Future<void> _processOperation({
-  required final SyncOperation operation,
-  required final SyncableRepositoryRegistry registry,
-  required final PendingSyncRepository pendingRepository,
-  required final void Function(SyncStatus status) emitStatus,
-  required final _PendingProcessingResult result,
-  final String? Function()? getSharedSyncAuthUserId,
-  final String? authUserIdAtCycleStart,
+  required SyncOperation operation,
+  required SyncableRepositoryRegistry registry,
+  required PendingSyncRepository pendingRepository,
+  required void Function(SyncStatus status) emitStatus,
+  required _PendingProcessingResult result,
+  String? Function()? getSharedSyncAuthUserId,
+  String? authUserIdAtCycleStart,
 }) async {
   final SyncableRepository? repository = registry.resolve(operation.entityType);
   if (repository == null) {
@@ -202,14 +202,14 @@ Future<void> _processOperation({
   }
 }
 
-DateTime _nextRetryAt(final int retryCount) {
+DateTime _nextRetryAt(int retryCount) {
   final int backoffMinutes = pow(2, retryCount.clamp(0, 5)).toInt();
   return DateTime.now().toUtc().add(Duration(minutes: backoffMinutes));
 }
 
 bool _isSharedSyncAuthStale({
-  required final String? Function()? getSharedSyncAuthUserId,
-  required final String? authUserIdAtCycleStart,
+  required String? Function()? getSharedSyncAuthUserId,
+  required String? authUserIdAtCycleStart,
 }) {
   if (getSharedSyncAuthUserId == null) {
     return false;
@@ -218,12 +218,11 @@ bool _isSharedSyncAuthStale({
 }
 
 SyncCycleSummary _abortSyncCycleForAuthChange({
-  required final Stopwatch stopwatch,
-  required final int pendingAtStart,
-  required final Map<String, int> pendingByEntity,
-  required final void Function(SyncStatus status) emitStatus,
-  required final void Function(String event, Map<String, Object?> payload)
-  telemetry,
+  required Stopwatch stopwatch,
+  required int pendingAtStart,
+  required Map<String, int> pendingByEntity,
+  required void Function(SyncStatus status) emitStatus,
+  required void Function(String event, Map<String, Object?> payload) telemetry,
 }) {
   stopwatch.stop();
   final SyncCycleSummary summary = _buildSummary(

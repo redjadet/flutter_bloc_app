@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PlatformInfoSection extends StatelessWidget {
   const PlatformInfoSection({
@@ -16,7 +16,7 @@ class PlatformInfoSection extends StatelessWidget {
   final String? errorMessage;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     if (isLoading && info == null && errorMessage == null) {
@@ -60,15 +60,15 @@ class PlatformInfoSection extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _loadingIndicator(final BuildContext context) => Padding(
+  Widget _loadingIndicator(BuildContext context) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
     child: const CommonLoadingWidget(),
   );
 
   Widget _errorText(
-    final BuildContext context,
-    final ThemeData theme,
-    final String message,
+    BuildContext context,
+    ThemeData theme,
+    String message,
   ) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
     child: Text(
@@ -106,7 +106,7 @@ class IsolateResultSection extends StatelessWidget {
       parallelDuration != null;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final l10n = context.l10n;
     if (isLoading && !_hasResults && errorMessage == null) {
@@ -151,15 +151,15 @@ class IsolateResultSection extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _loadingIndicator(final BuildContext context) => Padding(
+  Widget _loadingIndicator(BuildContext context) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
     child: const CommonLoadingWidget(),
   );
 
   Widget _errorText(
-    final BuildContext context,
-    final ThemeData theme,
-    final String message,
+    BuildContext context,
+    ThemeData theme,
+    String message,
   ) => Padding(
     padding: EdgeInsets.only(top: context.responsiveGapS),
     child: Text(

@@ -16,10 +16,7 @@ class _ControllableTimerService extends Fake implements TimerService {
   int periodicCalls = 0;
 
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     periodicCalls += 1;
     _lastOnTick = onTick;
     return _ControllableTimerDisposable(onTick);
@@ -66,18 +63,14 @@ void main() {
       registry = SyncableRepositoryRegistry();
       networkController = StreamController<NetworkStatus>.broadcast();
       enqueueController = StreamController<void>.broadcast();
-      when(
-        () => networkService.statusStream,
-      ).thenAnswer((_) => networkController.stream);
-      when(
-        () => networkService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.online);
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async => <SyncOperation>[]);
-      when(
-        () => pendingRepository.onOperationEnqueued,
-      ).thenAnswer((_) => enqueueController.stream);
+      when(() => networkService.statusStream)
+          .thenAnswer((_) => networkController.stream);
+      when(() => networkService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.online);
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async => <SyncOperation>[]);
+      when(() => pendingRepository.onOperationEnqueued)
+          .thenAnswer((_) => enqueueController.stream);
       when(
         () => pendingRepository.prune(
           maxRetryCount: any(named: 'maxRetryCount'),
@@ -97,19 +90,16 @@ void main() {
         payload: const <String, dynamic>{'count': 1},
         idempotencyKey: 'key2',
       );
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async => <SyncOperation>[operation]);
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async => <SyncOperation>[operation]);
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-      when(
-        () => syncableRepo.processOperation(operation),
-      ).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(operation))
+          .thenAnswer((_) async {});
       registry.register(syncableRepo);
-      when(
-        () => pendingRepository.markCompleted(operation.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(operation.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -144,13 +134,11 @@ void main() {
         final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
         when(() => syncableRepo.entityType).thenReturn('counter');
         when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-        when(
-          () => syncableRepo.processOperation(operation),
-        ).thenAnswer((_) => processGate.future);
+        when(() => syncableRepo.processOperation(operation))
+            .thenAnswer((_) => processGate.future);
         registry.register(syncableRepo);
-        when(
-          () => pendingRepository.markCompleted(operation.id),
-        ).thenAnswer((_) async {});
+        when(() => pendingRepository.markCompleted(operation.id))
+            .thenAnswer((_) async {});
 
         final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
           repository: pendingRepository,
@@ -184,19 +172,16 @@ void main() {
         payload: const <String, dynamic>{'count': 1},
         idempotencyKey: 'quiesce-key',
       );
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async => <SyncOperation>[operation]);
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async => <SyncOperation>[operation]);
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-      when(
-        () => syncableRepo.processOperation(operation),
-      ).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(operation))
+          .thenAnswer((_) async {});
       registry.register(syncableRepo);
-      when(
-        () => pendingRepository.markCompleted(operation.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(operation.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -323,15 +308,13 @@ void main() {
         payload: const <String, dynamic>{'count': 2},
         idempotencyKey: 'retry-key',
       );
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async => <SyncOperation>[operation]);
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async => <SyncOperation>[operation]);
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-      when(
-        () => syncableRepo.processOperation(operation),
-      ).thenThrow(Exception('fail'));
+      when(() => syncableRepo.processOperation(operation))
+          .thenThrow(Exception('fail'));
       registry.register(syncableRepo);
 
       DateTime? capturedRetryAt;
@@ -397,17 +380,14 @@ void main() {
         final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
         when(() => syncableRepo.entityType).thenReturn('counter');
         when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-        when(
-          () => syncableRepo.processOperation(successOp),
-        ).thenAnswer((_) async {});
-        when(
-          () => syncableRepo.processOperation(failOp),
-        ).thenThrow(Exception('fail op'));
+        when(() => syncableRepo.processOperation(successOp))
+            .thenAnswer((_) async {});
+        when(() => syncableRepo.processOperation(failOp))
+            .thenThrow(Exception('fail op'));
         registry.register(syncableRepo);
 
-        when(
-          () => pendingRepository.markCompleted(successOp.id),
-        ).thenAnswer((_) async {});
+        when(() => pendingRepository.markCompleted(successOp.id))
+            .thenAnswer((_) async {});
         DateTime? failedRetryAt;
         when(
           () => pendingRepository.markFailed(
@@ -457,9 +437,8 @@ void main() {
     );
 
     test('ignores offline events and only syncs when online', () async {
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async => <SyncOperation>[]);
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async => <SyncOperation>[]);
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
@@ -478,25 +457,20 @@ void main() {
       await coordinator.start();
 
       // When offline, getCurrentStatus should return offline to prevent sync
-      when(
-        () => networkService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.offline);
+      when(() => networkService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.offline);
       networkController.add(NetworkStatus.offline);
       await Future<void>.delayed(const Duration(milliseconds: 10));
-      expect(
-        emitted.where((final SyncStatus s) => s == SyncStatus.syncing),
-        isEmpty,
-      );
+      expect(emitted.where((SyncStatus s) => s == SyncStatus.syncing), isEmpty);
       // Network check in _triggerSync prevents sync when offline
 
       // When online, getCurrentStatus should return online to allow sync
-      when(
-        () => networkService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.online);
+      when(() => networkService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.online);
       networkController.add(NetworkStatus.online);
       await Future<void>.delayed(const Duration(milliseconds: 10));
       expect(
-        emitted.where((final SyncStatus s) => s == SyncStatus.degraded),
+        emitted.where((SyncStatus s) => s == SyncStatus.degraded),
         isEmpty,
       );
       await coordinator.stop();
@@ -515,9 +489,8 @@ void main() {
         requestCount++;
         return requestCount == 1 ? <SyncOperation>[orphan] : <SyncOperation>[];
       });
-      when(
-        () => pendingRepository.markCompleted(orphan.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(orphan.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -534,7 +507,7 @@ void main() {
 
       verify(() => pendingRepository.markCompleted(orphan.id)).called(1);
       expect(
-        emitted.where((final SyncStatus s) => s == SyncStatus.syncing),
+        emitted.where((SyncStatus s) => s == SyncStatus.syncing),
         isNotEmpty,
       );
       expect(emitted.contains(SyncStatus.idle), isTrue);
@@ -571,9 +544,8 @@ void main() {
           retryCount: any(named: 'retryCount'),
         ),
       ).thenAnswer((_) async {});
-      when(
-        () => pendingRepository.markCompleted(retryOp.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(retryOp.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -610,12 +582,11 @@ void main() {
         idempotencyKey: 'flap',
       );
       int fetchCount = 0;
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async {
-        fetchCount++;
-        return fetchCount == 1 ? <SyncOperation>[op] : <SyncOperation>[];
-      });
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async {
+            fetchCount++;
+            return fetchCount == 1 ? <SyncOperation>[op] : <SyncOperation>[];
+          });
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
@@ -623,9 +594,8 @@ void main() {
         (_) async => Future<void>.delayed(const Duration(milliseconds: 5)),
       );
       registry.register(syncableRepo);
-      when(
-        () => pendingRepository.markCompleted(op.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(op.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -651,90 +621,11 @@ void main() {
       await coordinator.stop();
     });
 
-    test(
-      'coalesces immediate triggers and avoids overlapping sync cycles',
-      () async {
-        final SyncOperation op = SyncOperation.create(
-          entityType: 'counter',
-          payload: const <String, dynamic>{'count': 10},
-          idempotencyKey: 'coalesce',
-        );
-
-        final Completer<void> operationCompleter = Completer<void>();
-        final Completer<void> operationStarted = Completer<void>();
-        int pendingCalls = 0;
-        when(
-          () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-        ).thenAnswer((_) async {
-          pendingCalls++;
-          // start() performs an initial sync; keep it fast/empty.
-          if (pendingCalls == 1) {
-            return <SyncOperation>[];
-          }
-          // The first manual flush returns a real operation and blocks.
-          if (pendingCalls == 2) {
-            return <SyncOperation>[op];
-          }
-          // A coalesced follow-up run is allowed only after the first completes.
-          if (!operationCompleter.isCompleted) {
-            throw StateError(
-              'Overlapping sync cycle detected: second cycle started early',
-            );
-          }
-          return <SyncOperation>[];
-        });
-
-        final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
-        when(() => syncableRepo.entityType).thenReturn('counter');
-        when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
-        when(() => syncableRepo.processOperation(op)).thenAnswer((_) async {
-          if (!operationStarted.isCompleted) {
-            operationStarted.complete();
-          }
-          return operationCompleter.future;
-        });
-        registry.register(syncableRepo);
-        when(
-          () => pendingRepository.markCompleted(op.id),
-        ).thenAnswer((_) async {});
-
-        final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
-          repository: pendingRepository,
-          networkStatusService: networkService,
-          timerService: timerService,
-          registry: registry,
-          syncInterval: const Duration(milliseconds: 10),
-        );
-
-        await coordinator.start();
-
-        final Future<void> flushFuture = coordinator.flush();
-
-        // Ensure the sync cycle is actively processing before triggering.
-        await operationStarted.future;
-
-        // Trigger multiple sync requests while flush is in-flight.
-        networkController.add(NetworkStatus.online);
-        (timerService as _ControllableTimerService).tick();
-
-        operationCompleter.complete();
-
-        await flushFuture;
-        await Future<void>.delayed(const Duration(milliseconds: 5));
-
-        verify(() => syncableRepo.processOperation(op)).called(1);
-        verify(() => pendingRepository.markCompleted(op.id)).called(1);
-        expect(pendingCalls, greaterThanOrEqualTo(3));
-
-        await coordinator.stop();
-      },
-    );
-
-    test('coalesces duplicate FCM triggers into a single run', () async {
+    test('coalesces immediate triggers and avoids overlapping sync cycles', () async {
       final SyncOperation op = SyncOperation.create(
         entityType: 'counter',
-        payload: const <String, dynamic>{'count': 11},
-        idempotencyKey: 'fcm-coalesce',
+        payload: const <String, dynamic>{'count': 10},
+        idempotencyKey: 'coalesce',
       );
 
       final Completer<void> operationCompleter = Completer<void>();
@@ -748,13 +639,15 @@ void main() {
         if (pendingCalls == 1) {
           return <SyncOperation>[];
         }
-        // The first FCM trigger returns a real operation and blocks.
+        // The first manual flush returns a real operation and blocks.
         if (pendingCalls == 2) {
           return <SyncOperation>[op];
         }
-        // Any follow-up should happen only after the first completes.
+        // A coalesced follow-up run is allowed only after the first completes.
         if (!operationCompleter.isCompleted) {
-          throw StateError('Overlapping sync cycle detected');
+          throw StateError(
+            'Overlapping sync cycle detected: second cycle started early',
+          );
         }
         return <SyncOperation>[];
       });
@@ -769,9 +662,80 @@ void main() {
         return operationCompleter.future;
       });
       registry.register(syncableRepo);
-      when(
-        () => pendingRepository.markCompleted(op.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(op.id))
+          .thenAnswer((_) async {});
+
+      final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
+        repository: pendingRepository,
+        networkStatusService: networkService,
+        timerService: timerService,
+        registry: registry,
+        syncInterval: const Duration(milliseconds: 10),
+      );
+
+      await coordinator.start();
+
+      final Future<void> flushFuture = coordinator.flush();
+
+      // Ensure the sync cycle is actively processing before triggering.
+      await operationStarted.future;
+
+      // Trigger multiple sync requests while flush is in-flight.
+      networkController.add(NetworkStatus.online);
+      (timerService as _ControllableTimerService).tick();
+
+      operationCompleter.complete();
+
+      await flushFuture;
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+
+      verify(() => syncableRepo.processOperation(op)).called(1);
+      verify(() => pendingRepository.markCompleted(op.id)).called(1);
+      expect(pendingCalls, greaterThanOrEqualTo(3));
+
+      await coordinator.stop();
+    });
+
+    test('coalesces duplicate FCM triggers into a single run', () async {
+      final SyncOperation op = SyncOperation.create(
+        entityType: 'counter',
+        payload: const <String, dynamic>{'count': 11},
+        idempotencyKey: 'fcm-coalesce',
+      );
+
+      final Completer<void> operationCompleter = Completer<void>();
+      final Completer<void> operationStarted = Completer<void>();
+      int pendingCalls = 0;
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async {
+            pendingCalls++;
+            // start() performs an initial sync; keep it fast/empty.
+            if (pendingCalls == 1) {
+              return <SyncOperation>[];
+            }
+            // The first FCM trigger returns a real operation and blocks.
+            if (pendingCalls == 2) {
+              return <SyncOperation>[op];
+            }
+            // Any follow-up should happen only after the first completes.
+            if (!operationCompleter.isCompleted) {
+              throw StateError('Overlapping sync cycle detected');
+            }
+            return <SyncOperation>[];
+          });
+
+      final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
+      when(() => syncableRepo.entityType).thenReturn('counter');
+      when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
+      when(() => syncableRepo.processOperation(op)).thenAnswer((_) async {
+        if (!operationStarted.isCompleted) {
+          operationStarted.complete();
+        }
+        return operationCompleter.future;
+      });
+      registry.register(syncableRepo);
+      when(() => pendingRepository.markCompleted(op.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -809,27 +773,25 @@ void main() {
       );
 
       int pendingCalls = 0;
-      when(
-        () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-      ).thenAnswer((_) async {
-        pendingCalls++;
-        if (pendingCalls == 1) {
-          return <SyncOperation>[];
-        }
-        if (pendingCalls == 2) {
-          return <SyncOperation>[op];
-        }
-        return <SyncOperation>[];
-      });
+      when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+          .thenAnswer((_) async {
+            pendingCalls++;
+            if (pendingCalls == 1) {
+              return <SyncOperation>[];
+            }
+            if (pendingCalls == 2) {
+              return <SyncOperation>[op];
+            }
+            return <SyncOperation>[];
+          });
 
       final _MockSyncableRepository syncableRepo = _MockSyncableRepository();
       when(() => syncableRepo.entityType).thenReturn('counter');
       when(() => syncableRepo.pullRemote()).thenAnswer((_) async {});
       when(() => syncableRepo.processOperation(op)).thenAnswer((_) async {});
       registry.register(syncableRepo);
-      when(
-        () => pendingRepository.markCompleted(op.id),
-      ).thenAnswer((_) async {});
+      when(() => pendingRepository.markCompleted(op.id))
+          .thenAnswer((_) async {});
 
       final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
         repository: pendingRepository,
@@ -837,7 +799,7 @@ void main() {
         timerService: timerService,
         registry: registry,
         syncInterval: const Duration(milliseconds: 10),
-        startIotDemoRealtimeSubscription: (final callback) {
+        startIotDemoRealtimeSubscription: (callback) {
           onSyncRequested = callback;
         },
       );
@@ -858,9 +820,8 @@ void main() {
     test(
       'flush degrades gracefully when network status lookup fails',
       () async {
-        when(
-          () => networkService.getCurrentStatus(),
-        ).thenThrow(Exception('status lookup failed'));
+        when(() => networkService.getCurrentStatus())
+            .thenThrow(Exception('status lookup failed'));
 
         final BackgroundSyncCoordinator coordinator = BackgroundSyncCoordinator(
           repository: pendingRepository,

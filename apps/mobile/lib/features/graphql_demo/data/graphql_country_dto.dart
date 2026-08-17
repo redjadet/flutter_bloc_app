@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 class GraphqlContinentDto {
   GraphqlContinentDto({required this.code, required this.name});
 
-  factory GraphqlContinentDto.fromJson(final Map<String, dynamic> json) =>
+  factory GraphqlContinentDto.fromJson(Map<String, dynamic> json) =>
       GraphqlContinentDto(
         code: requireGraphqlString(json, 'code'),
         name: requireGraphqlString(json, 'name'),
@@ -26,7 +26,7 @@ class GraphqlCountryDto {
     this.emoji,
   });
 
-  factory GraphqlCountryDto.fromJson(final Map<String, dynamic> json) =>
+  factory GraphqlCountryDto.fromJson(Map<String, dynamic> json) =>
       GraphqlCountryDto(
         code: requireGraphqlString(json, 'code'),
         name: requireGraphqlString(json, 'name'),

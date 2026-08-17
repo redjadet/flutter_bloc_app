@@ -3,7 +3,7 @@ part of 'game_page.dart';
 /// Stake options (in minor units) for the demo game.
 const List<int> _stakeOptions = <int>[10, 50, 100, 500];
 
-String _symbolLegendLabel(final AppLocalizations l10n, final String symbol) {
+String _symbolLegendLabel(AppLocalizations l10n, String symbol) {
   switch (symbol) {
     case '7':
       return l10n.igamingDemoSymbol7;

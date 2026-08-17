@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/audio_playback_service.dart';
 import 'package:flutter_bloc_app/features/playlearn/domain/topic_item.dart';
@@ -6,8 +5,10 @@ import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_item.dart'
 import 'package:flutter_bloc_app/features/playlearn/domain/vocabulary_repository.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/playlearn_page.dart';
 import 'package:flutter_bloc_app/features/playlearn/presentation/pages/vocabulary_list_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Regression tests for "InheritedWidget in one-time lifecycle" bug.
 ///
@@ -60,13 +61,10 @@ void main() {
   });
 }
 
-Future<void> _pumpLocalizedPage(
-  final WidgetTester tester,
-  final Widget page,
-) async {
+Future<void> _pumpLocalizedPage(WidgetTester tester, Widget page) async {
   await tester.pumpWidget(
     MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: page,
     ),
@@ -79,13 +77,13 @@ class _FakeVocabularyRepository implements VocabularyRepository {
   List<TopicItem> getTopics() => const <TopicItem>[];
 
   @override
-  List<VocabularyItem> getWordsByTopic(final String topicId) =>
+  List<VocabularyItem> getWordsByTopic(String topicId) =>
       const <VocabularyItem>[];
 }
 
 class _FakeAudioPlaybackService implements AudioPlaybackService {
   @override
-  Future<void> speak(final String text) => Future<void>.value();
+  Future<void> speak(String text) => Future<void>.value();
 
   @override
   Future<void> stop() => Future<void>.value();

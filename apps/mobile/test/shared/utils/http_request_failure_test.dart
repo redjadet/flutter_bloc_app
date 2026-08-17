@@ -1,5 +1,5 @@
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('HttpRequestFailure', () {

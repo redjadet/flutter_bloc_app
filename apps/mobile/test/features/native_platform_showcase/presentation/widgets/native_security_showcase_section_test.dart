@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_check_attestation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/certificate_pin_policy_summary.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_security_showcase_section.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 import '../../../../test_helpers.dart';
@@ -27,7 +27,7 @@ class _FakeNativeSecurityShowcaseService
 
   @override
   Future<NativeSecurityOperationResult> run(
-    final NativeSecurityOperation operation,
+    NativeSecurityOperation operation,
   ) async {
     invocations.add(operation);
     return result;
@@ -46,8 +46,8 @@ class _FakeFirebaseAppCheckAttestationService
 }
 
 CertificatePinPolicySummary _fakeCertificateSummary(
-  final CertificatePinningConfig config, {
-  required final bool canOpenMutableDemo,
+  CertificatePinningConfig config, {
+  required bool canOpenMutableDemo,
 }) => CertificatePinPolicySummary(
   modeName: config.mode.name,
   pinHashKindName: config.pinHashKind.name,
@@ -58,8 +58,8 @@ CertificatePinPolicySummary _fakeCertificateSummary(
 );
 
 NativeSecurityShowcaseCubit _buildCubit({
-  required final NativeSecurityOperationResult operationResult,
-  final bool canOpenMutableDemo = false,
+  required NativeSecurityOperationResult operationResult,
+  bool canOpenMutableDemo = false,
 }) => NativeSecurityShowcaseCubit(
   runOperation: RunNativeSecurityOperationUseCase(
     _FakeNativeSecurityShowcaseService(result: operationResult),
@@ -74,15 +74,12 @@ NativeSecurityShowcaseCubit _buildCubit({
   canOpenMutableDemo: canOpenMutableDemo,
 );
 
-Widget _pumpableSection(final NativeSecurityShowcaseCubit cubit) =>
-    wrapWithProviders(
-      child: BlocProvider<NativeSecurityShowcaseCubit>.value(
-        value: cubit,
-        child: const SingleChildScrollView(
-          child: NativeSecurityShowcaseSection(),
-        ),
-      ),
-    );
+Widget _pumpableSection(NativeSecurityShowcaseCubit cubit) => wrapWithProviders(
+  child: BlocProvider<NativeSecurityShowcaseCubit>.value(
+    value: cubit,
+    child: const SingleChildScrollView(child: NativeSecurityShowcaseSection()),
+  ),
+);
 
 void main() {
   group('NativeSecurityShowcaseSection', () {
@@ -92,9 +89,7 @@ void main() {
       platform: 'unknown',
     );
 
-    testWidgets('shows the section and all five card keys', (
-      final tester,
-    ) async {
+    testWidgets('shows the section and all five card keys', (tester) async {
       final cubit = _buildCubit(operationResult: unavailableResult);
       addTearDown(cubit.close);
 
@@ -127,9 +122,7 @@ void main() {
       );
     });
 
-    testWidgets('crypto card shows two separate run buttons', (
-      final tester,
-    ) async {
+    testWidgets('crypto card shows two separate run buttons', (tester) async {
       final cubit = _buildCubit(operationResult: unavailableResult);
       addTearDown(cubit.close);
 
@@ -148,7 +141,7 @@ void main() {
 
     testWidgets(
       'tapping run-crypto shows the mobile-only outcome off native platforms',
-      (final tester) async {
+      (tester) async {
         final l10n = lookupAppLocalizations(const Locale('en'));
         final cubit = _buildCubit(operationResult: unavailableResult);
         addTearDown(cubit.close);
@@ -169,7 +162,7 @@ void main() {
     );
 
     testWidgets('certificate card hides the open-demo button when disabled', (
-      final tester,
+      tester,
     ) async {
       final cubit = _buildCubit(
         operationResult: unavailableResult,
@@ -189,7 +182,7 @@ void main() {
     });
 
     testWidgets('certificate card shows the open-demo button when enabled', (
-      final tester,
+      tester,
     ) async {
       final cubit = _buildCubit(
         operationResult: unavailableResult,
@@ -208,9 +201,7 @@ void main() {
       );
     });
 
-    testWidgets('never renders raw secret-looking material', (
-      final tester,
-    ) async {
+    testWidgets('never renders raw secret-looking material', (tester) async {
       const successResult = NativeSecurityOperationResult(
         status: NativeSecurityStatus.success,
         reasonCode: 'ok',
@@ -239,7 +230,7 @@ void main() {
 
       final Iterable<Text> texts = tester
           .widgetList<Text>(find.byType(Text))
-          .where((final widget) => widget.data != null);
+          .where((widget) => widget.data != null);
       for (final Text text in texts) {
         expect(text.data, isNot(contains('-----BEGIN')));
         expect(text.data!.length, lessThan(200));
@@ -247,7 +238,7 @@ void main() {
     });
 
     testWidgets('keeps all five cards on compact and wide surfaces', (
-      final tester,
+      tester,
     ) async {
       final cubit = _buildCubit(operationResult: unavailableResult);
       addTearDown(cubit.close);
@@ -278,7 +269,7 @@ void main() {
     });
 
     testWidgets('App Check setup-needed state shows Console guidance', (
-      final tester,
+      tester,
     ) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       final cubit = _buildCubit(operationResult: unavailableResult);

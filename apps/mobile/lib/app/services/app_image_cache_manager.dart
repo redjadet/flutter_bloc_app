@@ -30,7 +30,7 @@ class AppImageCacheManager extends CacheManager {
     'FLUTTER_TEST',
   );
 
-  Future<void> onTrim(final AppMemoryTrimLevel level) async {
+  Future<void> onTrim(AppMemoryTrimLevel level) async {
     if (level != AppMemoryTrimLevel.pressure) {
       return;
     }

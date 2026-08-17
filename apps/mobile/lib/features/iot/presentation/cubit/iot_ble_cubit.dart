@@ -47,8 +47,8 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
     required this._mockRepository,
     required this._reactiveRepository,
     required this._classicRepository,
-    required final BlePlatformGateway platformGateway,
-    required final IotBleRuntimeConfig runtimeConfig,
+    required BlePlatformGateway platformGateway,
+    required IotBleRuntimeConfig runtimeConfig,
     required this._timerService,
   }) : _platformGateway = platformGateway,
        super(
@@ -86,11 +86,11 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
 
   TimerService get timerService => _timerService;
 
-  void setScanTimeout(final Duration timeout) {
+  void setScanTimeout(Duration timeout) {
     emit(state.copyWith(scanTimeout: timeout));
   }
 
-  void selectDevice(final String deviceId) {
+  void selectDevice(String deviceId) {
     emit(
       state.copyWith(
         connectionLifecycle: IotBleConnectionLifecycle.idle(
@@ -100,7 +100,7 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
     );
   }
 
-  void selectCharacteristic(final BleCharacteristicRef ref) {
+  void selectCharacteristic(BleCharacteristicRef ref) {
     emit(
       state.copyWith(
         selectedCharacteristic: ref,
@@ -116,7 +116,7 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
     emit(state.copyWith(logs: const <BleLogEntry>[]));
   }
 
-  void appendLog(final BleLogKind kind, final String message) {
+  void appendLog(BleLogKind kind, String message) {
     if (isClosed) {
       return;
     }
@@ -127,7 +127,7 @@ abstract class IotBleCubitCore extends Cubit<IotBleState>
     );
   }
 
-  void emitBleFailure(final IotBleErrorCode code, final Object? cause) {
+  void emitBleFailure(IotBleErrorCode code, Object? cause) {
     final String? detail = cause is Failure
         ? cause.toString()
         : cause?.toString();

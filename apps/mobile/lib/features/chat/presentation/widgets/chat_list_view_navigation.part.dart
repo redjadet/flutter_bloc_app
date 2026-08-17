@@ -1,7 +1,7 @@
 part of 'chat_list_view.dart';
 
 extension _ChatListViewNavigation on ChatListView {
-  void navigateToChat(final BuildContext context, final ChatContact contact) {
+  void navigateToChat(BuildContext context, ChatContact contact) {
     if (!context.mounted) {
       ContextUtils.logNotMounted('ChatListView._navigateToChat');
       return;
@@ -11,7 +11,7 @@ extension _ChatListViewNavigation on ChatListView {
 
     // Navigate to chat page
     final MaterialPageRoute<void> route = MaterialPageRoute<void>(
-      builder: (final routeContext) {
+      builder: (routeContext) {
         final List<BlocProvider<dynamic>> providers = <BlocProvider<dynamic>>[
           if (CubitHelpers.isCubitAvailable<
             ChatSyncStatusCubit,
@@ -21,7 +21,7 @@ extension _ChatListViewNavigation on ChatListView {
               value: context.cubit<ChatSyncStatusCubit>(),
             ),
           BlocProvider<ChatCubit>(
-            create: (final _) {
+            create: (_) {
               final ChatCubit cubit = ChatCubit(
                 repository: chatRepository,
                 historyRepository: historyRepository,
@@ -51,8 +51,8 @@ extension _ChatListViewNavigation on ChatListView {
   }
 
   void showDeleteDialog(
-    final BuildContext context,
-    final ChatContact contact,
+    BuildContext context,
+    ChatContact contact,
   ) {
     final chatListCubit = context.cubit<ChatListCubit>();
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
@@ -60,7 +60,7 @@ extension _ChatListViewNavigation on ChatListView {
     unawaited(
       showAdaptiveDialog<void>(
         context: context,
-        builder: (final dialogContext) {
+        builder: (dialogContext) {
           if (isCupertino) {
             return CupertinoAlertDialog(
               title: Text(l10n.chatHistoryDeleteConversation),

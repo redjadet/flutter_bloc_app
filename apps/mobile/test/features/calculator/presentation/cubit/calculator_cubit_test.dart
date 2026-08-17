@@ -17,7 +17,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'inputDigit composes new amount',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('1')
       ..inputDigit('2')
       ..inputDigit('3'),
@@ -31,7 +31,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'decimal point is added only once',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('4')
       ..inputDecimalPoint()
       ..inputDecimalPoint()
@@ -46,7 +46,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'evaluates addition and stores last operand for repeated equals',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('1')
       ..inputDigit('0')
       ..selectOperation(CalculatorOperation.add)
@@ -92,7 +92,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'backspace removes digits and resets to zero',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('9')
       ..inputDigit('9')
       ..backspace()
@@ -108,7 +108,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'clearAll resets to defaults',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('3')
       ..setTaxRate(0.2)
       ..setTipRate(0.15)
@@ -188,7 +188,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'new entry after evaluation clears history',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('9')
       ..selectOperation(CalculatorOperation.add)
       ..inputDigit('1')
@@ -225,7 +225,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'divide by zero surfaces error state',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('8')
       ..selectOperation(CalculatorOperation.divide)
       ..inputDigit('0')
@@ -259,7 +259,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'clearAll resets error state',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('8')
       ..selectOperation(CalculatorOperation.divide)
       ..inputDigit('0')
@@ -295,7 +295,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'input digit clears divide-by-zero error state',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..inputDigit('8')
       ..selectOperation(CalculatorOperation.divide)
       ..inputDigit('0')
@@ -337,7 +337,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'non-positive total triggers error state',
     build: buildCubit,
-    act: (final cubit) => cubit.evaluate(),
+    act: (cubit) => cubit.evaluate(),
     expect: () => const <CalculatorState>[
       CalculatorState(
         display: '0',
@@ -352,7 +352,7 @@ void main() {
   blocTest<CalculatorCubit, CalculatorState>(
     'input digit clears non-positive total error state',
     build: buildCubit,
-    act: (final cubit) => cubit
+    act: (cubit) => cubit
       ..evaluate()
       ..inputDigit('5'),
     expect: () => const <CalculatorState>[

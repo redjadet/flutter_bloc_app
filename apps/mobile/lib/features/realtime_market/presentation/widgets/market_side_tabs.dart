@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MarketSideTabs extends StatelessWidget {
   const MarketSideTabs({
@@ -15,9 +15,9 @@ class MarketSideTabs extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final bool labelsFit = constraints.maxWidth >= 340;
         return Semantics(
           label:
@@ -39,7 +39,7 @@ class MarketSideTabs extends StatelessWidget {
               ),
             ],
             selected: <RealtimeMarketSideTab>{selected},
-            onSelectionChanged: (final next) {
+            onSelectionChanged: (next) {
               onChanged(next.first);
             },
           ),

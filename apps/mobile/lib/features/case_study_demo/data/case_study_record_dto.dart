@@ -14,7 +14,7 @@ class CaseStudyRecordDto {
     required this.answers,
   });
 
-  CaseStudyRecordDto.fromDomain(final CaseStudyRecord record)
+  CaseStudyRecordDto.fromDomain(CaseStudyRecord record)
     : id = record.id,
       submittedAt = record.submittedAt,
       doctorName = record.doctorName,
@@ -47,7 +47,7 @@ class CaseStudyRecordDto {
     'answers': answers,
   };
 
-  static CaseStudyRecordDto? fromJson(final Map<String, Object?>? json) {
+  static CaseStudyRecordDto? fromJson(Map<String, Object?>? json) {
     if (json == null) return null;
     try {
       final String? id = json['id'] as String?;
@@ -62,7 +62,7 @@ class CaseStudyRecordDto {
         json['answers'] as Map? ?? const {},
       );
       final Map<String, String> answers = answersRaw.map(
-        (final k, final v) => MapEntry(k, v?.toString() ?? ''),
+        (k, v) => MapEntry(k, v?.toString() ?? ''),
       );
 
       return CaseStudyRecordDto(
@@ -80,13 +80,11 @@ class CaseStudyRecordDto {
   }
 
   // check-ignore: small payload (<8KB) - demo history
-  static String encodeList(final List<CaseStudyRecord> records) => jsonEncode(
-    records
-        .map((final r) => CaseStudyRecordDto.fromDomain(r).toJson())
-        .toList(),
+  static String encodeList(List<CaseStudyRecord> records) => jsonEncode(
+    records.map((r) => CaseStudyRecordDto.fromDomain(r).toJson()).toList(),
   );
 
-  static List<CaseStudyRecord> decodeList(final String? raw) {
+  static List<CaseStudyRecord> decodeList(String? raw) {
     if (raw == null || raw.isEmpty) return <CaseStudyRecord>[];
     try {
       // check-ignore: small payload (<8KB) - demo history
@@ -98,8 +96,7 @@ class CaseStudyRecordDto {
           final Map<String, Object?> map => CaseStudyRecordDto.fromJson(map),
           final Map<Object?, Object?> map => CaseStudyRecordDto.fromJson(
             map.map(
-              (final dynamic k, final dynamic v) =>
-                  MapEntry(k.toString(), v as Object?),
+              (dynamic k, dynamic v) => MapEntry(k.toString(), v as Object?),
             ),
           ),
           _ => null,

@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ConnectionStatusPill extends StatelessWidget {
   const ConnectionStatusPill({
@@ -14,7 +14,7 @@ class ConnectionStatusPill extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final (Color bg, Color fg, String label) = switch (status) {
       MarketConnectionStatus.live => (

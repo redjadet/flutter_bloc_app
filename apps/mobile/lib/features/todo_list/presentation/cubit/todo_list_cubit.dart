@@ -33,7 +33,7 @@ class TodoListCubit extends Cubit<TodoListState>
     required this.repository,
     required this._timerService,
     this._searchDebounceDuration = const Duration(milliseconds: 300),
-    final TodoSyncDiagnosticsPort? syncDiagnostics,
+    TodoSyncDiagnosticsPort? syncDiagnostics,
   }) : _syncDiagnostics = resolveTodoSyncDiagnostics(
          repository: repository,
          syncDiagnostics: syncDiagnostics,
@@ -55,12 +55,12 @@ class TodoListCubit extends Cubit<TodoListState>
   @override
   TimerDisposable? get searchDebounceHandle => _searchDebounceHandle;
   @override
-  set searchDebounceHandle(final TimerDisposable? value) =>
+  set searchDebounceHandle(TimerDisposable? value) =>
       _searchDebounceHandle = value;
   @override
   TodoItem? get lastDeletedItem => _lastDeletedItem;
   @override
-  set lastDeletedItem(final TodoItem? value) => _lastDeletedItem = value;
+  set lastDeletedItem(TodoItem? value) => _lastDeletedItem = value;
   @override
   bool Function() get stopLoadingIfClosed => _stopLoadingIfClosed;
   @override
@@ -68,7 +68,7 @@ class TodoListCubit extends Cubit<TodoListState>
   @override
   int get loadRequestId => _loadRequestIdGuard.currentId;
   @override
-  set loadRequestId(final int value) => _loadRequestIdGuard.currentId = value;
+  set loadRequestId(int value) => _loadRequestIdGuard.currentId = value;
 
   final TimerService _timerService;
   final Duration _searchDebounceDuration;
@@ -89,12 +89,12 @@ class TodoListCubit extends Cubit<TodoListState>
     await loadInitial();
   }
 
-  void setFilter(final TodoFilter filter) {
+  void setFilter(TodoFilter filter) {
     if (isClosed || filter == state.filter) return;
     emit(state.copyWith(filter: filter));
   }
 
-  void setSearchQuery(final String query) {
+  void setSearchQuery(String query) {
     if (isClosed) return;
     _cancelSearchDebounce();
     final String trimmedQuery = query.trim();
@@ -124,7 +124,7 @@ class TodoListCubit extends Cubit<TodoListState>
     _searchDebounceHandle = null;
   }
 
-  void setSortOrder(final TodoSortOrder sortOrder) {
+  void setSortOrder(TodoSortOrder sortOrder) {
     if (isClosed || sortOrder == state.sortOrder) return;
     emit(state.copyWith(sortOrder: sortOrder));
   }
@@ -137,10 +137,10 @@ class TodoListCubit extends Cubit<TodoListState>
     }
   }
 
-  void toggleItemSelection(final String itemId) {
+  void toggleItemSelection(String itemId) {
     if (isClosed) return;
     // Verify item exists before allowing selection
-    if (!state.items.any((final item) => item.id == itemId)) {
+    if (!state.items.any((item) => item.id == itemId)) {
       return;
     }
     final Set<String> updated = Set<String>.from(state.selectedItemIds);
@@ -155,7 +155,7 @@ class TodoListCubit extends Cubit<TodoListState>
   void selectAllItems() {
     if (isClosed) return;
     final Set<String> allIds = state.filteredItems
-        .map((final item) => item.id)
+        .map((item) => item.id)
         .toSet();
     emit(state.copyWith(selectedItemIds: allIds));
   }
@@ -174,24 +174,24 @@ class TodoListCubit extends Cubit<TodoListState>
 
   Future<void> batchCompleteSelected() async {
     await _applyToSelectedItems(
-      shouldProcess: (final item) => !item.isCompleted,
+      shouldProcess: (item) => !item.isCompleted,
       action: toggleTodo,
     );
   }
 
   Future<void> batchUncompleteSelected() async {
     await _applyToSelectedItems(
-      shouldProcess: (final item) => item.isCompleted,
+      shouldProcess: (item) => item.isCompleted,
       action: toggleTodo,
     );
   }
 
-  TodoItem? _findItemById(final String id) =>
-      state.items.firstWhereOrNull((final item) => item.id == id);
+  TodoItem? _findItemById(String id) =>
+      state.items.firstWhereOrNull((item) => item.id == id);
 
   Future<void> _applyToSelectedItems({
-    required final bool Function(TodoItem item) shouldProcess,
-    required final Future<void> Function(TodoItem item) action,
+    required bool Function(TodoItem item) shouldProcess,
+    required Future<void> Function(TodoItem item) action,
   }) async {
     if (isClosed || state.selectedItemIds.isEmpty) return;
     // Copy selection to avoid race conditions while iterating.

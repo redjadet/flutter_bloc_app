@@ -1,22 +1,23 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_offline_badge.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('offline badge exposes semantics label from l10n', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final SemanticsHandle handle = tester.ensureSemantics();
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
         home: Builder(
-          builder: (final BuildContext context) => Scaffold(
+          builder: (BuildContext context) => Scaffold(
             body: buildAppMixScope(context, child: const ChatOfflineBadge()),
           ),
         ),
@@ -27,9 +28,8 @@ void main() {
     final BuildContext badgeContext = tester.element(
       find.byType(ChatOfflineBadge),
     );
-    final String expectedSemantics = AppLocalizations.of(
-      badgeContext,
-    ).chatOfflineBadgeSemanticsLabel;
+    final String expectedSemantics = AppLocalizations.of(badgeContext)
+        .chatOfflineBadgeSemanticsLabel;
 
     expect(find.bySemanticsLabel(expectedSemantics), findsOneWidget);
     expect(find.text('Offline'), findsOneWidget);

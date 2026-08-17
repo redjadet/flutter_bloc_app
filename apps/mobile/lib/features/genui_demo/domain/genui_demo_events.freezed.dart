@@ -86,8 +86,7 @@ extension GenUiSurfaceEventPatterns on GenUiSurfaceEvent {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GenUiSurfaceAdded value)?  added,TResult Function( GenUiSurfaceRemoved value)?  removed,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GenUiSurfaceAdded value)?  added,TResult Function( GenUiSurfaceRemoved value)?  removed,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case GenUiSurfaceAdded() when added != null:
 return added(_that);case GenUiSurfaceRemoved() when removed != null:
@@ -109,8 +108,7 @@ return removed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GenUiSurfaceAdded value)  added,required TResult Function( GenUiSurfaceRemoved value)  removed,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GenUiSurfaceAdded value)  added,required TResult Function( GenUiSurfaceRemoved value)  removed,}){final _that = this;
 switch (_that) {
 case GenUiSurfaceAdded():
 return added(_that);case GenUiSurfaceRemoved():
@@ -128,8 +126,7 @@ return removed(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GenUiSurfaceAdded value)?  added,TResult? Function( GenUiSurfaceRemoved value)?  removed,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GenUiSurfaceAdded value)?  added,TResult? Function( GenUiSurfaceRemoved value)?  removed,}){final _that = this;
 switch (_that) {
 case GenUiSurfaceAdded() when added != null:
 return added(_that);case GenUiSurfaceRemoved() when removed != null:

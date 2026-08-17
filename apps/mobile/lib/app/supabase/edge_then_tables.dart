@@ -29,13 +29,12 @@ void ensureSupabaseConfigured() {
 /// a non-Postgrest failure occurs; override so UI/tests see repository-specific
 /// text.
 Future<SupabaseEdgeThenTablesResult<T>> runSupabaseEdgeThenTables<T>({
-  required final Future<List<T>> Function() tryEdge,
-  required final Future<List<T>> Function() fetchTables,
-  required final Exception Function(PostgrestException e) onPostgrestException,
-  required final Exception Function(String message, Object? cause)
-  onGenericException,
-  required final String logContext,
-  final String genericFailureMessage = 'Failed to load from Supabase',
+  required Future<List<T>> Function() tryEdge,
+  required Future<List<T>> Function() fetchTables,
+  required Exception Function(PostgrestException e) onPostgrestException,
+  required Exception Function(String message, Object? cause) onGenericException,
+  required String logContext,
+  String genericFailureMessage = 'Failed to load from Supabase',
 }) async {
   ensureSupabaseConfigured();
   try {

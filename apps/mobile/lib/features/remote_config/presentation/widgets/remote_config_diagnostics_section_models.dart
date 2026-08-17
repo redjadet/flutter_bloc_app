@@ -24,7 +24,7 @@ class _RemoteConfigMetadataRow extends StatelessWidget {
   final DateTime? lastSyncedAt;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final List<String> parts = <String>[];
     if (dataSource case final s?) {
       if (s.isNotEmpty) {

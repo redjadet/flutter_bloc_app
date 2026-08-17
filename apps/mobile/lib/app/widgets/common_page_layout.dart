@@ -1,10 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_app_bar.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A reusable page layout widget that provides consistent structure
 /// across the app with responsive design and common AppBar pattern.
@@ -80,7 +80,7 @@ class CommonPageLayout extends StatelessWidget {
   final Color? backgroundColor;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     assert(
       appBar != null || title.isNotEmpty,
       'CommonPageLayout requires a non-empty title or a custom appBar.',
@@ -107,7 +107,7 @@ class CommonPageLayout extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildDefaultAppBar(final BuildContext context) {
+  PreferredSizeWidget _buildDefaultAppBar(BuildContext context) {
     final l10n = context.l10n;
     return CommonAppBar(
       title: title,
@@ -133,8 +133,8 @@ class _ResponsiveBody extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final context, final constraints) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
       final double keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
       final double bottomInset = math.max(context.bottomInset, keyboardInset);
       final EdgeInsets resolvedPadding = EdgeInsets.fromLTRB(

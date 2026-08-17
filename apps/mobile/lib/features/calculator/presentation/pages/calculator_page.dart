@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'calculator_page.freezed.dart';
 part 'calculator_page_display.part.dart';
@@ -22,14 +22,14 @@ class CalculatorPage extends StatelessWidget {
   static const double _maxContentWidthWide = 720;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.calculatorTitle,
       useResponsiveBody: false,
       body: SafeArea(
         child: LayoutBuilder(
-          builder: (final context, final constraints) {
+          builder: (context, constraints) {
             final bool compactHeight =
                 constraints.maxHeight <
                 LayoutBreakpoints.compactHeightBreakpoint;
@@ -108,7 +108,7 @@ class _CalculatorBody extends StatelessWidget {
   const _CalculatorBody();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double sectionGap = context.responsiveGapL * 2;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

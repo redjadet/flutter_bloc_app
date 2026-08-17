@@ -1,8 +1,8 @@
 import 'package:design_system/responsive.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
+import 'package:material_ui/material_ui.dart';
 
 class SearchResultsGrid extends StatelessWidget {
   const SearchResultsGrid({required this.results, super.key});
@@ -10,7 +10,7 @@ class SearchResultsGrid extends StatelessWidget {
   final List<SearchResult> results;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gridLayout = context.calculateGridLayout(
       mobileColumns: 2,
@@ -28,7 +28,7 @@ class SearchResultsGrid extends StatelessWidget {
           desktopColumns: 4,
         ),
         itemCount: results.length,
-        itemBuilder: (final context, final index) {
+        itemBuilder: (context, index) {
           final result = results[index];
           return RepaintBoundary(
             key: ValueKey<String>('search-result-${result.id}'),
@@ -42,7 +42,7 @@ class SearchResultsGrid extends StatelessWidget {
                   shimmerBaseColor: theme.colorScheme.surfaceContainerHighest,
                   shimmerHighlightColor: theme.colorScheme.surface,
                   errorWidget: Builder(
-                    builder: (final context) {
+                    builder: (context) {
                       final colors = Theme.of(context).colorScheme;
                       return ColoredBox(
                         color: colors.surfaceContainerHighest,

@@ -94,8 +94,7 @@ extension TodoListStatePatterns on TodoListState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TodoListState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TodoListState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
 return $default(_that);case _:
@@ -116,8 +115,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TodoListState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TodoListState value)  $default,){final _that = this;
 switch (_that) {
 case _TodoListState():
 return $default(_that);case _:
@@ -137,8 +135,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TodoListState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TodoListState value)?  $default,){final _that = this;
 switch (_that) {
 case _TodoListState() when $default != null:
 return $default(_that);case _:
@@ -214,7 +211,7 @@ return $default(_that.status,_that.items,_that.filter,_that.searchQuery,_that.so
 
 
 class _TodoListState extends TodoListState {
-  const _TodoListState({this.status = ViewStatus.initial, final  List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.searchQuery = '', this.sortOrder = TodoSortOrder.dateDesc, final  Map<String, int> manualOrder = const <String, int>{}, final  Set<String> selectedItemIds = const <String>{}, this.pendingSyncCount = 0, this.lastError}): _items = items,_manualOrder = manualOrder,_selectedItemIds = selectedItemIds,super._();
+  const _TodoListState({this.status = ViewStatus.initial, List<TodoItem> items = const <TodoItem>[], this.filter = TodoFilter.all, this.searchQuery = '', this.sortOrder = TodoSortOrder.dateDesc, Map<String, int> manualOrder = const <String, int>{}, Set<String> selectedItemIds = const <String>{}, this.pendingSyncCount = 0, this.lastError}): _items = items,_manualOrder = manualOrder,_selectedItemIds = selectedItemIds,super._();
   
 
 @override@JsonKey() final  ViewStatus status;

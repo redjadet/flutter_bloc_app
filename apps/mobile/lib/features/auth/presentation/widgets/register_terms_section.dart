@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegisterTermsSection extends StatelessWidget {
   const RegisterTermsSection({
@@ -30,13 +30,13 @@ class RegisterTermsSection extends StatelessWidget {
   final TextStyle? errorStyle;
 
   @override
-  Widget build(final BuildContext context) => Row(
+  Widget build(BuildContext context) => Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Checkbox.adaptive(
         key: const ValueKey('register-terms-checkbox'),
         value: accepted,
-        onChanged: (final checked) async {
+        onChanged: (checked) async {
           if (checked ?? false) {
             await onAcceptRequested();
           } else {

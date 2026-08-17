@@ -8,7 +8,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       return;
     }
     final List<ChatConversation> filtered = stored
-        .where((final c) => c.hasContent)
+        .where((c) => c.hasContent)
         .toList();
     List<ChatConversation> history = _sortHistory(filtered);
     bool needsPersist = filtered.length != stored.length;
@@ -26,7 +26,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     if (active.model != resolvedModel) {
       active = active.copyWith(model: resolvedModel);
       final ChatConversation currentActive = active;
-      if (history.any((final c) => c.id == currentActive.id)) {
+      if (history.any((c) => c.id == currentActive.id)) {
         history = _replaceConversation(active, history: history);
         needsPersist = true;
       }
@@ -78,14 +78,14 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
     );
   }
 
-  Future<void> deleteConversation(final String conversationId) async {
+  Future<void> deleteConversation(String conversationId) async {
     _bumpPersistEpoch();
     final int requestId = nextRequestId();
     final List<ChatConversation> history = List<ChatConversation>.from(
       state.history,
     );
     final int index = history.indexWhere(
-      (final c) => c.id == conversationId,
+      (c) => c.id == conversationId,
     );
     if (index < 0) {
       return;
@@ -141,7 +141,7 @@ mixin _ChatCubitHistoryActions on _ChatCubitCore, _ChatCubitHelpers {
       isAlive: () => !isClosed,
       logContext: 'ChatCubit.resetConversation',
       onSuccess: () => persisted = true,
-      onError: (final message) {
+      onError: (message) {
         AppLogger.error('Chat reset persistence failed', message);
         if (isClosed) {
           return;

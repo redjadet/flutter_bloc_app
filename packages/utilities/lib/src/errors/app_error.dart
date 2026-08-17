@@ -23,9 +23,9 @@ enum AuthErrorKind { unauthorized, tokenExpired, forbidden }
 
 final class NetworkError extends AppError {
   const NetworkError({
-    required final String message,
+    required String message,
     required this.kind,
-    final Object? cause,
+    Object? cause,
   }) : super(message, cause: cause);
 
   final NetworkErrorKind kind;
@@ -43,30 +43,27 @@ final class NetworkError extends AppError {
 
 final class StorageError extends AppError {
   const StorageError({
-    required final String message,
+    required String message,
     required this.kind,
-    final Object? cause,
+    Object? cause,
   }) : super(message, cause: cause);
 
   final StorageErrorKind kind;
 }
 
 final class AuthError extends AppError {
-  const AuthError({
-    required final String message,
-    required this.kind,
-    final Object? cause,
-  }) : super(message, cause: cause);
+  const AuthError({required String message, required this.kind, Object? cause})
+    : super(message, cause: cause);
 
   final AuthErrorKind kind;
 }
 
 final class UnknownError extends AppError {
-  const UnknownError({required final String message, final Object? cause})
+  const UnknownError({required String message, Object? cause})
     : super(message, cause: cause);
 }
 
-NetworkErrorKind _networkKindFromStatusCode(final int statusCode) =>
+NetworkErrorKind _networkKindFromStatusCode(int statusCode) =>
     switch (statusCode) {
       408 => NetworkErrorKind.timeout,
       429 => NetworkErrorKind.rateLimited,
@@ -77,9 +74,9 @@ NetworkErrorKind _networkKindFromStatusCode(final int statusCode) =>
     };
 
 AppError appErrorFromHttpStatus(
-  final int statusCode, {
-  required final String message,
-  final Object? cause,
+  int statusCode, {
+  required String message,
+  Object? cause,
 }) => switch (statusCode) {
   401 => AuthError(
     message: message,

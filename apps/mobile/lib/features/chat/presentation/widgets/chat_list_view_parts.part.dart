@@ -17,7 +17,7 @@ class _ChatListSelectorData {
   final String? errorMessage;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is _ChatListSelectorData &&
           isLoading == other.isLoading &&
@@ -39,7 +39,7 @@ class _ChatDivider extends StatelessWidget {
   const _ChatDivider();
 
   @override
-  Widget build(final BuildContext context) => Divider(
+  Widget build(BuildContext context) => Divider(
     height: 0.5,
     thickness: 0.5,
     color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),

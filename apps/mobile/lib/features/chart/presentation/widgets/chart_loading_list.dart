@@ -1,13 +1,13 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/presentation/widgets/chart_scrollable.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ChartLoadingList extends StatelessWidget {
   const ChartLoadingList({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final skeletonColor = theme.colorScheme.surfaceContainerHighest;
     final chartHeight = context.heightFraction(0.28);

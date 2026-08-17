@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/flavor_badge.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CounterPageBody extends StatelessWidget {
@@ -23,10 +23,10 @@ class CounterPageBody extends StatelessWidget {
   final Widget? optionalBanner;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocSelector<CounterCubit, CounterState, bool>(
-        selector: (final state) => state.isLoading,
-        builder: (final context, final isLoading) => Skeletonizer(
+        selector: (state) => state.isLoading,
+        builder: (context, isLoading) => Skeletonizer(
           enabled: isLoading,
           effect: ShimmerEffect(
             baseColor: theme.colorScheme.surfaceContainerHighest,
@@ -56,7 +56,7 @@ class _CounterContent extends StatelessWidget {
   final Widget? optionalBanner;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final Widget? banner = optionalBanner;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

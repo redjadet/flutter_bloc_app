@@ -10,7 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupabaseSessionManager {
   SupabaseSessionManager({
     this._sessionCoordinator,
-    final TokenRepository? tokenRepository,
+    TokenRepository? tokenRepository,
     Future<AuthResponse> Function()? refreshSession,
     String? Function()? readPersistentAccessToken,
     String? Function()? readAccessToken,

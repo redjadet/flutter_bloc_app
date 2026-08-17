@@ -1,9 +1,9 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/widgets/diagnostics/settings_diagnostics_widgets.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 class GraphqlCacheControlsSection extends StatefulWidget {
@@ -56,7 +56,7 @@ class _GraphqlCacheControlsSectionState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final double gap = context.responsiveGapS;
 

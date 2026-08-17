@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegisterPasswordField extends StatefulWidget {
   const RegisterPasswordField({
@@ -36,7 +36,7 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
   }
 
   @override
-  void didUpdateWidget(final RegisterPasswordField oldWidget) {
+  void didUpdateWidget(RegisterPasswordField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value && _controller.text != widget.value) {
       _controller.value = TextEditingValue(
@@ -53,7 +53,7 @@ class _RegisterPasswordFieldState extends State<RegisterPasswordField> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return TextFormField(

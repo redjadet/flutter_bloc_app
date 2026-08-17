@@ -6,7 +6,7 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
   final bool _result;
 
   @override
-  Future<bool> authenticate({final String? localizedReason}) async => _result;
+  Future<bool> authenticate({String? localizedReason}) async => _result;
 }
 
 class _FakeAppInfoRepository implements AppInfoRepository {
@@ -16,7 +16,7 @@ class _FakeAppInfoRepository implements AppInfoRepository {
 }
 
 class _FixedLocaleRepository implements LocaleRepository {
-  _FixedLocaleRepository({required final AppLocale? initialLocale})
+  _FixedLocaleRepository({required AppLocale? initialLocale})
     : _locale = initialLocale;
 
   AppLocale? _locale;
@@ -25,7 +25,7 @@ class _FixedLocaleRepository implements LocaleRepository {
   Future<AppLocale?> load() async => _locale;
 
   @override
-  Future<void> save(final AppLocale? locale) async {
+  Future<void> save(AppLocale? locale) async {
     _locale = locale;
   }
 }
@@ -91,19 +91,19 @@ class _FakeGraphqlDemoRepository implements GraphqlDemoRepository {
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     if (continentCode == null) {
       return _countries;
     }
     return _countries
-        .where((final country) => country.continent.code == continentCode)
+        .where((country) => country.continent.code == continentCode)
         .toList(growable: false);
   }
 }
 
 Future<void> _overrideGraphqlRepository({
-  final bool failOnceThenSuccess = false,
+  bool failOnceThenSuccess = false,
 }) async {
   if (getIt.isRegistered<GraphqlDemoRepository>()) {
     await getIt.unregister<GraphqlDemoRepository>();
@@ -139,8 +139,8 @@ class _FakeCameraGalleryRepository implements CameraGalleryRepository {
 
   @override
   Future<CameraGalleryResult> processImage({
-    required final ImageProcessingFilter filter,
-    required final String sourcePath,
+    required ImageProcessingFilter filter,
+    required String sourcePath,
   }) => _processingService.process(filter: filter, sourcePath: sourcePath);
 }
 

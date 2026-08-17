@@ -47,10 +47,10 @@ extension SealedStateHelpers<T extends Equatable> on T {
   /// }
   /// ```
   R when<R>({
-    final R Function()? idle,
-    final R Function()? loading,
-    final R Function(Object? target, Object? origin)? navigate,
-    final R Function(String message)? error,
+    R Function()? idle,
+    R Function()? loading,
+    R Function(Object? target, Object? origin)? navigate,
+    R Function(String message)? error,
   }) {
     // This is a runtime helper. For compile-time exhaustiveness,
     // use Dart 3.0+ pattern matching with switch expressions.
@@ -94,7 +94,7 @@ class SealedStateMatcher<S, R> {
   R? _errorResult;
 
   /// Handles the idle state variant.
-  SealedStateMatcher<S, R> caseIdle(final R Function() handler) {
+  SealedStateMatcher<S, R> caseIdle(R Function() handler) {
     // Runtime check - for compile-time, use switch expressions
     if (state.toString().contains('Idle')) {
       _idleResult = handler();
@@ -104,7 +104,7 @@ class SealedStateMatcher<S, R> {
   }
 
   /// Handles the loading state variant.
-  SealedStateMatcher<S, R> caseLoading(final R Function() handler) {
+  SealedStateMatcher<S, R> caseLoading(R Function() handler) {
     if (state.toString().contains('Loading')) {
       _loadingResult = handler();
     }
@@ -114,7 +114,7 @@ class SealedStateMatcher<S, R> {
 
   /// Handles the navigate state variant.
   SealedStateMatcher<S, R> caseNavigate(
-    final R Function(Object? target, Object? origin) handler,
+    R Function(Object? target, Object? origin) handler,
   ) {
     if (state.toString().contains('Navigate')) {
       // This is a simplified example - actual implementation would
@@ -126,7 +126,7 @@ class SealedStateMatcher<S, R> {
   }
 
   /// Handles the error state variant.
-  SealedStateMatcher<S, R> caseError(final R Function(String message) handler) {
+  SealedStateMatcher<S, R> caseError(R Function(String message) handler) {
     if (state.toString().contains('Error')) {
       // This is a simplified example - actual implementation would
       // extract message from the state

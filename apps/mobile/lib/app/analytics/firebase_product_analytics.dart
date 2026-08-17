@@ -26,7 +26,7 @@ class FirebaseProductAnalytics implements ProductAnalytics {
   bool get collectionEnabled => _collectionEnabled;
 
   @override
-  Future<void> setCollectionEnabled({required final bool enabled}) async {
+  Future<void> setCollectionEnabled({required bool enabled}) async {
     _collectionEnabled = enabled;
     if (_gatewayUnavailable) {
       return;
@@ -43,7 +43,7 @@ class FirebaseProductAnalytics implements ProductAnalytics {
   }
 
   @override
-  Future<void> track(final AppAnalyticsEvent event) async {
+  Future<void> track(AppAnalyticsEvent event) async {
     if (!_collectionEnabled || _gatewayUnavailable) {
       return;
     }

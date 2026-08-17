@@ -19,8 +19,8 @@ class ImageProcessingCameraGalleryService {
   final ImageProcessor processor;
 
   Future<CameraGalleryResult> process({
-    required final ImageProcessingFilter filter,
-    required final String sourcePath,
+    required ImageProcessingFilter filter,
+    required String sourcePath,
   }) async {
     try {
       // Original is already the source; skip codec round-trip.
@@ -54,7 +54,7 @@ class ImageProcessingCameraGalleryService {
     }
   }
 
-  Future<Uint8List> _readImageBytes(final String sourcePath) async {
+  Future<Uint8List> _readImageBytes(String sourcePath) async {
     if (sourcePath.startsWith('data:')) {
       final int separator = sourcePath.indexOf(',');
       if (separator == -1 || !sourcePath.contains(';base64,')) {

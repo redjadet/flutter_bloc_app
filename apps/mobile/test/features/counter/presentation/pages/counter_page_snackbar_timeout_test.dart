@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
-import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
 import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
+import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../test_helpers.dart'
     show FakeTimerService, MockCounterRepository;
@@ -20,21 +21,18 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
 class _FakeErrorNotificationService implements ErrorNotificationService {
   @override
   Future<void> showAlertDialog(
-    final BuildContext context,
-    final String title,
-    final String message,
+    BuildContext context,
+    String title,
+    String message,
   ) async {}
 
   @override
-  Future<void> showSnackBar(
-    final BuildContext context,
-    final String message,
-  ) async {}
+  Future<void> showSnackBar(BuildContext context, String message) async {}
 }
 
 void main() {
   testWidgets('cannot-go-below-zero snackbar auto-dismisses in 2 seconds', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     await tester.binding.setSurfaceSize(AppConstants.designSize);
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -52,9 +50,9 @@ void main() {
         designSize: AppConstants.designSize,
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (final context, final child) => MaterialApp(
+        builder: (context, child) => MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<CounterCubit>.value(
             value: cubit,
@@ -86,7 +84,7 @@ void main() {
 
   testWidgets(
     'cannot-go-below-zero snackbar shows again on repeated subtract',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(AppConstants.designSize);
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -103,9 +101,9 @@ void main() {
           designSize: AppConstants.designSize,
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (final context, final child) => MaterialApp(
+          builder: (context, child) => MaterialApp(
             locale: const Locale('en'),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: BlocProvider<CounterCubit>.value(
               value: cubit,
@@ -144,7 +142,7 @@ void main() {
 
   testWidgets(
     'cannot-go-below-zero snackbar is not stacked when subtract is spammed',
-    (final WidgetTester tester) async {
+    (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(AppConstants.designSize);
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -161,9 +159,9 @@ void main() {
           designSize: AppConstants.designSize,
           minTextAdapt: true,
           splitScreenMode: true,
-          builder: (final context, final child) => MaterialApp(
+          builder: (context, child) => MaterialApp(
             locale: const Locale('en'),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            localizationsDelegates: appLocalizationDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: BlocProvider<CounterCubit>.value(
               value: cubit,

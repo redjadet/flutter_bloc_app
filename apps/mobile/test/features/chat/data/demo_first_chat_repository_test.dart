@@ -6,49 +6,43 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DemoFirstChatRepository', () {
-    test(
-      'chatRemoteTransportHint uses composite hint when render is not attempted first',
-      () async {
-        final _RecordingRepo render = _RecordingRepo(
-          result: _dummyResult(ChatRemotePath.renderOrchestration),
-          hint: ChatRemotePath.renderOrchestration,
-        );
-        final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatRemotePath.directApi),
-          hint: ChatRemotePath.directApi,
-        );
-        final DemoFirstChatRepository repo = DemoFirstChatRepository(
-          renderRepository: render,
-          compositeRepository: composite,
-          isRenderAttemptedFirst: () => false,
-          isRenderStrict: () => false,
-        );
+    test('chatRemoteTransportHint uses composite hint when render is not attempted first', () async {
+      final _RecordingRepo render = _RecordingRepo(
+        result: _dummyResult(ChatRemotePath.renderOrchestration),
+        hint: ChatRemotePath.renderOrchestration,
+      );
+      final _RecordingRepo composite = _RecordingRepo(
+        result: _dummyResult(ChatRemotePath.directApi),
+        hint: ChatRemotePath.directApi,
+      );
+      final DemoFirstChatRepository repo = DemoFirstChatRepository(
+        renderRepository: render,
+        compositeRepository: composite,
+        isRenderAttemptedFirst: () => false,
+        isRenderStrict: () => false,
+      );
 
-        expect(repo.chatRemoteTransportHint, ChatRemotePath.directApi);
-      },
-    );
+      expect(repo.chatRemoteTransportHint, ChatRemotePath.directApi);
+    });
 
-    test(
-      'chatRemoteTransportHint falls back to composite when render hint is unavailable',
-      () async {
-        final _RecordingRepo render = _RecordingRepo(
-          result: _dummyResult(ChatRemotePath.renderOrchestration),
-          hint: null,
-        );
-        final _RecordingRepo composite = _RecordingRepo(
-          result: _dummyResult(ChatRemotePath.edgeProxy),
-          hint: ChatRemotePath.edgeProxy,
-        );
-        final DemoFirstChatRepository repo = DemoFirstChatRepository(
-          renderRepository: render,
-          compositeRepository: composite,
-          isRenderAttemptedFirst: () => true,
-          isRenderStrict: () => false,
-        );
+    test('chatRemoteTransportHint falls back to composite when render hint is unavailable', () async {
+      final _RecordingRepo render = _RecordingRepo(
+        result: _dummyResult(ChatRemotePath.renderOrchestration),
+        hint: null,
+      );
+      final _RecordingRepo composite = _RecordingRepo(
+        result: _dummyResult(ChatRemotePath.edgeProxy),
+        hint: ChatRemotePath.edgeProxy,
+      );
+      final DemoFirstChatRepository repo = DemoFirstChatRepository(
+        renderRepository: render,
+        compositeRepository: composite,
+        isRenderAttemptedFirst: () => true,
+        isRenderStrict: () => false,
+      );
 
-        expect(repo.chatRemoteTransportHint, ChatRemotePath.edgeProxy);
-      },
-    );
+      expect(repo.chatRemoteTransportHint, ChatRemotePath.edgeProxy);
+    });
 
     test('skips render when not attempted first', () async {
       final _RecordingRepo render = _RecordingRepo(
@@ -204,7 +198,7 @@ void main() {
   });
 }
 
-ChatResult _dummyResult(final ChatRemotePath transport) => ChatResult(
+ChatResult _dummyResult(ChatRemotePath transport) => ChatResult(
   reply: const ChatMessage(author: ChatAuthor.assistant, text: 'ok'),
   pastUserInputs: const <String>['hi'],
   generatedResponses: const <String>['ok'],
@@ -226,12 +220,12 @@ class _RecordingRepo implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     calls++;
     lastModel = model;

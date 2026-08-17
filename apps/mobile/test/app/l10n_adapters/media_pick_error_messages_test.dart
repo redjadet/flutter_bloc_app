@@ -1,19 +1,20 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/l10n_adapters/media_pick_error_messages.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
-  testWidgets('maps known media pick error keys', (final tester) async {
+  testWidgets('maps known media pick error keys', (tester) async {
     late AppLocalizations l10n;
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
         home: Builder(
-          builder: (final context) {
+          builder: (context) {
             l10n = AppLocalizations.of(context);
             return const SizedBox.shrink();
           },

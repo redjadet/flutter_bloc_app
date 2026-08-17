@@ -20,7 +20,7 @@ class _MemoryHistoryRepository implements ChatHistoryRepository {
       List<ChatConversation>.from(_conversations);
 
   @override
-  Future<void> save(final List<ChatConversation> conversations) async {
+  Future<void> save(List<ChatConversation> conversations) async {
     _conversations = List<ChatConversation>.from(conversations);
   }
 }
@@ -35,12 +35,12 @@ class _DelayedChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     await releaseSend.future;
     return ChatResult(
@@ -75,38 +75,35 @@ void main() {
     },
   );
 
-  test(
-    'sendMessage persists assistant reply when superseded but conversation remains active',
-    () async {
-      final _DelayedChatRepository repository = _DelayedChatRepository();
-      final _MemoryHistoryRepository history = _MemoryHistoryRepository();
-      final ChatCubit cubit = ChatCubit(
-        repository: repository,
-        historyRepository: history,
-      );
-      addTearDown(cubit.close);
+  test('sendMessage persists assistant reply when superseded but conversation remains active', () async {
+    final _DelayedChatRepository repository = _DelayedChatRepository();
+    final _MemoryHistoryRepository history = _MemoryHistoryRepository();
+    final ChatCubit cubit = ChatCubit(
+      repository: repository,
+      historyRepository: history,
+    );
+    addTearDown(cubit.close);
 
-      final Future<void> send = cubit.sendMessage('hello');
-      await Future<void>.delayed(Duration.zero);
-      final String conversationId = cubit.state.activeConversationId!;
-      expect(cubit.state.isLoading, isTrue);
+    final Future<void> send = cubit.sendMessage('hello');
+    await Future<void>.delayed(Duration.zero);
+    final String conversationId = cubit.state.activeConversationId!;
+    expect(cubit.state.isLoading, isTrue);
 
-      await cubit.loadHistory();
-      repository.releaseSend.complete();
-      await send;
+    await cubit.loadHistory();
+    repository.releaseSend.complete();
+    await send;
 
-      expect(cubit.state.isLoading, isFalse);
-      expect(cubit.state.activeConversationId, conversationId);
-      expect(
-        cubit.state.messages.any(
-          (final message) =>
-              message.author == ChatAuthor.assistant &&
-              message.text == 'assistant',
-        ),
-        isTrue,
-      );
-    },
-  );
+    expect(cubit.state.isLoading, isFalse);
+    expect(cubit.state.activeConversationId, conversationId);
+    expect(
+      cubit.state.messages.any(
+        (message) =>
+            message.author == ChatAuthor.assistant &&
+            message.text == 'assistant',
+      ),
+      isTrue,
+    );
+  });
 
   test(
     'sendMessage clears loading when superseded by deleteConversation',

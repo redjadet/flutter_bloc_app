@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('PlatformAdaptive', () {
     testWidgets('isCupertino returns false for Android platform', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(platform: TargetPlatform.android),
           home: Builder(
-            builder: (final context) {
+            builder: (context) {
               expect(PlatformAdaptive.isCupertino(context), isFalse);
               return const SizedBox();
             },
@@ -20,14 +20,12 @@ void main() {
       );
     });
 
-    testWidgets('isCupertino returns true for iOS platform', (
-      final tester,
-    ) async {
+    testWidgets('isCupertino returns true for iOS platform', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(platform: TargetPlatform.iOS),
           home: Builder(
-            builder: (final context) {
+            builder: (context) {
               expect(PlatformAdaptive.isCupertino(context), isTrue);
               return const SizedBox();
             },
@@ -36,14 +34,12 @@ void main() {
       );
     });
 
-    testWidgets('isCupertino returns true for macOS platform', (
-      final tester,
-    ) async {
+    testWidgets('isCupertino returns true for macOS platform', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(platform: TargetPlatform.macOS),
           home: Builder(
-            builder: (final context) {
+            builder: (context) {
               expect(PlatformAdaptive.isCupertino(context), isTrue);
               return const SizedBox();
             },
@@ -80,13 +76,11 @@ void main() {
       );
     });
 
-    testWidgets('button delegates to PlatformAdaptiveButtons', (
-      final tester,
-    ) async {
+    testWidgets('button delegates to PlatformAdaptiveButtons', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.button(
                 context: context,
                 onPressed: () {},
@@ -101,12 +95,12 @@ void main() {
     });
 
     testWidgets('textButton delegates to PlatformAdaptiveButtons', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.textButton(
                 context: context,
                 onPressed: () {},
@@ -121,12 +115,12 @@ void main() {
     });
 
     testWidgets('filledButton delegates to PlatformAdaptiveButtons', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.filledButton(
                 context: context,
                 onPressed: () {},
@@ -141,12 +135,12 @@ void main() {
     });
 
     testWidgets('outlinedButton delegates to PlatformAdaptiveButtons', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.outlinedButton(
                 context: context,
                 onPressed: () {},
@@ -161,12 +155,12 @@ void main() {
     });
 
     testWidgets('dialogAction delegates to PlatformAdaptiveButtons', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.dialogAction(
                 context: context,
                 onPressed: () {},
@@ -182,14 +176,14 @@ void main() {
     });
 
     testWidgets('textField delegates to PlatformAdaptiveInputs', (
-      final tester,
+      tester,
     ) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.textField(
                 context: context,
                 controller: controller,
@@ -203,17 +197,15 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('checkbox delegates to PlatformAdaptiveInputs', (
-      final tester,
-    ) async {
+    testWidgets('checkbox delegates to PlatformAdaptiveInputs', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.checkbox(
                 context: context,
                 value: true,
-                onChanged: (final value) {},
+                onChanged: (value) {},
               ),
             ),
           ),
@@ -223,13 +215,11 @@ void main() {
       expect(find.byType(Checkbox), findsOneWidget);
     });
 
-    testWidgets('listTile delegates to PlatformAdaptiveInputs', (
-      final tester,
-    ) async {
+    testWidgets('listTile delegates to PlatformAdaptiveInputs', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => Scaffold(
+            builder: (context) => Scaffold(
               body: PlatformAdaptive.listTile(
                 context: context,
                 title: const Text('Title'),

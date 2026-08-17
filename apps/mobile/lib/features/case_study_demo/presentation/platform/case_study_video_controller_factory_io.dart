@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:video_player/video_player.dart';
 
 Future<VideoPlayerController> createCaseStudyVideoController(
-  final String videoPath,
+  String videoPath,
 ) async {
   final Uri? uri = Uri.tryParse(videoPath);
   if (uri != null && (uri.scheme == 'http' || uri.scheme == 'https')) {

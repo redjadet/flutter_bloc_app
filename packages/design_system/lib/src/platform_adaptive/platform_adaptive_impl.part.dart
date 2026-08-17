@@ -4,28 +4,28 @@ part of 'platform_adaptive.dart';
 class PlatformAdaptive {
   const PlatformAdaptive._();
 
-  static bool isCupertino(final BuildContext context) =>
+  static bool isCupertino(BuildContext context) =>
       isCupertinoFromTheme(Theme.of(context));
 
-  static bool isCupertinoFromTheme(final ThemeData theme) =>
+  static bool isCupertinoFromTheme(ThemeData theme) =>
       isCupertinoPlatform(theme.platform);
 
-  static bool isCupertinoPlatform(final TargetPlatform platform) =>
+  static bool isCupertinoPlatform(TargetPlatform platform) =>
       platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
   /// Returns a platform-adaptive button widget
   /// Uses CupertinoButton on iOS/macOS, Material button elsewhere
   static Widget button({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final double? minSize,
-    final double? pressedOpacity,
-    final BorderRadius? borderRadius,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    double? minSize,
+    double? pressedOpacity,
+    BorderRadius? borderRadius,
+    ButtonStyle? materialStyle,
   }) => PlatformAdaptiveButtons.button(
     context: context,
     onPressed: onPressed,
@@ -41,13 +41,13 @@ class PlatformAdaptive {
 
   /// Returns a platform-adaptive text button widget
   static Widget textButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    ButtonStyle? materialStyle,
   }) => PlatformAdaptiveButtons.textButton(
     context: context,
     onPressed: onPressed,
@@ -60,14 +60,14 @@ class PlatformAdaptive {
 
   /// Returns a platform-adaptive filled button widget
   static Widget filledButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final Key? key,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    Key? key,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    ButtonStyle? materialStyle,
   }) => PlatformAdaptiveButtons.filledButton(
     context: context,
     onPressed: onPressed,
@@ -81,16 +81,16 @@ class PlatformAdaptive {
 
   /// Returns a platform-adaptive outlined button widget.
   static Widget outlinedButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? backgroundColor,
-    final Color? foregroundColor,
-    final Color? disabledColor,
-    final BorderSide? side,
-    final BorderRadius? borderRadius,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    Color? disabledColor,
+    BorderSide? side,
+    BorderRadius? borderRadius,
+    ButtonStyle? materialStyle,
   }) => PlatformAdaptiveButtons.outlinedButton(
     context: context,
     onPressed: onPressed,
@@ -106,10 +106,10 @@ class PlatformAdaptive {
 
   /// Returns a platform-adaptive dialog action button
   static Widget dialogAction({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final String label,
-    final bool isDestructive = false,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required String label,
+    bool isDestructive = false,
   }) => PlatformAdaptiveButtons.dialogAction(
     context: context,
     onPressed: onPressed,
@@ -120,21 +120,21 @@ class PlatformAdaptive {
   /// Returns a platform-adaptive text field widget
   /// Uses CupertinoTextField on iOS/macOS, TextField elsewhere
   static Widget textField({
-    required final BuildContext context,
-    required final TextEditingController controller,
-    final FocusNode? focusNode,
-    final String? placeholder,
-    final String? hintText,
-    final void Function(String)? onChanged,
-    final void Function(String)? onSubmitted,
-    final TextInputType? keyboardType,
-    final bool obscureText = false,
-    final int? maxLines = 1,
-    final bool enabled = true,
-    final bool autofocus = false,
-    final EdgeInsetsGeometry? padding,
-    final InputDecoration? decoration,
-    final TextStyle? style,
+    required BuildContext context,
+    required TextEditingController controller,
+    FocusNode? focusNode,
+    String? placeholder,
+    String? hintText,
+    void Function(String)? onChanged,
+    void Function(String)? onSubmitted,
+    TextInputType? keyboardType,
+    bool obscureText = false,
+    int? maxLines = 1,
+    bool enabled = true,
+    bool autofocus = false,
+    EdgeInsetsGeometry? padding,
+    InputDecoration? decoration,
+    TextStyle? style,
   }) => PlatformAdaptiveInputs.textField(
     context: context,
     controller: controller,
@@ -156,11 +156,11 @@ class PlatformAdaptive {
   /// Returns a platform-adaptive checkbox widget
   /// Uses CupertinoCheckbox on iOS/macOS, Checkbox elsewhere
   static Widget checkbox({
-    required final BuildContext context,
-    required final bool? value,
-    required final ValueChanged<bool?>? onChanged,
-    final Color? activeColor,
-    final Color? checkColor,
+    required BuildContext context,
+    required bool? value,
+    required ValueChanged<bool?>? onChanged,
+    Color? activeColor,
+    Color? checkColor,
   }) => PlatformAdaptiveInputs.checkbox(
     context: context,
     value: value,
@@ -172,14 +172,14 @@ class PlatformAdaptive {
   /// Returns a platform-adaptive list tile widget
   /// Uses CupertinoListTile on iOS/macOS, ListTile elsewhere
   static Widget listTile({
-    required final BuildContext context,
-    required final Widget title,
-    final Widget? subtitle,
-    final Widget? leading,
-    final Widget? trailing,
-    final VoidCallback? onTap,
-    final bool selected = false,
-    final Color? selectedTileColor,
+    required BuildContext context,
+    required Widget title,
+    Widget? subtitle,
+    Widget? leading,
+    Widget? trailing,
+    VoidCallback? onTap,
+    bool selected = false,
+    Color? selectedTileColor,
   }) => PlatformAdaptiveInputs.listTile(
     context: context,
     title: title,
@@ -194,13 +194,13 @@ class PlatformAdaptive {
   /// Shows a platform-adaptive modal bottom sheet
   /// Uses CupertinoActionSheet on iOS/macOS, Material showModalBottomSheet elsewhere
   static Future<T?> showAdaptiveModalBottomSheet<T>({
-    required final BuildContext context,
-    required final WidgetBuilder builder,
-    final bool isScrollControlled = false,
-    final Color? backgroundColor,
-    final bool useSafeArea = false,
-    final bool isDismissible = true,
-    final bool enableDrag = true,
+    required BuildContext context,
+    required WidgetBuilder builder,
+    bool isScrollControlled = false,
+    Color? backgroundColor,
+    bool useSafeArea = false,
+    bool isDismissible = true,
+    bool enableDrag = true,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return showCupertinoModalPopup<T>(context: context, builder: builder);
@@ -220,20 +220,20 @@ class PlatformAdaptive {
   /// On iOS/macOS: Shows CupertinoPicker in a CupertinoActionSheet
   /// On Android: Shows a bottom sheet with a list
   static Future<T?> showPickerModal<T>({
-    required final BuildContext context,
-    required final List<T> items,
-    required final T selectedItem,
-    required final String Function(T) itemLabel,
-    final Object Function(T item)? itemKey,
-    final String? title,
-    final Widget Function(BuildContext, T)? itemBuilder,
-    final String cancelLabel = 'Cancel',
-    final String doneLabel = 'Done',
+    required BuildContext context,
+    required List<T> items,
+    required T selectedItem,
+    required String Function(T) itemLabel,
+    Object Function(T item)? itemKey,
+    String? title,
+    Widget Function(BuildContext, T)? itemBuilder,
+    String cancelLabel = 'Cancel',
+    String doneLabel = 'Done',
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return showCupertinoModalPopup<T>(
         context: context,
-        builder: (final popupContext) => _CupertinoPickerSheetContent<T>(
+        builder: (popupContext) => _CupertinoPickerSheetContent<T>(
           items: items,
           selectedItem: selectedItem,
           title: title,
@@ -248,7 +248,7 @@ class PlatformAdaptive {
 
     return showModalBottomSheet<T>(
       context: context,
-      builder: (final sheetContext) => _MaterialPickerSheetContent<T>(
+      builder: (sheetContext) => _MaterialPickerSheetContent<T>(
         items: items,
         selectedItem: selectedItem,
         itemLabel: itemLabel,
@@ -278,7 +278,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
   final Widget Function(BuildContext, T)? itemBuilder;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
     return SafeArea(
@@ -299,7 +299,7 @@ class _MaterialPickerSheetContent<T> extends StatelessWidget {
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: items.length,
-              itemBuilder: (final itemContext, final index) {
+              itemBuilder: (itemContext, index) {
                 final T item = items[index];
                 final Object? keyValue = itemKey?.call(item) ?? item;
                 return ListTile(
@@ -373,7 +373,7 @@ class _CupertinoPickerSheetContentState<T>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
       height: 260,
@@ -393,14 +393,14 @@ class _CupertinoPickerSheetContentState<T>
               child: CupertinoPicker(
                 scrollController: _scrollController,
                 itemExtent: 32,
-                onSelectedItemChanged: (final index) {
+                onSelectedItemChanged: (index) {
                   if (index >= 0 && index < widget.items.length) {
                     setState(() {
                       _currentSelection = widget.items[index];
                     });
                   }
                 },
-                children: widget.items.map((final item) {
+                children: widget.items.map((item) {
                   final Object? keyValue = widget.itemKey?.call(item) ?? item;
                   return KeyedSubtree(
                     key: ValueKey<Object?>(keyValue),

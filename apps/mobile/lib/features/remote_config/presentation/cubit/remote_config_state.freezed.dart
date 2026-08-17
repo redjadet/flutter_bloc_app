@@ -55,8 +55,7 @@ extension RemoteConfigStatePatterns on RemoteConfigState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RemoteConfigInitial value)?  initial,TResult Function( RemoteConfigLoading value)?  loading,TResult Function( RemoteConfigLoaded value)?  loaded,TResult Function( RemoteConfigError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( RemoteConfigInitial value)?  initial,TResult Function( RemoteConfigLoading value)?  loading,TResult Function( RemoteConfigLoaded value)?  loaded,TResult Function( RemoteConfigError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case RemoteConfigInitial() when initial != null:
 return initial(_that);case RemoteConfigLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RemoteConfigInitial value)  initial,required TResult Function( RemoteConfigLoading value)  loading,required TResult Function( RemoteConfigLoaded value)  loaded,required TResult Function( RemoteConfigError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( RemoteConfigInitial value)  initial,required TResult Function( RemoteConfigLoading value)  loading,required TResult Function( RemoteConfigLoaded value)  loaded,required TResult Function( RemoteConfigError value)  error,}){final _that = this;
 switch (_that) {
 case RemoteConfigInitial():
 return initial(_that);case RemoteConfigLoading():
@@ -101,8 +99,7 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RemoteConfigInitial value)?  initial,TResult? Function( RemoteConfigLoading value)?  loading,TResult? Function( RemoteConfigLoaded value)?  loaded,TResult? Function( RemoteConfigError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( RemoteConfigInitial value)?  initial,TResult? Function( RemoteConfigLoading value)?  loading,TResult? Function( RemoteConfigLoaded value)?  loaded,TResult? Function( RemoteConfigError value)?  error,}){final _that = this;
 switch (_that) {
 case RemoteConfigInitial() when initial != null:
 return initial(_that);case RemoteConfigLoading() when loading != null:

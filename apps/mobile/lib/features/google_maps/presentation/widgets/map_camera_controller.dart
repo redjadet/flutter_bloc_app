@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as amap;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:material_ui/material_ui.dart';
 
 /// Controls camera movements and animations for both Google and Apple Maps.
 class MapCameraController {
@@ -29,7 +29,7 @@ class MapCameraController {
   }
 
   /// Move camera to a specific position without animation.
-  Future<void> moveCamera(final gmaps.CameraPosition position) async {
+  Future<void> moveCamera(gmaps.CameraPosition position) async {
     if (useAppleMaps) {
       final amap.AppleMapController? controller = appleController;
       if (controller == null) return;
@@ -51,9 +51,9 @@ class MapCameraController {
 
   /// Animate camera to focus on a location.
   Future<void> focusOnLocation(
-    final MapLocation location, {
-    required final VoidCallback onAnimationStart,
-    required final VoidCallback onAnimationEnd,
+    MapLocation location, {
+    required VoidCallback onAnimationStart,
+    required VoidCallback onAnimationEnd,
   }) async {
     onAnimationStart();
 

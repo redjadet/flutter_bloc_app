@@ -39,11 +39,11 @@ class OfflineFirstStaffDemoEventProofRepository
 
   @override
   Future<String> submitProof({
-    required final String userId,
-    required final String siteId,
-    required final String? shiftId,
-    required final List<String> photoFilePaths,
-    required final String signaturePngFilePath,
+    required String userId,
+    required String siteId,
+    required String? shiftId,
+    required List<String> photoFilePaths,
+    required String signaturePngFilePath,
   }) async {
     final String proofId =
         _proofIdFactory?.call() ??
@@ -87,7 +87,7 @@ class OfflineFirstStaffDemoEventProofRepository
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     final payload = operation.payload;
     final proofId =
         payload[StaffDemoEventProofSyncConstants.payloadProofId] as String?;
@@ -123,12 +123,12 @@ class OfflineFirstStaffDemoEventProofRepository
   }
 
   Future<void> _submitRemote({
-    required final String proofId,
-    required final String userId,
-    required final String siteId,
-    required final String? shiftId,
-    required final List<String> photoFilePaths,
-    required final String signaturePngFilePath,
+    required String proofId,
+    required String userId,
+    required String siteId,
+    required String? shiftId,
+    required List<String> photoFilePaths,
+    required String signaturePngFilePath,
   }) async {
     final List<String> uploadedPhotoStoragePaths = <String>[];
     for (int i = 0; i < photoFilePaths.length; i++) {
@@ -183,7 +183,7 @@ class OfflineFirstStaffDemoEventProofRepository
   /// registers this repo but remote pull is not part of the demo contract.
   Future<void> pullRemote() async {}
 
-  bool _shouldQueueForOfflineRetry(final Object error) {
+  bool _shouldQueueForOfflineRetry(Object error) {
     if (isStaffDemoTransientNetworkError(error)) {
       return true;
     }

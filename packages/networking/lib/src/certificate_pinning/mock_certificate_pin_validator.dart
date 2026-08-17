@@ -15,7 +15,7 @@ final class MockCertificatePinValidator implements CertificatePinValidator {
     required this._validationTimeout,
     this._logger,
     this._mode = CertificatePinningMode.mockSuccess,
-    final Future<void> Function(Duration delay)? delay,
+    Future<void> Function(Duration delay)? delay,
   }) : _delay = delay ?? Future<void>.delayed;
 
   final MockCertificateScenarioController _scenarioController;
@@ -26,9 +26,9 @@ final class MockCertificatePinValidator implements CertificatePinValidator {
 
   @override
   Future<CertificatePinResult> validate({
-    required final String host,
-    required final int port,
-    required final Uint8List certificateBytes,
+    required String host,
+    required int port,
+    required Uint8List certificateBytes,
   }) async {
     final Stopwatch sw = Stopwatch()..start();
     final MockCertificateScenario scenario = _scenarioController.scenario;
@@ -61,9 +61,9 @@ final class MockCertificatePinValidator implements CertificatePinValidator {
   }
 
   Future<CertificatePinResult> _resultForScenario({
-    required final MockCertificateScenario scenario,
-    required final String host,
-    required final Uint8List certificateBytes,
+    required MockCertificateScenario scenario,
+    required String host,
+    required Uint8List certificateBytes,
   }) async {
     switch (scenario) {
       case MockCertificateScenario.validPrimaryPin:

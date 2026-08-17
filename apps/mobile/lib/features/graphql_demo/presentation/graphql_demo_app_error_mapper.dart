@@ -2,7 +2,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_demo_excep
 import 'package:utilities/utilities.dart';
 
 AppError graphqlDemoAppErrorFromException(
-  final GraphqlDemoException exception,
+  GraphqlDemoException exception,
 ) {
   return graphqlDemoAppErrorFromType(
     exception.type,
@@ -12,9 +12,9 @@ AppError graphqlDemoAppErrorFromException(
 }
 
 AppError graphqlDemoAppErrorFromType(
-  final GraphqlDemoErrorType? type,
-  final String? message, {
-  final Object? cause,
+  GraphqlDemoErrorType? type,
+  String? message, {
+  Object? cause,
 }) {
   final String trimmed = message?.trim() ?? '';
   final String resolved = trimmed.isNotEmpty ? trimmed : 'GraphQL demo error';

@@ -6,13 +6,13 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 
 class HuggingfaceChatRepository implements ChatRepository {
   HuggingfaceChatRepository({
-    final Dio? client,
-    final String? apiKey,
-    final String? model,
+    Dio? client,
+    String? apiKey,
+    String? model,
     this._useChatCompletions = true,
-    final HuggingFaceApiClient? apiClient,
-    final HuggingFacePayloadBuilder? payloadBuilder,
-    final HuggingFaceResponseParser? responseParser,
+    HuggingFaceApiClient? apiClient,
+    HuggingFacePayloadBuilder? payloadBuilder,
+    HuggingFaceResponseParser? responseParser,
   }) : _apiClient =
            apiClient ??
            HuggingFaceApiClient(
@@ -52,12 +52,12 @@ class HuggingfaceChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     if (!_apiClient.hasApiKey) {
       throw const ChatException('Missing Hugging Face API token.');
@@ -94,10 +94,10 @@ class HuggingfaceChatRepository implements ChatRepository {
   }
 
   Future<ChatResult> _sendViaInference({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    required final String model,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    required String model,
   }) async {
     final Map<String, dynamic> payload = _payloadBuilder.buildInferencePayload(
       pastUserInputs: pastUserInputs,
@@ -121,10 +121,10 @@ class HuggingfaceChatRepository implements ChatRepository {
   }
 
   Future<ChatResult> _sendViaChatCompletions({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    required final String model,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    required String model,
   }) async {
     final Map<String, dynamic> payload = _payloadBuilder
         .buildChatCompletionsPayload(
@@ -154,15 +154,15 @@ class HuggingfaceChatRepository implements ChatRepository {
     );
   }
 
-  String _resolveModel(final String? value) => _normalize(value) ?? _model;
+  String _resolveModel(String? value) => _normalize(value) ?? _model;
 
-  static String? _normalize(final String? value) {
+  static String? _normalize(String? value) {
     if (value == null) return null;
     final String trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
   }
 
-  static bool _shouldFallbackToChatCompletions(final ChatException error) {
+  static bool _shouldFallbackToChatCompletions(ChatException error) {
     final String message = error.message.toLowerCase();
     return message.contains('http 410') &&
         message.contains('api-inference.huggingface.co') &&

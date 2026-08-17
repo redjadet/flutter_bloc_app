@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Helper classes for CounterPageAppBar overflow menu items.
 enum OverflowAction {
@@ -47,7 +47,7 @@ class CupertinoIconButton extends StatelessWidget {
   final String tooltip;
 
   @override
-  Widget build(final BuildContext context) => Semantics(
+  Widget build(BuildContext context) => Semantics(
     button: true,
     label: tooltip,
     child: Tooltip(

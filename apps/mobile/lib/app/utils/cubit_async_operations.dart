@@ -26,15 +26,14 @@ class CubitExceptionHandler {
   /// - [onError]: Callback to handle the error (typically emits error state)
   /// - [specificExceptionHandlers]: Map of specific exception types to custom handlers
   static void handleException<T extends Exception>(
-    final Object error,
-    final StackTrace? stackTrace,
-    final String logContext, {
-    required final void Function(String errorMessage) onError,
-    final void Function(AppError appError)? onAppError,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
+    Object error,
+    StackTrace? stackTrace,
+    String logContext, {
+    required void Function(String errorMessage) onError,
+    void Function(AppError appError)? onAppError,
+    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
+    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
   }) {
     // Handle specific exceptions first if provided
     if (specificExceptionHandlers != null) {
@@ -73,7 +72,7 @@ class CubitExceptionHandler {
   ///
   /// For [HttpRequestFailure], uses [NetworkErrorMapper] so 401 vs 503 etc.
   /// are differentiated (e.g. "Service temporarily unavailable" vs "Sign in again").
-  static String _extractErrorMessage(final Object error) {
+  static String _extractErrorMessage(Object error) {
     if (error is HttpRequestFailure) {
       return NetworkErrorMapper.getErrorMessage(error);
     }
@@ -120,16 +119,15 @@ class CubitExceptionHandler {
   /// );
   /// ```
   static Future<void> executeAsync<T>({
-    required final Future<T> Function() operation,
-    required final void Function(T result) onSuccess,
-    required final void Function(String errorMessage) onError,
-    required final String logContext,
-    final bool Function()? isAlive,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
+    required Future<T> Function() operation,
+    required void Function(T result) onSuccess,
+    required void Function(String errorMessage) onError,
+    required String logContext,
+    bool Function()? isAlive,
+    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
-    final void Function(AppError appError)? onAppError,
+    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
+    void Function(AppError appError)? onAppError,
   }) async {
     try {
       final T result = await operation();
@@ -165,16 +163,15 @@ class CubitExceptionHandler {
   /// );
   /// ```
   static Future<void> executeAsyncVoid({
-    required final Future<void> Function() operation,
-    required final void Function(String errorMessage) onError,
-    required final String logContext,
-    final void Function()? onSuccess,
-    final bool Function()? isAlive,
-    final Map<Type, void Function(Object error, StackTrace? stackTrace)>?
+    required Future<void> Function() operation,
+    required void Function(String errorMessage) onError,
+    required String logContext,
+    void Function()? onSuccess,
+    bool Function()? isAlive,
+    Map<Type, void Function(Object error, StackTrace? stackTrace)>?
     specificExceptionHandlers,
-    final void Function(Object error, StackTrace? stackTrace)?
-    onErrorWithDetails,
-    final void Function(AppError appError)? onAppError,
+    void Function(Object error, StackTrace? stackTrace)? onErrorWithDetails,
+    void Function(AppError appError)? onAppError,
   }) async {
     await executeAsync(
       operation: operation,

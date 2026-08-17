@@ -7,10 +7,10 @@ sealed class GenUiSurfaceEvent with _$GenUiSurfaceEvent {
   const GenUiSurfaceEvent._();
 
   const factory GenUiSurfaceEvent.added({
-    required final String surfaceId,
+    required String surfaceId,
   }) = GenUiSurfaceAdded;
 
   const factory GenUiSurfaceEvent.removed({
-    required final String surfaceId,
+    required String surfaceId,
   }) = GenUiSurfaceRemoved;
 }

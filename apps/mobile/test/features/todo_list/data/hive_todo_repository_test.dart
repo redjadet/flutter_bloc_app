@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_bloc_app/features/todo_list/data/hive_todo_repository.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   group('HiveTodoRepository', () {
@@ -129,7 +129,7 @@ void main() {
       () async {
         await hiveService.openBoxAndRun<void>(
           'todo_list',
-          action: (final box) async {
+          action: (box) async {
             final List<Map<String, dynamic>> legacy = <Map<String, dynamic>>[
               <String, dynamic>{
                 'id': 'ok',
@@ -151,9 +151,9 @@ void main() {
 
         final box = await repository.getBox();
         expect(box.get('__tmp__todos_migrated'), isNull);
-        final Map<dynamic, dynamic>? meta =
-            box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-                as Map<dynamic, dynamic>?;
+        final Map<dynamic, dynamic>? meta = box.get(
+          HiveSchemaMigratorService.metaKeyFingerprints,
+        ) as Map<dynamic, dynamic>?;
         expect(meta, isNotNull);
         expect(meta!.containsKey('todo_list:todos'), isTrue);
       },
@@ -164,7 +164,7 @@ void main() {
       () async {
         await hiveService.openBoxAndRun<void>(
           'todo_list',
-          action: (final box) async {
+          action: (box) async {
             await box.put('todos', <dynamic>[
               <String, dynamic>{
                 'id': 'ok',
@@ -187,9 +187,9 @@ void main() {
         expect(items, hasLength(1));
         expect(items.single.id, 'ok');
         final box = await repository.getBox();
-        final Map<dynamic, dynamic>? meta =
-            box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-                as Map<dynamic, dynamic>?;
+        final Map<dynamic, dynamic>? meta = box.get(
+          HiveSchemaMigratorService.metaKeyFingerprints,
+        ) as Map<dynamic, dynamic>?;
         expect(meta?['todo_list:todos'], isNotNull);
       },
     );
@@ -197,7 +197,7 @@ void main() {
     test('schema migrate is idempotent and clears stale tmp key', () async {
       await hiveService.openBoxAndRun<void>(
         'todo_list',
-        action: (final box) async {
+        action: (box) async {
           await box.put('__tmp__todos_migrated', <dynamic>['junk']);
           await box.put('todos', <dynamic>[]);
         },
@@ -220,9 +220,9 @@ void main() {
       await throwing.fetchAll();
 
       final box = await throwing.getBox();
-      final Map<dynamic, dynamic>? meta =
-          box.get(HiveSchemaMigratorService.metaKeyFingerprints)
-              as Map<dynamic, dynamic>?;
+      final Map<dynamic, dynamic>? meta = box.get(
+        HiveSchemaMigratorService.metaKeyFingerprints,
+      ) as Map<dynamic, dynamic>?;
       expect(meta?['todo_list:todos'], isNull);
     });
   });
@@ -240,20 +240,20 @@ class _ThrowingTodoRepository extends HiveTodoRepository {
   );
 
   static Future<void> _throwingMigrator(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     throw Exception('boom');
   }
 }
 
 TodoItem _todoItem({
-  required final String id,
-  required final String title,
-  final String? description,
-  final bool isCompleted = false,
-  final DateTime? createdAt,
-  final DateTime? updatedAt,
+  required String id,
+  required String title,
+  String? description,
+  bool isCompleted = false,
+  DateTime? createdAt,
+  DateTime? updatedAt,
 }) {
   final DateTime created = createdAt ?? DateTime.utc(2024, 1, 1);
   final DateTime updated = updatedAt ?? created;

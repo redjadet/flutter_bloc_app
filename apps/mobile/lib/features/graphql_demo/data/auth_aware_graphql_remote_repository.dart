@@ -45,7 +45,7 @@ class AuthAwareGraphqlRemoteRepository implements GraphqlRemoteRepository {
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     final GraphqlRemoteRepository active = _active;
     final List<GraphqlCountry> countries = await active.fetchCountries(

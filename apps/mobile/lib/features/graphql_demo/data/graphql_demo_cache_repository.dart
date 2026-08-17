@@ -19,7 +19,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
 
   @override
   Future<List<GraphqlContinent>> readContinents({
-    final Duration? maxAge,
+    Duration? maxAge,
   }) async => StorageGuard.run<List<GraphqlContinent>>(
     logContext: 'GraphqlDemoCacheRepository.readContinents',
     action: () async {
@@ -39,7 +39,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final json) {
+            (json) {
               // Hive returns Map<dynamic, dynamic>, convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
               return GraphqlContinentDto.fromJson(typedJson).toDomain();
@@ -52,7 +52,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
 
   @override
   Future<void> writeContinents(
-    final List<GraphqlContinent> continents,
+    List<GraphqlContinent> continents,
   ) async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.writeContinents',
@@ -71,8 +71,8 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
 
   @override
   Future<List<GraphqlCountry>> readCountries({
-    final String? continentCode,
-    final Duration? maxAge,
+    String? continentCode,
+    Duration? maxAge,
   }) async => StorageGuard.run<List<GraphqlCountry>>(
     logContext: 'GraphqlDemoCacheRepository.readCountries',
     action: () async {
@@ -92,7 +92,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
       return items
           .whereType<Map<dynamic, dynamic>>()
           .map(
-            (final json) {
+            (json) {
               // Hive returns Map<dynamic, dynamic>, recursively convert to Map<String, dynamic>
               final Map<String, dynamic> typedJson = _convertMapToTyped(json);
               return GraphqlCountryDto.fromJson(typedJson).toDomain();
@@ -105,8 +105,8 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
 
   @override
   Future<void> writeCountries({
-    required final List<GraphqlCountry> countries,
-    final String? continentCode,
+    required List<GraphqlCountry> countries,
+    String? continentCode,
   }) async {
     await StorageGuard.run<void>(
       logContext: 'GraphqlDemoCacheRepository.writeCountries',
@@ -123,7 +123,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
     );
   }
 
-  String _countriesKey(final String? continentCode) {
+  String _countriesKey(String? continentCode) {
     final String normalized = (continentCode ?? 'all').trim();
     final String suffix = normalized.isEmpty ? 'all' : normalized;
     return '$_countriesPrefix:$suffix';
@@ -140,13 +140,13 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
     );
   }
 
-  Map<String, dynamic> _continentToJson(final GraphqlContinent continent) =>
+  Map<String, dynamic> _continentToJson(GraphqlContinent continent) =>
       <String, dynamic>{
         'code': continent.code,
         'name': continent.name,
       };
 
-  Map<String, dynamic> _countryToJson(final GraphqlCountry country) =>
+  Map<String, dynamic> _countryToJson(GraphqlCountry country) =>
       <String, dynamic>{
         'code': country.code,
         'name': country.name,
@@ -156,20 +156,20 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
         'continent': _continentToJson(country.continent),
       };
 
-  DateTime? _parseUpdatedAt(final Map<dynamic, dynamic> stored) {
+  DateTime? _parseUpdatedAt(Map<dynamic, dynamic> stored) {
     final Object? raw = stored[_updatedAtKey];
     if (raw is! String) return null;
     return DateTime.tryParse(raw);
   }
 
-  bool _isStale(final DateTime? updatedAt, final Duration? maxAge) {
+  bool _isStale(DateTime? updatedAt, Duration? maxAge) {
     if (updatedAt == null || maxAge == null) return false;
     return updatedAt.isBefore(DateTime.now().toUtc().subtract(maxAge));
   }
 
   /// Recursively converts `Map<dynamic, dynamic>` to `Map<String, dynamic>`.
   /// Handles nested maps and lists that may contain maps.
-  Map<String, dynamic> _convertMapToTyped(final Map<dynamic, dynamic> source) {
+  Map<String, dynamic> _convertMapToTyped(Map<dynamic, dynamic> source) {
     final Map<String, dynamic> result = <String, dynamic>{};
     for (final MapEntry<dynamic, dynamic> entry in source.entries) {
       if (entry.key is! String) {
@@ -183,7 +183,7 @@ class GraphqlDemoCacheRepository extends HiveRepositoryBase
         final List<dynamic> list =>
           list
               .map(
-                (final dynamic item) => switch (item) {
+                (dynamic item) => switch (item) {
                   final Map<dynamic, dynamic> map => _convertMapToTyped(map),
                   _ => item,
                 },

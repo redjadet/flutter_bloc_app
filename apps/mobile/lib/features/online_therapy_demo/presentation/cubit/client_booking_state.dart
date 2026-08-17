@@ -24,7 +24,7 @@ class ClientBookingState {
   TherapistProfile? get selectedTherapist =>
       selectedTherapistId == null ? null : therapistById(selectedTherapistId!);
 
-  TherapistProfile? therapistById(final String therapistId) {
+  TherapistProfile? therapistById(String therapistId) {
     for (final therapist in therapists) {
       if (therapist.id == therapistId) return therapist;
     }

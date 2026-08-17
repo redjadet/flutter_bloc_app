@@ -41,7 +41,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         _emitError(
           message,
           nextState: state.copyWith(walletAddress: null),
@@ -135,10 +135,10 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
   }
 
   Future<void> _runLoadingAction({
-    required final String logContext,
-    required final Future<void> Function() operation,
-    final void Function(String message)? onError,
-    final bool clearError = true,
+    required String logContext,
+    required Future<void> Function() operation,
+    void Function(String message)? onError,
+    bool clearError = true,
   }) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
@@ -174,7 +174,7 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
   }
 
   Future<WalletUserProfile?> _loadUserProfile(
-    final WalletAddress? linkedAddress,
+    WalletAddress? linkedAddress,
   ) async {
     if (linkedAddress == null) {
       return null;
@@ -182,14 +182,14 @@ class WalletConnectAuthCubit extends Cubit<WalletConnectAuthState> {
     return _repository.getWalletUserProfile(linkedAddress.value);
   }
 
-  void _emitSuccess(final WalletConnectAuthState nextState) {
+  void _emitSuccess(WalletConnectAuthState nextState) {
     if (isClosed) return;
     emit(nextState.copyWith(status: ViewStatus.success));
   }
 
   void _emitError(
-    final String message, {
-    final WalletConnectAuthState? nextState,
+    String message, {
+    WalletConnectAuthState? nextState,
   }) {
     if (isClosed) return;
     emit(

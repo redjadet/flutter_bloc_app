@@ -2,11 +2,11 @@ import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_favorite_icon.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid_item_helpers.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'scape_grid_item_icon_button.part.dart';
 
@@ -23,7 +23,7 @@ class ScapeGridItem extends StatelessWidget {
   final VoidCallback onMorePressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final EpochThemeExtension epoch = context.epoch;
 
@@ -35,7 +35,7 @@ class ScapeGridItem extends StatelessWidget {
     final double iconSize = UI.scaleFontMax(16);
 
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final TextStyle baseTitleStyle = EpochTextStyles.assetName(context);
         final TextStyle metadataStyle = EpochTextStyles.metadata(context);
         final TextScaler textScaler = MediaQuery.textScalerOf(context);
@@ -163,8 +163,7 @@ class ScapeGridItem extends StatelessWidget {
                             width: UI.scaleWidth(4),
                             height: iconSize,
                             child: ResilientSvgAssetImage(
-                              assetPath:
-                                  'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_three_dot_icon.svg',
+                              assetPath: 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_three_dot_icon.svg',
                               fit: BoxFit.contain,
                               fallbackBuilder: () => const SizedBox.shrink(),
                             ),

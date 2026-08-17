@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:core/core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_iot_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -17,9 +16,11 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_repository.da
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 import '../../helpers/memory/leak_safe_test_widgets.dart';
@@ -27,23 +28,20 @@ import '../../helpers/memory/leak_safe_test_widgets.dart';
 class _StubIotDemoRepository implements IotDemoRepository {
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) => Stream<List<IotDevice>>.value(const <IotDevice>[]);
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {
@@ -90,7 +88,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> quiesceForSessionCleanup() async {}
@@ -140,7 +138,7 @@ void main() {
     await getIt.reset(dispose: true);
   });
 
-  testWidgets('IotDemoHubPage shows Cloud and BLE tabs', (final tester) async {
+  testWidgets('IotDemoHubPage shows Cloud and BLE tabs', (tester) async {
     final IotDemoCubit demoCubit = IotDemoCubit(
       repository: _StubIotDemoRepository(),
     );
@@ -154,11 +152,11 @@ void main() {
     await demoCubit.initialize();
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
         home: Builder(
-          builder: (final context) => buildAppMixScope(
+          builder: (context) => buildAppMixScope(
             context,
             child: BlocProvider<SyncStatusCubit>.value(
               value: syncCubit,
@@ -186,7 +184,7 @@ void main() {
 
   leakSafeTestWidgets(
     'leaving BLE tab tears down scan and Bluetooth sessions',
-    (final tester) async {
+    (tester) async {
       await getIt.unregister<MockBleRepository>();
       await getIt.unregister<MockClassicBluetoothRepository>();
       final _TrackingBleRepository bleRepository = _TrackingBleRepository();
@@ -194,11 +192,11 @@ void main() {
           _TrackingClassicRepository();
       getIt.registerSingleton<MockBleRepository>(
         bleRepository,
-        dispose: (final repository) => repository.dispose(),
+        dispose: (repository) => repository.dispose(),
       );
       getIt.registerSingleton<MockClassicBluetoothRepository>(
         classicRepository,
-        dispose: (final repository) => repository.dispose(),
+        dispose: (repository) => repository.dispose(),
       );
 
       final IotDemoCubit demoCubit = IotDemoCubit(
@@ -214,11 +212,11 @@ void main() {
       await demoCubit.initialize();
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: Builder(
-            builder: (final context) => buildAppMixScope(
+            builder: (context) => buildAppMixScope(
               context,
               child: BlocProvider<SyncStatusCubit>.value(
                 value: syncCubit,

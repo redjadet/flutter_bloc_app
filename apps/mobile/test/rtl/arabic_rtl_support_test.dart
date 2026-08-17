@@ -1,18 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/theme/app_theme.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_details.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
-const _delegates = <LocalizationsDelegate<dynamic>>[
-  GlobalMaterialLocalizations.delegate,
-  GlobalWidgetsLocalizations.delegate,
-  GlobalCupertinoLocalizations.delegate,
-  AppLocalizations.delegate,
-];
+const _delegates = appLocalizationDelegates;
 
 void main() {
   test('Arabic theme uses bundled Cairo font family', () {
@@ -24,7 +19,7 @@ void main() {
     expect(textTheme.displayLarge?.fontFamily, AppTheme.arabicFontFamily);
   });
 
-  testWidgets('Locale(ar) uses RTL directionality', (final tester) async {
+  testWidgets('Locale(ar) uses RTL directionality', (tester) async {
     TextDirection? observed;
 
     await tester.pumpWidget(
@@ -33,7 +28,7 @@ void main() {
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: _delegates,
         home: Builder(
-          builder: (final context) {
+          builder: (context) {
             observed = Directionality.of(context);
             return const SizedBox.shrink();
           },
@@ -45,7 +40,7 @@ void main() {
   });
 
   testWidgets('ChatContactTileDetails uses directional spacing for time', (
-    final tester,
+    tester,
   ) async {
     const timeText = '12:34';
     final contact = ChatContact(
@@ -90,7 +85,7 @@ void main() {
       ),
     );
 
-    final timePaddingFinder = find.byWidgetPredicate((final widget) {
+    final timePaddingFinder = find.byWidgetPredicate((widget) {
       if (widget is! Padding) return false;
       final child = widget.child;
       return child is Text && child.data == timeText;

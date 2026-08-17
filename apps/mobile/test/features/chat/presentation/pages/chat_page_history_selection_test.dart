@@ -1,19 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _FakeChatRepository implements ChatRepository {
   @override
@@ -75,34 +76,29 @@ void main() {
       coordinator = _MockBackgroundSyncCoordinator();
       errorNotificationService = _MockErrorNotificationService();
 
-      when(
-        () => networkStatusService.statusStream,
-      ).thenAnswer((_) => Stream<NetworkStatus>.value(NetworkStatus.online));
-      when(
-        () => networkStatusService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.online);
+      when(() => networkStatusService.statusStream)
+          .thenAnswer((_) => Stream<NetworkStatus>.value(NetworkStatus.online));
+      when(() => networkStatusService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.online);
       when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);
       when(() => coordinator.latestSummary).thenReturn(null);
       when(() => coordinator.history).thenReturn(const <SyncCycleSummary>[]);
-      when(
-        () => coordinator.statusStream,
-      ).thenAnswer((_) => const Stream<SyncStatus>.empty());
-      when(
-        () => coordinator.summaryStream,
-      ).thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
+      when(() => coordinator.statusStream)
+          .thenAnswer((_) => const Stream<SyncStatus>.empty());
+      when(() => coordinator.summaryStream)
+          .thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
       when(() => coordinator.flush()).thenAnswer((_) async {});
       when(() => coordinator.ensureStarted()).thenAnswer((_) async {});
-      when(
-        () => errorNotificationService.showSnackBar(any(), any()),
-      ).thenAnswer((_) async {});
+      when(() => errorNotificationService.showSnackBar(any(), any()))
+          .thenAnswer((_) async {});
     });
 
     tearDown(() {});
 
     Widget buildSubject(ChatCubit cubit) => MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      builder: (final BuildContext context, final Widget? child) =>
+      builder: (BuildContext context, Widget? child) =>
           buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
       home: MultiBlocProvider(
         providers: <BlocProvider<dynamic>>[

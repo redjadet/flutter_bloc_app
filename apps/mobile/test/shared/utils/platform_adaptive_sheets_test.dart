@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/app/utils/platform_adaptive_sheets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('PlatformAdaptiveSheets', () {
     testWidgets('showAdaptiveModalBottomSheet shows Material bottom sheet', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: SizedBox())),
@@ -18,7 +18,7 @@ void main() {
       unawaited(
         PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
           context: tester.element(find.byType(Scaffold)),
-          builder: (final context) {
+          builder: (context) {
             sheetShown = true;
             return const SizedBox();
           },
@@ -32,7 +32,7 @@ void main() {
     });
 
     testWidgets('showAdaptiveModalBottomSheet respects isScrollControlled', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: SizedBox())),
@@ -42,7 +42,7 @@ void main() {
         PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
           context: tester.element(find.byType(Scaffold)),
           isScrollControlled: true,
-          builder: (final context) => const SizedBox(),
+          builder: (context) => const SizedBox(),
         ),
       );
 
@@ -54,7 +54,7 @@ void main() {
     });
 
     testWidgets('showAdaptiveModalBottomSheet respects useSafeArea', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: SizedBox())),
@@ -64,7 +64,7 @@ void main() {
         PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
           context: tester.element(find.byType(Scaffold)),
           useSafeArea: true,
-          builder: (final context) => const SizedBox(),
+          builder: (context) => const SizedBox(),
         ),
       );
 
@@ -76,7 +76,7 @@ void main() {
     });
 
     testWidgets('showAdaptiveModalBottomSheet respects isDismissible', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: SizedBox())),
@@ -86,7 +86,7 @@ void main() {
         PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
           context: tester.element(find.byType(Scaffold)),
           isDismissible: false,
-          builder: (final context) => const SizedBox(),
+          builder: (context) => const SizedBox(),
         ),
       );
 
@@ -98,7 +98,7 @@ void main() {
     });
 
     testWidgets('showAdaptiveModalBottomSheet respects enableDrag', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: SizedBox())),
@@ -108,7 +108,7 @@ void main() {
         PlatformAdaptiveSheets.showAdaptiveModalBottomSheet(
           context: tester.element(find.byType(Scaffold)),
           enableDrag: false,
-          builder: (final context) => const SizedBox(),
+          builder: (context) => const SizedBox(),
         ),
       );
 
@@ -120,7 +120,7 @@ void main() {
     });
 
     testWidgets('showPickerModal renders title and selected item state', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpMaterialAppWithMixTheme(tester);
 
@@ -130,7 +130,7 @@ void main() {
           items: const <String>['Alpha', 'Beta'],
           selectedItem: 'Alpha',
           title: 'Pick One',
-          itemLabel: (final item) => item,
+          itemLabel: (item) => item,
         ),
       );
 
@@ -144,7 +144,7 @@ void main() {
     });
 
     testWidgets('showPickerModal returns tapped material item', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpMaterialAppWithMixTheme(tester);
 
@@ -154,8 +154,8 @@ void main() {
           context: tester.element(find.byType(Scaffold)),
           items: const <String>['Alpha', 'Beta'],
           selectedItem: 'Alpha',
-          itemLabel: (final item) => item,
-        ).then((final value) => selectedValue = value),
+          itemLabel: (item) => item,
+        ).then((value) => selectedValue = value),
       );
 
       await tester.pump();
@@ -168,7 +168,7 @@ void main() {
     });
 
     testWidgets('showPickerModal keys material rows with itemKey', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await _pumpMaterialAppWithMixTheme(tester);
 
@@ -177,8 +177,8 @@ void main() {
           context: tester.element(find.byType(Scaffold)),
           items: const <String>['Alpha', 'Beta'],
           selectedItem: 'Alpha',
-          itemLabel: (final item) => item,
-          itemKey: (final item) => 'id-$item',
+          itemLabel: (item) => item,
+          itemKey: (item) => 'id-$item',
         ),
       );
 
@@ -191,10 +191,10 @@ void main() {
   });
 }
 
-Future<void> _pumpMaterialAppWithMixTheme(final WidgetTester tester) {
+Future<void> _pumpMaterialAppWithMixTheme(WidgetTester tester) {
   return tester.pumpWidget(
     MaterialApp(
-      builder: (final context, final child) =>
+      builder: (context, child) =>
           buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
       home: const Scaffold(body: SizedBox()),
     ),

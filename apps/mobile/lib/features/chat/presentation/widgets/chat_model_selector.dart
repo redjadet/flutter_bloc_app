@@ -1,17 +1,17 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_model_ids.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatModelSelector extends StatelessWidget {
   const ChatModelSelector({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
 
@@ -19,8 +19,8 @@ class ChatModelSelector extends StatelessWidget {
     final List<String> models = cubit.models;
 
     return TypeSafeBlocSelector<ChatCubit, ChatState, String?>(
-      selector: (final state) => state.currentModel,
-      builder: (final context, final currentModel) {
+      selector: (state) => state.currentModel,
+      builder: (context, currentModel) {
         // Defensive check: ensure models list is not empty
         if (models.isEmpty) {
           return const SizedBox.shrink();
@@ -41,26 +41,26 @@ class ChatModelSelector extends StatelessWidget {
           value: effectiveModel,
           items: models
               .map(
-                (final model) => DropdownMenuItem<String>(
+                (model) => DropdownMenuItem<String>(
                   value: model,
                   child: Text(_modelLabel(l10n, model)),
                 ),
               )
               .toList(growable: false),
-          onChanged: (final value) {
+          onChanged: (value) {
             if (value != null) {
               cubit.selectModel(value);
             }
           },
           labelText: l10n.chatModelLabel,
           labelPosition: DropdownLabelPosition.left,
-          customItemLabel: (final model) => _modelLabel(l10n, model),
+          customItemLabel: (model) => _modelLabel(l10n, model),
         );
       },
     );
   }
 
-  String _modelLabel(final AppLocalizations l10n, final String model) {
+  String _modelLabel(AppLocalizations l10n, String model) {
     switch (model) {
       case kChatOrchestrationAutoModelId:
         return l10n.chatModelAuto;

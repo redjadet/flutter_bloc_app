@@ -28,7 +28,7 @@ void main() {
       final IotDemoRealtimeSubscription subscription =
           IotDemoRealtimeSubscription(
             isConfiguredOverride: () => false,
-            createChannel: (final _) {
+            createChannel: (_) {
               createChannelCalls += 1;
               throw StateError('should not create channel');
             },
@@ -48,7 +48,7 @@ void main() {
       final IotDemoRealtimeSubscription subscription =
           IotDemoRealtimeSubscription(
             isConfiguredOverride: () => true,
-            createChannel: (final callback) {
+            createChannel: (callback) {
               createChannelCalls += 1;
               onPayload = callback;
               return channel;
@@ -89,7 +89,7 @@ void main() {
       final IotDemoRealtimeSubscription subscription =
           IotDemoRealtimeSubscription(
             isConfiguredOverride: () => true,
-            createChannel: (final callback) {
+            createChannel: (callback) {
               onPayload = callback;
               return channel;
             },
@@ -123,8 +123,8 @@ void main() {
       final IotDemoRealtimeSubscription subscription =
           IotDemoRealtimeSubscription(
             isConfiguredOverride: () => true,
-            createChannel: (final _) => channel,
-            removeChannel: (final removedChannel) async {
+            createChannel: (_) => channel,
+            removeChannel: (removedChannel) async {
               expect(removedChannel, same(channel));
               removeChannelCalls += 1;
             },

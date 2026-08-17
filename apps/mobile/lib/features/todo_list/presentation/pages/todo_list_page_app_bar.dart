@@ -2,8 +2,8 @@ part of 'todo_list_page.dart';
 
 /// Builds the app bar action widgets (select all, batch menu) for the todo list.
 List<Widget>? _buildTodoListAppBarActions(
-  final BuildContext context,
-  final _TodoAppBarData barData,
+  BuildContext context,
+  _TodoAppBarData barData,
 ) {
   final List<Widget> actionWidgets = <Widget>[];
   if (barData.hasFilteredItems) {
@@ -33,7 +33,7 @@ List<Widget>? _buildTodoListAppBarActions(
         tooltip: context.l10n.todoListItemsSelected(
           barData.selectedCount,
         ),
-        onSelected: (final action) async {
+        onSelected: (action) async {
           final cubit = context.cubit<TodoListCubit>();
           switch (action) {
             case _BatchMenuAction.complete:
@@ -53,7 +53,7 @@ List<Widget>? _buildTodoListAppBarActions(
               break;
           }
         },
-        itemBuilder: (final context) => <PopupMenuEntry<_BatchMenuAction>>[
+        itemBuilder: (context) => <PopupMenuEntry<_BatchMenuAction>>[
           if (barData.hasSelectedActive)
             PopupMenuItem<_BatchMenuAction>(
               value: _BatchMenuAction.complete,

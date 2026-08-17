@@ -4,20 +4,20 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   GoRoute(
     path: AppRoutes.fcmDemoPath,
     name: AppRoutes.fcmDemo,
-    builder: (final context, final state) =>
+    builder: (context, state) =>
         BlocProviderHelpers.withAsyncInit<FcmDemoCubit>(
           create: () => FcmDemoCubit(
             messaging: getIt<FcmMessagingService>(),
             coordinator: getIt<BackgroundSyncCoordinator>(),
           ),
-          init: (final cubit) => cubit.initialize(),
+          init: (cubit) => cubit.initialize(),
           child: const FcmDemoPage(),
         ),
   ),
   GoRoute(
     path: AppRoutes.productionReadinessPath,
     name: AppRoutes.productionReadiness,
-    builder: (final context, final state) {
+    builder: (context, state) {
       final FcmSimulationController? simulation =
           getIt.isRegistered<FcmSimulationController>()
           ? getIt<FcmSimulationController>()
@@ -45,7 +45,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
                 : null,
           );
         },
-        init: (final cubit) => cubit.initialize(),
+        init: (cubit) => cubit.initialize(),
         child: ProductionReadinessPage(
           showSimulatedNotificationButton: simulation != null,
         ),
@@ -55,15 +55,15 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   GoRoute(
     path: AppRoutes.iotDemoPath,
     name: AppRoutes.iotDemo,
-    builder: (final context, final state) {
+    builder: (context, state) {
       // Gate/policy once; listen only around hub so deferred ticks do not
       // recreate IotDemoCubit.
       final BackendAvailability availability = getIt<BackendAvailability>();
       final Widget hub = BlocProviderHelpers.withAsyncInit<IotDemoCubit>(
         create: () => IotDemoCubit(repository: getIt<IotDemoRepository>()),
-        init: (final cubit) => cubit.initialize(),
+        init: (cubit) => cubit.initialize(),
         child: _listenBackendAvailability(
-          (final live) => IotDemoHubPage(
+          (live) => IotDemoHubPage(
             showBackendDisabledBanner: live.showIotCloudBackendDisabledBanner,
           ),
         ),
@@ -85,7 +85,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
   GoRoute(
     path: AppRoutes.iapDemoPath,
     name: AppRoutes.iapDemo,
-    builder: (final context, final state) =>
+    builder: (context, state) =>
         BlocProviderHelpers.withAsyncInit<InAppPurchaseDemoCubit>(
           create: () {
             final fake = getIt<FakeInAppPurchaseRepository>();
@@ -97,18 +97,18 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
               realDemoControls: real,
             );
           },
-          init: (final cubit) => cubit.initialize(),
+          init: (cubit) => cubit.initialize(),
           child: const InAppPurchaseDemoPage(),
         ),
   ),
   GoRoute(
     path: AppRoutes.aiDecisionDemoPath,
     name: AppRoutes.aiDecisionDemo,
-    builder: (final context, final state) =>
+    builder: (context, state) =>
         BlocProviderHelpers.withAsyncInit<AiDecisionCubit>(
           create: () =>
               AiDecisionCubit(repository: getIt<AiDecisionRepository>()),
-          init: (final cubit) => cubit.loadQueue(),
+          init: (cubit) => cubit.loadQueue(),
           child: const AiDecisionDemoPage(),
         ),
   ),
@@ -123,7 +123,7 @@ List<RouteBase> createDemoRoutesTail() => <RouteBase>[
 RouteBase createNativePlatformShowcaseRoute() => GoRoute(
   path: AppRoutes.nativePlatformShowcasePath,
   name: AppRoutes.nativePlatformShowcase,
-  builder: (final context, final state) => MultiBlocProvider(
+  builder: (context, state) => MultiBlocProvider(
     providers: <BlocProvider<dynamic>>[
       BlocProviderHelpers.providerWithAsyncInit<NativePlatformShowcaseCubit>(
         create: () => NativePlatformShowcaseCubit(
@@ -132,7 +132,7 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
           triggerHaptic: getIt<TriggerNativeShowcaseHapticUseCase>(),
           shareText: getIt<ShareNativeShowcaseTextUseCase>(),
         ),
-        init: (final cubit) => cubit.load(),
+        init: (cubit) => cubit.load(),
       ),
       BlocProvider<NativeSecurityShowcaseCubit>(
         create: (_) => createNativeSecurityShowcaseCubit(),
@@ -145,8 +145,7 @@ RouteBase createNativePlatformShowcaseRoute() => GoRoute(
 RouteBase createEventBusDemoRoute() => GoRoute(
   path: AppRoutes.eventBusDemoPath,
   name: AppRoutes.eventBusDemo,
-  builder: (final context, final state) =>
-      EventBusDemoPage(eventBus: getIt<EventBus>()),
+  builder: (context, state) => EventBusDemoPage(eventBus: getIt<EventBus>()),
 );
 
 ChatCubit _createChatCubit() => ChatCubit(
@@ -166,9 +165,9 @@ ChatCubit _createChatCubit() => ChatCubit(
 /// a Supabase session before showing chat; otherwise redirects to
 /// [AppRoutes.supabaseAuthPath] with return [GoRouterState.matchedLocation].
 Widget _withChatSupabaseSessionGate({
-  required final GoRouterState state,
-  required final BackendAvailability availability,
-  required final Widget child,
+  required GoRouterState state,
+  required BackendAvailability availability,
+  required Widget child,
 }) {
   if (availability.webNoBackendMode) {
     return child;
@@ -186,10 +185,10 @@ Widget _withChatSupabaseSessionGate({
 }
 
 Widget _listenBackendAvailability(
-  final Widget Function(BackendAvailability availability) builder,
+  Widget Function(BackendAvailability availability) builder,
 ) {
   return ListenableBuilder(
     listenable: BackendAvailabilityUpdates.instance,
-    builder: (final context, final _) => builder(getIt<BackendAvailability>()),
+    builder: (context, _) => builder(getIt<BackendAvailability>()),
   );
 }

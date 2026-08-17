@@ -7,10 +7,10 @@ part 'search_state.freezed.dart';
 @freezed
 abstract class SearchState with _$SearchState {
   const factory SearchState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    @Default('') final String query,
-    @Default(<SearchResult>[]) final List<SearchResult> results,
-    final Object? error,
+    @Default(ViewStatus.initial) ViewStatus status,
+    @Default('') String query,
+    @Default(<SearchResult>[]) List<SearchResult> results,
+    Object? error,
   }) = _SearchState;
 
   const SearchState._();

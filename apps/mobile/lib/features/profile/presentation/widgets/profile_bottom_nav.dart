@@ -1,10 +1,10 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'profile_bottom_nav_handlers.part.dart';
 part 'profile_bottom_nav_models.part.dart';
@@ -13,7 +13,7 @@ class ProfileBottomNav extends StatelessWidget {
   const ProfileBottomNav({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double bottomPadding = context.safeAreaInsets.bottom;
     final ThemeData theme = Theme.of(context);
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(theme);
@@ -48,29 +48,29 @@ class _AdaptiveBottomNavBar extends StatelessWidget {
 
   List<BottomNavigationBarItem> get _navigationBarItems => items
       .map(
-        (final item) => BottomNavigationBarItem(
+        (item) => BottomNavigationBarItem(
           icon: Icon(useCupertino ? item.cupertinoIcon : item.materialIcon),
           label: item.label,
         ),
       )
       .toList();
 
-  Future<void> _onTap(final BuildContext context, final int index) =>
+  Future<void> _onTap(BuildContext context, int index) =>
       _handleTap(context, items[index], currentLocation);
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (useCupertino) {
       return CupertinoTabBar(
         currentIndex: selectedIndex,
         items: _navigationBarItems,
-        onTap: (final index) => _onTap(context, index),
+        onTap: (index) => _onTap(context, index),
       );
     }
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: selectedIndex,
-      onTap: (final index) => _onTap(context, index),
+      onTap: (index) => _onTap(context, index),
       items: _navigationBarItems,
     );
   }

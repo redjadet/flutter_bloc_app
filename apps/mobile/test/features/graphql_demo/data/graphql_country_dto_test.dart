@@ -54,7 +54,7 @@ void main() {
         }),
         throwsA(
           isA<FormatException>().having(
-            (final error) => error.message,
+            (error) => error.message,
             'message',
             allOf(contains('String'), isNot(contains(sensitiveValue))),
           ),

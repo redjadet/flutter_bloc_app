@@ -2,10 +2,10 @@
 library;
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../integration_test/test_harness.dart';
 import '../../integration_test/test_harness_log_filtering.dart'
@@ -22,7 +22,7 @@ void main() {
 
   void installLogObserver() {
     unexpectedLogs.clear();
-    AppLogger.observer = (final entry) {
+    AppLogger.observer = (entry) {
       if (test_harness_log_filtering.isUnexpectedIntegrationLog(
         entry,
         isWeb: true,

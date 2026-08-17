@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:core/core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/app_scope.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_state.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'test_harness.dart';
 
@@ -36,7 +36,7 @@ class FakeStaffDemoLocationService extends StaffDemoLocationService {
   }
 }
 
-Future<void> openExamplePage(final WidgetTester tester) async {
+Future<void> openExamplePage(WidgetTester tester) async {
   await launchTestApp(tester);
   tester
       .widget<AppScope>(find.byType(AppScope))
@@ -46,7 +46,7 @@ Future<void> openExamplePage(final WidgetTester tester) async {
   await pumpUntilFound(tester, find.text('Example Page'));
 }
 
-Future<void> openStaffAppDemoFromExample(final WidgetTester tester) async {
+Future<void> openStaffAppDemoFromExample(WidgetTester tester) async {
   tester
       .widget<AppScope>(find.byType(AppScope))
       .router
@@ -63,8 +63,8 @@ Future<void> openStaffAppDemoFromExample(final WidgetTester tester) async {
 }
 
 Future<String> signInGetUid({
-  required final String email,
-  required final String password,
+  required String email,
+  required String password,
 }) async {
   final creds = await FirebaseAuth.instance.signInWithEmailAndPassword(
     email: email,
@@ -85,10 +85,10 @@ Uint8List buildDeterministicPngBytes() => Uint8List.fromList(<int>[
 ]);
 
 Future<String?> submitProofOrReturnNullIfQuotaExceeded({
-  required final WidgetTester tester,
-  required final FirebaseFirestore firestore,
-  required final StaffDemoProofCubit proofCubit,
-  required final String employeeUid,
+  required WidgetTester tester,
+  required FirebaseFirestore firestore,
+  required StaffDemoProofCubit proofCubit,
+  required String employeeUid,
 }) async {
   await pumpSettleWithin(tester, timeout: const Duration(seconds: 2));
   final bool submitted = find
@@ -146,9 +146,9 @@ Future<String?> submitProofOrReturnNullIfQuotaExceeded({
 }
 
 Future<void> openMessagesAndSendShiftAssignment(
-  final WidgetTester tester, {
-  required final String employeeUid,
-  required final String employeeEmail,
+  WidgetTester tester, {
+  required String employeeUid,
+  required String employeeEmail,
 }) async {
   await tapAndPump(tester, find.text('Msgs'));
   await pumpUntilFound(tester, find.text('Messages'));

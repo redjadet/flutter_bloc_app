@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_keypad.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('CalculatorKeypad', () {
@@ -223,7 +223,7 @@ void main() {
       addTearDown(cubit.close);
       final originalOnError = FlutterError.onError;
       final errors = <FlutterErrorDetails>[];
-      FlutterError.onError = (final details) {
+      FlutterError.onError = (details) {
         errors.add(details);
         originalOnError?.call(details);
       };
@@ -255,7 +255,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final overflows = errors.where(
-        (final error) => error.exceptionAsString().contains('overflow'),
+        (error) => error.exceptionAsString().contains('overflow'),
       );
       expect(overflows, isEmpty);
       expect(tester.takeException(), isNull);

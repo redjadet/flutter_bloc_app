@@ -1,9 +1,9 @@
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/library_demo/presentation/widgets/library_demo_body.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LibraryDemoPage extends StatefulWidget {
   const LibraryDemoPage({
@@ -37,7 +37,7 @@ class _LibraryDemoPageState extends State<LibraryDemoPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final TimerService timerService = widget.timerService;
     final ThemeData theme = Theme.of(context);
     final EpochThemeExtension epoch = context.epoch;

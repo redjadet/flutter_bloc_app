@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _FakeLocaleRepository implements LocaleRepository {
   _FakeLocaleRepository({this.throwOnSave = false});
@@ -14,7 +14,7 @@ class _FakeLocaleRepository implements LocaleRepository {
   Future<AppLocale?> load() async => stored;
 
   @override
-  Future<void> save(final AppLocale? locale) async {
+  Future<void> save(AppLocale? locale) async {
     if (throwOnSave) {
       throw StateError('save failed');
     }

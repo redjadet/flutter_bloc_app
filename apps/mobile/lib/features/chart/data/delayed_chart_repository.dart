@@ -8,7 +8,7 @@ class DelayedChartRepository extends HttpChartRepository {
   DelayedChartRepository({
     required super.api,
     super.now,
-    final AppRuntimeConfig? appRuntimeConfig,
+    AppRuntimeConfig? appRuntimeConfig,
   }) : _config = appRuntimeConfig ?? AppRuntimeConfig.fromBootstrap();
 
   final AppRuntimeConfig _config;

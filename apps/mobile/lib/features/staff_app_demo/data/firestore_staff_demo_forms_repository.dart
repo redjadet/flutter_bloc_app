@@ -10,9 +10,9 @@ class FirestoreStaffDemoFormsRepository implements StaffDemoFormsRepository {
 
   @override
   Future<void> submitAvailability({
-    required final String userId,
-    required final DateTime weekStartUtc,
-    required final Map<String, bool> availabilityByIsoDate,
+    required String userId,
+    required DateTime weekStartUtc,
+    required Map<String, bool> availabilityByIsoDate,
   }) async {
     final docId = '${userId}_${weekStartUtc.toIso8601String()}';
     await _firestore.collection('staffDemoAvailability').doc(docId).set(
@@ -28,9 +28,9 @@ class FirestoreStaffDemoFormsRepository implements StaffDemoFormsRepository {
 
   @override
   Future<void> submitManagerReport({
-    required final String userId,
-    required final String siteId,
-    required final String notes,
+    required String userId,
+    required String siteId,
+    required String notes,
   }) async {
     final docId = _firestore.collection('staffDemoManagerReports').doc().id;
     await _firestore.collection('staffDemoManagerReports').doc(docId).set(

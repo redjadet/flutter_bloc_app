@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/google_maps/data/sample_map_location_repository.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SampleMapLocationRepository', () {

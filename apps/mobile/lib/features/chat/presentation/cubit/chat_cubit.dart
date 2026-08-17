@@ -50,8 +50,8 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
     this._renderOrchestrationHfTokenProvider,
     this._authSessionPort,
     this._renderOrchestrationDiagnostics,
-    final String? initialModel,
-    final List<String>? supportedModels,
+    String? initialModel,
+    List<String>? supportedModels,
   }) : _models = _buildModelList(initialModel, supportedModels),
        super(
          ChatState.initial(
@@ -85,7 +85,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   ChatState get currentState => state;
 
   @protected
-  void emitState(final ChatState newState) {
+  void emitState(ChatState newState) {
     if (isClosed) return;
     emit(newState);
   }
@@ -94,7 +94,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   int nextRequestId() => _requestIdGuard.next();
 
   @protected
-  bool isRequestCurrent(final int id) => _requestIdGuard.isCurrent(id);
+  bool isRequestCurrent(int id) => _requestIdGuard.isCurrent(id);
 
   @protected
   void invalidateRequests() {
@@ -110,7 +110,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   int capturePersistEpoch() => _persistEpoch;
 
   @protected
-  bool isPersistEpochCurrent(final int epoch) => epoch == _persistEpoch;
+  bool isPersistEpochCurrent(int epoch) => epoch == _persistEpoch;
 
   void clearError() {
     if (isClosed) return;
@@ -124,7 +124,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
   }
 
   @protected
-  void logRenderOrchestrationIfDebug(final String tag) {
+  void logRenderOrchestrationIfDebug(String tag) {
     _renderOrchestrationDiagnostics?.logIfDebug(tag);
   }
 
@@ -142,7 +142,7 @@ abstract class _ChatCubitCore extends Cubit<ChatState>
           }
           _refreshRunnableTransportHintOnly();
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'ChatCubit.onFirebaseAuthStateChange',
             error,

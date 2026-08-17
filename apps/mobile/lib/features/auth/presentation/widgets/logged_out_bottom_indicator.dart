@@ -1,6 +1,6 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LoggedOutBottomIndicator extends StatelessWidget {
   const LoggedOutBottomIndicator({
@@ -13,7 +13,7 @@ class LoggedOutBottomIndicator extends StatelessWidget {
   final double verticalScale;
 
   @override
-  Widget build(final BuildContext context) => SizedBox(
+  Widget build(BuildContext context) => SizedBox(
     width: 135 * scale,
     height: 5 * verticalScale,
     child: _ShapeIndicator(
@@ -33,12 +33,12 @@ class _ShapeIndicator extends StatelessWidget {
   final double height;
 
   @override
-  Widget build(final BuildContext context) => SvgPicture.asset(
+  Widget build(BuildContext context) => SvgPicture.asset(
     'assets/figma/Logged_out_0-2/Shape_0-115.svg',
     width: width,
     height: height,
     fit: BoxFit.fill,
-    placeholderBuilder: (final context) => Container(
+    placeholderBuilder: (context) => Container(
       width: width,
       height: height,
       decoration: BoxDecoration(

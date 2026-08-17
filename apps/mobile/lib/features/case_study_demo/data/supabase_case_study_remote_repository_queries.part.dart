@@ -3,13 +3,13 @@ part of 'supabase_case_study_remote_repository.dart';
 extension _SupabaseCaseStudyRemoteRepositoryQueries
     on SupabaseCaseStudyRemoteRepository {
   Future<void> upsertRow({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final String status,
-    required final DateTime? submittedAtUtc,
-    required final Map<String, String> remoteAnswers,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required String status,
+    required DateTime? submittedAtUtc,
+    required Map<String, String> remoteAnswers,
   }) async {
     ensureSupabaseConfigured();
     final User? user = Supabase.instance.client.auth.currentUser;
@@ -97,7 +97,7 @@ extension _SupabaseCaseStudyRemoteRepositoryQueries
   }
 
   Future<RemoteCaseStudyDetail?> getSubmittedCaseImpl({
-    required final String caseId,
+    required String caseId,
   }) async {
     ensureSupabaseConfigured();
     final User? user = Supabase.instance.client.auth.currentUser;

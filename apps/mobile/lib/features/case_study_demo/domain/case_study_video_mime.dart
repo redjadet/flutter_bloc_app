@@ -1,5 +1,5 @@
 /// MIME type for in-memory case-study clip paths (extension from virtual path).
-String mimeTypeForCaseStudyVideoPath(final String path) {
+String mimeTypeForCaseStudyVideoPath(String path) {
   final int dot = path.lastIndexOf('.');
   if (dot == -1 || dot == path.length - 1) {
     return 'video/mp4';
@@ -15,7 +15,7 @@ String mimeTypeForCaseStudyVideoPath(final String path) {
 }
 
 /// File extension without dot for storage object keys (default mp4).
-String fileExtensionForCaseStudyVideoPath(final String path) {
+String fileExtensionForCaseStudyVideoPath(String path) {
   final int dot = path.lastIndexOf('.');
   if (dot == -1 || dot == path.length - 1) {
     return 'mp4';

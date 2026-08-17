@@ -37,9 +37,9 @@ class BlocProviderHelpers {
   /// **Error handling:** Errors during initialization should be handled within
   /// the cubit's error handling mechanism (e.g., `CubitExceptionHandler`).
   static Widget withAsyncInit<T extends StateStreamableSource<Object?>>({
-    required final T Function() create,
-    required final Future<void> Function(T cubit) init,
-    required final Widget child,
+    required T Function() create,
+    required Future<void> Function(T cubit) init,
+    required Widget child,
   }) => BlocProvider<T>(
     create: (_) {
       final cubit = create();
@@ -71,16 +71,15 @@ class BlocProviderHelpers {
   /// ```
   static BlocProvider<T>
   providerWithAsyncInit<T extends StateStreamableSource<Object?>>({
-    required final T Function() create,
-    required final Future<void> Function(T cubit) init,
+    required T Function() create,
+    required Future<void> Function(T cubit) init,
   }) => BlocProvider<T>(
     create: (_) {
       final cubit = create();
       unawaited(init(cubit));
       return cubit;
     },
-    child:
-        const SizedBox.shrink(), // Placeholder child, not used in MultiBlocProvider
+    child: const SizedBox.shrink(), // Placeholder child, not used in MultiBlocProvider
   );
 
   /// Creates a type-safe BlocProvider with compile-time type checking.
@@ -98,12 +97,12 @@ class BlocProviderHelpers {
   /// )
   /// ```
   static Widget withCubit<C extends Cubit<S>, S>({
-    required final C Function() create,
-    required final Widget Function(BuildContext context, C cubit) builder,
+    required C Function() create,
+    required Widget Function(BuildContext context, C cubit) builder,
   }) => BlocProvider<C>(
     create: (_) => create(),
     child: Builder(
-      builder: (final context) {
+      builder: (context) {
         final cubit = context.cubit<C>();
         return builder(context, cubit);
       },
@@ -123,9 +122,9 @@ class BlocProviderHelpers {
   /// )
   /// ```
   static Widget withCubitAsyncInit<C extends Cubit<S>, S>({
-    required final C Function() create,
-    required final Future<void> Function(C cubit) init,
-    required final Widget Function(BuildContext context, C cubit) builder,
+    required C Function() create,
+    required Future<void> Function(C cubit) init,
+    required Widget Function(BuildContext context, C cubit) builder,
   }) => BlocProvider<C>(
     create: (_) {
       final cubit = create();
@@ -133,7 +132,7 @@ class BlocProviderHelpers {
       return cubit;
     },
     child: Builder(
-      builder: (final context) {
+      builder: (context) {
         final cubit = context.cubit<C>();
         return builder(context, cubit);
       },

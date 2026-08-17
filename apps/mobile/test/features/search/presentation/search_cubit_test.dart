@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_state.dart';
-import 'package:design_system/design_system.dart';
-import 'package:core/core.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../../../test_helpers.dart';
 
@@ -15,7 +15,7 @@ class _StubSearchRepository extends SearchRepository {
   final Future<List<SearchResult>> Function(String query) onSearch;
 
   @override
-  Future<List<SearchResult>> search(final String query) => onSearch(query);
+  Future<List<SearchResult>> search(String query) => onSearch(query);
 }
 
 class _CountingOneShotTimerService implements TimerService {
@@ -70,7 +70,7 @@ void main() {
       Future<List<SearchResult>> Function(String query) onSearch,
     ) => SearchCubit(
       repository: _StubSearchRepository(
-        onSearch: (final query) async {
+        onSearch: (query) async {
           capturedQueries.add(query);
           return onSearch(query);
         },
@@ -82,11 +82,11 @@ void main() {
     blocTest<SearchCubit, SearchState>(
       'debounces rapid queries and only searches with the latest value',
       build: () => buildCubit(
-        (final query) async => <SearchResult>[
+        (query) async => <SearchResult>[
           SearchResult(id: query, imageUrl: 'https://example.com/$query.png'),
         ],
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.search('d');
         cubit.search('do');
         cubit.search('dog');
@@ -97,16 +97,12 @@ void main() {
         const SearchState(query: 'do'),
         const SearchState(query: 'dog'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.loading)
-            .having((final state) => state.query, 'query', 'dog'),
+            .having((state) => state.status, 'status', ViewStatus.loading)
+            .having((state) => state.query, 'query', 'dog'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.success)
-            .having((final state) => state.query, 'query', 'dog')
-            .having(
-              (final state) => state.results.single.id,
-              'result id',
-              'dog',
-            ),
+            .having((state) => state.status, 'status', ViewStatus.success)
+            .having((state) => state.query, 'query', 'dog')
+            .having((state) => state.results.single.id, 'result id', 'dog'),
       ],
       verify: (_) => expect(capturedQueries, equals(<String>['dog'])),
     );
@@ -114,11 +110,11 @@ void main() {
     blocTest<SearchCubit, SearchState>(
       'clearSearch cancels pending searches and resets state',
       build: () => buildCubit(
-        (final query) async => <SearchResult>[
+        (query) async => <SearchResult>[
           SearchResult(id: query, imageUrl: 'https://example.com/$query.png'),
         ],
       ),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.search('dogs');
         cubit.clearSearch();
         timerService.elapse(const Duration(milliseconds: 300));
@@ -132,33 +128,33 @@ void main() {
 
     blocTest<SearchCubit, SearchState>(
       'emits an error state when the repository throws',
-      build: () => buildCubit((final _) async {
+      build: () => buildCubit((_) async {
         throw Exception('failed');
       }),
-      act: (final cubit) {
+      act: (cubit) {
         cubit.search('error');
         timerService.elapse(const Duration(milliseconds: 300));
       },
       expect: () => <dynamic>[
         const SearchState(query: 'error'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.loading)
-            .having((final state) => state.query, 'query', 'error'),
+            .having((state) => state.status, 'status', ViewStatus.loading)
+            .having((state) => state.query, 'query', 'error'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.error)
-            .having((final state) => state.query, 'query', 'error')
-            .having((final state) => state.error, 'error', isA<Exception>()),
+            .having((state) => state.status, 'status', ViewStatus.error)
+            .having((state) => state.query, 'query', 'error')
+            .having((state) => state.error, 'error', isA<Exception>()),
       ],
     );
 
     blocTest<SearchCubit, SearchState>(
       'handles rapid consecutive searches correctly (race condition fix)',
       build: () => buildCubit(
-        (final query) async => <SearchResult>[
+        (query) async => <SearchResult>[
           SearchResult(id: query, imageUrl: 'https://example.com/$query.png'),
         ],
       ),
-      act: (final cubit) {
+      act: (cubit) {
         // Trigger multiple searches rapidly
         cubit.search('first');
         cubit.search('second');
@@ -171,16 +167,12 @@ void main() {
         const SearchState(query: 'second'),
         const SearchState(query: 'third'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.loading)
-            .having((final state) => state.query, 'query', 'third'),
+            .having((state) => state.status, 'status', ViewStatus.loading)
+            .having((state) => state.query, 'query', 'third'),
         isA<SearchState>()
-            .having((final state) => state.status, 'status', ViewStatus.success)
-            .having((final state) => state.query, 'query', 'third')
-            .having(
-              (final state) => state.results.single.id,
-              'result id',
-              'third',
-            ),
+            .having((state) => state.status, 'status', ViewStatus.success)
+            .having((state) => state.query, 'query', 'third')
+            .having((state) => state.results.single.id, 'result id', 'third'),
       ],
       verify: (_) => expect(capturedQueries, equals(<String>['third'])),
     );
@@ -192,7 +184,7 @@ void main() {
             _CountingOneShotTimerService();
         final SearchCubit cubit = SearchCubit(
           repository: _StubSearchRepository(
-            onSearch: (final query) async => <SearchResult>[
+            onSearch: (query) async => <SearchResult>[
               SearchResult(
                 id: query,
                 imageUrl: 'https://example.com/$query.png',

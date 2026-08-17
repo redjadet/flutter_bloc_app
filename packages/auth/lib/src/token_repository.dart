@@ -36,7 +36,7 @@ class InMemoryTokenRepository implements TokenRepository {
   String? _supabaseAccessToken;
 
   @override
-  Future<void> hydrateFirebaseSession(final User? user) async {
+  Future<void> hydrateFirebaseSession(User? user) async {
     if (user == null) {
       clearProvider(AuthProviderKind.firebase);
       return;
@@ -45,7 +45,7 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @override
-  Future<String?> getFirebaseAccessToken(final User user) async {
+  Future<String?> getFirebaseAccessToken(User user) async {
     final DateTime now = DateTime.now().toUtc();
     final DateTime? expiry = _firebaseTokenExpiry;
     if (_firebaseAccessToken != null &&
@@ -58,12 +58,12 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @override
-  Future<String?> refreshFirebaseAccessToken(final User user) async {
+  Future<String?> refreshFirebaseAccessToken(User user) async {
     return _readFirebaseTokenResult(user, forceRefresh: true);
   }
 
   @override
-  void cacheSupabaseAccessToken(final String? token) {
+  void cacheSupabaseAccessToken(String? token) {
     final String? trimmed = token?.trim();
     _supabaseAccessToken = trimmed == null || trimmed.isEmpty ? null : trimmed;
   }
@@ -73,8 +73,8 @@ class InMemoryTokenRepository implements TokenRepository {
 
   @override
   Future<String?> refreshSupabaseAccessToken({
-    required final Future<AuthResponse> Function() refreshSession,
-    required final String? Function() readPersistentAccessToken,
+    required Future<AuthResponse> Function() refreshSession,
+    required String? Function() readPersistentAccessToken,
   }) async {
     await refreshSession();
     final String? token = readPersistentAccessToken();
@@ -83,7 +83,7 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   @override
-  void clearProvider(final AuthProviderKind provider) {
+  void clearProvider(AuthProviderKind provider) {
     switch (provider) {
       case AuthProviderKind.firebase:
         _firebaseAccessToken = null;
@@ -95,8 +95,8 @@ class InMemoryTokenRepository implements TokenRepository {
   }
 
   Future<String?> _readFirebaseTokenResult(
-    final User user, {
-    required final bool forceRefresh,
+    User user, {
+    required bool forceRefresh,
   }) async {
     try {
       final IdTokenResult tokenResult = await user.getIdTokenResult(

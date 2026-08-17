@@ -10,9 +10,9 @@ abstract final class StaffDemoProofSubmitEligibility {
 
   /// Returns a block reason when draft inputs cannot be submitted yet.
   static StaffDemoProofSubmitBlockReason? validateDraft({
-    required final String? userId,
-    required final String siteId,
-    required final String? signaturePath,
+    required String? userId,
+    required String siteId,
+    required String? signaturePath,
   }) {
     if (userId == null || userId.trim().isEmpty) {
       return StaffDemoProofSubmitBlockReason.notSignedIn;
@@ -26,7 +26,7 @@ abstract final class StaffDemoProofSubmitEligibility {
     return null;
   }
 
-  static String messageFor(final StaffDemoProofSubmitBlockReason reason) =>
+  static String messageFor(StaffDemoProofSubmitBlockReason reason) =>
       switch (reason) {
         StaffDemoProofSubmitBlockReason.notSignedIn => 'Not signed in.',
         StaffDemoProofSubmitBlockReason.siteIdRequired =>

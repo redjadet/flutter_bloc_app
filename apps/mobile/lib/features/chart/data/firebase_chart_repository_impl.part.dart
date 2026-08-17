@@ -82,7 +82,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   }
 
   Future<List<ChartPoint>> _fetchTrendingCountsInternal(
-    final FirebaseAuth auth,
+    FirebaseAuth auth,
   ) async {
     // Ensure FirebaseAuth had a chance to hydrate the current user before we
     // call the authenticated Cloud Function.
@@ -154,7 +154,7 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   }
 
   static String _directFallbackDebugMessage(
-    final _FirebaseChartFetchAttempt cloud,
+    _FirebaseChartFetchAttempt cloud,
   ) {
     final _FirebaseChartFetchFailure? failure = cloud.failure;
     return failure != null
@@ -255,8 +255,8 @@ class FirebaseChartRepository implements ChartRemoteRepository {
   }
 
   void _logAttemptFailure({
-    required final String context,
-    required final _FirebaseChartFetchFailure? failure,
+    required String context,
+    required _FirebaseChartFetchFailure? failure,
   }) {
     if (failure == null) {
       return;

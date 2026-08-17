@@ -28,7 +28,7 @@ class FcmSyncTriggerPayload {
   /// Extracts the structured payload from an FCM `data` map.
   ///
   /// Unknown extra keys are ignored.
-  factory FcmSyncTriggerPayload.fromData(final Map<String, String> data) {
+  factory FcmSyncTriggerPayload.fromData(Map<String, String> data) {
     return FcmSyncTriggerPayload(
       feature: _normalized(data[kFcmSyncFeatureKey]),
       resourceType: _normalized(data[kFcmSyncResourceTypeKey]),
@@ -45,7 +45,7 @@ class FcmSyncTriggerPayload {
       (resourceType?.isEmpty ?? true) &&
       (resourceId?.isEmpty ?? true);
 
-  static String? _normalized(final String? value) {
+  static String? _normalized(String? value) {
     final String? v = value?.trim();
     return (v == null || v.isEmpty) ? null : v;
   }

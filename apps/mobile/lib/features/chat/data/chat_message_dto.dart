@@ -13,7 +13,7 @@ class ChatMessageDto {
     this.terminalSyncFailureCode,
   });
 
-  ChatMessageDto.fromDomain(final ChatMessage message)
+  ChatMessageDto.fromDomain(ChatMessage message)
     : author = message.author,
       text = message.text,
       clientMessageId = message.clientMessageId,
@@ -22,10 +22,10 @@ class ChatMessageDto {
       lastSyncedAt = message.lastSyncedAt,
       terminalSyncFailureCode = message.terminalSyncFailureCode;
 
-  factory ChatMessageDto.fromJson(final Map<String, dynamic> json) {
+  factory ChatMessageDto.fromJson(Map<String, dynamic> json) {
     final String authorValue = (json['author'] ?? '').toString();
     final ChatAuthor author = ChatAuthor.values.firstWhere(
-      (final value) => value.name == authorValue,
+      (value) => value.name == authorValue,
       orElse: () => ChatAuthor.system,
     );
     final String text = (json['text'] ?? '').toString();

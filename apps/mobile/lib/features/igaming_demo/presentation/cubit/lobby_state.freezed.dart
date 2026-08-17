@@ -55,8 +55,7 @@ extension LobbyStatePatterns on LobbyState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _LobbyInitial value)?  initial,TResult Function( _LobbyLoading value)?  loading,TResult Function( _LobbyReady value)?  ready,TResult Function( _LobbyError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _LobbyInitial value)?  initial,TResult Function( _LobbyLoading value)?  loading,TResult Function( _LobbyReady value)?  ready,TResult Function( _LobbyError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _LobbyInitial() when initial != null:
 return initial(_that);case _LobbyLoading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _LobbyInitial value)  initial,required TResult Function( _LobbyLoading value)  loading,required TResult Function( _LobbyReady value)  ready,required TResult Function( _LobbyError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _LobbyInitial value)  initial,required TResult Function( _LobbyLoading value)  loading,required TResult Function( _LobbyReady value)  ready,required TResult Function( _LobbyError value)  error,}){final _that = this;
 switch (_that) {
 case _LobbyInitial():
 return initial(_that);case _LobbyLoading():
@@ -104,8 +102,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _LobbyInitial value)?  initial,TResult? Function( _LobbyLoading value)?  loading,TResult? Function( _LobbyReady value)?  ready,TResult? Function( _LobbyError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _LobbyInitial value)?  initial,TResult? Function( _LobbyLoading value)?  loading,TResult? Function( _LobbyReady value)?  ready,TResult? Function( _LobbyError value)?  error,}){final _that = this;
 switch (_that) {
 case _LobbyInitial() when initial != null:
 return initial(_that);case _LobbyLoading() when loading != null:

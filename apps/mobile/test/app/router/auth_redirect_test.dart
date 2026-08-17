@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
+import 'package:flutter_bloc_app/app/router/auth_redirect.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
@@ -112,9 +112,8 @@ void main() {
       const anonymousUser = AuthUser(id: '1', isAnonymous: true);
       when(() => mockAuth.currentUser).thenReturn(anonymousUser);
       when(() => mockState.matchedLocation).thenReturn(AppRoutes.authPath);
-      when(
-        () => mockState.uri,
-      ).thenReturn(Uri.parse(AppRoutes.authUpgradePath()));
+      when(() => mockState.uri)
+          .thenReturn(Uri.parse(AppRoutes.authUpgradePath()));
 
       final redirect = createAuthRedirect(mockAuth);
       final result = redirect(testContext, mockState);

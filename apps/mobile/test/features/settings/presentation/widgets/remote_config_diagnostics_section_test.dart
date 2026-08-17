@@ -1,21 +1,22 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/widgets/remote_config_diagnostics_section.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_de.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_es.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_fr.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_tr.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _MockRemoteConfigCubit extends MockCubit<RemoteConfigState>
     implements RemoteConfigCubit {}
@@ -39,12 +40,12 @@ void main() {
     });
 
     Future<void> pumpWidget(
-      final WidgetTester tester, {
+      WidgetTester tester, {
       bool includeSyncCubit = false,
     }) {
       return tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: <BlocProvider<dynamic>>[
@@ -59,7 +60,7 @@ void main() {
     }
 
     testWidgets('shows error message when remote config fails', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.error(
         'Network unavailable',
@@ -81,7 +82,7 @@ void main() {
     });
 
     testWidgets('shows flag status and test value when config loads', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
@@ -108,7 +109,7 @@ void main() {
     });
 
     testWidgets('invokes fetchValues when retry button tapped', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.error('boom');
       when(() => cubit.state).thenReturn(state);
@@ -130,7 +131,7 @@ void main() {
     });
 
     testWidgets('invokes clearCache when clear button tapped', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
@@ -154,7 +155,7 @@ void main() {
     });
 
     testWidgets('ensures sync starts when sync cubit is available', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       const RemoteConfigState state = RemoteConfigState.loaded(
         isAwesomeFeatureEnabled: true,
@@ -185,7 +186,7 @@ void main() {
 
     testWidgets(
       'does not render a sync status selector inside remote config diagnostics',
-      (final WidgetTester tester) async {
+      (WidgetTester tester) async {
         const RemoteConfigState remoteConfigState = RemoteConfigState.loaded(
           isAwesomeFeatureEnabled: true,
           testValue: 'cached',

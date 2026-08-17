@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Live native banner via [UiKitView] / [AndroidView], or a placeholder.
 class NativePlatformShowcasePlatformViewSection extends StatelessWidget {
@@ -19,7 +19,7 @@ class NativePlatformShowcasePlatformViewSection extends StatelessWidget {
       'com.example.flutter_bloc_app/native_showcase_banner';
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
     final TargetPlatform platform = platformOverride ?? defaultTargetPlatform;
@@ -68,7 +68,7 @@ class _NativeBanner extends StatelessWidget {
   final TargetPlatform platform;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (platform == TargetPlatform.iOS) {
       return const UiKitView(
         viewType: NativePlatformShowcasePlatformViewSection.viewType,

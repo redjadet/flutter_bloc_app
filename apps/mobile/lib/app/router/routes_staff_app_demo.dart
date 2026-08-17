@@ -32,9 +32,9 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staf
 import 'package:go_router/go_router.dart';
 
 Widget _buildStaffAppDemoShell(
-  final BuildContext context,
-  final GoRouterState state,
-  final Widget child,
+  BuildContext context,
+  GoRouterState state,
+  Widget child,
 ) {
   final AuthRepository auth = getIt<AuthRepository>();
   return AppRouteAuthGate(

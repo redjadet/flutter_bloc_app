@@ -11,8 +11,8 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 /// Resolves `auto` for composite to 20B.
 class DemoFirstChatRepository implements ChatRepository {
   DemoFirstChatRepository({
-    required final ChatRepository renderRepository,
-    required final ChatRepository compositeRepository,
+    required ChatRepository renderRepository,
+    required ChatRepository compositeRepository,
     required this._isRenderAttemptedFirst,
     required this._isRenderStrict,
     this._logOrchestrationDiagnostics,
@@ -34,7 +34,7 @@ class DemoFirstChatRepository implements ChatRepository {
     return _composite.chatRemoteTransportHint;
   }
 
-  String? _compositeModel(final String? model) {
+  String? _compositeModel(String? model) {
     final String? trimmed = model?.trim();
     if (trimmed == null || trimmed.isEmpty) {
       return null;
@@ -47,12 +47,12 @@ class DemoFirstChatRepository implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     final bool renderFirst = _isRenderAttemptedFirst();
     if (kDebugMode) {

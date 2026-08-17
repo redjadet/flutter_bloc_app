@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/messaging_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'online_therapy_messaging_view_content.part.dart';
 
@@ -40,6 +40,5 @@ class _OnlineTherapyMessagingViewState
   }
 
   @override
-  Widget build(final BuildContext context) =>
-      buildMessagingContentImpl(context);
+  Widget build(BuildContext context) => buildMessagingContentImpl(context);
 }

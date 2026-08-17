@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Maps [PostgrestException] to [GraphqlDemoErrorType] for domain error handling.
 GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(
-  final PostgrestException e,
+  PostgrestException e,
 ) {
   final String? code = e.code;
   final int? status = code != null ? int.tryParse(code) : null;
@@ -18,7 +18,7 @@ GraphqlDemoErrorType graphqlDemoErrorTypeFromPostgrest(
 
 /// Maps [PostgrestException] to [GraphqlDemoException] for use in repositories.
 GraphqlDemoException graphqlDemoExceptionFromPostgrest(
-  final PostgrestException e,
+  PostgrestException e,
 ) => GraphqlDemoException(
   e.message,
   cause: e,

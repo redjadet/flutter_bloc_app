@@ -55,8 +55,7 @@ extension WebsocketConnectionStatePatterns on WebsocketConnectionState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WebsocketConnectionStateDisconnected value)?  disconnected,TResult Function( WebsocketConnectionStateConnecting value)?  connecting,TResult Function( WebsocketConnectionStateConnected value)?  connected,TResult Function( WebsocketConnectionStateError value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( WebsocketConnectionStateDisconnected value)?  disconnected,TResult Function( WebsocketConnectionStateConnecting value)?  connecting,TResult Function( WebsocketConnectionStateConnected value)?  connected,TResult Function( WebsocketConnectionStateError value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case WebsocketConnectionStateDisconnected() when disconnected != null:
 return disconnected(_that);case WebsocketConnectionStateConnecting() when connecting != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WebsocketConnectionStateDisconnected value)  disconnected,required TResult Function( WebsocketConnectionStateConnecting value)  connecting,required TResult Function( WebsocketConnectionStateConnected value)  connected,required TResult Function( WebsocketConnectionStateError value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( WebsocketConnectionStateDisconnected value)  disconnected,required TResult Function( WebsocketConnectionStateConnecting value)  connecting,required TResult Function( WebsocketConnectionStateConnected value)  connected,required TResult Function( WebsocketConnectionStateError value)  error,}){final _that = this;
 switch (_that) {
 case WebsocketConnectionStateDisconnected():
 return disconnected(_that);case WebsocketConnectionStateConnecting():
@@ -101,8 +99,7 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WebsocketConnectionStateDisconnected value)?  disconnected,TResult? Function( WebsocketConnectionStateConnecting value)?  connecting,TResult? Function( WebsocketConnectionStateConnected value)?  connected,TResult? Function( WebsocketConnectionStateError value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( WebsocketConnectionStateDisconnected value)?  disconnected,TResult? Function( WebsocketConnectionStateConnecting value)?  connecting,TResult? Function( WebsocketConnectionStateConnected value)?  connected,TResult? Function( WebsocketConnectionStateError value)?  error,}){final _that = this;
 switch (_that) {
 case WebsocketConnectionStateDisconnected() when disconnected != null:
 return disconnected(_that);case WebsocketConnectionStateConnecting() when connecting != null:

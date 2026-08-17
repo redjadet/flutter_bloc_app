@@ -4,7 +4,7 @@ description: Remote config and feature-flag contracts.
 resolution: workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 dependencies:
   core:

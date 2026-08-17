@@ -16,9 +16,9 @@ abstract class NetworkStatusService {
 
 class ConnectivityNetworkStatusService implements NetworkStatusService {
   ConnectivityNetworkStatusService({
-    final Connectivity? connectivity,
+    Connectivity? connectivity,
     this._debounce = const Duration(milliseconds: 250),
-    final TimerService? timerService,
+    TimerService? timerService,
   }) : _connectivity = connectivity ?? Connectivity(),
        _timerService = timerService ?? DefaultTimerService() {
     _controller = StreamController<NetworkStatus>.broadcast(
@@ -70,10 +70,10 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     final int session = _listenSession;
     _hasStreamConnectivityUpdate = false;
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
-      (final results) {
+      (results) {
         _handleConnectivityResults(results);
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'ConnectivityNetworkStatusService.listen failed',
           error,
@@ -95,7 +95,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
               _controller.add(status);
             }
           })
-          .catchError((final Object error, final StackTrace stackTrace) {
+          .catchError((Object error, StackTrace stackTrace) {
             if (session != _listenSession) {
               return;
             }
@@ -119,7 +119,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     _connectivitySubscription = null;
   }
 
-  void _handleConnectivityResults(final List<ConnectivityResult> results) {
+  void _handleConnectivityResults(List<ConnectivityResult> results) {
     _hasStreamConnectivityUpdate = true;
     final NetworkStatus next = _mapConnectivityList(results);
     if (next == _latest) {
@@ -143,7 +143,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     _timerHandles.register(handle);
   }
 
-  NetworkStatus _mapConnectivityRaw(final dynamic raw) {
+  NetworkStatus _mapConnectivityRaw(dynamic raw) {
     if (raw is List<ConnectivityResult>) {
       return _mapConnectivityList(raw);
     }
@@ -157,20 +157,20 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     return NetworkStatus.unknown;
   }
 
-  NetworkStatus _mapConnectivityList(final List<ConnectivityResult> results) {
+  NetworkStatus _mapConnectivityList(List<ConnectivityResult> results) {
     if (results.isEmpty) {
       return NetworkStatus.offline;
     }
     if (results.any(_isOnlineConnectivity)) {
       return NetworkStatus.online;
     }
-    if (results.every((final result) => result == ConnectivityResult.none)) {
+    if (results.every((result) => result == ConnectivityResult.none)) {
       return NetworkStatus.offline;
     }
     return NetworkStatus.unknown;
   }
 
-  bool _isOnlineConnectivity(final ConnectivityResult result) {
+  bool _isOnlineConnectivity(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.bluetooth:
       case ConnectivityResult.wifi:
@@ -185,7 +185,7 @@ class ConnectivityNetworkStatusService implements NetworkStatusService {
     }
   }
 
-  NetworkStatus _mapConnectivity(final ConnectivityResult result) {
+  NetworkStatus _mapConnectivity(ConnectivityResult result) {
     switch (result) {
       case ConnectivityResult.bluetooth:
       case ConnectivityResult.wifi:

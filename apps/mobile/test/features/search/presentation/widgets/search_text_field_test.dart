@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
 import 'package:flutter_bloc_app/features/search/presentation/cubit/search_cubit.dart';
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
-import 'package:flutter_bloc_app/features/search/domain/search_repository.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+
 import '../../../../test_helpers.dart';
 
 class MockSearchRepository extends Mock implements SearchRepository {}
@@ -86,7 +87,7 @@ void main() {
       await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
 
-      final decoratedBoxFinder = find.byWidgetPredicate((final widget) {
+      final decoratedBoxFinder = find.byWidgetPredicate((widget) {
         if (widget is! DecoratedBox) return false;
         final decoration = widget.decoration;
         if (decoration is! BoxDecoration) return false;

@@ -10,10 +10,10 @@ part 'wallet_user_profile.freezed.dart';
 @freezed
 abstract class WalletUserProfile with _$WalletUserProfile {
   const factory WalletUserProfile({
-    @Default(0.0) final double balanceOffChain,
-    @Default(0.0) final double balanceOnChain,
-    @Default(0.0) final double rewards,
-    final DateTime? lastClaim,
-    @Default(<NftMetadata>[]) final List<NftMetadata> nfts,
+    @Default(0.0) double balanceOffChain,
+    @Default(0.0) double balanceOnChain,
+    @Default(0.0) double rewards,
+    DateTime? lastClaim,
+    @Default(<NftMetadata>[]) List<NftMetadata> nfts,
   }) = _WalletUserProfile;
 }

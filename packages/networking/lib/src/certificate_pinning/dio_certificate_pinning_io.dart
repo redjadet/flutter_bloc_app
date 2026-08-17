@@ -15,9 +15,9 @@ import 'real_certificate_pin_validator.dart';
 /// Uses [IOHttpClientAdapter.validateCertificate] after system trust succeeds.
 /// Never sets [HttpClient.badCertificateCallback] to accept all certificates.
 void applyCertificatePinning(
-  final Dio dio, {
-  required final CertificatePinningConfig config,
-  required final CertificatePinValidator validator,
+  Dio dio, {
+  required CertificatePinningConfig config,
+  required CertificatePinValidator validator,
 }) {
   if (config.mode != CertificatePinningMode.real) {
     return;
@@ -40,21 +40,16 @@ void applyCertificatePinning(
 
   dio.httpClientAdapter = IOHttpClientAdapter(
     createHttpClient: existingCreateHttpClient,
-    validateCertificate:
-        (
-          final X509Certificate? certificate,
-          final String host,
-          final int port,
-        ) {
-          if (certificate == null) {
-            return false;
-          }
-          final CertificatePinResult result = realValidator.validateSync(
-            host: host,
-            port: port,
-            certificateBytes: Uint8List.fromList(certificate.der),
-          );
-          return result is CertificatePinSuccess;
-        },
+    validateCertificate: (X509Certificate? certificate, String host, int port) {
+      if (certificate == null) {
+        return false;
+      }
+      final CertificatePinResult result = realValidator.validateSync(
+        host: host,
+        port: port,
+        certificateBytes: Uint8List.fromList(certificate.der),
+      );
+      return result is CertificatePinSuccess;
+    },
   );
 }

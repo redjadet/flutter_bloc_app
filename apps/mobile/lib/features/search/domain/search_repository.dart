@@ -5,8 +5,8 @@ abstract class SearchRepository {
   const SearchRepository();
 
   /// Returns search results for the given [query].
-  Future<List<SearchResult>> search(final String query);
+  Future<List<SearchResult>> search(String query);
 
   /// Convenience callable that delegates to [search].
-  Future<List<SearchResult>> call(final String query) => search(query);
+  Future<List<SearchResult>> call(String query) => search(query);
 }

@@ -20,11 +20,11 @@ class ChatListCubit extends Cubit<ChatListState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.getChatContacts,
       isAlive: () => !isClosed,
-      onSuccess: (final contacts) {
+      onSuccess: (contacts) {
         if (isClosed) return;
         emit(ChatListState.loaded(contacts: contacts));
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(ChatListState.error(failure: ChatFailure(message: message)));
       },
@@ -32,7 +32,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     );
   }
 
-  Future<void> deleteContact(final String contactId) async {
+  Future<void> deleteContact(String contactId) async {
     final currentState = state;
     if (currentState is! ChatListLoaded) return;
 
@@ -41,12 +41,12 @@ class ChatListCubit extends Cubit<ChatListState> {
         await _repository.deleteChatContact(contactId);
         if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts
-            .where((final contact) => contact.id != contactId)
+            .where((contact) => contact.id != contactId)
             .toList();
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       isAlive: () => !isClosed,
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(ChatListState.error(failure: ChatFailure(message: message)));
       },
@@ -54,7 +54,7 @@ class ChatListCubit extends Cubit<ChatListState> {
     );
   }
 
-  Future<void> markAsRead(final String contactId) async {
+  Future<void> markAsRead(String contactId) async {
     final currentState = state;
     if (currentState is! ChatListLoaded) return;
 
@@ -63,7 +63,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         await _repository.markAsRead(contactId);
         if (isClosed) return;
         final List<ChatContact> updatedContacts = currentState.contacts.map((
-          final contact,
+          contact,
         ) {
           if (contact.id == contactId) {
             return contact.copyWith(unreadCount: 0);
@@ -73,7 +73,7 @@ class ChatListCubit extends Cubit<ChatListState> {
         emit(ChatListState.loaded(contacts: updatedContacts));
       },
       isAlive: () => !isClosed,
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(ChatListState.error(failure: ChatFailure(message: message)));
       },

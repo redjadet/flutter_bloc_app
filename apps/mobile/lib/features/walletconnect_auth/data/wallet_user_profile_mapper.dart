@@ -27,7 +27,7 @@ class WalletUserProfileMapper {
 
   /// Converts [WalletUserProfile] to a Firestore-serializable map.
   /// The updatedAt field is not included; set separately with [FieldValue.serverTimestamp()].
-  static Map<String, Object?> toFirestore(final WalletUserProfile profile) {
+  static Map<String, Object?> toFirestore(WalletUserProfile profile) {
     return <String, Object?>{
       WalletUserProfileFields.balanceOffChain: profile.balanceOffChain,
       WalletUserProfileFields.balanceOnChain: profile.balanceOnChain,
@@ -46,7 +46,7 @@ class WalletUserProfileMapper {
 
   /// Parses Firestore document data into [WalletUserProfile].
   /// Returns null if [data] is null or invalid.
-  static WalletUserProfile? fromFirestore(final Map<String, dynamic>? data) {
+  static WalletUserProfile? fromFirestore(Map<String, dynamic>? data) {
     if (data == null) return null;
     try {
       final lastClaimTimestamp = data[WalletUserProfileFields.lastClaim];
@@ -58,7 +58,7 @@ class WalletUserProfileMapper {
       final List<NftMetadata> nftsList = nftsRaw is List
           ? nftsRaw
                 .map(
-                  (final e) => _nftFromMap(
+                  (e) => _nftFromMap(
                     e is Map ? Map<String, dynamic>.from(e) : null,
                   ),
                 )
@@ -88,7 +88,7 @@ class WalletUserProfileMapper {
     }
   }
 
-  static Map<String, Object?> _nftToMap(final NftMetadata nft) {
+  static Map<String, Object?> _nftToMap(NftMetadata nft) {
     return <String, Object?>{
       NftMetadataFields.tokenId: nft.tokenId,
       NftMetadataFields.contractAddress: nft.contractAddress,
@@ -98,11 +98,11 @@ class WalletUserProfileMapper {
   }
 
   static String? _stringFromMap(
-    final Map<String, dynamic> map,
-    final String key,
+    Map<String, dynamic> map,
+    String key,
   ) => stringFromDynamic(map[key]);
 
-  static NftMetadata? _nftFromMap(final Map<String, dynamic>? map) {
+  static NftMetadata? _nftFromMap(Map<String, dynamic>? map) {
     if (map == null) return null;
     final tokenId = _stringFromMap(map, NftMetadataFields.tokenId);
     final contractAddress = _stringFromMap(
@@ -121,6 +121,6 @@ class WalletUserProfileMapper {
     );
   }
 
-  static double _toDouble(final Object? value, final double fallback) =>
+  static double _toDouble(Object? value, double fallback) =>
       doubleFromDynamic(value, fallback);
 }

@@ -5,55 +5,54 @@ final List<_SecretStorageField> _secureStorageFields = <_SecretStorageField>[
     storageKey: SecretConfig._keyHfToken,
     envKey: 'HUGGINGFACE_API_KEY',
     readValue: () => SecretConfig._huggingfaceApiKey,
-    applyValue: (final value) => SecretConfig._huggingfaceApiKey = value,
+    applyValue: (value) => SecretConfig._huggingfaceApiKey = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keyHfModel,
     envKey: 'HUGGINGFACE_MODEL',
     readValue: () => SecretConfig._huggingfaceModel,
-    applyValue: (final value) => SecretConfig._huggingfaceModel = value,
+    applyValue: (value) => SecretConfig._huggingfaceModel = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keyGoogleMaps,
     envKey: 'GOOGLE_MAPS_API_KEY',
     readValue: () => SecretConfig._googleMapsApiKey,
-    applyValue: (final value) => SecretConfig._googleMapsApiKey = value,
+    applyValue: (value) => SecretConfig._googleMapsApiKey = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keyGeminiApiKey,
     envKey: 'GEMINI_API_KEY',
     readValue: () => SecretConfig._geminiApiKey,
-    applyValue: (final value) => SecretConfig._geminiApiKey = value,
+    applyValue: (value) => SecretConfig._geminiApiKey = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keySupabaseUrl,
     envKey: 'SUPABASE_URL',
     readValue: () => SecretConfig._supabaseUrl,
-    applyValue: (final value) => SecretConfig._supabaseUrl = value,
+    applyValue: (value) => SecretConfig._supabaseUrl = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keySupabaseAnonKey,
     envKey: 'SUPABASE_ANON_KEY',
     readValue: () => SecretConfig._supabaseAnonKey,
-    applyValue: (final value) => SecretConfig._supabaseAnonKey = value,
+    applyValue: (value) => SecretConfig._supabaseAnonKey = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keySupabaseConfigVersion,
     envKey: 'SUPABASE_CONFIG_VERSION',
     readValue: () => SecretConfig._supabaseConfigVersion,
-    applyValue: (final value) => SecretConfig._supabaseConfigVersion = value,
+    applyValue: (value) => SecretConfig._supabaseConfigVersion = value,
   ),
   _SecretStorageField(
     storageKey: SecretConfig._keySupabaseFirebaseProjectId,
     envKey: 'SUPABASE_FIREBASE_PROJECT_ID',
     readValue: () => SecretConfig._supabaseFirebaseProjectId,
-    applyValue: (final value) =>
-        SecretConfig._supabaseFirebaseProjectId = value,
+    applyValue: (value) => SecretConfig._supabaseFirebaseProjectId = value,
   ),
 ];
 
 Future<Map<String, dynamic>?> _readSecureSecrets(
-  final SecretStorage storage,
+  SecretStorage storage,
 ) async {
   try {
     final Map<String, dynamic> secrets = <String, dynamic>{};
@@ -82,7 +81,7 @@ Future<Map<String, dynamic>?> _readSecureSecrets(
   }
 }
 
-Future<void> _persistToSecureStorage(final SecretStorage storage) async {
+Future<void> _persistToSecureStorage(SecretStorage storage) async {
   for (final _SecretStorageField field in _secureStorageFields) {
     await field.persist(storage);
   }
@@ -92,7 +91,7 @@ Future<void> _persistToSecureStorage(final SecretStorage storage) async {
   );
 }
 
-void _applySecrets(final Map<String, dynamic> json) {
+void _applySecrets(Map<String, dynamic> json) {
   for (final _SecretStorageField field in _secureStorageFields) {
     if (!json.containsKey(field.envKey)) {
       continue;
@@ -135,12 +134,12 @@ void _applySecrets(final Map<String, dynamic> json) {
   }
 }
 
-bool _hasSecrets(final Map<String, dynamic>? source) {
+bool _hasSecrets(Map<String, dynamic>? source) {
   if (source == null) return false;
   final Object? flag = source['HUGGINGFACE_USE_CHAT_COMPLETIONS'];
   final String? googleKey = stringFromDynamic(source['GOOGLE_API_KEY'])?.trim();
   final bool hasConfiguredField = _secureStorageFields.any(
-    (final field) => field.normalizedFrom(source[field.envKey]) != null,
+    (field) => field.normalizedFrom(source[field.envKey]) != null,
   );
   final bool hasFlag =
       flag is bool || (flag is String && flag.trim().isNotEmpty);
@@ -216,10 +215,10 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   final AssetBundle bundle = SecretConfig.debugAssetBundle ?? rootBundle;
   final String? raw = await bundle
       .loadString(assetPath)
-      .then<String?>((final value) => value)
+      .then<String?>((value) => value)
       .catchError(
         (Object _) => null,
-        test: (final error) => error is FlutterError,
+        test: (error) => error is FlutterError,
       );
   if (raw == null) {
     // Asset not bundled; ignore silently for developers without a local file.
@@ -243,17 +242,17 @@ Future<Map<String, dynamic>?> _readAssetSecrets() async {
   return null;
 }
 
-Future<void> _persistGoogleMapsKey(final SecretStorage storage) async {
+Future<void> _persistGoogleMapsKey(SecretStorage storage) async {
   await _secureStorageFields
       .firstWhere(
-        (final field) => field.storageKey == SecretConfig._keyGoogleMaps,
+        (field) => field.storageKey == SecretConfig._keyGoogleMaps,
       )
       .persist(storage);
 }
 
 Future<bool> _loadFromSource(
-  final FutureOr<Map<String, dynamic>?> Function() read, {
-  final Future<void> Function()? afterApply,
+  FutureOr<Map<String, dynamic>?> Function() read, {
+  Future<void> Function()? afterApply,
 }) async {
   final Map<String, dynamic>? secrets =
       await Future<Map<String, dynamic>?>.value(read());
@@ -278,7 +277,7 @@ final class _SecretStorageField {
   final String? Function() readValue;
   final void Function(String? value) applyValue;
 
-  String? normalizedFrom(final Object? sourceValue) {
+  String? normalizedFrom(Object? sourceValue) {
     final String? value = stringFromDynamic(sourceValue)?.trim();
     if (value == null || value.isEmpty) {
       return null;
@@ -286,11 +285,11 @@ final class _SecretStorageField {
     return value;
   }
 
-  void applyNormalized(final Object? sourceValue) {
+  void applyNormalized(Object? sourceValue) {
     applyValue(normalizedFrom(sourceValue));
   }
 
-  Future<void> persist(final SecretStorage storage) async {
+  Future<void> persist(SecretStorage storage) async {
     final String? value = readValue();
     if (value case final persistedValue?) {
       await storage.write(storageKey, persistedValue);

@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_sta
 
 typedef RestorationResult = StateRestorationOutcome<CounterState>;
 
-RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
+RestorationResult restoreStateFromSnapshot(CounterSnapshot snapshot) {
   final int safeCount = snapshot.count < 0 ? 0 : snapshot.count;
   final bool shouldPersist = safeCount != snapshot.count;
   final bool holdCountdown = safeCount == 0;
@@ -22,8 +22,8 @@ RestorationResult restoreStateFromSnapshot(final CounterSnapshot snapshot) {
 }
 
 bool shouldIgnoreRemoteSnapshot(
-  final CounterState current,
-  final CounterSnapshot snapshot,
+  CounterState current,
+  CounterSnapshot snapshot,
 ) {
   if (_isOlderThanCurrentState(current, snapshot)) {
     return true;
@@ -44,8 +44,8 @@ bool shouldIgnoreRemoteSnapshot(
 }
 
 bool _isOlderThanCurrentState(
-  final CounterState current,
-  final CounterSnapshot snapshot,
+  CounterState current,
+  CounterSnapshot snapshot,
 ) {
   final DateTime? currentChanged = current.lastChanged;
   if (currentChanged == null) {

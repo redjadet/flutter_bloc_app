@@ -2,8 +2,8 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String? fullNameErrorText(
-  final AppLocalizations l10n,
-  final RegisterFullNameError? error,
+  AppLocalizations l10n,
+  RegisterFullNameError? error,
 ) => switch (error) {
   RegisterFullNameError.empty => l10n.registerFullNameEmptyError,
   RegisterFullNameError.tooShort => l10n.registerFullNameTooShortError,
@@ -11,8 +11,8 @@ String? fullNameErrorText(
 };
 
 String? emailErrorText(
-  final AppLocalizations l10n,
-  final RegisterEmailError? error,
+  AppLocalizations l10n,
+  RegisterEmailError? error,
 ) => switch (error) {
   RegisterEmailError.empty => l10n.registerEmailEmptyError,
   RegisterEmailError.invalid => l10n.registerEmailInvalidError,
@@ -20,8 +20,8 @@ String? emailErrorText(
 };
 
 String? passwordErrorText(
-  final AppLocalizations l10n,
-  final RegisterPasswordError? error,
+  AppLocalizations l10n,
+  RegisterPasswordError? error,
 ) => switch (error) {
   RegisterPasswordError.empty => l10n.registerPasswordEmptyError,
   RegisterPasswordError.tooShort => l10n.registerPasswordTooShortError,
@@ -32,8 +32,8 @@ String? passwordErrorText(
 };
 
 String? confirmPasswordErrorText(
-  final AppLocalizations l10n,
-  final RegisterConfirmPasswordError? error,
+  AppLocalizations l10n,
+  RegisterConfirmPasswordError? error,
 ) => switch (error) {
   RegisterConfirmPasswordError.empty => l10n.registerConfirmPasswordEmptyError,
   RegisterConfirmPasswordError.mismatch =>
@@ -42,8 +42,8 @@ String? confirmPasswordErrorText(
 };
 
 String? phoneErrorText(
-  final AppLocalizations l10n,
-  final RegisterPhoneError? error,
+  AppLocalizations l10n,
+  RegisterPhoneError? error,
 ) => switch (error) {
   RegisterPhoneError.empty => l10n.registerPhoneEmptyError,
   RegisterPhoneError.invalid => l10n.registerPhoneInvalidError,

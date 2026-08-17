@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_device_dto.dart';
@@ -14,7 +15,7 @@ import 'package:storage/storage.dart';
 part 'persistent_iot_demo_repository_storage.part.dart';
 
 /// Sanitizes [supabaseUserId] for use in a Hive box name (alphanumeric, underscore, hyphen).
-String _sanitizeBoxSuffix(final String supabaseUserId) {
+String _sanitizeBoxSuffix(String supabaseUserId) {
   return supabaseUserId.replaceAll(RegExp('[^a-zA-Z0-9_-]'), '_');
 }
 
@@ -25,13 +26,13 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
     implements IotDemoRepository {
   PersistentIotDemoRepository({
     required super.hiveService,
-    required final String supabaseUserId,
+    required String supabaseUserId,
     required this._timerService,
   }) : _boxNameSuffix = _sanitizeBoxSuffix(
          PersistentIotDemoRepository._validateUserId(supabaseUserId),
        );
 
-  static String _validateUserId(final String supabaseUserId) {
+  static String _validateUserId(String supabaseUserId) {
     final String trimmed = supabaseUserId.trim();
     if (trimmed.isEmpty) {
       throw ArgumentError('supabaseUserId must not be empty or whitespace');
@@ -44,7 +45,7 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
   static const String _keyDevices = 'devices';
   static const Duration _connectDelay = Duration(milliseconds: 400);
 
-  Future<void> _delay(final Duration duration) {
+  Future<void> _delay(Duration duration) {
     if (duration <= Duration.zero) {
       return Future<void>.value();
     }
@@ -58,24 +59,24 @@ class PersistentIotDemoRepository extends HiveRepositoryBase
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) => watchDevicesStream(filter);
 
   @override
-  Future<void> addDevice(final IotDevice device) => addDeviceImpl(device);
+  Future<void> addDevice(IotDevice device) => addDeviceImpl(device);
 
-  Future<void> replaceDevices(final List<IotDevice> devices) =>
+  Future<void> replaceDevices(List<IotDevice> devices) =>
       replaceDevicesImpl(devices);
 
   @override
-  Future<void> connect(final String deviceId) => connectImpl(deviceId);
+  Future<void> connect(String deviceId) => connectImpl(deviceId);
 
   @override
-  Future<void> disconnect(final String deviceId) => disconnectImpl(deviceId);
+  Future<void> disconnect(String deviceId) => disconnectImpl(deviceId);
 
   @override
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) => sendCommandImpl(deviceId, command);
 }

@@ -126,8 +126,7 @@ extension WalletConnectAuthStatePatterns on WalletConnectAuthState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WalletConnectAuthState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WalletConnectAuthState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _WalletConnectAuthState() when $default != null:
 return $default(_that);case _:
@@ -148,8 +147,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WalletConnectAuthState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WalletConnectAuthState value)  $default,){final _that = this;
 switch (_that) {
 case _WalletConnectAuthState():
 return $default(_that);case _:
@@ -169,8 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WalletConnectAuthState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WalletConnectAuthState value)?  $default,){final _that = this;
 switch (_that) {
 case _WalletConnectAuthState() when $default != null:
 return $default(_that);case _:

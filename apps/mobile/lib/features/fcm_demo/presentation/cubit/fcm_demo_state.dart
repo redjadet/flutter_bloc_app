@@ -15,12 +15,12 @@ enum FcmDemoStatus {
 @freezed
 abstract class FcmDemoState with _$FcmDemoState {
   const factory FcmDemoState({
-    @Default(FcmDemoStatus.initial) final FcmDemoStatus status,
+    @Default(FcmDemoStatus.initial) FcmDemoStatus status,
     @Default(FcmPermissionState.notDetermined)
-    final FcmPermissionState permissionState,
-    final String? fcmToken,
-    final String? apnsToken,
-    final PushMessage? lastMessage,
-    final String? errorMessage,
+    FcmPermissionState permissionState,
+    String? fcmToken,
+    String? apnsToken,
+    PushMessage? lastMessage,
+    String? errorMessage,
   }) = _FcmDemoState;
 }

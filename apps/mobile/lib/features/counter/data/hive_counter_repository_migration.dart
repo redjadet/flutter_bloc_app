@@ -2,8 +2,8 @@ part of 'hive_counter_repository.dart';
 
 extension HiveCounterRepositoryMigration on HiveCounterRepository {
   Future<void> _migrateCounter(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     final int? migratedCount = _coerceCount(
       box.get(HiveCounterRepository._keyCount),
@@ -60,7 +60,7 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     }
   }
 
-  int? _coerceCount(final dynamic raw) => switch (raw) {
+  int? _coerceCount(dynamic raw) => switch (raw) {
     final int v => v < 0 ? 0 : v,
     final num v when !v.isFinite => null,
     final num v => _nonNegativeInt(v.toInt()),
@@ -68,14 +68,14 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     _ => null,
   };
 
-  int? _nonNegativeInt(final int? value) {
+  int? _nonNegativeInt(int? value) {
     if (value == null) {
       return null;
     }
     return value < 0 ? 0 : value;
   }
 
-  int? _coerceTimestampMs(final dynamic raw) {
+  int? _coerceTimestampMs(dynamic raw) {
     final int? timestampMs = switch (raw) {
       final int v => v,
       final num v when !v.isFinite => null,
@@ -96,7 +96,7 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     )?.millisecondsSinceEpoch;
   }
 
-  bool? _coerceBool(final dynamic raw) => switch (raw) {
+  bool? _coerceBool(dynamic raw) => switch (raw) {
     final bool v => v,
     final int v when v == 0 => false,
     final int v when v == 1 => true,
@@ -111,7 +111,7 @@ extension HiveCounterRepositoryMigration on HiveCounterRepository {
     _ => null,
   };
 
-  String? _coerceNonEmptyString(final dynamic raw) => switch (raw) {
+  String? _coerceNonEmptyString(dynamic raw) => switch (raw) {
     final String v when v.trim().isNotEmpty => v.trim(),
     _ => null,
   };

@@ -2,8 +2,8 @@ import 'package:flutter_bloc_app/features/chat/data/composite_chat_repository.da
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 class _StubEdgeRepo implements ChatRepository {
   _StubEdgeRepo({this.result, this.throwOnSend});
@@ -16,12 +16,12 @@ class _StubEdgeRepo implements ChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     if (throwOnSend != null) {
       throw throwOnSend!;
@@ -51,12 +51,12 @@ class _FakeHfDirect implements HuggingfaceChatRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     sendCount++;
     return result;
@@ -171,7 +171,7 @@ void main() {
         ),
         throwsA(
           isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
+            (ChatRemoteFailureException e) => e.code,
             'code',
             'invalid_request',
           ),
@@ -207,7 +207,7 @@ void main() {
         ),
         throwsA(
           isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
+            (ChatRemoteFailureException e) => e.code,
             'code',
             'missing_configuration',
           ),
@@ -301,12 +301,12 @@ void main() {
           throwsA(
             isA<ChatRemoteFailureException>()
                 .having(
-                  (final ChatRemoteFailureException e) => e.retryable,
+                  (ChatRemoteFailureException e) => e.retryable,
                   'retryable',
                   isTrue,
                 )
                 .having(
-                  (final ChatRemoteFailureException e) => e.code,
+                  (ChatRemoteFailureException e) => e.code,
                   'code',
                   'upstream_unavailable',
                 ),
@@ -433,7 +433,7 @@ void main() {
         ),
         throwsA(
           isA<ChatRemoteFailureException>().having(
-            (final ChatRemoteFailureException e) => e.code,
+            (ChatRemoteFailureException e) => e.code,
             'code',
             'auth_required',
           ),

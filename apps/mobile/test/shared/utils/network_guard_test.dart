@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   group('NetworkGuard', () {
@@ -14,10 +14,10 @@ void main() {
       final result = await NetworkGuard.executeDio<String, Exception>(
         request: () async => response,
         timeout: const Duration(seconds: 5),
-        isSuccess: (final statusCode) => statusCode == 200,
+        isSuccess: (statusCode) => statusCode == 200,
         logContext: 'test',
-        onHttpFailure: (final res) => Exception('HTTP error'),
-        onException: (final error) => Exception('Network error'),
+        onHttpFailure: (res) => Exception('HTTP error'),
+        onException: (error) => Exception('Network error'),
       );
 
       expect(result.statusCode, 200);
@@ -37,11 +37,10 @@ void main() {
           () => NetworkGuard.executeDio<String, Exception>(
             request: () async => response,
             timeout: const Duration(seconds: 5),
-            isSuccess: (final statusCode) => statusCode == 200,
+            isSuccess: (statusCode) => statusCode == 200,
             logContext: 'test',
-            onHttpFailure: (final res) =>
-                Exception('HTTP error: ${res.statusCode}'),
-            onException: (final error) => Exception('Network error'),
+            onHttpFailure: (res) => Exception('HTTP error: ${res.statusCode}'),
+            onException: (error) => Exception('Network error'),
           ),
           throwsA(isA<Exception>()),
         );
@@ -62,11 +61,11 @@ void main() {
           await NetworkGuard.executeDio<String, Exception>(
             request: () async => response,
             timeout: const Duration(seconds: 5),
-            isSuccess: (final statusCode) => statusCode == 200,
+            isSuccess: (statusCode) => statusCode == 200,
             logContext: 'test',
-            onHttpFailure: (final res) => Exception('HTTP error'),
-            onException: (final error) => Exception('Network error'),
-            onFailureLog: (final res) {
+            onHttpFailure: (res) => Exception('HTTP error'),
+            onException: (error) => Exception('Network error'),
+            onFailureLog: (res) {
               failureLogCalled = true;
             },
           );
@@ -90,10 +89,10 @@ void main() {
             );
           },
           timeout: const Duration(milliseconds: 100),
-          isSuccess: (final statusCode) => statusCode == 200,
+          isSuccess: (statusCode) => statusCode == 200,
           logContext: 'test',
-          onHttpFailure: (final res) => Exception('HTTP error'),
-          onException: (final error) => Exception('Timeout error'),
+          onHttpFailure: (res) => Exception('HTTP error'),
+          onException: (error) => Exception('Timeout error'),
         ),
         throwsA(isA<Exception>()),
       );
@@ -106,10 +105,10 @@ void main() {
             throw Exception('Connection failed');
           },
           timeout: const Duration(seconds: 5),
-          isSuccess: (final statusCode) => statusCode == 200,
+          isSuccess: (statusCode) => statusCode == 200,
           logContext: 'test',
-          onHttpFailure: (final res) => Exception('HTTP error'),
-          onException: (final error) => Exception('Network error'),
+          onHttpFailure: (res) => Exception('HTTP error'),
+          onException: (error) => Exception('Network error'),
         ),
         throwsA(isA<Exception>()),
       );
@@ -122,10 +121,10 @@ void main() {
             throw TestException('Custom error');
           },
           timeout: const Duration(seconds: 5),
-          isSuccess: (final statusCode) => statusCode == 200,
+          isSuccess: (statusCode) => statusCode == 200,
           logContext: 'test',
-          onHttpFailure: (final res) => TestException('HTTP error'),
-          onException: (final error) => TestException('Network error'),
+          onHttpFailure: (res) => TestException('HTTP error'),
+          onException: (error) => TestException('Network error'),
         ),
         throwsA(isA<TestException>()),
       );

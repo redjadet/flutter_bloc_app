@@ -1,13 +1,13 @@
 part of 'reactive_ble_repository.dart';
 
 mixin _ReactiveBleRepositoryScan on _ReactiveBleRepositoryBase {
-  Future<Result<void>> startScan({final Duration? timeout}) async {
+  Future<Result<void>> startScan({Duration? timeout}) async {
     await _scanSubscription?.cancel();
     _scanResults.clear();
     _scanSubscription = client
         .scanForDevices(withServices: const <Uuid>[])
         .listen(
-          (final device) {
+          (device) {
             _scanResults[device.id] = BleDiscoveredDevice(
               id: device.id,
               name: device.name.isEmpty ? 'Unknown' : device.name,

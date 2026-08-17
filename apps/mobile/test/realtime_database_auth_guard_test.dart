@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_bloc_app/app/firebase/auth_helpers.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('waitForAuthUser', () {

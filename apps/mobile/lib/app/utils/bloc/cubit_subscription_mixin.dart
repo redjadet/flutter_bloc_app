@@ -46,7 +46,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   ///
   /// Subscriptions should be registered immediately after creation.
   T registerSubscription<T extends StreamSubscription<dynamic>?>(
-    final T subscription,
+    T subscription,
   ) {
     if (subscription == null) return subscription;
 
@@ -63,7 +63,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
 
   /// Cancels a registered subscription and removes it from the tracked set.
   Future<void> cancelRegisteredSubscription(
-    final StreamSubscription<dynamic>? subscription,
+    StreamSubscription<dynamic>? subscription,
   ) async {
     if (subscription == null) return;
     _subscriptions.untrackSubscription(subscription);
@@ -74,7 +74,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   ///
   /// If a late async callback creates a timer after the cubit has already
   /// closed, the handle is disposed immediately to avoid leaks.
-  T registerTimer<T extends TimerDisposable?>(final T handle) {
+  T registerTimer<T extends TimerDisposable?>(T handle) {
     final TimerDisposable? value = handle;
     if (value == null) return handle;
     if (isClosed) {
@@ -86,7 +86,7 @@ mixin CubitSubscriptionMixin<S> on Cubit<S> {
   }
 
   /// Unregisters a timer handle that has been disposed independently.
-  void unregisterTimer(final TimerDisposable? handle) {
+  void unregisterTimer(TimerDisposable? handle) {
     _timers.unregister(handle);
   }
 

@@ -6,7 +6,14 @@ Primary codegen path for models, states, and Retrofit APIs:
 
 ```bash
 cd apps/mobile && dart run build_runner build --delete-conflicting-outputs
+bash tool/strip_freezed_dart_313_params.sh
 ```
+
+Dart 3.13 language forbids `final` on ordinary constructor parameters.
+Current Freezed still emits `final` on hidden-field constructors and similar
+parameters, so re-run `tool/strip_freezed_dart_313_params.sh` after codegen
+until Freezed is 3.13-safe. The strip keeps field `final` and locals such as
+`final _that = this;` and `final value = ...`.
 
 Prefer Freezed for immutable domain/presentation models. See
 [`freezed_usage_analysis.md`](../architecture/freezed_usage_analysis.md) and

@@ -1,6 +1,5 @@
 // check-ignore: nonbuilder_lists - small, fixed-size page content
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -8,12 +7,13 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_time_
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoAdminPage extends StatelessWidget {
   const StaffAppDemoAdminPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final data = context
         .selectState<
           StaffDemoAdminCubit,
@@ -92,7 +92,7 @@ class _StaffDemoAdminViewData {
     required this.flaggedEntries,
   });
 
-  factory _StaffDemoAdminViewData.fromState(final StaffDemoAdminState state) {
+  factory _StaffDemoAdminViewData.fromState(StaffDemoAdminState state) {
     final flaggedEntries = <StaffDemoTimeEntrySummary>[
       for (final entry in state.recentEntries)
         if (entry.isFlagged) entry,
@@ -117,7 +117,7 @@ class _StaffDemoAdminViewData {
   static const DeepCollectionEquality _listEq = DeepCollectionEquality();
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is _StaffDemoAdminViewData &&
           other.status == status &&

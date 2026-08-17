@@ -14,9 +14,9 @@ class PaymentCalculator {
   /// Applies [operation] to [lhs] and [rhs], rounding the result using the
   /// configured [scale].
   double applyOperation({
-    required final double lhs,
-    required final double rhs,
-    required final CalculatorOperation operation,
+    required double lhs,
+    required double rhs,
+    required CalculatorOperation operation,
   }) {
     final double result = switch (operation) {
       CalculatorOperation.add => lhs + rhs,
@@ -29,14 +29,14 @@ class PaymentCalculator {
 
   /// Parses currency text into a double, normalising thousand separators and
   /// constraining the scale.
-  double parseCurrency(final String value) {
+  double parseCurrency(String value) {
     final String normalised = value.replaceAll(',', '');
     final double parsed = double.tryParse(normalised) ?? 0;
     return round(parsed);
   }
 
   /// Rounds [value] to the configured [scale].
-  double round(final double value) {
+  double round(double value) {
     final double mod = math.pow(10, scale).toDouble();
     return (value * mod).roundToDouble() / mod;
   }

@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart' show AppMemoryTrimLevel;
 
 /// Displays an SVG asset but falls back to the embedded raster payload when
@@ -88,14 +88,12 @@ class ResilientSvgAssetImage extends StatelessWidget {
   static int get debugCacheSize => _cache.length;
 
   @visibleForTesting
-  static void debugStoreCacheEntry(final String key, final Uint8List? value) {
+  static void debugStoreCacheEntry(String key, Uint8List? value) {
     _evictIfNeeded();
     _cache[key] = value;
   }
 
-  static Future<void> trimCache({
-    required final AppMemoryTrimLevel level,
-  }) async {
+  static Future<void> trimCache({required AppMemoryTrimLevel level}) async {
     if (_cache.isEmpty) {
       return;
     }
@@ -129,7 +127,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (_cache.containsKey(assetPath)) {
       final bytes = _cache[assetPath];
       if (bytes case final data?) {
@@ -140,7 +138,7 @@ class ResilientSvgAssetImage extends StatelessWidget {
 
     return FutureBuilder<Uint8List?>(
       future: _loadBytes(),
-      builder: (final context, final snapshot) {
+      builder: (context, snapshot) {
         final bytes = snapshot.data;
         if (bytes case final data?) {
           return Image.memory(data, fit: fit);

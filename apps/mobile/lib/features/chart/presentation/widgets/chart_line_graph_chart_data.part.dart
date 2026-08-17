@@ -2,8 +2,8 @@ part of 'chart_line_graph.dart';
 
 extension _ChartLineGraphStateChartData on _ChartLineGraphState {
   LineChartData _getOrBuildChartData(
-    final BuildContext context, {
-    required final bool zoomEnabled,
+    BuildContext context, {
+    required bool zoomEnabled,
   }) {
     final theme = Theme.of(context);
 
@@ -52,9 +52,9 @@ extension _ChartLineGraphStateChartData on _ChartLineGraphState {
             touchTooltipData: LineTouchTooltipData(
               fitInsideHorizontally: true,
               fitInsideVertically: true,
-              getTooltipItems: (final touchedSpots) => touchedSpots
+              getTooltipItems: (touchedSpots) => touchedSpots
                   .map<LineTooltipItem?>(
-                    (final spot) => LineTooltipItem(
+                    (spot) => LineTooltipItem(
                       spot.y.toStringAsFixed(3),
                       tooltipTextStyle,
                     ),
@@ -70,7 +70,7 @@ extension _ChartLineGraphStateChartData on _ChartLineGraphState {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: renderKey.reservedSize,
-            getTitlesWidget: (final value, final meta) {
+            getTitlesWidget: (value, meta) {
               final index = value.toInt();
               Widget child = const SizedBox.shrink();
               if (index >= 0 &&
@@ -135,7 +135,7 @@ class _ChartRenderKey {
   final int labelCount;
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       other is _ChartRenderKey &&
       other.primaryColor == primaryColor &&
       other.onSurface == onSurface &&

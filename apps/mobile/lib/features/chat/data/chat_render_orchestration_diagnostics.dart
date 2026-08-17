@@ -5,10 +5,10 @@ import 'package:flutter_bloc_app/app/config/secret_config.dart';
 
 /// Dev-only diagnostics for why Render/FastAPI orchestration may be skipped.
 void logChatRenderOrchestrationIfDebug(
-  final String tag,
-  final bool Function() isFirebaseAuthRegistered, {
-  final bool? chatRenderDemoEnabledOverride,
-  final String? chatRenderDemoBaseUrlOverride,
+  String tag,
+  bool Function() isFirebaseAuthRegistered, {
+  bool? chatRenderDemoEnabledOverride,
+  String? chatRenderDemoBaseUrlOverride,
 }) {
   if (!kDebugMode) {
     return;
@@ -37,9 +37,9 @@ void logChatRenderOrchestrationIfDebug(
 
 /// When non-null, Render orchestration would not run (composite path only).
 String? renderOrchestrationNotRunnableReason(
-  final bool Function() isFirebaseAuthRegistered, {
-  final bool? chatRenderDemoEnabledOverride,
-  final String? chatRenderDemoBaseUrlOverride,
+  bool Function() isFirebaseAuthRegistered, {
+  bool? chatRenderDemoEnabledOverride,
+  String? chatRenderDemoBaseUrlOverride,
 }) {
   final bool enabled =
       chatRenderDemoEnabledOverride ?? SecretConfig.chatRenderDemoEnabled;

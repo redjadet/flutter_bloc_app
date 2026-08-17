@@ -1,7 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/main_bootstrap.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +19,11 @@ void main() {
         ensureBootstrapBindingInitialized = () {
           calls.add('binding');
         };
-        registerFcmBackgroundHandler = (final handler) {
+        registerFcmBackgroundHandler = (handler) {
           calls.add('background-handler');
           registeredHandler = handler;
         };
-        bootstrapFlavorApp = (final flavor) async {
+        bootstrapFlavorApp = (flavor) async {
           calls.add('bootstrap');
           bootstrappedFlavor = flavor;
         };

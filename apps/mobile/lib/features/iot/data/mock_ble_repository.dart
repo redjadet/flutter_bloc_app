@@ -104,18 +104,18 @@ class _MockBleRepositoryBase {
       _scanResults.putIfAbsent(profile.device.id, () => profile.device);
     }
     final List<BleDiscoveredDevice> sorted = _scanResults.values.toList()
-      ..sort((final a, final b) => b.rssi.compareTo(a.rssi));
+      ..sort((a, b) => b.rssi.compareTo(a.rssi));
     _scanController.add(List<BleDiscoveredDevice>.unmodifiable(sorted));
   }
 
   StreamController<BleConnectionPhase> _connectionController(
-    final String deviceId,
+    String deviceId,
   ) => _connectionControllers.putIfAbsent(
     deviceId,
     StreamController<BleConnectionPhase>.broadcast,
   );
 
-  List<int> _readValue(final BleCharacteristicRef ref) {
+  List<int> _readValue(BleCharacteristicRef ref) {
     if (ref.deviceId == MockBleDeviceCatalog.thermometerId) {
       final double celsius = 36.5 + _random.nextDouble();
       final int value = (celsius * 100).round();
@@ -128,10 +128,10 @@ class _MockBleRepositoryBase {
     return <int>[0x64];
   }
 
-  String _notifyKey(final BleCharacteristicRef ref) =>
+  String _notifyKey(BleCharacteristicRef ref) =>
       '${ref.deviceId}|${ref.serviceUuid}|${ref.characteristicUuid}';
 
-  void _startNotifyTimerIfNeeded(final BleCharacteristicRef ref) {
+  void _startNotifyTimerIfNeeded(BleCharacteristicRef ref) {
     if (_notifyTimerHandle != null) {
       return;
     }
@@ -188,7 +188,7 @@ class _MockBleRepositoryBase {
   }
 
   StreamController<List<int>> _notifyChannelFor(
-    final BleCharacteristicRef ref,
+    BleCharacteristicRef ref,
   ) => _notifyControllers.putIfAbsent(
     _notifyKey(ref),
     StreamController<List<int>>.broadcast,

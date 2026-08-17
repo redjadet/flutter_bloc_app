@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/counter/data/rest_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_error.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Dio createCounterMockDio({
@@ -29,7 +29,7 @@ Dio createCounterMockDio({
           );
         } else if (options.method == 'POST') {
           final Map<String, String> headers = <String, String>{};
-          options.headers.forEach((final k, final v) {
+          options.headers.forEach((k, v) {
             if (v != null) headers[k] = v.toString();
           });
           if (options.contentType != null) {
@@ -193,12 +193,12 @@ void main() {
           throwsA(
             isA<CounterError>()
                 .having(
-                  (final CounterError error) => error.type,
+                  (CounterError error) => error.type,
                   'type',
                   CounterErrorType.loadError,
                 )
                 .having(
-                  (final CounterError error) => error.message,
+                  (CounterError error) => error.message,
                   'message',
                   'REST load failed (HTTP unknown).',
                 ),
@@ -433,12 +433,12 @@ void main() {
         throwsA(
           isA<CounterError>()
               .having(
-                (final CounterError error) => error.type,
+                (CounterError error) => error.type,
                 'type',
                 CounterErrorType.saveError,
               )
               .having(
-                (final CounterError error) => error.message,
+                (CounterError error) => error.message,
                 'message',
                 'Save failed with status unknown',
               ),
@@ -535,10 +535,10 @@ class CounterTestRequests {
   String? lastBody;
 
   void record(
-    final String method,
-    final String url,
-    final String? body, [
-    final Map<String, String>? headers,
+    String method,
+    String url,
+    String? body, [
+    Map<String, String>? headers,
   ]) {
     lastMethod = method;
     lastUrl = url;

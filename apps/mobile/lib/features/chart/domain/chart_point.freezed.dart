@@ -87,8 +87,7 @@ extension ChartPointPatterns on ChartPoint {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChartPoint value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChartPoint value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChartPoint() when $default != null:
 return $default(_that);case _:
@@ -109,8 +108,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChartPoint value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChartPoint value)  $default,){final _that = this;
 switch (_that) {
 case _ChartPoint():
 return $default(_that);case _:
@@ -130,8 +128,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChartPoint value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChartPoint value)?  $default,){final _that = this;
 switch (_that) {
 case _ChartPoint() when $default != null:
 return $default(_that);case _:

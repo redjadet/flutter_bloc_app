@@ -3,6 +3,6 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 
 abstract interface class NativeShowcaseTelemetryService {
   Stream<NativeShowcaseTelemetrySnapshot> watchTelemetry({
-    required final NativeShowcaseTelemetryStreamConfig config,
+    required NativeShowcaseTelemetryStreamConfig config,
   });
 }

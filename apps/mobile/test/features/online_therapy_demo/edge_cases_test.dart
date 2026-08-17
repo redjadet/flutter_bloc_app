@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapist_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_messaging_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
@@ -630,13 +630,13 @@ class _CountingAvailabilityTherapistRepository implements TherapistRepository {
   void resetCount() => listAvailabilityCalls = 0;
 
   @override
-  Future<TherapistProfile> getTherapist({required final String therapistId}) =>
+  Future<TherapistProfile> getTherapist({required String therapistId}) =>
       _inner.getTherapist(therapistId: therapistId);
 
   @override
   Future<List<AvailabilitySlot>> listAvailability({
-    required final String therapistId,
-    required final DateTime date,
+    required String therapistId,
+    required DateTime date,
   }) {
     listAvailabilityCalls++;
     return _inner.listAvailability(therapistId: therapistId, date: date);
@@ -644,9 +644,9 @@ class _CountingAvailabilityTherapistRepository implements TherapistRepository {
 
   @override
   Future<List<TherapistProfile>> listTherapists({
-    final String? query,
-    final String? specialty,
-    final String? language,
+    String? query,
+    String? specialty,
+    String? language,
   }) => _inner.listTherapists(
     query: query,
     specialty: specialty,
@@ -661,13 +661,13 @@ class _DelayedAvailabilityTherapistRepository implements TherapistRepository {
   static const Duration _delay = Duration(milliseconds: 100);
 
   @override
-  Future<TherapistProfile> getTherapist({required final String therapistId}) =>
+  Future<TherapistProfile> getTherapist({required String therapistId}) =>
       _inner.getTherapist(therapistId: therapistId);
 
   @override
   Future<List<AvailabilitySlot>> listAvailability({
-    required final String therapistId,
-    required final DateTime date,
+    required String therapistId,
+    required DateTime date,
   }) async {
     await Future<void>.delayed(_delay);
     return _inner.listAvailability(therapistId: therapistId, date: date);
@@ -675,9 +675,9 @@ class _DelayedAvailabilityTherapistRepository implements TherapistRepository {
 
   @override
   Future<List<TherapistProfile>> listTherapists({
-    final String? query,
-    final String? specialty,
-    final String? language,
+    String? query,
+    String? specialty,
+    String? language,
   }) => _inner.listTherapists(
     query: query,
     specialty: specialty,
@@ -699,15 +699,15 @@ class _GatedAppointmentRepository implements AppointmentRepository {
 
   @override
   Future<Appointment> cancelAppointment({
-    required final String appointmentId,
-    required final String reason,
+    required String appointmentId,
+    required String reason,
   }) => _inner.cancelAppointment(appointmentId: appointmentId, reason: reason);
 
   @override
   Future<Appointment> createAppointment({
-    required final String therapistId,
-    required final DateTime startAt,
-    required final DateTime endAt,
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
   }) async {
     await _createGate.future;
     return _inner.createAppointment(
@@ -732,39 +732,31 @@ class _DelayedMessagingRepository implements TherapyMessagingRepository {
   Future<List<Conversation>> listConversations() => _inner.listConversations();
 
   @override
-  Future<List<Message>> listMessages({
-    required final String conversationId,
-  }) async {
+  Future<List<Message>> listMessages({required String conversationId}) async {
     await Future<void>.delayed(_delay);
     return _inner.listMessages(conversationId: conversationId);
   }
 
   @override
-  Future<Message> retryMessage({required final String messageId}) =>
+  Future<Message> retryMessage({required String messageId}) =>
       _inner.retryMessage(messageId: messageId);
 
   @override
   Future<Message> sendMessage({
-    required final String conversationId,
-    required final String body,
+    required String conversationId,
+    required String body,
   }) => _inner.sendMessage(conversationId: conversationId, body: body);
 }
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _NoopTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopTimerDisposable();
   }

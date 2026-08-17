@@ -4,7 +4,7 @@ void registerNavigationIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Navigation flow',
     testName: 'moves from counter to example and into library demo',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await tapAndPump(tester, find.byTooltip('Open example page'));
@@ -57,7 +57,7 @@ void registerPlaylearnIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Playlearn flow',
     testName: 'opens playlearn from overflow and shows playlearn page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open Playlearn');
@@ -76,7 +76,7 @@ void registerPlaylearnEmptyTopicsIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Playlearn flow',
     testName: 'shows empty state when no topics are available',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open Playlearn');
@@ -98,7 +98,7 @@ void registerSearchIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Search flow',
     testName: 'opens search from example and shows results section',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Search Demo');
@@ -113,7 +113,7 @@ void registerSettingsIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Settings flow',
     testName: 'opens settings and applies theme and locale changes',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester, ensureSignedIn: true);
 
       await pumpUntilFound(tester, find.byTooltip('Open settings'));
@@ -158,7 +158,7 @@ void registerTodoListIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Todo list flow',
     testName: 'opens todo list from example, adds a todo and sees it in list',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Todo List Demo');
@@ -190,7 +190,7 @@ void registerEventBusDemoIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Event Bus demo flow',
     testName: 'opens Event Bus demo from Example page and updates listeners',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
@@ -225,7 +225,7 @@ void registerNativePlatformShowcaseIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Native platform showcase flow',
     testName: 'opens showcase from Example and renders platform summary',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
@@ -307,7 +307,7 @@ void registerNativePlatformShowcaseIntegrationFlow() {
         expect(card, findsOneWidget);
       }
 
-      Future<void> tapSecurityRun(final String key) async {
+      Future<void> tapSecurityRun(String key) async {
         final Finder button = find.byKey(ValueKey<String>(key));
         // Prefer ensureVisible over tapAndPump: a second scrollUntilVisible can
         // overshoot nested lists and leave the control above the hit-test area.
@@ -334,7 +334,7 @@ void registerNativePlatformShowcaseIntegrationFlow() {
       final Iterable<String> visibleTexts = find
           .byType(Text)
           .evaluate()
-          .map((final e) => (e.widget as Text).data)
+          .map((e) => (e.widget as Text).data)
           .whereType<String>();
       for (final String text in visibleTexts) {
         expect(
@@ -394,7 +394,7 @@ void registerWebsocketIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'WebSocket flow',
     testName: 'opens WebSocket demo from example and shows WebSocket page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Open WebSocket demo');
@@ -409,7 +409,7 @@ void registerWhiteboardIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Whiteboard flow',
     testName: 'opens whiteboard from overflow and shows whiteboard page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open Whiteboard');
@@ -428,7 +428,7 @@ void registerCameraGalleryIntegrationFlow() {
     options: const IntegrationDependencyOptions(
       overrideCameraGalleryRepository: true,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.byTooltip('Open example page'));
@@ -465,7 +465,7 @@ void registerCameraGalleryIntegrationFlow() {
       await pumpUntilFound(
         tester,
         find.byWidgetPredicate(
-          (final widget) =>
+          (widget) =>
               widget is ChoiceChip &&
               widget.key == const ValueKey('camera-gallery-filter-grayscale') &&
               widget.selected,

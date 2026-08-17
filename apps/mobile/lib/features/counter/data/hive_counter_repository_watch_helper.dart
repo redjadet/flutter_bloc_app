@@ -16,7 +16,7 @@ class HiveCounterRepositoryWatchHelper {
     required this.loadSnapshot,
     required this.emptySnapshot,
     required this.getBox,
-    final TimerService? timerService,
+    TimerService? timerService,
   }) : _timerService = timerService ?? DefaultTimerService(),
        _watchState = HiveCounterRepositoryWatchState(
          loadSnapshot: loadSnapshot,
@@ -47,7 +47,7 @@ class HiveCounterRepositoryWatchHelper {
   CounterSnapshot? get cachedSnapshot => _watchState.cachedSnapshot;
 
   /// Sets the cached snapshot.
-  set cachedSnapshot(final CounterSnapshot snapshot) =>
+  set cachedSnapshot(CounterSnapshot snapshot) =>
       _watchState.cachedSnapshot = snapshot;
 
   /// Gets the stream for watching snapshots.
@@ -63,8 +63,8 @@ class HiveCounterRepositoryWatchHelper {
   /// If the controller was already created (e.g., by accessing [stream]),
   /// this method will recreate it with the proper callbacks.
   void createWatchController({
-    required final void Function() onListen,
-    required final Future<void> Function() onCancel,
+    required void Function() onListen,
+    required Future<void> Function() onCancel,
   }) => _watchState.createController(onListen: onListen, onCancel: onCancel);
 
   /// Handles when a listener subscribes to the watch stream.
@@ -109,13 +109,13 @@ class HiveCounterRepositoryWatchHelper {
       await _boxSubscription?.cancel();
 
       _boxSubscription = box.watch().listen(
-        (final event) {
+        (event) {
           // Only trigger load for relevant keys to avoid unnecessary work
           if (_isRelevantKey(event.key)) {
             unawaited(_watchState.loadAndEmitInitial());
           }
         },
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'Hive box watch error',
             error,
@@ -164,11 +164,11 @@ class HiveCounterRepositoryWatchHelper {
   }
 
   /// Checks if a Hive box key is relevant for counter updates.
-  bool _isRelevantKey(final dynamic key) =>
+  bool _isRelevantKey(dynamic key) =>
       key == _keyCount || key == _keyChanged || key == _keyUserId;
 
   /// Emits a snapshot to all active stream listeners.
-  void emitSnapshot(final CounterSnapshot snapshot) {
+  void emitSnapshot(CounterSnapshot snapshot) {
     _watchState.emitSnapshot(snapshot);
   }
 

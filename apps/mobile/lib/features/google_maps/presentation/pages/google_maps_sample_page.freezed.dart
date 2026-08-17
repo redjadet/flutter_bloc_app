@@ -95,8 +95,7 @@ extension _MapBodyDataPatterns on _MapBodyData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __MapBodyData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __MapBodyData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __MapBodyData() when $default != null:
 return $default(_that);case _:
@@ -117,8 +116,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __MapBodyData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __MapBodyData value)  $default,){final _that = this;
 switch (_that) {
 case __MapBodyData():
 return $default(_that);case _:
@@ -138,8 +136,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __MapBodyData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __MapBodyData value)?  $default,){final _that = this;
 switch (_that) {
 case __MapBodyData() when $default != null:
 return $default(_that);case _:
@@ -371,8 +368,7 @@ extension _ControlsViewModelPatterns on _ControlsViewModel {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ControlsViewModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ControlsViewModel value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __ControlsViewModel() when $default != null:
 return $default(_that);case _:
@@ -393,8 +389,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ControlsViewModel value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ControlsViewModel value)  $default,){final _that = this;
 switch (_that) {
 case __ControlsViewModel():
 return $default(_that);case _:
@@ -414,8 +409,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ControlsViewModel value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ControlsViewModel value)?  $default,){final _that = this;
 switch (_that) {
 case __ControlsViewModel() when $default != null:
 return $default(_that);case _:
@@ -643,8 +637,7 @@ extension _LocationListViewModelPatterns on _LocationListViewModel {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __LocationListViewModel value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __LocationListViewModel value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __LocationListViewModel() when $default != null:
 return $default(_that);case _:
@@ -665,8 +658,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __LocationListViewModel value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __LocationListViewModel value)  $default,){final _that = this;
 switch (_that) {
 case __LocationListViewModel():
 return $default(_that);case _:
@@ -686,8 +678,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __LocationListViewModel value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __LocationListViewModel value)?  $default,){final _that = this;
 switch (_that) {
 case __LocationListViewModel() when $default != null:
 return $default(_that);case _:
@@ -763,7 +754,7 @@ return $default(_that.locations,_that.selectedMarkerId);case _:
 
 
 class __LocationListViewModel with DiagnosticableTreeMixin implements _LocationListViewModel {
-  const __LocationListViewModel({required final  List<MapLocation> locations, required this.selectedMarkerId}): _locations = locations;
+  const __LocationListViewModel({required  List<MapLocation> locations, required this.selectedMarkerId}): _locations = locations;
   
 
  final  List<MapLocation> _locations;

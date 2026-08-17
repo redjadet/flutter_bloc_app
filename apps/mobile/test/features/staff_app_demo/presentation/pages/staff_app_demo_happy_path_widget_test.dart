@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auth/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_inbox_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/firestore_staff_demo_messaging_repository.dart';
@@ -13,16 +12,17 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_admin_state.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_inbox_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_messages_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_messages_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_session_state.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_sites_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_admin_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_dashboard_page.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/pages/staff_app_demo_messages_page.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_sites_cubit.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_inbox_item.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
@@ -73,8 +73,8 @@ class _RefreshingAdminCubit extends StaffDemoAdminCubit {
 }
 
 Widget _wrapWithProviders({
-  required final Widget child,
-  required final StaffDemoSessionCubit sessionCubit,
+  required Widget child,
+  required StaffDemoSessionCubit sessionCubit,
   StaffDemoMessagesCubit? messagesCubit,
   StaffDemoSitesCubit? sitesCubit,
 }) {
@@ -98,9 +98,8 @@ void main() {
       'messages compose dialog shows staff dropdown and disables send until selection',
       (tester) async {
         final profileRepository = _MockStaffDemoProfileRepository();
-        when(
-          () => profileRepository.loadProfile(userId: any(named: 'userId')),
-        ).thenAnswer((_) async => null);
+        when(() => profileRepository.loadProfile(userId: any(named: 'userId')))
+            .thenAnswer((_) async => null);
         when(() => profileRepository.listAssignableStaff()).thenAnswer(
           (_) async => const <StaffDemoProfile>[
             StaffDemoProfile(
@@ -151,9 +150,8 @@ void main() {
         );
 
         final sitesRepository = _MockStaffDemoSiteRepository();
-        when(
-          () => sitesRepository.listSites(),
-        ).thenAnswer((_) async => const <StaffDemoSite>[]);
+        when(() => sitesRepository.listSites())
+            .thenAnswer((_) async => const <StaffDemoSite>[]);
         final sitesCubit = StaffDemoSitesCubit(repository: sitesRepository);
         addTearDown(sitesCubit.close);
         sitesCubit.emit(

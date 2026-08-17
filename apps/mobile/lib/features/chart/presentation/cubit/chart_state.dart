@@ -3,12 +3,12 @@ part of 'chart_cubit.dart';
 @freezed
 abstract class ChartState with _$ChartState {
   const factory ChartState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    @Default(<ChartPoint>[]) final List<ChartPoint> points,
-    final String? errorMessage,
-    @Default(false) final bool zoomEnabled,
-    @Default(ChartDataSource.unknown) final ChartDataSource dataSource,
-    final AppError? lastError,
+    @Default(ViewStatus.initial) ViewStatus status,
+    @Default(<ChartPoint>[]) List<ChartPoint> points,
+    String? errorMessage,
+    @Default(false) bool zoomEnabled,
+    @Default(ChartDataSource.unknown) ChartDataSource dataSource,
+    AppError? lastError,
   }) = _ChartState;
 
   const ChartState._();

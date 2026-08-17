@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'platform_adaptive.dart';
 
@@ -7,21 +7,21 @@ class PlatformAdaptiveInputs {
   const PlatformAdaptiveInputs._();
 
   static Widget textField({
-    required final BuildContext context,
-    required final TextEditingController controller,
-    final FocusNode? focusNode,
-    final String? placeholder,
-    final String? hintText,
-    final void Function(String)? onChanged,
-    final void Function(String)? onSubmitted,
-    final TextInputType? keyboardType,
-    final bool obscureText = false,
-    final int? maxLines = 1,
-    final bool enabled = true,
-    final bool autofocus = false,
-    final EdgeInsetsGeometry? padding,
-    final InputDecoration? decoration,
-    final TextStyle? style,
+    required BuildContext context,
+    required TextEditingController controller,
+    FocusNode? focusNode,
+    String? placeholder,
+    String? hintText,
+    void Function(String)? onChanged,
+    void Function(String)? onSubmitted,
+    TextInputType? keyboardType,
+    bool obscureText = false,
+    int? maxLines = 1,
+    bool enabled = true,
+    bool autofocus = false,
+    EdgeInsetsGeometry? padding,
+    InputDecoration? decoration,
+    TextStyle? style,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return CupertinoTextField(
@@ -56,19 +56,17 @@ class PlatformAdaptiveInputs {
   }
 
   static Widget checkbox({
-    required final BuildContext context,
-    required final bool? value,
-    required final ValueChanged<bool?>? onChanged,
-    final Color? activeColor,
-    final Color? checkColor,
+    required BuildContext context,
+    required bool? value,
+    required ValueChanged<bool?>? onChanged,
+    Color? activeColor,
+    Color? checkColor,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       final theme = Theme.of(context);
       return CupertinoCheckbox(
         value: value ?? false,
-        onChanged: onChanged != null
-            ? (final newValue) => onChanged(newValue)
-            : null,
+        onChanged: onChanged != null ? (newValue) => onChanged(newValue) : null,
         activeColor: activeColor ?? theme.colorScheme.primary,
       );
     }
@@ -82,14 +80,14 @@ class PlatformAdaptiveInputs {
   }
 
   static Widget listTile({
-    required final BuildContext context,
-    required final Widget title,
-    final Widget? subtitle,
-    final Widget? leading,
-    final Widget? trailing,
-    final VoidCallback? onTap,
-    final bool selected = false,
-    final Color? selectedTileColor,
+    required BuildContext context,
+    required Widget title,
+    Widget? subtitle,
+    Widget? leading,
+    Widget? trailing,
+    VoidCallback? onTap,
+    bool selected = false,
+    Color? selectedTileColor,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       final theme = Theme.of(context);

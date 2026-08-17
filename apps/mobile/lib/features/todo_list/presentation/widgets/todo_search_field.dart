@@ -1,13 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
-double _todoSearchFontSize(final BuildContext context) =>
+double _todoSearchFontSize(BuildContext context) =>
     context.responsiveBodySize.clamp(14.0, 22.0);
 
 class TodoSearchField extends StatefulWidget {
@@ -33,7 +33,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
@@ -55,7 +55,7 @@ class _TodoSearchFieldState extends State<TodoSearchField> {
 
     final Widget textField = TextField(
       controller: _controller,
-      onChanged: (final value) {
+      onChanged: (value) {
         setState(() {});
         // Debouncing is handled in the cubit
         context.cubit<TodoListCubit>().setSearchQuery(value);

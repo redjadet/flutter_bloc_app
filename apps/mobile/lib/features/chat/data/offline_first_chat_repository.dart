@@ -35,12 +35,12 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
 
   @override
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   }) async {
     final String convoId =
         conversationId ?? _syncOperationFactory.generateConversationId();
@@ -88,15 +88,15 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   }
 
   Future<void> _enqueueFailedSend({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    required final String conversationId,
-    required final String clientMessageId,
-    required final DateTime createdAt,
-    required final Object error,
-    final String? model,
-    final StackTrace? stackTrace,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    required String conversationId,
+    required String clientMessageId,
+    required DateTime createdAt,
+    required Object error,
+    String? model,
+    StackTrace? stackTrace,
   }) async {
     AppLogger.error(
       'OfflineFirstChatRepository.sendMessage failed, queuing operation',
@@ -116,7 +116,7 @@ class OfflineFirstChatRepository implements ChatRepository, SyncableRepository {
   }
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async {
+  Future<void> processOperation(SyncOperation operation) async {
     final ChatSyncPayload payload = _syncOperationFactory.readPayload(
       operation,
     );

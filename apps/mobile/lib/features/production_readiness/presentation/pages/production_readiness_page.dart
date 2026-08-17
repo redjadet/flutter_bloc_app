@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc_app/features/production_readiness/presentation/cubi
 import 'package:flutter_bloc_app/features/production_readiness/presentation/cubit/production_readiness_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 part 'production_readiness_page.part.dart';
@@ -22,12 +22,12 @@ class ProductionReadinessPage extends StatelessWidget {
   final bool showSimulatedNotificationButton;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.productionReadinessPageTitle,
       body: BlocBuilder<ProductionReadinessCubit, ProductionReadinessState>(
-        builder: (final context, final state) {
+        builder: (context, state) {
           if (state.status == ProductionReadinessStatus.loading ||
               state.status == ProductionReadinessStatus.initial) {
             return const Center(child: CircularProgressIndicator());
@@ -100,7 +100,7 @@ class ProductionReadinessPage extends StatelessWidget {
                 _ConsentCard(
                   key: const ValueKey('production-readiness-consent-card'),
                   enabled: state.analyticsConsentEnabled,
-                  onChanged: (final value) => context
+                  onChanged: (value) => context
                       .read<ProductionReadinessCubit>()
                       .setAnalyticsConsent(enabled: value),
                 ),

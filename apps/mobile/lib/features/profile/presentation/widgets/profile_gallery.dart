@@ -1,7 +1,7 @@
 import 'package:design_system/responsive.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/profile/domain/profile_user.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileGallery extends StatelessWidget {
   const ProfileGallery({required this.images, super.key});
@@ -9,7 +9,7 @@ class ProfileGallery extends StatelessWidget {
   final List<ProfileImage> images;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gridLayout = context.calculateGridLayout(
       mobileColumns: 2,
@@ -60,7 +60,7 @@ class _GalleryColumn extends StatelessWidget {
   final double spacing;
 
   @override
-  Widget build(final BuildContext context) => Column(
+  Widget build(BuildContext context) => Column(
     children: [
       for (int i = 0; i < images.length; i++) ...[
         ClipRect(

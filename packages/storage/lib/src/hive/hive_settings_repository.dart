@@ -47,7 +47,7 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
   /// Loads the value from Hive with validation and error handling.
   Future<T?> load() async => StorageGuard.run<T?>(
     logContext: '$runtimeType.load',
-    action: () async => runWithBox((final box) async {
+    action: () async => runWithBox((box) async {
       final dynamic storedValue = box.get(key);
 
       // Handle null/empty values
@@ -100,9 +100,9 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
   );
 
   /// Saves the value to Hive.
-  Future<void> save(final T? value) async => StorageGuard.run<void>(
+  Future<void> save(T? value) async => StorageGuard.run<void>(
     logContext: '$runtimeType.save',
-    action: () async => runWithBox((final box) async {
+    action: () async => runWithBox((box) async {
       if (value == null) {
         await box.delete(key);
       } else {
@@ -114,8 +114,8 @@ abstract class HiveSettingsRepository<T> extends HiveRepositoryBase {
   );
 
   Future<void> _cleanupInvalidOwnedValue(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     final dynamic storedValue;
     try {

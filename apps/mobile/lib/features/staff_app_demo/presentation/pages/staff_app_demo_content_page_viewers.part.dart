@@ -6,7 +6,7 @@ class _ContentTile extends StatelessWidget {
   final StaffDemoContentItem item;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final icon = switch (item.type) {
       StaffDemoContentType.pdf => Icons.picture_as_pdf,
       StaffDemoContentType.video => Icons.play_circle,
@@ -60,7 +60,7 @@ class _PdfViewerPage extends StatelessWidget {
   final Uri url;
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text(title)),
     body: PdfViewer.uri(url),
   );
@@ -92,7 +92,7 @@ class _VideoViewerPageState extends State<_VideoViewerPage> {
             setState(() {});
             unawaited(_controller.play());
           })
-          .catchError((final Object error) {
+          .catchError((Object error) {
             if (!mounted) return;
             setState(() {
               _initializationError = error;
@@ -108,7 +108,7 @@ class _VideoViewerPageState extends State<_VideoViewerPage> {
   }
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: Text(widget.title)),
     body: Center(
       child: _initializationError != null

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 /// Base skeleton widget that provides common skeleton behavior and styling.
@@ -22,7 +22,7 @@ class SkeletonBase extends StatelessWidget {
   final String semanticLabel;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 

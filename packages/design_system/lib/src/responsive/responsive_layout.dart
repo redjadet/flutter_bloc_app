@@ -40,7 +40,7 @@ extension ResponsiveLayoutContext on BuildContext {
   EdgeInsets get pageHorizontalPaddingInsets =>
       EdgeInsets.symmetric(horizontal: pageHorizontalPadding);
 
-  EdgeInsets pageHorizontalPaddingWithVertical(final double vertical) =>
+  EdgeInsets pageHorizontalPaddingWithVertical(double vertical) =>
       EdgeInsets.symmetric(
         horizontal: pageHorizontalPadding,
         vertical: vertical,
@@ -82,7 +82,7 @@ extension ResponsiveLayoutContext on BuildContext {
     vertical: _scaledHeight(this, mobile: 20, tablet: 24, desktop: 24),
   );
 
-  EdgeInsets responsiveSheetPadding({final double extraBottom = 0}) =>
+  EdgeInsets responsiveSheetPadding({double extraBottom = 0}) =>
       EdgeInsets.fromLTRB(
         responsiveHorizontalGapL,
         responsiveGapM,

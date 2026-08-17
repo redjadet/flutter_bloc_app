@@ -10,14 +10,14 @@ part 'graphql_demo_state.freezed.dart';
 @freezed
 abstract class GraphqlDemoState with _$GraphqlDemoState {
   const factory GraphqlDemoState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    @Default(<GraphqlCountry>[]) final List<GraphqlCountry> countries,
-    @Default(<GraphqlContinent>[]) final List<GraphqlContinent> continents,
-    final String? activeContinentCode,
-    final String? errorMessage,
-    final GraphqlDemoErrorType? errorType,
-    final AppError? lastError,
-    @Default(GraphqlDataSource.unknown) final GraphqlDataSource dataSource,
+    @Default(ViewStatus.initial) ViewStatus status,
+    @Default(<GraphqlCountry>[]) List<GraphqlCountry> countries,
+    @Default(<GraphqlContinent>[]) List<GraphqlContinent> continents,
+    String? activeContinentCode,
+    String? errorMessage,
+    GraphqlDemoErrorType? errorType,
+    AppError? lastError,
+    @Default(GraphqlDataSource.unknown) GraphqlDataSource dataSource,
   }) = _GraphqlDemoState;
 
   const GraphqlDemoState._();

@@ -173,7 +173,7 @@ class _FakeVocabularyRepository implements VocabularyRepository {
   }
 
   @override
-  List<VocabularyItem> getWordsByTopic(final String topicId) {
+  List<VocabularyItem> getWordsByTopic(String topicId) {
     if (throwOnGetWordsByTopic) {
       throw StateError('getWordsByTopic failed');
     }
@@ -188,7 +188,7 @@ class _FakeAudioPlaybackService implements AudioPlaybackService {
   final bool throwOnSpeak;
 
   @override
-  Future<void> speak(final String text) async {
+  Future<void> speak(String text) async {
     if (throwOnSpeak) {
       throw StateError('speak failed');
     }

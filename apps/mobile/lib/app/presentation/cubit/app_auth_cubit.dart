@@ -31,7 +31,7 @@ class AppAuthCubit extends Cubit<AppAuthState>
     _authSubscription = registerSubscription(
       _authRepository.authStateChanges.listen(
         _handleAuthUserChanged,
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error('AppAuthCubit.authStateChanges', error, stackTrace);
         },
         cancelOnError: false,
@@ -42,7 +42,7 @@ class AppAuthCubit extends Cubit<AppAuthState>
     _invalidationSubscription = registerSubscription(
       _sessionCoordinator.invalidationEvents.listen(
         _handleInvalidation,
-        onError: (final Object error, final StackTrace stackTrace) {
+        onError: (Object error, StackTrace stackTrace) {
           AppLogger.error(
             'AppAuthCubit.invalidationEvents',
             error,
@@ -60,7 +60,7 @@ class AppAuthCubit extends Cubit<AppAuthState>
     emit(const AppAuthState.unauthenticated());
   }
 
-  void _handleInvalidation(final SessionInvalidationEvent event) {
+  void _handleInvalidation(SessionInvalidationEvent event) {
     if (isClosed) return;
     if (event.provider != AuthProviderKind.firebase) {
       return;
@@ -69,7 +69,7 @@ class AppAuthCubit extends Cubit<AppAuthState>
     emit(AppAuthState.sessionExpired(event.reason));
   }
 
-  void _handleAuthUserChanged(final AuthUser? user) {
+  void _handleAuthUserChanged(AuthUser? user) {
     if (isClosed) return;
     if (user != null) {
       _stickyExpiredReason = null;

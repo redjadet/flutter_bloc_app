@@ -4,7 +4,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
   GoRoute(
     path: AppRoutes.settingsPath,
     name: AppRoutes.settings,
-    builder: (final context, final state) => AppRouteAuthGate(
+    builder: (context, state) => AppRouteAuthGate(
       policy: AppRoutePolicies.settings,
       getCurrentUser: () => getIt<AuthRepository>().currentUser,
       authStateChanges: getIt<AuthRepository>().authStateChanges,
@@ -13,7 +13,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
         appInfoRepository: getIt<AppInfoRepository>(),
         authRepository: getIt<AuthRepository>(),
         showQaExtras: FlavorManager.I.isDev || FlavorManager.I.isQa,
-        buildQaExtras: (final ctx) => <Widget>[
+        buildQaExtras: (ctx) => <Widget>[
           GraphqlCacheControlsSection(
             key: const ValueKey('settings-qa-graphql-cache-controls'),
             cacheRepository: getIt<GraphqlCacheClearPort>(),
@@ -57,7 +57,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
   GoRoute(
     path: AppRoutes.manageAccountPath,
     name: AppRoutes.manageAccount,
-    builder: (final context, final state) => AppRouteAuthGate(
+    builder: (context, state) => AppRouteAuthGate(
       policy: AppRoutePolicies.manageAccount,
       getCurrentUser: () => getIt<AuthRepository>().currentUser,
       authStateChanges: getIt<AuthRepository>().authStateChanges,
@@ -68,7 +68,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
   GoRoute(
     path: AppRoutes.profilePath,
     name: AppRoutes.profile,
-    builder: (final context, final state) => AppRouteAuthGate(
+    builder: (context, state) => AppRouteAuthGate(
       policy: AppRoutePolicies.profile,
       getCurrentUser: () => getIt<AuthRepository>().currentUser,
       authStateChanges: getIt<AuthRepository>().authStateChanges,
@@ -77,7 +77,7 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
         create: () => ProfileCubit(
           repository: getIt<ProfileRepository>(),
         ),
-        init: (final cubit) => cubit.loadProfile(),
+        init: (cubit) => cubit.loadProfile(),
         child: const ProfilePage(),
       ),
     ),
@@ -85,17 +85,17 @@ List<RouteBase> _coreRoutesSettingsAndProfile() => <RouteBase>[
   GoRoute(
     path: AppRoutes.registerPath,
     name: AppRoutes.register,
-    builder: (final context, final state) => const RegisterPage(),
+    builder: (context, state) => const RegisterPage(),
   ),
   GoRoute(
     path: AppRoutes.loggedOutPath,
     name: AppRoutes.loggedOut,
-    builder: (final context, final state) => const LoggedOutPage(),
+    builder: (context, state) => const LoggedOutPage(),
   ),
   GoRoute(
     path: AppRoutes.libraryDemoPath,
     name: AppRoutes.libraryDemo,
-    builder: (final context, final state) => BlocProvider<ScapesCubit>(
+    builder: (context, state) => BlocProvider<ScapesCubit>(
       create: (_) => ScapesCubit(
         repository: getIt<ScapesRepository>(),
         timerService: getIt<TimerService>(),

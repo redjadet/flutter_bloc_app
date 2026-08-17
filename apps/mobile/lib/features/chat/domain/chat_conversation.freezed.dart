@@ -95,8 +95,7 @@ extension ChatConversationPatterns on ChatConversation {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatConversation value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ChatConversation value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _ChatConversation() when $default != null:
 return $default(_that);case _:
@@ -117,8 +116,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatConversation value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ChatConversation value)  $default,){final _that = this;
 switch (_that) {
 case _ChatConversation():
 return $default(_that);case _:
@@ -138,8 +136,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatConversation value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ChatConversation value)?  $default,){final _that = this;
 switch (_that) {
 case _ChatConversation() when $default != null:
 return $default(_that);case _:
@@ -215,7 +212,7 @@ return $default(_that.id,_that.createdAt,_that.updatedAt,_that.messages,_that.pa
 
 
 class _ChatConversation extends ChatConversation {
-  const _ChatConversation({required this.id, required this.createdAt, required this.updatedAt, final  List<ChatMessage> messages = const <ChatMessage>[], final  List<String> pastUserInputs = const <String>[], final  List<String> generatedResponses = const <String>[], this.model, this.lastSyncedAt, this.synchronized = true, this.changeId}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
+  const _ChatConversation({required this.id, required this.createdAt, required this.updatedAt, List<ChatMessage> messages = const <ChatMessage>[], List<String> pastUserInputs = const <String>[], List<String> generatedResponses = const <String>[], this.model, this.lastSyncedAt, this.synchronized = true, this.changeId}): _messages = messages,_pastUserInputs = pastUserInputs,_generatedResponses = generatedResponses,super._();
   
 
 @override final  String id;

@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/profile/profile.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 const _testUser = ProfileUser(
   name: 'Jane',
@@ -23,8 +24,8 @@ const _testUser = ProfileUser(
 );
 
 Future<void> _pumpProfilePage(
-  final WidgetTester tester, {
-  required final ProfileRepository repository,
+  WidgetTester tester, {
+  required ProfileRepository repository,
   SyncStatusCubit? syncStatusCubit,
 }) async {
   final SyncStatusCubit cubit =
@@ -55,13 +56,13 @@ Future<void> _pumpProfilePage(
   await tester.pumpWidget(
     MaterialApp.router(
       routerConfig: router,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
     ),
   );
 }
 
-Future<void> _resolveAsyncWork(final WidgetTester tester) async {
+Future<void> _resolveAsyncWork(WidgetTester tester) async {
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 100));
 }
@@ -104,7 +105,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
     await _controller.close();
   }
 
-  void emit(final NetworkStatus newStatus) {
+  void emit(NetworkStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
@@ -157,9 +158,9 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
-  void emit(final SyncStatus newStatus) {
+  void emit(SyncStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
@@ -167,7 +168,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 
 void main() {
   group('ProfilePage', () {
-    testWidgets('renders loading then profile content', (final tester) async {
+    testWidgets('renders loading then profile content', (tester) async {
       await _pumpProfilePage(
         tester,
         repository: const _SuccessProfileRepository(),
@@ -190,7 +191,7 @@ void main() {
       expect(find.text('SEE MORE'), findsOneWidget);
     });
 
-    testWidgets('displays profile sections', (final tester) async {
+    testWidgets('displays profile sections', (tester) async {
       await _pumpProfilePage(
         tester,
         repository: const _SuccessProfileRepository(),
@@ -203,7 +204,7 @@ void main() {
       expect(find.byType(ProfileBottomNav), findsOneWidget);
     });
 
-    testWidgets('shows retry view when loading fails', (final tester) async {
+    testWidgets('shows retry view when loading fails', (tester) async {
       final repository = _FlakyProfileRepository();
       await _pumpProfilePage(tester, repository: repository);
       await _resolveAsyncWork(tester);

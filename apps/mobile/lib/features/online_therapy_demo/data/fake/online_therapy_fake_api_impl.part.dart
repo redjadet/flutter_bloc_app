@@ -31,8 +31,8 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   final Map<String, int> _messageSendAttemptsByConversationId = <String, int>{};
 
   Future<TherapyUser> login({
-    required final String email,
-    required final TherapyRole role,
+    required String email,
+    required TherapyRole role,
   }) async {
     await _simulateNetwork();
     final user = _userForRole(role, email: email);
@@ -51,9 +51,9 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<List<TherapistProfile>> listTherapists({
-    final String? query,
-    final String? specialty,
-    final String? language,
+    String? query,
+    String? specialty,
+    String? language,
   }) async {
     await _simulateNetwork();
     _requireCurrentUser();
@@ -83,7 +83,7 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<TherapistProfile> getTherapist({
-    required final String therapistId,
+    required String therapistId,
   }) async {
     await _simulateNetwork();
     _requireCurrentUser();
@@ -91,8 +91,8 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<List<AvailabilitySlot>> listAvailability({
-    required final String therapistId,
-    required final DateTime date,
+    required String therapistId,
+    required DateTime date,
   }) async {
     await _simulateNetwork();
     _requireCurrentUser();
@@ -107,9 +107,9 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<Appointment> createAppointment({
-    required final String therapistId,
-    required final DateTime startAt,
-    required final DateTime endAt,
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
@@ -172,8 +172,8 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<Appointment> cancelAppointment({
-    required final String appointmentId,
-    required final String reason,
+    required String appointmentId,
+    required String reason,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
@@ -231,7 +231,7 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<List<Message>> listMessages({
-    required final String conversationId,
+    required String conversationId,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
@@ -243,8 +243,8 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
   }
 
   Future<Message> sendMessage({
-    required final String conversationId,
-    required final String body,
+    required String conversationId,
+    required String body,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
@@ -277,7 +277,7 @@ class OnlineTherapyFakeApi implements OnlineTherapyNetworkModeController {
     return message;
   }
 
-  Future<Message> retryMessage({required final String messageId}) async {
+  Future<Message> retryMessage({required String messageId}) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
     final idx = _messages.indexWhere((m) => m.id == messageId);

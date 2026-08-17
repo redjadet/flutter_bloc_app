@@ -3,7 +3,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 extension AppPlatformKindL10n on AppPlatformKind {
-  String label(final AppLocalizations l10n) => switch (this) {
+  String label(AppLocalizations l10n) => switch (this) {
     AppPlatformKind.android => l10n.nativePlatformShowcasePlatformAndroid,
     AppPlatformKind.ios => l10n.nativePlatformShowcasePlatformIos,
     AppPlatformKind.macos => l10n.nativePlatformShowcasePlatformMacos,
@@ -14,7 +14,7 @@ extension AppPlatformKindL10n on AppPlatformKind {
 }
 
 extension NativeCapabilityKindL10n on NativeCapabilityKind {
-  String title(final AppLocalizations l10n) => switch (this) {
+  String title(AppLocalizations l10n) => switch (this) {
     NativeCapabilityKind.nativeViewEmbedding =>
       l10n.nativePlatformShowcaseCapabilityNativeViewEmbeddingTitle,
     NativeCapabilityKind.platformPackageManager =>
@@ -27,7 +27,7 @@ extension NativeCapabilityKindL10n on NativeCapabilityKind {
       l10n.nativePlatformShowcaseCapabilityAdaptiveGesturesTitle,
   };
 
-  String summary(final AppLocalizations l10n) => switch (this) {
+  String summary(AppLocalizations l10n) => switch (this) {
     NativeCapabilityKind.nativeViewEmbedding =>
       l10n.nativePlatformShowcaseCapabilityNativeViewEmbeddingSummary,
     NativeCapabilityKind.platformPackageManager =>

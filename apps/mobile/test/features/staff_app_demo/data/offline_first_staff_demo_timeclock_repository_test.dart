@@ -2,19 +2,19 @@
 
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auth/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/offline_first_staff_demo_timeclock_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_open_entry_snapshot.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_shift_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_timeclock_local_store.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_platform_interface/geolocator_platform_interface.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:storage/storage.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -38,19 +38,19 @@ class _InMemoryTimeclockLocalStore implements StaffDemoTimeclockLocalStore {
   StaffDemoOpenEntrySnapshot? _open;
 
   @override
-  Future<void> clearOpenEntry({required final String userId}) async {
+  Future<void> clearOpenEntry({required String userId}) async {
     _open = null;
   }
 
   @override
   Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
-    required final String userId,
+    required String userId,
   }) async => _open;
 
   @override
   Future<void> saveOpenEntry({
-    required final String userId,
-    required final StaffDemoOpenEntrySnapshot snapshot,
+    required String userId,
+    required StaffDemoOpenEntrySnapshot snapshot,
   }) async {
     _open = snapshot;
   }
@@ -73,7 +73,7 @@ class _FakeGeolocatorPlatform extends GeolocatorPlatform {
 
   @override
   Future<Position> getCurrentPosition({
-    final LocationSettings? locationSettings,
+    LocationSettings? locationSettings,
   }) async {
     final limit = locationSettings?.timeLimit;
     if (limit == null) {
@@ -84,7 +84,7 @@ class _FakeGeolocatorPlatform extends GeolocatorPlatform {
   }
 }
 
-Position _samplePosition({final double accuracy = 12}) => Position(
+Position _samplePosition({double accuracy = 12}) => Position(
   latitude: 41.0,
   longitude: 29.0,
   timestamp: DateTime.utc(2026, 1, 1),
@@ -140,14 +140,13 @@ void main() {
 
     when(() => authRepository.currentUser).thenReturn(user);
     when(() => registry.register(any())).thenReturn(null);
-    when(() => pendingSyncRepository.enqueue(any())).thenAnswer((
-      final Invocation inv,
-    ) async {
-      final SyncOperation operation =
-          inv.positionalArguments[0] as SyncOperation;
-      enqueuedOperations.add(operation);
-      return operation;
-    });
+    when(() => pendingSyncRepository.enqueue(any()))
+        .thenAnswer((Invocation inv) async {
+          final SyncOperation operation =
+              inv.positionalArguments[0] as SyncOperation;
+          enqueuedOperations.add(operation);
+          return operation;
+        });
 
     final shiftRepository = _MockStaffDemoShiftRepository();
     final siteRepository = _MockStaffDemoSiteRepository();

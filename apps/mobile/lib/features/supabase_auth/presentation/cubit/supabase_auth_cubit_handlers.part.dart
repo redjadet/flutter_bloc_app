@@ -13,7 +13,7 @@ mixin _SupabaseAuthCubitHandlers
     StreamSubscription<SessionInvalidationEvent>? value,
   );
 
-  void _handleInvalidationEvent(final SessionInvalidationEvent event) {
+  void _handleInvalidationEvent(SessionInvalidationEvent event) {
     if (isClosed) return;
     if (event.provider != AuthProviderKind.supabase) {
       return;
@@ -22,9 +22,9 @@ mixin _SupabaseAuthCubitHandlers
   }
 
   Future<void> _runAuthAction({
-    required final String logContext,
-    required final Future<void> Function() operation,
-    final void Function()? onSuccess,
+    required String logContext,
+    required Future<void> Function() operation,
+    void Function()? onSuccess,
   }) async {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () async {
@@ -44,7 +44,7 @@ mixin _SupabaseAuthCubitHandlers
       logContext: logContext,
       isAlive: () => !isClosed,
       onError: (_) {},
-      onErrorWithDetails: (final error, final stackTrace) {
+      onErrorWithDetails: (error, stackTrace) {
         _emitActionError(
           context: logContext,
           error: error,
@@ -66,7 +66,7 @@ mixin _SupabaseAuthCubitHandlers
     emit(const SupabaseAuthState.unauthenticated());
   }
 
-  void _handleAuthStateChanged(final AuthUser? user) {
+  void _handleAuthStateChanged(AuthUser? user) {
     if (isClosed) return;
 
     if (user != null) {
@@ -85,16 +85,16 @@ mixin _SupabaseAuthCubitHandlers
     emit(const SupabaseAuthState.unauthenticated());
   }
 
-  void _handleAuthStateError(final Object error, final StackTrace stackTrace) {
+  void _handleAuthStateError(Object error, StackTrace stackTrace) {
     AppLogger.error('SupabaseAuthCubit.authStateChanges', error, stackTrace);
     if (isClosed) return;
     emit(SupabaseAuthState.error(_mapErrorMessage(error)));
   }
 
   void _emitActionError({
-    required final String context,
-    required final Object error,
-    required final StackTrace? stackTrace,
+    required String context,
+    required Object error,
+    required StackTrace? stackTrace,
   }) {
     final bool isExpectedAuthFailure =
         error is SupabaseAuthException &&
@@ -111,7 +111,7 @@ mixin _SupabaseAuthCubitHandlers
     emit(SupabaseAuthState.error(_mapErrorMessage(error)));
   }
 
-  String _mapErrorMessage(final Object error) {
+  String _mapErrorMessage(Object error) {
     if (error is SupabaseAuthException) {
       switch (error.code) {
         case SupabaseAuthErrorCode.invalidCredentials:

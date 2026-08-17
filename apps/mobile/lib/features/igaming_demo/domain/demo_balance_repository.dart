@@ -5,8 +5,8 @@ import 'package:flutter_bloc_app/features/igaming_demo/domain/demo_balance.dart'
 abstract class DemoBalanceRepository {
   Future<DemoBalance> getBalance();
 
-  Future<void> setBalance(final DemoBalance balance);
+  Future<void> setBalance(DemoBalance balance);
 
   /// Applies a delta (positive or negative); implementor clamps to >= 0.
-  Future<void> updateBalance(final int deltaUnits);
+  Future<void> updateBalance(int deltaUnits);
 }

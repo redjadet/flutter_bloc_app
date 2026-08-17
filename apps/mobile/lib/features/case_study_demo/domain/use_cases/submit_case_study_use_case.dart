@@ -10,9 +10,9 @@ import 'package:ilkersevim_retry/ilkersevim_retry.dart';
 /// Multi-port submit: mock upload → optional remote clips/finalize → local history.
 class SubmitCaseStudyUseCase {
   const SubmitCaseStudyUseCase({
-    required final CaseStudyUploadRepository uploadRepository,
-    required final CaseStudyRemoteRepository remoteRepository,
-    required final CaseStudyRemoteDeleteRepository remoteDeleteRepository,
+    required CaseStudyUploadRepository uploadRepository,
+    required CaseStudyRemoteRepository remoteRepository,
+    required CaseStudyRemoteDeleteRepository remoteDeleteRepository,
     required this._persistSubmission,
   }) : _upload = uploadRepository,
        _remote = remoteRepository,
@@ -24,12 +24,12 @@ class SubmitCaseStudyUseCase {
   final PersistCaseStudySubmissionUseCase _persistSubmission;
 
   Future<SubmitCaseStudyOutcome> call({
-    required final String userId,
-    required final CaseStudyDraft draft,
-    required final bool remoteSubmit,
-    required final RetryDelay retryDelay,
-    final void Function(double progress)? onProgress,
-    final DateTime Function()? now,
+    required String userId,
+    required CaseStudyDraft draft,
+    required bool remoteSubmit,
+    required RetryDelay retryDelay,
+    void Function(double progress)? onProgress,
+    DateTime Function()? now,
   }) async {
     final CaseStudyCaseType? caseType = draft.caseType;
     if (caseType == null || !draft.isComplete) {
@@ -53,7 +53,7 @@ class SubmitCaseStudyUseCase {
       if (remoteSubmit) {
         beganRemoteCaseStudyUpload = true;
         final int clipTotal = draft.answers.values
-            .where((final path) => path.isNotEmpty)
+            .where((path) => path.isNotEmpty)
             .length;
         final int totalSteps = clipTotal + 2;
         var done = 0;

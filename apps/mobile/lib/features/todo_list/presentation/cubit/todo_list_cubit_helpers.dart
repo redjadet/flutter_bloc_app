@@ -5,8 +5,8 @@ class _TodoListCubitHelpers {
   _TodoListCubitHelpers._();
 
   /// Returns the maximum value in [order], or -1 if empty.
-  static int maxOrderValue(final Map<String, int> order) =>
-      order.values.fold(-1, (final currentMax, final value) {
+  static int maxOrderValue(Map<String, int> order) =>
+      order.values.fold(-1, (currentMax, value) {
         if (value > currentMax) {
           return value;
         }
@@ -15,12 +15,12 @@ class _TodoListCubitHelpers {
 
   /// saves an item into a list, maintaining sort order by updatedAt descending.
   static List<TodoItem> saveInList(
-    final List<TodoItem> items,
-    final TodoItem item,
+    List<TodoItem> items,
+    TodoItem item,
   ) {
     final List<TodoItem> updated = List<TodoItem>.from(items);
     final int index = updated.indexWhere(
-      (final current) => current.id == item.id,
+      (current) => current.id == item.id,
     );
     if (index == -1) {
       updated.add(item);
@@ -28,7 +28,7 @@ class _TodoListCubitHelpers {
       updated[index] = item;
     }
     // Sort by updatedAt descending (most recent first)
-    updated.sort((final a, final b) => b.updatedAt.compareTo(a.updatedAt));
+    updated.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return updated;
   }
 }

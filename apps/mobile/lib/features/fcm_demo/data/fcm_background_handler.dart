@@ -10,7 +10,7 @@ import 'package:flutter_bloc_app/firebase_options.dart';
 /// the app is bootstrapped. Runs in a separate isolate; do not
 /// access GetIt or Flutter bindings here.
 @pragma('vm:entry-point')
-Future<void> fcmBackgroundHandler(final RemoteMessage message) async {
+Future<void> fcmBackgroundHandler(RemoteMessage message) async {
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,

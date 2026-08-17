@@ -1,10 +1,10 @@
 part of 'flow_scenarios.dart';
 
 Future<void> _scrollDestinationIntoView(
-  final WidgetTester tester,
-  final Finder destination, {
-  final double delta = 240,
-  final double edgeNudge = -120,
+  WidgetTester tester,
+  Finder destination, {
+  double delta = 240,
+  double edgeNudge = -120,
 }) async {
   final Finder scrollableAncestor = find.ancestor(
     of: destination,
@@ -31,8 +31,8 @@ Future<void> _scrollDestinationIntoView(
 }
 
 Future<bool> _tapHitTestable(
-  final WidgetTester tester,
-  final Finder destination,
+  WidgetTester tester,
+  Finder destination,
 ) async {
   final Finder hittable = destination.hitTestable();
   if (!tester.any(hittable)) {
@@ -44,8 +44,8 @@ Future<bool> _tapHitTestable(
 }
 
 Future<void> _openExampleDestination(
-  final WidgetTester tester,
-  final String destinationLabel,
+  WidgetTester tester,
+  String destinationLabel,
 ) async {
   await pumpUntilFound(tester, find.byTooltip('Open example page'));
   await tapAndPump(tester, find.byTooltip('Open example page'));
@@ -66,15 +66,15 @@ Future<void> _openExampleDestination(
 }
 
 Future<void> _openOverflowDestination(
-  final WidgetTester tester,
-  final String destinationLabel,
+  WidgetTester tester,
+  String destinationLabel,
 ) async {
   // Material uses PopupMenuEntry; Cupertino (iOS) uses CupertinoActionSheet.
   // Lower PopupMenu entries on small Android AVDs miss intermittently under
   // suite load. Retry only while the overflow surface stays open after a tap.
   const int maxAttempts = 3;
   final Finder menuEntries = find.byWidgetPredicate(
-    (final widget) =>
+    (widget) =>
         widget is PopupMenuEntry || widget is CupertinoActionSheetAction,
   );
   for (var attempt = 0; attempt < maxAttempts; attempt++) {
@@ -117,7 +117,7 @@ Future<void> _openOverflowDestination(
   );
 }
 
-Future<void> _pageBack(final WidgetTester tester) async {
+Future<void> _pageBack(WidgetTester tester) async {
   final Finder cupertinoBack = find.byType(CupertinoNavigationBarBackButton);
   final Finder materialBack = find.byIcon(Icons.arrow_back);
   if (tester.any(cupertinoBack)) {
@@ -133,15 +133,15 @@ Future<void> _pageBack(final WidgetTester tester) async {
 }
 
 Finder _findAdaptiveButtonByText(
-  final String text, {
-  final Finder? scope,
+  String text, {
+  Finder? scope,
 }) => find
     .ancestor(
       of: scope == null
           ? find.text(text)
           : find.descendant(of: scope, matching: find.text(text)),
       matching: find.byWidgetPredicate(
-        (final widget) =>
+        (widget) =>
             widget is CupertinoButton ||
             widget is CupertinoDialogAction ||
             widget is ElevatedButton ||
@@ -155,13 +155,13 @@ Finder _findAdaptiveButtonByText(
     .first;
 
 Finder _findDialog() => find.byWidgetPredicate(
-  (final widget) => widget is AlertDialog || widget is CupertinoAlertDialog,
+  (widget) => widget is AlertDialog || widget is CupertinoAlertDialog,
 );
 
 Finder _findDialogTextField() {
   final Finder dialog = _findDialog();
   final Finder textField = find.byWidgetPredicate(
-    (final widget) => widget is TextField || widget is CupertinoTextField,
+    (widget) => widget is TextField || widget is CupertinoTextField,
   );
   return find.descendant(of: dialog, matching: textField).first;
 }
@@ -169,10 +169,10 @@ Finder _findDialogTextField() {
 Finder _findDialogCheckbox() {
   final Finder dialog = _findDialog();
   final Finder checkbox = find.byWidgetPredicate(
-    (final widget) => widget is Checkbox || widget is CupertinoCheckbox,
+    (widget) => widget is Checkbox || widget is CupertinoCheckbox,
   );
   return find.descendant(of: dialog, matching: checkbox).first;
 }
 
-Finder _findDialogButtonByText(final String text) =>
+Finder _findDialogButtonByText(String text) =>
     _findAdaptiveButtonByText(text, scope: _findDialog());

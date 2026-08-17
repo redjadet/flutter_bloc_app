@@ -1,6 +1,6 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/igaming_demo/presentation/widgets/slot_symbol_text_style.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'slot_machine_spinner_reel.part.dart';
 
@@ -71,7 +71,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
   }
 
   @override
-  void didUpdateWidget(final SlotMachineSpinner oldWidget) {
+  void didUpdateWidget(SlotMachineSpinner oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.staticProgress == null && widget.staticProgress != null) {
       _controller?.dispose();
@@ -88,7 +88,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
     super.dispose();
   }
 
-  Widget _buildReelsAt(final double progress) {
+  Widget _buildReelsAt(double progress) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final textTheme = theme.textTheme;
@@ -98,7 +98,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List<Widget>.generate(3, (final reelIndex) {
+      children: List<Widget>.generate(3, (reelIndex) {
         final double reelOffset;
         if (useTargets) {
           final int idx = target[reelIndex].clamp(
@@ -132,7 +132,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double? staticProgress = widget.staticProgress;
     if (staticProgress != null) {
       return _buildReelsAt(staticProgress);
@@ -143,7 +143,7 @@ class _SlotMachineSpinnerState extends State<SlotMachineSpinner>
     }
     return AnimatedBuilder(
       animation: animation,
-      builder: (final context, final _) => _buildReelsAt(animation.value),
+      builder: (context, _) => _buildReelsAt(animation.value),
     );
   }
 }

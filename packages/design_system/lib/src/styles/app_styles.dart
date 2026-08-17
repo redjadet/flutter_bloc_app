@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../theme/mix_app_theme.dart';

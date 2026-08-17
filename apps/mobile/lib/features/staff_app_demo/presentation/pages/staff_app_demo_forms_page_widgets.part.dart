@@ -6,7 +6,7 @@ class _StatusBanner extends StatelessWidget {
   final StaffDemoFormsState state;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final String? message = staffDemoFormsStatusBannerMessage(l10n, state);
     if (message == null) return const SizedBox.shrink();
@@ -40,7 +40,7 @@ class _AvailabilityCardState extends State<_AvailabilityCard> {
   final Map<String, bool> _availability = <String, bool>{};
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final start = StaffDemoWeekCalendar.weekStartUtc();
     final days = StaffDemoWeekCalendar.weekDaysUtc(start);
@@ -106,7 +106,7 @@ class _ManagerReportCardState extends State<_ManagerReportCard> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Card(
       child: Padding(

@@ -133,7 +133,7 @@ String _generateSwitchHelper(String content, String filePath) {
     final params = subclassParams[subclassName] ?? [];
     final camelName = _toCamelCase(subclassName);
     if (params.isEmpty) {
-      buffer.writeln('    required final T Function() $camelName,');
+      buffer.writeln('    required T Function() $camelName,');
     } else {
       // Check if we should use named parameters
       final hasBoolean = params.any((p) => p.type == 'bool');
@@ -145,7 +145,7 @@ String _generateSwitchHelper(String content, String filePath) {
 
       if (shouldUseNamed && params.length > 1) {
         // Generate named parameters
-        buffer.writeln('    required final T Function({');
+        buffer.writeln('    required T Function({');
         for (final param in params) {
           final required = param.isRequired ? 'required ' : '';
           buffer.writeln('      $required${param.type} ${param.name},');
@@ -154,7 +154,7 @@ String _generateSwitchHelper(String content, String filePath) {
       } else {
         // Generate positional parameters
         final paramList = params.map((p) => '${p.type} ${p.name}').join(', ');
-        buffer.writeln('    required final T Function($paramList) $camelName,');
+        buffer.writeln('    required T Function($paramList) $camelName,');
       }
     }
   }

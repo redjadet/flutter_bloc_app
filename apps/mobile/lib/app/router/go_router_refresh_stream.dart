@@ -23,10 +23,10 @@ import 'package:flutter/widgets.dart';
 /// The subscription cancellation uses `unawaited()` because disposal is synchronous
 /// and we don't need to wait for the cancellation to complete.
 class GoRouterRefreshStream extends ChangeNotifier {
-  GoRouterRefreshStream(final Stream<dynamic> stream) {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
     _subscription = stream.listen(
       (_) => notifyListeners(),
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'GoRouterRefreshStream auth state error',
           error,

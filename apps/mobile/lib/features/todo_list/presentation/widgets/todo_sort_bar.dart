@@ -1,9 +1,9 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
+import 'package:material_ui/material_ui.dart';
 
-double _todoSortLabelFontSize(final BuildContext context) =>
+double _todoSortLabelFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 18.0);
 
 class TodoSortBar extends StatelessWidget {
@@ -16,7 +16,7 @@ class TodoSortBar extends StatelessWidget {
   final TodoSortOrder sortOrder;
   final ValueChanged<TodoSortOrder> onSortChanged;
 
-  String _getSortLabel(final BuildContext context) => switch (sortOrder) {
+  String _getSortLabel(BuildContext context) => switch (sortOrder) {
     TodoSortOrder.dateDesc => context.l10n.todoListSortDateDesc,
     TodoSortOrder.dateAsc => context.l10n.todoListSortDateAsc,
     TodoSortOrder.titleAsc => context.l10n.todoListSortTitleAsc,
@@ -29,7 +29,7 @@ class TodoSortBar extends StatelessWidget {
   };
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final String sortLabel = _getSortLabel(context);
@@ -51,7 +51,7 @@ class TodoSortBar extends StatelessWidget {
           size: (context.responsiveIconSize * 0.8).clamp(16.0, 24.0),
         ),
       ),
-      itemBuilder: (final context) => [
+      itemBuilder: (context) => [
         PopupMenuItem<TodoSortOrder>(
           value: TodoSortOrder.dateDesc,
           child: IconLabelRow(

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_bloc_app/features/search/presentation/widgets/search_res
 import 'package:flutter_bloc_app/features/search/presentation/widgets/search_text_field.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'search_page.freezed.dart';
 
@@ -32,8 +32,8 @@ class SearchPage extends StatelessWidget {
   final TimerService timerService;
 
   @override
-  Widget build(final BuildContext context) => BlocProvider(
-    create: (final context) => SearchCubit(
+  Widget build(BuildContext context) => BlocProvider(
+    create: (context) => SearchCubit(
       repository: repository,
       timerService: timerService,
     )..search('dogs'),
@@ -45,7 +45,7 @@ class _SearchPageContent extends StatelessWidget {
   const _SearchPageContent();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     final colorScheme = theme.colorScheme;
@@ -91,23 +91,21 @@ class _SearchPageContent extends StatelessWidget {
                         SearchState,
                         _SearchBodyData
                       >(
-                        selector: (final state) => _SearchBodyData(
+                        selector: (state) => _SearchBodyData(
                           isLoading: state.isLoading,
                           isError: state.status.isError,
                           hasResults: state.hasResults,
                           results: state.results,
                         ),
-                        isLoading: (final data) => data.isLoading,
-                        isError: (final data) => data.isError,
-                        loadingBuilder: (final _) =>
-                            const CommonLoadingWidget(),
-                        errorBuilder: (final context, final _) =>
-                            CommonErrorView(
-                              message: context.l10n.searchErrorLoadingResults,
-                              onRetry: () =>
-                                  context.cubit<SearchCubit>().search('dogs'),
-                            ),
-                        builder: (final context, final bodyData) {
+                        isLoading: (data) => data.isLoading,
+                        isError: (data) => data.isError,
+                        loadingBuilder: (_) => const CommonLoadingWidget(),
+                        errorBuilder: (context, _) => CommonErrorView(
+                          message: context.l10n.searchErrorLoadingResults,
+                          onRetry: () =>
+                              context.cubit<SearchCubit>().search('dogs'),
+                        ),
+                        builder: (context, bodyData) {
                           if (!bodyData.hasResults) {
                             return CommonEmptyState(
                               message: context.l10n.searchNoResultsFound,
@@ -128,7 +126,7 @@ class _SearchPageContent extends StatelessWidget {
     );
   }
 
-  double _searchAppBarHeight(final BuildContext context) {
+  double _searchAppBarHeight(BuildContext context) {
     final double textScale = MediaQuery.textScalerOf(context).scale(1);
     final double verticalPadding = context.responsiveGapM;
     final double titleHeight = context.responsiveHeadlineSize * textScale * 1.2;
@@ -146,10 +144,10 @@ class _SearchPageContent extends StatelessWidget {
 @freezed
 abstract class _SearchBodyData with _$SearchBodyData {
   const factory _SearchBodyData({
-    required final bool isLoading,
-    required final bool isError,
-    required final bool hasResults,
-    required final List<SearchResult> results,
+    required bool isLoading,
+    required bool isError,
+    required bool hasResults,
+    required List<SearchResult> results,
   }) = __SearchBodyData;
 }
 
@@ -166,7 +164,7 @@ class _SearchPageAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(preferredHeight);
 
   @override
-  Widget build(final BuildContext context) => Material(
+  Widget build(BuildContext context) => Material(
     color: backgroundColor,
     child: const SafeArea(
       bottom: false,

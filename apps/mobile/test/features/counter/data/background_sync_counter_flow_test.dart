@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/counter/data/hive_counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/data/offline_first_counter_repository.dart';
-import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
-import 'package:networking/networking.dart';
+import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 class _MockNetworkStatusService extends Mock implements NetworkStatusService {}
 
@@ -24,7 +24,7 @@ class _FakeRemoteCounterRepository
   Future<CounterSnapshot> load() async => _snapshot;
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     _snapshot = snapshot;
   }
 
@@ -39,7 +39,7 @@ class _FakeStreamController<T> {
 
   final StreamController<T> controller;
 
-  void add(final T value) => controller.add(value);
+  void add(T value) => controller.add(value);
 
   Stream<T> get stream => controller.stream;
 
@@ -68,12 +68,10 @@ void main() {
       registry = SyncableRepositoryRegistry();
       networkStatusService = _MockNetworkStatusService();
       statusController = _FakeStreamController<NetworkStatus>();
-      when(
-        () => networkStatusService.statusStream,
-      ).thenAnswer((_) => statusController.stream);
-      when(
-        () => networkStatusService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.online);
+      when(() => networkStatusService.statusStream)
+          .thenAnswer((_) => statusController.stream);
+      when(() => networkStatusService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.online);
     });
 
     tearDown(() async {
@@ -121,19 +119,13 @@ void main() {
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _ImmediateTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _ImmediateTimerDisposable();
   }

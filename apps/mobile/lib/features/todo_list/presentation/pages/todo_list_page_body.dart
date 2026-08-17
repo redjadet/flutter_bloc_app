@@ -24,24 +24,24 @@ class _TodoListBodyState extends State<_TodoListBody> {
 
   @override
   Widget build(
-    final BuildContext context,
+    BuildContext context,
   ) => ViewStatusSwitcher<TodoListCubit, TodoListState, TodoListLifecycleData>(
     selector: TodoListLifecycleData.fromState,
-    isLoading: (final data) => data.isLoading,
-    isError: (final data) => data.hasError,
-    loadingBuilder: (final _) => const CommonLoadingWidget(),
-    errorBuilder: (final context, final data) => CommonErrorView(
+    isLoading: (data) => data.isLoading,
+    isError: (data) => data.hasError,
+    loadingBuilder: (_) => const CommonLoadingWidget(),
+    errorBuilder: (context, data) => CommonErrorView(
       message: data.errorMessage ?? context.l10n.todoListLoadError,
       onRetry: () => context.cubit<TodoListCubit>().loadInitial(),
     ),
-    builder: (final context, final _) =>
+    builder: (context, _) =>
         TypeSafeBlocSelector<
           TodoListCubit,
           TodoListState,
           TodoListListProjection
         >(
           selector: TodoListListProjection.fromState,
-          builder: (final context, final listData) => _TodoListSuccessBody(
+          builder: (context, listData) => _TodoListSuccessBody(
             listData: listData,
             scrollController: _listScrollController,
           ),
@@ -59,7 +59,7 @@ class _TodoListSuccessBody extends StatelessWidget {
   final ScrollController scrollController;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final List<TodoItem> filteredItems = listData.filteredItems;
     final TodoListCubit cubit = context.cubit<TodoListCubit>();
     final ThemeData theme = Theme.of(context);
@@ -68,7 +68,7 @@ class _TodoListSuccessBody extends StatelessWidget {
     return CommonMaxWidth(
       maxWidth: context.contentMaxWidth,
       child: LayoutBuilder(
-        builder: (final context, final constraints) {
+        builder: (context, constraints) {
           final _TodoHeaderLayout layout = _TodoHeaderLayout.resolve(
             context: context,
             listData: listData,

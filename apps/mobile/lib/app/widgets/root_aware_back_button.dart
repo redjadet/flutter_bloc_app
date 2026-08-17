@@ -1,7 +1,7 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart' show PlatformAdaptive;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Displays a back button when the navigator can pop, otherwise a home button.
 class RootAwareBackButton extends StatelessWidget {
@@ -10,7 +10,7 @@ class RootAwareBackButton extends StatelessWidget {
   final String homeTooltip;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final navigator = Navigator.of(context);
     final bool useCupertino = PlatformAdaptive.isCupertino(context);
     void handleNavigation() => NavigationUtils.popOrGoHome(context);
@@ -21,9 +21,9 @@ class RootAwareBackButton extends StatelessWidget {
   }
 
   Widget _buildBackButton(
-    final bool useCupertino,
-    final VoidCallback onPressed,
-    final BuildContext context,
+    bool useCupertino,
+    VoidCallback onPressed,
+    BuildContext context,
   ) => useCupertino
       ? CupertinoNavigationBarBackButton(
           color: CupertinoTheme.of(context).primaryColor,
@@ -36,8 +36,8 @@ class RootAwareBackButton extends StatelessWidget {
         );
 
   Widget _buildHomeButton(
-    final bool useCupertino,
-    final VoidCallback onPressed,
+    bool useCupertino,
+    VoidCallback onPressed,
   ) => useCupertino
       ? Tooltip(
           message: homeTooltip,

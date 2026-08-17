@@ -4,41 +4,41 @@ import 'package:flutter_test/flutter_test.dart';
 class _FakeCaseStudyClipFileStore implements CaseStudyClipFileStore {
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async => throw UnimplementedError();
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) {
+  String finalClipFilePathFromStaging(String stagingPath) {
     final String out = stagingPath.replaceFirst('.staging.', '.final.');
     return out == stagingPath ? stagingPath : out;
   }
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) => throw UnimplementedError();
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async => throw UnimplementedError();
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async =>
+  Future<void> deleteFileIfExists(String? path) async =>
       throw UnimplementedError();
 
   @override
-  Future<void> deleteCaseFolder(final String caseId) async =>
+  Future<void> deleteCaseFolder(String caseId) async =>
       throw UnimplementedError();
 
   @override
-  Future<List<int>> readClipBytes(final String path) async =>
+  Future<List<int>> readClipBytes(String path) async =>
       throw UnimplementedError();
 }
 

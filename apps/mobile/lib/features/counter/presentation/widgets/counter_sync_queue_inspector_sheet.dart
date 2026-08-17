@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_sync_queue_entry.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CounterSyncQueueInspectorSheet extends StatelessWidget {
   const CounterSyncQueueInspectorSheet({
@@ -14,7 +14,7 @@ class CounterSyncQueueInspectorSheet extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (entries.isEmpty) {
       return Padding(
         padding: context.pagePadding,
@@ -35,7 +35,7 @@ class CounterSyncQueueInspectorSheet extends StatelessWidget {
             SizedBox(height: context.responsiveGapM),
             Flexible(
               child: ListView.separated(
-                itemBuilder: (final itemContext, final index) {
+                itemBuilder: (itemContext, index) {
                   final CounterSyncQueueEntry entry = entries[index];
                   final String subtitle = l10n.syncQueueInspectorOperation(
                     entry.entityType,
@@ -50,11 +50,10 @@ class CounterSyncQueueInspectorSheet extends StatelessWidget {
                     ),
                   );
                 },
-                separatorBuilder:
-                    (
-                      final itemContext,
-                      final _,
-                    ) => SizedBox(height: context.responsiveGapS),
+                separatorBuilder: (
+                  itemContext,
+                  _,
+                ) => SizedBox(height: context.responsiveGapS),
                 itemCount: entries.length,
               ),
             ),

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -11,14 +10,15 @@ import 'package:flutter_bloc_app/features/staff_app_demo/presentation/staff_demo
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_inbox_item.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/widgets/staff_demo_shift_compose_dialog.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class StaffAppDemoMessagesPage extends StatelessWidget {
   const StaffAppDemoMessagesPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final role = context.select<StaffDemoSessionCubit, StaffDemoRole?>(
-      (final c) => c.state.profile?.role,
+      (c) => c.state.profile?.role,
     );
     final bool canCompose =
         role == StaffDemoRole.manager || role == StaffDemoRole.accountant;
@@ -91,7 +91,7 @@ class _InboxTile extends StatelessWidget {
   final StaffDemoInboxItem item;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ListTile(
       title: Text(

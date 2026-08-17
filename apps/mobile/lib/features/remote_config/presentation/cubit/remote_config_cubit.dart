@@ -58,10 +58,10 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   bool _isLoading = false;
 
   Future<void> _loadRemoteConfig({
-    required final String logContext,
-    final Future<void> Function()? setup,
-    final Future<void> Function()? preFetch,
-    final bool showLoading = false,
+    required String logContext,
+    Future<void> Function()? setup,
+    Future<void> Function()? preFetch,
+    bool showLoading = false,
   }) async {
     if (isClosed || _isLoading) return;
     _isLoading = true;
@@ -83,7 +83,7 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
         isAlive: () => !isClosed,
         logContext: logContext,
         onSuccess: _emitLoadedState,
-        onError: (final message) {
+        onError: (message) {
           if (isClosed) return;
           emit(RemoteConfigState.error(message));
         },

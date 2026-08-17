@@ -2,8 +2,8 @@ part of 'hive_todo_repository.dart';
 
 extension HiveTodoRepositoryMigration on HiveTodoRepository {
   Future<void> _migrateTodos(
-    final Box<dynamic> box, {
-    required final String? fromFingerprint,
+    Box<dynamic> box, {
+    required String? fromFingerprint,
   }) async {
     // Best-effort: never leave tmp key around.
     await safeDeleteKey(box, HiveTodoRepository._tmpKeyMigrated);
@@ -54,7 +54,7 @@ extension HiveTodoRepositoryMigration on HiveTodoRepository {
     await safeDeleteKey(box, HiveTodoRepository._tmpKeyMigrated);
   }
 
-  Future<List<dynamic>?> _decodeTodosRawToListOrNull(final dynamic raw) async {
+  Future<List<dynamic>?> _decodeTodosRawToListOrNull(dynamic raw) async {
     if (raw == null) {
       return const <dynamic>[];
     }
@@ -75,10 +75,9 @@ extension HiveTodoRepositoryMigration on HiveTodoRepository {
     return null;
   }
 
-  Map<String, dynamic>? _salvageTodoMap(final Map<dynamic, dynamic> raw) {
+  Map<String, dynamic>? _salvageTodoMap(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> out = raw.map(
-      (final dynamic key, final dynamic value) =>
-          MapEntry(key.toString(), value),
+      (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );
 
     final String? id = out['id']?.toString();
@@ -116,7 +115,7 @@ extension HiveTodoRepositoryMigration on HiveTodoRepository {
     return out;
   }
 
-  String? _coerceDateToUtcIso(final dynamic value) {
+  String? _coerceDateToUtcIso(dynamic value) {
     try {
       if (value is DateTime) {
         return value.toUtc().toIso8601String();

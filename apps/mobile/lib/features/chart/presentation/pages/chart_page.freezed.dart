@@ -91,8 +91,7 @@ extension _ChartViewDataPatterns on _ChartViewData {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ChartViewData value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( __ChartViewData value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case __ChartViewData() when $default != null:
 return $default(_that);case _:
@@ -113,8 +112,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ChartViewData value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( __ChartViewData value)  $default,){final _that = this;
 switch (_that) {
 case __ChartViewData():
 return $default(_that);case _:
@@ -134,8 +132,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ChartViewData value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( __ChartViewData value)?  $default,){final _that = this;
 switch (_that) {
 case __ChartViewData() when $default != null:
 return $default(_that);case _:
@@ -211,7 +208,7 @@ return $default(_that.showLoading,_that.showError,_that.showEmpty,_that.points,_
 
 
 class __ChartViewData implements _ChartViewData {
-  const __ChartViewData({required this.showLoading, required this.showError, required this.showEmpty, required final  List<ChartPoint> points, required this.zoomEnabled, required this.lastError}): _points = points;
+  const __ChartViewData({required this.showLoading, required this.showError, required this.showEmpty, required  List<ChartPoint> points, required this.zoomEnabled, required this.lastError}): _points = points;
   
 
 @override final  bool showLoading;

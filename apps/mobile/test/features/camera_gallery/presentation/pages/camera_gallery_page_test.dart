@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_repository.dart';
@@ -6,8 +5,10 @@ import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_r
 import 'package:flutter_bloc_app/features/camera_gallery/domain/image_processing_filter.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/cubit/camera_gallery_cubit.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/presentation/pages/camera_gallery_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _StubRepository implements CameraGalleryRepository {
   _StubRepository({this.cameraResult, this.galleryResult});
@@ -28,19 +29,17 @@ class _StubRepository implements CameraGalleryRepository {
 
   @override
   Future<CameraGalleryResult> processImage({
-    required final ImageProcessingFilter filter,
-    required final String sourcePath,
+    required ImageProcessingFilter filter,
+    required String sourcePath,
   }) async => const CameraGalleryResult.cancelled();
 }
 
 void main() {
   group('CameraGalleryPage', () {
-    testWidgets('renders placeholder and both action buttons', (
-      final tester,
-    ) async {
+    testWidgets('renders placeholder and both action buttons', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: BlocProvider<CameraGalleryCubit>(
@@ -56,9 +55,7 @@ void main() {
       expect(find.text('On-device processing'), findsNothing);
     });
 
-    testWidgets('renders preview when state has image path', (
-      final tester,
-    ) async {
+    testWidgets('renders preview when state has image path', (tester) async {
       final cubit = CameraGalleryCubit(
         repository: _StubRepository(
           galleryResult: const CameraGalleryResult.success('/tmp/test.jpg'),
@@ -68,7 +65,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: BlocProvider<CameraGalleryCubit>(
@@ -86,11 +83,11 @@ void main() {
     });
 
     testWidgets('shows camera unavailable message when camera is missing', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: BlocProvider<CameraGalleryCubit>(
@@ -118,11 +115,11 @@ void main() {
     });
 
     testWidgets('shows cancelled message when picker is cancelled', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
           home: BlocProvider<CameraGalleryCubit>(

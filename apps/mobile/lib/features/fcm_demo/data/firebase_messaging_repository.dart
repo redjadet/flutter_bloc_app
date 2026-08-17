@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/fcm_demo/data/fcm_log_redaction.dart';
 import 'package:utilities/utilities.dart';
 
 /// Maps FCM [AuthorizationStatus] to domain [FcmPermissionState].
-FcmPermissionState _mapPermissionState(final AuthorizationStatus status) {
+FcmPermissionState _mapPermissionState(AuthorizationStatus status) {
   return switch (status) {
     AuthorizationStatus.authorized => FcmPermissionState.authorized,
     AuthorizationStatus.denied => FcmPermissionState.denied,
@@ -16,7 +16,7 @@ FcmPermissionState _mapPermissionState(final AuthorizationStatus status) {
 }
 
 /// Converts [RemoteMessage.data] to [Map<String, String>].
-Map<String, String> _dataToStringMap(final Map<String, dynamic>? data) {
+Map<String, String> _dataToStringMap(Map<String, dynamic>? data) {
   if (data == null || data.isEmpty) return const {};
   final Map<String, String> result = {};
   for (final MapEntry<String, dynamic> e in data.entries) {
@@ -29,8 +29,8 @@ Map<String, String> _dataToStringMap(final Map<String, dynamic>? data) {
 /// Uses notification.title/body when present; falls back to data['title']/data['body']
 /// so simulator .apns payloads (which may not set notification) still show in UI.
 PushMessage _toPushMessage(
-  final RemoteMessage message, {
-  required final PushMessageSource source,
+  RemoteMessage message, {
+  required PushMessageSource source,
 }) {
   final Map<String, String> dataMap = _dataToStringMap(message.data);
   final String? title =
@@ -52,9 +52,9 @@ PushMessage _toPushMessage(
 /// FCM implementation of [FcmMessagingService].
 class FirebaseMessagingRepository implements FcmMessagingService {
   FirebaseMessagingRepository({
-    final FirebaseMessaging? messaging,
-    final Stream<RemoteMessage>? foregroundMessages,
-    final Stream<RemoteMessage>? openedMessages,
+    FirebaseMessaging? messaging,
+    Stream<RemoteMessage>? foregroundMessages,
+    Stream<RemoteMessage>? openedMessages,
   }) : _messaging = messaging ?? FirebaseMessaging.instance,
        _foregroundMessages = foregroundMessages ?? FirebaseMessaging.onMessage,
        _openedMessages = openedMessages ?? FirebaseMessaging.onMessageOpenedApp;
@@ -115,7 +115,7 @@ class FirebaseMessagingRepository implements FcmMessagingService {
 
   @override
   Stream<PushMessage> get foregroundMessages => _foregroundMessages.map(
-    (final m) {
+    (m) {
       final PushMessage p = _toPushMessage(
         m,
         source: PushMessageSource.foreground,
@@ -130,7 +130,7 @@ class FirebaseMessagingRepository implements FcmMessagingService {
 
   @override
   Stream<PushMessage> get openedMessages => _openedMessages.map(
-    (final m) {
+    (m) {
       final PushMessage p = _toPushMessage(
         m,
         source: PushMessageSource.opened,

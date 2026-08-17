@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/markdown_editor/markdown_editor_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('MarkdownEditorWidget', () {
-    testWidgets('renders editor with toolbar', (
-      final WidgetTester tester,
-    ) async {
+    testWidgets('renders editor with toolbar', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: MarkdownEditorWidget())),
       );
@@ -18,7 +16,7 @@ void main() {
     });
 
     testWidgets('toggles between edit and preview modes', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: MarkdownEditorWidget())),
@@ -41,7 +39,7 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('allows text input', (final WidgetTester tester) async {
+    testWidgets('allows text input', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: MarkdownEditorWidget())),
       );
@@ -55,9 +53,7 @@ void main() {
       expect(find.textContaining('Test Header'), findsOneWidget);
     });
 
-    testWidgets('shows markdown shortcuts menu', (
-      final WidgetTester tester,
-    ) async {
+    testWidgets('shows markdown shortcuts menu', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: MarkdownEditorWidget())),
       );
@@ -73,7 +69,7 @@ void main() {
     });
 
     testWidgets('applies formatting even without an active selection', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: MarkdownEditorWidget())),

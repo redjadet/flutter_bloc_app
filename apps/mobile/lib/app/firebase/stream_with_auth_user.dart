@@ -7,9 +7,9 @@ import 'package:flutter_bloc_app/app/firebase/auth_helpers.dart';
 /// Use in Firebase-backed repositories to avoid duplicating
 /// `Stream.fromFuture(waitForAuthUser(auth)).asyncExpand(...).handleError(...)`.
 Stream<T> streamWithAuthUser<T>({
-  required final FirebaseAuth auth,
-  required final String logContext,
-  required final Stream<T> Function(User user) streamPerUser,
+  required FirebaseAuth auth,
+  required String logContext,
+  required Stream<T> Function(User user) streamPerUser,
 }) =>
     Stream.fromFuture(
           waitForAuthUser(auth),

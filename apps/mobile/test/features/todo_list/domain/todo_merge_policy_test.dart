@@ -6,9 +6,9 @@ void main() {
   const TodoMergePolicy policy = TodoMergePolicy();
 
   TodoItem item({
-    required final String id,
-    required final DateTime updatedAt,
-    final bool synchronized = true,
+    required String id,
+    required DateTime updatedAt,
+    bool synchronized = true,
   }) {
     final DateTime createdAt = updatedAt.subtract(const Duration(hours: 1));
     return TodoItem(

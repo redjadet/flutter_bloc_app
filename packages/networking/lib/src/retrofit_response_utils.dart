@@ -4,7 +4,7 @@ import 'package:retrofit/retrofit.dart';
 /// Adapts Retrofit [HttpResponse] values to plain Dio [Response] objects so
 /// existing repository helpers can continue to use shared Dio-based guards.
 Response<String> stringResponseFromHttpResponse(
-  final HttpResponse<String> httpResponse,
+  HttpResponse<String> httpResponse,
 ) {
   final Response<dynamic> response = httpResponse.response;
   return Response<String>(
@@ -21,7 +21,7 @@ Response<String> stringResponseFromHttpResponse(
 
 /// Adapts Retrofit [HttpResponse] with a UTF-8 byte body to a Dio [Response].
 Response<List<int>> bytesResponseFromHttpResponse(
-  final HttpResponse<List<int>> httpResponse,
+  HttpResponse<List<int>> httpResponse,
 ) {
   final Response<dynamic> response = httpResponse.response;
   return Response<List<int>>(

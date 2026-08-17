@@ -91,15 +91,15 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
     registerSubscription(_subscription);
   }
 
-  Future<void> confirm(final StaffDemoInboxItem item) => confirmImpl(item);
+  Future<void> confirm(StaffDemoInboxItem item) => confirmImpl(item);
 
   Future<List<StaffDemoProfile>> loadAssignableStaff() =>
       _profileRepository.listAssignableStaff();
 
   Future<void> sendShiftAssignmentWithDefaults({
-    required final String toUserId,
-    required final String body,
-    required final String siteId,
+    required String toUserId,
+    required String body,
+    required String siteId,
   }) {
     final ({DateTime startAtUtc, DateTime endAtUtc}) window =
         StaffDemoShiftDefaults.defaultWindowUtc();
@@ -113,11 +113,11 @@ class StaffDemoMessagesCubit extends Cubit<StaffDemoMessagesState>
   }
 
   Future<void> sendShiftAssignment({
-    required final String toUserId,
-    required final String body,
-    required final String siteId,
-    required final DateTime startAtUtc,
-    required final DateTime endAtUtc,
+    required String toUserId,
+    required String body,
+    required String siteId,
+    required DateTime startAtUtc,
+    required DateTime endAtUtc,
   }) => sendShiftAssignmentImpl(
     toUserId: toUserId,
     body: body,

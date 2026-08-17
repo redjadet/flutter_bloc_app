@@ -90,8 +90,7 @@ extension StaffDemoProofStatePatterns on StaffDemoProofState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoProofState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoProofState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _StaffDemoProofState() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoProofState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoProofState value)  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoProofState():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoProofState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoProofState value)?  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoProofState() when $default != null:
 return $default(_that);case _:
@@ -210,7 +207,7 @@ return $default(_that.status,_that.photoPaths,_that.signaturePath,_that.errorMes
 
 
 class _StaffDemoProofState implements StaffDemoProofState {
-  const _StaffDemoProofState({this.status = StaffDemoProofStatus.initial, final  List<String> photoPaths = const <String>[], this.signaturePath, this.errorMessage, this.lastProofId}): _photoPaths = photoPaths;
+  const _StaffDemoProofState({this.status = StaffDemoProofStatus.initial, List<String> photoPaths = const <String>[], this.signaturePath, this.errorMessage, this.lastProofId}): _photoPaths = photoPaths;
   
 
 @override@JsonKey() final  StaffDemoProofStatus status;

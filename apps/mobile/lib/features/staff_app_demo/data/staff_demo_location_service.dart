@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:core/core.dart';
 
 import 'package:geolocator/geolocator.dart';
@@ -19,8 +20,8 @@ class StaffDemoCapturedLocation {
 
 class StaffDemoLocationService {
   StaffDemoLocationService({
-    final Future<Position> Function()? currentPositionFetcher,
-    final Duration locationTimeout = const Duration(seconds: 5),
+    Future<Position> Function()? currentPositionFetcher,
+    Duration locationTimeout = const Duration(seconds: 5),
   }) : _currentPositionFetcher =
            currentPositionFetcher ??
            (() => Geolocator.getCurrentPosition(

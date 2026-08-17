@@ -59,7 +59,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   }
 
   @override
-  Future<void> save(final TodoItem item) async => StorageGuard.run<void>(
+  Future<void> save(TodoItem item) async => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.save',
     action: () async {
       final Box<dynamic> box = await getBox();
@@ -70,13 +70,13 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   );
 
   @override
-  Future<void> delete(final String id) async => StorageGuard.run<void>(
+  Future<void> delete(String id) async => StorageGuard.run<void>(
     logContext: 'HiveTodoRepository.delete',
     action: () async {
       final Box<dynamic> box = await getBox();
       final List<TodoItem> existing = await _loadFromBox(box);
       final List<TodoItem> updated = existing
-          .where((final item) => item.id != id)
+          .where((item) => item.id != id)
           .toList(growable: false);
       await _save(box, updated);
     },
@@ -89,7 +89,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
       final Box<dynamic> box = await getBox();
       final List<TodoItem> existing = await _loadFromBox(box);
       final List<TodoItem> updated = existing
-          .where((final item) => !item.isCompleted)
+          .where((item) => !item.isCompleted)
           .toList(growable: false);
       await _save(box, updated);
     },
@@ -104,7 +104,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     },
   );
 
-  Future<List<TodoItem>> _loadFromBox(final Box<dynamic> box) async =>
+  Future<List<TodoItem>> _loadFromBox(Box<dynamic> box) async =>
       StorageGuard.run<List<TodoItem>>(
         logContext: 'HiveTodoRepository._loadFromBox',
         action: () async {
@@ -115,13 +115,13 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
         fallback: () => const <TodoItem>[],
       );
 
-  Future<void> _save(final Box<dynamic> box, final List<TodoItem> items) async {
+  Future<void> _save(Box<dynamic> box, List<TodoItem> items) async {
     if (items.isEmpty) {
       await safeDeleteKey(box, _keyTodos);
     } else {
       final List<Map<String, dynamic>> serialized = items
           .map(TodoItemDto.fromDomain)
-          .map((final dto) => dto.toMap())
+          .map((dto) => dto.toMap())
           .toList(growable: false);
       await box.put(_keyTodos, serialized);
     }
@@ -129,12 +129,12 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
   }
 
   List<TodoItem> _applyItem(
-    final List<TodoItem> existing,
-    final TodoItem item,
+    List<TodoItem> existing,
+    TodoItem item,
   ) {
     final List<TodoItem> items = List<TodoItem>.from(existing);
     final int index = items.indexWhere(
-      (final current) => current.id == item.id,
+      (current) => current.id == item.id,
     );
     if (index == -1) {
       items.add(item);
@@ -144,7 +144,7 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     return _sortItems(items);
   }
 
-  Future<List<TodoItem>> _parseStored(final dynamic raw) async {
+  Future<List<TodoItem>> _parseStored(dynamic raw) async {
     if (raw is String && raw.isNotEmpty) {
       try {
         final List<dynamic> decoded = await decodeJsonList(raw);
@@ -161,14 +161,14 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     return const <TodoItem>[];
   }
 
-  List<TodoItem> _parseIterable(final Iterable<dynamic> raw) => raw
+  List<TodoItem> _parseIterable(Iterable<dynamic> raw) => raw
       .whereType<Map<dynamic, dynamic>>()
       .map(_safeMap)
       .whereType<TodoItemDto>()
-      .map((final dto) => dto.toDomain())
+      .map((dto) => dto.toDomain())
       .toList(growable: false);
 
-  TodoItemDto? _safeMap(final Map<dynamic, dynamic> raw) {
+  TodoItemDto? _safeMap(Map<dynamic, dynamic> raw) {
     try {
       return TodoItemDto.fromMap(raw);
     } on Exception {
@@ -176,9 +176,9 @@ class HiveTodoRepository extends HiveRepositoryBase implements TodoRepository {
     }
   }
 
-  List<TodoItem> _sortItems(final List<TodoItem> items) {
+  List<TodoItem> _sortItems(List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items)
-      ..sort((final a, final b) => b.updatedAt.compareTo(a.updatedAt));
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     return List<TodoItem>.unmodifiable(sorted);
   }
 }

@@ -1,15 +1,16 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/pages/google_maps_sample_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/platform/native_platform_service.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:utilities/utilities.dart';
 
 import '../../helpers/fake_google_maps_flutter_platform.dart';
 
@@ -55,7 +56,7 @@ void main() {
     }) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<MapSampleCubit>.value(
             value: cubit,
@@ -71,9 +72,8 @@ void main() {
     testWidgets('shows unsupported message on non-mobile platforms', (
       tester,
     ) async {
-      when(
-        () => platformService.hasGoogleMapsApiKey(),
-      ).thenAnswer((_) async => true);
+      when(() => platformService.hasGoogleMapsApiKey())
+          .thenAnswer((_) async => true);
       when(() => cubit.state).thenReturn(MapSampleState.initial());
 
       await pumpPage(tester, platform: TargetPlatform.macOS);
@@ -87,9 +87,8 @@ void main() {
     testWidgets('shows missing key message when API key is absent', (
       tester,
     ) async {
-      when(
-        () => platformService.hasGoogleMapsApiKey(),
-      ).thenAnswer((_) async => false);
+      when(() => platformService.hasGoogleMapsApiKey())
+          .thenAnswer((_) async => false);
       when(() => cubit.state).thenReturn(MapSampleState.initial());
 
       await pumpPage(tester, platform: TargetPlatform.android);
@@ -101,12 +100,10 @@ void main() {
     testWidgets('shows loading indicator when cubit is loading', (
       tester,
     ) async {
-      when(
-        () => platformService.hasGoogleMapsApiKey(),
-      ).thenAnswer((_) async => true);
-      when(
-        () => cubit.state,
-      ).thenReturn(MapSampleState.initial().copyWith(isLoading: true));
+      when(() => platformService.hasGoogleMapsApiKey())
+          .thenAnswer((_) async => true);
+      when(() => cubit.state)
+          .thenReturn(MapSampleState.initial().copyWith(isLoading: true));
 
       await pumpPage(tester, platform: TargetPlatform.android);
       await tester.pump();
@@ -115,9 +112,8 @@ void main() {
     });
 
     testWidgets('shows error message when cubit has error', (tester) async {
-      when(
-        () => platformService.hasGoogleMapsApiKey(),
-      ).thenAnswer((_) async => true);
+      when(() => platformService.hasGoogleMapsApiKey())
+          .thenAnswer((_) async => true);
       when(() => cubit.state).thenReturn(
         MapSampleState.initial().copyWith(
           isLoading: false,
@@ -134,9 +130,8 @@ void main() {
     testWidgets('retry button calls loadLocations when error is retryable', (
       tester,
     ) async {
-      when(
-        () => platformService.hasGoogleMapsApiKey(),
-      ).thenAnswer((_) async => true);
+      when(() => platformService.hasGoogleMapsApiKey())
+          .thenAnswer((_) async => true);
       when(() => cubit.loadLocations()).thenAnswer((_) async {});
       when(() => cubit.state).thenReturn(
         MapSampleState.initial().copyWith(

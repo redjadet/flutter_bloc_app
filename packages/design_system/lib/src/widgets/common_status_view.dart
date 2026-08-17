@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../responsive/responsive.dart';
@@ -33,7 +33,7 @@ class CommonStatusView extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bool hasMixTheme = MixScope.maybeOf(context) != null;
     final Widget column = Column(
@@ -71,7 +71,7 @@ class CommonStatusView extends StatelessWidget {
         ? Padding(padding: resolvedPadding, child: column)
         : Box(style: AppStyles.emptyState, child: column);
     final Widget content = LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final double maxHeight = constraints.maxHeight;
         if (maxHeight.isInfinite) {
           return Center(child: container);

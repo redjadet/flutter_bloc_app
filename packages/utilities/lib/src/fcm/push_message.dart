@@ -6,12 +6,12 @@ part 'push_message.freezed.dart';
 @freezed
 abstract class PushMessage with _$PushMessage {
   const factory PushMessage({
-    required final String messageId,
-    required final String? title,
-    required final String? body,
-    required final DateTime? sentTime,
-    required final Map<String, String> data,
-    @Default(PushMessageSource.foreground) final PushMessageSource source,
+    required String messageId,
+    required String? title,
+    required String? body,
+    required DateTime? sentTime,
+    required Map<String, String> data,
+    @Default(PushMessageSource.foreground) PushMessageSource source,
   }) = _PushMessage;
 }
 

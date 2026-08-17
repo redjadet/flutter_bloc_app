@@ -1,26 +1,25 @@
 import 'dart:async';
 
 import 'package:feature_flags/feature_flags.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/analytics/analytics_consent_repository.dart';
 import 'package:flutter_bloc_app/app/analytics/in_memory_product_analytics.dart';
 import 'package:flutter_bloc_app/features/production_readiness/production_readiness.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:utilities/utilities.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   Future<void> pumpPage(
-    final WidgetTester tester, {
-    required final ProductionReadinessCubit cubit,
-    final bool showSimulatedButton = false,
-    final double textScale = 1,
-    final Size size = const Size(360, 800),
-    final Locale locale = const Locale('en'),
+    WidgetTester tester, {
+    required ProductionReadinessCubit cubit,
+    bool showSimulatedButton = false,
+    double textScale = 1,
+    Size size = const Size(360, 800),
+    Locale locale = const Locale('en'),
   }) async {
     await tester.binding.setSurfaceSize(size);
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -34,9 +33,7 @@ void main() {
           locale: locale,
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
+            ...GlobalMaterialLocalizations.delegates,
           ],
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<ProductionReadinessCubit>.value(
@@ -77,7 +74,7 @@ void main() {
       await consent.dispose();
     });
 
-    testWidgets('renders diagnostic cards at 360px', (final tester) async {
+    testWidgets('renders diagnostic cards at 360px', (tester) async {
       await pumpPage(tester, cubit: cubit, showSimulatedButton: true);
 
       expect(
@@ -122,9 +119,7 @@ void main() {
       );
     });
 
-    testWidgets('emit test non-fatal updates localized status', (
-      final tester,
-    ) async {
+    testWidgets('emit test non-fatal updates localized status', (tester) async {
       await pumpPage(tester, cubit: cubit);
       expect(
         find.byKey(
@@ -147,7 +142,7 @@ void main() {
     });
 
     testWidgets('shows kill-switch banner when release flag disabled', (
-      final tester,
+      tester,
     ) async {
       remoteConfig.enabled = false;
       await cubit.refreshReleaseFlag();
@@ -164,7 +159,7 @@ void main() {
     });
 
     testWidgets('shows FCM stream error banner while remaining ready', (
-      final tester,
+      tester,
     ) async {
       final StreamController<PushMessage> foreground =
           StreamController<PushMessage>.broadcast();
@@ -194,7 +189,7 @@ void main() {
       );
     });
 
-    testWidgets('renders at 1024px and textScale 2.0', (final tester) async {
+    testWidgets('renders at 1024px and textScale 2.0', (tester) async {
       await pumpPage(
         tester,
         cubit: cubit,
@@ -207,7 +202,7 @@ void main() {
       );
     });
 
-    testWidgets('renders Arabic RTL locale', (final tester) async {
+    testWidgets('renders Arabic RTL locale', (tester) async {
       await pumpPage(
         tester,
         cubit: cubit,
@@ -248,7 +243,7 @@ class _FakeConsent implements AnalyticsConsentRepository {
   Future<bool> load() async => enabled;
 
   @override
-  Future<bool> save({required final bool enabled}) async {
+  Future<bool> save({required bool enabled}) async {
     this.enabled = enabled;
     _changes.add(enabled);
     return true;
@@ -275,11 +270,11 @@ class _FakeRemoteConfig implements RemoteConfigService {
   Future<void> clearCache() async {}
 
   @override
-  bool getBool(final String key) =>
+  bool getBool(String key) =>
       enabled && key == RemoteConfigKeys.productionDemoEnabled;
 
   @override
-  String getString(final String key) {
+  String getString(String key) {
     if (key == RemoteConfigKeys.productionDemoVariant) {
       return 'control';
     }
@@ -290,10 +285,10 @@ class _FakeRemoteConfig implements RemoteConfigService {
   }
 
   @override
-  int getInt(final String key) => 0;
+  int getInt(String key) => 0;
 
   @override
-  double getDouble(final String key) => 0;
+  double getDouble(String key) => 0;
 }
 
 class _ErroringFcm implements FcmMessagingService {

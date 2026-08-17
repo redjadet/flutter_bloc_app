@@ -22,9 +22,9 @@ mixin _CaseStudySessionCubitWizard on _CaseStudySessionCubitBase {
   }
 
   Future<void> setMetadata({
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
   }) async {
     final String? userId = _requireUserId();
     if (userId == null) return;

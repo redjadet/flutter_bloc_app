@@ -5,12 +5,12 @@ export 'chat_remote_path.dart';
 
 mixin ChatRepository {
   Future<ChatResult> sendMessage({
-    required final List<String> pastUserInputs,
-    required final List<String> generatedResponses,
-    required final String prompt,
-    final String? model,
-    final String? conversationId,
-    final String? clientMessageId,
+    required List<String> pastUserInputs,
+    required List<String> generatedResponses,
+    required String prompt,
+    String? model,
+    String? conversationId,
+    String? clientMessageId,
   });
 
   /// Hint for UI chrome when not mid-flight.

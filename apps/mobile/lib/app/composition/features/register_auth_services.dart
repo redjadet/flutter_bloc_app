@@ -19,7 +19,7 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 void registerAuthServices() {
   registerLazySingletonIfAbsent<SessionLifecycleCoordinator>(
     SessionLifecycleCoordinatorImpl.new,
-    dispose: (final coordinator) async {
+    dispose: (coordinator) async {
       if (coordinator is SessionLifecycleCoordinatorImpl) {
         await coordinator.dispose();
       }
@@ -64,7 +64,7 @@ void registerAuthServices() {
         coordinator: coordinator,
       );
     },
-    dispose: (final repository) async {
+    dispose: (repository) async {
       final AuthRepository inner = repository is SignOutAwareAuthRepository
           ? repository.delegate
           : repository;
@@ -84,7 +84,7 @@ void registerAuthServices() {
 }
 
 AuthRepository _createInnerAuthRepository({
-  required final FirebaseAuth? firebaseAuth,
+  required FirebaseAuth? firebaseAuth,
 }) {
   if (firebaseAuth == null) {
     final bool allowWebLocalGuestAuth =

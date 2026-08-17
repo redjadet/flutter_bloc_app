@@ -12,8 +12,8 @@ import 'package:firebase_database/firebase_database.dart'
 /// [message] should describe the operation for the user (e.g. "Check database
 /// rules and path keys" or "Check database rules and auth state").
 Future<void> guardRealtimeDatabaseWrite(
-  final Future<void> Function() operation, {
-  required final String message,
+  Future<void> Function() operation, {
+  required String message,
 }) async {
   try {
     await operation();

@@ -1,15 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/widgets/retry_snackbar_listener.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 void main() {
   group('RetrySnackBarListener', () {
-    testWidgets('shows snackbar when notification is received', (
-      final tester,
-    ) async {
+    testWidgets('shows snackbar when notification is received', (tester) async {
       final controller = StreamController<RetryNotification>.broadcast();
 
       await tester.pumpWidget(
@@ -40,9 +38,7 @@ void main() {
       await controller.close();
     });
 
-    testWidgets('throttles notifications within 2 seconds', (
-      final tester,
-    ) async {
+    testWidgets('throttles notifications within 2 seconds', (tester) async {
       final controller = StreamController<RetryNotification>.broadcast();
 
       await tester.pumpWidget(
@@ -90,7 +86,7 @@ void main() {
     });
 
     testWidgets('handles notification when widget is not mounted', (
-      final tester,
+      tester,
     ) async {
       final controller = StreamController<RetryNotification>.broadcast();
 
@@ -127,7 +123,7 @@ void main() {
 
     testWidgets(
       'handles notification when ScaffoldMessenger is not available',
-      (final tester) async {
+      (tester) async {
         final controller = StreamController<RetryNotification>.broadcast();
 
         await tester.pumpWidget(
@@ -157,7 +153,7 @@ void main() {
     );
 
     testWidgets('updates subscription when notifications stream changes', (
-      final tester,
+      tester,
     ) async {
       final controller1 = StreamController<RetryNotification>.broadcast();
       final controller2 = StreamController<RetryNotification>.broadcast();
@@ -203,7 +199,7 @@ void main() {
       await controller2.close();
     });
 
-    testWidgets('disposes subscription on dispose', (final tester) async {
+    testWidgets('disposes subscription on dispose', (tester) async {
       final controller = StreamController<RetryNotification>.broadcast();
 
       await tester.pumpWidget(

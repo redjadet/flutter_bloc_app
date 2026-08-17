@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_bar_content.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CountdownBar extends StatefulWidget {
   const CountdownBar({super.key});
@@ -20,18 +20,18 @@ class _CountdownBarState extends State<CountdownBar> {
 
   @override
   Widget build(
-    final BuildContext context,
+    BuildContext context,
   ) {
     final l10n = context.l10n;
     final ColorScheme colors = Theme.of(context).colorScheme;
 
     return TypeSafeBlocSelector<CounterCubit, CounterState, _CountdownBarData>(
-      selector: (final state) => _CountdownBarData(
+      selector: (state) => _CountdownBarData(
         active: state.isAutoDecrementActive,
         isLoading: state.isLoading,
         countdownSeconds: state.countdownSeconds,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         _updateCycleTotalSeconds(data.countdownSeconds);
         final int total =
             _cycleTotalSeconds ?? CounterState.defaultCountdownSeconds;
@@ -58,7 +58,7 @@ class _CountdownBarState extends State<CountdownBar> {
     );
   }
 
-  void _updateCycleTotalSeconds(final int seconds) {
+  void _updateCycleTotalSeconds(int seconds) {
     final int current = _cycleTotalSeconds ?? seconds;
     _cycleTotalSeconds = math.max(current, seconds);
   }

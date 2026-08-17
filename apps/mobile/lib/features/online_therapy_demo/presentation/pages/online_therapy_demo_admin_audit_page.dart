@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/admin_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoAdminAuditPage extends StatefulWidget {
   const OnlineTherapyDemoAdminAuditPage({super.key});
@@ -28,24 +28,24 @@ class _OnlineTherapyDemoAdminAuditPageState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final isLoggedIn = context
         .selectState<
           OnlineTherapyDemoSessionCubit,
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final isBusy = context.selectState<AdminCubit, AdminState, bool>(
-      selector: (final state) => state.isBusy,
+      selector: (state) => state.isBusy,
     );
     final errorMessage = context.selectState<AdminCubit, AdminState, String?>(
-      selector: (final state) => state.errorMessage,
+      selector: (state) => state.errorMessage,
     );
     final selectedEvents = context
         .selectState<AdminCubit, AdminState, List<AuditEvent>>(
-          selector: (final state) => state.auditEvents,
+          selector: (state) => state.auditEvents,
         );
     final cubit = context.cubit<AdminCubit>();
 
@@ -62,8 +62,7 @@ class _OnlineTherapyDemoAdminAuditPageState
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: events.length + 1,
-        separatorBuilder: (final context, final index) =>
-            const Divider(height: 1),
+        separatorBuilder: (context, index) => const Divider(height: 1),
         itemBuilder: (context, index) {
           if (index == 0) {
             if (!isLoggedIn) {

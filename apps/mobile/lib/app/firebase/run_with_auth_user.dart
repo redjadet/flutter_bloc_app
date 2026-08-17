@@ -12,10 +12,10 @@ import 'package:networking/networking.dart';
 ///
 /// [logContext] is used in log messages, e.g. "RealtimeDatabaseCounterRepository.load".
 Future<T> runWithAuthUser<T>({
-  required final FirebaseAuth auth,
-  required final String logContext,
-  required final Future<T> Function(User user) action,
-  final Future<T> Function()? onFailureFallback,
+  required FirebaseAuth auth,
+  required String logContext,
+  required Future<T> Function(User user) action,
+  Future<T> Function()? onFailureFallback,
 }) async {
   try {
     final User user = await waitForAuthUser(auth);

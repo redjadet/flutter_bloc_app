@@ -10,7 +10,7 @@ const MethodChannel nativeShowcaseTestChannel = MethodChannel(
 void registerNativeShowcaseChannelMock() {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(nativeShowcaseTestChannel, (
-        final MethodCall call,
+        MethodCall call,
       ) async {
         switch (call.method) {
           case 'invokeSwift':

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:core/core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/fake_repositories.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/data/fake/online_therapy_fake_api.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/pages/online_therapy_demo_client_appointments_page.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('appointments page tolerates list shrinking during rebuild', (
@@ -83,26 +83,20 @@ class _TestClientBookingCubit extends ClientBookingCubit {
     required super.appointments,
   });
 
-  void replaceAppointments(final List<Appointment> appointments) {
+  void replaceAppointments(List<Appointment> appointments) {
     emit(state.copyWith(appointments: appointments, isBusy: false));
   }
 }
 
 class _ImmediateTimerService implements TimerService {
   @override
-  TimerDisposable periodic(
-    final Duration interval,
-    final void Function() onTick,
-  ) {
+  TimerDisposable periodic(Duration interval, void Function() onTick) {
     onTick();
     return _NoopTimerDisposable();
   }
 
   @override
-  TimerDisposable runOnce(
-    final Duration delay,
-    final void Function() onComplete,
-  ) {
+  TimerDisposable runOnce(Duration delay, void Function() onComplete) {
     onComplete();
     return _NoopTimerDisposable();
   }

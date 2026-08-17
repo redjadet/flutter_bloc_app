@@ -1,17 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_user.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/domain/supabase_auth_repository.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_cubit.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/cubit/supabase_auth_state.dart';
 import 'package:flutter_bloc_app/features/supabase_auth/presentation/pages/supabase_auth_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('SupabaseAuthPage', () {
     testWidgets('shows not configured message when state is notConfigured', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final cubit = SupabaseAuthCubit(
         repository: _FakeRepo(isConfigured: false),
@@ -27,7 +28,7 @@ void main() {
       );
     });
 
-    testWidgets('shows title from l10n', (final WidgetTester tester) async {
+    testWidgets('shows title from l10n', (WidgetTester tester) async {
       final cubit = SupabaseAuthCubit(
         repository: _FakeRepo(isConfigured: false),
       )..emit(const SupabaseAuthState.notConfigured());
@@ -41,7 +42,7 @@ void main() {
 
     testWidgets(
       'disables submit buttons until email and password are entered',
-      (final WidgetTester tester) async {
+      (WidgetTester tester) async {
         final cubit = SupabaseAuthCubit(
           repository: _FakeRepo(isConfigured: true),
         )..emit(const SupabaseAuthState.unauthenticated());
@@ -78,7 +79,7 @@ void main() {
     );
 
     testWidgets('dismisses error state back to sign-in form', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final cubit = SupabaseAuthCubit(repository: _FakeRepo(isConfigured: true))
         ..emit(const SupabaseAuthState.error('Bad credentials'));
@@ -98,7 +99,7 @@ void main() {
     });
 
     testWidgets('signs out from authenticated state', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final _FakeRepo repository = _FakeRepo(isConfigured: true);
       final cubit = SupabaseAuthCubit(repository: repository)
@@ -121,9 +122,9 @@ void main() {
   });
 }
 
-Widget _buildTestApp({required final SupabaseAuthCubit cubit}) {
+Widget _buildTestApp({required SupabaseAuthCubit cubit}) {
   return MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: BlocProvider<SupabaseAuthCubit>.value(
       value: cubit,
@@ -148,15 +149,15 @@ class _FakeRepo implements SupabaseAuthRepository {
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {}
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {}
 
   @override

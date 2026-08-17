@@ -1,6 +1,6 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/responsive.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'platform_adaptive.dart';
 
@@ -8,16 +8,16 @@ class PlatformAdaptiveButtons {
   const PlatformAdaptiveButtons._();
 
   static Widget button({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final double? minSize,
-    final double? pressedOpacity,
-    final BorderRadius? borderRadius,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    double? minSize,
+    double? pressedOpacity,
+    BorderRadius? borderRadius,
+    ButtonStyle? materialStyle,
   }) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     if (PlatformAdaptive.isCupertino(context)) {
@@ -48,13 +48,13 @@ class PlatformAdaptiveButtons {
   }
 
   static Widget textButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    ButtonStyle? materialStyle,
   }) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     if (PlatformAdaptive.isCupertino(context)) {
@@ -89,14 +89,14 @@ class PlatformAdaptiveButtons {
   }
 
   static Widget filledButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final Key? key,
-    final EdgeInsetsGeometry? padding,
-    final Color? color,
-    final Color? disabledColor,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    Key? key,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Color? disabledColor,
+    ButtonStyle? materialStyle,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return CupertinoButton.filled(
@@ -122,16 +122,16 @@ class PlatformAdaptiveButtons {
   }
 
   static Widget outlinedButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final Widget child,
-    final EdgeInsetsGeometry? padding,
-    final Color? backgroundColor,
-    final Color? foregroundColor,
-    final Color? disabledColor,
-    final BorderSide? side,
-    final BorderRadius? borderRadius,
-    final ButtonStyle? materialStyle,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    Color? disabledColor,
+    BorderSide? side,
+    BorderRadius? borderRadius,
+    ButtonStyle? materialStyle,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       final bool isDisabled = onPressed == null;
@@ -187,10 +187,10 @@ class PlatformAdaptiveButtons {
   }
 
   static Widget dialogAction({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final String label,
-    final bool isDestructive = false,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required String label,
+    bool isDestructive = false,
   }) {
     if (PlatformAdaptive.isCupertino(context)) {
       return CupertinoDialogAction(

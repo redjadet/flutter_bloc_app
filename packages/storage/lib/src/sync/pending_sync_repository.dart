@@ -55,7 +55,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
   }
 
   /// Adds a [SyncOperation] to the pending queue.
-  Future<SyncOperation> enqueue(final SyncOperation operation) async {
+  Future<SyncOperation> enqueue(SyncOperation operation) async {
     await StorageGuard.run<void>(
       logContext: 'PendingSyncRepository.enqueue',
       action: () async {
@@ -68,12 +68,12 @@ class PendingSyncRepository extends HiveRepositoryBase {
         final String? userScope = _userScopeForDedupe(operation);
         final List<dynamic> duplicateKeys = readResult.operations
             .where(
-              (final entry) =>
+              (entry) =>
                   entry.operation.entityType == operation.entityType &&
                   entry.operation.idempotencyKey == operation.idempotencyKey &&
                   _userScopeForDedupe(entry.operation) == userScope,
             )
-            .map((final entry) => entry.key)
+            .map((entry) => entry.key)
             .toList(growable: false);
         final int duplicateCount = duplicateKeys.length;
         if (duplicateCount > 0) {
@@ -98,7 +98,7 @@ class PendingSyncRepository extends HiveRepositoryBase {
 
   // Best-effort user scope for dedupe. Not all operations are user-scoped yet;
   // return null when the payload doesn't have a stable user identifier.
-  String? _userScopeForDedupe(final SyncOperation operation) {
+  String? _userScopeForDedupe(SyncOperation operation) {
     final dynamic uid = operation.payload[payloadKeySupabaseUserId];
     return uid is String && uid.isNotEmpty ? uid : null;
   }
@@ -112,9 +112,9 @@ class PendingSyncRepository extends HiveRepositoryBase {
   /// When [supabaseUserIdFilter] is set, only iot_demo ops whose
   /// payload supabaseUserId equals this value are included.
   Future<List<SyncOperation>> getPendingOperations({
-    final DateTime? now,
-    final int? limit,
-    final String? supabaseUserIdFilter,
+    DateTime? now,
+    int? limit,
+    String? supabaseUserIdFilter,
   }) async => StorageGuard.run<List<SyncOperation>>(
     logContext: 'PendingSyncRepository.getPendingOperations',
     action: () async {
@@ -123,17 +123,17 @@ class PendingSyncRepository extends HiveRepositoryBase {
         box.toMap(),
       );
       final List<SyncOperation> operations =
-          readResult.operations.map((final entry) => entry.operation).toList()
-            ..sort((final a, final b) => a.createdAt.compareTo(b.createdAt));
+          readResult.operations.map((entry) => entry.operation).toList()
+            ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
       await _deleteKeys(box, readResult.malformedKeys);
 
       final DateTime threshold = (now ?? DateTime.now()).toUtc();
       Iterable<SyncOperation> ready = operations.where(
-        (final op) => _isReadyForRetry(op, threshold),
+        (op) => _isReadyForRetry(op, threshold),
       );
       if (supabaseUserIdFilter != null) {
         ready = ready.where(
-          (final op) => _matchesSupabaseUserIdFilter(op, supabaseUserIdFilter),
+          (op) => _matchesSupabaseUserIdFilter(op, supabaseUserIdFilter),
         );
       }
 
@@ -146,14 +146,14 @@ class PendingSyncRepository extends HiveRepositoryBase {
   );
 
   /// Removes a successfully synchronized operation from the queue.
-  Future<void> markCompleted(final String operationId) =>
+  Future<void> markCompleted(String operationId) =>
       markCompletedBody(operationId);
 
   /// Updates an operation that failed to sync with a new retry timestamp.
   Future<void> markFailed({
-    required final String operationId,
-    required final DateTime nextRetryAt,
-    final int? retryCount,
+    required String operationId,
+    required DateTime nextRetryAt,
+    int? retryCount,
   }) => markFailedBody(
     operationId: operationId,
     nextRetryAt: nextRetryAt,
@@ -167,14 +167,14 @@ class PendingSyncRepository extends HiveRepositoryBase {
   ///
   /// Used on auth transitions to drop shared-device queues that are not
   /// user-scoped in the payload (e.g. Firebase todo/counter/chat).
-  Future<int> clearEntityTypes(final Iterable<String> types) =>
+  Future<int> clearEntityTypes(Iterable<String> types) =>
       clearEntityTypesBody(types);
 
   /// Prunes operations that have exceeded retry limits or are too old to retry.
   ///
   /// Returns the number of pruned operations.
   Future<int> prune({
-    final int maxRetryCount = 10,
-    final Duration maxAge = const Duration(days: 30),
+    int maxRetryCount = 10,
+    Duration maxAge = const Duration(days: 30),
   }) => pruneBody(maxRetryCount: maxRetryCount, maxAge: maxAge);
 }

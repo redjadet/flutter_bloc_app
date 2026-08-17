@@ -3,7 +3,7 @@ enum StaffDemoRole {
   manager,
   accountant;
 
-  static StaffDemoRole? tryParse(final String? raw) {
+  static StaffDemoRole? tryParse(String? raw) {
     return switch (raw) {
       'employee' => StaffDemoRole.employee,
       'manager' => StaffDemoRole.manager,

@@ -1,6 +1,6 @@
 /// Stable log message tokens shared by app code and integration harness filters.
 abstract final class IntegrationLogMessages {
-  static String offlineFirstRemoteConfigFetchFailed(final String reason) =>
+  static String offlineFirstRemoteConfigFetchFailed(String reason) =>
       'OfflineFirstRemoteConfigRepository.$reason failed';
 
   static const String offlineFirstTodoSaveSyncFailed =

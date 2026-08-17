@@ -5,8 +5,8 @@ part 'app_locale.freezed.dart';
 @freezed
 abstract class AppLocale with _$AppLocale {
   const factory AppLocale({
-    required final String languageCode,
-    final String? countryCode,
+    required String languageCode,
+    String? countryCode,
   }) = _AppLocale;
 
   const AppLocale._();
@@ -16,7 +16,7 @@ abstract class AppLocale with _$AppLocale {
     _ => languageCode,
   };
 
-  static AppLocale? fromTag(final String? tag) {
+  static AppLocale? fromTag(String? tag) {
     if (tag == null || tag.isEmpty) {
       return null;
     }

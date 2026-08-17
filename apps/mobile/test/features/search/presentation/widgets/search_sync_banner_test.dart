@@ -1,15 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:flutter_bloc_app/features/search/presentation/widgets/search_sync_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
 
 class _FakeNetworkStatusService implements NetworkStatusService {
   _FakeNetworkStatusService();
@@ -29,7 +30,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
     await _controller.close();
   }
 
-  void emit(final NetworkStatus newStatus) {
+  void emit(NetworkStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
@@ -81,14 +82,14 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
-  void emit(final SyncStatus newStatus) {
+  void emit(SyncStatus newStatus) {
     status = newStatus;
     _controller.add(newStatus);
   }
 
-  void emitSummary(final SyncCycleSummary summary) {
+  void emitSummary(SyncCycleSummary summary) {
     _latestSummary = summary;
     _history.add(summary);
     _summaryController.add(summary);
@@ -130,7 +131,7 @@ void main() {
 
     Widget buildSubject() {
       return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: BlocProvider<SyncStatusCubit>.value(
           value: syncCubit,
@@ -158,7 +159,7 @@ void main() {
     testWidgets('renders safely without SyncStatusCubit', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: SearchSyncBanner()),
         ),
@@ -217,7 +218,7 @@ void main() {
       await tester.runAsync(() async {
         networkService.emit(NetworkStatus.offline);
         await syncCubit.stream.firstWhere(
-          (final SyncStatusState state) =>
+          (SyncStatusState state) =>
               state.networkStatus == NetworkStatus.offline,
         );
       });
@@ -237,7 +238,7 @@ void main() {
       await tester.runAsync(() async {
         networkService.emit(NetworkStatus.online);
         await syncCubit.stream.firstWhere(
-          (final SyncStatusState state) =>
+          (SyncStatusState state) =>
               state.networkStatus == NetworkStatus.online,
         );
       });
@@ -263,8 +264,7 @@ void main() {
       await tester.runAsync(() async {
         coordinator.emit(SyncStatus.syncing);
         await syncCubit.stream.firstWhere(
-          (final SyncStatusState state) =>
-              state.syncStatus == SyncStatus.syncing,
+          (SyncStatusState state) => state.syncStatus == SyncStatus.syncing,
         );
       });
       await tester.pumpAndSettle(); // Allow stream event to propagate
@@ -283,7 +283,7 @@ void main() {
       await tester.runAsync(() async {
         coordinator.emit(SyncStatus.idle);
         await syncCubit.stream.firstWhere(
-          (final SyncStatusState state) => state.syncStatus == SyncStatus.idle,
+          (SyncStatusState state) => state.syncStatus == SyncStatus.idle,
         );
       });
       await tester.pumpAndSettle(); // Allow stream event to propagate
@@ -324,7 +324,7 @@ void main() {
       int buildCount = 0;
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<SyncStatusCubit>.value(
             value: cubit,
@@ -335,8 +335,8 @@ void main() {
                     SyncStatusState,
                     (NetworkStatus, SyncStatus)
                   >(
-                    selector: (final s) => (s.networkStatus, s.syncStatus),
-                    builder: (final context, final pair) {
+                    selector: (s) => (s.networkStatus, s.syncStatus),
+                    builder: (context, pair) {
                       buildCount++;
                       return Text(
                         '${pair.$1}-${pair.$2}',

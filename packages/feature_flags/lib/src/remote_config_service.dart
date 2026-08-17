@@ -10,14 +10,14 @@ abstract class RemoteConfigService {
   Future<void> clearCache();
 
   /// Returns the boolean value for [key], or false if unset.
-  bool getBool(final String key);
+  bool getBool(String key);
 
   /// Returns the string value for [key], or empty string if unset.
-  String getString(final String key);
+  String getString(String key);
 
   /// Returns the int value for [key], or 0 if unset.
-  int getInt(final String key);
+  int getInt(String key);
 
   /// Returns the double value for [key], or 0.0 if unset.
-  double getDouble(final String key);
+  double getDouble(String key);
 }

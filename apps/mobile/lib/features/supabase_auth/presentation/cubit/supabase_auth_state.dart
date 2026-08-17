@@ -7,12 +7,11 @@ part 'supabase_auth_state.freezed.dart';
 abstract class SupabaseAuthState with _$SupabaseAuthState {
   const factory SupabaseAuthState.initial() = _Initial;
   const factory SupabaseAuthState.loading() = _Loading;
-  const factory SupabaseAuthState.authenticated(final AuthUser user) =
-      _Authenticated;
+  const factory SupabaseAuthState.authenticated(AuthUser user) = _Authenticated;
   const factory SupabaseAuthState.unauthenticated() = _Unauthenticated;
   const factory SupabaseAuthState.sessionExpired(
-    final SessionInvalidationReason reason,
+    SessionInvalidationReason reason,
   ) = _SessionExpired;
-  const factory SupabaseAuthState.error(final String message) = _Error;
+  const factory SupabaseAuthState.error(String message) = _Error;
   const factory SupabaseAuthState.notConfigured() = _NotConfigured;
 }

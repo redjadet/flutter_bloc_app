@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:design_system/responsive.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 import '../../styles/app_styles.dart';
-import 'package:design_system/responsive.dart';
 import 'skeleton_base.dart';
 
 /// A reusable skeleton list tile for list-based UIs.
@@ -28,7 +28,7 @@ class SkeletonListTile extends StatelessWidget {
   final bool hasSubtitle;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     final effectiveHeight = height ?? context.responsiveButtonHeight * 1.5;

@@ -3,19 +3,19 @@
 )
 library;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_domain.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
-import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'test_helpers.dart';
 
@@ -112,7 +112,7 @@ class _FakeBiometricAuthenticator implements BiometricAuthenticator {
   Future<bool> authenticate({String? localizedReason}) async => true;
 }
 
-ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {
+ThemePreference _toPreference(ThemeMode mode) => switch (mode) {
   ThemeMode.light => ThemePreference.light,
   ThemeMode.dark => ThemePreference.dark,
   ThemeMode.system => ThemePreference.system,

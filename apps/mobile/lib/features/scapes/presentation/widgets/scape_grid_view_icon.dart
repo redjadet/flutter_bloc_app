@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Grid view icon for scapes page, matching Figma design
 class ScapeGridViewIcon extends StatelessWidget {
@@ -11,7 +11,7 @@ class ScapeGridViewIcon extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     final double iconSize = UI.scaleFontMax(16);
     final String assetPath = isSelected
@@ -51,7 +51,7 @@ class ScapeListViewIcon extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final EpochThemeExtension epoch = context.epoch;
     final double iconSize = UI.scaleFontMax(16);
     final Color iconColor = isSelected ? epoch.warmGreyLightest : epoch.ash;
@@ -62,8 +62,7 @@ class ScapeListViewIcon extends StatelessWidget {
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
         child: ResilientSvgAssetImage(
-          assetPath:
-              'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon.svg',
+          assetPath: 'assets/figma/Epoch___Mobile___Library_A_2805-20462/library_list_view_icon.svg',
           fit: BoxFit.contain,
           fallbackBuilder: () => Icon(
             Icons.view_list,

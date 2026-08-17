@@ -1,17 +1,17 @@
 import 'dart:math' as math;
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/scapes/domain/scape.dart';
 import 'package:flutter_bloc_app/features/scapes/presentation/widgets/scape_grid_item.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Shared grid metrics (delegate + mainAxisExtent) for [ScapesGridView] and
 /// [ScapesGridSliver] so layout is identical.
 _ScapesGridMetrics _computeScapesGridMetrics(
-  final BuildContext context,
-  final double maxWidth,
+  BuildContext context,
+  double maxWidth,
 ) {
   final gridLayout = context.calculateGridLayout(
     mobileColumns: 2,
@@ -94,9 +94,9 @@ class ScapesGridView extends StatelessWidget {
   final bool shrinkWrap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final metrics = _computeScapesGridMetrics(
           context,
           constraints.maxWidth,
@@ -114,7 +114,7 @@ class ScapesGridView extends StatelessWidget {
                 : const AlwaysScrollableScrollPhysics(),
             gridDelegate: metrics.delegate,
             itemCount: scapes.length,
-            itemBuilder: (final context, final index) {
+            itemBuilder: (context, index) {
               final scape = scapes[index];
               return RepaintBoundary(
                 key: ValueKey<String>('scape-${scape.id}'),
@@ -147,9 +147,9 @@ class ScapesGridSliver extends StatelessWidget {
   final void Function(String scapeId) onMorePressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return SliverLayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final metrics = _computeScapesGridMetrics(
           context,
           constraints.crossAxisExtent,
@@ -162,7 +162,7 @@ class ScapesGridSliver extends StatelessWidget {
           sliver: SliverGrid(
             gridDelegate: metrics.delegate,
             delegate: SliverChildBuilderDelegate(
-              (final context, final index) {
+              (context, index) {
                 final scape = scapes[index];
                 return RepaintBoundary(
                   key: ValueKey<String>('scape-${scape.id}'),

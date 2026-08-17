@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:material_ui/material_ui.dart';
 
 /// Google Maps implementation of the map view.
 class GoogleMapsView extends StatefulWidget {
@@ -24,7 +24,7 @@ class GoogleMapsView extends StatefulWidget {
 class _GoogleMapsViewState extends State<GoogleMapsView> {
   gmaps.GoogleMapController? _mapController;
 
-  void _onMapCreated(final gmaps.GoogleMapController controller) {
+  void _onMapCreated(gmaps.GoogleMapController controller) {
     _mapController = controller;
     if (!widget.controller.isCompleted) {
       widget.controller.complete(controller);
@@ -32,7 +32,7 @@ class _GoogleMapsViewState extends State<GoogleMapsView> {
   }
 
   @override
-  Widget build(final BuildContext context) => gmaps.GoogleMap(
+  Widget build(BuildContext context) => gmaps.GoogleMap(
     mapType: widget.stateManager.mapType,
     initialCameraPosition: widget.stateManager.cameraPosition,
     markers: widget.stateManager.markers,

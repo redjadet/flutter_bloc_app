@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Banner showing pending chat sync count and optional manual sync action.
@@ -39,7 +39,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
     }
   }
 
-  Future<void> _handleSyncNow(final BuildContext context) async {
+  Future<void> _handleSyncNow(BuildContext context) async {
     if (_isManualSyncing) {
       return;
     }
@@ -61,7 +61,7 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<SyncStatusCubit, SyncStatusState>(
           context,
         ) ||
@@ -73,19 +73,19 @@ class _ChatSyncBannerState extends State<ChatSyncBanner> {
     }
 
     return TypeSafeBlocListener<SyncStatusCubit, SyncStatusState>(
-      listener: (final context, final state) {
+      listener: (context, state) {
         // check-ignore: listener callback is event-driven, not a build side effect
         unawaited(context.cubit<ChatSyncStatusCubit>().refresh());
       },
       child: TypeSafeBlocBuilder<ChatSyncStatusCubit, ChatSyncStatusState>(
-        builder: (final context, final chatSyncState) {
+        builder: (context, chatSyncState) {
           return TypeSafeBlocSelector<
             SyncStatusCubit,
             SyncStatusState,
             (NetworkStatus, SyncStatus)
           >(
-            selector: (final s) => (s.networkStatus, s.syncStatus),
-            builder: (final context, final pair) {
+            selector: (s) => (s.networkStatus, s.syncStatus),
+            builder: (context, pair) {
               final bool isOffline = pair.$1 == NetworkStatus.offline;
               final bool isSyncing = pair.$2 == SyncStatus.syncing;
               final int pendingCount = chatSyncState.pendingCount;

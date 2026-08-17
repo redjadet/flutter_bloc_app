@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('AppTypography', () {
-    testWidgets('derives styles from theme text roles', (final tester) async {
+    testWidgets('derives styles from theme text roles', (tester) async {
       late TextStyle button;
       late TextStyle body;
       late TextStyle title;
@@ -25,7 +25,7 @@ void main() {
             ),
           ),
           home: Builder(
-            builder: (final context) {
+            builder: (context) {
               button = AppTypography.buttonText(
                 context,
                 color: Colors.red,

@@ -119,7 +119,7 @@ class MockBleDeviceCatalog {
     ),
   ];
 
-  static MockBleDeviceProfile? profileForId(final String deviceId) {
+  static MockBleDeviceProfile? profileForId(String deviceId) {
     for (final MockBleDeviceProfile profile in profiles) {
       if (profile.device.id == deviceId) {
         return profile;

@@ -3,16 +3,16 @@ import 'package:flutter_bloc_app/features/ai_decision_demo/domain/ai_decision_mo
 abstract interface class AiDecisionRepository {
   Future<List<AiDecisionCaseSummary>> getCases();
 
-  Future<AiDecisionCaseDetail> getCaseDetail(final String caseId);
+  Future<AiDecisionCaseDetail> getCaseDetail(String caseId);
 
   Future<AiDecisionDecisionResult> runDecisionSupport({
-    required final String caseId,
-    required final String operatorNote,
+    required String caseId,
+    required String operatorNote,
   });
 
   Future<void> createAction({
-    required final String caseId,
-    required final String actionType,
-    required final String note,
+    required String caseId,
+    required String actionType,
+    required String note,
   });
 }

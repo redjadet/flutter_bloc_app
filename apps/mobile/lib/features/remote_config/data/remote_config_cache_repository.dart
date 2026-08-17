@@ -50,23 +50,22 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
     fallback: () => null,
   );
 
-  Future<void> saveSnapshot(final RemoteConfigSnapshot snapshot) =>
-      StorageGuard.run(
-        logContext: 'RemoteConfigCacheRepository.saveSnapshot',
-        action: () async {
-          final Box<dynamic> box = await getBox();
-          await box.put(
-            _snapshotKey,
-            <String, dynamic>{
-              _valuesKey: Map<String, dynamic>.from(snapshot.values),
-              _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
-              _templateVersionKey: snapshot.templateVersion,
-              _dataSourceKey: snapshot.dataSource,
-              _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
-            },
-          );
+  Future<void> saveSnapshot(RemoteConfigSnapshot snapshot) => StorageGuard.run(
+    logContext: 'RemoteConfigCacheRepository.saveSnapshot',
+    action: () async {
+      final Box<dynamic> box = await getBox();
+      await box.put(
+        _snapshotKey,
+        <String, dynamic>{
+          _valuesKey: Map<String, dynamic>.from(snapshot.values),
+          _lastFetchedKey: snapshot.lastFetchedAt?.toIso8601String(),
+          _templateVersionKey: snapshot.templateVersion,
+          _dataSourceKey: snapshot.dataSource,
+          _lastSyncedKey: snapshot.lastSyncedAt?.toIso8601String(),
         },
       );
+    },
+  );
 
   Future<void> clear() => StorageGuard.run(
     logContext: 'RemoteConfigCacheRepository.clear',
@@ -76,10 +75,10 @@ class RemoteConfigCacheRepository extends HiveRepositoryBase {
     },
   );
 
-  Map<String, dynamic> _mapValues(final dynamic rawValues) {
+  Map<String, dynamic> _mapValues(dynamic rawValues) {
     if (rawValues is Map<dynamic, dynamic>) {
       return rawValues.map(
-        (final dynamic key, final dynamic value) => MapEntry(
+        (dynamic key, dynamic value) => MapEntry(
           key.toString(),
           value,
         ),

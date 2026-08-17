@@ -5,11 +5,11 @@ const String kDefaultRealtimeMarketPairId = 'btc_usdt';
 
 /// Read + watch simulated market snapshots with Hive persistence.
 abstract class RealtimeMarketRepository {
-  Future<MarketFeedSnapshot?> loadCached(final String pairId);
+  Future<MarketFeedSnapshot?> loadCached(String pairId);
 
-  Stream<MarketFeedSnapshot> watch(final String pairId);
+  Stream<MarketFeedSnapshot> watch(String pairId);
 
-  Future<void> reconnect(final String pairId);
+  Future<void> reconnect(String pairId);
 
   Future<void> dispose();
 }

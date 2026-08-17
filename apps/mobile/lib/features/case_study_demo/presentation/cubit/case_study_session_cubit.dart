@@ -53,17 +53,17 @@ class CaseStudySessionCubit extends _CaseStudySessionCubitBase
 
 abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   _CaseStudySessionCubitBase({
-    required final AuthRepository authRepository,
-    required final CaseStudyLocalRepository localRepository,
-    required final CaseStudyVideoRepository videoRepository,
-    required final CaseStudyUploadRepository uploadRepository,
+    required AuthRepository authRepository,
+    required CaseStudyLocalRepository localRepository,
+    required CaseStudyVideoRepository videoRepository,
+    required CaseStudyUploadRepository uploadRepository,
     required this._clipStore,
-    required final CaseStudyRemoteDeleteRepository remoteDeleteRepository,
-    required final RemoteBackendAuthPort remoteBackendAuth,
-    required final CaseStudyRemoteRepository remoteRepository,
+    required CaseStudyRemoteDeleteRepository remoteDeleteRepository,
+    required RemoteBackendAuthPort remoteBackendAuth,
+    required CaseStudyRemoteRepository remoteRepository,
     required this._timerService,
-    final SubmitCaseStudyUseCase? submitCaseStudy,
-    final PersistCaseStudySubmissionUseCase? persistSubmission,
+    SubmitCaseStudyUseCase? submitCaseStudy,
+    PersistCaseStudySubmissionUseCase? persistSubmission,
   }) : _authRepository = authRepository,
        _local = localRepository,
        _video = videoRepository,
@@ -126,7 +126,7 @@ abstract class _CaseStudySessionCubitBase extends Cubit<CaseStudySessionState> {
   String? _authUserId;
 
   /// Adapts [_timerService] to [RetryDelay] for local persist backoff.
-  Future<void> _retryDelayViaTimerService(final Duration duration) {
+  Future<void> _retryDelayViaTimerService(Duration duration) {
     final Completer<void> completer = Completer<void>();
     final TimerDisposable handle = _timerService.runOnce(duration, () {
       if (!completer.isCompleted) {

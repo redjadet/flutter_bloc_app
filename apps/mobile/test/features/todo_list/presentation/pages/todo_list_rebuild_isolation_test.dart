@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
@@ -10,17 +9,18 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/pages/todo_list_page_data.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_selectable_item.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../test_helpers.dart';
 
 class _FakeTodoRepository
     with TodoRepositoryNoPendingSync
     implements TodoRepository {
-  _FakeTodoRepository({final List<TodoItem>? initialItems})
+  _FakeTodoRepository({List<TodoItem>? initialItems})
     : _items = List<TodoItem>.from(initialItems ?? <TodoItem>[]) {
     _controller = StreamController<List<TodoItem>>.broadcast(
       onListen: _emitCurrent,
@@ -37,10 +37,8 @@ class _FakeTodoRepository
   Future<List<TodoItem>> fetchAll() async => _snapshot();
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int index = _items.indexWhere(
-      (final current) => current.id == item.id,
-    );
+  Future<void> save(TodoItem item) async {
+    final int index = _items.indexWhere((current) => current.id == item.id);
     if (index == -1) {
       _items.add(item);
     } else {
@@ -50,14 +48,14 @@ class _FakeTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items.removeWhere((final item) => item.id == id);
+  Future<void> delete(String id) async {
+    _items.removeWhere((item) => item.id == id);
     _emitCurrent();
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items.removeWhere((final item) => item.isCompleted);
+    _items.removeWhere((item) => item.isCompleted);
     _emitCurrent();
   }
 
@@ -77,7 +75,7 @@ class _FakeTodoRepository
   }
 }
 
-TodoItem _item(final int index) {
+TodoItem _item(int index) {
   final DateTime stamp = DateTime.utc(2026, 1, 1).add(Duration(minutes: index));
   return TodoItem(
     id: 'todo-$index',
@@ -87,7 +85,7 @@ TodoItem _item(final int index) {
   );
 }
 
-List<TodoItem> _largeList({final int count = 120}) =>
+List<TodoItem> _largeList({int count = 120}) =>
     List<TodoItem>.generate(count, _item, growable: false);
 
 class _ReadCountingTodoList extends ListBase<TodoItem> {
@@ -100,16 +98,16 @@ class _ReadCountingTodoList extends ListBase<TodoItem> {
   int get length => _items.length;
 
   @override
-  set length(final int value) => throw UnsupportedError('read only');
+  set length(int value) => throw UnsupportedError('read only');
 
   @override
-  TodoItem operator [](final int index) {
+  TodoItem operator [](int index) {
     readCount++;
     return _items[index];
   }
 
   @override
-  void operator []=(final int index, final TodoItem value) =>
+  void operator []=(int index, TodoItem value) =>
       throw UnsupportedError('read only');
 }
 
@@ -128,8 +126,8 @@ void main() {
       expect(a, equals(b));
       expect(a.filteredItems, hasLength(120));
       expect(
-        b.filteredItems.map((final i) => i.id),
-        a.filteredItems.map((final i) => i.id),
+        b.filteredItems.map((i) => i.id),
+        a.filteredItems.map((i) => i.id),
       );
     });
 
@@ -163,7 +161,7 @@ void main() {
 
     testWidgets(
       'list projection selector does not rebuild on selection-only emits',
-      (final WidgetTester tester) async {
+      (WidgetTester tester) async {
         final List<TodoItem> items = _largeList();
         final _FakeTodoRepository repository = _FakeTodoRepository(
           initialItems: items,
@@ -187,9 +185,7 @@ void main() {
           MaterialApp(
             localizationsDelegates: const [
               AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
+              ...GlobalMaterialLocalizations.delegates,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
             home: BlocProvider<TodoListCubit>.value(
@@ -201,7 +197,7 @@ void main() {
                     TodoListListProjection
                   >(
                     selector: TodoListListProjection.fromState,
-                    builder: (final context, final listData) {
+                    builder: (context, listData) {
                       listBuildCount++;
                       capturedFiltered = listData.filteredItems;
                       return TypeSafeBlocSelector<
@@ -210,7 +206,7 @@ void main() {
                         TodoListSelectionData
                       >(
                         selector: TodoListSelectionData.fromState,
-                        builder: (final context, final selection) {
+                        builder: (context, selection) {
                           selectionBuildCount++;
                           return Text(
                             'list=${capturedFiltered!.length} '
@@ -245,7 +241,7 @@ void main() {
     );
 
     testWidgets('large list keeps stable ValueKey identity for rows', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final List<TodoItem> items = _largeList();
       await tester.pumpWidget(
@@ -253,7 +249,7 @@ void main() {
           home: Scaffold(
             body: ListView.builder(
               itemCount: items.length,
-              itemBuilder: (final context, final index) {
+              itemBuilder: (context, index) {
                 final TodoItem item = items[index];
                 return RepaintBoundary(
                   key: ValueKey<String>('todo-${item.id}'),
@@ -280,7 +276,7 @@ void main() {
     });
 
     testWidgets('row selector updates the tapped row selection chrome', (
-      final WidgetTester tester,
+      WidgetTester tester,
     ) async {
       final _FakeTodoRepository repository = _FakeTodoRepository(
         initialItems: _largeList(count: 2),
@@ -295,11 +291,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: BlocProvider<TodoListCubit>.value(
             value: cubit,
@@ -308,9 +300,8 @@ void main() {
                 TodoListSelectableItem(
                   item: _item(0),
                   showDragHandle: false,
-                  onItemSelectionChanged:
-                      (final itemId, {required final selected}) =>
-                          cubit.toggleItemSelection(itemId),
+                  onItemSelectionChanged: (itemId, {required selected}) =>
+                      cubit.toggleItemSelection(itemId),
                   onToggle: () {},
                   onEdit: () {},
                   onDelete: () {},
@@ -318,9 +309,8 @@ void main() {
                 TodoListSelectableItem(
                   item: _item(1),
                   showDragHandle: false,
-                  onItemSelectionChanged:
-                      (final itemId, {required final selected}) =>
-                          cubit.toggleItemSelection(itemId),
+                  onItemSelectionChanged: (itemId, {required selected}) =>
+                      cubit.toggleItemSelection(itemId),
                   onToggle: () {},
                   onEdit: () {},
                   onDelete: () {},
@@ -340,7 +330,7 @@ void main() {
       final List<Checkbox> checkboxes = tester
           .widgetList<Checkbox>(find.byType(Checkbox))
           .toList(growable: false);
-      expect(checkboxes.map((final checkbox) => checkbox.value), <bool?>[
+      expect(checkboxes.map((checkbox) => checkbox.value), <bool?>[
         true,
         false,
       ]);

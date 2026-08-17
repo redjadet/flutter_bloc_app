@@ -7,7 +7,7 @@ void registerGuestSignInIntegrationFlow() {
     options: const IntegrationDependencyOptions(
       authMode: IntegrationAuthMode.realFirebaseAuth,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       if (FirebaseBootstrapService.isFirebaseInitialized) {
         if (FirebaseAuth.instance.currentUser != null) {
           await FirebaseAuth.instance.signOut();
@@ -59,7 +59,7 @@ void registerAppLaunchIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'App launch',
     testName: 'launches to the counter page and updates the count',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       expect(find.text('Home Page'), findsOneWidget);
@@ -88,7 +88,7 @@ void registerCalculatorIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Calculator flow',
     testName: 'opens calculator from home and shows calculator page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.byTooltip('Open payment calculator'));
@@ -104,7 +104,7 @@ void registerChartsIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Charts flow',
     testName: 'opens charts from overflow and shows chart page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open charts');
@@ -119,7 +119,7 @@ void registerChartsRefreshIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Charts flow',
     testName: 'refreshes chart data via pull-to-refresh',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open charts');
@@ -142,7 +142,7 @@ void registerChatListIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'Chat list flow',
     testName: 'opens chat list from example and shows conversation history',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openExampleDestination(tester, 'Chat List Demo');
@@ -164,7 +164,7 @@ void registerCounterPersistenceIntegrationFlow() {
     options: const IntegrationDependencyOptions(
       overrideCounterRepository: false,
     ),
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await pumpUntilFound(tester, find.text('0'));
@@ -200,7 +200,7 @@ void registerGenUiDemoIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'GenUI demo flow',
     testName: 'opens GenUI demo from overflow and shows GenUI demo page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'GenUI Demo');
@@ -215,7 +215,7 @@ void registerGraphqlDemoIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'GraphQL demo flow',
     testName: 'opens GraphQL demo from overflow and shows GraphQL page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Explore GraphQL sample');
@@ -234,7 +234,7 @@ void registerIgamingDemoIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'iGaming demo flow',
     testName: 'opens iGaming demo from overflow and shows iGaming demo lobby',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'iGaming Demo');
@@ -249,7 +249,7 @@ void registerIotDemoIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'IoT demo flow',
     testName: 'opens IoT demo from overflow and shows IoT demo page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open IoT Demo');
@@ -268,7 +268,7 @@ void registerIotDemoBleTabIntegrationFlow() {
   registerIntegrationFlow(
     groupName: 'IoT demo BLE tab flow',
     testName: 'opens IoT demo BLE tab and shows mock BLE showcase',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open IoT Demo');
@@ -292,7 +292,7 @@ void registerMarkdownEditorIntegrationFlow() {
     groupName: 'Markdown editor flow',
     testName:
         'opens markdown editor from overflow and shows markdown editor page',
-    body: (final tester) async {
+    body: (tester) async {
       await launchTestApp(tester);
 
       await _openOverflowDestination(tester, 'Open Markdown Editor');

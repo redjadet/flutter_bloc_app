@@ -10,6 +10,6 @@ class ChatRenderOrchestrationDiagnosticsAdapter
   final bool Function() _isFirebaseAuthRegistered;
 
   @override
-  void logIfDebug(final String tag) =>
+  void logIfDebug(String tag) =>
       logChatRenderOrchestrationIfDebug(tag, _isFirebaseAuthRegistered);
 }

@@ -1,32 +1,33 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_value_range.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_set_value_dialog.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _DialogResultStore {
   double? value;
 }
 
 Future<void> _pumpDialogHarness(
-  final WidgetTester tester,
-  final _DialogResultStore resultStore,
+  WidgetTester tester,
+  _DialogResultStore resultStore,
 ) async {
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => Scaffold(
+        builder: (context) => Scaffold(
           body: Center(
             child: TextButton(
               onPressed: () async {
                 final AppLocalizations l10n = AppLocalizations.of(context);
                 resultStore.value = await showAdaptiveDialog<double>(
                   context: context,
-                  builder: (final _) => IotDemoSetValueDialogBody(
+                  builder: (_) => IotDemoSetValueDialogBody(
                     initialValue: 21,
                     l10n: l10n,
                     minValue: iotDemoValueMin,
@@ -48,7 +49,7 @@ void main() {
     final AppLocalizationsEn l10n = AppLocalizationsEn();
 
     testWidgets('shows out-of-range message and does not close', (
-      final tester,
+      tester,
     ) async {
       final _DialogResultStore resultStore = _DialogResultStore();
       await _pumpDialogHarness(tester, resultStore);
@@ -69,7 +70,7 @@ void main() {
     });
 
     testWidgets('accepts comma decimal input and returns value', (
-      final tester,
+      tester,
     ) async {
       final _DialogResultStore resultStore = _DialogResultStore();
       await _pumpDialogHarness(tester, resultStore);

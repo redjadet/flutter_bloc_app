@@ -1,7 +1,7 @@
 import 'package:design_system/responsive.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class MarketChartPanel extends StatelessWidget {
   const MarketChartPanel({
@@ -14,7 +14,7 @@ class MarketChartPanel extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     final List<double> series = closes.isEmpty
@@ -27,7 +27,7 @@ class MarketChartPanel extends StatelessWidget {
     final double pad = (maxY - minY).abs() < 1e-6 ? 1 : (maxY - minY) * 0.08;
     final List<FlSpot> spots = List<FlSpot>.generate(
       series.length,
-      (final i) => FlSpot(i.toDouble(), series[i]),
+      (i) => FlSpot(i.toDouble(), series[i]),
       growable: false,
     );
 
@@ -51,7 +51,7 @@ class MarketChartPanel extends StatelessWidget {
                 clipData: const FlClipData.all(),
                 gridData: FlGridData(
                   drawVerticalLine: false,
-                  getDrawingHorizontalLine: (final _) => FlLine(
+                  getDrawingHorizontalLine: (_) => FlLine(
                     color: scheme.outlineVariant.withValues(alpha: 0.35),
                     strokeWidth: 1,
                   ),
@@ -63,8 +63,8 @@ class MarketChartPanel extends StatelessWidget {
                     getTooltipColor: (_) => scheme.surfaceContainerHigh,
                     fitInsideHorizontally: true,
                     fitInsideVertically: true,
-                    getTooltipItems: (final touched) {
-                      return touched.map((final spot) {
+                    getTooltipItems: (touched) {
+                      return touched.map((spot) {
                         return LineTooltipItem(
                           spot.y.toStringAsFixed(2),
                           TextStyle(

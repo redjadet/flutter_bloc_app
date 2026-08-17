@@ -38,7 +38,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   @override
-  Future<void> linkWalletToFirebaseUser(final String walletAddress) async {
+  Future<void> linkWalletToFirebaseUser(String walletAddress) async {
     try {
       User user = await _requireAuthenticatedUser();
       final WalletAddress address = _requireValidWalletAddress(walletAddress);
@@ -83,7 +83,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   /// Builds a user-visible detail string from Firebase/auth errors.
-  static String _firebaseErrorDetail(final Object error) {
+  static String _firebaseErrorDetail(Object error) {
     if (error is FirebaseException) {
       final code = error.code;
       final msg = error.message?.trim();
@@ -146,8 +146,8 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
 
   @override
   Future<void> upsertWalletUserProfile(
-    final String walletAddress, {
-    final WalletUserProfile? profile,
+    String walletAddress, {
+    WalletUserProfile? profile,
   }) async {
     try {
       final User user = _requireCurrentUserForProfileWrite();
@@ -180,7 +180,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
 
   @override
   Future<WalletUserProfile?> getWalletUserProfile(
-    final String walletAddress,
+    String walletAddress,
   ) async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -209,10 +209,10 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   /// Normalizes wallet address for use as Firestore document ID (e.g. lowercase).
-  static String _normalizeWalletDocId(final String walletAddress) =>
+  static String _normalizeWalletDocId(String walletAddress) =>
       walletAddress.toLowerCase();
 
-  DocumentReference<Map<String, dynamic>> _userDocument(final String uid) =>
+  DocumentReference<Map<String, dynamic>> _userDocument(String uid) =>
       _firestore.collection(_usersCollection).doc(uid);
 
   Future<User> _requireAuthenticatedUser() async =>
@@ -228,7 +228,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
     return user;
   }
 
-  WalletAddress _requireValidWalletAddress(final String walletAddress) {
+  WalletAddress _requireValidWalletAddress(String walletAddress) {
     final WalletAddress address = WalletAddress(walletAddress);
     if (!address.isValid) {
       throw WalletConnectException(
@@ -238,7 +238,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
     return address;
   }
 
-  WalletAddress? _parseLinkedWalletAddress(final String walletAddress) {
+  WalletAddress? _parseLinkedWalletAddress(String walletAddress) {
     final WalletAddress address = WalletAddress(walletAddress);
     if (address.isValid) {
       return address;
@@ -250,7 +250,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   Future<WalletAddress?> _linkedWalletAddressForCurrentUser(
-    final String walletAddress,
+    String walletAddress,
   ) async {
     final WalletAddress? linked = await getLinkedWalletAddress();
     if (linked == null) {
@@ -263,7 +263,7 @@ class WalletConnectAuthRepositoryImpl implements WalletConnectAuthRepository {
   }
 
   Future<WalletAddress> _requireLinkedWalletAddress(
-    final String walletAddress,
+    String walletAddress,
   ) async {
     final WalletAddress? linked = await _linkedWalletAddressForCurrentUser(
       walletAddress,

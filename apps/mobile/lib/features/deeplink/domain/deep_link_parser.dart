@@ -7,7 +7,7 @@ class DeepLinkParser {
 
   /// Returns the matching [DeepLinkTarget] for the provided [uri].
   /// Returns null when the URI is not supported.
-  DeepLinkTarget? parse(final Uri uri) {
+  DeepLinkTarget? parse(Uri uri) {
     if (!_isSupportedScheme(uri.scheme)) {
       return null;
     }
@@ -16,8 +16,8 @@ class DeepLinkParser {
     }
 
     final List<String> segments = uri.pathSegments
-        .where((final segment) => segment.isNotEmpty)
-        .map((final segment) => segment.toLowerCase())
+        .where((segment) => segment.isNotEmpty)
+        .map((segment) => segment.toLowerCase())
         .toList();
 
     if (segments.isEmpty) {
@@ -46,27 +46,27 @@ class DeepLinkParser {
     return _segmentMap[key];
   }
 
-  bool _isSupportedScheme(final String scheme) =>
+  bool _isSupportedScheme(String scheme) =>
       scheme == DeepLinkConfig.universalScheme ||
       scheme == DeepLinkConfig.fallbackScheme ||
       _isWebHttpScheme(scheme);
 
-  bool _isSupportedWebHost(final Uri uri) =>
+  bool _isSupportedWebHost(Uri uri) =>
       _isLocalhostHost(uri.host) ||
       (uri.scheme == DeepLinkConfig.universalScheme &&
           _isUniversalLinkHost(uri.host));
 
-  bool _isUniversalLinkHost(final String host) =>
+  bool _isUniversalLinkHost(String host) =>
       host.toLowerCase() == DeepLinkConfig.universalHost;
 
-  bool _isLocalhostHost(final String host) {
+  bool _isLocalhostHost(String host) {
     final String normalized = host.toLowerCase();
     return normalized == 'localhost' ||
         normalized == '127.0.0.1' ||
         normalized == '::1';
   }
 
-  static bool _isWebHttpScheme(final String scheme) =>
+  static bool _isWebHttpScheme(String scheme) =>
       scheme == 'http' || scheme == 'https';
 
   static const Map<String, DeepLinkTarget> _segmentMap =

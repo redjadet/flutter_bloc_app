@@ -10,8 +10,8 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_site.
 /// - **Flat fields** (seed script / legacy): `centerLat`, `centerLng`,
 ///   `radiusMeters`.
 StaffDemoSite? staffDemoSiteFromFirestoreMap({
-  required final String siteId,
-  required final Map<String, dynamic> data,
+  required String siteId,
+  required Map<String, dynamic> data,
 }) {
   final trimmedId = siteId.trim();
   if (trimmedId.isEmpty) return null;

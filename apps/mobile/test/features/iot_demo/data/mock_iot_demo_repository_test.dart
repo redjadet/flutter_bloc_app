@@ -25,9 +25,8 @@ void main() {
       final Future<List<IotConnectionState>> statesFuture = repository
           .watchDevices()
           .map(
-            (final devices) => devices
-                .firstWhere((final d) => d.id == 'light-1')
-                .connectionState,
+            (devices) =>
+                devices.firstWhere((d) => d.id == 'light-1').connectionState,
           )
           .take(3)
           .toList();

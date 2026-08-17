@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'calculator_keypad_button.dart';
 part 'calculator_keypad_config.dart';
@@ -21,7 +21,7 @@ class CalculatorKeypad extends StatelessWidget {
   final bool shrinkWrap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final CalculatorCubit cubit = context.cubit<CalculatorCubit>();
     final double rawSpacing = context.responsiveGapL;
     final CalculatorActions actions = CalculatorCubitActions(cubit);
@@ -31,7 +31,7 @@ class CalculatorKeypad extends StatelessWidget {
     final List<_ButtonConfig> buttons = _buildButtons(context);
 
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final double spacing = math.min(
           rawSpacing,
           constraints.maxWidth / 3,
@@ -46,7 +46,7 @@ class CalculatorKeypad extends StatelessWidget {
             crossAxisSpacing: spacing,
           ),
           itemCount: buttons.length,
-          itemBuilder: (final context, final index) {
+          itemBuilder: (context, index) {
             final button = buttons[index];
             return _CalculatorButton(
               key: ValueKey<String>('calculator-button-${button.label}'),
@@ -72,7 +72,7 @@ class CalculatorKeypad extends StatelessWidget {
     );
   }
 
-  List<_ButtonConfig> _buildButtons(final BuildContext context) {
+  List<_ButtonConfig> _buildButtons(BuildContext context) {
     final l10n = context.l10n;
     return <_ButtonConfig>[
       _ButtonConfig.function(

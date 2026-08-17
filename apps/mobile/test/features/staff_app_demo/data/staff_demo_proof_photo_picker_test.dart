@@ -1,7 +1,7 @@
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
@@ -37,9 +37,8 @@ void main() {
   });
 
   test('returns success when image path is non-empty', () async {
-    when(
-      () => picker.pickImage(source: ImageSource.gallery),
-    ).thenAnswer((_) async => _FakeXFile('/tmp/photo.jpg'));
+    when(() => picker.pickImage(source: ImageSource.gallery))
+        .thenAnswer((_) async => _FakeXFile('/tmp/photo.jpg'));
 
     final MediaPickResult result = await photoPicker.pickFromGallery();
 
@@ -57,7 +56,7 @@ void main() {
       final MediaPickResult result = await photoPicker.pickFromGallery();
 
       result.maybeWhen(
-        success: (final String imagePath) {
+        success: (String imagePath) {
           expect(
             imagePath,
             startsWith(StaffDemoProofPickMemory.pickPathPrefix),
@@ -74,9 +73,8 @@ void main() {
       ImagePickerStaffDemoProofPhotoPicker.maxWebPickBytes + 1,
       1,
     );
-    when(
-      () => picker.pickImage(source: ImageSource.gallery),
-    ).thenAnswer((_) async => _FakeXFile('', bytes: oversized));
+    when(() => picker.pickImage(source: ImageSource.gallery))
+        .thenAnswer((_) async => _FakeXFile('', bytes: oversized));
 
     final MediaPickResult result = await photoPicker.pickFromGallery();
 
@@ -87,9 +85,8 @@ void main() {
   });
 
   test('returns failure when empty path and zero bytes', () async {
-    when(
-      () => picker.pickImage(source: ImageSource.gallery),
-    ).thenAnswer((_) async => _FakeXFile('', bytes: <int>[]));
+    when(() => picker.pickImage(source: ImageSource.gallery))
+        .thenAnswer((_) async => _FakeXFile('', bytes: <int>[]));
 
     final MediaPickResult result = await photoPicker.pickFromGallery();
 
@@ -100,9 +97,8 @@ void main() {
   });
 
   test('returns cancelled when picker returns null', () async {
-    when(
-      () => picker.pickImage(source: ImageSource.camera),
-    ).thenAnswer((_) async => null);
+    when(() => picker.pickImage(source: ImageSource.camera))
+        .thenAnswer((_) async => null);
 
     final MediaPickResult result = await photoPicker.pickFromCamera();
 

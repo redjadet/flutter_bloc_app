@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void installMockFirebasePlatformForTests({final bool seedDefaultApp = true}) {
+void installMockFirebasePlatformForTests({bool seedDefaultApp = true}) {
   final MockFirebasePlatform mockPlatform = MockFirebasePlatform(
     seedDefaultApp: seedDefaultApp,
   );
@@ -15,7 +15,7 @@ void resetFirebaseTestDelegate() {
 }
 
 class MockFirebasePlatform extends FirebasePlatform {
-  MockFirebasePlatform({final bool seedDefaultApp = true}) {
+  MockFirebasePlatform({bool seedDefaultApp = true}) {
     if (seedDefaultApp) {
       _apps.add(MockFirebaseApp('[DEFAULT]', mockFirebaseOptions));
       _options = mockFirebaseOptions;
@@ -52,7 +52,7 @@ class MockFirebasePlatform extends FirebasePlatform {
       );
     }
     return _apps.firstWhere(
-      (final FirebaseAppPlatform app) => app.name == name,
+      (FirebaseAppPlatform app) => app.name == name,
       orElse: () => _apps.first,
     );
   }

@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_cubit.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/cubit/map_sample_state.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_c
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_sample_map_controller.dart';
 import 'package:flutter_bloc_app/features/google_maps/presentation/widgets/map_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:material_ui/material_ui.dart';
 
 class MapSampleMapView extends StatefulWidget {
   const MapSampleMapView({
@@ -58,7 +58,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   }
 
   @override
-  void didUpdateWidget(final MapSampleMapView oldWidget) {
+  void didUpdateWidget(MapSampleMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!identical(oldWidget.controller, widget.controller)) {
       oldWidget.controller.focusHandler = null;
@@ -72,7 +72,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
   }
 
   @override
-  Widget build(final BuildContext context) => RepaintBoundary(
+  Widget build(BuildContext context) => RepaintBoundary(
     child: ClipRRect(
       borderRadius: BorderRadius.circular(context.responsiveCardRadius),
       child: widget.useAppleMaps
@@ -80,7 +80,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
               stateManager: _stateManager,
               cubit: widget.cubit,
               onCameraMove: _handleCameraMove,
-              onMapCreated: (final controller) {
+              onMapCreated: (controller) {
                 _cameraController.appleController = controller;
               },
             )
@@ -92,7 +92,7 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     ),
   );
 
-  Future<void> _applyStateUpdate(final MapSampleState state) async {
+  Future<void> _applyStateUpdate(MapSampleState state) async {
     if (!mounted) return;
 
     final MapStateChanges changes = _stateManager.applyStateUpdate(state);
@@ -116,14 +116,14 @@ class _MapSampleMapViewState extends State<MapSampleMapView> {
     // Camera changes are handled by moveCamera above and don't need setState
   }
 
-  void _handleCameraMove(final gmaps.CameraPosition position) {
+  void _handleCameraMove(gmaps.CameraPosition position) {
     if (_isAnimatingCamera) return;
     // Update local state only - don't notify cubit to prevent rebuilds/blinking
     // The cubit only needs camera position for programmatic updates
     _stateManager.updateCameraPosition(position, notifyCubit: false);
   }
 
-  Future<void> _focusOnLocation(final MapLocation location) async {
+  Future<void> _focusOnLocation(MapLocation location) async {
     final gmaps.CameraPosition targetPosition = widget.cubit
         .cameraPositionForLocation(location);
     _stateManager.setCameraPosition(targetPosition);

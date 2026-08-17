@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyCallView extends StatelessWidget {
   const OnlineTherapyCallView({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final viewState = context
         .selectState<
@@ -24,7 +24,7 @@ class OnlineTherapyCallView extends StatelessWidget {
             String? errorMessage,
           })
         >(
-          selector: (final state) => (
+          selector: (state) => (
             isBusy: state.isBusy,
             cameraPermissionGranted: state.cameraPermissionGranted,
             microphonePermissionGranted: state.microphonePermissionGranted,
@@ -48,7 +48,7 @@ class OnlineTherapyCallView extends StatelessWidget {
           hint: Text(l10n.selectAppointmentHintLabel),
           onChanged: viewState.isBusy
               ? null
-              : (final v) => v == null ? null : cubit.selectAppointment(v),
+              : (v) => v == null ? null : cubit.selectAppointment(v),
           items: viewState.appointments
               .map(
                 (a) => DropdownMenuItem<String>(
@@ -68,7 +68,7 @@ class OnlineTherapyCallView extends StatelessWidget {
           value: viewState.cameraPermissionGranted,
           onChanged: viewState.isBusy
               ? null
-              : (final v) =>
+              : (v) =>
                     v == null ? null : cubit.toggleCameraPermission(granted: v),
           title: Text(l10n.cameraPermissionGrantedLabel),
           controlAffinity: ListTileControlAffinity.leading,
@@ -79,7 +79,7 @@ class OnlineTherapyCallView extends StatelessWidget {
           value: viewState.microphonePermissionGranted,
           onChanged: viewState.isBusy
               ? null
-              : (final v) => v == null
+              : (v) => v == null
                     ? null
                     : cubit.toggleMicrophonePermission(granted: v),
           title: Text(l10n.microphonePermissionGrantedLabel),

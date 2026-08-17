@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:networking/networking.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 void main() {

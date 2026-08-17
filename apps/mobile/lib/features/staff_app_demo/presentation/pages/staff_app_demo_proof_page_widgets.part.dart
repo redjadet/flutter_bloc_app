@@ -8,8 +8,8 @@ class _ProofStatusBanner extends StatelessWidget {
   /// Shared with [StaffAppDemoProofPage] so the banner can be pinned outside
   /// the scroll view only when it has content.
   static String? messageFor(
-    final StaffDemoProofState state,
-    final AppLocalizations l10n,
+    StaffDemoProofState state,
+    AppLocalizations l10n,
   ) => switch (state.status) {
     StaffDemoProofStatus.initial || StaffDemoProofStatus.editing => null,
     StaffDemoProofStatus.submitting => l10n.staffDemoSubmitting,
@@ -25,7 +25,7 @@ class _ProofStatusBanner extends StatelessWidget {
   };
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final String? message = messageFor(state, l10n);
     if (message == null) return const SizedBox.shrink();
@@ -53,7 +53,7 @@ class _PhotoSection extends StatelessWidget {
   const _PhotoSection();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final state = context.watch<StaffDemoProofCubit>().state;
     final l10n = context.l10n;
     return Card(
@@ -138,7 +138,7 @@ class _PhotoChip extends StatelessWidget {
   final VoidCallback onRemove;
 
   @override
-  Widget build(final BuildContext context) => InputChip(
+  Widget build(BuildContext context) => InputChip(
     label: Text(path.split('/').last),
     onDeleted: onRemove,
   );
@@ -162,7 +162,7 @@ class _SubmitSectionState extends State<_SubmitSection> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final state = context.watch<StaffDemoProofCubit>().state;
     final bool busy = state.status == StaffDemoProofStatus.submitting;

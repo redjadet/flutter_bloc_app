@@ -16,14 +16,14 @@ abstract class NativePlatformShowcaseState with _$NativePlatformShowcaseState {
   const factory NativePlatformShowcaseState.loading() = _Loading;
 
   const factory NativePlatformShowcaseState.loaded(
-    final PlatformShowcaseData data, {
-    final NativeShowcaseTelemetrySnapshot? telemetry,
-    final NativePlatformShowcaseAction? lastAction,
-    final NativeInteropCallResult? lastActionResult,
-    final NativePlatformShowcaseAction? actionInFlight,
+    PlatformShowcaseData data, {
+    NativeShowcaseTelemetrySnapshot? telemetry,
+    NativePlatformShowcaseAction? lastAction,
+    NativeInteropCallResult? lastActionResult,
+    NativePlatformShowcaseAction? actionInFlight,
   }) = _Loaded;
 
   const factory NativePlatformShowcaseState.error({
-    required final NativePlatformShowcaseFailureKind failure,
+    required NativePlatformShowcaseFailureKind failure,
   }) = _Error;
 }

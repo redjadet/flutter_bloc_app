@@ -4,27 +4,27 @@
 part of 'genui_demo_cubit.dart';
 
 extension GenUiDemoCubitHandlers on GenUiDemoCubit {
-  Future<void> sendMessage(final String text) async {
+  Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
     final bool canSend = state.maybeWhen(
-      ready: (_, final _, final _) => true,
-      loading: (_, final _, final _) => true,
-      error: (_, final _, final hostHandle, final _) => hostHandle != null,
+      ready: (_, _, _) => true,
+      loading: (_, _, _) => true,
+      error: (_, _, hostHandle, _) => hostHandle != null,
       orElse: () => false,
     );
     if (!canSend) return;
     if (isClosed) return;
 
     state.mapOrNull(
-      ready: (final state) {
+      ready: (state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: true));
       },
-      loading: (final state) {
+      loading: (state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: true));
       },
-      error: (final state) {
+      error: (state) {
         if (isClosed) return;
         emit(
           GenUiDemoState.ready(
@@ -40,24 +40,24 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
       operation: () => _agent.sendMessage(text),
       isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.sendMessage',
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         state.mapOrNull(
-          ready: (final state) => emit(
+          ready: (state) => emit(
             GenUiDemoState.error(
               message: message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
             ),
           ),
-          loading: (final state) => emit(
+          loading: (state) => emit(
             GenUiDemoState.error(
               message: message,
               surfaceIds: state.surfaceIds,
               hostHandle: state.hostHandle,
             ),
           ),
-          error: (final state) => emit(
+          error: (state) => emit(
             state.copyWith(
               message: message,
               isSending: false,
@@ -70,55 +70,55 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
     if (isClosed) return;
 
     state.mapOrNull(
-      ready: (final state) {
+      ready: (state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: false));
       },
-      loading: (final state) {
+      loading: (state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: false));
       },
-      error: (final state) {
+      error: (state) {
         if (isClosed) return;
         emit(state.copyWith(isSending: false));
       },
     );
   }
 
-  void _onSurfaceEvent(final GenUiSurfaceEvent event) {
+  void _onSurfaceEvent(GenUiSurfaceEvent event) {
     if (isClosed) return;
 
     event.when(
-      added: (final surfaceId) {
+      added: (surfaceId) {
         state.mapOrNull(
-          ready: (final state) {
+          ready: (state) {
             if (isClosed) return;
             emit(state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]));
           },
-          loading: (final state) {
+          loading: (state) {
             if (isClosed) return;
             emit(state.copyWith(surfaceIds: [...state.surfaceIds, surfaceId]));
           },
         );
       },
-      removed: (final surfaceId) {
+      removed: (surfaceId) {
         state.mapOrNull(
-          ready: (final state) {
+          ready: (state) {
             if (isClosed) return;
             emit(
               state.copyWith(
                 surfaceIds: state.surfaceIds
-                    .where((final id) => id != surfaceId)
+                    .where((id) => id != surfaceId)
                     .toList(),
               ),
             );
           },
-          loading: (final state) {
+          loading: (state) {
             if (isClosed) return;
             emit(
               state.copyWith(
                 surfaceIds: state.surfaceIds
-                    .where((final id) => id != surfaceId)
+                    .where((id) => id != surfaceId)
                     .toList(),
               ),
             );
@@ -128,11 +128,11 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
     );
   }
 
-  void _onError(final String error) {
+  void _onError(String error) {
     if (isClosed) return;
 
     state.mapOrNull(
-      ready: (final state) {
+      ready: (state) {
         if (isClosed) return;
         emit(
           GenUiDemoState.error(
@@ -142,7 +142,7 @@ extension GenUiDemoCubitHandlers on GenUiDemoCubit {
           ),
         );
       },
-      loading: (final state) {
+      loading: (state) {
         if (isClosed) return;
         emit(
           GenUiDemoState.error(

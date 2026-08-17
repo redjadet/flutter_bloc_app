@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:design_system/design_system.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -20,12 +19,13 @@ import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_se
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_sort_bar.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_stats_widget.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'todo_list_page_app_bar.dart';
 part 'todo_list_page_body.dart';
 part 'todo_list_page_body.part.dart';
-part 'todo_list_page_header.part.dart';
 part 'todo_list_page_handlers.dart';
+part 'todo_list_page_header.part.dart';
 
 enum _BatchMenuAction { complete, uncomplete, delete }
 
@@ -41,19 +41,19 @@ class _TodoAppBarData {
   });
 
   factory _TodoAppBarData.fromProjections({
-    required final List<TodoItem> items,
-    required final List<TodoItem> filteredItems,
-    required final TodoListSelectionData selection,
+    required List<TodoItem> items,
+    required List<TodoItem> filteredItems,
+    required TodoListSelectionData selection,
   }) {
     final ids = selection.selectedItemIds;
     final allSelected =
         filteredItems.isNotEmpty &&
-        filteredItems.every((final i) => ids.contains(i.id));
+        filteredItems.every((i) => ids.contains(i.id));
     final hasSelectedActive = items.any(
-      (final i) => ids.contains(i.id) && !i.isCompleted,
+      (i) => ids.contains(i.id) && !i.isCompleted,
     );
     final hasSelectedCompleted = items.any(
-      (final i) => ids.contains(i.id) && i.isCompleted,
+      (i) => ids.contains(i.id) && i.isCompleted,
     );
     return _TodoAppBarData(
       hasFilteredItems: filteredItems.isNotEmpty,
@@ -73,7 +73,7 @@ class _TodoAppBarData {
   final int selectedCount;
 
   @override
-  bool operator ==(final Object other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
@@ -101,7 +101,7 @@ class TodoListPage extends StatelessWidget {
   const TodoListPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     // Outer list projection derives filtered rows only when list inputs change.
     // Inner selection rebuilds app-bar actions without re-filtering.
@@ -111,7 +111,7 @@ class TodoListPage extends StatelessWidget {
       TodoListListProjection
     >(
       selector: TodoListListProjection.fromState,
-      builder: (final context, final listData) {
+      builder: (context, listData) {
         final List<TodoItem> filteredItems = listData.filteredItems;
         return TypeSafeBlocSelector<
           TodoListCubit,
@@ -119,7 +119,7 @@ class TodoListPage extends StatelessWidget {
           TodoListSelectionData
         >(
           selector: TodoListSelectionData.fromState,
-          builder: (final context, final selection) {
+          builder: (context, selection) {
             final _TodoAppBarData barData = _TodoAppBarData.fromProjections(
               items: listData.items,
               filteredItems: filteredItems,

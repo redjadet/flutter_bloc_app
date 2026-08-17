@@ -90,8 +90,7 @@ extension WalletUserProfilePatterns on WalletUserProfile {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WalletUserProfile value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WalletUserProfile value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _WalletUserProfile() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WalletUserProfile value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WalletUserProfile value)  $default,){final _that = this;
 switch (_that) {
 case _WalletUserProfile():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WalletUserProfile value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WalletUserProfile value)?  $default,){final _that = this;
 switch (_that) {
 case _WalletUserProfile() when $default != null:
 return $default(_that);case _:
@@ -210,7 +207,7 @@ return $default(_that.balanceOffChain,_that.balanceOnChain,_that.rewards,_that.l
 
 
 class _WalletUserProfile implements WalletUserProfile {
-  const _WalletUserProfile({this.balanceOffChain = 0.0, this.balanceOnChain = 0.0, this.rewards = 0.0, this.lastClaim, final  List<NftMetadata> nfts = const <NftMetadata>[]}): _nfts = nfts;
+  const _WalletUserProfile({this.balanceOffChain = 0.0, this.balanceOnChain = 0.0, this.rewards = 0.0, this.lastClaim, List<NftMetadata> nfts = const <NftMetadata>[]}): _nfts = nfts;
   
 
 @override@JsonKey() final  double balanceOffChain;

@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 /// Shown when orchestration is hosted on FastAPI Cloud.
@@ -8,7 +8,7 @@ class ChatFastApiCloudBadge extends StatelessWidget {
   const ChatFastApiCloudBadge({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     return Semantics(

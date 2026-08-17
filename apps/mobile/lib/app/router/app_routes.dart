@@ -47,9 +47,9 @@ class AppRoutes {
   static const authPath = '/auth';
   static const String authUpgradeQueryKey = _authUpgradeQueryKey;
   static const String authUpgradeQueryValue = _authUpgradeQueryValue;
-  static String authUpgradePath({final String? redirect}) =>
+  static String authUpgradePath({String? redirect}) =>
       _appRoutesAuthUpgradePath(redirect: redirect);
-  static bool isSafeRedirectPath(final String? path) =>
+  static bool isSafeRedirectPath(String? path) =>
       _appRoutesIsSafeRedirectPath(path);
 
   static const profile = 'profile';

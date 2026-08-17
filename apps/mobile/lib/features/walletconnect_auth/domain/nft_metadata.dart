@@ -8,9 +8,9 @@ part 'nft_metadata.freezed.dart';
 @freezed
 abstract class NftMetadata with _$NftMetadata {
   const factory NftMetadata({
-    required final String tokenId,
-    required final String contractAddress,
-    required final String name,
-    final String? imageUrl,
+    required String tokenId,
+    required String contractAddress,
+    required String name,
+    String? imageUrl,
   }) = _NftMetadata;
 }

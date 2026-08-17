@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_list_repository.dart';
@@ -9,11 +10,11 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_list_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_list_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_bottom_navigation_bar.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockChatListRepository extends Mock implements ChatListRepository {}
@@ -40,7 +41,7 @@ void main() {
 
     Widget createWidgetUnderTest() {
       return MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ChatListPage(
           repository: mockRepository,
@@ -99,9 +100,8 @@ void main() {
         ),
       ];
 
-      when(
-        () => mockRepository.getChatContacts(),
-      ).thenAnswer((_) async => mockContacts);
+      when(() => mockRepository.getChatContacts())
+          .thenAnswer((_) async => mockContacts);
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump(); // Initial pump
@@ -128,9 +128,8 @@ void main() {
     testWidgets('should show loading state initially', (tester) async {
       // Use a completer to control when the future completes
       final completer = Completer<List<ChatContact>>();
-      when(
-        () => mockRepository.getChatContacts(),
-      ).thenAnswer((_) => completer.future);
+      when(() => mockRepository.getChatContacts())
+          .thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pump();
@@ -143,9 +142,8 @@ void main() {
     });
 
     testWidgets('should handle error state', (tester) async {
-      when(
-        () => mockRepository.getChatContacts(),
-      ).thenThrow(Exception('Network error'));
+      when(() => mockRepository.getChatContacts())
+          .thenThrow(Exception('Network error'));
 
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();

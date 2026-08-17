@@ -36,7 +36,7 @@ class FirestoreStaffDemoContentRepository
   }
 
   @override
-  Future<Uri> getDownloadUrl({required final String storagePath}) async {
+  Future<Uri> getDownloadUrl({required String storagePath}) async {
     final storage = _storage;
     if (storage == null) {
       throw StateError('Firebase Storage unavailable');

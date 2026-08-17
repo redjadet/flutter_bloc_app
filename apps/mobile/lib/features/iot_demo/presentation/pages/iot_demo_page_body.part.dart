@@ -10,13 +10,13 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
   final IotDevice device;
 
   static Future<void> showSetValueDialog(
-    final BuildContext context,
-    final IotDevice device,
-    final AppLocalizations l10n,
+    BuildContext context,
+    IotDevice device,
+    AppLocalizations l10n,
   ) async {
     final double? value = await showAdaptiveDialog<double>(
       context: context,
-      builder: (final ctx) => IotDemoSetValueDialogBody(
+      builder: (ctx) => IotDemoSetValueDialogBody(
         initialValue: device.value.clamp(iotDemoValueMin, iotDemoValueMax),
         l10n: l10n,
         minValue: iotDemoValueMin,
@@ -36,7 +36,7 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
     }
   }
 
-  void _onSliderChanged(final BuildContext context, final double value) {
+  void _onSliderChanged(BuildContext context, double value) {
     final double clamped = iotDemoClampAndRound(
       value,
       iotDemoValueMin,
@@ -51,7 +51,7 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     final bodyVariantStyle = theme.textTheme.bodySmall?.copyWith(
@@ -99,7 +99,7 @@ class IotDemoSelectedDeviceActions extends StatelessWidget {
             Slider.adaptive(
               value: device.value.clamp(iotDemoValueMin, iotDemoValueMax),
               max: iotDemoValueMax,
-              onChanged: (final v) => _onSliderChanged(context, v),
+              onChanged: (v) => _onSliderChanged(context, v),
             ),
           ],
         ],
@@ -158,7 +158,7 @@ class IotDemoDeviceTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Semantics(
       button: true,

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// The "gem" symbol used by the slot reels/legend.
 const String kSlotGemSymbol = '♦';
@@ -22,15 +22,15 @@ const List<String> kSlotSymbolFontFamilyFallback = <String>[
   'Segoe UI Symbol',
 ];
 
-TextStyle? withSlotSymbolFallback(final TextStyle? base) =>
+TextStyle? withSlotSymbolFallback(TextStyle? base) =>
     base?.copyWith(fontFamilyFallback: kSlotSymbolFontFamilyFallback);
 
 /// Builds a widget for a slot symbol that is robust across platforms/fonts.
 /// Symbols in [kSlotSymbolToIcon] use [Icon]; others use [Text] with fallback.
 Widget buildSlotSymbolWidget(
-  final String symbol, {
-  required final TextStyle? textStyle,
-  required final Color color,
+  String symbol, {
+  required TextStyle? textStyle,
+  required Color color,
 }) {
   final IconData? iconData = kSlotSymbolToIcon[symbol];
   if (iconData != null) {

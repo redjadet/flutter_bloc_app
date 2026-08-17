@@ -10,7 +10,7 @@ class _ShiftComposeSiteDropdown extends StatelessWidget {
   final ValueChanged<String?> onChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final sitesState = context.watch<StaffDemoSitesCubit>().state;
     final List<StaffDemoSite> sites = sitesState.sites;
@@ -25,7 +25,7 @@ class _ShiftComposeSiteDropdown extends StatelessWidget {
       initialValue: effectiveSelectedSiteId,
       items: sites
           .map(
-            (final s) => DropdownMenuItem<String>(
+            (s) => DropdownMenuItem<String>(
               value: s.siteId,
               child: Text('${s.name} (${s.siteId})'),
             ),

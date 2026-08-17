@@ -1,6 +1,5 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/bootstrap/supabase_bootstrap_service.dart';
@@ -25,6 +24,7 @@ import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'graphql_fail_once_repository.dart';
@@ -81,11 +81,10 @@ void registerIntegrationHarness() {
 }
 
 void registerIntegrationFlow({
-  required final String groupName,
-  required final String testName,
-  required final WidgetTesterCallback body,
-  final IntegrationDependencyOptions options =
-      const IntegrationDependencyOptions(),
+  required String groupName,
+  required String testName,
+  required WidgetTesterCallback body,
+  IntegrationDependencyOptions options = const IntegrationDependencyOptions(),
 }) {
   group(groupName, () {
     setUp(() async {
@@ -110,7 +109,7 @@ void registerIntegrationFlow({
       await tearDownIntegrationTestDependencies();
     });
 
-    testWidgets(testName, (final tester) async {
+    testWidgets(testName, (tester) async {
       try {
         await body(tester);
       } finally {
@@ -132,7 +131,7 @@ Future<void> initializeIntegrationTestHarness() async {
 
 void _beginIntegrationLogCapture() {
   _unexpectedIntegrationLogs.clear();
-  AppLogger.observer = (final entry) {
+  AppLogger.observer = (entry) {
     if (_isUnexpectedIntegrationLog(entry)) {
       _unexpectedIntegrationLogs.add(entry);
     }
@@ -156,15 +155,15 @@ void _assertNoUnexpectedIntegrationLogs() {
 }
 
 Future<void> configureIntegrationTestDependencies({
-  final bool overrideCounterRepository = true,
-  final bool overrideChartRepository = true,
-  final bool overrideGraphqlRepository = true,
-  final bool overrideCameraGalleryRepository = false,
-  final bool graphqlFailOnceThenSuccess = false,
-  final bool setFlavorToProd = true,
-  final bool biometricSuccess = true,
-  final AppLocale? locale = const AppLocale(languageCode: 'en'),
-  final IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
+  bool overrideCounterRepository = true,
+  bool overrideChartRepository = true,
+  bool overrideGraphqlRepository = true,
+  bool overrideCameraGalleryRepository = false,
+  bool graphqlFailOnceThenSuccess = false,
+  bool setFlavorToProd = true,
+  bool biometricSuccess = true,
+  AppLocale? locale = const AppLocale(languageCode: 'en'),
+  IntegrationAuthMode authMode = IntegrationAuthMode.mockFirebaseAuth,
 }) async {
   final bool requestedRealFirebaseAuth =
       authMode == IntegrationAuthMode.realFirebaseAuth;
@@ -190,11 +189,10 @@ Future<void> configureIntegrationTestDependencies({
   // routes (redirect to supabase auth → missing "Conversation history" /
   // "IoT Demo"). Keep bootstrap uninitialized for demo-flow coverage.
   SupabaseBootstrapService.resetForTest();
-  SupabaseBootstrapService.initializeClient =
-      ({
-        required final url,
-        required final anonKey,
-      }) async {};
+  SupabaseBootstrapService.initializeClient = ({
+    required url,
+    required anonKey,
+  }) async {};
 
   // RTDB repos rely on plugin-backed auth to produce valid RTDB credentials.
   // Omit under mock auth or when real auth fell back to local guest only.
@@ -235,9 +233,9 @@ Future<void> tearDownIntegrationTestDependencies() async {
 }
 
 Future<void> launchTestApp(
-  final WidgetTester tester, {
-  final bool requireAuth = false,
-  final bool ensureSignedIn = false,
+  WidgetTester tester, {
+  bool requireAuth = false,
+  bool ensureSignedIn = false,
 }) async {
   if (ensureSignedIn) {
     if (getIt.isRegistered<feature_auth.AuthRepository>()) {
@@ -255,8 +253,8 @@ Future<void> launchTestApp(
 }
 
 Future<void> restartTestApp(
-  final WidgetTester tester, {
-  final bool requireAuth = false,
+  WidgetTester tester, {
+  bool requireAuth = false,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await pumpSettleWithin(
@@ -266,7 +264,7 @@ Future<void> restartTestApp(
   await launchTestApp(tester, requireAuth: requireAuth);
 }
 
-Future<void> _postTestCleanupPumps(final WidgetTester tester) async {
+Future<void> _postTestCleanupPumps(WidgetTester tester) async {
   // Keep cleanup lightweight. Avoid unmounting the whole widget tree here since
   // the integration device runner manages app lifecycle (install/launch/kill).
   try {
@@ -281,7 +279,7 @@ Future<void> _postTestCleanupPumps(final WidgetTester tester) async {
   }
 }
 
-Future<void> _overrideBiometricAuthenticator(final bool success) async {
+Future<void> _overrideBiometricAuthenticator(bool success) async {
   if (getIt.isRegistered<BiometricAuthenticator>()) {
     await getIt.unregister<BiometricAuthenticator>();
   }
@@ -297,7 +295,7 @@ Future<void> _overrideAppInfoRepository() async {
   getIt.registerSingleton<AppInfoRepository>(_FakeAppInfoRepository());
 }
 
-Future<void> _overrideLocaleRepository(final AppLocale? locale) async {
+Future<void> _overrideLocaleRepository(AppLocale? locale) async {
   if (getIt.isRegistered<LocaleRepository>()) {
     await getIt.unregister<LocaleRepository>();
   }

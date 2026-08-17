@@ -24,12 +24,12 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
 
   Future<void> initialize() async {
     final bool isReady = state.maybeWhen(
-      ready: (_, final _, final _) => true,
+      ready: (_, _, _) => true,
       orElse: () => false,
     );
     if (isReady) return;
     final bool isLoading = state.maybeWhen(
-      loading: (_, final _, final _) => true,
+      loading: (_, _, _) => true,
       orElse: () => false,
     );
     if (isLoading) return;
@@ -41,7 +41,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
       operation: () => _agent.initialize(),
       isAlive: () => !isClosed,
       logContext: 'GenUiDemoCubit.initialize',
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(GenUiDemoState.error(message: message));
       },
@@ -49,7 +49,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
 
     if (isClosed) return;
     final bool isError = state.maybeWhen(
-      error: (_, final _, final _, final _) => true,
+      error: (_, _, _, _) => true,
       orElse: () => false,
     );
     if (isError) return;
@@ -58,7 +58,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     // Subscribe to streams
     _surfaceSubscription = _agent.surfaceEvents.listen(
       _onSurfaceEvent,
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'GenUiDemoCubit surface events stream error',
           error,
@@ -68,7 +68,7 @@ class GenUiDemoCubit extends Cubit<GenUiDemoState>
     );
     _errorSubscription = _agent.errors.listen(
       _onError,
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'GenUiDemoCubit errors stream error',
           error,

@@ -6,11 +6,11 @@ part 'counter_snapshot.freezed.dart';
 @freezed
 abstract class CounterSnapshot with _$CounterSnapshot {
   const factory CounterSnapshot({
-    required final int count,
-    final String? userId,
-    final DateTime? lastChanged,
-    final String? changeId,
-    final DateTime? lastSyncedAt,
-    @Default(false) final bool synchronized,
+    required int count,
+    String? userId,
+    DateTime? lastChanged,
+    String? changeId,
+    DateTime? lastSyncedAt,
+    @Default(false) bool synchronized,
   }) = _CounterSnapshot;
 }

@@ -11,12 +11,12 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 
 class WebsocketCubit extends Cubit<WebsocketState>
     with CubitSubscriptionMixin<WebsocketState> {
-  WebsocketCubit({required final WebsocketRepository repository})
+  WebsocketCubit({required WebsocketRepository repository})
     : _repository = repository,
       super(WebsocketState.initial(repository.endpoint)) {
     _statusSubscription = _repository.connectionStates.listen(
       _onConnectionState,
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'WebsocketCubit connection state stream error',
           error,
@@ -26,7 +26,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     );
     _messageSubscription = _repository.incomingMessages.listen(
       _onIncomingMessage,
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'WebsocketCubit incoming messages stream error',
           error,
@@ -59,7 +59,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await CubitExceptionHandler.executeAsyncVoid(
       operation: _repository.connect,
       isAlive: () => !isClosed,
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         _inFlightSends = 0;
         emit(
@@ -83,7 +83,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     await _repository.disconnect();
   }
 
-  Future<bool> sendMessage(final String rawMessage) async {
+  Future<bool> sendMessage(String rawMessage) async {
     final String message = rawMessage.trim();
     if (message.isEmpty || !state.isConnected) {
       return false;
@@ -113,7 +113,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
         _decrementInFlightSends();
         emit(state.copyWith(isSending: _inFlightSends > 0));
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         _decrementInFlightSends();
         emit(
@@ -134,7 +134,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     }
   }
 
-  void _onIncomingMessage(final WebsocketMessage message) {
+  void _onIncomingMessage(WebsocketMessage message) {
     if (isClosed) return;
     emit(
       state.appendMessage(
@@ -143,7 +143,7 @@ class WebsocketCubit extends Cubit<WebsocketState>
     );
   }
 
-  void _onConnectionState(final WebsocketConnectionState connectionState) {
+  void _onConnectionState(WebsocketConnectionState connectionState) {
     if (isClosed) return;
     if (connectionState.status != WebsocketStatus.connected) {
       _inFlightSends = 0;

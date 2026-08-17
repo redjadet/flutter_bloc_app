@@ -22,7 +22,7 @@ void main() {
 
 class _TestSearchRepository extends SearchRepository {
   @override
-  Future<List<SearchResult>> search(final String query) async {
+  Future<List<SearchResult>> search(String query) async {
     return [
       SearchResult(
         id: 'result-1',

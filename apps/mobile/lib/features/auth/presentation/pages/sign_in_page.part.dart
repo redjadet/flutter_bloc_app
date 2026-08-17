@@ -1,9 +1,9 @@
 part of 'sign_in_page.dart';
 
 void _showAuthError({
-  required final BuildContext context,
-  required final AppLocalizations l10n,
-  required final Object error,
+  required BuildContext context,
+  required AppLocalizations l10n,
+  required Object error,
 }) {
   if (!context.mounted) {
     ContextUtils.logNotMounted('SignInPage.showAuthError');
@@ -21,7 +21,7 @@ void _showAuthError({
   }
 }
 
-String _postAuthPath({required final String? redirectAfterLogin}) {
+String _postAuthPath({required String? redirectAfterLogin}) {
   final String? redirectPath = redirectAfterLogin;
   if (redirectPath case final String nonNullPath
       when AppRoutes.isSafeRedirectPath(nonNullPath)) {
@@ -31,12 +31,12 @@ String _postAuthPath({required final String? redirectAfterLogin}) {
 }
 
 Future<void> _signInAnonymously({
-  required final BuildContext context,
-  required final AppLocalizations l10n,
-  required final FirebaseAuth? auth,
-  required final AuthRepository? repository,
-  required final void Function(Object error) showAuthError,
-  required final String Function() postAuthPath,
+  required BuildContext context,
+  required AppLocalizations l10n,
+  required FirebaseAuth? auth,
+  required AuthRepository? repository,
+  required void Function(Object error) showAuthError,
+  required String Function() postAuthPath,
 }) async {
   if (auth == null) {
     try {

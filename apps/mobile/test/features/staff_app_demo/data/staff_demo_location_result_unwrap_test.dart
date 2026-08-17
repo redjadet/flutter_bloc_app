@@ -1,7 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_result_unwrap.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_location_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
 
 void main() {
   group('unwrapStaffDemoLocationResult', () {

@@ -8,9 +8,9 @@ class StorageGuard {
   StorageGuard._();
 
   static Future<T> run<T>({
-    required final String logContext,
-    required final FutureOr<T> Function() action,
-    final FutureOr<T> Function()? fallback,
+    required String logContext,
+    required FutureOr<T> Function() action,
+    FutureOr<T> Function()? fallback,
   }) async {
     try {
       return await action();

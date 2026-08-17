@@ -19,7 +19,7 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
 
   @override
   Future<List<ChartPoint>> readTrendingCounts({
-    final Duration? maxAge,
+    Duration? maxAge,
   }) async => StorageGuard.run<List<ChartPoint>>(
     logContext: 'ChartDemoCacheRepository.readTrendingCounts',
     action: () async {
@@ -60,7 +60,7 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> writeTrendingCounts(final List<ChartPoint> points) async {
+  Future<void> writeTrendingCounts(List<ChartPoint> points) async {
     await StorageGuard.run<void>(
       logContext: 'ChartDemoCacheRepository.writeTrendingCounts',
       action: () async {
@@ -71,7 +71,7 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
             _updatedAtKey: DateTime.now().toUtc().toIso8601String(),
             _itemsKey: points
                 .map(
-                  (final point) => ChartPointDto.fromDomain(point).toJson(),
+                  (point) => ChartPointDto.fromDomain(point).toJson(),
                 )
                 .toList(),
           },
@@ -80,18 +80,18 @@ class ChartDemoCacheRepository extends HiveRepositoryBase
     );
   }
 
-  DateTime? _parseUpdatedAt(final Map<dynamic, dynamic> stored) {
+  DateTime? _parseUpdatedAt(Map<dynamic, dynamic> stored) {
     final Object? raw = stored[_updatedAtKey];
     if (raw is! String) return null;
     return DateTime.tryParse(raw);
   }
 
-  bool _isStale(final DateTime? updatedAt, final Duration? maxAge) {
+  bool _isStale(DateTime? updatedAt, Duration? maxAge) {
     if (updatedAt == null || maxAge == null) return false;
     return updatedAt.isBefore(DateTime.now().toUtc().subtract(maxAge));
   }
 
-  Map<String, dynamic> _convertMapToTyped(final Map<dynamic, dynamic> source) {
+  Map<String, dynamic> _convertMapToTyped(Map<dynamic, dynamic> source) {
     final Map<String, dynamic> result = <String, dynamic>{};
     for (final MapEntry<dynamic, dynamic> entry in source.entries) {
       if (entry.key is! String) continue;

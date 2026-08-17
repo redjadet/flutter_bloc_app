@@ -13,7 +13,7 @@ import 'package:flutter_bloc_app/app/composition/injector_helpers.dart';
 Future<void> registerAnalyticsServices() async {
   registerLazySingletonIfAbsent<AnalyticsConsentRepository>(
     SharedPreferencesAnalyticsConsentRepository.new,
-    dispose: (final repository) => repository.dispose(),
+    dispose: (repository) => repository.dispose(),
   );
   registerLazySingletonIfAbsent<InMemoryProductAnalytics>(
     InMemoryProductAnalytics.new,

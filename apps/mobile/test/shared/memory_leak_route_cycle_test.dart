@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../helpers/memory/leak_safe_test_widgets.dart';
 
@@ -8,19 +8,19 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   leakSafeTestWidgets('GoRouter MaterialApp mount/unmount is leak-safe', (
-    final tester,
+    tester,
   ) async {
     final GoRouter router = GoRouter(
       routes: <RouteBase>[
         GoRoute(
           path: '/',
-          builder: (final BuildContext context, final GoRouterState state) {
+          builder: (BuildContext context, GoRouterState state) {
             return const Scaffold(body: Center(child: Text('home')));
           },
           routes: <RouteBase>[
             GoRoute(
               path: 'details',
-              builder: (final BuildContext context, final GoRouterState state) {
+              builder: (BuildContext context, GoRouterState state) {
                 return const Scaffold(body: Center(child: Text('details')));
               },
             ),

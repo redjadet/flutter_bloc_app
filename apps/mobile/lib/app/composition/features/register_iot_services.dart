@@ -39,7 +39,7 @@ void registerIotServices() {
         timerService: getIt<TimerService>(),
         permissionGateway: getIt<BlePermissionGateway>(),
       ),
-      dispose: (final repo) => repo.dispose(),
+      dispose: (repo) => repo.dispose(),
     );
   } else {
     registerLazySingletonIfAbsent<BlePermissionGateway>(

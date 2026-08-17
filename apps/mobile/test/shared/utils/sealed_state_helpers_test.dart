@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   group('SealedStateHelpers', () {
@@ -16,36 +16,36 @@ void main() {
   group('SealedStateMatcher', () {
     test('caseIdle handles idle state', () {
       final TestIdleState state = TestIdleState();
-      final result = SealedStateMatcher<TestIdleState, String>(
-        state,
-      ).caseIdle(() => 'idle').build();
+      final result = SealedStateMatcher<TestIdleState, String>(state)
+          .caseIdle(() => 'idle')
+          .build();
 
       expect(result, 'idle');
     });
 
     test('caseLoading handles loading state', () {
       final TestLoadingState state = TestLoadingState();
-      final result = SealedStateMatcher<TestLoadingState, String>(
-        state,
-      ).caseLoading(() => 'loading').build();
+      final result = SealedStateMatcher<TestLoadingState, String>(state)
+          .caseLoading(() => 'loading')
+          .build();
 
       expect(result, 'loading');
     });
 
     test('caseNavigate handles navigate state', () {
       final TestNavigateState state = TestNavigateState();
-      final result = SealedStateMatcher<TestNavigateState, String>(
-        state,
-      ).caseNavigate((target, origin) => 'navigate').build();
+      final result = SealedStateMatcher<TestNavigateState, String>(state)
+          .caseNavigate((target, origin) => 'navigate')
+          .build();
 
       expect(result, 'navigate');
     });
 
     test('caseError handles error state', () {
       final TestErrorState state = TestErrorState();
-      final result = SealedStateMatcher<TestErrorState, String>(
-        state,
-      ).caseError((message) => 'error').build();
+      final result = SealedStateMatcher<TestErrorState, String>(state)
+          .caseError((message) => 'error')
+          .build();
 
       expect(result, 'error');
     });
@@ -60,9 +60,10 @@ void main() {
 
     test('build returns first matching handler result', () {
       final TestIdleState state = TestIdleState();
-      final result = SealedStateMatcher<TestIdleState, String>(
-        state,
-      ).caseIdle(() => 'idle').caseLoading(() => 'loading').build();
+      final result = SealedStateMatcher<TestIdleState, String>(state)
+          .caseIdle(() => 'idle')
+          .caseLoading(() => 'loading')
+          .build();
 
       expect(result, 'idle');
     });

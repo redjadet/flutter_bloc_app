@@ -32,16 +32,16 @@ abstract class SupabaseAuthRepository implements RemoteBackendAuthPort {
 
   /// Signs in with email and password. Throws [SupabaseAuthException] on failure.
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   });
 
   /// Signs up with email, password, and optional display name.
   /// Throws [SupabaseAuthException] on failure.
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   });
 
   /// Signs out the current user.

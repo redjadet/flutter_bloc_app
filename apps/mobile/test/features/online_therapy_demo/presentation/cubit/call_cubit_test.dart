@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/appointment_repository.dart';
+import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/therapy_call_repository.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/call_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -320,11 +320,11 @@ class _DelayedCallRepository implements TherapyCallRepository {
   Completer<CallSession>? _createCompleter;
   Completer<CallSession>? _joinCompleter;
 
-  void completeCreate(final CallSession session) {
+  void completeCreate(CallSession session) {
     _createCompleter?.complete(session);
   }
 
-  void completeJoin(final CallSession session) {
+  void completeJoin(CallSession session) {
     _joinCompleter?.complete(session);
   }
 

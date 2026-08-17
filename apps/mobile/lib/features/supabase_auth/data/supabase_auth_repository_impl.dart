@@ -13,21 +13,21 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
   SupabaseAuthRepositoryImpl({
     this._isConfiguredOverride,
     this.tokenRepository,
-    final User? Function()? readCurrentUser,
-    final String? Function()? readCurrentAccessToken,
-    final Stream<AuthState> Function()? authStateChangesStream,
-    final Future<void> Function({
+    User? Function()? readCurrentUser,
+    String? Function()? readCurrentAccessToken,
+    Stream<AuthState> Function()? authStateChangesStream,
+    Future<void> Function({
       required String email,
       required String password,
     })?
     signInWithPasswordImpl,
-    final Future<void> Function({
+    Future<void> Function({
       required String email,
       required String password,
       Map<String, dynamic>? data,
     })?
     signUpImpl,
-    final Future<void> Function()? signOutImpl,
+    Future<void> Function()? signOutImpl,
   }) : _readCurrentUser = readCurrentUser ?? _defaultReadCurrentUser,
        _readCurrentAccessToken =
            readCurrentAccessToken ?? _defaultReadCurrentAccessToken,
@@ -78,7 +78,7 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
     if (!_canAccessSupabase) {
       return Stream<app_auth.AuthUser?>.value(null);
     }
-    return _authStateChangesStream().map((final data) {
+    return _authStateChangesStream().map((data) {
       if (kDebugMode) {
         AppLogger.debug(
           'Supabase auth state changed (session=${data.session != null}).',
@@ -90,8 +90,8 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {
     _requireConfigured();
     _validateCredentialInputs(email: email, password: password);
@@ -113,9 +113,9 @@ class SupabaseAuthRepositoryImpl implements SupabaseAuthRepository {
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {
     _requireConfigured();
     _validateCredentialInputs(email: email, password: password);

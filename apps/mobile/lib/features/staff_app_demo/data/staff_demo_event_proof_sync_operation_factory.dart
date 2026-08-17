@@ -3,12 +3,12 @@ import 'package:storage/storage.dart';
 
 class StaffDemoEventProofSyncOperationFactory {
   SyncOperation createSubmitOperation({
-    required final String proofId,
-    required final String userId,
-    required final String siteId,
-    required final String? shiftId,
-    required final List<String> photoFilePaths,
-    required final String signaturePngFilePath,
+    required String proofId,
+    required String userId,
+    required String siteId,
+    required String? shiftId,
+    required List<String> photoFilePaths,
+    required String signaturePngFilePath,
   }) => SyncOperation.create(
     entityType: StaffDemoEventProofSyncConstants.entityType,
     idempotencyKey: proofId,

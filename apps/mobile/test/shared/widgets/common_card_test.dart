@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/pump_with_mix_theme.dart';
 
 void main() {
   group('CommonCard', () {
     testWidgets('uses Mix token defaults for style and padding', (
-      final tester,
+      tester,
     ) async {
       const childKey = Key('common_card_default_child');
       final theme = ThemeData(
@@ -46,7 +46,7 @@ void main() {
       );
     });
 
-    testWidgets('respects explicit overrides', (final tester) async {
+    testWidgets('respects explicit overrides', (tester) async {
       const childKey = Key('common_card_override_child');
       final customShape = RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),

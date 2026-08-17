@@ -6,9 +6,9 @@ part 'game_round_result.freezed.dart';
 @freezed
 abstract class GameRoundResult with _$GameRoundResult {
   const factory GameRoundResult({
-    required final int betAmount,
-    required final int payoutAmount,
-    required final bool isWin,
+    required int betAmount,
+    required int payoutAmount,
+    required bool isWin,
   }) = _GameRoundResult;
 
   const GameRoundResult._();

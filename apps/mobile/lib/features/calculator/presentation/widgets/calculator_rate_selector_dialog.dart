@@ -41,7 +41,7 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final bool useCupertino = PlatformAdaptive.isCupertinoFromTheme(
       Theme.of(context),
     );
@@ -51,14 +51,14 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
         : _buildMaterialDialog(context);
   }
 
-  void _handleChanged(final String value) {
+  void _handleChanged(String value) {
     final double? parsed = double.tryParse(value);
     setState(() {
       _parsedValue = parsed == null ? null : (parsed / 100).clamp(0, 1);
     });
   }
 
-  Widget _buildMaterialDialog(final BuildContext context) => AlertDialog(
+  Widget _buildMaterialDialog(BuildContext context) => AlertDialog(
     title: Text(widget.title),
     content: TextField(
       controller: _controller,
@@ -86,41 +86,40 @@ class _CustomRateDialogState extends State<_CustomRateDialog> {
     ],
   );
 
-  Widget _buildCupertinoDialog(final BuildContext context) =>
-      CupertinoAlertDialog(
-        title: Text(widget.title),
-        content: Builder(
-          builder: (final context) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: context.responsiveGapM),
-              CupertinoTextField(
-                controller: _controller,
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                placeholder: widget.fieldLabel,
-                suffix: Padding(
-                  padding: EdgeInsets.only(
-                    right: context.responsiveHorizontalGapS,
-                  ),
-                  child: Text(widget.suffixText),
-                ),
-                onChanged: _handleChanged,
+  Widget _buildCupertinoDialog(BuildContext context) => CupertinoAlertDialog(
+    title: Text(widget.title),
+    content: Builder(
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: context.responsiveGapM),
+          CupertinoTextField(
+            controller: _controller,
+            keyboardType: TextInputType.number,
+            autofocus: true,
+            placeholder: widget.fieldLabel,
+            suffix: Padding(
+              padding: EdgeInsets.only(
+                right: context.responsiveHorizontalGapS,
               ),
-            ],
-          ),
-        ),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => NavigationUtils.maybePop(context),
-            child: Text(widget.cancelLabel),
-          ),
-          CupertinoDialogAction(
-            onPressed: _parsedValue == null
-                ? null
-                : () => NavigationUtils.maybePop(context, result: _parsedValue),
-            child: Text(widget.applyLabel),
+              child: Text(widget.suffixText),
+            ),
+            onChanged: _handleChanged,
           ),
         ],
-      );
+      ),
+    ),
+    actions: [
+      CupertinoDialogAction(
+        onPressed: () => NavigationUtils.maybePop(context),
+        child: Text(widget.cancelLabel),
+      ),
+      CupertinoDialogAction(
+        onPressed: _parsedValue == null
+            ? null
+            : () => NavigationUtils.maybePop(context, result: _parsedValue),
+        child: Text(widget.applyLabel),
+      ),
+    ],
+  );
 }

@@ -12,7 +12,7 @@ class TtsAudioService implements AudioPlaybackService {
   final FlutterTts _tts = FlutterTts();
 
   @override
-  Future<void> speak(final String text) async {
+  Future<void> speak(String text) async {
     await _tts.stop();
     await _tts.speak(text);
   }

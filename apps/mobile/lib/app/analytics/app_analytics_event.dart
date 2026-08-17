@@ -4,17 +4,17 @@
 /// Values are schema-constrained (short enum-like tokens), never free-form IDs.
 final class AppAnalyticsEvent {
   factory AppAnalyticsEvent.showcaseOpened({
-    required final String mode,
-    required final String source,
+    required String mode,
+    required String source,
   }) => AppAnalyticsEvent._('showcase_opened', <String, String>{
     'mode': mode,
     'source': source,
   });
 
   factory AppAnalyticsEvent.releaseFlagEvaluated({
-    required final String result,
-    required final String variant,
-    required final String source,
+    required String result,
+    required String variant,
+    required String source,
   }) => AppAnalyticsEvent._('release_flag_evaluated', <String, String>{
     'result': result,
     'variant': variant,
@@ -22,30 +22,30 @@ final class AppAnalyticsEvent {
   });
 
   factory AppAnalyticsEvent.notificationReceived({
-    required final String mode,
-    required final String source,
+    required String mode,
+    required String source,
   }) => AppAnalyticsEvent._('notification_received', <String, String>{
     'mode': mode,
     'source': source,
   });
 
   factory AppAnalyticsEvent.notificationOpened({
-    required final String mode,
-    required final String source,
+    required String mode,
+    required String source,
   }) => AppAnalyticsEvent._('notification_opened', <String, String>{
     'mode': mode,
     'source': source,
   });
 
   factory AppAnalyticsEvent.demoActionCompleted({
-    required final String result,
-    required final String source,
+    required String result,
+    required String source,
   }) => AppAnalyticsEvent._('demo_action_completed', <String, String>{
     'result': result,
     'source': source,
   });
 
-  AppAnalyticsEvent._(this.name, final Map<String, String> rawParameters)
+  AppAnalyticsEvent._(this.name, Map<String, String> rawParameters)
     : parameters = Map<String, String>.unmodifiable(rawParameters) {
     validateParameters(parameters);
   }
@@ -72,7 +72,7 @@ final class AppAnalyticsEvent {
   final Map<String, String> parameters;
 
   /// Defense-in-depth validation before adapters forward parameters.
-  static void validateParameters(final Map<String, Object?> parameters) {
+  static void validateParameters(Map<String, Object?> parameters) {
     for (final MapEntry<String, Object?> entry in parameters.entries) {
       if (!allowedParameterKeys.contains(entry.key)) {
         throw ArgumentError.value(
@@ -101,8 +101,8 @@ final class AppAnalyticsEvent {
 
   /// Coerce free-form remote/config strings into allowlisted tokens.
   static String coerceToken(
-    final String raw, {
-    required final String fallback,
+    String raw, {
+    required String fallback,
   }) {
     final String trimmed = raw.trim();
     if (_isAllowedParameterValue(trimmed)) {
@@ -111,7 +111,7 @@ final class AppAnalyticsEvent {
     return fallback;
   }
 
-  static bool _isAllowedParameterValue(final String value) {
+  static bool _isAllowedParameterValue(String value) {
     if (value.isEmpty || value.length > maxParameterValueLength) {
       return false;
     }
@@ -124,7 +124,7 @@ final class AppAnalyticsEvent {
     return true;
   }
 
-  static bool _looksLikeForbiddenPayload(final String value) {
+  static bool _looksLikeForbiddenPayload(String value) {
     final String lower = value.toLowerCase();
     if (lower.contains('@') && lower.contains('.')) {
       return true; // email-like

@@ -8,7 +8,7 @@ import '../utils/storage_guard.dart';
 
 /// Manages encryption key for Hive database using secure storage.
 class HiveKeyManager {
-  HiveKeyManager({final SecretStorage? storage})
+  HiveKeyManager({SecretStorage? storage})
     : _useStableDebugEncryptionKey =
           storage == null && useInMemorySecretStorageInDebug(),
       _storage = storage ?? createDefaultSecretStorage();
@@ -16,7 +16,7 @@ class HiveKeyManager {
   static const String _storageKey = 'hive_encryption_key';
   static const int _keyLengthBytes = 32; // 256 bits
   static final List<int> _appleDebugFallbackKey = List<int>.unmodifiable(
-    List<int>.generate(_keyLengthBytes, (final index) => index),
+    List<int>.generate(_keyLengthBytes, (index) => index),
   );
 
   final SecretStorage _storage;

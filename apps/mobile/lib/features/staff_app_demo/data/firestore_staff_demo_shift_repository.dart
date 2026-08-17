@@ -12,8 +12,8 @@ class FirestoreStaffDemoShiftRepository implements StaffDemoShiftRepository {
 
   @override
   Future<StaffDemoShift?> findActiveShift({
-    required final String userId,
-    required final DateTime nowUtc,
+    required String userId,
+    required DateTime nowUtc,
   }) async {
     final query = await _firestore
         .collection('staffDemoShifts')

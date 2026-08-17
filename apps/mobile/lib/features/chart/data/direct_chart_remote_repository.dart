@@ -38,7 +38,7 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
     return _parseFromMap(decoded);
   }
 
-  List<ChartPoint> _parseFromMap(final Map<String, dynamic> decoded) {
+  List<ChartPoint> _parseFromMap(Map<String, dynamic> decoded) {
     final dynamic prices = decoded['prices'];
     if (prices is! List) {
       throw const FormatException('Invalid chart payload content');
@@ -51,7 +51,7 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
   }
 
   /// Parses price entries resiliently; skips invalid entries and logs.
-  List<ChartPoint> _parsePricesResilient(final List<dynamic> raw) {
+  List<ChartPoint> _parsePricesResilient(List<dynamic> raw) {
     final List<ChartPoint> out = <ChartPoint>[];
     for (final dynamic item in raw) {
       if (item is! List<dynamic> || item.length < 2) continue;
@@ -68,7 +68,7 @@ class DirectChartRemoteRepository implements ChartRemoteRepository {
         );
       }
     }
-    out.sort((final a, final b) => a.date.compareTo(b.date));
+    out.sort((a, b) => a.date.compareTo(b.date));
     return out;
   }
 }

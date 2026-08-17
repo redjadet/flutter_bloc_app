@@ -7,12 +7,12 @@ part 'counter_state.freezed.dart';
 @freezed
 abstract class CounterViewData with _$CounterViewData {
   const factory CounterViewData({
-    @Default(0) final int count,
-    final DateTime? lastChanged,
-    final DateTime? lastSyncedAt,
-    final String? changeId,
-    @Default(CounterState.defaultCountdownSeconds) final int countdownSeconds,
-    @Default(0) final int pendingSyncCount,
+    @Default(0) int count,
+    DateTime? lastChanged,
+    DateTime? lastSyncedAt,
+    String? changeId,
+    @Default(CounterState.defaultCountdownSeconds) int countdownSeconds,
+    @Default(0) int pendingSyncCount,
   }) = _CounterViewData;
 }
 
@@ -21,30 +21,30 @@ sealed class CounterState with _$CounterState {
   const CounterState._();
 
   const factory CounterState.initial({
-    @Default(CounterViewData()) final CounterViewData data,
+    @Default(CounterViewData()) CounterViewData data,
   }) = CounterInitial;
 
   const factory CounterState.loading({
-    required final CounterViewData data,
+    required CounterViewData data,
   }) = CounterLoading;
 
   const factory CounterState.ready({
-    required final CounterViewData data,
+    required CounterViewData data,
   }) = CounterReady;
 
   const factory CounterState.failure({
-    required final CounterViewData data,
-    required final CounterError error,
+    required CounterViewData data,
+    required CounterError error,
   }) = CounterFailure;
 
   /// Ready snapshot used by restoration / remote watch.
   factory CounterState.success({
-    required final int count,
-    final DateTime? lastChanged,
-    final DateTime? lastSyncedAt,
-    final String? changeId,
-    final int countdownSeconds = CounterState.defaultCountdownSeconds,
-    final int pendingSyncCount = 0,
+    required int count,
+    DateTime? lastChanged,
+    DateTime? lastSyncedAt,
+    String? changeId,
+    int countdownSeconds = CounterState.defaultCountdownSeconds,
+    int pendingSyncCount = 0,
   }) => CounterState.ready(
     data: CounterViewData(
       count: count,
@@ -78,7 +78,7 @@ sealed class CounterState with _$CounterState {
   /// Auto decrement stays active while the counter is above zero.
   bool get isAutoDecrementActive => count > 0;
 
-  CounterState withData(final CounterViewData data) => switch (this) {
+  CounterState withData(CounterViewData data) => switch (this) {
     CounterInitial() => CounterState.initial(data: data),
     CounterLoading() => CounterState.loading(data: data),
     CounterReady() => CounterState.ready(data: data),
@@ -91,16 +91,16 @@ sealed class CounterState with _$CounterState {
   CounterState asInitial() => CounterState.initial(data: data);
   CounterState asLoading() => CounterState.loading(data: data);
   CounterState asReady() => CounterState.ready(data: data);
-  CounterState asFailure(final CounterError error) =>
+  CounterState asFailure(CounterError error) =>
       CounterState.failure(data: data, error: error);
 
   CounterState copyData({
-    final int? count,
-    final DateTime? lastChanged,
-    final DateTime? lastSyncedAt,
-    final String? changeId,
-    final int? countdownSeconds,
-    final int? pendingSyncCount,
+    int? count,
+    DateTime? lastChanged,
+    DateTime? lastSyncedAt,
+    String? changeId,
+    int? countdownSeconds,
+    int? pendingSyncCount,
   }) => withData(
     data.copyWith(
       count: count ?? data.count,

@@ -29,12 +29,12 @@ class AppInfoCubit extends Cubit<AppInfoState> {
       operation: () => RetryPolicy.transientErrors.executeWithRetry(
         action: _repository.load,
         cancelToken: _loadToken,
-        shouldRetry: (final e) =>
+        shouldRetry: (e) =>
             NetworkErrorMapper.isNetworkError(e) ||
             NetworkErrorMapper.isTimeoutError(e),
       ),
       isAlive: () => !isClosed,
-      onSuccess: (final info) {
+      onSuccess: (info) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -44,7 +44,7 @@ class AppInfoCubit extends Cubit<AppInfoState> {
           ),
         );
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -67,8 +67,8 @@ class AppInfoCubit extends Cubit<AppInfoState> {
 @freezed
 abstract class AppInfoState with _$AppInfoState {
   const factory AppInfoState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    final AppInfo? info,
-    final String? errorMessage,
+    @Default(ViewStatus.initial) ViewStatus status,
+    AppInfo? info,
+    String? errorMessage,
   }) = _AppInfoState;
 }

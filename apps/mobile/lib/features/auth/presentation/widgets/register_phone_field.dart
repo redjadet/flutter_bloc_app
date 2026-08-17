@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_country_option.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/register_state.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_country_picker.dart';
+import 'package:material_ui/material_ui.dart';
 
 class RegisterPhoneField extends StatelessWidget {
   const RegisterPhoneField({
@@ -29,7 +29,7 @@ class RegisterPhoneField extends StatelessWidget {
   final ValueChanged<CountryOption> onCountryChanged;
 
   @override
-  Widget build(final BuildContext context) => Row(
+  Widget build(BuildContext context) => Row(
     children: [
       _CountryChip(
         country: state.selectedCountry,
@@ -73,7 +73,7 @@ class _CountryChip extends StatelessWidget {
   final Future<void> Function() onPressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     return PlatformAdaptive.outlinedButton(

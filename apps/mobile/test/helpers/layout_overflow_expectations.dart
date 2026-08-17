@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 startLayoutOverflowCapture() {
   final List<FlutterErrorDetails> errors = <FlutterErrorDetails>[];
   final FlutterExceptionHandler? originalOnError = FlutterError.onError;
-  FlutterError.onError = (final FlutterErrorDetails details) {
+  FlutterError.onError = (FlutterErrorDetails details) {
     errors.add(details);
     originalOnError?.call(details);
   };
@@ -18,9 +18,9 @@ startLayoutOverflowCapture() {
   );
 }
 
-void expectNoRenderOverflows(final List<FlutterErrorDetails> errors) {
+void expectNoRenderOverflows(List<FlutterErrorDetails> errors) {
   final Iterable<FlutterErrorDetails> overflows = errors.where(
-    (final FlutterErrorDetails e) => e.exceptionAsString().contains('overflow'),
+    (FlutterErrorDetails e) => e.exceptionAsString().contains('overflow'),
   );
   expect(
     overflows,

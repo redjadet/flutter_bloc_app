@@ -1,12 +1,12 @@
 part of 'reactive_ble_repository.dart';
 
 mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
-  Stream<BleConnectionPhase> watchConnection(final String deviceId) =>
+  Stream<BleConnectionPhase> watchConnection(String deviceId) =>
       _connectionController.stream.where(
-        (final phase) => phase.deviceId == deviceId,
+        (phase) => phase.deviceId == deviceId,
       );
 
-  Future<Result<void>> connect(final String deviceId) async {
+  Future<Result<void>> connect(String deviceId) async {
     await _connectionSubscription?.cancel();
     final Completer<Result<void>> completer = Completer<Result<void>>();
     _connectionSubscription = client
@@ -15,7 +15,7 @@ mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
           connectionTimeout: const Duration(seconds: 15),
         )
         .listen(
-          (final update) {
+          (update) {
             final BleConnectionPhase phase = _mapConnectionUpdate(update);
             _connectionController.add(phase);
             if (update.connectionState == DeviceConnectionState.connected &&
@@ -36,7 +36,7 @@ mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
               );
             }
           },
-          onError: (final Object error, final StackTrace stackTrace) {
+          onError: (Object error, StackTrace stackTrace) {
             AppLogger.error(
               'ReactiveBleRepository connection stream',
               error,
@@ -88,7 +88,7 @@ mixin _ReactiveBleRepositoryConnection on _ReactiveBleRepositoryBase {
     await connect(id);
   }
 
-  BleConnectionPhase _mapConnectionUpdate(final ConnectionStateUpdate update) =>
+  BleConnectionPhase _mapConnectionUpdate(ConnectionStateUpdate update) =>
       BleConnectionPhase(
         deviceId: update.deviceId,
         phase: switch (update.connectionState) {

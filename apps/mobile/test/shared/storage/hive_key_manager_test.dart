@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:core/core.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
+import 'package:core/core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:storage/storage.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -71,7 +71,7 @@ void main() {
       'getEncryptionKey propagates read failure without rotating stored key',
       () async {
         final storage = _InterruptingReadSecretStorage();
-        final validKey = List<int>.generate(32, (final index) => index);
+        final validKey = List<int>.generate(32, (index) => index);
         await storage.write('hive_encryption_key', base64Encode(validKey));
 
         storage.failReads = true;
@@ -181,13 +181,13 @@ class _InterruptingReadSecretStorage implements SecretStorage {
   bool failReads = false;
 
   @override
-  Future<String?> read(final String key) async {
+  Future<String?> read(String key) async {
     final result = await readResult(key);
     return result.getOrNull();
   }
 
   @override
-  Future<Result<String?>> readResult(final String key) async {
+  Future<Result<String?>> readResult(String key) async {
     if (failReads) {
       return FailureResult<String?>(
         StorageFailure(kind: StorageFailureKind.read, key: key),
@@ -197,27 +197,27 @@ class _InterruptingReadSecretStorage implements SecretStorage {
   }
 
   @override
-  Future<void> write(final String key, final String value) async {
+  Future<void> write(String key, String value) async {
     _values[key] = value;
   }
 
   @override
-  Future<void> delete(final String key) async {
+  Future<void> delete(String key) async {
     _values.remove(key);
   }
 
   @override
-  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+  T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
       AppLogger.silenceAsync(action);
 }
 
 /// Simulates [FlutterSecureSecretStorage.write] swallowing write failures.
 class _NoPersistWriteSecretStorage extends InMemorySecretStorage {
   @override
-  Future<void> write(final String key, final String value) async {}
+  Future<void> write(String key, String value) async {}
 }
 
 class _VerifyMismatchSecretStorage implements SecretStorage {
@@ -225,13 +225,13 @@ class _VerifyMismatchSecretStorage implements SecretStorage {
   String? _written;
 
   @override
-  Future<String?> read(final String key) async {
+  Future<String?> read(String key) async {
     final result = await readResult(key);
     return result.getOrNull();
   }
 
   @override
-  Future<Result<String?>> readResult(final String key) async {
+  Future<Result<String?>> readResult(String key) async {
     _readCount++;
     if (_readCount == 1) {
       return const Success(null);
@@ -243,50 +243,50 @@ class _VerifyMismatchSecretStorage implements SecretStorage {
   }
 
   @override
-  Future<void> write(final String key, final String value) async {
+  Future<void> write(String key, String value) async {
     _written = value;
   }
 
   @override
-  Future<void> delete(final String key) async {
+  Future<void> delete(String key) async {
     _written = null;
     _readCount = 0;
   }
 
   @override
-  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+  T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
       AppLogger.silenceAsync(action);
 }
 
 class _FailingSecretStorage implements SecretStorage {
   @override
-  Future<String?> read(final String key) async {
+  Future<String?> read(String key) async {
     throw Exception('Storage read failed');
   }
 
   @override
-  Future<Result<String?>> readResult(final String key) async =>
+  Future<Result<String?>> readResult(String key) async =>
       const FailureResult<String?>(
         UnknownFailure(message: 'Storage read failed'),
       );
 
   @override
-  Future<void> write(final String key, final String value) async {
+  Future<void> write(String key, String value) async {
     throw Exception('Storage write failed');
   }
 
   @override
-  Future<void> delete(final String key) async {
+  Future<void> delete(String key) async {
     throw Exception('Storage delete failed');
   }
 
   @override
-  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+  T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
       AppLogger.silenceAsync(action);
 }

@@ -12,7 +12,7 @@ const Set<String> authClassifiedFirebaseRefreshFailureCodes = <String>{
 };
 
 /// Returns true when [error] indicates an unrecoverable auth session failure.
-bool isAuthClassifiedFirebaseRefreshFailure(final Object error) {
+bool isAuthClassifiedFirebaseRefreshFailure(Object error) {
   if (error is! FirebaseAuthException) {
     return false;
   }

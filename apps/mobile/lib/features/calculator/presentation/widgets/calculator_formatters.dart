@@ -15,7 +15,7 @@ class CalculatorFormatters {
   ///
   /// Formatters are cached per locale to avoid recreating NumberFormat
   /// instances on every build, which is expensive due to locale data allocation.
-  factory CalculatorFormatters.of(final BuildContext context) {
+  factory CalculatorFormatters.of(BuildContext context) {
     final Locale locale = Localizations.localeOf(context);
     final String localeName = Intl.canonicalizedLocale(locale.toString());
 

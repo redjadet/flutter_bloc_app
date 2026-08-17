@@ -1,22 +1,23 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialogs.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> _pumpDialog(
-  final WidgetTester tester, {
-  required final Future<void> Function(BuildContext) open,
-  final TargetPlatform platform = TargetPlatform.android,
+  WidgetTester tester, {
+  required Future<void> Function(BuildContext) open,
+  TargetPlatform platform = TargetPlatform.android,
 }) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: ThemeData(platform: platform),
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => Scaffold(
+        builder: (context) => Scaffold(
           body: Center(
             child: TextButton(
               onPressed: () async => open(context),
@@ -31,11 +32,11 @@ Future<void> _pumpDialog(
 
 void main() {
   group('showTodoEditorDialog', () {
-    testWidgets('Cancel returns null', (final tester) async {
+    testWidgets('Cancel returns null', (tester) async {
       TodoEditorResult? result;
       await _pumpDialog(
         tester,
-        open: (final ctx) async {
+        open: (ctx) async {
           result = await showTodoEditorDialog(context: ctx);
         },
       );
@@ -52,12 +53,12 @@ void main() {
     });
 
     testWidgets('valid title and Save returns TodoEditorResult', (
-      final tester,
+      tester,
     ) async {
       TodoEditorResult? result;
       await _pumpDialog(
         tester,
-        open: (final ctx) async {
+        open: (ctx) async {
           result = await showTodoEditorDialog(context: ctx);
         },
       );
@@ -78,12 +79,12 @@ void main() {
     });
 
     testWidgets('empty title keeps Save disabled and dialog open', (
-      final tester,
+      tester,
     ) async {
       TodoEditorResult? result;
       await _pumpDialog(
         tester,
-        open: (final ctx) async {
+        open: (ctx) async {
           result = await showTodoEditorDialog(context: ctx);
         },
       );
@@ -100,12 +101,12 @@ void main() {
     });
 
     testWidgets('iOS dialog requests keyboard focus for the title field', (
-      final tester,
+      tester,
     ) async {
       await _pumpDialog(
         tester,
         platform: TargetPlatform.iOS,
-        open: (final ctx) async {
+        open: (ctx) async {
           await showTodoEditorDialog(context: ctx);
         },
       );

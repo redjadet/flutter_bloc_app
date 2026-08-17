@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/counter.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 
@@ -35,7 +36,7 @@ class _FakeCounterRepository
   Future<CounterSnapshot> load() async => _snapshot;
 
   @override
-  Future<void> save(final CounterSnapshot snapshot) async {
+  Future<void> save(CounterSnapshot snapshot) async {
     _snapshot = snapshot;
   }
 
@@ -64,7 +65,7 @@ class TestSyncStatusCubit extends SyncStatusCubit {
     required super.coordinator,
   });
 
-  void emitState(final SyncStatusState state) => emit(state);
+  void emitState(SyncStatusState state) => emit(state);
 }
 
 void main() {
@@ -86,20 +87,16 @@ void main() {
         changeId: 'abc123',
       );
 
-      when(
-        () => networkStatusService.statusStream,
-      ).thenAnswer((_) => const Stream<NetworkStatus>.empty());
-      when(
-        () => networkStatusService.getCurrentStatus(),
-      ).thenAnswer((_) async => NetworkStatus.online);
-      when(
-        () => coordinator.statusStream,
-      ).thenAnswer((_) => const Stream<SyncStatus>.empty());
+      when(() => networkStatusService.statusStream)
+          .thenAnswer((_) => const Stream<NetworkStatus>.empty());
+      when(() => networkStatusService.getCurrentStatus())
+          .thenAnswer((_) async => NetworkStatus.online);
+      when(() => coordinator.statusStream)
+          .thenAnswer((_) => const Stream<SyncStatus>.empty());
       when(() => coordinator.currentStatus).thenReturn(SyncStatus.idle);
       when(() => coordinator.history).thenReturn(const <SyncCycleSummary>[]);
-      when(
-        () => coordinator.summaryStream,
-      ).thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
+      when(() => coordinator.summaryStream)
+          .thenAnswer((_) => const Stream<SyncCycleSummary>.empty());
       when(() => coordinator.latestSummary).thenReturn(null);
       when(() => coordinator.ensureStarted()).thenAnswer((_) async {});
 
@@ -120,9 +117,9 @@ void main() {
       await getIt.reset();
     });
 
-    Widget buildBanner(final Widget child) => MaterialApp(
+    Widget buildBanner(Widget child) => MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: ResponsiveScope(
         child: MultiBlocProvider(
@@ -149,7 +146,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -177,7 +174,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -187,7 +184,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -211,7 +208,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -241,7 +238,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -270,7 +267,7 @@ void main() {
       await tester.pumpWidget(
         buildBanner(
           Builder(
-            builder: (final context) =>
+            builder: (context) =>
                 CounterSyncBanner(l10n: AppLocalizations.of(context)),
           ),
         ),
@@ -332,7 +329,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ResponsiveScope(
             child: BlocProvider<CounterCubit>.value(
@@ -355,7 +352,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ResponsiveScope(
             child: Scaffold(
@@ -386,7 +383,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: ResponsiveScope(
             child: Scaffold(

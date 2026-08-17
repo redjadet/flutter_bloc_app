@@ -42,7 +42,7 @@ final class GraphqlFailOnceNetworkRepository implements GraphqlDemoRepository {
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     if (continentCode == null) {
       _initialLoadAttempt++;
@@ -56,12 +56,12 @@ final class GraphqlFailOnceNetworkRepository implements GraphqlDemoRepository {
     }
     return _succeedWithCache(
       _countries
-          .where((final country) => country.continent.code == continentCode)
+          .where((country) => country.continent.code == continentCode)
           .toList(growable: false),
     );
   }
 
-  List<GraphqlCountry> _succeedWithCache(final List<GraphqlCountry> countries) {
+  List<GraphqlCountry> _succeedWithCache(List<GraphqlCountry> countries) {
     _lastSource = GraphqlDataSource.cache;
     return countries;
   }

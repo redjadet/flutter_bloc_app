@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:design_system/responsive.dart';
 import 'package:event_bus/event_bus.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/domain/event_bus_demo_events.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_listener_card.dart';
 import 'package:flutter_bloc_app/features/event_bus_demo/presentation/widgets/event_bus_demo_login_panel.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Interactive demo of the Event Bus pattern (login → home + notification).
 ///
@@ -58,7 +58,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
     }
   }
 
-  void _onLoggedIn(final UserLoggedInEvent event) {
+  void _onLoggedIn(UserLoggedInEvent event) {
     if (!mounted) {
       return;
     }
@@ -68,7 +68,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
     });
   }
 
-  void _onLoggedOut(final UserLoggedOutEvent _) {
+  void _onLoggedOut(UserLoggedOutEvent _) {
     if (!mounted) {
       return;
     }
@@ -79,8 +79,8 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
   }
 
   void _onEventBusStreamError(
-    final Object error,
-    final StackTrace stackTrace,
+    Object error,
+    StackTrace stackTrace,
   ) {
     FlutterError.reportError(
       FlutterErrorDetails(
@@ -113,7 +113,7 @@ class _EventBusDemoPageState extends State<EventBusDemoPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;

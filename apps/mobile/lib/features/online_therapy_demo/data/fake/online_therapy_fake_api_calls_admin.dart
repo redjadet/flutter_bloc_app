@@ -2,7 +2,7 @@ part of 'online_therapy_fake_api.dart';
 
 extension OnlineTherapyFakeApiCallsAdmin on OnlineTherapyFakeApi {
   Future<CallSession> createCallSession({
-    required final String appointmentId,
+    required String appointmentId,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
@@ -26,7 +26,7 @@ extension OnlineTherapyFakeApiCallsAdmin on OnlineTherapyFakeApi {
     return call;
   }
 
-  Future<CallSession> joinCall({required final String callSessionId}) async {
+  Future<CallSession> joinCall({required String callSessionId}) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();
     final idx = _calls.indexWhere((c) => c.id == callSessionId);
@@ -73,7 +73,7 @@ extension OnlineTherapyFakeApiCallsAdmin on OnlineTherapyFakeApi {
   }
 
   Future<TherapistProfile> approveTherapist({
-    required final String therapistId,
+    required String therapistId,
   }) async {
     await _simulateNetwork();
     final user = _requireCurrentUser();

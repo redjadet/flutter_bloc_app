@@ -57,7 +57,7 @@ class FirestoreStaffDemoProfileRepository
   }
 
   @override
-  Future<StaffDemoProfile?> loadProfile({required final String userId}) async {
+  Future<StaffDemoProfile?> loadProfile({required String userId}) async {
     final snap = await _firestore
         .collection('staffDemoProfiles')
         .doc(userId)

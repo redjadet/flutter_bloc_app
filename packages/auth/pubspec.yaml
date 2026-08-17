@@ -4,7 +4,7 @@ description: Provider-neutral auth contracts shared across apps.
 resolution: workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
   flutter: ">=3.38.0"
 
 dependencies:

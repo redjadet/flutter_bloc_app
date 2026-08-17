@@ -9,7 +9,7 @@ import 'package:storage/storage.dart';
 
 /// Stores chat history in encrypted platform storage.
 class SecureChatHistoryRepository implements ChatHistoryRepository {
-  SecureChatHistoryRepository({final SecretStorage? storage})
+  SecureChatHistoryRepository({SecretStorage? storage})
     : _storage = storage ?? createDefaultSecretStorage();
 
   static const String _storageKeyHistory = 'chat_history';
@@ -30,7 +30,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
             return decoded
                 .whereType<Map<String, dynamic>>()
                 .map(
-                  (final map) => ChatConversationDto.fromJson(map).toDomain(),
+                  (map) => ChatConversationDto.fromJson(map).toDomain(),
                 )
                 .toList(growable: false);
           } on FormatException catch (error, stackTrace) {
@@ -46,7 +46,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
       );
 
   @override
-  Future<void> save(final List<ChatConversation> conversations) async {
+  Future<void> save(List<ChatConversation> conversations) async {
     await StorageGuard.run<void>(
       logContext: 'SecureChatHistoryRepository.save',
       action: () async {
@@ -57,7 +57,7 @@ class SecureChatHistoryRepository implements ChatHistoryRepository {
         // check-ignore: small payload (<8KB) - chat history encoding for storage is handled via decodeJsonList on read
         final String json = jsonEncode(
           conversations
-              .map((final c) => ChatConversationDto.fromDomain(c).toJson())
+              .map((c) => ChatConversationDto.fromDomain(c).toJson())
               .toList(growable: false),
         );
         await _storage.write(_storageKeyHistory, json);

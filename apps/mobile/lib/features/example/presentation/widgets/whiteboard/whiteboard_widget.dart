@@ -1,8 +1,8 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_painter.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// An interactive whiteboard widget using CustomPainter for low-level rendering.
 ///
@@ -59,7 +59,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
     });
   }
 
-  void _startStroke(final Offset position) {
+  void _startStroke(Offset position) {
     setState(() {
       _currentStroke = WhiteboardStroke(
         points: <Offset>[position],
@@ -69,7 +69,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
     });
   }
 
-  void _updateStroke(final Offset position) {
+  void _updateStroke(Offset position) {
     final WhiteboardStroke? stroke = _currentStroke;
     if (stroke == null) return;
     setState(() {
@@ -118,7 +118,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     final List<WhiteboardStroke> allStrokes = switch (_currentStroke) {
@@ -138,7 +138,7 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
           canRedo: _undoStack.isNotEmpty,
           canClear: allStrokes.isNotEmpty,
           onPickColor: _pickColor,
-          onWidthChanged: (final value) {
+          onWidthChanged: (value) {
             setState(() {
               _currentWidth = value;
             });
@@ -151,20 +151,20 @@ class _WhiteboardWidgetState extends State<WhiteboardWidget> {
         Expanded(
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onPanStart: (final details) {
+            onPanStart: (details) {
               _startStroke(details.localPosition);
             },
-            onPanUpdate: (final details) {
+            onPanUpdate: (details) {
               _updateStroke(details.localPosition);
             },
-            onPanEnd: (final details) {
+            onPanEnd: (details) {
               _endStroke();
             },
             child: LayoutBuilder(
               builder:
                   (
-                    final context,
-                    final constraints,
+                    context,
+                    constraints,
                   ) => RepaintBoundary(
                     child: CustomPaint(
                       key: ValueKey<int>(_version),

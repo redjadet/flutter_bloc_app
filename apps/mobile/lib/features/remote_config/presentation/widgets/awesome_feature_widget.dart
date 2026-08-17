@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remote_config_cubit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'awesome_feature_widget.freezed.dart';
 
 @freezed
 abstract class _FeatureEnabledData with _$FeatureEnabledData {
-  const factory _FeatureEnabledData({required final bool isEnabled}) =
+  const factory _FeatureEnabledData({required bool isEnabled}) =
       __FeatureEnabledData;
 }
 
@@ -38,7 +38,7 @@ class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (!CubitHelpers.isCubitAvailable<RemoteConfigCubit, RemoteConfigState>(
       context,
     )) {
@@ -51,10 +51,10 @@ class _AwesomeFeatureWidgetState extends State<AwesomeFeatureWidget> {
       RemoteConfigState,
       _FeatureEnabledData
     >(
-      selector: (final state) => _FeatureEnabledData(
+      selector: (state) => _FeatureEnabledData(
         isEnabled: state is RemoteConfigLoaded && state.isAwesomeFeatureEnabled,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         if (data.isEnabled) {
           return Text(context.l10n.remoteConfigAwesomeFeatureEnabled);
         }

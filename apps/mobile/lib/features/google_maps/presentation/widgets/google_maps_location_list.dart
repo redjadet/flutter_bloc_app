@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
 import 'package:flutter_bloc_app/features/google_maps/domain/map_location.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsLocationList extends StatelessWidget {
   const GoogleMapsLocationList({
@@ -24,7 +24,7 @@ class GoogleMapsLocationList extends StatelessWidget {
   final ValueChanged<MapLocation> onFocus;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     if (locations.isEmpty) {
       return CommonEmptyState(
@@ -75,7 +75,7 @@ class _LocationFocusActions extends StatelessWidget {
   final VoidCallback onFocus;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
     return Row(

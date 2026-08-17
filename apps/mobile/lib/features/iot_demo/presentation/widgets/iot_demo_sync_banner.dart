@@ -1,11 +1,11 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_banner_helpers.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Banner that displays IoT demo sync status (offline/syncing/pending).
@@ -33,18 +33,18 @@ class _IotDemoSyncBannerState extends State<IotDemoSyncBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       SyncStatusCubit,
       SyncStatusState,
       (NetworkStatus, SyncStatus, int)
     >(
-      selector: (final s) => (
+      selector: (s) => (
         s.networkStatus,
         s.syncStatus,
         s.lastSummary?.pendingAtStart ?? 0,
       ),
-      builder: (final context, final triple) {
+      builder: (context, triple) {
         final bool isOffline = triple.$1 == NetworkStatus.offline;
         final bool isSyncing = triple.$2 == SyncStatus.syncing;
         final int pendingCount = triple.$3;

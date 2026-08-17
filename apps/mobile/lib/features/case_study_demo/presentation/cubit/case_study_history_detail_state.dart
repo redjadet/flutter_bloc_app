@@ -31,15 +31,15 @@ class CaseStudyHistoryDetailState extends Equatable {
   bool get isLoading => status == CaseStudyHistoryDetailStatus.loading;
 
   CaseStudyHistoryDetailState copyWith({
-    final CaseStudyHistoryDetailStatus? status,
-    final CaseStudyRecord? record,
-    final bool? usesExpiringCloudPlaybackUrls,
-    final String? errorMessage,
-    final bool clearErrorMessage = false,
-    final Object? transientError,
-    final bool clearTransientError = false,
-    final bool clearRecord = false,
-    final bool? isDeleting,
+    CaseStudyHistoryDetailStatus? status,
+    CaseStudyRecord? record,
+    bool? usesExpiringCloudPlaybackUrls,
+    String? errorMessage,
+    bool clearErrorMessage = false,
+    Object? transientError,
+    bool clearTransientError = false,
+    bool clearRecord = false,
+    bool? isDeleting,
   }) => CaseStudyHistoryDetailState(
     status: status ?? this.status,
     record: clearRecord ? null : (record ?? this.record),

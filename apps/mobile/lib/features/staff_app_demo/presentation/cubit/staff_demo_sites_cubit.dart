@@ -17,9 +17,9 @@ class StaffDemoSitesState {
   final String? errorMessage;
 
   StaffDemoSitesState copyWith({
-    final StaffDemoSitesStatus? status,
-    final List<StaffDemoSite>? sites,
-    final String? errorMessage,
+    StaffDemoSitesStatus? status,
+    List<StaffDemoSite>? sites,
+    String? errorMessage,
   }) {
     return StaffDemoSitesState(
       status: status ?? this.status,
@@ -41,7 +41,7 @@ class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
     await CubitExceptionHandler.executeAsync<List<StaffDemoSite>>(
       operation: _repository.listSites,
       isAlive: () => !isClosed,
-      onSuccess: (final sites) {
+      onSuccess: (sites) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -50,7 +50,7 @@ class StaffDemoSitesCubit extends Cubit<StaffDemoSitesState> {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(

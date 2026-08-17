@@ -1,8 +1,8 @@
 import 'package:design_system/responsive.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chart/domain/chart_point.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chart_line_graph_chart_data.part.dart';
 
@@ -39,7 +39,7 @@ class _ChartLineGraphState extends State<ChartLineGraph> {
   }
 
   @override
-  void didUpdateWidget(final ChartLineGraph oldWidget) {
+  void didUpdateWidget(ChartLineGraph oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.points != widget.points ||
         oldWidget.dateFormat != widget.dateFormat) {
@@ -61,12 +61,12 @@ class _ChartLineGraphState extends State<ChartLineGraph> {
     final List<ChartPoint> points = widget.points;
     _spots = List<FlSpot>.generate(
       points.length,
-      (final i) => FlSpot(i.toDouble(), points[i].value),
+      (i) => FlSpot(i.toDouble(), points[i].value),
       growable: false,
     );
     _bottomLabels = List<String>.generate(
       points.length,
-      (final i) => widget.dateFormat.format(points[i].date),
+      (i) => widget.dateFormat.format(points[i].date),
       growable: false,
     );
   }
@@ -78,7 +78,7 @@ class _ChartLineGraphState extends State<ChartLineGraph> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final chart = LineChart(
       _getOrBuildChartData(
         context,

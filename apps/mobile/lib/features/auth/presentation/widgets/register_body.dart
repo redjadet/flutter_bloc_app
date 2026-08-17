@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/auth/presentation/widgets/register_form.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ResponsiveRegisterBody extends StatelessWidget {
   const ResponsiveRegisterBody({super.key});
@@ -8,8 +8,8 @@ class ResponsiveRegisterBody extends StatelessWidget {
   static const double _horizontalPadding = 20;
 
   @override
-  Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final context, final constraints) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
       final bool isWide = constraints.maxWidth >= 720;
       final double maxContentWidth = isWide ? 520 : constraints.maxWidth;
 

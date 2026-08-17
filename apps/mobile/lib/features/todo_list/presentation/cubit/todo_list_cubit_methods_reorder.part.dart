@@ -2,8 +2,8 @@ part of 'todo_list_cubit.dart';
 
 mixin _TodoListCubitMethodsReorder on Cubit<TodoListState> {
   void reorderItems({
-    required final int oldIndex,
-    required final int newIndex,
+    required int oldIndex,
+    required int newIndex,
   }) {
     if (isClosed) return;
     if (state.filter != TodoFilter.all || state.searchQuery.isNotEmpty) {

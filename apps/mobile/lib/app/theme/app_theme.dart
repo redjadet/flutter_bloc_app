@@ -1,7 +1,8 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as sdk;
 import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Named decorative colors for confetti/particle effects; not UI theme colors.
 const Color _confettiGreen = Color(0xFF4CAF50);
@@ -54,24 +55,35 @@ class AppTheme {
   );
 
   /// Text theme using Roboto with Comfortaa for display styles.
-  static TextTheme createAppTextTheme(final Brightness brightness) {
-    final ThemeData baseTheme = ThemeData(brightness: brightness);
-    final TextTheme robotoTheme = GoogleFonts.robotoTextTheme(
-      baseTheme.textTheme,
+  static TextTheme createAppTextTheme(Brightness brightness) {
+    final sdk.TextTheme robotoTheme = GoogleFonts.robotoTextTheme(
+      sdk.ThemeData(brightness: brightness).textTheme,
     );
     final String? comfortaaFamily = GoogleFonts.comfortaa().fontFamily;
-    TextStyle? withComfortaa(final TextStyle? style) =>
+    TextStyle? withComfortaa(TextStyle? style) =>
         style?.copyWith(fontFamily: comfortaaFamily);
-    return robotoTheme.copyWith(
+    return TextTheme(
       displayLarge: withComfortaa(robotoTheme.displayLarge),
       displayMedium: withComfortaa(robotoTheme.displayMedium),
       displaySmall: withComfortaa(robotoTheme.displaySmall),
+      headlineLarge: robotoTheme.headlineLarge,
+      headlineMedium: robotoTheme.headlineMedium,
+      headlineSmall: robotoTheme.headlineSmall,
+      titleLarge: robotoTheme.titleLarge,
+      titleMedium: robotoTheme.titleMedium,
+      titleSmall: robotoTheme.titleSmall,
+      bodyLarge: robotoTheme.bodyLarge,
+      bodyMedium: robotoTheme.bodyMedium,
+      bodySmall: robotoTheme.bodySmall,
+      labelLarge: robotoTheme.labelLarge,
+      labelMedium: robotoTheme.labelMedium,
+      labelSmall: robotoTheme.labelSmall,
     );
   }
 
   /// Arabic-optimized text theme.
   ///
   /// Uses bundled Cairo for all styles (no Comfortaa overrides).
-  static TextTheme createArabicTextTheme(final TextTheme baseTextTheme) =>
+  static TextTheme createArabicTextTheme(TextTheme baseTextTheme) =>
       baseTextTheme.apply(fontFamily: arabicFontFamily);
 }

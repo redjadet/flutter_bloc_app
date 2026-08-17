@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.da
 
 /// JSON-serializable snapshot for Hive (demo feature).
 class MarketSnapshotDto {
-  factory MarketSnapshotDto.fromDomain(final MarketFeedSnapshot s) {
+  factory MarketSnapshotDto.fromDomain(MarketFeedSnapshot s) {
     return MarketSnapshotDto._(<String, Object?>{
       'pairId': s.pairId,
       'lastPrice': s.lastPrice,
@@ -21,7 +21,7 @@ class MarketSnapshotDto {
     });
   }
 
-  factory MarketSnapshotDto.fromJson(final Map<dynamic, dynamic> json) {
+  factory MarketSnapshotDto.fromJson(Map<dynamic, dynamic> json) {
     final Map<String, Object?> out = <String, Object?>{};
     for (final MapEntry<dynamic, dynamic> e in json.entries) {
       out[e.key.toString()] = e.value as Object?;
@@ -45,20 +45,20 @@ class MarketSnapshotDto {
       final List<OrderBookLevel> bids = _list(
         _json,
         'bids',
-      ).map((final e) => _orderBookFromMap(_asMap(e))).toList();
+      ).map((e) => _orderBookFromMap(_asMap(e))).toList();
       final List<OrderBookLevel> asks = _list(
         _json,
         'asks',
-      ).map((final e) => _orderBookFromMap(_asMap(e))).toList();
+      ).map((e) => _orderBookFromMap(_asMap(e))).toList();
       final List<RecentTrade> trades = _list(
         _json,
         'recentTrades',
-      ).map((final e) => _tradeFromMap(_asMap(e))).toList();
+      ).map((e) => _tradeFromMap(_asMap(e))).toList();
       final MarketStats stats = _statsFromMap(_asMap(_json['stats']));
       final List<double> chart = _list(
         _json,
         'chartCloses',
-      ).map((final e) => (e as num).toDouble()).toList();
+      ).map((e) => (e as num).toDouble()).toList();
       final int updatedAtMs = _num(_json, 'updatedAtMs').toInt();
       return MarketFeedSnapshot(
         pairId: pairId,
@@ -83,7 +83,7 @@ class MarketSnapshotDto {
 
 Never _bad() => throw const FormatException('invalid market snapshot dto');
 
-String _string(final Map<String, Object?> m, final String key) {
+String _string(Map<String, Object?> m, String key) {
   final Object? v = m[key];
   if (v is String) {
     return v;
@@ -91,7 +91,7 @@ String _string(final Map<String, Object?> m, final String key) {
   _bad();
 }
 
-num _num(final Map<String, Object?> m, final String key) {
+num _num(Map<String, Object?> m, String key) {
   final Object? v = m[key];
   if (v is num) {
     return v;
@@ -99,7 +99,7 @@ num _num(final Map<String, Object?> m, final String key) {
   _bad();
 }
 
-List<dynamic> _list(final Map<String, Object?> m, final String key) {
+List<dynamic> _list(Map<String, Object?> m, String key) {
   final Object? v = m[key];
   if (v is List) {
     return List<dynamic>.from(v);
@@ -107,21 +107,20 @@ List<dynamic> _list(final Map<String, Object?> m, final String key) {
   _bad();
 }
 
-Map<dynamic, dynamic> _asMap(final Object? v) {
+Map<dynamic, dynamic> _asMap(Object? v) {
   if (v is Map) {
     return Map<dynamic, dynamic>.from(v);
   }
   _bad();
 }
 
-Map<String, Object?> _orderBookToMap(final OrderBookLevel b) =>
-    <String, Object?>{
-      'price': b.price,
-      'quantity': b.quantity,
-      'side': b.side.name,
-    };
+Map<String, Object?> _orderBookToMap(OrderBookLevel b) => <String, Object?>{
+  'price': b.price,
+  'quantity': b.quantity,
+  'side': b.side.name,
+};
 
-OrderBookLevel _orderBookFromMap(final Map<dynamic, dynamic> m) {
+OrderBookLevel _orderBookFromMap(Map<dynamic, dynamic> m) {
   final Object? price = m['price'];
   final Object? quantity = m['quantity'];
   final Object? side = m['side'];
@@ -135,7 +134,7 @@ OrderBookLevel _orderBookFromMap(final Map<dynamic, dynamic> m) {
   );
 }
 
-Map<String, Object?> _tradeToMap(final RecentTrade t) => <String, Object?>{
+Map<String, Object?> _tradeToMap(RecentTrade t) => <String, Object?>{
   'id': t.id,
   'price': t.price,
   'quantity': t.quantity,
@@ -143,7 +142,7 @@ Map<String, Object?> _tradeToMap(final RecentTrade t) => <String, Object?>{
   'atMs': t.at.millisecondsSinceEpoch,
 };
 
-RecentTrade _tradeFromMap(final Map<dynamic, dynamic> m) {
+RecentTrade _tradeFromMap(Map<dynamic, dynamic> m) {
   final Object? id = m['id'];
   final Object? price = m['price'];
   final Object? quantity = m['quantity'];
@@ -168,13 +167,13 @@ RecentTrade _tradeFromMap(final Map<dynamic, dynamic> m) {
   );
 }
 
-Map<String, Object?> _statsToMap(final MarketStats s) => <String, Object?>{
+Map<String, Object?> _statsToMap(MarketStats s) => <String, Object?>{
   'high24h': s.high24h,
   'low24h': s.low24h,
   'volume24h': s.volume24h,
 };
 
-MarketStats _statsFromMap(final Map<dynamic, dynamic> m) {
+MarketStats _statsFromMap(Map<dynamic, dynamic> m) {
   final Object? high = m['high24h'];
   final Object? low = m['low24h'];
   final Object? vol = m['volume24h'];

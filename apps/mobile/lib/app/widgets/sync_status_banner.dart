@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:design_system/design_system.dart'
     show AppMessage, PlatformAdaptive;
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/sync/sync_context_extensions.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 /// Global sync status banner that displays when sync is degraded or error.
@@ -35,13 +35,13 @@ class _SyncStatusBannerState extends State<SyncStatusBanner> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (context.tryCubit<SyncStatusCubit>() == null) {
       return const SizedBox.shrink();
     }
     return TypeSafeBlocSelector<SyncStatusCubit, SyncStatusState, SyncStatus>(
-      selector: (final state) => state.syncStatus,
-      builder: (final context, final syncStatus) {
+      selector: (state) => state.syncStatus,
+      builder: (context, syncStatus) {
         if (syncStatus != SyncStatus.degraded) {
           return const SizedBox.shrink();
         }

@@ -14,10 +14,10 @@ enum StaffDemoProofStatus {
 @freezed
 abstract class StaffDemoProofState with _$StaffDemoProofState {
   const factory StaffDemoProofState({
-    @Default(StaffDemoProofStatus.initial) final StaffDemoProofStatus status,
-    @Default(<String>[]) final List<String> photoPaths,
-    final String? signaturePath,
-    final String? errorMessage,
-    final String? lastProofId,
+    @Default(StaffDemoProofStatus.initial) StaffDemoProofStatus status,
+    @Default(<String>[]) List<String> photoPaths,
+    String? signaturePath,
+    String? errorMessage,
+    String? lastProofId,
   }) = _StaffDemoProofState;
 }

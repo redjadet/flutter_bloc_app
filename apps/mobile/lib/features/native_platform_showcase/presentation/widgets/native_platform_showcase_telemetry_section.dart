@@ -1,25 +1,25 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcaseTelemetrySection extends StatelessWidget {
   const NativePlatformShowcaseTelemetrySection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       NativePlatformShowcaseCubit,
       NativePlatformShowcaseState,
       NativeShowcaseTelemetrySnapshot?
     >(
-      selector: (final state) =>
-          state.mapOrNull(loaded: (final loaded) => loaded.telemetry),
-      builder: (final context, final telemetry) {
+      selector: (state) =>
+          state.mapOrNull(loaded: (loaded) => loaded.telemetry),
+      builder: (context, telemetry) {
         final AppLocalizations l10n = AppLocalizations.of(context);
         final ThemeData theme = Theme.of(context);
 
@@ -61,7 +61,7 @@ class _TelemetryBody extends StatelessWidget {
   final ThemeData theme;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final NativeShowcaseTelemetrySnapshot? snapshot = telemetry;
     if (snapshot == null) {
       return Text(
@@ -121,7 +121,7 @@ class _MetricRow extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: context.responsiveGapXS),
       child: Row(

@@ -2,8 +2,8 @@ import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 /// Maps persisted remote failure `code` strings (e.g. from dequeue) to plan ARB copy.
 String terminalSyncFailureMessage(
-  final AppLocalizations l10n,
-  final String code,
+  AppLocalizations l10n,
+  String code,
 ) {
   switch (code) {
     case 'auth_required':

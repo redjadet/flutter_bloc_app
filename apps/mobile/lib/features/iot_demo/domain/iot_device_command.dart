@@ -7,6 +7,5 @@ part 'iot_device_command.freezed.dart';
 sealed class IotDeviceCommand with _$IotDeviceCommand {
   const factory IotDeviceCommand.toggle() = IotDeviceCommandToggle;
 
-  const factory IotDeviceCommand.setValue(final num value) =
-      IotDeviceCommandSetValue;
+  const factory IotDeviceCommand.setValue(num value) = IotDeviceCommandSetValue;
 }

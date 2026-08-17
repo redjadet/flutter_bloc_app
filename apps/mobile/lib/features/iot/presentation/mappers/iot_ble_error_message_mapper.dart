@@ -2,9 +2,9 @@ import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 
 String resolveIotBleErrorMessage(
-  final AppLocalizations l10n,
-  final IotBleErrorCode code, [
-  final String? detail,
+  AppLocalizations l10n,
+  IotBleErrorCode code, [
+  String? detail,
 ]) {
   final String base = switch (code) {
     IotBleErrorCode.initialize => l10n.iotBleErrorInitialize,

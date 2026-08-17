@@ -1,5 +1,4 @@
 import 'package:auth/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_certificate_pinning_demo_services.dart';
 import 'package:flutter_bloc_app/app/composition/features/register_http_services.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
@@ -8,10 +7,11 @@ import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/router/routes_certificate_pinning_demo.dart';
 import 'package:flutter_bloc_app/app/router/routes_demos.dart';
 import 'package:flutter_bloc_app/features/certificate_pinning_demo/presentation/pages/certificate_pinning_demo_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 
@@ -42,7 +42,7 @@ void main() {
     final List<RouteBase> routes = createDemoRoutes();
     expect(
       routes.any(
-        (final RouteBase r) =>
+        (RouteBase r) =>
             r is GoRoute &&
             r.name == AppRoutes.certificatePinningDemo &&
             r.path == AppRoutes.certificatePinningDemoPath,
@@ -52,7 +52,7 @@ void main() {
   });
 
   testWidgets('createCertificatePinningDemoRoute redirects in prod flavor', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     FlavorManager.current = Flavor.prod;
     addTearDown(() => FlavorManager.current = Flavor.dev);
@@ -66,7 +66,7 @@ void main() {
   });
 
   testWidgets('createCertificatePinningDemoRoute allows non-prod debug', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     FlavorManager.current = Flavor.dev;
 
@@ -79,7 +79,7 @@ void main() {
   });
 
   testWidgets('createCertificatePinningDemoRoute builds demo page', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     getIt.registerSingleton<NetworkStatusService>(_TestNetworkStatusService());
     getIt.registerSingleton<TokenRepository>(InMemoryTokenRepository());
@@ -92,7 +92,7 @@ void main() {
         createCertificatePinningDemoRoute(),
         GoRoute(
           path: AppRoutes.counterPath,
-          builder: (final context, final state) => const SizedBox.shrink(),
+          builder: (context, state) => const SizedBox.shrink(),
         ),
       ],
     );
@@ -100,11 +100,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp.router(
         routerConfig: router,
-        localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
       ),
     );

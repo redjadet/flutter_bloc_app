@@ -8,15 +8,15 @@ part 'map_sample_state.freezed.dart';
 @freezed
 abstract class MapSampleState with _$MapSampleState {
   const factory MapSampleState({
-    required final gmaps.CameraPosition cameraPosition,
-    @Default(true) final bool isLoading,
-    final String? errorMessage,
-    final AppError? lastError,
-    @Default(<gmaps.Marker>{}) final Set<gmaps.Marker> markers,
-    @Default(gmaps.MapType.normal) final gmaps.MapType mapType,
-    @Default(false) final bool trafficEnabled,
-    @Default(<MapLocation>[]) final List<MapLocation> locations,
-    final gmaps.MarkerId? selectedMarkerId,
+    required gmaps.CameraPosition cameraPosition,
+    @Default(true) bool isLoading,
+    String? errorMessage,
+    AppError? lastError,
+    @Default(<gmaps.Marker>{}) Set<gmaps.Marker> markers,
+    @Default(gmaps.MapType.normal) gmaps.MapType mapType,
+    @Default(false) bool trafficEnabled,
+    @Default(<MapLocation>[]) List<MapLocation> locations,
+    gmaps.MarkerId? selectedMarkerId,
   }) = _MapSampleState;
 
   const MapSampleState._();

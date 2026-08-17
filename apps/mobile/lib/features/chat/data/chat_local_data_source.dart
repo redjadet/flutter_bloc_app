@@ -32,7 +32,7 @@ class ChatLocalDataSource extends HiveRepositoryBase
       );
 
   @override
-  Future<void> save(final List<ChatConversation> conversations) async =>
+  Future<void> save(List<ChatConversation> conversations) async =>
       StorageGuard.run<void>(
         logContext: 'ChatLocalDataSource.save',
         action: () async {
@@ -43,13 +43,13 @@ class ChatLocalDataSource extends HiveRepositoryBase
           }
 
           final List<Map<String, dynamic>> serialized = conversations
-              .map((final c) => ChatConversationDto.fromDomain(c).toJson())
+              .map((c) => ChatConversationDto.fromDomain(c).toJson())
               .toList(growable: false);
           await box.put(_keyConversations, serialized);
         },
       );
 
-  Future<List<ChatConversation>> _parseStored(final dynamic raw) async {
+  Future<List<ChatConversation>> _parseStored(dynamic raw) async {
     if (raw is String && raw.isNotEmpty) {
       try {
         final List<dynamic> decoded = await decodeJsonList(raw);
@@ -70,15 +70,14 @@ class ChatLocalDataSource extends HiveRepositoryBase
     return const <ChatConversation>[];
   }
 
-  List<ChatConversation> _parseIterable(final Iterable<dynamic> raw) => raw
+  List<ChatConversation> _parseIterable(Iterable<dynamic> raw) => raw
       .whereType<Map<dynamic, dynamic>>()
       .map(_mapToConversation)
       .toList(growable: false);
 
-  ChatConversation _mapToConversation(final Map<dynamic, dynamic> raw) {
+  ChatConversation _mapToConversation(Map<dynamic, dynamic> raw) {
     final Map<String, dynamic> normalized = raw.map(
-      (final dynamic key, final dynamic value) =>
-          MapEntry(key.toString(), value),
+      (dynamic key, dynamic value) => MapEntry(key.toString(), value),
     );
     return ChatConversationDto.fromJson(normalized).toDomain();
   }

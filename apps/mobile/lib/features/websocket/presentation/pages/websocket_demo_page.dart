@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/websocket/domain/websocket_message.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_bloc_app/features/websocket/presentation/cubit/websocket
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_connection_banner.dart';
 import 'package:flutter_bloc_app/features/websocket/presentation/widgets/websocket_message_list.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'websocket_demo_page_sections.part.dart';
 
@@ -58,7 +58,7 @@ class _WebsocketDemoPageState extends State<WebsocketDemoPage> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.websocketDemoTitle,

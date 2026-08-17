@@ -6,7 +6,6 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart'
     as firebase_ui_google;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc_app/features/auth/auth.dart';
 import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 export 'package:flutter_bloc_app/features/auth/presentation/widgets/auth_error_message.dart';
 
@@ -31,7 +31,7 @@ class SignInPage extends StatelessWidget {
     this.authRepository,
     this.redirectAfterLogin,
     this.providersOverride,
-    final firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
+    firebase_ui_google.GoogleProvider? Function()? googleProviderFactory,
   }) : _googleProviderFactory =
            googleProviderFactory ?? maybeCreateGoogleProvider;
 
@@ -44,10 +44,10 @@ class SignInPage extends StatelessWidget {
 
   @visibleForTesting
   static List<firebase_ui.AuthProvider> prepareProviders({
-    required final FirebaseAuth auth,
-    required final firebase_ui_google.GoogleProvider? Function()
+    required FirebaseAuth auth,
+    required firebase_ui_google.GoogleProvider? Function()
     googleProviderFactory,
-    final List<firebase_ui.AuthProvider>? override,
+    List<firebase_ui.AuthProvider>? override,
   }) => buildAuthProviders(
     auth: auth,
     override: override,
@@ -59,7 +59,7 @@ class SignInPage extends StatelessWidget {
       !kIsWeb && !kReleaseMode && defaultTargetPlatform == TargetPlatform.macOS;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final ThemeData theme = Theme.of(context);
     final FirebaseAuth? auth = switch (_auth) {
@@ -85,7 +85,7 @@ class SignInPage extends StatelessWidget {
       providers = <firebase_ui.AuthProvider>[];
     }
 
-    void showAuthError(final Object error) =>
+    void showAuthError(Object error) =>
         _showAuthError(context: context, l10n: l10n, error: error);
 
     String postAuthPath() =>
@@ -116,7 +116,7 @@ class SignInPage extends StatelessWidget {
     return firebase_ui.SignInScreen(
       auth: auth,
       providers: providers,
-      headerBuilder: (final context, final constraints, _) => Padding(
+      headerBuilder: (context, constraints, _) => Padding(
         padding: EdgeInsets.only(
           top: context.responsiveGapL * 2,
           bottom: context.responsiveGapL,
@@ -128,7 +128,7 @@ class SignInPage extends StatelessWidget {
         ),
       ),
       subtitleBuilder: upgradingAnonymous
-          ? (final context, final action) => Padding(
+          ? (context, action) => Padding(
               padding: EdgeInsets.only(bottom: context.responsiveGapL),
               child: Text(
                 l10n.anonymousUpgradeHint,
@@ -137,7 +137,7 @@ class SignInPage extends StatelessWidget {
               ),
             )
           : null,
-      footerBuilder: (final context, final action) => Column(
+      footerBuilder: (context, action) => Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           SizedBox(height: context.responsiveGapL),
@@ -160,26 +160,26 @@ class SignInPage extends StatelessWidget {
       ),
       actions: <firebase_ui.FirebaseUIAction>[
         firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((
-          final context,
-          final state,
+          context,
+          state,
         ) {
           context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
-          final context,
-          final state,
+          context,
+          state,
         ) {
           context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((
-          final context,
-          final state,
+          context,
+          state,
         ) {
           context.go(postAuthPath());
         }),
         firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
-          final context,
-          final state,
+          context,
+          state,
         ) {
           showAuthError(state.exception);
         }),

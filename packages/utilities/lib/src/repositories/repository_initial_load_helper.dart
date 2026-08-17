@@ -17,9 +17,9 @@ class RepositoryInitialLoadHelper<T> {
   /// Subsequent calls while the initial load is in-flight will await the same
   /// completer to avoid duplicate requests.
   Future<void> ensureInitialLoad({
-    required final Future<T> Function() load,
-    required final void Function(T value) onValue,
-    final void Function(Object error, StackTrace stackTrace)? onError,
+    required Future<T> Function() load,
+    required void Function(T value) onValue,
+    void Function(Object error, StackTrace stackTrace)? onError,
   }) {
     if (_initialLoadCompleter case final c?) return c.future;
 

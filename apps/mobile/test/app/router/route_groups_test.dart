@@ -7,7 +7,7 @@ void main() {
     test('returns non-empty list of RouteBase', () {
       final List<RouteBase> routes = createAuxiliaryRoutes();
       expect(routes, isNotEmpty);
-      expect(routes.every((final RouteBase r) => r is GoRoute), isTrue);
+      expect(routes.every((RouteBase r) => r is GoRoute), isTrue);
     });
 
     test('routes have correct path and name properties', () {

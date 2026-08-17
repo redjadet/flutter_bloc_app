@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/date_time_formatting.dart';
@@ -10,12 +9,13 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
   const OnlineTherapyDemoClientBookingConfirmPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -23,19 +23,19 @@ class OnlineTherapyDemoClientBookingConfirmPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final slot = context
         .selectState<ClientBookingCubit, ClientBookingState, AvailabilitySlot?>(
-          selector: (final state) => state.pendingBookingSlot,
+          selector: (state) => state.pendingBookingSlot,
         );
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final errorMessage = context
         .selectState<ClientBookingCubit, ClientBookingState, String?>(
-          selector: (final state) => state.errorMessage,
+          selector: (state) => state.errorMessage,
         );
     final cubit = context.cubit<ClientBookingCubit>();
     final List<Widget> items = <Widget>[

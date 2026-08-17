@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
@@ -18,6 +17,7 @@ import 'package:flutter_bloc_app/features/chat/domain/chat_auth_session_port.dar
 import 'package:flutter_bloc_app/features/chat/domain/chat_render_orchestration_diagnostics_port.dart';
 import 'package:flutter_bloc_app/features/chat/domain/render_orchestration_hf_token_provider.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'chat_list_view_navigation.part.dart';
 part 'chat_list_view_parts.part.dart';
@@ -51,14 +51,14 @@ class ChatListView extends StatelessWidget {
   final ChatRenderOrchestrationDiagnosticsPort? renderOrchestrationDiagnostics;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocSelector<ChatListCubit, ChatListState, _ChatListSelectorData>(
-        selector: (final state) => _ChatListSelectorData(
+        selector: (state) => _ChatListSelectorData(
           isLoading: state is ChatListLoading,
           contacts: state is ChatListLoaded ? state.contacts : null,
           errorMessage: state is ChatListError ? state.failure.message : null,
         ),
-        builder: (final context, final data) {
+        builder: (context, data) {
           if (data.isLoading) {
             return const CommonLoadingWidget();
           }
@@ -71,8 +71,8 @@ class ChatListView extends StatelessWidget {
           if (data.contacts case final contacts?) {
             return _ChatLoadedList(
               contacts: contacts,
-              onContactTap: (final contact) => navigateToChat(context, contact),
-              onContactLongPress: (final contact) =>
+              onContactTap: (contact) => navigateToChat(context, contact),
+              onContactLongPress: (contact) =>
                   showDeleteDialog(context, contact),
             );
           }

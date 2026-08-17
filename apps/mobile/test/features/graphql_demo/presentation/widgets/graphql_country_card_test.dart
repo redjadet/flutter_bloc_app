@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/presentation/widgets/graphql_country_card.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('GraphqlCountryCard', () {
@@ -19,7 +19,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
-            builder: (final context) => buildAppMixScope(
+            builder: (context) => buildAppMixScope(
               context,
               child: Scaffold(
                 body: GraphqlCountryCard(
@@ -55,7 +55,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Builder(
-              builder: (final context) => buildAppMixScope(
+              builder: (context) => buildAppMixScope(
                 context,
                 child: Scaffold(
                   body: GraphqlCountryCard(

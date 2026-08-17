@@ -2,12 +2,12 @@ import 'dart:ui' show PointerDeviceKind;
 
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Application configuration and theme setup
 class AppConfig {
@@ -22,17 +22,14 @@ class AppConfig {
 
   /// Creates the MaterialApp with all necessary configurations
   static Widget createMaterialApp({
-    required final ThemeMode themeMode,
-    required final GoRouter router,
-    final Locale? locale,
-    final TransitionBuilder? appOverlayBuilder,
+    required ThemeMode themeMode,
+    required GoRouter router,
+    Locale? locale,
+    TransitionBuilder? appOverlayBuilder,
   }) => MaterialApp.router(
-    onGenerateTitle: (final ctx) => ctx.l10n.appTitle,
+    onGenerateTitle: (ctx) => ctx.l10n.appTitle,
     localizationsDelegates: const [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-      GlobalCupertinoLocalizations.delegate,
-      AppLocalizations.delegate,
+      ...appLocalizationDelegates,
       FirebaseUILocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
@@ -42,7 +39,7 @@ class AppConfig {
     darkTheme: _applyTestThemeOverrides(AppTheme.darkTheme()),
     themeMode: themeMode,
     scrollBehavior: const _AppScrollBehavior(),
-    builder: (final context, final appChild) {
+    builder: (context, appChild) {
       Widget result = appChild ?? const SizedBox.shrink();
 
       final locale = Localizations.maybeLocaleOf(context);
@@ -57,7 +54,7 @@ class AppConfig {
         result = Theme(
           data: arabicTheme,
           child: Builder(
-            builder: (final themedContext) =>
+            builder: (themedContext) =>
                 buildAppMixScope(themedContext, child: themedChild),
           ),
         );
@@ -90,7 +87,9 @@ class AppConfig {
         result = appOverlayBuilder(context, result);
       }
 
-      return result;
+      // Mix, genui, and firebase_ui_auth still import package:flutter/material.dart.
+      // ignore: deprecated_member_use -- official shim until those packages migrate
+      return MaterialUiCompatibilityBridge(child: result);
     },
     routerConfig: router,
   );
@@ -99,8 +98,8 @@ class AppConfig {
 
   /// Handles locale resolution with fallback logic
   static Locale? _localeListResolutionCallback(
-    final List<Locale>? locales,
-    final Iterable<Locale> supported,
+    List<Locale>? locales,
+    Iterable<Locale> supported,
   ) {
     if (locales == null || locales.isEmpty) {
       return _defaultLocale;
@@ -110,7 +109,7 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (final supportedLocale) =>
+        (supportedLocale) =>
             supportedLocale.languageCode == locale.languageCode &&
             (supportedLocale.countryCode == locale.countryCode ||
                 supportedLocale.countryCode == null),
@@ -124,7 +123,7 @@ class AppConfig {
 
     for (final locale in locales) {
       final matchingLocale = supportedLocales.firstWhere(
-        (final supportedLocale) =>
+        (supportedLocale) =>
             supportedLocale.languageCode == locale.languageCode,
         orElse: () => const Locale('unsupported'),
       );
@@ -139,15 +138,15 @@ class AppConfig {
 
   @visibleForTesting
   static Locale? resolveLocales(
-    final List<Locale>? locales,
-    final Iterable<Locale> supported,
+    List<Locale>? locales,
+    Iterable<Locale> supported,
   ) => _localeListResolutionCallback(locales, supported) ?? _defaultLocale;
 
   /// Skips M3 [InkSparkle] splashes in widget/integration test bindings.
   ///
   /// Linux CI widget tests use a SkSL backend while `ink_sparkle.frag` may ship
   /// Vulkan-only stages, which throws when tapping Material buttons.
-  static ThemeData _applyTestThemeOverrides(final ThemeData theme) {
+  static ThemeData _applyTestThemeOverrides(ThemeData theme) {
     if (!_isTestEnvironment()) {
       return theme;
     }

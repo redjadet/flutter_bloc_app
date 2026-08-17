@@ -6,28 +6,28 @@ import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case
 abstract class CaseStudyRemoteRepository {
   /// Uploads a local clip file and returns a Supabase Storage object key.
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   });
 
   /// Writes a remote draft row (`status='draft'`) with any known remote keys.
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   });
 
   /// Finalizes the remote row as submitted.
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   });
 
   /// Lists submitted cases for the current Supabase user.
@@ -35,13 +35,13 @@ abstract class CaseStudyRemoteRepository {
 
   /// Gets a submitted case with full remote answers.
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   });
 
   /// Creates a signed URL for playback from an object key.
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   });
 }
 

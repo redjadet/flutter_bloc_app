@@ -1,18 +1,18 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Builds a platform-adaptive text field for the todo editor dialog.
 Widget buildTodoTextField({
-  required final BuildContext context,
-  required final TextEditingController controller,
-  required final String placeholder,
-  required final bool isCupertino,
-  final ValueChanged<String>? onChanged,
-  final bool autofocus = false,
-  final int maxLines = 1,
-  final FocusNode? focusNode,
+  required BuildContext context,
+  required TextEditingController controller,
+  required String placeholder,
+  required bool isCupertino,
+  ValueChanged<String>? onChanged,
+  bool autofocus = false,
+  int maxLines = 1,
+  FocusNode? focusNode,
 }) {
   final textField = PlatformAdaptive.textField(
     context: context,
@@ -45,16 +45,16 @@ Widget buildTodoTextField({
 
 /// Builds a priority selector dropdown for the todo editor dialog.
 Widget buildTodoPrioritySelector({
-  required final BuildContext context,
-  required final TodoPriority selectedPriority,
-  required final ValueChanged<TodoPriority> onPriorityChanged,
+  required BuildContext context,
+  required TodoPriority selectedPriority,
+  required ValueChanged<TodoPriority> onPriorityChanged,
 }) {
   final l10n = context.l10n;
 
   return CommonDropdownField<TodoPriority>(
     value: selectedPriority,
     items: TodoPriority.values
-        .map((final priority) {
+        .map((priority) {
           final String label = switch (priority) {
             TodoPriority.none => l10n.todoListPriorityNone,
             TodoPriority.low => l10n.todoListPriorityLow,
@@ -67,7 +67,7 @@ Widget buildTodoPrioritySelector({
           );
         })
         .toList(growable: false),
-    onChanged: (final value) {
+    onChanged: (value) {
       if (value != null) {
         onPriorityChanged(value);
       }
@@ -78,10 +78,10 @@ Widget buildTodoPrioritySelector({
 
 /// Builds a completion checkbox for the todo editor dialog.
 Widget buildTodoCompletionCheckbox({
-  required final BuildContext context,
-  required final bool isCompleted,
-  required final ValueChanged<bool> onCompletedChanged,
-  required final bool isCupertino,
+  required BuildContext context,
+  required bool isCompleted,
+  required ValueChanged<bool> onCompletedChanged,
+  required bool isCupertino,
 }) {
   final l10n = context.l10n;
 
@@ -94,7 +94,7 @@ Widget buildTodoCompletionCheckbox({
         children: [
           Checkbox.adaptive(
             value: isCompleted,
-            onChanged: (final value) {
+            onChanged: (value) {
               if (value != null) {
                 onCompletedChanged(value);
               }
@@ -120,7 +120,7 @@ Widget buildTodoCompletionCheckbox({
     child: CheckboxListTile(
       title: Text(l10n.todoListCompleteAction),
       value: isCompleted,
-      onChanged: (final value) {
+      onChanged: (value) {
         if (value != null) {
           onCompletedChanged(value);
         }

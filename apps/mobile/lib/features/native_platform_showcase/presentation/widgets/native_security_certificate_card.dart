@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/certificate_pin_policy_summary.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_security_showcase_cubit.dart';
@@ -7,13 +6,14 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Certificate pin policy summary + optional mutable demo navigation.
 class NativeSecurityCertificateCard extends StatelessWidget {
   const NativeSecurityCertificateCard({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
@@ -22,8 +22,8 @@ class NativeSecurityCertificateCard extends StatelessWidget {
       NativeSecurityShowcaseState,
       CertificatePinPolicySummary
     >(
-      selector: (final state) => state.certificateSummary,
-      builder: (final context, final summary) => KeyedSubtree(
+      selector: (state) => state.certificateSummary,
+      builder: (context, summary) => KeyedSubtree(
         key: const ValueKey<String>('native-security-card-certificate'),
         child: CommonCard(
           child: Column(
@@ -85,7 +85,7 @@ class _SummaryRow extends StatelessWidget {
   final String value;
 
   @override
-  Widget build(final BuildContext context) => Padding(
+  Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.only(bottom: context.responsiveGapXS),
     child: Row(
       children: <Widget>[

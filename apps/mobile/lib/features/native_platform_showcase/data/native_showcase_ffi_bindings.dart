@@ -38,8 +38,7 @@ final class NativeShowcaseFfiBindings {
 
   String greeting() => _greeting().cast<Utf8>().toDartString();
 
-  int add({required final int left, required final int right}) =>
-      _add(left, right);
+  int add({required int left, required int right}) => _add(left, right);
 
   static ffi.DynamicLibrary _openLibrary() {
     if (Platform.isAndroid) {

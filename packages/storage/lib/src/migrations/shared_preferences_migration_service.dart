@@ -123,7 +123,7 @@ class SharedPreferencesMigrationService {
     );
   }
 
-  Future<void> _migrateCounterData(final SharedPreferences prefs) async {
+  Future<void> _migrateCounterData(SharedPreferences prefs) async {
     final dynamic countValue = prefs.get(_preferencesKeyCount);
     final dynamic changedMsValue = prefs.get(_preferencesKeyChanged);
 
@@ -146,7 +146,7 @@ class SharedPreferencesMigrationService {
     }
   }
 
-  Future<void> _migrateLocaleData(final SharedPreferences prefs) async {
+  Future<void> _migrateLocaleData(SharedPreferences prefs) async {
     final String? localeTag = prefs.getString(_preferencesKeyLocale);
     if (localeTag != null && localeTag.isNotEmpty) {
       final Box<dynamic> box = await _hiveService.openBox('settings');
@@ -155,7 +155,7 @@ class SharedPreferencesMigrationService {
     }
   }
 
-  Future<void> _migrateThemeData(final SharedPreferences prefs) async {
+  Future<void> _migrateThemeData(SharedPreferences prefs) async {
     final String? themeMode = prefs.getString(_preferencesKeyTheme);
     if (themeMode != null && themeMode.isNotEmpty) {
       final Box<dynamic> box = await _hiveService.openBox('settings');

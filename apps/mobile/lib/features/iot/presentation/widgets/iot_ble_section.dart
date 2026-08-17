@@ -1,5 +1,4 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/features/iot/domain/iot_ble_error_code.dart';
@@ -16,13 +15,14 @@ import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_scan_
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_services_explorer.dart';
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_status_card.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Scrollable BLE showcase mounted on the IoT demo hub BLE tab.
 class IotBleSection extends StatelessWidget {
   const IotBleSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final IotBleState state = context.watchState<IotBleCubit, IotBleState>();
     if (state.status == IotBleStatus.loading ||
         state.status == IotBleStatus.initial) {
@@ -40,7 +40,7 @@ class IotBleSection extends StatelessWidget {
       );
     }
     return LayoutBuilder(
-      builder: (final context, final constraints) {
+      builder: (context, constraints) {
         final bool wide = context.isMediumWidth;
         const Widget leftColumn = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

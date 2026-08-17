@@ -25,7 +25,7 @@ void registerSupabaseConfigServices() {
       auth: firebaseAuth,
       provider: getIt<SupabaseConfigProvider>(),
     ),
-    dispose: (final coordinator) => coordinator.dispose(),
+    dispose: (coordinator) => coordinator.dispose(),
   );
 }
 

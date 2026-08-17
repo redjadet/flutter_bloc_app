@@ -6,12 +6,12 @@ import 'package:flutter_bloc_app/features/search/domain/search_result.dart';
 /// can hydrate instantly and work offline.
 abstract class SearchCacheRepository {
   /// Loads cached results for a query, or null if not cached.
-  Future<List<SearchResult>?> loadCachedResults(final String query);
+  Future<List<SearchResult>?> loadCachedResults(String query);
 
   /// Saves search results for a query.
   Future<void> saveCachedResults(
-    final String query,
-    final List<SearchResult> results,
+    String query,
+    List<SearchResult> results,
   );
 
   /// Loads recent search queries (most recent first).

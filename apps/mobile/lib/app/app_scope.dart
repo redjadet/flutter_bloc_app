@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/app_config.dart';
 import 'package:flutter_bloc_app/app/auth/session_lifecycle_coordinator.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_bloc_app/features/remote_config/presentation/cubit/remot
 import 'package:flutter_bloc_app/features/settings/settings.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
@@ -67,7 +67,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(final AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _backgroundTrimHandle?.dispose();
       _backgroundTrimHandle = null;
@@ -110,7 +110,7 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(final BuildContext context) => MultiBlocProvider(
+  Widget build(BuildContext context) => MultiBlocProvider(
     providers: [
       BlocProvider(
         create: (_) => SyncStatusCubit(
@@ -120,11 +120,11 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
       ),
       BlocProviderHelpers.providerWithAsyncInit<LocaleCubit>(
         create: () => LocaleCubit(repository: getIt<LocaleRepository>()),
-        init: (final cubit) => cubit.loadInitial(),
+        init: (cubit) => cubit.loadInitial(),
       ),
       BlocProviderHelpers.providerWithAsyncInit<ThemeCubit>(
         create: () => ThemeCubit(repository: getIt<ThemeRepository>()),
-        init: (final cubit) => cubit.loadInitial(),
+        init: (cubit) => cubit.loadInitial(),
       ),
       BlocProvider(
         create: (_) => getIt<RemoteConfigCubit>(),
@@ -139,20 +139,19 @@ class _AppScopeState extends State<AppScope> with WidgetsBindingObserver {
         parser: getIt<DeepLinkParser>(),
         child: ResponsiveScope(
           child: TypeSafeBlocBuilder<LocaleCubit, Locale?>(
-            builder: (final context, final locale) =>
+            builder: (context, locale) =>
                 TypeSafeBlocBuilder<ThemeCubit, ThemeMode>(
-                  builder: (final context, final themeMode) =>
-                      AppConfig.createMaterialApp(
-                        themeMode: themeMode,
-                        router: widget.router,
-                        locale: locale,
-                        appOverlayBuilder: (final context, final child) =>
-                            RetrySnackBarListener(
-                              notifications: getIt<RetryNotificationService>()
-                                  .notifications,
-                              child: child ?? const SizedBox.shrink(),
-                            ),
-                      ),
+                  builder: (context, themeMode) => AppConfig.createMaterialApp(
+                    themeMode: themeMode,
+                    router: widget.router,
+                    locale: locale,
+                    appOverlayBuilder: (context, child) =>
+                        RetrySnackBarListener(
+                          notifications:
+                              getIt<RetryNotificationService>().notifications,
+                          child: child ?? const SizedBox.shrink(),
+                        ),
+                  ),
                 ),
           ),
         ),
@@ -171,7 +170,7 @@ class _AppAuthSessionListener extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return BlocListener<AppAuthCubit, AppAuthState>(
       listenWhen: (previous, current) => current.maybeMap(
         sessionExpired: (_) => true,

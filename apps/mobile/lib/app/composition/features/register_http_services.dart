@@ -17,7 +17,7 @@ import 'package:networking/networking.dart';
 void registerHttpServices() {
   registerLazySingletonIfAbsent<RetryNotificationService>(
     InMemoryRetryNotificationService.new,
-    dispose: (final service) => service.dispose(),
+    dispose: (service) => service.dispose(),
   );
 
   registerLazySingletonIfAbsent<CertificatePinningConfig>(() {
@@ -111,5 +111,5 @@ void registerHttpServices() {
       );
     }
     return dio;
-  }, dispose: (final dio) => dio.close());
+  }, dispose: (dio) => dio.close());
 }

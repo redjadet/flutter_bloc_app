@@ -35,7 +35,13 @@ Add `@Preview` targets with the **same fixtures** when using Flutter Widget Prev
 
 ## Minimal app shell
 
-Wrap the subject with `MaterialApp`, localization delegates, and supported locales.
+Wrap the subject with `MaterialApp` from `package:material_ui`,
+[`appLocalizationDelegates`](../../apps/mobile/lib/l10n/app_localization_delegates.dart),
+and `AppLocalizations.supportedLocales`. Do not use generated
+`AppLocalizations.localizationsDelegates` (flutter_localizations types) or
+golden_toolkit `materialAppWrapper` (still `package:flutter/material.dart`).
+Goldens: [`materialUiAppWrapper`](../../apps/mobile/test/helpers/material_ui_app_wrapper.dart).
+
 See [`test/features/auth/presentation/pages/register_page_test.dart`](../../apps/mobile/test/features/auth/presentation/pages/register_page_test.dart).
 
 ## Inject cubit (BLoC)

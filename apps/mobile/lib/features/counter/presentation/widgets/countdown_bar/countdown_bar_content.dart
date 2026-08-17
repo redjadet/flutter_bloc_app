@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/widgets/countdown_bar/countdown_status.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CountdownBarContent extends StatelessWidget {
@@ -27,7 +27,7 @@ class CountdownBarContent extends StatelessWidget {
   final Duration animFast;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final Widget bar = SafeArea(
       top: false,
       child: Padding(
@@ -44,7 +44,7 @@ class CountdownBarContent extends StatelessWidget {
               TweenAnimationBuilder<Color?>(
                 duration: UI.animMedium,
                 tween: ColorTween(end: targetColor),
-                builder: (final context, final animatedColor, _) {
+                builder: (context, animatedColor, _) {
                   final Color c = animatedColor ?? targetColor;
                   return CountdownStatus(
                     active: active,
@@ -60,7 +60,7 @@ class CountdownBarContent extends StatelessWidget {
               TweenAnimationBuilder<Color?>(
                 duration: UI.animMedium,
                 tween: ColorTween(end: targetColor),
-                builder: (final context, final animatedColor, _) {
+                builder: (context, animatedColor, _) {
                   final Color barColor = animatedColor ?? targetColor;
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(UI.radiusPill),

@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
+import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:core/core.dart';
+import 'package:storage/storage.dart';
 
 import '../../test_helpers.dart' as test_helpers;
 
@@ -72,7 +72,7 @@ void main() {
           lockedService.openBox('migration', encrypted: false),
           throwsA(
             isA<StateError>().having(
-              (final error) => error.message,
+              (error) => error.message,
               'message',
               contains('another app process owns it'),
             ),
@@ -360,35 +360,35 @@ void main() {
 
 class _NoPersistWriteSecretStorage extends InMemorySecretStorage {
   @override
-  Future<void> write(final String key, final String value) async {}
+  Future<void> write(String key, String value) async {}
 }
 
 class _FailingSecretStorage implements SecretStorage {
   @override
-  Future<String?> read(final String key) async {
+  Future<String?> read(String key) async {
     throw Exception('Storage read failed');
   }
 
   @override
-  Future<Result<String?>> readResult(final String key) async =>
+  Future<Result<String?>> readResult(String key) async =>
       const FailureResult<String?>(
         UnknownFailure(message: 'Storage read failed'),
       );
 
   @override
-  Future<void> write(final String key, final String value) async {
+  Future<void> write(String key, String value) async {
     throw Exception('Storage write failed');
   }
 
   @override
-  Future<void> delete(final String key) async {
+  Future<void> delete(String key) async {
     throw Exception('Storage delete failed');
   }
 
   @override
-  T withoutLogs<T>(final T Function() action) => AppLogger.silence(action);
+  T withoutLogs<T>(T Function() action) => AppLogger.silence(action);
 
   @override
-  Future<T> withoutLogsAsync<T>(final Future<T> Function() action) =>
+  Future<T> withoutLogsAsync<T>(Future<T> Function() action) =>
       AppLogger.silenceAsync(action);
 }

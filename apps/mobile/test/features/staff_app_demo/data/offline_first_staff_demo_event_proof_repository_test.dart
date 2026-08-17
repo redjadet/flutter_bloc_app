@@ -10,9 +10,9 @@ import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_p
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_event_proof_sync_operation_factory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:storage/storage.dart';
 
 class _MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 
@@ -39,23 +39,21 @@ class _MockReference extends Mock implements Reference {}
 
 class _DiskProofFileStore implements StaffDemoProofFileStore {
   @override
-  Future<bool> fileExists(final String path) => File(path).exists();
+  Future<bool> fileExists(String path) => File(path).exists();
 
   @override
-  Future<List<int>> readFileBytes(final String path) =>
-      File(path).readAsBytes();
+  Future<List<int>> readFileBytes(String path) => File(path).readAsBytes();
 
   @override
-  Future<String> persistPhotoFile({required final String sourcePath}) async =>
+  Future<String> persistPhotoFile({required String sourcePath}) async =>
       sourcePath;
 
   @override
-  Future<String> persistSignaturePngBytes({
-    required final List<int> bytes,
-  }) async => throw UnimplementedError();
+  Future<String> persistSignaturePngBytes({required List<int> bytes}) async =>
+      throw UnimplementedError();
 
   @override
-  Future<void> deleteFileAtPath(final String path) async {
+  Future<void> deleteFileAtPath(String path) async {
     final file = File(path);
     if (await file.exists()) {
       await file.delete();
@@ -123,8 +121,7 @@ void main() {
           ),
         );
         when(() => pendingSyncRepository.enqueue(any())).thenAnswer(
-          (final Invocation inv) async =>
-              inv.positionalArguments[0] as SyncOperation,
+          (Invocation inv) async => inv.positionalArguments[0] as SyncOperation,
         );
 
         final repository = OfflineFirstStaffDemoEventProofRepository(
@@ -192,7 +189,7 @@ void main() {
         ),
         throwsA(
           isA<StaffDemoProofFileMissingException>().having(
-            (final StaffDemoProofFileMissingException e) => e.message,
+            (StaffDemoProofFileMissingException e) => e.message,
             'message',
             contains('Photo file missing'),
           ),

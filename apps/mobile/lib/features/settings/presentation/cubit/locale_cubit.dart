@@ -1,8 +1,8 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/settings/domain/app_locale.dart';
 import 'package:flutter_bloc_app/features/settings/domain/locale_repository.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LocaleCubit extends Cubit<Locale?> {
   LocaleCubit({required this._repository}) : super(null);
@@ -18,7 +18,7 @@ class LocaleCubit extends Cubit<Locale?> {
     }
   }
 
-  Future<void> setLocale(final Locale? locale) async {
+  Future<void> setLocale(Locale? locale) async {
     if (_isSame(locale, state)) return;
     final Locale? previous = state;
     emit(locale);
@@ -37,18 +37,18 @@ class LocaleCubit extends Cubit<Locale?> {
     }
   }
 
-  bool _isSame(final Locale? a, final Locale? b) {
+  bool _isSame(Locale? a, Locale? b) {
     if (a == null && b == null) return true;
     if (a == null || b == null) return false;
     return a.languageCode == b.languageCode && a.countryCode == b.countryCode;
   }
 
-  Locale? _toLocale(final AppLocale? locale) {
+  Locale? _toLocale(AppLocale? locale) {
     if (locale == null) return null;
     return Locale(locale.languageCode, locale.countryCode);
   }
 
-  AppLocale? _toAppLocale(final Locale? locale) {
+  AppLocale? _toAppLocale(Locale? locale) {
     if (locale == null) return null;
     return AppLocale(
       languageCode: locale.languageCode,

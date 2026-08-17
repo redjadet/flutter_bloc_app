@@ -7,9 +7,9 @@ final Map<String, String> _blobUrlByCaseStudyPath = <String, String>{};
 
 /// Registers a blob object URL for [caseStudyPath] playback on web.
 void registerCaseStudyVideoBlobUrl({
-  required final String caseStudyPath,
-  required final List<int> bytes,
-  required final String mimeType,
+  required String caseStudyPath,
+  required List<int> bytes,
+  required String mimeType,
 }) {
   releaseCaseStudyVideoBlobForPath(caseStudyPath);
   final JSArrayBuffer data = Uint8List.fromList(bytes).buffer.toJS;
@@ -22,7 +22,7 @@ void registerCaseStudyVideoBlobUrl({
 }
 
 /// Revokes blob URL created for [videoPath], if any.
-void releaseCaseStudyVideoBlobForPath(final String videoPath) {
+void releaseCaseStudyVideoBlobForPath(String videoPath) {
   final String? blobUrl = _blobUrlByCaseStudyPath.remove(videoPath);
   if (blobUrl != null) {
     URL.revokeObjectURL(blobUrl);
@@ -30,5 +30,5 @@ void releaseCaseStudyVideoBlobForPath(final String videoPath) {
 }
 
 /// Blob URL registered for [caseStudyPath], or null if not in memory.
-String? caseStudyVideoBlobUrlForPath(final String caseStudyPath) =>
+String? caseStudyVideoBlobUrlForPath(String caseStudyPath) =>
     _blobUrlByCaseStudyPath[caseStudyPath];

@@ -3,13 +3,13 @@ part of 'todo_list_cubit.dart';
 /// Mixin extension for CRUD operations on TodoListCubit.
 mixin _TodoListCubitCrud on _TodoListCubitMethods {
   Future<void> saveItem(
-    final TodoItem item, {
-    required final String logContext,
+    TodoItem item, {
+    required String logContext,
   }) async {
     if (isClosed) return;
     final TodoListState previousState = state;
     final bool itemExists = state.items.any(
-      (final existing) => existing.id == item.id,
+      (existing) => existing.id == item.id,
     );
     final List<TodoItem> updatedItems = _TodoListCubitHelpers.saveInList(
       state.items,
@@ -39,9 +39,9 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.save(item),
       isAlive: () => !isClosed,
-      onAppError: (final appError) => latestError = appError,
+      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         emit(
           previousState.copyWith(
@@ -55,10 +55,10 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
   }
 
   Future<void> addTodo({
-    required final String title,
-    final String? description,
-    final DateTime? dueDate,
-    final TodoPriority priority = TodoPriority.none,
+    required String title,
+    String? description,
+    DateTime? dueDate,
+    TodoPriority priority = TodoPriority.none,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -78,12 +78,12 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
   }
 
   Future<void> updateTodo({
-    required final TodoItem item,
-    required final String title,
-    final String? description,
-    final DateTime? dueDate,
-    final TodoPriority? priority,
-    final bool? isCompleted,
+    required TodoItem item,
+    required String title,
+    String? description,
+    DateTime? dueDate,
+    TodoPriority? priority,
+    bool? isCompleted,
   }) async {
     if (isClosed) return;
     final String trimmedTitle = title.trim();
@@ -104,7 +104,7 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await saveItem(updated, logContext: 'TodoListCubit.updateTodo');
   }
 
-  Future<void> toggleTodo(final TodoItem item) async {
+  Future<void> toggleTodo(TodoItem item) async {
     if (isClosed) return;
     final TodoItem updated = item.copyWith(
       isCompleted: !item.isCompleted,
@@ -113,24 +113,23 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
     await saveItem(updated, logContext: 'TodoListCubit.toggleTodo');
   }
 
-  Future<void> deleteTodo(final TodoItem item) async {
-    if (isClosed ||
-        state.items.every((final current) => current.id != item.id)) {
+  Future<void> deleteTodo(TodoItem item) async {
+    if (isClosed || state.items.every((current) => current.id != item.id)) {
       return;
     }
     lastDeletedItem = item;
     final TodoListState previousState = state;
     final List<TodoItem> updatedItems = state.items
-        .where((final current) => current.id != item.id)
+        .where((current) => current.id != item.id)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
     AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: () => repository.delete(item.id),
       isAlive: () => !isClosed,
-      onAppError: (final appError) => latestError = appError,
+      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         lastDeletedItem = null;
         emit(
@@ -145,21 +144,21 @@ mixin _TodoListCubitCrud on _TodoListCubitMethods {
   }
 
   Future<void> clearCompleted() async {
-    if (isClosed || !state.items.any((final item) => item.isCompleted)) {
+    if (isClosed || !state.items.any((item) => item.isCompleted)) {
       return;
     }
     final TodoListState previousState = state;
     final List<TodoItem> updatedItems = state.items
-        .where((final item) => !item.isCompleted)
+        .where((item) => !item.isCompleted)
         .toList(growable: false);
     emitOptimisticUpdate(updatedItems);
     AppError? latestError;
     await CubitExceptionHandler.executeAsyncVoid(
       operation: repository.clearCompleted,
       isAlive: () => !isClosed,
-      onAppError: (final appError) => latestError = appError,
+      onAppError: (appError) => latestError = appError,
       onSuccess: () => unawaited(refreshPendingSyncCount()),
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed) return;
         emit(
           previousState.copyWith(

@@ -11,14 +11,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseChartRepository implements ChartRemoteRepository {
   SupabaseChartRepository({
-    final String? Function()? readAccessToken,
-    final Future<FunctionResponse> Function({
+    String? Function()? readAccessToken,
+    Future<FunctionResponse> Function({
       required String functionName,
       required String accessToken,
       required Map<String, dynamic> body,
     })?
     invokeEdgeFunction,
-    final Future<Object?> Function()? fetchTableRows,
+    Future<Object?> Function()? fetchTableRows,
     this._liveDirectFallback,
   }) : _readAccessToken = readAccessToken ?? _defaultReadAccessToken,
        _invokeEdgeFunction = invokeEdgeFunction ?? _defaultInvokeEdgeFunction,
@@ -107,9 +107,9 @@ class SupabaseChartRepository implements ChartRemoteRepository {
   }
 
   Never _rethrowAsChartFailure(
-    final String message,
-    final Object cause,
-    final StackTrace stackTrace,
+    String message,
+    Object cause,
+    StackTrace stackTrace,
   ) {
     _lastSource = ChartDataSource.unknown;
     AppLogger.error(
@@ -161,7 +161,7 @@ class SupabaseChartRepository implements ChartRemoteRepository {
     return _mapPoints(raw);
   }
 
-  List<ChartPoint> _mapPoints(final Object? raw) {
+  List<ChartPoint> _mapPoints(Object? raw) {
     final List<dynamic>? list = listFromDynamic(raw);
     if (list == null || list.isEmpty) {
       return const <ChartPoint>[];
@@ -173,9 +173,9 @@ class SupabaseChartRepository implements ChartRemoteRepository {
       Supabase.instance.client.auth.currentSession?.accessToken;
 
   static Future<FunctionResponse> _defaultInvokeEdgeFunction({
-    required final String functionName,
-    required final String accessToken,
-    required final Map<String, dynamic> body,
+    required String functionName,
+    required String accessToken,
+    required Map<String, dynamic> body,
   }) {
     return Supabase.instance.client.functions.invoke(
       functionName,

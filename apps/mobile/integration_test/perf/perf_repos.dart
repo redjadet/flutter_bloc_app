@@ -8,7 +8,7 @@ import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_repository.dart';
 
 Future<void> overrideChartRepositoryForPerf({
-  required final int pointCount,
+  required int pointCount,
 }) async {
   if (getIt.isRegistered<ChartRepository>()) {
     await getIt.unregister<ChartRepository>();
@@ -19,7 +19,7 @@ Future<void> overrideChartRepositoryForPerf({
 }
 
 Future<void> overrideTodoRepositoryForPerf({
-  required final int itemCount,
+  required int itemCount,
 }) async {
   if (getIt.isRegistered<TodoRepository>()) {
     await getIt.unregister<TodoRepository>();
@@ -30,10 +30,10 @@ Future<void> overrideTodoRepositoryForPerf({
 }
 
 class _PerfChartRepository extends ChartRepository {
-  _PerfChartRepository({required final int pointCount})
+  _PerfChartRepository({required int pointCount})
     : _points = List<ChartPoint>.generate(
         pointCount,
-        (final i) => ChartPoint(
+        (i) => ChartPoint(
           date: DateTime.utc(2026).add(Duration(days: i)),
           value: 42000 + (i % 50) * 17.0,
         ),
@@ -55,10 +55,10 @@ class _PerfChartRepository extends ChartRepository {
 class _PerfTodoRepository
     with TodoSyncDiagnosticsNoPendingSync
     implements TodoRepository {
-  _PerfTodoRepository({required final int itemCount})
+  _PerfTodoRepository({required int itemCount})
     : _items = List<TodoItem>.generate(
         itemCount,
-        (final i) => TodoItem.create(title: 'Perf seed todo $i'),
+        (i) => TodoItem.create(title: 'Perf seed todo $i'),
         growable: false,
       ) {
     _controller.add(_items);
@@ -76,8 +76,8 @@ class _PerfTodoRepository
   Future<List<TodoItem>> fetchAll() async => _items;
 
   @override
-  Future<void> save(final TodoItem item) async {
-    final int existingIndex = _items.indexWhere((final e) => e.id == item.id);
+  Future<void> save(TodoItem item) async {
+    final int existingIndex = _items.indexWhere((e) => e.id == item.id);
     if (existingIndex == -1) {
       _items = <TodoItem>[item, ..._items];
     } else {
@@ -89,14 +89,14 @@ class _PerfTodoRepository
   }
 
   @override
-  Future<void> delete(final String id) async {
-    _items = _items.where((final e) => e.id != id).toList(growable: false);
+  Future<void> delete(String id) async {
+    _items = _items.where((e) => e.id != id).toList(growable: false);
     _controller.add(_items);
   }
 
   @override
   Future<void> clearCompleted() async {
-    _items = _items.where((final e) => !e.isCompleted).toList(growable: false);
+    _items = _items.where((e) => !e.isCompleted).toList(growable: false);
     _controller.add(_items);
   }
 }

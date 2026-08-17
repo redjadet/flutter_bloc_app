@@ -1,21 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
+import 'package:flutter_bloc_app/app/config/app_constants.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_repository.dart';
 import 'package:flutter_bloc_app/features/counter/domain/counter_snapshot.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cubit.dart';
 import 'package:flutter_bloc_app/features/counter/presentation/pages/counter_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/platform/biometric_authenticator.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 import '../../../../test_helpers.dart' as test_helpers;
 import '../../../../test_helpers.dart' show FakeTimerService;
@@ -99,7 +100,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> quiesceForSessionCleanup() async {}
@@ -161,9 +162,8 @@ void main() {
     }
     getIt.registerSingleton<CounterRepository>(repository);
     getIt.registerSingleton<PendingSyncRepository>(pendingRepository);
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer((_) async => <SyncOperation>[]);
+    when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+        .thenAnswer((_) async => <SyncOperation>[]);
 
     final CounterCubit counterCubit = CounterCubit(
       repository: repository,
@@ -185,7 +185,7 @@ void main() {
         splitScreenMode: true,
         builder: (context, child) => MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: MultiBlocProvider(
             providers: <BlocProvider<dynamic>>[

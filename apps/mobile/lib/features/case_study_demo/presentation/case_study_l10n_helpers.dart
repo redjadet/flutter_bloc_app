@@ -5,8 +5,8 @@ export 'package:flutter_bloc_app/app/l10n_adapters/media_pick_error_messages.dar
     show cameraGalleryErrorMessage;
 
 String caseStudyCaseTypeTitle(
-  final AppLocalizations l10n,
-  final CaseStudyCaseType type,
+  AppLocalizations l10n,
+  CaseStudyCaseType type,
 ) {
   switch (type) {
     case CaseStudyCaseType.implant:

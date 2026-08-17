@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:auth/auth.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
-import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
+import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_case_type.dart';
+import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_clip_file_store.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_draft.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_local_repository.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/domain/case_study_question.dart';
@@ -14,9 +14,10 @@ import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/cas
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/cubit/case_study_history_detail_cubit.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_detail_page.dart';
 import 'package:flutter_bloc_app/features/case_study_demo/presentation/pages/case_study_history_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _StubAuthRepository implements AuthRepository {
   _StubAuthRepository(this._currentUser);
@@ -60,28 +61,28 @@ class _StubRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<String> uploadClip({
-    required final String caseId,
-    required final String questionId,
-    required final String localPath,
+    required String caseId,
+    required String questionId,
+    required String localPath,
   }) async => '';
 
   @override
   Future<void> upsertRemoteDraft({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
   }) async {}
 
   @override
   Future<void> finalizeRemoteSubmission({
-    required final String caseId,
-    required final String doctorName,
-    required final CaseStudyCaseType caseType,
-    required final String notes,
-    required final Map<String, String> remoteObjectKeysByQuestion,
-    required final DateTime submittedAtUtc,
+    required String caseId,
+    required String doctorName,
+    required CaseStudyCaseType caseType,
+    required String notes,
+    required Map<String, String> remoteObjectKeysByQuestion,
+    required DateTime submittedAtUtc,
   }) async {}
 
   @override
@@ -89,13 +90,13 @@ class _StubRemoteRepository implements CaseStudyRemoteRepository {
 
   @override
   Future<RemoteCaseStudyDetail?> getSubmittedCase({
-    required final String caseId,
+    required String caseId,
   }) async => detail;
 
   @override
   Future<String> createSignedPlaybackUrl({
-    required final String objectKey,
-    required final Duration ttl,
+    required String objectKey,
+    required Duration ttl,
   }) async => '';
 }
 
@@ -104,7 +105,7 @@ class _StubRemoteDeleteRepository implements CaseStudyRemoteDeleteRepository {
   String? lastCaseId;
 
   @override
-  Future<void> deleteCaseStudyRemote({required final String caseId}) async {
+  Future<void> deleteCaseStudyRemote({required String caseId}) async {
     callCount += 1;
     lastCaseId = caseId;
   }
@@ -115,44 +116,44 @@ class _NoopClipStore implements CaseStudyClipFileStore {
   String? lastCaseId;
 
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {
+  Future<void> deleteCaseFolder(String caseId) async {
     deleteFolderCount += 1;
     lastCaseId = caseId;
   }
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {}
+  Future<void> deleteFileIfExists(String? path) async {}
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) => stagingPath;
+  String finalClipFilePathFromStaging(String stagingPath) => stagingPath;
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async => sourcePath;
 
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async => sourcePath;
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) => finalPath;
 
   @override
-  Future<List<int>> readClipBytes(final String path) async => const <int>[];
+  Future<List<int>> readClipBytes(String path) async => const <int>[];
 }
 
 class _MutableLocalRepository implements CaseStudyLocalRepository {
-  _MutableLocalRepository({required final List<CaseStudyRecord> initialRecords})
+  _MutableLocalRepository({required List<CaseStudyRecord> initialRecords})
     : _records = List<CaseStudyRecord>.from(initialRecords);
 
   List<CaseStudyRecord> _records;
@@ -161,34 +162,25 @@ class _MutableLocalRepository implements CaseStudyLocalRepository {
   Future<void> ensureReady() async {}
 
   @override
-  Future<CaseStudyDraft?> loadDraft(final String userId) async => null;
+  Future<CaseStudyDraft?> loadDraft(String userId) async => null;
 
   @override
-  Future<void> saveDraft(
-    final String userId,
-    final CaseStudyDraft draft,
-  ) async {}
+  Future<void> saveDraft(String userId, CaseStudyDraft draft) async {}
 
   @override
-  Future<void> clearDraft(final String userId) async {}
+  Future<void> clearDraft(String userId) async {}
 
   @override
-  Future<List<CaseStudyRecord>> loadRecords(final String userId) async =>
+  Future<List<CaseStudyRecord>> loadRecords(String userId) async =>
       List<CaseStudyRecord>.from(_records);
 
   @override
-  Future<void> saveRecords(
-    final String userId,
-    final List<CaseStudyRecord> records,
-  ) async {
+  Future<void> saveRecords(String userId, List<CaseStudyRecord> records) async {
     _records = List<CaseStudyRecord>.from(records);
   }
 
   @override
-  Future<CaseStudyRecord?> getRecord(
-    final String userId,
-    final String recordId,
-  ) async {
+  Future<CaseStudyRecord?> getRecord(String userId, String recordId) async {
     for (final CaseStudyRecord r in _records) {
       if (r.id == recordId) return r;
     }
@@ -206,12 +198,12 @@ Widget _buildHistoryPage() {
       clipStore: getIt<CaseStudyClipFileStore>(),
       remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
     ),
-    init: (final cubit) => cubit.load(),
+    init: (cubit) => cubit.load(),
     child: const CaseStudyHistoryPage(),
   );
 }
 
-Widget _buildHistoryDetailPage({required final String recordId}) {
+Widget _buildHistoryDetailPage({required String recordId}) {
   return BlocProviderHelpers.withAsyncInit<CaseStudyHistoryDetailCubit>(
     create: () => CaseStudyHistoryDetailCubit(
       recordId: recordId,
@@ -222,17 +214,17 @@ Widget _buildHistoryDetailPage({required final String recordId}) {
       clipStore: getIt<CaseStudyClipFileStore>(),
       remoteBackendAuth: getIt<RemoteBackendAuthPort>(),
     ),
-    init: (final cubit) => cubit.load(),
+    init: (cubit) => cubit.load(),
     child: const CaseStudyHistoryDetailPage(),
   );
 }
 
-Widget _buildApp({required final Widget home}) {
+Widget _buildApp({required Widget home}) {
   return MaterialApp(
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     locale: const Locale('en'),
-    builder: (final context, final child) =>
+    builder: (context, child) =>
         buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
     home: home,
   );
@@ -273,7 +265,7 @@ void main() {
     });
 
     testWidgets('deletes from history list (local mode) after confirmation', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(_buildApp(home: _buildHistoryPage()));
       await tester.pumpAndSettle();
@@ -294,23 +286,21 @@ void main() {
     });
 
     testWidgets('deletes from detail page and pops back to root', (
-      final tester,
+      tester,
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          builder: (final context, final child) => buildAppMixScope(
+          builder: (context, child) => buildAppMixScope(
             context,
             child: child ?? const SizedBox.shrink(),
           ),
           initialRoute: '/detail',
           routes: <String, WidgetBuilder>{
-            '/': (final context) =>
-                const Scaffold(body: Text('root placeholder')),
-            '/detail': (final context) =>
-                _buildHistoryDetailPage(recordId: 'r1'),
+            '/': (context) => const Scaffold(body: Text('root placeholder')),
+            '/detail': (context) => _buildHistoryDetailPage(recordId: 'r1'),
           },
         ),
       );
@@ -331,7 +321,7 @@ void main() {
 
     testWidgets(
       'calls remote delete from history list when Supabase is active',
-      (final tester) async {
+      (tester) async {
         await getIt.reset(dispose: true);
 
         const user = AuthUser(id: 'user-1', isAnonymous: false);
@@ -377,7 +367,7 @@ void main() {
     );
 
     testWidgets('calls remote delete from detail when Supabase is active', (
-      final tester,
+      tester,
     ) async {
       await getIt.reset(dispose: true);
 
@@ -408,19 +398,17 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          builder: (final context, final child) => buildAppMixScope(
+          builder: (context, child) => buildAppMixScope(
             context,
             child: child ?? const SizedBox.shrink(),
           ),
           initialRoute: '/detail',
           routes: <String, WidgetBuilder>{
-            '/': (final context) =>
-                const Scaffold(body: Text('root placeholder')),
-            '/detail': (final context) =>
-                _buildHistoryDetailPage(recordId: 'r1'),
+            '/': (context) => const Scaffold(body: Text('root placeholder')),
+            '/detail': (context) => _buildHistoryDetailPage(recordId: 'r1'),
           },
         ),
       );

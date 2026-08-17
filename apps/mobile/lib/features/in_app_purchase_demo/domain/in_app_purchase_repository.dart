@@ -10,7 +10,7 @@ abstract interface class InAppPurchaseRepository {
   /// Fake repository emits results when [purchase] is called.
   Stream<IapPurchaseResult> watchPurchaseResults();
 
-  Future<IapPurchaseResult> purchase(final IapProduct product);
+  Future<IapPurchaseResult> purchase(IapProduct product);
 
   Future<void> restorePurchases();
 

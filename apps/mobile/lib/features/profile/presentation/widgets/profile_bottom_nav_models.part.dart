@@ -13,7 +13,7 @@ class _NavDestination {
   final String label;
   final String route;
 
-  bool matches(final String location) {
+  bool matches(String location) {
     final String path = Uri.tryParse(location)?.path ?? '/';
     return path == route || path.endsWith(route);
   }
@@ -26,9 +26,9 @@ class _NavItem {
       _cupertinoIconOverride = null;
 
   const _NavItem.action({
-    required final String label,
-    required final IconData materialIcon,
-    required final IconData cupertinoIcon,
+    required String label,
+    required IconData materialIcon,
+    required IconData cupertinoIcon,
   }) : destination = null,
        _labelOverride = label,
        _materialIconOverride = materialIcon,
@@ -39,8 +39,7 @@ class _NavItem {
   final IconData? _materialIconOverride;
   final IconData? _cupertinoIconOverride;
 
-  bool matches(final String location) =>
-      destination?.matches(location) ?? false;
+  bool matches(String location) => destination?.matches(location) ?? false;
 
   String get label => switch ((destination?.label, _labelOverride)) {
     (final destLabel?, _) => destLabel,
@@ -111,9 +110,9 @@ const List<_NavItem> _navItems = <_NavItem>[
   ),
 ];
 
-int _resolveSelectedIndex(final String currentLocation) {
+int _resolveSelectedIndex(String currentLocation) {
   final int selectedIndex = _navItems.indexWhere(
-    (final item) => item.matches(currentLocation),
+    (item) => item.matches(currentLocation),
   );
   return selectedIndex >= 0 ? selectedIndex : _profileTabIndex;
 }

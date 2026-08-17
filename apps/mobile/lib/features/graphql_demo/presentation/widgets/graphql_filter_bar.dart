@@ -1,8 +1,8 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/utils/bloc/cubit_helpers.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/graphql_demo.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Filter bar for selecting continents in the GraphQL demo.
 class GraphqlFilterBar extends StatelessWidget {
@@ -20,17 +20,17 @@ class GraphqlFilterBar extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final String? selectedContinentCode =
         activeContinentCode != null &&
-            continents.any((final c) => c.code == activeContinentCode)
+            continents.any((c) => c.code == activeContinentCode)
         ? activeContinentCode
         : null;
 
     // Create list of items for picker (null for "All", then continents)
     final List<String?> allItems = [
       null,
-      ...continents.map((final c) => c.code),
+      ...continents.map((c) => c.code),
     ];
 
     return CommonDropdownField<String?>(
@@ -40,7 +40,7 @@ class GraphqlFilterBar extends StatelessWidget {
           child: Text(l10n.graphqlSampleAllContinents),
         ),
         ...continents.map(
-          (final continent) => DropdownMenuItem<String?>(
+          (continent) => DropdownMenuItem<String?>(
             value: continent.code,
             child: Text('${continent.name} (${continent.code})'),
           ),
@@ -48,20 +48,20 @@ class GraphqlFilterBar extends StatelessWidget {
       ],
       onChanged: isLoading
           ? null
-          : (final value) =>
+          : (value) =>
                 CubitHelpers.safeExecute<GraphqlDemoCubit, GraphqlDemoState>(
                   context,
-                  (final cubit) => cubit.selectContinent(value),
+                  (cubit) => cubit.selectContinent(value),
                 ),
       labelText: l10n.graphqlSampleFilterLabel,
       enabled: !isLoading,
       customPickerItems: allItems,
-      customItemLabel: (final code) {
+      customItemLabel: (code) {
         if (code == null) {
           return l10n.graphqlSampleAllContinents;
         }
         final continent = continents.firstWhere(
-          (final c) => c.code == code,
+          (c) => c.code == code,
           orElse: () => GraphqlContinent(code: code, name: code),
         );
         return '${continent.name} (${continent.code})';

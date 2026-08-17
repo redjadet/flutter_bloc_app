@@ -12,13 +12,13 @@ import 'package:flutter_bloc_app/features/auth/domain/auth_repository.dart';
 class DebugKeychainGuestAuthRepository extends FirebaseAuthRepository {
   DebugKeychainGuestAuthRepository({required super.firebaseAuth}) {
     _firebaseSubscription = super.authStateChanges.listen(
-      (final user) {
+      (user) {
         if (user != null) {
           _localGuest = null;
         }
         _authStateController.add(currentUser);
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'DebugKeychainGuestAuthRepository authStateChanges failed',
           error,
@@ -152,7 +152,7 @@ class UnavailableAuthRepository implements AuthRepository {
   Future<void> signOut() async {}
 }
 
-bool _looksLikeKeychainEntitlementError(final Object error) {
+bool _looksLikeKeychainEntitlementError(Object error) {
   if (error is FirebaseAuthException && error.code == 'keychain-error') {
     return true;
   }

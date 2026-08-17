@@ -15,15 +15,15 @@ class _GoogleMapsMapSection extends StatelessWidget {
   final bool useAppleMaps;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocListener<MapSampleCubit, MapSampleState>(
         listenWhen: _mapStateChanged,
-        listener: (final context, final state) async {
+        listener: (context, state) async {
           await controller.syncWithState(state);
         },
         child: TypeSafeBlocBuilder<MapSampleCubit, MapSampleState>(
-          buildWhen: (final previous, final current) => false,
-          builder: (final context, final state) => RepaintBoundary(
+          buildWhen: (previous, current) => false,
+          builder: (context, state) => RepaintBoundary(
             child: MapSampleMapView(
               initialState: state,
               cubit: cubit,
@@ -35,8 +35,8 @@ class _GoogleMapsMapSection extends StatelessWidget {
       );
 
   bool _mapStateChanged(
-    final MapSampleState previous,
-    final MapSampleState current,
+    MapSampleState previous,
+    MapSampleState current,
   ) =>
       previous.cameraPosition != current.cameraPosition ||
       previous.markers != current.markers ||
@@ -58,13 +58,13 @@ class _GoogleMapsControlsSection extends StatelessWidget {
   final ValueChanged<bool> onToggleTraffic;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocSelector<MapSampleCubit, MapSampleState, _ControlsViewModel>(
-        selector: (final state) => _ControlsViewModel(
+        selector: (state) => _ControlsViewModel(
           isHybridMapType: state.mapType == gmaps.MapType.hybrid,
           trafficEnabled: state.trafficEnabled,
         ),
-        builder: (final context, final viewModel) => GoogleMapsControlsCard(
+        builder: (context, viewModel) => GoogleMapsControlsCard(
           heading: l10n.googleMapsPageControlsHeading,
           helpText: l10n.googleMapsPageApiKeyHelp,
           isHybridMapType: viewModel.isHybridMapType,
@@ -88,20 +88,20 @@ class _GoogleMapsLocationListSection extends StatelessWidget {
   final ValueChanged<MapLocation> onFocus;
 
   @override
-  Widget build(final BuildContext context) =>
+  Widget build(BuildContext context) =>
       TypeSafeBlocSelector<
         MapSampleCubit,
         MapSampleState,
         _LocationListViewModel
       >(
-        selector: (final state) => _LocationListViewModel(
+        selector: (state) => _LocationListViewModel(
           locations: state.locations,
           selectedMarkerId: state.selectedMarkerId?.value,
         ),
         builder:
             (
-              final context,
-              final viewModel,
+              context,
+              viewModel,
             ) => GoogleMapsLocationList(
               locations: viewModel.locations,
               selectedMarkerId: viewModel.selectedMarkerId,

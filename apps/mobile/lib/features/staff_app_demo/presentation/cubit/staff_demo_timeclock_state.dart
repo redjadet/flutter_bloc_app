@@ -14,10 +14,9 @@ enum StaffDemoTimeclockStatus {
 @freezed
 abstract class StaffDemoTimeclockState with _$StaffDemoTimeclockState {
   const factory StaffDemoTimeclockState({
-    @Default(StaffDemoTimeclockStatus.initial)
-    final StaffDemoTimeclockStatus status,
-    final String? openEntryId,
-    final StaffDemoClockResult? lastResult,
-    final String? errorMessage,
+    @Default(StaffDemoTimeclockStatus.initial) StaffDemoTimeclockStatus status,
+    String? openEntryId,
+    StaffDemoClockResult? lastResult,
+    String? errorMessage,
   }) = _StaffDemoTimeclockState;
 }

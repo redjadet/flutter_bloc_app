@@ -5,7 +5,7 @@ class MapSampleMapController {
   Future<void> Function(MapSampleState state)? syncStateHandler;
   Future<void> Function(MapLocation location)? focusHandler;
 
-  Future<void> syncWithState(final MapSampleState state) async {
+  Future<void> syncWithState(MapSampleState state) async {
     final handler = syncStateHandler;
     if (handler == null) {
       return;
@@ -13,7 +13,7 @@ class MapSampleMapController {
     await handler(state);
   }
 
-  Future<void> focusOnLocation(final MapLocation location) async {
+  Future<void> focusOnLocation(MapLocation location) async {
     final handler = focusHandler;
     if (handler == null) {
       return;

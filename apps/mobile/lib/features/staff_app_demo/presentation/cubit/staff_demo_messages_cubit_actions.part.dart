@@ -5,8 +5,8 @@ part of 'staff_demo_messages_cubit.dart';
 
 extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
   Future<void> hydrateFromRecipientsImpl(
-    final List<StaffDemoInboxRecipientSnapshot> recipients,
-    final int hydrationToken,
+    List<StaffDemoInboxRecipientSnapshot> recipients,
+    int hydrationToken,
   ) async {
     try {
       final items = <StaffDemoInboxItem>[];
@@ -67,7 +67,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
     }
   }
 
-  Future<void> confirmImpl(final StaffDemoInboxItem item) async {
+  Future<void> confirmImpl(StaffDemoInboxItem item) async {
     final shiftId = item.shiftId;
     if (shiftId == null || shiftId.isEmpty) return;
     await CubitExceptionHandler.executeAsync<void>(
@@ -100,7 +100,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -115,11 +115,11 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
   }
 
   Future<void> sendShiftAssignmentImpl({
-    required final String toUserId,
-    required final String body,
-    required final String siteId,
-    required final DateTime startAtUtc,
-    required final DateTime endAtUtc,
+    required String toUserId,
+    required String body,
+    required String siteId,
+    required DateTime startAtUtc,
+    required DateTime endAtUtc,
   }) async {
     await CubitExceptionHandler.executeAsync<void>(
       operation: () async {
@@ -143,7 +143,7 @@ extension _StaffDemoMessagesCubitActions on StaffDemoMessagesCubit {
           ),
         );
       },
-      onError: (final message) {
+      onError: (message) {
         if (isClosed) return;
         emit(
           state.copyWith(

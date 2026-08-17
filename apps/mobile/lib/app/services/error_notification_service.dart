@@ -1,26 +1,26 @@
 import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/context_utils.dart';
 import 'package:flutter_bloc_app/app/utils/error_handling.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract class ErrorNotificationService {
-  Future<void> showSnackBar(final BuildContext context, final String message);
+  Future<void> showSnackBar(BuildContext context, String message);
   Future<void> showAlertDialog(
-    final BuildContext context,
-    final String title,
-    final String message,
+    BuildContext context,
+    String title,
+    String message,
   );
 }
 
 class SnackbarErrorNotificationService implements ErrorNotificationService {
   @override
   Future<void> showSnackBar(
-    final BuildContext context,
-    final String message,
+    BuildContext context,
+    String message,
   ) async {
     if (!context.mounted) {
       ContextUtils.logNotMounted(
@@ -45,9 +45,9 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
 
   @override
   Future<void> showAlertDialog(
-    final BuildContext context,
-    final String title,
-    final String message,
+    BuildContext context,
+    String title,
+    String message,
   ) {
     if (!context.mounted) {
       ContextUtils.logNotMounted(
@@ -62,7 +62,7 @@ class SnackbarErrorNotificationService implements ErrorNotificationService {
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     return showAdaptiveDialog<void>(
       context: context,
-      builder: (final dialogContext) {
+      builder: (dialogContext) {
         if (isCupertino) {
           return CupertinoAlertDialog(
             title: Text(title),

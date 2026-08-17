@@ -94,8 +94,7 @@ extension WhiteboardStrokePatterns on WhiteboardStroke {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _WhiteboardStroke value)?  raw,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _WhiteboardStroke value)?  raw,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _WhiteboardStroke() when raw != null:
 return raw(_that);case _:
@@ -116,8 +115,7 @@ return raw(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _WhiteboardStroke value)  raw,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _WhiteboardStroke value)  raw,}){final _that = this;
 switch (_that) {
 case _WhiteboardStroke():
 return raw(_that);case _:
@@ -137,8 +135,7 @@ return raw(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _WhiteboardStroke value)?  raw,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _WhiteboardStroke value)?  raw,}){final _that = this;
 switch (_that) {
 case _WhiteboardStroke() when raw != null:
 return raw(_that);case _:
@@ -214,7 +211,7 @@ return raw(_that.points,_that.color,_that.width);case _:
 
 
 class _WhiteboardStroke with DiagnosticableTreeMixin implements WhiteboardStroke {
-  const _WhiteboardStroke({required final  List<Offset> points, required this.color, required this.width}): _points = points;
+  const _WhiteboardStroke({required  List<Offset> points, required this.color, required this.width}): _points = points;
   
 
  final  List<Offset> _points;

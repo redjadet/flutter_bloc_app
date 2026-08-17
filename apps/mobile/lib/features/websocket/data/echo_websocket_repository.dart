@@ -11,9 +11,9 @@ typedef WebSocketConnector = FutureOr<WebSocketChannel> Function(Uri uri);
 
 class EchoWebsocketRepository implements WebsocketRepository {
   EchoWebsocketRepository({
-    final Uri? endpoint,
-    final WebSocketConnector? connector,
-    final Duration? connectionTimeout,
+    Uri? endpoint,
+    WebSocketConnector? connector,
+    Duration? connectionTimeout,
   }) : endpoint = endpoint ?? Uri.parse(_kDefaultEndpoint),
        _connector = connector ?? _defaultConnector,
        _connectionTimeout = connectionTimeout ?? const Duration(seconds: 10) {
@@ -41,7 +41,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   WebsocketConnectionState _state =
       const WebsocketConnectionState.disconnected();
 
-  static Future<WebSocketChannel> _defaultConnector(final Uri uri) async =>
+  static Future<WebSocketChannel> _defaultConnector(Uri uri) async =>
       WebSocketChannel.connect(uri);
 
   @override
@@ -107,7 +107,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     }
   }
 
-  void _releaseConnectionAttempt(final Object error) {
+  void _releaseConnectionAttempt(Object error) {
     final Completer<void>? pending = _connectionCompleter.pending;
     if (pending == null) {
       return;
@@ -116,7 +116,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     // completeError would become an unhandled async error in tests/zones —
     // attach a sink first. Followers already listen, so skip the sink then.
     if (_connectionFollowerCount == 0) {
-      unawaited(pending.future.catchError((final Object _) {}));
+      unawaited(pending.future.catchError((Object _) {}));
     }
     _connectionCompleter.completeErrorAndReset(error);
   }
@@ -127,7 +127,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     logContext: 'EchoWebsocketRepository.connect',
   );
 
-  void _handleIncoming(final dynamic data) {
+  void _handleIncoming(dynamic data) {
     final String message = data?.toString() ?? '';
     if (_messagesController.isClosed) {
       return;
@@ -142,8 +142,8 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }
 
   Future<void> _handleError(
-    final Object error, [
-    final StackTrace? stackTrace,
+    Object error, [
+    StackTrace? stackTrace,
   ]) async {
     await _cleanupChannel();
     _updateState(WebsocketConnectionState.error(error.toString()));
@@ -166,7 +166,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
     _channel = null;
   }
 
-  void _updateState(final WebsocketConnectionState state) {
+  void _updateState(WebsocketConnectionState state) {
     _state = state;
     if (!_stateController.isClosed) {
       _stateController.add(state);
@@ -195,7 +195,7 @@ class EchoWebsocketRepository implements WebsocketRepository {
   }
 
   @override
-  Future<void> send(final String message) async {
+  Future<void> send(String message) async {
     final WebSocketChannel? channel = _channel;
     if (channel == null) {
       throw StateError('WebSocket is not connected');

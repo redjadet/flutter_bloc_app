@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/certificate_pinning_demo/domain/certificate_pinning_demo_failure.dart';
 import 'package:flutter_bloc_app/features/certificate_pinning_demo/presentation/cubit/certificate_pinning_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/certificate_pinning_demo/presentation/cubit/certificate_pinning_demo_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:networking/networking.dart';
 
 class CertificatePinningDemoPage extends StatelessWidget {
   const CertificatePinningDemoPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.certificatePinningDemoTitle)),
@@ -20,7 +20,7 @@ class CertificatePinningDemoPage extends StatelessWidget {
               CertificatePinningDemoCubit,
               CertificatePinningDemoState
             >(
-              builder: (final context, final state) {
+              builder: (context, state) {
                 final CertificatePinningDemoCubit cubit = context
                     .read<CertificatePinningDemoCubit>();
                 return ListView(
@@ -47,18 +47,17 @@ class CertificatePinningDemoPage extends StatelessWidget {
                       value: state.scenario,
                       items: MockCertificateScenario.values
                           .map(
-                            (final s) =>
-                                DropdownMenuItem<MockCertificateScenario>(
-                                  value: s,
-                                  child: Text(s.name),
-                                ),
+                            (s) => DropdownMenuItem<MockCertificateScenario>(
+                              value: s,
+                              child: Text(s.name),
+                            ),
                           )
                           .toList(growable: false),
                       onChanged:
                           state.status ==
                               CertificatePinningDemoStatus.validating
                           ? null
-                          : (final value) {
+                          : (value) {
                               if (value != null) {
                                 cubit.selectScenario(value);
                               }
@@ -104,7 +103,7 @@ class CertificatePinningDemoPage extends StatelessWidget {
                       Text(l10n.certificatePinningDemoLogsEmpty)
                     else
                       ...state.logLines.map(
-                        (final line) => Padding(
+                        (line) => Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: SelectableText(
                             line,
@@ -128,7 +127,7 @@ class _StatusBanner extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     switch (state.status) {
       case CertificatePinningDemoStatus.initial:
@@ -161,8 +160,8 @@ class _StatusBanner extends StatelessWidget {
   }
 
   String _failureMessage(
-    final CertificatePinningDemoFailure? failure,
-    final AppLocalizations l10n,
+    CertificatePinningDemoFailure? failure,
+    AppLocalizations l10n,
   ) {
     final String code = failure?.l10nCode ?? 'unknown';
     return switch (code) {

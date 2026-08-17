@@ -13,11 +13,11 @@ class StaffDemoPunchEvaluator {
   static const double maxTrustedAccuracyMeters = 100;
 
   static StaffDemoClockInEvaluation evaluateClockIn({
-    required final DateTime nowUtc,
-    required final DateTime? shiftStartUtc,
-    required final double? distanceMeters,
-    required final double? radiusMeters,
-    required final double? accuracyMeters,
+    required DateTime nowUtc,
+    required DateTime? shiftStartUtc,
+    required double? distanceMeters,
+    required double? radiusMeters,
+    required double? accuracyMeters,
   }) {
     final bool missingScheduledShift = shiftStartUtc == null;
     final bool earlyClockIn =

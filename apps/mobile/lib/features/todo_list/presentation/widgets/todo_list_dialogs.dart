@@ -1,10 +1,10 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/navigation.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/widgets/todo_list_dialog_content.dart';
+import 'package:material_ui/material_ui.dart';
 
 export 'todo_list_delete_dialogs.dart';
 
@@ -25,12 +25,12 @@ class TodoEditorResult {
 }
 
 Future<TodoEditorResult?> showTodoEditorDialog({
-  required final BuildContext context,
-  final TodoItem? existing,
+  required BuildContext context,
+  TodoItem? existing,
 }) async => showAdaptiveDialog<TodoEditorResult>(
   context: context,
   requestFocus: true,
-  builder: (final context) => _TodoEditorDialog(existing: existing),
+  builder: (context) => _TodoEditorDialog(existing: existing),
 );
 
 class _TodoEditorDialog extends StatefulWidget {
@@ -82,7 +82,7 @@ class _TodoEditorDialogState extends State<_TodoEditorDialog> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final bool isCupertino = PlatformAdaptive.isCupertino(context);
     final String trimmedTitle = _titleController.text.trim();
@@ -100,17 +100,17 @@ class _TodoEditorDialogState extends State<_TodoEditorDialog> {
       isCompleted: _isCompleted,
       onTitleChanged: (_) => setState(() {}),
       onDescriptionChanged: (_) => setState(() {}),
-      onDueDateChanged: (final date) {
+      onDueDateChanged: (date) {
         setState(() {
           _selectedDueDate = date;
         });
       },
-      onPriorityChanged: (final priority) {
+      onPriorityChanged: (priority) {
         setState(() {
           _selectedPriority = priority;
         });
       },
-      onCompletedChanged: (final completed) {
+      onCompletedChanged: (completed) {
         setState(() {
           _isCompleted = completed;
         });

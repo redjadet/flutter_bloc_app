@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_de
 import 'package:flutter_bloc_app/features/genui_demo/presentation/cubit/genui_demo_state.dart';
 import 'package:genui/genui.dart' as genui;
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'genui_demo_content_widgets.part.dart';
 
@@ -36,9 +36,9 @@ class _GenUiDemoContentState extends State<GenUiDemoContent> {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final isInitial = context.selectState<GenUiDemoCubit, GenUiDemoState, bool>(
-      selector: (final state) =>
+      selector: (state) =>
           state.maybeWhen(initial: () => true, orElse: () => false),
     );
 

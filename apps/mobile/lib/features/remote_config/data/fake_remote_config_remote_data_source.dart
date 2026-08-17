@@ -10,7 +10,7 @@ class FakeRemoteConfigRemoteDataSource implements RemoteConfigRemoteDataSource {
   Future<void> forceFetch() async {}
 
   @override
-  String getString(final String key) {
+  String getString(String key) {
     if (key == RemoteConfigKeys.productionDemoVariant) {
       return 'control';
     }
@@ -18,7 +18,7 @@ class FakeRemoteConfigRemoteDataSource implements RemoteConfigRemoteDataSource {
   }
 
   @override
-  bool getBool(final String key) {
+  bool getBool(String key) {
     if (key == RemoteConfigKeys.productionDemoEnabled) {
       return true;
     }
@@ -26,10 +26,10 @@ class FakeRemoteConfigRemoteDataSource implements RemoteConfigRemoteDataSource {
   }
 
   @override
-  int getInt(final String key) => 0;
+  int getInt(String key) => 0;
 
   @override
-  double getDouble(final String key) => 0;
+  double getDouble(String key) => 0;
 
   @override
   Future<void> clearCache() async {}

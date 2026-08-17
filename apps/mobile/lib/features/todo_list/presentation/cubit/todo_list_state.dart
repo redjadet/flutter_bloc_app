@@ -22,15 +22,15 @@ enum TodoSortOrder {
 @freezed
 abstract class TodoListState with _$TodoListState {
   const factory TodoListState({
-    @Default(ViewStatus.initial) final ViewStatus status,
-    @Default(<TodoItem>[]) final List<TodoItem> items,
-    @Default(TodoFilter.all) final TodoFilter filter,
-    @Default('') final String searchQuery,
-    @Default(TodoSortOrder.dateDesc) final TodoSortOrder sortOrder,
-    @Default(<String, int>{}) final Map<String, int> manualOrder,
-    @Default(<String>{}) final Set<String> selectedItemIds,
-    @Default(0) final int pendingSyncCount,
-    final AppError? lastError,
+    @Default(ViewStatus.initial) ViewStatus status,
+    @Default(<TodoItem>[]) List<TodoItem> items,
+    @Default(TodoFilter.all) TodoFilter filter,
+    @Default('') String searchQuery,
+    @Default(TodoSortOrder.dateDesc) TodoSortOrder sortOrder,
+    @Default(<String, int>{}) Map<String, int> manualOrder,
+    @Default(<String>{}) Set<String> selectedItemIds,
+    @Default(0) int pendingSyncCount,
+    AppError? lastError,
   }) = _TodoListState;
 
   const TodoListState._();
@@ -51,9 +51,9 @@ abstract class TodoListState with _$TodoListState {
     List<TodoItem> result = switch (filter) {
       TodoFilter.all => items,
       TodoFilter.active =>
-        items.where((final item) => !item.isCompleted).toList(growable: false),
+        items.where((item) => !item.isCompleted).toList(growable: false),
       TodoFilter.completed =>
-        items.where((final item) => item.isCompleted).toList(growable: false),
+        items.where((item) => item.isCompleted).toList(growable: false),
     };
 
     // Early return if filter resulted in empty list
@@ -66,7 +66,7 @@ abstract class TodoListState with _$TodoListState {
       final String query = searchQuery.toLowerCase();
       result = result
           .where(
-            (final item) =>
+            (item) =>
                 item.title.toLowerCase().contains(query) ||
                 (item.description?.toLowerCase().contains(query) ?? false),
           )
@@ -82,13 +82,13 @@ abstract class TodoListState with _$TodoListState {
     return _applySorting(result);
   }
 
-  static int _compareByUpdatedAtDesc(final TodoItem a, final TodoItem b) =>
+  static int _compareByUpdatedAtDesc(TodoItem a, TodoItem b) =>
       b.updatedAt.compareTo(a.updatedAt);
 
   static int _compareByDueDate(
-    final TodoItem a,
-    final TodoItem b,
-    final bool ascending,
+    TodoItem a,
+    TodoItem b,
+    bool ascending,
   ) {
     final DateTime? aDue = a.dueDate;
     final DateTime? bDue = b.dueDate;
@@ -104,30 +104,28 @@ abstract class TodoListState with _$TodoListState {
     return _compareByUpdatedAtDesc(a, b);
   }
 
-  List<TodoItem> _applySorting(final List<TodoItem> items) {
+  List<TodoItem> _applySorting(List<TodoItem> items) {
     final List<TodoItem> sorted = List<TodoItem>.from(items);
 
     switch (sortOrder) {
       case TodoSortOrder.dateDesc:
-        sorted.sort((final a, final b) => _compareByUpdatedAtDesc(a, b));
+        sorted.sort((a, b) => _compareByUpdatedAtDesc(a, b));
         break;
       case TodoSortOrder.dateAsc:
-        sorted.sort((final a, final b) => a.updatedAt.compareTo(b.updatedAt));
+        sorted.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
         break;
       case TodoSortOrder.titleAsc:
         sorted.sort(
-          (final a, final b) =>
-              a.title.toLowerCase().compareTo(b.title.toLowerCase()),
+          (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
         );
         break;
       case TodoSortOrder.titleDesc:
         sorted.sort(
-          (final a, final b) =>
-              b.title.toLowerCase().compareTo(a.title.toLowerCase()),
+          (a, b) => b.title.toLowerCase().compareTo(a.title.toLowerCase()),
         );
         break;
       case TodoSortOrder.priorityDesc:
-        sorted.sort((final a, final b) {
+        sorted.sort((a, b) {
           final int priorityCompare = b.priorityValue.compareTo(
             a.priorityValue,
           );
@@ -136,7 +134,7 @@ abstract class TodoListState with _$TodoListState {
         });
         break;
       case TodoSortOrder.priorityAsc:
-        sorted.sort((final a, final b) {
+        sorted.sort((a, b) {
           final int priorityCompare = a.priorityValue.compareTo(
             b.priorityValue,
           );
@@ -145,13 +143,13 @@ abstract class TodoListState with _$TodoListState {
         });
         break;
       case TodoSortOrder.dueDateAsc:
-        sorted.sort((final a, final b) => _compareByDueDate(a, b, true));
+        sorted.sort((a, b) => _compareByDueDate(a, b, true));
         break;
       case TodoSortOrder.dueDateDesc:
-        sorted.sort((final a, final b) => _compareByDueDate(a, b, false));
+        sorted.sort((a, b) => _compareByDueDate(a, b, false));
         break;
       case TodoSortOrder.manual:
-        sorted.sort((final a, final b) {
+        sorted.sort((a, b) {
           final int orderA = manualOrder[a.id] ?? 0;
           final int orderB = manualOrder[b.id] ?? 0;
           if (orderA != orderB) {
@@ -165,16 +163,15 @@ abstract class TodoListState with _$TodoListState {
     return List<TodoItem>.unmodifiable(sorted);
   }
 
-  bool get hasCompleted => items.any((final item) => item.isCompleted);
+  bool get hasCompleted => items.any((item) => item.isCompleted);
 
-  int get completedCount =>
-      items.where((final item) => item.isCompleted).length;
+  int get completedCount => items.where((item) => item.isCompleted).length;
 
   int get activeCount => items.length - completedCount;
 
   bool get hasSelectedItems => selectedItemIds.isNotEmpty;
 
-  bool isItemSelected(final String itemId) => selectedItemIds.contains(itemId);
+  bool isItemSelected(String itemId) => selectedItemIds.contains(itemId);
 
   int get selectedCount => selectedItemIds.length;
 }

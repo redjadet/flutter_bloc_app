@@ -31,10 +31,10 @@ FirebaseOptions? _resolveFirebaseOptions() {
 }
 
 List<String> _missingFirebaseRequiredConfigFields(
-  final FirebaseOptions options,
+  FirebaseOptions options,
 ) {
   final missing = <String>[];
-  void addIfMissing(final String label, final String? value) {
+  void addIfMissing(String label, String? value) {
     if (_isPlaceholderFirebaseValue(value)) {
       missing.add(label);
     }
@@ -49,7 +49,7 @@ List<String> _missingFirebaseRequiredConfigFields(
   return missing;
 }
 
-bool _isPlaceholderFirebaseValue(final String? value) {
+bool _isPlaceholderFirebaseValue(String? value) {
   if (value == null || value.isEmpty) {
     return true;
   }
@@ -107,13 +107,13 @@ GoogleProvider? _createGoogleProvider() {
   }
 }
 
-bool _supportsGoogleProvider(final TargetPlatform platform) {
+bool _supportsGoogleProvider(TargetPlatform platform) {
   return platform == TargetPlatform.android || platform == TargetPlatform.iOS;
 }
 
 String _resolveGoogleClientId(
-  final FirebaseOptions options,
-  final String? platformClientId,
+  FirebaseOptions options,
+  String? platformClientId,
 ) {
   return switch (platformClientId) {
     final id? when id.trim().isNotEmpty => id.trim(),
@@ -162,7 +162,7 @@ Future<void> _enableDatabasePersistence() async {
 }
 
 Future<bool> _initializeConfiguredFirebase(
-  final FirebaseOptions options,
+  FirebaseOptions options,
 ) async {
   await Firebase.initializeApp(options: options);
   AppLogger.info('Firebase initialized for project: ${options.projectId}');
@@ -193,8 +193,8 @@ Future<void> _disableAnalyticsUntilConsentApplied() async {
 }
 
 void _logFirebaseInitializationFailure(
-  final Object error,
-  final StackTrace stackTrace,
+  Object error,
+  StackTrace stackTrace,
 ) {
   AppLogger.error('Firebase initialization failed', error, stackTrace);
 }

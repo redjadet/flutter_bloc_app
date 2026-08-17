@@ -4,18 +4,18 @@ class _TherapistPanel extends StatelessWidget {
   const _TherapistPanel();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final isBusy = context
         .selectState<TherapistHomeCubit, TherapistHomeState, bool>(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final errorMessage = context
         .selectState<TherapistHomeCubit, TherapistHomeState, String?>(
-          selector: (final state) => state.errorMessage,
+          selector: (state) => state.errorMessage,
         );
     final selectedAppointments = context
         .selectState<TherapistHomeCubit, TherapistHomeState, List<Appointment>>(
-          selector: (final state) => state.appointments,
+          selector: (state) => state.appointments,
         );
     final cubit = context.cubit<TherapistHomeCubit>();
     final appointments = List<Appointment>.unmodifiable(selectedAppointments);

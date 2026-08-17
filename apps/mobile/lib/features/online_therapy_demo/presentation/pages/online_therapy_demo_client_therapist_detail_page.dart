@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/utils/date_time_formatting.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/widgets/online_therapy_logged_out_prompt.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientTherapistDetailPage extends StatefulWidget {
   const OnlineTherapyDemoClientTherapistDetailPage({
@@ -40,7 +40,7 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -48,11 +48,11 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final therapist = context
         .selectState<ClientBookingCubit, ClientBookingState, TherapistProfile?>(
-          selector: (final state) => state.therapistById(widget.therapistId),
+          selector: (state) => state.therapistById(widget.therapistId),
         );
     final availability = context
         .selectState<
@@ -60,11 +60,11 @@ class _OnlineTherapyDemoClientTherapistDetailPageState
           ClientBookingState,
           List<AvailabilitySlot>
         >(
-          selector: (final state) => state.availability,
+          selector: (state) => state.availability,
         );
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final cubit = context.cubit<ClientBookingCubit>();
     final List<Widget> items = <Widget>[

@@ -90,8 +90,7 @@ extension WebsocketStatePatterns on WebsocketState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WebsocketState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _WebsocketState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _WebsocketState() when $default != null:
 return $default(_that);case _:
@@ -112,8 +111,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WebsocketState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _WebsocketState value)  $default,){final _that = this;
 switch (_that) {
 case _WebsocketState():
 return $default(_that);case _:
@@ -133,8 +131,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WebsocketState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _WebsocketState value)?  $default,){final _that = this;
 switch (_that) {
 case _WebsocketState() when $default != null:
 return $default(_that);case _:
@@ -210,7 +207,7 @@ return $default(_that.endpoint,_that.status,_that.messages,_that.errorMessage,_t
 
 
 class _WebsocketState extends WebsocketState {
-  const _WebsocketState({required this.endpoint, required this.status, final  List<WebsocketMessage> messages = const <WebsocketMessage>[], this.errorMessage, this.isSending = false}): _messages = messages,super._();
+  const _WebsocketState({required this.endpoint, required this.status, List<WebsocketMessage> messages = const <WebsocketMessage>[], this.errorMessage, this.isSending = false}): _messages = messages,super._();
   
 
 @override final  Uri endpoint;

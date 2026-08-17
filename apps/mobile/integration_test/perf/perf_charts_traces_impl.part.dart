@@ -1,8 +1,8 @@
 part of 'perf_charts_traces.dart';
 
 Future<void> _captureChartModeIsolationTracesImpl({
-  required final IntegrationTestWidgetsFlutterBinding binding,
-  required final WidgetTester tester,
+  required IntegrationTestWidgetsFlutterBinding binding,
+  required WidgetTester tester,
 }) async {
   // Minimal toggles (no app navigation): isolates InteractiveViewer vs fl_chart.
   await binding.traceAction(
@@ -10,7 +10,7 @@ Future<void> _captureChartModeIsolationTracesImpl({
       final DateFormat dateFormat = DateFormat.Md('en_US');
       final List<ChartPoint> points = List<ChartPoint>.generate(
         400,
-        (final i) => ChartPoint(
+        (i) => ChartPoint(
           date: DateTime.utc(2024).add(Duration(days: i)),
           value: (i % 100).toDouble(),
         ),
@@ -21,12 +21,11 @@ Future<void> _captureChartModeIsolationTracesImpl({
         await tester.pumpWidget(
           MaterialApp(
             home: MinimalChartToggleHarness(
-              childBuilder: (final context, {required final zoomEnabled}) =>
-                  ChartLineGraph(
-                    points: points,
-                    dateFormat: dateFormat,
-                    zoomEnabled: zoomEnabled,
-                  ),
+              childBuilder: (context, {required zoomEnabled}) => ChartLineGraph(
+                points: points,
+                dateFormat: dateFormat,
+                zoomEnabled: zoomEnabled,
+              ),
             ),
           ),
         );
@@ -169,10 +168,9 @@ Future<void> _captureChartModeIsolationTracesImpl({
         await tester.pumpWidget(
           MaterialApp(
             home: MinimalChartToggleHarness(
-              childBuilder: (final context, {required final zoomEnabled}) =>
-                  BareLineChart(
-                    data: data,
-                  ),
+              childBuilder: (context, {required zoomEnabled}) => BareLineChart(
+                data: data,
+              ),
             ),
           ),
         );
@@ -300,11 +298,9 @@ Future<void> _captureChartModeIsolationTracesImpl({
 }
 
 Map<String, dynamic> _chartModeIsolationMetaImpl() => <String, dynamic>{
-  'meta.charts_minimal_linechart_toggle_trace.note':
-      'Minimal harness: toggles ChartLineGraph (isolates fl_chart vs InteractiveViewer).',
+  'meta.charts_minimal_linechart_toggle_trace.note': 'Minimal harness: toggles ChartLineGraph (isolates fl_chart vs InteractiveViewer).',
   'meta.charts_minimal_linechart_toggle_trace.flutter': '3.41.9',
-  'meta.charts_minimal_placeholder_toggle_trace.note':
-      'Minimal harness: toggles placeholder widget with InteractiveViewer (no fl_chart).',
+  'meta.charts_minimal_placeholder_toggle_trace.note': 'Minimal harness: toggles placeholder widget with InteractiveViewer (no fl_chart).',
   'meta.charts_minimal_placeholder_toggle_trace.flutter': '3.41.9',
   'meta.switch_toggle_no_subtree_change_trace.note':
       'Control: toggles SwitchListTile while rendering constant child.',

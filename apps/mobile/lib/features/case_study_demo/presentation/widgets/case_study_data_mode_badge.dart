@@ -1,7 +1,7 @@
 import 'package:auth/auth.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mix/mix.dart';
 
 enum CaseStudyDataMode { localOnly, supabase, unknown }
@@ -12,7 +12,7 @@ class CaseStudyDataModeBadge extends StatelessWidget {
   final CaseStudyDataMode mode;
 
   static CaseStudyDataMode fromRemoteBackendAuth(
-    final RemoteBackendAuthPort auth,
+    RemoteBackendAuthPort auth,
   ) {
     if (!auth.isConfigured) return CaseStudyDataMode.localOnly;
     if (auth.currentUser != null) return CaseStudyDataMode.supabase;
@@ -20,7 +20,7 @@ class CaseStudyDataModeBadge extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     if (mode == CaseStudyDataMode.unknown) return const SizedBox.shrink();
 
     final l10n = context.l10n;

@@ -40,7 +40,7 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
     }
   }
 
-  void loadWordsForTopic(final String topicId) {
+  void loadWordsForTopic(String topicId) {
     if (isClosed) return;
     try {
       final words = _repository.getWordsByTopic(topicId);
@@ -68,7 +68,7 @@ class PlaylearnCubit extends Cubit<PlaylearnState> {
     }
   }
 
-  Future<void> speakWord(final String text) async {
+  Future<void> speakWord(String text) async {
     try {
       await _audioService.speak(text);
     } on Object catch (error, stackTrace) {

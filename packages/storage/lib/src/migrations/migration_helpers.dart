@@ -24,7 +24,7 @@ class MigrationHelpers {
   /// - `-3` → `0` (negative values normalized to 0)
   /// - `3.7` → `3` (floats truncated)
   /// - `'invalid'` → `null`
-  static int? normalizeCount(final dynamic value) {
+  static int? normalizeCount(dynamic value) {
     final int? raw = intFromDynamic(value);
     if (raw == null) return null;
     return raw >= 0 ? raw : 0;
@@ -41,7 +41,7 @@ class MigrationHelpers {
   /// - `null` if the timestamp is invalid or cannot be converted
   ///
   /// Invalid timestamps are logged as warnings.
-  static int? normalizeTimestamp(final dynamic value) {
+  static int? normalizeTimestamp(dynamic value) {
     final int? timestamp = intFromDynamic(value);
 
     if (timestamp == null) {

@@ -3,8 +3,8 @@ import 'package:flutter_bloc_app/features/calculator/presentation/cubit/calculat
 
 /// Abstraction describing the calculator interactions exposed to presentation.
 abstract class CalculatorActions {
-  void inputDigit(final String digit);
-  void inputOperation(final CalculatorOperation operation);
+  void inputDigit(String digit);
+  void inputOperation(CalculatorOperation operation);
   void inputDecimalPoint();
   void evaluate();
   void toggleSign();
@@ -35,10 +35,10 @@ class CalculatorCubitActions implements CalculatorActions {
   void inputDecimalPoint() => _cubit.inputDecimalPoint();
 
   @override
-  void inputDigit(final String digit) => _cubit.inputDigit(digit);
+  void inputDigit(String digit) => _cubit.inputDigit(digit);
 
   @override
-  void inputOperation(final CalculatorOperation operation) =>
+  void inputOperation(CalculatorOperation operation) =>
       _cubit.selectOperation(operation);
 
   @override
@@ -49,7 +49,7 @@ class CalculatorCubitActions implements CalculatorActions {
 abstract class CalculatorCommand {
   const CalculatorCommand();
 
-  void execute(final CalculatorActions actions);
+  void execute(CalculatorActions actions);
 }
 
 class DigitCommand extends CalculatorCommand {
@@ -58,7 +58,7 @@ class DigitCommand extends CalculatorCommand {
   final String digit;
 
   @override
-  void execute(final CalculatorActions actions) => actions.inputDigit(digit);
+  void execute(CalculatorActions actions) => actions.inputDigit(digit);
 }
 
 class OperationCommand extends CalculatorCommand {
@@ -67,48 +67,47 @@ class OperationCommand extends CalculatorCommand {
   final CalculatorOperation operation;
 
   @override
-  void execute(final CalculatorActions actions) =>
-      actions.inputOperation(operation);
+  void execute(CalculatorActions actions) => actions.inputOperation(operation);
 }
 
 class DecimalCommand extends CalculatorCommand {
   const DecimalCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.inputDecimalPoint();
+  void execute(CalculatorActions actions) => actions.inputDecimalPoint();
 }
 
 class EvaluateCommand extends CalculatorCommand {
   const EvaluateCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.evaluate();
+  void execute(CalculatorActions actions) => actions.evaluate();
 }
 
 class ToggleSignCommand extends CalculatorCommand {
   const ToggleSignCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.toggleSign();
+  void execute(CalculatorActions actions) => actions.toggleSign();
 }
 
 class ApplyPercentageCommand extends CalculatorCommand {
   const ApplyPercentageCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.applyPercentage();
+  void execute(CalculatorActions actions) => actions.applyPercentage();
 }
 
 class ClearAllCommand extends CalculatorCommand {
   const ClearAllCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.clearAll();
+  void execute(CalculatorActions actions) => actions.clearAll();
 }
 
 class BackspaceCommand extends CalculatorCommand {
   const BackspaceCommand();
 
   @override
-  void execute(final CalculatorActions actions) => actions.backspace();
+  void execute(CalculatorActions actions) => actions.backspace();
 }

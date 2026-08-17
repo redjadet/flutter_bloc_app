@@ -86,8 +86,8 @@ Future<void> _markAndroidEmulatorInDebugIfNeeded() async {
 }
 
 Future<bool> _activateAppleAppCheck({
-  required final String debugToken,
-  required final bool logSimulatorInfo,
+  required String debugToken,
+  required bool logSimulatorInfo,
 }) async {
   if (kDebugMode && logSimulatorInfo) {
     await _markIosSimulatorInDebugIfNeeded();
@@ -107,13 +107,13 @@ Future<bool> _activateAppleAppCheck({
   return true;
 }
 
-String _resolveAppCheckDebugToken(final String debugTokenEnv) {
+String _resolveAppCheckDebugToken(String debugTokenEnv) {
   return debugTokenEnv.isEmpty ? 'flutter_bloc_app_debug' : debugTokenEnv;
 }
 
 void _logAppCheckDebugToken(
-  final String debugToken,
-  final String debugTokenEnv,
+  String debugToken,
+  String debugTokenEnv,
 ) {
   if (!kDebugMode) {
     return;

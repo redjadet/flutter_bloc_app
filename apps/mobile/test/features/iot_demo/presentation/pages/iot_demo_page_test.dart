@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_device_filter.dart';
 import 'package:flutter_bloc_app/features/iot_demo/domain/iot_demo_error_code.dart';
@@ -11,11 +11,12 @@ import 'package:flutter_bloc_app/features/iot_demo/domain/iot_device_command.dar
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/cubit/iot_demo_state.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:networking/networking.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 
 class _StubIotDemoRepository implements IotDemoRepository {
   _StubIotDemoRepository({this.devices = const <IotDevice>[]});
@@ -24,29 +25,26 @@ class _StubIotDemoRepository implements IotDemoRepository {
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) => Stream<List<IotDevice>>.value(devices);
 
   @override
-  Future<void> connect(final String deviceId) async {}
+  Future<void> connect(String deviceId) async {}
 
   @override
-  Future<void> disconnect(final String deviceId) async {}
+  Future<void> disconnect(String deviceId) async {}
 
   @override
-  Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
-  ) async {}
+  Future<void> sendCommand(String deviceId, IotDeviceCommand command) async {}
 
   @override
-  Future<void> addDevice(final IotDevice device) async {}
+  Future<void> addDevice(IotDevice device) async {}
 }
 
 class _TestIotDemoCubit extends IotDemoCubit {
   _TestIotDemoCubit() : super(repository: _StubIotDemoRepository());
 
-  void setTestState(final IotDemoState value) => emit(value);
+  void setTestState(IotDemoState value) => emit(value);
 }
 
 class _FakeNetworkStatusService implements NetworkStatusService {
@@ -105,7 +103,7 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 
@@ -116,8 +114,8 @@ class _FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
 const bool _testShowBackendDisabledBanner = false;
 
 Future<void> _pumpPage(
-  final WidgetTester tester, {
-  required final IotDemoState state,
+  WidgetTester tester, {
+  required IotDemoState state,
 }) async {
   final cubit = _TestIotDemoCubit()..setTestState(state);
   addTearDown(cubit.close);
@@ -131,10 +129,10 @@ Future<void> _pumpPage(
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => buildAppMixScope(
+        builder: (context) => buildAppMixScope(
           context,
           child: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
@@ -153,8 +151,8 @@ Future<void> _pumpPage(
 }
 
 Future<void> _pumpInteractivePage(
-  final WidgetTester tester, {
-  required final IotDemoRepository repository,
+  WidgetTester tester, {
+  required IotDemoRepository repository,
   _FakeBackgroundSyncCoordinator? coordinator,
 }) async {
   final IotDemoCubit cubit = IotDemoCubit(repository: repository);
@@ -171,10 +169,10 @@ Future<void> _pumpInteractivePage(
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => buildAppMixScope(
+        builder: (context) => buildAppMixScope(
           context,
           child: BlocProvider<SyncStatusCubit>.value(
             value: syncCubit,
@@ -198,16 +196,14 @@ void main() {
   group('IotDemoPage', () {
     final l10n = AppLocalizationsEn();
 
-    testWidgets('shows progress indicator in loading state', (
-      final tester,
-    ) async {
+    testWidgets('shows progress indicator in loading state', (tester) async {
       await _pumpPage(tester, state: const IotDemoState.loading());
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('shows empty message when device list is empty', (
-      final tester,
+      tester,
     ) async {
       await _pumpPage(
         tester,
@@ -217,7 +213,7 @@ void main() {
       expect(find.text(l10n.iotDemoDeviceListEmpty), findsOneWidget);
     });
 
-    testWidgets('shows device list when loaded', (final tester) async {
+    testWidgets('shows device list when loaded', (tester) async {
       const devices = [
         IotDevice(
           id: 'light-1',
@@ -235,7 +231,7 @@ void main() {
     });
 
     testWidgets('filter buttons update the device list on first tap', (
-      final tester,
+      tester,
     ) async {
       const List<IotDevice> devices = <IotDevice>[
         IotDevice(
@@ -267,7 +263,7 @@ void main() {
       expect(find.text('Off Device'), findsNothing);
     });
 
-    testWidgets('starts sync when page is shown', (final tester) async {
+    testWidgets('starts sync when page is shown', (tester) async {
       final _FakeBackgroundSyncCoordinator coordinator =
           _FakeBackgroundSyncCoordinator();
 
@@ -284,9 +280,7 @@ void main() {
       expect(coordinator.ensureStartedCallCount, 1);
     });
 
-    testWidgets('shows error and retry when in error state', (
-      final tester,
-    ) async {
+    testWidgets('shows error and retry when in error state', (tester) async {
       await _pumpPage(
         tester,
         state: IotDemoState.error(code: IotDemoErrorCode.load),
@@ -297,7 +291,7 @@ void main() {
 
     testWidgets(
       'Set value dialog close does not use controller after dispose',
-      (final tester) async {
+      (tester) async {
         const devices = [
           IotDevice(
             id: 'thermostat-1',

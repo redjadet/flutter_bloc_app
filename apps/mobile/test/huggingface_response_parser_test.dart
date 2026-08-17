@@ -44,30 +44,27 @@ void main() {
       expect(result.generatedResponses, isEmpty);
     });
 
-    test(
-      'buildChatCompletionsResult appends prompt and history then parses string',
-      () {
-        final JsonMap json = <String, dynamic>{
-          'choices': <JsonMap>[
-            <String, dynamic>{
-              'message': <String, dynamic>{'content': 'assistant reply'},
-            },
-          ],
-        };
+    test('buildChatCompletionsResult appends prompt and history then parses string', () {
+      final JsonMap json = <String, dynamic>{
+        'choices': <JsonMap>[
+          <String, dynamic>{
+            'message': <String, dynamic>{'content': 'assistant reply'},
+          },
+        ],
+      };
 
-        final ChatResult result = parser.buildChatCompletionsResult(
-          json: json,
-          pastUserInputs: const <String>['hi'],
-          generatedResponses: const <String>['hello'],
-          prompt: 'new prompt',
-        );
+      final ChatResult result = parser.buildChatCompletionsResult(
+        json: json,
+        pastUserInputs: const <String>['hi'],
+        generatedResponses: const <String>['hello'],
+        prompt: 'new prompt',
+      );
 
-        Approvals.verifyAsJson(
-          _chatResultSnapshot(result),
-          options: approvalTestOptions(),
-        );
-      },
-    );
+      Approvals.verifyAsJson(
+        _chatResultSnapshot(result),
+        options: approvalTestOptions(),
+      );
+    });
 
     test(
       'buildChatCompletionsResult concatenates chunked content fallback',
@@ -170,7 +167,7 @@ void main() {
   });
 }
 
-JsonMap _chatResultSnapshot(final ChatResult result) => <String, dynamic>{
+JsonMap _chatResultSnapshot(ChatResult result) => <String, dynamic>{
   'replyAuthor': result.reply.author.name,
   'replyText': result.reply.text,
   'pastUserInputs': result.pastUserInputs,

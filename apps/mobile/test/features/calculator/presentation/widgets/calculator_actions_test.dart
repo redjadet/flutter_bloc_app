@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc_app/features/calculator/calculator.dart';
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_actions.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('CalculatorActions', () {

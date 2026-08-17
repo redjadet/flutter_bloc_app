@@ -78,11 +78,11 @@ class _ExamplePageBodyContent extends StatelessWidget {
   final Duration? parallelDuration;
 
   Widget _buildIconButton({
-    required final BuildContext context,
-    required final VoidCallback? onPressed,
-    required final IconData icon,
-    required final String label,
-    final Key? key,
+    required BuildContext context,
+    required VoidCallback? onPressed,
+    required IconData icon,
+    required String label,
+    Key? key,
   }) => PlatformAdaptive.filledButton(
     key: key,
     context: context,
@@ -91,7 +91,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
   );
 
   @override
-  Widget build(final BuildContext context) => SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
     padding: EdgeInsets.symmetric(vertical: context.responsiveGapL),
     child: CommonCard(
       key: const ValueKey('example-content-card'),
@@ -105,8 +105,7 @@ class _ExamplePageBodyContent extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(context.responsiveCardRadius),
             child: FancyShimmerImage(
-              imageUrl:
-                  'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+              imageUrl: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
               height: 180,
               width: double.infinity,
               boxFit: BoxFit.cover,

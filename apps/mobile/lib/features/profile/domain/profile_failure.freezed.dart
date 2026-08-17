@@ -86,8 +86,7 @@ extension ProfileFailurePatterns on ProfileFailure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProfileLoadFailure value)?  load,TResult Function( ProfileUnknownFailure value)?  unknown,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ProfileLoadFailure value)?  load,TResult Function( ProfileUnknownFailure value)?  unknown,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case ProfileLoadFailure() when load != null:
 return load(_that);case ProfileUnknownFailure() when unknown != null:
@@ -109,8 +108,7 @@ return unknown(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProfileLoadFailure value)  load,required TResult Function( ProfileUnknownFailure value)  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ProfileLoadFailure value)  load,required TResult Function( ProfileUnknownFailure value)  unknown,}){final _that = this;
 switch (_that) {
 case ProfileLoadFailure():
 return load(_that);case ProfileUnknownFailure():
@@ -128,8 +126,7 @@ return unknown(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProfileLoadFailure value)?  load,TResult? Function( ProfileUnknownFailure value)?  unknown,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ProfileLoadFailure value)?  load,TResult? Function( ProfileUnknownFailure value)?  unknown,}){final _that = this;
 switch (_that) {
 case ProfileLoadFailure() when load != null:
 return load(_that);case ProfileUnknownFailure() when unknown != null:

@@ -7,5 +7,5 @@ abstract class GraphqlDemoRepository {
   GraphqlDataSource get lastSource;
 
   Future<List<GraphqlContinent>> fetchContinents();
-  Future<List<GraphqlCountry>> fetchCountries({final String? continentCode});
+  Future<List<GraphqlCountry>> fetchCountries({String? continentCode});
 }

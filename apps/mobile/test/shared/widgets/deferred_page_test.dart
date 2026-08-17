@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:design_system/design_system.dart';
+import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:flutter_bloc_app/app/widgets/deferred_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
+import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('DeferredPage', () {
@@ -16,11 +17,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DeferredPage(
             loadLibrary: () => completer.future,
-            builder: (final context) => const Text('Loaded'),
+            builder: (context) => const Text('Loaded'),
           ),
         ),
       );
@@ -35,11 +36,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DeferredPage(
             loadLibrary: () async {},
-            builder: (final context) => const Text('Loaded'),
+            builder: (context) => const Text('Loaded'),
           ),
         ),
       );
@@ -56,11 +57,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('en'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          localizationsDelegates: appLocalizationDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: DeferredPage(
             loadLibrary: () => Future<void>.error(Exception('load failed')),
-            builder: (final context) => const Text('Loaded'),
+            builder: (context) => const Text('Loaded'),
           ),
         ),
       );

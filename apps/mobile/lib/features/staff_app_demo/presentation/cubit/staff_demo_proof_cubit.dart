@@ -57,15 +57,15 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     await super.close();
   }
 
-  void setPhotos(final List<String> paths) {
+  void setPhotos(List<String> paths) {
     emit(state.copyWith(photoPaths: List<String>.from(paths)));
   }
 
-  void addPhoto(final String path) {
+  void addPhoto(String path) {
     emit(state.copyWith(photoPaths: <String>[...state.photoPaths, path]));
   }
 
-  Future<void> addPhotoFromPath(final String sourcePath) async {
+  Future<void> addPhotoFromPath(String sourcePath) async {
     final Future<void> operation = _persistPhotoFromPath(sourcePath);
     _activePersistOperation = operation;
     try {
@@ -77,7 +77,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     }
   }
 
-  Future<void> _persistPhotoFromPath(final String sourcePath) async {
+  Future<void> _persistPhotoFromPath(String sourcePath) async {
     final String persisted = await _fileStore.persistPhotoFile(
       sourcePath: sourcePath,
     );
@@ -94,7 +94,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
       _pickPhoto(_photoPicker.pickFromGallery);
 
   Future<String?> _pickPhoto(
-    final Future<MediaPickResult> Function() pick,
+    Future<MediaPickResult> Function() pick,
   ) async {
     if (_pickInFlight) {
       return null;
@@ -108,7 +108,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
   }
 
   Future<String?> _pickPhotoBody(
-    final Future<MediaPickResult> Function() pick,
+    Future<MediaPickResult> Function() pick,
   ) async {
     final MediaPickResult result = await pick();
     if (isClosed || _isClosing) {
@@ -132,7 +132,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     );
   }
 
-  void _trackPendingStagedPick(final String path) {
+  void _trackPendingStagedPick(String path) {
     if (!StaffDemoProofPickMemory.instance.isPickPath(path)) {
       return;
     }
@@ -149,7 +149,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     _pendingStagedPickPath = null;
   }
 
-  void _releaseStagedFromResult(final MediaPickResult result) {
+  void _releaseStagedFromResult(MediaPickResult result) {
     result.when(
       success: (path) {
         if (StaffDemoProofPickMemory.instance.isPickPath(path)) {
@@ -161,7 +161,7 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     );
   }
 
-  void removePhotoAt(final int index) {
+  void removePhotoAt(int index) {
     final updated = List<String>.from(state.photoPaths);
     if (index < 0 || index >= updated.length) return;
     final String removed = updated.removeAt(index);
@@ -169,11 +169,11 @@ abstract class _StaffDemoProofCubitBase extends Cubit<StaffDemoProofState> {
     unawaited(_fileStore.deleteFileAtPath(removed));
   }
 
-  void setSignaturePath(final String? path) {
+  void setSignaturePath(String? path) {
     emit(state.copyWith(signaturePath: path));
   }
 
-  Future<void> saveSignaturePngBytes(final List<int> bytes) async {
+  Future<void> saveSignaturePngBytes(List<int> bytes) async {
     final String persisted = await _fileStore.persistSignaturePngBytes(
       bytes: bytes,
     );

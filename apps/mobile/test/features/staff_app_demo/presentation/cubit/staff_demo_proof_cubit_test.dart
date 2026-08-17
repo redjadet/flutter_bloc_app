@@ -2,23 +2,23 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:auth/auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_file_store_web.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/data/staff_demo_proof_photo_picker.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_repository.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_event_proof_submit_exception.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_file_store.dart';
-import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_photo_picker.dart';
+import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_proof_pick_memory.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_cubit.dart';
 import 'package:flutter_bloc_app/features/staff_app_demo/presentation/cubit/staff_demo_proof_state.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:storage/storage.dart';
 
 import '../../../../support/hive_test_helpers.dart' as test_helpers;
 
@@ -48,9 +48,7 @@ Future<void> _pumpUntil(
 }
 
 void _stubProofFileStore(_MockStaffDemoProofFileStore fileStore) {
-  when(() => fileStore.fileExists(any())).thenAnswer((
-    final Invocation inv,
-  ) async {
+  when(() => fileStore.fileExists(any())).thenAnswer((Invocation inv) async {
     final path = inv.positionalArguments[0] as String;
     return File(path).exists();
   });
@@ -321,15 +319,14 @@ void main() {
       when(() => authRepository.currentUser).thenReturn(
         const AuthUser(id: 'u1', email: 'user@example.com', isAnonymous: false),
       );
-      when(() => fileStore.fileExists(any())).thenAnswer((
-        final Invocation inv,
-      ) async {
-        final path = inv.positionalArguments[0] as String;
-        if (path.endsWith('missing-photo.jpg')) {
-          return false;
-        }
-        return File(path).exists();
-      });
+      when(() => fileStore.fileExists(any()))
+          .thenAnswer((Invocation inv) async {
+            final path = inv.positionalArguments[0] as String;
+            if (path.endsWith('missing-photo.jpg')) {
+              return false;
+            }
+            return File(path).exists();
+          });
 
       final cubit = StaffDemoProofCubit(
         authRepository: authRepository,
@@ -379,12 +376,10 @@ void main() {
         final sourceFile = File('${tempDir.path}/source.jpg');
         await sourceFile.writeAsBytes(const <int>[1], flush: true);
 
-        when(
-          () => mockImagePicker.pickImage(source: ImageSource.camera),
-        ).thenAnswer((_) async => _FakeXFile(sourceFile.path));
-        when(
-          () => fileStore.persistPhotoFile(sourcePath: sourceFile.path),
-        ).thenAnswer((_) async => '${tempDir.path}/persisted.jpg');
+        when(() => mockImagePicker.pickImage(source: ImageSource.camera))
+            .thenAnswer((_) async => _FakeXFile(sourceFile.path));
+        when(() => fileStore.persistPhotoFile(sourcePath: sourceFile.path))
+            .thenAnswer((_) async => '${tempDir.path}/persisted.jpg');
         _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
@@ -423,12 +418,10 @@ void main() {
         final sourceFile = File('${tempDir.path}/source.jpg');
         await sourceFile.writeAsBytes(const <int>[1], flush: true);
 
-        when(
-          () => mockImagePicker.pickImage(source: ImageSource.camera),
-        ).thenAnswer((_) async => _FakeXFile(sourceFile.path));
-        when(
-          () => fileStore.persistPhotoFile(sourcePath: sourceFile.path),
-        ).thenThrow(Exception('disk full'));
+        when(() => mockImagePicker.pickImage(source: ImageSource.camera))
+            .thenAnswer((_) async => _FakeXFile(sourceFile.path));
+        when(() => fileStore.persistPhotoFile(sourcePath: sourceFile.path))
+            .thenThrow(Exception('disk full'));
         _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
@@ -461,12 +454,10 @@ void main() {
       final sourceFile = File('${tempDir.path}/source.jpg');
       await sourceFile.writeAsBytes(const <int>[1], flush: true);
 
-      when(
-        () => photoPicker.pickFromCamera(),
-      ).thenAnswer((_) => completer.future);
-      when(
-        () => fileStore.persistPhotoFile(sourcePath: sourceFile.path),
-      ).thenAnswer((_) async => '${tempDir.path}/persisted.jpg');
+      when(() => photoPicker.pickFromCamera())
+          .thenAnswer((_) => completer.future);
+      when(() => fileStore.persistPhotoFile(sourcePath: sourceFile.path))
+          .thenAnswer((_) async => '${tempDir.path}/persisted.jpg');
       _stubProofFileStore(fileStore);
 
       final cubit = StaffDemoProofCubit(
@@ -504,9 +495,8 @@ void main() {
           picker: mockImagePicker,
         );
 
-        when(
-          () => mockImagePicker.pickImage(source: ImageSource.gallery),
-        ).thenThrow(PlatformException(code: 'photo_access_denied'));
+        when(() => mockImagePicker.pickImage(source: ImageSource.gallery))
+            .thenThrow(PlatformException(code: 'photo_access_denied'));
         _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
@@ -552,9 +542,8 @@ void main() {
         const bytes = <int>[0xFF, 0xD8, 0xFF, 0x00];
         final dataUrl = 'data:image/jpeg;base64,${base64Encode(bytes)}';
 
-        when(
-          () => photoPicker.pickFromGallery(),
-        ).thenAnswer((_) async => MediaPickResult.success(dataUrl));
+        when(() => photoPicker.pickFromGallery())
+            .thenAnswer((_) async => MediaPickResult.success(dataUrl));
 
         final cubit = StaffDemoProofCubit(
           authRepository: authRepository,
@@ -583,12 +572,39 @@ void main() {
       const bytes = <int>[0xFF, 0xD8, 0xFF, 0x00];
       final pickPath = StaffDemoProofPickMemory.instance.stage(bytes);
 
-      when(
-        () => photoPicker.pickFromGallery(),
-      ).thenAnswer((_) async => MediaPickResult.success(pickPath));
-      when(
-        () => fileStore.persistPhotoFile(sourcePath: pickPath),
-      ).thenThrow(Exception('disk full'));
+      when(() => photoPicker.pickFromGallery())
+          .thenAnswer((_) async => MediaPickResult.success(pickPath));
+      when(() => fileStore.persistPhotoFile(sourcePath: pickPath))
+          .thenThrow(Exception('disk full'));
+      _stubProofFileStore(fileStore);
+
+      final cubit = StaffDemoProofCubit(
+        authRepository: authRepository,
+        repository: repository,
+        fileStore: fileStore,
+        photoPicker: photoPicker,
+      );
+      addTearDown(cubit.close);
+
+      final errorKey = await cubit.pickPhotoFromGallery();
+
+      expect(errorKey, MediaPickErrorKeys.generic);
+      expect(cubit.state.photoPaths, isEmpty);
+      expect(StaffDemoProofPickMemory.instance.peek(pickPath), isNull);
+    });
+
+    test('returns generic error when persist throws StateError from web store path', () async {
+      final authRepository = _MockAuthRepository();
+      final repository = _MockStaffDemoEventProofRepository();
+      final fileStore = _MockStaffDemoProofFileStore();
+      final photoPicker = _MockStaffDemoProofPhotoPicker();
+      const bytes = <int>[0xFF, 0xD8, 0xFF, 0x00];
+      final pickPath = StaffDemoProofPickMemory.instance.stage(bytes);
+
+      when(() => photoPicker.pickFromGallery())
+          .thenAnswer((_) async => MediaPickResult.success(pickPath));
+      when(() => fileStore.persistPhotoFile(sourcePath: pickPath))
+          .thenThrow(StateError('debug simulated put failure'));
       _stubProofFileStore(fileStore);
 
       final cubit = StaffDemoProofCubit(
@@ -607,40 +623,6 @@ void main() {
     });
 
     test(
-      'returns generic error when persist throws StateError from web store path',
-      () async {
-        final authRepository = _MockAuthRepository();
-        final repository = _MockStaffDemoEventProofRepository();
-        final fileStore = _MockStaffDemoProofFileStore();
-        final photoPicker = _MockStaffDemoProofPhotoPicker();
-        const bytes = <int>[0xFF, 0xD8, 0xFF, 0x00];
-        final pickPath = StaffDemoProofPickMemory.instance.stage(bytes);
-
-        when(
-          () => photoPicker.pickFromGallery(),
-        ).thenAnswer((_) async => MediaPickResult.success(pickPath));
-        when(
-          () => fileStore.persistPhotoFile(sourcePath: pickPath),
-        ).thenThrow(StateError('debug simulated put failure'));
-        _stubProofFileStore(fileStore);
-
-        final cubit = StaffDemoProofCubit(
-          authRepository: authRepository,
-          repository: repository,
-          fileStore: fileStore,
-          photoPicker: photoPicker,
-        );
-        addTearDown(cubit.close);
-
-        final errorKey = await cubit.pickPhotoFromGallery();
-
-        expect(errorKey, MediaPickErrorKeys.generic);
-        expect(cubit.state.photoPaths, isEmpty);
-        expect(StaffDemoProofPickMemory.instance.peek(pickPath), isNull);
-      },
-    );
-
-    test(
       'releases staged web pick memory when cubit closes before persist',
       () async {
         final authRepository = _MockAuthRepository();
@@ -651,15 +633,13 @@ void main() {
         final pickPath = StaffDemoProofPickMemory.instance.stage(bytes);
         final persistGate = Completer<void>();
 
-        when(
-          () => photoPicker.pickFromGallery(),
-        ).thenAnswer((_) async => MediaPickResult.success(pickPath));
-        when(() => fileStore.persistPhotoFile(sourcePath: pickPath)).thenAnswer(
-          (_) async {
-            await persistGate.future;
-            return '${Directory.systemTemp.path}/never.jpg';
-          },
-        );
+        when(() => photoPicker.pickFromGallery())
+            .thenAnswer((_) async => MediaPickResult.success(pickPath));
+        when(() => fileStore.persistPhotoFile(sourcePath: pickPath))
+            .thenAnswer((_) async {
+              await persistGate.future;
+              return '${Directory.systemTemp.path}/never.jpg';
+            });
         _stubProofFileStore(fileStore);
 
         final cubit = StaffDemoProofCubit(
@@ -704,9 +684,8 @@ void main() {
         const bytes = <int>[0xFF, 0xD8, 0xFF, 0x00];
         final pickPath = StaffDemoProofPickMemory.instance.stage(bytes);
 
-        when(
-          () => photoPicker.pickFromGallery(),
-        ).thenAnswer((_) async => MediaPickResult.success(pickPath));
+        when(() => photoPicker.pickFromGallery())
+            .thenAnswer((_) async => MediaPickResult.success(pickPath));
 
         final cubit = StaffDemoProofCubit(
           authRepository: authRepository,

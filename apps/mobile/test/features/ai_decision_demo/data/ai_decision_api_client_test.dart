@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_app/features/ai_decision_demo/data/ai_decision_api_client.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 Dio _mockDio({
-  required final Map<String, dynamic>? body,
-  required final int statusCode,
+  required Map<String, dynamic>? body,
+  required int statusCode,
   void Function(RequestOptions options)? onRequest,
 }) {
   final dio = Dio(BaseOptions(validateStatus: (_) => true));
   dio.interceptors.add(
     InterceptorsWrapper(
-      onRequest: (final options, final handler) {
+      onRequest: (options, handler) {
         onRequest?.call(options);
         handler.resolve(
           Response<Map<String, dynamic>>(
@@ -63,7 +63,7 @@ void main() {
               ],
             },
             statusCode: 200,
-            onRequest: (final options) => request = options,
+            onRequest: (options) => request = options,
           ),
         );
 
@@ -83,7 +83,7 @@ void main() {
         dio: _mockDio(
           body: null,
           statusCode: 200,
-          onRequest: (final options) => request = options,
+          onRequest: (options) => request = options,
         ),
       );
 
@@ -95,7 +95,7 @@ void main() {
         ),
         throwsA(
           isA<Exception>().having(
-            (final e) => e.toString(),
+            (e) => e.toString(),
             'message',
             contains('AI Decision API returned empty action response.'),
           ),
@@ -134,8 +134,8 @@ void main() {
         client.getCases(),
         throwsA(
           isA<HttpRequestFailure>()
-              .having((final e) => e.statusCode, 'statusCode', 503)
-              .having((final e) => e.message, 'message', 'backend_unavailable'),
+              .having((e) => e.statusCode, 'statusCode', 503)
+              .having((e) => e.message, 'message', 'backend_unavailable'),
         ),
       );
     });

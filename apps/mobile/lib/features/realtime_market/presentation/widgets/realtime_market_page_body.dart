@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_connection_status.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/o
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/recent_trades_panel.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 part 'realtime_market_page_body.part.dart';
 
@@ -21,7 +21,7 @@ class RealtimeMarketLoadErrorBanner extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     return Card(
@@ -32,7 +32,7 @@ class RealtimeMarketLoadErrorBanner extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(context.responsiveGapM),
         child: LayoutBuilder(
-          builder: (final context, final constraints) {
+          builder: (context, constraints) {
             final bool stackAction = constraints.maxWidth < 420;
             final Widget message = Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class RealtimeMarketEmptyOrErrorBody extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
     return Center(
@@ -152,7 +152,7 @@ class RealtimeMarketSkeletonPlaceholder extends StatelessWidget {
   const RealtimeMarketSkeletonPlaceholder({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -36,7 +36,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
 
   @override
   Future<List<GraphqlCountry>> fetchCountries({
-    final String? continentCode,
+    String? continentCode,
   }) async {
     return _fetchWithCache<GraphqlCountry>(
       logContext: _logContextFetchCountries,
@@ -47,7 +47,7 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
       fetchRemote: () => remoteRepository.fetchCountries(
         continentCode: continentCode,
       ),
-      writeCache: (final countries) => cacheRepository.writeCountries(
+      writeCache: (countries) => cacheRepository.writeCountries(
         countries: countries,
         continentCode: continentCode,
       ),
@@ -56,11 +56,11 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
   }
 
   Future<List<T>> _fetchWithCache<T>({
-    required final String logContext,
-    required final Future<List<T>> Function() readCache,
-    required final Future<List<T>> Function() fetchRemote,
-    required final Future<void> Function(List<T> items) writeCache,
-    required final String? continentCodeForTelemetry,
+    required String logContext,
+    required Future<List<T>> Function() readCache,
+    required Future<List<T>> Function() fetchRemote,
+    required Future<void> Function(List<T> items) writeCache,
+    required String? continentCodeForTelemetry,
   }) async {
     final List<T> cached = await readCache();
     try {
@@ -89,8 +89,8 @@ class OfflineFirstGraphqlDemoRepository implements GraphqlDemoRepository {
   }
 
   void _telemetry(
-    final String source, {
-    final String? continentCode,
+    String source, {
+    String? continentCode,
   }) {
     final String details = [
       'source=$source',

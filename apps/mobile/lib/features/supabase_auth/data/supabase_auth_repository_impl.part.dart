@@ -18,8 +18,8 @@ const String _genericUnexpectedAuthMessage = 'Authentication request failed.';
 final RegExp _basicEmailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
 void _validateCredentialInputs({
-  required final String email,
-  required final String password,
+  required String email,
+  required String password,
 }) {
   final String normalizedEmail = email.trim();
   if (normalizedEmail.isEmpty ||
@@ -37,10 +37,10 @@ void _validateCredentialInputs({
   }
 }
 
-app_auth.AuthUser? _mapSupabaseUser(final User? user) =>
+app_auth.AuthUser? _mapSupabaseUser(User? user) =>
     user == null ? null : _toAuthUser(user);
 
-Map<String, dynamic>? _signUpUserData(final String? displayName) {
+Map<String, dynamic>? _signUpUserData(String? displayName) {
   if (displayName == null) {
     return null;
   }
@@ -51,7 +51,7 @@ Map<String, dynamic>? _signUpUserData(final String? displayName) {
   return <String, dynamic>{'full_name': trimmedDisplayName};
 }
 
-SupabaseAuthException _authExceptionFromSupabase(final AuthException error) {
+SupabaseAuthException _authExceptionFromSupabase(AuthException error) {
   return SupabaseAuthException(
     error.message,
     code: _mapErrorCode(error),
@@ -59,10 +59,10 @@ SupabaseAuthException _authExceptionFromSupabase(final AuthException error) {
   );
 }
 
-SupabaseAuthException _unexpectedAuthException(final Object error) =>
+SupabaseAuthException _unexpectedAuthException(Object error) =>
     SupabaseAuthException(_genericUnexpectedAuthMessage, cause: error);
 
-app_auth.AuthUser _toAuthUser(final User user) {
+app_auth.AuthUser _toAuthUser(User user) {
   final meta = user.userMetadata;
   final String? displayName = switch (meta) {
     final Map<dynamic, dynamic> values => stringFromDynamic(
@@ -78,7 +78,7 @@ app_auth.AuthUser _toAuthUser(final User user) {
   );
 }
 
-SupabaseAuthErrorCode? _mapErrorCode(final AuthException error) {
+SupabaseAuthErrorCode? _mapErrorCode(AuthException error) {
   if (error is AuthRetryableFetchException || error.statusCode == null) {
     return SupabaseAuthErrorCode.network;
   }
@@ -124,8 +124,8 @@ Stream<AuthState> _defaultAuthStateChangesStream() =>
     Supabase.instance.client.auth.onAuthStateChange;
 
 Future<void> _defaultSignInWithPassword({
-  required final String email,
-  required final String password,
+  required String email,
+  required String password,
 }) {
   return Supabase.instance.client.auth.signInWithPassword(
     email: email,
@@ -134,9 +134,9 @@ Future<void> _defaultSignInWithPassword({
 }
 
 Future<void> _defaultSignUp({
-  required final String email,
-  required final String password,
-  final Map<String, dynamic>? data,
+  required String email,
+  required String password,
+  Map<String, dynamic>? data,
 }) {
   return Supabase.instance.client.auth.signUp(
     email: email,

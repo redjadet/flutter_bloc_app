@@ -4,15 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('AiDecisionCaseSummaryDto', () {
     test('maps valid JSON to domain', () {
-      final AiDecisionCaseSummaryDto dto =
-          AiDecisionCaseSummaryDto.fromJson(<String, dynamic>{
-            'id': 'case-1',
-            'applicant_name': 'Ada',
-            'business_name': 'Engines',
-            'amount': 12000,
-            'status': 'review',
-            'last_decision_band': 'medium',
-          });
+      final AiDecisionCaseSummaryDto dto = AiDecisionCaseSummaryDto.fromJson(
+        <String, dynamic>{
+          'id': 'case-1',
+          'applicant_name': 'Ada',
+          'business_name': 'Engines',
+          'amount': 12000,
+          'status': 'review',
+          'last_decision_band': 'medium',
+        },
+      );
 
       final domain = dto.toDomain();
       expect(domain.id, 'case-1');
@@ -87,7 +88,7 @@ void main() {
         }),
         throwsA(
           isA<FormatException>().having(
-            (final error) => error.message,
+            (error) => error.message,
             'message',
             allOf(contains('String'), isNot(contains(sensitiveValue))),
           ),
@@ -109,7 +110,7 @@ void main() {
         }),
         throwsA(
           isA<FormatException>().having(
-            (final error) => error.message,
+            (error) => error.message,
             'message',
             allOf(
               contains('latest_decision'),

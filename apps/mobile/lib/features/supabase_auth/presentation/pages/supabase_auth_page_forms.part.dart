@@ -18,7 +18,7 @@ class SupabaseAuthAuthenticatedSection extends StatelessWidget {
   final VoidCallback onSignOut;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double iconSize = math.min(context.responsiveIconSize, 28);
     final displayEmail = user.email ?? user.id;
     return Column(
@@ -90,7 +90,7 @@ class SupabaseAuthSignInForm extends StatelessWidget {
   final AppLocalizations l10n;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

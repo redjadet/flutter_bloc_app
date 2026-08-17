@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_check_attestation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_platform_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/certificate_pin_policy_summary.dart';
+import 'package:flutter_bloc_app/features/native_platform_showcase/domain/firebase_app_check_attestation_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_capability_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_bridge_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_platform_info_repository.dart';
-import 'package:flutter_bloc_app/features/native_platform_showcase/domain/firebase_app_check_attestation_service.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_operation.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_operation_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_security_showcase_service.dart';
@@ -17,7 +16,6 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_snapshot.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_showcase_telemetry_stream_config.dart';
-
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/platform_showcase_data.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_certificate_pin_policy_summary_use_case.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/use_cases/load_native_platform_showcase_use_case.dart';
@@ -32,6 +30,7 @@ import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/pages/native_platform_showcase_page.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 
@@ -54,8 +53,8 @@ class _TestNativeSecurityShowcaseCubit extends NativeSecurityShowcaseCubit {
       );
 
   static CertificatePinPolicySummary _fakeCertificateSummary(
-    final CertificatePinningConfig config, {
-    required final bool canOpenMutableDemo,
+    CertificatePinningConfig config, {
+    required bool canOpenMutableDemo,
   }) => CertificatePinPolicySummary(
     modeName: config.mode.name,
     pinHashKindName: config.pinHashKind.name,
@@ -70,7 +69,7 @@ class _UnavailableNativeSecurityShowcaseService
     implements NativeSecurityShowcaseService {
   @override
   Future<NativeSecurityOperationResult> run(
-    final NativeSecurityOperation operation,
+    NativeSecurityOperation operation,
   ) async => const NativeSecurityOperationResult(
     status: NativeSecurityStatus.unavailable,
     reasonCode: 'mobile_only',
@@ -89,7 +88,7 @@ class _UnavailableFirebaseAppCheckAttestationService
       );
 }
 
-Widget _wrapWithSecurityProvider(final Widget child) =>
+Widget _wrapWithSecurityProvider(Widget child) =>
     BlocProvider<NativeSecurityShowcaseCubit>(
       create: (_) => _TestNativeSecurityShowcaseCubit(),
       child: child,
@@ -97,7 +96,7 @@ Widget _wrapWithSecurityProvider(final Widget child) =>
 
 class _TestNativePlatformShowcaseCubit extends NativePlatformShowcaseCubit {
   _TestNativePlatformShowcaseCubit({
-    final WatchNativeShowcaseTelemetryUseCase? watchTelemetry,
+    WatchNativeShowcaseTelemetryUseCase? watchTelemetry,
   }) : super(
          loadShowcase: LoadNativePlatformShowcaseUseCase(_ThrowingRepository()),
          watchTelemetry:
@@ -106,14 +105,14 @@ class _TestNativePlatformShowcaseCubit extends NativePlatformShowcaseCubit {
          shareText: _EmptyShareNativeShowcaseTextUseCase(),
        );
 
-  void setState(final NativePlatformShowcaseState value) => emit(value);
+  void setState(NativePlatformShowcaseState value) => emit(value);
 }
 
 class _EmptyWatchNativeShowcaseTelemetryUseCase
     implements WatchNativeShowcaseTelemetryUseCase {
   @override
   Stream<NativeShowcaseTelemetrySnapshot> call({
-    required final NativeShowcaseTelemetryStreamConfig config,
+    required NativeShowcaseTelemetryStreamConfig config,
   }) => const Stream.empty();
 }
 
@@ -130,7 +129,7 @@ class _EmptyTriggerNativeShowcaseHapticUseCase
 class _EmptyShareNativeShowcaseTextUseCase
     implements ShareNativeShowcaseTextUseCase {
   @override
-  Future<NativeInteropCallResult> call(final String text) async =>
+  Future<NativeInteropCallResult> call(String text) async =>
       const NativeInteropCallResult(
         kind: NativeInteropBridgeKind.swift,
         status: NativeInteropStatus.unavailable,
@@ -154,7 +153,7 @@ void main() {
       platform: AppPlatformKind.ios,
       capabilities: NativeCapabilityKind.values
           .map(
-            (final kind) =>
+            (kind) =>
                 NativeCapability(kind: kind, platformDetail: 'detail-$kind'),
           )
           .toList(growable: false),
@@ -179,7 +178,7 @@ void main() {
 
     testWidgets(
       'shows full runtime platform label on iOS portrait without overflow',
-      (final tester) async {
+      (tester) async {
         final l10n = lookupAppLocalizations(const Locale('en'));
         tester.view.physicalSize = const Size(393, 852);
         tester.view.devicePixelRatio = 1;
@@ -216,7 +215,7 @@ void main() {
     );
 
     testWidgets('renders summary, lessons, and capability tiles when loaded', (
-      final tester,
+      tester,
     ) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       tester.view.physicalSize = const Size(390, 6200);
@@ -279,7 +278,7 @@ void main() {
       );
     });
 
-    testWidgets('shows error message when load fails', (final tester) async {
+    testWidgets('shows error message when load fails', (tester) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       final cubit = _TestNativePlatformShowcaseCubit()
         ..setState(
@@ -307,7 +306,7 @@ void main() {
       );
     });
 
-    testWidgets('retry tap calls load again after error', (final tester) async {
+    testWidgets('retry tap calls load again after error', (tester) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       final repository = _MockNativePlatformInfoRepository();
       var attempts = 0;
@@ -353,7 +352,7 @@ void main() {
       expect(find.text(l10n.nativePlatformShowcaseIntro), findsOneWidget);
     });
 
-    testWidgets('shows telemetry section when loaded', (final tester) async {
+    testWidgets('shows telemetry section when loaded', (tester) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       tester.view.physicalSize = const Size(390, 3200);
       tester.view.devicePixelRatio = 1;
@@ -386,7 +385,7 @@ void main() {
       );
     });
 
-    testWidgets('renders streaming telemetry labels', (final tester) async {
+    testWidgets('renders streaming telemetry labels', (tester) async {
       final l10n = lookupAppLocalizations(const Locale('en'));
       tester.view.physicalSize = const Size(390, 6200);
       tester.view.devicePixelRatio = 1;
@@ -448,7 +447,7 @@ void main() {
 
     testWidgets(
       'unavailable telemetry keeps summary and interop sections visible',
-      (final tester) async {
+      (tester) async {
         final l10n = lookupAppLocalizations(const Locale('en'));
         tester.view.physicalSize = const Size(390, 6200);
         tester.view.devicePixelRatio = 1;
@@ -507,7 +506,7 @@ void main() {
     );
 
     testWidgets('failed telemetry keeps summary and interop sections visible', (
-      final tester,
+      tester,
     ) async {
       tester.view.physicalSize = const Size(390, 6200);
       tester.view.devicePixelRatio = 1;

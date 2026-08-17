@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/example/presentation/widgets/whiteboard/whiteboard_toolbar_helpers.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Size and radius for the stroke-width preview box in the toolbar.
 const double _widthPreviewWidth = 40;
@@ -40,7 +40,7 @@ class WhiteboardToolbar extends StatelessWidget {
   final VoidCallback onClear;
 
   @override
-  Widget build(final BuildContext context) => Container(
+  Widget build(BuildContext context) => Container(
     padding: context.allGapS,
     decoration: BoxDecoration(
       color: colors.surfaceContainerHighest,
@@ -93,7 +93,7 @@ class WhiteboardToolbar extends StatelessWidget {
     ),
   );
 
-  Widget _buildColorButton(final BuildContext context) => Tooltip(
+  Widget _buildColorButton(BuildContext context) => Tooltip(
     message: context.l10n.whiteboardChoosePenColor,
     child: PlatformAdaptive.filledButton(
       key: const ValueKey('whiteboard-color-button'),
@@ -123,7 +123,7 @@ class WhiteboardToolbar extends StatelessWidget {
     ),
   );
 
-  Widget _buildWidthControls(final BuildContext context) => ConstrainedBox(
+  Widget _buildWidthControls(BuildContext context) => ConstrainedBox(
     constraints: const BoxConstraints(maxWidth: 400),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +181,7 @@ class WhiteboardToolbar extends StatelessWidget {
           runSpacing: context.responsiveGapXS,
           children: defaultWidthPresetsFor(context.l10n)
               .map<Widget>(
-                (final preset) => WidthPresetButton(
+                (preset) => WidthPresetButton(
                   preset: preset,
                   isSelected: (currentWidth - preset.value).abs() < 0.5,
                   currentColor: currentColor,

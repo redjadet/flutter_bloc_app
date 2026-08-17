@@ -26,24 +26,24 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
     return box;
   }
 
-  List<int>? _decodeBytes(final Object? raw) {
+  List<int>? _decodeBytes(Object? raw) {
     if (raw is List<int>) {
       return List<int>.from(raw);
     }
-    if (raw is List && raw.every((final item) => item is int)) {
+    if (raw is List && raw.every((item) => item is int)) {
       return raw.cast<int>().toList(growable: false);
     }
     return null;
   }
 
-  Future<void> _putBytes(final String path, final List<int> bytes) async {
+  Future<void> _putBytes(String path, List<int> bytes) async {
     final List<int> copy = List<int>.from(bytes);
     _memory.put(path, copy);
     final Box<dynamic> box = await _openBox();
     await box.put(path, copy);
   }
 
-  Future<List<int>?> _tryReadBytesFromHive(final String path) async {
+  Future<List<int>?> _tryReadBytesFromHive(String path) async {
     final Box<dynamic> box = await _openBox();
     final List<int>? bytes = _decodeBytes(box.get(path));
     if (bytes == null) {
@@ -53,7 +53,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
     return bytes;
   }
 
-  Future<List<int>> _readBytesFromHive(final String path) async {
+  Future<List<int>> _readBytesFromHive(String path) async {
     final List<int>? bytes = await _tryReadBytesFromHive(path);
     if (bytes == null) {
       throw StateError('Case study clip missing: $path');
@@ -62,16 +62,16 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   Future<void> _replaceBytes({
-    required final String stagingPath,
-    required final String finalPath,
-    required final List<int> bytes,
+    required String stagingPath,
+    required String finalPath,
+    required List<int> bytes,
   }) async {
     final Box<dynamic> box = await _openBox();
     await box.put(finalPath, List<int>.from(bytes));
     await box.delete(stagingPath);
   }
 
-  String _extensionFromPath(final String sourcePath) {
+  String _extensionFromPath(String sourcePath) {
     final int dot = sourcePath.lastIndexOf('.');
     if (dot == -1 || dot == sourcePath.length - 1) {
       return '.mp4';
@@ -80,23 +80,23 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   String _virtualPath({
-    required final String caseId,
-    required final String questionId,
-    required final String suffix,
-    required final String ext,
+    required String caseId,
+    required String questionId,
+    required String suffix,
+    required String ext,
   }) => 'case-study://$caseId/$questionId.$suffix$ext';
 
-  String? _stagingPathFromFinal(final String finalPath) {
+  String? _stagingPathFromFinal(String finalPath) {
     final String stagingPath = finalPath.replaceFirst('.final.', '.staging.');
     return stagingPath == finalPath ? null : stagingPath;
   }
 
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async {
     final List<int> bytes = await XFile(sourcePath).readAsBytes();
     final String ext = _extensionFromPath(sourcePath);
@@ -111,15 +111,15 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) {
+  String finalClipFilePathFromStaging(String stagingPath) {
     final String out = stagingPath.replaceFirst('.staging.', '.final.');
     return out == stagingPath ? stagingPath : out;
   }
 
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) {
     final List<int> bytes = _memory.read(stagingPath);
     _memory
@@ -137,9 +137,9 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async {
     final List<int> bytes = await XFile(sourcePath).readAsBytes();
     final String ext = _extensionFromPath(sourcePath);
@@ -154,7 +154,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {
+  Future<void> deleteFileIfExists(String? path) async {
     _memory.deleteIfExists(path);
     if (path == null || path.isEmpty) {
       return;
@@ -164,7 +164,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {
+  Future<void> deleteCaseFolder(String caseId) async {
     _memory.deleteCase(caseId);
     if (caseId.isEmpty) {
       return;
@@ -173,13 +173,13 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
     final String prefix = 'case-study://$caseId/';
     final keys = box.keys
         .whereType<String>()
-        .where((final key) => key.startsWith(prefix))
+        .where((key) => key.startsWith(prefix))
         .toList(growable: false);
     await box.deleteAll(keys);
   }
 
   @override
-  Future<List<int>> readClipBytes(final String path) async {
+  Future<List<int>> readClipBytes(String path) async {
     final List<int>? memoryBytes = _memory.tryRead(path);
     if (memoryBytes != null) {
       return memoryBytes;

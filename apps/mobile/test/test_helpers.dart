@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:core/core.dart';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/bootstrap/firebase_bootstrap_service.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
+import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
+import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_api_client.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/data/huggingface_payload_builder.dart';
@@ -22,18 +24,17 @@ import 'package:flutter_bloc_app/features/counter/presentation/cubit/counter_cub
 import 'package:flutter_bloc_app/features/settings/domain/theme_preference.dart';
 import 'package:flutter_bloc_app/features/settings/domain/theme_repository.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/theme_cubit.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:flutter_bloc_app/app/services/app_image_cache_manager.dart';
-import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 import 'test_helpers_shared.dart';
 
@@ -88,7 +89,7 @@ Widget wrapWithProviders({
       ),
     ],
     child: MaterialApp(
-      localizationsDelegates: const [AppLocalizations.delegate],
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
     ),
@@ -205,7 +206,7 @@ class _FakeThemeRepository implements ThemeRepository {
   }
 }
 
-ThemePreference _toPreference(final ThemeMode mode) => switch (mode) {
+ThemePreference _toPreference(ThemeMode mode) => switch (mode) {
   ThemeMode.light => ThemePreference.light,
   ThemeMode.dark => ThemePreference.dark,
   ThemeMode.system => ThemePreference.system,
@@ -459,7 +460,7 @@ void overrideMemoryServicesForTests() {
   }
 
   getIt.registerLazySingleton<AppMemoryService>(
-    () => AppMemoryService(onImageCacheTrim: (final level) async {}),
+    () => AppMemoryService(onImageCacheTrim: (level) async {}),
   );
 }
 

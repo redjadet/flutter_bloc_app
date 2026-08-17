@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+20
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 resolution: workspace
 
 # Major bumps still blocked by the live graph (see root dependency_overrides):
@@ -55,6 +55,7 @@ dependencies:
     path: ../../packages/core
   cross_file: ^0.3.5+2
   cupertino_icons: ^1.0.9
+  cupertino_ui: ^1.0.0
   design_system:
     path: ../../packages/design_system
   device_info_plus: ^13.2.0
@@ -121,6 +122,7 @@ dependencies:
   local_auth: ^3.0.2
   logger: ^2.7.0
   markdown: ^7.3.1
+  material_ui: ^1.0.0
   meta: ^1.16.0
   mix: ^2.1.0
   networking:

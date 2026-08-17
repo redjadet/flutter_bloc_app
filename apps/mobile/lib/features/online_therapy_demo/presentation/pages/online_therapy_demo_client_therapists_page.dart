@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/client_booking_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientTherapistsPage extends StatefulWidget {
   const OnlineTherapyDemoClientTherapistsPage({super.key});
@@ -29,10 +29,10 @@ class _OnlineTherapyDemoClientTherapistsPageState
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final isBusy = context
         .selectState<ClientBookingCubit, ClientBookingState, bool>(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final _VerifiedTherapistsViewData verifiedTherapists = context
         .selectState<
@@ -51,8 +51,7 @@ class _OnlineTherapyDemoClientTherapistsPageState
         child: ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: verifiedTherapists.items.length + 1,
-          separatorBuilder: (final context, final index) =>
-              const Divider(height: 1),
+          separatorBuilder: (context, index) => const Divider(height: 1),
           itemBuilder: (context, index) {
             if (index == 0) {
               return KeyedSubtree(
@@ -103,7 +102,7 @@ class _VerifiedTherapistsViewData {
   const _VerifiedTherapistsViewData(this.items);
 
   factory _VerifiedTherapistsViewData.fromState(
-    final ClientBookingState state,
+    ClientBookingState state,
   ) {
     final items = <TherapistProfile>[
       for (final therapist in state.therapists)
@@ -119,7 +118,7 @@ class _VerifiedTherapistsViewData {
   static const DeepCollectionEquality _eq = DeepCollectionEquality();
 
   @override
-  bool operator ==(final Object other) =>
+  bool operator ==(Object other) =>
       identical(this, other) ||
       other is _VerifiedTherapistsViewData && _eq.equals(other.items, items);
 

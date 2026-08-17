@@ -1,5 +1,5 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum TodoItemDensity {
   regular,
@@ -10,9 +10,9 @@ enum TodoItemDensity {
   bool get showsDescription => this != TodoItemDensity.phoneLandscape;
 
   T resolve<T>({
-    required final T regular,
-    required final T compact,
-    required final T phoneLandscape,
+    required T regular,
+    required T compact,
+    required T phoneLandscape,
   }) => switch (this) {
     TodoItemDensity.regular => regular,
     TodoItemDensity.compact => compact,
@@ -20,7 +20,7 @@ enum TodoItemDensity {
   };
 }
 
-TodoItemDensity resolveTodoItemDensity(final BuildContext context) {
+TodoItemDensity resolveTodoItemDensity(BuildContext context) {
   final Size screenSize = MediaQuery.sizeOf(context);
   final bool isPhoneLandscape =
       screenSize.width > screenSize.height && screenSize.shortestSide < 600;

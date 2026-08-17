@@ -3,7 +3,7 @@ import 'package:storage/storage.dart';
 
 abstract interface class IapDemoCreditsStore {
   Future<int> loadCredits();
-  Future<void> saveCredits(final int credits);
+  Future<void> saveCredits(int credits);
 }
 
 class InMemoryIapDemoCreditsStore implements IapDemoCreditsStore {
@@ -15,7 +15,7 @@ class InMemoryIapDemoCreditsStore implements IapDemoCreditsStore {
   Future<int> loadCredits() async => _credits;
 
   @override
-  Future<void> saveCredits(final int credits) async {
+  Future<void> saveCredits(int credits) async {
     _credits = credits;
   }
 }
@@ -43,7 +43,7 @@ class HiveIapDemoCreditsStore implements IapDemoCreditsStore {
   );
 
   @override
-  Future<void> saveCredits(final int credits) async => StorageGuard.run<void>(
+  Future<void> saveCredits(int credits) async => StorageGuard.run<void>(
     logContext: 'HiveIapDemoCreditsStore.saveCredits',
     action: () async {
       final Box<dynamic> box = await _getBox();

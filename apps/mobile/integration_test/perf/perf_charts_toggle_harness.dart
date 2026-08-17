@@ -1,11 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
-typedef ZoomChildBuilder =
-    Widget Function(
-      BuildContext context, {
-      required bool zoomEnabled,
-    });
+typedef ZoomChildBuilder = Widget Function(
+  BuildContext context, {
+  required bool zoomEnabled,
+});
 
 class MinimalChartToggleHarness extends StatefulWidget {
   const MinimalChartToggleHarness({
@@ -24,12 +23,12 @@ class _MinimalChartToggleHarnessState extends State<MinimalChartToggleHarness> {
   bool _zoomEnabled = false;
 
   @override
-  Widget build(final BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
     body: Column(
       children: <Widget>[
         SwitchListTile.adaptive(
           value: _zoomEnabled,
-          onChanged: (final value) => setState(() => _zoomEnabled = value),
+          onChanged: (value) => setState(() => _zoomEnabled = value),
           title: const Text('Enable zoom'),
         ),
         Expanded(
@@ -43,8 +42,8 @@ class _MinimalChartToggleHarnessState extends State<MinimalChartToggleHarness> {
 }
 
 Widget buildPlaceholderChart(
-  final BuildContext context, {
-  required final bool zoomEnabled,
+  BuildContext context, {
+  required bool zoomEnabled,
 }) => InteractiveViewer(
   panEnabled: zoomEnabled,
   scaleEnabled: zoomEnabled,
@@ -68,8 +67,8 @@ Widget buildPlaceholderChart(
 );
 
 Widget buildPlaceholderNoInteractiveViewer(
-  final BuildContext context, {
-  required final bool zoomEnabled,
+  BuildContext context, {
+  required bool zoomEnabled,
 }) => Center(
   child: Container(
     width: 280,
@@ -87,8 +86,8 @@ Widget buildPlaceholderNoInteractiveViewer(
 );
 
 Widget buildConstantChild(
-  final BuildContext context, {
-  required final bool zoomEnabled,
+  BuildContext context, {
+  required bool zoomEnabled,
 }) => const SizedBox.expand();
 
 class BareLineChart extends StatelessWidget {
@@ -100,7 +99,7 @@ class BareLineChart extends StatelessWidget {
   final LineChartData data;
 
   @override
-  Widget build(final BuildContext context) => Center(
+  Widget build(BuildContext context) => Center(
     child: SizedBox(
       width: 320,
       height: 220,

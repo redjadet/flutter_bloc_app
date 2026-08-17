@@ -6,13 +6,13 @@ import 'package:networking/networking.dart';
 /// Never exposes raw pins/hosts — counts and enum-name labels only.
 abstract final class CertificatePinPolicySummaryMapper {
   static CertificatePinPolicySummary fromConfig(
-    final CertificatePinningConfig config, {
-    required final bool canOpenMutableDemo,
+    CertificatePinningConfig config, {
+    required bool canOpenMutableDemo,
   }) {
     final int hosts = config.allowedHosts.length;
     final int totalPins = List<Set<String>>.from(
       config.sha256PinsByHost.values,
-    ).fold<int>(0, (final sum, final pins) => sum + pins.length);
+    ).fold<int>(0, (sum, pins) => sum + pins.length);
     return CertificatePinPolicySummary(
       modeName: config.mode.name,
       pinHashKindName: config.pinHashKind.name,

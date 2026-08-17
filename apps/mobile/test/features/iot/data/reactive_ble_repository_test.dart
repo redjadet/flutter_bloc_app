@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'package:core/core.dart';
 
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart' hide Result;
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_gatt_snapshot.dart';
 import 'package:flutter_bloc_app/features/iot/data/ble_radio_client.dart';
 import 'package:flutter_bloc_app/features/iot/data/reactive_ble_repository.dart';
-import 'package:flutter_bloc_app/features/iot/domain/ble_permission_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_connection_phase.dart';
+import 'package:flutter_bloc_app/features/iot/domain/ble_permission_gateway.dart';
 import 'package:flutter_bloc_app/features/iot/domain/ble_service.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart' hide Result;
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeBlePermissionGateway implements BlePermissionGateway {
@@ -41,14 +41,14 @@ class _FakeBleRadioClient implements BleRadioClient {
 
   @override
   Stream<DiscoveredDevice> scanForDevices({
-    required final List<Uuid> withServices,
-    final ScanMode scanMode = ScanMode.balanced,
+    required List<Uuid> withServices,
+    ScanMode scanMode = ScanMode.balanced,
   }) => const Stream<DiscoveredDevice>.empty();
 
   @override
   Stream<ConnectionStateUpdate> connectToDevice({
-    required final String deviceId,
-    final Duration? connectionTimeout,
+    required String deviceId,
+    Duration? connectionTimeout,
   }) {
     connectCalls += 1;
     return Stream<ConnectionStateUpdate>.fromIterable(connectionUpdates);
@@ -56,26 +56,26 @@ class _FakeBleRadioClient implements BleRadioClient {
 
   @override
   Future<List<BleGattServiceSnapshot>> discoverGattServices(
-    final String deviceId,
+    String deviceId,
   ) async => <BleGattServiceSnapshot>[];
 
   @override
-  Future<List<int>> readCharacteristic(final BleCharacteristicRef ref) async =>
+  Future<List<int>> readCharacteristic(BleCharacteristicRef ref) async =>
       <int>[];
 
   @override
   Future<void> writeCharacteristic(
-    final BleCharacteristicRef ref,
-    final List<int> value, {
-    final bool withoutResponse = false,
+    BleCharacteristicRef ref,
+    List<int> value, {
+    bool withoutResponse = false,
   }) async {}
 
   @override
-  Stream<List<int>> subscribeToCharacteristic(final BleCharacteristicRef ref) =>
+  Stream<List<int>> subscribeToCharacteristic(BleCharacteristicRef ref) =>
       const Stream<List<int>>.empty();
 
   @override
-  void clearDeviceCache(final String deviceId) {}
+  void clearDeviceCache(String deviceId) {}
 }
 
 void main() {
@@ -169,7 +169,7 @@ void main() {
       final List<BleConnectionPhaseKind> phases = <BleConnectionPhaseKind>[];
       final StreamSubscription<void> subscription = repository
           .watchConnection('device-1')
-          .listen((final phase) {
+          .listen((phase) {
             phases.add(phase.phase);
           });
       addTearDown(subscription.cancel);

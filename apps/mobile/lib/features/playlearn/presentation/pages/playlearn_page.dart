@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc_app/features/playlearn/presentation/widgets/topic_c
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Topic selection page for playlearn (kids vocabulary).
 class PlaylearnPage extends StatelessWidget {
@@ -28,8 +28,8 @@ class PlaylearnPage extends StatelessWidget {
   final AudioPlaybackService audioService;
 
   static String _topicDisplayName(
-    final String nameL10nKey,
-    final AppLocalizations l10n,
+    String nameL10nKey,
+    AppLocalizations l10n,
   ) {
     if (nameL10nKey == 'playlearnTopicAnimals') {
       return l10n.playlearnTopicAnimals;
@@ -38,10 +38,10 @@ class PlaylearnPage extends StatelessWidget {
   }
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return BlocProvider(
-      create: (final _) => PlaylearnCubit(
+      create: (_) => PlaylearnCubit(
         repository: repository,
         audioService: audioService,
         l10n: l10n,
@@ -49,7 +49,7 @@ class PlaylearnPage extends StatelessWidget {
       child: CommonPageLayout(
         title: l10n.playlearnTitle,
         body: Builder(
-          builder: (final context) {
+          builder: (context) {
             final viewState = context
                 .selectState<
                   PlaylearnCubit,
@@ -60,7 +60,7 @@ class PlaylearnPage extends StatelessWidget {
                     List<TopicItem> topics,
                   })
                 >(
-                  selector: (final state) => (
+                  selector: (state) => (
                     isLoading: state.isLoading,
                     errorMessage: state.errorMessage,
                     topics: state.topics,
@@ -82,9 +82,9 @@ class PlaylearnPage extends StatelessWidget {
             return ListView.separated(
               padding: context.pagePadding,
               itemCount: topics.length,
-              separatorBuilder: (final context, final index) =>
+              separatorBuilder: (context, index) =>
                   SizedBox(height: context.responsiveGapM),
-              itemBuilder: (final context, final index) {
+              itemBuilder: (context, index) {
                 if (index >= topics.length) {
                   return const SizedBox.shrink();
                 }

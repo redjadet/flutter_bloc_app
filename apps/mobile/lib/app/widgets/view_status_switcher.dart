@@ -1,10 +1,10 @@
 import 'package:design_system/design_system.dart' show CommonLoadingWidget;
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_error_view.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Switches between loading, error, and success content using a single
 /// [TypeSafeBlocSelector]. Intended to reduce repeated status checks in widgets.
@@ -28,12 +28,12 @@ class ViewStatusSwitcher<C extends StateStreamableSource<S>, S, T>
   final Widget Function(BuildContext context, T data)? errorBuilder;
 
   @override
-  Widget build(final BuildContext context) => TypeSafeBlocSelector<C, S, T>(
+  Widget build(BuildContext context) => TypeSafeBlocSelector<C, S, T>(
     selector: selector,
     builder: _buildFromData,
   );
 
-  Widget _buildFromData(final BuildContext context, final T data) {
+  Widget _buildFromData(BuildContext context, T data) {
     if (isLoading(data)) {
       return loadingBuilder?.call(context) ?? const CommonLoadingWidget();
     }

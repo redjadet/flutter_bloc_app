@@ -1,5 +1,5 @@
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Card shell for one Event Bus listener panel in the demo.
 class EventBusDemoListenerCard extends StatelessWidget {
@@ -15,7 +15,7 @@ class EventBusDemoListenerCard extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Card(
       child: Padding(

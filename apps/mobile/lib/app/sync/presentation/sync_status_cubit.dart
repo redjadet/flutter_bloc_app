@@ -12,7 +12,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
     with CubitSubscriptionMixin<SyncStatusState> {
   SyncStatusCubit({
     required this._networkStatusService,
-    required final BackgroundSyncCoordinator coordinator,
+    required BackgroundSyncCoordinator coordinator,
   }) : _coordinator = coordinator,
        super(
          SyncStatusState(
@@ -23,11 +23,11 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
          ),
        ) {
     _networkSubscription = _networkStatusService.statusStream.listen(
-      (final status) {
+      (status) {
         if (isClosed) return;
         emit(state.copyWith(networkStatus: status));
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'SyncStatusCubit network status stream error',
           error,
@@ -38,11 +38,11 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
     registerSubscription(_networkSubscription);
 
     _syncSubscription = _coordinator.statusStream.listen(
-      (final status) {
+      (status) {
         if (isClosed) return;
         emit(state.copyWith(syncStatus: status));
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'SyncStatusCubit sync status stream error',
           error,
@@ -53,7 +53,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
     registerSubscription(_syncSubscription);
 
     _summarySubscription = _coordinator.summaryStream.listen(
-      (final summary) {
+      (summary) {
         if (isClosed) return;
         emit(
           state.copyWith(
@@ -62,7 +62,7 @@ class SyncStatusCubit extends Cubit<SyncStatusState>
           ),
         );
       },
-      onError: (final Object error, final StackTrace stackTrace) {
+      onError: (Object error, StackTrace stackTrace) {
         AppLogger.error(
           'SyncStatusCubit summary stream error',
           error,

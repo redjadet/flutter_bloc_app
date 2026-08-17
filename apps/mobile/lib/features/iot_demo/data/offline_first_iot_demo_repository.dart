@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/iot_demo/data/iot_demo_pending_set_value.dart';
@@ -95,7 +96,7 @@ class OfflineFirstIotDemoRepository
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) {
     final PersistentIotDemoRepository? local = _getLocalRepository();
     if (local == null) {
@@ -105,8 +106,8 @@ class OfflineFirstIotDemoRepository
   }
 
   Map<String, dynamic> _basePayload(
-    final String deviceId,
-    final String action,
+    String deviceId,
+    String action,
   ) => iotDemoBasePayloadForUser(
     deviceId,
     action,
@@ -114,21 +115,19 @@ class OfflineFirstIotDemoRepository
   );
 
   @override
-  Future<void> addDevice(final IotDevice device) async =>
-      addDeviceImpl(this, device);
+  Future<void> addDevice(IotDevice device) async => addDeviceImpl(this, device);
 
   @override
-  Future<void> connect(final String deviceId) async =>
-      connectImpl(this, deviceId);
+  Future<void> connect(String deviceId) async => connectImpl(this, deviceId);
 
   @override
-  Future<void> disconnect(final String deviceId) async =>
+  Future<void> disconnect(String deviceId) async =>
       disconnectImpl(this, deviceId);
 
   @override
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) async => sendCommandImpl(this, deviceId, command);
 
   String? _currentSupabaseUserId() {
@@ -140,12 +139,12 @@ class OfflineFirstIotDemoRepository
   }
 
   String _pendingSetValueKey({
-    required final String userId,
-    required final String deviceId,
+    required String userId,
+    required String deviceId,
   }) => '$userId::$deviceId';
 
   @override
-  Future<void> processOperation(final SyncOperation operation) async =>
+  Future<void> processOperation(SyncOperation operation) async =>
       processOperationImpl(this, operation);
 
   @override

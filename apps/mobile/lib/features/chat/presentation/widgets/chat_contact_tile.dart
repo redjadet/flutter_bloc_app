@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_contact.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_avatar.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_config.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_contact_tile_details.dart';
 import 'package:ilkersevim_relative_time/ilkersevim_relative_time.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ChatContactTile extends StatelessWidget {
   const ChatContactTile({
@@ -20,7 +20,7 @@ class ChatContactTile extends StatelessWidget {
   final bool isTabletLayout;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final config = ChatContactTileConfig.fromContext(context);
     final timeText = formatRelativeTimeShort(contact.lastMessageTime);
 

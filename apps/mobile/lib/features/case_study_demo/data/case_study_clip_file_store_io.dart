@@ -8,16 +8,16 @@ import 'package:storage/storage.dart';
 /// Persists picked videos under app documents for stable paths across restarts.
 class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   // ignore: avoid_unused_constructor_parameters - keeps DI parity with web.
-  CaseStudyClipFileStoreImpl({final HiveService? hiveService});
+  CaseStudyClipFileStoreImpl({HiveService? hiveService});
 
   /// Copies [sourcePath] to a unique staging file so concurrent commits cannot
   /// overwrite each other's destination until promotion to the final path.
   @override
   Future<String> persistClipToStaging({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
-    required final int commitToken,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
+    required int commitToken,
   }) async {
     final Directory dir = await _caseDir(caseId);
     await dir.create(recursive: true);
@@ -34,7 +34,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   /// Uses a per-pick unique filename so re-picking a clip for the same question
   /// produces a new path, forcing any video preview widgets to reinitialize.
   @override
-  String finalClipFilePathFromStaging(final String stagingPath) {
+  String finalClipFilePathFromStaging(String stagingPath) {
     // Staging paths are created by [persistClipToStaging] with:
     //   $questionId.staging.$commitToken.ext
     // Convert to:
@@ -48,8 +48,8 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   /// a newer pick/commit for the same question.
   @override
   String promoteStagingToFinalSync({
-    required final String stagingPath,
-    required final String finalPath,
+    required String stagingPath,
+    required String finalPath,
   }) {
     final File finalFile = File(finalPath);
     if (finalFile.existsSync()) {
@@ -59,7 +59,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
     return finalPath;
   }
 
-  Future<Directory> _caseDir(final String caseId) async {
+  Future<Directory> _caseDir(String caseId) async {
     final Directory docs = await getApplicationDocumentsDirectory();
     return Directory(
       p.join(docs.path, 'case_study_clips', caseId),
@@ -68,9 +68,9 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
 
   @override
   Future<String> persistClip({
-    required final String sourcePath,
-    required final String caseId,
-    required final String questionId,
+    required String sourcePath,
+    required String caseId,
+    required String questionId,
   }) async {
     final Directory dir = await _caseDir(caseId);
     await dir.create(recursive: true);
@@ -82,7 +82,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  Future<void> deleteFileIfExists(final String? path) async {
+  Future<void> deleteFileIfExists(String? path) async {
     if (path == null || path.isEmpty) return;
     try {
       final File f = File(path);
@@ -95,7 +95,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  Future<void> deleteCaseFolder(final String caseId) async {
+  Future<void> deleteCaseFolder(String caseId) async {
     if (caseId.isEmpty) return;
     final Directory docs = await getApplicationDocumentsDirectory();
     final Directory dir = Directory(
@@ -111,7 +111,7 @@ class CaseStudyClipFileStoreImpl implements CaseStudyClipFileStore {
   }
 
   @override
-  Future<List<int>> readClipBytes(final String path) async {
+  Future<List<int>> readClipBytes(String path) async {
     return File(path).readAsBytes();
   }
 }

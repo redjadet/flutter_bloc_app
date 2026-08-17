@@ -8,8 +8,8 @@ import 'certificate_pinning_mode.dart';
 final class CertificatePinningConfig {
   CertificatePinningConfig({
     required this.mode,
-    final Set<String>? allowedHosts,
-    final Map<String, Set<String>>? sha256PinsByHost,
+    Set<String>? allowedHosts,
+    Map<String, Set<String>>? sha256PinsByHost,
     this.validationTimeout = const Duration(seconds: 2),
     this.enableVerboseLogging = false,
     this.realProbeUrl,
@@ -23,7 +23,7 @@ final class CertificatePinningConfig {
 
   /// Safe default: pinning off for all flavors until explicitly enabled.
   factory CertificatePinningConfig.disabled({
-    final bool enableVerboseLogging = false,
+    bool enableVerboseLogging = false,
   }) => CertificatePinningConfig(
     mode: CertificatePinningMode.disabled,
     enableVerboseLogging: enableVerboseLogging,
@@ -40,10 +40,10 @@ final class CertificatePinningConfig {
   final CertificatePinHashKind pinHashKind;
 
   /// DNS hosts compared case-insensitively (lowercase ASCII).
-  static String normalizeHost(final String host) => host.trim().toLowerCase();
+  static String normalizeHost(String host) => host.trim().toLowerCase();
 
   /// Fail closed for unsafe production / incomplete configuration.
-  void validate({required final bool isProdRelease, final bool isWeb = false}) {
+  void validate({required bool isProdRelease, bool isWeb = false}) {
     if (isProdRelease &&
         (mode == CertificatePinningMode.mockSuccess ||
             mode == CertificatePinningMode.mockFailure)) {
@@ -97,7 +97,7 @@ final class CertificatePinningConfig {
   }
 
   static Map<String, Set<String>> _freezePins(
-    final Map<String, Set<String>>? source,
+    Map<String, Set<String>>? source,
   ) {
     if (source == null || source.isEmpty) {
       return const <String, Set<String>>{};

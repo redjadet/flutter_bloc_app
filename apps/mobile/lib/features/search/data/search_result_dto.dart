@@ -9,13 +9,13 @@ class SearchResultDto {
     this.description,
   });
 
-  SearchResultDto.fromDomain(final SearchResult result)
+  SearchResultDto.fromDomain(SearchResult result)
     : id = result.id,
       imageUrl = result.imageUrl,
       title = result.title,
       description = result.description;
 
-  factory SearchResultDto.fromJson(final Map<String, dynamic> json) =>
+  factory SearchResultDto.fromJson(Map<String, dynamic> json) =>
       SearchResultDto(
         id: json['id'] as String,
         imageUrl: json['imageUrl'] as String,

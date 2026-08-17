@@ -4,7 +4,7 @@ import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.da
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
 /// Parses raw Supabase response into continents; skips invalid items and logs.
-List<GraphqlContinent> parseGraphqlContinentsFromRaw(final Object? raw) {
+List<GraphqlContinent> parseGraphqlContinentsFromRaw(Object? raw) {
   final List<dynamic>? list = listFromDynamic(raw);
   if (list == null || list.isEmpty) {
     return const <GraphqlContinent>[];
@@ -30,7 +30,7 @@ List<GraphqlContinent> parseGraphqlContinentsFromRaw(final Object? raw) {
 }
 
 /// Parses raw Supabase response into countries; skips invalid items and logs.
-List<GraphqlCountry> parseGraphqlCountriesFromRaw(final Object? raw) {
+List<GraphqlCountry> parseGraphqlCountriesFromRaw(Object? raw) {
   final List<dynamic>? list = listFromDynamic(raw);
   if (list == null || list.isEmpty) {
     return const <GraphqlCountry>[];

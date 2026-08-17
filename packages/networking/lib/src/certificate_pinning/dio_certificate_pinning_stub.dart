@@ -9,9 +9,9 @@ import 'certificate_pinning_mode.dart';
 /// Fail closed when [CertificatePinningMode.real] is requested — never silently
 /// skip pinning on a platform that cannot enforce it.
 void applyCertificatePinning(
-  final Dio dio, {
-  required final CertificatePinningConfig config,
-  required final CertificatePinValidator validator,
+  Dio dio, {
+  required CertificatePinningConfig config,
+  required CertificatePinValidator validator,
 }) {
   if (config.mode == CertificatePinningMode.real) {
     throw UnsupportedError(

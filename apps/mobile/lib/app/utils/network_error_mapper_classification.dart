@@ -1,19 +1,18 @@
 part of 'network_error_mapper.dart';
 
-AppErrorCode _getErrorCodeForStatusCode(final int statusCode) =>
-    switch (statusCode) {
-      401 => AppErrorCode.auth,
-      403 || 404 => AppErrorCode.client,
-      408 => AppErrorCode.timeout,
-      429 => AppErrorCode.rateLimit,
-      503 => AppErrorCode.serviceUnavailable,
-      500 || 502 || 504 => AppErrorCode.server,
-      >= 400 && < 500 => AppErrorCode.client,
-      >= 500 => AppErrorCode.server,
-      _ => AppErrorCode.unknown,
-    };
+AppErrorCode _getErrorCodeForStatusCode(int statusCode) => switch (statusCode) {
+  401 => AppErrorCode.auth,
+  403 || 404 => AppErrorCode.client,
+  408 => AppErrorCode.timeout,
+  429 => AppErrorCode.rateLimit,
+  503 => AppErrorCode.serviceUnavailable,
+  500 || 502 || 504 => AppErrorCode.server,
+  >= 400 && < 500 => AppErrorCode.client,
+  >= 500 => AppErrorCode.server,
+  _ => AppErrorCode.unknown,
+};
 
-AppErrorCode _getErrorCode(final dynamic error) {
+AppErrorCode _getErrorCode(dynamic error) {
   if (error case HttpRequestFailure(:final statusCode)) {
     return _getErrorCodeForStatusCode(statusCode);
   }
@@ -73,7 +72,7 @@ AppErrorCode _getErrorCode(final dynamic error) {
   return AppErrorCode.unknown;
 }
 
-int? _extractHttpStatusCode(final String value) {
+int? _extractHttpStatusCode(String value) {
   final RegExpMatch? match = RegExp(r'\b([1-5]\d{2})\b').firstMatch(value);
   if (match == null) {
     return null;
@@ -81,12 +80,12 @@ int? _extractHttpStatusCode(final String value) {
   return int.tryParse(match.group(1) ?? '');
 }
 
-bool _hasExplicitStatusMessage(final int statusCode) => switch (statusCode) {
+bool _hasExplicitStatusMessage(int statusCode) => switch (statusCode) {
   401 || 403 || 404 || 408 || 429 || 500 || 502 || 503 || 504 => true,
   _ => false,
 };
 
-bool _isNetworkError(final dynamic error) {
+bool _isNetworkError(dynamic error) {
   if (error == null) return false;
   if (error is DioException && error.type == DioExceptionType.connectionError) {
     return true;
@@ -98,7 +97,7 @@ bool _isNetworkError(final dynamic error) {
       errorString.contains('dns');
 }
 
-bool _isTimeoutError(final dynamic error) {
+bool _isTimeoutError(dynamic error) {
   if (error == null) return false;
   if (error case DioException(:final type)) {
     return switch (type) {
@@ -115,7 +114,7 @@ bool _isTimeoutError(final dynamic error) {
       error.toString().toLowerCase().contains('timed out');
 }
 
-bool _isTransientError(final int statusCode) =>
+bool _isTransientError(int statusCode) =>
     statusCode == 408 ||
     statusCode == 429 ||
     statusCode == 500 ||
@@ -123,27 +122,27 @@ bool _isTransientError(final int statusCode) =>
     statusCode == 503 ||
     statusCode == 504;
 
-bool _containsNetworkHint(final String value) =>
+bool _containsNetworkHint(String value) =>
     value.contains('network') || value.contains('connection');
 
-bool _containsTimeoutHint(final String value) => value.contains('timeout');
+bool _containsTimeoutHint(String value) => value.contains('timeout');
 
-bool _containsUnauthorizedHint(final String value) =>
+bool _containsUnauthorizedHint(String value) =>
     value.contains('unauthorized') || value.contains('401');
 
-bool _containsForbiddenHint(final String value) =>
+bool _containsForbiddenHint(String value) =>
     value.contains('forbidden') || value.contains('403');
 
-bool _containsNotFoundHint(final String value) =>
+bool _containsNotFoundHint(String value) =>
     value.contains('not found') || value.contains('404');
 
-bool _containsRateLimitHint(final String value) =>
+bool _containsRateLimitHint(String value) =>
     value.contains('too many requests') || value.contains('429');
 
-bool _containsServiceUnavailableHint(final String value) =>
+bool _containsServiceUnavailableHint(String value) =>
     value.contains('service unavailable') || value.contains('503');
 
-bool _containsServerHint(final String value) =>
+bool _containsServerHint(String value) =>
     value.contains('500') ||
     value.contains('502') ||
     value.contains('504') ||

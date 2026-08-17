@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Custom RenderObject for rendering markdown text with syntax highlighting.
 ///
@@ -24,7 +24,7 @@ class MarkdownRenderObject extends RenderBox {
   TextDirection _textDirection;
 
   String get text => _text;
-  set text(final String value) {
+  set text(String value) {
     if (_text == value) return;
     _text = value;
     _cachedSpan = null;
@@ -34,7 +34,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   TextStyle get textStyle => _textStyle;
-  set textStyle(final TextStyle value) {
+  set textStyle(TextStyle value) {
     if (_textStyle == value) return;
     _textStyle = value;
     _cachedSpan = null;
@@ -44,7 +44,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   EdgeInsets get padding => _padding;
-  set padding(final EdgeInsets value) {
+  set padding(EdgeInsets value) {
     if (_padding == value) return;
     _padding = value;
     markNeedsLayout();
@@ -52,7 +52,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   TextDirection get textDirection => _textDirection;
-  set textDirection(final TextDirection value) {
+  set textDirection(TextDirection value) {
     if (_textDirection == value) return;
     _textDirection = value;
     markNeedsLayout();
@@ -92,19 +92,19 @@ class MarkdownRenderObject extends RenderBox {
   bool get sizedByParent => false;
 
   @override
-  double computeMinIntrinsicWidth(final double height) {
+  double computeMinIntrinsicWidth(double height) {
     _layoutText(double.infinity);
     return _obtainTextPainter().size.width + _padding.horizontal;
   }
 
   @override
-  double computeMaxIntrinsicWidth(final double height) {
+  double computeMaxIntrinsicWidth(double height) {
     _layoutText(double.infinity);
     return _obtainTextPainter().size.width + _padding.horizontal;
   }
 
   @override
-  double computeMinIntrinsicHeight(final double width) {
+  double computeMinIntrinsicHeight(double width) {
     final double availableWidth = width.isFinite
         ? (width - _padding.horizontal).clamp(0, double.infinity)
         : double.infinity;
@@ -113,7 +113,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   @override
-  double computeMaxIntrinsicHeight(final double width) {
+  double computeMaxIntrinsicHeight(double width) {
     final double availableWidth = width.isFinite
         ? (width - _padding.horizontal).clamp(0, double.infinity)
         : double.infinity;
@@ -124,7 +124,7 @@ class MarkdownRenderObject extends RenderBox {
   TextPainter _obtainTextPainter() =>
       _textPainter ??= TextPainter(textDirection: _textDirection);
 
-  void _layoutText(final double maxWidth) {
+  void _layoutText(double maxWidth) {
     final double effectiveMaxWidth = maxWidth.isFinite && maxWidth > 0
         ? maxWidth
         : double.infinity;
@@ -156,7 +156,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   @override
-  void paint(final PaintingContext context, final Offset offset) {
+  void paint(PaintingContext context, Offset offset) {
     final TextPainter? painter = _textPainter;
     if (painter == null || painter.text == null) return;
 
@@ -172,7 +172,7 @@ class MarkdownRenderObject extends RenderBox {
   }
 
   @override
-  bool hitTestSelf(final Offset position) => true;
+  bool hitTestSelf(Offset position) => true;
 
   @override
   void dispose() {

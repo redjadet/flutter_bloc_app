@@ -1,12 +1,12 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Compact spinner used on settings diagnostics cards (metadata load, clear in flight).
 class SettingsDiagnosticsBusyGlyph extends StatelessWidget {
   const SettingsDiagnosticsBusyGlyph({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final double s = context.responsiveGapM;
     return SizedBox(
       height: s,
@@ -30,7 +30,7 @@ class SettingsDiagnosticsClearButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return Align(
       alignment: AlignmentDirectional.centerEnd,
       child: PlatformAdaptive.textButton(

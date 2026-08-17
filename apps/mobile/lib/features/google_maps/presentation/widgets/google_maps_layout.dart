@@ -2,7 +2,7 @@
 // Simple layout wrapper widget, tested indirectly via google_maps_sample_page tests
 
 import 'package:design_system/responsive.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class GoogleMapsContentLayout extends StatelessWidget {
   const GoogleMapsContentLayout({
@@ -17,8 +17,8 @@ class GoogleMapsContentLayout extends StatelessWidget {
   final Widget locations;
 
   @override
-  Widget build(final BuildContext context) => LayoutBuilder(
-    builder: (final context, final constraints) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
       final bool useHorizontalLayout = constraints.maxWidth >= 900;
       final Widget mapSection = SizedBox(
         height: useHorizontalLayout ? double.infinity : 320,

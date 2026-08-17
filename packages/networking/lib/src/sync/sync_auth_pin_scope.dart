@@ -10,8 +10,8 @@ abstract final class SyncAuthPinScope {
 
   /// Runs [action] while [uid] is pinned; restores the previous pin afterward.
   static Future<T> runWithPin<T>(
-    final String? uid,
-    final Future<T> Function() action,
+    String? uid,
+    Future<T> Function() action,
   ) async {
     final String? previous = _current;
     _current = uid;

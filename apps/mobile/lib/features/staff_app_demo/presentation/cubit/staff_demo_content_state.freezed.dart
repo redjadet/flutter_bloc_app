@@ -88,8 +88,7 @@ extension StaffDemoContentStatePatterns on StaffDemoContentState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoContentState value)?  $default,{required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _StaffDemoContentState value)?  $default,{required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _StaffDemoContentState() when $default != null:
 return $default(_that);case _:
@@ -110,8 +109,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoContentState value)  $default,){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _StaffDemoContentState value)  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoContentState():
 return $default(_that);case _:
@@ -131,8 +129,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoContentState value)?  $default,){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _StaffDemoContentState value)?  $default,){final _that = this;
 switch (_that) {
 case _StaffDemoContentState() when $default != null:
 return $default(_that);case _:
@@ -208,7 +205,7 @@ return $default(_that.status,_that.items,_that.errorMessage);case _:
 
 
 class _StaffDemoContentState implements StaffDemoContentState {
-  const _StaffDemoContentState({this.status = StaffDemoContentStatus.initial, final  List<StaffDemoContentItem> items = const <StaffDemoContentItem>[], this.errorMessage}): _items = items;
+  const _StaffDemoContentState({this.status = StaffDemoContentStatus.initial, List<StaffDemoContentItem> items = const <StaffDemoContentItem>[], this.errorMessage}): _items = items;
   
 
 @override@JsonKey() final  StaffDemoContentStatus status;

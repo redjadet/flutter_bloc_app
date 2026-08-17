@@ -1,12 +1,12 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/config/flavor.dart';
 import 'package:flutter_bloc_app/app/widgets/flavor_badge.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('FlavorBadge', () {
-    testWidgets('renders nothing for prod flavor', (final tester) async {
+    testWidgets('renders nothing for prod flavor', (tester) async {
       FlavorManager.current = Flavor.prod;
 
       await tester.pumpWidget(
@@ -19,7 +19,7 @@ void main() {
       expect(find.byType(CommonCard), findsNothing);
     });
 
-    testWidgets('renders badge for dev flavor', (final tester) async {
+    testWidgets('renders badge for dev flavor', (tester) async {
       FlavorManager.current = Flavor.dev;
 
       await tester.pumpWidget(
@@ -32,7 +32,7 @@ void main() {
       expect(find.text('DEV'), findsOneWidget);
     });
 
-    testWidgets('renders badge for staging flavor', (final tester) async {
+    testWidgets('renders badge for staging flavor', (tester) async {
       FlavorManager.current = Flavor.staging;
 
       await tester.pumpWidget(
@@ -45,7 +45,7 @@ void main() {
       expect(find.text('STG'), findsOneWidget);
     });
 
-    testWidgets('renders badge for qa flavor', (final tester) async {
+    testWidgets('renders badge for qa flavor', (tester) async {
       FlavorManager.current = Flavor.qa;
 
       await tester.pumpWidget(
@@ -58,7 +58,7 @@ void main() {
       expect(find.text('QA'), findsOneWidget);
     });
 
-    testWidgets('renders badge for beta flavor', (final tester) async {
+    testWidgets('renders badge for beta flavor', (tester) async {
       FlavorManager.current = Flavor.beta;
 
       await tester.pumpWidget(
@@ -71,7 +71,7 @@ void main() {
       expect(find.text('BETA'), findsOneWidget);
     });
 
-    testWidgets('applies correct styling', (final tester) async {
+    testWidgets('applies correct styling', (tester) async {
       FlavorManager.current = Flavor.dev;
 
       await tester.pumpWidget(

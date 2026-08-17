@@ -1,17 +1,17 @@
 import 'dart:io';
 
+import 'package:app_shared_flutter/app_shared_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/offline_first_remote_config_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/data/remote_config_cache_repository.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_keys.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_remote_data_source.dart';
 import 'package:flutter_bloc_app/features/remote_config/domain/remote_config_snapshot.dart';
-import 'package:app_shared_flutter/app_shared_flutter.dart';
-import 'package:networking/networking.dart';
-import 'package:storage/storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:networking/networking.dart';
+import 'package:storage/storage.dart';
 
 class _MockRemoteConfigRemoteDataSource extends Mock
     implements RemoteConfigRemoteDataSource {}
@@ -27,7 +27,7 @@ class _FakeNetworkStatusService implements NetworkStatusService {
   @override
   Future<NetworkStatus> getCurrentStatus() async => _status;
 
-  void setStatus(final NetworkStatus status) {
+  void setStatus(NetworkStatus status) {
     _status = status;
   }
 
@@ -59,9 +59,8 @@ void main() {
 
       when(() => remoteRepository.initialize()).thenAnswer((_) async {});
       when(() => remoteRepository.forceFetch()).thenAnswer((_) async {});
-      when(
-        () => remoteRepository.getString(RemoteConfigKeys.testValue1),
-      ).thenReturn('remote');
+      when(() => remoteRepository.getString(RemoteConfigKeys.testValue1))
+          .thenReturn('remote');
       when(
         () => remoteRepository.getBool(RemoteConfigKeys.awesomeFeatureEnabled),
       ).thenReturn(true);
@@ -71,12 +70,10 @@ void main() {
       when(
         () => remoteRepository.getBool(RemoteConfigKeys.productionDemoEnabled),
       ).thenReturn(true);
-      when(
-        () => remoteRepository.getString(RemoteConfigKeys.supabaseUrl),
-      ).thenReturn('');
-      when(
-        () => remoteRepository.getString(RemoteConfigKeys.supabaseAnonKey),
-      ).thenReturn('');
+      when(() => remoteRepository.getString(RemoteConfigKeys.supabaseUrl))
+          .thenReturn('');
+      when(() => remoteRepository.getString(RemoteConfigKeys.supabaseAnonKey))
+          .thenReturn('');
       when(
         () => remoteRepository.getString(
           RemoteConfigKeys.renderChatDemoHfReadToken,
@@ -190,10 +187,9 @@ void main() {
             cacheRepository: cacheRepository,
             networkStatusService: networkStatusService,
             registry: registry,
-            telemetry:
-                (final String event, final Map<String, Object?> payload) {
-                  telemetryEvents.add(payload);
-                },
+            telemetry: (String event, Map<String, Object?> payload) {
+              telemetryEvents.add(payload);
+            },
           );
 
       final DateTime fetchedAt = DateTime.now().toUtc();
@@ -214,8 +210,7 @@ void main() {
 
       expect(
         telemetryEvents.where(
-          (final Map<String, Object?> event) =>
-              event['reason'] == 'recent_refresh',
+          (Map<String, Object?> event) => event['reason'] == 'recent_refresh',
         ),
         hasLength(1),
       );
@@ -229,8 +224,7 @@ void main() {
 
       expect(
         telemetryEvents.where(
-          (final Map<String, Object?> event) =>
-              event['reason'] == 'recent_refresh',
+          (Map<String, Object?> event) => event['reason'] == 'recent_refresh',
         ),
         isEmpty,
       );

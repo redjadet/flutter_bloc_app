@@ -11,11 +11,11 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
   @override
   String get boxName => _boxName;
 
-  String _openEntryKey(final String userId) => 'openEntry:$userId';
+  String _openEntryKey(String userId) => 'openEntry:$userId';
 
   @override
   Future<StaffDemoOpenEntrySnapshot?> loadOpenEntry({
-    required final String userId,
+    required String userId,
   }) => StorageGuard.run<StaffDemoOpenEntrySnapshot?>(
     logContext: 'HiveStaffDemoTimeclockLocalStore.loadOpenEntry',
     action: () async {
@@ -44,8 +44,8 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
 
   @override
   Future<void> saveOpenEntry({
-    required final String userId,
-    required final StaffDemoOpenEntrySnapshot snapshot,
+    required String userId,
+    required StaffDemoOpenEntrySnapshot snapshot,
   }) async {
     await StorageGuard.run<void>(
       logContext: 'HiveStaffDemoTimeclockLocalStore.saveOpenEntry',
@@ -62,7 +62,7 @@ class HiveStaffDemoTimeclockLocalStore extends HiveRepositoryBase
   }
 
   @override
-  Future<void> clearOpenEntry({required final String userId}) async {
+  Future<void> clearOpenEntry({required String userId}) async {
     await StorageGuard.run<void>(
       logContext: 'HiveStaffDemoTimeclockLocalStore.clearOpenEntry',
       action: () async {

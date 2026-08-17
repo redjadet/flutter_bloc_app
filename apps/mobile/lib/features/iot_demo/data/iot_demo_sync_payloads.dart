@@ -5,9 +5,9 @@ const String iotDemoSyncPayloadKeySupabaseUserId = 'supabaseUserId';
 
 /// Builds the base payload map for a sync operation (deviceId, action, optional userId).
 Map<String, dynamic> iotDemoBasePayloadForUser(
-  final String deviceId,
-  final String action, {
-  required final String? supabaseUserId,
+  String deviceId,
+  String action, {
+  required String? supabaseUserId,
 }) {
   final Map<String, dynamic> payload = <String, dynamic>{
     'deviceId': deviceId,
@@ -20,7 +20,7 @@ Map<String, dynamic> iotDemoBasePayloadForUser(
 }
 
 /// Converts [command] to the sync payload map for the 'command' action.
-Map<String, dynamic> iotDemoCommandToPayload(final IotDeviceCommand command) {
+Map<String, dynamic> iotDemoCommandToPayload(IotDeviceCommand command) {
   if (command is IotDeviceCommandToggle) {
     return <String, dynamic>{'kind': 'toggle'};
   }

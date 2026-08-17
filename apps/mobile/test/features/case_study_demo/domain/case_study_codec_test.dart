@@ -111,7 +111,7 @@ void main() {
 ''';
 
       final List<CaseStudyRecord> decoded = CaseStudyRecordDto.decodeList(raw);
-      expect(decoded.map((final r) => r.id).toList(), <String>['r1', 'r2']);
+      expect(decoded.map((r) => r.id).toList(), <String>['r1', 'r2']);
     });
   });
 }

@@ -11,7 +11,7 @@ part 'hive_service_boxes.part.dart';
 class HiveService with HiveServiceBoxOperations {
   HiveService({
     required this._keyManager,
-    final Future<bool> Function()? initializeHiveStorage,
+    Future<bool> Function()? initializeHiveStorage,
   }) : _initializeHiveStorage = initializeHiveStorage ?? initHive;
 
   final HiveKeyManager _keyManager;
@@ -24,14 +24,11 @@ class HiveService with HiveServiceBoxOperations {
   bool get isInitialized => _initialized;
   bool get isStorageAvailable => _storageAvailable;
 
-  _BoxMutex _mutexFor(final String boxName) =>
+  _BoxMutex _mutexFor(String boxName) =>
       _boxMutexes.putIfAbsent(boxName, _BoxMutex.new);
 
   /// Runs [action] under the per-box mutex used by open/close/delete.
-  Future<T> withBoxLock<T>(
-    final String boxName,
-    final Future<T> Function() action,
-  ) {
+  Future<T> withBoxLock<T>(String boxName, Future<T> Function() action) {
     if (boxName.isEmpty) {
       throw ArgumentError('Box name cannot be empty');
     }

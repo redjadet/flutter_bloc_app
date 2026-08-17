@@ -1,26 +1,27 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_conversation.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_history_repository.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_message.dart';
 import 'package:flutter_bloc_app/features/chat/domain/chat_repository.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_cubit.dart';
-import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_state.dart';
+import 'package:flutter_bloc_app/features/chat/presentation/cubit/chat_sync_status_cubit.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/pages/chat_page.dart';
 import 'package:flutter_bloc_app/features/chat/presentation/widgets/chat_sync_banner.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:flutter_bloc_app/app/services/error_notification_service.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:networking/networking.dart';
 import 'package:storage/storage.dart';
-import 'package:flutter_bloc_app/app/sync/presentation/sync_status_cubit.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:design_system/design_system.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers/memory/leak_safe_test_widgets.dart';
 
@@ -33,7 +34,7 @@ void main() {
   });
 
   testWidgets('ChatPage mounts ChatSyncBanner when sync cubits are provided', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final _TestChatCubit cubit = _TestChatCubit(
       supportedModels: const <String>['only-model'],
@@ -42,12 +43,10 @@ void main() {
 
     final _MockPendingSyncRepository pendingRepository =
         _MockPendingSyncRepository();
-    when(
-      () => pendingRepository.getPendingOperations(now: any(named: 'now')),
-    ).thenAnswer((_) async => <SyncOperation>[]);
-    when(
-      () => pendingRepository.onOperationEnqueued,
-    ).thenAnswer((_) => const Stream<void>.empty());
+    when(() => pendingRepository.getPendingOperations(now: any(named: 'now')))
+        .thenAnswer((_) async => <SyncOperation>[]);
+    when(() => pendingRepository.onOperationEnqueued)
+        .thenAnswer((_) => const Stream<void>.empty());
 
     final SyncStatusCubit syncCubit = _buildSyncStatusCubit();
     final ChatSyncStatusCubit chatSyncCubit = ChatSyncStatusCubit(
@@ -67,7 +66,7 @@ void main() {
   });
 
   leakSafeTestWidgets('ChatPage controller ownership teardown is leak-safe', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final _TestChatCubit cubit = _TestChatCubit(
       supportedModels: const <String>['only-model'],
@@ -171,7 +170,7 @@ void main() {
       MaterialApp(
         theme: ThemeData(platform: TargetPlatform.iOS),
         locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: MultiBlocProvider(
           providers: <BlocProvider<dynamic>>[
@@ -350,7 +349,7 @@ class FakeBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> stop() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 
   @override
   Future<void> dispose() async {}
@@ -383,9 +382,9 @@ Widget _wrapWithCubit(
   }
   return MaterialApp(
     locale: const Locale('en'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    localizationsDelegates: appLocalizationDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
-    builder: (final BuildContext context, final Widget? child) =>
+    builder: (BuildContext context, Widget? child) =>
         buildAppMixScope(context, child: child ?? const SizedBox.shrink()),
     home: MultiBlocProvider(
       providers: providers,
@@ -634,5 +633,5 @@ class _ManualFlushCoordinator implements BackgroundSyncCoordinator {
   Future<void> resumeAfterSessionCleanup() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
 }

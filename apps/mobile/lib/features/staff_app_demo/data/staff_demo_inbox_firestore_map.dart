@@ -5,7 +5,7 @@ import 'package:flutter_bloc_app/features/staff_app_demo/domain/staff_demo_inbox
 /// Firestore map helpers for staff demo inbox (data layer only).
 abstract final class StaffDemoInboxFirestoreMap {
   static List<StaffDemoInboxRecipientSnapshot> recipientsFromSnapshot(
-    final QuerySnapshot<Map<String, dynamic>> snapshot,
+    QuerySnapshot<Map<String, dynamic>> snapshot,
   ) {
     final recipients = <StaffDemoInboxRecipientSnapshot>[];
     for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
@@ -21,7 +21,7 @@ abstract final class StaffDemoInboxFirestoreMap {
   }
 
   static StaffDemoInboxRecipientSnapshot? recipientFromData(
-    final Map<String, dynamic> data,
+    Map<String, dynamic> data,
   ) {
     final String? messageId = data['messageId'] as String?;
     if (messageId == null || messageId.isEmpty) {
@@ -42,7 +42,7 @@ abstract final class StaffDemoInboxFirestoreMap {
   /// Returns null only when [data] is null. Malformed/missing optional fields
   /// become null on the model (presentation defaults blank strings).
   static StaffDemoInboxMessage? messageFromData(
-    final Map<String, dynamic>? data,
+    Map<String, dynamic>? data,
   ) {
     if (data == null) {
       return null;
@@ -54,7 +54,7 @@ abstract final class StaffDemoInboxFirestoreMap {
     );
   }
 
-  static String? _optionalString(final Object? value) {
+  static String? _optionalString(Object? value) {
     if (value is! String) {
       return null;
     }

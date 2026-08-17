@@ -6,7 +6,7 @@ part 'map_coordinate.freezed.dart';
 @freezed
 abstract class MapCoordinate with _$MapCoordinate {
   const factory MapCoordinate({
-    required final double latitude,
-    required final double longitude,
+    required double latitude,
+    required double longitude,
   }) = _MapCoordinate;
 }

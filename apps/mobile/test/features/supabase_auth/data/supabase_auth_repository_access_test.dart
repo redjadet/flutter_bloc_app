@@ -26,15 +26,15 @@ class _StubSupabaseAuthRepository implements SupabaseAuthRepository {
 
   @override
   Future<void> signInWithPassword({
-    required final String email,
-    required final String password,
+    required String email,
+    required String password,
   }) async {}
 
   @override
   Future<void> signUp({
-    required final String email,
-    required final String password,
-    final String? displayName,
+    required String email,
+    required String password,
+    String? displayName,
   }) async {}
 
   @override

@@ -38,7 +38,7 @@ void main() {
       );
 
       result.when(
-        success: (final path) {
+        success: (path) {
           expect(path.startsWith('data:image/jpeg;base64,'), isTrue);
           final Uint8List bytes = base64Decode(
             path.substring(path.indexOf(',') + 1),
@@ -46,7 +46,7 @@ void main() {
           expect(image.decodeJpg(bytes), isNotNull);
         },
         cancelled: () => fail('expected success'),
-        failure: (final _, final message) => fail('expected success: $message'),
+        failure: (_, message) => fail('expected success: $message'),
       );
     });
   });

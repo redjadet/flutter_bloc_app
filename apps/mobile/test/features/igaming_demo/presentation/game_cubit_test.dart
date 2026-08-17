@@ -20,12 +20,12 @@ class _StubDemoBalanceRepository implements DemoBalanceRepository {
   Future<DemoBalance> getBalance() async => _balance;
 
   @override
-  Future<void> setBalance(final DemoBalance b) async {
+  Future<void> setBalance(DemoBalance b) async {
     _balance = b;
   }
 
   @override
-  Future<void> updateBalance(final int deltaUnits) async {
+  Future<void> updateBalance(int deltaUnits) async {
     _balance = DemoBalance(
       amountUnits: (_balance.amountUnits + deltaUnits).clamp(0, 1 << 62),
     );

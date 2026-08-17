@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/widgets/order_book_panel.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
-  Future<AppLocalizations> loadL10n(final WidgetTester tester) async {
+  Future<AppLocalizations> loadL10n(WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: SizedBox.shrink(),
       ),
@@ -18,7 +19,7 @@ void main() {
   }
 
   testWidgets('OrderBookPanel keeps row keys when levels are new instances', (
-    final WidgetTester tester,
+    WidgetTester tester,
   ) async {
     final AppLocalizations l10n = await loadL10n(tester);
     const List<OrderBookLevel> initialBids = <OrderBookLevel>[
@@ -31,7 +32,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: SizedBox(
@@ -69,7 +70,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: appLocalizationDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(
           body: SizedBox(

@@ -55,8 +55,7 @@ extension GenUiDemoStatePatterns on GenUiDemoState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Ready value)?  ready,TResult Function( _Error value)?  error,required TResult orElse(),}){
-final _that = this;
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Ready value)?  ready,TResult Function( _Error value)?  error,required TResult orElse(),}){final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
@@ -80,8 +79,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Ready value)  ready,required TResult Function( _Error value)  error,}){
-final _that = this;
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Ready value)  ready,required TResult Function( _Error value)  error,}){final _that = this;
 switch (_that) {
 case _Initial():
 return initial(_that);case _Loading():
@@ -104,8 +102,7 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Ready value)?  ready,TResult? Function( _Error value)?  error,}){
-final _that = this;
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Ready value)?  ready,TResult? Function( _Error value)?  error,}){final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial(_that);case _Loading() when loading != null:
@@ -225,7 +222,7 @@ String toString() {
 
 
 class _Loading implements GenUiDemoState {
-  const _Loading({final  List<String> surfaceIds = const <String>[], this.isSending = false, this.hostHandle}): _surfaceIds = surfaceIds;
+  const _Loading({ List<String> surfaceIds = const <String>[], this.isSending = false, this.hostHandle}): _surfaceIds = surfaceIds;
   
 
  final  List<String> _surfaceIds;
@@ -301,7 +298,7 @@ as genui.A2uiMessageProcessor?,
 
 
 class _Ready implements GenUiDemoState {
-  const _Ready({required final  List<String> surfaceIds, required this.hostHandle, this.isSending = false}): _surfaceIds = surfaceIds;
+  const _Ready({required  List<String> surfaceIds, required this.hostHandle, this.isSending = false}): _surfaceIds = surfaceIds;
   
 
  final  List<String> _surfaceIds;
@@ -377,7 +374,7 @@ as bool,
 
 
 class _Error implements GenUiDemoState {
-  const _Error({required this.message, final  List<String> surfaceIds = const <String>[], this.hostHandle, this.isSending = false}): _surfaceIds = surfaceIds;
+  const _Error({required this.message, List<String> surfaceIds = const <String>[], this.hostHandle, this.isSending = false}): _surfaceIds = surfaceIds;
   
 
  final  String message;

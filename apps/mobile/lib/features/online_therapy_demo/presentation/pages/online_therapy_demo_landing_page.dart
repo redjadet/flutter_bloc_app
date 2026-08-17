@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
@@ -6,12 +5,13 @@ import 'package:flutter_bloc_app/features/online_therapy_demo/domain/domain.dart
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoLandingPage extends StatelessWidget {
   const OnlineTherapyDemoLandingPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
     final user = context
@@ -20,7 +20,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           TherapyUser?
         >(
-          selector: (final state) => state.user,
+          selector: (state) => state.user,
         );
     final isBusy = context
         .selectState<
@@ -28,7 +28,7 @@ class OnlineTherapyDemoLandingPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isBusy,
+          selector: (state) => state.isBusy,
         );
     final List<Widget> items = <Widget>[
       const Text(
@@ -110,7 +110,7 @@ class _RoleTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final session = context.cubit<OnlineTherapyDemoSessionCubit>();
 
     return ListTile(

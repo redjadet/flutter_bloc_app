@@ -1,8 +1,8 @@
+import 'package:core/core.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_error_keys.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_failure_mapper.dart';
 import 'package:flutter_bloc_app/features/camera_gallery/domain/camera_gallery_result.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core.dart';
 
 void main() {
   group('failureFromCameraGalleryResult', () {

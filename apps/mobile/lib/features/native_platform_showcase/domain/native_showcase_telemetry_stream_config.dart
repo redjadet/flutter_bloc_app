@@ -21,18 +21,18 @@ enum NativeShowcaseTelemetryAggregation {
 abstract class NativeShowcaseTelemetryStreamConfig
     with _$NativeShowcaseTelemetryStreamConfig {
   const factory NativeShowcaseTelemetryStreamConfig({
-    required final int schemaVersion,
-    required final NativeShowcaseTelemetryMode mode,
-    required final int maxDeliveryHz,
-    required final NativeShowcaseTelemetryAggregation aggregation,
-    required final String sessionId,
+    required int schemaVersion,
+    required NativeShowcaseTelemetryMode mode,
+    required int maxDeliveryHz,
+    required NativeShowcaseTelemetryAggregation aggregation,
+    required String sessionId,
   }) = _NativeShowcaseTelemetryStreamConfig;
 
   const NativeShowcaseTelemetryStreamConfig._();
 
   /// Default render-mode contract used by the showcase Cubit.
   factory NativeShowcaseTelemetryStreamConfig.renderDefault({
-    required final String sessionId,
+    required String sessionId,
   }) {
     return NativeShowcaseTelemetryStreamConfig(
       schemaVersion: supportedSchemaVersion,

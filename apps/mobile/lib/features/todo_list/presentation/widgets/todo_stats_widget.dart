@@ -1,31 +1,31 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_cubit.dart';
 import 'package:flutter_bloc_app/features/todo_list/presentation/cubit/todo_list_state.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
-double _todoStatsValueFontSize(final BuildContext context) =>
+double _todoStatsValueFontSize(BuildContext context) =>
     context.responsiveTitleSize.clamp(20.0, 56.0);
 
-double _todoStatsLabelFontSize(final BuildContext context) =>
+double _todoStatsLabelFontSize(BuildContext context) =>
     context.responsiveCaptionSize.clamp(12.0, 24.0);
 
 class TodoStatsWidget extends StatelessWidget {
   const TodoStatsWidget({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
     return TypeSafeBlocSelector<TodoListCubit, TodoListState, _TodoStatsData>(
-      selector: (final state) => _TodoStatsData(
+      selector: (state) => _TodoStatsData(
         total: state.items.length,
         completed: state.completedCount,
         active: state.activeCount,
       ),
-      builder: (final context, final data) {
+      builder: (context, data) {
         if (data.total == 0) {
           return const SizedBox.shrink();
         }
@@ -87,7 +87,7 @@ class _StatItem extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,

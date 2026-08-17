@@ -1,16 +1,16 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/cubit/locale_cubit.dart';
 import 'package:flutter_bloc_app/features/settings/presentation/widgets/settings_card.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class LanguageSection extends StatelessWidget {
   const LanguageSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final Map<String, String> localizedLabels = <String, String>{
       'en': l10n.languageEnglish,
@@ -24,8 +24,8 @@ class LanguageSection extends StatelessWidget {
     return SettingsSection(
       title: l10n.languageSectionTitle,
       child: TypeSafeBlocSelector<LocaleCubit, Locale?, Locale?>(
-        selector: (final state) => state,
-        builder: (final context, final currentLocale) {
+        selector: (state) => state,
+        builder: (context, currentLocale) {
           final List<SettingsOption<Locale?>> options =
               <SettingsOption<Locale?>>[
                 SettingsOption(
@@ -43,8 +43,8 @@ class LanguageSection extends StatelessWidget {
 
           return SettingsCard<Locale?>(
             options: options,
-            isSelected: (final locale) => _sameLocale(locale, currentLocale),
-            onSelect: (final locale) =>
+            isSelected: (locale) => _sameLocale(locale, currentLocale),
+            onSelect: (locale) =>
                 context.cubit<LocaleCubit>().setLocale(locale),
           );
         },
@@ -52,7 +52,7 @@ class LanguageSection extends StatelessWidget {
     );
   }
 
-  bool _sameLocale(final Locale? a, final Locale? b) {
+  bool _sameLocale(Locale? a, Locale? b) {
     if (a == null && b == null) return true;
     if (a == null || b == null) return false;
     return a.languageCode == b.languageCode && a.countryCode == b.countryCode;

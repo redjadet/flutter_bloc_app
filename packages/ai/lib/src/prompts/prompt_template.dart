@@ -14,7 +14,7 @@ class PromptTemplate {
   final String body;
   final List<String> variables;
 
-  String render(final Map<String, String> values) {
+  String render(Map<String, String> values) {
     var rendered = body;
     for (final key in variables) {
       rendered = rendered.replaceAll('{{$key}}', values[key] ?? '');

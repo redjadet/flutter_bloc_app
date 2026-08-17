@@ -18,16 +18,15 @@ enum InAppPurchaseDemoStatus {
 @freezed
 abstract class InAppPurchaseDemoState with _$InAppPurchaseDemoState {
   const factory InAppPurchaseDemoState({
-    @Default(InAppPurchaseDemoStatus.initial)
-    final InAppPurchaseDemoStatus status,
-    @Default(<IapProduct>[]) final List<IapProduct> products,
-    @Default(IapEntitlements()) final IapEntitlements entitlements,
-    final IapPurchaseResult? lastResult,
-    final String? errorMessage,
-    @Default(true) final bool useFakeRepository,
+    @Default(InAppPurchaseDemoStatus.initial) InAppPurchaseDemoStatus status,
+    @Default(<IapProduct>[]) List<IapProduct> products,
+    @Default(IapEntitlements()) IapEntitlements entitlements,
+    IapPurchaseResult? lastResult,
+    String? errorMessage,
+    @Default(true) bool useFakeRepository,
     @Default(IapDemoForcedOutcome.deterministic)
-    final IapDemoForcedOutcome forcedOutcome,
-    @Default(false) final bool isBusy,
+    IapDemoForcedOutcome forcedOutcome,
+    @Default(false) bool isBusy,
   }) = _InAppPurchaseDemoState;
 
   const InAppPurchaseDemoState._();

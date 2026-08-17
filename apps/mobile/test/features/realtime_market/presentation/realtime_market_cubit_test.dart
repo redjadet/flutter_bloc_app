@@ -4,8 +4,8 @@ import 'package:flutter_bloc_app/features/realtime_market/domain/market_connecti
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_feed_snapshot.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/market_stats.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/order_book_level.dart';
-import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/domain/realtime_market_repository.dart';
+import 'package:flutter_bloc_app/features/realtime_market/domain/recent_trade.dart';
 import 'package:flutter_bloc_app/features/realtime_market/presentation/cubit/realtime_market_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -126,7 +126,7 @@ void main() {
   });
 }
 
-MarketFeedSnapshot _snap({required final double last}) => MarketFeedSnapshot(
+MarketFeedSnapshot _snap({required double last}) => MarketFeedSnapshot(
   pairId: 'btc_usdt',
   lastPrice: last,
   changePct24h: 0,
@@ -153,20 +153,20 @@ final class _FakeRepo implements RealtimeMarketRepository {
   var disposed = false;
   var reconnectCount = 0;
 
-  void emit(final MarketFeedSnapshot s) {
+  void emit(MarketFeedSnapshot s) {
     if (!_out.isClosed) {
       _out.add(s);
     }
   }
 
-  void emitError(final Object error) {
+  void emitError(Object error) {
     if (!_out.isClosed) {
       _out.addError(error);
     }
   }
 
   @override
-  Future<MarketFeedSnapshot?> loadCached(final String pairId) async {
+  Future<MarketFeedSnapshot?> loadCached(String pairId) async {
     if (loadCachedError != null) {
       Error.throwWithStackTrace(loadCachedError!, StackTrace.current);
     }
@@ -174,10 +174,10 @@ final class _FakeRepo implements RealtimeMarketRepository {
   }
 
   @override
-  Stream<MarketFeedSnapshot> watch(final String pairId) => _out.stream;
+  Stream<MarketFeedSnapshot> watch(String pairId) => _out.stream;
 
   @override
-  Future<void> reconnect(final String pairId) async {
+  Future<void> reconnect(String pairId) async {
     reconnectCount++;
   }
 

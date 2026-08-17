@@ -5,11 +5,11 @@ part of 'iot_demo_add_device_dialog.dart';
 
 extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
   Widget buildMaterialDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
-    final bool hasValue,
+    BuildContext context,
+    AppLocalizations l10n,
+    String cancelLabel,
+    String okLabel,
+    bool hasValue,
   ) => AlertDialog(
     title: Text(l10n.iotDemoAddDevice),
     content: SingleChildScrollView(
@@ -36,13 +36,13 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
             ),
             items: _iotDemoAddDeviceDialogTypes
                 .map(
-                  (final t) => DropdownMenuItem<IotDeviceType>(
+                  (t) => DropdownMenuItem<IotDeviceType>(
                     value: t,
                     child: Text(iotDemoDeviceTypeLabel(t, widget.l10n)),
                   ),
                 )
                 .toList(),
-            onChanged: (final t) {
+            onChanged: (t) {
               if (t != null) setState(() => _selectedType = t);
             },
           ),
@@ -63,7 +63,7 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
                     ),
                     max: iotDemoValueMax,
                     label: _initialValue.toStringAsFixed(0),
-                    onChanged: (final v) => setState(() => _initialValue = v),
+                    onChanged: (v) => setState(() => _initialValue = v),
                   ),
                   ExcludeSemantics(
                     child: Text(
@@ -95,15 +95,15 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
   );
 
   Widget buildCupertinoDialog(
-    final BuildContext context,
-    final AppLocalizations l10n,
-    final String cancelLabel,
-    final String okLabel,
-    final bool hasValue,
+    BuildContext context,
+    AppLocalizations l10n,
+    String cancelLabel,
+    String okLabel,
+    bool hasValue,
   ) => CupertinoAlertDialog(
     title: Text(l10n.iotDemoAddDevice),
     content: Builder(
-      builder: (final _) => Material(
+      builder: (_) => Material(
         type: MaterialType.transparency,
         child: Padding(
           padding: EdgeInsets.only(top: context.responsiveGapM),
@@ -136,13 +136,13 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
                 ),
                 items: _iotDemoAddDeviceDialogTypes
                     .map(
-                      (final t) => DropdownMenuItem<IotDeviceType>(
+                      (t) => DropdownMenuItem<IotDeviceType>(
                         value: t,
                         child: Text(iotDemoDeviceTypeLabel(t, widget.l10n)),
                       ),
                     )
                     .toList(),
-                onChanged: (final t) {
+                onChanged: (t) {
                   if (t != null) setState(() => _selectedType = t);
                 },
               ),
@@ -162,8 +162,7 @@ extension _IotDemoAddDeviceDialogUi on _IotDemoAddDeviceDialogBodyState {
                           iotDemoValueMax,
                         ),
                         max: iotDemoValueMax,
-                        onChanged: (final v) =>
-                            setState(() => _initialValue = v),
+                        onChanged: (v) => setState(() => _initialValue = v),
                       ),
                       ExcludeSemantics(
                         child: Text(

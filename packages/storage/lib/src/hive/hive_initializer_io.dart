@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:app_shared_flutter/app_shared_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -33,13 +33,13 @@ Future<bool> initHive() async {
   return true;
 }
 
-Future<void> _initHiveInSupportSubdirectory(final String hiveDirName) async {
+Future<void> _initHiveInSupportSubdirectory(String hiveDirName) async {
   final Directory hiveDir = await _ensureHiveDirectory(hiveDirName);
   Hive.init(hiveDir.path);
   AppLogger.debug('Hive initialized in $hiveDirName (${hiveDir.path})');
 }
 
-Future<Directory> _ensureHiveDirectory(final String hiveDirName) async {
+Future<Directory> _ensureHiveDirectory(String hiveDirName) async {
   final Directory supportDir = await getApplicationSupportDirectory();
   final Directory hiveDir = Directory('${supportDir.path}/$hiveDirName');
   if (!hiveDir.existsSync()) {
@@ -48,7 +48,7 @@ Future<Directory> _ensureHiveDirectory(final String hiveDirName) async {
   return hiveDir;
 }
 
-Future<bool> _acquireHiveProcessLock(final Directory hiveDir) async {
+Future<bool> _acquireHiveProcessLock(Directory hiveDir) async {
   if (_hiveProcessLockFile != null) {
     return true;
   }

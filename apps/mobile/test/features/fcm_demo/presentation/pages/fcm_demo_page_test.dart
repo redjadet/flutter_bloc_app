@@ -1,16 +1,17 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_app/app/theme/theme.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_cubit.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/cubit/fcm_demo_state.dart';
 import 'package:flutter_bloc_app/features/fcm_demo/presentation/pages/fcm_demo_page.dart';
+import 'package:flutter_bloc_app/l10n/app_localization_delegates.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations_en.dart';
-import 'package:networking/networking.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:networking/networking.dart';
 import 'package:utilities/utilities.dart';
 
 class _NoopMessagingService implements FcmMessagingService {
@@ -70,7 +71,7 @@ class _NoopBackgroundSyncCoordinator implements BackgroundSyncCoordinator {
   Future<void> flush() async {}
 
   @override
-  Future<void> triggerFromFcm({final String? hint}) async {}
+  Future<void> triggerFromFcm({String? hint}) async {}
   @override
   Future<void> quiesceForSessionCleanup() async {}
 
@@ -85,7 +86,7 @@ class _TestFcmDemoCubit extends FcmDemoCubit {
         coordinator: _NoopBackgroundSyncCoordinator(),
       );
 
-  void setTestState(final FcmDemoState value) => emit(value);
+  void setTestState(FcmDemoState value) => emit(value);
 }
 
 PushMessage _message() => PushMessage(
@@ -98,8 +99,8 @@ PushMessage _message() => PushMessage(
 );
 
 Future<void> _pumpPage(
-  final WidgetTester tester, {
-  required final FcmDemoState state,
+  WidgetTester tester, {
+  required FcmDemoState state,
 }) async {
   final cubit = _TestFcmDemoCubit()..setTestState(state);
   addTearDown(cubit.close);
@@ -107,10 +108,10 @@ Future<void> _pumpPage(
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('en'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: appLocalizationDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Builder(
-        builder: (final context) => buildAppMixScope(
+        builder: (context) => buildAppMixScope(
           context,
           child: BlocProvider<FcmDemoCubit>.value(
             value: cubit,
@@ -127,16 +128,14 @@ void main() {
   group('FcmDemoPage', () {
     final l10n = AppLocalizationsEn();
 
-    testWidgets('shows progress indicator in initial state', (
-      final tester,
-    ) async {
+    testWidgets('shows progress indicator in initial state', (tester) async {
       await _pumpPage(tester, state: const FcmDemoState());
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('shows fallback error text when error message is null', (
-      final tester,
+      tester,
     ) async {
       await _pumpPage(
         tester,
@@ -147,7 +146,7 @@ void main() {
     });
 
     testWidgets('renders permission, token, and last message in ready state', (
-      final tester,
+      tester,
     ) async {
       await _pumpPage(
         tester,
@@ -171,11 +170,11 @@ void main() {
     });
 
     testWidgets('copy token action copies FCM token and shows feedback', (
-      final tester,
+      tester,
     ) async {
       String? copiedText;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(SystemChannels.platform, (final call) {
+          .setMockMethodCallHandler(SystemChannels.platform, (call) {
             if (call.method == 'Clipboard.setData') {
               final data = call.arguments as Map<dynamic, dynamic>;
               copiedText = data['text'] as String?;

@@ -12,8 +12,8 @@ class FakeTherapyAuthRepository implements TherapyAuthRepository {
 
   @override
   Future<TherapyUser> login({
-    required final String email,
-    required final TherapyRole role,
+    required String email,
+    required TherapyRole role,
   }) => _api.login(email: email, role: role);
 
   @override
@@ -26,14 +26,14 @@ class FakeTherapistRepository implements TherapistRepository {
   final OnlineTherapyFakeApi _api;
 
   @override
-  Future<TherapistProfile> getTherapist({required final String therapistId}) =>
+  Future<TherapistProfile> getTherapist({required String therapistId}) =>
       _api.getTherapist(therapistId: therapistId);
 
   @override
   Future<List<TherapistProfile>> listTherapists({
-    final String? query,
-    final String? specialty,
-    final String? language,
+    String? query,
+    String? specialty,
+    String? language,
   }) => _api.listTherapists(
     query: query,
     specialty: specialty,
@@ -42,8 +42,8 @@ class FakeTherapistRepository implements TherapistRepository {
 
   @override
   Future<List<AvailabilitySlot>> listAvailability({
-    required final String therapistId,
-    required final DateTime date,
+    required String therapistId,
+    required DateTime date,
   }) => _api.listAvailability(therapistId: therapistId, date: date);
 }
 
@@ -54,15 +54,15 @@ class FakeAppointmentRepository implements AppointmentRepository {
 
   @override
   Future<Appointment> cancelAppointment({
-    required final String appointmentId,
-    required final String reason,
+    required String appointmentId,
+    required String reason,
   }) => _api.cancelAppointment(appointmentId: appointmentId, reason: reason);
 
   @override
   Future<Appointment> createAppointment({
-    required final String therapistId,
-    required final DateTime startAt,
-    required final DateTime endAt,
+    required String therapistId,
+    required DateTime startAt,
+    required DateTime endAt,
   }) => _api.createAppointment(
     therapistId: therapistId,
     startAt: startAt,
@@ -83,17 +83,17 @@ class FakeTherapyMessagingRepository implements TherapyMessagingRepository {
   Future<List<Conversation>> listConversations() => _api.listConversations();
 
   @override
-  Future<List<Message>> listMessages({required final String conversationId}) =>
+  Future<List<Message>> listMessages({required String conversationId}) =>
       _api.listMessages(conversationId: conversationId);
 
   @override
-  Future<Message> retryMessage({required final String messageId}) =>
+  Future<Message> retryMessage({required String messageId}) =>
       _api.retryMessage(messageId: messageId);
 
   @override
   Future<Message> sendMessage({
-    required final String conversationId,
-    required final String body,
+    required String conversationId,
+    required String body,
   }) => _api.sendMessage(conversationId: conversationId, body: body);
 }
 
@@ -103,11 +103,11 @@ class FakeTherapyCallRepository implements TherapyCallRepository {
   final OnlineTherapyFakeApi _api;
 
   @override
-  Future<CallSession> createSession({required final String appointmentId}) =>
+  Future<CallSession> createSession({required String appointmentId}) =>
       _api.createCallSession(appointmentId: appointmentId);
 
   @override
-  Future<CallSession> join({required final String callSessionId}) =>
+  Future<CallSession> join({required String callSessionId}) =>
       _api.joinCall(callSessionId: callSessionId);
 }
 
@@ -118,7 +118,7 @@ class FakeTherapyAdminRepository implements TherapyAdminRepository {
 
   @override
   Future<TherapistProfile> approveTherapist({
-    required final String therapistId,
+    required String therapistId,
   }) => _api.approveTherapist(therapistId: therapistId);
 
   @override

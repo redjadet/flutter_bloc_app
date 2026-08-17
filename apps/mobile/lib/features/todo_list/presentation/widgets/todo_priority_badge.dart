@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TodoPriorityBadge extends StatelessWidget {
   const TodoPriorityBadge({required this.priority, super.key});
@@ -9,7 +9,7 @@ class TodoPriorityBadge extends StatelessWidget {
   final TodoPriority priority;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
     final l10n = context.l10n;

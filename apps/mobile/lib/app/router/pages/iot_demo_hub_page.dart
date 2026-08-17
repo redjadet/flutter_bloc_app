@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/composition/injector.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/utils/bloc_provider_helpers.dart';
@@ -14,6 +13,7 @@ import 'package:flutter_bloc_app/features/iot/presentation/cubit/iot_ble_cubit.d
 import 'package:flutter_bloc_app/features/iot/presentation/widgets/iot_ble_section.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/pages/iot_demo_page_helpers.dart';
 import 'package:flutter_bloc_app/features/iot_demo/presentation/widgets/iot_demo_cloud_tab.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum IotDemoHubTab { cloud, ble }
 
@@ -31,7 +31,7 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
   IotDemoHubTab _tab = IotDemoHubTab.cloud;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonPageLayout(
       title: l10n.iotDemoPageTitle,
@@ -63,7 +63,7 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
                 ),
               ],
               selected: <IotDemoHubTab>{_tab},
-              onSelectionChanged: (final selected) {
+              onSelectionChanged: (selected) {
                 final IotDemoHubTab? next = selected.firstOrNull;
                 if (next != null && next != _tab) {
                   setState(() => _tab = next);
@@ -90,7 +90,7 @@ class _IotDemoHubPageState extends State<IotDemoHubPage> {
                     runtimeConfig: getIt<IotBleRuntimeConfig>(),
                     timerService: getIt<TimerService>(),
                   ),
-                  init: (final cubit) => cubit.initialize(),
+                  init: (cubit) => cubit.initialize(),
                   child: const IotBleSection(),
                 ),
             },

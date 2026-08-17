@@ -8,8 +8,8 @@ class ContextUtils {
   /// Returns `true` if the [context] is still mounted. Otherwise logs a debug
   /// message (when [debugLabel] is provided) and returns `false`.
   static bool ensureMounted(
-    final BuildContext context, {
-    final String? debugLabel,
+    BuildContext context, {
+    String? debugLabel,
   }) {
     if (context.mounted) {
       return true;
@@ -20,7 +20,7 @@ class ContextUtils {
     return false;
   }
 
-  static void logNotMounted(final String debugLabel) {
+  static void logNotMounted(String debugLabel) {
     AppLogger.debug(
       'Skipping $debugLabel — context is no longer mounted.',
     );

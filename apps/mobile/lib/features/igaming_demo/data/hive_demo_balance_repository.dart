@@ -41,27 +41,25 @@ class HiveDemoBalanceRepository extends HiveRepositoryBase
   );
 
   @override
-  Future<void> setBalance(final DemoBalance balance) async =>
-      StorageGuard.run<void>(
-        logContext: 'HiveDemoBalanceRepository.setBalance',
-        action: () async {
-          final int safe = balance.amountUnits < 0 ? 0 : balance.amountUnits;
-          final Box<dynamic> box = await getBox();
-          await box.put(_keyAmountUnits, safe);
-        },
-        fallback: () {},
-      );
+  Future<void> setBalance(DemoBalance balance) async => StorageGuard.run<void>(
+    logContext: 'HiveDemoBalanceRepository.setBalance',
+    action: () async {
+      final int safe = balance.amountUnits < 0 ? 0 : balance.amountUnits;
+      final Box<dynamic> box = await getBox();
+      await box.put(_keyAmountUnits, safe);
+    },
+    fallback: () {},
+  );
 
   @override
-  Future<void> updateBalance(final int deltaUnits) async =>
-      StorageGuard.run<void>(
-        logContext: 'HiveDemoBalanceRepository.updateBalance',
-        action: () async {
-          final DemoBalance current = await getBalance();
-          final int newAmount = current.amountUnits + deltaUnits;
-          final int clamped = newAmount < 0 ? 0 : newAmount;
-          await setBalance(DemoBalance(amountUnits: clamped));
-        },
-        fallback: () {},
-      );
+  Future<void> updateBalance(int deltaUnits) async => StorageGuard.run<void>(
+    logContext: 'HiveDemoBalanceRepository.updateBalance',
+    action: () async {
+      final DemoBalance current = await getBalance();
+      final int newAmount = current.amountUnits + deltaUnits;
+      final int clamped = newAmount < 0 ? 0 : newAmount;
+      await setBalance(DemoBalance(amountUnits: clamped));
+    },
+    fallback: () {},
+  );
 }

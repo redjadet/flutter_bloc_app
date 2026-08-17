@@ -28,7 +28,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
   final RequestIdGuard _operationGuard = RequestIdGuard();
   static final DateTime _demoAvailabilityDate = DateTime.utc(2026, 4, 22);
 
-  bool _isRequestStillActive(final int requestId) =>
+  bool _isRequestStillActive(int requestId) =>
       !isClosed && _operationGuard.isCurrent(requestId);
 
   Future<void> refresh() async {
@@ -66,7 +66,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     }
   }
 
-  Future<void> selectTherapist(final String therapistId) async {
+  Future<void> selectTherapist(String therapistId) async {
     if (therapistId.trim().isEmpty) {
       _operationGuard.invalidate();
       emit(
@@ -88,7 +88,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     await loadAvailability(therapistId: therapistId);
   }
 
-  void setPendingBookingSlot(final AvailabilitySlot slot) {
+  void setPendingBookingSlot(AvailabilitySlot slot) {
     emit(state.copyWith(pendingBookingSlot: slot));
   }
 
@@ -96,7 +96,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     emit(state.copyWith(pendingBookingSlot: null));
   }
 
-  Future<void> loadAvailability({required final String therapistId}) async {
+  Future<void> loadAvailability({required String therapistId}) async {
     if (therapistId.trim().isEmpty) {
       _operationGuard.invalidate();
       emit(
@@ -155,7 +155,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
   }
 
   /// Returns `true` when the appointment was created and the list refreshed.
-  Future<bool> createAppointmentFromSlot(final AvailabilitySlot slot) async {
+  Future<bool> createAppointmentFromSlot(AvailabilitySlot slot) async {
     final requestId = _operationGuard.next();
     emit(state.copyWith(isBusy: true, clearErrorMessage: true));
     try {
@@ -185,7 +185,7 @@ class ClientBookingCubit extends Cubit<ClientBookingState> {
     }
   }
 
-  Future<void> cancelAppointment(final String appointmentId) async {
+  Future<void> cancelAppointment(String appointmentId) async {
     if (appointmentId.trim().isEmpty) {
       _operationGuard.invalidate();
       emit(state.copyWith(isBusy: false));

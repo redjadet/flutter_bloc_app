@@ -1,6 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_bloc_app/app/utils/isolate_samples.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('IsolateSamples', () {

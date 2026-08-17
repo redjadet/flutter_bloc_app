@@ -23,11 +23,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     await CubitExceptionHandler.executeAsync(
       operation: _repository.getProfile,
       isAlive: () => !isClosed,
-      onSuccess: (final user) {
+      onSuccess: (user) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(ProfileState.ready(user));
       },
-      onError: (final errorMessage) {
+      onError: (errorMessage) {
         if (isClosed || !_loadGuard.isCurrent(requestId)) return;
         emit(
           ProfileState.error(

@@ -1,5 +1,4 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/calculator_error.dart';
 import 'package:flutter_bloc_app/features/calculator/domain/payment_calculator.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calcul
 import 'package:flutter_bloc_app/features/calculator/presentation/widgets/calculator_rate_selector.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CalculatorSummaryCard extends StatelessWidget {
   const CalculatorSummaryCard({required this.padding, super.key});
@@ -17,9 +17,9 @@ class CalculatorSummaryCard extends StatelessWidget {
 
   @override
   Widget build(
-    final BuildContext context,
+    BuildContext context,
   ) => TypeSafeBlocBuilder<CalculatorCubit, CalculatorState>(
-    builder: (final context, final state) {
+    builder: (context, state) {
       final l10n = context.l10n;
       final CalculatorCubit cubit = context.cubit<CalculatorCubit>();
       final PaymentCalculator calculator = cubit.calculator;
@@ -49,7 +49,7 @@ class CalculatorSummaryCard extends StatelessWidget {
           elevation: context.responsiveCardElevation,
           padding: EdgeInsets.zero,
           child: LayoutBuilder(
-            builder: (final context, final constraints) {
+            builder: (context, constraints) {
               final BoxConstraints scrollConstraints =
                   constraints.maxHeight.isFinite
                   ? BoxConstraints(minHeight: constraints.maxHeight)
@@ -173,7 +173,7 @@ class _SummaryRow extends StatelessWidget {
   final bool highlight;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final TextStyle? labelStyle = highlight
         ? textTheme.titleMedium

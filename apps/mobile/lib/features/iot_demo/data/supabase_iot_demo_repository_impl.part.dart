@@ -7,15 +7,15 @@ part of 'supabase_iot_demo_repository.dart';
 /// returns empty; used by the offline-first repository for pull and sync.
 class SupabaseIotDemoRepository implements IotDemoRepository {
   SupabaseIotDemoRepository({
-    final Future<Object?> Function(IotDemoDeviceFilter filter)? fetchRows,
-    final Future<void> Function(
+    Future<Object?> Function(IotDemoDeviceFilter filter)? fetchRows,
+    Future<void> Function(
       String deviceId,
       Map<String, dynamic> updates,
     )?
     updateDevice,
-    final Future<void> Function(Map<String, dynamic> payload)? insertDevice,
-    final Future<Object?> Function(String deviceId)? fetchToggleState,
-    final String? Function()? readCurrentUserId,
+    Future<void> Function(Map<String, dynamic> payload)? insertDevice,
+    Future<Object?> Function(String deviceId)? fetchToggleState,
+    String? Function()? readCurrentUserId,
   }) : _fetchRows = fetchRows ?? _defaultFetchRows,
        _updateDevice = updateDevice ?? _defaultUpdateDevice,
        _insertDevice = insertDevice ?? _defaultInsertDevice,
@@ -39,7 +39,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
 
   @override
   Stream<List<IotDevice>> watchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       return Stream<List<IotDevice>>.value(const <IotDevice>[]);
@@ -50,7 +50,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   /// Fetches devices from Supabase. Used by offline-first pullRemote (filter=all)
   /// and by watchDevices when filter is toggledOnOnly.
   Future<List<IotDevice>> fetchDevices([
-    final IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
+    IotDemoDeviceFilter filter = IotDemoDeviceFilter.all,
   ]) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       return const <IotDevice>[];
@@ -89,7 +89,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> connect(final String deviceId) async {
+  Future<void> connect(String deviceId) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       throw StateError(
         'Supabase is not configured (missing URL or anon key).',
@@ -104,7 +104,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> disconnect(final String deviceId) async {
+  Future<void> disconnect(String deviceId) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       throw StateError(
         'Supabase is not configured (missing URL or anon key).',
@@ -118,7 +118,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   @override
-  Future<void> addDevice(final IotDevice device) async {
+  Future<void> addDevice(IotDevice device) async {
     if (device.id.trim().isEmpty || device.name.trim().isEmpty) {
       throw ArgumentError('device id and name must not be empty');
     }
@@ -154,7 +154,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     });
   }
 
-  static String _deviceTypeToDb(final IotDeviceType type) {
+  static String _deviceTypeToDb(IotDeviceType type) {
     switch (type) {
       case IotDeviceType.light:
         return 'light';
@@ -171,8 +171,8 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
 
   @override
   Future<void> sendCommand(
-    final String deviceId,
-    final IotDeviceCommand command,
+    String deviceId,
+    IotDeviceCommand command,
   ) async {
     if (!SupabaseBootstrapService.isSupabaseInitialized) {
       throw StateError(
@@ -206,7 +206,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     await _updateDevice(deviceId, updates);
   }
 
-  static IotDevice? _rowToDevice(final Map<String, dynamic> row) {
+  static IotDevice? _rowToDevice(Map<String, dynamic> row) {
     final String? id = stringFromDynamicTrimmed(row['id']);
     final String? name = stringFromDynamicTrimmed(row['name']);
     final String? typeStr = stringFromDynamicTrimmed(row['type']);
@@ -233,7 +233,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     );
   }
 
-  static IotDeviceType? _parseDeviceType(final String value) {
+  static IotDeviceType? _parseDeviceType(String value) {
     switch (value) {
       case 'light':
         return IotDeviceType.light;
@@ -251,7 +251,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   /// Parses DB column: enum/string 'disconnected' | 'connecting' | 'connected'.
-  static IotConnectionState _parseConnectionState(final dynamic value) {
+  static IotConnectionState _parseConnectionState(dynamic value) {
     final String? s = stringFromDynamic(value)?.trim();
     switch (s) {
       case 'connecting':
@@ -263,7 +263,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
     }
   }
 
-  static DateTime? _parseTimestamp(final dynamic value) => switch (value) {
+  static DateTime? _parseTimestamp(dynamic value) => switch (value) {
     null => null,
     final DateTime d => d,
     final String s => DateTime.tryParse(s),
@@ -271,7 +271,7 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   };
 
   static Future<Object?> _defaultFetchRows(
-    final IotDemoDeviceFilter filter,
+    IotDemoDeviceFilter filter,
   ) async {
     if (filter == IotDemoDeviceFilter.toggledOnOnly) {
       return Supabase.instance.client
@@ -296,8 +296,8 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
   }
 
   static Future<void> _defaultUpdateDevice(
-    final String deviceId,
-    final Map<String, dynamic> updates,
+    String deviceId,
+    Map<String, dynamic> updates,
   ) {
     return Supabase.instance.client
         .from(_table)
@@ -305,11 +305,11 @@ class SupabaseIotDemoRepository implements IotDemoRepository {
         .eq('id', deviceId);
   }
 
-  static Future<void> _defaultInsertDevice(final Map<String, dynamic> payload) {
+  static Future<void> _defaultInsertDevice(Map<String, dynamic> payload) {
     return Supabase.instance.client.from(_table).insert(payload);
   }
 
-  static Future<Object?> _defaultFetchToggleState(final String deviceId) {
+  static Future<Object?> _defaultFetchToggleState(String deviceId) {
     return Supabase.instance.client
         .from(_table)
         .select('toggled_on')

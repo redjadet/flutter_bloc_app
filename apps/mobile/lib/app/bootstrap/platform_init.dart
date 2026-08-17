@@ -6,8 +6,8 @@ import 'package:flutter_bloc_app/app/config/app_constants.dart';
 class PlatformInit {
   /// Initializes platform-specific features
   static Future<void> initialize({
-    final Object? manager,
-    final bool Function()? isDesktopPredicate,
+    Object? manager,
+    bool Function()? isDesktopPredicate,
   }) async {
     if (kIsWeb) return;
     await initializePlatformWindowing(

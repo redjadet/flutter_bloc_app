@@ -8,7 +8,7 @@ import 'package:utilities/utilities.dart';
 
 class _MockFirebaseMessaging extends Mock implements FirebaseMessaging {}
 
-NotificationSettings _settings(final AuthorizationStatus status) =>
+NotificationSettings _settings(AuthorizationStatus status) =>
     NotificationSettings(
       alert: AppleNotificationSetting.enabled,
       announcement: AppleNotificationSetting.enabled,
@@ -25,8 +25,8 @@ NotificationSettings _settings(final AuthorizationStatus status) =>
     );
 
 RemoteMessage _message({
-  required final String id,
-  required final PushMessageSource source,
+  required String id,
+  required PushMessageSource source,
 }) => RemoteMessage(
   messageId: id,
   sentTime: DateTime(2026, 1, 2),
@@ -48,15 +48,13 @@ void main() {
       openedController = StreamController<RemoteMessage>.broadcast();
       tokenRefreshController = StreamController<String>.broadcast();
 
-      when(
-        () => messaging.onTokenRefresh,
-      ).thenAnswer((_) => tokenRefreshController.stream);
+      when(() => messaging.onTokenRefresh)
+          .thenAnswer((_) => tokenRefreshController.stream);
       when(
         () => messaging.getNotificationSettings(),
       ).thenAnswer((_) async => _settings(AuthorizationStatus.notDetermined));
-      when(
-        () => messaging.requestPermission(),
-      ).thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
+      when(() => messaging.requestPermission())
+          .thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
       when(() => messaging.getToken()).thenAnswer((_) async => 'fcm-token');
       when(() => messaging.getAPNSToken()).thenAnswer((_) async => 'apns');
       when(() => messaging.getInitialMessage()).thenAnswer((_) async => null);
@@ -78,9 +76,8 @@ void main() {
       when(
         () => messaging.getNotificationSettings(),
       ).thenAnswer((_) async => _settings(AuthorizationStatus.notDetermined));
-      when(
-        () => messaging.requestPermission(),
-      ).thenAnswer((_) async => _settings(AuthorizationStatus.provisional));
+      when(() => messaging.requestPermission())
+          .thenAnswer((_) async => _settings(AuthorizationStatus.provisional));
 
       final state = await repository.requestPermission();
 
@@ -89,9 +86,8 @@ void main() {
     });
 
     test('requestPermission skips OS prompt when already authorized', () async {
-      when(
-        () => messaging.getNotificationSettings(),
-      ).thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
+      when(() => messaging.getNotificationSettings())
+          .thenAnswer((_) async => _settings(AuthorizationStatus.authorized));
 
       final state = await repository.requestPermission();
 
@@ -100,9 +96,8 @@ void main() {
     });
 
     test('requestPermission skips OS prompt when already denied', () async {
-      when(
-        () => messaging.getNotificationSettings(),
-      ).thenAnswer((_) async => _settings(AuthorizationStatus.denied));
+      when(() => messaging.getNotificationSettings())
+          .thenAnswer((_) async => _settings(AuthorizationStatus.denied));
 
       final state = await repository.requestPermission();
 
@@ -141,17 +136,9 @@ void main() {
         repository.foregroundMessages,
         emits(
           isA<PushMessage>()
-              .having(
-                (final m) => m.source,
-                'source',
-                PushMessageSource.foreground,
-              )
-              .having((final m) => m.messageId, 'messageId', 'foreground-id')
-              .having(
-                (final m) => m.data['source'],
-                'dataSource',
-                'foreground',
-              ),
+              .having((m) => m.source, 'source', PushMessageSource.foreground)
+              .having((m) => m.messageId, 'messageId', 'foreground-id')
+              .having((m) => m.data['source'], 'dataSource', 'foreground'),
         ),
       );
 
@@ -167,9 +154,9 @@ void main() {
         repository.openedMessages,
         emits(
           isA<PushMessage>()
-              .having((final m) => m.source, 'source', PushMessageSource.opened)
-              .having((final m) => m.messageId, 'messageId', 'opened-id')
-              .having((final m) => m.data['source'], 'dataSource', 'opened'),
+              .having((m) => m.source, 'source', PushMessageSource.opened)
+              .having((m) => m.messageId, 'messageId', 'opened-id')
+              .having((m) => m.data['source'], 'dataSource', 'opened'),
         ),
       );
 

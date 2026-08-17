@@ -7,7 +7,7 @@ mixin _CaseStudyHistoryDetailCubitActions
     emit(state.copyWith(clearTransientError: true));
   }
 
-  Future<void> load({final bool refresh = false}) async {
+  Future<void> load({bool refresh = false}) async {
     if (isClosed) return;
     final int requestId = _loadGuard.next();
 
@@ -121,7 +121,7 @@ mixin _CaseStudyHistoryDetailCubitActions
         await _local.ensureReady();
         final List<CaseStudyRecord> records = await _local.loadRecords(userId);
         final List<CaseStudyRecord> next = records
-            .where((final r) => r.id != recordId)
+            .where((r) => r.id != recordId)
             .toList();
         await _local.saveRecords(userId, next);
         await clipStore.deleteCaseFolder(recordId);

@@ -36,7 +36,7 @@ final class SupabaseConfigProvider {
   ///
   /// Single-flights concurrent calls to prevent duplicate fetch/init.
   Future<SupabaseConfigFetchResult> fetchAndApplyIfNeeded({
-    final bool force = false,
+    bool force = false,
   }) async {
     final existing = _inFlight;
     if (existing != null) return existing;
@@ -53,7 +53,7 @@ final class SupabaseConfigProvider {
   }
 
   Future<SupabaseConfigFetchResult> _fetchInternal({
-    required final bool force,
+    required bool force,
   }) async {
     final bool requiresFirebaseSingletons =
         _auth == null || _remoteConfig == null;

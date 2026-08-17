@@ -1,17 +1,17 @@
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<bool?> showTodoDeleteConfirmDialog({
-  required final BuildContext context,
-  required final String title,
+  required BuildContext context,
+  required String title,
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return showAdaptiveDialog<bool>(
     context: context,
-    builder: (final context) => isCupertino
+    builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListDeleteDialogTitle),
             content: Padding(
@@ -57,14 +57,14 @@ Future<bool?> showTodoDeleteConfirmDialog({
 }
 
 Future<bool?> showTodoBatchDeleteConfirmDialog({
-  required final BuildContext context,
-  required final int count,
+  required BuildContext context,
+  required int count,
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return showAdaptiveDialog<bool>(
     context: context,
-    builder: (final context) => isCupertino
+    builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListBatchDeleteDialogTitle),
             content: Padding(
@@ -110,14 +110,14 @@ Future<bool?> showTodoBatchDeleteConfirmDialog({
 }
 
 Future<bool?> showTodoClearCompletedConfirmDialog({
-  required final BuildContext context,
-  required final int count,
+  required BuildContext context,
+  required int count,
 }) async {
   final l10n = context.l10n;
   final bool isCupertino = PlatformAdaptive.isCupertino(context);
   return showAdaptiveDialog<bool>(
     context: context,
-    builder: (final context) => isCupertino
+    builder: (context) => isCupertino
         ? CupertinoAlertDialog(
             title: Text(l10n.todoListClearCompletedDialogTitle),
             content: Padding(

@@ -6,7 +6,7 @@ import 'package:flutter_bloc_app/features/auth/presentation/cubit/register/regis
 class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit() : super(const RegisterState());
 
-  void fullNameChanged(final String value) {
+  void fullNameChanged(String value) {
     emit(
       state.copyWith(
         fullName: state.fullName.update(value),
@@ -15,7 +15,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  void emailChanged(final String value) {
+  void emailChanged(String value) {
     emit(
       state.copyWith(
         email: state.email.update(value),
@@ -24,7 +24,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  void passwordChanged(final String value) {
+  void passwordChanged(String value) {
     emit(
       state.copyWith(
         password: state.password.update(value),
@@ -33,7 +33,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  void confirmPasswordChanged(final String value) {
+  void confirmPasswordChanged(String value) {
     emit(
       state.copyWith(
         confirmPassword: state.confirmPassword.update(value),
@@ -42,7 +42,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  void phoneChanged(final String value) {
+  void phoneChanged(String value) {
     emit(
       state.copyWith(
         phoneNumber: state.phoneNumber.update(value),
@@ -51,7 +51,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 
-  void countrySelected(final CountryOption country) {
+  void countrySelected(CountryOption country) {
     emit(
       state.copyWith(
         selectedCountry: country,
@@ -66,7 +66,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  void termsAcceptanceChanged({required final bool accepted}) {
+  void termsAcceptanceChanged({required bool accepted}) {
     emit(
       state.copyWith(
         acceptedTerms: state.hasViewedTerms && accepted,

@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc_app/app/services/app_memory_service.dart';
-import 'package:utilities/utilities.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:utilities/utilities.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -11,10 +11,10 @@ void main() {
     final List<AppMemoryTrimLevel> chartLevels = <AppMemoryTrimLevel>[];
     final List<AppMemoryTrimLevel> imageLevels = <AppMemoryTrimLevel>[];
     final AppMemoryService service = AppMemoryService(
-      onImageCacheTrim: (final AppMemoryTrimLevel level) async {
+      onImageCacheTrim: (AppMemoryTrimLevel level) async {
         imageLevels.add(level);
       },
-      onChartMemoryTrim: (final AppMemoryTrimLevel level) async {
+      onChartMemoryTrim: (AppMemoryTrimLevel level) async {
         chartLevels.add(level);
       },
     );
@@ -29,7 +29,7 @@ void main() {
     final Completer<void> allowBackgroundImageTrim = Completer<void>();
     final List<AppMemoryTrimLevel> imageLevels = <AppMemoryTrimLevel>[];
     final AppMemoryService service = AppMemoryService(
-      onImageCacheTrim: (final AppMemoryTrimLevel level) async {
+      onImageCacheTrim: (AppMemoryTrimLevel level) async {
         imageLevels.add(level);
         if (level == AppMemoryTrimLevel.background) {
           await allowBackgroundImageTrim.future;

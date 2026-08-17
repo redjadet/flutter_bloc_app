@@ -1,11 +1,11 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_call_result.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/native_interop_status.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_cubit.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/cubit/native_platform_showcase_state.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class _ActionUiSnapshot {
   const _ActionUiSnapshot({
@@ -23,20 +23,20 @@ class NativePlatformShowcaseActionSection extends StatelessWidget {
   const NativePlatformShowcaseActionSection({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     return TypeSafeBlocSelector<
       NativePlatformShowcaseCubit,
       NativePlatformShowcaseState,
       _ActionUiSnapshot?
     >(
-      selector: (final state) => state.mapOrNull(
-        loaded: (final loaded) => _ActionUiSnapshot(
+      selector: (state) => state.mapOrNull(
+        loaded: (loaded) => _ActionUiSnapshot(
           busy: loaded.actionInFlight != null,
           lastAction: loaded.lastAction,
           lastActionResult: loaded.lastActionResult,
         ),
       ),
-      builder: (final context, final snapshot) {
+      builder: (context, snapshot) {
         final AppLocalizations l10n = AppLocalizations.of(context);
         final ThemeData theme = Theme.of(context);
         final bool enabled = snapshot != null && !snapshot.busy;
@@ -113,9 +113,9 @@ class NativePlatformShowcaseActionSection extends StatelessWidget {
   }
 
   static String _lastActionLabel({
-    required final AppLocalizations l10n,
-    required final NativePlatformShowcaseAction? action,
-    required final NativeInteropCallResult result,
+    required AppLocalizations l10n,
+    required NativePlatformShowcaseAction? action,
+    required NativeInteropCallResult result,
   }) {
     final String actionLabel = switch (action) {
       NativePlatformShowcaseAction.haptic =>
@@ -134,8 +134,8 @@ class NativePlatformShowcaseActionSection extends StatelessWidget {
   }
 
   static Color _statusColor(
-    final ThemeData theme,
-    final NativeInteropStatus status,
+    ThemeData theme,
+    NativeInteropStatus status,
   ) => switch (status) {
     NativeInteropStatus.success => theme.colorScheme.primary,
     NativeInteropStatus.unavailable => theme.colorScheme.outline,

@@ -1,5 +1,5 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Text field component for editing markdown content.
 class MarkdownEditorField extends StatelessWidget {
@@ -15,7 +15,7 @@ class MarkdownEditorField extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colors = theme.colorScheme;
 
@@ -31,8 +31,7 @@ class MarkdownEditorField extends StatelessWidget {
         expands: true,
         style: theme.textTheme.bodyLarge,
         decoration: InputDecoration(
-          hintText:
-              'Start typing markdown...\n\n# Header\n**Bold**\n*Italic*\n`Code`',
+          hintText: 'Start typing markdown...\n\n# Header\n**Bold**\n*Italic*\n`Code`',
           border: InputBorder.none,
           hintStyle: theme.textTheme.bodyLarge?.copyWith(
             color: colors.onSurface.withValues(alpha: 0.5),

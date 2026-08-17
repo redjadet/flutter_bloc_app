@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/widgets/common_empty_state.dart';
+import 'package:material_ui/material_ui.dart';
 
 class TodoEmptyState extends StatelessWidget {
   const TodoEmptyState({required this.onAddTodo, super.key});
@@ -8,7 +8,7 @@ class TodoEmptyState extends StatelessWidget {
   final VoidCallback onAddTodo;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return CommonEmptyState(
       title: l10n.todoListEmptyTitle,

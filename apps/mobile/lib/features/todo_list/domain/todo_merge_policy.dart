@@ -12,8 +12,8 @@ class TodoMergePolicy {
   /// Symmetric to [shouldApplyRemote]: never push an older pending write over a
   /// newer remote snapshot (multi-device stale queue replay).
   bool shouldPushPendingToRemote(
-    final TodoItem pendingItem,
-    final TodoItem remoteItem,
+    TodoItem pendingItem,
+    TodoItem remoteItem,
   ) {
     if (remoteItem.updatedAt.isAfter(pendingItem.updatedAt)) {
       return false;
@@ -26,8 +26,8 @@ class TodoMergePolicy {
   /// When local is synchronized, accepts remote if equal or newer; when local
   /// has unsynced changes, accepts only if remote is strictly newer.
   bool shouldApplyRemote(
-    final TodoItem? localItem,
-    final TodoItem remoteItem,
+    TodoItem? localItem,
+    TodoItem remoteItem,
   ) {
     if (localItem == null) {
       return true;

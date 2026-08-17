@@ -16,7 +16,7 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
 
   @override
   Stream<List<StaffDemoInboxRecipientSnapshot>> watchRecipients({
-    required final String userId,
+    required String userId,
   }) {
     return _firestore
         .collection('staffDemoMessageRecipients')
@@ -32,9 +32,9 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
           >.fromHandlers(
             handleError:
                 (
-                  final error,
-                  final stackTrace,
-                  final sink,
+                  error,
+                  stackTrace,
+                  sink,
                 ) {
                   if (error is FirebaseException &&
                       error.code == 'permission-denied') {
@@ -51,7 +51,7 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
   }
 
   @override
-  Future<StaffDemoInboxMessage?> loadMessage(final String messageId) async {
+  Future<StaffDemoInboxMessage?> loadMessage(String messageId) async {
     final snap = await _firestore
         .collection('staffDemoMessages')
         .doc(messageId)
@@ -60,7 +60,7 @@ class FirestoreStaffDemoInboxRepository implements StaffDemoInboxRepository {
   }
 
   @override
-  Future<String?> loadShiftStatus(final String shiftId) async {
+  Future<String?> loadShiftStatus(String shiftId) async {
     final snap = await _firestore
         .collection('staffDemoShifts')
         .doc(shiftId)

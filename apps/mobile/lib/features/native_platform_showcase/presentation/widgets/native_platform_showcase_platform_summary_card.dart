@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/domain/app_platform_kind.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_platform_showcase_adaptive.dart';
 import 'package:flutter_bloc_app/features/native_platform_showcase/presentation/widgets/native_showcase_l10n_extensions.dart';
 import 'package:flutter_bloc_app/l10n/app_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class NativePlatformShowcasePlatformSummaryCard extends StatelessWidget {
   const NativePlatformShowcasePlatformSummaryCard({
@@ -13,7 +13,7 @@ class NativePlatformShowcasePlatformSummaryCard extends StatelessWidget {
   final AppPlatformKind platform;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final AppLocalizations l10n = AppLocalizations.of(context);
     final bool isCupertino = NativePlatformShowcaseAdaptive.isCupertino(
       context,

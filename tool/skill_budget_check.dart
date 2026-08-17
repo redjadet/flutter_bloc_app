@@ -45,11 +45,9 @@ Future<void> main(List<String> args) async {
       ) ??
       3000;
 
-  final inv =
-      jsonDecode(
-            await File(inventoryPath).readAsString(),
-          )
-          as Map<String, Object?>;
+  final inv = jsonDecode(
+    await File(inventoryPath).readAsString(),
+  ) as Map<String, Object?>;
   final skills = (inv['skills']! as List).cast<Map<String, Object?>>();
 
   final excludePluginCache = inv['excludePluginCache'] == true;

@@ -35,7 +35,7 @@ void main() {
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
       'initialize loads products and entitlements',
       build: buildCubit,
-      act: (final cubit) => cubit.initialize(),
+      act: (cubit) => cubit.initialize(),
       expect: () => [
         isA<InAppPurchaseDemoState>().having(
           (s) => s.status,
@@ -53,7 +53,7 @@ void main() {
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
       'buy updates entitlements for consumable',
       build: buildCubit,
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         final products = cubit.state.products;
         final consumable = products.firstWhere(
@@ -61,7 +61,7 @@ void main() {
         );
         await cubit.buy(consumable);
       },
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.entitlements.credits, greaterThanOrEqualTo(100));
       },
     );
@@ -69,12 +69,12 @@ void main() {
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
       'purchase stream error clears busy state and surfaces message',
       build: buildCubit,
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         fakeRepo.simulatePurchaseStreamError(Exception('store stream failed'));
         await Future<void>.delayed(Duration.zero);
       },
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.status, InAppPurchaseDemoStatus.error);
         expect(cubit.state.isBusy, isFalse);
         expect(cubit.state.errorMessage, contains('store stream failed'));
@@ -84,7 +84,7 @@ void main() {
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
       'terminal failure result clears busy state and returns to ready',
       build: buildCubit,
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         final consumable = cubit.state.products.firstWhere(
           (p) => p.type == IapProductType.consumable,
@@ -101,7 +101,7 @@ void main() {
         await buyFuture;
         await Future<void>.delayed(Duration.zero);
       },
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.status, InAppPurchaseDemoStatus.ready);
         expect(cubit.state.isBusy, isFalse);
         expect(
@@ -123,11 +123,11 @@ void main() {
     blocTest<InAppPurchaseDemoCubit, InAppPurchaseDemoState>(
       'restore updates non-consumable and subscription entitlements',
       build: buildCubit,
-      act: (final cubit) async {
+      act: (cubit) async {
         await cubit.initialize();
         await cubit.restore();
       },
-      verify: (final cubit) {
+      verify: (cubit) {
         expect(cubit.state.entitlements.isPremiumOwned, isTrue);
         expect(cubit.state.entitlements.isSubscriptionActive, isTrue);
       },

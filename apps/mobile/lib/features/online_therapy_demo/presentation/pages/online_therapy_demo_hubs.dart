@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc_app/app/extensions/build_context_l10n.dart';
 import 'package:flutter_bloc_app/app/router/app_routes.dart';
 import 'package:flutter_bloc_app/app/widgets/common_page_layout.dart';
 import 'package:flutter_bloc_app/features/online_therapy_demo/presentation/cubit/online_therapy_demo_session_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ilkersevim_type_safe_bloc/ilkersevim_type_safe_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
 class OnlineTherapyDemoClientHubPage extends StatelessWidget {
   const OnlineTherapyDemoClientHubPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -18,7 +18,7 @@ class OnlineTherapyDemoClientHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
@@ -71,7 +71,7 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
   const OnlineTherapyDemoTherapistHubPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -79,7 +79,7 @@ class OnlineTherapyDemoTherapistHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
@@ -127,7 +127,7 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
   const OnlineTherapyDemoAdminHubPage({super.key});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isLoggedIn = context
         .selectState<
@@ -135,7 +135,7 @@ class OnlineTherapyDemoAdminHubPage extends StatelessWidget {
           OnlineTherapyDemoSessionState,
           bool
         >(
-          selector: (final state) => state.isLoggedIn,
+          selector: (state) => state.isLoggedIn,
         );
     final List<Widget> items = <Widget>[
       if (!isLoggedIn)
@@ -178,7 +178,7 @@ class _LoggedOutPrompt extends StatelessWidget {
   final VoidCallback onGoToLanding;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Card(
       child: Padding(
