@@ -27,6 +27,14 @@ TERMINAL_STATUSES = frozenset(
     }
 )
 
+RETRYABLE_GITHUB_HTTP_STATUSES = frozenset({429, 500, 502, 503, 504})
+GITHUB_API_RETRY_DELAYS_SECONDS = (2, 4, 8, 16)
+
+
+def is_retryable_github_http_status(status: int) -> bool:
+    """Return True for transient GitHub API statuses that should be retried."""
+    return status in RETRYABLE_GITHUB_HTTP_STATUSES
+
 
 @dataclass(frozen=True)
 class PagesDeployment:
@@ -135,18 +143,42 @@ class GitHubPagesDrainClient:
                 "User-Agent": "flutter-bloc-app-pages-drain",
             },
         )
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                status = response.status
-                body = response.read().decode("utf-8")
-        except urllib.error.HTTPError as error:
-            status = error.code
-            body = error.read().decode("utf-8")
-        if status not in accept_statuses:
+        delays = GITHUB_API_RETRY_DELAYS_SECONDS
+        last_status = 0
+        last_body = ""
+        last_url_error: BaseException | None = None
+        for attempt in range(len(delays) + 1):
+            last_url_error = None
+            try:
+                with urllib.request.urlopen(request, timeout=30) as response:
+                    last_status = response.status
+                    last_body = response.read().decode("utf-8")
+            except urllib.error.HTTPError as error:
+                last_status = error.code
+                last_body = error.read().decode("utf-8")
+            except urllib.error.URLError as error:
+                last_url_error = error
+                if attempt < len(delays):
+                    time.sleep(delays[attempt])
+                    continue
+                raise RuntimeError(
+                    f"GitHub API {method} {path} failed: {error}"
+                ) from error
+            if last_status in accept_statuses:
+                return last_status, last_body
+            if is_retryable_github_http_status(last_status) and attempt < len(
+                delays
+            ):
+                time.sleep(delays[attempt])
+                continue
+            break
+        if last_url_error is not None:
             raise RuntimeError(
-                f"GitHub API {method} {path} failed with HTTP {status}: {body}"
-            )
-        return status, body
+                f"GitHub API {method} {path} failed: {last_url_error}"
+            ) from last_url_error
+        raise RuntimeError(
+            f"GitHub API {method} {path} failed with HTTP {last_status}: {last_body}"
+        )
 
     def list_environment_deployments(
         self,
