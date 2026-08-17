@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/app/composition/injector.dart';

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:core/core.dart';
 
 import 'package:flutter_bloc_app/features/chat/data/chat_conversation_dto.dart';

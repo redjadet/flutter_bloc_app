@@ -26,7 +26,7 @@ class RemoteConfigRenderOrchestrationTokenAdapter
         return null;
       }
       return trimmed;
-    } on Exception catch (e, _) {
+    } on Exception catch (e) {
       AppLogger.debug(
         'RemoteConfigRenderOrchestrationTokenAdapter.readDevToken: $e',
       );

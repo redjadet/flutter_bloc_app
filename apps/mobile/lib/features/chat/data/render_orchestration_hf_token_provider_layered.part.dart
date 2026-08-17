@@ -70,7 +70,7 @@ class LayeredRenderOrchestrationHfTokenProvider
         _devRemoteFetchAttempted = true;
         try {
           await _remoteTokenPort.forceRefresh();
-        } on Exception catch (e, _) {
+        } on Exception catch (e) {
           AppLogger.info(
             'LayeredRenderOrchestrationHfTokenProvider: Remote Config forceFetch failed ($e)',
           );
@@ -148,7 +148,7 @@ class LayeredRenderOrchestrationHfTokenProvider
     try {
       final User user = await waitForAuthUser(auth);
       await user.getIdToken(true);
-    } on FirebaseAuthException catch (e, _) {
+    } on FirebaseAuthException catch (e) {
       AppLogger.info(
         'LayeredRenderOrchestrationHfTokenProvider: Callable skipped (auth ${e.code})',
       );
@@ -172,12 +172,12 @@ class LayeredRenderOrchestrationHfTokenProvider
           stringFromDynamicTrimmed(map?['hf_read_token']) ??
           stringFromDynamicTrimmed(map?['token']);
       return token;
-    } on FirebaseFunctionsException catch (e, _) {
+    } on FirebaseFunctionsException catch (e) {
       AppLogger.info(
         'LayeredRenderOrchestrationHfTokenProvider: Callable failed (${e.code})',
       );
       return null;
-    } on Exception catch (e, _) {
+    } on Exception catch (e) {
       AppLogger.info(
         'LayeredRenderOrchestrationHfTokenProvider: Callable error ($e)',
       );
