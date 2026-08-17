@@ -1,12 +1,10 @@
 import 'package:design_system/design_system.dart';
 import 'package:material_ui/material_ui.dart';
 
-class SettingsOption<T> {
-  const SettingsOption({required this.label, required this.value});
-
-  final String label;
-  final T value;
-}
+class const SettingsOption<T>({
+  required final String label,
+  required final T value,
+});
 
 class SettingsCard<T> extends StatelessWidget {
   const SettingsCard({

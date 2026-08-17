@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/graphql_demo/data/graphql_json.dart';
 import 'package:flutter_bloc_app/features/graphql_demo/domain/graphql_country.dart';
 
-class GraphqlContinentDto({
+class const GraphqlContinentDto({
   required final String code,
   required final String name,
 }) {
@@ -14,7 +14,7 @@ class GraphqlContinentDto({
   GraphqlContinent toDomain() => GraphqlContinent(code: code, name: name);
 }
 
-class GraphqlCountryDto({
+class const GraphqlCountryDto({
   required final String code,
   required final String name,
   required final GraphqlContinentDto continent,

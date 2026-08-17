@@ -1,7 +1,7 @@
 import 'package:flutter_bloc_app/features/todo_list/domain/todo_item.dart';
 import 'package:ilkersevim_safe_parse/ilkersevim_safe_parse.dart';
 
-class TodoItemDto({
+class const TodoItemDto({
   required final String id,
   required final String title,
   required final String? description,

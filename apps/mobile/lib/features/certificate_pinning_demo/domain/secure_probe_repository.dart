@@ -10,11 +10,9 @@ final class const SecureProbeSuccess({
   required final CertificatePinMatchKind matchKind,
 }) extends SecureProbeOutcome;
 
-final class SecureProbeFailure extends SecureProbeOutcome {
-  const SecureProbeFailure(this.failure);
-
-  final CertificatePinningDemoFailure failure;
-}
+final class const SecureProbeFailure(
+  final CertificatePinningDemoFailure failure,
+) extends SecureProbeOutcome;
 
 abstract interface class SecureProbeRepository {
   Future<SecureProbeOutcome> probe();
